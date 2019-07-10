@@ -2,96 +2,220 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B51C004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D40BC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD597208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554AC2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TbgGZCXc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EafiB/Ja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfGJL0b (ORCPT
+        id S1727163AbfGJL1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:26:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53679 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfGJL0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:26:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45kH2C2Wrtz9s8m;
-        Wed, 10 Jul 2019 21:26:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562757988;
-        bh=7INYaCUq7snUi6RkopB4JyzdlcPRBZlesJ1RAJFGDEY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TbgGZCXc1R7vtjCSbfa4VNNA4ATyauAz4BizlBAc43Lw5MStEh0OfzLb4z+3WVs/L
-         lH2CG2MjSaArSNsxLMGh4+2lU9v7do8EGM6hs27KsSBIOzQ2CIpKLEwagMEDvhYb8K
-         rYq6TYJ6RqcRr0rgD2WEHKjOxqQ3hRmT5sinlfDYT6LEbXase2ezHvODP0FlT8R5QQ
-         xObq9donYU5I3Q4i1sA98iDiVG+Nu0S9WEdaIrqeB6m2RAnkYYBip0hAsnDmFIS9/E
-         u1xAiH1PdL/9+p3tAQ8mgf01gWy5nIMXG3m+ZgfmLJCoXr/xqez5XiLfJyjZPEbutM
-         0fI8x9gGLnoZQ==
-Date:   Wed, 10 Jul 2019 21:26:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wen Yang <wen.yang99@zte.com.cn>
-Subject: linux-next: Fixes tag needs some work in the pm tree
-Message-ID: <20190710212625.718c5327@canb.auug.org.au>
+        Wed, 10 Jul 2019 07:27:35 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2388 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfGJL1e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:27:34 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d25cba90000>; Wed, 10 Jul 2019 04:27:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 10 Jul 2019 04:27:32 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 10 Jul 2019 04:27:32 -0700
+Received: from [10.24.44.109] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 11:27:26 +0000
+Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
+ search API
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-6-vidyas@nvidia.com>
+ <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
+Date:   Wed, 10 Jul 2019 16:57:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/6_E_+M7MasBoQ1_151EJMSW"; protocol="application/pgp-signature"
+In-Reply-To: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562758057; bh=qS3f23rc6PRI4/MEpYT+5T67cBOKXa874wiiveHkTCg=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EafiB/JafsAB4XgIv+kuhmSXzMjX8sEGmlmAPi297oiwRYe1EDvopt11WEQtv62Kn
+         P68kRduwYVtqcruwVZoDE+bv+o6glEr4k5MEemu1JREu99Uv8eElpYiB3Vg8nPbdDZ
+         d78YkyqQPbJHVqijZK2PPUcS/6p+l5ZtSTORRqiBGIkLoPxbRAk0iF82Sf9XC0qT30
+         DumRDWAYLCXhaiAEXazW9kQD5mohJOTHpEn07lqEgVO6/VpWY4op6rRwppYCFLpGZF
+         JVw6UBBHAtVIU9UfrRX1elmEDBUfNc0ZKI1o5qEYFmdMH42RrXJkMAwlthNEQrTvI3
+         SVopVCiyORfew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6_E_+M7MasBoQ1_151EJMSW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 7/10/2019 4:07 PM, Lorenzo Pieralisi wrote:
+> On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
+>> Add extended configuration space capability search API using struct dw_pcie *
+>> pointer
+> 
+> Sentences are terminated with a period and this is v13 not v1, which
+> proves that you do not read the commit logs you write.
+> 
+> I need you guys to understand that I can't rewrite commit logs all
+> the time, I do not want to go as far as not accepting your patches
+> anymore so please do pay attention to commit log details they
+> are as important as the code itself.
+> 
+> https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+My sincere apologies.
+Since I didn't touch this patch much all through this series, I missed it.
+I'll make a point to not make such mistakes again.
+Do you want me to send a new version fixing it?
 
-Hi all,
+Thanks,
+Vidya Sagar
 
-In commit
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> V13:
+>> * None
+>>
+>> V12:
+>> * None
+>>
+>> V11:
+>> * None
+>>
+>> V10:
+>> * None
+>>
+>> V9:
+>> * Added Acked-by from Thierry
+>>
+>> V8:
+>> * Changed data types of return and arguments to be inline with data being returned
+>>    and passed.
+>>
+>> V7:
+>> * None
+>>
+>> V6:
+>> * None
+>>
+>> V5:
+>> * None
+>>
+>> V4:
+>> * None
+>>
+>> V3:
+>> * None
+>>
+>> V2:
+>> * This is a new patch in v2 series
+>>
+>>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>>   2 files changed, 42 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 7818b4febb08..181449e342f1 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>>   }
+>>   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>>   
+>> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+>> +					    u8 cap)
+>> +{
+>> +	u32 header;
+>> +	int ttl;
+>> +	int pos = PCI_CFG_SPACE_SIZE;
+>> +
+>> +	/* minimum 8 bytes per capability */
+>> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+>> +
+>> +	if (start)
+>> +		pos = start;
+>> +
+>> +	header = dw_pcie_readl_dbi(pci, pos);
+>> +	/*
+>> +	 * If we have no capabilities, this is indicated by cap ID,
+>> +	 * cap version and next pointer all being 0.
+>> +	 */
+>> +	if (header == 0)
+>> +		return 0;
+>> +
+>> +	while (ttl-- > 0) {
+>> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+>> +			return pos;
+>> +
+>> +		pos = PCI_EXT_CAP_NEXT(header);
+>> +		if (pos < PCI_CFG_SPACE_SIZE)
+>> +			break;
+>> +
+>> +		header = dw_pcie_readl_dbi(pci, pos);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+>> +{
+>> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+>> +}
+>> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>>   {
+>>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index d8c66a6827dc..11c223471416 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -252,6 +252,7 @@ struct dw_pcie {
+>>   		container_of((endpoint), struct dw_pcie, ep)
+>>   
+>>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+>>   
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>> -- 
+>> 2.17.1
+>>
 
-  f43e075f7252 ("cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_i=
-nit()")
-
-Fixes tag
-
-  Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6_E_+M7MasBoQ1_151EJMSW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ly2EACgkQAVBC80lX
-0GzpwAf/az9TRF+927S9E9lLZdvty4YjLHj1DHOglysX17MyUCLr8ZhUUDqD+LEG
-5j9H3p8r7Yd9Op/PPM2l4Jbxw5OkDobqbGimXyaBuU6p9SyjJqnd0V2TOad06o+w
-oRetixC2HTqZFlP1j2HNhobmbpZuX6/Yl3DY7QL3olMV78aQPFYgJ92xGCS2FIJe
-ItMUuECeBOdi/JFHfn1dqmWxsc8GWehVjYpkVyE+BB7Q7uvLGZ+CwF+cZThmEC1E
-7nM2Zb6tY+ifuQ2zL/73zZyUzYlnpflJzxmjMP41qE5xg9lLePq7eNfUxaHJ+e1C
-SctiPj/kb6vSVJky8TfukBAGonpJcQ==
-=vFWS
------END PGP SIGNATURE-----
-
---Sig_/6_E_+M7MasBoQ1_151EJMSW--
