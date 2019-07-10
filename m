@@ -2,306 +2,129 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82656C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A78BC74A3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7922087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D85320645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfGJTm7 (ORCPT
+        id S1728023AbfGJTni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:42:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48500 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfGJTm7 (ORCPT
+        Wed, 10 Jul 2019 15:43:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33595 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfGJTni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:42:59 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlIUK-0001gY-2n; Wed, 10 Jul 2019 21:42:48 +0200
-Date:   Wed, 10 Jul 2019 21:42:46 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xi Ruoyao <xry111@mengyan1223.wang>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH] x86/asm: Move native_write_cr0/3() out of line
-In-Reply-To: <a822cf447949582e2a11b7899f22b11da02f0ece.camel@mengyan1223.wang>
-Message-ID: <alpine.DEB.2.21.1907102140340.1758@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>  <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>  <201907091727.91CC6C72D8@keescook>  <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang> 
- <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>  <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>  <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>  <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang> 
- <20190710134433.GN3402@hirez.programming.kicks-ass.net>  <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>  <20190710142653.GJ3419@hirez.programming.kicks-ass.net>  <alpine.DEB.2.21.1907101709340.1758@nanos.tec.linutronix.de>
- <a822cf447949582e2a11b7899f22b11da02f0ece.camel@mengyan1223.wang>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 15:43:38 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u15so2609101oiv.0;
+        Wed, 10 Jul 2019 12:43:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aBeg5u7rV+bMV5EqKauG05KOk0ihpzkj5CrP7OIiW7A=;
+        b=iczZZC7y+hxpNMvIcOZRtbPqCEZYFSczj6ZM3y/g3jKHFC1PmtSUEhSlzumZSwmAY1
+         ucGfvtrnj/nqlKYlTwvm6qDy6WplQ1XfCmSChxoTXmjif6Vk2YubNe4dsawBpqYLsKiQ
+         YQpkxuHh3uk+90AjcN/RLdPiWeXoaFFX6evFUSFsx3Kaik7zmXuV6u/h32UK0oI/LwUZ
+         CMU7NA7PdtwXc5SrakasQg/To796JDOWSuRRmOMmkLAaQHZd8i5B29ErbKpRxRPGvW88
+         vM4F22818nI62pB46Zq5li8cxSTFtGbpm8keKSKc+r7bQF4miteclNMelmKqUgNZFqcU
+         utyw==
+X-Gm-Message-State: APjAAAXBIrP3yyPSTL3fmCds2VS/OI6IaQxDXHkAmbYdvWgKf4FVjviu
+        2ZYVffwnea1oEF1wVeLifcgitx0R
+X-Google-Smtp-Source: APXvYqxiu7sqTEGElu3MaaJKrMb0D6yZnrjapkZhNipwv7xY+vIqDLFwq3Y7ZoqpUnrsCurUPaNt+Q==
+X-Received: by 2002:aca:edc6:: with SMTP id l189mr44881oih.86.1562787816462;
+        Wed, 10 Jul 2019 12:43:36 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id b138sm1122585oii.7.2019.07.10.12.43.35
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 12:43:35 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id q10so3347785otk.10;
+        Wed, 10 Jul 2019 12:43:35 -0700 (PDT)
+X-Received: by 2002:a9d:5510:: with SMTP id l16mr47230oth.63.1562787815427;
+ Wed, 10 Jul 2019 12:43:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190705101800.44561-1-biwen.li@nxp.com> <20190705101800.44561-2-biwen.li@nxp.com>
+In-Reply-To: <20190705101800.44561-2-biwen.li@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 10 Jul 2019 14:43:24 -0500
+X-Gmail-Original-Message-ID: <CADRPPNTg52BNx6bN1P9+WQnf+gG8p2hnLuxWEUXoy1CSt55Npw@mail.gmail.com>
+Message-ID: <CADRPPNTg52BNx6bN1P9+WQnf+gG8p2hnLuxWEUXoy1CSt55Npw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Documentation: dt: binding: rtc: add binding for ftm
+ alarm driver
+To:     Biwen Li <biwen.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pinning of sensitive CR0 and CR4 bits caused a boot crash when loading
-the kvm_intel module on a kernel compiled with CONFIG_PARAVIRT=n.
+On Fri, Jul 5, 2019 at 6:26 AM Biwen Li <biwen.li@nxp.com> wrote:
+>
+> The patch adds binding for ftm alarm driver
+>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 
-The reason is that the static key which controls the pinning is marked RO
-after init. The kvm_intel module contains a CR4 write which requires to
-update the static key entry list. That obviously does not work when the key
-is in a RO section.
+Please add dts maintainer for binding patches.  I have added Rob.
 
-With CONFIG_PARAVIRT enabled this does not happen because the CR4 write
-uses the paravirt indirection and the actual write function is built in.
+> ---
+>  .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> new file mode 100644
+> index 0000000..0f330b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> @@ -0,0 +1,33 @@
+> +Freescale FlexTimer Module (FTM) Alarm
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
+> +              supported chips include
+> +              "fsl,ls1012a-ftm-alarm"
+> +              "fsl,ls1021a-ftm-alarm"
+> +              "fsl,ls1028a-ftm-alarm"
+> +              "fsl,ls1043a-ftm-alarm"
+> +              "fsl,ls1046a-ftm-alarm"
+> +              "fsl,ls1088a-ftm-alarm"
+> +              "fsl,ls208xa-ftm-alarm"
+> +- reg : Specifies base physical address and size of the register sets for the
+> +  FlexTimer Module and base physical address of IP Powerdown Exception Control
+> +  Register.
+> +- reg-names: names of the mapped memory regions listed in regs property.
+> +  should include the following entries:
+> +  "ftm":    Address of the register sets for FlexTimer Module
+> +  "pmctrl": Address of IP Powerdown Exception Control register
 
-As the key is intended to be immutable after init, move
-native_write_cr0/3() out of line.
+I assume we don't need this after we let the rcpm driver to deal with this.
 
-While at it consolidate the update of the cr4 shadow variable and store the
-value right away when the pinning is initialized on a booting CPU. No point
-in reading it back 20 instructions later. This allows to confine the static
-key and the pinning variable to cpu/common and allows to mark them static.
+> +- interrupts : Should be the FlexTimer Module interrupt.
+> +- big-endian: If the host controller is big-endian mode, specify this property.
+> +  The default endian mode is little-endian.
 
-Fixes: 8dbec27a242c ("x86/asm: Pin sensitive CR0 bits")
-Fixes: 873d50d58f67 ("x86/asm: Pin sensitive CR4 bits")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Xi Ruoyao <xry111@mengyan1223.wang>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Xi Ruoyao <xry111@mengyan1223.wang>
----
- arch/x86/include/asm/processor.h     |    1 
- arch/x86/include/asm/special_insns.h |   41 -------------------
- arch/x86/kernel/cpu/common.c         |   72 +++++++++++++++++++++++++++--------
- arch/x86/kernel/smpboot.c            |   14 ------
- arch/x86/xen/smp_pv.c                |    1 
- 5 files changed, 61 insertions(+), 68 deletions(-)
+If it is optional as suggested by the description, put it in the
+optinal property section.
 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -741,6 +741,7 @@ extern void load_direct_gdt(int);
- extern void load_fixmap_gdt(int);
- extern void load_percpu_segment(int);
- extern void cpu_init(void);
-+extern void cr4_init(void);
- 
- static inline unsigned long get_debugctlmsr(void)
- {
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -18,9 +18,7 @@
-  */
- extern unsigned long __force_order;
- 
--/* Starts false and gets enabled once CPU feature detection is done. */
--DECLARE_STATIC_KEY_FALSE(cr_pinning);
--extern unsigned long cr4_pinned_bits;
-+void native_write_cr0(unsigned long val);
- 
- static inline unsigned long native_read_cr0(void)
- {
-@@ -29,24 +27,6 @@ static inline unsigned long native_read_
- 	return val;
- }
- 
--static inline void native_write_cr0(unsigned long val)
--{
--	unsigned long bits_missing = 0;
--
--set_register:
--	asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
--
--	if (static_branch_likely(&cr_pinning)) {
--		if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
--			bits_missing = X86_CR0_WP;
--			val |= bits_missing;
--			goto set_register;
--		}
--		/* Warn after we've set the missing bits. */
--		WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
--	}
--}
--
- static inline unsigned long native_read_cr2(void)
- {
- 	unsigned long val;
-@@ -91,24 +71,7 @@ static inline unsigned long native_read_
- 	return val;
- }
- 
--static inline void native_write_cr4(unsigned long val)
--{
--	unsigned long bits_missing = 0;
--
--set_register:
--	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
--
--	if (static_branch_likely(&cr_pinning)) {
--		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
--			bits_missing = ~val & cr4_pinned_bits;
--			val |= bits_missing;
--			goto set_register;
--		}
--		/* Warn after we've set the missing bits. */
--		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
--			  bits_missing);
--	}
--}
-+void native_write_cr4(unsigned long val);
- 
- #ifdef CONFIG_X86_64
- static inline unsigned long native_read_cr8(void)
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -366,10 +366,62 @@ static __always_inline void setup_umip(s
- 	cr4_clear_bits(X86_CR4_UMIP);
- }
- 
--DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
--EXPORT_SYMBOL(cr_pinning);
--unsigned long cr4_pinned_bits __ro_after_init;
--EXPORT_SYMBOL(cr4_pinned_bits);
-+static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
-+static unsigned long cr4_pinned_bits __ro_after_init;
-+
-+void native_write_cr0(unsigned long val)
-+{
-+	unsigned long bits_missing = 0;
-+
-+set_register:
-+	asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
-+
-+	if (static_branch_likely(&cr_pinning)) {
-+		if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
-+			bits_missing = X86_CR0_WP;
-+			val |= bits_missing;
-+			goto set_register;
-+		}
-+		/* Warn after we've set the missing bits. */
-+		WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
-+	}
-+}
-+EXPORT_SYMBOL(native_write_cr0);
-+
-+void native_write_cr4(unsigned long val)
-+{
-+	unsigned long bits_missing = 0;
-+
-+set_register:
-+	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
-+
-+	if (static_branch_likely(&cr_pinning)) {
-+		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
-+			bits_missing = ~val & cr4_pinned_bits;
-+			val |= bits_missing;
-+			goto set_register;
-+		}
-+		/* Warn after we've set the missing bits. */
-+		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
-+			  bits_missing);
-+	}
-+}
-+EXPORT_SYMBOL(native_write_cr4);
-+
-+void cr4_init(void)
-+{
-+	unsigned long cr4 = __read_cr4();
-+
-+	if (boot_cpu_has(X86_FEATURE_PCID))
-+		cr4 |= X86_CR4_PCIDE;
-+	if (static_branch_likely(&cr_pinning))
-+		cr4 |= cr4_pinned_bits;
-+
-+	__write_cr4(cr4);
-+
-+	/* Initialize cr4 shadow for this CPU. */
-+	this_cpu_write(cpu_tlbstate.cr4, cr4);
-+}
- 
- /*
-  * Once CPU feature detection is finished (and boot params have been
-@@ -1723,12 +1775,6 @@ void cpu_init(void)
- 
- 	wait_for_master_cpu(cpu);
- 
--	/*
--	 * Initialize the CR4 shadow before doing anything that could
--	 * try to read it.
--	 */
--	cr4_init_shadow();
--
- 	if (cpu)
- 		load_ucode_ap();
- 
-@@ -1823,12 +1869,6 @@ void cpu_init(void)
- 
- 	wait_for_master_cpu(cpu);
- 
--	/*
--	 * Initialize the CR4 shadow before doing anything that could
--	 * try to read it.
--	 */
--	cr4_init_shadow();
--
- 	show_ucode_info_early();
- 
- 	pr_info("Initializing CPU#%d\n", cpu);
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -210,28 +210,16 @@ static int enable_start_cpu0;
-  */
- static void notrace start_secondary(void *unused)
- {
--	unsigned long cr4 = __read_cr4();
--
- 	/*
- 	 * Don't put *anything* except direct CPU state initialization
- 	 * before cpu_init(), SMP booting is too fragile that we want to
- 	 * limit the things done here to the most necessary things.
- 	 */
--	if (boot_cpu_has(X86_FEATURE_PCID))
--		cr4 |= X86_CR4_PCIDE;
--	if (static_branch_likely(&cr_pinning))
--		cr4 |= cr4_pinned_bits;
--
--	__write_cr4(cr4);
-+	cr4_init();
- 
- #ifdef CONFIG_X86_32
- 	/* switch away from the initial page table */
- 	load_cr3(swapper_pg_dir);
--	/*
--	 * Initialize the CR4 shadow before doing anything that could
--	 * try to read it.
--	 */
--	cr4_init_shadow();
- 	__flush_tlb_all();
- #endif
- 	load_current_idt();
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -58,6 +58,7 @@ static void cpu_bringup(void)
- {
- 	int cpu;
- 
-+	cr4_init();
- 	cpu_init();
- 	touch_softlockup_watchdog();
- 	preempt_disable();
+> +
+> +Example:
+> +ftm_alarm0: timer@29d0000 {
+> +       compatible = "fsl,ls1043a-ftm-alarm";
+> +       reg = <0x0 0x29d0000 0x0 0x10000>,
+> +             <0x0 0x1ee2140 0x0 0x4>;
+> +       reg-names = "ftm", "pmctrl";
+> +       interrupts = <0 86 0x4>;
+> +       big-endian;
+> +};
+> --
+> 2.7.4
+>
