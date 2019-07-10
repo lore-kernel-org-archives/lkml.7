@@ -2,112 +2,90 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DB1C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8DCC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F7A20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A1020844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1oBImM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfGJTQk (ORCPT
+        id S1728150AbfGJTWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:16:40 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47385 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfGJTQk (ORCPT
+        Wed, 10 Jul 2019 15:22:31 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:34924 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbfGJTWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:16:40 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id EF28B805E5; Wed, 10 Jul 2019 21:16:26 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 21:16:37 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v3 4/4] backlight: add led-backlight driver
-Message-ID: <20190710191637.GD22995@amd>
-References: <20190710123932.28244-1-jjhiblot@ti.com>
- <20190710123932.28244-5-jjhiblot@ti.com>
+        Wed, 10 Jul 2019 15:22:31 -0400
+Received: by mail-lf1-f46.google.com with SMTP id p197so2390683lfa.2;
+        Wed, 10 Jul 2019 12:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z2Uqn8KaqAt4pyqoTXJXbIy2RR8WRUZ2AX1N5WTbhWA=;
+        b=j1oBImM2v6CYPEZCuqx5JvSx9EqzQn/b7nImCL79tH/QPlYvqpCUNjDdPwEuFv/h+w
+         M4hXGwfvywI9Z+L2+TNoHOj1AH0r1FJ5o9gxAj6Y3eL8mxlNyP08oHRfh3k36knx/+nX
+         edORECxbrNGtc6yhyBNIv6LW73LVsjenamUSwTFOZnK4DsUPaRtjdvwUOSYd7xqvXfw2
+         jK/kX5MKh58E3KvS0GLDU6rdb58Jf4xgZbnpU7zm8bAqsEdSnZkntHLVZmddhEgCmlVg
+         Ji6W+slznOUazBqFjbjZ3esSK2207S53fSatvqhCEG9u9IIeOOPWGIzmQ+xCThb2kIwg
+         7FXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z2Uqn8KaqAt4pyqoTXJXbIy2RR8WRUZ2AX1N5WTbhWA=;
+        b=P6ZffLh4C8PxojKOsBAyeXqxJmIb9bE0Uw9Ok1Sg2LJZtsoKOWIBrlILfnT0qXxXxZ
+         DXTpVWaSPg7LdKp9vtY/MLGc1IhpFs2u+KNlEW57eyLYWx0kQ9OqzR7sj4GLHQGVEaRd
+         Zue2nkfmuRwcuR3OZTf3FqMPheITorN3JW729wHhpZvUINOMIE3dTAouN/tNp7DsBip8
+         Ne57awE1fO10lmLlRkrc7mPyEeOctqg6rBYsU9WYTRzRVwfO4uPkMlFsqs33mQPf8zDh
+         mZO5vgwTTrQVUR9Rc/nFJsBUgSY+48gQ31kJjKSpyjvG5nAp7CWMbaDkb8mgsB2Rmw6r
+         vFTA==
+X-Gm-Message-State: APjAAAUZvIlld0we987Jp5nXZS7zyvom5it8SiB2ZK+gLXrUl/qMT6xo
+        vQBAFUClblsnZ2eIi3O7hj0MCQqlXXg=
+X-Google-Smtp-Source: APXvYqxqDSVbdOa6febH/m2WRnsXKHZT9QvvSWZpiCOCKOmHDol6eFPb/KT8/8XyI9A1iWwQl5KE+g==
+X-Received: by 2002:ac2:4202:: with SMTP id y2mr5892071lfh.178.1562786548105;
+        Wed, 10 Jul 2019 12:22:28 -0700 (PDT)
+Received: from arch.lan (89-70-29-67.dynamic.chello.pl. [89.70.29.67])
+        by smtp.gmail.com with ESMTPSA id a70sm603515ljf.57.2019.07.10.12.22.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 12:22:27 -0700 (PDT)
+From:   Tomasz Duszynski <tduszyns@gmail.com>
+To:     linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        jic23@kernel.org, robh+dt@kernel.org,
+        Tomasz Duszynski <tduszyns@gmail.com>
+Subject: [PATCH 0/2] iio: chemical: pms7003: convert bindings to yaml
+Date:   Wed, 10 Jul 2019 21:21:53 +0200
+Message-Id: <20190710192155.11489-1-tduszyns@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="gE7i1rD7pdK0Ng3j"
-Content-Disposition: inline
-In-Reply-To: <20190710123932.28244-5-jjhiblot@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert plantower pms7003 air pollution sensor bindings to yaml and
+while at it add myself as a driver maintainer.
 
---gE7i1rD7pdK0Ng3j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tomasz Duszynski (2):
+  dt-bindings: iio: chemical: pms7003: convert bindings to yaml
+  MAINTAINERS: add entry for plantower pms7003 driver
 
-On Wed 2019-07-10 14:39:32, Jean-Jacques Hiblot wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->=20
-> This patch adds a led-backlight driver (led_bl), which is similar to
-> pwm_bl except the driver uses a LED class driver to adjust the
-> brightness in the HW. Multiple LEDs can be used for a single backlight.
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+ .../iio/chemical/plantower,pms7003.txt        | 26 ----------
+ .../iio/chemical/plantower,pms7003.yaml       | 51 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 3 files changed, 57 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
 
-> +
-> +		/*
-> +		 *try to map actual LED brightness to backlight brightness
-> +		 * level
-> +		 */
+--
+2.22.0
 
-"* Try"
-
-> +		db =3D priv->default_brightness;
-> +		for (i =3D 0 ; i < num_levels; i++) {
-> +			if ((i && db > levels[i-1]) && db <=3D levels[i])
-> +				break;
-> +		}
-> +		priv->default_brightness =3D i;
-> +		priv->max_brightness =3D num_levels - 1;
-> +		priv->levels =3D levels;
-> +	} else if (num_levels >=3D 0)
-> +		dev_warn(dev, "not enought levels defined\n");
-
-"Not enough"
-
-> +	ret =3D of_property_read_u32(node, "default-brightness-level", &value);
-> +	if (!ret && value <=3D priv->max_brightness)
-> +		priv->default_brightness =3D value;
-> +	else if (!ret  && value > priv->max_brightness)
-> +		dev_warn(dev, "invalid default brightness. ignoring it\n");
-
-"Invalid... Ignoring it."
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---gE7i1rD7pdK0Ng3j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0mOZUACgkQMOfwapXb+vKGjACbBk0etpxF6Viyuje0o1lj4McY
-wJgAoKbPa8b/CQqQPf5ELQ7VvqyxdarH
-=TOSr
------END PGP SIGNATURE-----
-
---gE7i1rD7pdK0Ng3j--
