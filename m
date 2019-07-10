@@ -2,274 +2,122 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459FDC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E45C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFC920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD8420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:05:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPGy1Jrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbfGJTCM (ORCPT
+        id S1728021AbfGJTFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:02:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59064 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726245AbfGJTCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:02:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0B052B030;
-        Wed, 10 Jul 2019 19:02:10 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4AAE71E43B7; Wed, 10 Jul 2019 21:02:04 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 21:02:04 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190710190204.GB14701@quack2.suse.cz>
-References: <20190703121743.GH1729@bombadil.infradead.org>
- <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
- <20190703195302.GJ1729@bombadil.infradead.org>
- <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org>
- <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
+        Wed, 10 Jul 2019 15:05:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34885 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfGJTFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:05:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y4so3630029wrm.2;
+        Wed, 10 Jul 2019 12:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QpN5CHwpzVqFTlvbsrr+q70h5+rFXHepQXU4UwgW+ak=;
+        b=iPGy1Jrmt2gRxtF412YFifkUTN9fK7qKNXNPavYbpyRr3ZQ8LCSQBTWs9DNI5a7qBj
+         1f42sTxWjq7PCoeTG3rGjaBr9eo4WoqGdTuhHO2somI7t8Vspvudrwu57a+wy2GZj+pj
+         AzTFnz6zHKdD0YtnWo+Es9N/jsq+n8rmlNCzLY95WxC6GGA2oxgU/C8fJiBgdlMve0sz
+         DpaSU6WLDNviqMvV4fuUs/PYlL1lu2vxv+l4lRQ5sRszzJvNx38VzxlhJ1EFGAWIpDJZ
+         CWhms+nFQhkNKGPgMNC/NLfDrtcF27mVxrxrXeVLvxXM1UF4HJpDIWbItUV1eUnKzqzQ
+         u8hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QpN5CHwpzVqFTlvbsrr+q70h5+rFXHepQXU4UwgW+ak=;
+        b=X2fqjZ1OEoMsgxFISrQKob9nK4ulby9m/Hm0WOnZdEvGNmZqlLWGNWxkqyDvBB+m96
+         c10EmN0T5/Y5j9uwsXQVTPtw/j8IHjif4P86pDJEJ8Uhnd4v6mLWFjGK0SVi1cc3QEO3
+         Jn/9/9XqW+l0vqNIB6gfs6nwvPOtzSO4YmaFBvTkaEZ+Ly4inWYUDfDK7IVRIsvtSyKt
+         PVHgs7Hk9AV5p2Wu9aE3fS/4yYUiY70/4641Ik9ujR9GAkX7alzxyzCb3VEP04lOjBh0
+         Qn6MRBf5Jo3C5e5tJjDXUSiCCYnbKH6QU3tet8YOVRrSUrj4vksasjViIrIvi55pILnN
+         duqQ==
+X-Gm-Message-State: APjAAAVPb0sB4kJAtTPYLVYY/baXoRlUlXQ79MHMT+pAyhX7Ys524ixa
+        fnNFa14WqXxdXCQLjf0suJMGxIalfxCVxg==
+X-Google-Smtp-Source: APXvYqyLA5hi4rqSfStW9zfDiOCykfIKuz4yycIzUOpHzjDAzYmb0ho1+ZaBmLj+T0pW1JsF0/IzFQ==
+X-Received: by 2002:adf:f904:: with SMTP id b4mr34063592wrr.291.1562785504941;
+        Wed, 10 Jul 2019 12:05:04 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id b2sm3727191wrp.72.2019.07.10.12.05.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 12:05:04 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] net/mlx5e: Move priv variable into case statement in mlx5e_setup_tc
+Date:   Wed, 10 Jul 2019 12:05:02 -0700
+Message-Id: <20190710190502.104010-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="Nq2Wo0NMKNjxTN9z"
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is an unused variable warning on arm64 defconfig when
+CONFIG_MLX5_ESWITCH is unset:
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+drivers/net/ethernet/mellanox/mlx5/core/en_main.c:3467:21: warning:
+unused variable 'priv' [-Wunused-variable]
+        struct mlx5e_priv *priv = netdev_priv(dev);
+                           ^
+1 warning generated.
 
-On Fri 05-07-19 13:47:02, Dan Williams wrote:
-> On Fri, Jul 5, 2019 at 12:10 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Thu, Jul 04, 2019 at 04:27:14PM -0700, Dan Williams wrote:
-> > > On Thu, Jul 4, 2019 at 12:14 PM Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > > On Thu, Jul 04, 2019 at 06:54:50PM +0200, Jan Kara wrote:
-> > > > > On Wed 03-07-19 20:27:28, Matthew Wilcox wrote:
-> > > > > > So I think we're good for all current users.
-> > > > >
-> > > > > Agreed but it is an ugly trap. As I already said, I'd rather pay the
-> > > > > unnecessary cost of waiting for pte entry and have an easy to understand
-> > > > > interface. If we ever have a real world use case that would care for this
-> > > > > optimization, we will need to refactor functions to make this possible and
-> > > > > still keep the interfaces sane. For example get_unlocked_entry() could
-> > > > > return special "error code" indicating that there's no entry with matching
-> > > > > order in xarray but there's a conflict with it. That would be much less
-> > > > > error-prone interface.
-> > > >
-> > > > This is an internal interface.  I think it's already a pretty gnarly
-> > > > interface to use by definition -- it's going to sleep and might return
-> > > > almost anything.  There's not much scope for returning an error indicator
-> > > > either; value entries occupy half of the range (all odd numbers between 1
-> > > > and ULONG_MAX inclusive), plus NULL.  We could use an internal entry, but
-> > > > I don't think that makes the interface any easier to use than returning
-> > > > a locked entry.
-> > > >
-> > > > I think this iteration of the patch makes it a little clearer.  What do you
-> > > > think?
-> > > >
-> > >
-> > > Not much clearer to me. get_unlocked_entry() is now misnamed and this
-> >
-> > misnamed?  You'd rather it was called "try_get_unlocked_entry()"?
-> 
-> I was thinking more along the lines of
-> get_unlocked_but_sometimes_locked_entry(), i.e. per Jan's feedback to
-> keep the interface simple.
+Move it down into the case statement where it is used.
 
-So how about the attached patch? That keeps the interface sane and passes a
-smoketest for me (full fstest run running). Obviously it also needs a
-proper changelog...
-
-								Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
-
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-dax-Fix-missed-PMD-wakeups.patch"
-
-From 1aeaba0e061b2bf38143f21d054e66853543a680 Mon Sep 17 00:00:00 2001
-From: Jan Kara <jack@suse.cz>
-Date: Wed, 10 Jul 2019 20:28:37 +0200
-Subject: [PATCH] dax: Fix missed PMD wakeups
-
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 4e95bc268b91 ("net: flow_offload: add flow_block_cb_setup_simple()")
+Link: https://github.com/ClangBuiltLinux/linux/issues/597
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- fs/dax.c | 46 +++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index fe5e33810cd4..3fe655d38c7a 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -191,15 +191,18 @@ static void dax_wake_entry(struct xa_state *xas, void *entry, bool wake_all)
- 		__wake_up(wq, TASK_NORMAL, wake_all ? 0 : 1, &key);
- }
- 
-+#define DAX_ENTRY_CONFLICT dax_make_entry(pfn_to_pfn_t(1), DAX_EMPTY)
- /*
-  * Look up entry in page cache, wait for it to become unlocked if it
-  * is a DAX entry and return it.  The caller must subsequently call
-  * put_unlocked_entry() if it did not lock the entry or dax_unlock_entry()
-- * if it did.
-+ * if it did. 'order' is the minimum order of entry to return. If there's no
-+ * entry of sufficiently large order but there are some entries of lower order
-+ * in the range described by xas, return special DAX_ENTRY_CONFLICT value.
-  *
-  * Must be called with the i_pages lock held.
-  */
--static void *get_unlocked_entry(struct xa_state *xas)
-+static void *get_unlocked_entry(struct xa_state *xas, unsigned int order)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 6d0ae87c8ded..651eb714eb5b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3464,15 +3464,16 @@ static LIST_HEAD(mlx5e_block_cb_list);
+ static int mlx5e_setup_tc(struct net_device *dev, enum tc_setup_type type,
+ 			  void *type_data)
  {
- 	void *entry;
- 	struct wait_exceptional_entry_queue ewait;
-@@ -210,6 +213,8 @@ static void *get_unlocked_entry(struct xa_state *xas)
- 
- 	for (;;) {
- 		entry = xas_find_conflict(xas);
-+		if (dax_entry_order(entry) < order)
-+			return DAX_ENTRY_CONFLICT;
- 		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)) ||
- 				!dax_is_locked(entry))
- 			return entry;
-@@ -254,7 +259,7 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
- static void put_unlocked_entry(struct xa_state *xas, void *entry)
- {
- 	/* If we were the only waiter woken, wake the next one */
--	if (entry)
-+	if (entry && entry != DAX_ENTRY_CONFLICT)
- 		dax_wake_entry(xas, entry, false);
- }
- 
-@@ -461,7 +466,7 @@ void dax_unlock_page(struct page *page, dax_entry_t cookie)
-  * overlap with xarray value entries.
-  */
- static void *grab_mapping_entry(struct xa_state *xas,
--		struct address_space *mapping, unsigned long size_flag)
-+		struct address_space *mapping, unsigned int order)
- {
- 	unsigned long index = xas->xa_index;
- 	bool pmd_downgrade = false; /* splitting PMD entry into PTE entries? */
-@@ -469,20 +474,16 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 
- retry:
- 	xas_lock_irq(xas);
--	entry = get_unlocked_entry(xas);
+-	struct mlx5e_priv *priv = netdev_priv(dev);
 -
-+	entry = get_unlocked_entry(xas, order);
-+	if (entry == DAX_ENTRY_CONFLICT)
-+		goto fallback;
- 	if (entry) {
- 		if (!xa_is_value(entry)) {
- 			xas_set_err(xas, EIO);
- 			goto out_unlock;
- 		}
- 
--		if (size_flag & DAX_PMD) {
--			if (dax_is_pte_entry(entry)) {
--				put_unlocked_entry(xas, entry);
--				goto fallback;
--			}
--		} else { /* trying to grab a PTE entry */
-+		if (order == 0) {
- 			if (dax_is_pmd_entry(entry) &&
- 			    (dax_is_zero_entry(entry) ||
- 			     dax_is_empty_entry(entry))) {
-@@ -523,7 +524,11 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 	if (entry) {
- 		dax_lock_entry(xas, entry);
- 	} else {
--		entry = dax_make_entry(pfn_to_pfn_t(0), size_flag | DAX_EMPTY);
-+		unsigned long flags = DAX_EMPTY;
+ 	switch (type) {
+ #ifdef CONFIG_MLX5_ESWITCH
+-	case TC_SETUP_BLOCK:
++	case TC_SETUP_BLOCK: {
++		struct mlx5e_priv *priv = netdev_priv(dev);
 +
-+		if (order > 0)
-+			flags |= DAX_PMD;
-+		entry = dax_make_entry(pfn_to_pfn_t(0), flags);
- 		dax_lock_entry(xas, entry);
- 		if (xas_error(xas))
- 			goto out_unlock;
-@@ -594,7 +599,7 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 		if (WARN_ON_ONCE(!xa_is_value(entry)))
- 			continue;
- 		if (unlikely(dax_is_locked(entry)))
--			entry = get_unlocked_entry(&xas);
-+			entry = get_unlocked_entry(&xas, 0);
- 		if (entry)
- 			page = dax_busy_page(entry);
- 		put_unlocked_entry(&xas, entry);
-@@ -621,7 +626,7 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	void *entry;
- 
- 	xas_lock_irq(&xas);
--	entry = get_unlocked_entry(&xas);
-+	entry = get_unlocked_entry(&xas, 0);
- 	if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
- 		goto out;
- 	if (!trunc &&
-@@ -848,7 +853,7 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
- 	if (unlikely(dax_is_locked(entry))) {
- 		void *old_entry = entry;
- 
--		entry = get_unlocked_entry(xas);
-+		entry = get_unlocked_entry(xas, 0);
- 
- 		/* Entry got punched out / reallocated? */
- 		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
-@@ -1509,7 +1514,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
- 	 * entry is already in the array, for instance), it will return
- 	 * VM_FAULT_FALLBACK.
- 	 */
--	entry = grab_mapping_entry(&xas, mapping, DAX_PMD);
-+	entry = grab_mapping_entry(&xas, mapping, PMD_ORDER);
- 	if (xa_is_internal(entry)) {
- 		result = xa_to_internal(entry);
- 		goto fallback;
-@@ -1658,11 +1663,10 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
- 	vm_fault_t ret;
- 
- 	xas_lock_irq(&xas);
--	entry = get_unlocked_entry(&xas);
-+	entry = get_unlocked_entry(&xas, order);
- 	/* Did we race with someone splitting entry or so? */
--	if (!entry ||
--	    (order == 0 && !dax_is_pte_entry(entry)) ||
--	    (order == PMD_ORDER && !dax_is_pmd_entry(entry))) {
-+	if (!entry || entry == DAX_ENTRY_CONFLICT ||
-+	    (order == 0 && !dax_is_pte_entry(entry))) {
- 		put_unlocked_entry(&xas, entry);
- 		xas_unlock_irq(&xas);
- 		trace_dax_insert_pfn_mkwrite_no_entry(mapping->host, vmf,
+ 		return flow_block_cb_setup_simple(type_data,
+ 						  &mlx5e_block_cb_list,
+ 						  mlx5e_setup_tc_block_cb,
+ 						  priv, priv, true);
++	}
+ #endif
+ 	case TC_SETUP_QDISC_MQPRIO:
+ 		return mlx5e_setup_tc_mqprio(dev, type_data);
 -- 
-2.16.4
+2.22.0
 
-
---Nq2Wo0NMKNjxTN9z--
