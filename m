@@ -2,102 +2,76 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8E6C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A6FC73C65
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937D220693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A9220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:28:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562718506;
+	bh=pgC6c3DPV5AItfmGQQFtB/x1Xt0vg1j5Q5WBogBNnOY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h9IXVnQa7/Bcm0IQ5d8OgiaLTwtwbZIdKk13g5Wz9MqCVvHgp7AfE/r8OdPinNzzE
+	 KHNvqX3rP1jLN2w5lIibA0uPXIINf2jNlqq9AgXrjYUdFzMMTh3+hfCv5N+2XmqWDT
+	 cZlFqwZLn9wgFrcvQ82QUZppeo/c4jY52v3XNwKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfGJA0W convert rfc822-to-8bit (ORCPT
+        id S1726802AbfGJA2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 20:26:22 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:50328 "EHLO mxct.zte.com.cn"
+        Tue, 9 Jul 2019 20:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGJA0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 20:26:21 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 0AD18C49280A697936D4;
-        Wed, 10 Jul 2019 08:26:13 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x6A0Po56035564;
-        Wed, 10 Jul 2019 08:25:50 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019071008260808-2222445 ;
-          Wed, 10 Jul 2019 08:26:08 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     pbonzini@redhat.com
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, sean.j.christopherson@intel.com,
-        up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: [PATCH v2] kvm: x86: Fix -Wmissing-prototypes warnings
-Date:   Wed, 10 Jul 2019 08:24:03 +0800
-Message-Id: <1562718243-46068-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-10 08:26:08,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-10 08:25:53
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl2.zte.com.cn x6A0Po56035564
+        id S1726133AbfGJA2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 20:28:25 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E7DC20645;
+        Wed, 10 Jul 2019 00:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562718504;
+        bh=pgC6c3DPV5AItfmGQQFtB/x1Xt0vg1j5Q5WBogBNnOY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bcORr81NEQsz5D+zOUG6k8DlarV4FeSW19kgXYYSMd9qxtzYAp2QLxXViDAJRru6M
+         dtwMY3UTEic/u5ydDJe4uucQjbfejE/8h+7uvSrHfdzgxUJFHps8dEZGqI+bVmC1qW
+         p6MjkxHTx75iefkEq1M0pWmNUiKj0HVfWBXbH/Ys=
+Date:   Tue, 9 Jul 2019 17:28:23 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        =?ISO-8859-1?Q?J?= =?ISO-8859-1?Q?=E9r=F4me?= Glisse 
+        <jglisse@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
+Message-Id: <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
+In-Reply-To: <20190709223556.28908-1-rcampbell@nvidia.com>
+References: <20190709223556.28908-1-rcampbell@nvidia.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get a warning when build kernel W=1:
+On Tue, 9 Jul 2019 15:35:56 -0700 Ralph Campbell <rcampbell@nvidia.com> wrote:
 
-arch/x86/kvm/../../../virt/kvm/eventfd.c:48:1: warning: no previous prototype for ‘kvm_arch_irqfd_allowed’ [-Wmissing-prototypes]
- kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
- ^
+> When migrating a ZONE device private page from device memory to system
+> memory, the subpage pointer is initialized from a swap pte which computes
+> an invalid page pointer. A kernel panic results such as:
+> 
+> BUG: unable to handle page fault for address: ffffea1fffffffc8
+> 
+> Initialize subpage correctly before calling page_remove_rmap().
 
-The reason is kvm_arch_irqfd_allowed() is declared in arch/x86/kvm/irq.h,
-which is not included by eventfd.c. Considering kvm_arch_irqfd_allowed()
-is a weakly defined function in eventfd.c, remove the declaration to
-kvm_host.h can fix this.
+I think this is
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-v2: add comments about the reason.
----
- arch/x86/kvm/irq.h       | 1 -
- include/linux/kvm_host.h | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+Fixes:  a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
+Cc: stable
 
-diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-index d6519a3..7c6233d 100644
---- a/arch/x86/kvm/irq.h
-+++ b/arch/x86/kvm/irq.h
-@@ -102,7 +102,6 @@ static inline int irqchip_in_kernel(struct kvm *kvm)
- 	return mode != KVM_IRQCHIP_NONE;
- }
- 
--bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
- void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu);
- void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu);
- void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d1ad38a..5f04005 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -990,6 +990,7 @@ void kvm_unregister_irq_ack_notifier(struct kvm *kvm,
- 				   struct kvm_irq_ack_notifier *kian);
- int kvm_request_irq_source_id(struct kvm *kvm);
- void kvm_free_irq_source_id(struct kvm *kvm, int irq_source_id);
-+bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
- 
- /*
-  * search_memslots() and __gfn_to_memslot() are here because they are
--- 
-1.8.3.1
-
+yes?
