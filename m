@@ -2,135 +2,126 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1786C004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED88C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABC020844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562747279;
-	bh=KtzVii5P4LP//T6JpRtFhPSLRcL9TdMNzIFDUtImHus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zvA/3x0BBvCPnw7XDz5SFw6P67OPWeNHBQ4jDOb3bg6yNpux3joG5mrHdwtjHWBhA
-	 lz2WK/rMFKThXscyesdvCpC1AA0dnQbSVBNzFQL3m6Xpahi7fauDu/nN8IUgkowwIW
-	 zy4YXnnXGMg36T/rVXw6ua07B5EWTHiuRDolfe5U=
+	by mail.kernel.org (Postfix) with ESMTP id 1DDA520651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfGJI16 (ORCPT
+        id S1727464AbfGJI2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 04:28:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:57452 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfGJI16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:27:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AF220651;
-        Wed, 10 Jul 2019 08:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562747277;
-        bh=KtzVii5P4LP//T6JpRtFhPSLRcL9TdMNzIFDUtImHus=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qR49111kqThrC5A5mX+wugORt3GbwDStFhBcJX2gaNEdewA1aeZQ1JHwfhfJRyEZK
-         tP50l2WhV6CKmi0jDYoZDp03A/a2GGDPZ0TDqPIHnG8nKkh0cxtTkyqwBgSc5M6Stb
-         HRi5PNHjkG0VLqCovtd7C3IHEy0mjXsQq4BaXhOU=
-Date:   Wed, 10 Jul 2019 09:27:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Huw Davies <huw@codeweavers.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        id S1726162AbfGJI2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 04:28:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8ACE7344;
+        Wed, 10 Jul 2019 01:28:31 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB2493F246;
+        Wed, 10 Jul 2019 01:28:30 -0700 (PDT)
+Subject: Re: [PATCH 05/12] irqchip/gic-v3-its: Fix misuse of GENMASK macro
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Peter Collingbourne <pcc@google.com>
-Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
-Message-ID: <20190710082750.mvm3e6myzpqsurga@willie-the-truck>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-11-vincenzo.frascino@arm.com>
- <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com>
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-kernel@vger.kernel.org
+References: <cover.1562734889.git.joe@perches.com>
+ <ab5deb4fc3cd604cb620054770b7d00016d736bc.1562734889.git.joe@perches.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <8b7cffb3-c6a5-cefb-089c-b71d3202ca15@arm.com>
+Date:   Wed, 10 Jul 2019 09:28:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <ab5deb4fc3cd604cb620054770b7d00016d736bc.1562734889.git.joe@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On 10/07/2019 06:04, Joe Perches wrote:
+> Arguments are supposed to be ordered high then low.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 35500801dc2b..730fbe0e2a9d 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -185,7 +185,7 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
+>  
+>  static struct its_collection *valid_col(struct its_collection *col)
+>  {
+> -	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(0, 15)))
+> +	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
+>  		return NULL;
+>  
+>  	return col;
+> 
 
-On Tue, Jul 09, 2019 at 09:02:54PM -0700, John Stultz wrote:
-> On Fri, Jun 21, 2019 at 3:18 AM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
-> >
-> > Provide the arm64 compat (AArch32) vDSO in kernel/vdso32 in a similar
-> > way to what happens in kernel/vdso.
-> >
-> > The compat vDSO leverages on an adaptation of the arm architecture code
-> > with few changes:
-> >  - Use of lib/vdso for gettimeofday
-> >  - Implementation of syscall based fallback
-> >  - Introduction of clock_getres for the compat library
-> >  - Implementation of trampolines
-> >  - Implementation of elf note
-> >
-> > To build the compat vDSO a 32 bit compiler is required and needs to be
-> > specified via CONFIG_CROSS_COMPILE_COMPAT_VDSO.
-> >
-> 
-> Hey Vincenzo!
->   Congrats on getting this work merged, I know its been a long effort
-> over a number of years!
-> 
-> Though unfortunately, it seems the arm64 vdso code that just landed is
-> breaking AOSP for me.
-> 
-> I see a lot of the following errors:
-> 01-01 01:22:14.097   755   755 F libc    : Fatal signal 11 (SIGSEGV),
-> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 755 (cameraserver),
-> pid 755 (cameraserver)
-> 01-01 01:22:14.112   759   759 F libc    : Fatal signal 11 (SIGSEGV),
-> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 759
-> (android.hardwar), pid 759 (android.hardwar)
-> 01-01 01:22:14.120   756   756 F libc    : Fatal signal 11 (SIGSEGV),
-> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 756 (drmserver),
-> pid 756 (drmserver)
-> 
-> Which go away if I revert the vdso merge that went in via tip/timers.
-> 
-> I tried to bisect things down a bit, but as some later fixes are
-> required (at one point, date was returning the start epoch and never
-> increasing), this hasn't worked too well. But I'm guessing since I
-> see: "CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will
-> not be built", and the system is half working, I'm guessing this is an
-> issue with just the 32bit code failing.  While I can try to sort out
-> the proper CROSS_COMPILE_COMPAT in my build environment, I assume
-> userland shouldn't be crashing if that value isn't set.
-> 
-> Any chance this issue has already been raised?
+Well caught.
 
-First I've seen of it, although Vincenzo is likely to know better than me.
-In the meantime, please can you share your .config?
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 
 Thanks,
 
-Will
+	M.
+-- 
+Jazz is not dead. It just smells funny...
