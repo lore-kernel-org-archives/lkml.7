@@ -4,39 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE33C73C6E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F8AC73C6D
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DB52083D
+	by mail.kernel.org (Postfix) with ESMTP id 53B8820651
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfGJFEg (ORCPT
+        id S1726231AbfGJFEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:04:36 -0400
-Received: from smtprelay0016.hostedemail.com ([216.40.44.16]:43557 "EHLO
+        Wed, 10 Jul 2019 01:04:39 -0400
+Received: from smtprelay0104.hostedemail.com ([216.40.44.104]:46353 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbfGJFEf (ORCPT
+        by vger.kernel.org with ESMTP id S1725938AbfGJFEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:04:35 -0400
+        Wed, 10 Jul 2019 01:04:38 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 7644B18225E0E;
-        Wed, 10 Jul 2019 05:04:34 +0000 (UTC)
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id E12FD7832;
+        Wed, 10 Jul 2019 05:04:36 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: point79_abbc6ba6bd53
-X-Filterd-Recvd-Size: 1939
+X-HE-Tag: bit87_aed68f386556
+X-Filterd-Recvd-Size: 1794
 Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
         (Authenticated sender: joe@perches.com)
         by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jul 2019 05:04:33 +0000 (UTC)
+        Wed, 10 Jul 2019 05:04:34 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] checkpatch: Add GENMASK tests
-Date:   Tue,  9 Jul 2019 22:04:14 -0700
-Message-Id: <c5cf9dd30360a395b50514f8fece2231e0180ce1.1562734889.git.joe@perches.com>
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 02/12] clocksource/drivers/npcm: Fix misuse of GENMASK macro
+Date:   Tue,  9 Jul 2019 22:04:15 -0700
+Message-Id: <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <cover.1562734889.git.joe@perches.com>
 References: <cover.1562734889.git.joe@perches.com>
@@ -45,45 +52,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro is easy to misuse as it's odd argument order.
-
-If specified with simple decimal values, make sure the arguments are
-ordered high then low.
-
-Also check if any argument is > 32 where instead of GENMASK,
-GENMASK_ULL should be used.
+Arguments are supposed to be ordered high then low.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- scripts/checkpatch.pl | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/clocksource/timer-npcm7xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 6cb99ec62000..d37bbe33524b 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -6368,6 +6368,21 @@ sub process {
- 			     "switch default: should use break\n" . $herectx);
- 		}
- 
-+# check for misuses of GENMASK
-+		if ($line =~ /\b(GENMASK(?:_ULL)?)\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/) {
-+			my $type = $1;
-+			my $high = $2;
-+			my $low = $3;
-+			if ($high < $low) {
-+				ERROR("GENMASK",
-+				      "$type argument order is high then low\n" . $herecurr);
-+			}
-+			if ($type eq "GENMASK" && ($high >= 32 || $low >= 32)) {
-+				ERROR("GENMASK",
-+				      "$type with arguments >= 32 should use GENMASK_ULL\n" . $herecurr);
-+			}
-+		}
-+
- # check for gcc specific __FUNCTION__
- 		if ($line =~ /\b__FUNCTION__\b/) {
- 			if (WARN("USE_FUNC",
+diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
+index 7a9bb5532d99..8a30da7f083b 100644
+--- a/drivers/clocksource/timer-npcm7xx.c
++++ b/drivers/clocksource/timer-npcm7xx.c
+@@ -32,7 +32,7 @@
+ #define NPCM7XX_Tx_INTEN		BIT(29)
+ #define NPCM7XX_Tx_COUNTEN		BIT(30)
+ #define NPCM7XX_Tx_ONESHOT		0x0
+-#define NPCM7XX_Tx_OPER			GENMASK(3, 27)
++#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
+ #define NPCM7XX_Tx_MIN_PRESCALE		0x1
+ #define NPCM7XX_Tx_TDR_MASK_BITS	24
+ #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
 -- 
 2.15.0
 
