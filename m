@@ -6,108 +6,189 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C16C73C64
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6694C73C64
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920E62064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C802064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfGJLkD (ORCPT
+        id S1727158AbfGJLkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:40:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47484 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfGJLkD (ORCPT
+        Wed, 10 Jul 2019 07:40:47 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47661 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfGJLkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:40:03 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlAw9-0001Fg-M3; Wed, 10 Jul 2019 13:39:01 +0200
-Date:   Wed, 10 Jul 2019 13:39:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pingfan Liu <kernelfans@gmail.com>
-cc:     Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
-        Barret Rhoden <brho@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] x86/numa: instance all parsed numa node
-In-Reply-To: <CAFgQCTtK7G9NPQgHa_gJkr8WLzYqagBVLaqBY7-w+tirX-+w-g@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907101334230.1758@nanos.tec.linutronix.de>
-References: <1562300143-11671-1-git-send-email-kernelfans@gmail.com> <1562300143-11671-2-git-send-email-kernelfans@gmail.com> <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de> <CAFgQCTvwS+yEkAmCJnsCfnr0JS01OFtBnDg4cr41_GqU79A4Gg@mail.gmail.com>
- <alpine.DEB.2.21.1907081125300.3648@nanos.tec.linutronix.de> <CAFgQCTvAOeerLHQvgvFXy_kLs=H=CuUFjYE+UAN+vhPCG+s=pQ@mail.gmail.com> <alpine.DEB.2.21.1907090810490.1961@nanos.tec.linutronix.de> <CAFgQCTui7D6_FQ_v_ijj6k_=+TQzQ3PaGvzxd6p+XEGjQ2S6jw@mail.gmail.com>
- <4AF3459B-28F2-425F-8E4B-40311DEF30C6@amacapital.net> <CAFgQCTtK7G9NPQgHa_gJkr8WLzYqagBVLaqBY7-w+tirX-+w-g@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 07:40:47 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CFA7B60004;
+        Wed, 10 Jul 2019 11:40:42 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 13:40:42 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>,
+        Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Message-ID: <20190710114042.ybgavnxb4hgqrtor@flea>
+References: <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea>
+ <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea>
+ <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
+ <20190709085532.cdqv7whuesrjs64c@flea>
+ <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1204690592-1562758741=:1758"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="escjyxb6ltmmy4x5"
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1204690592-1562758741=:1758
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+--escjyxb6ltmmy4x5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 10 Jul 2019, Pingfan Liu wrote:
-> On Tue, Jul 9, 2019 at 9:34 PM Andy Lutomirski <luto@amacapital.net> wrote:
+On Tue, Jul 09, 2019 at 01:30:18PM -0700, Vasily Khoruzhick wrote:
+> On Tue, Jul 9, 2019 at 1:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > Go for it. I’m not familiar enough with the SMP boot stuff that I would
-> > be able to do it any faster than you. I’ll gladly help review it.
-> 
-> I had sent out a patch to fix maxcpus "[PATCH] smp: force all cpu to
-> boot once under maxcpus option"
+> > On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
+> > > > > Maybe instead of edp-connector one would introduce integrator's specific
+> > > > > connector, for example with compatible "olimex,teres-edp-connector"
+> > > > > which should follow edp abstract connector rules? This will be at least
+> > > > > consistent with below presentation[1] - eDP requirements depends on
+> > > > > integrator. Then if olimex has standard way of dealing with panels
+> > > > > present in olimex/teres platforms the driver would then create
+> > > > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
+> > > > > Anyway it still looks fishy for me :), maybe because I am not
+> > > > > familiarized with details of these platforms.
+> > > >
+> > > > That makes sense yes
+> > >
+> > > Actually, it makes no sense at all. Current implementation for anx6345
+> > > driver works fine as is with any panel specified assuming panel delays
+> > > are long enough for connected panel. It just doesn't use panel timings
+> > > from the driver. Creating a platform driver for connector itself looks
+> > > redundant since it can't be reused, it doesn't describe actual
+> > > hardware and it's just defeats purpose of DT by introducing
+> > > board-specific code.
+> >
+> > I'm not sure where you got the idea that the purpose of DT is to not
+> > have any board-specific code.
 >
-> But for the case of nrcpus, I think things will not be so easy due to
-> percpu area, and I think it may take a quite different way.
+> I believe DT was an attempt to move to declarative approach for
+> describing hardware. Yes, we have different compatibles for different
+> devices but they're specific to particular device rather than
+> particular board. Device interconnection is described in DT along with
+> some properties rather than in board-specific C-file.
 
-No.
+You're right, but it's not incompatible with having some code to deal
+with some board quirk.
 
-It's the same problem and it's broken in the same way as maxcpus on x86. So
-nr_cpus on x86 has to do:
+> Introducing board-specific compatible for a connector isn't looking
+> right to me.
 
-	if (nr_cpus < num_present_cpus()) {
-		pr_info(....);
-		max_cpus = nr_cpus;
-		nr_cpus = num_present_cpus();
-	}
+If that board has a board-specific behaviour for it's connector, then
+what's the issue?
 
-or something like that.
+You can't describe all the quirks in the all boards using purely
+properties.
 
-Stop making extra cases which are pointlessly different. X86 boot is a
-trainwreck in hardware, so no magic software can fix it.
+> > It's perfectly fine to have some, that's even why there's a compatible
+> > assigned to each and every board.
+> >
+> > What the DT is about is allowing us to have a generic behaviour that
+> > we can detect: we can have a given behaviour for a given board, and a
+> > separate one for another one, and this will be evaluated at runtime.
+> >
+> > This is *exactly* what this is about: we can have a compatible that
+> > sets a given, more specific, behaviour (olimex,teres-edp-connector)
+> > while saying that this is compatible with the generic behaviour
+> > (edp-connector). That way, any OS will know what quirk to apply if
+> > needed, and if not that it can use the generic behaviour.
+> >
+> > And we could create a generic driver, for the generic behaviour if
+> > needed.
+> >
+> > > There's another issue: if we introduce edp-connector we'll have to
+> > > specify power up delays somewhere (in dts? or in platform driver?), so
+> > > edp-connector doesn't really solve the issue of multiple panels with
+> > > same motherboard.
+> >
+> > And that's what that compatible is about :)
+>
+> Sorry, I fail to see how it would be different from using existing
+> panels infrastructure and different panels compatibles. I think Rob's
+> idea was to introduce generic edp-connector.
 
-All you can do is pray that it reaches the point where all present CPUs
-have been at least minimaly initialized.
+Again, there's no such thing as a generic edp-connector. The spec
+doesn't define anything related to the power sequence for example.
 
-Thanks,
+> If we can't make it generic then let's use panel infrastructure.
 
-	tglx
+Which uses a device specific compatible. Really, I'm not sure what
+your objection and / or argument is here.
 
+In addition, when that was brought up in the discussion, you rejected
+it because it was inconvenient:
+https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
 
+And I agree with you on that one.
 
---8323329-1204690592-1562758741=:1758--
+> > > I'd say DT overlays should be preferred solution here, not another
+> > > connector binding.
+> >
+> > Overlays are a way to apply a device tree dynamically. It's orthogonal
+> > to the binding.
+>
+> It isn't orthogonal to original problem though.
+
+It is. The original problem is that you want to power up whatever is
+on the other side of a eDP link using an arbitrary regulator.
+
+This is a "how do I describe that in my DT" problem, and it really has
+nothing to do with how the DT is being passed to the kernel.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--escjyxb6ltmmy4x5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSXOugAKCRDj7w1vZxhR
+xdG+AP9pfxb7uYcDFKG6xikGZewhXzpg/acmPfrETXLF2B1jZQD7Bc2oEF0IKqh7
+tiE8F0AU/5LApsNMhblCY9s+dkDrFwU=
+=gnu6
+-----END PGP SIGNATURE-----
+
+--escjyxb6ltmmy4x5--
