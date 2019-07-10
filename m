@@ -2,408 +2,191 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715D5C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CCBC004EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F60C20861
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5C12064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:00:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZKMn521M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfGJK73 (ORCPT
+        id S1727476AbfGJLAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:59:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43576 "EHLO mx1.suse.de"
+        Wed, 10 Jul 2019 07:00:00 -0400
+Received: from mail-eopbgr130058.outbound.protection.outlook.com ([40.107.13.58]:35394
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726043AbfGJK73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:59:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AB7B9AC2C;
-        Wed, 10 Jul 2019 10:59:27 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH] s390/livepatch: Implement reliable stack tracing for the consistency model
-Date:   Wed, 10 Jul 2019 12:59:18 +0200
-Message-Id: <20190710105918.22487-1-mbenes@suse.cz>
-X-Mailer: git-send-email 2.22.0
+        id S1725994AbfGJK77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 06:59:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qfjadrs8/RVcClOsSH8trK1RH1VdNKOlkLfrE5OTEbG7z3bWoSyXNc51OkPJjttCuZ6YWgXiHaxRQKEfoYukTsoZNnHiHTed1dOyZHu/Pf0SfYKUxZ1VzopnUX8y3evLZtCQSsHe32V1abXhCToChSYQ9SteSVbHoZ43rjF3rUPAMh3wDWk9KW7VCBsLtmZFKCtdMg7sWKYDr9R1xB9DOnJww2wpgVa+4VaQ7xOzi5JJxvoe8LsPhuS/QmKtStK1Psi0WWSh1u3gjRog2nUJ6T0cI5XWjYCYJtEgxY7TyVfULdnbHPNk1Pav24JsZoLrJsrjVrwrHhR+mQiFo9WxzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AyWWdvUG0udGBdzuETdyV9wbouWvstbi2Ru0hPwH1Yk=;
+ b=njoGFlHsFIp4Tj0ctOoqspJO6kwicbyLBz9OAXe0VTFX3migQhmzd2fJNj+Gc5ea9bgnaweof0ZiuOggMVKcBTF/37hJgC4m2WeE7he/C60/0liIu942ECdCLB2J8KHm/g5/P4qkH2emLnck3BOdg3gFdrkImfSKTfeFo0dAJhvJCh+u6z3YwuqOvFL0In+UbHoSw6U4LTyVILG+HgQdJSzPcGyaqX5Cw2J/xzd5hoteRmPHXV3T36t6IpRaPJmISfKjT5YWwJUPXwlRBJ1qOL84x2WJzw3WuhG3XdoryjwW7g5ILa/ZCddloJABEtJ4rVL7CEtbCg1kYdTHsPx7eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AyWWdvUG0udGBdzuETdyV9wbouWvstbi2Ru0hPwH1Yk=;
+ b=ZKMn521M91dQaM+D3bVKRha9TqFqgUNyMFscGGqbxgAFXbO6hUW/aHilrpGN+eKirwKnWfKEy3L9ulaQXfNmLvSkrfdewHUOQUmu53SVDlYlLV9iSxeWHlBeyzYkc4Vlqr0qpba58rvi0rg17y+bqqeZkwAMyYPDGi3Lwe2A5is=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB7081.eurprd04.prod.outlook.com (10.141.120.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.10; Wed, 10 Jul 2019 10:59:55 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::93a:4344:1120:4ca0]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::93a:4344:1120:4ca0%6]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
+ 10:59:55 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv6 00/28] PCI: mobiveil: fixes for Mobiveil PCIe Host
+ Bridge IP driver
+Thread-Topic: [PATCHv6 00/28] PCI: mobiveil: fixes for Mobiveil PCIe Host
+ Bridge IP driver
+Thread-Index: AQHVMxlmjw5aCO+Wjkqv+IAkHKqDIKbAnCqAgAMGNJA=
+Date:   Wed, 10 Jul 2019 10:59:54 +0000
+Message-ID: <DB8PR04MB674701F8622A1C46FF0C3D6284F00@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
+ <20190708113503.GA21942@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190708113503.GA21942@e121166-lin.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca371bbc-6951-490b-11fa-08d70525bdca
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7081;
+x-ms-traffictypediagnostic: DB8PR04MB7081:
+x-microsoft-antispam-prvs: <DB8PR04MB70812ED875ECCC50CA81CB2484F00@DB8PR04MB7081.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(189003)(199004)(13464003)(54534003)(66066001)(66946007)(66476007)(64756008)(66446008)(55016002)(66556008)(71190400001)(71200400001)(76116006)(33656002)(14454004)(2906002)(6436002)(54906003)(86362001)(229853002)(99286004)(25786009)(53936002)(6116002)(3846002)(7696005)(8676002)(74316002)(81166006)(81156014)(305945005)(6246003)(7416002)(52536014)(9686003)(14444005)(5660300002)(6916009)(256004)(186003)(26005)(6506007)(53546011)(102836004)(76176011)(476003)(486006)(11346002)(316002)(68736007)(478600001)(446003)(8936002)(7736002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7081;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MfaObObXVl89mG2eRlk3lx6+SEEZml0cyp7crImZXcJBO/jk3sU372uf+oknemJakdf5vuixD2SPZUka/hzvVkdVBQE+yo+fnLutHipOOG1pPGyd81rOkvcKUNjT9AYCZeE2uiEFOJ44EdLWwZGYw5WYpGoL09aN2W3EasYEY8yOAMn8WT3uAnciOlAbcHyYB4MAoC62Xa05Czj1PuhJzbrqa/ht+nv3Nqfv64TYdCbdO6WeMc6gq7jCRtmY+JRQVk+2NDyEJfOmYlgEjmuYVGqBmwDnrmQ5DyiLes/QF2uOHswuhENzkp3srYiOuCPBZ8s7ulAQJC4CIiD4yci0d2F1yht1XKT8V48ncOqtYnp+2NUT+M2DYuhanQffTUbnHKYWwnT3G9wXJjoUJu3IO3/23hwb5bjQP489c9zCXiA=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca371bbc-6951-490b-11fa-08d70525bdca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 10:59:54.9951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The livepatch consistency model requires reliable stack tracing
-architecture support in order to work properly. In order to achieve
-this, two main issues have to be solved. First, reliable and consistent
-call chain backtracing has to be ensured. Second, the unwinder needs to
-be able to detect stack corruptions and return errors.
-
-The "zSeries ELF Application Binary Interface Supplement" says:
-
-  "The stack pointer points to the first word of the lowest allocated
-  stack frame. If the "back chain" is implemented this word will point to
-  the previously allocated stack frame (towards higher addresses), except
-  for the first stack frame, which shall have a back chain of zero (NULL).
-  The stack shall grow downwards, in other words towards lower addresses."
-
-"back chain" is optional. GCC option -mbackchain enables it. Quoting
-Martin Schwidefsky [1]:
-
-  "The compiler is called with the -mbackchain option, all normal C
-  function will store the backchain in the function prologue. All
-  functions written in assembler code should do the same, if you find one
-  that does not we should fix that. The end result is that a task that
-  *voluntarily* called schedule() should have a proper backchain at all
-  times.
-
-  Dependent on the use case this may or may not be enough. Asynchronous
-  interrupts may stop the CPU at the beginning of a function, if kernel
-  preemption is enabled we can end up with a broken backchain.  The
-  production kernels for IBM Z are all compiled *without* kernel
-  preemption. So yes, we might get away without the objtool support.
-
-  On a side-note, we do have a line item to implement the ORC unwinder for
-  the kernel, that includes the objtool support. Once we have that we can
-  drop the -mbackchain option for the kernel build. That gives us a nice
-  little performance benefit. I hope that the change from backchain to the
-  ORC unwinder will not be too hard to implement in the livepatch tools."
-
-Thus, the call chain backtracing should be currently ensured and objtool
-should not be necessary for livepatch purposes.
-
-Regarding the second issue, stack corruptions and non-reliable states
-have to be recognized by the unwinder. Mainly it means to detect
-preemption or page faults, the end of the task stack must be reached,
-return addresses must be valid text addresses and hacks like function
-graph tracing and kretprobes must be properly detected.
-
-Unwinding a running task's stack is not a problem, because there is a
-livepatch requirement that every checked task is blocked, except for the
-current task. Due to that, the implementation can be much simpler
-compared to the existing non-reliable infrastructure. We can consider a
-task's kernel/thread stack only and skip the other stacks.
-
-Idle tasks are a bit special. Their final back chains point to no_dat
-stacks. See for reference CALL_ON_STACK() in smp_start_secondary()
-callback used in __cpu_up(). The unwinding is stopped there and it is
-not considered to be a stack corruption.
-
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
----
-- based on Linus' master
-- passes livepatch kselftests
-- passes tests from https://github.com/lpechacek/qa_test_klp, which
-  stress the consistency model and the unwinder a bit more
-
- arch/s390/Kconfig                  |  1 +
- arch/s390/include/asm/stacktrace.h |  5 ++
- arch/s390/include/asm/unwind.h     | 19 ++++++
- arch/s390/kernel/dumpstack.c       | 28 +++++++++
- arch/s390/kernel/stacktrace.c      | 78 +++++++++++++++++++++++++
- arch/s390/kernel/unwind_bc.c       | 93 ++++++++++++++++++++++++++++++
- 6 files changed, 224 insertions(+)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index fdb4246265a5..ea73e555063d 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -170,6 +170,7 @@ config S390
- 	select HAVE_PERF_EVENTS
- 	select HAVE_RCU_TABLE_FREE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-+	select HAVE_RELIABLE_STACKTRACE
- 	select HAVE_RSEQ
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_VIRT_CPU_ACCOUNTING
-diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
-index 0ae4bbf7779c..2b5c913c408f 100644
---- a/arch/s390/include/asm/stacktrace.h
-+++ b/arch/s390/include/asm/stacktrace.h
-@@ -23,6 +23,11 @@ const char *stack_type_name(enum stack_type type);
- int get_stack_info(unsigned long sp, struct task_struct *task,
- 		   struct stack_info *info, unsigned long *visit_mask);
- 
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+int get_stack_info_reliable(unsigned long sp, struct task_struct *task,
-+			    struct stack_info *info);
-+#endif
-+
- static inline bool on_stack(struct stack_info *info,
- 			    unsigned long addr, size_t len)
- {
-diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
-index d827b5b9a32c..1cc96c54169c 100644
---- a/arch/s390/include/asm/unwind.h
-+++ b/arch/s390/include/asm/unwind.h
-@@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- bool unwind_next_frame(struct unwind_state *state);
- unsigned long unwind_get_return_address(struct unwind_state *state);
- 
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+void __unwind_start_reliable(struct unwind_state *state,
-+			     struct task_struct *task, unsigned long sp);
-+bool unwind_next_frame_reliable(struct unwind_state *state);
-+
-+static inline void unwind_start_reliable(struct unwind_state *state,
-+					 struct task_struct *task)
-+{
-+	unsigned long sp;
-+
-+	if (task == current)
-+		sp = current_stack_pointer();
-+	else
-+		sp = task->thread.ksp;
-+
-+	__unwind_start_reliable(state, task, sp);
-+}
-+#endif
-+
- static inline bool unwind_done(struct unwind_state *state)
- {
- 	return state->stack_info.type == STACK_TYPE_UNKNOWN;
-diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
-index ac06c3949ab3..b21ef2a766ff 100644
---- a/arch/s390/kernel/dumpstack.c
-+++ b/arch/s390/kernel/dumpstack.c
-@@ -127,6 +127,34 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
- 	return -EINVAL;
- }
- 
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+int get_stack_info_reliable(unsigned long sp, struct task_struct *task,
-+			    struct stack_info *info)
-+{
-+	if (!sp)
-+		goto error;
-+
-+	/* Sanity check: ABI requires SP to be aligned 8 bytes. */
-+	if (sp & 0x7)
-+		goto error;
-+
-+	if (!task)
-+		goto error;
-+
-+	/*
-+	 * The unwinding should not start on nodat_stack, async_stack or
-+	 * restart_stack. The task is either current or must be inactive.
-+	 */
-+	if (!in_task_stack(sp, task, info))
-+		goto error;
-+
-+	return 0;
-+error:
-+	info->type = STACK_TYPE_UNKNOWN;
-+	return -EINVAL;
-+}
-+#endif
-+
- void show_stack(struct task_struct *task, unsigned long *stack)
- {
- 	struct unwind_state state;
-diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
-index f6a620f854e1..7d774a325163 100644
---- a/arch/s390/kernel/stacktrace.c
-+++ b/arch/s390/kernel/stacktrace.c
-@@ -13,6 +13,7 @@
- #include <linux/export.h>
- #include <asm/stacktrace.h>
- #include <asm/unwind.h>
-+#include <asm/kprobes.h>
- 
- void save_stack_trace(struct stack_trace *trace)
- {
-@@ -60,3 +61,80 @@ void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
- 	}
- }
- EXPORT_SYMBOL_GPL(save_stack_trace_regs);
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+/*
-+ * This function returns an error if it detects any unreliable features of the
-+ * stack.  Otherwise it guarantees that the stack trace is reliable.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is inactive.
-+ */
-+static __always_inline int
-+__save_stack_trace_tsk_reliable(struct task_struct *tsk,
-+				struct stack_trace *trace)
-+{
-+	struct unwind_state state;
-+
-+	for (unwind_start_reliable(&state, tsk);
-+	     !unwind_done(&state) && !unwind_error(&state);
-+	     unwind_next_frame_reliable(&state)) {
-+
-+		if (!__kernel_text_address(state.ip))
-+			return -EINVAL;
-+
-+#ifdef CONFIG_KPROBES
-+		/*
-+		 * Mark stacktraces with kretprobed functions on them
-+		 * as unreliable.
-+		 */
-+		if (state.ip == (unsigned long)kretprobe_trampoline)
-+			return -EINVAL;
-+#endif
-+
-+		if (trace->nr_entries >= trace->max_entries)
-+			return -E2BIG;
-+
-+		if (!trace->skip)
-+			trace->entries[trace->nr_entries++] = state.ip;
-+		else
-+			trace->skip--;
-+	}
-+
-+	/* Check for stack corruption */
-+	if (unwind_error(&state))
-+		return -EINVAL;
-+
-+	/* Store kernel_thread_starter, null for swapper/0 */
-+	if (tsk->flags & (PF_KTHREAD | PF_IDLE)) {
-+		if (trace->nr_entries >= trace->max_entries)
-+			return -E2BIG;
-+
-+		if (!trace->skip)
-+			trace->entries[trace->nr_entries++] =
-+				state.regs->psw.addr;
-+		else
-+			trace->skip--;
-+	}
-+
-+	return 0;
-+}
-+
-+int save_stack_trace_tsk_reliable(struct task_struct *tsk,
-+				  struct stack_trace *trace)
-+{
-+	int ret;
-+
-+	/*
-+	 * If the task doesn't have a stack (e.g., a zombie), the stack is
-+	 * "reliably" empty.
-+	 */
-+	if (!try_get_task_stack(tsk))
-+		return 0;
-+
-+	ret = __save_stack_trace_tsk_reliable(tsk, trace);
-+
-+	put_task_stack(tsk);
-+
-+	return ret;
-+}
-+#endif
-diff --git a/arch/s390/kernel/unwind_bc.c b/arch/s390/kernel/unwind_bc.c
-index 3ce8a0808059..ada3a8538961 100644
---- a/arch/s390/kernel/unwind_bc.c
-+++ b/arch/s390/kernel/unwind_bc.c
-@@ -153,3 +153,96 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 	state->reliable = reliable;
- }
- EXPORT_SYMBOL_GPL(__unwind_start);
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+void __unwind_start_reliable(struct unwind_state *state,
-+			     struct task_struct *task, unsigned long sp)
-+{
-+	struct stack_info *info = &state->stack_info;
-+	struct stack_frame *sf;
-+	unsigned long ip;
-+
-+	memset(state, 0, sizeof(*state));
-+	state->task = task;
-+
-+	/* Get current stack pointer and initialize stack info */
-+	if (get_stack_info_reliable(sp, task, info) ||
-+	    !on_stack(info, sp, sizeof(struct stack_frame))) {
-+		/* Something is wrong with the stack pointer */
-+		info->type = STACK_TYPE_UNKNOWN;
-+		state->error = true;
-+		return;
-+	}
-+
-+	/* Get the instruction pointer from the stack frame */
-+	sf = (struct stack_frame *) sp;
-+	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-+
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+	/* Decode any ftrace redirection */
-+	if (ip == (unsigned long) return_to_handler)
-+		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-+					   ip, NULL);
-+#endif
-+
-+	/* Update unwind state */
-+	state->sp = sp;
-+	state->ip = ip;
-+}
-+
-+bool unwind_next_frame_reliable(struct unwind_state *state)
-+{
-+	struct stack_info *info = &state->stack_info;
-+	struct stack_frame *sf;
-+	struct pt_regs *regs;
-+	unsigned long sp, ip;
-+
-+	sf = (struct stack_frame *) state->sp;
-+	sp = READ_ONCE_NOCHECK(sf->back_chain);
-+	/*
-+	 * Idle tasks are special. The final back-chain points to nodat_stack.
-+	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
-+	 * __cpu_up(). We just accept it, go to else branch and look for
-+	 * pt_regs.
-+	 */
-+	if (likely(sp && !(is_idle_task(state->task) &&
-+			   outside_of_stack(state, sp)))) {
-+		/* Non-zero back-chain points to the previous frame */
-+		if (unlikely(outside_of_stack(state, sp)))
-+			goto out_err;
-+
-+		sf = (struct stack_frame *) sp;
-+		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-+	} else {
-+		/* No back-chain, look for a pt_regs structure */
-+		sp = state->sp + STACK_FRAME_OVERHEAD;
-+		regs = (struct pt_regs *) sp;
-+		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
-+			goto out_err;
-+		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
-+		     !user_mode(regs))
-+			goto out_err;
-+
-+		state->regs = regs;
-+		goto out_stop;
-+	}
-+
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+	/* Decode any ftrace redirection */
-+	if (ip == (unsigned long) return_to_handler)
-+		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-+					   ip, (void *) sp);
-+#endif
-+
-+	/* Update unwind state */
-+	state->sp = sp;
-+	state->ip = ip;
-+	return true;
-+
-+out_err:
-+	state->error = true;
-+out_stop:
-+	state->stack_info.type = STACK_TYPE_UNKNOWN;
-+	return false;
-+}
-+#endif
--- 
-2.22.0
-
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJh
+bGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo31MI4yNUgMTk6MzUNCj4gVG86IFoucS4gSG91
+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdv
+b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwu
+c3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0K
+PiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVh
+Y29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlh
+biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
+cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NiAwMC8yOF0gUENJOiBtb2JpdmVpbDogZml4
+ZXMgZm9yIE1vYml2ZWlsIFBDSWUgSG9zdA0KPiBCcmlkZ2UgSVAgZHJpdmVyDQo+IA0KPiBPbiBG
+cmksIEp1bCAwNSwgMjAxOSBhdCAwNTo1NjoyOFBNICswODAwLCBIb3UgWmhpcWlhbmcgd3JvdGU6
+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgdG8gYWRkIGZpeGVzIGZvciBNb2JpdmVpbCBQQ0llIEhv
+c3QgZHJpdmVyLg0KPiA+IFNwbGl0ZWQgIzIsICMzLCAjOSBhbmQgIzEwIG9mIHY1IHBhdGNoZXMu
+DQo+ID4NCj4gPiBIb3UgWmhpcWlhbmcgKDI4KToNCj4gPiAgIFBDSTogbW9iaXZlaWw6IFVuaWZ5
+IHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgUENJOiBtb2JpdmVpbDogUmVtb3ZlIHRoZSBmbGFn
+IE1TSV9GTEFHX01VTFRJX1BDSV9NU0kNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEZpeCBQQ0kgYmFz
+ZSBhZGRyZXNzIGluIE1FTS9JTyBvdXRib3VuZCB3aW5kb3dzDQo+ID4gICBQQ0k6IG1vYml2ZWls
+OiBVcGRhdGUgdGhlIHJlc291cmNlIGxpc3QgdHJhdmVyc2FsIGZ1bmN0aW9uDQo+ID4gICBQQ0k6
+IG1vYml2ZWlsOiBVc2UgV0lOX05VTV8wIGV4cGxpY2l0bHkgZm9yIENGRyBvdXRib3VuZCB3aW5k
+b3cNCj4gPiAgIFBDSTogbW9iaXZlaWw6IFVzZSB0aGUgMXN0IGluYm91bmQgd2luZG93IGZvciBN
+RU0gaW5ib3VuZA0KPiA+ICAgICB0cmFuc2FjdGlvbnMNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEZp
+eCB0aGUgQ2xhc3MgQ29kZSBmaWVsZA0KPiA+ICAgUENJOiBtb2JpdmVpbDogTW92ZSB0aGUgbGlu
+ayB1cCB3YWl0aW5nIG91dCBvZiBtb2JpdmVpbF9ob3N0X2luaXQoKQ0KPiA+ICAgUENJOiBtb2Jp
+dmVpbDogTW92ZSBJUlEgY2hhaW5lZCBoYW5kbGVyIHNldHVwIG91dCBvZiBEVCBwYXJzZQ0KPiA+
+ICAgUENJOiBtb2JpdmVpbDogSW5pdGlhbGl6ZSBQcmltYXJ5L1NlY29uZGFyeS9TdWJvcmRpbmF0
+ZSBidXMgbnVtYmVycw0KPiA+ICAgUENJOiBtb2JpdmVpbDogRml4IGRldmZuIGNoZWNrIGluIG1v
+Yml2ZWlsX3BjaWVfdmFsaWRfZGV2aWNlKCkNCj4gPiAgIGR0LWJpbmRpbmdzOiBQQ0k6IG1vYml2
+ZWlsOiBDaGFuZ2UgZ3Bpb19zbGF2ZSBhbmQgYXBiX2NzciB0byBvcHRpb25hbA0KPiA+ICAgUENJ
+OiBtb2JpdmVpbDogUmVmb3JtYXQgdGhlIGNvZGUgZm9yIHJlYWRhYmlsaXR5DQo+ID4gICBQQ0k6
+IG1vYml2ZWlsOiBNYWtlIHRoZSByZWdpc3RlciB1cGRhdGluZyBtb3JlIHJlYWRhYmxlDQo+ID4g
+ICBQQ0k6IG1vYml2ZWlsOiBSZXZpc2UgdGhlIE1FTS9JTyBvdXRib3VuZCB3aW5kb3cgaW5pdGlh
+bGl6YXRpb24NCj4gPiAgIFBDSTogbW9iaXZlaWw6IEZpeCB0aGUgcmV0dXJuZWQgZXJyb3IgbnVt
+YmVyDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBSZW1vdmUgYW4gdW5uZWNlc3NhcnkgcmV0dXJuIHZh
+bHVlIGNoZWNrDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBSZW1vdmUgcmVkdW5kYW50IHZhciBkZWZp
+bml0aW9ucyBhbmQgcmVnaXN0ZXIgcmVhZA0KPiA+ICAgICBvcGVyYXRpb25zDQo+ID4gICBQQ0k6
+IG1vYml2ZWlsOiBGaXggdGhlIHZhbGlkIGNoZWNrIGZvciBpbmJvdW5kIGFuZCBvdXRib3VuZCB3
+aW5kb3cNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEFkZCB0aGUgc3RhdGlzdGljIG9mIGluaXRpYWxp
+emVkIGluYm91bmQgd2luZG93cw0KPiA+ICAgUENJOiBtb2JpdmVpbDogQ2xlYXIgdGhlIHRhcmdl
+dCBmaWVsZHMgYmVmb3JlIHVwZGF0aW5nIHRoZSByZWdpc3Rlcg0KPiA+ICAgUENJOiBtb2JpdmVp
+bDogTWFzayBvdXQgdGhlIGxvd2VyIDEwLWJpdCBoYXJkY29kZSB3aW5kb3cgc2l6ZQ0KPiA+ICAg
+UENJOiBtb2JpdmVpbDogQWRkIHVwcGVyIDMyLWJpdCBDUFUgYmFzZSBhZGRyZXNzIHNldHVwIGlu
+IG91dGJvdW5kDQo+ID4gICAgIHdpbmRvdw0KPiA+ICAgUENJOiBtb2JpdmVpbDogQWRkIHVwcGVy
+IDMyLWJpdCBQQ0kgYmFzZSBhZGRyZXNzIHNldHVwIGluIGluYm91bmQNCj4gPiAgICAgd2luZG93
+DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBGaXggdGhlIENQVSBiYXNlIGFkZHJlc3Mgc2V0dXAgaW4g
+aW5ib3VuZCB3aW5kb3cNCj4gPiAgIFBDSTogbW9iaXZlaWw6IE1vdmUgUENJZSBQSU8gZW5hYmxl
+bWVudCBvdXQgb2YgaW5ib3VuZCB3aW5kb3cNCj4gcm91dGluZQ0KPiA+ICAgUENJOiBtb2JpdmVp
+bDogRml4IGluZmluaXRlLWxvb3AgaW4gdGhlIElOVHggcHJvY2Vzcw0KPiA+ICAgUENJOiBtb2Jp
+dmVpbDogRml4IHRoZSBwb3RlbnRpYWwgSU5UeCBtaXNzaW5nIHByb2JsZW0NCj4gPg0KPiA+ICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbW9iaXZlaWwtcGNpZS50eHQgICAgICB8ICAgIDIg
+Kw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyAgICAgICAgICAg
+ICB8ICA1MjkNCj4gKysrKysrKysrKysrLS0tLS0tLS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAz
+MTggaW5zZXJ0aW9ucygrKSwgMjEzIGRlbGV0aW9ucygtKQ0KPiA+DQo+IA0KPiBPSywgSSByZXdy
+b3RlIG1vc3Qgb2YgY29tbWl0IGxvZ3MsIGRyb3BwZWQgcGF0Y2ggMjUgc2luY2UgSSBkbyBub3QN
+Cj4gdW5kZXJzdGFuZCB0aGUgY29tbWl0IGxvZywgcHVzaGVkIHRvIHBjaS9tb2JpdmVpbCB0ZW50
+YXRpdmVseSBmb3IgdjUuMy4NCiANClRoZSBwYXRjaCAjMjUgaXMgdG8gZml4IHRoZSB3cm9uZ2x5
+IHByb2dyYW1taW5nIG9mIHRoZSBDUFUgYmFzZSBhZGRyZXNzIG9mDQp0aGUgaW5ib3VuZCB3aW5k
+b3dzLiBUaGUgY3VycmVudCBjb2RlIHNldCB0aGUgQ1BVIGJhc2UgYWRkcmVzcyB3aXRoIHRoZQ0K
+UENJIGJhc2UgYWRkcmVzcyBwYXJhbWV0ZXIgd2hpY2ggaXMgdGhlIGNhbGxlciBwYXNzZWQgdG8g
+c2V0IHRoZSBQQ0kgYmFzZQ0KYWRkcmVzcyBvZiB0aGUgaW5ib3VuZCB3aW5kb3csIGFuZCB0aGUg
+dXBwZXIgMzItYml0IG9mIHRoZSBDUFUgYmFzZSBhZGRyZXNzDQpvZiB0aGUgaW5ib3VuZCB3aW5k
+b3cgaXMgbm90IHNldCBpbiBjdXJyZW50IGNvZGUuDQoNClNvIGl0IG1lYW5zIHRoZSBjdXJyZW50
+IGNvZGUgb25seSBzdXBwb3J0IDE6MSBpbmJvdW5kIHdpbmRvdyBzZXR0aW5nICYgdGhlDQpDUFUg
+YmFzZSBhZGRyZXNzIG11c3QgYmUgPCA0R0IuIEl0IHdvbid0IHdvcmsgaWYgaW4gZnV0dXJlIHNv
+bWVvbmUgY2hhbmdlDQppdCB0byBub24gMToxIG1hcHBpbmcgb3IgdGhlIENQVSBiYXNlIGFkZHJl
+c3Mgb2YgdGhlIGluYm91bmQgd2luZG93ID4gNEdCLg0KDQpTbywgSSB3aWxsIHJlc2VuZCBpdCBz
+ZXBhcmF0ZWx5Lg0KDQo+IEhhdmluZyBzYWlkIHRoYXQsIHlvdSBzaG91bGQgaW1wcm92ZSBjb21t
+aXQgbG9ncyB3cml0aW5nIGl0IHRvb2sgbWUgdG9vDQo+IG11Y2ggdGltZSB0byBjaGVjayB0aGVt
+IGFsbCBhbmQgcmV3cml0ZSB0aGVtLg0KPiANCj4gTmV2ZXIgZXZlciBhZ2FpbiBwb3N0IGEgbWFz
+c2l2ZSBzZXJpZXMgbGlrZSB0aGlzIG1peGluZyByZWZhY3RvcmluZyBmaXhlcyBhbmQNCj4gY2xl
+YW4tdXBzIGl0IHdhcyBwYWluZnVsIHRvIHJldmlldy9yZWJhc2UsIHBsZWFzZSBzcGxpdCBwYXRj
+aCBzZXJpZXMgaW50byBzbWFsbA0KPiBjaHVua3MgdG8gbWFrZSBteSBsaWZlIG11Y2ggZWFzaWVy
+Lg0KDQpJIHVuZGVyc3RhbmQgaXQgaXMgd2Vhcmlzb21lLCBidXQgSSBqdXN0IHdhbnQgdG8gbWFr
+ZSBpdCBiZXR0ZXIgYW5kIGVhc2llciB0bw0KYWRkIG5ldyBkcml2ZXIgZm9yIG90aGVyIGRldmVs
+b3BlcnMuIEkgd2lsbCB0cnkgdG8gbm90IG1peCB0aGUgZGlzdGluY3QgY2hhbmdlcw0Kc28gdGhh
+dCBlYXN5IHRvIG1haW50YWluLg0KVGhhbmsgeW91IHNvIG11Y2ggZm9yIHJlY29tcG9zaW5nIG9m
+IHRoZXNlIGNoYW5nZWxvZ3MuDQogDQo+IFBsZWFzZSBjaGVjayBteSBwY2kvbW9iaXZlaWwgYnJh
+bmNoIGFuZCByZXBvcnQgYmFjayBpZiBzb21ldGhpbmcgaXMgbm90IGluDQo+IG9yZGVyLg0KDQpZ
+ZXMsIGFuZCB0aGFua3MgYWdhaW4uDQoNCkIuUiwNClpoaXFpYW5nDQoNCj4gTG9yZW56bw0K
