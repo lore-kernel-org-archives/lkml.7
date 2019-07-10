@@ -2,97 +2,88 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFB2C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD6C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1590820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771793;
-	bh=sPYdK/AiA+gg/7LedtybDnaOtTe9bVP0+4TaMRxUoXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oHErlb+4ywQr1q7kwh3u7yC4mG9uHQZoKk71q/jO7dpRd7OaKojy+xupSay1cJhih
-	 LcUCtaDZGDlRLG2w8HNY9cteDSi9YO9WQ7Wte1jyLDY6oNZW3cDw5pCLzl1E5hg95Q
-	 jIF3Ksya8TeSsExk7MW1I9FvmFISFDGIp/kXtjWw=
+	by mail.kernel.org (Postfix) with ESMTP id 8545B2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfGJPQb (ORCPT
+        id S1727920AbfGJPTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:16:31 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42908 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJPQb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:16:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+NmPohTe5VcwGbBQfkbScaQQcsiEBLcON+Y9FGq7nUc=; b=KfdlmKY+62neHMNCrhnMM/gRF
-        evFbuArvd5BJkHQXE5pqjmENoARRiZbft/nm9NvXFu36wszOucl7RihMRZJyG7AOFFCp9A3r95z7I
-        VRKXTkKKZC3SZC3EV5JyWVk/2klLld/g5wxmGud0nxF2HPmOyhtefXd5yJlUoVqWV9ZD8=;
-Received: from [217.140.106.53] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hlEKb-00082E-G9; Wed, 10 Jul 2019 15:16:29 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id AFE31D02D51; Wed, 10 Jul 2019 16:16:28 +0100 (BST)
-Date:   Wed, 10 Jul 2019 16:16:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     han.xu@nxp.com
-Cc:     ashish.kumar@nxp.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB memory for
- FSPI
-Message-ID: <20190710151628.GF14859@sirena.co.uk>
-References: <20190710023128.13115-1-han.xu@nxp.com>
- <20190710023128.13115-2-han.xu@nxp.com>
+        Wed, 10 Jul 2019 11:19:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:35200 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfGJPTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:19:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE0F2B;
+        Wed, 10 Jul 2019 08:19:11 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 078203F246;
+        Wed, 10 Jul 2019 08:19:08 -0700 (PDT)
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+ <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
+ <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com>
+ <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com>
+ <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <f9bea5bd-370a-47b5-8ad1-a30bd43d6cca@arm.com>
+Date:   Wed, 10 Jul 2019 16:19:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Y/WcH0a6A93yCHGr"
-Content-Disposition: inline
-In-Reply-To: <20190710023128.13115-2-han.xu@nxp.com>
-X-Cookie: Visit beautiful Vergas, Minnesota.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Pasha,
 
---Y/WcH0a6A93yCHGr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 09/07/2019 14:07, Pavel Tatashin wrote:
+>>> Enabling MMU and D-Cache for relocation  would essentially require the
+>>> same changes in kernel. Could you please share exactly why these were
+>>> not accepted upstream into kexec-tools?
+>>
+>> Because '--no-checks' is a much simpler alternative.
+>>
+>> More of the discussion:
+>> https://lore.kernel.org/linux-arm-kernel/5599813d-f83c-d154-287a-c131c48292ca@arm.com/
+>>
+>> While you can make purgatory a fully-fledged operating system, it doesn't really need to
+>> do anything on arm64. Errata-workarounds alone are a reason not do start down this path.
+> 
+> Thank you James. I will summaries the information gathered from the
+> yesterday's/today's discussion and add it to the cover letter together
+> with ARM64 tag. I think, the patch series makes sense for ARM64 only,
+> unless there are other platforms that disable caching/MMU during
+> relocation.
 
-On Wed, Jul 10, 2019 at 10:31:26AM +0800, han.xu@nxp.com wrote:
-> From: Han Xu <han.xu@nxp.com>
->=20
-> dynamically alloc AHB memory for FSPI controller
+I'd prefer not to reserve additional memory for regular kexec just to avoid the relocation.
+If the kernel's relocation work is so painful we can investigate doing it while the MMU is
+enabled. If you can compare regular-kexec with kexec_file_load() you eliminate the
+purgatory part of the work.
 
-Why?  This is currently done at probe which is what you'd expect
-to happen here, there's no explanation as to why this change is
-being made.
 
---Y/WcH0a6A93yCHGr
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0mAUsACgkQJNaLcl1U
-h9Dwqwf/XfgT2pwWuQsy6NbQs7XkAQ/D0a1jByJNafCXGsuoIDp9fBsT27ugprQ0
-2BkIzw0Mj2hgvh7Fx0vlB78sDiU17SLMFKWHzHxLQGCHFDeX0z2i9pfnFYKgN1fn
-r0qusnbnu0ZqgFcXtqMV+muWvGVZXrXqraICv9mnbfgUc2LgizjDY6vD4RrgLrWM
-Gpu65WuvbMXf/FXOuIHGSlfe2Cl4dLBkaf5Vr/sxti0r6n0bxmm3RoTO6GpS9Z+h
-21pGi63ixddVXMCGOK+93DutGZcTpPx9JFuIKha3oJVNNblrXEEIBfWd4RgAQJD7
-GitY8PwFzdAShFzKzne8bzwtUfIIUQ==
-=89qm
------END PGP SIGNATURE-----
-
---Y/WcH0a6A93yCHGr--
+James
