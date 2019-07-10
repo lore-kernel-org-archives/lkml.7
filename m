@@ -2,109 +2,133 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1359BC73C66
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1A0C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B0B2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52692081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="cjGnS0LQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l8wM/ukD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8NM9kgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfGJCAM (ORCPT
+        id S1726762AbfGJCCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 22:00:12 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41947 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbfGJCAL (ORCPT
+        Tue, 9 Jul 2019 22:02:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37411 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfGJCCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 22:00:11 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2C3BE22493;
-        Tue,  9 Jul 2019 22:00:10 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 09 Jul 2019 22:00:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=lzL/P/6XyszwFm6GR1tak3ZTNCxTfU8
-        xFHl3trMlzBo=; b=cjGnS0LQ/zRspsmBRBkhxGxS171JISRFA57HNB5zx6DtsWZ
-        1gbg+wBMvXfB/nYBRarwW09O0P3miQBh71wFet2rjgdbUrdwlQ5iHQGr6EQ03B/I
-        6bEHtsp8sEkzjhGWmtdXlVvTb2pmJY9IhaosjABz4hUI47C264v3uVwK/SqSCm83
-        iVclJXGh768M18FK5vjVDf3OXt3TCHsHG039IsX5R7KYezfEMcx2rTDgDCYN1uIZ
-        hjybXhn5DvhoJ0iNgwgkJfkR7/KiSYxB1mhWzGH5kiQGjkvC1x0D3Ng9tU0hhrIg
-        uw57Uyvutnk3Aeh4pF8/RoamEfpYtPzwxc6KZEg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=lzL/P/
-        6XyszwFm6GR1tak3ZTNCxTfU8xFHl3trMlzBo=; b=l8wM/ukDu2ovfJId8tYGOL
-        4rfZH+YbNLTR94C9XeJYypnkPSF1jEwRaf+ZZ3F+nyYx8HUcKZQDkEJX6qdRL1qe
-        WW3GVmmMxvyqzVr4Cu11z805KzDjEFl/ms5MJBE804Y7bRMhK3cevhXEMxftYJuC
-        DWn4/aZpZ6c5oCy4Lmg/w5GqJeQVZaozUav7to8N7N/a+cU4WZGRBd1DvDsMRVme
-        1hpYSBItxRGMC03yYgIGJ4RwHz9wPPKUvFFkwuOYUTZCX6jqALNE9pB5+s7p9N4B
-        zWYYdhiZA4+oj87XYcSxx+sgTVFSWdPf+9+h02tmBh7SUsIg7Zt9wN+mPsYa2x1g
-        ==
-X-ME-Sender: <xms:qEYlXd1lMHkppkzm8FQurPkOYfEKQC7WnYE9xF4Bh7baDoKnQpaWyQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeggdehvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:qEYlXSvhixOSJI878hkt76xxXtqqHcU-otcrEBLoXfHkwvE816z23Q>
-    <xmx:qEYlXdgQOiEwFeu2THopzBZOCC-eBGTDUi8Vj3O8xvuSwonmmmiJsw>
-    <xmx:qEYlXRCdhKj-5_bFThl0r4KwWf18GbiE07xIQORcF7PvUAJ63Yewrg>
-    <xmx:qkYlXd1hRoVOSyjICp5kBBVXf_E_2Zll_0ZULRUhQ1Rm5-OZJf9nkA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id D3530E0193; Tue,  9 Jul 2019 22:00:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <90c0c965-00ae-4f7a-a6f5-258572398bb0@www.fastmail.com>
-In-Reply-To: <CAL_Jsq+0z4OZ7qbaiUva1v5xCKXpsaPBZ9tj_M4HbEihsU_MfA@mail.gmail.com>
-References: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
- <CAL_Jsq+0z4OZ7qbaiUva1v5xCKXpsaPBZ9tj_M4HbEihsU_MfA@mail.gmail.com>
-Date:   Wed, 10 Jul 2019 11:30:14 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rob Herring" <robh+dt@kernel.org>,
-        "Hongwei Zhang" <hongweiz@ami.com>
-Cc:     devicetree@vger.kernel.org, "Joel Stanley" <joel@jms.id.au>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-Content-Type: text/plain
+        Tue, 9 Jul 2019 22:02:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 19so279574pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 19:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5ozlntHdL+bOtNT4Ao+TnnUuHHmNF6lXl3Z50ffu07w=;
+        b=W8NM9kgbB7xliKIJEKnoVM053v5lDWkRfoaMeuHpmAd6ZCrXem052uVY+7963In31Z
+         IBFu0UUcNMZaqsrQ28XjPseQlb0Fq0euCjm68QyY82ha87aMzOs4TjuM/0rvxAPO/+Yq
+         Kgv5/tsvBb6X+JUDOBv/zD3a5Xqs/WhtvSdFEoKqX144BxgQD+G3pEGIvxKgor0+7xiF
+         0KYpLqJcZ0KFAWryEyauCFsWodJybldYm3+k0nkucj2zLJiK42CtFcTP/4HiXXxqoVz5
+         sPv8IxdAWi9dtmVquthytM65LXfhPVZSbzCUaAqORxDIJ6clB2jIumBGY5F2K8kX+ocd
+         oJ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ozlntHdL+bOtNT4Ao+TnnUuHHmNF6lXl3Z50ffu07w=;
+        b=aatKDOzOJpYWFiz0PFJDg5fhxK9fzHRWLcbpg+iXQIO91jrMKcCKS5z1QMmi0N5bWe
+         4Dz5cAAw+uTFdsLJOvm4MnP3eAAKJvlz4cu3Uwdw/W0ze5wkkqcLx4QiXLBcbHesCTyN
+         rw6Bdi8BGYso1M4utIbHyZqyy4Bb94Gyd/l+zWEGlV2Xnti6Y2DaEiKqkQNA6DM9yVW7
+         vS3fb1uEIx2zAjIrZIFlr/ffydiLpxw7jEuDICa2i9chyunlzZUaSGbO9iQr92AKVafW
+         ikkvFfGIjVnadOu7F410bCtUbllPbov9xYl+tHO89WSANx3Qk2rkKMcQMRvRSHOrR4ob
+         Sh2A==
+X-Gm-Message-State: APjAAAXoQ2DNhnIBsRiCvMbeH9jXcuFIi8h+aJAfzDLp1wIPX7QYq0+q
+        +f7diFBa33W7ihQ+GsmQ2dE=
+X-Google-Smtp-Source: APXvYqyH4iuaZb9I1WmMrypxp2AoldTXAmkmzDe2l43UsFMsM5aA6WPD309XzD6oHM7J1itC5SK4nw==
+X-Received: by 2002:a63:f346:: with SMTP id t6mr35149751pgj.203.1562724136460;
+        Tue, 09 Jul 2019 19:02:16 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id k22sm337387pfk.157.2019.07.09.19.02.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 19:02:15 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 07:32:08 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Ladislav Michl <ladis@linux-mips.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Gen Zhang <blackgod016574@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH] sound: soc: codecs: wcd9335: add irqflag
+ IRQF_ONESHOT flag
+Message-ID: <20190710020208.GA12600@hari-Inspiron-1545>
+References: <20190704191026.GA20732@hari-Inspiron-1545>
+ <20190705201006.GA22085@lenoch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705201006.GA22085@lenoch>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Wed, 10 Jul 2019, at 04:23, Rob Herring wrote:
-> On Wed, Jul 3, 2019 at 2:01 PM Hongwei Zhang <hongweiz@ami.com> wrote:
-> >
-> > Add bindings to support SGPIO on AST2400 or AST2500.
-> >
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+On Fri, Jul 05, 2019 at 10:10:06PM +0200, Ladislav Michl wrote:
+> On Fri, Jul 05, 2019 at 12:40:26AM +0530, Hariprasad Kelam wrote:
+> > Add IRQF_ONESHOT to ensure "Interrupt is not reenabled after the hardirq
+> > handler finished".
+> > 
+> > fixes below issue reported by coccicheck
+> > 
+> > sound/soc/codecs/wcd9335.c:4068:8-33: ERROR: Threaded IRQ with no
+> > primary handler requested without IRQF_ONESHOT
+> > 
+> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 > > ---
-> >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
+> >  sound/soc/codecs/wcd9335.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+> > index 85737fe..7ab9bf6f 100644
+> > --- a/sound/soc/codecs/wcd9335.c
+> > +++ b/sound/soc/codecs/wcd9335.c
+> > @@ -4056,6 +4056,9 @@ static struct wcd9335_irq wcd9335_irqs[] = {
+> >  static int wcd9335_setup_irqs(struct wcd9335_codec *wcd)
+> >  {
+> >  	int irq, ret, i;
+> > +	unsigned long irqflags;
+> > +
+> > +	irqflags = IRQF_TRIGGER_RISING | IRQF_ONESHOT;
 > 
-> Is this SGPIO as in the blinky lights for HDDs in servers? If so, that
-> has nothing to do with Linux GPIO subsystem.
+> Why does this change trigger adding a variable?
+Yes variable is not required. Will resend the patch without variable.
 > 
-
-No, this is just literal serialised GPIO, which can be used with e.g. nexperia
-74LV595 / 74LV165 parts.
-
-There is a separate chunk of IP in the SoC that acts as an SFF-8485 (blinky
-lights) slave monitor.
-
-Andrew
+> >  	for (i = 0; i < ARRAY_SIZE(wcd9335_irqs); i++) {
+> >  		irq = regmap_irq_get_virq(wcd->irq_data, wcd9335_irqs[i].irq);
+> > @@ -4067,7 +4070,7 @@ static int wcd9335_setup_irqs(struct wcd9335_codec *wcd)
+> >  
+> >  		ret = devm_request_threaded_irq(wcd->dev, irq, NULL,
+> >  						wcd9335_irqs[i].handler,
+> > -						IRQF_TRIGGER_RISING,
+> > +						irqflags,
+> >  						wcd9335_irqs[i].name, wcd);
+> >  		if (ret) {
+> >  			dev_err(wcd->dev, "Failed to request %s\n",
+> > -- 
+> > 2.7.4
+> > 
+> > _______________________________________________
+> > Alsa-devel mailing list
+> > Alsa-devel@alsa-project.org
+> > https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
