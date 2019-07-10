@@ -4,130 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAD5C73C65
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FA9C73C65
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D71520651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="M64FY2Y/"
+	by mail.kernel.org (Postfix) with ESMTP id 661EF20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562720936;
+	bh=F71BOyPnjr02173+roHGTIr/+ykJmXCEgpsxjH8h97Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lVenU4Iro27bIGpOsLxqMyQZ2AJtKglNuwECD+8aXmMfZmKbmINZ7LGaRd7zXy8r0
+	 vITy6FwhuVmsRVJD2Ic3GCwIYduiM8Y2PZ1WKBggMsKNpFVv8mgpr2R0WzI20a8FF0
+	 I5Bq2f552pixuSddFXxZXWVKo9GtwxKtIfVMyylw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfGJBEu (ORCPT
+        id S1726792AbfGJBIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:04:50 -0400
-Received: from mail-eopbgr770125.outbound.protection.outlook.com ([40.107.77.125]:52429
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726710AbfGJBEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:04:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EX2LGnEvapj0sFwnsFURqORE3wlL5XS0tmCGEnhh3HJ5qYYpNGZKyxLS+V96MU6CEtfitvpnAZhUw/Id58KSNGmlPMriAebY+V2hsSghaBIFraZStLOzuoVO1SyldZYds0y1JscdyiJuc8Tf87a96c6tMjs9pB7PIWtZOujg98dQW3ci2hMuUNnG5MWNtQUqKl5bIZD7pRQde0udsB6dWPdfWdz2ui07SNd4pWKKMpLiWM7WUVlhz2hWB5r9b/KZZbWlqJOGGq+Ob8xql/XQ5aisJIY9bVP1EeToETBSDv1TPAXzYj3fRnNyehp0h+f3kjz918VIircdJI848q2hgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aPNNUnNZUmydsPDIRnEZcUils3sRed325LUfrTyp+MQ=;
- b=XoJ+O/irpBlbzIylrmMswv+X5z5O3ubYEHKmX6/T2QumLlrRESaGFqrR4Hh2qd2eCxH6Wd0WuskflGYSHb8W2Xn06losbv5imV3zyJb95HlYxQEyH48+Jxh5f+VVebT3hYHKRZcA9r7qx4T6tKJPL08L8gaTGUJ4zUNjGnK4erlpwcneknG4ZLTAuyqGWpB+paclsdURIQud/apgBLkU6NKEAskceKgKahmMqHTFqLW8Jq/DJfC70lmAUcryTEMDlaLQJMWqkyVEcgl7Dc54CzQJoRuE182tEVrjHLQZn7S/+nPaR7aZCZqWXIESZooHg5GYnaGb+eVHTJAyD1AyIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aPNNUnNZUmydsPDIRnEZcUils3sRed325LUfrTyp+MQ=;
- b=M64FY2Y/rBaKy6B6cv7TpzpTPJhrEKQTZ1rzTR5MZ7+6Us6ExijasppvW58acHRPOBSxvT8sbIHkgiceX/5aezNPF6ZM2grcNUl7GS6/Ucr7gV7iof9Q4m1bN7ch24ttpDEwn4rJ2GdMvLnZBY9LBW63Ou6liBxiD7ofI+FQrQI=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1146.namprd21.prod.outlook.com (20.179.50.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.3; Wed, 10 Jul 2019 01:04:44 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::5067:7dee:544e:6c08]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::5067:7dee:544e:6c08%9]) with mapi id 15.20.2094.001; Wed, 10 Jul 2019
- 01:04:44 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] Name NICs based on vmbus offer and enable async
- probe by default
-Thread-Topic: [PATCH net-next] Name NICs based on vmbus offer and enable async
- probe by default
-Thread-Index: AQHVNqmLUJAyxztGLUGuWv2QILreQ6bC/8cAgAAJnzA=
-Date:   Wed, 10 Jul 2019 01:04:44 +0000
-Message-ID: <DM6PR21MB1337BA65754C4378239B4886CAF00@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1562712932-79936-1-git-send-email-haiyangz@microsoft.com>
- <20190709.172936.1666884223446806217.davem@davemloft.net>
-In-Reply-To: <20190709.172936.1666884223446806217.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-10T01:04:42.6565530Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a8beef6d-53de-4daf-bd7b-3704ecc94531;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5432f746-5cb2-4728-1de7-08d704d2985f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1146;
-x-ms-traffictypediagnostic: DM6PR21MB1146:|DM6PR21MB1146:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB11466432A8A7B7D028DA87A4CAF00@DM6PR21MB1146.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(189003)(199004)(13464003)(186003)(7696005)(256004)(25786009)(8936002)(22452003)(229853002)(6116002)(8990500004)(4326008)(66066001)(11346002)(446003)(86362001)(316002)(66946007)(26005)(3846002)(476003)(486006)(99286004)(76116006)(54906003)(6436002)(102836004)(66476007)(6506007)(71190400001)(66556008)(6916009)(33656002)(53546011)(10090500001)(64756008)(66446008)(53936002)(81156014)(4744005)(76176011)(9686003)(305945005)(55016002)(74316002)(8676002)(478600001)(6246003)(2906002)(7736002)(71200400001)(68736007)(10290500003)(14454004)(52536014)(5660300002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1146;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YjZAQV1IY0mx7pl7UCJJhLtXc6ryTf94G0Rr+AO0BLEpPzWOMJL7Bs/qRFPc5sYvBcDD62LYst+8ABnNdlCFf2TLsv9VjbCot4YabE9zHQgJJHyhncnVXmynjvmftT3C41W2n9fJU2tYdhdl/SfsLnLu4iztSDGXzX0X7mD/8XpLFc9ln8lAoP6XRcIzSf0TCfFF7I70O71PhUD63jITijpKjbThk5kosm4CIOuwjiuayCEyIc+AYwgM4ZjjAykQbVt9HfiMr249vxh2Ng3TauqVevuO45AqLHo5GG5wCcvOl38f1ezDAOc8hmPZZMUOmG6r6lRRb7u7CinC9DuSSUT68Mv/BgrhvVp4K47XCuN32+H7uSPPabp8HBn8UxD/KPI3VJDq9/jlI1w+RMwj7m/U3fcc2sW3mDZYlEsZq1Q=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jul 2019 21:08:55 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34405 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfGJBIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 21:08:54 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p17so326388ljg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 18:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Up9iZjHgNCrq6ieA7OVjWsH/10kzcc/oi8LMzBf69I=;
+        b=Rf0xOIMPoXeM5arzCpWk0X8A7YdXx/q5SGa1Od6cG77Y3DQ+U7tiaIfxjxVQrso7wv
+         RlVDVJyckSktKk5/NVoyVC5yHcdFsiyRiIigpFCbq9Qvzie6U4YZ/Xub0zDPilFL9VeL
+         h0ue94X6HQsyBTkcJmVfS7PDivZLhW2Ae2Ujk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Up9iZjHgNCrq6ieA7OVjWsH/10kzcc/oi8LMzBf69I=;
+        b=Kfoo6QKlaOLKrlTpxITGsMn9HTr+FAoVS84EL2ZneyVRibxVw3L6VbozS6SRKysxOX
+         zuIOA+wI/Voo49iQwo1UswgD2GS10jl3LevW/z5KjF0edf7QWCXesK0SBjps4V238M1o
+         1phK2UsSFjPXtX0y4dhF4eHlR5ms1N37L0/CrFu9/N6fmKNCZY/R9qVbp7azNJOods/Q
+         jeMu7XovbKEOzaMgiDGnzgdexajyXIHD03ydFt+1JWVvef5g88t0yr/atAzO4ZMytlC7
+         SSnF8M8lWaMcWsXmqCbBznKHlipIlgXMxEN6tPTLtniRzaT/pBhWAhdxT21lQirpkBbz
+         eLbw==
+X-Gm-Message-State: APjAAAVaxrcr53On7BH9koaw0+qGZ0jirpXF/6ZlPswGQjnJDWEwAgZU
+        c4gvU1i+FEkNJ0KExZnJ5NYpq4vJTDc=
+X-Google-Smtp-Source: APXvYqwIgUCsbS3Nbj76VqBsANuS54NJrbctg7zcdQx7um/bsrkBoAy7Wts2Z4ChoeON8E5JsRlfzQ==
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr15006182lje.46.1562720931662;
+        Tue, 09 Jul 2019 18:08:51 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id p15sm141698lji.80.2019.07.09.18.08.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 18:08:50 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id r9so308864ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 18:08:50 -0700 (PDT)
+X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr15908516ljj.156.1562720929921;
+ Tue, 09 Jul 2019 18:08:49 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5432f746-5cb2-4728-1de7-08d704d2985f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 01:04:44.1282
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: haiyangz@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1146
+References: <20190708162756.GA69120@gmail.com> <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
+ <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
+ <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+ <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
+ <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de> <CAHk-=wj5E=WTz3jfNFnupCPoLXDyFZdW1xgKvuuU-M1_7MEqaw@mail.gmail.com>
+In-Reply-To: <CAHk-=wj5E=WTz3jfNFnupCPoLXDyFZdW1xgKvuuU-M1_7MEqaw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Jul 2019 18:08:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wghD6CzP7NxHzG4_-bAqOiad_aAohdETDTpUpyci55kfg@mail.gmail.com>
+Message-ID: <CAHk-=wghD6CzP7NxHzG4_-bAqOiad_aAohdETDTpUpyci55kfg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Jiri Kosina <jkosina@suse.cz>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 9, 2019 at 5:59 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On my laptop (which I am at right now), the hang is different, and
+> maybe it's similar to your ACPI hang issue. I will try that revert,
+> and at least see if that solves the laptop side.
 
+Nope, that wasn't it.  Apparently there are three different issues.
 
-> -----Original Message-----
-> From: linux-hyperv-owner@vger.kernel.org <linux-hyperv-
-> owner@vger.kernel.org> On Behalf Of David Miller
-> Sent: Tuesday, July 9, 2019 8:30 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next] Name NICs based on vmbus offer and enable
-> async probe by default
->=20
->=20
-> The net-next tree, if you are reading netdev today, has been closed.
-I will re-submit when the tree re-opened.=20
-Thanks,
-- Haiyang
+I guess I'll just have to do a full bisect on the laptop too. That's
+going to take forever.
+
+                    Linus
