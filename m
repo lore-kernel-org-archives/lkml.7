@@ -2,151 +2,170 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF134C73C65
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3097AC73C65
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CD220645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79742073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="XjQCg58D"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="VeOxePKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfGJAfD (ORCPT
+        id S1726916AbfGJAuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 20:35:03 -0400
-Received: from mail-eopbgr680115.outbound.protection.outlook.com ([40.107.68.115]:42119
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        Tue, 9 Jul 2019 20:50:40 -0400
+Received: from mail-eopbgr690092.outbound.protection.outlook.com ([40.107.69.92]:63959
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726444AbfGJAfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 20:35:03 -0400
+        id S1726444AbfGJAuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 20:50:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MkTsn+pSgj1a7EQpft2Z7awkvRruTaRO2U2EWqLzpst12leHdty4qPg3ICNTXNx8zzgLHDmcYCuXwiQVdZTtVQBij+99hiisPBBNkGRUaxJ4uw/HV6RkQaC9GMTFq3LS2/xU6sTy2xL7vykHicQkczCTB+FDsIzzglYZeQLlgBekZPjW84skTgOOrEPlEmi7xKTWzL4c1k+Uzt/6diyvVNxFQPB51LK56rCiVqHvdM0Nlxj46lbUBoUN3ZNhS/OcI5HUL/j9VHcEgqDpJEzI6q5mF1usIqwF9J0qP+E2llyFhTet7S5SpE/8ivgar7zX6hjOF9fW8Bc6pdCFu44YUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C/MEdO4xKVJ/7QlENAs5nmXgKFkZBw/t9X5CO5f5ZqE=;
+ b=U19wBf6pcLdRCyRCvQl7Uk7LJuVNnAfRy6xin9R1Xp5qfNHh+OVmOUeJwb7B0Z3NqVx8pqwwWIA3zIO70rKoXYQ7Gdk8Ae44CSAs+yvzB2ma6yf1BHDVTE9T78W5yQ4Z9IwVyI20V3yjk+sRm7mYz0gVa4eL2hnvlLn89nhOhfqtVTdcacK9PLKuSi852lCYvEVwL3OOjsQVwFbbZcfyPaTx9DEu1E9o3//iFjQrJQppdcwkCYZCnLkiaAODkjY2rqg2gZirHKQqykMc/Hcm821BRmmlkQFH+tTcCYutcv0ZxzDbbN+uDGsjzytgi/esF95/GftUXy7I7Plv2uaznA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=os.amperecomputing.com;dmarc=pass action=none
+ header.from=os.amperecomputing.com;dkim=pass
+ header.d=os.amperecomputing.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2DXeYGwDAu8XiBRuIFYeU35G8ERKcDs4TKxSlAcuhhQ=;
- b=XjQCg58DJh5OWvBF27jHXcjJdIs9et5RPAEB96GUpfBPzRiOvqRix5m2vwihDnxYPRuHYwHpSTSgym0Gi69ZOB1lZQf8TekQ7pemn07PYtvKlW87mISqtx/adYE+YrVW0oIo7oqtHdU2emat+85KTeXBzVtefhwY0aGA/TFXvfU=
-Received: from SN6PR01MB4094.prod.exchangelabs.com (52.135.119.23) by
- SN6PR01MB3790.prod.exchangelabs.com (52.132.123.140) with Microsoft SMTP
+ bh=C/MEdO4xKVJ/7QlENAs5nmXgKFkZBw/t9X5CO5f5ZqE=;
+ b=VeOxePKJuyAz88ECWJi5OkUm2UxW1qiQT6oKZq8iWisz+Y+ouOkFPSq26ZDxn0bh/ax77Vifm8swvczJM1qN867zzjdNg+M3wAuIrk5ZOxvqoXpnk6rJXp2evVJh/dQNbAFNi3e5UBPjxT6GDQAL8y9ma21OOr0MgV/G/2FGACg=
+Received: from BYAPR01MB3975.prod.exchangelabs.com (52.135.201.14) by
+ BYAPR01MB5335.prod.exchangelabs.com (20.179.61.202) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Wed, 10 Jul 2019 00:34:19 +0000
-Received: from SN6PR01MB4094.prod.exchangelabs.com
- ([fe80::b958:7797:c21b:5725]) by SN6PR01MB4094.prod.exchangelabs.com
- ([fe80::b958:7797:c21b:5725%5]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
- 00:34:19 +0000
-From:   Hoan Tran OS <hoan@os.amperecomputing.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+ 15.20.2073.10; Wed, 10 Jul 2019 00:49:56 +0000
+Received: from BYAPR01MB3975.prod.exchangelabs.com
+ ([fe80::a81b:f1e7:a31f:d464]) by BYAPR01MB3975.prod.exchangelabs.com
+ ([fe80::a81b:f1e7:a31f:d464%6]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 00:49:56 +0000
+From:   Tyler Baicar OS <baicar@os.amperecomputing.com>
+To:     Shiju Jose <shiju.jose@huawei.com>,
+        Open Source Submission <patches@amperecomputing.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Submission <patches@amperecomputing.com>
-Subject: Re: [PATCH 3/5] x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-Thread-Topic: [PATCH 3/5] x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-Thread-Index: AQHVK6WX71HRsQts10W3HaW79T6UP6as+COAgBYe74A=
-Date:   Wed, 10 Jul 2019 00:34:19 +0000
-Message-ID: <1c5bc3a8-0c6f-dce3-95a2-8aec765408a2@os.amperecomputing.com>
-References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
- <1561501810-25163-4-git-send-email-Hoan@os.amperecomputing.com>
- <alpine.DEB.2.21.1906260032250.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906260032250.32342@nanos.tec.linutronix.de>
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "Matteo.Carlini@arm.com" <Matteo.Carlini@arm.com>,
+        "Andrew.Murray@arm.com" <andrew.murray@arm.com>
+Subject: Re: [PATCH RFC 1/4] ACPI/AEST: Initial AEST driver
+Thread-Topic: [PATCH RFC 1/4] ACPI/AEST: Initial AEST driver
+Thread-Index: AQHVMPZqphfhRm1STkOzQdqBSPqI3aa6dWVQgAibBEg=
+Date:   Wed, 10 Jul 2019 00:49:56 +0000
+Message-ID: <BYAPR01MB39758AB5AF4A67AF8278E361E3F00@BYAPR01MB3975.prod.exchangelabs.com>
+References: <1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com>
+ <1562086280-5351-2-git-send-email-baicar@os.amperecomputing.com>,<86258A5CC0A3704780874CF6004BA8A6584514BF@lhreml523-mbs.china.huawei.com>
+In-Reply-To: <86258A5CC0A3704780874CF6004BA8A6584514BF@lhreml523-mbs.china.huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: CY4PR06CA0048.namprd06.prod.outlook.com
- (2603:10b6:903:77::34) To SN6PR01MB4094.prod.exchangelabs.com
- (2603:10b6:805:a4::23)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hoan@os.amperecomputing.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [27.68.67.201]
+ smtp.mailfrom=baicar@os.amperecomputing.com; 
+x-originating-ip: [107.15.51.194]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bb0fe928-c6f4-4bc5-9d58-08d704ce5894
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR01MB3790;
-x-ms-traffictypediagnostic: SN6PR01MB3790:
-x-microsoft-antispam-prvs: <SN6PR01MB37900B4D5DBABBA819D47E45F1F00@SN6PR01MB3790.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: 11b7165e-72d5-4b61-4309-08d704d08744
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR01MB5335;
+x-ms-traffictypediagnostic: BYAPR01MB5335:
+x-microsoft-antispam-prvs: <BYAPR01MB53356766A75F2327AD31CA2DE3F00@BYAPR01MB5335.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(39840400004)(136003)(396003)(189003)(199004)(54534003)(68736007)(66066001)(486006)(2616005)(186003)(6116002)(76176011)(54906003)(31696002)(11346002)(446003)(6246003)(3846002)(316002)(8676002)(107886003)(6916009)(25786009)(478600001)(14454004)(86362001)(6512007)(52116002)(476003)(81156014)(81166006)(66476007)(7736002)(64756008)(66946007)(66556008)(229853002)(256004)(6486002)(386003)(6506007)(26005)(7416002)(66446008)(5660300002)(305945005)(99286004)(53546011)(71200400001)(31686004)(4326008)(53936002)(71190400001)(102836004)(6436002)(2906002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR01MB3790;H:SN6PR01MB4094.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(346002)(39850400004)(396003)(136003)(189003)(199004)(71200400001)(64756008)(53546011)(110136005)(52536014)(66476007)(66446008)(7696005)(5660300002)(14454004)(99286004)(66946007)(71190400001)(68736007)(91956017)(186003)(66066001)(6506007)(2906002)(76176011)(76116006)(74316002)(66556008)(26005)(305945005)(102836004)(8676002)(86362001)(446003)(229853002)(55016002)(33656002)(478600001)(2201001)(256004)(11346002)(486006)(7736002)(2501003)(6436002)(9686003)(3846002)(6116002)(81166006)(7416002)(81156014)(53936002)(8936002)(25786009)(6246003)(316002)(476003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR01MB5335;H:BYAPR01MB3975.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
 received-spf: None (protection.outlook.com: os.amperecomputing.com does not
  designate permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: S5KyvRHNyHX690M0L8U8FPmcFEGo8JmEPvSX3mb2MAyMU4SIUy55UM7YxwWRYqXNW9DlK1BZeqtX15DF7S83MUVw8KM7/Yh5EwxXNAMZIm2aMteWKVBaiAblNLmqY1P+Hkp1/VBaD1dpfJQBUSIKQ9tNVy++Z/b/Eti+XW4HJiYpXWeynUnxFYbihmOwnJB6jMc+yn2lU3Ym5/qoXasQl2FoQqO7bpv7Cu16BR4XTsBO+m7zpf2IPIQYqM8UpuX3YtsLENYIZzML7TZck88G/vihyLzH7dtDC23Gyinj0Rg0I3m+KhkcOI+/UxigbgpXaMK6QgWdr+d0npL58N7rbE975vRD4m8DUElXDHHO2QwdAxt4oceP9lvtViM78BBUKdTsy/SoeH283AO3R8CevORbimUO56jsuo+6fLlJY6k=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <856DBE6A98D2C64F9203DA2E92E3CCD6@prod.exchangelabs.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: NkfRPx5jW4m7iSKtG8mQFOGOt2LRr9M239mIYZjFCU8F+nRWpM6Hpz+HwVp83d5x/M4+7jvfPm0mXCOE/em7qCdDeYZ0dMlLtzDS5gqOGg8haeSVTnhhxBXsTRLsaYR7cXnaNwQdFv+G8jy1cEH/MfGx8Es10ZRpNCkXZeoEiUYJobAV+wFxbZufhp/PdkEiPn7hcXcMvJEXM71J9FUSu8F05+Ngh8+8pyya++5EKXr4kXW331rNK1Z9JoSC0vP05c6OroTzHCqhKiS+q+NFwGtQfNNaS/xGWxR60Cfd1xeUJBebWI5fgjU8IFvOnSr+tn1Ii0jAZPoAXZrb69RxJ+/HASpD9ovI3uZ50rIPe/25uEbYMPH39KEX9eQN4f0UWiMiAZchD+yy5FGN++V/NSVa1FwL616SlA7QELwMGRI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb0fe928-c6f4-4bc5-9d58-08d704ce5894
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 00:34:19.5061
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11b7165e-72d5-4b61-4309-08d704d08744
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 00:49:56.3561
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hoan@os.amperecomputing.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR01MB3790
+X-MS-Exchange-CrossTenant-userprincipalname: Baicar@os.amperecomputing.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5335
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGhvbWFzLA0KDQpUaGFua3MgZm9yIHlvdSBjb21tZW50cw0KDQpPbiA2LzI1LzE5IDM6NDUg
-UE0sIFRob21hcyBHbGVpeG5lciB3cm90ZToNCj4gSG9hbiwNCj4gDQo+IE9uIFR1ZSwgMjUgSnVu
-IDIwMTksIEhvYW4gVHJhbiBPUyB3cm90ZToNCj4gDQo+IFBsZWFzZSB1c2UgJ3g4Ni9LY29uZmln
-OiAnIGFzIHByZWZpeC4NCj4gDQo+PiBUaGlzIHBhdGNoIHJlbW92ZXMgQ09ORklHX05PREVTX1NQ
-QU5fT1RIRVJfTk9ERVMgYXMgaXQncw0KPj4gZW5hYmxlZCBieSBkZWZhdWx0IHdpdGggTlVNQS4N
-Cj4gDQo+IFBsZWFzZSBkbyBub3QgdXNlICdUaGlzIHBhdGNoJyBpbiBjaGFuZ2Vsb2dzLiBJdCdz
-IHBvaW50bGVzcyBiZWNhdXNlIHdlDQo+IGFscmVhZHkga25vdyB0aGF0IHRoaXMgaXMgYSBwYXRj
-aC4NCj4gDQo+IFNlZSBhbHNvIERvY3VtZW50YXRpb24vcHJvY2Vzcy9zdWJtaXR0aW5nLXBhdGNo
-ZXMucnN0IGFuZCBzZWFyY2ggZm9yICdUaGlzDQo+IHBhdGNoJw0KPiANCj4gU2ltcGx5IHNheToN
-Cj4gDQo+ICAgIFJlbW92ZSBDT05GSUdfTk9ERVNfU1BBTl9PVEhFUl9OT0RFUyBhcyBpdCdzIGVu
-YWJsZWQgYnkgZGVmYXVsdCB3aXRoDQo+ICAgIE5VTUEuDQo+IA0KDQpHb3QgaXQsIHdpbGwgZml4
-DQoNCj4gQnV0IC4uLi4uDQo+IA0KPj4gQEAgLTE1NjcsMTUgKzE1NjcsNiBAQCBjb25maWcgWDg2
-XzY0X0FDUElfTlVNQQ0KPj4gICAJLS0taGVscC0tLQ0KPj4gICAJICBFbmFibGUgQUNQSSBTUkFU
-IGJhc2VkIG5vZGUgdG9wb2xvZ3kgZGV0ZWN0aW9uLg0KPj4gICANCj4+IC0jIFNvbWUgTlVNQSBu
-b2RlcyBoYXZlIG1lbW9yeSByYW5nZXMgdGhhdCBzcGFuDQo+PiAtIyBvdGhlciBub2Rlcy4gIEV2
-ZW4gdGhvdWdoIGEgcGZuIGlzIHZhbGlkIGFuZA0KPj4gLSMgYmV0d2VlbiBhIG5vZGUncyBzdGFy
-dCBhbmQgZW5kIHBmbnMsIGl0IG1heSBub3QNCj4+IC0jIHJlc2lkZSBvbiB0aGF0IG5vZGUuICBT
-ZWUgbWVtbWFwX2luaXRfem9uZSgpDQo+PiAtIyBmb3IgZGV0YWlscy4NCj4+IC1jb25maWcgTk9E
-RVNfU1BBTl9PVEhFUl9OT0RFUw0KPj4gLQlkZWZfYm9vbCB5DQo+PiAtCWRlcGVuZHMgb24gWDg2
-XzY0X0FDUElfTlVNQQ0KPiANCj4gdGhlIGNoYW5nZWxvZyBkb2VzIG5vdCBtZW50aW9uIHRoYXQg
-dGhpcyBsaWZ0cyB0aGUgZGVwZW5kZW5jeSBvbg0KPiBYODZfNjRfQUNQSV9OVU1BIGFuZCB0aGVy
-ZWZvcmUgZW5hYmxlcyB0aGF0IGZ1bmN0aW9uYWxpdHkgZm9yIGFueXRoaW5nDQo+IHdoaWNoIGhh
-cyBOVU1BIGVuYWJsZWQgaW5jbHVkaW5nIDMyYml0Lg0KPiANCg0KSSB0aGluayB0aGlzIGNvbmZp
-ZyBpcyB1c2VkIGZvciBhIE5VTUEgbGF5b3V0IHdoaWNoIE5VTUEgbm9kZXMgYWRkcmVzc2VzIA0K
-YXJlIHNwYW5uZWQgdG8gb3RoZXIgbm9kZXMuIEkgdGhpbmsgMzJiaXQgTlVNQSBhbHNvIGhhdmUg
-dGhlIHNhbWUgaXNzdWUgDQp3aXRoIHRoYXQgbGF5b3V0LiBQbGVhc2UgY29ycmVjdCBtZSBpZiBJ
-J20gd3JvbmcuDQoNCj4gVGhlIGNvcmUgbW0gY2hhbmdlIGdpdmVzIG5vIGhlbHBmdWwgaW5mb3Jt
-YXRpb24gZWl0aGVyLiBZb3UganVzdCBjb3BpZWQgdGhlDQo+IGFib3ZlIGNvbW1lbnQgdGV4dCBm
-cm9tIHNvbWUgcmFuZG9tIEtjb25maWcuDQoNClllcywgYXMgaXQncyBhIGNvcnJlY3QgY29tbWVu
-dCBhbmQgaXMgdXNlZCBhdCBtdWx0aXBsZSBwbGFjZXMuDQoNClRoYW5rcw0KSG9hbg0KDQo+IA0K
-PiBUaGlzIG5lZWRzIGEgYml0IG1vcmUgZGF0YSBpbiB0aGUgY2hhbmdlbG9ncyBhbmQgdGhlIGNv
-dmVyIGxldHRlcjoNCj4gDQo+ICAgICAgIC0gV2h5IGlzIGl0IHVzZWZ1bCB0byBlbmFibGUgaXQg
-dW5jb25kaXRpb25hbGx5DQo+IA0KPiAgICAgICAtIFdoeSBpcyBpdCBzYWZlIHRvIGRvIHNvLCBl
-dmVuIGlmIHRoZSBhcmNoaXRlY3R1cmUgaGFkIGNvbnN0cmFpbnRzIG9uDQo+ICAgICAgICAgaXQN
-Cj4gDQo+ICAgICAgIC0gV2hhdCdzIHRoZSBwb3RlbnRpYWwgaW1wYWN0DQo+IA0KPiBUaGFua3Ms
-DQo+IA0KPiAJdGdseA0KPiANCg==
+Hello Shiju,
+
+Thank you for the feedback!
+
+On Thu, Jul 4, 2019 at 12:03 PM Shiju Jose <shiju.jose@huawei.com> wrote:
+> >+struct ras_ext_regs {
+> >+      u64 err_fr;
+> >+      u64 err_ctlr;
+> >+      u64 err_status;
+> >+      u64 err_addr;
+> >+      u64 err_misc0;
+> >+      u64 err_misc1;
+> >+      u64 err_misc2;
+> >+      u64 err_misc3;
+> err_misc2 and err_misc3 are not used. Are they for the future purpose?
+
+Yes, these will be for future purpose once ARMv8.4 support is added. I'd li=
+ke
+to keep them in this structure define since that makes iterating through th=
+e
+memory mapped error records easier. Regardless of ARMv8.2 or ARMv8.4 suppor=
+t,
+each error record in memory mapped nodes are 64 bytes apart. Having these i=
+n
+the structure make the structure 64 bytes long making it possible for me to
+increment through error records with the increment ++ operation.
+
+If folks don't agree with that, I can change this structure to just have a
+reserved field at the end such as:
+
++ u64 res0[2];
+
+or
+
++ u8 res0[8];
+
+
+> >+      ppi_data =3D kcalloc(num_ppi, sizeof(struct aest_node_data *),
+> >+                         GFP_KERNEL);
+> >+
+> >+      for (i =3D 0; i < num_ppi; i++) {
+> >+              ppi_data[i] =3D alloc_percpu(struct aest_node_data);
+> >+              if (!ppi_data[i]) {
+> >+                      ret =3D -ENOMEM;
+> >+                      break;
+> >+              }
+> >+      }
+> >+
+> >+      if (ret) {
+> >+              pr_err("Failed percpu allocation\n");
+> >+              for (i =3D 0; i < num_ppi; i++)
+> >+                      free_percpu(ppi_data[i]);
+> I think 'ppi_data' to be freed here?
+
+Yes it should be! I'll add that in the next version.
+
+Thanks,
+Tyler=
