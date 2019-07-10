@@ -2,86 +2,90 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BADC74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74717C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54BC20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RPALncVm"
+	by mail.kernel.org (Postfix) with ESMTP id 3B9AA2087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562777460;
+	bh=K6RLxomY6/gcylM+PgA2F22Cd9n5TkDVQKNBjdOm/cs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W3pNqcqJKrqccQCFD58uDPPwkjBkMKZGf54m86k5NDeGdKncR/JNlvKL9w3DkHNL6
+	 LafKjBRHWhPDG3uaIPXmqPuIF9ZiDZWxS74EPDxGjrMrMsYIBxINLwxiiZ8hCWBXXN
+	 NDs8NR/U7T6Fd4gYKkTpHWSXvgNcIMwPtTwUikkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfGJQtt (ORCPT
+        id S1728186AbfGJQu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 12:49:49 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48956 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfGJQtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 12:49:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a8Magxb04BgDjSI4OQWgNmwKyRSckuRhLmFaoPzvT5w=; b=RPALncVmFFKUm7YFTHnRLEd/gj
-        lV+8UPCdlZC4Du5HZLEZQ1hW7NnQEPr1CCoCPtgDO0XZqHQ/+XPjwD+lpQyGDaWQEyY9ngiBB8Nxi
-        vmMVXXafwIhouY4/BtEsDjwA3xSxFil/fO6JeIyBRlJfl+BAvcRCYyH33t9xCT0examCUw5OWhStb
-        DOInsCH0DlNkjLNmEzVBVd+j8IrFJgSkSkHmS74CD6p3w466qAHoZT3daKgjHaEyy0oL1DeD+Z5wk
-        dwqakfkclQ9A3QbSSFoNuZfjnwJBzkkoOHHzHgz+WhuGYqg/YBDjNlmUA5sYMUA86ulAH97x4P1pk
-        gIHK+rgg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlFmp-0006Qo-TU; Wed, 10 Jul 2019 16:49:44 +0000
-Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>, paul@paul-moore.com
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, jmorris@namei.org, sds@tycho.nsa.gov,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-References: <20190710133403.855-1-acgoide@tycho.nsa.gov>
- <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <cb754dda-fbce-8169-4cd7-eef66e8d809e@infradead.org>
-Date:   Wed, 10 Jul 2019 09:49:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 12:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbfGJQu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 12:50:58 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 556A020665;
+        Wed, 10 Jul 2019 16:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562777458;
+        bh=K6RLxomY6/gcylM+PgA2F22Cd9n5TkDVQKNBjdOm/cs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ti2Bfojla1sTv2FTzxEHe6Vi2FoSNE5wORzZIPoTWSLPbyzdLRQZhb7BfhLk4WEiR
+         U48OE5ZzNxM5Jk4OW6BPw7r6Qd2OVTsmlWtc2T1re9KhjyGgOkC9RgPjCMKoJlKN1c
+         0Rpyx46CqmkjE+v0tXI6UFO9ysMG8nspo11Kqb5g=
+Date:   Wed, 10 Jul 2019 17:50:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, tglx@linutronix.de
+Subject: Re: [PATCH] locking/mutex: Test for initialized mutex
+Message-ID: <20190710165053.cjt7qs7kx5fwu3d4@willie-the-truck>
+References: <20190703092125.lsdf4gpsh2plhavb@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703092125.lsdf4gpsh2plhavb@linutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 9:38 AM, Casey Schaufler wrote:
-> On 7/10/2019 6:34 AM, Aaron Goidel wrote:
-
->> @@ -3261,6 +3262,26 @@ static int selinux_inode_removexattr(struct dentry *dentry, const char *name)
->>  	return -EACCES;
->>  }
->>  
->> +static int selinux_inode_notify(struct inode *inode, u64 mask)
->> +{
->> +	u32 perm = FILE__WATCH; // basic permission, can a watch be set?
+On Wed, Jul 03, 2019 at 11:21:26AM +0200, Sebastian Andrzej Siewior wrote:
+> An uninitialized/ zeroed mutex will go unnoticed because there is no
+> check for it. There is a magic check in the unlock's slowpath path which
+> might go unnoticed if the unlock happens in the fastpath.
 > 
-> We don't use // comments in the Linux kernel.
+> Add a ->magic check early in the mutex_lock() and mutex_trylock() path.
 > 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> Nothing screamed during uninitialized usage of init_mm's context->lock
+>   https://git.kernel.org/tip/32232b350d7cd93cdc65fe5a453e6a40b539e9f9
+> 
+>  kernel/locking/mutex.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+> index 0c601ae072b3f..fb1f6f1e1cc61 100644
+> --- a/kernel/locking/mutex.c
+> +++ b/kernel/locking/mutex.c
+> @@ -908,6 +908,10 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
+>  
+>  	might_sleep();
+>  
+> +#ifdef CONFIG_DEBUG_MUTEXES
+> +	DEBUG_LOCKS_WARN_ON(lock->magic != lock);
+> +#endif
 
-I thought that we had recently moved into the 21st century on that issue,
-but I don't see it mentioned in coding-style.rst.  Maybe we need a Doc update.
+Why do we need to check this so early, or could we move it into
+debug_mutex_lock_common() instead?
 
-checkpatch allows C99 comments by default.
-Joe, do you recall about this?
-
-thanks.
--- 
-~Randy
+Will
