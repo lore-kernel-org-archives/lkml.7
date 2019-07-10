@@ -2,101 +2,104 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD4CC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C74C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C92F20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:10:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y78Fo7bq"
+	by mail.kernel.org (Postfix) with ESMTP id B76B72081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562749974;
+	bh=rS1FXWun4tnZthZjP5gvCnsRMWjJHRs43/TtJSmyduM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h/eeh4f2z/lS3Hc+Npizgg/sD/JkZkOorQ6QtaQgYOvNFjripMv3ZL0/0uLhIQeCY
+	 j+VRKbrlpRU+8Nz9M+gDWMY/7VLd98b+PUpuJmAy9BskP0fECACU+GQbLf0NjAYA1D
+	 NP8zD+s0DUkaedudtzbtlZ+JkvswSCfhmvdGszCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfGJJKL (ORCPT
+        id S1727711AbfGJJMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:10:11 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59313 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfGJJKL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:10:11 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6A9A3im2347178
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 10 Jul 2019 02:10:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6A9A3im2347178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562749803;
-        bh=Ga0hiwpxMHtqeVSBV5pF7381TYukT9gg0R4ViGA1Xg0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Y78Fo7bq1O9t95W7mewQpMsZ6ep4h0TBL5kJBV4Va6Y7i6tqYPDbwL7DHCpC49QKd
-         unLP514zp9GNPzfuVNC6DbMjNF3qITePICgiFOLtD//xYiJKFrZPYVMqvWAQfEYgMA
-         qct90F745yOZYm+sx+e2Hrms+HffMO1+7rG/kVxFvlSFFseAN+7bIq0KWOwyV6Se/U
-         Y02NszqmIfi3vbs6ZI20kOafN3MzkkgpfAy17TG5tC6w/0vTvhrdvmL3ea6lp/Pqne
-         xfD2F8N+SQYNpvFBxISSmz63Jv+7DInk1tXBSkLSmWQhvg7OR99xrN27bkTrue+dOy
-         NslTpXv49hGFA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6A9A2022347175;
-        Wed, 10 Jul 2019 02:10:02 -0700
-Date:   Wed, 10 Jul 2019 02:10:02 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Joe Perches <tipbot@zytor.com>
-Message-ID: <tip-9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb@git.kernel.org>
-Cc:     joe@perches.com, mingo@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de
-Reply-To: mingo@kernel.org, joe@perches.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
-References: <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/urgent] clocksource/drivers/npcm: Fix misuse of GENMASK
- macro
-Git-Commit-ID: 9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 10 Jul 2019 05:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726580AbfGJJMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:12:53 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 830AE20665;
+        Wed, 10 Jul 2019 09:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562749972;
+        bh=rS1FXWun4tnZthZjP5gvCnsRMWjJHRs43/TtJSmyduM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1z2JsBfvr21gQUt5iPDz7NT2dAXcWemQ9w/74bx4HfLPPC6I7yVg06g5XX0Wfju1i
+         A7YbWtlN91d+sVk5jnXkMYO7rltvml6cCoFWpUmywj+Czo+7nwKBl+DzPN77JGNAsg
+         PKclIs28Fbusl8l9KEjTRFoEXRXj2I6/SdInl9L4=
+Date:   Wed, 10 Jul 2019 10:12:45 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>
+Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
+Message-ID: <20190710091245.zztm6cpbix4objlq@willie-the-truck>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-11-vincenzo.frascino@arm.com>
+ <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com>
+ <20190710082750.mvm3e6myzpqsurga@willie-the-truck>
+ <alpine.DEB.2.21.1907101057190.1758@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907101057190.1758@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb
-Gitweb:     https://git.kernel.org/tip/9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb
-Author:     Joe Perches <joe@perches.com>
-AuthorDate: Tue, 9 Jul 2019 22:04:15 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 10 Jul 2019 11:05:26 +0200
+On Wed, Jul 10, 2019 at 10:58:25AM +0200, Thomas Gleixner wrote:
+> On Wed, 10 Jul 2019, Will Deacon wrote:
+> > On Tue, Jul 09, 2019 at 09:02:54PM -0700, John Stultz wrote:
+> > > I tried to bisect things down a bit, but as some later fixes are
+> > > required (at one point, date was returning the start epoch and never
+> > > increasing), this hasn't worked too well. But I'm guessing since I
+> > > see: "CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will
+> > > not be built", and the system is half working, I'm guessing this is an
+> > > issue with just the 32bit code failing.  While I can try to sort out
+> > > the proper CROSS_COMPILE_COMPAT in my build environment, I assume
+> > > userland shouldn't be crashing if that value isn't set.
+> > > 
+> > > Any chance this issue has already been raised?
+> > 
+> > First I've seen of it, although Vincenzo is likely to know better than me.
+> > In the meantime, please can you share your .config?
+> 
+> I think the key is: CROSS_COMPILE_COMPAT not defined or empty. And then run
+> 32bit userspace.
 
-clocksource/drivers/npcm: Fix misuse of GENMASK macro
+The part I was wondering about is whether the vectors page has been disabled
+at the same time, since I'm fairly sure I've already been running with the
+above (but I can easily double-check).
 
-Arguments are supposed to be ordered high then low.
-
-Signed-off-by: Joe Perches <joe@perches.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com
-
----
- drivers/clocksource/timer-npcm7xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
-index 7a9bb5532d99..8a30da7f083b 100644
---- a/drivers/clocksource/timer-npcm7xx.c
-+++ b/drivers/clocksource/timer-npcm7xx.c
-@@ -32,7 +32,7 @@
- #define NPCM7XX_Tx_INTEN		BIT(29)
- #define NPCM7XX_Tx_COUNTEN		BIT(30)
- #define NPCM7XX_Tx_ONESHOT		0x0
--#define NPCM7XX_Tx_OPER			GENMASK(3, 27)
-+#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
- #define NPCM7XX_Tx_MIN_PRESCALE		0x1
- #define NPCM7XX_Tx_TDR_MASK_BITS	24
- #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
+Will
