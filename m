@@ -2,172 +2,136 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196EBC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEE7C74A3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D643220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED1320844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oIfExlZf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUZ7ZPsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfGJXm4 (ORCPT
+        id S1727898AbfGJXpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 19:42:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35476 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfGJXm4 (ORCPT
+        Wed, 10 Jul 2019 19:45:08 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46117 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbfGJXpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 19:42:56 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u14so1833933pfn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 16:42:55 -0700 (PDT)
+        Wed, 10 Jul 2019 19:45:08 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so4398244qtn.13;
+        Wed, 10 Jul 2019 16:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/8wra02GeEP0SVg5sdKoUvO7OcYTQnTWkeSeWCcrhT0=;
-        b=oIfExlZfIRhZ7FVUoexMOfO3VzFoeSLUjFHiaCi687FqmnIAHRxj5m5nV1R7MqGbzW
-         Gd+wzR3f4AhjQJji14ivA5zoW6MrZTP6ZBk1+uasXwmBAcrW0/rXkD7MJAkr+WEZq/pa
-         drBy+kVqVv9Iqxufv/pap5vDKWplfS15m1hBM+PSp7QdaniIesWMfm79UTPrPu685bNa
-         U8E9a0NRTIUFvzpOUd5KqugCTzWhKHuSAnHKZaT5SmRnFnSuH/94N5SoyEdYbxaDJiqv
-         vMPE2VaOYA90T3iAR+fpuI/ScZHT7ZLvU+FbY6d7gz+vpbYDRh96LvGKE3euIvko5q23
-         2UaQ==
+        bh=+sqiUwWG1mesQFrY9cj+FFlURTAmOGb307o36jkpKUA=;
+        b=VUZ7ZPsRDv0lE9oH6yFofV6HgtN0E35Umsfhfrver5Gf3jWCGylbX2z9k5XMZwTB3l
+         w0uKdVOGr/rGGo/GlDvEKsm6HMP3LU+4HBGjz0BW1CmR5bMyTtne12DlD2lLpN199S5v
+         ji/Bhv1iqG2QzNs92n6pFKaDZJh3/skcvjJqxJysFMTL2CjYA8XT09FJDiHEnHi1b+pv
+         CS//+7M5xf7qb6li+WNEtnDbwpJgrhv07w1QBoPQsDSOa/lgVOaREkvCaIsuZCgwC7Ku
+         J+FIpfKu1Fi1rVZhW5fOXu1zIdtYyj5Fr8NsIdj0lebp4GK2KniY4LGhZoWN1DTtdrAX
+         EQcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/8wra02GeEP0SVg5sdKoUvO7OcYTQnTWkeSeWCcrhT0=;
-        b=B+TePBcsfwG9IgXrxbeD17w0C76bdiI04uAA6E4Cm3oP/Mx3ggRhPloQPRzo07/cH2
-         nOTTdsPwS5NI8TQ2pcg7OOMDMpkkZ0BPc8wLDeKeFNTuOsXkfN7BTkuNFNrCoRDhHfTo
-         ct9riI8vwnsn5hEV/AfdWBKSpULydH4BTOEiKNxMEDW0QP3XRch1VQQGfoCSTb0FF2QB
-         qhS7EiggLlUGuRuEwKDIbv7Y7z6+/xuo3R2PFH6Ljm12+q1IrxMmReMwzdF03VJ7tg3C
-         I1QEkB+ejKJXuDE2jbU2tns5QcFxxVOxSWsJwmec9gr2rKCbMm/QC8nd43fyFSYEDjbX
-         s9gA==
-X-Gm-Message-State: APjAAAVLL9Uj7cGl8kTyhBVu4LFX056IuhmbV+xxTt1a80opAU/2idbw
-        T0Y2hrAcdEriglLFGhH1hflXMoFhFDg2nABZm76tvA==
-X-Google-Smtp-Source: APXvYqxppDsOItDIT2YaELr43k74ClVedLV7sA/RnILraBhZZyo5avdE5zTyXJhFMqrri9Sx4SWOX07jkPYf4o/PBwM=
-X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr1070268pje.123.1562802174886;
- Wed, 10 Jul 2019 16:42:54 -0700 (PDT)
+        bh=+sqiUwWG1mesQFrY9cj+FFlURTAmOGb307o36jkpKUA=;
+        b=Xqpr32kKUCPaOozdUUl/gQg19UBpUwJqMEHmKwiLlhP4G8YPt0/hOIPCmjc9nva+5D
+         JZSIRfxJiAJ+Yal7+dT/T0+v9t+KZO4h6uiJMLAk269lmFJgB/akJgG7IuT8GvCEObP+
+         7fhBTUkHSDVKxLdwTclSZ/li9qSNdgW3kG34e2U+y89uUd3/5pW/GT3g3zM1qpYxZMrS
+         yXkcXe1MsK4NSUqCktHy9W2KzjhqyDM0awY6lSf9XPIjC80q+Nk1D1YaJwGOMAGM6uZW
+         O42G3QvFAlRvd7j8Gt5Q4C+OirTUGbdyoOa4cMGPpdLNx/GhbO8qWrFuQdwe0P7qbhRk
+         PjBg==
+X-Gm-Message-State: APjAAAWvV7y7EbkY2ctsfsPOQOGBZesdhs49sMkF2KQQPLKGUH5Hng3z
+        LMdNlurMnmPYbiJYrQErH6z5ES0HlfWivIwWVJ0=
+X-Google-Smtp-Source: APXvYqy8GWjftJ3Av6vXwuKiibSMw+/nri5HwCcX0ApT0PI4jJeELHj+Rbkf5rNNwm4kqnppptUnNg32L2xGZz/8cLI=
+X-Received: by 2002:ac8:2d56:: with SMTP id o22mr539105qta.171.1562802306754;
+ Wed, 10 Jul 2019 16:45:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
- <alpine.DEB.2.21.1907022332000.1802@nanos.tec.linutronix.de>
- <20190706155001.yrfxqj7c2bmqtbid@treble> <20190710232244.to73phlufdetf5os@treble>
-In-Reply-To: <20190710232244.to73phlufdetf5os@treble>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 10 Jul 2019 16:42:43 -0700
-Message-ID: <CAKwvOdmSQUjDUeL-rG5q=EyfhWstHeCVDn+=9spEQmw5BJGaaA@mail.gmail.com>
-Subject: Re: objtool warnings in prerelease clang-9
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Craig Topper <craig.topper@intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Stephen Hines <srhines@google.com>
+References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-2-krzesimir@kinvolk.io>
+In-Reply-To: <20190708163121.18477-2-krzesimir@kinvolk.io>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 10 Jul 2019 16:44:55 -0700
+Message-ID: <CAEf4BzYDOyU52wdCinm9cxxvNijpTJgQbCg9UxcO1QKk6vWhNA@mail.gmail.com>
+Subject: Re: [bpf-next v3 01/12] selftests/bpf: Print a message when tester
+ could not run a program
+To:     Krzesimir Nowak <krzesimir@kinvolk.io>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 4:22 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wrote:
 >
-> On Sat, Jul 06, 2019 at 10:50:01AM -0500, Josh Poimboeuf wrote:
-> > On Tue, Jul 02, 2019 at 11:58:27PM +0200, Thomas Gleixner wrote:
-> > > platform-quirks.o:
-> > >
-> > >         if (x86_platform.set_legacy_features)
-> > >   74:   4c 8b 1d 00 00 00 00    mov    0x0(%rip),%r11        # 7b <x86_early_init_platform_quirks+0x7b>
-> > >   7b:   4d 85 db                test   %r11,%r11
-> > >   7e:   0f 85 00 00 00 00       jne    84 <x86_early_init_platform_quirks+0x84>
-> > >                 x86_platform.set_legacy_features();
-> > > }
-> > >   84:   c3                      retq
-> > >
-> > > That jne jumps to __x86_indirect_thunk_r11, aka. ratpoutine.
-> > >
-> > > No idea why objtool thinks that the instruction at 0x84 is not
-> > > reachable. Josh?
-> >
-> > That's a conditional tail call, which is something GCC never does.
-> > Objtool doesn't understand that, so we'll need to fix it.
+> This prints a message when the error is about program type being not
+> supported by the test runner or because of permissions problem. This
+> is to see if the program we expected to run was actually executed.
 >
-> Can somebody test this patch to see if it fixes the platform-quirks.o
-> warning?
+> The messages are open-coded because strerror(ENOTSUPP) returns
+> "Unknown error 524".
+>
+> Changes since v2:
+> - Also print "FAIL" on an unexpected bpf_prog_test_run error, so there
+>   is a corresponding "FAIL" message for each failed test.
+>
+> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> ---
+>  tools/testing/selftests/bpf/test_verifier.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+> index c5514daf8865..b8d065623ead 100644
+> --- a/tools/testing/selftests/bpf/test_verifier.c
+> +++ b/tools/testing/selftests/bpf/test_verifier.c
+> @@ -831,11 +831,20 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
+>                                 tmp, &size_tmp, &retval, NULL);
+>         if (unpriv)
+>                 set_admin(false);
+> -       if (err && errno != 524/*ENOTSUPP*/ && errno != EPERM) {
+> -               printf("Unexpected bpf_prog_test_run error ");
+> -               return err;
+> +       if (err) {
+> +               switch (errno) {
+> +               case 524/*ENOTSUPP*/:
+> +                       printf("Did not run the program (not supported) ");
+> +                       return 0;
+> +               case EPERM:
+> +                       printf("Did not run the program (no permission) ");
 
-$ make CC=clang -j71 2>&1 | grep platform-quirks
-  CC      arch/x86/kernel/platform-quirks.o
-arch/x86/kernel/platform-quirks.o: warning: objtool:
-x86_early_init_platform_quirks()+0x84: unreachable instruction
-$ git am /tmp/objtool.patch
-$ make CC=clang -j71 clean
-$ make CC=clang -j71 2>&1 | grep platform-quirks
-  CC      arch/x86/kernel/platform-quirks.o
-arch/x86/kernel/platform-quirks.o: warning: objtool:
-x86_early_init_platform_quirks()+0x84: unreachable instruction
+Let's add "SKIP: " prefix to these?
 
-:(
-
-$ llvm-objdump -dr arch/x86/kernel/platform-quirks.o
-
-arch/x86/kernel/platform-quirks.o: file format ELF64-x86-64
-
-
-Disassembly of section .init.text:
-
-0000000000000000 x86_early_init_platform_quirks:
-       0: 48 b8 02 00 00 00 01 00 00 00 movabsq $4294967298, %rax
-       a: 48 89 05 00 00 00 00          movq %rax, (%rip)
-000000000000000d:  R_X86_64_PC32 x86_platform+84
-      11: c7 05 00 00 00 00 01 00 00 00 movl $1, (%rip)
-0000000000000013:  R_X86_64_PC32 x86_platform+88
-      1b: 48 b8 00 00 00 00 01 00 00 00 movabsq $4294967296, %rax
-      25: 48 89 05 00 00 00 00          movq %rax, (%rip)
-0000000000000028:  R_X86_64_PC32 x86_platform+100
-      2c: 8b 05 00 00 00 00            movl (%rip), %eax
-000000000000002e:  R_X86_64_PC32 boot_params+568
-      32: 8d 48 fd                      leal -3(%rax), %ecx
-      35: 83 f9 02                      cmpl $2, %ecx
-      38: 72 15                        jb 21
-<x86_early_init_platform_quirks+0x4f>
-      3a: 83 f8 02                      cmpl $2, %eax
-      3d: 74 27                        je 39
-<x86_early_init_platform_quirks+0x66>
-      3f: 85 c0                        testl %eax, %eax
-      41: 75 31                        jne 49
-<x86_early_init_platform_quirks+0x74>
-      43: c7 05 00 00 00 00 01 00 00 00 movl $1, (%rip)
-0000000000000045:  R_X86_64_PC32 x86_platform+96
-      4d: eb 25                        jmp 37
-<x86_early_init_platform_quirks+0x74>
-      4f: c7 05 00 00 00 00 00 00 00 00 movl $0, (%rip)
-0000000000000051:  R_X86_64_PC32 x86_platform+100
-      59: 48 c7 05 00 00 00 00 00 00 00 00      movq $0, (%rip)
-000000000000005c:  R_X86_64_PC32 x86_platform+80
-      64: eb 0e                        jmp 14
-<x86_early_init_platform_quirks+0x74>
-      66: 31 c0                        xorl %eax, %eax
-      68: 89 05 00 00 00 00            movl %eax, (%rip)
-000000000000006a:  R_X86_64_PC32 x86_platform+104
-      6e: 89 05 00 00 00 00            movl %eax, (%rip)
-0000000000000070:  R_X86_64_PC32 x86_platform+88
-      74: 4c 8b 1d 00 00 00 00          movq (%rip), %r11
-0000000000000077:  R_X86_64_PC32 x86_platform+108
-      7b: 4d 85 db                      testq %r11, %r11
-      7e: 0f 85 00 00 00 00            jne 0
-<x86_early_init_platform_quirks+0x84>
-0000000000000080:  R_X86_64_PC32 __x86_indirect_thunk_r11-4
-      84: c3                            retq
-
-I've sent you the .o file off thread as well.  Thanks for taking a
-look into this. :D
--- 
-Thanks,
-~Nick Desaulniers
+> +                       return 0;
+> +               default:
+> +                       printf("FAIL: Unexpected bpf_prog_test_run error (%s) ", strerror(saved_errno));
+> +                       return err;
+> +               }
+>         }
+> -       if (!err && retval != expected_val &&
+> +       if (retval != expected_val &&
+>             expected_val != POINTER_VALUE) {
+>                 printf("FAIL retval %d != %d ", retval, expected_val);
+>                 return 1;
+> --
+> 2.20.1
+>
