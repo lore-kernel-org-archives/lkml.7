@@ -2,110 +2,177 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB286C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C0CC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAEB2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DY67Qqzg"
+	by mail.kernel.org (Postfix) with ESMTP id 4FE7A2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfGJPo5 (ORCPT
+        id S1728196AbfGJPp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:44:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54670 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfGJPo5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:44:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p74so2802273wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 08:44:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NtOOR2nEu//DGOMUejq+6mfdm7EgmWFyTPqFW/hZNEg=;
-        b=DY67Qqzg8l5sGMLitlWOUm/qzQ2NhqQ9Db12bmwsYd4wnB6rushO8O/ab2p8CxPx0A
-         1WsSAHX8Z84rQ/xQUHoU5CmUje5IAYvZH0mYD1OhVkH3AeegsnCBhCoeCACxKoyZxe5H
-         9S7xCeV+scTCi+NWNYdfV6JzV/ALBwtiFqdGKbxIkeguyVuk/obU+WoexQo4hGkjO6+6
-         0Fr1hgGDjgjCLdlv+LcmtrtSGqrW9oQfc3X48T193n2XMAqFhMRVRETjEynSPHk/tvxT
-         aMv2O4k4gFAhmL/ivOMGxt1DGbmppZeL0jGqtM2tnK9tLwU4MpDB8m1LL1YSAbWx5231
-         EnEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NtOOR2nEu//DGOMUejq+6mfdm7EgmWFyTPqFW/hZNEg=;
-        b=LCJgqMZMJUz15fXwLOfPnB7i4zSzlZYt4Q9Dc6AWmrEwS59oVhKsrl/qSdplQ9VEF1
-         sahjSyCjhf5zemjfUtEoJZlATLvGjdQHD99AV7zr9feWUMoEqTQqPf7KEy8/SDa3rESN
-         56YBJzc0EV8d2u/8T7hr1dn7IgrZ6nXymW8ou5YUUkMno13ICwQg83a/QUnKD13mmulT
-         l514wDs8cYVwckgx4taGowNUKqI+yF38s2QlcblJIKSUMLrpayD14aCoYqR8Z5V40xzu
-         EGv+BIwcxn98RnyiKG1us1Ay5zthzb+IrZME0TFBZbWCrFk4o81yN4vFnndJlGto7JLP
-         I0Hg==
-X-Gm-Message-State: APjAAAV3w2Fvb3ju450ktcjTgQyp+QZEqvidIckqyEWXpNOEmMo2zMl3
-        vmb5Stejzc3scpFy1fXaRAjrrpCy73uMYZs82vNbxg==
-X-Google-Smtp-Source: APXvYqxWuFYdRc3oezY5CyAazr9+mnSggdhSKTQQUlfs/r4ufXqeKNR1JiskvJeNZu0AbFrkKC6ypVSymVpP5xMNcCk=
-X-Received: by 2002:a1c:d10c:: with SMTP id i12mr5991172wmg.152.1562773494692;
- Wed, 10 Jul 2019 08:44:54 -0700 (PDT)
+        Wed, 10 Jul 2019 11:45:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19661 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727616AbfGJPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:45:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 08:45:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,475,1557212400"; 
+   d="scan'208";a="193091354"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga002.fm.intel.com with SMTP; 10 Jul 2019 08:45:24 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 10 Jul 2019 18:45:24 +0300
+Date:   Wed, 10 Jul 2019 18:45:24 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Need to remove char pointers from trace events
+Message-ID: <20190710154524.GG5942@intel.com>
+References: <20190710112549.0366bb03@gandalf.local.home>
 MIME-Version: 1.0
-References: <20190621095252.32307-11-vincenzo.frascino@arm.com> <20190710140119.23417-1-vincenzo.frascino@arm.com>
-In-Reply-To: <20190710140119.23417-1-vincenzo.frascino@arm.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 10 Jul 2019 08:44:43 -0700
-Message-ID: <CALAqxLVnf_hyxxmx72F360PbJUTZowuD3wJx0nJ=dCTyW+w-Tw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: vdso: Fix ABI regression in compat vdso
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190710112549.0366bb03@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 7:01 AM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Prior to the introduction of Unified vDSO support and compat layer for
-> vDSO on arm64, AT_SYSINFO_EHDR was not defined for compat tasks.
-> In the current implementation, AT_SYSINFO_EHDR is defined even if the
-> compat vdso layer is not built and this causes a regression in the
-> expected behavior of the ABI.
->
-> Restore the ABI behavior making sure that AT_SYSINFO_EHDR for compat
-> tasks is defined only when CONFIG_COMPAT_VDSO is enabled.
->
-> Reported-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+On Wed, Jul 10, 2019 at 11:25:49AM -0400, Steven Rostedt wrote:
+> I was doing a bit of an audit on trace events and found this:
+> 
+> # cat /debug/tracing/events/i915/intel_disable_plane/format
+> name: intel_disable_plane
+> ID: 1358
+> format:
+> 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> 	field:int common_pid;	offset:4;	size:4;	signed:1;
+> 
+> 	field:enum pipe pipe;	offset:8;	size:4;	signed:1;
+> 	field:const char * name;	offset:16;	size:8;	signed:0;
+> 	field:u32 frame;	offset:24;	size:4;	signed:0;
+> 	field:u32 scanline;	offset:28;	size:4;	signed:0;
+> 
+> print fmt: "pipe %c, plane %s, frame=%u, scanline=%u", ((REC->pipe) + 'A'), REC->name, REC->frame, REC->scanline
+> 
+> 
+> Same goes for intel_update_plane.
+> 
+> 
+> The problem here is:
+> 
+> 	field:const char * name;	offset:16;	size:8;	signed:0;
+> 
+> print fmt: "pipe %c, plane %s, frame=%u, scanline=%u", ((REC->pipe) + 'A'), REC->name, REC->frame, REC->scanline
+> 
+> 
+> Where the TRACE_EVENT() macro has:
+> 
+> 	    TP_fast_assign(
+> 			   __entry->pipe = crtc->pipe;
+> 			   __entry->name = plane->name;
+> 			   __entry->frame = crtc->base.dev->driver->get_vblank_counter(crtc->base.dev,
+> 										       crtc->pipe);
+> 			   __entry->scanline = intel_get_crtc_scanline(crtc);
+> 			   ),
+> 
+> 	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u",
+> 		      pipe_name(__entry->pipe), __entry->name,
+> 		      __entry->frame, __entry->scanline)
+> 
+> 
+> The issue here is that you record a pointer address to "plane->name"
+> and then sometime in the distant future access that same address.
+> There's usually no guarantee that the contents at that address will
+> exist when the buffer is read.
 
-This seems to solve it for me!
-Thanks so much for the quick turnaround on a fix. I really appreciate it!
+The only way those can disappear is if the device goes away. But I have
+no problem going with your patch. Want to provide a proper commit message
+for it?
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+> 
+> The proper way to record strings, is to record the string into the ring
+> buffer itself, and not rely on it existing hours or days later.
+> 
+> I recommend the following patch:
+> 
+> -- Steve
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_trace.h b/drivers/gpu/drm/i915/i915_trace.h
+> index 12893304c8f8..d41d914a16ca 100644
+> --- a/drivers/gpu/drm/i915/i915_trace.h
+> +++ b/drivers/gpu/drm/i915/i915_trace.h
+> @@ -298,16 +298,16 @@ TRACE_EVENT(intel_update_plane,
+>  
+>  	    TP_STRUCT__entry(
+>  			     __field(enum pipe, pipe)
+> -			     __field(const char *, name)
+>  			     __field(u32, frame)
+>  			     __field(u32, scanline)
+>  			     __array(int, src, 4)
+>  			     __array(int, dst, 4)
+> +			     __string(name, plane->name)
+>  			     ),
+>  
+>  	    TP_fast_assign(
+> +			   __assign_str(name, plane->name);
+>  			   __entry->pipe = crtc->pipe;
+> -			   __entry->name = plane->name;
+>  			   __entry->frame = crtc->base.dev->driver->get_vblank_counter(crtc->base.dev,
+>  										       crtc->pipe);
+>  			   __entry->scanline = intel_get_crtc_scanline(crtc);
+> @@ -316,7 +316,7 @@ TRACE_EVENT(intel_update_plane,
+>  			   ),
+>  
+>  	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u, " DRM_RECT_FP_FMT " -> " DRM_RECT_FMT,
+> -		      pipe_name(__entry->pipe), __entry->name,
+> +		      pipe_name(__entry->pipe), __get_str(name),
+>  		      __entry->frame, __entry->scanline,
+>  		      DRM_RECT_FP_ARG((const struct drm_rect *)__entry->src),
+>  		      DRM_RECT_ARG((const struct drm_rect *)__entry->dst))
+> @@ -328,21 +328,21 @@ TRACE_EVENT(intel_disable_plane,
+>  
+>  	    TP_STRUCT__entry(
+>  			     __field(enum pipe, pipe)
+> -			     __field(const char *, name)
+>  			     __field(u32, frame)
+>  			     __field(u32, scanline)
+> +			     __string(name, plane->name)
+>  			     ),
+>  
+>  	    TP_fast_assign(
+> +			   __assign_str(name, plane->name);
+>  			   __entry->pipe = crtc->pipe;
+> -			   __entry->name = plane->name;
+>  			   __entry->frame = crtc->base.dev->driver->get_vblank_counter(crtc->base.dev,
+>  										       crtc->pipe);
+>  			   __entry->scanline = intel_get_crtc_scanline(crtc);
+>  			   ),
+>  
+>  	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u",
+> -		      pipe_name(__entry->pipe), __entry->name,
+> +		      pipe_name(__entry->pipe), __get_str(name),
+>  		      __entry->frame, __entry->scanline)
+>  );
+>  
 
-thanks
--john
+-- 
+Ville Syrjälä
+Intel
