@@ -2,104 +2,148 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AF0C73C7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB62C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8072064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC202064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfGJIJB (ORCPT
+        id S1727516AbfGJIJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:09:01 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:58047 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfGJIJB (ORCPT
+        Wed, 10 Jul 2019 04:09:33 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:49885 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbfGJIJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:09:01 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MZkxd-1hxa0r3rmR-00WjLd; Wed, 10 Jul 2019 10:08:43 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, wenxu <wenxu@ucloud.cn>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next] netfilter: bridge: make NF_TABLES_BRIDGE tristate
-Date:   Wed, 10 Jul 2019 10:08:20 +0200
-Message-Id: <20190710080835.296696-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 10 Jul 2019 04:09:32 -0400
+Received: from [IPv6:2001:983:e9a7:1:10f:829c:8d05:60ea] ([IPv6:2001:983:e9a7:1:10f:829c:8d05:60ea])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id l7fMhsLbn0SBql7fOh6R3G; Wed, 10 Jul 2019 10:09:30 +0200
+Subject: Re: [PATCHv4 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+ <20190603112835.19661-2-hverkuil-cisco@xs4all.nl>
+ <CAAFQd5Aa-PQEakeg3sC_EDYdKy15hHx09Qmk6Jik4COeBe3xVA@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <02da6340-3174-c03b-ffad-cc9a0a58afab@xs4all.nl>
+Date:   Wed, 10 Jul 2019 10:09:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAAFQd5Aa-PQEakeg3sC_EDYdKy15hHx09Qmk6Jik4COeBe3xVA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:elaCO7FAVfJUeOfRfMZ/SidxX1yW9xg/dTsF+eOAjseTF+HrSsh
- O/5o2LCc/QHx9+Dtt5SpGZwyRjo+WBMgSb1nYeNSEjJ5paUqiHeO5Lojl8GV/xsWVvNC+Vt
- d7lpKPCfcrQc7XOz4ar3qp5WIH4H5Zuanv+y7mswQGzCABkfTMOoe8W17qnU5aedb3udHHJ
- wb+VVASNuep4zWR8giESA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yMgse7shMA4=:LArjo+6xNg3a9zmYJxTdn+
- HOvd4nwyv98ntXVQMrMy9NQhoqgh8gFs8IwouZ5KzTK863X7uTeiUXjRHp/JFEcboyNL1a1H8
- HbNXt6gQQcr3Ca3esHg9nfmSUjxYFBNjnjP3DlbkMzQ4D6WzdLmWpG5gefkikmGjp8mcrP/Oo
- W+W9cndzhkGDuQ/byGySE2sE3a29dd5Sck5s3wMBHo0iuyH1kOC6Vv70VDSB+nfqC+TNpEksU
- g4Jxlhu83BHuX8mquA25nQfX7kaW0yr96SEgGbs9gdAiTTKoeC7Dhhtn3omqN0EXKuFCDCpBv
- tKtg8O7LTzxWnHCTD1hrgN07J1x1VDJm4hCfibRPuBz04zELQbpb7UpIG3fXAMuzQvG9LRP4j
- 2a26VnmKI1bpfy9T1x4ZapFRW4t4JhCjD5zYcfbkUJrf0pSyj+T6KEXaWBwt9JnAzoF669t4x
- uEifEPpGoOsEvw9rcAe4Jmz8xSujIqpdNJYFd9gRJCd5vIlmQBc9zw4xuksStC74Rj8UTetGo
- CEpUXLHkpKcokBWIT+avQVeuCep7sxZ7GdpxgwgR1A9PZei2EyeNBtmyV5Hv+igVWAZ+r5kRl
- GwgaTBqj1B0IHgcAaIa3qqR4BNYWPgGJ6eHuRzcJqgqQA9k/tI7xVahXkSGuZtwFNRRxmrzC6
- XmSfJmz0CefDEhqPnCQDPzty208/msEKOarWMU/hx81rlZoiUc4KUErX7KFtnnUgBA0Acx4Vd
- ZGYexP96hzBT+6EqkaDrcVTEHIZ2cen3nHV5Gg==
+X-CMAE-Envelope: MS4wfB8/NX8OMxDhoB5rNNb4Nrxp+O02fe8pwgh4uz7RNaRO/12CMe5NnBdik+t2PDdSBV9zwCfQtcO5GOvH/vCMdvuO4LREs1q/VcPyupkoSXNH/7GpTpy7
+ /ds4jkR99tFUr+xaJ4FVxvt/mnjXlBEOUHF3cHktbSvNZmeoKH53nX6zQFIQEB4EblOgFmjzjJf8Iuo869qJsUVfty7EZJKO6P1S9NwmTXVQ2Wl7RFuLd6o9
+ lch5JvNcALsRkSt75o0siIszLNfPOttuEwVy4yhW3D+0kmAnasTTTEx9KpWNJSUHHCdiQzB5ueOP/r1ScpriO8ftobRu1mfiZy1Ir00vLn9CToxs5SG7SaZW
+ ugDgAYGV01aiMA7OX/Z+F4RWKTmlhe635iE0UhVoS4ET9obEWA4fNNHT8JoHU+QkFsAtL16dyt37uY/DHjKGF0UxrBZE2Q3gKqGlRAFxTZ4hkhP4H/yTt27c
+ XurABG4XNozGVHjUMHWiXm+87KUAkfs4TFtdYkGzTCTixylt2PG9+UhO/+i92nhQvfJbrIZT9NfK5KcPsEL++82N3BLcfGGfSpHJCQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new nft_meta_bridge code fails to link as built-in when NF_TABLES
-is a loadable module.
+On 7/3/19 6:58 AM, Tomasz Figa wrote:
+> Hi Hans,
+> 
+> On Mon, Jun 3, 2019 at 8:28 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> From: Tomasz Figa <tfiga@chromium.org>
+>>
+>> Due to complexity of the video decoding process, the V4L2 drivers of
+>> stateful decoder hardware require specific sequences of V4L2 API calls
+>> to be followed. These include capability enumeration, initialization,
+>> decoding, seek, pause, dynamic resolution change, drain and end of
+>> stream.
+>>
+>> Specifics of the above have been discussed during Media Workshops at
+>> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
+>> Conference Europe 2014 in Düsseldorf. The de facto Codec API that
+>> originated at those events was later implemented by the drivers we already
+>> have merged in mainline, such as s5p-mfc or coda.
+>>
+>> The only thing missing was the real specification included as a part of
+>> Linux Media documentation. Fix it now and document the decoder part of
+>> the Codec API.
+>>
+>> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>> ---
+>>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+>>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    8 +-
+>>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
+>>  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
+>>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+>>  5 files changed, 1132 insertions(+), 16 deletions(-)
+>>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+>>
+> 
+> Thanks a lot for helping with remaining changes.
+> 
+> Just one thing inline our team member found recently.
+> 
+> [snip]
+>> +Capture setup
+>> +=============
+>> +
+> [snip]
+>> +4.  **Optional.** Set the ``CAPTURE`` format via :c:func:`VIDIOC_S_FMT` on the
+>> +    ``CAPTURE`` queue. The client may choose a different format than
+>> +    selected/suggested by the decoder in :c:func:`VIDIOC_G_FMT`.
+>> +
+>> +    * **Required fields:**
+>> +
+>> +      ``type``
+>> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+>> +
+>> +      ``pixelformat``
+>> +          a raw pixel format.
+> 
+> The client should be able to set the width and height as well. It's a
+> quite frequent case, especially in DMA-buf import mode, that the
+> buffers are actually bigger (e.g. more alignment) than what we could
+> get from the decoder by default. For sane hardware platforms it's
+> reasonable to expect that such bigger buffers could be handled as
+> well, as long as we update the width and height here.
 
-net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_eval':
-nft_meta_bridge.c:(.text+0x1e8): undefined reference to `nft_meta_get_eval'
-net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_init':
-nft_meta_bridge.c:(.text+0x468): undefined reference to `nft_meta_get_init'
-nft_meta_bridge.c:(.text+0x49c): undefined reference to `nft_parse_register'
-nft_meta_bridge.c:(.text+0x4cc): undefined reference to `nft_validate_register_store'
-net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_exit':
-nft_meta_bridge.c:(.exit.text+0x14): undefined reference to `nft_unregister_expr'
-net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_init':
-nft_meta_bridge.c:(.init.text+0x14): undefined reference to `nft_register_expr'
-net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x60): undefined reference to `nft_meta_get_dump'
-net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x88): undefined reference to `nft_meta_set_eval'
+I've added this:
 
-This can happen because the NF_TABLES_BRIDGE dependency itself is just a
-'bool'.  Make the symbol a 'tristate' instead so Kconfig can propagate the
-dependencies correctly.
+     ``width``, ``height``
+         frame buffer resolution of the decoded stream; typically unchanged from
+         what was returned with :c:func:`VIDIOC_G_FMT`, but it may be different
+         if the hardware supports composition and/or scaling.
 
-Fixes: 30e103fe24de ("netfilter: nft_meta: move bridge meta keys into nft_meta_bridge")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/bridge/netfilter/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is that what you were looking for?
 
-diff --git a/net/bridge/netfilter/Kconfig b/net/bridge/netfilter/Kconfig
-index 154fa558bb90..d0c75d7ec074 100644
---- a/net/bridge/netfilter/Kconfig
-+++ b/net/bridge/netfilter/Kconfig
-@@ -6,7 +6,7 @@
- menuconfig NF_TABLES_BRIDGE
- 	depends on BRIDGE && NETFILTER && NF_TABLES
- 	select NETFILTER_FAMILY_BRIDGE
--	bool "Ethernet Bridge nf_tables support"
-+	tristate "Ethernet Bridge nf_tables support"
- 
- if NF_TABLES_BRIDGE
- 
--- 
-2.20.0
+> 
+> It's more like a clarification anyway, so if you think it would be
+> better to just merge the current revision, I could send a follow up
+> patch.
+> 
+> Regardless of that and FWIW:
+> 
+> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+
+Thanks!
+
+	Hans
+
+> 
+> Best regards,
+> Tomasz
+> 
 
