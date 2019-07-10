@@ -2,27 +2,27 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE67C73C7C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8AEC606CF
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648A920838
+	by mail.kernel.org (Postfix) with ESMTP id B21F120838
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfGJJb0 (ORCPT
+        id S1727297AbfGJJbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:31:26 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56412 "EHLO relay.sw.ru"
+        Wed, 10 Jul 2019 05:31:34 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56410 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfGJJbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:31:25 -0400
+        id S1727064AbfGJJb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:31:26 -0400
 Received: from [10.94.4.83] (helo=finist-ce7.sw.ru)
         by relay.sw.ru with esmtp (Exim 4.92)
         (envelope-from <khorenko@virtuozzo.com>)
-        id 1hl8wV-0003b5-KE; Wed, 10 Jul 2019 12:31:15 +0300
+        id 1hl8wV-0003b5-Bg; Wed, 10 Jul 2019 12:31:15 +0300
 From:   Konstantin Khorenko <khorenko@virtuozzo.com>
 To:     Prasad B Munirathnam <prasad.munirathnam@microsemi.com>,
         Raghava Aditya Renukunta 
@@ -32,164 +32,121 @@ To:     Prasad B Munirathnam <prasad.munirathnam@microsemi.com>,
 Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Subject: [PATCH v2 1/2] Revert "scsi: aacraid: Remove reference to Series-9"
-Date:   Wed, 10 Jul 2019 12:31:12 +0300
-Message-Id: <20190710093113.27936-2-khorenko@virtuozzo.com>
+Subject: [PATCH v2 0/2] aacraid: Host adapter Adaptec 6405 constantly resets under high io load
+Date:   Wed, 10 Jul 2019 12:31:11 +0300
+Message-Id: <20190710093113.27936-1-khorenko@virtuozzo.com>
 X-Mailer: git-send-email 2.15.1
-In-Reply-To: <20190710093113.27936-1-khorenko@virtuozzo.com>
+In-Reply-To: <2a6f5cc2-40cb-647c-003d-aae594d05062@virtuozzo.com>
 References: <2a6f5cc2-40cb-647c-003d-aae594d05062@virtuozzo.com>
- <20190710093113.27936-1-khorenko@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 395e5df79a9588abf1099ea746f11872c9086252.
+Problem description:
+====================
+A node with Adaptec 6405 controller, latest BIOS V5.3-0[19204]
+A lot of disks attached to the controller.
+Simple test: running mkfs.ext4 on many disks on the same controller in
+parallel
+(mkfs is not important here, any serious io load triggers controller aborts)
 
-The patch being reverted not only drops Series-9 cards
-checks but also changes logic for Series-6 controllers which
-lead to controller hungs/resets under high io load.
+Results:
+* no problems (controller resets) with kernels prior to
+  395e5df79a95 ("scsi: aacraid: Remove reference to Series-9")
 
-So revert the original patch, references to Series 9 are to
-be removed by next patch.
+* latest ms kernel v5.2-rc6-15-g249155c20f9b - mkfs processes are in D state,
+  lot of complains in logs like:
 
+  [  654.894633] aacraid: Host adapter abort request.
+  aacraid: Outstanding commands on (0,1,43,0):
+  [  699.441034] aacraid: Host adapter abort request.
+  aacraid: Outstanding commands on (0,1,40,0):
+  [  699.442950] aacraid: Host adapter reset request. SCSI hang ?
+  [  714.457428] aacraid: Host adapter reset request. SCSI hang ?
+  ...
+  [  759.514759] aacraid: Host adapter reset request. SCSI hang ?
+  [  759.514869] aacraid 0000:03:00.0: outstanding cmd: midlevel-0
+  [  759.514870] aacraid 0000:03:00.0: outstanding cmd: lowlevel-0
+  [  759.514872] aacraid 0000:03:00.0: outstanding cmd: error handler-498
+  [  759.514873] aacraid 0000:03:00.0: outstanding cmd: firmware-471
+  [  759.514875] aacraid 0000:03:00.0: outstanding cmd: kernel-60
+  [  759.514912] aacraid 0000:03:00.0: Controller reset type is 3
+  [  759.515013] aacraid 0000:03:00.0: Issuing IOP reset
+  [  850.296705] aacraid 0000:03:00.0: IOP reset succeeded
+
+Same complains on Ubuntu kernel 4.15.0-50-generic:
 https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1777586
-https://bugzilla.redhat.com/show_bug.cgi?id=1724077
-https://jira.sw.ru/browse/PSBM-95736
 
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
----
- drivers/scsi/aacraid/aacraid.h  | 12 +-----------
- drivers/scsi/aacraid/comminit.c | 18 ++++++++++++++----
- drivers/scsi/aacraid/commsup.c  |  5 ++++-
- drivers/scsi/aacraid/linit.c    | 10 +++++++---
- 4 files changed, 26 insertions(+), 19 deletions(-)
+Controller:
+===========
+03:00.0 RAID bus controller: Adaptec Series 6 - 6G SAS/PCIe 2 (rev 01)
+         Subsystem: Adaptec Series 6 - ASR-6405 - 4 internal 6G SAS ports
 
-diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-index 3fa03230f6ba..aef47d0e718c 100644
---- a/drivers/scsi/aacraid/aacraid.h
-+++ b/drivers/scsi/aacraid/aacraid.h
-@@ -416,6 +416,7 @@ struct aac_ciss_identify_pd {
- #define PMC_DEVICE_S6	0x28b
- #define PMC_DEVICE_S7	0x28c
- #define PMC_DEVICE_S8	0x28d
-+#define PMC_DEVICE_S9	0x28f
- 
- #define aac_phys_to_logical(x)  ((x)+1)
- #define aac_logical_to_phys(x)  ((x)?(x)-1:0)
-@@ -2729,17 +2730,6 @@ int _aac_rx_init(struct aac_dev *dev);
- int aac_rx_select_comm(struct aac_dev *dev, int comm);
- int aac_rx_deliver_producer(struct fib * fib);
- 
--static inline int aac_is_src(struct aac_dev *dev)
--{
--	u16 device = dev->pdev->device;
--
--	if (device == PMC_DEVICE_S6 ||
--		device == PMC_DEVICE_S7 ||
--		device == PMC_DEVICE_S8)
--		return 1;
--	return 0;
--}
--
- static inline int aac_supports_2T(struct aac_dev *dev)
- {
- 	return (dev->adapter_info.options & AAC_OPT_NEW_COMM_64);
-diff --git a/drivers/scsi/aacraid/comminit.c b/drivers/scsi/aacraid/comminit.c
-index d4fcfa1e54e0..edaa2d53e704 100644
---- a/drivers/scsi/aacraid/comminit.c
-+++ b/drivers/scsi/aacraid/comminit.c
-@@ -41,8 +41,11 @@ static inline int aac_is_msix_mode(struct aac_dev *dev)
- {
- 	u32 status = 0;
- 
--	if (aac_is_src(dev))
-+	if (dev->pdev->device == PMC_DEVICE_S6 ||
-+		dev->pdev->device == PMC_DEVICE_S7 ||
-+		dev->pdev->device == PMC_DEVICE_S8) {
- 		status = src_readl(dev, MUnit.OMR);
-+	}
- 	return (status & AAC_INT_MODE_MSIX);
- }
- 
-@@ -349,7 +352,9 @@ int aac_send_shutdown(struct aac_dev * dev)
- 	/* FIB should be freed only after getting the response from the F/W */
- 	if (status != -ERESTARTSYS)
- 		aac_fib_free(fibctx);
--	if (aac_is_src(dev) &&
-+	if ((dev->pdev->device == PMC_DEVICE_S7 ||
-+	     dev->pdev->device == PMC_DEVICE_S8 ||
-+	     dev->pdev->device == PMC_DEVICE_S9) &&
- 	     dev->msi_enabled)
- 		aac_set_intx_mode(dev);
- 	return status;
-@@ -605,7 +610,9 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
- 		dev->max_fib_size = status[1] & 0xFFE0;
- 		host->sg_tablesize = status[2] >> 16;
- 		dev->sg_tablesize = status[2] & 0xFFFF;
--		if (aac_is_src(dev)) {
-+		if (dev->pdev->device == PMC_DEVICE_S7 ||
-+		    dev->pdev->device == PMC_DEVICE_S8 ||
-+		    dev->pdev->device == PMC_DEVICE_S9) {
- 			if (host->can_queue > (status[3] >> 16) -
- 					AAC_NUM_MGT_FIB)
- 				host->can_queue = (status[3] >> 16) -
-@@ -624,7 +631,10 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
- 			pr_warn("numacb=%d ignored\n", numacb);
- 	}
- 
--	if (aac_is_src(dev))
-+	if (dev->pdev->device == PMC_DEVICE_S6 ||
-+	    dev->pdev->device == PMC_DEVICE_S7 ||
-+	    dev->pdev->device == PMC_DEVICE_S8 ||
-+	    dev->pdev->device == PMC_DEVICE_S9)
- 		aac_define_int_mode(dev);
- 	/*
- 	 *	Ok now init the communication subsystem
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index 2142a649e865..b047b1e2215a 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -2574,7 +2574,10 @@ void aac_free_irq(struct aac_dev *dev)
- {
- 	int i;
- 
--	if (aac_is_src(dev)) {
-+	if (dev->pdev->device == PMC_DEVICE_S6 ||
-+	    dev->pdev->device == PMC_DEVICE_S7 ||
-+	    dev->pdev->device == PMC_DEVICE_S8 ||
-+	    dev->pdev->device == PMC_DEVICE_S9) {
- 		if (dev->max_msix > 1) {
- 			for (i = 0; i < dev->max_msix; i++)
- 				free_irq(pci_irq_vector(dev->pdev, i),
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index 644f7f5c61a2..f669a4405217 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -1559,8 +1559,10 @@ static void __aac_shutdown(struct aac_dev * aac)
- 	aac_send_shutdown(aac);
- 
- 	aac_adapter_disable_int(aac);
--
--	if (aac_is_src(aac)) {
-+	if (aac->pdev->device == PMC_DEVICE_S6 ||
-+	    aac->pdev->device == PMC_DEVICE_S7 ||
-+	    aac->pdev->device == PMC_DEVICE_S8 ||
-+	    aac->pdev->device == PMC_DEVICE_S9) {
- 		if (aac->max_msix > 1) {
- 			for (i = 0; i < aac->max_msix; i++) {
- 				free_irq(pci_irq_vector(aac->pdev, i),
-@@ -1835,7 +1837,9 @@ static int aac_acquire_resources(struct aac_dev *dev)
- 	aac_adapter_enable_int(dev);
- 
- 
--	if (aac_is_src(dev))
-+	if ((dev->pdev->device == PMC_DEVICE_S7 ||
-+	     dev->pdev->device == PMC_DEVICE_S8 ||
-+	     dev->pdev->device == PMC_DEVICE_S9))
- 		aac_define_int_mode(dev);
- 
- 	if (dev->msi_enabled)
+Test:
+=====
+# cat dev.list
+/dev/sdq1
+/dev/sde1
+/dev/sds1
+/dev/sdb1
+/dev/sdk1
+/dev/sdaj1
+/dev/sdaf1
+/dev/sdd1
+/dev/sdac1
+/dev/sdai1
+/dev/sdz1
+/dev/sdj1
+/dev/sdy1
+/dev/sdn1
+/dev/sdae1
+/dev/sdg1
+/dev/sdi1
+/dev/sdc1
+/dev/sdf1
+/dev/sdl1
+/dev/sda1
+/dev/sdab1
+/dev/sdr1
+/dev/sdo1
+/dev/sdah1
+/dev/sdm1
+/dev/sdt1
+/dev/sdp1
+/dev/sdad1
+/dev/sdh1
+
+===========================================
+# cat run_mkfs.sh
+#!/bin/bash
+
+while read i; do
+   mkfs.ext4 $i -q -E lazy_itable_init=1 -O uninit_bg -m 0 &
+done
+
+=================================
+# cat dev.list | ./run_mkfs.sh
+
+The issue is 100% reproducible.
+
+i've bisected to the culprit patch, it's
+395e5df79a95 ("scsi: aacraid: Remove reference to Series-9")
+
+it changes arc ctrl checks for Series-6 controllers
+and i've checked that resurrection of original logic in arc ctrl checks
+eliminates controller hangs/resets.
+
+Konstantin Khorenko (2):
+  Revert "scsi: aacraid: Remove reference to Series-9"
+  scsi: aacraid: Remove references to Series-9 (only)
+
+ drivers/scsi/aacraid/aacraid.h  | 11 -----------
+ drivers/scsi/aacraid/comminit.c | 15 +++++++++++----
+ drivers/scsi/aacraid/commsup.c  |  4 +++-
+ drivers/scsi/aacraid/linit.c    |  8 +++++---
+ 4 files changed, 19 insertions(+), 19 deletions(-)
+
 -- 
 2.15.1
 
