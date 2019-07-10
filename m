@@ -2,660 +2,256 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20049C74A2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFBC74A2C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EE22064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0B22064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEAScme2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfGJOyd convert rfc822-to-8bit (ORCPT
+        id S1727895AbfGJOzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:54:33 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:51527 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJOyd (ORCPT
+        Wed, 10 Jul 2019 10:55:24 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:44660 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfGJOzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:54:33 -0400
-X-AuditID: ac10606f-bbfff70000003de9-bb-5d25fc271c4c
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 62.38.15849.82CF52D5; Wed, 10 Jul 2019 10:54:32 -0400 (EDT)
-Received: from ATLMS2.us.megatrends.com ([fe80::29dc:a91e:ea0c:cdeb]) by
- atlms1.us.megatrends.com ([fe80::8c55:daf0:ef05:5605%12]) with mapi id
- 14.03.0415.000; Wed, 10 Jul 2019 10:54:31 -0400
-From:   Hongwei Zhang <Hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>
-Subject: RE: [PATCH 2/3 v1] ARM: dts: aspeed: Add SGPIO driver
-Thread-Topic: [PATCH 2/3 v1] ARM: dts: aspeed: Add SGPIO driver
-Thread-Index: AdU3L18QRwrQLptrQ+KtIqfSSx1hWg==
-Date:   Wed, 10 Jul 2019 14:54:31 +0000
-Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF82AA8F4335@atlms2.us.megatrends.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.100.241]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 10 Jul 2019 10:55:24 -0400
+Received: by mail-yb1-f196.google.com with SMTP id a14so835731ybm.11;
+        Wed, 10 Jul 2019 07:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QCiTMtxWZLPJb5y6myKW6/LqRAFmEt/hmzQDDMTW8VI=;
+        b=lEAScme2mzOQ+tU9R4si7PoXLwO6ANudoejGNvbvXY7MTia3jsDqXVK2sT7T4ezaA8
+         ZC4iXV3mp74Kk/A5sykoJYHMeB7eC9DYwai4hnX303CgGyj/Et2Ard1470VsuyZmEq/Q
+         Zrsjy/wNgl+wh/8Qa6Bvo92PqPEBBv4YzpXEHI+PRSQIT67cEGiWBA9o5HCZHpOPoKt0
+         GSIWFuXGblzSC+AcGxl/L1itQekXjckZxhNhibF3a6SHfKqVX96KeE3BwGm9mos3w+Gg
+         MtgEQDmPLzOv9/H64lLCIm/8VGZDhLyQzhq4IZ5azGRZUwNd6yPl+Vxnms0+Hd8bOeLt
+         WjBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QCiTMtxWZLPJb5y6myKW6/LqRAFmEt/hmzQDDMTW8VI=;
+        b=MmAazY1m+v3Yh2ZliV8OeyZ5FvlJ5kwQcQyj9Tz2kmHLf7PyK1OSi+4Za0+BTFN3aY
+         GCKwAQ2q8mYbNrpyFWFIkaPt52h9ZLECQs71SoAQ+aKE2gSgoPIxdrsGfoLvrDJp766v
+         sKYgBIiUKbIDxoi21akkwXR/ZYQ/UyPrNwoJpLfH6Hox3VMtNlUEWRfZJZEMinJ0x6ZH
+         c9dUCWZy/o5SViXU3Ln97q5OvwhX3htWGWe4D1PbAHSx9QczIboXE0YXCZxswzsDyDYk
+         tx7m99WbkWoYSVhOpYtPFaXlu+gHrFumM6ajJiN9PYjYDRNSOhGKWvGZTIfOtB/CBaMf
+         fxVg==
+X-Gm-Message-State: APjAAAUXzfrFCN5lpkMkO5D3nnwGQPH0DgbhnEVOOICblEQLbmrie2ZV
+        Q5/HhzIDmAlP8dX06Oq8TS6mME1HntziRPhS8YhsCA==
+X-Google-Smtp-Source: APXvYqy2ZYzPT4Hl6P3dw3H30HQZL3QHerrdT5q0XUMb6fhSaBXk0zgxuJcflF5qEH5p0TTt0jJmcKFd2E8H1UmCPlI=
+X-Received: by 2002:a25:aaea:: with SMTP id t97mr16794751ybi.126.1562770522978;
+ Wed, 10 Jul 2019 07:55:22 -0700 (PDT)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42JZI5AwQVfjj2qswYuX/Ba7LnNYfJl7isXi
-        9/m/zBZT/ixnstj0+BqrRfPqc8wWm+f/YbS4vGsOmwOHx9X2Xewe72+0sntc/HiM2ePOtT1s
-        HpuX1Hucn7GQ0ePzJrkA9igum5TUnMyy1CJ9uwSujE3Tp7EXfJzOWHGn5T1jA+OV0i5GTg4J
-        AROJQ/s7mLsYuTiEBHYxSVz8dIkdwjnMKNE3cyETSBWbgJrE0z8NYAkRgUWMEkcW3mcHSTAL
-        bGOS+HPdFsQWFrCT+HH1LSuILSJgL3Gpew0LhK0ncbtvAlg9i4CqxJ/1d5lBbF4Bf4nZzVPA
-        FjAKiEl8P7WGCWKmuMStJ/OZIM4TkFiy5zwzhC0q8fLxP1YIW0miYcU/qHodiQW7P7FB2NoS
-        yxa+hpovKHFy5hOWCYzCs5CMnYWkZRaSlllIWhYwsqxiFEosyclNzMxJLzfSS8zN1EvOz93E
-        CImv/B2MHz+aH2Jk4mA8xCjBwawkwrvPXTlWiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+qNd9i
-        hATSE0tSs1NTC1KLYLJMHJxSDYzT5gfYT9go7hv8s3WRiVvJrLWLz6xIPGB6LsPzdcSRzUyv
-        eF2/L3uiHeLsNl1f9XVP4m3Jc/W+X9+9uHMkeqqKNKee9O51Ms9Wsa7UcPLZf5DfIvPIu1pB
-        15DXSVdmTj2XM702uuf738ct0Z5c5v+fJO+a9cVt0c3PT4Vrj3hp7915bbLyLtt2JZbijERD
-        Leai4kQAky75450CAAA=
+References: <20190710133403.855-1-acgoide@tycho.nsa.gov>
+In-Reply-To: <20190710133403.855-1-acgoide@tycho.nsa.gov>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 10 Jul 2019 17:55:11 +0300
+Message-ID: <CAOQ4uxhKP9AUHqYN24ELP5OcyaJQcpS9hdzuZOm5uJpokFAXvg@mail.gmail.com>
+Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
+ hook for fs notifications
+To:     Aaron Goidel <acgoide@tycho.nsa.gov>
+Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andrew,
+On Wed, Jul 10, 2019 at 4:34 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
+>
+> As of now, setting watches on filesystem objects has, at most, applied a
+> check for read access to the inode, and in the case of fanotify, requires
+> CAP_SYS_ADMIN. No specific security hook or permission check has been
+> provided to control the setting of watches. Using any of inotify, dnotify,
+> or fanotify, it is possible to observe, not only write-like operations, but
+> even read access to a file. Modeling the watch as being merely a read from
+> the file is insufficient. Furthermore, fanotify watches grant more power to
+> an application in the form of permission events. While notification events
+> are solely, unidirectional (i.e. they only pass information to the
+> receiving application), permission events are blocking. Permission events
+> make a request to the receiving application which will then reply with a
+> decision as to whether or not that action may be completed.
+>
+> In order to solve these issues, a new LSM hook is implemented and has been
+> placed within the system calls for marking filesystem objects with inotify,
+> fanotify, and dnotify watches. These calls to the hook are placed at the
+> point at which the target inode has been resolved and are provided with
+> both the inode and the mask of requested notification events. The mask has
+> already been translated into common FS_* values shared by the entirety of
+> the fs notification infrastructure.
+>
+> This only provides a hook at the point of setting a watch, and presumes
+> that permission to set a particular watch implies the ability to receive
+> all notification about that object which match the mask. This is all that
+> is required for SELinux. If other security modules require additional hooks
+> or infrastructure to control delivery of notification, these can be added
+> by them. It does not make sense for us to propose hooks for which we have
+> no implementation. The understanding that all notifications received by the
+> requesting application are all strictly of a type for which the application
+> has been granted permission shows that this implementation is sufficient in
+> its coverage.
+>
+> Fanotify further has the issue that it returns a file descriptor with the
+> file mode specified during fanotify_init() to the watching process on
+> event. This is already covered by the LSM security_file_open hook if the
+> security module implements checking of the requested file mode there.
+>
+> The selinux_inode_notify hook implementation works by adding three new
+> file permissions: watch, watch_reads, and watch_with_perm (descriptions
+> about which will follow). The hook then decides which subset of these
+> permissions must be held by the requesting application based on the
+> contents of the provided mask. The selinux_file_open hook already checks
+> the requested file mode and therefore ensures that a watching process
+> cannot escalate its access through fanotify.
+>
+> The watch permission is the baseline permission for setting a watch on an
+> object and is a requirement for any watch to be set whatsoever. It should
+> be noted that having either of the other two permissions (watch_reads and
+> watch_with_perm) does not imply the watch permission, though this could be
+> changed if need be.
+>
+> The watch_reads permission is required to receive notifications from
+> read-exclusive events on filesystem objects. These events include accessing
+> a file for the purpose of reading and closing a file which has been opened
+> read-only. This distinction has been drawn in order to provide a direct
+> indication in the policy for this otherwise not obvious capability. Read
+> access to a file should not necessarily imply the ability to observe read
+> events on a file.
+>
+> Finally, watch_with_perm only applies to fanotify masks since it is the
+> only way to set a mask which allows for the blocking, permission event.
+> This permission is needed for any watch which is of this type. Though
+> fanotify requires CAP_SYS_ADMIN, this is insufficient as it gives implicit
+> trust to root, which we do not do, and does not support least privilege.
+>
+> Signed-off-by: Aaron Goidel <acgoide@tycho.nsa.gov>
+> ---
+>  fs/notify/dnotify/dnotify.c         | 14 +++++++++++---
+>  fs/notify/fanotify/fanotify_user.c  | 11 +++++++++--
+>  fs/notify/inotify/inotify_user.c    | 12 ++++++++++--
+>  include/linux/lsm_hooks.h           |  2 ++
+>  include/linux/security.h            |  7 +++++++
+>  security/security.c                 |  5 +++++
+>  security/selinux/hooks.c            | 22 ++++++++++++++++++++++
+>  security/selinux/include/classmap.h |  2 +-
+>  8 files changed, 67 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
+> index 250369d6901d..e91ce092efb1 100644
+> --- a/fs/notify/dnotify/dnotify.c
+> +++ b/fs/notify/dnotify/dnotify.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/dnotify.h>
+>  #include <linux/init.h>
+> +#include <linux/security.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/slab.h>
+>  #include <linux/fdtable.h>
+> @@ -288,6 +289,16 @@ int fcntl_dirnotify(int fd, struct file *filp, unsigned long arg)
+>                 goto out_err;
+>         }
+>
+> +       /*
+> +        * convert the userspace DN_* "arg" to the internal FS_*
+> +        * defined in fsnotify
+> +        */
+> +       mask = convert_arg(arg);
+> +
+> +       error = security_inode_notify(inode, mask);
+> +       if (error)
+> +               goto out_err;
+> +
+>         /* expect most fcntl to add new rather than augment old */
+>         dn = kmem_cache_alloc(dnotify_struct_cache, GFP_KERNEL);
+>         if (!dn) {
+> @@ -302,9 +313,6 @@ int fcntl_dirnotify(int fd, struct file *filp, unsigned long arg)
+>                 goto out_err;
+>         }
+>
+> -       /* convert the userspace DN_* "arg" to the internal FS_* defines in fsnotify */
+> -       mask = convert_arg(arg);
+> -
+>         /* set up the new_fsn_mark and new_dn_mark */
+>         new_fsn_mark = &new_dn_mark->fsn_mark;
+>         fsnotify_init_mark(new_fsn_mark, dnotify_group);
+> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+> index a90bb19dcfa2..c0d9fa998377 100644
+> --- a/fs/notify/fanotify/fanotify_user.c
+> +++ b/fs/notify/fanotify/fanotify_user.c
+> @@ -528,7 +528,7 @@ static const struct file_operations fanotify_fops = {
+>  };
+>
+>  static int fanotify_find_path(int dfd, const char __user *filename,
+> -                             struct path *path, unsigned int flags)
+> +                             struct path *path, unsigned int flags, __u64 mask)
+>  {
+>         int ret;
+>
+> @@ -567,8 +567,15 @@ static int fanotify_find_path(int dfd, const char __user *filename,
+>
+>         /* you can only watch an inode if you have read permissions on it */
+>         ret = inode_permission(path->dentry->d_inode, MAY_READ);
+> +       if (ret) {
+> +               path_put(path);
+> +               goto out;
+> +       }
+> +
+> +       ret = security_inode_notify(path->dentry->d_inode, mask);
+>         if (ret)
+>                 path_put(path);
+> +
+>  out:
+>         return ret;
+>  }
+> @@ -1014,7 +1021,7 @@ static int do_fanotify_mark(int fanotify_fd, unsigned int flags, __u64 mask,
+>                 goto fput_and_out;
+>         }
+>
+> -       ret = fanotify_find_path(dfd, pathname, &path, flags);
+> +       ret = fanotify_find_path(dfd, pathname, &path, flags, mask);
+>         if (ret)
+>                 goto fput_and_out;
+>
 
-Thanks for your review and comments, please find our inline response at below.
-I will email updated driver code separately, because Outlook breaks source code's tabs.
+So the mark_type doesn't matter to SELinux?
+You have no need for mount_noitify and sb_notify hooks?
+A watch permission on the mount/sb root inode implies permission
+(as CAP_SYS_ADMIN) to watch all events in mount/sb?
 
-There is one place need your more input for clarification, which is about DATA_READ/DATA_VALUE registers, 
-please see it at below.
+[...]
 
-Best Regards,
--- Hongwei
+> +static int selinux_inode_notify(struct inode *inode, u64 mask)
+> +{
+> +       u32 perm = FILE__WATCH; // basic permission, can a watch be set?
+> +
+> +       struct common_audit_data ad;
+> +
+> +       ad.type = LSM_AUDIT_DATA_INODE;
+> +       ad.u.inode = inode;
+> +
+> +       // check if the mask is requesting ability to set a blocking watch
+> +       if (mask & (FS_OPEN_PERM | FS_OPEN_EXEC_PERM | FS_ACCESS_PERM))
 
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Wednesday, July 3, 2019 8:06 PM
-> To:	Hongwei Zhang; Bartosz Golaszewski; Joel Stanley; Linus Walleij
-> Cc:	linux-gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-aspeed@lists.ozlabs.org; 
-> linux-kernel@vger.kernel.org
-> Subject:	Re: [PATCH 2/3 linux,dev-5.1 v1] ARM: dts: aspeed: Add SGPIO driver
-> 
-> Hello Hongwei,
-> 
-> As this is patch is sent to the upstream lists (linux-gpio@ etc) please drop the OpenBMC-specific 
-> "linux,dev-5.1" from the subject.
-> 
+Better ALL_FSNOTIFY_PERM_EVENTS
 
-Got it but to be more specific, for the situation of mixed recipients, should I send out separate emails with 
-different subject line format in the future?
-
-> Also, it looks like you may have manually added the series revision (v1).
-> For the record you can make `git format-patch` do this for you with the `-v`option (e.g. if you really want 
-> it here, `-v 1`).
-> 
-> On Thu, 4 Jul 2019, at 07:09, Hongwei Zhang wrote:
-> > Add SGPIO driver support for Aspeed AST2500 SoC.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  drivers/gpio/sgpio-aspeed.c | 470 
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 470 insertions(+)
-> >  create mode 100644 drivers/gpio/sgpio-aspeed.c
-> > 
-> > diff --git a/drivers/gpio/sgpio-aspeed.c b/drivers/gpio/sgpio-aspeed.c 
-> > new file mode 100644 index 0000000..108ed13
-> > --- /dev/null
-> > +++ b/drivers/gpio/sgpio-aspeed.c
-> > @@ -0,0 +1,470 @@
-> > +/*
-> > + * Copyright 2019 American Megatrends International LLC. 
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * as published by the Free Software Foundation; either version
-> > + * 2 of the License, or (at your option) any later version.
-> 
-> You should use the SPDX license identifier here rather than the GPL blurb, and it should be the first line 
-> of the file. Keep your copyright line in place though:
-> 
-OK
-
-> // SPDX-License-Identifier: GPL-2.0-or-later // Copyright 2019 American Megatrends International LLC.
-> 
-> > + */
-> > +
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/gpio/aspeed.h>
-> > +#include <linux/hashtable.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pinctrl/consumer.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/string.h>
-> > +
-> > +#define NR_SGPIO        80
-> > +
-> > +struct aspeed_sgpio {
-> > +	struct gpio_chip chip;
-> > +	spinlock_t lock;
-> > +	void __iomem *base;
-> > +	int irq;
-> > +};
-> > +
-> > +struct aspeed_sgpio_bank {
-> > +	uint16_t    val_regs;
-> > +	uint16_t    rdata_reg;
-> > +	uint16_t    irq_regs;
-> > +	const char  names[4][3];
-> > +};
-> > +
-> > +/*
-> > + * Note: The "value" register returns the input value sampled on the
-> > + *       line even when the GPIO is configured as an output. Since
-> > + *       that input goes through synchronizers, writing, then reading
-> > + *       back may not return the written value right away.
-> > + *
-> > + *       The "rdata" register returns the content of the write latch
-> > + *       and thus can be used to read back what was last written
-> > + *       reliably.
-> > + */
-> > +
-> > +static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-> > +	{
-> > +		.val_regs = 0x0000,
-> > +		.rdata_reg = 0x0070,
-> > +		.irq_regs = 0x0004,
-> > +		.names = { "A", "B", "C", "D" },
-> > +	},
-> > +	{
-> > +		.val_regs = 0x001C,
-> > +		.rdata_reg = 0x0074,
-> > +		.irq_regs = 0x0020,
-> > +		.names = { "E", "F", "G", "H" },
-> > +	},
-> > +	{
-> > +		.val_regs = 0x0038,
-> > +		.rdata_reg = 0x0078,
-> > +		.irq_regs = 0x003C,
-> > +		.names = { "I", "J" },
-> > +	},
-> > +};
-> > +
-> > +enum aspeed_sgpio_reg {
-> > +	reg_val,
-> > +	reg_rdata,
-> > +	reg_irq_enable,
-> > +	reg_irq_type0,
-> > +	reg_irq_type1,
-> > +	reg_irq_type2,
-> > +	reg_irq_status,
-> > +};
-> > +
-> > +#define GPIO_VAL_VALUE      0x00
-> > +#define GPIO_VAL_DIR        0x04
-> > +#define GPIO_IRQ_ENABLE     0x00
-> > +#define GPIO_IRQ_TYPE0      0x04
-> > +#define GPIO_IRQ_TYPE1      0x08
-> > +#define GPIO_IRQ_TYPE2      0x0C
-> > +#define GPIO_IRQ_STATUS     0x10
-> > +
-> > +/* This will be resolved at compile time */ static inline void 
-> > +__iomem *bank_reg(struct aspeed_sgpio *gpio,
-> > +				     const struct aspeed_sgpio_bank *bank,
-> > +				     const enum aspeed_sgpio_reg reg) {
-> > +	switch (reg) {
-> > +	case reg_val:
-> > +		return gpio->base + bank->val_regs + GPIO_VAL_VALUE;
-> > +	case reg_rdata:
-> > +		return gpio->base + bank->rdata_reg;
-> > +	case reg_irq_enable:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_ENABLE;
-> > +	case reg_irq_type0:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE0;
-> > +	case reg_irq_type1:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE1;
-> > +	case reg_irq_type2:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_TYPE2;
-> > +	case reg_irq_status:
-> > +		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
-> > +	}
-> > +	BUG_ON(1);
-> 
-> This isn't appropriate - we shouldn't take down the kernel on a faulty peripheral access. Please change 
-> this to WARN().
-> 
-              -  Cannot change it to WARN(), it throws build error, warning: control reaches end of non-void 
-                 function [-Wreturn-type], so I add WARN_ON() in the switch's 'default: ' case statement, and
-                 followed with a return(gpio->base) to mute the [-Wreturn-type] compiling warning.
-
-> > +}
-> > +
-> > +#define GPIO_BANK(x)    ((x) >> 5)
-> > +#define GPIO_OFFSET(x)  ((x) & 0x1f)
-> > +#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-> > +
-> > +static const struct aspeed_sgpio_bank *to_bank(unsigned int offset) {
-> > +	unsigned int bank = GPIO_BANK(offset);
-> > +
-> > +	WARN_ON(bank >= ARRAY_SIZE(aspeed_sgpio_banks));
-> > +	return &aspeed_sgpio_banks[bank];
-> > +}
-> > +
-> > +static inline bool have_gpio(struct aspeed_sgpio *gpio, unsigned int
-> > offset)
-> > +{
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +	unsigned int group = GPIO_OFFSET(offset) / 8;
-> > +
-> > +	return bank->names[group][0] != '\0';
-> 
-> Lets just drop have_gpio() altogether, it's a contiguous set of 80 GPIOs.
-> At best this should just be:
-> 
-> static inline bool have_gpio(struct aspeed_sgpio *gpio, unsigned int offset) {
->     return offset < NR_SGPIO;
-> }
-> 
-> But lets just assume that we've properly configured the gpio subsystem for the controller and remove it 
-> completely.
-> 
-
-Karthik - [Addressed] Removed have_gpio()
-
-> > +}
-> > +
-> > +static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int 
-> > +offset) {
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +
-> > +	return !!(ioread32(bank_reg(gpio, bank, reg_val)) & 
-> > +GPIO_BIT(offset)); }
-> > +
-> > +static void __aspeed_sgpio_set(struct gpio_chip *gc, unsigned int
-> > offset,
-> > +			       int val)
-> 
-> No need to split this out from aspeed_sgpio_set() below. Separating the implementation was necessary 
-> in the parallel GPIO driver for reasons that aren't relevant here.
-> 
-
-Karthik - [Addressed] Merged into single API itself.
-
-> > +{
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	const struct aspeed_sgpio_bank *bank = to_bank(offset);
-> > +	void __iomem *addr;
-> > +	u32 reg;
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_val);
-> > +
-> > +	if (val)
-> > +		reg |= GPIO_BIT(offset);
-> > +	else
-> > +		reg &= ~GPIO_BIT(offset);
-> > +
-> > +	iowrite32(reg, addr);
-> > +}
-> > +
-> > +static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset,
-> > +			     int val)
-> > +{
-> > +	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	__aspeed_sgpio_set(gc, offset, val);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int
-> > offset)
-> > +{
-> > +	/* By default all SGPIO Pins are input */
-> 
-> Right, but with your implementation below you can never mark them as output.
-> 
-
-Karthik - [Addressed] Just return success if user space try to set dir as input or output.
-
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned
-> > int offset)
-> > +{
-> > +	/* By default all SGPIO Pins are input */
-> > +	return 1;
-> 
-> As above. Given my understanding of SGPIO, I think you should be implementing both dir_in() and 
-> dir_out(), and capturing which state userspace "wants" the GPIO to be in, and directing reads/writes to 
-> the DATA_READ/DATA_VALUE registers as appropriate. There's no state we need to modify in the 
-> hardware, but that doesn't mean we shouldn't capture the intent of userspace at all.
-> 
-
-Karthik -  Just return success if user space try to set dir as input or output. 
-                 But I don't understand the point directing reads/writes to the DATA_READ/DATA_VALUE Registers. 
-                 If userspace configured GPIO as input, Then get_gpio() should return reg_rdata value?
-                 If userspace configured GPIO as output, Then get_gpio() should return reg_val value?
-                 Please clarify.
-
-> > +
-> > +}
-> > +
-> > +static inline int irqd_to_aspeed_sgpio_data(struct irq_data *d,
-> > +					    struct aspeed_sgpio **gpio,
-> > +					    const struct aspeed_sgpio_bank **bank,
-> > +					    u32 *bit, int *offset)
-> > +{
-> > +	struct aspeed_sgpio *internal;
-> > +
-> > +	*offset = irqd_to_hwirq(d);
-> > +
-> > +	internal = irq_data_get_irq_chip_data(d);
-> > +
-> > +	*gpio = internal;
-> > +	*bank = to_bank(*offset);
-> > +	*bit = GPIO_BIT(*offset);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_ack(struct irq_data *d) {
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	void __iomem *status_addr;
-> > +	int rc, offset;
-> > +	u32 bit;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return;
-> > +
-> > +	status_addr = bank_reg(gpio, bank, reg_irq_status);
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	iowrite32(bit, status_addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set) {
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	u32 reg, bit;
-> > +	void __iomem *addr;
-> > +	int rc, offset;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return;
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_enable);
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	reg = ioread32(addr);
-> > +	if (set)
-> > +		reg |= bit;
-> > +	else
-> > +		reg &= ~bit;
-> > +
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags); }
-> > +
-> > +static void aspeed_sgpio_irq_mask(struct irq_data *d) {
-> > +	aspeed_sgpio_irq_set_mask(d, false); }
-> > +
-> > +static void aspeed_sgpio_irq_unmask(struct irq_data *d) {
-> > +	aspeed_sgpio_irq_set_mask(d, true);
-> > +}
-> > +
-> > +static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int 
-> > +type) {
-> > +	u32 type0 = 0;
-> > +	u32 type1 = 0;
-> > +	u32 type2 = 0;
-> > +	u32 bit, reg;
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +	irq_flow_handler_t handler;
-> > +	struct aspeed_sgpio *gpio;
-> > +	unsigned long flags;
-> > +	void __iomem *addr;
-> > +	int rc, offset;
-> > +
-> > +	rc = irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> > +	if (rc)
-> > +		return -EINVAL;
-> > +
-> > +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> > +	case IRQ_TYPE_EDGE_BOTH:
-> > +		type2 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		type0 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_EDGE_FALLING:
-> > +		handler = handle_edge_irq;
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		type0 |= bit;
-> > +		/* fall through */
-> > +	case IRQ_TYPE_LEVEL_LOW:
-> > +		type1 |= bit;
-> > +		handler = handle_level_irq;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	spin_lock_irqsave(&gpio->lock, flags);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type0);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type0;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type1);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type1;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	addr = bank_reg(gpio, bank, reg_irq_type2);
-> > +	reg = ioread32(addr);
-> > +	reg = (reg & ~bit) | type2;
-> > +	iowrite32(reg, addr);
-> > +
-> > +	spin_unlock_irqrestore(&gpio->lock, flags);
-> > +
-> > +	irq_set_handler_locked(d, handler);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void aspeed_sgpio_irq_handler(struct irq_desc *desc) {
-> > +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *ic = irq_desc_get_chip(desc);
-> > +	struct aspeed_sgpio *data = gpiochip_get_data(gc);
-> > +	unsigned int i, p, girq;
-> > +	unsigned long reg;
-> > +
-> > +	chained_irq_enter(ic, desc);
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		const struct aspeed_sgpio_bank *bank = &aspeed_sgpio_banks[i];
-> > +
-> > +		reg = ioread32(bank_reg(data, bank, reg_irq_status));
-> > +
-> > +		for_each_set_bit(p, &reg, 32) {
-> > +			girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-> > +			generic_handle_irq(girq);
-> > +		}
-> > +
-> > +	}
-> > +
-> > +	chained_irq_exit(ic, desc);
-> > +}
-> > +
-> > +static struct irq_chip aspeed_sgpio_irqchip = {
-> > +	.name       = "aspeed-sgpio",
-> > +	.irq_ack    = aspeed_sgpio_irq_ack,
-> > +	.irq_mask   = aspeed_sgpio_irq_mask,
-> > +	.irq_unmask = aspeed_sgpio_irq_unmask,
-> > +	.irq_set_type   = aspeed_sgpio_set_type,
-> > +};
-> > +
-> > +static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
-> > +				   struct platform_device *pdev)
-> > +{
-> > +	int rc, i;
-> > +	const struct aspeed_sgpio_bank *bank;
-> > +
-> > +	rc = platform_get_irq(pdev, 0);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	gpio->irq = rc;
-> > +
-> > +	/* Disable IRQ and clear Interrupt status registers for all SPGIO
-> > Pins. */
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		bank =  &aspeed_sgpio_banks[i];
-> > +		/* disable irq enable bits */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_enable));
-> > +		/* clear status bits */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_status));
-> > +	}
-> > +
-> > +	rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +				  0, handle_bad_irq, IRQ_TYPE_NONE);
-> > +	if (rc) {
-> > +		dev_info(&pdev->dev, "Could not add irqchip\n");
-> > +		return rc;
-> > +	}
-> > +
-> > +	gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_sgpio_irqchip,
-> > +				     gpio->irq, aspeed_sgpio_irq_handler);
-> > +
-> > +	/* set IRQ settings and Enable Interrupt */
-> > +	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> > +		bank = &aspeed_sgpio_banks[i];
-> > +		/* set falling or level-low irq */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type0));
-> > +		/* trigger type is edge */
-> > +		iowrite32(0x00000000, bank_reg(gpio, bank, reg_irq_type1));
-> > +		/* dual edge trigger mode. */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_type2));
-> > +		/* enable irq */
-> > +		iowrite32(0xffffffff, bank_reg(gpio, bank, reg_irq_enable));
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int aspeed_sgpio_request(struct gpio_chip *chip, unsigned int
-> > offset)
-> > +{
-> > +	if (!have_gpio(gpiochip_get_data(chip), offset))
-> > +		return -ENODEV;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id aspeed_sgpio_of_table[] = {
-> > +	{ .compatible = "aspeed,ast2400-sgpio", .data = NULL, },
-> > +	{ .compatible = "aspeed,ast2500-sgpio", .data = NULL,},
-> 
-> You can drop the assignment to data.
-> 
-
-Karthik - [Addressed]  dropped data parameter
-
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, aspeed_sgpio_of_table);
-> > +
-> > +static int __init aspeed_sgpio_probe(struct platform_device *pdev) {
-> > +	const struct of_device_id *gpio_id;
-> > +	struct aspeed_sgpio *gpio;
-> > +	struct resource *res;
-> > +	int rc, i;
-> > +
-> > +	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-> > +	if (!gpio)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	gpio->base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(gpio->base))
-> > +		return PTR_ERR(gpio->base);
-> > +
-> > +	spin_lock_init(&gpio->lock);
-> > +
-> > +	gpio_id = of_match_node(aspeed_sgpio_of_table, pdev->dev.of_node);
-> > +	if (!gpio_id)
-> > +		return -EINVAL;
-> 
-> gpio_id isn't used, so you can drop the of_match_node() above.
-> 
-
-Karthik - [Addressed]  dropped gpio_id
-
-> > +
-> > +	gpio->chip.parent = &pdev->dev;
-> > +	gpio->chip.ngpio = NR_SGPIO;
-> > +	gpio->chip.direction_input = aspeed_sgpio_dir_in;
-> > +	gpio->chip.direction_output = NULL;
-> 
-> We can do outputs too - we shouldn't be omitting the direction_output callback, see the discussion 
-> above about dir_in()/dir_out()/get_direction()
-> 
-
-Karthik - [Addressed]  Added output API also.
-
-> Andrew
-> 
-> > +	gpio->chip.get_direction = aspeed_sgpio_get_direction;
-> > +	gpio->chip.request = aspeed_sgpio_request;
-> > +	gpio->chip.free = NULL;
-> > +	gpio->chip.get = aspeed_sgpio_get;
-> > +	gpio->chip.set = aspeed_sgpio_set;
-> > +	gpio->chip.set_config = NULL;
-> > +	gpio->chip.label = dev_name(&pdev->dev);
-> > +	gpio->chip.base = -1;
-> > +
-> > +	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	return aspeed_sgpio_setup_irqs(gpio, pdev); }
-> > +
-> > +static struct platform_driver aspeed_sgpio_driver = {
-> > +	.driver = {
-> > +		.name = KBUILD_MODNAME,
-> > +		.of_match_table = aspeed_sgpio_of_table,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver_probe(aspeed_sgpio_driver, 
-> > +aspeed_sgpio_probe); MODULE_DESCRIPTION("Aspeed Serial GPIO Driver"); 
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.7.4
-> > 
-> >
+Thanks,
+Amir.
