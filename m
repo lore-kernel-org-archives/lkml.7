@@ -2,137 +2,181 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93083C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0667C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5427620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MBtSsTma";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="kIbkEPjx"
+	by mail.kernel.org (Postfix) with ESMTP id 6A2052084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfGJKd6 (ORCPT
+        id S1727179AbfGJKhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:33:58 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:55968 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbfGJKd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:33:57 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 98DA0C0167;
-        Wed, 10 Jul 2019 10:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562754837; bh=1hMf7QxxYpiL2DjBcQK0XBZelYzP+0nPC5LuDTJrJsM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=MBtSsTmarLyCnSAhcVnnAo44H4E9TtWms9RlNeYlpUw+BTRzP7+ZVhgUatE5G0ZfD
-         qr4D57ErTmQz3kqIyB9sm6s0yO4NwlcOpykoDudugFYwS8HO9fkTuY5sUUlW8+2m3O
-         7fnG3IRiNf6AmyQX9tM2KDshyj+lvk3wglaks3zr2ea/+RBlRt1/1+O7JmbpSLkFQB
-         zhs7J899xRlp2Lga3ofSM8Gi3dyr8mX924CIMxhWwD+LzULwLIVYZ0WNbBay8rvtXM
-         XKY5x0zZkhDF0dojisK+CrATY9Yz18DjHScINq6A4u80Qo6S4bwcXxhcnGPPUvrBDS
-         OurZINiWqQ8wA==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 9E321A009A;
-        Wed, 10 Jul 2019 10:33:48 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 10 Jul 2019 03:33:48 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 10 Jul 2019 03:33:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1hMf7QxxYpiL2DjBcQK0XBZelYzP+0nPC5LuDTJrJsM=;
- b=kIbkEPjxwLcz+fzaGETFiWeO8YXvSXfB3hfAf+z861d9s7pB+tL3cMaNqIAPw+aeoXKOeU/apC1CpRSs/aJ/pRkUrTP1gPRq6b6R6FPvenY9gl7tv5txG9bey0fehNxiUZ80SBL30WNAdbO/aNn7UyJ+SgNkPiu2xJcAU1jdgb0=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB3603.namprd12.prod.outlook.com (20.178.212.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Wed, 10 Jul 2019 10:33:46 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
- 10:33:46 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 08/12] net: stmmac: Fix misuses of GENMASK macro
-Thread-Topic: [PATCH 08/12] net: stmmac: Fix misuses of GENMASK macro
-Thread-Index: AQHVNt0RSTk/ZLig7EqtmWvteU3zKqbDp4tA
-Date:   Wed, 10 Jul 2019 10:33:46 +0000
-Message-ID: <BN8PR12MB3266C01DFCB92FF8A9BDBADAD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1562734889.git.joe@perches.com>
- <b38b0b67e724cd026709194b68c2be5ee1058c57.1562734889.git.joe@perches.com>
-In-Reply-To: <b38b0b67e724cd026709194b68c2be5ee1058c57.1562734889.git.joe@perches.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: be8102ad-26b5-4a41-7e7a-08d7052216d6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3603;
-x-ms-traffictypediagnostic: BN8PR12MB3603:
-x-microsoft-antispam-prvs: <BN8PR12MB360355AAD18F2FA8D700BE24D3F00@BN8PR12MB3603.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(396003)(136003)(366004)(189003)(199004)(229853002)(110136005)(6436002)(9686003)(3846002)(53936002)(25786009)(8936002)(4326008)(33656002)(478600001)(55016002)(6246003)(66066001)(71200400001)(54906003)(4744005)(76176011)(14454004)(7416002)(316002)(99286004)(7696005)(186003)(102836004)(26005)(52536014)(446003)(11346002)(71190400001)(7736002)(486006)(81156014)(5660300002)(8676002)(476003)(81166006)(6506007)(74316002)(68736007)(66946007)(6116002)(66446008)(66476007)(64756008)(2906002)(256004)(86362001)(76116006)(305945005)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3603;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YMAj++/Mek0ZoQXIjqzeYtjoM6G6n3D4oboFPjSo9tk+GKEtusGAFEYPF6LjTMQTxpPNUuAcXn8gzZEBsiydwBDcHwl9UiuSEghpZSIRjVlcG2vmLwhUT3gkkHTxAPA3VMsM7FdiS4SLkV3boO6jaHMRcfAcomZTFSRnnUCUYEvr3ztCMIu+g+NF+1GkPGZ0Jt5LiIHKLfeQsHl89f/31zSmRnEUXqB9o+uPQza3uDsPNII7pBWJgLKyKV8hK7KwGY9KjwEeGQksCvyuENUHNh/NXOH4Qp+sYgeBNKPdMM0Av4UyysW88fLx8pEKRzQ/55rbn1s8ABE3rfPrP/RIn+QPyQ2x1o461IxTkPrTpSWuWyaLu81IbvBQ2xri1We0ucaRJ3FZuw2RDqjbdgU6BJc48SeZ82oMDkNUDI3ibHk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 10 Jul 2019 06:37:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:59352 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfGJKhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 06:37:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 987C4344;
+        Wed, 10 Jul 2019 03:37:16 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DEAB3F738;
+        Wed, 10 Jul 2019 03:37:13 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 11:37:09 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
+ search API
+Message-ID: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: be8102ad-26b5-4a41-7e7a-08d7052216d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 10:33:46.5417
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3603
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710062212.1745-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
-Date: Jul/10/2019, 06:04:21 (UTC+00:00)
+On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
+> Add extended configuration space capability search API using struct dw_pcie *
+> pointer
 
-> Arguments are supposed to be ordered high then low.
->=20
-> Signed-off-by: Joe Perches <joe@perches.com>
+Sentences are terminated with a period and this is v13 not v1, which
+proves that you do not read the commit logs you write.
 
-If you submit another version please add:
+I need you guys to understand that I can't rewrite commit logs all
+the time, I do not want to go as far as not accepting your patches
+anymore so please do pay attention to commit log details they
+are as important as the code itself.
 
-Fixes: 293e4365a1ad ("stmmac: change descriptor layout")
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
 
----
 Thanks,
-Jose Miguel Abreu
+Lorenzo
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V13:
+> * None
+> 
+> V12:
+> * None
+> 
+> V11:
+> * None
+> 
+> V10:
+> * None
+> 
+> V9:
+> * Added Acked-by from Thierry
+> 
+> V8:
+> * Changed data types of return and arguments to be inline with data being returned
+>   and passed.
+> 
+> V7:
+> * None
+> 
+> V6:
+> * None
+> 
+> V5:
+> * None
+> 
+> V4:
+> * None
+> 
+> V3:
+> * None
+> 
+> V2:
+> * This is a new patch in v2 series
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7818b4febb08..181449e342f1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>  
+> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+> +					    u8 cap)
+> +{
+> +	u32 header;
+> +	int ttl;
+> +	int pos = PCI_CFG_SPACE_SIZE;
+> +
+> +	/* minimum 8 bytes per capability */
+> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> +
+> +	if (start)
+> +		pos = start;
+> +
+> +	header = dw_pcie_readl_dbi(pci, pos);
+> +	/*
+> +	 * If we have no capabilities, this is indicated by cap ID,
+> +	 * cap version and next pointer all being 0.
+> +	 */
+> +	if (header == 0)
+> +		return 0;
+> +
+> +	while (ttl-- > 0) {
+> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> +			return pos;
+> +
+> +		pos = PCI_EXT_CAP_NEXT(header);
+> +		if (pos < PCI_CFG_SPACE_SIZE)
+> +			break;
+> +
+> +		header = dw_pcie_readl_dbi(pci, pos);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+> +{
+> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+> +
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>  {
+>  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index d8c66a6827dc..11c223471416 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -252,6 +252,7 @@ struct dw_pcie {
+>  		container_of((endpoint), struct dw_pcie, ep)
+>  
+>  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+>  
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> -- 
+> 2.17.1
+> 
