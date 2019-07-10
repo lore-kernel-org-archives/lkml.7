@@ -2,93 +2,101 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A499C74A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95601C74A33
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2A120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562778290;
-	bh=km9vPhTYYLcAIVJu82GKQsQYAIy+sydY/n0IPVosDgc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yZS+pD6s2h0jKRnin5tUJpt0URPtYCMA1q6UGgzi6gWvZIOMVn8RS3JMEjUy5YZHL
-	 w1X1v8YDutVtufcwvPoIiB5fuCLOSzALRl0jfnFyPmrwVJIn/26XTZvsmyQW4nYGEA
-	 ey7NL2ZsuUV59CmQFSWxSXwkXmOKNQetVenEa9YU=
+	by mail.kernel.org (Postfix) with ESMTP id 6F1A420844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgX7vUmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfGJREt (ORCPT
+        id S1727827AbfGJRHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727197AbfGJREs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:04:48 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55E3F21019;
-        Wed, 10 Jul 2019 17:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562778287;
-        bh=km9vPhTYYLcAIVJu82GKQsQYAIy+sydY/n0IPVosDgc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QEdrpaFHEh3zW9nuvHZ2o0yq4u5FY9FL+bVTPcBgZUHm4q/qQAxpw8MsX+rC4tNe8
-         nmiubxPig3xHGBJxnnEDuewzemKphiwkiqIPluplYGE9HBxTmKssI2IJNqKwpxFm7N
-         xGnFqer8J+u7KD4dmyfWWG/ZMt1mJyqMYso3iU+Q=
-Received: by mail-lj1-f173.google.com with SMTP id 16so2809984ljv.10;
-        Wed, 10 Jul 2019 10:04:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAUmygMWAJMNm1/IjEaYwcRkrzqKmHGf6OmwQIUzVzcAEjpEoM6O
-        N/TiXoe7xPSMy7yDhhknipBYyehfZND+/VdgwH8=
-X-Google-Smtp-Source: APXvYqzfmGhkpnNV2qvF32P4a3uf1qBrtt+rh5QtV7zEQaa2I7op29+r7aQ7NFhCLGgPnbKn++N3IYyRGjYZWs6YKD8=
-X-Received: by 2002:a2e:6e0c:: with SMTP id j12mr17994402ljc.123.1562778285653;
- Wed, 10 Jul 2019 10:04:45 -0700 (PDT)
+        Wed, 10 Jul 2019 13:07:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38786 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfGJRHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:07:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g17so3272674wrr.5;
+        Wed, 10 Jul 2019 10:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LTapdIVWysC4BmFKF+77+HFRaZAY62cmjGq1o8w76vc=;
+        b=WgX7vUmpKwcssDeQZ0MQCpS6ehrwEZDkM5PrLDqqta6OsnfC5F/Bw2Y9Vgk6sNw2Gr
+         Yq58/XpF/aKiFjPlxKZM+3JMgmZ7tzLpluZX2SWGwZqyliDcjaAyYAXrJi71ipLyF1Y8
+         d3URV+ecdHf25fEvfA4CvW85ZfzhvfiYe8OzWLt9aAtkLKNMLrmEI/P8NT3QGbGnZ9kK
+         nPLRwL8VGEViiZy/BdIVQJVP1jEdMadH1/l+WgWrl5VX3tBfkYSyEU1dueTO+h1N6Pz8
+         gAhNyadOvDm3f0iYbtgwfJ/7ieqKduIuEkabjZCWOpeq1nBmhSSbg7nQrBphy4k2Tox3
+         Zmpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LTapdIVWysC4BmFKF+77+HFRaZAY62cmjGq1o8w76vc=;
+        b=FPog9j/g4SJu2c+4cmvIcgQl20Yv04Zzpa1weJwr9gOPPOKbuGUZwQUhZIdrcy1/Up
+         hgY0VpIwEChj0fzdHJePt1GEu/eDTkR2gVvm2y7ABIw5gPyr75SI0EUUQITL06VjGhya
+         JERIZ1Y66OwbB0iiASMg8BKXVL2Yc5/fm5IClAjV9dtrcz0CO1sNGon+Bji1nuHZYtY/
+         lR5rbbVnWdl5M/Tsi2dEmozljo3cxHu7Ddy6K9h5dCtIXYLHrlnwxo0ZJWEKYPJXS96/
+         G89qB2AEB96nl91uDRZvS3HmIP5TDRYLr4Ylh/tO2kiW+ZqEq6Pw6jQoXJ+b5sJEPymP
+         YZkw==
+X-Gm-Message-State: APjAAAX+QjD8QFDF3l5pIkQullidtrrg8FGsBa3WTJO/F41NINfV+dM3
+        pns5IrsAti2OTRES45jE9CPITU5axvojjg==
+X-Google-Smtp-Source: APXvYqzlGvjJxPScjAmBHyjng9WLycfn5Ibh6mdp6sgjQFC0e/OL/AbQOXuRiD7VtdFPAH68+7a1SA==
+X-Received: by 2002:adf:f046:: with SMTP id t6mr1655148wro.307.1562778433258;
+        Wed, 10 Jul 2019 10:07:13 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id c12sm4348617wrd.21.2019.07.10.10.07.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 10:07:12 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 10:07:11 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] IB/rdmavt: Fix variable shadowing issue in
+ rvt_create_cq
+Message-ID: <20190710170711.GA80444@archlinux-threadripper>
+References: <20190709221312.7089-1-natechancellor@gmail.com>
+ <20190709230552.61842-1-natechancellor@gmail.com>
+ <20190710170322.GA5072@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <CGME20190708141200eucas1p144ca3b2a5b4019aaa5773d23c0236f31@eucas1p1.samsung.com>
- <20190708141140.24379-1-k.konieczny@partner.samsung.com> <20190708141140.24379-3-k.konieczny@partner.samsung.com>
-In-Reply-To: <20190708141140.24379-3-k.konieczny@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 10 Jul 2019 19:04:34 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfWr-2t_e3f6oi7E6KLLRAbskzgEKz26XyK5n_9C8wV1w@mail.gmail.com>
-Message-ID: <CAJKOXPfWr-2t_e3f6oi7E6KLLRAbskzgEKz26XyK5n_9C8wV1w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] devfreq: exynos-bus: convert to use dev_pm_opp_set_rate()
-To:     k.konieczny@partner.samsung.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710170322.GA5072@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
->
-> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
->
-> Reuse opp core code for setting bus clock and voltage. As a side
-> effect this allow useage of coupled regulators feature (required
-> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
-> uses regulator_set_voltage_triplet() for setting regulator voltage
-> while the old code used regulator_set_voltage_tol() with fixed
-> tolerance. This patch also removes no longer needed parsing of DT
-> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+On Wed, Jul 10, 2019 at 10:03:23AM -0700, Ira Weiny wrote:
+> What version of the kernel was this found on?
+> 
+> I don't see the problem with 5.2.  AFAICS there is no 'err' in the function
+> scope and the if scoped 'err' is initialized properly on line 239.
+> 
+> Ira
+> 
 
-Please also update the bindings in such case. Both with removal of
-unused property and with example/recommended regulator couplings.
+$ git describe --contains 239b0e52d8aa
+next-20190709~84^2~57
 
-Best regards,
-Krzysztof
+I should probably be better about adding 'PATCH -next' to my patches,
+sorry for the confusion!
+
+Cheers,
+Nathan
