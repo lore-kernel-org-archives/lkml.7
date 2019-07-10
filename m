@@ -2,112 +2,113 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0570CC606CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFD9C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABFB20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C1A20861
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562753707;
+	bh=FKpiA/emhKXUOAPvuAJ5oh3C3NX2rCFMH+btriqrd4E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gksMa/Jgzwr4ySO0S2IRK9ulrp7p9C3Ygjh11TZPU8al/A2IKAY7n06bJHiXW88Sh
+	 kGdmKvs12tuBDyd+bY0oCEWJzdBkJXzniBwuTbmQMP1grMh07DBd/TmN9TQ3oV9MRw
+	 BenTqRGmkxKYxNneLZNFh4JjQLimheExWHQ1AW4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfGJKNQ (ORCPT
+        id S1727287AbfGJKPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:13:16 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36895 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727203AbfGJKNQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:13:16 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t76so1187039oih.4;
-        Wed, 10 Jul 2019 03:13:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sMQ20HN1HkUQ5iXeyevGIec1BiPAteEIkUj5csryX4M=;
-        b=PogKRyCeV6WJxMOTIuNo1D1IqzdIsVHnScXRn7SUoxFp82wmm6VXfDLKk8no1su/qq
-         j+FQgqsyQaHYQT1RsGowx2nF2b5kSQbiV1HpPcdDW4203eKi7j3pbC6sjn/sZhhIDYhw
-         2CoqveccXMxfSE/V1STFLW7cdJ2vkp3TZsT4Yorm2YYTdRC7Xyg1tQJ/DyqO/ItAhfnj
-         V+DHeCH4Gywy3OPXohY9oZufL5MKNZG5Kz0qrhATZemAS5NzEGfHbfQ1nLuKqgk3MSca
-         x2K+Uvty8d3ZSJmFqIkRCT56on76edK7QPsmeNKHEFAxlAmIWvj/VIbb5saMh23M+RpU
-         x8bw==
-X-Gm-Message-State: APjAAAW/ZyFXSO5tBhCApcszpdH5shvoCDLsldDxfY9JlKZLz5I4Eh4X
-        q4MGLb90pmP6Bgt1cWVxF6P2o7pxn8eGYd5CFqs=
-X-Google-Smtp-Source: APXvYqw7XmF+8mgq1SOVrjfC5LsQ/5ZaBFuBF9bzZRW00yqQKLq2uowodCNWOPtfwnJP/gRhEVpUnkVdqZP3FSTJE7I=
-X-Received: by 2002:aca:bd43:: with SMTP id n64mr2639388oif.148.1562753595363;
- Wed, 10 Jul 2019 03:13:15 -0700 (PDT)
+        Wed, 10 Jul 2019 06:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbfGJKPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 06:15:06 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAADD20861;
+        Wed, 10 Jul 2019 10:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562753705;
+        bh=FKpiA/emhKXUOAPvuAJ5oh3C3NX2rCFMH+btriqrd4E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xWsc9WLv9uXi+kTm/sQBJC6Gcxs5SxUhmTBPZGMtgW6lJzrVfAdyorhbft7xaFAbL
+         AgdDhUNdVXew3QRvl0mZO1y3DthJZ0L/AoSun2BGegLwZrrGgnFcZE4XKtjQvSZ5+r
+         T6LfnYa6wKz0ZydjRFYLeFVNiPuGW48f18Uj8N0Q=
+Received: by mail-lj1-f181.google.com with SMTP id h10so1520713ljg.0;
+        Wed, 10 Jul 2019 03:15:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAVQxdRoZYVnURzSBtDbJZqcuArvSrrEXadiK6eckkQPUAKeF7YV
+        3Ie/qN/2qe4CeMaty2bfG9Ybju3IP5N0zvxBeOE=
+X-Google-Smtp-Source: APXvYqzFBP1tdwwgtZ/3RtfqPPV8drCmzRWKuK+JH6Dw5x+7dbZyN+IaqrSobdz3ZdFMyRjarSxqkEs4HDySwe+JxPc=
+X-Received: by 2002:a2e:7818:: with SMTP id t24mr13443634ljc.210.1562753702877;
+ Wed, 10 Jul 2019 03:15:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190710090852.9239-1-brgl@bgdev.pl> <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
-In-Reply-To: <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 10 Jul 2019 12:13:04 +0200
-Message-ID: <CAMuHMdUB7fU1grp7jgrFWad183RLcRE7CDNQYczgm_Ur-Nu_9g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: em: remove the gpiochip before removing the irq domain
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable <stable@vger.kernel.org>
+References: <CGME20190708141158eucas1p17d4b50978dbe1e5c876ce6d8f433cc95@eucas1p1.samsung.com>
+ <20190708141140.24379-1-k.konieczny@partner.samsung.com> <CAJKOXPd+UZ2MdrTVfBv5UYzK5LgKNQHUFzRbRNeq271EaDSchg@mail.gmail.com>
+ <91f65527-3440-90fd-4096-5824fba1df78@partner.samsung.com>
+In-Reply-To: <91f65527-3440-90fd-4096-5824fba1df78@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 10 Jul 2019 12:14:51 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPc1rOyFujyWk4HwmQb6YEXd=CEHKwN8AH_pKxk-6CA08w@mail.gmail.com>
+Message-ID: <CAJKOXPc1rOyFujyWk4HwmQb6YEXd=CEHKwN8AH_pKxk-6CA08w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] add coupled regulators for Exynos5422/5800
+To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Phil,
-
-On Wed, Jul 10, 2019 at 11:37 AM Phil Reid <preid@electromag.com.au> wrote:
-> On 10/07/2019 17:08, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > In commit 8764c4ca5049 ("gpio: em: use the managed version of
-> > gpiochip_add_data()") we implicitly altered the ordering of resource
-> > freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
-> > internally, we now can potentially use the irq_domain after it was
-> > destroyed in the remove() callback (as devm resources are freed after
-> > remove() has returned).
-> >
-> > Use devm_add_action() to keep the ordering right and entirely kill
-> > the remove() callback in the driver.
-> >
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add_data()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-> > --- a/drivers/gpio/gpio-em.c
-> > +++ b/drivers/gpio/gpio-em.c
-
-> > @@ -333,39 +340,32 @@ static int em_gio_probe(struct platform_device *pdev)
-> >               return -ENXIO;
-> >       }
-> >
-> > +     ret = devm_add_action(&pdev->dev,
-> > +                           em_gio_irq_domain_remove, p->irq_domain);
+On Wed, 10 Jul 2019 at 12:03, Kamil Konieczny
+<k.konieczny@partner.samsung.com> wrote:
 >
-> Could devm_add_action_or_reset be used?
-
-Thank you very much for bringing this function to my attention!
-I was just wondering if devm_add_action() should call the action on
-failure, as this is what most callers seem to do anyway.
-
+> On 10.07.2019 11:00, Krzysztof Kozlowski wrote:
+> > On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
+> >>
+> >> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> >>
+> >> Hi,
+> >>
+> >> The main purpose of this patch series is to add coupled regulators for
+> >> Exynos5422/5800 to keep constrain on voltage difference between vdd_arm
+> >> and vdd_int to be at most 300mV. In exynos-bus instead of using
+> >> regulator_set_voltage_tol() with default voltage tolerance it should be
+> >> used regulator_set_voltage_triplet() with volatege range, and this is
+> >> already present in opp/core.c code, so it can be reused. While at this,
+> >> move setting regulators into opp/core.
+> >>
+> >> This patchset was tested on Odroid XU3.
+> >>
+> >> The last patch depends on two previous.
+> >
+> > So you break the ABI... I assume that patchset maintains
+> > bisectability. However there is no explanation why ABI break is needed
+> > so this does not look good...
 >
-> > +     if (ret) {
-> > +             irq_domain_remove(p->irq_domain);
-> > +             return ret;
-> > +     }
+> Patchset is bisectable, first one is simple and do not depends on others,
+> second depends on first, last depends on first and second.
+>
+> What do you mean by breaking ABI ?
 
-Gr{oetje,eeting}s,
+I mean, that Linux kernel stops working with existing DTBs... or am I
+mistaken and there is no problem? Maybe I confused the order...
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
