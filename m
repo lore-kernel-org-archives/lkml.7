@@ -2,48 +2,49 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306B2C71142
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB5CC606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E28121473
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7122064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PkSp2haE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfGJMhC (ORCPT
+        id S1727426AbfGJMhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:37:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22835 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbfGJMhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:37:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 05:36:59 -0700
-X-IronPort-AV: E=Sophos;i="5.63,474,1557212400"; 
-   d="scan'208";a="170906953"
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 05:36:57 -0700
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Micha=C5=82=20Wajdeczko?= <michal.wajdeczko@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Subject: [RFC PATCH 6/6] drm/i915: Rename "inject_load_failure" module parameter
-Date:   Wed, 10 Jul 2019 14:36:31 +0200
-Message-Id: <20190710123631.26575-7-janusz.krzysztofik@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190710123631.26575-1-janusz.krzysztofik@linux.intel.com>
-References: <20190710123631.26575-1-janusz.krzysztofik@linux.intel.com>
+        Wed, 10 Jul 2019 08:37:32 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34974 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJMhb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:37:31 -0400
+Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1E62731C;
+        Wed, 10 Jul 2019 14:37:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1562762249;
+        bh=rXmN/ZP1jKpCFxlT6ZQ3Ed8fIwsZSXGnqlc6PGjlcj8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PkSp2haE0jZmJsqrMwJ1rxk/Cok03Jt0bZbMIZ/5e19X7e8fcGgs51dJLcALqvA41
+         pAADSeNs5/vyArQ7vyiqt+t1x9fpsh4GaUv4Dg1kTyXlMn3fWBwaGULBbfBJ0KNOY5
+         BprfaHdPT11bG4UE3ij96ouj+9QPnuVv5rNOY2C0=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] media: i2c: adv748x: Convert to new i2c device probe()
+Date:   Wed, 10 Jul 2019 13:37:19 +0100
+Message-Id: <20190710123719.3376-1-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,76 +52,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the "probe" nomenclature for consistency with internally used names
-of functions and variables.
+The I2C core framework provides a simplified probe framework from commit
+b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
 
-Requires adjustment of IGT tests and possibly affects other user custom
-applications.
+Convert the ADV748x to utilise this simplfied i2c driver registration.
 
-Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- drivers/gpu/drm/i915/i915_drv.c    | 10 +++++-----
- drivers/gpu/drm/i915/i915_params.c |  2 +-
- drivers/gpu/drm/i915/i915_params.h |  2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/media/i2c/adv748x/adv748x-core.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index 7241a7d14e9b..3bac6be9f37d 100644
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -85,13 +85,13 @@ static unsigned int i915_probe_fail_count;
- 
- bool __i915_inject_probe_failure(const char *func, int line)
- {
--	if (i915_probe_fail_count >= i915_modparams.inject_load_failure)
-+	if (i915_probe_fail_count >= i915_modparams.inject_probe_failure)
- 		return false;
- 
--	if (++i915_probe_fail_count == i915_modparams.inject_load_failure) {
-+	if (++i915_probe_fail_count == i915_modparams.inject_probe_failure) {
- 		DRM_INFO("Injecting failure at checkpoint %u [%s:%d]\n",
--			 i915_modparams.inject_load_failure, func, line);
--		i915_modparams.inject_load_failure = 0;
-+			 i915_modparams.inject_probe_failure, func, line);
-+		i915_modparams.inject_probe_failure = 0;
- 		return true;
- 	}
- 
-@@ -100,7 +100,7 @@ bool __i915_inject_probe_failure(const char *func, int line)
- 
- bool i915_error_injected(void)
- {
--	return i915_probe_fail_count && !i915_modparams.inject_load_failure;
-+	return i915_probe_fail_count && !i915_modparams.inject_probe_failure;
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index 097e94279cf7..ae2b6eb93e09 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -677,8 +677,7 @@ static void adv748x_dt_cleanup(struct adv748x_state *state)
+ 		of_node_put(state->endpoints[i]);
  }
  
- #endif
-diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
-index 296452f9efe4..59a6586dae15 100644
---- a/drivers/gpu/drm/i915/i915_params.c
-+++ b/drivers/gpu/drm/i915/i915_params.c
-@@ -165,7 +165,7 @@ i915_param_named_unsafe(enable_dp_mst, bool, 0600,
- 	"Enable multi-stream transport (MST) for new DisplayPort sinks. (default: true)");
+-static int adv748x_probe(struct i2c_client *client,
+-			 const struct i2c_device_id *id)
++static int adv748x_probe(struct i2c_client *client)
+ {
+ 	struct adv748x_state *state;
+ 	int ret;
+@@ -806,13 +805,6 @@ static int adv748x_remove(struct i2c_client *client)
+ 	return 0;
+ }
  
- #if IS_ENABLED(CONFIG_DRM_I915_DEBUG)
--i915_param_named_unsafe(inject_load_failure, uint, 0400,
-+i915_param_named_unsafe(inject_probe_failure, uint, 0400,
- 	"Force an error after a number of failure check points (0:disabled (default), N:force failure at the Nth failure check point)");
- #endif
+-static const struct i2c_device_id adv748x_id[] = {
+-	{ "adv7481", 0 },
+-	{ "adv7482", 0 },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(i2c, adv748x_id);
+-
+ static const struct of_device_id adv748x_of_table[] = {
+ 	{ .compatible = "adi,adv7481", },
+ 	{ .compatible = "adi,adv7482", },
+@@ -825,9 +817,8 @@ static struct i2c_driver adv748x_driver = {
+ 		.name = "adv748x",
+ 		.of_match_table = adv748x_of_table,
+ 	},
+-	.probe = adv748x_probe,
++	.probe_new = adv748x_probe,
+ 	.remove = adv748x_remove,
+-	.id_table = adv748x_id,
+ };
  
-diff --git a/drivers/gpu/drm/i915/i915_params.h b/drivers/gpu/drm/i915/i915_params.h
-index d29ade3b7de6..8c887413fc70 100644
---- a/drivers/gpu/drm/i915/i915_params.h
-+++ b/drivers/gpu/drm/i915/i915_params.h
-@@ -62,7 +62,7 @@ struct drm_printer;
- 	param(int, mmio_debug, -IS_ENABLED(CONFIG_DRM_I915_DEBUG_MMIO)) \
- 	param(int, edp_vswing, 0) \
- 	param(int, reset, 2) \
--	param(unsigned int, inject_load_failure, 0) \
-+	param(unsigned int, inject_probe_failure, 0) \
- 	param(int, fastboot, -1) \
- 	param(int, enable_dpcd_backlight, 0) \
- 	param(char *, force_probe, CONFIG_DRM_I915_FORCE_PROBE) \
+ module_i2c_driver(adv748x_driver);
 -- 
-2.21.0
+2.20.1
 
