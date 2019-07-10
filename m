@@ -2,127 +2,122 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02EAC74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A079C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942EB20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kDswq2kM"
+	by mail.kernel.org (Postfix) with ESMTP id 5D4DC20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfGJXhV (ORCPT
+        id S1727827AbfGJXhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 19:37:21 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38026 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfGJXhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 19:37:20 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ANYiiS015651;
-        Wed, 10 Jul 2019 23:37:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=0APovDijHG6PwMSfhaesG8TZJSRCkJcQP5cEbaYB8ww=;
- b=kDswq2kM9t+wCwvFNJYyU0TrxV21pjy/M9lYa3StIs3pnj3l4kJvj8zJCYnIOp4If51F
- Nr1dOTH+0YlC2OWMnZxMrjLnKIe/AOpLghBdk28iNkeBJmtjUmzUR0jkSmvfEWGtL4MS
- YRtCGDh5rSkJd51kXyPGhmY21vP4SxiBeoNbznJkeRd7JXnpBWDMZ02pHrKMPQKJdKKB
- E2Un0r3ziXKC04h5Z3MvHSyykh3cv4f2V1OvzJ6a6elKSlN+Ma/EXiIwwg3dUxq9YCqf
- ou/sRP15idTp6Bqm98Bs/FIdUxntZ/MMwP6ME7WdcEJxqusU75NyzyuPZsWKyAs+3o6e FQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2tjkkpvwtt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jul 2019 23:37:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ANXBMl092682;
-        Wed, 10 Jul 2019 23:37:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2tmmh3twx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jul 2019 23:37:04 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6ANaxxv003472;
-        Wed, 10 Jul 2019 23:36:59 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Jul 2019 16:36:59 -0700
-Subject: Re: [Question] Should direct reclaim time be bounded?
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Hillf Danton <hdanton@sina.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@suse.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
- <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
- <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
- <20190710194403.GR29695@dhcp22.suse.cz>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <9d6c8b74-3cf6-4b9e-d3cb-a7ef49f838c7@oracle.com>
-Date:   Wed, 10 Jul 2019 16:36:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 10 Jul 2019 19:37:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33038 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727220AbfGJXhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 19:37:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 16:37:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
+   d="scan'208";a="249618898"
+Received: from bxing-desk.ccr.corp.intel.com (HELO [134.134.148.187]) ([134.134.148.187])
+  by orsmga001.jf.intel.com with ESMTP; 10 Jul 2019 16:37:40 -0700
+Subject: Re: [RFC PATCH v2 0/3] An alternative __vdso_sgx_enter_enclave() to
+ allow enclave/host parameter passing using untrusted stack
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        kai.svahn@intel.com, kai.huang@intel.com
+References: <cover.1555965327.git.cedric.xing@intel.com>
+ <20190424062623.4345-1-cedric.xing@intel.com>
+ <20190710111719.nnoedfo4wvbfghq7@linux.intel.com>
+ <686e47d2-f45c-6828-39d1-48374925de6c@intel.com>
+ <20190710224628.epjxwlpqqxdurmzo@linux.intel.com>
+ <20190710231538.dkc7tyeyvns53737@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <27cf0fc7-71c6-7dc1-f031-86bf887f1fe1@intel.com>
+Date:   Wed, 10 Jul 2019 16:37:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190710194403.GR29695@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190710231538.dkc7tyeyvns53737@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907100274
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907100274
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 12:44 PM, Michal Hocko wrote:
-> On Wed 10-07-19 11:42:40, Mike Kravetz wrote:
-> [...]
->> As Michal suggested, I'm going to do some testing to see what impact
->> dropping the __GFP_RETRY_MAYFAIL flag for these huge page allocations
->> will have on the number of pages allocated.
+On 7/10/2019 4:15 PM, Jarkko Sakkinen wrote:
+> On Thu, Jul 11, 2019 at 01:46:28AM +0300, Jarkko Sakkinen wrote:
+>> On Wed, Jul 10, 2019 at 11:08:37AM -0700, Xing, Cedric wrote:
+>>>> With these conclusions I think the current vDSO API is sufficient for
+>>>> Linux.
+>>>
+>>> The new vDSO API is to support data exchange on stack. It has nothing to do
+>>> with debugging. BTW, the community has closed on this.
+>>
+>> And how that is useful?
+>>
+>>> The CFI directives are for stack unwinding. They don't affect what the code
+>>> does so you can just treat them as NOPs if you don't understand what they
+>>> do. However, they are useful to not only debuggers but also exception
+>>> handling code. libunwind also has a setjmp()/longjmp() implementation based
+>>> on CFI directives.
+>>
+>> Of course I won't merge code of which usefulness I don't understand.
 > 
-> Just to clarify. I didn't mean to drop __GFP_RETRY_MAYFAIL from the
-> allocation request. I meant to drop the special casing of the flag in
-> should_continue_reclaim. I really have hard time to argue for this
-> special casing TBH. The flag is meant to retry harder but that shouldn't
-> be reduced to a single reclaim attempt because that alone doesn't really
-> help much with the high order allocation. It is more about compaction to
-> be retried harder.
+> I re-read the cover letter [1] because it usually is the place
+> to "pitch" a feature.
+> 
+> It fails to address two things:
+> 
+> 1. How and in what circumstances is an untrusted stack is a better
+>     vessel for handling exceptions than the register based approach
+>     that we already have?
 
-Thanks Michal.  That is indeed what you suggested earlier.  I remembered
-incorrectly.  Sorry.
+We are not judging which vessel is better (or the best) among all 
+possible vessels. We are trying to enable more vessels. Every vessel has 
+its pros and cons so there's *no* single best vessel.
 
-Removing the special casing for __GFP_RETRY_MAYFAIL in should_continue_reclaim
-implies that it will return false if nothing was reclaimed (nr_reclaimed == 0)
-in the previous pass.
+> 2. How is it simpler approach? There is a strong claim of simplicity
+>     and convenience without anything backing it.
 
-When I make such a modification and test, I see long stalls as a result
-of should_compact_retry returning true too often.  On a system I am currently
-testing, should_compact_retry has returned true 36000000 times.  My guess
-is that this may stall forever.  Vlastmil previously asked about this behavior,
-so I am capturing the reason.  Like before [1], should_compact_retry is
-returning true mostly because compaction_withdrawn() returns COMPACT_DEFERRED.
+The major benefits in terms of simplicity realize in user mode 
+applications. It's always a trade-off. This vDSO API takes 10-20 more 
+lines than the original one but would save hundreds or even thousands in 
+user applications.
 
-Total 36000000
-      35437500	COMPACT_DEFERRED
-        562500  COMPACT_PARTIAL_SKIPPED
+Again, I don't want to repeat everything as you can look back at the 
+lengthy discussion to dig out the details.
 
+> 3. Why we need both register and stack based approach co-exist? I'd go
+>     with one approach for a new API without any legacy whatsoever.
 
-[1] https://lkml.org/lkml/2019/6/5/643
--- 
-Mike Kravetz
+Neither is a legacy to the other. Supporting both approaches is by 
+design. Again, the goal is to enable more vessels because there's *no* 
+single best vessel.
+
+> This really needs a better pitch before we can consider doing anything
+> to it.
+> 
+> Also, in [2] there is talk about the next revision. Maybe the way go
+> forward is to address the three issues I found in the cover letter
+> and fix whatever needed to be fixed in the actual patches?
+> 
+> [1] https://lkml.org/lkml/2019/4/24/84
+> [2] https://lkml.org/lkml/2019/4/25/1170
+
+Let me update the commit message for the vDSO API and send you a patch.
+
+> /Jarkko
+> 
