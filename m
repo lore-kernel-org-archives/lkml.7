@@ -2,97 +2,117 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6E9C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AE5C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0BE20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545C7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562781767;
+	bh=KFGaAqqNpUWmU9c47f997s7PEzdV9jbLos0AqkAsUVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AG1xKVBU8FJzZL8gI526UYfiYy9vtyccu9NTIaVRmYiiFBVtVgc8NDdiUQ6UKLa/3
+	 HpGuVRdgbuNnNW70sXrsZOQmQSpn4/J/vdZa3fomyXdwl/VTqTWTD8kyBR4S9Il5IP
+	 XUcxbrt3aZUycWI4b6jE8Eb0vSEMT9XDQHwSgjx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfGJR7R (ORCPT
+        id S1727631AbfGJSCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:59:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43478 "EHLO mx1.redhat.com"
+        Wed, 10 Jul 2019 14:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfGJR7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:59:16 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727287AbfGJSCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 14:02:45 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 83E8330C1D17;
-        Wed, 10 Jul 2019 17:59:16 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-55.sin2.redhat.com [10.67.116.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCDAA60148;
-        Wed, 10 Jul 2019 17:59:03 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     virtualization@lists.linux-foundation.org, dan.j.williams@intel.com
-Cc:     yuval.shaia@oracle.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com, mst@redhat.com,
-        lcapitulino@redhat.com, pagupta@redhat.com
-Subject: [PATCH v2] virtio_pmem: fix sparse warning
-Date:   Wed, 10 Jul 2019 23:28:32 +0530
-Message-Id: <20190710175832.17252-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 10 Jul 2019 17:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3456F20844;
+        Wed, 10 Jul 2019 18:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562781765;
+        bh=KFGaAqqNpUWmU9c47f997s7PEzdV9jbLos0AqkAsUVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uwFFK4pGoZCSPrz+JNDCvPgIycc256Op50N1bPJzN5YbJf/EkSvOMyLjkWgzzor3j
+         E2XooU0qpWDyO/rPFNvKyblb8x6qsAQsbpmBSCdPfscjMCyf5gPXFu5u1B5DE3e+8S
+         xwjxYVEMGHv+LiQhi/zwX0In2Otdyo7XJt/pFFwA=
+Date:   Wed, 10 Jul 2019 11:02:43 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+Message-ID: <20190710180242.GA193819@gmail.com>
+Mail-Followup-To: Bart Van Assche <bvanassche@acm.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000089a718058556e1d8@google.com>
+ <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
+ <20190710053030.GB2152@sol.localdomain>
+ <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
+ <20190710170057.GB801@sol.localdomain>
+ <20190710172123.GC801@sol.localdomain>
+ <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below sparse warning related to __virtio
-type in virtio pmem driver. This is reported by Intel test
-bot on linux-next tree.
+On Wed, Jul 10, 2019 at 10:46:00AM -0700, Bart Van Assche wrote:
+> On 7/10/19 10:21 AM, Eric Biggers wrote:
+> > With my simplified reproducer, on commit 669de8bda87b ("kernel/workqueue: Use
+> > dynamic lockdep keys for workqueues") I see:
+> > 
+> > 	WARNING: CPU: 3 PID: 189 at kernel/locking/lockdep.c:747 register_lock_class+0x4f6/0x580
+> > 
+> > and then somewhat later:
+> > 
+> > 	BUG: MAX_LOCKDEP_KEYS too low!
+> > 
+> > If on top of that I cherry pick commit 28d49e282665 ("locking/lockdep: Shrink
+> > struct lock_class_key"), I see instead:
+> > 
+> > 	BUG: MAX_STACK_TRACE_ENTRIES too low!
+> > 
+> > I also see that on mainline.
+> > 
+> > Alternatively, if I check out 669de8bda87b and revert it, I don't see anything.
+> 
+> Hi Eric,
+> 
+> Is the rdma_ucm code the only code that triggers the "BUG:
+> MAX_STACK_TRACE_ENTRIES too low!" complaint or is this complaint also
+> triggered by other kernel code? I'm asking this because I think that
+> fixing this would require to implement garbage collection for the
+> stack_trace[] array in the lockdep code. That would make the lockdep
+> code slower. I don't think that making the lockdep code slower would be
+> welcome.
+> 
+> Bart.
 
-nd_virtio.c:56:28: warning: incorrect type in assignment 
-				(different base types)
-nd_virtio.c:56:28:    expected unsigned int [unsigned] [usertype] type
-nd_virtio.c:56:28:    got restricted __virtio32
-nd_virtio.c:93:59: warning: incorrect type in argument 2 
-				(different base types)
-nd_virtio.c:93:59:    expected restricted __virtio32 [usertype] val
-nd_virtio.c:93:59:    got unsigned int [unsigned] [usertype] ret
+I already mentioned that io_uring triggers it too.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
----
+Those are just 2 cases that syzbot happened to generate reproducers for.  I
+expect there are many others too, since many places in the kernel allocate
+workqueues.  AFAICS most are placed in static or global variables which avoids
+this issue, but there are still many cases where a workqueue is owned by some
+dynamic structure that can have a much shorter lifetime.
 
-This fixes a warning, so submitting it as a separate
-patch on top of virtio pmem series.
+You can also check the other syzbot reports that look similar
+(https://lore.kernel.org/lkml/20190710055838.GC2152@sol.localdomain/).
+Two of them have C reproducers too.
 
- include/uapi/linux/virtio_pmem.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
-index efcd72f2d20d..7a7435281362 100644
---- a/include/uapi/linux/virtio_pmem.h
-+++ b/include/uapi/linux/virtio_pmem.h
-@@ -10,7 +10,7 @@
- #ifndef _UAPI_LINUX_VIRTIO_PMEM_H
- #define _UAPI_LINUX_VIRTIO_PMEM_H
- 
--#include <linux/types.h>
-+#include <linux/virtio_types.h>
- #include <linux/virtio_ids.h>
- #include <linux/virtio_config.h>
- 
-@@ -23,12 +23,12 @@ struct virtio_pmem_config {
- 
- struct virtio_pmem_resp {
- 	/* Host return status corresponding to flush request */
--	__u32 ret;
-+	__virtio32 ret;
- };
- 
- struct virtio_pmem_req {
- 	/* command type */
--	__u32 type;
-+	__virtio32 type;
- };
- 
- #endif
--- 
-2.20.1
-
+- Eric
