@@ -2,71 +2,94 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27F9C73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDA7C73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08F22083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF322083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfGJFF1 (ORCPT
+        id S1727143AbfGJFFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:05:27 -0400
-Received: from smtprelay0107.hostedemail.com ([216.40.44.107]:43576 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726234AbfGJFEn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:04:43 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id A2F6B18224D97;
-        Wed, 10 Jul 2019 05:04:42 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cast53_be22f579d301
-X-Filterd-Recvd-Size: 1550
-Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jul 2019 05:04:41 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 05/12] irqchip/gic-v3-its: Fix misuse of GENMASK macro
-Date:   Tue,  9 Jul 2019 22:04:18 -0700
-Message-Id: <ab5deb4fc3cd604cb620054770b7d00016d736bc.1562734889.git.joe@perches.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <cover.1562734889.git.joe@perches.com>
-References: <cover.1562734889.git.joe@perches.com>
+        Wed, 10 Jul 2019 01:05:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41080 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726234AbfGJFFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:05:30 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 25DF892C0BA70E4A1D17;
+        Wed, 10 Jul 2019 13:05:27 +0800 (CST)
+Received: from [127.0.0.1] (10.65.87.206) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 10 Jul 2019
+ 13:05:20 +0800
+Subject: Re: [PATCH v2 05/10] net: hisilicon: HI13X1_GMAX need dreq reset at
+ first
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+        <mark.rutland@arm.com>, <dingtianhong@huawei.com>
+References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
+ <890c48d1-76b8-5aea-e175-aa7d9967acd2@cogentembedded.com>
+ <101b8c68-75f5-00a7-9845-e59c0467768c@huawei.com>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <leeyou.li@huawei.com>,
+        <nixiaoming@huawei.com>, <jianping.liu@huawei.com>,
+        <xiekunxun@huawei.com>
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <5e3eda91-dedc-e687-6a18-b1aec1e9fe63@huawei.com>
+Date:   Wed, 10 Jul 2019 13:05:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <101b8c68-75f5-00a7-9845-e59c0467768c@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.87.206]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arguments are supposed to be ordered high then low.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 35500801dc2b..730fbe0e2a9d 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -185,7 +185,7 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
- 
- static struct its_collection *valid_col(struct its_collection *col)
- {
--	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(0, 15)))
-+	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
- 		return NULL;
- 
- 	return col;
--- 
-2.15.0
+On 2019/7/9 21:48, Jiangfeng Xiao wrote:
+> 
+> 
+> On 2019/7/9 17:35, Sergei Shtylyov wrote:
+>> Hello!
+>>
+>> On 09.07.2019 6:31, Jiangfeng Xiao wrote:
+>>
+[...]
+>>> @@ -853,6 +867,15 @@ static int hip04_mac_probe(struct platform_device *pdev)
+>>>           goto init_fail;
+>>>       }
+>>>   +#if defined(CONFIG_HI13X1_GMAC)
+>>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>> +    priv->sysctrl_base = devm_ioremap_resource(d, res);
+>>
+>>    There's devm_platform_ioremap_resource() now.
+> 
+> Thank you for your review, Great issue, which makes my code more concise.
+> 
+> I will fix it in v3. Or submit a patch to modify it separately, if maintainer
+> applies this patch series.
+> 
+I decided to wait for this series of patches to sync to the mainline
+and then fix this based on the mainline.
+
+Because the mainline does not currently have this part of the code,
+if I submit the changes, and the patch is accidentally merged into
+another branch or another maintainer to handle, a conflict will occur.
+
+As we all know, maintianer has to deal with many commits every day,
+I don't want to increase the burden of maintainer.
+
+So I decided to wait until the patch is synced to the mainline
+and then modify it, which is more safe.
 
