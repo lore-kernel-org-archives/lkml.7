@@ -2,127 +2,185 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AD0C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4DDC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A69208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE7220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="okWIQmP9";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="okWIQmP9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="ms1OuSEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfGJRfh (ORCPT
+        id S1727655AbfGJRhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:35:37 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43278 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbfGJRfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:35:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CE1698EE24C;
-        Wed, 10 Jul 2019 10:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562780136;
-        bh=B70gAXooxvZK/Lf3HwD7p1V8t+7FlnkHdVRJexmSkFw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=okWIQmP9GmOEZoBgruAKHEKyShJaVoqPbC0/vxxvqvwNL6cXmo1bjWaVEsOZc2GtZ
-         dDnwoHAnt2DPX5g+Eoa/v9aScrOrFOppGatpMky2n2yplzfXszVU9wy9swQsUxGQe2
-         yi5qacgvwVo31QseTxnEA5fsIinkjskyi8KvVqxM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HoVGSRes2uiH; Wed, 10 Jul 2019 10:35:36 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 566D48EE147;
-        Wed, 10 Jul 2019 10:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562780136;
-        bh=B70gAXooxvZK/Lf3HwD7p1V8t+7FlnkHdVRJexmSkFw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=okWIQmP9GmOEZoBgruAKHEKyShJaVoqPbC0/vxxvqvwNL6cXmo1bjWaVEsOZc2GtZ
-         dDnwoHAnt2DPX5g+Eoa/v9aScrOrFOppGatpMky2n2yplzfXszVU9wy9swQsUxGQe2
-         yi5qacgvwVo31QseTxnEA5fsIinkjskyi8KvVqxM=
-Message-ID: <1562780135.3213.58.camel@HansenPartnership.com>
-Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Paul Bolle <pebolle@tiscali.nl>, intel-gfx@lists.freedesktop.org
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 10 Jul 2019 10:35:35 -0700
-In-Reply-To: <5245d2b3d82f11d2f988a3154814eb42dcb835c5.camel@tiscali.nl>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <1562770874.3213.14.camel@HansenPartnership.com>
-         <93b8a186f4c8b4dae63845a20bd49ae965893143.camel@tiscali.nl>
-         <1562776339.3213.50.camel@HansenPartnership.com>
-         <5245d2b3d82f11d2f988a3154814eb42dcb835c5.camel@tiscali.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Wed, 10 Jul 2019 13:37:55 -0400
+Received: from vern.gendns.com ([98.142.107.122]:45282 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727179AbfGJRhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:37:55 -0400
+X-Greylist: delayed 1765 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 13:37:54 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=742DpKy/3b3aX3/oMvUvDOUEYqGujp/g6haYNubKl7I=; b=ms1OuSEyHhgFjbxrDtK9phgJcv
+        MMKv20yCMtriXEpwZh5Jo3kSYocR0t73tmXpfSCpsXSfF93JsxV0C9YVM3HNIn3ncOlsAO+zQeoQ1
+        +ZGZmWCo6FoM04K96zl6PRHpGqSqYRn8uBp4zrCPDf070s6ReMIJHA+xaN14TJOvkYLhm8Cs4epEs
+        xYoABusaadCrtfLyoYz6IaDmvSZV2Mxeu7I/VcLNGa4s17ldWHuewV4jArpRO+6Co7QHYLZakOgUY
+        NYDe921QmXQtYGVil0xhQBtN+kUjgrHtch2Zp9ABr+EuAhH/rs/KbrpJ1riuDFjXUs2dyxy9H9vMC
+        eKpir75Q==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:45726 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hlG4x-0010KP-A6; Wed, 10 Jul 2019 13:08:27 -0400
+Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
+ bindings
+To:     Suman Anna <s-anna@ti.com>, "Andrew F. Davis" <afd@ti.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190708035243.12170-1-s-anna@ti.com>
+ <20190708035243.12170-2-s-anna@ti.com>
+ <b67e8ce6-a291-ce4c-9972-b7fc7cd08bb4@ti.com>
+ <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <c3f0061f-22b0-c281-b8ff-4a2cb7e91aba@lechnology.com>
+Date:   Wed, 10 Jul 2019 12:08:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-10 at 18:45 +0200, Paul Bolle wrote:
-> James Bottomley schreef op wo 10-07-2019 om 09:32 [-0700]:
-> > You seem to be getting it to happen much more often than I can.
-> > Last
-> > night, on the below pull request it took me a good hour to see the
-> > freeze.
+
+>>> +- interrupts           : all the interrupts generated towards the main host
+>>> +                         processor in the SoC. The format depends on the
+>>> +                         interrupt specifier for the particular SoC's ARM GIC
+>>> +                         parent interrupt controller. A shared interrupt can
+>>> +                         be skipped if the desired destination and usage is by
+>>> +                         a different processor/device.
+>>> +- interrupt-names      : should use one of the following names for each valid
+>>> +                         interrupt connected to ARM GIC, the name should match
+>>> +                         the corresponding host interrupt number,
+>>> +                             "host0", "host1", "host2", "host3", "host4",
+>>> +                             "host5", "host6" or "host7"
+>>> +- interrupt-controller : mark this node as an interrupt controller
+>>> +- #interrupt-cells     : should be 1. Client users shall use the PRU System
+>>> +                         event number (the interrupt source that the client
+>>> +                         is interested in) as the value of the interrupts
+>>> +                         property in their node
+>>> +
+>>> +Optional Properties:
+>>> +--------------------
+>>> +The following properties are _required_ only for some SoCs. If none of the below
+>>> +properties are defined, it implies that all the host interrupts 2 through 9 are
+>>> +connected exclusively to the ARM GIC.
+>>> +
+>>> +- ti,irqs-reserved     : an array of 8-bit elements of host interrupts between
+>>> +                         0 and 7 (corresponding to PRUSS INTC output interrupts
+>>> +                         2 through 9) that are not connected to the ARM GIC.
+>>
+>> The reason for 0-7 mapping to 2-9 is not instantly clear to someone
+>> reading this. If you respin this could you note that reason is
+>> interrupts 0 and 1 are always routed back into the PRUSS.
 > 
-> Yes. Sometimes within a minute of resuming. Typing stuff into
-> evolution seems to help with triggering this. It's all a bit
-> mysterious, but this message alone frooze my laptop a few times.
-> Seriously!
+> Yeah, this is always going to be somewhat confusing since the driver has
+> to deal with all hosts from channel-mapping perspective, but only the 8
+> interrupts at most that reach MPU for handling interrupts. TRM has
 > 
-> > Sure, my current testing indicates it's somewhere inside this pull
-> > request:
-> > 
-> > Merge: 89c3b37af87e eb85d03e01c3
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Wed May 8 21:35:19 2019 -0700
-> > 
-> >     Merge tag 'drm-next-2019-05-09' of
-> > git://anongit.freedesktop.org/drm/drm
-> >     
-> >     Pull drm updates from Dave Airlie:
+> Anyway, I have already mentioned the first 2 interrupt routing in the
+> first paragraph above.
 > 
-> Lazy question: how does one determine the first and last commit
-> inside a merge request? Can I simply do
->     good   a2d635decbfa9c1e4ae15cb05b68b2559f7f827c^
->     bad    a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
+> Thinking more
+>> on that, the same is true for interrupt 7 ("host5") on AM437x/66AK2G yet
+>> we don't skip that in the naming.. now that we have the reserved IRQ
+>> mechanism above, why not leave the one-to-one interrupt to name mapping,
+>> but always have at least the first two marked as reserved for all the
+>> current devices:
+>>
+>> ti,irqs-reserved = /bits/ 8 <0 1>;
+>>
+>> Then any "hostx" listed as reserved need not be present in the host
+>> interrupts property array. To me that would solve the "managing
+>> interrupts not targeting the Linux running core" problem and keep the
+>> names consistent, e.g.:
 > 
-> for git bisect?
-
-I think so.  I actually did
-
-	bad	a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
-	good	89c3b37af87ec183b666d83428cb28cc421671a6
-
-But I think ^ steps down in the main branch.  Note, I've only done a
-couple of hours run on what I think is the good commit ... and actually
-I'd already marked a2d635decbfa9c1e4ae15cb05b68b2559f7f827c as good
-until the screen froze just after I'd built the new bisect kernel, so
-there's still some chance 89c3b37af87ec183b666d83428cb28cc421671a6 is
-bad.
-
-> > So I was about to test out the i915 changes in that but since my
-> > laptop is what I use for daily work, it's a bit hard (can't freeze
-> > up on video calls for instance).
+> I had actually used the interrupt-names always starting from "host2"
+> through "host9" (names from PRU perspective) previously, and I have
+> changed this to start indexing from 0 in this series to address an
+> internal review comment from Grygorii and to align with TRM. All the
+> TRMs (except for AM572x) actually use the names/signals "host_intr0",
+> "host_intr1".."host_intr7" etc for the interrupts going towards MPU.
+> Maybe I should actually rename the interrupt-names to be host_intrX
+> instead of hostX to avoid confusion and be exactly aligned with the TRM
+> names. I will file a bug against AM57xx TRM to align the names with all
+> other SoC TRMs.
 > 
-> I usually use one of the ThinkPads from my embarrassing pile of
-> outdated hardware to do nasty bisects, but I'm not about to loose any
-> income if my much appreciated XPS 13 is out of order for a while.
+> I am using "output interrupt lines" to imply names w.r.t PRU vs "host
+> interrupt" to imply ARM GIC names.
+> 
+> regards
+> Suman
+> 
 
-I can get back to it this afternoon, when I'm done with the meeting
-requirements and doing other dev stuff.
+FWIW, the AM1808 TRM only uses PRU_EVTOUT0 to PRU_EVTOUT7 and does not
+mention "host" in relation to these interrupts. The AM3xxx and AM4xxx
+also use similar names (PRU_ICSS_EVTOUT0, PRU_ICSS1_EVTOUT0) although
+they do mention that the source is "pr1_host[0] output/events exported
+from PRU_ICSS1". (Also, the older processors have AINTC instead of GIC).
 
-James
+Maybe to help clarify here we could mention "event" in the docs:
+
+
++- interrupt-names      : should use one of the following names for each valid
++                         host event interrupt connected to ARM interrupt
++                         controller,the name should match the corresponding
++                         host event interrupt number,
++                             "host0", "host1", "host2", "host3", "host4",
++                             "host5", "host6" or "host7"
+
+
+
+...
+
+>>> +
+>>> +Example:
+>>> +--------
+>>> +
+>>> +1.	/* AM33xx PRU-ICSS */
+>>> +	pruss: pruss@0 {
+
+I don't suppose there is a generic name that could be used here
+instead of pruss? It seems like there should be one for remote
+processors that aren't DSPs or other specialized processors.
 
