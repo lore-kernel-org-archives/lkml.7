@@ -2,120 +2,137 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41946C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62DFC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF1120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7BE20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="KSHUDWNc"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XRoYyZXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfGJJYh (ORCPT
+        id S1727435AbfGJJZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:24:37 -0400
-Received: from mail-eopbgr130118.outbound.protection.outlook.com ([40.107.13.118]:59182
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726284AbfGJJYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:24:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnnf9avYfA4mgOaRAFsI8FNm7Kg2Mf+GchbtmVnVX1U=;
- b=KSHUDWNctnlTZH7zvIQ/Vt9teAhRX+jmqatVe9C/oMPJncLc6O1oF/PiGdfUq7qYLVm2cj2gEWXf9dVo+iN2HXx/ePN1UdeX4NLP4nDn8ptMtmtIEFL0ayZrSTalzGO/y0fig6nHdZMspSh110b46K5SAuyNLzHfgjCaE+0syDM=
-Received: from VI1PR08MB3166.eurprd08.prod.outlook.com (52.133.15.141) by
- VI1PR08MB3038.eurprd08.prod.outlook.com (52.133.14.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Wed, 10 Jul 2019 09:24:32 +0000
-Received: from VI1PR08MB3166.eurprd08.prod.outlook.com
- ([fe80::2c58:9237:97d5:485d]) by VI1PR08MB3166.eurprd08.prod.outlook.com
- ([fe80::2c58:9237:97d5:485d%7]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
- 09:24:32 +0000
-From:   Konstantin Khorenko <khorenko@virtuozzo.com>
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        "Andrey Jr. Melnikov" <temnota.am@gmail.com>,
-        Raghava Aditya Renukunta 
-        <RaghavaAditya.Renukunta@microsemi.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] scsi: aacraid: resurrect correct arc ctrl checks for
- Series-6
-Thread-Topic: [PATCH 1/1] scsi: aacraid: resurrect correct arc ctrl checks for
- Series-6
-Thread-Index: AQHVLQNcsN6qYRwvAUm4pvYVhh3Yc6a/42KigAPFSAA=
-Date:   Wed, 10 Jul 2019 09:24:32 +0000
-Message-ID: <2a6f5cc2-40cb-647c-003d-aae594d05062@virtuozzo.com>
-References: <20190627161408.10295-1-khorenko@virtuozzo.com>
- <20190627161408.10295-2-khorenko@virtuozzo.com>
- <10t8vf-fq.ln1@banana.localnet>
- <alpine.LNX.2.21.1907080936090.10@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.21.1907080936090.10@nippy.intranet>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0902CA0014.eurprd09.prod.outlook.com
- (2603:10a6:3:e5::24) To VI1PR08MB3166.eurprd08.prod.outlook.com
- (2603:10a6:803:47::13)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=khorenko@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [185.231.240.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 374d2625-4430-41f7-7fd3-08d705186aa8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR08MB3038;
-x-ms-traffictypediagnostic: VI1PR08MB3038:
-x-microsoft-antispam-prvs: <VI1PR08MB303895B4DCA45EBC3BD9A1A0C8F00@VI1PR08MB3038.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(39850400004)(376002)(136003)(189003)(199004)(25786009)(386003)(6506007)(52116002)(2906002)(66446008)(66946007)(53546011)(66476007)(66556008)(64756008)(446003)(2616005)(66066001)(6246003)(186003)(316002)(36756003)(54906003)(110136005)(71190400001)(76176011)(8936002)(476003)(71200400001)(102836004)(5660300002)(11346002)(6512007)(81166006)(81156014)(53936002)(3846002)(6436002)(6116002)(14454004)(99286004)(6486002)(229853002)(26005)(8676002)(4326008)(256004)(7736002)(305945005)(68736007)(478600001)(31686004)(31696002)(86362001)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB3038;H:VI1PR08MB3166.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xw09MF4SeHqzissX8yJdkYjr1AJiaWaX4NBpxMAAUAkuW1Qvv5FUeoUTkDdWtJ4HuozB9TMfT+jAKR77/b8QIo+K/fymJJUcljJvY2J7fx0GtSm/LRFVc6XGRgxdOFt0DbL5kCyzZAau4rRYzXjIbvPkY14MMaibFS/2j3SGwaHQyUW4SnrCay1skxCKe4tkhSC7kOm7nCqA6ZiDgHf2bJ2FbfQFovXEt8lxp17kb7k7I4DpQEKE+sxDj6hgYirak4ohDr6gMMhslWKbOeHxHvfZDAhKtmjxvn2n2/wNqPYY+SISE+/qoFfGd+PLZe3OGKuUPOdzgi2cBPX0ChLIAjsSYtuXF344383RD0iSYXFm7ai3ukVZabRWkdZgFQU7W2+xC+cNoEErVAaQT04UGFfodl0zlQEPF87oESm58iQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5FFDF7C3A92AA54B9A0F794CBF1770D9@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 10 Jul 2019 05:25:18 -0400
+Received: from mout.web.de ([212.227.17.12]:54951 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726147AbfGJJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:25:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1562750690;
+        bh=UWQsBYlELnAYysk2mtM7AdDfEOErIPJ0ROaaHxCVQxs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=XRoYyZXYDivkNcB/t/1j7EiIQApsYPOkhM/geeTahr2vEQEADhDHgnHBQq8Yc6p/L
+         YJko79Jp5XLc/ZhOI82urXCnKKykSMZmBtNxuKPMVazdcJ891WPv5IGc5xrCR3U1WU
+         TJNyNwUvsvJZyTR+0DO8hl3lmTZ5+Bd2C9N/PRkc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.42.76]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LzsGF-1iXj3B1Cqp-014zk9; Wed, 10
+ Jul 2019 11:24:50 +0200
+Subject: Re: [1/2] powerpc/83xx: fix use-after-free in mpc831x_usb_cfg()
+To:     Wen Yang <wen.yang99@zte.com.cn>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Scott Wood <oss@buserror.net>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <201907101533443009168@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ef968d9a-785e-dbf7-dfe6-9572fc241e63@web.de>
+Date:   Wed, 10 Jul 2019 11:24:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 374d2625-4430-41f7-7fd3-08d705186aa8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 09:24:32.5874
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: khorenko@virtuozzo.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3038
+In-Reply-To: <201907101533443009168@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:u8YF1F7kU0eryeuNCAgxxNLtq1skRg8kO+bDl9Qx1VNi5KbWU52
+ da522RyNmIHaH5nwXU4VySQbrXiQ90rR7mAg65Dca2oSG6TJVOIyckD5vPH27HsvPNzpqtF
+ K2G+GKRzevvkWBpuVT0TH6PwMTre/wxnDnrtvhHFiOVfnKs3eNH5pttzQ707WRdLo7nTS0X
+ 8Tgp8R/Oakl9JGYopBZKQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jVmT6SyvKd0=:jEbVcml8nJtdSC97HCysHC
+ SW+yUsScvjRFJEQi6t22gIrim5WE5ffuwlLP4L5LUvN37lttkAAC4QoNrPdX6jwNb/8qsWQtF
+ /w3Xer4ieL4obybJDnQ567SvRdJVAqB9SutbrNDwW8ireuR3/7ODd9nlxgGgGTjNNLeHQmhnb
+ 3lSj0Y0oj8Fo8JHp7rH/dibh+FO4sAGJrm7sfg32p+MdRknp+dwwyqIh1VXnJtDyGiMh1LW8N
+ VBdhOaVMepRmEV8Z/qLZCzUgkF8U133PY021jG+b6ysDM3ov1swSIhv8Mie92oELoisOmls7y
+ iV9MVUqpTXs1hayQIDtf6K8ma4yc9rD2A6ke7W4G/HWByQiuiLQGbZTES8UoKspqjwVLDNQ2Z
+ FsInyzcFecqOsTJa2dEDRZsk95u0F51nSFSFXVOHf1Q+i1n9MOer3VQWPsYloCyir8HvcJy/h
+ rErpqjY4+pQWkeU/jB6sfJK3T9IpEnD+kppalZdKjRQnph95evGKn2QI3g59bCi4RWorrC3QB
+ dJRXmoqx7+veiFdHYzAyJig8K62Ax18/hZvUujdVT9u9GWLrWWDS7m2hcbWkpTCPtZch2HSTV
+ xD6MRI8+Hj+vlz/lx2oay5mrZIrdahxV1Jdc7aAZBRlf3Wz2XnKc+FFfVnKgAxpINYzgndqx2
+ +P+OOM2ZbGNHY+AF4kOnG3e22vJT9jxhqBK6rnV76GthSrjgJc+Z7w4Ugl0Fl+wSBd5QvHdM5
+ sUb5zFqhk8Td6ui5oSYMx/HrAeqNkrEEk9xOxGI/pGIB4RKXYQXA/LLC3gSW7LAi8zUW4PrQF
+ d3gqRtAXr9gGo6VdgKrGi5C+arvWoTwUEI/J3Grl89mRTPd5lKtjMhMIMpR96H30c4qgwhym2
+ ETpaC/1Xk8QkUc8zOmhRDWWT+biYg9xtEjvCd0t7iD1wuyNNjQXyFRUk2o2yOxRac8XoQNOwB
+ IddJQVb0Y/9AbpezJ0DMga4ZjQk7j/sCIhREQ0LbxgLeCGLsCu+mLfa5O5YmiOdUB2ICyyRFd
+ vY9rOwYYPMn7aEcJbDkFUnFkSFZiKKfJPevIgJv5gMOe2tzNgvsitt5Bs93SpkJsftsUSwd8j
+ W/JNwrvn2nQvJvY1CwMVgdNGyT2F6s74ugX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDcvMDgvMjAxOSAwMjo0OSBBTSwgRmlubiBUaGFpbiB3cm90ZToNCj4gQW5kcmV5LA0KPg0K
-PiBJdCBpcyBoZWxwZnVsIHRvIHNlbmQgeW91ciByZXZpZXcgdG8gdGhlIHBhdGNoIGF1dGhvci4g
-SSd2ZSBhZGRlZA0KPiBLb25zdGFudGluIHRvIHRoZSBDYyBsaXN0LCBhcyB3ZWxsIGFzIFJhZ2hh
-dmEgKHdobyBpbnRyb2R1Y2VkIHRoZQ0KPiByZWdyZXNzaW9uIGFkZHJlc3NlZCBieSBLb25zdGFu
-dGluJ3MgcGF0Y2gpLg0KPg0KPiBJZiBJJ20gbm90IG1pc3Rha2VuLCB5b3VyIHJldmlldyBtaXN1
-bmRlcnN0YW5kcyB0aGUgcGF0Y2ggZGVzY3JpcHRpb24uDQo+DQo+IEZXSVcsIEtvbnN0YW50aW4n
-cyBwYXRjaCBtaWdodCBoYXZlIGJlZW4gZWFzaWVyIHRvIGZvbGxvdyBpZiBpdCB3YXMgYQ0KPiBz
-aW1wbGUgJ2dpdCByZXZlcnQnLg0KDQpIaSBGaW5uLCBBbmRyZXksDQoNCkZpbm4sDQp0aGFuayB5
-b3UgZm9yIHB1dHRpbmcgbWUgYmFjayB0byB0aGUgdGhyZWFkLCBhcHByZWNpYXRlZC4NCkFuZCBp
-IGFncmVlIHdpdGggeW91LCBtYXkgYmUgZ2l0IHJldmVydCBmb2xsb3dlZCBieSBpbmRlcGVuZGVu
-dCBwYXRjaA0Kd2hpY2ggcmVtb3ZlcyBTZXJpZXMtOSBtZW50aW9ucyBpcyBlYXNpZXIgdG8gcmVh
-ZCwgc28gc2VuZGluZyB0aGUgc2Vjb25kDQp2ZXJzaW9uIC0gaW4gdGhhdCB3YXkuDQoNCg0KQW5k
-cmV5LA0KcGxlYXNlIHRha2UgYSBsb29rIGF0IHRoZSBuZXcgdmVyc2lvbiBwYXRjaGVzLCBob3Bl
-IGl0J3MgZWFzaWVyIHRvIHVuZGVyc3RhbmQuDQoNCkFuZCB0YWxraW5nIGFib3V0IHRoZSBoZWxw
-ZXI6IGkgdGhvdWdodCBhYm91dCBsZWF2aW5nIGl0LCBidXQgd2UgaGF2ZSBzZXZlcmFsIHBsYWNl
-cyB3aGljaCBjaGVjayBmb3IgU2VyaWVzIDcgYW5kIDggb25seQ0KYW5kIHNldmVyYWwgcGxhY2Vz
-IHdoaWNoIGNoZWNrIGZvciBTZXJpZXMgNiw3LDgsIHNvIGVpdGhlcg0KLSB3ZSBuZWVkIDIgaGVs
-cGVycw0KLSB3ZSBoYXZlIGEgaGVscGVyIHRvIGNoZWNrIGZvciBTZXJpZXMgNyw4IG9ubHkgYW5k
-IGluIHNvbWUgcGxhY2VzIHdpbGwgaGF2ZSBhIGNoZWNrIGZvciBTZXJpZXMgNiArIGhlbHBlcg0K
-LSBpbnRyb2R1Y2UgdGhlIGhlbHBlciB3aXRoIHBhcmFtZXRlcg0KDQpIb25lc3RseSBpIGRvbid0
-IGxpa2UgYW55IG9mIHZhcmlhbnRzIGFib3ZlLCBzbyBqdXN0IGxlZnQgdGhlIGNvZGUgd2l0aG91
-dCBoZWxwZXIsDQpub3QgdGhhdCBtYW55IGNoZWNrcyBhbmQgZWFzaWVyIHRvIHJlYWQgdGhlIGNv
-ZGUgSU1ITy4NCg0KVGhhbmsgeW91IQ0KDQotLQ0KQmVzdCByZWdhcmRzLA0KDQpLb25zdGFudGlu
-IEtob3JlbmtvLA0KVmlydHVvenpvIExpbnV4IEtlcm5lbCBUZWFtDQo=
+> we developed a coccinelle script to detect such problems.
+
+How do you think about to give any attribution to this development software
+in your commit descriptions?
+
+
+> After a period of testing, we will send it to the LMKL mailing list later.
+
+I am also curious then on how this area will evolve further.
+
+Regards,
+Markus
