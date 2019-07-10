@@ -2,99 +2,115 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0CEC749E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FDDC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DDE20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67032084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfGJNHW (ORCPT
+        id S1727334AbfGJNIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:07:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:41471 "EHLO
+        Wed, 10 Jul 2019 09:08:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:52727 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJNHV (ORCPT
+        with ESMTP id S1725956AbfGJNIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:07:21 -0400
-Received: from [192.168.1.110] ([95.117.121.26]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N0Ip5-1ifNjy1aHn-00xHFL; Wed, 10 Jul 2019 15:07:13 +0200
-Subject: Re: [PATCH 2/3] platform/x86/pcengines-apuv2: add legacy leds gpio
- definitions
-To:     Florian Eckert <fe@dev.tdt.de>
-Cc:     Eckert.Florian@googlemail.com, info@metux.net,
-        dvhart@infradead.org, andy@infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <20190704090205.19400-3-fe@dev.tdt.de>
- <bf9c82c3-bc6e-b701-afd4-b4e657cb09be@metux.net>
- <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <b029d90c-06b6-a261-5cde-8034de052d7c@metux.net>
-Date:   Wed, 10 Jul 2019 15:07:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 10 Jul 2019 09:08:24 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MT9zD-1hvHLv1pVf-00UWdp; Wed, 10 Jul 2019 15:08:04 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Shamir Rabinovitch <shamir.rabinovitch@oracle.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] [net-next] IB/hfi1: removed shadowed 'err' variable
+Date:   Wed, 10 Jul 2019 15:07:51 +0200
+Message-Id: <20190710130802.1878874-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:QedsUTmfx+jQYnQQMP1Zi2x49ZHzHbFgmrQho7VsqsJIETm+NdU
- /zZSE//ROnKc8cenG5nqgJiMsb02qT8jUwGkEF6ontILnuHrXDU82aeodYoeH4Ymuu2dfDk
- xv4SglFn3Ctow1ZY4t31fOSGEumeSyr0mxpF5hvsMpkz6uvHGCQHrdgDIce1uqcNuaibPrY
- DIJJfNHwUG+zvWOJI5H8A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0Q7gNDk6p6I=:n34cJjHE6SMgU0GnzxdH8/
- 3GopdLl59BRFSB8o3owh0TCTAjj8fQjBhcVrCJqGAdLEnuT0GAafqOJIbDiiOw5xy4mHG0/64
- D2bsG7P1upu3+1zwcfKzzbPBXpDUfv6Rg5FIc454deglVPqtjLpLEm9Uz2gopJx5HWkMTtQn4
- TOHggMlr02Wwn7Oe+zYTmEyKmJGI0sH/jCsZhk2zRCuqR8hzOIx6x5UwwsfI7ATgzpfCmQpTc
- MQ6j7qHGUVnVRY0Jn3Sa9Z18Qi+eEOlXEFuwk7Jh4TL8qxN4r7ApPndH2f+ZNrtMUIKbemmAQ
- QUwLT8STFScnFqgvXKIOTvY3S3LPWC9wSvmEh1Hgy2VGwYrZe3S59tbugqErO07gU5etPQCke
- JC2i0e4IV9N2PElGbqTALqkqh37tCOeWxV9z3BDO59f/5fBxwEk46L6RdL4O3w58nl7TpuLx7
- w9ITCJyral69KxhMtMhdDdBImjdv0xqr9r5T2wuZ6YdSPwwZf/VLFrtfMAiY+5C5ee9UHaw+n
- Sa+6HH2rI/Qr5iwmg2/o+AvzRUXOYwCA0j1XpwhtluQbWX0vMYZRIPR2iOJd+/lhvimL5vT2K
- yH5ZIA9lZDNZjG6TVO6ygPjChqgOi1LJ7cFMsV4UXaXplMXKz/WJZE+zOMAp0ojbuyTWoAmEK
- fWsiqhBEsLCsk4C1rlcw5T7mZkLnQExLUN6JN6ECQQ2p/xZegf5+ICW2050nLCp/Ca0L4DNfN
- CVu2s41qNrAAz5xJyDHKm7O1QUA4CAEYqCbPWpIV3N2cTyOpdw0tU3m8uA8=
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:KkQQx8DbdUAeEoiZ4dYi+5NkNEKv2SgbU+HJttadWoj6WJJyCL6
+ sIVYpTHXvGhQ/eSTFB5EwdD+YKjqIhJKH2Tw4C7ZvviaK3SfFYkw5tF8WohilXIz6SjQ42U
+ TlAyZSlmLeQ919CjlfeUBjm68ud+/2t2B8L+h8ACU+efARBFY2lVb+VA9jOM4t6swldiVW6
+ RH66axC5tDxrPc5gl30Gw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zECRC6kMYdA=:9tSX5Ea1rKb7S91ddPQyVz
+ gg/zpmly8nKnhW6vo+Tzvx62YfsMqTTNtQbjXn3lnxe7mnfGB94kmQ9QjpStn9EAuFL0U2e8+
+ O9qsKHjbM9caD/MoH6rwA1knKrwTrBizT2cd+86qkN65zaXcFMFnt80BeInYyND4Lqss3kQtZ
+ 0xqbZvv/hhT3Vao1zVLwlag/DEdiZDdK8rPhNuLP199HCu4+1H1UlstaZpcRnIlw32qx0uLy7
+ kRMfQsJjclztQ4C7cob9ksh95ZqiXKfaCCE/Y/zfiFUP6mIzGpl66oHjQk8LXZvsXgRWj3zAb
+ hLTm0nwW1OOi4vRqf/JhhQH3PVNVnRQYlOdLg36ynXSgaAgvbR0TbpJDglSwnaQf3W/vs+B5o
+ ZLMRjDzZvlY4Uc0c3Ln3Md76EctKxwa4OuqZ6hRxHBumL+Nscu88XPZfh7aBdDG5D5btUGZfe
+ 8W812KGMYFXclNdPApk9DsS1gfPoZdRQGa9e7Wl7NdQom55Nugj6/qOFlG6ttBwgGCfJcOeZ7
+ ZlcLPp53zzCfS0ZgPy0uPn8PMyNnraOkWp41XI8C31PqNAY67eDy1LhGCSnX91YfzsOJUfiY2
+ YtUyhwYXmxRCyINLWEm/j5kqVNNPYi4Is6ndt0kVcbeqKkTom/OwxPPxpJ37IvIVI61ykF030
+ 0UK6Ce/PPFBrEM+xKEhXduLZTkhWUsbyT0Qq22mJU2NIOWKN5sulHle8xCeaJFslBQ5/gUPNb
+ RxlvgFgvrrPGiD19ERpHdXshpvTFaaM7/M6J9Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.07.19 14:03, Florian Eckert wrote:
+As clang reports, rvt_create_cq() may return an uninitialized
+variable, because the 'err' variable is shadowed by another
+local declaration:
 
-> I have back ported your pcengines-apuv2 device and gpio-amd-fch GPIO
-> driver to the kernel version 4.19 on OpenWrt.
-> If I compile and load this without the change no LEDs are visible in
-> "/sys/class/leds"!
+drivers/infiniband/sw/rdmavt/cq.c:260:7: warning: variable 'err' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+                if (err)
+                    ^~~
+drivers/infiniband/sw/rdmavt/cq.c:310:9: note: uninitialized use occurs here
+        return err;
+               ^~~
+drivers/infiniband/sw/rdmavt/cq.c:260:3: note: remove the 'if' if its condition is always false
+                if (err)
+                ^~~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:253:7: warning: variable 'err' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+                if (!cq->ip) {
+                    ^~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:310:9: note: uninitialized use occurs here
+        return err;
+               ^~~
+drivers/infiniband/sw/rdmavt/cq.c:253:3: note: remove the 'if' if its condition is always false
+                if (!cq->ip) {
+                ^~~~~~~~~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:211:9: note: initialize the variable 'err' to silence this warning
+        int err;
+               ^
+                = 0
 
-Maybe this old kernel just ignored all entries w/o gpio ID. Note that
-these IDs are deprecated for quite a while and shouldn't be used in new
-code anymore.
+I can't think of any reason for the inner variable declaration, so
+remove it to avoid the issue.
 
-> From my point of view the connection between the GPIO and the LEDs
-> subsystem is missing.
-> How should the LED subsystem know which GPIO to use?
+Fixes: 239b0e52d8aa ("IB/hfi1: Move rvt_cq_wc struct into uapi directory")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/infiniband/sw/rdmavt/cq.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-See gpiod_lookup_table.
-
-> If I add the change to the pcengines-apuv2 device then the LEDs will be
-> visilbe under "/sys/class/leds"
-> and could be used, by OpenWrt userland.
-> 
-> Mybe I miss something.
-
-Your patch is only valid for your backport onto this old kernel, not for
-recent mainline.
-
-
---mtx
-
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index fac87b13329d..a85571a4cf57 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -247,8 +247,6 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 * See rvt_mmap() for details.
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+-		int err;
+-
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+ 		if (!cq->ip) {
+ 			err = -ENOMEM;
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.20.0
+
