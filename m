@@ -2,106 +2,133 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A11C74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E88CC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830682084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2EC2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562765142;
-	bh=TvIYigy0Bf458ARoYJR+lIAzAVW32Q+zCs3htN50YFE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lR2AU+txbL4SrvMM9UQj4AAgqvWO4pLh/2cdnZT+lVRIf0AZ3+F0rW8mTS4dByVo1
-	 p2BslJCoV2uBqZlAFIXkGHCY8HBJ37G8aA1PN1pDG+p9uOoOv/oLQe31u/fZYHY+tY
-	 4J/DCP4cGSiF4+XNXQRMWwxohw/QXsEBxh1d57tI=
+	s=default; t=1562765250;
+	bh=DYFIWwQJQxK/aOVUf88sxLGFW7Cu4ptjJEnA2QgLruQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gyLJfTnjSAOqsOPBgAZemnjzfww8lKlHUrRWe9+lQxos0YxlTuLn2yusR5lcDu3NI
+	 WWG+Wx2jSz1YciSCNjFSoT5HjhItPIRzYTpmDojzVDm74ldcPYJ9xvoOn7niwEQcF+
+	 t0G5loqoN7ohWX8YjYsTAK7573jBOO/fZ3aGU9zo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfGJNZl (ORCPT
+        id S1727363AbfGJN13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:25:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46454 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 09:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbfGJNZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:25:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1725994AbfGJN13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:27:29 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D787A2064B;
-        Wed, 10 Jul 2019 13:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B26F620861;
+        Wed, 10 Jul 2019 13:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562765139;
-        bh=TvIYigy0Bf458ARoYJR+lIAzAVW32Q+zCs3htN50YFE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eX9ZzqH6pqN88Uqghq+OYeQgOiUPblilOt1ruqmmlPIMENmN+dxYtWWv3Yq2amFbI
-         LDtJTQQ1b/um0wiQeYo/JHi4IeBRalMLwk/LB26dPlW6rtCF/OFhonm3olB3u1SwY7
-         rnSwgLdcakjndWNB0IxuKSgaOAGdD0NYXVF4OaBs=
-Date:   Wed, 10 Jul 2019 14:25:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, arnd@arndb.de, linux@armlinux.org.uk,
-        ralf@linux-mips.org, paul.burton@mips.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de, salyzyn@android.com,
-        pcc@google.com, shuah@kernel.org, 0x7f454c46@gmail.com,
-        linux@rasmusvillemoes.dk, huw@codeweavers.com,
-        sthotton@marvell.com, andre.przywara@arm.com, luto@kernel.org,
-        john.stultz@linaro.org
-Subject: Re: [PATCH] arm64: vdso: Fix ABI regression in compat vdso
-Message-ID: <20190710132532.r27yryvt25ex76xk@willie-the-truck>
-References: <20190621095252.32307-11-vincenzo.frascino@arm.com>
- <20190710130452.44111-1-vincenzo.frascino@arm.com>
+        s=default; t=1562765247;
+        bh=DYFIWwQJQxK/aOVUf88sxLGFW7Cu4ptjJEnA2QgLruQ=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=cc+jznRp8oLOBE7fHjwCUfW4DYkKh/sKMOSScXyBLT2mxx456dv5XKtJotUq9+3hG
+         HHTZhkgWp7g/SVdptOvkndTADQH4t4Uk0xYb4WXIU4mEmZoP2UnZ3023jcIF2HOE3K
+         O7P3cVRDLj5IUn/UbSm0LR29k7ftdV9MWu/Ps6/Y=
+Date:   Wed, 10 Jul 2019 15:27:18 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Xi Ruoyao <xry111@mengyan1223.wang>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+In-Reply-To: <20190710132144.GM3402@hirez.programming.kicks-ass.net>
+Message-ID: <nycvar.YFH.7.76.1907101523550.5899@cbobk.fhfr.pm>
+References: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com> <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com> <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de> <201907091727.91CC6C72D8@keescook> <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang> <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
+ <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de> <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm> <20190710132144.GM3402@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710130452.44111-1-vincenzo.frascino@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 02:04:52PM +0100, Vincenzo Frascino wrote:
-> Prior to the introduction of Unified vDSO support and compat layer for
-> vDSO on arm64, AT_SYSINFO_EHDR was not defined for compat tasks.
-> In the current implementation, AT_SYSINFO_EHDR is defined even if the
-> compat vdso layer is not built and this causes a regression in the
-> expected behavior of the ABI.
+On Wed, 10 Jul 2019, Peter Zijlstra wrote:
+
+> > > BUG: unable to handle page fault for address: ffffffff9edc1598
+> > > #PF: supervisor write access in kernel mode
+> > > #PF: error_code(0x0003) - permissions violation
+> > > PGD 1a20c067 P4D 1a20c067 PUD 1a20d063 PMD 8000000019e000e1 
+> > > Oops: 0003 [#1] SMP PTI
+> > > 2 PID: 151 Comm: systemd-udevd Not tainted 5.2.0+ #54
+> > > Hardware name: LENOVO 20175/INVALID, BIOS 66CN54WW 01/21/2013
+> > > RIP: 0010:static_key_set_mod.isra.0+0x10/0x30
+> > > Code: 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f0 a8 03 75 0d 48 8b 37 83 e6 03 48 09 c6 <48> 89 37 c3 0f 0b 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e
+> > > RSP: 0000:ffffa606c032bc98 EFLAGS: 00010286
+> > > RAX: ffff9981ddce30a0 RBX: ffffffff9edc1590 RCX: 0000000000000000
+> > > RDX: 0000000000000020 RSI: ffff9981ddce30a0 RDI: ffffffff9edc1598
+> > > RBP: ffffffffc06f4000 R08: ffff9981e6003980 R09: ffff9981ddce30a0
+> > > R10: 0000000000000000 R11: 0000000000028b56 R12: ffffffffc06f8880
+> > > R13: ffff9981ddce3080 R14: ffffffffc06f4008 R15: ffffffffc06f6dc0
+> > > FS:  00007f992dd9a680(0000) GS:ffff9981e7080000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: ffffffff9edc1598 CR3: 00000002233aa001 CR4: 00000000001606e0
+> > > Call Trace:
+> > >   jump_label_module_notify+0x1e7/0x2b0
+> > >   notifier_call_chain+0x44/0x70
+> > >   blocking_notifier_call_chain+0x43/0x60
+> > >   load_module+0x1bcb/0x2490
+> > >   ? vfs_read+0x11f/0x150
+> > >   ? __do_sys_finit_module+0xbf/0xe0
+> > >   __do_sys_finit_module+0xbf/0xe0
+> > >   do_syscall_64+0x43/0x110
+> > >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > 
+> > > Josh, didn't you mention that yesterday or so?
+> > 
+> > That's what Tony yesterday indicated on IRC that his system is suffering 
+> > from as well.
+> > 
+> > Adding Daniel to check whether this couldn't be some fallout of jumplabel 
+> > batching.
 > 
-> Restore the ABI behavior making sure that AT_SYSINFO_EHDR for compat
-> tasks is defined only when CONFIG_GENERIC_COMPAT_VDSO and
-> CONFIG_COMPAT_VDSO are enabled.
-
-I think you could do a better job in the changelog of explaining what's
-actually going on here. The problem seems to be that you're advertising
-the presence of a non-existent vDSO to userspace.
-
-> Reported-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  arch/arm64/include/asm/elf.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> AFAICT this is _before_ we get to patching. The function that explodes
+> is static_key_set_mod(), as called from jump_label_add_module().
 > 
-> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-> index 3c7037c6ba9b..b7992bb9d414 100644
-> --- a/arch/arm64/include/asm/elf.h
-> +++ b/arch/arm64/include/asm/elf.h
-> @@ -202,7 +202,7 @@ typedef compat_elf_greg_t		compat_elf_gregset_t[COMPAT_ELF_NGREG];
->  ({									\
->  	set_thread_flag(TIF_32BIT);					\
->   })
-> -#ifdef CONFIG_GENERIC_COMPAT_VDSO
-> +#if defined(CONFIG_COMPAT_VDSO) && defined(CONFIG_GENERIC_COMPAT_VDSO)
+> What that function does is for all patch sites in the module, find the
+> corresponding key; if that key is not also in that module, allocate a
+> static_key_mod structure and link the module entries to the key. Such
+> that we can find all instances from a given key.
+> 
+> I don't think anything here has changed in a while.
 
-Can't this just be #ifdef CONFIG_COMPAT_VDSO ?
+Hm, and it seems to explode on dereferencing the static_key* in %rsi
 
-John -- can you give this a whirl, please?
+  21:   48 8b 37                mov    (%rdi),%rsi
+  24:   83 e6 03                and    $0x3,%esi
+  27:   48 09 c6                or     %rax,%rsi
+  2a:*  48 89 37                mov    %rsi,(%rdi)              <-- trapping instruction
 
-Cheers,
+which looks odd, as it derefenced it successfully just 3 instructions ago.
 
-Will
+-- 
+Jiri Kosina
+SUSE Labs
+
