@@ -2,133 +2,235 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77305C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278CDC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5353B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10602064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfGJKvq (ORCPT
+        id S1727413AbfGJKyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:51:46 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:20018 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGJKvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:51:45 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: ykMk+mAJO8ioHV8LJM8Fq6OabviCLQQPIWM+wFtiZOyTHASTsqQvDQ4UHJ1jD325ogv0nZjctL
- 4a7XCno7CNOUkOfei/SLl418omfbWsxRbiPmYC1/mTovnbSV8l/lyhtph8SWS2DxIxhFLLjtF2
- QjlpUih/0Jaza8fpyy6xgJsTOHoy0UzbTMaU+WmwjD0RCKUTTB5yLJaaWTwXsjX//z0e0bmglq
- qTM3sUukGF1VxAqTrtfq9/x8FoLrhNt1oi+AAr1929UjvlqD3bjdvXyqMtvQlI6dWFsZZg+8gW
- w/s=
-X-IronPort-AV: E=Sophos;i="5.63,474,1557212400"; 
-   d="scan'208";a="37641144"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jul 2019 03:51:44 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 10 Jul 2019 03:51:43 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 10 Jul 2019 03:51:41 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <perex@perex.cz>, <tiwai@suse.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Tzung-Bi Shih <tzungbi@google.com>
-Subject: [PATCH] ASoC: codecs: ad193x: Use regmap_multi_reg_write() when initializing
-Date:   Wed, 10 Jul 2019 13:51:19 +0300
-Message-ID: <20190710105119.22987-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Jul 2019 06:54:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42548 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727231AbfGJKyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 06:54:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 54509AC2C;
+        Wed, 10 Jul 2019 10:54:50 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BB8481E43B7; Wed, 10 Jul 2019 12:54:48 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 12:54:48 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, josef@toxicpanda.com, clm@fb.com,
+        dsterba@suse.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/5] blkcg, writeback: Rename wbc_account_io() to
+ wbc_account_cgroup_owner()
+Message-ID: <20190710105448.GA9171@quack2.suse.cz>
+References: <20190627203952.386785-1-tj@kernel.org>
+ <20190627203952.386785-3-tj@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627203952.386785-3-tj@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using regmap_multi_reg_write() when we set the default values for our
-registers makes the code smaller and easier to read.
+On Thu 27-06-19 13:39:49, Tejun Heo wrote:
+> wbc_account_io() does a very specific job - try to see which cgroup is
+> actually dirtying an inode and transfer its ownership to the majority
+> dirtier if needed.  The name is too generic and confusing.  Let's
+> rename it to something more specific.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
 
-Suggested-by: Tzung-Bi Shih <tzungbi@google.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- sound/soc/codecs/ad193x.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+Looks good to me. You can add:
 
-diff --git a/sound/soc/codecs/ad193x.c b/sound/soc/codecs/ad193x.c
-index 80dab5df9633..fb04c9379b71 100644
---- a/sound/soc/codecs/ad193x.c
-+++ b/sound/soc/codecs/ad193x.c
-@@ -413,15 +413,10 @@ static struct snd_soc_dai_driver ad193x_no_adc_dai = {
- 	.ops = &ad193x_dai_ops,
- };
- 
--struct ad193x_reg_default {
--	unsigned int reg;
--	unsigned int val;
--};
--
- /* codec register values to set after reset */
- static void ad193x_reg_default_init(struct ad193x_priv *ad193x)
- {
--	const struct ad193x_reg_default reg_init[] = {
-+	const struct reg_sequence reg_init[] = {
- 		{  0, 0x99 },	/* PLL_CLK_CTRL0: pll input: mclki/xi 12.288Mhz */
- 		{  1, 0x04 },	/* PLL_CLK_CTRL1: no on-chip Vref */
- 		{  2, 0x40 },	/* DAC_CTRL0: TDM mode */
-@@ -437,21 +432,17 @@ static void ad193x_reg_default_init(struct ad193x_priv *ad193x)
- 		{ 12, 0x00 },	/* DAC_L4_VOL: no attenuation */
- 		{ 13, 0x00 },	/* DAC_R4_VOL: no attenuation */
- 	};
--	const struct ad193x_reg_default reg_adc_init[] = {
-+	const struct reg_sequence reg_adc_init[] = {
- 		{ 14, 0x03 },	/* ADC_CTRL0: high-pass filter enable */
- 		{ 15, 0x43 },	/* ADC_CTRL1: sata delay=1, adc aux mode */
- 		{ 16, 0x00 },	/* ADC_CTRL2: reset */
- 	};
--	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(reg_init); i++)
--		regmap_write(ad193x->regmap, reg_init[i].reg, reg_init[i].val);
-+	regmap_multi_reg_write(ad193x->regmap, reg_init, ARRAY_SIZE(reg_init));
- 
- 	if (ad193x_has_adc(ad193x)) {
--		for (i = 0; i < ARRAY_SIZE(reg_adc_init); i++) {
--			regmap_write(ad193x->regmap, reg_adc_init[i].reg,
--				     reg_adc_init[i].val);
--		}
-+		regmap_multi_reg_write(ad193x->regmap, reg_adc_init,
-+				       ARRAY_SIZE(reg_adc_init));
- 	}
- }
- 
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst | 2 +-
+>  fs/btrfs/extent_io.c                    | 4 ++--
+>  fs/buffer.c                             | 2 +-
+>  fs/ext4/page-io.c                       | 2 +-
+>  fs/f2fs/data.c                          | 4 ++--
+>  fs/fs-writeback.c                       | 8 ++++----
+>  fs/mpage.c                              | 2 +-
+>  include/linux/writeback.h               | 8 ++++----
+>  8 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index cf88c1f98270..356a7a3dcb2f 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -2108,7 +2108,7 @@ following two functions.
+>  	a queue (device) has been associated with the bio and
+>  	before submission.
+>  
+> -  wbc_account_io(@wbc, @page, @bytes)
+> +  wbc_account_cgroup_owner(@wbc, @page, @bytes)
+>  	Should be called for each data segment being written out.
+>  	While this function doesn't care exactly when it's called
+>  	during the writeback session, it's the easiest and most
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index db337e53aab3..5106008f5e28 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -2911,7 +2911,7 @@ static int submit_extent_page(unsigned int opf, struct extent_io_tree *tree,
+>  			bio = NULL;
+>  		} else {
+>  			if (wbc)
+> -				wbc_account_io(wbc, page, page_size);
+> +				wbc_account_cgroup_owner(wbc, page, page_size);
+>  			return 0;
+>  		}
+>  	}
+> @@ -2924,7 +2924,7 @@ static int submit_extent_page(unsigned int opf, struct extent_io_tree *tree,
+>  	bio->bi_opf = opf;
+>  	if (wbc) {
+>  		wbc_init_bio(wbc, bio);
+> -		wbc_account_io(wbc, page, page_size);
+> +		wbc_account_cgroup_owner(wbc, page, page_size);
+>  	}
+>  
+>  	*bio_ret = bio;
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index e450c55f6434..40547bbbea94 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -3093,7 +3093,7 @@ static int submit_bh_wbc(int op, int op_flags, struct buffer_head *bh,
+>  
+>  	if (wbc) {
+>  		wbc_init_bio(wbc, bio);
+> -		wbc_account_io(wbc, bh->b_page, bh->b_size);
+> +		wbc_account_cgroup_owner(wbc, bh->b_page, bh->b_size);
+>  	}
+>  
+>  	submit_bio(bio);
+> diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
+> index 4690618a92e9..56e287f5ee50 100644
+> --- a/fs/ext4/page-io.c
+> +++ b/fs/ext4/page-io.c
+> @@ -404,7 +404,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
+>  	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
+>  	if (ret != bh->b_size)
+>  		goto submit_and_retry;
+> -	wbc_account_io(io->io_wbc, page, bh->b_size);
+> +	wbc_account_cgroup_owner(io->io_wbc, page, bh->b_size);
+>  	io->io_next_block++;
+>  	return 0;
+>  }
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index eda4181d2092..e1cab1717ac7 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -470,7 +470,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
+>  	}
+>  
+>  	if (fio->io_wbc && !is_read_io(fio->op))
+> -		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+> +		wbc_account_cgroup_owner(fio->io_wbc, page, PAGE_SIZE);
+>  
+>  	bio_set_op_attrs(bio, fio->op, fio->op_flags);
+>  
+> @@ -537,7 +537,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>  	}
+>  
+>  	if (fio->io_wbc)
+> -		wbc_account_io(fio->io_wbc, bio_page, PAGE_SIZE);
+> +		wbc_account_cgroup_owner(fio->io_wbc, bio_page, PAGE_SIZE);
+>  
+>  	io->last_block_in_bio = fio->new_blkaddr;
+>  	f2fs_trace_ios(fio, 0);
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index a8a40bc26c2f..0aef79e934bb 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -706,7 +706,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+>  EXPORT_SYMBOL_GPL(wbc_detach_inode);
+>  
+>  /**
+> - * wbc_account_io - account IO issued during writeback
+> + * wbc_account_cgroup_owner - account writeback to update inode cgroup ownership
+>   * @wbc: writeback_control of the writeback in progress
+>   * @page: page being written out
+>   * @bytes: number of bytes being written out
+> @@ -715,8 +715,8 @@ EXPORT_SYMBOL_GPL(wbc_detach_inode);
+>   * controlled by @wbc.  Keep the book for foreign inode detection.  See
+>   * wbc_detach_inode().
+>   */
+> -void wbc_account_io(struct writeback_control *wbc, struct page *page,
+> -		    size_t bytes)
+> +void wbc_account_cgroup_owner(struct writeback_control *wbc, struct page *page,
+> +			      size_t bytes)
+>  {
+>  	struct cgroup_subsys_state *css;
+>  	int id;
+> @@ -753,7 +753,7 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+>  	else
+>  		wbc->wb_tcand_bytes -= min(bytes, wbc->wb_tcand_bytes);
+>  }
+> -EXPORT_SYMBOL_GPL(wbc_account_io);
+> +EXPORT_SYMBOL_GPL(wbc_account_cgroup_owner);
+>  
+>  /**
+>   * inode_congested - test whether an inode is congested
+> diff --git a/fs/mpage.c b/fs/mpage.c
+> index 436a85260394..a63620cdb73a 100644
+> --- a/fs/mpage.c
+> +++ b/fs/mpage.c
+> @@ -647,7 +647,7 @@ static int __mpage_writepage(struct page *page, struct writeback_control *wbc,
+>  	 * the confused fail path above (OOM) will be very confused when
+>  	 * it finds all bh marked clean (i.e. it will not write anything)
+>  	 */
+> -	wbc_account_io(wbc, page, PAGE_SIZE);
+> +	wbc_account_cgroup_owner(wbc, page, PAGE_SIZE);
+>  	length = first_unmapped << blkbits;
+>  	if (bio_add_page(bio, page, length, 0) < length) {
+>  		bio = mpage_bio_submit(REQ_OP_WRITE, op_flags, bio);
+> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+> index 738a0c24874f..dda5cf228172 100644
+> --- a/include/linux/writeback.h
+> +++ b/include/linux/writeback.h
+> @@ -188,8 +188,8 @@ void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
+>  				 struct inode *inode)
+>  	__releases(&inode->i_lock);
+>  void wbc_detach_inode(struct writeback_control *wbc);
+> -void wbc_account_io(struct writeback_control *wbc, struct page *page,
+> -		    size_t bytes);
+> +void wbc_account_cgroup_owner(struct writeback_control *wbc, struct page *page,
+> +			      size_t bytes);
+>  void cgroup_writeback_umount(void);
+>  
+>  /**
+> @@ -291,8 +291,8 @@ static inline void wbc_init_bio(struct writeback_control *wbc, struct bio *bio)
+>  {
+>  }
+>  
+> -static inline void wbc_account_io(struct writeback_control *wbc,
+> -				  struct page *page, size_t bytes)
+> +static inline void wbc_account_cgroup_owner(struct writeback_control *wbc,
+> +					    struct page *page, size_t bytes)
+>  {
+>  }
+>  
+> -- 
+> 2.17.1
+> 
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
