@@ -2,141 +2,156 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF017C73C75
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90719C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D40D2083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B2020693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RjICyuOq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mHi2l865"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfGJHIy (ORCPT
+        id S1726979AbfGJHPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:08:54 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42714 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfGJHIx (ORCPT
+        Wed, 10 Jul 2019 03:15:32 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:41560 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfGJHPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:08:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t132so757170pgb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:08:53 -0700 (PDT)
+        Wed, 10 Jul 2019 03:15:31 -0400
+Received: by mail-pl1-f202.google.com with SMTP id i3so840567plb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=opTBgfSTSFi3V1ce9YlYEnYQO/1kKdgFofPaGYJTBOY=;
-        b=RjICyuOquidt6LyqOASElFqobDNn4mo6EWt1hQsD6iwRx26+bMSTRwY0lCmMrVaHSG
-         6a47JWfUcXiJfqoCtNQ7lq7rjKXQcz2UUkE2pHMU2JgLeyFB7HyoZ+a4e8q03awEvrPl
-         4wQTV2TDpVxnBFrbqJ7OGM83LJNpTu4ZxCalU=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=0pW1BcsjTPSHyEkMo96k/o71l5W8M51wh7ZyhpVzADM=;
+        b=mHi2l865KLWjgVk77JKmNtYGZe0xgmJqUcNAffie+cN+57XolMX3GDCpJ2ZH1ceLYR
+         MfFyvnNY0Qwe0x/ZOIiekj7NzIlsbUZDTxthSd/LJOgqPFNF5dEsFtGMwPVF/nYSdHyJ
+         3VdZcCGqzormHX3dS/yuInQiUg9E6laAPfQmLbGCGEz4HepJhwqJgmDJF7yj1dr6aCix
+         Siqg+NV9jVwUY3x9AB0/e1BJUu0lC4cmATkNcO/Wd9E8nEXdmqgE1jZEc5mwC0ai37Am
+         Pbg5JO4uqte1qi5grtXQRrH7O14tsuFUMbYzcI0pjXuihXi7w4+aV03+iVTZpiuzAPq1
+         67HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=opTBgfSTSFi3V1ce9YlYEnYQO/1kKdgFofPaGYJTBOY=;
-        b=I7MnTbz5sniFwkqV1Mh6OwO9e552ihQ5EcKlaktUK3mYS6ZRMwTnaSsk35Sr2xjgdc
-         7CTeiK8RxIt6N58WsCBlJf6uGcQlyrzZHKAyPmAb/MxooTLFX1NBd/8d/Xzwtw7ZJw5I
-         1vaWPd1U9tQOdt6p3l0KlrdvA/3ewZFoiwbHBFkZLZPPB3CzT/ZczU3N3BpIwPKSo5K6
-         2KRQNLE4+RdO+cNcECDxIZlMjLSyNmnx4UAQWYq3UKZEIoD+B1XxVHdsuQR39VNoPKDf
-         XFawhx6adtT4M9KZO8+0us9E1cSfmH9lWDJFIrlrjq/msmdjZg2pcych5jq56eY/s6rE
-         ZfFg==
-X-Gm-Message-State: APjAAAWLLqXmW7Yo20+6MinBl41DGtnCFyJQsP2FiywA85hlds+EglR3
-        Q3fO0ho2y7XdIxKG2fQOQTCUpJlhgDc=
-X-Google-Smtp-Source: APXvYqyla6Le8Sl5C5IFq+BMbhDM8PgxLabMwmqWmWurGv0zA2QcXauHAgdORrx2hOafDqZMEhT1zA==
-X-Received: by 2002:a65:4045:: with SMTP id h5mr36503650pgp.247.1562742532604;
-        Wed, 10 Jul 2019 00:08:52 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:b:e688:dfd2:a1a7:2956])
-        by smtp.gmail.com with ESMTPSA id b36sm3319370pjc.16.2019.07.10.00.08.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 00:08:52 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v2 4/4] ASoC: rockchip_max98090: Add HDMI jack support
-Date:   Wed, 10 Jul 2019 15:07:51 +0800
-Message-Id: <20190710070751.260061-5-cychiang@chromium.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=0pW1BcsjTPSHyEkMo96k/o71l5W8M51wh7ZyhpVzADM=;
+        b=J7+tjjGx6K7KAHByTtF/3pspIHEVIwzCKDD8YmuWsTBYC18841JtboTJqMxCf9pRbn
+         YtrEaKHizX09qrUainhgKnlISMaSGoXydMY39AUvR019Zcw1MBpDd/ErUo52xqs1uYIh
+         ReHYaLEHfxpK/2XwrS8SGr6Ui5o23GM6vYqWmrSHXYbbubnHxNefkNPCDQRvCqImL4Z2
+         11748SCtpLuvXXqQ9nPR52OixU21peZHT8iOScTZDgD/B4YeDuh75lrK7hulSWNy/5pk
+         9yTZulaIfs5mK1LvqHwnxJcCjToYJSaMe+gwgQEEDo/T5uz4+MvB8hoDTGXkhK3pVIFo
+         GAzw==
+X-Gm-Message-State: APjAAAWeQK7ILwRw40aBDjCfGn7z+F81VuF/oH+xpBvnnpTYWEeVx85d
+        F7wZeokE0U9TKpi1XmrA3MNwzaviIFRcwY3BWdDo2A==
+X-Google-Smtp-Source: APXvYqyb0LRYaKSRSGjVUbWvUV4R01ShtwO7/fsNXpVB/VnszhSBSXJqqHQquziMhALgKYKtHVI7t5pL3wpE0iRmNMtOpg==
+X-Received: by 2002:a63:1f56:: with SMTP id q22mr33295799pgm.315.1562742929971;
+ Wed, 10 Jul 2019 00:15:29 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 00:14:50 -0700
+Message-Id: <20190710071508.173491-1-brendanhiggins@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190710070751.260061-1-cychiang@chromium.org>
-References: <20190710070751.260061-1-cychiang@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v8 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Iurii Zaikin <yzaikin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In machine driver, create a jack and let hdmi-codec report jack status.
+## TL;DR
 
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
----
- sound/soc/rockchip/rockchip_max98090.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+This new patch set only contains a very minor change suggested by
+Masahiro to [PATCH v7 06/18] and is otherwise identical to PATCH v7.
 
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index 3617012692ea..177c8a7ec8de 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -15,6 +15,7 @@
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-+#include <sound/hdmi-codec.h>
- 
- #include "rockchip_i2s.h"
- #include "../codecs/ts3a227e.h"
-@@ -133,6 +134,25 @@ enum {
- 	DAILINK_HDMI,
- };
- 
-+static struct snd_soc_jack rk_hdmi_jack;
-+
-+static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	struct snd_soc_card *card = runtime->card;
-+	struct snd_soc_component *component = runtime->codec_dai->component;
-+	int ret;
-+
-+	/* enable jack detection */
-+	ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
-+				    &rk_hdmi_jack, NULL, 0);
-+	if (ret) {
-+		dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
-+		return ret;
-+	}
-+
-+	return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
-+}
-+
- /* max98090 and HDMI codec dai_link */
- static struct snd_soc_dai_link rk_dailinks[] = {
- 	[DAILINK_MAX98090] = {
-@@ -150,6 +170,7 @@ static struct snd_soc_dai_link rk_dailinks[] = {
- 		.ops = &rk_aif1_ops,
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			SND_SOC_DAIFMT_CBS_CFS,
-+		.init = rk_hdmi_init,
- 		SND_SOC_DAILINK_REG(hdmi),
- 	}
- };
+Also, with Josh's ack on the preceding patch set, I think we now have
+all necessary reviews and acks from all interested parties.
+
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2/v8 branch.
+
+## Changes Since Last Version
+
+Like I said in the TL;DR, there is only one minor change since the
+previous revision. That change only affects patch 06/18; it makes it so
+that make doesn't attempt to scan the kunit/ directory when CONFIG_KUNIT
+is not set as suggested by Masahiro.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2/v8
+
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
