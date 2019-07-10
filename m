@@ -2,87 +2,112 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B09BC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DB1C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1FB20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F7A20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbfGJTQE (ORCPT
+        id S1728260AbfGJTQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:16:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48461 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfGJTQD (ORCPT
+        Wed, 10 Jul 2019 15:16:40 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47385 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbfGJTQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:16:03 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlI4D-00018t-VR; Wed, 10 Jul 2019 21:15:50 +0200
-Date:   Wed, 10 Jul 2019 21:15:49 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     Sodagudi Prasad <psodagud@codeaurora.org>,
-        gregkh@linuxfoundation.org, john.stultz@linaro.org,
-        chang-an.chen@mediatek.com, mingo@kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, linux-kernel@vger.kernel.org,
-        tsoni@codeaurora.org
-Subject: Re: sched_clock and device suspend/resume
-In-Reply-To: <20190710151334.49158be3@gandalf.local.home>
-Message-ID: <alpine.DEB.2.21.1907102114480.1758@nanos.tec.linutronix.de>
-References: <1d6ef4687c87dd4d2ec88d0d593a9c1d@codeaurora.org> <20190710113609.7b63c5d6@gandalf.local.home> <alpine.DEB.2.21.1907102034190.1758@nanos.tec.linutronix.de> <20190710145744.7279b355@gandalf.local.home> <alpine.DEB.2.21.1907102104490.1758@nanos.tec.linutronix.de>
- <20190710151334.49158be3@gandalf.local.home>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 15:16:40 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id EF28B805E5; Wed, 10 Jul 2019 21:16:26 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 21:16:37 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, lee.jones@linaro.org,
+        daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v3 4/4] backlight: add led-backlight driver
+Message-ID: <20190710191637.GD22995@amd>
+References: <20190710123932.28244-1-jjhiblot@ti.com>
+ <20190710123932.28244-5-jjhiblot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gE7i1rD7pdK0Ng3j"
+Content-Disposition: inline
+In-Reply-To: <20190710123932.28244-5-jjhiblot@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Steven Rostedt wrote:
-> 
-> [ Removed the two emails that were bouncing ]
-> 
-> On Wed, 10 Jul 2019 21:06:57 +0200 (CEST)
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> > > > > sched_clock_continuous() ? (I know, horrible name), that simply keeps
-> > > > > track of the time delta at suspend and returns:
-> > > > > 
-> > > > > 	sched_clock() + delta;    
-> > > > 
-> > > > Which you get already when you do
-> > > > 
-> > > > # echo boot > /sys/kernel/debug/tracing/trace_clock
-> > > >   
-> > > 
-> > > So basically the answer here is to change printk to use
-> > > ktime_get_boot_fast_ns() instead of local_clock()?  
-> > 
-> > Aargh. That was tracing.
-> > 
-> > There was a patchset floating around which actually implemented that clock
-> > choice for sched_clock as well. Don't know why that was never merged.
-> 
-> Will it cause issues with the scheduler though. If it doesn't stop
-> during suspend, can't that make the scheduler think that processes were
-> using the CPU during the entire suspend and screw up the accounting?
 
-Duh. My brain is not working.
+--gE7i1rD7pdK0Ng3j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Not sched_clock, the patches were for printk so you could select a printk
-clock. Can't find them right now.
+On Wed 2019-07-10 14:39:32, Jean-Jacques Hiblot wrote:
+> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>=20
+> This patch adds a led-backlight driver (led_bl), which is similar to
+> pwm_bl except the driver uses a LED class driver to adjust the
+> brightness in the HW. Multiple LEDs can be used for a single backlight.
+>=20
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 
-Thanks,
+> +
+> +		/*
+> +		 *try to map actual LED brightness to backlight brightness
+> +		 * level
+> +		 */
 
-	tglx
+"* Try"
+
+> +		db =3D priv->default_brightness;
+> +		for (i =3D 0 ; i < num_levels; i++) {
+> +			if ((i && db > levels[i-1]) && db <=3D levels[i])
+> +				break;
+> +		}
+> +		priv->default_brightness =3D i;
+> +		priv->max_brightness =3D num_levels - 1;
+> +		priv->levels =3D levels;
+> +	} else if (num_levels >=3D 0)
+> +		dev_warn(dev, "not enought levels defined\n");
+
+"Not enough"
+
+> +	ret =3D of_property_read_u32(node, "default-brightness-level", &value);
+> +	if (!ret && value <=3D priv->max_brightness)
+> +		priv->default_brightness =3D value;
+> +	else if (!ret  && value > priv->max_brightness)
+> +		dev_warn(dev, "invalid default brightness. ignoring it\n");
+
+"Invalid... Ignoring it."
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gE7i1rD7pdK0Ng3j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0mOZUACgkQMOfwapXb+vKGjACbBk0etpxF6Viyuje0o1lj4McY
+wJgAoKbPa8b/CQqQPf5ELQ7VvqyxdarH
+=TOSr
+-----END PGP SIGNATURE-----
+
+--gE7i1rD7pdK0Ng3j--
