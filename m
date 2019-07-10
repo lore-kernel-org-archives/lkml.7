@@ -2,166 +2,115 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701B7C71142
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C444C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF3920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017E32064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:39:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f+I7sA0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfGJMiG (ORCPT
+        id S1727319AbfGJMjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:38:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43906 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbfGJMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:38:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BBD4BAEAC;
-        Wed, 10 Jul 2019 12:38:03 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 126CEE0E06; Wed, 10 Jul 2019 14:38:03 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 14:38:03 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
-Message-ID: <20190710123803.GB5700@unicorn.suse.cz>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
- <20190703114933.GW2250@nanopsycho>
- <20190703181851.GP20101@unicorn.suse.cz>
- <20190704080435.GF2250@nanopsycho>
- <20190704115236.GR20101@unicorn.suse.cz>
- <20190709141817.GE2301@nanopsycho.orion>
+        Wed, 10 Jul 2019 08:39:48 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32776 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfGJMjs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:39:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6ACdcQ5118639;
+        Wed, 10 Jul 2019 07:39:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562762378;
+        bh=BTg5sJ09hjAmyl9lV+ilPYbUgyB7pc/IyYE4O6pyJNg=;
+        h=From:To:CC:Subject:Date;
+        b=f+I7sA0qzyuQ2pQ8bnAoApuFmtKmigmtUkGL/TDv5ciZM7slZuci4K3w7mQAcOKLI
+         NOMLwvSAJwPfhS7vwk2G2K/cXFNUrw0i9xLCnMrzpogtlaQBdKw7GjI6zWykqHy8zk
+         429fY1PcdLlH35slyhOLN6BbHl3chdblMasKQZR0=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6ACdblg038225
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jul 2019 07:39:38 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
+ Jul 2019 07:39:37 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 10 Jul 2019 07:39:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6ACdaGP129983;
+        Wed, 10 Jul 2019 07:39:37 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v3 0/4]  Add a generic driver for LED-based backlight
+Date:   Wed, 10 Jul 2019 14:39:28 +0200
+Message-ID: <20190710123932.28244-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709141817.GE2301@nanopsycho.orion>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 04:18:17PM +0200, Jiri Pirko wrote:
-> 
-> I understand. So how about avoid the bitfield all together and just
-> have array of either bits of strings or combinations?
-> 
-> ETHTOOL_CMD_SETTINGS_SET (U->K)
->     ETHTOOL_A_HEADER
->         ETHTOOL_A_DEV_NAME = "eth3"
->     ETHTOOL_A_SETTINGS_PRIV_FLAGS
->        ETHTOOL_A_SETTINGS_PRIV_FLAG
->            ETHTOOL_A_FLAG_NAME = "legacy-rx"
-> 	   ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-> 
-> or the same with index instead of string
-> 
-> ETHTOOL_CMD_SETTINGS_SET (U->K)
->     ETHTOOL_A_HEADER
->         ETHTOOL_A_DEV_NAME = "eth3"
->     ETHTOOL_A_SETTINGS_PRIV_FLAGS
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_INDEX = 0
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-> 
-> 
-> For set you can combine both when you want to set multiple bits:
-> 
-> ETHTOOL_CMD_SETTINGS_SET (U->K)
->     ETHTOOL_A_HEADER
->         ETHTOOL_A_DEV_NAME = "eth3"
->     ETHTOOL_A_SETTINGS_PRIV_FLAGS
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_INDEX = 2
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_INDEX = 8
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_NAME = "legacy-rx"
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-> 
-> 
-> For get this might be a bit bigger message:
-> 
-> ETHTOOL_CMD_SETTINGS_GET_REPLY (K->U)
->     ETHTOOL_A_HEADER
->         ETHTOOL_A_DEV_NAME = "eth3"
->     ETHTOOL_A_SETTINGS_PRIV_FLAGS
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_INDEX = 0
->             ETHTOOL_A_FLAG_NAME = "legacy-rx"
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_INDEX = 1
->             ETHTOOL_A_FLAG_NAME = "vf-ipsec"
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
->         ETHTOOL_A_SETTINGS_PRIV_FLAG
->             ETHTOOL_A_FLAG_INDEX = 8
->             ETHTOOL_A_FLAG_NAME = "something-else"
->  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+This series aims to add a led-backlight driver, similar to pwm-backlight,
+but using a LED class device underneath.
 
-This is perfect for "one shot" applications but not so much for long
-running ones, either "ethtool --monitor" or management or monitoring
-daemons. Repeating the names in every notification message would be
-a waste, it's much more convenient to load the strings only once and
-cache them. Even if we omit the names in notifications (and possibly the
-GET replies if client opts for it), this format still takes 12-16 bytes
-per bit.
+A few years ago (2015), Tomi Valkeinen posted a series implementing a
+backlight driver on top of a LED device:
+https://patchwork.kernel.org/patch/7293991/
+https://patchwork.kernel.org/patch/7294001/
+https://patchwork.kernel.org/patch/7293981/
 
-So the problem I'm trying to address is that there are two types of
-clients with very different mode of work and different preferences.
+The discussion stopped because Tomi lacked the time to work on it.
 
-Looking at the bitset.c, I would rather say that most of the complexity
-and ugliness comes from dealing with both unsigned long based bitmaps
-and u32 based ones. Originally, there were functions working with
-unsigned long based bitmaps and the variants with "32" suffix were
-wrappers around them which converted u32 bitmaps to unsigned long ones
-and back. This became a problem when kernel started issuing warnings
-about variable length arrays as getting rid of them meant two kmalloc()
-and two kfree() for each u32 bitmap operation, even if most of the
-bitmaps are in rather short in practice.
+changes in v3:
+- dt binding: don't limit the brightness range to 0-255. Use the range of
+  the underlying LEDs. as a side-effect, all LEDs must now have the same
+  range
+- driver: Adapt to dt binding update.
+- driver: rework probe() for clarity and remove the remaining goto.
 
-Maybe the wrapper could do something like
+changes in v2:
+- handle more than one LED.
+- don't make the backlight device a child of the LED controller.
+- make brightness-levels and default-brightness-level optionnal
+- removed the option to use a GPIO enable.
+- removed the option to use a regulator. It should be handled by the LED core
+- don't make any change to the LED core (not needed anymore)
 
-int ethnl_put_bitset32(const u32 *value, const u32 *mask,
-		       unsigned int size,  ...)
-{
-	unsigned long fixed_value[2], fixed_mask[2];
-	unsigned long *tmp_value = fixed_value;
-	unsigned long *tmp_mask = fixed_mask;
+Jean-Jacques Hiblot (2):
+  leds: Add managed API to get a LED from a device driver
+  dt-bindings: backlight: Add led-backlight binding
 
-	if (size > sizeof(fixed_value) * BITS_PER_BYTE) {
-		tmp_value = bitmap_alloc(size);
-		if (!tmp_value)
-			return -ENOMEM;
-		tmp_mask = bitmap_alloc(size);
-		if (!tmp_mask) {
-			kfree(tmp_value);
-			return -ENOMEM;
-		}
-	}
+Tomi Valkeinen (2):
+  leds: Add of_led_get() and led_put()
+  backlight: add led-backlight driver
 
-	bitmap_from_arr32(tmp_value, value, size);
-	bitmap_from_arr32(tmp_mask, mask, size);
-	ret = ethnl_put_bitset(tmp_value, tmp_mask, size, ...);
-}
+ .../bindings/leds/backlight/led-backlight.txt |  28 ++
+ drivers/leds/led-class.c                      |  92 ++++++
+ drivers/video/backlight/Kconfig               |   7 +
+ drivers/video/backlight/Makefile              |   1 +
+ drivers/video/backlight/led_bl.c              | 268 ++++++++++++++++++
+ include/linux/leds.h                          |   6 +
+ 6 files changed, 402 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+ create mode 100644 drivers/video/backlight/led_bl.c
 
-This way we would make bitset.c code cleaner while avoiding allocating
-short bitmaps (which is the most common case). 
+-- 
+2.17.1
 
-Michal
