@@ -2,54 +2,53 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108D6C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB064C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68E021537
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949B02064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771013;
-	bh=CbmMWEeV6MOMCbYKjw+SxwbG0mG1v/wTHIyvOGV82N4=;
+	s=default; t=1562771017;
+	bh=LMO9SlGP21+nsQr6IidSCJbD4Vg7RTJcjTaiZ0yhzkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihYbiCxA6Zxx1rGXlFPbjiL+xJNPty8h1iCTREBDGKLkFIUrHatpNwLIL+6XfbsWH
-	 M9jLacdYFvUi7RsdEJH7KGhco1pORmJMjGz1j1MSwjCD9r/hGaH7G1Kfrr6ibgeN3l
-	 t4neAYi/VuMcJjIPpTGAj+iptZL4rCmC7af5BsgQ=
+	b=OBfiKSdfYcpHBdoxtksr5ioOQct91hSEaCEy/j6Z/0dIh7CpDT5G77LoDSzRgCm0J
+	 tBA+FBV2bepNDp1jvyYrG3V10T3O1Ci1qBDhdEpXnCgJFr1z9ON4iCxcHEf7y1AlFe
+	 hqvoKmdSRE7veGO+1bh7xP05id++vtEIRr8IqC7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfGJPDc (ORCPT
+        id S1728235AbfGJPDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:03:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35448 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfGJPD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:28 -0400
+        id S1728192AbfGJPDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C7A2064A;
-        Wed, 10 Jul 2019 15:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E952064A;
+        Wed, 10 Jul 2019 15:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562771007;
-        bh=CbmMWEeV6MOMCbYKjw+SxwbG0mG1v/wTHIyvOGV82N4=;
+        s=default; t=1562771011;
+        bh=LMO9SlGP21+nsQr6IidSCJbD4Vg7RTJcjTaiZ0yhzkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wk+3KErBooiH15vwv4gT1Z4FFSdo2CSPaG+zmVbD5/GDsi7ytzKFqvljVZmNhEJae
-         TeSX+OYvaZ4pLWcp4eSmHVfUgQJbg2a/f1c6zyeOJigGQkjoFGFIq1vw9KK8tGxn6c
-         74zfg/QkWoh34N1MsSv9DTcMFs6ZKvkLM1qEjqeo=
+        b=HoEYXNC0ZyXNuuIhQ0C0QecXby4+pSaCpVjSklvtNZcgco6h7VGeLozuRH5i2BuMC
+         3o/UIuQNXeb6Jrhz7ughDmpK8G5KrbUWx2bxtSNjCpEp6vCl/RjNLJe2lvZPqBnWQ/
+         fkRjQzmp7RVrP/nTNwq3s6LFu3Wvm9OsUtfccv/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Fangrui Song <maskray@google.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 3/8] arm64/efi: Mark __efistub_stext_offset as an absolute symbol explicitly
-Date:   Wed, 10 Jul 2019 11:03:13 -0400
-Message-Id: <20190710150319.7258-3-sashal@kernel.org>
+Cc:     Maurizio Lombardi <mlombard@redhat.com>,
+        Chris Leech <cleech@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 5/8] scsi: iscsi: set auth_protocol back to NULL if CHAP_A value is not supported
+Date:   Wed, 10 Jul 2019 11:03:15 -0400
+Message-Id: <20190710150319.7258-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710150319.7258-1-sashal@kernel.org>
 References: <20190710150319.7258-1-sashal@kernel.org>
@@ -62,60 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-[ Upstream commit aa69fb62bea15126e744af2e02acc0d6cf3ed4da ]
+[ Upstream commit 5dd6c49339126c2c8df2179041373222362d6e49 ]
 
-After r363059 and r363928 in LLVM, a build using ld.lld as the linker
-with CONFIG_RANDOMIZE_BASE enabled fails like so:
+If the CHAP_A value is not supported, the chap_server_open() function
+should free the auth_protocol pointer and set it to NULL, or we will leave
+a dangling pointer around.
 
-ld.lld: error: relocation R_AARCH64_ABS32 cannot be used against symbol
-__efistub_stext_offset; recompile with -fPIC
+[   66.010905] Unsupported CHAP_A value
+[   66.011660] Security negotiation failed.
+[   66.012443] iSCSI Login negotiation failed.
+[   68.413924] general protection fault: 0000 [#1] SMP PTI
+[   68.414962] CPU: 0 PID: 1562 Comm: targetcli Kdump: loaded Not tainted 4.18.0-80.el8.x86_64 #1
+[   68.416589] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[   68.417677] RIP: 0010:__kmalloc_track_caller+0xc2/0x210
 
-Fangrui and Peter figured out that ld.lld is incorrectly considering
-__efistub_stext_offset as a relative symbol because of the order in
-which symbols are evaluated. _text is treated as an absolute symbol
-and stext is a relative symbol, making __efistub_stext_offset a
-relative symbol.
-
-Adding ABSOLUTE will force ld.lld to evalute this expression in the
-right context and does not change ld.bfd's behavior. ld.lld will
-need to be fixed but the developers do not see a quick or simple fix
-without some research (see the linked issue for further explanation).
-Add this simple workaround so that ld.lld can continue to link kernels.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/561
-Link: https://github.com/llvm/llvm-project/commit/025a815d75d2356f2944136269aa5874721ec236
-Link: https://github.com/llvm/llvm-project/commit/249fde85832c33f8b06c6b4ac65d1c4b96d23b83
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Debugged-by: Fangrui Song <maskray@google.com>
-Debugged-by: Peter Smith <peter.smith@linaro.org>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-[will: add comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Reviewed-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/image.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/target/iscsi/iscsi_target_auth.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
-index 40f9f0b078a4..12af2ba8d558 100644
---- a/arch/arm64/kernel/image.h
-+++ b/arch/arm64/kernel/image.h
-@@ -73,7 +73,11 @@
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index 4e680d753941..e2fa3a3bc81d 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -89,6 +89,12 @@ static int chap_check_algorithm(const char *a_str)
+ 	return CHAP_DIGEST_UNKNOWN;
+ }
  
- #ifdef CONFIG_EFI
++static void chap_close(struct iscsi_conn *conn)
++{
++	kfree(conn->auth_protocol);
++	conn->auth_protocol = NULL;
++}
++
+ static struct iscsi_chap *chap_server_open(
+ 	struct iscsi_conn *conn,
+ 	struct iscsi_node_auth *auth,
+@@ -126,7 +132,7 @@ static struct iscsi_chap *chap_server_open(
+ 	case CHAP_DIGEST_UNKNOWN:
+ 	default:
+ 		pr_err("Unsupported CHAP_A value\n");
+-		kfree(conn->auth_protocol);
++		chap_close(conn);
+ 		return NULL;
+ 	}
  
--__efistub_stext_offset = stext - _text;
-+/*
-+ * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
-+ * https://github.com/ClangBuiltLinux/linux/issues/561
-+ */
-+__efistub_stext_offset = ABSOLUTE(stext - _text);
+@@ -141,19 +147,13 @@ static struct iscsi_chap *chap_server_open(
+ 	 * Generate Challenge.
+ 	 */
+ 	if (chap_gen_challenge(conn, 1, aic_str, aic_len) < 0) {
+-		kfree(conn->auth_protocol);
++		chap_close(conn);
+ 		return NULL;
+ 	}
  
- /*
-  * The EFI stub has its own symbol namespace prefixed by __efistub_, to
+ 	return chap;
+ }
+ 
+-static void chap_close(struct iscsi_conn *conn)
+-{
+-	kfree(conn->auth_protocol);
+-	conn->auth_protocol = NULL;
+-}
+-
+ static int chap_server_compute_md5(
+ 	struct iscsi_conn *conn,
+ 	struct iscsi_node_auth *auth,
 -- 
 2.20.1
 
