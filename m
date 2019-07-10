@@ -2,52 +2,56 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D59C74A2E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8E6C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58A12166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3312921670
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771050;
-	bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uE5Sj4AzReY1X+OgiPojbeIC9sAW2ssoLy3gVaooMdxzmNHDNQ2dTsKHEGtDfnRph
-	 gV0UXxafe9q5N+mQ2daq5XbavTgo8j0erFANRO5HzmGESL99LtkpiH8q1RDTMqS00G
-	 ZWKY5IMPJnOsZY4SzYshYV7DFBhS42EYMMM/0qj0=
+	s=default; t=1562771053;
+	bh=jGB9OM116C7+htRI4ITgZZja9A7XZkPCjr6Z7ikeaKU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZVP1FqRy5lmRff4fiY9pVisAEnxyU5l4IzbC1yCyybzkbvy2FuNWB/1aaDJwalJbp
+	 hjDfAIp1XEZcGW5LJ5lR0hnRmykmBZZK9BuIE+vMe87MrfOcWIk737YpBy6v1DRNg2
+	 ALdCvb5ve4O4B8R1ATAFA+7HYNOBmZfm8uNSVc0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfGJPD5 (ORCPT
+        id S1728056AbfGJPDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35978 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbfGJPDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:53 -0400
+        id S1728279AbfGJPDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1F4E216B7;
-        Wed, 10 Jul 2019 15:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C0DB216C8;
+        Wed, 10 Jul 2019 15:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562771032;
-        bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MTCDJn5btN+BczGhQIZvdv9ItndqyShbA1LSr5L08SjmPujav0W7sbLBb+UtGqnih
-         p9z20wirdWT96CBqna/roueXSRbMTBQnFBaAZdnSeEZo6DhM/5ibbIHr/FdcBJcu0l
-         lMLrBHWSCE/iuJskEB6PJKgZ3qTcS/nPiIjtPPLI=
+        s=default; t=1562771026;
+        bh=jGB9OM116C7+htRI4ITgZZja9A7XZkPCjr6Z7ikeaKU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o8JUA7j86OI9m4HUfkw7iJ0ftZ8x9/9GsMvjKZKLQtQxyjIMWcVBkoDY63yqPEL0F
+         j9sB9shanOVRP39IZ1DPfUb6sZKEpiJKglZPCfxhEVTqLj4LUX0wA0uLzpf+MWsTFn
+         OT5POd8LWcNEkvD09WOnNM2hmdkc27A5JhGBdXTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Hellermann <stefan@the2masters.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 1/4] MIPS: ath79: fix ar933x uart parity mode
-Date:   Wed, 10 Jul 2019 11:03:46 -0400
-Message-Id: <20190710150350.7501-1-sashal@kernel.org>
+Cc:     Robert Beckett <bob.beckett@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 5/7] drm/imx: notify drm core before sending event during crtc disable
+Date:   Wed, 10 Jul 2019 11:03:33 -0400
+Message-Id: <20190710150337.7390-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190710150337.7390-1-sashal@kernel.org>
+References: <20190710150337.7390-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,40 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hellermann <stefan@the2masters.de>
+From: Robert Beckett <bob.beckett@collabora.com>
 
-[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
+[ Upstream commit 78c68e8f5cd24bd32ba4ca1cdfb0c30cf0642685 ]
 
-While trying to get the uart with parity working I found setting even
-parity enabled odd parity insted. Fix the register settings to match
-the datasheet of AR9331.
+Notify drm core before sending pending events during crtc disable.
+This fixes the first event after disable having an old stale timestamp
+by having drm_crtc_vblank_off update the timestamp to now.
 
-A similar patch was created by 8devices, but not sent upstream.
-https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
+This was seen while debugging weston log message:
+Warning: computed repaint delay is insane: -8212 msec
 
-Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
+This occurred due to:
+1. driver starts up
+2. fbcon comes along and restores fbdev, enabling vblank
+3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
+seq number and time set at current value
+(some time later)
+4. weston starts and does a modeset
+5. atomic commit disables crtc while it does the modeset
+6. ipu_crtc_atomic_disable sends vblank with old seq number and time
+
+Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
+
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-index c2917b39966b..bba2c8837951 100644
---- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-+++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-@@ -27,8 +27,8 @@
- #define AR933X_UART_CS_PARITY_S		0
- #define AR933X_UART_CS_PARITY_M		0x3
- #define	  AR933X_UART_CS_PARITY_NONE	0
--#define	  AR933X_UART_CS_PARITY_ODD	1
--#define	  AR933X_UART_CS_PARITY_EVEN	2
-+#define	  AR933X_UART_CS_PARITY_ODD	2
-+#define	  AR933X_UART_CS_PARITY_EVEN	3
- #define AR933X_UART_CS_IF_MODE_S	2
- #define AR933X_UART_CS_IF_MODE_M	0x3
- #define	  AR933X_UART_CS_IF_MODE_NONE	0
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 8dbba61a2708..a202237c315f 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -76,14 +76,14 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	drm_atomic_helper_disable_planes_on_crtc(old_crtc_state, false);
+ 	ipu_dc_disable(ipu);
+ 
++	drm_crtc_vblank_off(crtc);
++
+ 	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (crtc->state->event) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+-
+-	drm_crtc_vblank_off(crtc);
+ }
+ 
+ static void imx_drm_crtc_reset(struct drm_crtc *crtc)
 -- 
 2.20.1
 
