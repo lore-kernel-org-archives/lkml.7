@@ -2,190 +2,84 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E46AC74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAA3C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5895420844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:29:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQEuRN+Z"
+	by mail.kernel.org (Postfix) with ESMTP id 329C520844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfGJP3W (ORCPT
+        id S1728055AbfGJP3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:29:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35050 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfGJP3W (ORCPT
+        Wed, 10 Jul 2019 11:29:40 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38814 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfGJP3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:29:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so1424179plp.2;
-        Wed, 10 Jul 2019 08:29:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MdOxKwqbOJNN62BREvj5/5BRN5rSH+WxFWM7LgBxf6E=;
-        b=bQEuRN+ZyjSDUzUB+nFWoUt9QElahPH/MEYYOWzr4TOVj68xl9uPnaRUcNXcrq1N27
-         7ilKTo/wOWhrjN8PVGPknnpfkj911znf0uuz5F6UMKaaSfm44NTArbTWafqgxnn5XzsC
-         RnU09XrPn4/wiFFUw5PQLvnFb7buUFGVAavz/ViHVW1FImTOXlrJjmXEWezBKO3xHPan
-         f7GeqtBvxnhzSxaDPmB4qMEg0VgL90tQL3kjgNGUmCoSOP52ZYo5kIPBFAgl6Vgg+1Vy
-         4lDQU4+ZGdfbdkkcNRnTI304L3xdHQuWyTrFYYHUJveFfjgNFbgonOPyuM46+sUplxkf
-         JFTg==
+        Wed, 10 Jul 2019 11:29:39 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s15so2718064wmj.3;
+        Wed, 10 Jul 2019 08:29:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MdOxKwqbOJNN62BREvj5/5BRN5rSH+WxFWM7LgBxf6E=;
-        b=bDTUP0Y2XqJ/X0dt70AudnErPsfkfGm1Uu958PinB8/RlxZE6gO8QZspbdLCdp9jSR
-         QaDKky+Jz6NxiuDCYUXA33YR89LvLnF+yKEne5eWWOzEEkU5gOmsjxtJoyu0G57xJmNg
-         NzCOOa9ueFq+73/7iyejSTYyK6q8ffP1wcCF9v9Uyv2JwCkKczJ8b2pjAbrAwtPfAz+3
-         irY//LM9hcy1CFN/aM2uJunX1wh4clUy3HESjTxJuMNn+ITl0SpYHtRuUublF3b7qe9m
-         a5zhNwyav9kpL5ie/9KjbhIz3dL0XOSLxEEwi4himQLd9bwK15a6dqWVY/73F3ZyUpWm
-         r7mg==
-X-Gm-Message-State: APjAAAXkEcYzy+JlDbolBPsBDCNr0hdEDKzTlwBxlDadarkpIcDcTw4P
-        9GOj1BFqRICEZfpjYolEQjE=
-X-Google-Smtp-Source: APXvYqxMYBu3Ooy60D80xvsIIEqvdDL05QgVyHd28yhyf5WOVmagnAZax9URtoaoiXbk9Oe+ZUEHJA==
-X-Received: by 2002:a17:902:e202:: with SMTP id ce2mr35861996plb.272.1562772560744;
-        Wed, 10 Jul 2019 08:29:20 -0700 (PDT)
-Received: from localhost.localdomain (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
-        by smtp.gmail.com with ESMTPSA id s6sm5755827pfs.122.2019.07.10.08.29.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Jul 2019 08:29:19 -0700 (PDT)
-From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, skhan@linuxfoundation.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org, Shobhit Kukreti <shobhitkukreti@gmail.com>
-Subject: [PATCH v3] Documentation: filesystems: Convert jfs.txt to
-Date:   Wed, 10 Jul 2019 08:29:01 -0700
-Message-Id: <1562772541-32144-1-git-send-email-shobhitkukreti@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20190710093323.7e5d6790@coco.lan>
-References: <20190710093323.7e5d6790@coco.lan>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OYCkBfE5VzYOraD6A4aTNdxZz8pMoTxJpb4Qn0Coz5Y=;
+        b=VEQohiREzx2Qe9kGtKxlzuLl8DqCu5p1lDNNMYQGHer23qOWjf0ahOV5TCjsjQystb
+         eZqE5QOHYUXe2M93ITqSTUivT4eCIgK394hWRR7Q7PgOD6/xjEqiFG5ZA7axT+JqhY9u
+         Wi99PtksHiUK1vY8mB4uSBhljZTVKbf/kbc8hDr+e15WHQTd4hw93ikjxtyMrky/p7bR
+         hAT3Cqa1c3LHSNqSUnWkBRb9xzCiJLz755jJ9/9u+8vsbtaW617BNwktB9Sa3T2e+PAR
+         PbWbuqSCx8Tr/qQdT1bMGm25RvPaVZEaftV4siVrDUKqz9ZUPEQqjrl81kOZggMc63hJ
+         rQ7w==
+X-Gm-Message-State: APjAAAXmm/QQzZzxHf0BDSTfrUmyWBu1P4/fAhKnloedP3c72hraWo9b
+        Uf7WL5uDfgwMysWsLiKHC6o=
+X-Google-Smtp-Source: APXvYqzw654gnLQ3h8248FiJYECZ4Lf8UQgmXRoXKxJv9+cWo346I606rNIRbNXIiLEQM91cyO+iMQ==
+X-Received: by 2002:a1c:b189:: with SMTP id a131mr6142061wmf.7.1562772577140;
+        Wed, 10 Jul 2019 08:29:37 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id g11sm2914510wru.24.2019.07.10.08.29.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 08:29:36 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Chuansheng Liu <chuansheng.liu@intel.com>
+Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ahci: Remove the exporting of ahci_em_messages
+Date:   Wed, 10 Jul 2019 18:29:23 +0300
+Message-Id: <20190710152923.25562-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation of jfs.txt to reStructuredText
-format. Added to documentation build process and verified with 
-make htmldocs
+The variable ahci_em_messages is declared static and marked
+EXPORT_SYMBOL_GPL, which is at best an odd combination. Because the
+variable is not used outside of the drivers/ata/libahci.c file it is
+defined in, this commit removes the EXPORT_SYMBOL_GPL() marking.
 
-Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
+Fixes: ed08d40cdec4 ("ahci: Changing two module params with static and __read_mostly")
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
-Changes in v3:
-        1. Reverted to minimally changed jfs.rst
-        2. Used -M1 in git format-patch to show files as renamed
+ drivers/ata/libahci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Changes in v2:
-        1. Removed flat-table.
-        2. Moved jfs.rst from filesystem to admin-guide
-
- Documentation/admin-guide/index.rst                |  1 +
- .../{filesystems/jfs.txt => admin-guide/jfs.rst}   | 44 ++++++++++++++--------
- 2 files changed, 30 insertions(+), 15 deletions(-)
- rename Documentation/{filesystems/jfs.txt => admin-guide/jfs.rst} (51%)
-
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 8001917..2871b79 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
-    ras
-    bcache
-    ext4
-+   jfs
-    pm/index
-    thunderbolt
-    LSM/index
-diff --git a/Documentation/filesystems/jfs.txt b/Documentation/admin-guide/jfs.rst
-similarity index 51%
-rename from Documentation/filesystems/jfs.txt
-rename to Documentation/admin-guide/jfs.rst
-index 41fd757..9e12d93 100644
---- a/Documentation/filesystems/jfs.txt
-+++ b/Documentation/admin-guide/jfs.rst
-@@ -1,45 +1,59 @@
-+===========================================
- IBM's Journaled File System (JFS) for Linux
-+===========================================
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index e4c45d3cca79..bff369d9a1a7 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -175,7 +175,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
+ EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
  
- JFS Homepage:  http://jfs.sourceforge.net/
- 
- The following mount options are supported:
-+
- (*) == default
- 
--iocharset=name	Character set to use for converting from Unicode to
-+iocharset=name
-+                Character set to use for converting from Unicode to
- 		ASCII.  The default is to do no conversion.  Use
- 		iocharset=utf8 for UTF-8 translations.  This requires
- 		CONFIG_NLS_UTF8 to be set in the kernel .config file.
- 		iocharset=none specifies the default behavior explicitly.
- 
--resize=value	Resize the volume to <value> blocks.  JFS only supports
-+resize=value
-+                Resize the volume to <value> blocks.  JFS only supports
- 		growing a volume, not shrinking it.  This option is only
- 		valid during a remount, when the volume is mounted
- 		read-write.  The resize keyword with no value will grow
- 		the volume to the full size of the partition.
- 
--nointegrity	Do not write to the journal.  The primary use of this option
-+nointegrity
-+                Do not write to the journal.  The primary use of this option
- 		is to allow for higher performance when restoring a volume
- 		from backup media.  The integrity of the volume is not
- 		guaranteed if the system abnormally abends.
- 
--integrity(*)	Commit metadata changes to the journal.  Use this option to
-+integrity(*)
-+                Commit metadata changes to the journal.  Use this option to
- 		remount a volume where the nointegrity option was
- 		previously specified in order to restore normal behavior.
- 
--errors=continue		Keep going on a filesystem error.
--errors=remount-ro(*)	Remount the filesystem read-only on an error.
--errors=panic		Panic and halt the machine if an error occurs.
-+errors=continue
-+                        Keep going on a filesystem error.
-+errors=remount-ro(*)
-+                        Remount the filesystem read-only on an error.
-+errors=panic
-+                        Panic and halt the machine if an error occurs.
- 
--uid=value	Override on-disk uid with specified value
--gid=value	Override on-disk gid with specified value
--umask=value	Override on-disk umask with specified octal value.  For
--		directories, the execute bit will be set if the corresponding
-+uid=value
-+                Override on-disk uid with specified value
-+gid=value
-+                Override on-disk gid with specified value
-+umask=value
-+                Override on-disk umask with specified octal value. For
-+                directories, the execute bit will be set if the corresponding
- 		read bit is set.
- 
--discard=minlen	This enables/disables the use of discard/TRIM commands.
--discard		The discard/TRIM commands are sent to the underlying
--nodiscard(*)	block device when blocks are freed. This is useful for SSD
--		devices and sparse/thinly-provisioned LUNs.  The FITRIM ioctl
-+discard=minlen, discard/nodiscard(*)
-+                This enables/disables the use of discard/TRIM commands.
-+		The discard/TRIM commands are sent to the underlying
-+                block device when blocks are freed. This is useful for SSD
-+                devices and sparse/thinly-provisioned LUNs.  The FITRIM ioctl
- 		command is also available together with the nodiscard option.
- 		The value of minlen specifies the minimum blockcount, when
- 		a TRIM command to the block device is considered useful.
+ static bool ahci_em_messages __read_mostly = true;
+-EXPORT_SYMBOL_GPL(ahci_em_messages);
+ module_param(ahci_em_messages, bool, 0444);
+ /* add other LED protocol types when they become supported */
+ MODULE_PARM_DESC(ahci_em_messages,
 -- 
-2.7.4
+2.21.0
 
