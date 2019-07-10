@@ -2,200 +2,89 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6681EC74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ABDC74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290262064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QB9XtGbw"
+	by mail.kernel.org (Postfix) with ESMTP id C31A620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfGJQkl (ORCPT
+        id S1727927AbfGJQpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 12:40:41 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41853 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfGJQkl (ORCPT
+        Wed, 10 Jul 2019 12:45:19 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:33437 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727287AbfGJQpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 12:40:41 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p15so2800855eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 09:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dfuwXMh/PFSs/hNZrr4/4G7Y//4Qrkq5C3uMpNwhxbA=;
-        b=QB9XtGbwlJ0dk+sdfcqtd+yhmZhSROLxmsepY6HorySiOWPEIyM9XwVmu5qtWE7dfm
-         1RlLNpqPlmRxBfmeASPIzX/yL4xsMab7IBT5N5IqwU6jYb7+BaQhj9apEElx6Heb6oze
-         P682jiJU2EuEAH4a1qhV08wm1emG/EFRuFK6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=dfuwXMh/PFSs/hNZrr4/4G7Y//4Qrkq5C3uMpNwhxbA=;
-        b=n+H0DOvVL32pOBsVgnQt9lT6iRS6LOm4jjTx6APYK/JmqvXnUL0B0C9Fy8596M971s
-         H4RkbKtOD62/VAGq9q3mksIIuBy7ejk1vSquWmiUQ1sCosNtUeTvGF6kjuZK82RBMM/a
-         zWTIWjFQgWsn2tTOr/f0KQaliP5U9aRADrpz5G+Hcckam+WmjDIbG87Gkp9WMUPmwOT+
-         8ict7MNteSMyWrlmrUOLzovQ8TfpIVXyde6lF+UUaboqdP+lBo1uC/WjKgmh+gLMtlA/
-         DJLL7ffuCTRgLpFavK33VqO3KqNJdvPs+4OvzfNFhcxoWNskWtLrjJp7SQyRGimIpgjT
-         o7bw==
-X-Gm-Message-State: APjAAAVNcEy/c2sS0v+QY7ehtoRmWZp0T6DcYTRAHh4ZLBJdJt/WLECA
-        4onQ6loExrFH3X8qBmaIrH8r2g==
-X-Google-Smtp-Source: APXvYqwIMINglW2hmlI0ckWdmJ5NRNUHC2Hz0rtqpJFLfi1tlczsBrBMWvAG0a8ShZy1HwxjHtMscg==
-X-Received: by 2002:a50:a4ef:: with SMTP id x44mr33058891edb.304.1562776838911;
-        Wed, 10 Jul 2019 09:40:38 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id e43sm875876ede.62.2019.07.10.09.40.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 09:40:38 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 18:40:36 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Simon Ser <contact@emersion.fr>,
-        Oleg Vasilev <oleg.vasilev@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] drm/vkms: Add support for vkms work without vblank
-Message-ID: <20190710164036.GZ15868@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>, Simon Ser <contact@emersion.fr>,
-        Oleg Vasilev <oleg.vasilev@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20190710015514.42anrmx3r2ijaomz@smtp.gmail.com>
+        Wed, 10 Jul 2019 12:45:19 -0400
+Received: from xps13 ([83.160.161.190])
+        by smtp-cloud7.xs4all.net with ESMTPSA
+        id lFiUhwAZy0SBqlFiXh8vkM; Wed, 10 Jul 2019 18:45:17 +0200
+Message-ID: <5245d2b3d82f11d2f988a3154814eb42dcb835c5.camel@tiscali.nl>
+Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
+From:   Paul Bolle <pebolle@tiscali.nl>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        intel-gfx@lists.freedesktop.org
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Jul 2019 18:45:14 +0200
+In-Reply-To: <1562776339.3213.50.camel@HansenPartnership.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <1562770874.3213.14.camel@HansenPartnership.com>
+         <93b8a186f4c8b4dae63845a20bd49ae965893143.camel@tiscali.nl>
+         <1562776339.3213.50.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710015514.42anrmx3r2ijaomz@smtp.gmail.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNbzLWZLuh1XujReLYpRK8CR5zZBk8afhybZyOc0P8XoqWz2+slcd9HGh7xkABVaQu054GrdSrCpN8vNd/JzsrDStYmD4KqONQdh0MUQd3iIrnTw2Wxy
+ bi8ZQ3MYREuWcUhh1dSYkbpbf9bECwc/6L/GNcDrpUjqHbc5cTot0/WWX1OKYlXWi6hdtlPO40geBVGzxcBahggrYyx7QUVD2WLrwqVCDarGIXZfWlsfi0RN
+ 0pdosbU7uXHoz1D3cw11ygFTM8Mc/p3O5TsjWTXVURg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:55:14PM -0300, Rodrigo Siqueira wrote:
-> Currently, vkms only work with enabled VBlank. This patch adds another
-> operation model that allows vkms to work without VBlank support. In this
-> scenario, vblank signaling is faked by calling drm_send_vblank_event()
-> in vkms_crtc_atomic_flush(); this approach works due to the
-> drm_vblank_get() == 0 checking.
-> 
-> Changes since V2:
->  - Rebase
-> 
-> Changes since V1:
->   Daniel Vetter:
->   - Change module parameter name from disablevblank to virtual_hw
->   - Improve parameter description
->   - Improve commit message
-> 
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_crtc.c | 10 ++++++++++
->  drivers/gpu/drm/vkms/vkms_drv.c  | 13 +++++++++++--
->  drivers/gpu/drm/vkms/vkms_drv.h  |  2 ++
->  3 files changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-> index 49a8ec2cb1c1..a0c75b8c4335 100644
-> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> @@ -207,12 +207,22 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
->  static void vkms_crtc_atomic_enable(struct drm_crtc *crtc,
->  				    struct drm_crtc_state *old_state)
->  {
-> +	struct vkms_output *vkms_out = drm_crtc_to_vkms_output(crtc);
-> +
-> +	if (vkms_out->disable_vblank)
-> +		return;
-> +
->  	drm_crtc_vblank_on(crtc);
->  }
->  
->  static void vkms_crtc_atomic_disable(struct drm_crtc *crtc,
->  				     struct drm_crtc_state *old_state)
->  {
-> +	struct vkms_output *vkms_out = drm_crtc_to_vkms_output(crtc);
-> +
-> +	if (vkms_out->disable_vblank)
-> +		return;
-> +
->  	drm_crtc_vblank_off(crtc);
->  }
->  
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index 152d7de24a76..542a002ef9d5 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -34,6 +34,11 @@ bool enable_writeback;
->  module_param_named(enable_writeback, enable_writeback, bool, 0444);
->  MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector");
->  
-> +bool virtual_hw;
+James Bottomley schreef op wo 10-07-2019 om 09:32 [-0700]:
+> You seem to be getting it to happen much more often than I can. Last
+> night, on the below pull request it took me a good hour to see the
+> freeze.
 
-Can be static, you only use this in vkms_drv.c.
+Yes. Sometimes within a minute of resuming. Typing stuff into evolution seems
+to help with triggering this. It's all a bit mysterious, but this message
+alone frooze my laptop a few times. Seriously!
 
-> +module_param_named(virtual_hw, virtual_hw, bool, 0444);
-> +MODULE_PARM_DESC(virtual_hw,
-> +		 "Enable virtual hardware mode (disables vblanks and immediately completes flips)");
-> +
->  static const struct file_operations vkms_driver_fops = {
->  	.owner		= THIS_MODULE,
->  	.open		= drm_open,
-> @@ -154,9 +159,13 @@ static int __init vkms_init(void)
->  	if (ret)
->  		goto out_unregister;
->  
-> -	vkms_device->drm.irq_enabled = true;
-> +	vkms_device->output.disable_vblank = virtual_hw;
-> +	vkms_device->drm.irq_enabled = !virtual_hw;
-> +
-> +	if (virtual_hw)
-> +		DRM_INFO("Virtual hardware mode enabled");
->  
-> -	ret = drm_vblank_init(&vkms_device->drm, 1);
-> +	ret = (virtual_hw) ? 0 : drm_vblank_init(&vkms_device->drm, 1);
->  	if (ret) {
->  		DRM_ERROR("Failed to vblank\n");
->  		goto out_fini;
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> index 9ff2cd4ebf81..256e5e65c947 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -21,6 +21,7 @@
->  
->  extern bool enable_cursor;
->  extern bool enable_writeback;
-> +extern bool virtual_hw;
->  
->  struct vkms_composer {
->  	struct drm_framebuffer fb;
-> @@ -69,6 +70,7 @@ struct vkms_output {
->  	struct drm_connector connector;
->  	struct drm_writeback_connector wb_connector;
->  	struct hrtimer vblank_hrtimer;
-> +	bool disable_vblank;
->  	ktime_t period_ns;
->  	struct drm_pending_vblank_event *event;
->  	/* ordered wq for composer_work */
+> Sure, my current testing indicates it's somewhere inside this pull
+> request:
+> 
+> Merge: 89c3b37af87e eb85d03e01c3
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Wed May 8 21:35:19 2019 -0700
+> 
+>     Merge tag 'drm-next-2019-05-09' of git://anongit.freedesktop.org/drm/drm
+>     
+>     Pull drm updates from Dave Airlie:
 
-I'm kinda wondering how this works at all ... does writeback/crc still
-work if you set virtual mode? Writeback since this seems based on the
-writeback series ...
+Lazy question: how does one determine the first and last commit inside a merge
+request? Can I simply do
+    good   a2d635decbfa9c1e4ae15cb05b68b2559f7f827c^
+    bad    a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
 
-btw if you send out patches that need other patches, point at that other
-series in the cover letter or patch. Gets confusing fast otherwise.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+for git bisect?
+
+> So I was about to test out the i915 changes in that but since my laptop
+> is what I use for daily work, it's a bit hard (can't freeze up on video
+> calls for instance).
+
+I usually use one of the ThinkPads from my embarrassing pile of outdated
+hardware to do nasty bisects, but I'm not about to loose any income if my much
+appreciated XPS 13 is out of order for a while.
+
+Thanks,
+
+
+Paul Bolle
+
