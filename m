@@ -2,153 +2,131 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5EFC73C6A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5A8C73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A574D20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39BC2083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Er83EjvR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bWsVGu9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfGJEMP (ORCPT
+        id S1726147AbfGJEMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 00:12:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37317 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfGJEMP (ORCPT
+        Wed, 10 Jul 2019 00:12:18 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40734 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfGJEMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 00:12:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id q22so1775379iog.4;
-        Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
+        Wed, 10 Jul 2019 00:12:17 -0400
+Received: by mail-vs1-f66.google.com with SMTP id a186so609314vsd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 21:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
-        b=Er83EjvRJBQgeZLZLNGHJ/CIJ3vFfD2b44UXb9NJhum0QdBtKCUFxG0HoR3ONVkgQr
-         o0xtIwaDaN0tSl+1OGHaci0d6tKYunpmoPln67v2glTbuS5CSUdXTa8xze14By08wGhJ
-         bnFbwyg1k2PhbXe0djOJmsDtY3LdvNtwjKTrbPiHCZrB+/GEsN5F2cseK/B+iQPFWgp4
-         8aC8paqLYpkbbfpBuPq3IgyZDy0jlhnYJrWVc/4I9/jUAFt8B/TF67q3NMTifsw9cR0k
-         edGv+eaK5sywQoqE1FsB2w1F+jWKQPgaYi8IzrYgBQF21mb60gjkzmvG2hcoMO1gVhLq
-         T2Hg==
+        bh=jsT84thXZgrjljKWPHUjY7JeFgImc9+U4hEoxyiTJcc=;
+        b=bWsVGu9ZtrSBJl4JbELamsoGGvbUEuoJyLkzEdD/lBLkOe2SuDywqNJvjhLcdkFQIV
+         uQzhsHZfClHSSErFS8YngoK5icUK/zOzfk2MyJE77f/EpBtLGiDl5OLXwZaYMg1H4xvi
+         8bZw2KyzNEgXQhxeZxd3j43hSpSd9KAK3Vxwk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
-        b=YfZWWWiYHYSfH6GCkZYIxl2X72F5nYqi8y9IQuPCBTwbru/NczvY5S0uu9LFdPdgDe
-         Up36MFa/JTE4f9R6vAyS0ytyJab60ahv1a24NeJaQoROuI5pSi3DxUUC4ihng3Jpfatd
-         WGNZTPU07NMA2KPQxdMbC9la7M2meTMubcWRpcwJVG7lRLxrT6qIYplbuLpq2edxqeZK
-         4i7/B3XSGDAlK6TWCQmAYiBcn1lIij85W+zByLvZjFfpW/dTdyiXjqOSPXRA0TyBB9Rn
-         R8NmlWN0Grjq3W01+OGGX8NWfhbGna8D6Lperv3KW7OWJdEcoOnQVy/HyKTW1ouUMLXb
-         1JLw==
-X-Gm-Message-State: APjAAAW+RHvRi+sE68ksciB+SzShV4PXXTbDIhKm7EtlLd+3CnUb/D/0
-        hk8F5HYdrI6FHvLe69L5dAJuMJNPqu15UAc+4kA=
-X-Google-Smtp-Source: APXvYqyrY3pgnVJVoKBZLLrB+4OJFeIjwcN5V+rh111wh3J7yNqwK0JY5nwgq4JIQX+Ci9Ss4o59aShURyDdZ3NjNHU=
-X-Received: by 2002:a5d:8c81:: with SMTP id g1mr30451959ion.239.1562731934157;
- Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
+        bh=jsT84thXZgrjljKWPHUjY7JeFgImc9+U4hEoxyiTJcc=;
+        b=aeR7bQK3FEjN2e6Fq+hDYG6OmhNs1mdddQHylXjwB2uXZXdRFIZDmcD5gpq4zS1IXe
+         eHumGXfHxDXMtqttSFWuxUmq764MJbi0C1LeekwuSkk9mm5p+XVKOHIph8gXdPyOn0G/
+         KIvUwTuOi1AC8akXKVgf65OtDFZjxkIEA/1wLg4qgfPzsn2PW3DATao5Hx9XUQYUSe9D
+         w13Q0vGE+50J194wC7wn6QYQFxBD0s6vyeAnb4bckoBqhcBj+WSDtNxDkbcAbwvah8du
+         z2vPy/cNztiHd0LTgR3L2YCWVFOcsndQM8fvT0XF2snbwNfo2ZPCvlIVfhk8LaYN8a0/
+         l1zQ==
+X-Gm-Message-State: APjAAAXlxSDAJVK+dgg3Bz0vK3uaCfDVfd9rRz8LprXz7iYDk1Gep/eh
+        qcYMhJsdLXHcmeNWLdT1ixDHA6JmsGwSEzEOIoznPA==
+X-Google-Smtp-Source: APXvYqwRDoiekjMfVg1dAkd95CbZGZ3jhAzyHEQ1N/LeXKKIJksHQNLAm0BnKpQtXYeH+ZnDwbVN+JmCCFjQkCNhqMc=
+X-Received: by 2002:a67:f7cd:: with SMTP id a13mr14190782vsp.163.1562731935844;
+ Tue, 09 Jul 2019 21:12:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
-In-Reply-To: <20190709143437.GA30850@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Tue, 9 Jul 2019 23:12:03 -0500
-Message-ID: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
+References: <20190603043251.226549-1-cychiang@chromium.org>
+ <20190603043251.226549-6-cychiang@chromium.org> <20190709200121.GA19118@bogus>
+In-Reply-To: <20190709200121.GA19118@bogus>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Wed, 10 Jul 2019 12:11:48 +0800
+Message-ID: <CAFv8NwLiKu055S7apzj+gTYh0neQ5rLmPYEYkEj6Zf3hikWWpA@mail.gmail.com>
+Subject: Re: [PATCH 5/7] ASoC: rockchip: rockchip-max98090: Add node for HDMI
 To:     Rob Herring <robh@kernel.org>
-Cc:     dmaengine@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        orito.takao@socionext.com,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        kasai.kazuhiro@socionext.com,
-        Jassi Brar <jaswinder.singh@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Doug Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        linux-media@vger.kernel.org,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
+On Wed, Jul 10, 2019 at 4:01 AM Rob Herring <robh@kernel.org> wrote:
 >
-> On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
-> > From: Jassi Brar <jaswinder.singh@linaro.org>
+> On Mon, Jun 03, 2019 at 12:32:49PM +0800, Cheng-Yi Chiang wrote:
+> > Let user specify HDMI node so machine driver can use it to let codec
+> > driver register callback on correct hdmi-notifier.
 > >
-> > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > controller. Controller has upto 8 floating channels, that need
-> > a predefined slave-id to work from a set of slaves.
-> >
-> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
 > > ---
-> >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> >  Documentation/devicetree/bindings/sound/rockchip-max98090.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > new file mode 100644
-> > index 000000000000..a104fcb9e73d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > @@ -0,0 +1,51 @@
-> > +* Milbeaut AHB DMA Controller
-> > +
-> > +Milbeaut AHB DMA controller has transfer capability bellow.
-> > + - memory to memory transfer
-> > + - device to memory transfer
-> > + - memory to device transfer
-> > +
-> > +Required property:
-> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > +- reg:              Should contain DMA registers location and length.
-> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
+> > diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> > index a805aa99ad75..dae57c14864e 100644
+> > --- a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> > +++ b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> > @@ -7,6 +7,7 @@ Required properties:
+> >    connected to the CODEC
+> >  - rockchip,audio-codec: The phandle of the MAX98090 audio codec
+> >  - rockchip,headset-codec: The phandle of Ext chip for jack detection
+> > +- rockchip,hdmi: The phandle of HDMI node for HDMI jack detection
+> >
+> >  Example:
+> >
+> > @@ -16,4 +17,5 @@ sound {
+> >       rockchip,i2s-controller = <&i2s>;
+> >       rockchip,audio-codec = <&max98090>;
+> >       rockchip,headset-codec = <&headsetcodec>;
+> > +     rockchip,hdmi= <&hdmi>;
 >
-> How many?
+> space                ^
 >
-Each channel has an IRQ line. And the number of channels is
-configurable. So instead of having some explicit property like
-'dma-channels', we infer that from the number of irqs registered.
-
-> > +- #dma-cells:       Should be 1. Specify the ID of the slave.
-> > +- clocks:           Phandle to the clock used by the HDMAC module.
-> > +
-> > +
-> > +Example:
-> > +
-> > +     hdmac1: hdmac@1e110000 {
+> With that,
 >
-> dma-controller@...
+> Acked-by: Rob Herring <robh@kernel.org>
 >
-OK
-
-> > +             compatible = "socionext,milbeaut-m10v-hdmac";
-> > +             reg = <0x1e110000 0x10000>;
-> > +             interrupts = <0 132 4>,
-> > +                          <0 133 4>,
-> > +                          <0 134 4>,
-> > +                          <0 135 4>,
-> > +                          <0 136 4>,
-> > +                          <0 137 4>,
-> > +                          <0 138 4>,
-> > +                          <0 139 4>;
-> > +             #dma-cells = <1>;
-> > +             clocks = <&dummy_clk>;
-> > +     };
-> > +
-> > +* DMA client
-> > +
-> > +Clients have to specify the DMA requests with phandles in a list.
->
-> Nothing specific to this binding here and the client side is already
-> documented, so drop this section.
->
-OK.
-
-Thanks
+Hi Rob,
+Thank you for the review.
+But I have changed the approach in v2 so there is no need for machine
+driver to expose this property.
+Thanks!
+> >  };
+> > --
+> > 2.22.0.rc1.257.g3120a18244-goog
+> >
