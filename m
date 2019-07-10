@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD830C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D46C74A2E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B743B214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF312064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771103;
-	bh=LMO9SlGP21+nsQr6IidSCJbD4Vg7RTJcjTaiZ0yhzkI=;
+	s=default; t=1562771113;
+	bh=kkVtKIKtY+cKBVcVE9XetstR4pjnwlDvVK28e/w5Q7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwPtgJ0Pjy2ervbH5EVlSNq4g081+zjo0Qf/nmPMj316AoF7yll6vadNG4fD05YbT
-	 q7YGuFXfOJ999mbwEcpKu8fM9Wl/QFccZ7+rfQSWxsI1t2jO2WJwflozHlkT54ZHVE
-	 D0ywYF8OIdwha/STSOCKPRVjl+9gkwMuF+VvgCPo=
+	b=2L9s03LVZI6HZoAZqCl08oqZ4qEZ52UjdFCLzdwF3D8KkrRpLvdI6BVLWNHK22EKv
+	 kOxISSpBGZvInGCoQoM47u49otjfXrHhkV2anjNF+91wRtrFxB0UizsFjDFcr0+bvW
+	 AZ048l52auVMR9AvhUsaN1NDmjV8mJd3m6qYVgck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfGJPFC (ORCPT
+        id S1728058AbfGJPDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:05:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfGJPDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:15 -0400
+        id S1727978AbfGJPC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:02:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 429CE208C4;
-        Wed, 10 Jul 2019 15:03:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67145208E4;
+        Wed, 10 Jul 2019 15:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562770994;
-        bh=LMO9SlGP21+nsQr6IidSCJbD4Vg7RTJcjTaiZ0yhzkI=;
+        s=default; t=1562770978;
+        bh=kkVtKIKtY+cKBVcVE9XetstR4pjnwlDvVK28e/w5Q7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yl0fX3Sub7+LL3WofA3xBrXj0LYHT+5740JHYorTwJEJM+fgGNHVkcwJyp9N+LSFi
-         7nSc+BjkZ8sDO02KGb/43EexgM1tGTtWZQS/TVIrZZGANbCPU/KBHMeQ0cet7M3B/k
-         7c1Ii1qg4dzN9CjNBav1VdMYZbnrASfL5eS7dQyk=
+        b=oLe3BNRsasVE+pGUlmjRUjfLGFlWJwKSXUrXX2NKojdGBSxKEQnEsWxJ6B2blBTBt
+         mWZUPk9IseVqV9i3xLRyQQ71Vis7Nb5PEZVtylP8D8DeGBvgsOqEYtRrFj+HIg8ueH
+         PN/WoU0NRzJW5x4HRCc1Rpei8TUOPc/pg5pMOoUM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maurizio Lombardi <mlombard@redhat.com>,
-        Chris Leech <cleech@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 6/9] scsi: iscsi: set auth_protocol back to NULL if CHAP_A value is not supported
-Date:   Wed, 10 Jul 2019 11:02:56 -0400
-Message-Id: <20190710150301.7129-6-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 10/11] dmaengine: jz4780: Fix an endian bug in IRQ handler
+Date:   Wed, 10 Jul 2019 11:02:37 -0400
+Message-Id: <20190710150240.6984-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190710150301.7129-1-sashal@kernel.org>
-References: <20190710150301.7129-1-sashal@kernel.org>
+In-Reply-To: <20190710150240.6984-1-sashal@kernel.org>
+References: <20190710150240.6984-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,77 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5dd6c49339126c2c8df2179041373222362d6e49 ]
+[ Upstream commit 4c89cc73d1da42ae48b5c5dfbfd12304d0b86786 ]
 
-If the CHAP_A value is not supported, the chap_server_open() function
-should free the auth_protocol pointer and set it to NULL, or we will leave
-a dangling pointer around.
+The "pending" variable was a u32 but we cast it to an unsigned long
+pointer when we do the for_each_set_bit() loop.  The problem is that on
+big endian 64bit systems that results in an out of bounds read.
 
-[   66.010905] Unsupported CHAP_A value
-[   66.011660] Security negotiation failed.
-[   66.012443] iSCSI Login negotiation failed.
-[   68.413924] general protection fault: 0000 [#1] SMP PTI
-[   68.414962] CPU: 0 PID: 1562 Comm: targetcli Kdump: loaded Not tainted 4.18.0-80.el8.x86_64 #1
-[   68.416589] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[   68.417677] RIP: 0010:__kmalloc_track_caller+0xc2/0x210
-
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Reviewed-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4e4106f5e942 ("dmaengine: jz4780: Fix transfers being ACKed too soon")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target_auth.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/dma/dma-jz4780.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
-index 4e680d753941..e2fa3a3bc81d 100644
---- a/drivers/target/iscsi/iscsi_target_auth.c
-+++ b/drivers/target/iscsi/iscsi_target_auth.c
-@@ -89,6 +89,12 @@ static int chap_check_algorithm(const char *a_str)
- 	return CHAP_DIGEST_UNKNOWN;
- }
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index f49534019d37..503d9f13ea97 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -722,12 +722,13 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
+ {
+ 	struct jz4780_dma_dev *jzdma = data;
+ 	unsigned int nb_channels = jzdma->soc_data->nb_channels;
+-	uint32_t pending, dmac;
++	unsigned long pending;
++	uint32_t dmac;
+ 	int i;
  
-+static void chap_close(struct iscsi_conn *conn)
-+{
-+	kfree(conn->auth_protocol);
-+	conn->auth_protocol = NULL;
-+}
-+
- static struct iscsi_chap *chap_server_open(
- 	struct iscsi_conn *conn,
- 	struct iscsi_node_auth *auth,
-@@ -126,7 +132,7 @@ static struct iscsi_chap *chap_server_open(
- 	case CHAP_DIGEST_UNKNOWN:
- 	default:
- 		pr_err("Unsupported CHAP_A value\n");
--		kfree(conn->auth_protocol);
-+		chap_close(conn);
- 		return NULL;
+ 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
+ 
+-	for_each_set_bit(i, (unsigned long *)&pending, nb_channels) {
++	for_each_set_bit(i, &pending, nb_channels) {
+ 		if (jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]))
+ 			pending &= ~BIT(i);
  	}
- 
-@@ -141,19 +147,13 @@ static struct iscsi_chap *chap_server_open(
- 	 * Generate Challenge.
- 	 */
- 	if (chap_gen_challenge(conn, 1, aic_str, aic_len) < 0) {
--		kfree(conn->auth_protocol);
-+		chap_close(conn);
- 		return NULL;
- 	}
- 
- 	return chap;
- }
- 
--static void chap_close(struct iscsi_conn *conn)
--{
--	kfree(conn->auth_protocol);
--	conn->auth_protocol = NULL;
--}
--
- static int chap_server_compute_md5(
- 	struct iscsi_conn *conn,
- 	struct iscsi_node_auth *auth,
 -- 
 2.20.1
 
