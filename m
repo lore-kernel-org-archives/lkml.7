@@ -2,72 +2,103 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840C5C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE253C74A23
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B3E2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E492087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EW4PziXc"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="X2ZKFxpC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IcQ5AsDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfGJOPM (ORCPT
+        id S1727633AbfGJOPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:15:12 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47690 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfGJOPL (ORCPT
+        Wed, 10 Jul 2019 10:15:15 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:50567 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726458AbfGJOPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:15:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oP0gIGEEx6vBWbdTS/L8mSLxPp1+udys1WsnbGP0k70=; b=EW4PziXcJ7fiQlFhzwZ/7WMV8
-        i0F9eimJo3/kcrvfcT5B//zjqgHB2Yfx0dtSiVWdmSJ4BpPaHPVMho50d6NFjDBkDapFEwisQUv4+
-        11ZNGycHQcwPgro5eauJIS7Ua1QK+oauNoNjoaL4bdrs7DfRGZVAvUB0QqwP+8FgZyAUk2+YVgiDN
-        sY4QmsltkG3CAp9d/swzvMdIHPEUdAedz1DnW7WMsZTo2Qsgx0TDavv/DqeRaOKlqk+ch2QjyxRa3
-        e5Swp8gdRIDgg8awYsUG8IlxYv2WmZwtXyQuLwqa0rMTujuu9EEK3iVVoMxkbmNRgCx5GXGtc/n27
-        FbjiTQmxQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlDN8-00055x-1x; Wed, 10 Jul 2019 14:15:02 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D0FC20976EE7; Wed, 10 Jul 2019 16:15:00 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 16:15:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Wanpeng Li <wanpeng.li@hotmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] cputime: remove duplicate code in
- account_process_tick
-Message-ID: <20190710141500.GQ3402@hirez.programming.kicks-ass.net>
-References: <20190709060100.214154-1-alex.shi@linux.alibaba.com>
- <20190709060100.214154-2-alex.shi@linux.alibaba.com>
+        Wed, 10 Jul 2019 10:15:14 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 09CF522110;
+        Wed, 10 Jul 2019 10:15:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 10 Jul 2019 10:15:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=T/5pb6r/UoVQt8P3l97DTHCU6/
+        +Zf8y3qrrQsrsydeA=; b=X2ZKFxpCWG3Vijn9d9lOXXbc0Tm0ZcveoseEiLPESJ
+        NIwSCViJpbee2BpHt8yymxP7MdVLg0GO91xe6PLRBhigOi37/mK/XmFR+mo9wGON
+        lIqVqlkt2ozpkt1EM66VQChveVJ0JA2kufF+eM+cWJRci2KRLbyjoDYXSwjpiD4/
+        Nzptg96Ft0X19C42uR2dpGW6L8r2jIS57RJt5poeeuN+dsYrLuvPAWZ8Pu059Den
+        Vb8y8hKhzRi4IRN0ESw6KRoNbosTXTGKuf7PWVwJKza3YswZsUDkiW9/7+9ABpQG
+        CIJ+R9R/+/5j/tGbzq+YTMKcpNaZkHWk87zLALvN7NNg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=T/5pb6r/UoVQt8P3l
+        97DTHCU6/+Zf8y3qrrQsrsydeA=; b=IcQ5AsDfvkKnRbGfZ6moQEyceuLeKth25
+        u9gVS3tkhfdIcS8zFsPNe+GPGvQOd1rWG4kQGTtmvitHkHtjVPogEX1PHn44NK2L
+        EXQE+oCOb3sfRv/sY3kX0IAE1HuF3kwrGyd5OfGLTw5p9CJbzjq+Ftb6OsLIl+my
+        fND3QEsmO9ydoYBooSJ/v5vp040VsKtUuC4STYhI1rrUk2aEhI3le3z7hoqI7lQ9
+        NosJ/lmkmnEFhh7aX0tjPUECWBEOZ8CITaW3ngpm8b0ZdEkwggGC5GOkk6ESd7TS
+        f5ZEuAsZikckqMRLSKfx5vP1wd1emIOyeQmNS10MEUFmREFdzH67w==
+X-ME-Sender: <xms:7_IlXQpoHYjDQmCVOpHmjt_-tpzTaFGY4XpbHeVYzZSpyPBIa_uMgg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigdejhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhi
+    ugdrrghuqeenucfkphepudegrddvrdekhedrvddvnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgepud
+X-ME-Proxy: <xmx:7_IlXdetVpmyM7uZUhUAOnWmVbJG7FsDMXo6el8cQohmnS3MrF-3_A>
+    <xmx:7_IlXeLE2LtUOUMDARsIYouBCvUpOZuproX_7c17LH1oeftv9-ACZw>
+    <xmx:7_IlXauriFBbV7gwAcvljpN1_T4NWD532XBj-AI6UMofAr747060Ig>
+    <xmx:8fIlXXDNKuZJTMZtWUR2d-z9tV5LUB72y9Ot435UDHbg7jfEzdt31g>
+Received: from localhost.localdomain (ppp14-2-85-22.adl-apt-pir-bras31.tpg.internode.on.net [14.2.85.22])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7E8408005B;
+        Wed, 10 Jul 2019 10:15:08 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, joel@jms.id.au,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] ARM: dts: aspeed: Enable SD controllers
+Date:   Wed, 10 Jul 2019 23:45:00 +0930
+Message-Id: <20190710141503.21026-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709060100.214154-2-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 02:01:00PM +0800, Alex Shi wrote:
-> In funcation account_process_tick, func actually do same things with
-> irqtime_account_process_tick, whenever if IRQ_TIME_ACCOUNTING set or
-> if sched_clock_irqtime enabled.
-> 
-> So it's better to reuse one function for both.
+Hello,
 
-But it's not the exact same.. and you didn't say, not did you say why
-that is fine.
+This series describes the ASPEED SD controller in relevant devicetree files,
+enabling the MMC slots on the AST2500 EVB and Swift machines.
+
+Please review!
+
+Andrew
+
+Andrew Jeffery (2):
+  ARM: dts: aspeed: Describe SD controller in DTSIs
+  ARM: dts: aspeed: Enable both MMC slots on AST2500 EVB
+
+Joel Stanley (1):
+  ARM: dts: aspeed: Enable both MMC slots on Swift
+
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts      | 18 +++++++++++
+ .../boot/dts/aspeed-bmc-opp-witherspoon.dts   | 18 +++++++++++
+ arch/arm/boot/dts/aspeed-g4.dtsi              | 30 +++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 30 +++++++++++++++++++
+ 4 files changed, 96 insertions(+)
+
+-- 
+2.20.1
+
