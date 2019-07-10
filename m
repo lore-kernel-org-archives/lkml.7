@@ -2,256 +2,148 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75655C606CF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC74C73C64
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF922064B
+	by mail.kernel.org (Postfix) with ESMTP id 71BAC2084B
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562761631;
-	bh=Xm73U+ki2hKyWE8Ld+H5I9QGYsAnhrFCW4lA+Um5Oxc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VSzuml631K8YVxVkDRfqLttBOXNdAG4U0lEgMFB84TaPab4QzBgQ+CUcPbWHwA2QN
-	 SLpH8tD6mzLIg69BuThkeOFUvaI4zZWVmc4WNHD6uyXOYHwFC+CesazA335OLNZ84t
-	 tburgjMHAmvVwYDHicHjGyOIULpsdGNV0jGZLpyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfGJM0O (ORCPT
+        id S1727226AbfGJM1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:26:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35352 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJM0N (ORCPT
+        Wed, 10 Jul 2019 08:27:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39054 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfGJM1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:26:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kVhwy4jroDHBfIWxRCYth20jK+v7xvt7xAfvb71taGU=; b=JMNfPLh3IjOBu2a75+VyiZo94
-        i+3nzwdPj2IIJhb6HSb+8P0J8ynuoPCQ6oNWsPAPB2ATkJXGj57PsQyqv3uqsj66JYWQPIbp3aZvm
-        qNVam7hg/Vu8FOvuM16eKAha8zFuQB569ZNUwK7UG4tePTyBWmf4GovF/ruxRb1Sx9W5sSa36sG75
-        sDuRUDKxclEV98H/DiKZIGoQPPr/uRkHlFTliNjqURzKxbUdk4JNBUIitbBieKxdMXOdtZ6aYvlmK
-        0opgaLUCGzcOjQRtVa98HDog3ZQimvv0WnLxJdqE1LIKX3Ykva1gWj6oByipy6OK93RknVTm7EtSm
-        gkqqenekQ==;
-Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlBfm-000688-GT; Wed, 10 Jul 2019 12:26:10 +0000
-Date:   Wed, 10 Jul 2019 09:26:05 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: filesystems: Convert ufs.txt to
- reStructuredText format
-Message-ID: <20190710092605.73ddee8b@coco.lan>
-In-Reply-To: <1562730162-2116-1-git-send-email-shobhitkukreti@gmail.com>
-References: <20190707013947.GA10663@t-1000>
-        <1562730162-2116-1-git-send-email-shobhitkukreti@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 10 Jul 2019 08:27:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id y13so2671490iol.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 05:27:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=cbPNdpQzJQPTb9HVJLsYy4CtPaAMZo5y7btz9Zpm/eg=;
+        b=GLUJUzrW0C6ip/3PF0fQG2jd0GKOhs62prsdEO6vvMqjzwQ9VL58skJ/6pgHv9LwvA
+         rh3jgwdoMA9wO4+j2/6Yq8wCZWSVqVtjQSCu19oOhClYPJ2pdoZoPcmAG0LD4OAbhklJ
+         vX3DdjjnxyfXMl0I4z5haM5/PoOZZnWbT+exYlL3tc7YMDnFsRlhUZQ16KnCKfZDkfMX
+         azjDvcHAlw7o8woLRetYQAtcxJk21t94wGysajqOIirB0EeIoOV4WKtHPpjbAQbfpenp
+         AD08V+U0eTBJKDsUsoiPszh3ocsfrJMZ59zD20niS4duS8Howt58V0aT4PumvhErWtX3
+         y44g==
+X-Gm-Message-State: APjAAAWX0U8gNp+I2scG6j74735VNf94OWXAyBjTpXwzturSHw1sClCL
+        m4gE91esRet1ykBUG3rY9ptbqSs5k4f84GOZ4X2li3/Qg2id
+X-Google-Smtp-Source: APXvYqxC2WOJ+cMECsMY6rhDnMnZuVe8xq6CgMdJNzgdj0lXOR81S2XqmvUD1obUIH9M7EPQw9pjCYi/1HOGKe0PWWB6pykne2b2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:a708:: with SMTP id b8mr32636747iod.25.1562761626213;
+ Wed, 10 Jul 2019 05:27:06 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 05:27:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000996786058d52cb39@google.com>
+Subject: WARNING in mcba_usb_probe/usb_submit_urb
+From:   syzbot <syzbot+3bc1dce0cc0052d60fde@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue,  9 Jul 2019 20:42:42 -0700
-Shobhit Kukreti <shobhitkukreti@gmail.com> escreveu:
+Hello,
 
-> This converts the plain text documentation of ufs.txt to reStructuredText format.
-> Added to documentation build process and verified with make htmldocs
-> 
-> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
-> ---
-> Changes in v2:
-> 	1. Removed flat-table
-> 	2. Moved ufs.rst to admin-guide
-> 	
->  Documentation/admin-guide/index.rst |  1 +
->  Documentation/admin-guide/ufs.rst   | 48 +++++++++++++++++++++++++++++
->  Documentation/filesystems/ufs.txt   | 60 -------------------------------------
->  3 files changed, 49 insertions(+), 60 deletions(-)
->  create mode 100644 Documentation/admin-guide/ufs.rst
->  delete mode 100644 Documentation/filesystems/ufs.txt
+syzbot found the following crash on:
 
-please use -M1 when producing the diff, in order to show it as as a change
-and not as a delete/create.
+HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=16519490600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
+dashboard link: https://syzkaller.appspot.com/bug?extid=3bc1dce0cc0052d60fde
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13354217a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1071b7bfa00000
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3bc1dce0cc0052d60fde@syzkaller.appspotmail.com
 
-> 
-> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-> index 2871b79..9bfb076 100644
-> --- a/Documentation/admin-guide/index.rst
-> +++ b/Documentation/admin-guide/index.rst
-> @@ -71,6 +71,7 @@ configure specific aspects of kernel behavior to your liking.
->     bcache
->     ext4
->     jfs
-> +   ufs
->     pm/index
->     thunderbolt
->     LSM/index
-> diff --git a/Documentation/admin-guide/ufs.rst b/Documentation/admin-guide/ufs.rst
-> new file mode 100644
-> index 0000000..20b9c56
-> --- /dev/null
-> +++ b/Documentation/admin-guide/ufs.rst
-> @@ -0,0 +1,48 @@
-> +=========
-> +USING UFS
-> +=========
-
-In order to make it more coherent with the other documents, please
-capitalize the titles, e. g.:
-
-	=========
-	Using UFS
-	=========
-
-> +
-> +mount -t ufs -o ufstype=type_of_ufs device dir
-> +
-> +UFS OPTIONS
-> +===========
-
-Same here:
-
-	UFS Options
-	===========
-
-and so on.
-
-> +
-> +ufstype=type_of_ufs
-> +	UFS is a file system widely used in different operating systems.
-> +	The problem are differences among implementations. Features of
-> +	some implementations are undocumented, so its hard to recognize
-> +	type of ufs automatically. That's why user must specify type of 
-> +	ufs manually by mount option ufstype. Possible values are:
-> +
-> +	**old**	        old format of ufs default value, supported as read-only
-
-Please avoid adding markups where not needed. In this specific case,
-the best would be, instead, to use:
-
-	old
-		old format of ufs
-		default value, supported as read-only
-
-...
-	openstep
-		used in OpenStep
-		supported as read-only
+usb 1-1: New USB device found, idVendor=04d8, idProduct=0a30,  
+bcdDevice=e4.81
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+usb 1-1: string descriptor 0 read error: -71
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 3 != type 1
+WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x292/0x6c9 kernel/panic.c:219
+  __warn.cold+0x20/0x4b kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 78 db e8 fd 4c 89 f7 e8 a0 36 13 ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 80 23 1a 86 e8 03 a0 be fd <0f> 0b e9 20 f4  
+ff ff e8 4c db e8 fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881d9eff140 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfe1a
+RBP: ffff8881d1450700 R08: ffff8881d9e36000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+R13: ffff8881d7f83a08 R14: ffff8881d0c5d5a0 R15: ffff8881d56ed200
+  mcba_usb_start drivers/net/can/usb/mcba_usb.c:660 [inline]
+  mcba_usb_probe+0x83a/0xbca drivers/net/can/usb/mcba_usb.c:846
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> +
-> +	**44bsd**       used in FreeBSD, NetBSD, OpenBSD supported as read-write
-> +
-> +	**ufs2**        used in FreeBSD 5.x supported as read-write
-> +
-> +	**5xbsd**       synonym for ufs2
-> +
-> +	**sun**         used in SunOS (Solaris)	supported as read-write
-> +
-> +	**sunx86**      used in SunOS for Intel (Solarisx86) supported as read-write
-> +
-> +	**hp**  used in HP-UX supported as read-only
-> +
-> +	**nextstep**    used in NextStep supported as read-only
-> +
-> +	**nextstep-cd** 	used for NextStep CDROMs (block_size == 2048) supported as read-only
-> +
-> +	**openstep**    used in OpenStep supported as read-only
-> +
-> +
-> +POSSIBLE PROBLEMS
-> +-----------------
-> +
-> +See next section, if you have any.
-> +
-> +
-> +BUG REPORTS
-> +-----------
-> +
-> +Any ufs bug report you can send to daniel.pirkl@email.cz or
-> +to dushistov@mail.ru (do not send partition tables bug reports).
-> diff --git a/Documentation/filesystems/ufs.txt b/Documentation/filesystems/ufs.txt
-> deleted file mode 100644
-> index 7a602ad..0000000
-> --- a/Documentation/filesystems/ufs.txt
-> +++ /dev/null
-> @@ -1,60 +0,0 @@
-> -USING UFS
-> -=========
-> -
-> -mount -t ufs -o ufstype=type_of_ufs device dir
-> -
-> -
-> -UFS OPTIONS
-> -===========
-> -
-> -ufstype=type_of_ufs
-> -	UFS is a file system widely used in different operating systems.
-> -	The problem are differences among implementations. Features of
-> -	some implementations are undocumented, so its hard to recognize
-> -	type of ufs automatically. That's why user must specify type of 
-> -	ufs manually by mount option ufstype. Possible values are:
-> -
-> -	old	old format of ufs
-> -		default value, supported as read-only
-> -
-> -	44bsd	used in FreeBSD, NetBSD, OpenBSD
-> -		supported as read-write
-> -
-> -	ufs2    used in FreeBSD 5.x
-> -		supported as read-write
-> -
-> -	5xbsd	synonym for ufs2
-> -
-> -	sun	used in SunOS (Solaris)
-> -		supported as read-write
-> -
-> -	sunx86	used in SunOS for Intel (Solarisx86)
-> -		supported as read-write
-> -
-> -	hp	used in HP-UX
-> -		supported as read-only
-> -
-> -	nextstep
-> -		used in NextStep
-> -		supported as read-only
-> -
-> -	nextstep-cd
-> -		used for NextStep CDROMs (block_size == 2048)
-> -		supported as read-only
-> -
-> -	openstep
-> -		used in OpenStep
-> -		supported as read-only
-> -
-> -
-> -POSSIBLE PROBLEMS
-> -=================
-> -
-> -See next section, if you have any.
-> -
-> -
-> -BUG REPORTS
-> -===========
-> -
-> -Any ufs bug report you can send to daniel.pirkl@email.cz or
-> -to dushistov@mail.ru (do not send partition tables bug reports).
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-
-Thanks,
-Mauro
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
