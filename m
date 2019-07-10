@@ -2,201 +2,140 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55BBC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E677C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D27620645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562787854;
-	bh=KQ9dpBUN+zkkfv1JhBanSAaY9RnA/Nj1iA945a/BcG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HFA+mSzEAuE19yHpnyN7Q0ZaJtUm1WItk0yXtpwWKki8q9Pig01ChDgd0gjbGlvPr
-	 XHYYzx0FqHGTTetOfSRdb2pZ2YVOU7CbPaCJC/JjSuF7UATGk4/Uc1erN5qX8z6U34
-	 W4Q41jU1znkStCJyND4g1Mv4dhp30WWtNwQn0crU=
+	by mail.kernel.org (Postfix) with ESMTP id 6F3E92086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfGJToN (ORCPT
+        id S1727510AbfGJTqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbfGJToN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:44:13 -0400
-Received: from lore-desk-wlan.lan (unknown [151.66.63.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A935B2087F;
-        Wed, 10 Jul 2019 19:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562787851;
-        bh=KQ9dpBUN+zkkfv1JhBanSAaY9RnA/Nj1iA945a/BcG4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kReqj31G3gpMk681VjGLc1NjF9uqTpJjvf0QCoIrZoZDaNnJQFvnXCyd55XD6o+V0
-         lRRx0x34f5Twyj3QftyZd4pE5y+5PjinXtI+Q6oAr2v5xtHnvkWR2dAR0dLcYJnvW3
-         zztPHQohMHqeZ0hcBfXylERq3kaM/KD+OnV/gGfw=
-Date:   Wed, 10 Jul 2019 21:44:05 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-kernel@vger.kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        bbrezillon@knernel.org, Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v3 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
- LSM6DSO and LSM6DSR
-Message-ID: <20190710194405.GA10520@lore-desk-wlan.lan>
-References: <cover.1562767521.git.vitor.soares@synopsys.com>
- <73955529ae0c31f428221abb88031ab3b4165659.1562767521.git.vitor.soares@synopsys.com>
+        Wed, 10 Jul 2019 15:46:11 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44565 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJTqL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:46:11 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b7so3347247otl.11;
+        Wed, 10 Jul 2019 12:46:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BxExLGJghxg2B7i0n80p9r0YFAgFtHpoh5hsuKWRqGo=;
+        b=qPBc9CMgcL/XbAUYVJgN0YLzm+NDzoifWbh5GWizrBxc/jJ1aQifURzCVJb8LlLKqE
+         0ullmBz8JamJLPCp6PB8CxkF9tMXI2V0/1BTbMIkfgNHolwcxbwI6aUw2ZeJtxNBp89E
+         gNB5BOOi1KilH2RVWXIUld2aCq10PoUurUgtqgFDJvX2UU+fkeza36zB44dXKdrbXhaj
+         094z74YXnuBph3pE1shFjvzDs5ZvOAnTK5oVIbSlJgqPoeUGrAsu0mvmoGnbipSpgMLm
+         A36AmCLrtN0g6wbI+izHweBazEYIWKrawsM1HBOp/VAvngQxIX3yVkh2W+uC7eCdsOd7
+         +/xA==
+X-Gm-Message-State: APjAAAWB0kvFPnxafVoAv4DEfD3Bbp34NHkSqm52v4EfH1l1aJW8VAN4
+        3sUbqaKRfxYyi9wDy0c9bSDal01X
+X-Google-Smtp-Source: APXvYqyQiCAjT4jf+G106JWtRDemkIo7F58D7Pe2nU3yH51Ea38cafrX9icsaGbptVMcjioOqwcZnQ==
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr40810otp.189.1562787970236;
+        Wed, 10 Jul 2019 12:46:10 -0700 (PDT)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
+        by smtp.gmail.com with ESMTPSA id q82sm946837oif.30.2019.07.10.12.46.09
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 12:46:09 -0700 (PDT)
+Received: by mail-ot1-f49.google.com with SMTP id q20so3394318otl.0;
+        Wed, 10 Jul 2019 12:46:09 -0700 (PDT)
+X-Received: by 2002:a9d:4d81:: with SMTP id u1mr34994otk.221.1562787969461;
+ Wed, 10 Jul 2019 12:46:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <73955529ae0c31f428221abb88031ab3b4165659.1562767521.git.vitor.soares@synopsys.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190710110424.4254-1-biwen.li@nxp.com> <20190710110424.4254-2-biwen.li@nxp.com>
+In-Reply-To: <20190710110424.4254-2-biwen.li@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 10 Jul 2019 14:45:58 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ8nZQYq1ZXZ368LLeKnyrXpjB_X8XaHVhW890bw-tU6A@mail.gmail.com>
+Message-ID: <CADRPPNQ8nZQYq1ZXZ368LLeKnyrXpjB_X8XaHVhW890bw-tU6A@mail.gmail.com>
+Subject: Re: [v2,2/2] Documentation: dt: binding: rtc: add binding for ftm
+ alarm driver
+To:     Biwen Li <biwen.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 10, 2019 at 6:35 AM Biwen Li <biwen.li@nxp.com> wrote:
+>
+> The patch adds binding for ftm alarm driver
+>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks like I commented the older version just now.  Adding Rob to this
+version too.
 
-> For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
-> spi and i2c mode.
->=20
-> The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
-> them.
-
-Hi Vitor,
-
-just few comments inline.
-
-Regards,
-Lorenzo
-
->=20
-> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
-> Changes in v3:
->   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
->   Use st_lsm6dsx_probe new form
->=20
-> Changes in v2:
->   Add support for LSM6DSR
->   Set pm_ops to st_lsm6dsx_pm_ops
->=20
->  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
->  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 61 +++++++++++++++++++++++=
-++++++
->  3 files changed, 69 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
->=20
-
-[...]
-
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/im=
-u/st_lsm6dsx/st_lsm6dsx_i3c.c
+> Change in v2:
+>     - replace ls1043a with ls1088a as example
+>     - add rcpm node and fsl,rcpm-wakeup property
+>
+>  .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
 > new file mode 100644
-> index 0000000..f683754
+> index 0000000..010984a
 > --- /dev/null
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> @@ -0,0 +1,61 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> + *
-> + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> + */
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> @@ -0,0 +1,40 @@
+> +Freescale FlexTimer Module (FTM) Alarm
 > +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/i3c/device.h>
-> +#include <linux/i3c/master.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
+> +Note: The driver need work with RCPM driver to wake up system in sleep.
 > +
-> +#include "st_lsm6dsx.h"
+> +Required properties:
 > +
-> +static const struct i3c_device_id st_lsm6dsx_i3c_ids[];
-> +
+> +- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
+> +              supported chips include
+> +              "fsl,ls1012a-ftm-alarm"
+> +              "fsl,ls1021a-ftm-alarm"
+> +              "fsl,ls1028a-ftm-alarm"
+> +              "fsl,ls1043a-ftm-alarm"
+> +              "fsl,ls1046a-ftm-alarm"
+> +              "fsl,ls1088a-ftm-alarm"
+> +              "fsl,ls208xa-ftm-alarm"
+> +- reg : Specifies base physical address and size of the register sets for the
+> +  FlexTimer Module and base physical address of IP Powerdown Exception Control
+> +  Register.
+> +- reg-names: names of the mapped memory regions listed in regs property.
+> +  should include the following entries:
+> +  "ftm":    Address of the register sets for FlexTimer Module
+> +- interrupts : Should be the FlexTimer Module interrupt.
+> +- fsl,rcpm-wakeup property and rcpm node : Please refer
+> +       Documentation/devicetree/bindings/soc/fsl/rcpm.txt
 
-why do we need this? I guess you can just move st_lsm6dsx_i3c_ids definitio=
-n here
+Looks better.
 
-> +static const struct regmap_config st_lsm6dsx_i3c_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +};
+> +- big-endian: If the host controller is big-endian mode, specify this property.
+> +  The default endian mode is little-endian.
+
+Same comment about optional property.
+
 > +
-> +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
-> +{
-> +	const struct i3c_device_id *id =3D i3c_device_match_id(i3cdev,
-> +							    st_lsm6dsx_i3c_ids);
-
-i3c_device_match_id can theoretically fail so is it better to check
-return value here? (maybe I am too paranoid :))
-
-> +	struct regmap *regmap;
-> +	int hw_id =3D (int)id->data;
-
-I guess we do not need this since we use it just in st_lsm6dsx_probe(),
-we can just do:
-
-return st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
-> +
-> +	regmap =3D devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
-> +			(int)PTR_ERR(regmap));
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	return st_lsm6dsx_probe(&i3cdev->dev, 0, hw_id, regmap);
+> +Example:
+> +rcpm: rcpm@1e34050 {
+> +       compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
+> +       reg = <0x0 0x1e34050 0x0 0x4>;
+> +       fsl,#rcpm-wakeup-cells = <1>;
 > +}
 > +
-> +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] =3D {
-> +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
-> +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
-> +
-> +static struct i3c_driver st_lsm6dsx_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "st_lsm6dsx_i3c",
-> +		.pm =3D &st_lsm6dsx_pm_ops,
-> +	},
-> +	.probe =3D st_lsm6dsx_i3c_probe,
-> +	.id_table =3D st_lsm6dsx_i3c_ids,
-> +};
-> +module_i3c_driver(st_lsm6dsx_driver);
-> +
-> +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
-> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
+> +ftm_alarm0: timer@2800000 {
+> +       compatible = "fsl,ftm-alarm";
+> +       reg = <0x0 0x2800000 0x0 0x10000>;
+> +       fsl,rcpm-wakeup = <&rcpm 0x0 0x4000>;
+> +       interrupts = <0 44 4>;
+> +}
+> --
 > 2.7.4
->=20
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXSZAAgAKCRA6cBh0uS2t
-rEdhAP9qPkBeOryzKC0RGfqKR+Qp8cZ9cqsNUGpjjM+aDt3PkgD/Z4fhMOTocnhw
-qCQjPYrnX4PkPS1JmbrgxP6WO3svsgs=
-=KFKC
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+>
