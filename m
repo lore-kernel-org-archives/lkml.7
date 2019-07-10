@@ -2,109 +2,92 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AE9C004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E02C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AC620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E90B2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562757386;
+	bh=RGD/vidgsDuU7NFtcLeQfp/bwEy6DU9dIgAurbz4NUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gCmhOu0Z27MRfuPACk+9KBRhXbEonYx1DRqa1xJx6ma5/zviXQFoYWjZ6QfPnu/su
+	 ZV90MkqguwP9aaVzlHMzLfnxCDkFWWMlgiUbSBD3ZeaScmIZuDgaSA17vRSRzH5dWz
+	 KCv/nkHsn+fjkyb+qdmrqD+CEhxhJttHt/1Gl4uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfGJLNv (ORCPT
+        id S1727110AbfGJLQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:13:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33052 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfGJLNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:13:50 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D804200707;
-        Wed, 10 Jul 2019 13:13:48 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36D682006FF;
-        Wed, 10 Jul 2019 13:13:43 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0C92E402DB;
-        Wed, 10 Jul 2019 19:13:36 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        leoyang.li@nxp.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [v2,2/2] Documentation: dt: binding: rtc: add binding for ftm alarm driver
-Date:   Wed, 10 Jul 2019 19:04:24 +0800
-Message-Id: <20190710110424.4254-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190710110424.4254-1-biwen.li@nxp.com>
-References: <20190710110424.4254-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 10 Jul 2019 07:16:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48668 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726097AbfGJLQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:16:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 601B4AF05;
+        Wed, 10 Jul 2019 11:16:23 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 13:16:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 4/5] mm: introduce MADV_PAGEOUT
+Message-ID: <20190710111622.GI29695@dhcp22.suse.cz>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627115405.255259-5-minchan@kernel.org>
+ <20190709095518.GF26380@dhcp22.suse.cz>
+ <20190710104809.GA186559@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710104809.GA186559@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds binding for ftm alarm driver
+On Wed 10-07-19 19:48:09, Minchan Kim wrote:
+> On Tue, Jul 09, 2019 at 11:55:19AM +0200, Michal Hocko wrote:
+[...]
+> > I am still not convinced about the SWAP_CLUSTER_MAX batching and the
+> > udnerlying OOM argument. Is one pmd worth of pages really an OOM risk?
+> > Sure you can have many invocations in parallel and that would add on
+> > but the same might happen with SWAP_CLUSTER_MAX. So I would just remove
+> > the batching for now and think of it only if we really see this being a
+> > problem for real. Unless you feel really strong about this, of course.
+> 
+> I don't have the number to support SWAP_CLUSTER_MAX batching for hinting
+> operations. However, I wanted to be consistent with other LRU batching
+> logic so that it could affect altogether if someone try to increase
+> SWAP_CLUSTER_MAX which is more efficienty for batching operation, later.
+> (AFAIK, someone tried it a few years ago but rollback soon, I couldn't
+> rebemeber what was the reason at that time, anyway).
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v2:
-    - replace ls1043a with ls1088a as example
-    - add rcpm node and fsl,rcpm-wakeup property
+Then please drop this part. It makes the code more complex while any
+benefit is not demonstrated.
 
- .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> > Anyway the patch looks ok to me otherwise.
+> > 
+> > Acked-by: Michal Hocko <mhocko@suse.co>
+> 
+> Thanks!
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-new file mode 100644
-index 0000000..010984a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-@@ -0,0 +1,40 @@
-+Freescale FlexTimer Module (FTM) Alarm
-+
-+Note: The driver need work with RCPM driver to wake up system in sleep.
-+
-+Required properties:
-+
-+- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
-+	       supported chips include
-+	       "fsl,ls1012a-ftm-alarm"
-+	       "fsl,ls1021a-ftm-alarm"
-+	       "fsl,ls1028a-ftm-alarm"
-+	       "fsl,ls1043a-ftm-alarm"
-+	       "fsl,ls1046a-ftm-alarm"
-+	       "fsl,ls1088a-ftm-alarm"
-+	       "fsl,ls208xa-ftm-alarm"
-+- reg : Specifies base physical address and size of the register sets for the
-+  FlexTimer Module and base physical address of IP Powerdown Exception Control
-+  Register.
-+- reg-names: names of the mapped memory regions listed in regs property.
-+  should include the following entries:
-+  "ftm":    Address of the register sets for FlexTimer Module
-+- interrupts : Should be the FlexTimer Module interrupt.
-+- fsl,rcpm-wakeup property and rcpm node : Please refer
-+	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+- big-endian: If the host controller is big-endian mode, specify this property.
-+  The default endian mode is little-endian.
-+
-+Example:
-+rcpm: rcpm@1e34050 {
-+	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+	reg = <0x0 0x1e34050 0x0 0x4>;
-+	fsl,#rcpm-wakeup-cells = <1>;
-+}
-+
-+ftm_alarm0: timer@2800000 {
-+	compatible = "fsl,ftm-alarm";
-+	reg = <0x0 0x2800000 0x0 0x10000>;
-+	fsl,rcpm-wakeup = <&rcpm 0x0 0x4000>;
-+	interrupts = <0 44 4>;
-+}
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
