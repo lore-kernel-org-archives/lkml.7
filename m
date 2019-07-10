@@ -2,220 +2,111 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D40BC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E782C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554AC2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609002064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EafiB/Ja"
+	dkim=pass (2048-bit key) header.d=mengyan1223.wang header.i=@mengyan1223.wang header.b="uIQydmLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfGJL1f (ORCPT
+        id S1727197AbfGJL2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:27:35 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2388 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfGJL1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:27:34 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d25cba90000>; Wed, 10 Jul 2019 04:27:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 10 Jul 2019 04:27:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 10 Jul 2019 04:27:32 -0700
-Received: from [10.24.44.109] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 11:27:26 +0000
-Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
- search API
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-6-vidyas@nvidia.com>
- <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
-Date:   Wed, 10 Jul 2019 16:57:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 07:28:19 -0400
+Received: from mengyan1223.wang ([89.208.246.23]:38382 "EHLO mengyan1223.wang"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfGJL2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:28:18 -0400
+Received: from [192.168.50.135] (unknown [124.115.222.149])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: xry111@mengyan1223.wang)
+        by mengyan1223.wang (Postfix) with ESMTPSA id 8BDE666017;
+        Wed, 10 Jul 2019 07:28:12 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mengyan1223.wang;
+        s=mail; t=1562758096;
+        bh=2h7Lx57k+M/g6Rq8mI2WdK5E9uWze+XlMUmrRUBio8g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=uIQydmLBWV/4lhA72ne1tCb3QofFxYIm1elBsZXsp8Ez3zOeIYKLYwX0R832S0bJj
+         tdsU4lz783zDXGHBZfv1u3KwYME1tuCP7brIEJ56rW9weEvXlVhgBxRe5WuOf2Ultv
+         SvKSX9jYPByTCEowdYrKpiVT/oc7ykTShRsNQCmq1bQuBJkzy/uPjgE0Wh0F4pdGr8
+         tm3FIqCyMlJti8Gw3EgcWhF2kp2V8DDYIn0lywCz97YKxj8vjOBlu0KczsuLlPMvyA
+         5as6uf6v65/cA1xqWNpM+dx5WeipcM28woL6e9z4KsaaZxolaSAANjWGqSR77nUKbY
+         wIijqvEAfQDqA==
+Message-ID: <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+From:   Xi Ruoyao <xry111@mengyan1223.wang>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Jiri Kosina <jkosina@suse.cz>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        xry111@mengyan1223.wang
+Date:   Wed, 10 Jul 2019 19:27:53 +0800
+In-Reply-To: <201907091727.91CC6C72D8@keescook>
+References: <20190708162756.GA69120@gmail.com>
+         <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
+         <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
+         <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+         <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
+         <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
+         <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+         <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
+         <201907091727.91CC6C72D8@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 
 MIME-Version: 1.0
-In-Reply-To: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562758057; bh=qS3f23rc6PRI4/MEpYT+5T67cBOKXa874wiiveHkTCg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EafiB/JafsAB4XgIv+kuhmSXzMjX8sEGmlmAPi297oiwRYe1EDvopt11WEQtv62Kn
-         P68kRduwYVtqcruwVZoDE+bv+o6glEr4k5MEemu1JREu99Uv8eElpYiB3Vg8nPbdDZ
-         d78YkyqQPbJHVqijZK2PPUcS/6p+l5ZtSTORRqiBGIkLoPxbRAk0iF82Sf9XC0qT30
-         DumRDWAYLCXhaiAEXazW9kQD5mohJOTHpEn07lqEgVO6/VpWY4op6rRwppYCFLpGZF
-         JVw6UBBHAtVIU9UfrRX1elmEDBUfNc0ZKI1o5qEYFmdMH42RrXJkMAwlthNEQrTvI3
-         SVopVCiyORfew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/2019 4:07 PM, Lorenzo Pieralisi wrote:
-> On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
->> Add extended configuration space capability search API using struct dw_pcie *
->> pointer
+On 2019-07-09 17:31 -0700, Kees Cook wrote:
+> On Wed, Jul 10, 2019 at 01:17:11AM +0200, Thomas Gleixner wrote:
+> > On Wed, 10 Jul 2019, Thomas Gleixner wrote:
+> > > That still does not explain the cr4/0 issue you have. Can you send me your
+> > > .config please?
+> > 
+> > Does your machine have UMIP support? None of my test boxes has. So that'd
+> > be the difference of bits enforced in CR4. Should not matter because it's
+> > User mode instruction prevention, but who knows.
 > 
-> Sentences are terminated with a period and this is v13 not v1, which
-> proves that you do not read the commit logs you write.
-> 
-> I need you guys to understand that I can't rewrite commit logs all
-> the time, I do not want to go as far as not accepting your patches
-> anymore so please do pay attention to commit log details they
-> are as important as the code itself.
-> 
-> https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
-My sincere apologies.
-Since I didn't touch this patch much all through this series, I missed it.
-I'll make a point to not make such mistakes again.
-Do you want me to send a new version fixing it?
+> Ew. Yeah, I don't have i9 nor i7 for testing this. I did try everything
+> else I had (and hibernation). Is only Linus able to reproduce this so far?
 
-Thanks,
-Vidya Sagar
+I can, too.
 
+> To rule out (in?) UMIP, this would remove UMIP from the pinning:
 > 
-> Thanks,
-> Lorenzo
-> 
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> ---
->> V13:
->> * None
->>
->> V12:
->> * None
->>
->> V11:
->> * None
->>
->> V10:
->> * None
->>
->> V9:
->> * Added Acked-by from Thierry
->>
->> V8:
->> * Changed data types of return and arguments to be inline with data being returned
->>    and passed.
->>
->> V7:
->> * None
->>
->> V6:
->> * None
->>
->> V5:
->> * None
->>
->> V4:
->> * None
->>
->> V3:
->> * None
->>
->> V2:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
->>   2 files changed, 42 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 7818b4febb08..181449e342f1 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->>   }
->>   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->>   
->> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
->> +					    u8 cap)
->> +{
->> +	u32 header;
->> +	int ttl;
->> +	int pos = PCI_CFG_SPACE_SIZE;
->> +
->> +	/* minimum 8 bytes per capability */
->> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
->> +
->> +	if (start)
->> +		pos = start;
->> +
->> +	header = dw_pcie_readl_dbi(pci, pos);
->> +	/*
->> +	 * If we have no capabilities, this is indicated by cap ID,
->> +	 * cap version and next pointer all being 0.
->> +	 */
->> +	if (header == 0)
->> +		return 0;
->> +
->> +	while (ttl-- > 0) {
->> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
->> +			return pos;
->> +
->> +		pos = PCI_EXT_CAP_NEXT(header);
->> +		if (pos < PCI_CFG_SPACE_SIZE)
->> +			break;
->> +
->> +		header = dw_pcie_readl_dbi(pci, pos);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->> +{
->> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index d8c66a6827dc..11c223471416 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -252,6 +252,7 @@ struct dw_pcie {
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
->>   
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->> -- 
->> 2.17.1
->>
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 309b6b9b49d4..f3beedb6da8a 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -380,7 +380,7 @@ static void __init setup_cr_pinning(void)
+>  {
+>  	unsigned long mask;
+>  
+> -	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
+> +	mask = (X86_CR4_SMEP | X86_CR4_SMAP);
+>  	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
+>  	static_key_enable(&cr_pinning.key);
+>  }
+
+I'll try it.
+-- 
+Xi Ruoyao <xry111@mengyan1223.wang>
+School of Aerospace Science and Technology, Xidian University
 
