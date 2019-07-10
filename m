@@ -2,196 +2,114 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27168C73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472A1C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30EF2083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562738323;
-	bh=kkYg0gO8+9adIERzkGaCgOmbLYhWyJxWi0YOpXZQTeI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=X2R7V1bFPXmua4CEnsdEjCz7ydnxGluuCvk+TQykSu432n/TYoSJYtALEbgi77IEq
-	 QyrAXt3PQwYdQlEzQJmW2UTOMDG/0hTEp7bDiz4UZjK5X/g2QqtyFAH/6d5Axc1GeE
-	 elsBQOadrHGp+3KM+2MF57el7VYH7PXBu4z4mwOU=
+	by mail.kernel.org (Postfix) with ESMTP id 29B1E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfGJF6l (ORCPT
+        id S1726991AbfGJF7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfGJF6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:58:41 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D549F20838;
-        Wed, 10 Jul 2019 05:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562738320;
-        bh=kkYg0gO8+9adIERzkGaCgOmbLYhWyJxWi0YOpXZQTeI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VzxOrenO8ceaoxr7j9lXczeM5fSvNEREEN9TQiou/7ma/l6J/SZIHnNHYr4hnIF+q
-         lCIZDArVzHAradd4eHG2CCtuoQXacwMCHEFN49fYDnAjqqXEI8lnd26dmvFh+Ty5sR
-         DyuriaxjZ8ZGaFU+R9zUiutPqJgxVXQMLF4s8bzs=
-Date:   Tue, 9 Jul 2019 22:58:38 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Cc:     syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in lockdep subsystem
-Message-ID: <20190710055838.GC2152@sol.localdomain>
-Mail-Followup-To: linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        syzkaller-bugs@googlegroups.com
+        Wed, 10 Jul 2019 01:59:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46746 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfGJF7M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:59:12 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hl5cV-0004bB-Pv; Wed, 10 Jul 2019 07:58:23 +0200
+Date:   Wed, 10 Jul 2019 07:58:21 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Hoan Tran OS <hoan@os.amperecomputing.com>
+cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Open Source Submission <patches@amperecomputing.com>
+Subject: Re: [PATCH 3/5] x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+In-Reply-To: <1c5bc3a8-0c6f-dce3-95a2-8aec765408a2@os.amperecomputing.com>
+Message-ID: <alpine.DEB.2.21.1907100755010.1758@nanos.tec.linutronix.de>
+References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com> <1561501810-25163-4-git-send-email-Hoan@os.amperecomputing.com> <alpine.DEB.2.21.1906260032250.32342@nanos.tec.linutronix.de>
+ <1c5bc3a8-0c6f-dce3-95a2-8aec765408a2@os.amperecomputing.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+Hoan,
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the lockdep subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
+On Wed, 10 Jul 2019, Hoan Tran OS wrote:
+> On 6/25/19 3:45 PM, Thomas Gleixner wrote:
+> > On Tue, 25 Jun 2019, Hoan Tran OS wrote:
+> >> @@ -1567,15 +1567,6 @@ config X86_64_ACPI_NUMA
+> >>   	---help---
+> >>   	  Enable ACPI SRAT based node topology detection.
+> >>   
+> >> -# Some NUMA nodes have memory ranges that span
+> >> -# other nodes.  Even though a pfn is valid and
+> >> -# between a node's start and end pfns, it may not
+> >> -# reside on that node.  See memmap_init_zone()
+> >> -# for details.
+> >> -config NODES_SPAN_OTHER_NODES
+> >> -	def_bool y
+> >> -	depends on X86_64_ACPI_NUMA
+> > 
+> > the changelog does not mention that this lifts the dependency on
+> > X86_64_ACPI_NUMA and therefore enables that functionality for anything
+> > which has NUMA enabled including 32bit.
+> > 
+> 
+> I think this config is used for a NUMA layout which NUMA nodes addresses 
+> are spanned to other nodes. I think 32bit NUMA also have the same issue 
+> with that layout. Please correct me if I'm wrong.
 
-Of these 5 bugs, 3 were seen in mainline in the last week.
+I'm not saying you're wrong, but it's your duty to provide the analysis why
+this is correct for everything which has NUMA enabled.
 
-Of these 5 bugs, 1 was bisected to a commit from the following person:
+> > The core mm change gives no helpful information either. You just copied the
+> > above comment text from some random Kconfig.
+> 
+> Yes, as it's a correct comment and is used at multiple places.
 
-	Bart Van Assche <bvanassche@acm.org>
+Well it maybe correct in terms of explaining what this is about, it still
+does not explain why this is needed by default on everything which has NUMA
+enabled.
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
+Thanks,
 
-If you believe I misattributed a bug to the lockdep subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-Last occurred:      0 days ago
-Reported:           102 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=55fb46b50c9b08dfe294667f184db5840f9cdecc
-Original thread:    https://lkml.kernel.org/lkml/0000000000005ff8b20585395280@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
-	Author: Bart Van Assche <bvanassche@acm.org>
-	Date:   Thu Feb 14 23:00:54 2019 +0000
-
-	  kernel/workqueue: Use dynamic lockdep keys for workqueues
-
-The original thread for this bug received 2 replies; the last was 0 hours ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread, which had activity only 0 hours ago.  For the git send-email command to
-use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-instructions" at https://lkml.kernel.org/r/0000000000005ff8b20585395280@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-Last occurred:      0 days ago
-Reported:           125 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=381cb436fe60dc03d7fd2a092b46d7f09542a72a
-Original thread:    https://lkml.kernel.org/lkml/000000000000b7fd51058370d0d9@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 89 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000b7fd51058370d0d9@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: MAX_LOCKDEP_CHAINS too low!
-Last occurred:      5 days ago
-Reported:           284 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=bf037f4725d40a8d350b2b1b3b3e0947c6efae85
-Original thread:    https://lkml.kernel.org/lkml/0000000000007523a60576e80a47@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 3 replies; the last was 284 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007523a60576e80a47@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: MAX_LOCK_DEPTH too low! (2)
-Last occurred:      362 days ago
-Reported:           392 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e4feb2f88affd6242e3153d5c14ebb8569b499b8
-Original thread:    https://lkml.kernel.org/lkml/000000000000798298056e76cbbb@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+802a5abb8abae86eb6de@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000798298056e76cbbb@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: MAX_LOCKDEP_ENTRIES too low!
-Last occurred:      23 days ago
-Reported:           22 days ago
-Branches:           linux-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
-Original thread:    https://lkml.kernel.org/lkml/000000000000ec7273058b877e1f@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ec7273058b877e1f@google.com
-
+	tglx
