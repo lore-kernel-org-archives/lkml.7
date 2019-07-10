@@ -2,103 +2,165 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DE9C606CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6214C004EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B4420861
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12FE2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="BGZjj8D8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PU3zUfUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfGJKmq (ORCPT
+        id S1727340AbfGJKnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:42:46 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:40776 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbfGJKmq (ORCPT
+        Wed, 10 Jul 2019 06:43:42 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59214 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfGJKnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:42:46 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id B99FB2E0EBF;
-        Wed, 10 Jul 2019 13:42:42 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id uC97EkyPww-ggUe3vPG;
-        Wed, 10 Jul 2019 13:42:42 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1562755362; bh=MuHsnMCLNYQMR7LQcEktY+8kMNp1AKabcUeHAMKR+Lw=;
-        h=In-Reply-To:Message-ID:Date:References:To:From:Subject:Cc;
-        b=BGZjj8D8y+oFQMhHbtp28s9y8KPUGvHMIb/s6H6Ut3D7K4rDQ3yblRq9KWrkzEY8w
-         NYDruSUJfsGJ6x8IyfFvwIrbt+Ymq5XA375GgGcf1DVrVrry/OlFf2RQo2zy37kyRf
-         OcDTCr5S3/TY58oAHlb6vbZaxkdzoMP8DCWQCL2U=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:fce8:911:2fe8:4dfb])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id maOvm5OG9B-gfwmJY11;
-        Wed, 10 Jul 2019 13:42:41 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] blk-throttle: fix zero wait time for iops throttled group
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     Liu Bo <bo.liu@linux.alibaba.com>, Stable <stable@vger.kernel.org>,
-        cgroups@vger.kernel.org
-References: <156259979778.2486.6296077059654653057.stgit@buzz>
-Message-ID: <50aa6400-6128-0344-d7c8-0d73fccff350@yandex-team.ru>
-Date:   Wed, 10 Jul 2019 13:42:41 +0300
+        Wed, 10 Jul 2019 06:43:42 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190710104340euoutp02024d85b5a95d675212d37bd575aa121a~wBcZqWgOw0808508085euoutp02O
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 10:43:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190710104340euoutp02024d85b5a95d675212d37bd575aa121a~wBcZqWgOw0808508085euoutp02O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562755420;
+        bh=DGGSStnE8hfpWYVCDu2TLFZ0Ng6S0e/fEz3/71WaMS4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=PU3zUfUKbTxQGpP/eJNwFTYVWg9HGELEZYYT5xaLwXSXeS+iXV2Xsmrc4H2uW3M8z
+         YzljColupHSUvCx0xto5+6flzm6Wng0nbJjGDv0Afrha2smRr25li6NbFW7RVi5Weh
+         NPnAESVxcG7uCm7hSTzf04Cu7Rnjf6B5ar0fNy5E=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190710104339eucas1p2b87acc4b58219affc082fce7b280b574~wBcY8NakG2721527215eucas1p25;
+        Wed, 10 Jul 2019 10:43:39 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id AB.33.04377.B51C52D5; Wed, 10
+        Jul 2019 11:43:39 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190710104338eucas1p1d2047febe63064b119636f3d3937813e~wBcYMPbxF2192621926eucas1p1v;
+        Wed, 10 Jul 2019 10:43:38 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190710104338eusmtrp2a14ee9863a89120a79e4597f45456a13~wBcYJi2Ty1066010660eusmtrp2D;
+        Wed, 10 Jul 2019 10:43:38 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-63-5d25c15b8a28
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 83.4B.04140.A51C52D5; Wed, 10
+        Jul 2019 11:43:38 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190710104338eusmtip23e52dc9119a4006f313b1f6cfaa72859~wBcXaYpTL2747527475eusmtip2h;
+        Wed, 10 Jul 2019 10:43:37 +0000 (GMT)
+Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <1795603c-686f-dfb5-5982-c836b36dca9c@partner.samsung.com>
+Date:   Wed, 10 Jul 2019 12:43:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <156259979778.2486.6296077059654653057.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+In-Reply-To: <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUhUURjFu2+b59DIdVT80DamDCxNi5bbghS0zD9GRaAkU436MtExmefS
+        AmVRlpPpmIE2hVNkqZNpLriVljppmktSaYvRoIYtaoZTJITW+JL878c55+OeA5enlUOsJx8V
+        Gy/oY7UxKk7OVDZPdPqFNnhrAi52uZHSnBKW9NqHWGK2drIkY+ArTbq67stIx5lhGSkb6GHJ
+        i9rrHBm/ZEUkp6ueIves72Xkdm83Rd6dLuDI8K8Oipyrs8rIZE8pQ0p/qEm5rZnbrFQX5RYh
+        dZkllVP39Tzk1OV5p9TpFRakbnldRanHyxbsku2Tb4oQYqISBb1/4EH54Y6RFCrOLD/a2TfG
+        JqNq3oCceMCrobiphDMgOa/EBQjumrNZh6HEdgTna/ZLxjiC/udp3MxF+61vtBTKRzCatVEK
+        jSDorXsyHXLF2+CVOf9viOfd8DL4/EZwZGg8wcD9F6UyR4bD66C/qp1ysAJvh1/dhdO3DPaG
+        vOxR5GB3HAJt1lxGyrhA69XBaXbC62H04s/ppjT2gLeDZkrihVA1cp2WimbyUJSxSOKtYHlw
+        l5LYFb60VMgkngdTNeZ/ehJ8vJkucxQFfBaB7fx3RjI2QlNLN+sYQ2MfKKn1l+QtMJDaRDlk
+        wM7wesRFquAMlyuzaUlWwIUUpZT2g9ypdlZiLzBMFbNGpDLNGmaaNcY0a4zp/7s3EGNBHkKC
+        qIsUxFWxQtIKUasTE2IjV4Qf0ZWhv9/v2WSLvRrV/g5rRJhHqrkKOLtEo2S1ieIxXSMCnla5
+        Kep3LNYoFRHaY8cF/ZED+oQYQWxEXjyj8lCcmGMLVeJIbbwQLQhxgn7GpXgnz2RE37TJXZBn
+        in/4q0T6cZpzVdPSO0HBFuOn3aErzw2LvjH6Sbthc9AhYtuQNWH/EuyzNoc0vAwwPzJqAlvT
+        MzyMXmGB/rq6vj1vPZMyi3Z+LdQaTYaTY21ON+zv90Ul7t2S8PQa2eWd5usX35P6I2RN3PxT
+        hg/d0dlX3IfeLXdvG1Ix4mHtymW0XtT+AbSY9TZ6AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xe7pRB1VjDb5u1bPYOGM9q8X1L89Z
+        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
+        cbtxBZvFmx9nmSxa9x5ht/h3bSOLxcavHhabHxxjcxDyWDNvDaPHplWdbB53ru1h89i8pN6j
+        b8sqRo/jN7YzeXzeJBfAHqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9n
+        k5Kak1mWWqRvl6CXcfZtG1PBfK6Kc3c+sDYw7uDoYuTkkBAwkTiz+D1zFyMXh5DAUkaJiR1/
+        WSES0hKNp1czQdjCEn+udbFBFL1mlDiyZwVYQljAVeLq/OVA3RwcIgJaEi9vpoLUMAv8ZpHY
+        v/A8VEMTk8TuYwfZQBrYBMwlHm0/A9bMK+Am8ePiSrA4i4CqxJLp7xhBbFGBCIlJ13ayQNQI
+        Spyc+QTM5hSwlHjX/Q3sOmYBdYk/8y4xQ9jiEreezGeCsOUltr+dwzyBUWgWkvZZSFpmIWmZ
+        haRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxNjMCo33bs55YdjF3vgg8xCnAwKvHwSrSo
+        xAqxJpYVV+YeYpTgYFYS4d3nrhwrxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAhJRXEm9o
+        amhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoGx+rMsy2Qz1fxn99ncNxel
+        vJxexMPtfOhiCfe3y1VPv2z/taMz7UH403N198sZWQ+WRXI0NkZ8aHep/n/jop97d/8vjh0p
+        sV4lSjfZpFS6GDi/5iut8zvH9NqLv+7aj3SxI+Zv3wTvENmnkmbc/GzCdgXdO64WFmXTc2PU
+        uVpEb2Rc/fF6gYoSS3FGoqEWc1FxIgDuwhf2EAMAAA==
+X-CMS-MailID: 20190710104338eucas1p1d2047febe63064b119636f3d3937813e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190708141159eucas1p1751506975ff96a436e14940916623722
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190708141159eucas1p1751506975ff96a436e14940916623722
+References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
+        <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+        <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.07.2019 18:29, Konstantin Khlebnikov wrote:
-> After commit 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops
-> limit is enforced") wait time could be zero even if group is throttled and
-> cannot issue requests right now. As a result throtl_select_dispatch() turns
-> into busy-loop under irq-safe queue spinlock.
+On 09.07.2019 07:40, Viresh Kumar wrote:
+> On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
+>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>
+>> Add enable regulators to dev_pm_opp_set_regulators() and disable
+>> regulators to dev_pm_opp_put_regulators(). This prepares for
+>> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
+>>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> ---
+>>  drivers/opp/core.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index 0e7703fe733f..947cac452854 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>>  	if (ret)
+>>  		goto free_regulators;
+>>  
+>> +	for (i = 0; i < opp_table->regulator_count; i++) {
+>> +		ret = regulator_enable(opp_table->regulators[i]);
+>> +		if (ret < 0)
+>> +			goto disable;
+>> +	}
+> 
+> I am wondering on why is this really required as this isn't done for
+> any other platform, probably because the regulators are enabled by
+> bootloader and are always on.
 
-To be clear: this almost instantly kills entire machine - other cpus stuck at sending ipi.
+It is not ABI break, it should work with existing DTBs
 
-> 
-> Fix is simple: always round up target time to the next throttle slice.
-> 
-> Fixes: 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops limit is enforced")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Cc: stable@vger.kernel.org # v4.19+
-> ---
->   block/blk-throttle.c |    9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-> index 9ea7c0ecad10..8ab6c8153223 100644
-> --- a/block/blk-throttle.c
-> +++ b/block/blk-throttle.c
-> @@ -881,13 +881,10 @@ static bool tg_with_in_iops_limit(struct throtl_grp *tg, struct bio *bio,
->   	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
->   	u64 tmp;
->   
-> -	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[rw];
-> -
-> -	/* Slice has just started. Consider one slice interval */
-> -	if (!jiffy_elapsed)
-> -		jiffy_elapsed_rnd = tg->td->throtl_slice;
-> +	jiffy_elapsed = jiffies - tg->slice_start[rw];
->   
-> -	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
-> +	/* Round up to the next throttle slice, wait time must be nonzero */
-> +	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
->   
->   	/*
->   	 * jiffy_elapsed_rnd should not be a big value as minimum iops can be
-> 
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
+
