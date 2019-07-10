@@ -2,115 +2,105 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C2C74220
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A40DC71142
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6618820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B84A2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VNrBWkNP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StYp8lyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfGJMj5 (ORCPT
+        id S1727421AbfGJMme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:39:57 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53308 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfGJMjt (ORCPT
+        Wed, 10 Jul 2019 08:42:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45220 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfGJMme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:39:49 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6ACdfWG104822;
-        Wed, 10 Jul 2019 07:39:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562762381;
-        bh=Pk7hnsVKcJGKKe6elo6dBDjGU2lxh03iSzrLZOy1kgU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=VNrBWkNPOCnHiOPV7FKvFAJC3hRSnSsiiBRZKutIoS9cvXgXbbdi+cpRSKvrTGlq+
-         r9yYUT52z8IQN2pNlG3DlEWOAvxxJqo8QqciUqw6A8rrqL2f5ym+GArIwA8oyB9jof
-         akzodC8O4/4uNgf2yaVG50nOgb/d+v0bVr/JyGas=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6ACdf9l113538
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Jul 2019 07:39:41 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
- Jul 2019 07:39:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 10 Jul 2019 07:39:41 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6ACdeT5113704;
-        Wed, 10 Jul 2019 07:39:41 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v3 3/4] dt-bindings: backlight: Add led-backlight binding
-Date:   Wed, 10 Jul 2019 14:39:31 +0200
-Message-ID: <20190710123932.28244-4-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190710123932.28244-1-jjhiblot@ti.com>
-References: <20190710123932.28244-1-jjhiblot@ti.com>
+        Wed, 10 Jul 2019 08:42:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m23so1903147lje.12;
+        Wed, 10 Jul 2019 05:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SaYCgTca3sd4iZ2y4Hurjp1FivgyQ/okDm47EWmj7hc=;
+        b=StYp8lySiG1t3rWrCk1RzdObODtoNN3M/d5jCJvsQedwGPLuCSmiBx/w1LaHbHFBgl
+         IW+kkJFyaUBp09u3k5VqkReqlcgUfOobnH8TQDrFU0OR+Liynqa8yY2NxZLOzag7KUT1
+         xCJCIUw/qeUpp3J+PSkmXkFC1wEJNMB0ySnOXLazvLNFVsf0WDQod9shSiT40woQDRzt
+         3kEHD3fpkyI7jbriqPscoEqppfz1fxGz5f9WTCG+U0mFSoFFYGmkT1CxrM6OT850kyI6
+         TTqE2IEKoUZfN8fzfYoPZV1GWkDrtiFaySStTqhFu17j+UF1MPIRJlHbfX/NR8LuSGK4
+         0Ppw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SaYCgTca3sd4iZ2y4Hurjp1FivgyQ/okDm47EWmj7hc=;
+        b=UpW68VWR+9Nz3Q/r4Sf0j1EjDbJiOJnhN+gRFQp0sIYLjq2S0WY7pV4izbIK88VZ2V
+         ONV++KrdaagtaxxDfnGawqBDGbllot52eHeWOQ/NO/iU78E/+mcYSTvA0h2nTypFsPpL
+         0LW172djIqYj5MW3HVgVCAXzGC8TBkkwo0dGx93T4m84jysTuxpiGiFxnC6d3GeBzzOn
+         yW0JHjE/ReWQXurxon6SQchcUCmBAb9wfhhcnIT0u6SOwJNFiPxLb4oWvy/YhaKibntO
+         zN5hvr+A+1Y927xx5aCKTPFk1SuZ5eTlQOaTSLKXX2TP5C/KdWkS0Q4c+sM5HzXvXx3s
+         cUeQ==
+X-Gm-Message-State: APjAAAV2G7fkKef2MlA0LwIci0+WlYMYzbSnfswNPlISAEeaSTEkWKqv
+        wmeIQDBSNyNA41fwzlq4BL7El/N4
+X-Google-Smtp-Source: APXvYqyv9qEg1ZlrIdBVCuMpXtGYZG0FA071/mv/amZvqdKqsia+jiOwNz2oyczUb0a57xAb31Vn7w==
+X-Received: by 2002:a2e:9117:: with SMTP id m23mr17637479ljg.134.1562762551887;
+        Wed, 10 Jul 2019 05:42:31 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id n187sm343784lfa.30.2019.07.10.05.42.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 05:42:29 -0700 (PDT)
+Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190709145151.23086-1-digetx@gmail.com>
+ <20190710101229.54ufuhmh22dfxclr@flea>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
+Date:   Wed, 10 Jul 2019 15:42:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190710101229.54ufuhmh22dfxclr@flea>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT binding for led-backlight.
+10.07.2019 13:12, Maxime Ripard пишет:
+> On Tue, Jul 09, 2019 at 05:51:51PM +0300, Dmitry Osipenko wrote:
+>> The named mode could be invalid and then cmdline parser misses to validate
+>> mode's dimensions, happily adding 0x0 mode as a valid mode. One case where
+>> this happens is NVIDIA Tegra devices that are using downstream bootloader
+>> which adds "video=tegrafb" to the kernel's cmdline and thus upstream Tegra
+>> DRM driver fails to probe because of the invalid mode.
+>>
+>> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> 
+> Applied to drm-misc-next-fixes
+> 
+> Thanks for figuring this out!
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-new file mode 100644
-index 000000000000..0444eec8efe1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-@@ -0,0 +1,28 @@
-+led-backlight bindings
-+
-+This binding is used to describe a basic backlight device made of LEDs.
-+It can also be used to describe a backlight device controlled by the output of
-+a LED driver.
-+
-+Required properties:
-+  - compatible: "led-backlight"
-+  - leds: a list of LEDs
-+
-+Optional properties:
-+  - brightness-levels: Array of distinct brightness levels. The levels must be
-+                       in the range accepted by the underlying LED devices.
-+                       This is used to translate a backlight brightness level
-+                       into a LED brightness level. if not provided, the
-+                       identity mapping is used.
-+
-+  - default-brightness-level: The default brightness level.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "led-backlight";
-+
-+		leds = <&led1>, <&led2>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+	};
--- 
-2.17.1
-
+Thank you very much! So the driver now doesn't fail to probe because of the cmdline, but
+what else I noticed is that the framebuffer console is now rotated by 90° on a 800x1280
+panel, while display in Xorg is vertical as it was before. Seems something else is still
+missing, reverting "drm/modes: Rewrite the command line parser" returns the framebuffer's
+console orientation
+into the original state.
