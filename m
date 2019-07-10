@@ -2,143 +2,262 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16002C71142
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D266C71142
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0E82084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488342064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562761901;
-	bh=/ajfd3yE0Wo5aJMM4Pm4tcENGV9635k9fSibPR6P2Po=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jgOeH79aNyRH+UYO0zZL2Sks6l3hQxOiFQhmNmJ8/2esTC6IzLmvLDcVRVfGl7jyJ
-	 9PKfyekVhh6eZJEY6b97j5A3WdjGxM0LO2YUL50SkeDc8bopNVcGgEAs75MtBbrivk
-	 BaK/seLwabdtyZSR5eKBk1d+iV9cdWmjq4UMXZjg=
+	s=default; t=1562762011;
+	bh=uzCaeu3qJi1y+qctqOPXxxISm043JzDOeETQiMlzigY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cGlwpmljnvNbt0acHAEQOYxXQmlSlEdjYdjTa+FBZ2HOnmb+bMbQnjjhxGqh65vzR
+	 KxnStax/noS4GtJEtrvSkwcp0dHNftlqosqG/o8W/nTX+DUp6WRSFBZC7pMFz0a1Gk
+	 DIr28EJwqWvU6RKdJeiu8I/RxBkQw31rth3osUY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfGJMbk (ORCPT
+        id S1727242AbfGJMda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfGJMbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:31:40 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E03722064B;
-        Wed, 10 Jul 2019 12:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562761898;
-        bh=/ajfd3yE0Wo5aJMM4Pm4tcENGV9635k9fSibPR6P2Po=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=y5fBv6cd7gX5UZMDfwsK/79Y/nNdNz2nxsIM3ZIG6Iy7Ae+rTqU0oK+4DQ4b/g5Yy
-         wLOLBBfw5zsO1KiAEvIWVSRtgKt6XAzqjy6exPcTkbevFZ/VqAUkT3nJMgFMQHgG3O
-         0LjA/Kg7QBpHw3/cpC+Q9PtQnaCI8imrb7wgJWdA=
-Date:   Wed, 10 Jul 2019 14:31:29 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-cc:     Xi Ruoyao <xry111@mengyan1223.wang>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: [GIT PULL] x86/topology changes for v5.3
-In-Reply-To: <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
-Message-ID: <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
-References: <20190708162756.GA69120@gmail.com>  <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>  <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>  <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
-  <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>  <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>  <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>  <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
-  <201907091727.91CC6C72D8@keescook>  <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang> <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang> <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 10 Jul 2019 08:33:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36802 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfGJMda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:33:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GKkOnAHYDmsJE3tUOrE8JALnqY0x8ZYyqWzgAXaSu+Q=; b=cJAAXxcAbGgqJIxPdKdWKNKVI
+        suu8u6qA3YQBP6DTI2mH70OELSPRlB771aHZt9B/K9lfSy875eHxYgEI0iykPIc9aTTbLg2TW4w9f
+        zRE7d3GP4a0HdJuW0YrerBj337Vc8heCGQoVfNCj+CMwOl/AdWJUbWOUMMM6NyMkz04n8gmzCAFQf
+        KmdrNcismlICU2qob9i8Z1bY3KciGflpop/Fu6qhCpVoAfhib79ZFi1BE/LmpzFczGAh8sS5InONd
+        xCoXysK84c8XMrb8rEVCeyVb2qxc4Xf0u/gnF3OLIWhl4pLuG2fm8634LbVPW4dGAYFqDVeCCTtKE
+        znIo8dpsA==;
+Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlBmp-0008Nv-KX; Wed, 10 Jul 2019 12:33:28 +0000
+Date:   Wed, 10 Jul 2019 09:33:23 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
+Cc:     willy@infradead.org, Jonathan Corbet <corbet@lwn.net>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: filesystems: Convert jfs.txt to
+Message-ID: <20190710093323.7e5d6790@coco.lan>
+In-Reply-To: <1562729125-31475-1-git-send-email-shobhitkukreti@gmail.com>
+References: <20190708195717.GG32320@bombadil.infradead.org>
+        <1562729125-31475-1-git-send-email-shobhitkukreti@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Thomas Gleixner wrote:
+Em Tue,  9 Jul 2019 20:25:25 -0700
+Shobhit Kukreti <shobhitkukreti@gmail.com> escreveu:
 
-> From the log:
+> This converts the plain text documentation of jfs.txt to reStructuredText format.
+> Added to documentation build process and verified with make htmldocs
 > 
-> BUG: unable to handle page fault for address: ffffffff9edc1598
-> #PF: supervisor write access in kernel mode
-> #PF: error_code(0x0003) - permissions violation
-> PGD 1a20c067 P4D 1a20c067 PUD 1a20d063 PMD 8000000019e000e1 
-> Oops: 0003 [#1] SMP PTI
-> 2 PID: 151 Comm: systemd-udevd Not tainted 5.2.0+ #54
-> Hardware name: LENOVO 20175/INVALID, BIOS 66CN54WW 01/21/2013
-> RIP: 0010:static_key_set_mod.isra.0+0x10/0x30
-> Code: 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f0 a8 03 75 0d 48 8b 37 83 e6 03 48 09 c6 <48> 89 37 c3 0f 0b 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e
-> RSP: 0000:ffffa606c032bc98 EFLAGS: 00010286
-> RAX: ffff9981ddce30a0 RBX: ffffffff9edc1590 RCX: 0000000000000000
-> RDX: 0000000000000020 RSI: ffff9981ddce30a0 RDI: ffffffff9edc1598
-> RBP: ffffffffc06f4000 R08: ffff9981e6003980 R09: ffff9981ddce30a0
-> R10: 0000000000000000 R11: 0000000000028b56 R12: ffffffffc06f8880
-> R13: ffff9981ddce3080 R14: ffffffffc06f4008 R15: ffffffffc06f6dc0
-> FS:  00007f992dd9a680(0000) GS:ffff9981e7080000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff9edc1598 CR3: 00000002233aa001 CR4: 00000000001606e0
-> Call Trace:
->   jump_label_module_notify+0x1e7/0x2b0
->   notifier_call_chain+0x44/0x70
->   blocking_notifier_call_chain+0x43/0x60
->   load_module+0x1bcb/0x2490
->   ? vfs_read+0x11f/0x150
->   ? __do_sys_finit_module+0xbf/0xe0
->   __do_sys_finit_module+0xbf/0xe0
->   do_syscall_64+0x43/0x110
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
+> ---
+> Changes in v2:
+>         1. Removed flat-table.
+>         2. Moved jfs.rst from filesystem to admin-guide
 > 
-> Josh, didn't you mention that yesterday or so?
+>  Documentation/admin-guide/index.rst |  1 +
+>  Documentation/admin-guide/jfs.rst   | 50 +++++++++++++++++++++++++++++++++++
+>  Documentation/filesystems/jfs.txt   | 52 -------------------------------------
+>  3 files changed, 51 insertions(+), 52 deletions(-)
+>  create mode 100644 Documentation/admin-guide/jfs.rst
+>  delete mode 100644 Documentation/filesystems/jfs.txt
 
-That's what Tony yesterday indicated on IRC that his system is suffering 
-from as well.
-
-Adding Daniel to check whether this couldn't be some fallout of jumplabel 
-batching.
+As commented on ufs patch, please use -M1 to show it as a diff, and not as
+two separate changes.
 
 > 
-> 
-> RIP: 0033:0x7f992e2eeaf9
-> Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 67 73 0d 00 f7 d8 64 89 01 48
-> RSP: 002b:00007ffca220d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> RAX: ffffffffffffffda RBX: 00000000009b8da0 RCX: 00007f992e2eeaf9
-> RDX: 0000000000000000 RSI: 00007f992e464885 RDI: 0000000000000010
-> RBP: 0000000000020000 R08: 0000000000000000 R09: 00000000009c45c0
-> R10: 0000000000000010 R11: 0000000000000246 R12: 00007f992e464885
-> R13: 0000000000000000 R14: 00000000009acc50 R15: 00000000009b8da0
-> Modules linked in: kvm_intel(+) kvm irqbypass hid_sensor_hub crc32_pclmul mfd_core i2c_i801 snd_hda_intel i915(+) intel_gtt snd_hda_codec i2c_algo_bit snd_hwdep snd_hda_core drm_kms_helper snd_pcm syscopyarea sysfillrect sysimgblt fb_sys_fops drm hid_multitouch ideapad_laptop sparse_keymap hid_generic wmi efivarfs
-> CR2: ffffffff9edc1598
-> [ end trace dbeb7e66daa9bdca ]---
-> 
-> RIP: 0010:static_key_set_mod.isra.0+0x10/0x30
-> Code: 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f0 a8 03 75 0d 48 8b 37 83 e6 03 48 09 c6 <48> 89 37 c3 0f 0b 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e
-> RSP: 0000:ffffa606c032bc98 EFLAGS: 00010286
-> RAX: ffff9981ddce30a0 RBX: ffffffff9edc1590 RCX: 0000000000000000
-> RDX: 0000000000000020 RSI: ffff9981ddce30a0 RDI: ffffffff9edc1598
-> RBP: ffffffffc06f4000 R08: ffff9981e6003980 R09: ffff9981ddce30a0
-> R10: 0000000000000000 R11: 0000000000028b56 R12: ffffffffc06f8880
-> R13: ffff9981ddce3080 R14: ffffffffc06f4008 R15: ffffffffc06f6dc0
-> FS:  00007f992dd9a680(0000) GS:ffff9981e7080000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff9edc1598 CR3: 00000002233aa001 CR4: 00000000001606e0
-> 
+> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+> index 8001917..2871b79 100644
+> --- a/Documentation/admin-guide/index.rst
+> +++ b/Documentation/admin-guide/index.rst
+> @@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
+>     ras
+>     bcache
+>     ext4
+> +   jfs
+>     pm/index
+>     thunderbolt
+>     LSM/index
+> diff --git a/Documentation/admin-guide/jfs.rst b/Documentation/admin-guide/jfs.rst
+> new file mode 100644
+> index 0000000..a0a95e5
+> --- /dev/null
+> +++ b/Documentation/admin-guide/jfs.rst
+> @@ -0,0 +1,50 @@
+> +===========================================
+> +IBM's Journaled File System (JFS) for Linux
+> +===========================================
+> +
+> +JFS Homepage:  `<http://jfs.sourceforge.net/>`_
+> +
 
--- 
-Jiri Kosina
-SUSE Labs
+No need. Just keep it as:
 
+	JFS Homepage:  http://jfs.sourceforge.net/
+
+Sphinx will do the right thing when it finds a URL that starts with
+http/https.
+
+> +The following mount options are supported:
+> +(*) == default
+
+You need a blank line between those two above.
+
+> +
+> +**iocharset=name**      Character set to use for converting from Unicode to ASCII. The default is to do no conversion.
+> +
+> +**iocharset=utf8**      Use for UTF-8 translations. This requires CONFIG_NLS_UTF8 to be set in the kernel .config file.
+> +
+> +**iocharset=none**      specifies the default behavior explicitly.
+> +
+> +**resize=value**        Resize the volume to <value> blocks. JFS only supports growing a volume, not shrinking it.
+> +This option is only valid during a remount, when the volume is mounted read-write. The resize keyword with no value 
+> +will grow the volume to the full size of the partition.
+> +
+> +
+> +**nointegrity**	        Do not write to the journal. The primary use of this option is to allow for higher performance 
+> +when restoring a volume from backup media. The integrity of the volume is not guaranteed if the system abnormally abends.
+> +
+> +**integrity(*)**	Commit metadata changes to the journal. Use this option to remount a volume where the nointegrity 
+> +option was previously specified in order to restore normal behavior.
+> +
+> +**errors=continue**	Keep going on a filesystem error.
+> +
+> +**errors=remount-ro(*)**	Remount the filesystem read-only on an error.
+> +
+> +**errors=panic**	Panic and halt the machine if an error occurs.
+> +
+> +**uid=value**	Override on-disk uid with specified value
+> +
+> +**gid=value**	Override on-disk gid with specified value
+> +
+> +**umask=value**	Override on-disk umask with specified octal value. For directories, the execute bit will be set if the 
+> +corresponding  read bit is set.
+> +
+> +**discard=minlen, discard, nodiscard(*)**
+
+Please preserve as much as possible the original format.
+
+If you just place the mount option on one line and the description at the
+next one, e. g.:
+
+	iocharset=name
+	              	Character set to use for converting from Unicode to
+	                ASCII.  The default is to do no conversion.  Use
+	                iocharset=utf8 for UTF-8 translations.  This requires
+	                CONFIG_NLS_UTF8 to be set in the kernel .config file.
+	                iocharset=none specifies the default behavior explicitly.
+
+	resize=value
+	            	Resize the volume to <value> blocks.  JFS only supports
+	                growing a volume, not shrinking it.  This option is only
+	                valid during a remount, when the volume is mounted
+	                read-write.  The resize keyword with no value will grow
+	                the volume to the full size of the partition.
+...
+
+It will produce a very nice output, and the changes will be minimum,
+without any special markup.
+
+
+> +
+> +This enables/disables the use of discard/TRIM commands. The discard/TRIM 
+> +commands are sent to the underlying block device when blocks are freed. This is useful for SSD devices and 
+> +sparse/thinly-provisioned LUNs. The FITRIM ioctl command is also available together with the nodiscard option.
+> +The value of minlen specifies the minimum blockcount, when a TRIM command to the block device is considered useful.
+> +When no value is given to the discard option, it defaults to 64 blocks, which means 256KiB in JFS. The minlen value 
+> +of discard overrides the minlen value given on an FITRIM ioctl().
+> +
+> +The JFS mailing list can be subscribed to by using the link labeled
+> +"Mail list Subscribe" at our web page `<http://jfs.sourceforge.net/>`_
+
+Same here: just keep the URL as-is:
+
+	The JFS mailing list can be subscribed to by using the link labeled
+	"Mail list Subscribe" at our web page http://jfs.sourceforge.net/
+
+
+> diff --git a/Documentation/filesystems/jfs.txt b/Documentation/filesystems/jfs.txt
+> deleted file mode 100644
+> index 41fd757..0000000
+> --- a/Documentation/filesystems/jfs.txt
+> +++ /dev/null
+> @@ -1,52 +0,0 @@
+> -IBM's Journaled File System (JFS) for Linux
+> -
+> -JFS Homepage:  http://jfs.sourceforge.net/
+> -
+> -The following mount options are supported:
+> -(*) == default
+> -
+> -iocharset=name	Character set to use for converting from Unicode to
+> -		ASCII.  The default is to do no conversion.  Use
+> -		iocharset=utf8 for UTF-8 translations.  This requires
+> -		CONFIG_NLS_UTF8 to be set in the kernel .config file.
+> -		iocharset=none specifies the default behavior explicitly.
+> -
+> -resize=value	Resize the volume to <value> blocks.  JFS only supports
+> -		growing a volume, not shrinking it.  This option is only
+> -		valid during a remount, when the volume is mounted
+> -		read-write.  The resize keyword with no value will grow
+> -		the volume to the full size of the partition.
+> -
+> -nointegrity	Do not write to the journal.  The primary use of this option
+> -		is to allow for higher performance when restoring a volume
+> -		from backup media.  The integrity of the volume is not
+> -		guaranteed if the system abnormally abends.
+> -
+> -integrity(*)	Commit metadata changes to the journal.  Use this option to
+> -		remount a volume where the nointegrity option was
+> -		previously specified in order to restore normal behavior.
+> -
+> -errors=continue		Keep going on a filesystem error.
+> -errors=remount-ro(*)	Remount the filesystem read-only on an error.
+> -errors=panic		Panic and halt the machine if an error occurs.
+> -
+> -uid=value	Override on-disk uid with specified value
+> -gid=value	Override on-disk gid with specified value
+> -umask=value	Override on-disk umask with specified octal value.  For
+> -		directories, the execute bit will be set if the corresponding
+> -		read bit is set.
+> -
+> -discard=minlen	This enables/disables the use of discard/TRIM commands.
+> -discard		The discard/TRIM commands are sent to the underlying
+> -nodiscard(*)	block device when blocks are freed. This is useful for SSD
+> -		devices and sparse/thinly-provisioned LUNs.  The FITRIM ioctl
+> -		command is also available together with the nodiscard option.
+> -		The value of minlen specifies the minimum blockcount, when
+> -		a TRIM command to the block device is considered useful.
+> -		When no value is given to the discard option, it defaults to
+> -		64 blocks, which means 256KiB in JFS.
+> -		The minlen value of discard overrides the minlen value given
+> -		on an FITRIM ioctl().
+> -
+> -The JFS mailing list can be subscribed to by using the link labeled
+> -"Mail list Subscribe" at our web page http://jfs.sourceforge.net/
+
+
+
+Thanks,
+Mauro
