@@ -2,225 +2,155 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE79EC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1DC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBCA20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zblPjkVF"
+	by mail.kernel.org (Postfix) with ESMTP id 06A2020844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562789681;
+	bh=wtm+DjyVQOY6e2saxu9q/9JBUtIjNNcNelSObGoKHtc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=beTW0zwlxQe5zXL+057ztQHu8FZ5YgOr7DSMc93FOqNoYZY83oDaC5uqcOwHQGXP0
+	 fy050HgRE/NSUMHCTF1JSQIAdWAMD9JFttU0Dghwi3vAGJaEhaTUDJYhtSzfQwZUep
+	 /DKF3k1SxN+61G9Yc+oK1DXL9Z3B2tPFwSFFGtWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfGJUOC (ORCPT
+        id S1727619AbfGJUOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 16:14:02 -0400
-Received: from mail-eopbgr820053.outbound.protection.outlook.com ([40.107.82.53]:63365
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728455AbfGJUNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 16:13:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dO04eLnIK9fkm3I2EE2xf46g3arlJe8Bk77y5iUIoPc=;
- b=zblPjkVFIf+A5dnR8mCJrHLuOuNbZ0KOdEdaYDLmkciAaJOgljRMw218Mf+gTIg/V09DHTXSwlMKpoNo5+xNCNPuGHNezSZ5zAw4PNIRSy5qYawT5RsE7cVVlZpuNs7I1QFC69jSnThDuohpZ8yJGw03nZIt/R8pZuGg6Eh8RW0=
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
- DM6PR12MB2988.namprd12.prod.outlook.com (20.178.29.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Wed, 10 Jul 2019 20:13:09 +0000
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::bc1a:a30d:9da2:1cdd]) by DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::bc1a:a30d:9da2:1cdd%6]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
- 20:13:09 +0000
-From:   "Singh, Brijesh" <brijesh.singh@amd.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 08/11] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
-Thread-Topic: [PATCH v3 08/11] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS
- hypercall
-Thread-Index: AQHVN1vkr0vUgqY4y0eLnE4RKbM1dA==
-Date:   Wed, 10 Jul 2019 20:13:09 +0000
-Message-ID: <20190710201244.25195-9-brijesh.singh@amd.com>
-References: <20190710201244.25195-1-brijesh.singh@amd.com>
-In-Reply-To: <20190710201244.25195-1-brijesh.singh@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0014.namprd05.prod.outlook.com
- (2603:10b6:803:40::27) To DM6PR12MB2682.namprd12.prod.outlook.com
- (2603:10b6:5:4a::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 107668e9-d8d0-4b33-67f1-08d705730704
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2988;
-x-ms-traffictypediagnostic: DM6PR12MB2988:
-x-microsoft-antispam-prvs: <DM6PR12MB2988FBB67D9D34458B081DE8E5F00@DM6PR12MB2988.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(1730700003)(81156014)(81166006)(7416002)(478600001)(8676002)(486006)(446003)(7736002)(6116002)(476003)(2616005)(305945005)(71190400001)(71200400001)(3846002)(26005)(11346002)(64756008)(66946007)(66556008)(66476007)(66446008)(66066001)(186003)(76176011)(102836004)(14454004)(386003)(6506007)(36756003)(5660300002)(2501003)(52116002)(6916009)(1076003)(66574012)(99286004)(86362001)(68736007)(6436002)(2906002)(25786009)(6486002)(50226002)(4326008)(5640700003)(316002)(256004)(54906003)(6512007)(14444005)(53936002)(8936002)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2988;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9k5VNvIA9AWF9EULkfBgO49dxI9i79+lk10SA0kms+JFksWWrAoj7iLJVNWeBuU8VTz5ilxEl2snzpuZvijMJCuAsDaf3r4bMHFMk2O4bF1hKSE3dCzxywtE4LF6pd/0BvnpSsO58SiMtwuvNPdSkt+fECItrAn1x4+G7zupAWPELNp9y12ek1aYS6VkoHn5KootCk4I0bB+STnlv/2SsOjloMKP55WZVa+sTfPYoAvk+npb7/ZOS/mlojQpKRYnz0ZQbFB32MXVY2QdxD2FUsQiBLIOa6WadHxAcCDnwECsNm0eob449rMMao1JbUvxPP0PDVgxEUx+RS+wsQ+0puF9DbH/Pm4bJOWJA73M1ZVfeX9wiJX0zay/hGTGqDt12H81BE7J73YVqc2WMda62twV4DKUoo5guZvEvn1SeCM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E4AC05A3CBC99B47B0081B31F9FBA14C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 10 Jul 2019 16:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727179AbfGJUOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 16:14:39 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C5772064A;
+        Wed, 10 Jul 2019 20:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562789678;
+        bh=wtm+DjyVQOY6e2saxu9q/9JBUtIjNNcNelSObGoKHtc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CjFZzsIvy/bV1Wm5fVzdmbDSd8Z4gZtj9UPorTpWXw2d2eh2xapf/1TmvBENz5JoO
+         IQhrfXxZ/31Nz2SFTi4+beNghuV5Vmstb+tuc+L0txzAo55jxD0Tm5W/MPYVFDkLh4
+         Q1rrsydh6lhtmpjujnq6DeFlPyLX/z0uJ8/XLRSs=
+Date:   Wed, 10 Jul 2019 15:14:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V13 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+Message-ID: <20190710201433.GC35486@google.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 107668e9-d8d0-4b33-67f1-08d705730704
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 20:13:09.5350
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sbrijesh@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2988
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710062212.1745-2-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBoeXBlcmNhbGwgaXMgdXNlZCBieSB0aGUgU0VWIGd1ZXN0IHRvIG5vdGlmeSBhIGNoYW5n
-ZSBpbiB0aGUgcGFnZQ0KZW5jcnlwdGlvbiBzdGF0dXMgdG8gdGhlIGh5cGVydmlzb3IuIFRoZSBo
-eXBlcmNhbGwgc2hvdWxkIGJlIGludm9rZWQNCm9ubHkgd2hlbiB0aGUgZW5jcnlwdGlvbiBhdHRy
-aWJ1dGUgaXMgY2hhbmdlZCBmcm9tIGVuY3J5cHRlZCAtPiBkZWNyeXB0ZWQNCmFuZCB2aWNlIHZl
-cnNhLiBCeSBkZWZhdWx0IGFsbCBndWVzdCBwYWdlcyBhcmUgY29uc2lkZXJlZCBlbmNyeXB0ZWQu
-DQoNCkNjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCkNjOiBJbmdvIE1v
-bG5hciA8bWluZ29AcmVkaGF0LmNvbT4NCkNjOiAiSC4gUGV0ZXIgQW52aW4iIDxocGFAenl0b3Iu
-Y29tPg0KQ2M6IFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5jb20+DQpDYzogIlJhZGlt
-IEtyxI1tw6HFmSIgPHJrcmNtYXJAcmVkaGF0LmNvbT4NCkNjOiBKb2VyZyBSb2VkZWwgPGpvcm9A
-OGJ5dGVzLm9yZz4NCkNjOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQHN1c2UuZGU+DQpDYzogVG9tIExl
-bmRhY2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4NCkNjOiB4ODZAa2VybmVsLm9yZw0KQ2M6
-IGt2bUB2Z2VyLmtlcm5lbC5vcmcNCkNjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpT
-aWduZWQtb2ZmLWJ5OiBCcmlqZXNoIFNpbmdoIDxicmlqZXNoLnNpbmdoQGFtZC5jb20+DQotLS0N
-CiBEb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2h5cGVyY2FsbHMudHh0IHwgMTQgKysrKysNCiBh
-cmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oICAgICAgICAgIHwgIDIgKw0KIGFyY2gveDg2
-L2t2bS9zdm0uYyAgICAgICAgICAgICAgICAgICAgICAgfCA3MCArKysrKysrKysrKysrKysrKysr
-KysrKysNCiBhcmNoL3g4Ni9rdm0vdm14L3ZteC5jICAgICAgICAgICAgICAgICAgIHwgIDEgKw0K
-IGFyY2gveDg2L2t2bS94ODYuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgNSArKw0KIGluY2x1
-ZGUvdWFwaS9saW51eC9rdm1fcGFyYS5oICAgICAgICAgICAgfCAgMSArDQogNiBmaWxlcyBjaGFu
-Z2VkLCA5MyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3ZpcnR1
-YWwva3ZtL2h5cGVyY2FsbHMudHh0IGIvRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS9oeXBlcmNh
-bGxzLnR4dA0KaW5kZXggZGEyNGMxMzhjOGQxLi45NGYwNjExZjRkODggMTAwNjQ0DQotLS0gYS9E
-b2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2h5cGVyY2FsbHMudHh0DQorKysgYi9Eb2N1bWVudGF0
-aW9uL3ZpcnR1YWwva3ZtL2h5cGVyY2FsbHMudHh0DQpAQCAtMTQxLDMgKzE0MSwxNyBAQCBhMCBj
-b3JyZXNwb25kcyB0byB0aGUgQVBJQyBJRCBpbiB0aGUgdGhpcmQgYXJndW1lbnQgKGEyKSwgYml0
-IDENCiBjb3JyZXNwb25kcyB0byB0aGUgQVBJQyBJRCBhMisxLCBhbmQgc28gb24uDQogDQogUmV0
-dXJucyB0aGUgbnVtYmVyIG9mIENQVXMgdG8gd2hpY2ggdGhlIElQSXMgd2VyZSBkZWxpdmVyZWQg
-c3VjY2Vzc2Z1bGx5Lg0KKw0KKzcuIEtWTV9IQ19QQUdFX0VOQ19TVEFUVVMNCistLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQorQXJjaGl0ZWN0dXJlOiB4ODYNCitTdGF0dXM6IGFjdGl2ZQ0KK1B1
-cnBvc2U6IE5vdGlmeSB0aGUgZW5jcnlwdGlvbiBzdGF0dXMgY2hhbmdlcyBpbiBndWVzdCBwYWdl
-IHRhYmxlIChTRVYgZ3Vlc3QpDQorDQorYTA6IHRoZSBndWVzdCBwaHlzaWNhbCBhZGRyZXNzIG9m
-IHRoZSBzdGFydCBwYWdlDQorYTE6IHRoZSBudW1iZXIgb2YgcGFnZXMNCithMjogZW5jcnlwdGlv
-biBhdHRyaWJ1dGUNCisNCisgICBXaGVyZToNCisJKiAxOiBFbmNyeXB0aW9uIGF0dHJpYnV0ZSBp
-cyBzZXQNCisJKiAwOiBFbmNyeXB0aW9uIGF0dHJpYnV0ZSBpcyBjbGVhcmVkDQpkaWZmIC0tZ2l0
-IGEvYXJjaC94ODYvaW5jbHVkZS9hc20va3ZtX2hvc3QuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNt
-L2t2bV9ob3N0LmgNCmluZGV4IDI2ZDFlYjgzZjcyYS4uYjQ2M2E4MWRjMTc2IDEwMDY0NA0KLS0t
-IGEvYXJjaC94ODYvaW5jbHVkZS9hc20va3ZtX2hvc3QuaA0KKysrIGIvYXJjaC94ODYvaW5jbHVk
-ZS9hc20va3ZtX2hvc3QuaA0KQEAgLTExOTksNiArMTE5OSw4IEBAIHN0cnVjdCBrdm1feDg2X29w
-cyB7DQogCXVpbnQxNl90ICgqbmVzdGVkX2dldF9ldm1jc192ZXJzaW9uKShzdHJ1Y3Qga3ZtX3Zj
-cHUgKnZjcHUpOw0KIA0KIAlib29sICgqbmVlZF9lbXVsYXRpb25fb25fcGFnZV9mYXVsdCkoc3Ry
-dWN0IGt2bV92Y3B1ICp2Y3B1KTsNCisJaW50ICgqcGFnZV9lbmNfc3RhdHVzX2hjKShzdHJ1Y3Qg
-a3ZtICprdm0sIHVuc2lnbmVkIGxvbmcgZ3BhLA0KKwkJCQkgIHVuc2lnbmVkIGxvbmcgc3osIHVu
-c2lnbmVkIGxvbmcgbW9kZSk7DQogfTsNCiANCiBzdHJ1Y3Qga3ZtX2FyY2hfYXN5bmNfcGYgew0K
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS9zdm0uYyBiL2FyY2gveDg2L2t2bS9zdm0uYw0KaW5k
-ZXggMzA4OTk0MmY2NjMwLi40MzE3MTgzMDkzNTkgMTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rdm0v
-c3ZtLmMNCisrKyBiL2FyY2gveDg2L2t2bS9zdm0uYw0KQEAgLTEzNSw2ICsxMzUsOCBAQCBzdHJ1
-Y3Qga3ZtX3Nldl9pbmZvIHsNCiAJaW50IGZkOwkJCS8qIFNFViBkZXZpY2UgZmQgKi8NCiAJdW5z
-aWduZWQgbG9uZyBwYWdlc19sb2NrZWQ7IC8qIE51bWJlciBvZiBwYWdlcyBsb2NrZWQgKi8NCiAJ
-c3RydWN0IGxpc3RfaGVhZCByZWdpb25zX2xpc3Q7ICAvKiBMaXN0IG9mIHJlZ2lzdGVyZWQgcmVn
-aW9ucyAqLw0KKwl1bnNpZ25lZCBsb25nICpwYWdlX2VuY19ibWFwOw0KKwl1bnNpZ25lZCBsb25n
-IHBhZ2VfZW5jX2JtYXBfc2l6ZTsNCiB9Ow0KIA0KIHN0cnVjdCBrdm1fc3ZtIHsNCkBAIC0xOTEw
-LDYgKzE5MTIsOCBAQCBzdGF0aWMgdm9pZCBzZXZfdm1fZGVzdHJveShzdHJ1Y3Qga3ZtICprdm0p
-DQogDQogCXNldl91bmJpbmRfYXNpZChrdm0sIHNldi0+aGFuZGxlKTsNCiAJc2V2X2FzaWRfZnJl
-ZShrdm0pOw0KKw0KKwlrdmZyZWUoc2V2LT5wYWdlX2VuY19ibWFwKTsNCiB9DQogDQogc3RhdGlj
-IHZvaWQgYXZpY192bV9kZXN0cm95KHN0cnVjdCBrdm0gKmt2bSkNCkBAIC0yMDg0LDYgKzIwODgs
-NyBAQCBzdGF0aWMgdm9pZCBhdmljX3NldF9ydW5uaW5nKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwg
-Ym9vbCBpc19ydW4pDQogDQogc3RhdGljIHZvaWQgc3ZtX3ZjcHVfcmVzZXQoc3RydWN0IGt2bV92
-Y3B1ICp2Y3B1LCBib29sIGluaXRfZXZlbnQpDQogew0KKwlzdHJ1Y3Qga3ZtX3Nldl9pbmZvICpz
-ZXYgPSAmdG9fa3ZtX3N2bSh2Y3B1LT5rdm0pLT5zZXZfaW5mbzsNCiAJc3RydWN0IHZjcHVfc3Zt
-ICpzdm0gPSB0b19zdm0odmNwdSk7DQogCXUzMiBkdW1teTsNCiAJdTMyIGVheCA9IDE7DQpAQCAt
-MjEwNSw2ICsyMTEwLDEyIEBAIHN0YXRpYyB2b2lkIHN2bV92Y3B1X3Jlc2V0KHN0cnVjdCBrdm1f
-dmNwdSAqdmNwdSwgYm9vbCBpbml0X2V2ZW50KQ0KIA0KIAlpZiAoa3ZtX3ZjcHVfYXBpY3ZfYWN0
-aXZlKHZjcHUpICYmICFpbml0X2V2ZW50KQ0KIAkJYXZpY191cGRhdGVfdmFwaWNfYmFyKHN2bSwg
-QVBJQ19ERUZBVUxUX1BIWVNfQkFTRSk7DQorDQorCS8qIHJlc2V0IHRoZSBwYWdlIGVuY3J5cHRp
-b24gYml0bWFwICovDQorCWlmIChzZXZfZ3Vlc3QodmNwdS0+a3ZtKSkgew0KKwkJa3ZmcmVlKHNl
-di0+cGFnZV9lbmNfYm1hcCk7DQorCQlzZXYtPnBhZ2VfZW5jX2JtYXBfc2l6ZSA9IDA7DQorCX0N
-CiB9DQogDQogc3RhdGljIGludCBhdmljX2luaXRfdmNwdShzdHJ1Y3QgdmNwdV9zdm0gKnN2bSkN
-CkBAIC03MzU3LDYgKzczNjgsNjMgQEAgc3RhdGljIGludCBzZXZfcmVjZWl2ZV9maW5pc2goc3Ry
-dWN0IGt2bSAqa3ZtLCBzdHJ1Y3Qga3ZtX3Nldl9jbWQgKmFyZ3ApDQogCXJldHVybiByZXQ7DQog
-fQ0KIA0KK3N0YXRpYyBpbnQgc2V2X3Jlc2l6ZV9wYWdlX2VuY19iaXRtYXAoc3RydWN0IGt2bSAq
-a3ZtLCB1bnNpZ25lZCBsb25nIG5ld19zaXplKQ0KK3sNCisJc3RydWN0IGt2bV9zZXZfaW5mbyAq
-c2V2ID0gJnRvX2t2bV9zdm0oa3ZtKS0+c2V2X2luZm87DQorCXVuc2lnbmVkIGxvbmcgKm1hcDsN
-CisJdW5zaWduZWQgbG9uZyBzejsNCisNCisJaWYgKHNldi0+cGFnZV9lbmNfYm1hcF9zaXplID49
-IG5ld19zaXplKQ0KKwkJcmV0dXJuIDA7DQorDQorCXN6ID0gQUxJR04obmV3X3NpemUsIEJJVFNf
-UEVSX0xPTkcpIC8gODsNCisNCisJbWFwID0gdm1hbGxvYyhzeik7DQorCWlmICghbWFwKSB7DQor
-CQlwcl9lcnJfb25jZSgiRmFpbGVkIHRvIGFsbG9jYXRlIGRlY3J5cHRlZCBiaXRtYXAgc2l6ZSAl
-bHhcbiIsIHN6KTsNCisJCXJldHVybiAtRU5PTUVNOw0KKwl9DQorDQorCS8qIG1hcmsgdGhlIHBh
-Z2UgZW5jcnlwdGVkIChieSBkZWZhdWx0KSAqLw0KKwltZW1zZXQobWFwLCAweGZmLCBzeik7DQor
-DQorCWJpdG1hcF9jb3B5KG1hcCwgc2V2LT5wYWdlX2VuY19ibWFwLCBzZXYtPnBhZ2VfZW5jX2Jt
-YXBfc2l6ZSk7DQorCWt2ZnJlZShzZXYtPnBhZ2VfZW5jX2JtYXApOw0KKw0KKwlzZXYtPnBhZ2Vf
-ZW5jX2JtYXAgPSBtYXA7DQorCXNldi0+cGFnZV9lbmNfYm1hcF9zaXplID0gbmV3X3NpemU7DQor
-DQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgaW50IHN2bV9wYWdlX2VuY19zdGF0dXNfaGMo
-c3RydWN0IGt2bSAqa3ZtLCB1bnNpZ25lZCBsb25nIGdwYSwNCisJCQkJICB1bnNpZ25lZCBsb25n
-IG5wYWdlcywgdW5zaWduZWQgbG9uZyBlbmMpDQorew0KKwlzdHJ1Y3Qga3ZtX3Nldl9pbmZvICpz
-ZXYgPSAmdG9fa3ZtX3N2bShrdm0pLT5zZXZfaW5mbzsNCisJZ2ZuX3QgZ2ZuX3N0YXJ0LCBnZm5f
-ZW5kOw0KKwlpbnQgcmV0Ow0KKw0KKwlpZiAoIW5wYWdlcykNCisJCXJldHVybiAwOw0KKw0KKwln
-Zm5fc3RhcnQgPSBncGFfdG9fZ2ZuKGdwYSk7DQorCWdmbl9lbmQgPSBnZm5fc3RhcnQgKyBucGFn
-ZXM7DQorDQorCW11dGV4X2xvY2soJmt2bS0+bG9jayk7DQorCXJldCA9IHNldl9yZXNpemVfcGFn
-ZV9lbmNfYml0bWFwKGt2bSwgZ2ZuX2VuZCk7DQorCWlmIChyZXQpDQorCQlnb3RvIHVubG9jazsN
-CisNCisJaWYgKGVuYykNCisJCV9fYml0bWFwX3NldChzZXYtPnBhZ2VfZW5jX2JtYXAsIGdmbl9z
-dGFydCwgZ2ZuX2VuZCAtIGdmbl9zdGFydCk7DQorCWVsc2UNCisJCV9fYml0bWFwX2NsZWFyKHNl
-di0+cGFnZV9lbmNfYm1hcCwgZ2ZuX3N0YXJ0LCBnZm5fZW5kIC0gZ2ZuX3N0YXJ0KTsNCisNCit1
-bmxvY2s6DQorCW11dGV4X3VubG9jaygma3ZtLT5sb2NrKTsNCisJcmV0dXJuIHJldDsNCit9DQor
-DQogc3RhdGljIGludCBzdm1fbWVtX2VuY19vcChzdHJ1Y3Qga3ZtICprdm0sIHZvaWQgX191c2Vy
-ICphcmdwKQ0KIHsNCiAJc3RydWN0IGt2bV9zZXZfY21kIHNldl9jbWQ7DQpAQCAtNzY5OCw2ICs3
-NzY2LDggQEAgc3RhdGljIHN0cnVjdCBrdm1feDg2X29wcyBzdm1feDg2X29wcyBfX3JvX2FmdGVy
-X2luaXQgPSB7DQogCS5uZXN0ZWRfZ2V0X2V2bWNzX3ZlcnNpb24gPSBuZXN0ZWRfZ2V0X2V2bWNz
-X3ZlcnNpb24sDQogDQogCS5uZWVkX2VtdWxhdGlvbl9vbl9wYWdlX2ZhdWx0ID0gc3ZtX25lZWRf
-ZW11bGF0aW9uX29uX3BhZ2VfZmF1bHQsDQorDQorCS5wYWdlX2VuY19zdGF0dXNfaGMgPSBzdm1f
-cGFnZV9lbmNfc3RhdHVzX2hjDQogfTsNCiANCiBzdGF0aWMgaW50IF9faW5pdCBzdm1faW5pdCh2
-b2lkKQ0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS92bXgvdm14LmMgYi9hcmNoL3g4Ni9rdm0v
-dm14L3ZteC5jDQppbmRleCBkOThlYWMzNzFjMGEuLjc4ZjhhOTNmYzZkZCAxMDA2NDQNCi0tLSBh
-L2FyY2gveDg2L2t2bS92bXgvdm14LmMNCisrKyBiL2FyY2gveDg2L2t2bS92bXgvdm14LmMNCkBA
-IC03NzI0LDYgKzc3MjQsNyBAQCBzdGF0aWMgc3RydWN0IGt2bV94ODZfb3BzIHZteF94ODZfb3Bz
-IF9fcm9fYWZ0ZXJfaW5pdCA9IHsNCiAJLmdldF92bWNzMTJfcGFnZXMgPSBOVUxMLA0KIAkubmVz
-dGVkX2VuYWJsZV9ldm1jcyA9IE5VTEwsDQogCS5uZWVkX2VtdWxhdGlvbl9vbl9wYWdlX2ZhdWx0
-ID0gdm14X25lZWRfZW11bGF0aW9uX29uX3BhZ2VfZmF1bHQsDQorCS5wYWdlX2VuY19zdGF0dXNf
-aGMgPSBOVUxMLA0KIH07DQogDQogc3RhdGljIHZvaWQgdm14X2NsZWFudXBfbDFkX2ZsdXNoKHZv
-aWQpDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3g4Ni5jIGIvYXJjaC94ODYva3ZtL3g4Ni5j
-DQppbmRleCA2M2JiMWVlODI1OGUuLjZiYWY0OGVjMGVkNCAxMDA2NDQNCi0tLSBhL2FyY2gveDg2
-L2t2bS94ODYuYw0KKysrIGIvYXJjaC94ODYva3ZtL3g4Ni5jDQpAQCAtNzIxOSw2ICs3MjE5LDEx
-IEBAIGludCBrdm1fZW11bGF0ZV9oeXBlcmNhbGwoc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQ0KIAlj
-YXNlIEtWTV9IQ19TRU5EX0lQSToNCiAJCXJldCA9IGt2bV9wdl9zZW5kX2lwaSh2Y3B1LT5rdm0s
-IGEwLCBhMSwgYTIsIGEzLCBvcF82NF9iaXQpOw0KIAkJYnJlYWs7DQorCWNhc2UgS1ZNX0hDX1BB
-R0VfRU5DX1NUQVRVUzoNCisJCXJldCA9IC1LVk1fRU5PU1lTOw0KKwkJaWYgKGt2bV94ODZfb3Bz
-LT5wYWdlX2VuY19zdGF0dXNfaGMpDQorCQkJcmV0ID0ga3ZtX3g4Nl9vcHMtPnBhZ2VfZW5jX3N0
-YXR1c19oYyh2Y3B1LT5rdm0sIGEwLCBhMSwgYTIpOw0KKwkJYnJlYWs7DQogCWRlZmF1bHQ6DQog
-CQlyZXQgPSAtS1ZNX0VOT1NZUzsNCiAJCWJyZWFrOw0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvdWFw
-aS9saW51eC9rdm1fcGFyYS5oIGIvaW5jbHVkZS91YXBpL2xpbnV4L2t2bV9wYXJhLmgNCmluZGV4
-IDZjMGNlNDk5MzFlNS4uM2RjOWU1NzlmNGY5IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS91YXBpL2xp
-bnV4L2t2bV9wYXJhLmgNCisrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9rdm1fcGFyYS5oDQpAQCAt
-MjgsNiArMjgsNyBAQA0KICNkZWZpbmUgS1ZNX0hDX01JUFNfQ09OU09MRV9PVVRQVVQJOA0KICNk
-ZWZpbmUgS1ZNX0hDX0NMT0NLX1BBSVJJTkcJCTkNCiAjZGVmaW5lIEtWTV9IQ19TRU5EX0lQSQkJ
-MTANCisjZGVmaW5lIEtWTV9IQ19QQUdFX0VOQ19TVEFUVVMJCTExDQogDQogLyoNCiAgKiBoeXBl
-cmNhbGxzIHVzZSBhcmNoaXRlY3R1cmUgc3BlY2lmaWMNCi0tIA0KMi4xNy4xDQoNCg==
+On Wed, Jul 10, 2019 at 11:52:01AM +0530, Vidya Sagar wrote:
+> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+> features as defined in PCIe spec r4.0, sec 7.7.4 for Data Link Feature and
+> sec 7.7.5 for Physical Layer 16.0 GT/s.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Looks good, thanks!
+
+> ---
+> V13:
+> * Updated commit message to include references from spec
+> * Removed unused defines and moved some from pcie-tegra194.c file
+> * Addressed review comments from Bjorn
+> 
+> V12:
+> * None
+> 
+> V11:
+> * None
+> 
+> V10:
+> * None
+> 
+> V9:
+> * None
+> 
+> V8:
+> * None
+> 
+> V7:
+> * None
+> 
+> V6:
+> * None
+> 
+> V5:
+> * None
+> 
+> V4:
+> * None
+> 
+> V3:
+> * Updated commit message and description to explicitly mention that defines are
+>   added only for some of the features and not all.
+> 
+> V2:
+> * None
+> 
+>  include/uapi/linux/pci_regs.h | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f28e562d7ca8..d28d0319d932 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -713,7 +713,9 @@
+>  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> +#define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+>  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -1053,4 +1055,14 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>  
+> +/* Data Link Feature */
+> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+> +
+> +/* Physical Layer 16.0 GT/s */
+> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+> +#define  PCI_PL_16GT_LE_CTRL_DSP_TX_PRESET_MASK		0x0000000F
+> +#define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
+> +#define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
+> +
+>  #endif /* LINUX_PCI_REGS_H */
+> -- 
+> 2.17.1
+> 
