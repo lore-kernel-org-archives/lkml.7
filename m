@@ -2,170 +2,84 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D774C74A25
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2909BC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA80C2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XkDjrsQo"
+	by mail.kernel.org (Postfix) with ESMTP id E7AD020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562766779;
+	bh=zrEXgU06V3HSBHWapw594JuvhYnamH5a5R6f/0YmUgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iJoKbYOEqHGzrsMpcevw/Ygb4yDyOYHFe6b9q5M4d+nEA7BFnaOiApx7bpcv4m4ZP
+	 A05R2phrPZszo22L8fi/UbWKdJ33v5E173K8HrmyRgmkjdyOTsgs9i/L+jjuVrR6vZ
+	 fA8CegFxMZPi4T5HMZInMUsv4IKflmR35Mpul+yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfGJNwK (ORCPT
+        id S1727787AbfGJNw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:52:10 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:43457 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbfGJNwJ (ORCPT
+        Wed, 10 Jul 2019 09:52:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43701 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbfGJNw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:52:09 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190710135208euoutp0218058f124a07a090c9bc73e6bd6c07f7~wEA9V0tgr1520215202euoutp02E
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 13:52:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190710135208euoutp0218058f124a07a090c9bc73e6bd6c07f7~wEA9V0tgr1520215202euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562766728;
-        bh=bi+QQHJqP04uD+8PUqyDhDmLPS7ewuxGeL+v9hDW43c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XkDjrsQoRhYpbRBFf0mdiNpg334WtZe92Ste2Es0DVO/nkNlrn8UAREbPSI+3o4RO
-         AEgR2PBc2QD0Js1S9NRE3KYpf1WnOuOu31mNQZXlGvFWJcRlaP7cNce4LR99q/j7FU
-         ZG5XoUu2v3G0gHriVqFL8Px20Gu80nLv6EmOtEpM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190710135207eucas1p235be02737ffa0a20f8b784ed6eea3104~wEA8Mb-2g0520205202eucas1p2l;
-        Wed, 10 Jul 2019 13:52:07 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id B8.11.04298.78DE52D5; Wed, 10
-        Jul 2019 14:52:07 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190710135206eucas1p1a8bb3868e3358ac992d3337ce291fbdb~wEA7dMCQM2743727437eucas1p1z;
-        Wed, 10 Jul 2019 13:52:06 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190710135206eusmtrp115a884e0bda6f826981f7bb4f39154aa~wEA7O02i70752007520eusmtrp1x;
-        Wed, 10 Jul 2019 13:52:06 +0000 (GMT)
-X-AuditID: cbfec7f2-3615e9c0000010ca-f8-5d25ed878a38
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CB.D3.04140.68DE52D5; Wed, 10
-        Jul 2019 14:52:06 +0100 (BST)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190710135205eusmtip1139c29f0c0309ada945ad5f5326d2267~wEA6hgMwP1936419364eusmtip1X;
-        Wed, 10 Jul 2019 13:52:05 +0000 (GMT)
-Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
-From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Message-ID: <96583e19-f838-efe2-bd75-2f66d1deb0e5@partner.samsung.com>
-Date:   Wed, 10 Jul 2019 15:52:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Wed, 10 Jul 2019 09:52:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id k20so4804151ios.10;
+        Wed, 10 Jul 2019 06:52:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+sQ8qUL2tXP29Ld9BiqDZ7FWck10MSCLGC0VK5gjO5o=;
+        b=OGRJ729e3uwGg1HUiBT0+dGy96bM36n5pRuYYxH2yhJeV7TSCicNx3+8DRgcbVu+4L
+         abUTYZu0/A1pxy+s9Osp1TCV68vvCizol+Z4R9kSyljxGPbwPgxKr2xhfqb5WwICRkVy
+         1/sDMD0Ho72o+RuzYbYk2QiJgw7vhvt5XshoB4laA1mTC6e7gTuHwJMxP7LtCjStdAPK
+         ehjkWsvsdQC9eh0xtBUR60YGi/9T63enysEU2Gvqha2FT2FC9kbPG72dgXcbjc5GBraT
+         We59+VZA1CKb8Nh1acbbcaex1KKhMOXDpMapuqlLWur5MJuzZjeW4BWO5aNS03YsQjuK
+         aJag==
+X-Gm-Message-State: APjAAAUY8KhEykvweGT5NJLhaB6NH9BCce2mV/VfOmIWeZ8k3CWaqLvf
+        5MYb//TZyK3j3BZn1BfUCg==
+X-Google-Smtp-Source: APXvYqzRTXXDXm5+lNWb2TKj4hTvtu33GlKZXAbnlGua/pqd3BhOV1uRDSTpKXcaYpwC4fb6DQDIjw==
+X-Received: by 2002:a5e:d611:: with SMTP id w17mr12659726iom.63.1562766776311;
+        Wed, 10 Jul 2019 06:52:56 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id c17sm1663390ioo.82.2019.07.10.06.52.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 06:52:55 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 07:52:54 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 1/4] dt-bindings: iio/adc: Add a compatible string for
+ JZ4770 SoC ADC
+Message-ID: <20190710135254.GA30741@bogus>
+References: <20190623184732.5492-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
-In-Reply-To: <1795603c-686f-dfb5-5982-c836b36dca9c@partner.samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+93Xrub0NhVPFkkLIYUysehHShSmjiCoxCjttdlFJZ2y+ciC
-        zF7WMJUkKimnYGg+ci7R8BXobJUv1HxWaE0zH+ulUlZabtfI/z7nnO/5nfP9cVhSMk67slHK
-        eF6llEdLGVuq6tlc+6Y0s/uxLdV1DrjiTjmN+2bGaKw1tNM40zRJ4o4OnQi3XZwSYb2pl8bd
-        NfcYPH3DgPCdjgYClxneivCDvk4Cv04tYvDUjzYCX6k3iPBCbwWFK2Zl+PHwM2aXRFaaW4pk
-        +uLrjOxNbx0je1yQIsuoLEYyY381IZvWr9svCrX1O8VHRyXyKq+dJ20jB373E3GFK8+0lFZR
-        F1CJjQbZsMBthdrmdkKDbFkJV4RgvLKEEYIZBLk6EykE0wjuD2XQGsRaW7LrwoV8IYKe4nlK
-        CMwIxmqrRJZ3HbkA6NEWkhZmuO3wvrqVsDQ7cZ4wPsBb9CQ3R4Guu8KqF3OB0Jw6TluY4twh
-        U9fPWNiZOwwvDbmUoFkFL+6OWNmGCwLt/TKrhuRcYHBESwjsBtXme9atgbvFQvlcvUgwuge+
-        D31eYkeYMFYu8VpoyU6nBE6C0fwMkdB8GcFw2telgi80GTut9knOA8prvIT0bjBdbyKEX7GH
-        fvMqYQd7uFl1mxTSYrh2VSKoN0Hun1Za4DWg+fOIzkLSnGXOcpa5yVnmJuf/3DxEFSMXPkEd
-        E8GrvZV80ma1PEadoIzYHB4bo0eLB9iyYPz2BM12KRoRxyKpnZhdPEYJLU9UJ8c0ImBJqZO4
-        IWjDMYn4lDz5LK+KPaFKiObVjWgNS0ldxOdWDIdJuAh5PH+a5+N41b8qwdq4XkAK/w95P81R
-        x2cO7jV5BE6l6kYLfvQO7Qv8Qkz5B2wLdVN5p3seSco0TibaX9S/a1BsfHIp2FXTvlOrqk8N
-        CVu/L3ihwTG76fmOm7+j4j8eUtwdmZ/1tevyOW9KVLxSKCJTsi7dzlTmH0h6WHJ0Ps3NL311
-        yKenv3x+wdj8oMNEcJGzlFJHyr09SZVa/hcyH+rzfAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDIsWRmVeSWpSXmKPExsVy+t/xu7ptb1VjDU48lLLYOGM9q8X1L89Z
-        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
-        cbtxBZvFmx9nmSxa9x5ht/h3bSOLxcavHhabHxxjcxDyWDNvDaPHplWdbB53ru1h89i8pN6j
-        b8sqRo/jN7YzeXzeJBfAHqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9n
-        k5Kak1mWWqRvl6CXcfPPDaaC5dwVp9dsY2lgXM3ZxcjBISFgIjF5T3IXIxeHkMBSRoktG4+x
-        djFyAsWlJRpPr2aCsIUl/lzrYoMoes0ocXVdPztIQljAVeLq/OXMIDabgLnEo+1nmECGigho
-        Sby8mQpSzyzwm0Vi/8LzUM37mSTmrtgANpVXwE3iaONLsG0sAqoS/RtusIHYogIREpOu7WSB
-        qBGUODnzCZjNKeAuMX/uWrAaZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFRaBaS9llIWmYh
-        aZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwJjfduznlh2MXe+CDzEKcDAq8fAG
-        PFSNFWJNLCuuzD3EKMHBrCTCu89dOVaINyWxsiq1KD++qDQntfgQoynQcxOZpUST84HpKK8k
-        3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+NN8S+PWxpE163iYDZW
-        4GZk++cupXjvnM31gCNN1zRnWokc+i+trcd9cJ6xGedN2fPvMo5eSH7f/q8ha39A1i3Vi0/K
-        XfYdvuHWvX6WZUJsXHRCyoGi1InvxMvPR6ttXNP2cDXrGU/do1z77xjWCbg5qG8/+2FuaNaX
-        LbuaTmjwPA+x55CPnqfEUpyRaKjFXFScCAB2qey4DwMAAA==
-X-CMS-MailID: 20190710135206eucas1p1a8bb3868e3358ac992d3337ce291fbdb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190708141159eucas1p1751506975ff96a436e14940916623722
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190708141159eucas1p1751506975ff96a436e14940916623722
-References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
-        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
-        <20190708141140.24379-2-k.konieczny@partner.samsung.com>
-        <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
-        <1795603c-686f-dfb5-5982-c836b36dca9c@partner.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190623184732.5492-1-contact@artur-rojek.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10.07.2019 12:43, Kamil Konieczny wrote:
-> On 09.07.2019 07:40, Viresh Kumar wrote:
->> On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
->>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>>
->>> Add enable regulators to dev_pm_opp_set_regulators() and disable
->>> regulators to dev_pm_opp_put_regulators(). This prepares for
->>> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
->>>
->>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>> ---
->>>  drivers/opp/core.c | 13 +++++++++++++
->>>  1 file changed, 13 insertions(+)
->>>
->>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->>> index 0e7703fe733f..947cac452854 100644
->>> --- a/drivers/opp/core.c
->>> +++ b/drivers/opp/core.c
->>> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
->>>  	if (ret)
->>>  		goto free_regulators;
->>>  
->>> +	for (i = 0; i < opp_table->regulator_count; i++) {
->>> +		ret = regulator_enable(opp_table->regulators[i]);
->>> +		if (ret < 0)
->>> +			goto disable;
->>> +	}
->>
->> I am wondering on why is this really required as this isn't done for
->> any other platform, probably because the regulators are enabled by
->> bootloader and are always on.
+On Sun, 23 Jun 2019 20:47:29 +0200, Artur Rojek wrote:
+> Add a compatible string for the ADC controller present on
+> Ingenic JZ4770 SoC.
 > 
-> It is not ABI break, it should work with existing DTBs
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Sorry, this answer should go to question by Krzysztof
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
-
+Reviewed-by: Rob Herring <robh@kernel.org>
