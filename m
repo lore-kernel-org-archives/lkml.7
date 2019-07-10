@@ -2,128 +2,200 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A95DC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CF8C74A22
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD0920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF2B20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="VC17AU38"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIoj6W4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfGJNK1 (ORCPT
+        id S1727505AbfGJNLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:10:27 -0400
-Received: from mail-eopbgr760077.outbound.protection.outlook.com ([40.107.76.77]:3330
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfGJNK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNrj1a1xYvEEXWxnOymMfWoNPV1ydUCOXhYmBgDN0mk=;
- b=VC17AU38W9eu5MH0bKu1ckwvnUjPXBUpXZENq3BJgyiXpM02IoNuwXjrjVK9r4YH/0fuHN6yk31T+U5t+7a7ksB0Taq5vDGeR7DZ0cnkX5QJ9YfA7zpX6o46cKCBhBHZs/ZX9ZVY4KQLNEChYzTwwtkSWNTG+rpVyaqelcFKevo=
-Received: from MN2PR15MB3581.namprd15.prod.outlook.com (52.132.172.94) by
- MN2PR15MB2573.namprd15.prod.outlook.com (20.179.145.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Wed, 10 Jul 2019 13:10:20 +0000
-Received: from MN2PR15MB3581.namprd15.prod.outlook.com
- ([fe80::7d02:e054:fcd1:f7a0]) by MN2PR15MB3581.namprd15.prod.outlook.com
- ([fe80::7d02:e054:fcd1:f7a0%7]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
- 13:10:20 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Topic: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Index: AQHVNRbZCg2+IkEFUEKEsAEksjW2W6bB5j8AgABgI5CAAAiXAIAAV45AgADaXgCAAFK8kA==
-Date:   Wed, 10 Jul 2019 13:10:20 +0000
-Message-ID: <MN2PR15MB3581E1D6D56D6AA7DE8E357E9AF00@MN2PR15MB3581.namprd15.prod.outlook.com>
-References: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
- <2298b9eb-100f-6130-60c4-0e5e2c7b84d1@gmail.com>
- <361940337b0d4833a5634ddd1e1896a9@svr-chch-ex1.atlnz.lc>
- <87fd2150548041219fc42bce80b63c9c@svr-chch-ex1.atlnz.lc>
- <b862a74b-9f1e-fb64-0641-550a83b64664@gmail.com>
- <MN2PR15MB35811151C4A627C0AF364CAC9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
- <ef9a2ec1-1413-e8f9-1193-d53cf8ee52ba@gmail.com>
- <MN2PR15MB35813EA3ADE7E5E83A657D3F9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
- <e7606e76-8a0a-dab7-4561-f44f98d90164@gmail.com>
-In-Reply-To: <e7606e76-8a0a-dab7-4561-f44f98d90164@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [24.225.233.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c73ea754-390a-4c3c-4086-08d70537f641
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR15MB2573;
-x-ms-traffictypediagnostic: MN2PR15MB2573:
-x-microsoft-antispam-prvs: <MN2PR15MB2573CFFE79BF43FD1EF22FB29AF00@MN2PR15MB2573.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(39860400002)(396003)(376002)(199004)(189003)(13464003)(446003)(66946007)(4326008)(68736007)(86362001)(486006)(25786009)(76116006)(478600001)(66476007)(66556008)(2501003)(14454004)(44832011)(11346002)(476003)(110136005)(2201001)(229853002)(71200400001)(2906002)(256004)(5660300002)(14444005)(54906003)(305945005)(3846002)(66446008)(52536014)(81166006)(81156014)(7696005)(316002)(6436002)(55016002)(76176011)(66066001)(53546011)(53936002)(6246003)(64756008)(99286004)(7736002)(186003)(6506007)(8936002)(26005)(102836004)(74316002)(8676002)(33656002)(6116002)(71190400001)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR15MB2573;H:MN2PR15MB3581.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JUiaAR3oDbftQWyZ4TOOqLibn0r/hHI7CvFnK2SQvzEejDsVTUAFC2DZ/KiOXaK4u9kPdhUAWTqyhsIezNHBOkNH5uaK6FrBeovDmccyNDT+55f4PVjLc/curdg3RE18uAeHDNYaN9uN2sjFLWNHk/Y/FOYDz4tjFyTtGplY4ejVd/Wo/GECpW2T5FxsI29v35L7WYVCBbAepxMGFDs2ml7U3XAvfd9vSdKGMDTueSqKJ9l4c0aQzKg7CxtJqWfaTdYWixtRapcNyA8p0w/d72uOHpEnlO7wHVwPbSMjopdZnL+Wyulaq0cjgo3Lgwjp9INTa562Zff8h7Cfr6YRxoFahHqqhZjmaJKEquLybi1JUKKXSvmMJ8sFAHRSf/OHO6PG3DCCpw9oDE2/lO+wsn/2aDkkjRk5HC88E0i0cvU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 10 Jul 2019 09:11:23 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46792 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJNLW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:11:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so2005081ljg.13;
+        Wed, 10 Jul 2019 06:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HgiDeDG1wTRyQo64Yfrsty5IDtr0Xl76hBSeq06nMGA=;
+        b=gIoj6W4mOidrRaTyBkfWk8O76t97onXs6QezOsI5q4lPsGD8OAMjH8EjmVLJ0eFWA1
+         98wqWtTuyIF4/Ce7lUCc10Nve3UPm9FbvCECvU1VqA2XzvTvE/i+efDzhpZYCFIcRkof
+         7HPAyj1OAO+ZodgFSZ4BpTlQ7q88in4nkd5xVgF23xBkC7zsKUc39MD5kG5uG1QpfzXP
+         qpvyFTMa5ukE2baKI44snnWEz446qHp+5h6RiLQNa4BtcAR8sDjt4/muEna8fkKmxhwZ
+         Uh/CPiAYFh+2WwdxumRMRENx99QTSrrjyjGFRqBniw/z1O5YMBnMO2pgyvc8kQyu4/nE
+         +Apg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HgiDeDG1wTRyQo64Yfrsty5IDtr0Xl76hBSeq06nMGA=;
+        b=Qi1JOC8qr3bbRynV+EOmLl4JumJDz/0ZEk4JYjvRy6x+I3xtVfF/d6tN/ZiJEf1LZl
+         iKPo/uXCOZpFi4XS8wkJq7JwWSqZmODuPVCpmwE5AVuRfSRf9vovu/pRkWHVoyZPy8VG
+         PpafTM47R/YO35Eh2Qo0xF1CztBfIW+e1WtdghKgBBQEyjRCA8bpEG4hX+BCeYlRzvxc
+         iDm0feE/YbnFsBuuTWceEcq7it+8ZNhAvszwVyTaTdIZHsmGb5JtZLyhBk4GswC96qif
+         d9An9tWVEn+lCcelmPzGq7EiWJxHCwDfOBjtT1uT2XKasfHpY6MPi36EhNQgFCwUQvjK
+         TQJQ==
+X-Gm-Message-State: APjAAAX/VGf40SwRbbd7SYkKEXa5I0eXmJIevMggImd4V1RQgU98qiK5
+        SE1NNNqXh6rbOrjkr+2ppm8sDCs8
+X-Google-Smtp-Source: APXvYqzOix+zebKT77DqethjCJIvQPFqyzNy9+Xm78Q7pzDtGAAqoFCcfC5j257AmVfApzO+DA2u5A==
+X-Received: by 2002:a2e:9b57:: with SMTP id o23mr12773984ljj.67.1562764279309;
+        Wed, 10 Jul 2019 06:11:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id t67sm467079lje.19.2019.07.10.06.11.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 06:11:18 -0700 (PDT)
+Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190709145151.23086-1-digetx@gmail.com>
+ <20190710101229.54ufuhmh22dfxclr@flea>
+ <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
+ <20190710125552.qvmnh6qs63ikiu2k@flea>
+ <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
+ <20190710130615.gvi2jwgr2cds66xr@flea>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <75719cad-c65c-7ebc-3ea8-98134f86ddc3@gmail.com>
+Date:   Wed, 10 Jul 2019 16:11:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c73ea754-390a-4c3c-4086-08d70537f641
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 13:10:20.6767
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2573
+In-Reply-To: <20190710130615.gvi2jwgr2cds66xr@flea>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRXJpYyBEdW1hemV0IDxl
-cmljLmR1bWF6ZXRAZ21haWwuY29tPg0KPiBTZW50OiAxMC1KdWwtMTkgMDQ6MDANCj4gVG86IEpv
-biBNYWxveSA8am9uLm1hbG95QGVyaWNzc29uLmNvbT47IEVyaWMgRHVtYXpldA0KPiA8ZXJpYy5k
-dW1hemV0QGdtYWlsLmNvbT47IENocmlzIFBhY2toYW0NCj4gPENocmlzLlBhY2toYW1AYWxsaWVk
-dGVsZXNpcy5jby5uej47IHlpbmcueHVlQHdpbmRyaXZlci5jb207DQo+IGRhdmVtQGRhdmVtbG9m
-dC5uZXQNCj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IHRpcGMtZGlzY3Vzc2lvbkBsaXN0
-cy5zb3VyY2Vmb3JnZS5uZXQ7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0hdIHRpcGM6IGVuc3VyZSBza2ItPmxvY2sgaXMgaW5pdGlhbGlzZWQN
-Cj4gDQo+IA0KPiANCj4gT24gNy85LzE5IDEwOjE1IFBNLCBKb24gTWFsb3kgd3JvdGU6DQo+ID4N
-Cj4gPiBJdCBpcyBub3Qgb25seSBmb3IgbG9ja2RlcCBwdXJwb3NlcywgLWl0IGlzIGVzc2VudGlh
-bC4gIEJ1dCBwbGVhc2UgcHJvdmlkZSBkZXRhaWxzDQo+IGFib3V0IHdoZXJlIHlvdSBzZWUgdGhh
-dCBtb3JlIGZpeGVzIGFyZSBuZWVkZWQuDQo+ID4NCj4gDQo+IFNpbXBsZSBmYWN0IHRoYXQgeW91
-IGRldGVjdCBhIHByb2JsZW0gb25seSB3aGVuIHNrYl9xdWV1ZV9wdXJnZSgpIGlzIGNhbGxlZA0K
-PiBzaG91bGQgdGFsayBieSBpdHNlbGYuDQo+IA0KPiBBcyBJIHN0YXRlZCwgdGhlcmUgYXJlIG1h
-bnkgcGxhY2VzIHdoZXJlIHRoZSBsaXN0IGlzIG1hbmlwdWxhdGVkIF93aXRob3V0XyBpdHMNCj4g
-c3BpbmxvY2sgYmVpbmcgaGVsZC4NCg0KWWVzLCBhbmQgdGhhdCBpcyB0aGUgd2F5IGl0IHNob3Vs
-ZCBiZSBvbiB0aGUgc2VuZCBwYXRoLg0KDQo+IA0KPiBZb3Ugd2FudCBjb25zaXN0ZW5jeSwgdGhl
-bg0KPiANCj4gLSBncmFiIHRoZSBzcGlubG9jayBhbGwgdGhlIHRpbWUuDQo+IC0gT3IgZG8gbm90
-IGV2ZXIgdXNlIGl0Lg0KDQpUaGF0IGlzIGV4YWN0bHkgd2hhdCB3ZSBhcmUgZG9pbmcuIA0KLSBU
-aGUgc2VuZCBwYXRoIGRvZXNuJ3QgbmVlZCB0aGUgc3BpbmxvY2ssIGFuZCBuZXZlciBncmFicyBp
-dC4NCi0gVGhlIHJlY2VpdmUgcGF0aCBkb2VzIG5lZWQgaXQsIGFuZCBhbHdheXMgZ3JhYnMgaXQu
-DQoNCkhvd2V2ZXIsIHNpbmNlIHdlIGRvbid0IGtub3cgZnJvbSB0aGUgYmVnaW5uaW5nIHdoaWNo
-IHBhdGggYSBjcmVhdGVkIG1lc3NhZ2Ugd2lsbCBmb2xsb3csIHdlIGluaXRpYWxpemUgdGhlIHF1
-ZXVlIHNwaW5sb2NrICJqdXN0IGluIGNhc2UiIHdoZW4gaXQgaXMgY3JlYXRlZCwgZXZlbiB0aG91
-Z2ggaXQgbWF5IG5ldmVyIGJlIHVzZWQgbGF0ZXIuDQpZb3UgY2FuIHNlZSB0aGlzIGFzIGEgdmlv
-bGF0aW9uIG9mIHRoZSBwcmluY2lwbGUgeW91IGFyZSBzdGF0aW5nIGFib3ZlLCBidXQgaXQgaXMg
-YSBwcml6ZSB0aGF0IGlzIHdvcnRoIHBheWluZywgZ2l2ZW4gc2F2aW5ncyBpbiBjb2RlIHZvbHVt
-ZSwgY29tcGxleGl0eSBhbmQgcGVyZm9ybWFuY2UuDQoNCj4gDQo+IERvIG5vdCBpbml0aWFsaXpl
-IHRoZSBzcGlubG9jayBqdXN0IGluIGNhc2UgYSBwYXRoIHdpbGwgdXNlIHNrYl9xdWV1ZV9wdXJn
-ZSgpDQo+IChpbnN0ZWFkIG9mIHVzaW5nIF9fc2tiX3F1ZXVlX3B1cmdlKCkpDQoNCkkgYW0gb2sg
-d2l0aCB0aGF0LiBJIHRoaW5rIHdlIGNhbiBhZ3JlZSB0aGF0IENocmlzIGdvZXMgZm9yIHRoYXQg
-c29sdXRpb24sIHNvIHdlIGNhbiBnZXQgdGhpcyBidWcgZml4ZWQuDQoNCi8vL2pvbg0KDQoNCg==
+10.07.2019 16:06, Maxime Ripard пишет:
+> On Wed, Jul 10, 2019 at 03:59:55PM +0300, Dmitry Osipenko wrote:
+>> 10.07.2019 15:55, Maxime Ripard пишет:
+>>> On Wed, Jul 10, 2019 at 03:42:28PM +0300, Dmitry Osipenko wrote:
+>>>> 10.07.2019 13:12, Maxime Ripard пишет:
+>>>>> On Tue, Jul 09, 2019 at 05:51:51PM +0300, Dmitry Osipenko wrote:
+>>>>>> The named mode could be invalid and then cmdline parser misses to validate
+>>>>>> mode's dimensions, happily adding 0x0 mode as a valid mode. One case where
+>>>>>> this happens is NVIDIA Tegra devices that are using downstream bootloader
+>>>>>> which adds "video=tegrafb" to the kernel's cmdline and thus upstream Tegra
+>>>>>> DRM driver fails to probe because of the invalid mode.
+>>>>>>
+>>>>>> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>
+>>>>> Applied to drm-misc-next-fixes
+>>>>>
+>>>>> Thanks for figuring this out!
+>>>>
+>>>> Thank you very much! So the driver now doesn't fail to probe because
+>>>> of the cmdline, but what else I noticed is that the framebuffer
+>>>> console is now rotated by 90° on a 800x1280 panel, while display in
+>>>> Xorg is vertical as it was before. Seems something else is still
+>>>> missing, reverting "drm/modes: Rewrite the command line parser"
+>>>> returns the framebuffer's console orientation into the original
+>>>> state.
+>>>
+>>> What is the whole command line passed by the bootloader ?
+>>
+>> tegraid=30.1.3.0.0 mem=1022M@2048M android.commchip=0 vmalloc=512M androidboot.serialno=015d3f18c9081210 video=tegrafb no_console_suspend=1 console=none
+>> debug_uartport=hsport usbcore.old_scheme_first=1 lp0_vec=8192@0xbddf9000 tegra_fbmem=8195200@0xabe01000 core_edp_mv=0 audio_codec=rt5640 board_info=f41:a00:1:44:2
+>> root=/dev/sda1 rw rootwait tegraboot=sdmmc gpt gpt_sector=61079551 androidboot.bootloader=4.23 androidboot.baseband=1231_0.18.0_0409
+> 
+> Thanks.
+> 
+> It still doesn't really make sense to me why that video=tegrafb should
+> be considered valid.
+> 
+> However, I don't see anything rotation related in the commit you
+> list. Are you sure it's really the offending one and not another one?
+
+Yes.
+
+> Also, do you have the option to recompile a kernel so that we can add
+> some debug?
+
+Recompiling kernel is not a problem at all.
+
+Before "drm/modes: Rewrite the command line parser":
+
+[    1.256454] [drm] parse error at position 6 in video mode 'tegrafb'
+[    1.256654] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    1.256664] [drm] No driver support for vblank timestamp query.
+[    1.256703] [drm:drm_client_modeset_probe]
+[    1.256719] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
+[    1.256731] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] status updated from unknown to connected
+[    1.256828] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
+[    1.256842] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
+[    1.256849] [drm:drm_client_modeset_probe] connector 95 enabled? yes
+[    1.256859] [drm:drm_client_modeset_probe] Not using firmware configuration
+[    1.256867] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
+[    1.256874] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
+[    1.256880] [drm:drm_client_modeset_probe] found mode 800x1280
+[    1.256886] [drm:drm_client_modeset_probe] picking CRTCs for 4096x4096 config
+[    1.256896] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
+[    1.279069] [drm:tegra_crtc_atomic_enable] rate: 408000000, div: 10
+[    1.279077] [drm:tegra_crtc_atomic_enable] pclk: 0
+[    1.296744] [drm:drm_fb_helper_hotplug_event.part.0]
+[    1.296760] [drm:drm_client_modeset_probe]
+[    1.296792] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
+[    1.296987] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
+[    1.297010] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
+[    1.297022] [drm:drm_client_modeset_probe] connector 95 enabled? yes
+[    1.297040] [drm:drm_client_modeset_probe] Not using firmware configuration
+[    1.297054] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
+[    1.297065] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
+[    1.297073] [drm:drm_client_modeset_probe] found mode 800x1280
+[    1.297083] [drm:drm_client_modeset_probe] picking CRTCs for 800x1280 config
+[    1.297102] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
+
+After:
+
+[    1.225000] [drm:drm_connector_init] cmdline mode for connector LVDS-1 tegrafb 0x0@60Hz
+[    1.225143] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    1.225154] [drm] No driver support for vblank timestamp query.
+[    1.225182] [drm:drm_client_modeset_probe]
+[    1.225195] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
+[    1.225203] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] status updated from unknown to connected
+[    1.225283] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
+[    1.225294] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
+[    1.225299] [drm:drm_client_modeset_probe] connector 95 enabled? yes
+[    1.225307] [drm:drm_client_modeset_probe] Not using firmware configuration
+[    1.225314] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
+[    1.225319] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
+[    1.225323] [drm:drm_client_modeset_probe] found mode 800x1280
+[    1.225328] [drm:drm_client_modeset_probe] picking CRTCs for 4096x4096 config
+[    1.225336] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
+[    1.249051] [drm:tegra_crtc_atomic_enable] rate: 408000000, div: 10
+[    1.249058] [drm:tegra_crtc_atomic_enable] pclk: 0
+[    1.266748] [drm:drm_fb_helper_hotplug_event.part.0]
+[    1.266768] [drm:drm_client_modeset_probe]
+[    1.266805] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
+[    1.267045] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
+[    1.267074] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
+[    1.267091] [drm:drm_client_modeset_probe] connector 95 enabled? yes
+[    1.267113] [drm:drm_client_modeset_probe] Not using firmware configuration
+[    1.267129] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
+[    1.267143] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
+[    1.267155] [drm:drm_client_modeset_probe] found mode 800x1280
+[    1.267168] [drm:drm_client_modeset_probe] picking CRTCs for 800x1280 config
+[    1.267191] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
+
