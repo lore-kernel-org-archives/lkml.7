@@ -2,117 +2,100 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DFEC606CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A2DC606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504A72084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRN+1ygj"
+	by mail.kernel.org (Postfix) with ESMTP id E77892064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfGJM2L (ORCPT
+        id S1727220AbfGJMaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:28:11 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33876 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbfGJM2K (ORCPT
+        Wed, 10 Jul 2019 08:30:04 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:1311
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726097AbfGJMaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:28:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n5so1947630otk.1;
-        Wed, 10 Jul 2019 05:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9FNqx+M2R51JE04Z34tCRtE1I2zuoMlX/VVUP9urQ/g=;
-        b=cRN+1ygji015bntIuNNMqDL5Hhvz9UEFPR3wPkgOd9pZ0sb8Pp6JS2cxZ/6Ck9aJZ6
-         slcqy2QAylFSWD4AZkxn5Bpfo9f3TuRqaNv1y8ffzX6ubNCA+Udge0FdoXinLWh+NVsS
-         VCnGASm/tVS8oWXMoqO9ufoKto1DbMJGmEZfUyai1gHAVkJYHxZjBQq02gLm9aN4oZcL
-         zuPGYJsuDgJO1+gJexcT2ymPZob4d6bKWcPLuIsqByOSS5+oq1iYO66/C7rE+oIKCYQ4
-         Oe+nVSxEfPTEuYVebEkSW4FfE2PGDL+uov5nucedyg1dhivtPIfCXoUyz9U+Yn8wbvzo
-         ToUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9FNqx+M2R51JE04Z34tCRtE1I2zuoMlX/VVUP9urQ/g=;
-        b=avJnukx/EgcaSkaV0kxOkES0PR2itp8wKNc96nl3XTQG8dUezggB+s3KdJLkivkLSj
-         Ev4KLRdJ3Pc+p1Z4M56lcEfBJnEhmbYVwtXhcQYX2uyvg4ggbm8hbCriy75IBF+ERGP2
-         U7hdws6MBs/xB56XqyjwW4tJSYxN3z4ur4aQwo7uj28pLInTZ1JOeqyRV3xxrhlkfLr/
-         zcVgDd4HrtO4o/qdl9IBzAB3AKGoiLxpSsjWpkEpcY0yTkPOjn5cKuyWpXsOEK+nEqpC
-         gS8NEjQ8QivvgDO6gfse2ni4TPI/RFgO733szeHnoj9PwNliM5qYOPUm/4eq/nExCF/1
-         2utA==
-X-Gm-Message-State: APjAAAXQ99plM7X3eSrrPbHvf+c9qfOjdELn2jOqn38FxM4yQLwX3APx
-        qu0zWGLZ3TK3rh6Thq6URayJ+IyDzHzJl9aLh8E=
-X-Google-Smtp-Source: APXvYqzEWNBdZe9q7RPZCtKpqe0c0GbIay/OZ2Z1mJrHeMez83o2JTAzAdGZ3NJ3TfKDfeJ7z6jA9RE3ZCouyFwvx6s=
-X-Received: by 2002:a9d:6194:: with SMTP id g20mr2471325otk.149.1562761689474;
- Wed, 10 Jul 2019 05:28:09 -0700 (PDT)
+        Wed, 10 Jul 2019 08:30:04 -0400
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 2F9F9216E4;
+        Wed, 10 Jul 2019 12:30:02 +0000 (UTC)
 MIME-Version: 1.0
-References: <20190208150826.44EBC68DD2@newverein.lst.de> <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
- <20190311114945.GA5625@lst.de> <20190408153628.GL6139@lakrids.cambridge.arm.com>
- <20190409175238.GE9255@fuggles.cambridge.arm.com>
-In-Reply-To: <20190409175238.GE9255@fuggles.cambridge.arm.com>
-From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
-Date:   Wed, 10 Jul 2019 15:27:58 +0300
-Message-ID: <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
-Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Torsten Duwe <duwe@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 10 Jul 2019 14:30:02 +0200
+From:   Florian Eckert <fe@dev.tdt.de>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Eckert.Florian@googlemail.com, info@metux.net,
+        dvhart@infradead.org, andy@infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio
+ export
+In-Reply-To: <3c469213-f2d7-aa7e-4028-e8ce463a4441@metux.net>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-2-fe@dev.tdt.de>
+ <3c469213-f2d7-aa7e-4028-e8ce463a4441@metux.net>
+Message-ID: <f931d21e19a12e34841da978d10a615e@dev.tdt.de>
+X-Sender: fe@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 8:52 PM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Mon, Apr 08, 2019 at 04:36:28PM +0100, Mark Rutland wrote:
-> > On Mon, Mar 11, 2019 at 12:49:46PM +0100, Torsten Duwe wrote:
-> > > On Wed, Feb 13, 2019 at 11:11:04AM +0000, Julien Thierry wrote:
-> > > > Hi Torsten,
-> > > >
-> > > > On 08/02/2019 15:08, Torsten Duwe wrote:
-> > > > > Patch series v8, as discussed.
-> > > > > The whole series applies cleanly on 5.0-rc5
-> > >
-> > > So what's the status now? Besides debatable minor style
-> > > issues there were no more objections to v8. Would this
-> > > go through the ARM repo or via the ftrace repo?
-> >
-> > Sorry agains for the delay on this. I'm now back in the office and in
-> > front of a computer daily, so I can spend a bit more time on this.
-> >
-> > Regardless of anything else, I think that we should queue the first
-> > three patches now. I've poked the relevant maintainers for their acks so
-> > that those can be taken via the arm64 tree.
-> >
-> > I'm happy to do the trivial cleanups on the last couple of patches (e.g.
-> > s/lr/x30), and I'm actively looking at the API rework I requested.
->
-> Ok, I've picked up patches 1-3 and I'll wait for you to spin updates to the
-> last two.
+On 2019-07-08 21:44, Enrico Weigelt, metux IT consult wrote:
+> On 04.07.19 11:02, Florian Eckert wrote:
+>> On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to 
+>> reset
+>> the ports from the userspace, add the definition to this platform
+>> device. The gpio can then be exported by the legancy gpio subsystem to
+>> toggle the mpcie reset pin.
+> 
+> Are you sure they're also available on APUv2 (not just v3) ?
 
-Ok, I see that patches 1-3 are picked up and are already present in recent
-kernels.
+We have the following models on APU2 family:
+The schematic could be downloaded for all APU2 family boards from this 
+side.
+See https://www.pcengines.ch/apu2.htm
 
-Is there any progress on remaining two patches?
-Any help required?
+They all use the similar PCB with some minimal changes.
 
-Thanks,
-Ruslan
+APU2
+2 mpcie slot
+apu2d0 (2 GB DRAM, 2 i211AT NICs)
+apu2d2 (2 GB DRAM, 3 i211AT NICs)
+apu2d4 (4 GB DRAM, 3 i210AT NICs)
+
+J14 (USB + SIM1) PE3_RST to GPIO G51
+J13 (USB + SIM2) PE4_RST to GPIO G55
+
+APU3
+3 mpcie slot
+apu3c2 (2 GB DRAM, 3 i211AT NICs, optimized for 3G/LTE modems)
+apu3c4 (4 GB DRAM, 3 i211AT NICs, optimized for 3G/LTE modems)
+
+J16 (PCIe + USB no SIM) not connected to a userland GPIO
+J15 (USB SIM1) PE4_RST to GPIO G55
+J14 (mSATA or USB SIM2) PE3_RST to GPIO G51
+
+APU4
+3 mpcie slot
+apu4c2 (2 GB DRAM, 4 i211AT NICs)
+apu4c4 (4 GB DRAM, 4 i211AT NICs)
+
+J15 (PCIe + USB no SIM) not connected to a userland GPIO
+J14 (USB SIM1) PE4_RST to GPIO G55
+J13 (mSATA or USB SIM2) PE3_RST to GPIO G51
+
+Please check again so that I have not done any mistake.
+
+So all USB only mpcie slots could be reseted by a GPIO G51 and G55.
+
+Kind regards
+
+Flo
+
