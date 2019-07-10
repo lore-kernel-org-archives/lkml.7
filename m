@@ -2,151 +2,153 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBACAC73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5EFC73C6A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA09520645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A574D20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=jilayne.com header.i=@jilayne.com header.b="dJM475y+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Er83EjvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfGJEKn (ORCPT
+        id S1726118AbfGJEMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 00:10:43 -0400
-Received: from mx1.supremebox.com ([198.23.53.39]:58873 "EHLO
-        mx1.supremebox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfGJEKn (ORCPT
+        Wed, 10 Jul 2019 00:12:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37317 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfGJEMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 00:10:43 -0400
-X-Greylist: delayed 1756 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 00:10:42 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jilayne.com
-        ; s=default; h=To:References:Message-Id:Content-Transfer-Encoding:Cc:Date:
-        In-Reply-To:From:Subject:Mime-Version:Content-Type:Sender:Reply-To:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=AYOKcfGVOYIwtnBpJskuZTTWudypmg8tOCQ67JADO40=; b=dJM475y+qQShcOTAhRStkp5NwL
-        jhmtFFzuzeFwyduNeAEOLv/dvMSsoqagk34N8LSdXbQIQHoS9BIRso2BrhMavjMFb1+wfdg8u3XDH
-        RfqC+cGxeXuZM1RwzbbBRwypWa0uCes4fBH0BpjZ2UkNp+Jv5B90LBwMIWlsQDt/n7m8=;
-Received: from 184-96-235-43.hlrn.qwest.net ([184.96.235.43] helo=[192.168.0.12])
-        by mx1.supremebox.com with esmtpa (Exim 4.89)
-        (envelope-from <opensource@jilayne.com>)
-        id 1hl3VT-0006mr-KH; Wed, 10 Jul 2019 03:42:59 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2] gpu/drm_memory: fix a few warnings
-From:   J Lovejoy <opensource@jilayne.com>
-In-Reply-To: <alpine.DEB.2.21.1907082150170.1961@nanos.tec.linutronix.de>
-Date:   Tue, 9 Jul 2019 21:42:57 -0600
-Cc:     Qian Cai <cai@lca.pw>, Ilia Mirkin <imirkin@alum.mit.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, joe@perches.com,
-        linux-spdx@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, rfontana@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <472DABBB-81E5-4E79-9910-BA3C26936B40@jilayne.com>
-References: <1562609151-7283-1-git-send-email-cai@lca.pw>
- <CAKb7UvhoW2F5LSf4B=vJhLykPCme_ixwbUBup_sBXjoQa72Fzw@mail.gmail.com>
- <1562614919.8510.9.camel@lca.pw>
- <alpine.DEB.2.21.1907082150170.1961@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Sender-Ident-agJab5osgicCis: opensource@jilayne.com
+        Wed, 10 Jul 2019 00:12:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id q22so1775379iog.4;
+        Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
+        b=Er83EjvRJBQgeZLZLNGHJ/CIJ3vFfD2b44UXb9NJhum0QdBtKCUFxG0HoR3ONVkgQr
+         o0xtIwaDaN0tSl+1OGHaci0d6tKYunpmoPln67v2glTbuS5CSUdXTa8xze14By08wGhJ
+         bnFbwyg1k2PhbXe0djOJmsDtY3LdvNtwjKTrbPiHCZrB+/GEsN5F2cseK/B+iQPFWgp4
+         8aC8paqLYpkbbfpBuPq3IgyZDy0jlhnYJrWVc/4I9/jUAFt8B/TF67q3NMTifsw9cR0k
+         edGv+eaK5sywQoqE1FsB2w1F+jWKQPgaYi8IzrYgBQF21mb60gjkzmvG2hcoMO1gVhLq
+         T2Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
+        b=YfZWWWiYHYSfH6GCkZYIxl2X72F5nYqi8y9IQuPCBTwbru/NczvY5S0uu9LFdPdgDe
+         Up36MFa/JTE4f9R6vAyS0ytyJab60ahv1a24NeJaQoROuI5pSi3DxUUC4ihng3Jpfatd
+         WGNZTPU07NMA2KPQxdMbC9la7M2meTMubcWRpcwJVG7lRLxrT6qIYplbuLpq2edxqeZK
+         4i7/B3XSGDAlK6TWCQmAYiBcn1lIij85W+zByLvZjFfpW/dTdyiXjqOSPXRA0TyBB9Rn
+         R8NmlWN0Grjq3W01+OGGX8NWfhbGna8D6Lperv3KW7OWJdEcoOnQVy/HyKTW1ouUMLXb
+         1JLw==
+X-Gm-Message-State: APjAAAW+RHvRi+sE68ksciB+SzShV4PXXTbDIhKm7EtlLd+3CnUb/D/0
+        hk8F5HYdrI6FHvLe69L5dAJuMJNPqu15UAc+4kA=
+X-Google-Smtp-Source: APXvYqyrY3pgnVJVoKBZLLrB+4OJFeIjwcN5V+rh111wh3J7yNqwK0JY5nwgq4JIQX+Ci9Ss4o59aShURyDdZ3NjNHU=
+X-Received: by 2002:a5d:8c81:: with SMTP id g1mr30451959ion.239.1562731934157;
+ Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+ <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
+In-Reply-To: <20190709143437.GA30850@bogus>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Tue, 9 Jul 2019 23:12:03 -0500
+Message-ID: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
+ Milbeaut HDMAC bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     dmaengine@vger.kernel.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        orito.takao@socionext.com,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        kasai.kazuhiro@socionext.com,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
+> > From: Jassi Brar <jaswinder.singh@linaro.org>
+> >
+> > Document the devicetree bindings for Socionext Milbeaut HDMAC
+> > controller. Controller has upto 8 floating channels, that need
+> > a predefined slave-id to work from a set of slaves.
+> >
+> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > ---
+> >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> > new file mode 100644
+> > index 000000000000..a104fcb9e73d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> > @@ -0,0 +1,51 @@
+> > +* Milbeaut AHB DMA Controller
+> > +
+> > +Milbeaut AHB DMA controller has transfer capability bellow.
+> > + - memory to memory transfer
+> > + - device to memory transfer
+> > + - memory to device transfer
+> > +
+> > +Required property:
+> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
+> > +- reg:              Should contain DMA registers location and length.
+> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
+>
+> How many?
+>
+Each channel has an IRQ line. And the number of channels is
+configurable. So instead of having some explicit property like
+'dma-channels', we infer that from the number of irqs registered.
 
+> > +- #dma-cells:       Should be 1. Specify the ID of the slave.
+> > +- clocks:           Phandle to the clock used by the HDMAC module.
+> > +
+> > +
+> > +Example:
+> > +
+> > +     hdmac1: hdmac@1e110000 {
+>
+> dma-controller@...
+>
+OK
 
-> On Jul 8, 2019, at 1:57 PM, Thomas Gleixner <tglx@linutronix.de> =
-wrote:
->=20
-> On Mon, 8 Jul 2019, Qian Cai wrote:
->> On Mon, 2019-07-08 at 15:21 -0400, Ilia Mirkin wrote:
->>>> -/**
->>>> +// SPDX-License-Identifier: MIT
->>>> +/*
->>>>   * \file drm_memory.c
->>>>   * Memory management wrappers for DRM
->>>>   *
->>>> @@ -12,25 +13,6 @@
->>>>   * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.
->>>>   * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.
->>>>   * All Rights Reserved.
->>>> - *
->>>> - * Permission is hereby granted, free of charge, to any person =
-obtaining a
->>>> - * copy of this software and associated documentation files (the
->>>> "Software"),
->>>> - * to deal in the Software without restriction, including without
->>>> limitation
->>>> - * the rights to use, copy, modify, merge, publish, distribute, =
-sublicense,
->>>> - * and/or sell copies of the Software, and to permit persons to =
-whom the
->>>> - * Software is furnished to do so, subject to the following =
-conditions:
->>>> - *
->>>> - * The above copyright notice and this permission notice =
-(including the
->>>> next
->>>> - * paragraph) shall be included in all copies or substantial =
-portions of
->>>> the
->>>> - * Software.
->>>> - *
->>>> - * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, =
-EXPRESS
->>>> OR
->>>> - * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF =
-MERCHANTABILITY,
->>>> - * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO =
-EVENT SHALL
->>>> - * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, =
-DAMAGES
->>>> OR
->>>=20
->>> This talks about VA Linux Systems and/or its suppliers, while the =
-MIT
->>> licence talks about authors or copyright holders.
->=20
-> That's looks lika a valid substitution and does not change the meaning =
-of
-> the license, AFAICT.=20
+> > +             compatible = "socionext,milbeaut-m10v-hdmac";
+> > +             reg = <0x1e110000 0x10000>;
+> > +             interrupts = <0 132 4>,
+> > +                          <0 133 4>,
+> > +                          <0 134 4>,
+> > +                          <0 135 4>,
+> > +                          <0 136 4>,
+> > +                          <0 137 4>,
+> > +                          <0 138 4>,
+> > +                          <0 139 4>;
+> > +             #dma-cells = <1>;
+> > +             clocks = <&dummy_clk>;
+> > +     };
+> > +
+> > +* DMA client
+> > +
+> > +Clients have to specify the DMA requests with phandles in a list.
+>
+> Nothing specific to this binding here and the client side is already
+> documented, so drop this section.
+>
+OK.
 
-As of the 3.6 release of the SPDX License List, we will have added =
-markup to denote that the name in the disclaimer can be changed and =
-still considered a match. This is a common scenario in other licenses =
-(like the BSD family), but I don=E2=80=99t think we=E2=80=99d come =
-across it until the work on the kernel and adding SPDX identifiers. So, =
-yes, MIT would be the correct SPDX identifier here as of 3.6 (which will =
-be posted in a few days).
-
-For reference, the SPDX License List matching guidelines can be found =
-here: https://spdx.org/spdx-license-list/matching-guidelines - see =
-Guideline 2.1.3 specifically. Replaceable text is marked up in the =
-master files that comprise the SPDX License List according the the XML =
-schema and then displayed in color coded text on the website pages (see, =
-for example, BSD-3-Clause - https://spdx.org/licenses/BSD-3-Clause.html
-
-Of course, if anyone finds any other license text that deserves this =
-kind of accommodation, you can always make a PR here: =
-https://github.com/spdx/license-list-XML :)
-
-thanks,
-Jilayne
-SPDX legal team co-lead=
+Thanks
