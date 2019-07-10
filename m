@@ -6,46 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9578C73C65
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8E6C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871C420693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937D220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfGJAWz convert rfc822-to-8bit (ORCPT
+        id S1726887AbfGJA0W convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 20:22:55 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:8170 "EHLO mxhk.zte.com.cn"
+        Tue, 9 Jul 2019 20:26:22 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:50328 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGJAWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 20:22:54 -0400
+        id S1726133AbfGJA0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 20:26:21 -0400
 Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id D0A33B63676A81C54DA0;
-        Wed, 10 Jul 2019 08:22:51 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 0AD18C49280A697936D4;
+        Wed, 10 Jul 2019 08:26:13 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x6A0Mag1034399;
-        Wed, 10 Jul 2019 08:22:36 +0800 (GMT-8)
+        by mse-fl2.zte.com.cn with ESMTP id x6A0Po56035564;
+        Wed, 10 Jul 2019 08:25:50 +0800 (GMT-8)
         (envelope-from wang.yi59@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019071008225384-2222331 ;
-          Wed, 10 Jul 2019 08:22:53 +0800 
+          with ESMTP id 2019071008260808-2222445 ;
+          Wed, 10 Jul 2019 08:26:08 +0800 
 From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
-        wang.liang82@zte.com.cn
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, sean.j.christopherson@intel.com,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
 Subject: [PATCH v2] kvm: x86: Fix -Wmissing-prototypes warnings
-Date:   Wed, 10 Jul 2019 08:20:50 +0800
-Message-Id: <1562718050-45669-1-git-send-email-wang.yi59@zte.com.cn>
+Date:   Wed, 10 Jul 2019 08:24:03 +0800
+Message-Id: <1562718243-46068-1-git-send-email-wang.yi59@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-10 08:22:53,
+ 21, 2013) at 2019-07-10 08:26:08,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-10 08:22:39
+ 2019-07-10 08:25:53
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl2.zte.com.cn x6A0Mag1034399
+X-MAIL: mse-fl2.zte.com.cn x6A0Po56035564
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
