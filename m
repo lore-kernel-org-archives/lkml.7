@@ -4,41 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E6C73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E75C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC1920651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B459D20861
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfGJFFD (ORCPT
+        id S1727045AbfGJFFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:05:03 -0400
-Received: from smtprelay0108.hostedemail.com ([216.40.44.108]:34413 "EHLO
+        Wed, 10 Jul 2019 01:05:07 -0400
+Received: from smtprelay0207.hostedemail.com ([216.40.44.207]:38458 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726098AbfGJFEy (ORCPT
+        by vger.kernel.org with ESMTP id S1726623AbfGJFEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:04:54 -0400
+        Wed, 10 Jul 2019 01:04:53 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 739BD100E86C6;
-        Wed, 10 Jul 2019 05:04:53 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id B0270182CF688;
+        Wed, 10 Jul 2019 05:04:51 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hose32_d6edeaac7419
-X-Filterd-Recvd-Size: 1698
+X-HE-Tag: body50_d297ac8f1614
+X-Filterd-Recvd-Size: 1842
 Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
         (Authenticated sender: joe@perches.com)
         by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jul 2019 05:04:52 +0000 (UTC)
+        Wed, 10 Jul 2019 05:04:50 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH 10/12] phy: amlogic: G12A: Fix misuse of GENMASK macro
-Date:   Tue,  9 Jul 2019 22:04:23 -0700
-Message-Id: <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
+        Yan-Hsuan Chuang <yhchuang@realtek.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 09/12] rtw88: Fix misuse of GENMASK macro
+Date:   Tue,  9 Jul 2019 22:04:22 -0700
+Message-Id: <0de52d891d7925b02f4f0fe2c750d076e55434d9.1562734889.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <cover.1562734889.git.joe@perches.com>
 References: <cover.1562734889.git.joe@perches.com>
@@ -51,22 +52,22 @@ Arguments are supposed to be ordered high then low.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/phy/amlogic/phy-meson-g12a-usb2.c | 2 +-
+ drivers/net/wireless/realtek/rtw88/rtw8822b.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-index 9065ffc85eb4..cd7eccab2649 100644
---- a/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-+++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-@@ -66,7 +66,7 @@
- #define PHY_CTRL_R14						0x38
- 	#define PHY_CTRL_R14_I_RDP_EN				BIT(0)
- 	#define PHY_CTRL_R14_I_RPU_SW1_EN			BIT(1)
--	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(2, 3)
-+	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(3, 2)
- 	#define PHY_CTRL_R14_PG_RSTN				BIT(4)
- 	#define PHY_CTRL_R14_I_C2L_DATA_16_8			BIT(5)
- 	#define PHY_CTRL_R14_I_C2L_ASSERT_SINGLE_EN_ZERO	BIT(6)
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822b.c b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
+index 1172f6c0605b..d61d534396c7 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8822b.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
+@@ -997,7 +997,7 @@ static void rtw8822b_do_iqk(struct rtw_dev *rtwdev)
+ 	rtw_write_rf(rtwdev, RF_PATH_A, RF_DTXLOK, RFREG_MASK, 0x0);
+ 
+ 	reload = !!rtw_read32_mask(rtwdev, REG_IQKFAILMSK, BIT(16));
+-	iqk_fail_mask = rtw_read32_mask(rtwdev, REG_IQKFAILMSK, GENMASK(0, 7));
++	iqk_fail_mask = rtw_read32_mask(rtwdev, REG_IQKFAILMSK, GENMASK(7, 0));
+ 	rtw_dbg(rtwdev, RTW_DBG_PHY,
+ 		"iqk counter=%d reload=%d do_iqk_cnt=%d n_iqk_fail(mask)=0x%02x\n",
+ 		counter, reload, ++do_iqk_cnt, iqk_fail_mask);
 -- 
 2.15.0
 
