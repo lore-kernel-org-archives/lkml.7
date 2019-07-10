@@ -2,200 +2,195 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CF8C74A22
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3830C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF2B20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE47520838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIoj6W4m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+0BwmK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfGJNLX (ORCPT
+        id S1727411AbfGJNO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:11:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46792 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfGJNLW (ORCPT
+        Wed, 10 Jul 2019 09:14:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42548 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJNO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:11:22 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so2005081ljg.13;
-        Wed, 10 Jul 2019 06:11:20 -0700 (PDT)
+        Wed, 10 Jul 2019 09:14:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t132so1243129pgb.9;
+        Wed, 10 Jul 2019 06:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HgiDeDG1wTRyQo64Yfrsty5IDtr0Xl76hBSeq06nMGA=;
-        b=gIoj6W4mOidrRaTyBkfWk8O76t97onXs6QezOsI5q4lPsGD8OAMjH8EjmVLJ0eFWA1
-         98wqWtTuyIF4/Ce7lUCc10Nve3UPm9FbvCECvU1VqA2XzvTvE/i+efDzhpZYCFIcRkof
-         7HPAyj1OAO+ZodgFSZ4BpTlQ7q88in4nkd5xVgF23xBkC7zsKUc39MD5kG5uG1QpfzXP
-         qpvyFTMa5ukE2baKI44snnWEz446qHp+5h6RiLQNa4BtcAR8sDjt4/muEna8fkKmxhwZ
-         Uh/CPiAYFh+2WwdxumRMRENx99QTSrrjyjGFRqBniw/z1O5YMBnMO2pgyvc8kQyu4/nE
-         +Apg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VLGpVWCepPkViNPlTkxuFahJxt3WaXWMIUHUVNkKRfo=;
+        b=A+0BwmK4oAsgVef3DhVlqKulKgYebIo9OKP8qfDYLkZlxPiAd3yrKqrRq6NvoDvV/I
+         PH6wpAD9Su78O/ZS4ZU44XGzJWftifeY/yJwIzzlS3BjZUvKlJ2K5cU4tgN1FJbpJ3cr
+         GXjzau9lJ4+cwNLR/FZC/4ZtpbvuX9csG3Y502W0686CNEnuD7hZxTqQSXtYm7GSwpj8
+         utIQZ7EF0Pe5Mv20VbwEDZRrQ5vW3Sg367cCB1gO9QgBvQ9lQW0HROudGouXaUsVEhFj
+         qyxUkNSjmQ8QQRq3nSsyucroBhlvPWtGim/Can6mINjW4drLd2Npo3g2w/MnKZmPtLBq
+         BxBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HgiDeDG1wTRyQo64Yfrsty5IDtr0Xl76hBSeq06nMGA=;
-        b=Qi1JOC8qr3bbRynV+EOmLl4JumJDz/0ZEk4JYjvRy6x+I3xtVfF/d6tN/ZiJEf1LZl
-         iKPo/uXCOZpFi4XS8wkJq7JwWSqZmODuPVCpmwE5AVuRfSRf9vovu/pRkWHVoyZPy8VG
-         PpafTM47R/YO35Eh2Qo0xF1CztBfIW+e1WtdghKgBBQEyjRCA8bpEG4hX+BCeYlRzvxc
-         iDm0feE/YbnFsBuuTWceEcq7it+8ZNhAvszwVyTaTdIZHsmGb5JtZLyhBk4GswC96qif
-         d9An9tWVEn+lCcelmPzGq7EiWJxHCwDfOBjtT1uT2XKasfHpY6MPi36EhNQgFCwUQvjK
-         TQJQ==
-X-Gm-Message-State: APjAAAX/VGf40SwRbbd7SYkKEXa5I0eXmJIevMggImd4V1RQgU98qiK5
-        SE1NNNqXh6rbOrjkr+2ppm8sDCs8
-X-Google-Smtp-Source: APXvYqzOix+zebKT77DqethjCJIvQPFqyzNy9+Xm78Q7pzDtGAAqoFCcfC5j257AmVfApzO+DA2u5A==
-X-Received: by 2002:a2e:9b57:: with SMTP id o23mr12773984ljj.67.1562764279309;
-        Wed, 10 Jul 2019 06:11:19 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id t67sm467079lje.19.2019.07.10.06.11.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 06:11:18 -0700 (PDT)
-Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190709145151.23086-1-digetx@gmail.com>
- <20190710101229.54ufuhmh22dfxclr@flea>
- <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
- <20190710125552.qvmnh6qs63ikiu2k@flea>
- <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
- <20190710130615.gvi2jwgr2cds66xr@flea>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <75719cad-c65c-7ebc-3ea8-98134f86ddc3@gmail.com>
-Date:   Wed, 10 Jul 2019 16:11:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=VLGpVWCepPkViNPlTkxuFahJxt3WaXWMIUHUVNkKRfo=;
+        b=pYs7NQ7CeHdlTclfHflJ0isWLCfuOROWt55VBeelSQdYEmBXY3C5rINr4j6tniP8ST
+         TJV42mgy071vx2immjxIB9K4hZTWBaMntU+NkP+UYZ0mURj8wmJJ5Gew3l5sn5iPvlCn
+         vLOho5n+6VpwU/YdlIKFiNClLgh10wscYij54sAabfL0KD9ZfFkA/aoSjn/J8OI8R4JG
+         wsq5gsrYbzdcNQ234JINUi3vv4jgTYkCRsnbi6xfRIU4M6GqtGZXUzRy8F2TVEa9/+Kd
+         Vw9H2OYGZ29pbcLZFllMq5xu6EH0LRweh/PlaE/waff1V7afnuytaCqhb53TJkDHKG9x
+         G6XA==
+X-Gm-Message-State: APjAAAX6C2n+IoztkIPZDBVsFDGt3kLhq/hutUwCJacIbqVO4N7CSTzd
+        9RHKNSvagfI/pqMdzJ76tCEjDpMighic+Q==
+X-Google-Smtp-Source: APXvYqxzWYXUwjttKWD0MSuruhNwge1FOyOY/bWZc4n43lF4RblamDYxNzK6ccAh/vcxymQNvyfCXA==
+X-Received: by 2002:a17:90a:220a:: with SMTP id c10mr7084689pje.33.1562764465081;
+        Wed, 10 Jul 2019 06:14:25 -0700 (PDT)
+Received: from localhost.localdomain ([116.66.213.65])
+        by smtp.gmail.com with ESMTPSA id x25sm489273pfa.90.2019.07.10.06.14.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 10 Jul 2019 06:14:24 -0700 (PDT)
+From:   yangxingwu <xingwu.yang@gmail.com>
+To:     davem@davemloft.net
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        yangxingwu <xingwu.yang@gmail.com>
+Subject: [PATCH] ipv6: Use ipv6_authlen for len
+Date:   Wed, 10 Jul 2019 21:14:10 +0800
+Message-Id: <20190710131410.75825-1-xingwu.yang@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20190710130615.gvi2jwgr2cds66xr@flea>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.07.2019 16:06, Maxime Ripard пишет:
-> On Wed, Jul 10, 2019 at 03:59:55PM +0300, Dmitry Osipenko wrote:
->> 10.07.2019 15:55, Maxime Ripard пишет:
->>> On Wed, Jul 10, 2019 at 03:42:28PM +0300, Dmitry Osipenko wrote:
->>>> 10.07.2019 13:12, Maxime Ripard пишет:
->>>>> On Tue, Jul 09, 2019 at 05:51:51PM +0300, Dmitry Osipenko wrote:
->>>>>> The named mode could be invalid and then cmdline parser misses to validate
->>>>>> mode's dimensions, happily adding 0x0 mode as a valid mode. One case where
->>>>>> this happens is NVIDIA Tegra devices that are using downstream bootloader
->>>>>> which adds "video=tegrafb" to the kernel's cmdline and thus upstream Tegra
->>>>>> DRM driver fails to probe because of the invalid mode.
->>>>>>
->>>>>> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
->>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>
->>>>> Applied to drm-misc-next-fixes
->>>>>
->>>>> Thanks for figuring this out!
->>>>
->>>> Thank you very much! So the driver now doesn't fail to probe because
->>>> of the cmdline, but what else I noticed is that the framebuffer
->>>> console is now rotated by 90° on a 800x1280 panel, while display in
->>>> Xorg is vertical as it was before. Seems something else is still
->>>> missing, reverting "drm/modes: Rewrite the command line parser"
->>>> returns the framebuffer's console orientation into the original
->>>> state.
->>>
->>> What is the whole command line passed by the bootloader ?
->>
->> tegraid=30.1.3.0.0 mem=1022M@2048M android.commchip=0 vmalloc=512M androidboot.serialno=015d3f18c9081210 video=tegrafb no_console_suspend=1 console=none
->> debug_uartport=hsport usbcore.old_scheme_first=1 lp0_vec=8192@0xbddf9000 tegra_fbmem=8195200@0xabe01000 core_edp_mv=0 audio_codec=rt5640 board_info=f41:a00:1:44:2
->> root=/dev/sda1 rw rootwait tegraboot=sdmmc gpt gpt_sector=61079551 androidboot.bootloader=4.23 androidboot.baseband=1231_0.18.0_0409
-> 
-> Thanks.
-> 
-> It still doesn't really make sense to me why that video=tegrafb should
-> be considered valid.
-> 
-> However, I don't see anything rotation related in the commit you
-> list. Are you sure it's really the offending one and not another one?
+The length of AH header is computed manually as (hp->hdrlen+2)<<2.
+However, in include/linux/ipv6.h, a macro named ipv6_authlen is
+already defined for exactly the same job. This commit replaces
+the manual computation code with the macro.
 
-Yes.
+Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
+---
+ net/ipv6/ah6.c                          | 4 ++--
+ net/ipv6/exthdrs_core.c                 | 2 +-
+ net/ipv6/ip6_tunnel.c                   | 2 +-
+ net/ipv6/netfilter/ip6t_ah.c            | 2 +-
+ net/ipv6/netfilter/ip6t_ipv6header.c    | 2 +-
+ net/ipv6/netfilter/nf_conntrack_reasm.c | 2 +-
+ net/ipv6/netfilter/nf_log_ipv6.c        | 2 +-
+ 7 files changed, 8 insertions(+), 8 deletions(-)
 
-> Also, do you have the option to recompile a kernel so that we can add
-> some debug?
-
-Recompiling kernel is not a problem at all.
-
-Before "drm/modes: Rewrite the command line parser":
-
-[    1.256454] [drm] parse error at position 6 in video mode 'tegrafb'
-[    1.256654] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    1.256664] [drm] No driver support for vblank timestamp query.
-[    1.256703] [drm:drm_client_modeset_probe]
-[    1.256719] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
-[    1.256731] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] status updated from unknown to connected
-[    1.256828] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
-[    1.256842] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
-[    1.256849] [drm:drm_client_modeset_probe] connector 95 enabled? yes
-[    1.256859] [drm:drm_client_modeset_probe] Not using firmware configuration
-[    1.256867] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
-[    1.256874] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
-[    1.256880] [drm:drm_client_modeset_probe] found mode 800x1280
-[    1.256886] [drm:drm_client_modeset_probe] picking CRTCs for 4096x4096 config
-[    1.256896] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
-[    1.279069] [drm:tegra_crtc_atomic_enable] rate: 408000000, div: 10
-[    1.279077] [drm:tegra_crtc_atomic_enable] pclk: 0
-[    1.296744] [drm:drm_fb_helper_hotplug_event.part.0]
-[    1.296760] [drm:drm_client_modeset_probe]
-[    1.296792] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
-[    1.296987] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
-[    1.297010] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
-[    1.297022] [drm:drm_client_modeset_probe] connector 95 enabled? yes
-[    1.297040] [drm:drm_client_modeset_probe] Not using firmware configuration
-[    1.297054] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
-[    1.297065] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
-[    1.297073] [drm:drm_client_modeset_probe] found mode 800x1280
-[    1.297083] [drm:drm_client_modeset_probe] picking CRTCs for 800x1280 config
-[    1.297102] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
-
-After:
-
-[    1.225000] [drm:drm_connector_init] cmdline mode for connector LVDS-1 tegrafb 0x0@60Hz
-[    1.225143] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    1.225154] [drm] No driver support for vblank timestamp query.
-[    1.225182] [drm:drm_client_modeset_probe]
-[    1.225195] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
-[    1.225203] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] status updated from unknown to connected
-[    1.225283] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
-[    1.225294] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
-[    1.225299] [drm:drm_client_modeset_probe] connector 95 enabled? yes
-[    1.225307] [drm:drm_client_modeset_probe] Not using firmware configuration
-[    1.225314] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
-[    1.225319] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
-[    1.225323] [drm:drm_client_modeset_probe] found mode 800x1280
-[    1.225328] [drm:drm_client_modeset_probe] picking CRTCs for 4096x4096 config
-[    1.225336] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
-[    1.249051] [drm:tegra_crtc_atomic_enable] rate: 408000000, div: 10
-[    1.249058] [drm:tegra_crtc_atomic_enable] pclk: 0
-[    1.266748] [drm:drm_fb_helper_hotplug_event.part.0]
-[    1.266768] [drm:drm_client_modeset_probe]
-[    1.266805] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1]
-[    1.267045] [drm:drm_helper_probe_single_connector_modes] [CONNECTOR:95:LVDS-1] probed modes :
-[    1.267074] [drm:drm_mode_debug_printmodeline] Modeline "800x1280": 60 66770 800 849 882 899 1280 1281 1288 1303 0x48 0xa
-[    1.267091] [drm:drm_client_modeset_probe] connector 95 enabled? yes
-[    1.267113] [drm:drm_client_modeset_probe] Not using firmware configuration
-[    1.267129] [drm:drm_client_modeset_probe] looking for cmdline mode on connector 95
-[    1.267143] [drm:drm_client_modeset_probe] looking for preferred mode on connector 95 0
-[    1.267155] [drm:drm_client_modeset_probe] found mode 800x1280
-[    1.267168] [drm:drm_client_modeset_probe] picking CRTCs for 800x1280 config
-[    1.267191] [drm:drm_client_modeset_probe] desired mode 800x1280 set on crtc 94 (0,0)
+diff --git a/net/ipv6/ah6.c b/net/ipv6/ah6.c
+index 68b9e92..626c64b 100644
+--- a/net/ipv6/ah6.c
++++ b/net/ipv6/ah6.c
+@@ -464,7 +464,7 @@ static void ah6_input_done(struct crypto_async_request *base, int err)
+ 	struct ah_data *ahp = x->data;
+ 	struct ip_auth_hdr *ah = ip_auth_hdr(skb);
+ 	int hdr_len = skb_network_header_len(skb);
+-	int ah_hlen = (ah->hdrlen + 2) << 2;
++	int ah_hlen = ipv6_authlen(ah);
+ 
+ 	if (err)
+ 		goto out;
+@@ -546,7 +546,7 @@ static int ah6_input(struct xfrm_state *x, struct sk_buff *skb)
+ 	ahash = ahp->ahash;
+ 
+ 	nexthdr = ah->nexthdr;
+-	ah_hlen = (ah->hdrlen + 2) << 2;
++	ah_hlen = ipv6_authlen(ah);
+ 
+ 	if (ah_hlen != XFRM_ALIGN8(sizeof(*ah) + ahp->icv_full_len) &&
+ 	    ah_hlen != XFRM_ALIGN8(sizeof(*ah) + ahp->icv_trunc_len))
+diff --git a/net/ipv6/exthdrs_core.c b/net/ipv6/exthdrs_core.c
+index 11a43ee..b358f1a 100644
+--- a/net/ipv6/exthdrs_core.c
++++ b/net/ipv6/exthdrs_core.c
+@@ -266,7 +266,7 @@ int ipv6_find_hdr(const struct sk_buff *skb, unsigned int *offset,
+ 		} else if (nexthdr == NEXTHDR_AUTH) {
+ 			if (flags && (*flags & IP6_FH_F_AUTH) && (target < 0))
+ 				break;
+-			hdrlen = (hp->hdrlen + 2) << 2;
++			hdrlen = ipv6_authlen(hp);
+ 		} else
+ 			hdrlen = ipv6_optlen(hp);
+ 
+diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
+index b80fde1..3134fbb 100644
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -416,7 +416,7 @@ __u16 ip6_tnl_parse_tlv_enc_lim(struct sk_buff *skb, __u8 *raw)
+ 				break;
+ 			optlen = 8;
+ 		} else if (nexthdr == NEXTHDR_AUTH) {
+-			optlen = (hdr->hdrlen + 2) << 2;
++			optlen = ipv6_authlen(hdr);
+ 		} else {
+ 			optlen = ipv6_optlen(hdr);
+ 		}
+diff --git a/net/ipv6/netfilter/ip6t_ah.c b/net/ipv6/netfilter/ip6t_ah.c
+index 0228ff3..4e15a14 100644
+--- a/net/ipv6/netfilter/ip6t_ah.c
++++ b/net/ipv6/netfilter/ip6t_ah.c
+@@ -55,7 +55,7 @@ static bool ah_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		return false;
+ 	}
+ 
+-	hdrlen = (ah->hdrlen + 2) << 2;
++	hdrlen = ipv6_authlen(ah);
+ 
+ 	pr_debug("IPv6 AH LEN %u %u ", hdrlen, ah->hdrlen);
+ 	pr_debug("RES %04X ", ah->reserved);
+diff --git a/net/ipv6/netfilter/ip6t_ipv6header.c b/net/ipv6/netfilter/ip6t_ipv6header.c
+index fd439f8..0fc6326 100644
+--- a/net/ipv6/netfilter/ip6t_ipv6header.c
++++ b/net/ipv6/netfilter/ip6t_ipv6header.c
+@@ -71,7 +71,7 @@
+ 		if (nexthdr == NEXTHDR_FRAGMENT)
+ 			hdrlen = 8;
+ 		else if (nexthdr == NEXTHDR_AUTH)
+-			hdrlen = (hp->hdrlen + 2) << 2;
++			hdrlen = ipv6_authlen(hp);
+ 		else
+ 			hdrlen = ipv6_optlen(hp);
+ 
+diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
+index 84322ce..16de015 100644
+--- a/net/ipv6/netfilter/nf_conntrack_reasm.c
++++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
+@@ -421,7 +421,7 @@ static int nf_ct_frag6_reasm(struct frag_queue *fq, struct sk_buff *skb,
+ 		if (skb_copy_bits(skb, start, &hdr, sizeof(hdr)))
+ 			BUG();
+ 		if (nexthdr == NEXTHDR_AUTH)
+-			hdrlen = (hdr.hdrlen+2)<<2;
++			hdrlen = ipv6_authlen(&hdr);
+ 		else
+ 			hdrlen = ipv6_optlen(&hdr);
+ 
+diff --git a/net/ipv6/netfilter/nf_log_ipv6.c b/net/ipv6/netfilter/nf_log_ipv6.c
+index 549c511..f53bd8f 100644
+--- a/net/ipv6/netfilter/nf_log_ipv6.c
++++ b/net/ipv6/netfilter/nf_log_ipv6.c
+@@ -155,7 +155,7 @@ static void dump_ipv6_packet(struct net *net, struct nf_log_buf *m,
+ 
+ 			}
+ 
+-			hdrlen = (hp->hdrlen+2)<<2;
++			hdrlen = ipv6_authlen(hp);
+ 			break;
+ 		case IPPROTO_ESP:
+ 			if (logflags & NF_LOG_IPOPT) {
+-- 
+1.8.3.1
 
