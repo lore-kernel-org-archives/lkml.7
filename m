@@ -2,104 +2,141 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DFCC73C66
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AB6C73C66
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611FC20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DF120656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kpnGlFpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfGJDJZ (ORCPT
+        id S1726920AbfGJDKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 23:09:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2249 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725935AbfGJDJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 23:09:24 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B20CB753DD21332D48C9;
-        Wed, 10 Jul 2019 11:09:18 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 10 Jul 2019 11:09:10 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <adobriyan@gmail.com>, <akpm@linux-foundation.org>,
-        <anna.schumaker@netapp.com>, <arjan@linux.intel.com>,
-        <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <jlayton@kernel.org>, <luto@kernel.org>, <mingo@kernel.org>,
-        <Nadia.Derbey@bull.net>, <paulmck@linux.vnet.ibm.com>,
-        <semen.protsenko@linaro.org>, <stable@kernel.org>,
-        <stern@rowland.harvard.edu>, <tglx@linutronix.de>,
-        <torvalds@linux-foundation.org>, <trond.myklebust@hammerspace.com>,
-        <viresh.kumar@linaro.org>, <vvs@virtuozzo.com>
-CC:     <alex.huangjianhui@huawei.com>, <dylix.dailei@huawei.com>,
-        <nixiaoming@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-Date:   Wed, 10 Jul 2019 11:09:07 +0800
-Message-ID: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+        Tue, 9 Jul 2019 23:10:23 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47976 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfGJDKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 23:10:23 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x6A3935O010665;
+        Wed, 10 Jul 2019 12:09:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6A3935O010665
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562728145;
+        bh=yg87jS3mBO0kAMfLp5u/C6DBa8X2nswxL+kGhWPzUOg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kpnGlFpcSMzIQYPbVT4k8yuJ0iK5u1Xg9yTm6oCbld3FupuP6S1wqN5m09yY16Vyb
+         p+EZEWObjcPRUcC8ZNRgb78GdWU5X66K931RHTcFRL16pdIqZ5Pjo/PKVFRvuB9fc2
+         efVrduI/879i8wwwbc+qLCRighS32P9dsqCdu4XldXOIR7VF+tbaOtFWEqn2YguYM/
+         Krf8Q+srAdM4lvqQdcnow7zRJag2Q2PU6Lg/VCGhKov4gLwlYZwdYPDmrAqkL7ywp9
+         sjC8PIcD/F1p72iaglATkm1moBq5mTFfN2Vak+n4h2JK0Ob0Di9NHMngtEtAg4d8ol
+         d7L24k4mo7GDQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-parisc@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-um@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        linux-snps-arc@lists.infradead.org, Jeff Dike <jdike@addtoit.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: [PATCH] fixup! kbuild: remove obj and src from the top Makefile
+Date:   Wed, 10 Jul 2019 12:09:01 +0900
+Message-Id: <20190710030901.1836-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Registering the same notifier to a hook repeatedly can cause the hook
-list to form a ring or lose other members of the list.
+Merging today's kbuild tree would break arc, um, parisc.
+I just noticed it now. I will fix it soon for tomorrow's linux-next.
 
-case1: An infinite loop in notifier_chain_register() can cause soft lockup
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test2);
+If needed, this might be useful for today's linux-next.
 
-case2: An infinite loop in notifier_chain_register() can cause soft lockup
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-case3: lose other hook test2
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test2);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
+ arch/arc/Makefile    |  2 +-
+ arch/parisc/Makefile | 12 ++++++------
+ arch/um/Makefile     |  2 +-
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-case4: Unregister returns 0, but the hook is still in the linked list,
-        and it is not really registered. If you call notifier_call_chain
-        after ko is unloaded, it will trigger oops. if the system is
-       	configured with softlockup_panic and the same hook is repeatedly
-       	registered on the panic_notifier_list, it will cause a loop panic.
-
-so. need add a check in in notifier_chain_register() to avoid duplicate
-registration
-
-v1:
-* use notifier_chain_cond_register replace notifier_chain_register
-
-v2:
-* Add a check in notifier_chain_register() to avoid duplicate registration
-* remove notifier_chain_cond_register() to avoid duplicate code 
-* remove blocking_notifier_chain_cond_register() to avoid duplicate code
-
-v3:
-* Add a cover letter.
-
-Xiaoming Ni (3):
-  kernel/notifier.c: avoid duplicate registration
-  kernel/notifier.c: remove notifier_chain_cond_register()
-  kernel/notifier.c: remove blocking_notifier_chain_cond_register()
-
- include/linux/notifier.h |  4 ----
- kernel/notifier.c        | 41 +++--------------------------------------
- net/sunrpc/rpc_pipe.c    |  2 +-
- 3 files changed, 4 insertions(+), 43 deletions(-)
-
+diff --git a/arch/arc/Makefile b/arch/arc/Makefile
+index 03a0b19c92cd..ee6d1184c2b1 100644
+--- a/arch/arc/Makefile
++++ b/arch/arc/Makefile
+@@ -19,7 +19,7 @@ ifdef CONFIG_ARC_CURR_IN_REG
+ # any kernel headers, and missing the r25 global register
+ # Can't do unconditionally because of recursive include issues
+ # due to <linux/thread_info.h>
+-LINUXINCLUDE	+=  -include ${src}/arch/arc/include/asm/current.h
++LINUXINCLUDE	+=  -include $(srctree)/arch/arc/include/asm/current.h
+ endif
+ 
+ cflags-y				+= -fsection-anchors
+diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+index 58d46665cad9..8acb8fa1f8d6 100644
+--- a/arch/parisc/Makefile
++++ b/arch/parisc/Makefile
+@@ -120,8 +120,8 @@ PALO := $(shell if (which palo 2>&1); then : ; \
+ 	elif [ -x /sbin/palo ]; then echo /sbin/palo; \
+ 	fi)
+ 
+-PALOCONF := $(shell if [ -f $(src)/palo.conf ]; then echo $(src)/palo.conf; \
+-	else echo $(obj)/palo.conf; \
++PALOCONF := $(shell if [ -f $(srctree)/palo.conf ]; then echo $(srctree)/palo.conf; \
++	else echo $(objtree)/palo.conf; \
+ 	fi)
+ 
+ palo lifimage: vmlinuz
+@@ -131,8 +131,8 @@ palo lifimage: vmlinuz
+ 		false; \
+ 	fi
+ 	@if test ! -f "$(PALOCONF)"; then \
+-		cp $(src)/arch/parisc/defpalo.conf $(obj)/palo.conf; \
+-		echo 'A generic palo config file ($(obj)/palo.conf) has been created for you.'; \
++		cp $(srctree)/arch/parisc/defpalo.conf $(objtree)/palo.conf; \
++		echo 'A generic palo config file ($(objree)/palo.conf) has been created for you.'; \
+ 		echo 'You should check it and re-run "make palo".'; \
+ 		echo 'WARNING: the "lifimage" file is now placed in this directory by default!'; \
+ 		false; \
+@@ -162,10 +162,10 @@ vmlinuz: vmlinux
+ endif
+ 
+ install:
+-	$(CONFIG_SHELL) $(src)/arch/parisc/install.sh \
++	$(CONFIG_SHELL) $(srctree)/arch/parisc/install.sh \
+ 			$(KERNELRELEASE) vmlinux System.map "$(INSTALL_PATH)"
+ zinstall:
+-	$(CONFIG_SHELL) $(src)/arch/parisc/install.sh \
++	$(CONFIG_SHELL) $(srctree)/arch/parisc/install.sh \
+ 			$(KERNELRELEASE) vmlinuz System.map "$(INSTALL_PATH)"
+ 
+ CLEAN_FILES	+= lifimage
+diff --git a/arch/um/Makefile b/arch/um/Makefile
+index 273130cf91d1..d2daa206872d 100644
+--- a/arch/um/Makefile
++++ b/arch/um/Makefile
+@@ -73,7 +73,7 @@ KBUILD_AFLAGS += $(ARCH_INCLUDE)
+ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
+ 		$(ARCH_INCLUDE) $(MODE_INCLUDE) $(filter -I%,$(CFLAGS)) \
+ 		-D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
+-		-idirafter $(obj)/include -D__KERNEL__ -D__UM_HOST__
++		-idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
+ 
+ #This will adjust *FLAGS accordingly to the platform.
+ include $(ARCH_DIR)/Makefile-os-$(OS)
 -- 
-1.8.5.6
+2.17.1
 
