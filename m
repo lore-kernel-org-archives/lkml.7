@@ -2,82 +2,88 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D47C004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B3FC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0E020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604BB20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfGJKLK (ORCPT
+        id S1727196AbfGJKMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:11:10 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54674 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfGJKLK (ORCPT
+        Wed, 10 Jul 2019 06:12:33 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51473 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfGJKMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:11:10 -0400
-Received: from 79.184.253.121.ipv4.supernova.orange.pl (79.184.253.121) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id b3935117ca5db99f; Wed, 10 Jul 2019 12:11:07 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Anson.Huang@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] cpufreq: imx-cpufreq-dt: Add i.MX8MN support
-Date:   Wed, 10 Jul 2019 12:11:07 +0200
-Message-ID: <7456362.ddI0K1WBKD@kreacher>
-In-Reply-To: <20190708035057.h2lgadm56tgdqsor@vireshk-i7>
-References: <20190708030308.1815-1-Anson.Huang@nxp.com> <20190708035057.h2lgadm56tgdqsor@vireshk-i7>
+        Wed, 10 Jul 2019 06:12:33 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 76E2860006;
+        Wed, 10 Jul 2019 10:12:29 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 12:12:29 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
+Message-ID: <20190710101229.54ufuhmh22dfxclr@flea>
+References: <20190709145151.23086-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ahmo6bieusk7uhsj"
+Content-Disposition: inline
+In-Reply-To: <20190709145151.23086-1-digetx@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, July 8, 2019 5:50:57 AM CEST Viresh Kumar wrote:
-> On 08-07-19, 11:03, Anson.Huang@nxp.com wrote:
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> > 
-> > i.MX8MN is a new SoC of i.MX8M series, it also uses speed
-> > grading and market segment fuses for OPP definitions, add
-> > support for this SoC.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  drivers/cpufreq/imx-cpufreq-dt.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
-> > index b54fd26..4f85f31 100644
-> > --- a/drivers/cpufreq/imx-cpufreq-dt.c
-> > +++ b/drivers/cpufreq/imx-cpufreq-dt.c
-> > @@ -44,10 +44,11 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
-> >  	 * According to datasheet minimum speed grading is not supported for
-> >  	 * consumer parts so clamp to 1 to avoid warning for "no OPPs"
-> >  	 *
-> > -	 * Applies to 8mq and 8mm.
-> > +	 * Applies to i.MX8M series SoCs.
-> >  	 */
-> >  	if (mkt_segment == 0 && speed_grade == 0 && (
-> >  			of_machine_is_compatible("fsl,imx8mm") ||
-> > +			of_machine_is_compatible("fsl,imx8mn") ||
-> >  			of_machine_is_compatible("fsl,imx8mq")))
-> >  		speed_grade = 1;
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> @Rafael: Can you pick this one directly, no point sending another pull request
-> for just one patch. Thanks.
 
-Done, thanks!
+--ahmo6bieusk7uhsj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jul 09, 2019 at 05:51:51PM +0300, Dmitry Osipenko wrote:
+> The named mode could be invalid and then cmdline parser misses to validate
+> mode's dimensions, happily adding 0x0 mode as a valid mode. One case where
+> this happens is NVIDIA Tegra devices that are using downstream bootloader
+> which adds "video=tegrafb" to the kernel's cmdline and thus upstream Tegra
+> DRM driver fails to probe because of the invalid mode.
+>
+> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
+Applied to drm-misc-next-fixes
 
+Thanks for figuring this out!
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ahmo6bieusk7uhsj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSW6DQAKCRDj7w1vZxhR
+xUYsAP9EUafm0rr0sX06bl/cIzBTLvcr/5GalKzSZToTJ2kjlwD/aGukUMgjynHS
+9tpGZZ5GnYj8IbRYJWM5g6SBjjc6MA4=
+=8k/L
+-----END PGP SIGNATURE-----
+
+--ahmo6bieusk7uhsj--
