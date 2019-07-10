@@ -2,89 +2,149 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2835FC74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B955AC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CDE2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92719208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562768081;
+	bh=DyLQkR+SqZg30UD4WGgKKVBfPXf9H8Fp5j0gQLSjm1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v3Marjj0WTlMDCe3c2iareg84SA8ePXjxPybNR/RdLYqRuNGsk865SCo0W0xoZJit
+	 wtl19V6/LYSOQg+cJ7driYKlurGC8vmC50yBoAusVONvh8xdaQbYL8qv6c9saAaaRy
+	 ZfWi3GSiSvjthEyNktCWZN8b889bhn5NrqODEXVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGJOOO (ORCPT
+        id S1727839AbfGJOOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:14:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40972 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfGJOOO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:14:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id q4so1325465pgj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 07:14:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R5Znt+RzWmSgRwaRtC1ltuLCBGeBBNo+VH1yafA+2Es=;
-        b=a20yKPK+lg9RRhA8UHFTiE+lGP8I5WqXWgg7RPgzXlNKRndpAJOMTu7rDfOPP3x15h
-         T1LfmNSYl8wb8FeIJ61PE9XKWXnNs/3QCJjXJkao+DkZrMQhGIWlaprQfvTeoSFxt540
-         gJsSQvFD48hgF+gT9tSKclVkbyDheGYkXOrUcUffX+A3zNrnHvF+Yr7ZWG4Iqig/2nO7
-         W9WHaD9mSJDWceB/oCyIDzJsK725wYmiXGI0XcL6w+/s5pXrFK7KOHhW0AYbdajRzur1
-         tuwWoZtxW3AqCEHdNWQE2kVkeuqq4dsyXOjINiuQjkOYaB0ajqT2fQVnCz4YfbMpIjDO
-         2sSg==
-X-Gm-Message-State: APjAAAVA7XYWhmbM0zdOIzhPcistR5WLekEQiM9DM8d36rSG6zc1BlA7
-        oRwj61BrQHPZD18nnkhl7C4=
-X-Google-Smtp-Source: APXvYqym7BBx12csZrMAHwFiJaOwwSQ/mUMl/VcG5ZgV3KypL/be6ske4tRVJyuzjK61zGAEQsDpXg==
-X-Received: by 2002:a63:d748:: with SMTP id w8mr36788640pgi.157.1562768053204;
-        Wed, 10 Jul 2019 07:14:13 -0700 (PDT)
-Received: from asus.site ([2601:647:4000:5dd1:f8eb:b8a1:fefa:e83f])
-        by smtp.gmail.com with ESMTPSA id v12sm2252919pjk.13.2019.07.10.07.14.11
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 07:14:12 -0700 (PDT)
-Subject: Re: Reminder: 5 open syzbot bugs in lockdep subsystem
-To:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        syzkaller-bugs@googlegroups.com, jeffv@google.com
-References: <20190710055838.GC2152@sol.localdomain>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <f614ac47-34c3-fac4-c096-fd835ce6d35a@acm.org>
-Date:   Wed, 10 Jul 2019 07:14:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 10:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726458AbfGJOOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 10:14:40 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF772064B;
+        Wed, 10 Jul 2019 14:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562768078;
+        bh=DyLQkR+SqZg30UD4WGgKKVBfPXf9H8Fp5j0gQLSjm1M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Uv3XWiYycqQdOA9/aSy6OPad/nv4oF5fG/eYmZR921Lj5iSjaS116QIYDQi5XGtjy
+         97SSz7GWaEcn5oTyCpIQR8LU9e7nTbEKOnfCeXSHuxLRdk65zZZrVRN1Yge8y5i6Ec
+         DKc/PijLSM5tkGjiPgCKRl5Gv7qFM23n5caCPXH0=
+Date:   Wed, 10 Jul 2019 15:14:34 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2 3/5] memremap: Add support for read-only memory
+ mappings
+Message-ID: <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
+References: <20190614203717.75479-1-swboyd@chromium.org>
+ <20190614203717.75479-4-swboyd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190710055838.GC2152@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614203717.75479-4-swboyd@chromium.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/19 10:58 PM, Eric Biggers wrote:
-> [This email was generated by a script.  Let me know if you have any suggestions
-> to make it better, or if you want it re-generated with the latest status.]
+On Fri, Jun 14, 2019 at 01:37:15PM -0700, Stephen Boyd wrote:
+> Sometimes we have memories that are supposed to be read-only, but when
+> we map these regions the best we can do is map them as write-back with
+> MEMREMAP_WB. Introduce a read-only memory mapping (MEMREMAP_RO) that
+> allows us to map reserved memory regions as read-only. This way, we're
+> less likely to see these special memory regions become corrupted by
+> stray writes to them.
 > 
-> Of the currently open syzbot reports against the upstream kernel, I've manually
-> marked 5 of them as possibly being bugs in the lockdep subsystem.  I've listed
-> these reports below, sorted by an algorithm that tries to list first the reports
-> most likely to be still valid, important, and actionable.
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  include/linux/io.h |  1 +
+>  kernel/iomem.c     | 15 +++++++++++++--
+>  2 files changed, 14 insertions(+), 2 deletions(-)
 > 
-> Of these 5 bugs, 3 were seen in mainline in the last week.
-> 
-> Of these 5 bugs, 1 was bisected to a commit from the following person:
-> 
-> 	Bart Van Assche <bvanassche@acm.org>
+> diff --git a/include/linux/io.h b/include/linux/io.h
+> index 32e30e8fb9db..16c7f4498869 100644
+> --- a/include/linux/io.h
+> +++ b/include/linux/io.h
+> @@ -159,6 +159,7 @@ enum {
+>  	MEMREMAP_WC = 1 << 2,
+>  	MEMREMAP_ENC = 1 << 3,
+>  	MEMREMAP_DEC = 1 << 4,
+> +	MEMREMAP_RO = 1 << 5,
+>  };
+>  
+>  void *memremap(resource_size_t offset, size_t size, unsigned long flags);
+> diff --git a/kernel/iomem.c b/kernel/iomem.c
+> index 93c264444510..10d5ef0ff09e 100644
+> --- a/kernel/iomem.c
+> +++ b/kernel/iomem.c
+> @@ -19,6 +19,13 @@ static void *arch_memremap_wb(resource_size_t offset, unsigned long size)
+>  }
+>  #endif
+>  
+> +#ifndef arch_memremap_ro
+> +static void *arch_memremap_ro(resource_size_t offset, unsigned long size)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  #ifndef arch_memremap_can_ram_remap
+>  static bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
+>  					unsigned long flags)
+> @@ -84,7 +91,10 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
+>  	}
+>  
+>  	/* Try all mapping types requested until one returns non-NULL */
+> -	if (flags & MEMREMAP_WB) {
+> +	if ((flags & MEMREMAP_RO) && is_ram != REGION_INTERSECTS)
+> +		addr = arch_memremap_ro(offset, size);
+> +
+> +	if (!addr && (flags & MEMREMAP_WB)) {
+>  		/*
+>  		 * MEMREMAP_WB is special in that it can be satisfied
+>  		 * from the direct map.  Some archs depend on the
+> @@ -103,7 +113,8 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
+>  	 * address mapping.  Enforce that this mapping is not aliasing
+>  	 * System RAM.
+>  	 */
+> -	if (!addr && is_ram == REGION_INTERSECTS && flags != MEMREMAP_WB) {
+> +	if (!addr && is_ram == REGION_INTERSECTS &&
+> +	    (flags != MEMREMAP_WB || flags != MEMREMAP_RO)) {
+>  		WARN_ONCE(1, "memremap attempted on ram %pa size: %#lx\n",
+>  				&offset, (unsigned long) size);
+>  		return NULL;
 
-(+jeffv)
+This function seems a little confused about whether 'flags' is really a
+bitmap of flags, or whether it is equal to exactly one entry in the enum.
+Given that I think it's sensible for somebody to specify 'MEMREMAP_RO |
+MEMREMAP_WT', then we probably need to start checking these things a bit
+more thoroughly so we can reject unsupported combinations at the very least.
 
-Hi Eric,
-
-Several days ago I had already explained to you that the bisection 
-result that led to one of my commits did not make any sense to me. So I 
-do not appreciate this kind of fingerpointing. Please stop doing this.
-
-Bart.
+Will
