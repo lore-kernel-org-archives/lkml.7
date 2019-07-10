@@ -2,147 +2,198 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ABBC73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BAAC73C75
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91BC20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Tw/8/G9F"
+	by mail.kernel.org (Postfix) with ESMTP id AAF602083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562739841;
+	bh=JTGns6p7OAqlz2mMPRTsjr8VGWN/afiuC92QNMdncxo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uRBrUcDNNzPV0e6gBa5KEAM8r9SDmVkiOEO9mLB57Lg9azG3/tqhLJUlIZZhoVQ8z
+	 kN7TQfsR8P1JMsDgPlmac82XMvS49MEFKfwdULhT1BlBLy1cYMwJaGauj0eZS7CCo+
+	 INwA8t3rb58HgMJ+wVoiueR6pVlek2eI1rVq9f5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfGJGXz (ORCPT
+        id S1727215AbfGJGYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 02:23:55 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2197 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfGJGXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 02:23:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d25847f0000>; Tue, 09 Jul 2019 23:23:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jul 2019 23:23:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jul 2019 23:23:54 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 06:23:53 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 06:23:53 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jul 2019 06:23:53 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d2584730003>; Tue, 09 Jul 2019 23:23:53 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
-Date:   Wed, 10 Jul 2019 11:52:08 +0530
-Message-ID: <20190710062212.1745-9-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190710062212.1745-1-vidyas@nvidia.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 10 Jul 2019 02:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727199AbfGJGX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 02:23:59 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9B362083D;
+        Wed, 10 Jul 2019 06:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562739838;
+        bh=JTGns6p7OAqlz2mMPRTsjr8VGWN/afiuC92QNMdncxo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WWwMViM+9962VnK387VtomtsQHL6wHHyVkGs6um8Jpkor6A2F0toZ/nOsyEbj6MZj
+         C+bq+cyuFXRbN/qYl8RkXN38cjbzufM5pgR8+j3AKNvVcBmmdVf+JzhXVd/vxGprt1
+         YoZSs0+RnrntJuTVdW+c4AOeM8JDjfsWNDeMnPsI=
+Date:   Tue, 9 Jul 2019 23:23:56 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 6 open syzbot bugs in mm subsystem
+Message-ID: <20190710062356.GD2152@sol.localdomain>
+Mail-Followup-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562739839; bh=LIK02JXZVyy3iJU6m9yv5fvAUvIJfpUdqAGy+ZOpJJY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Tw/8/G9F/AHn7rjd+LlDF09PI8kLeLj6Rlm61cForzPdNySSQ+dyKm4nSw7vakSKv
-         O7J+SK2rSH5uvnHCtdajruWhAZjwbxTQxk+byE9cjCE0ng4QNOiSUrDdB535tu6Fbo
-         Vhd0D7BnGx3pKD4JpS75n6QemzQKyWjD8eP+1ygn52w1slg0ZoQ3Frdf3alRsOFHAD
-         IRDqzALK8guyqirf2alg48Auuiv+SkTSYkiATr2HVWhcd1GNIy/eptO+Y3Jha/nbhW
-         fekRl8KnRHyl4AFnSuLnK8yvSG+14ZCmaxhsgfaUPFNlcBnOoKObU1RWdDL8/dPwZ7
-         TDj/BH7Cvf+nA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some host controllers need to know the existence of clkreq signal routing to
-downstream devices to be able to advertise low power features like ASPM L1
-substates. Without clkreq signal routing being present, enabling ASPM L1 sub
-states might lead to downstream devices falling off the bus. Hence a new device
-tree property 'supports-clkreq' is added to make such host controllers
-aware of clkreq signal routing to downstream devices.
+[This email was generated by a script.  Let me know if you have any suggestions
+ to make it better, or if you want it re-generated with the latest status.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
----
-V13:
-* None
+ Note: currently the mm bugs look hard to do anything with and most look
+ outdated, but I figured I'd send them out just in case someone has any ideas...]
 
-V12:
-* Rebased on top of linux-next top of the tree
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 6 of them as possibly being bugs in the mm subsystem.  I've listed these
+reports below, sorted by an algorithm that tries to list first the reports most
+likely to be still valid, important, and actionable.
 
-V11:
-* None
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-V10:
-* None
+If you believe I misattributed a bug to the mm subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
-V9:
-* None
+Here are the bugs:
 
-V8:
-* None
+--------------------------------------------------------------------------------
+Title:              kernel BUG at mm/huge_memory.c:LINE!
+Last occurred:      17 days ago
+Reported:           187 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ce0353d7d140e57d81b6f1cb9252a76e50454955
+Original thread:    https://lkml.kernel.org/lkml/0000000000004d2e19057e8b6d78@google.com/T/#u
 
-V7:
-* None
+Unfortunately, this bug does not have a reproducer.
 
-V6:
-* s/Documentation\/devicetree/dt-bindings/ in the subject
+The original thread for this bug received 3 replies; the last was 154 days ago.
 
-V5:
-* None
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8e075128f7db8555391a@syzkaller.appspotmail.com
 
-V4:
-* Rebased on top of linux-next top of the tree
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000004d2e19057e8b6d78@google.com
 
-V3:
-* None
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in shmem_fault
+Last occurred:      77 days ago
+Reported:           143 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=53e0b9f6b68687a4c24339c7a9713c26055d4f63
+Original thread:    https://lkml.kernel.org/lkml/00000000000045d4f10581fe59a7@google.com/T/#u
 
-V2:
-* This is a new patch in v2 series
+Unfortunately, this bug does not have a reproducer.
 
- Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+No one replied to the original thread for this bug.
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index 2a5d91024059..29bcbd88f457 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -27,6 +27,11 @@ driver implementation may support the following properties:
- - reset-gpios:
-    If present this property specifies PERST# GPIO. Host drivers can parse the
-    GPIO and apply fundamental reset to endpoints.
-+- supports-clkreq:
-+   If present this property specifies that CLKREQ signal routing exists from
-+   root port to downstream device and host bridge drivers can do programming
-+   which depends on CLKREQ signal existence. For example, programming root port
-+   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
- 
- PCI-PCI Bridge properties
- -------------------------
--- 
-2.17.1
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+56fbe62f8c55f860fd99@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000045d4f10581fe59a7@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in untrack_pfn
+Last occurred:      153 days ago
+Reported:           351 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=149d7751733001d683eca36df500722bff6cc350
+Original thread:    https://lkml.kernel.org/lkml/000000000000f70a0e0571ad8ffb@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 3 replies; the last was 62 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e1a4f80c370d2381e49f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000f70a0e0571ad8ffb@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: locking bug in split_huge_page_to_list
+Last occurred:      82 days ago
+Reported:           77 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=867f27bec5181128ff0b1729bde7eed6786ec6bc
+Original thread:    https://lkml.kernel.org/lkml/0000000000003c9bea058734dc28@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug has received 1 reply, 77 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+35a50f1f6dfd5a0d7378@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000003c9bea058734dc28@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at mm/page_alloc.c:LINE!
+Last occurred:      94 days ago
+Reported:           174 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=858f3346ce928ea82fba5e952e44b7c2758a3609
+Original thread:    https://lkml.kernel.org/lkml/000000000000cdc61b057f9e360e@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 3 replies; the last was 173 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+80dd4798c16c634daf15@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000cdc61b057f9e360e@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at mm/internal.h:LINE!
+Last occurred:      108 days ago
+Reported:           106 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ffde950cd7002300185185998616192428c11981
+Original thread:    https://lkml.kernel.org/lkml/0000000000007311ca0584e690c1@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ce4fa49466985039fb35@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007311ca0584e690c1@google.com
 
