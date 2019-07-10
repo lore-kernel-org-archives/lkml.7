@@ -2,126 +2,132 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E4C606D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193BFC606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5962084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81FF20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfGJKVr (ORCPT
+        id S1727305AbfGJKWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:21:47 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39521 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfGJKVr (ORCPT
+        Wed, 10 Jul 2019 06:22:46 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59446 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfGJKWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:21:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so1601749otq.6;
-        Wed, 10 Jul 2019 03:21:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hi6thLRzPp31ZNlrsqTMD+L4AfM17N+VHGvoPv6ISh0=;
-        b=mG3WrhEm1WewCc0k8zoXM1AJO86kElwVpPAzClGT3S0fu+gHLa2J8uuoAKrqacox8f
-         JNVgx9wyGc9hoW7CEbrGe2ArHRZnibWn9hEjzqHtdyL7RJjQx8Ovcm5Sr9NHbQmstcl+
-         kd3EtgwXetqY+nEQ+64J5Ny3Hki34zcsTS4grJXmoalBIrWWKakQVEbdagqkrofrVOpM
-         T0JTPlXoQYRAXDE/Ur+FkWcea9Fa2h0wU41FKDd+xRoO7Th/NXRTLi3GOkzSgUOyQQe/
-         4vyCPhVMWDkGE6l1o9CExiZcVfQwIFqIN5M3ExSz9tz/DmHzdWxk09xaHriaGn28RNZd
-         MZcg==
-X-Gm-Message-State: APjAAAUtc/RICAlC8V4mAuh+Sn+sbhUpPqwHmGqu7AwAA+O3RoNssPtP
-        QPY09w6CelMfp0IjAmbofo0HeoHtOmmlAatiFyI=
-X-Google-Smtp-Source: APXvYqzIrZRSgRuX2Gq/mfmOXQ1oI1Q7/uvrG+ybtkgYq5mYPQ7do0oaeBVqu00kbw6aDN/dGT0IC7t5vSteaZXtVsY=
-X-Received: by 2002:a9d:5c11:: with SMTP id o17mr8348445otk.107.1562754106044;
- Wed, 10 Jul 2019 03:21:46 -0700 (PDT)
+        Wed, 10 Jul 2019 06:22:46 -0400
+Received: from 79.184.253.121.ipv4.supernova.orange.pl (79.184.253.121) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 7b98129f9fda85dd; Wed, 10 Jul 2019 12:22:43 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Thomas Lindroth <thomas.lindroth@gmail.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: The tick is active on idle adaptive-tick CPUs when /dev/cpu_dma_latency is used
+Date:   Wed, 10 Jul 2019 12:22:43 +0200
+Message-ID: <312565511.gEFFlSTcEG@kreacher>
+In-Reply-To: <6ef6b96e-1772-6e80-60cf-eb57af618e99@gmail.com>
+References: <79b247b3-e056-610e-9a07-e685dfdaa6c9@gmail.com> <7332404.L1nL2KBT3s@kreacher> <6ef6b96e-1772-6e80-60cf-eb57af618e99@gmail.com>
 MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be> <8500a069-9e29-d6ad-e5e4-22d5a3eead59@electromag.com.au>
-In-Reply-To: <8500a069-9e29-d6ad-e5e4-22d5a3eead59@electromag.com.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 10 Jul 2019 12:21:35 +0200
-Message-ID: <CAMuHMdWLcr0pf-ZM3+iWQGwDLB2xoHAZaeCKAjtEVEaiNed63Q@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Phil,
+On Saturday, July 6, 2019 3:02:11 PM CEST Thomas Lindroth wrote:
+> On 7/6/19 1:06 PM, Rafael J. Wysocki wrote:
+> > The patch is below, but note that it adds the tick stopping overhead to the idle loop
+> > for CPUs that are not adaptive-tick and when PM QoS latency constraints are used
+> > which is not desirable in general.
+> > 
+> > Please test it, but as I said above, the real solution appears to be to treat adaptive-tick
+> > CPUs in a special way in the idle loop.
+> > 
+> > ---
+> >   drivers/cpuidle/governors/menu.c |   16 +++++-----------
+> >   1 file changed, 5 insertions(+), 11 deletions(-)
+> > 
+> > Index: linux-pm/drivers/cpuidle/governors/menu.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/cpuidle/governors/menu.c
+> > +++ linux-pm/drivers/cpuidle/governors/menu.c
+> > @@ -302,9 +302,10 @@ static int menu_select(struct cpuidle_dr
+> >   	     !drv->states[0].disabled && !dev->states_usage[0].disable)) {
+> >   		/*
+> >   		 * In this case state[0] will be used no matter what, so return
+> > -		 * it right away and keep the tick running.
+> > +		 * it right away and keep the tick running if state[0] is a
+> > +		 * polling one.
+> >   		 */
+> > -		*stop_tick = false;
+> > +		*stop_tick = !!(drv->states[0].flags & CPUIDLE_FLAG_POLLING);
+> >   		return 0;
+> >   	}
+> >   
+> > @@ -395,16 +396,9 @@ static int menu_select(struct cpuidle_dr
+> >   
+> >   			return idx;
+> >   		}
+> > -		if (s->exit_latency > latency_req) {
+> > -			/*
+> > -			 * If we break out of the loop for latency reasons, use
+> > -			 * the target residency of the selected state as the
+> > -			 * expected idle duration so that the tick is retained
+> > -			 * as long as that target residency is low enough.
+> > -			 */
+> > -			predicted_us = drv->states[idx].target_residency;
+> > +		if (s->exit_latency > latency_req)
+> >   			break;
+> > -		}
+> > +
+> >   		idx = i;
+> >   	}
+> 
+> I tested the patch and it appears to work. Idle CPUs now have ticks disabled even
+> when /dev/cpu_dma_latency is used.
 
-On Wed, Jul 10, 2019 at 4:00 AM Phil Reid <preid@electromag.com.au> wrote:
-> On 6/07/2019 00:05, Geert Uytterhoeven wrote:
-> > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > character devices.  Access control to these devices is provided by
-> > standard UNIX file system permissions, on an all-or-nothing basis:
-> > either a GPIO controller is accessible for a user, or it is not.
-> > Currently no mechanism exists to control access to individual GPIOs.
-> >
-> > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> > and expose them as a new gpiochip.  This is useful for implementing
-> > access control, and assigning a set of GPIOs to a specific user.
-> > Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> > machine, as the VM can just grab the full virtual GPIO controller, and
-> > no longer needs to care about which GPIOs to grab and which not,
-> > reducing the attack surface.
-> >
-> > Virtual GPIO controllers are instantiated by writing to the "new_device"
-> > attribute file in sysfs:
-> >
-> >      $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> >             "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> >              > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> > Likewise, virtual GPIO controllers can be destroyed after use:
-> >
-> >      $ echo gpio-virt-agg.<N> \
-> >              > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
->
-> Nice.
-> This provides similar functionality to the "gpio inverter" driver currently on the list.
-> Other than being just a buffer.
+OK, thanks, but as I said previously, you'd see the problem again with the PM QoS
+latency constraint set to 0, which is somewhat inconsistent.  Also, this fix is
+specific to the menu governor and the behavior should not depend on the
+governor here IMO, so I have another patch to try (appended).
 
-Indeed, both drivers forward GPIO calls, but the gpio inverter modifies
-some parameters passed.
+Please test it (instead of the previous one) and report back.
 
-The way the drivers obtain references to GPIOs is different, though: the
-inverter driver obtains a fixed description from DT, while the virtual
-aggregator receives the description at runtime, from sysfs.
+> I also want to thank you for your work on the idle loop redesign. Overall it works
+> much better than before. I used to have a problem where idle CPUs would end up
+> doing C0 polling for a long time resulting in a big performance drop on the HT
+> sibling. When benchmarking I always had to offline siblings to get consistent
+> results. That problem was fixed in the redesign.
+> 
 
-But perhaps both drivers could share some code?
+Thank you, much appreciated.
 
-> Would it be possible to do the lookup via line names?
+---
+ kernel/sched/idle.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Doesn't the fact that a GPIO has a line name means that it is in use, and
-thus cannot be aggregated and exported to another user?
-
-Thanks!
+Index: linux-pm/kernel/sched/idle.c
+===================================================================
+--- linux-pm.orig/kernel/sched/idle.c
++++ linux-pm/kernel/sched/idle.c
+@@ -191,7 +191,8 @@ static void cpuidle_idle_call(void)
+ 		 */
+ 		next_state = cpuidle_select(drv, dev, &stop_tick);
+ 
+-		if (stop_tick || tick_nohz_tick_stopped())
++		if (stop_tick || tick_nohz_tick_stopped() ||
++		    !housekeeping_cpu(dev->cpu, HK_FLAG_TICK))
+ 			tick_nohz_idle_stop_tick();
+ 		else
+ 			tick_nohz_idle_retain_tick();
 
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
