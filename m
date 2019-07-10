@@ -2,56 +2,52 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0FDC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0C4C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B807B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3CC21530
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771018;
-	bh=jyNK6v7ZXgHIt1v/x0V6eXb0cohrsUZiPA+zCWQ19pk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DfkQVuusoNWQajTMVaB0ypq70PAuigCNuentwcE88eM/2OHSrHAM6urRxYqI5y1xc
-	 5og5t6AMrx04EXRwDj6s7p9JhYe5EcRCgLOqplUGRIxpTYYBvJPe0oBETtTbmZKIe3
-	 ShbAkaGEguOZnazY1LWYVwYl4jb6/PAspmu33O5E=
+	s=default; t=1562771022;
+	bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XYi/1zYfwG+wIa/077QLbN+QB6JHd+yWDp7vGvAe3hzmwjuW7Dt+RufR9PTtwJ1qE
+	 DxJdw+NNftc6ENRXL5CevQtAXn2qbAhjlTIQUdvM1vYCjAlcEHfk6tcXX7p+p6TO5d
+	 rnfm3CzCrUgYv5FU4c3lS1Y0gug+3CxO28v1TJ1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbfGJPDi (ORCPT
+        id S1728259AbfGJPDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbfGJPDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:33 -0400
+        id S1727717AbfGJPDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8144721530;
-        Wed, 10 Jul 2019 15:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C0621655;
+        Wed, 10 Jul 2019 15:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562771012;
-        bh=jyNK6v7ZXgHIt1v/x0V6eXb0cohrsUZiPA+zCWQ19pk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOxuemFHjPQSCG+dllZusWOdpD2M2XAl/KQAboaKB9pM++mYOIozAqJMIwi1GKU5k
-         KJNoQJftHchn6R803rm9NJBRL9ITasvU9IGSlud9UCdgtcMNVFwoLU/HPBhqCdcMcR
-         Lkk3RZ0zI2xhV001VJ0Edp/XygQgYGeokcjC+JGY=
+        s=default; t=1562771018;
+        bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BU/Ue2kxJH3BW907VnuGKhmorX3wEaBzCYiCzzi0ALgcXmD/pPVa6xUG0M6NeonNn
+         emlgh2pCnWoCFq94wQf0mq79footbDis77P4fiTdFu8NFUF6lBJX0iUlpAV3lqUGQL
+         axVtMOmm9vfSgkWjwLOIih29TjQowdVFOAFLuHTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Beckett <bob.beckett@collabora.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 6/8] drm/imx: notify drm core before sending event during crtc disable
-Date:   Wed, 10 Jul 2019 11:03:16 -0400
-Message-Id: <20190710150319.7258-6-sashal@kernel.org>
+Cc:     Stefan Hellermann <stefan@the2masters.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 1/7] MIPS: ath79: fix ar933x uart parity mode
+Date:   Wed, 10 Jul 2019 11:03:29 -0400
+Message-Id: <20190710150337.7390-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190710150319.7258-1-sashal@kernel.org>
-References: <20190710150319.7258-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,58 +57,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Beckett <bob.beckett@collabora.com>
+From: Stefan Hellermann <stefan@the2masters.de>
 
-[ Upstream commit 78c68e8f5cd24bd32ba4ca1cdfb0c30cf0642685 ]
+[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
 
-Notify drm core before sending pending events during crtc disable.
-This fixes the first event after disable having an old stale timestamp
-by having drm_crtc_vblank_off update the timestamp to now.
+While trying to get the uart with parity working I found setting even
+parity enabled odd parity insted. Fix the register settings to match
+the datasheet of AR9331.
 
-This was seen while debugging weston log message:
-Warning: computed repaint delay is insane: -8212 msec
+A similar patch was created by 8devices, but not sent upstream.
+https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
 
-This occurred due to:
-1. driver starts up
-2. fbcon comes along and restores fbdev, enabling vblank
-3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
-seq number and time set at current value
-(some time later)
-4. weston starts and does a modeset
-5. atomic commit disables crtc while it does the modeset
-6. ipu_crtc_atomic_disable sends vblank with old seq number and time
-
-Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
-
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/imx/ipuv3-crtc.c | 4 ++--
+ arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-index 957fbf8c55eb..7845202d0486 100644
---- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-+++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -99,14 +99,14 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
- 	ipu_dc_disable(ipu);
- 	ipu_prg_disable(ipu);
- 
-+	drm_crtc_vblank_off(crtc);
-+
- 	spin_lock_irq(&crtc->dev->event_lock);
- 	if (crtc->state->event) {
- 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
- 		crtc->state->event = NULL;
- 	}
- 	spin_unlock_irq(&crtc->dev->event_lock);
--
--	drm_crtc_vblank_off(crtc);
- }
- 
- static void imx_drm_crtc_reset(struct drm_crtc *crtc)
+diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
+index c2917b39966b..bba2c8837951 100644
+--- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
++++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
+@@ -27,8 +27,8 @@
+ #define AR933X_UART_CS_PARITY_S		0
+ #define AR933X_UART_CS_PARITY_M		0x3
+ #define	  AR933X_UART_CS_PARITY_NONE	0
+-#define	  AR933X_UART_CS_PARITY_ODD	1
+-#define	  AR933X_UART_CS_PARITY_EVEN	2
++#define	  AR933X_UART_CS_PARITY_ODD	2
++#define	  AR933X_UART_CS_PARITY_EVEN	3
+ #define AR933X_UART_CS_IF_MODE_S	2
+ #define AR933X_UART_CS_IF_MODE_M	0x3
+ #define	  AR933X_UART_CS_IF_MODE_NONE	0
 -- 
 2.20.1
 
