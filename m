@@ -2,96 +2,176 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634A7C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E5FC74A3B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BCF20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4073C2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="o9TO7Psg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfGJSgp convert rfc822-to-8bit (ORCPT
+        id S1728161AbfGJShR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:36:45 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36683 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbfGJSgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:36:44 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so1652873plt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 11:36:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A8Qs53e8oL8Rit9Ihe8NcNOpmThh1DKFAspTMJKydW0=;
-        b=mYLzaaYbAWrDMQQ3ZnHI7uD5LPxxBroLPEubf2g5M7C1bPK/FjbuJgRoJXVrxU2ipA
-         O01mBdDRJ1wN3Y7H0WyQcGt9TDinPPv4d+gs0ezouLdb6wOywtIa7AzqoO8QTzuqWOif
-         k+8YWRFVLgZpU2WcaVO+ZC1qRIYl9yNWyEixc9QSx1Y5vdZLX8qESVAlWAQt3/epsDlb
-         TrYNDL9Ac7MrTRMtz6kmeAAmcovor741Yrm4QgPrr7IB9q0fdA9xQa6L0xUzVWXMqytN
-         LonPqgSRbHVdhucuedvXrRQ94RpWh8sdyQjuzGwROGcooCi2zGX9HrmhdbnxXNWMemQ0
-         Godw==
-X-Gm-Message-State: APjAAAXuPgpOk5p7S0Argb6d1byuOT4NDCSulY5C7WM/uIY0b1FET1P1
-        8YNqZhCIgHN4NKdPftMgTvG4pzQV
-X-Google-Smtp-Source: APXvYqw+rVs6cOCxom0649D34DZC/c0A50KHyFAbjBCsjrTXj5njyXdTZWSdMsPCSOFN30O1RgIujQ==
-X-Received: by 2002:a17:902:e383:: with SMTP id ch3mr40236752plb.23.1562783803956;
-        Wed, 10 Jul 2019 11:36:43 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:fb9c:664d:d2ad:c9b5? ([2620:15c:2c1:200:fb9c:664d:d2ad:c9b5])
-        by smtp.gmail.com with ESMTPSA id q144sm2925710pfc.103.2019.07.10.11.36.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 11:36:43 -0700 (PDT)
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000089a718058556e1d8@google.com>
- <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
- <20190710053030.GB2152@sol.localdomain>
- <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
- <20190710170057.GB801@sol.localdomain> <20190710172123.GC801@sol.localdomain>
- <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
- <20190710180242.GA193819@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <a19779d0-0192-8dc0-d51b-e6938a455f31@acm.org>
-Date:   Wed, 10 Jul 2019 11:36:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190710180242.GA193819@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 10 Jul 2019 14:37:17 -0400
+Received: from mail-eopbgr740047.outbound.protection.outlook.com ([40.107.74.47]:14752
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727193AbfGJShQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 14:37:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pRC+ehMukb6Qa+LQ1I/g4rpi1wuFsq1+PXtFQWilG6M=;
+ b=o9TO7Psg4d16AvYdYu6ei95y42PR+6EdcpfkiPd24na5hhS2WgUbRAJTQ1EH8ul3S6xngkE4hK7LKCrOrcESFKY+O0dEPbdvA/BioCgKKpKkbWpnaeFiKDSUMbyaBgt8EO9JoPOc4bLIJO0FcWVYP1n/NKVwFpTC5PmEr8nBmtM=
+Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
+ SN6PR12MB2846.namprd12.prod.outlook.com (52.135.103.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.20; Wed, 10 Jul 2019 18:37:12 +0000
+Received: from SN6PR12MB2736.namprd12.prod.outlook.com
+ ([fe80::a475:e612:8e1e:ed28]) by SN6PR12MB2736.namprd12.prod.outlook.com
+ ([fe80::a475:e612:8e1e:ed28%3]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 18:37:12 +0000
+From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
+To:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>
+CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
+Subject: [PATCHv3 0/6] CPPC optional registers AMD support
+Thread-Topic: [PATCHv3 0/6] CPPC optional registers AMD support
+Thread-Index: AQHVN057bBT6zB/KfUWS9uFb7V9o2g==
+Date:   Wed, 10 Jul 2019 18:37:09 +0000
+Message-ID: <cover.1562781484.git.Janakarajan.Natarajan@amd.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0201CA0064.namprd02.prod.outlook.com
+ (2603:10b6:803:20::26) To SN6PR12MB2736.namprd12.prod.outlook.com
+ (2603:10b6:805:77::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5c3bb6aa-0c5f-4f2f-63f8-08d705659e0e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2846;
+x-ms-traffictypediagnostic: SN6PR12MB2846:
+x-microsoft-antispam-prvs: <SN6PR12MB2846135FB694E71AE0D783ADE7F00@SN6PR12MB2846.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(376002)(39860400002)(199004)(189003)(6512007)(14454004)(71190400001)(71200400001)(7736002)(25786009)(26005)(186003)(102836004)(52116002)(486006)(50226002)(6436002)(64756008)(66446008)(53936002)(386003)(99286004)(6506007)(2201001)(66946007)(66476007)(8676002)(305945005)(81166006)(68736007)(6116002)(8936002)(81156014)(86362001)(3846002)(66556008)(6486002)(110136005)(316002)(2501003)(2616005)(5660300002)(256004)(4326008)(36756003)(476003)(14444005)(478600001)(6666004)(2906002)(66066001)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2846;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xAmmub16/QE7iVZ7OfMlApteW+NjlYT64jZlYglYAiJBrKp2C5FNtPMkCLp5FKBXlNHa4hoDx1K530B1EfXFeHm2uycEVLNb/dk4IwUjU4gKidZ1dS56lIFIyzvDhq3l4Wqj1qPAaDICugdUuUuwW1ICL48PcZQ5nRhs14lH2zfl2Mq2kSS8Fh2xYm36l3d0lRou9ociaLCu43bZbA7HAO2ALTwsn+4EmSc5bV9XB1le91/ZJvuSyQvd8TkgR8j1xCf9lfOLXCFQ1g9l6/RaPCmSgEPmBHDNnAzhV9cvahWcXNE1vhopil65Q9oiUaap1fm/KazZTsxMLQUYBXuryUv2gQAjtTyAoEPZXVvP6My9jk83jCQ9LCe7vDzIDRAo7GM6X7jD7kZKw+Qsd2908r8TtCH2Ur7bypPnQXhPuI0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c3bb6aa-0c5f-4f2f-63f8-08d705659e0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 18:37:11.3514
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jnataraj@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 11:02 AM, Eric Biggers wrote:
-> I already mentioned that io_uring triggers it too.
-> 
-> Those are just 2 cases that syzbot happened to generate reproducers for.  I
-> expect there are many others too, since many places in the kernel allocate
-> workqueues.  AFAICS most are placed in static or global variables which avoids
-> this issue, but there are still many cases where a workqueue is owned by some
-> dynamic structure that can have a much shorter lifetime.
-> 
-> You can also check the other syzbot reports that look similar
-> (https://lore.kernel.org/lkml/20190710055838.GC2152@sol.localdomain/).
-> Two of them have C reproducers too.
+CPPC (Collaborative Processor Performance Control) offers optional
+registers which can be used to tune the system based on energy and/or
+performance requirements.
 
-As you may know lockdep cannot use dynamic memory allocation because
-doing so would introduce a circular dependency between lockdep and the
-memory allocator. Hence the fixed size arrays in the lockdep code.
-Additionally, as far as I know lockdep works fine for human kernel
-developers and only syzbot runs code that triggers the lockdep limits.
-So I think it's up to the syzbot authors to come up with a solution. I
-mean another solution than finger pointing at kernel developers.
+Newer AMD processors (>=3D Family 17h) add support for a subset of these
+optional CPPC registers, based on ACPI v6.1.
 
-Bart.
+The following are the supported CPPC registers for which sysfs entries
+are created:
+* enable                (NEW)
+* max_perf              (NEW)
+* min_perf              (NEW)
+* energy_perf
+* lowest_perf
+* nominal_perf
+* desired_perf          (NEW)
+* feedback_ctrs
+* auto_sel_enable       (NEW)
+* lowest_nonlinear_perf
 
+First, update cppc_acpi to create sysfs entries only when the optional
+registers are known to be supported.
+
+Next, a new CPUFreq driver is introduced to enable the OSPM and the userspa=
+ce
+to access the newly supported registers through sysfs entries found in
+/sys/devices/system/cpu/cpu<num>/amd_cpufreq/.
+
+This new CPUFreq driver can only be used by providing a module parameter,
+amd_cpufreq.cppc_enable=3D1.
+
+The purpose of exposing the registers via the amd-cpufreq sysfs entries is =
+to
+allow the userspace to:
+* Tweak the values to fit its workload.
+* Apply a profile from AMD's optimization guides.
+
+Profiles will be documented in the performance/optimization guides.
+
+Note:
+* AMD systems will not have a policy applied in the kernel at this time.
+
+TODO:
+* Create a linux userspace tool that will help users generate a CPPC profil=
+e
+  for their target workload.
+* Create a general CPPC policy in the kernel.
+
+v1->v2:
+* Add macro to ensure BUFFER only registers have BUFFER type.
+* Add support macro to make the right check based on register type.
+* Remove support checks for registers which are mandatory.
+
+v2->v3:
+* Introduce new amd-cpufreq driver which will have priority over acpi-cpufr=
+eq.
+* Move new sysfs entries creation to amd-cpufreq.
+
+Janakarajan Natarajan (3):
+  acpi/cppc: Add macros for CPPC register checks
+  acpi/cppc: Ensure only supported CPPC sysfs entries are created
+  drivers/cpufreq: Add a CPUFreq driver for AMD processors (Fam17h and
+    later)
+
+Yazen Ghannam (3):
+  acpi/cppc: Rework cppc_set_perf() to use cppc_regs index
+  acpi/cppc: Add support for optional CPPC registers
+  acpi/cppc: Add support for CPPC Enable register
+
+ drivers/acpi/cppc_acpi.c       | 244 ++++++++++++++++++++++++++++-----
+ drivers/cpufreq/Kconfig.x86    |  14 ++
+ drivers/cpufreq/Makefile       |   4 +-
+ drivers/cpufreq/amd-cpufreq.c  | 233 +++++++++++++++++++++++++++++++
+ drivers/cpufreq/cppc_cpufreq.c |   6 +-
+ include/acpi/cppc_acpi.h       |  11 +-
+ 6 files changed, 474 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/cpufreq/amd-cpufreq.c
+
+--=20
+2.17.1
 
