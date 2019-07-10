@@ -2,92 +2,98 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E02C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A9C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E90B2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562757386;
-	bh=RGD/vidgsDuU7NFtcLeQfp/bwEy6DU9dIgAurbz4NUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gCmhOu0Z27MRfuPACk+9KBRhXbEonYx1DRqa1xJx6ma5/zviXQFoYWjZ6QfPnu/su
-	 ZV90MkqguwP9aaVzlHMzLfnxCDkFWWMlgiUbSBD3ZeaScmIZuDgaSA17vRSRzH5dWz
-	 KCv/nkHsn+fjkyb+qdmrqD+CEhxhJttHt/1Gl4uE=
+	by mail.kernel.org (Postfix) with ESMTP id 1C0922084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfGJLQZ (ORCPT
+        id S1727198AbfGJLR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:16:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48668 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726097AbfGJLQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:16:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 601B4AF05;
-        Wed, 10 Jul 2019 11:16:23 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 13:16:22 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v3 4/5] mm: introduce MADV_PAGEOUT
-Message-ID: <20190710111622.GI29695@dhcp22.suse.cz>
-References: <20190627115405.255259-1-minchan@kernel.org>
- <20190627115405.255259-5-minchan@kernel.org>
- <20190709095518.GF26380@dhcp22.suse.cz>
- <20190710104809.GA186559@google.com>
+        Wed, 10 Jul 2019 07:17:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:57923 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfGJLR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:17:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 04:17:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,474,1557212400"; 
+   d="scan'208";a="364901022"
+Received: from marcindx-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.33.247])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Jul 2019 04:17:20 -0700
+Date:   Wed, 10 Jul 2019 14:17:19 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Cedric Xing <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        kai.svahn@intel.com, kai.huang@intel.com
+Subject: Re: [RFC PATCH v2 0/3] An alternative __vdso_sgx_enter_enclave() to
+ allow enclave/host parameter passing using untrusted stack
+Message-ID: <20190710111719.nnoedfo4wvbfghq7@linux.intel.com>
+References: <cover.1555965327.git.cedric.xing@intel.com>
+ <20190424062623.4345-1-cedric.xing@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710104809.GA186559@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424062623.4345-1-cedric.xing@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 19:48:09, Minchan Kim wrote:
-> On Tue, Jul 09, 2019 at 11:55:19AM +0200, Michal Hocko wrote:
-[...]
-> > I am still not convinced about the SWAP_CLUSTER_MAX batching and the
-> > udnerlying OOM argument. Is one pmd worth of pages really an OOM risk?
-> > Sure you can have many invocations in parallel and that would add on
-> > but the same might happen with SWAP_CLUSTER_MAX. So I would just remove
-> > the batching for now and think of it only if we really see this being a
-> > problem for real. Unless you feel really strong about this, of course.
+On Tue, Apr 23, 2019 at 11:26:20PM -0700, Cedric Xing wrote:
+> The current proposed __vdso_sgx_enter_enclave() requires enclaves to preserve
+> %rsp, which prohibits enclaves from allocating space on the untrusted stack.
+> However, there are existing enclaves (e.g. those built with current Intel SGX
+> SDK libraries) relying on the untrusted stack for passing parameters to
+> untrusted functions (aka. o-calls), which requires allocating space on the
+> untrusted stack by enclaves. And given its simplicity and convenience, it could
+> be desired by future SGX applications as well.  
 > 
-> I don't have the number to support SWAP_CLUSTER_MAX batching for hinting
-> operations. However, I wanted to be consistent with other LRU batching
-> logic so that it could affect altogether if someone try to increase
-> SWAP_CLUSTER_MAX which is more efficienty for batching operation, later.
-> (AFAIK, someone tried it a few years ago but rollback soon, I couldn't
-> rebemeber what was the reason at that time, anyway).
-
-Then please drop this part. It makes the code more complex while any
-benefit is not demonstrated.
-
-> > Anyway the patch looks ok to me otherwise.
-> > 
-> > Acked-by: Michal Hocko <mhocko@suse.co>
+> This patchset introduces a new ABI for __vdso_sgx_enter_enclave() to anchor its
+> stack frame on %rbp (instead of %rsp), so as to allow enclaves to "push" onto
+> the untrusted stack by decrementing the untrusted %rsp. Additionally, this new
+> __vdso_sgx_enter_enclave() will take one more parameter - a callback function,
+> to be invoked upon all enclave exits (both AEX and normal exits). The callback
+> function will be given the value of %rsp left off by the enclave, so that data
+> "pushed" by the enclave (if any) could be addressed/accessed.  Please note that
+> the callback function is optional, and if not supplied (i.e. null),
+> __vdso_sgx_enter_enclave() will just return (i.e. behave the same as the
+> current implementation) after the enclave exits (or AEX due to exceptions).
 > 
-> Thanks!
+> The SGX selftest is augmented by two new tests. One exercises the new callback
+> interface, and serves as a simple example to showcase how to use it; while the
+> other validates the hand-crafted CFI directives in __vdso_sgx_enter_enclave()
+> by single-stepping through it and unwinding call stack at every instruction.
 
--- 
-Michal Hocko
-SUSE Labs
+Why does the SDK anyway use real enclaves when step debugging? I don't
+think kernel needs to scale to that. For me it looks more like a bad
+architectural choice in the SDK implementation than anything else.
+
+You should design SDK in a way that it doesn't run the code inside real
+enclave at first. It is just the sanest development model to use. The
+current SDK has an unacceptable requirement that the workstation used to
+develop code destined to run inside enclave must possess an appropriate
+hardware. I don't think that is acceptable no matter what kind of API
+kernel provides to invoke enclaves.
+
+I think "real" debug enclaves are only good for production testing when
+you have more or less ready to release/deploy something but still want
+to be able to get a memory dump of the enclave on occassion.
+
+With these conclusions I think the current vDSO API is sufficient for
+Linux.
+
+/Jarkko
