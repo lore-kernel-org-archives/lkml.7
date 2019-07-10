@@ -2,122 +2,86 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31044C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EF6C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0C920844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ws8ZlSNu"
+	by mail.kernel.org (Postfix) with ESMTP id 1966220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfGJI6Y (ORCPT
+        id S1727675AbfGJI6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:58:24 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:44506 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbfGJI6Y (ORCPT
+        Wed, 10 Jul 2019 04:58:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47130 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfGJI6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:58:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tGVK8wsAuWr8Qn7qe1FmpGQnQVvxqZOxCuBAe9rzOVs=; b=ws8ZlSNuRKf2udjEGWe4O23qM
-        4YZzKbMaZasaLJsNPN/MsyavSHDphQtMvk8lWRaRSGt27iWdeaeCXm0facPqKm0268NtjpvpqPam4
-        p3B+gk6EiK29FupjXvEnd5TxmBMFGlL9IHqu06CjBbbU9yzh8vH7weSkazjG4SWLpL+zC07VUs+89
-        c5AWCsGtgxRpbGnSYpA2yoTMl0oqig6NlEpE/qp9NFmfrVyTe1gdd3Tijnbs87BTUqyfTIv8dg3wU
-        VxB1MwtwCDVjxMtiq3dUV7iL8yOCQg8MuNnLD80jnmvDTfIYCoNiq4ao5iYp6D/pGL+iTYgDMuU0C
-        k3+VCcNrQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59416)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hl8Qb-0005iE-6D; Wed, 10 Jul 2019 09:58:17 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hl8QY-0003lo-VD; Wed, 10 Jul 2019 09:58:14 +0100
-Date:   Wed, 10 Jul 2019 09:58:14 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] ARM: mtd-xip: work around clang/llvm bug
-Message-ID: <20190710085814.vgwdnj4b3s3zjmco@shell.armlinux.org.uk>
-References: <20190708203049.3484750-1-arnd@arndb.de>
- <CACRpkdY1JzUZKgmXbObb6hqFcLFygAj2NuMgPMj=8tCp9U2C1A@mail.gmail.com>
- <CAKwvOdnm6rd4pOJvRbAghLxfd2QL5VJ+ODiMyRh1ri3pmmz0yg@mail.gmail.com>
- <CAK8P3a2anB0hD5J0JfPpJ_Gjc=NjoNC4k9nJ=t9H5AOBbdnfqg@mail.gmail.com>
- <20190709222517.c3nn6fgrz2eost3s@shell.armlinux.org.uk>
- <CAK8P3a3Sv1dfSC3W4_Hfj8TSKaiJKS+fW1woLeLhGw97jHgT6g@mail.gmail.com>
+        Wed, 10 Jul 2019 04:58:33 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hl8Ql-0006xp-9o; Wed, 10 Jul 2019 10:58:27 +0200
+Date:   Wed, 10 Jul 2019 10:58:25 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Will Deacon <will@kernel.org>
+cc:     John Stultz <john.stultz@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>
+Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
+In-Reply-To: <20190710082750.mvm3e6myzpqsurga@willie-the-truck>
+Message-ID: <alpine.DEB.2.21.1907101057190.1758@nanos.tec.linutronix.de>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com> <20190621095252.32307-11-vincenzo.frascino@arm.com> <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com> <20190710082750.mvm3e6myzpqsurga@willie-the-truck>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3Sv1dfSC3W4_Hfj8TSKaiJKS+fW1woLeLhGw97jHgT6g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:33:31AM +0200, Arnd Bergmann wrote:
-> On Wed, Jul 10, 2019 at 12:25 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, Jul 09, 2019 at 08:40:51PM +0200, Arnd Bergmann wrote:
-> > > On Tue, Jul 9, 2019 at 8:08 PM 'Nick Desaulniers' via Clang Built
-> > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > > > On Tue, Jul 9, 2019 at 1:41 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > >
-> > > > > I guess this brings up the old question whether the compiler should
-> > > > > be worked around or just considered immature, but as it happens this
-> > > >
-> > > > Definitely a balancing act; we prioritize work based on what's
-> > > > feasible to work around vs must be implemented.  A lot of my time is
-> > > > going into validation of asm goto right now, but others are ramping up
-> > > > on the integrated assembler (clang itself can be invoked as a
-> > > > substitute for GNU AS; but there's not enough support to do `make
-> > > > AS=clang` for the kernel just yet).
-> > >
-> > > Note that this bug is the same with both gas and AS=clang, which also
-> > > indicates that clang implemented the undocumented .rep directive
-> > > for compatibility.
-> > >
-> > > Overall I think we are at the point where building the kernel with clang-8
-> > > is mature enough that we should work around bugs like this where it is
-> > > easy enough rather than waiting for clang-9.
-> >
-> > While both assemblers seem to support both .rept and .rep, might it
-> > be an idea to check what the clang-8 situation is with .rept ?
+On Wed, 10 Jul 2019, Will Deacon wrote:
+> On Tue, Jul 09, 2019 at 09:02:54PM -0700, John Stultz wrote:
+> > I tried to bisect things down a bit, but as some later fixes are
+> > required (at one point, date was returning the start epoch and never
+> > increasing), this hasn't worked too well. But I'm guessing since I
+> > see: "CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will
+> > not be built", and the system is half working, I'm guessing this is an
+> > issue with just the 32bit code failing.  While I can try to sort out
+> > the proper CROSS_COMPILE_COMPAT in my build environment, I assume
+> > userland shouldn't be crashing if that value isn't set.
+> > 
+> > Any chance this issue has already been raised?
 > 
-> Good idea. I tried this patch now:
-> 
-> --- a/arch/arm/include/asm/mtd-xip.h
-> +++ b/arch/arm/include/asm/mtd-xip.h
-> @@ -15,6 +15,6 @@
->  #include <mach/mtd-xip.h>
-> 
->  /* fill instruction prefetch */
-> -#define xip_iprefetch()        do { asm volatile (".rep 8; nop;
-> .endr"); } while (0)
-> +#define xip_iprefetch()        do { asm volatile (".rept 8; nop;
-> .endr"); } while (0)
-> 
->  #endif /* __ARM_MTD_XIP_H__ */
-> 
-> Unfortunately that has no effect, clang treats them both the same way.
+> First I've seen of it, although Vincenzo is likely to know better than me.
+> In the meantime, please can you share your .config?
 
-In any case, good to know.
+I think the key is: CROSS_COMPILE_COMPAT not defined or empty. And then run
+32bit userspace.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Thanks,
+
+	tglx
