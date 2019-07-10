@@ -3,69 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742ADC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B846EC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C652054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7F12054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfGJJR4 (ORCPT
+        id S1727782AbfGJJSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:17:56 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:36092 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfGJJRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:17:55 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hl8jF-0002Ji-QK; Wed, 10 Jul 2019 11:17:33 +0200
-Message-ID: <5fa1fa6998332642c49e2d5209193ffe2713f333.camel@sipsolutions.net>
-Subject: Re: [PATCH 00/12] treewide: Fix GENMASK misuses
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org, linux-media@vger.kernel.org
-Cc:     dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        linux-mmc@vger.kernel.org, devel@driverdev.osuosl.org,
-        alsa-devel@alsa-project.org
-Date:   Wed, 10 Jul 2019 11:17:31 +0200
-In-Reply-To: <cover.1562734889.git.joe@perches.com> (sfid-20190710_070546_627944_047EEDD0)
-References: <cover.1562734889.git.joe@perches.com>
-         (sfid-20190710_070546_627944_047EEDD0)
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
+        Wed, 10 Jul 2019 05:18:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:27551 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727497AbfGJJSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:18:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 02:18:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,474,1557212400"; 
+   d="scan'208";a="173811519"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Jul 2019 02:18:09 -0700
+Message-ID: <5D25AE9C.8090404@intel.com>
+Date:   Wed, 10 Jul 2019 17:23:40 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
+        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
+        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
+Subject: Re: [PATCH v7 12/12] KVM/VMX/vPMU: support to report GLOBAL_STATUS_LBRS_FROZEN
+References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com> <1562548999-37095-13-git-send-email-wei.w.wang@intel.com> <20190708150909.GP3402@hirez.programming.kicks-ass.net> <5D2408D7.3000002@intel.com> <20190709113549.GU3402@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190709113549.GU3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
-> These GENMASK uses are inverted argument order and the
-> actual masks produced are incorrect.  Fix them.
-> 
-> Add checkpatch tests to help avoid more misuses too.
-> 
-> Joe Perches (12):
->   checkpatch: Add GENMASK tests
+On 07/09/2019 07:35 PM, Peter Zijlstra wrote:
+>
+> Yeah; although I'm not sure if its an implementation or specification
+> problem. But as it exists it is of very limited use.
+>
+> Fundamentally our events (with exception of event groups) are
+> independent. Events should always count, except when the PMI is running
+> -- so as to not include the measurement overhead in the measurement
+> itself. But this (mis)feature stops the entire PMU as soon as a single
+> counter overflows, inhibiting all other counters from running (as they
+> should) until the PMI has happened and reset the state.
+>
+> (Note that, strictly speaking, we even expect the overflowing counter to
+> continue counting until the PMI happens. Having an overflow should not
+> mean we loose events. A sampling and !sampling event should produce the
+> same event count.)
+>
+> So even when there's only a single event (group) scheduled, it isn't
+> strictly right. And when there's multiple events scheduled it is
+> definitely wrong.
+>
+> And while I understand the purpose of the current semantics; it makes a
+> single event group sample count more coherent, the fact that is looses
+> events just bugs me something fierce -- and as shown, it breaks tools.
 
-IMHO this doesn't make a lot of sense as a checkpatch test - just throw
-in a BUILD_BUG_ON()?
+Thanks for sharing the finding.
+If I understand this correctly, you observed that counter getting freezed
+earlier than expected (expected to freeze at the time PMI gets generated).
 
-johannes
+Have you talked to anyone for possible freeze adjustment from the hardware?
+
+Best,
+Wei
 
