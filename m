@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D88C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F614C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09316208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EC420844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562772892;
-	bh=fRQ1IepkDiCINe4kIJOLiW2NRP+E+QL4aumO1FqR8A8=;
+	s=default; t=1562772895;
+	bh=GFFe1fN71gvI8U857vb83UKm3PaX39Jo1DxrXfcrMy8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=T88nR8swtYAs4Tuke6IxlOvePXluX1vgXs+4Of6EP1c3unsY2/43QjCY6Tel3R0xk
-	 Z/XmurAO1kwZHaqYPqvmTs78LE6Dx4gA1dSv/Fi9MwNxl5JQxSANP8rYYIMQT0Oyvw
-	 Q24Vq7t2zBhjy5xe+DvQJm/PsSLTD6NBly7EgiK0=
+	b=A6SwQIPp5cjkI82V7mFL4eDz4v5vPYzYVuG8ZxT6aVb/mVoiUyyX+oPNZo/qe0M99
+	 ndeXa/n63q6BFpkIPrhq6uC6biDQ7txtgRK510IIVALWBgv3YfX2CPD+1BEVobjYRj
+	 8vXEXsPH+ttc5AJagD9hqSXBCvnwgdw3Ay+wP8RA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfGJPeu (ORCPT
+        id S1727500AbfGJPey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:34:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45568 "EHLO
+        Wed, 10 Jul 2019 11:34:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45652 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfGJPeu (ORCPT
+        with ESMTP id S1727063AbfGJPew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:34:50 -0400
+        Wed, 10 Jul 2019 11:34:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=XL6NtJgyGoIzYEN3aZtJOFgsmtAvVEBqqaJp2gL0E/U=; b=cCD2xF53to9c
-        GLp0NSGeVjCgAb9Flp6LPjUDl8EyZV2Q84GXNNMHHrlJqSql9Moxk0vPUWre4pchF1WA1aMutrCeE
-        g/3khiJdW7L54qOsHoYNZB5n+XfEBvGR818SJnxBZH7FQmk6geCRrjBg0yR9Oe60EpNNUxT2culz3
-        wRQfg=;
+        List-Archive; bh=V91pmBsf6kxdFHew84eBND8S52MilJzfqdSmspUhTJo=; b=jAd/Ps0/iZHi
+        BE2144LdPYYIb3qiC4sqEAcaUL+ip753Mlxb04YZrQxVAXbKuAmAkhgAg/qlYuHUR9EF01UFhlwci
+        LbgX+a/lK5m4Be37ykGiwQPiUjTxAFeOhKtjiLhry1bFf9wnD6sUMy2QYao5G2YDUOc0k65HQv0Gn
+        D/Cj0=;
 Received: from [217.140.106.53] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hlEcD-00082n-ES; Wed, 10 Jul 2019 15:34:41 +0000
+        id 1hlEcB-00082j-6P; Wed, 10 Jul 2019 15:34:39 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 2A25DD02D7C; Wed, 10 Jul 2019 16:34:41 +0100 (BST)
+        id 99AAED02D7C; Wed, 10 Jul 2019 16:34:38 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Wen Yang <wen.yang99@zte.com.cn>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -54,11 +54,11 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, tiwai@suse.com,
         wang.yi59@zte.com.cn, xue.zhihong@zte.com.cn
-Subject: Applied "ASoC: audio-graph-card: fix use-after-free in graph_dai_link_of_dpcm()" to the asoc tree
-In-Reply-To:  <1562743509-30496-4-git-send-email-wen.yang99@zte.com.cn>
+Subject: Applied "ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()" to the asoc tree
+In-Reply-To:  <1562743509-30496-5-git-send-email-wen.yang99@zte.com.cn>
 X-Patchwork-Hint: ignore
-Message-Id: <20190710153441.2A25DD02D7C@fitzroy.sirena.org.uk>
-Date:   Wed, 10 Jul 2019 16:34:41 +0100 (BST)
+Message-Id: <20190710153438.99AAED02D7C@fitzroy.sirena.org.uk>
+Date:   Wed, 10 Jul 2019 16:34:38 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: audio-graph-card: fix use-after-free in graph_dai_link_of_dpcm()
+   ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()
 
 has been applied to the asoc tree at
 
@@ -91,109 +91,48 @@ to this mail.
 Thanks,
 Mark
 
-From aa2e362cb6b3f5ca88093ada01e1a0ace8a517b2 Mon Sep 17 00:00:00 2001
+From c152f8491a8d9a4b25afd65a86eb5e55e2a8c380 Mon Sep 17 00:00:00 2001
 From: Wen Yang <wen.yang99@zte.com.cn>
-Date: Wed, 10 Jul 2019 15:25:08 +0800
-Subject: [PATCH] ASoC: audio-graph-card: fix use-after-free in
- graph_dai_link_of_dpcm()
+Date: Wed, 10 Jul 2019 15:25:09 +0800
+Subject: [PATCH] ASoC: audio-graph-card: fix an use-after-free in
+ graph_get_dai_id()
 
-After calling of_node_put() on the ports, port, and node variables,
-they are still being used, which may result in use-after-free.
+After calling of_node_put() on the node variable, it is still being
+used, which may result in use-after-free.
 Fix this issue by calling of_node_put() after the last usage.
 
-Fixes: dd98fbc558a0 ("ASoC: audio-graph-card: cleanup DAI link loop method - step1")
-Link: https://lore.kernel.org/r/1562743509-30496-4-git-send-email-wen.yang99@zte.com.cn
+Fixes: a0c426fe1433 ("ASoC: simple-card-utils: check "reg" property on asoc_simple_card_get_dai_id()")
+Link: https://lore.kernel.org/r/1562743509-30496-5-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
 Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/generic/audio-graph-card.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ sound/soc/generic/audio-graph-card.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index e438011f5e45..bddfcfd7bedf 100644
+index bddfcfd7bedf..343ede8042c3 100644
 --- a/sound/soc/generic/audio-graph-card.c
 +++ b/sound/soc/generic/audio-graph-card.c
-@@ -208,10 +208,6 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
+@@ -63,6 +63,7 @@ static int graph_get_dai_id(struct device_node *ep)
+ 	struct device_node *endpoint;
+ 	struct of_endpoint info;
+ 	int i, id;
++	u32 *reg;
+ 	int ret;
  
- 	dev_dbg(dev, "link_of DPCM (%pOF)\n", ep);
+ 	/* use driver specified DAI ID if exist */
+@@ -83,8 +84,9 @@ static int graph_get_dai_id(struct device_node *ep)
+ 			return info.id;
  
--	of_node_put(ports);
--	of_node_put(port);
--	of_node_put(node);
--
- 	if (li->cpu) {
- 		int is_single_links = 0;
- 
-@@ -229,17 +225,17 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 		ret = asoc_simple_parse_cpu(ep, dai_link, &is_single_links);
- 		if (ret)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_parse_clk_cpu(dev, ep, dai_link, dai);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_set_dailink_name(dev, dai_link,
- 						   "fe.%s",
- 						   cpus->dai_name);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		/* card->num_links includes Codec */
- 		asoc_simple_canonicalize_cpu(dai_link, is_single_links);
-@@ -263,17 +259,17 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 		ret = asoc_simple_parse_codec(ep, dai_link);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_parse_clk_codec(dev, ep, dai_link, dai);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		ret = asoc_simple_set_dailink_name(dev, dai_link,
- 						   "be.%s",
- 						   codecs->dai_name);
- 		if (ret < 0)
--			return ret;
-+			goto out_put_node;
- 
- 		/* check "prefix" from top node */
- 		snd_soc_of_parse_node_prefix(top, cconf, codecs->of_node,
-@@ -293,19 +289,23 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
- 
- 	ret = asoc_simple_parse_tdm(ep, dai);
- 	if (ret)
--		return ret;
-+		goto out_put_node;
- 
- 	ret = asoc_simple_parse_daifmt(dev, cpu_ep, codec_ep,
- 				       NULL, &dai_link->dai_fmt);
- 	if (ret < 0)
--		return ret;
-+		goto out_put_node;
- 
- 	dai_link->dpcm_playback		= 1;
- 	dai_link->dpcm_capture		= 1;
- 	dai_link->ops			= &graph_ops;
- 	dai_link->init			= asoc_simple_dai_init;
- 
--	return 0;
-+out_put_node:
-+	of_node_put(ports);
-+	of_node_put(port);
-+	of_node_put(node);
-+	return ret;
- }
- 
- static int graph_dai_link_of(struct asoc_simple_priv *priv,
+ 		node = of_get_parent(ep);
++		reg = of_get_property(node, "reg", NULL);
+ 		of_node_put(node);
+-		if (of_get_property(node, "reg", NULL))
++		if (reg)
+ 			return info.port;
+ 	}
+ 	node = of_graph_get_port_parent(ep);
 -- 
 2.20.1
 
