@@ -2,195 +2,101 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514C7C606B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD4CC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200F92081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C92F20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="nc12BYUO"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y78Fo7bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfGJJJB (ORCPT
+        id S1727756AbfGJJKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:09:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33987 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727645AbfGJJJA (ORCPT
+        Wed, 10 Jul 2019 05:10:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59313 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbfGJJKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:09:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so4160589wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 02:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UnzrRWgbuTe9Zz0w/2n+yMVUm/kQiQ1KYQOegKaDBp8=;
-        b=nc12BYUO1zpFaUSEv9hSloc0orFVkHVdRlMYYXNKvVGB3Uz7A4EDLIrt/3S4C8/jXE
-         vx+m2Y9hX9MnsbuWJXxQJWSM8IbwDWBXZybSYz0vd8iYN3QyGaPjS6pt1F2ol6fC1qgj
-         +zhAY3O7EG/zUqdC5ZknepaTDTpWciXBfAiUnTJn3CmIZOBO6pbDDESTLrLUxgnBaMMC
-         EY9FFRydxPXpZSbsKhTaOTb+80agO2oAUobIMui1Gf9l8TsQTp+QjjUiGKZjCiyDVnTU
-         kQd4LBwOn7lN7VqfJPvRVKDhV6XgDifNH1/WJPF+ZfMJwOzk1PsvsY7kResDStDcrMJd
-         3lSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UnzrRWgbuTe9Zz0w/2n+yMVUm/kQiQ1KYQOegKaDBp8=;
-        b=LZ0vFuebaoQQa5kGAmUkNNrvSUioCJdBMC7pM99GvLYkJzGEfBUEuOZosERoqx9Fx/
-         J1GlAedjgP2acM9wC4gKtRNFZIvzdy45ahChUyXosS8Peqt5jg3vpNOuWYlb9FDsvqVL
-         cCa/9it17ahDIBYcb6Itx/t/7xEX+F6wCDkU1wniT3YI71/M5jQxMRpjvX4tnCuF7c3T
-         pi4nTUDQnI9ljpgOmBUmy0HjhJm+Xre0NH5sQV7/+5yGToeFdJF+bgxUN+htd8zrivAt
-         dOpAhwHNBmN5N95flbNUzJpNzLjoblLfTSRWZVCj68/A2cih9YcvpA7N6p6CuX0b30ch
-         +01g==
-X-Gm-Message-State: APjAAAX0lS0JIrKvcBB+Q6n1jIt4ngDXBZuwAg37wulgCLMpbu3oDHVm
-        GAkQg6R9KHe47gg1+BH+Fms4pw==
-X-Google-Smtp-Source: APXvYqw5GyviTXLJvhW5O0gNTEOahA9P3riO6KEJTkecnkfJvMizd9wmQSt4G2C8UW4ZnyYGopnnIQ==
-X-Received: by 2002:a05:600c:2182:: with SMTP id e2mr4203236wme.104.1562749737833;
-        Wed, 10 Jul 2019 02:08:57 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u186sm2308511wmu.26.2019.07.10.02.08.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 02:08:57 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/2] gpio: em: use a helper variable for &pdev->dev
-Date:   Wed, 10 Jul 2019 11:08:52 +0200
-Message-Id: <20190710090852.9239-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190710090852.9239-1-brgl@bgdev.pl>
-References: <20190710090852.9239-1-brgl@bgdev.pl>
+        Wed, 10 Jul 2019 05:10:11 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6A9A3im2347178
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Jul 2019 02:10:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6A9A3im2347178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562749803;
+        bh=Ga0hiwpxMHtqeVSBV5pF7381TYukT9gg0R4ViGA1Xg0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Y78Fo7bq1O9t95W7mewQpMsZ6ep4h0TBL5kJBV4Va6Y7i6tqYPDbwL7DHCpC49QKd
+         unLP514zp9GNPzfuVNC6DbMjNF3qITePICgiFOLtD//xYiJKFrZPYVMqvWAQfEYgMA
+         qct90F745yOZYm+sx+e2Hrms+HffMO1+7rG/kVxFvlSFFseAN+7bIq0KWOwyV6Se/U
+         Y02NszqmIfi3vbs6ZI20kOafN3MzkkgpfAy17TG5tC6w/0vTvhrdvmL3ea6lp/Pqne
+         xfD2F8N+SQYNpvFBxISSmz63Jv+7DInk1tXBSkLSmWQhvg7OR99xrN27bkTrue+dOy
+         NslTpXv49hGFA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6A9A2022347175;
+        Wed, 10 Jul 2019 02:10:02 -0700
+Date:   Wed, 10 Jul 2019 02:10:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Joe Perches <tipbot@zytor.com>
+Message-ID: <tip-9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb@git.kernel.org>
+Cc:     joe@perches.com, mingo@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Reply-To: mingo@kernel.org, joe@perches.com, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com
+In-Reply-To: <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
+References: <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/urgent] clocksource/drivers/npcm: Fix misuse of GENMASK
+ macro
+Git-Commit-ID: 9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Commit-ID:  9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb
+Gitweb:     https://git.kernel.org/tip/9bdd7bb3a8447fe841cd37ddd9e0a6974b06a0bb
+Author:     Joe Perches <joe@perches.com>
+AuthorDate: Tue, 9 Jul 2019 22:04:15 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 10 Jul 2019 11:05:26 +0200
 
-Instead of always dereferencing &pdev->dev, just assign a helper local
-variable of type struct device * and use it where applicable.
+clocksource/drivers/npcm: Fix misuse of GENMASK macro
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Arguments are supposed to be ordered high then low.
+
+Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com
+
 ---
- drivers/gpio/gpio-em.c | 37 +++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ drivers/clocksource/timer-npcm7xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-index c88028ac66f2..e3aa6fe3a320 100644
---- a/drivers/gpio/gpio-em.c
-+++ b/drivers/gpio/gpio-em.c
-@@ -272,11 +272,12 @@ static int em_gio_probe(struct platform_device *pdev)
- 	struct resource *io[2], *irq[2];
- 	struct gpio_chip *gpio_chip;
- 	struct irq_chip *irq_chip;
--	const char *name = dev_name(&pdev->dev);
-+	struct device *dev = &pdev->dev;
-+	const char *name = dev_name(dev);
- 	unsigned int ngpios;
- 	int ret;
- 
--	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
-+	p = devm_kzalloc(dev, sizeof(*p), GFP_KERNEL);
- 	if (!p)
- 		return -ENOMEM;
- 
-@@ -290,27 +291,27 @@ static int em_gio_probe(struct platform_device *pdev)
- 	irq[1] = platform_get_resource(pdev, IORESOURCE_IRQ, 1);
- 
- 	if (!io[0] || !io[1] || !irq[0] || !irq[1]) {
--		dev_err(&pdev->dev, "missing IRQ or IOMEM\n");
-+		dev_err(dev, "missing IRQ or IOMEM\n");
- 		return -EINVAL;
- 	}
- 
--	p->base0 = devm_ioremap_nocache(&pdev->dev, io[0]->start,
-+	p->base0 = devm_ioremap_nocache(dev, io[0]->start,
- 					resource_size(io[0]));
- 	if (!p->base0)
- 		return -ENOMEM;
- 
--	p->base1 = devm_ioremap_nocache(&pdev->dev, io[1]->start,
-+	p->base1 = devm_ioremap_nocache(dev, io[1]->start,
- 				   resource_size(io[1]));
- 	if (!p->base1)
- 		return -ENOMEM;
- 
--	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
--		dev_err(&pdev->dev, "Missing ngpios OF property\n");
-+	if (of_property_read_u32(dev->of_node, "ngpios", &ngpios)) {
-+		dev_err(dev, "Missing ngpios OF property\n");
- 		return -EINVAL;
- 	}
- 
- 	gpio_chip = &p->gpio_chip;
--	gpio_chip->of_node = pdev->dev.of_node;
-+	gpio_chip->of_node = dev->of_node;
- 	gpio_chip->direction_input = em_gio_direction_input;
- 	gpio_chip->get = em_gio_get;
- 	gpio_chip->direction_output = em_gio_direction_output;
-@@ -319,7 +320,7 @@ static int em_gio_probe(struct platform_device *pdev)
- 	gpio_chip->request = em_gio_request;
- 	gpio_chip->free = em_gio_free;
- 	gpio_chip->label = name;
--	gpio_chip->parent = &pdev->dev;
-+	gpio_chip->parent = dev;
- 	gpio_chip->owner = THIS_MODULE;
- 	gpio_chip->base = -1;
- 	gpio_chip->ngpio = ngpios;
-@@ -333,35 +334,35 @@ static int em_gio_probe(struct platform_device *pdev)
- 	irq_chip->irq_release_resources = em_gio_irq_relres;
- 	irq_chip->flags	= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
- 
--	p->irq_domain = irq_domain_add_simple(pdev->dev.of_node, ngpios, 0,
-+	p->irq_domain = irq_domain_add_simple(dev->of_node, ngpios, 0,
- 					      &em_gio_irq_domain_ops, p);
- 	if (!p->irq_domain) {
--		dev_err(&pdev->dev, "cannot initialize irq domain\n");
-+		dev_err(dev, "cannot initialize irq domain\n");
- 		return -ENXIO;
- 	}
- 
--	ret = devm_add_action(&pdev->dev,
-+	ret = devm_add_action(dev,
- 			      em_gio_irq_domain_remove, p->irq_domain);
- 	if (ret) {
- 		irq_domain_remove(p->irq_domain);
- 		return ret;
- 	}
- 
--	if (devm_request_irq(&pdev->dev, irq[0]->start,
-+	if (devm_request_irq(dev, irq[0]->start,
- 			     em_gio_irq_handler, 0, name, p)) {
--		dev_err(&pdev->dev, "failed to request low IRQ\n");
-+		dev_err(dev, "failed to request low IRQ\n");
- 		return -ENOENT;
- 	}
- 
--	if (devm_request_irq(&pdev->dev, irq[1]->start,
-+	if (devm_request_irq(dev, irq[1]->start,
- 			     em_gio_irq_handler, 0, name, p)) {
--		dev_err(&pdev->dev, "failed to request high IRQ\n");
-+		dev_err(dev, "failed to request high IRQ\n");
- 		return -ENOENT;
- 	}
- 
--	ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
-+	ret = devm_gpiochip_add_data(dev, gpio_chip, p);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to add GPIO controller\n");
-+		dev_err(dev, "failed to add GPIO controller\n");
- 		return ret;
- 	}
- 
--- 
-2.21.0
-
+diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
+index 7a9bb5532d99..8a30da7f083b 100644
+--- a/drivers/clocksource/timer-npcm7xx.c
++++ b/drivers/clocksource/timer-npcm7xx.c
+@@ -32,7 +32,7 @@
+ #define NPCM7XX_Tx_INTEN		BIT(29)
+ #define NPCM7XX_Tx_COUNTEN		BIT(30)
+ #define NPCM7XX_Tx_ONESHOT		0x0
+-#define NPCM7XX_Tx_OPER			GENMASK(3, 27)
++#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
+ #define NPCM7XX_Tx_MIN_PRESCALE		0x1
+ #define NPCM7XX_Tx_TDR_MASK_BITS	24
+ #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
