@@ -2,316 +2,207 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2D0C74822
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD04C74820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E3F20861
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562763584;
-	bh=sqM9ij7C74zlNZ4ajMhV2kVN8UyYVpDYmLH9DdG+ijw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Ahxqgp3jgk8d8dzHE1u3liehO7UHdzwgLTs2dWIHGFScT/ZLjtP+31P2XtCnybvwl
-	 hcFCrcRXL+9M0gYxwGXQeA4RojLqOZib39UaPreMzPB6BesiPJ7HSB1qmQpFwoiUeZ
-	 H6uLtcHkySwG/kPnqQK7Ar1Mm1G6mLaTebSJ4NIM=
+	by mail.kernel.org (Postfix) with ESMTP id EE26E2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="ldA8m8xw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfGJM7n (ORCPT
+        id S1727454AbfGJM7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:59:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfGJM7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:59:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 603A120861;
-        Wed, 10 Jul 2019 12:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562763580;
-        bh=sqM9ij7C74zlNZ4ajMhV2kVN8UyYVpDYmLH9DdG+ijw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=o8yXh1w4tRyHvqTwPw5VnYBzCxtx5vEN9Fy7DZLjuOJcKnRUwUKd+XnGqlw5rYUUh
-         8foaunn1gT3KoP9LAOnnYyXPo0BdE7iz8lrQfKd6PnkzzKyiUBFLs1btXCZzyHtgIs
-         M3b+uImJ1Hbec/Kg9rE/BqzEAP5nk75ErztUvazk=
-Date:   Wed, 10 Jul 2019 14:59:38 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.14.133
-Message-ID: <20190710125938.GA13266@kroah.com>
+        Wed, 10 Jul 2019 08:59:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36102 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJM7s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:59:48 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so2188316wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 05:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=orbBb9a1qfFgN+xq6RnxCXAYQ4k3T2hPbN79oSDoD6A=;
+        b=ldA8m8xwwRiTTIS2btCFnRuckdleBnwm0XHxSxB7e6PjcxARxDBKkRu1D4+dNXWC90
+         Xx6zrhRq0ia6YkLp8DSATZ2dXVJZm8SanZSLVSObGjg5xd7IMke97ZvqXQ9XHFT9VSM0
+         aM82zj3EEYaIRxhn9t9VvLWmJtO+xoLgor9HcivfxNEWdM1u+JDvTjxrbrZ4ZuEyHS47
+         tq/Zh+CjCWXwYO084l04fe8Cf3gKWoq85+etFsYHC0ZxheKoF1reM5NpKBdeCXoFQRhN
+         UqEQX79MY2jPlH+qXCfxEoXmFeCsURLx+f2Zoh4t8qUq0t6qshax95odHt/WPSoi+hAG
+         6Yfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=orbBb9a1qfFgN+xq6RnxCXAYQ4k3T2hPbN79oSDoD6A=;
+        b=hI4+Hp6Kg4ygfdDxurcl/VL+YRK2pV44ycbUpy9G9na2dnn9TepkKxaFEtXOSjG0gZ
+         IY/ZJ5SR2/1B2xr/1brL2V/90MOap+u6wEeHkIIffkuy7oQ5MwPWVRWvkr1bpq2FeqyM
+         Kcpr/aKSCO3IJmtKo5m0Y40+pxg15WZWmCmJuzp21i1+WmanDIrQ5w20LVt56jmpsQZc
+         kkUvdJSP4M6Z8PAqId4r93DGHVonxP9e+daQda66gLpPJWu/2qBG0suKQi0qJOvXfffx
+         jhaybSQXY47XfVReadCDFI7u+wr8JBLMj89BLblutWKuj5hoDSL80Ml3+9r4NMGuSlTY
+         M50g==
+X-Gm-Message-State: APjAAAWPZjGNwA2V6c14rojCZDvcRjYU5uBncG8zivbTG8kkPX17I26g
+        sERUxsCa81aRnHi5sYPUlaaqpQ==
+X-Google-Smtp-Source: APXvYqxFETRr0/i1rEqU4t0aMzwWbWuCsai3umAiF81aED1Fb7uqJiZsZ9ohbK20Rl73QCO0PePVPA==
+X-Received: by 2002:a1c:6c14:: with SMTP id h20mr5690149wmc.168.1562763585316;
+        Wed, 10 Jul 2019 05:59:45 -0700 (PDT)
+Received: from localhost (ip-89-176-1-116.net.upcbroadband.cz. [89.176.1.116])
+        by smtp.gmail.com with ESMTPSA id i18sm2130111wrp.91.2019.07.10.05.59.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 05:59:44 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 14:59:43 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+Message-ID: <20190710125943.GC2291@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+ <20190703114933.GW2250@nanopsycho>
+ <20190703181851.GP20101@unicorn.suse.cz>
+ <20190704080435.GF2250@nanopsycho>
+ <20190704115236.GR20101@unicorn.suse.cz>
+ <20190709141817.GE2301@nanopsycho.orion>
+ <20190710123803.GB5700@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190710123803.GB5700@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wed, Jul 10, 2019 at 02:38:03PM CEST, mkubecek@suse.cz wrote:
+>On Tue, Jul 09, 2019 at 04:18:17PM +0200, Jiri Pirko wrote:
+>> 
+>> I understand. So how about avoid the bitfield all together and just
+>> have array of either bits of strings or combinations?
+>> 
+>> ETHTOOL_CMD_SETTINGS_SET (U->K)
+>>     ETHTOOL_A_HEADER
+>>         ETHTOOL_A_DEV_NAME = "eth3"
+>>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>>        ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>            ETHTOOL_A_FLAG_NAME = "legacy-rx"
+>> 	   ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>> 
+>> or the same with index instead of string
+>> 
+>> ETHTOOL_CMD_SETTINGS_SET (U->K)
+>>     ETHTOOL_A_HEADER
+>>         ETHTOOL_A_DEV_NAME = "eth3"
+>>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_INDEX = 0
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>> 
+>> 
+>> For set you can combine both when you want to set multiple bits:
+>> 
+>> ETHTOOL_CMD_SETTINGS_SET (U->K)
+>>     ETHTOOL_A_HEADER
+>>         ETHTOOL_A_DEV_NAME = "eth3"
+>>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_INDEX = 2
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_INDEX = 8
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_NAME = "legacy-rx"
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>> 
+>> 
+>> For get this might be a bit bigger message:
+>> 
+>> ETHTOOL_CMD_SETTINGS_GET_REPLY (K->U)
+>>     ETHTOOL_A_HEADER
+>>         ETHTOOL_A_DEV_NAME = "eth3"
+>>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_INDEX = 0
+>>             ETHTOOL_A_FLAG_NAME = "legacy-rx"
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_INDEX = 1
+>>             ETHTOOL_A_FLAG_NAME = "vf-ipsec"
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>>             ETHTOOL_A_FLAG_INDEX = 8
+>>             ETHTOOL_A_FLAG_NAME = "something-else"
+>>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>
+>This is perfect for "one shot" applications but not so much for long
+>running ones, either "ethtool --monitor" or management or monitoring
+>daemons. Repeating the names in every notification message would be
+>a waste, it's much more convenient to load the strings only once and
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-I'm announcing the release of the 4.14.133 kernel.
-
-All users of the 4.14 kernel series must upgrade.
-
-The updated 4.14.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.14.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                 |    2 -
- arch/arc/kernel/traps.c                  |    8 +++++++
- arch/arm64/kernel/module.c               |    8 +++++--
- arch/mips/include/asm/netlogic/xlr/fmn.h |    2 -
- arch/mips/mm/mmap.c                      |    2 -
- arch/mips/mm/tlbex.c                     |   29 ++++++++++++++++++---------
- arch/x86/kernel/ftrace.c                 |    3 ++
- arch/x86/kvm/lapic.c                     |    2 -
- arch/x86/kvm/x86.c                       |    6 ++---
- crypto/cryptd.c                          |    1=20
- crypto/crypto_user.c                     |    3 ++
- drivers/dma/imx-sdma.c                   |    4 +--
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c    |   19 -----------------
- drivers/gpu/drm/i915/intel_csr.c         |   18 ++++++++++++++++
- drivers/gpu/drm/imx/ipuv3-crtc.c         |    6 ++---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c   |    1=20
- drivers/gpu/drm/mediatek/mtk_dsi.c       |   12 ++++++++++-
- drivers/platform/x86/mlx-platform.c      |    2 -
- drivers/scsi/hpsa.c                      |    7 +++++-
- drivers/scsi/hpsa_cmd.h                  |    1=20
- drivers/spi/spi-bitbang.c                |    2 -
- drivers/tty/rocket.c                     |    2 -
- drivers/usb/gadget/udc/fusb300_udc.c     |    5 ++++
- drivers/usb/gadget/udc/lpc32xx_udc.c     |    3 --
- drivers/vhost/net.c                      |   33 +++++++++++++++++---------=
------
- drivers/vhost/scsi.c                     |   14 +++++++++----
- drivers/vhost/vhost.c                    |   20 +++++++++++++++++-
- drivers/vhost/vhost.h                    |    6 ++++-
- drivers/vhost/vsock.c                    |   27 ++++++++++++++++++-------
- fs/btrfs/backref.c                       |    2 -
- fs/btrfs/dev-replace.c                   |   29 +++++++++++++++++----------
- fs/btrfs/volumes.c                       |    2 +
- fs/btrfs/volumes.h                       |    5 ++++
- kernel/cgroup/cpuset.c                   |   15 +++++++++++++-
- kernel/livepatch/core.c                  |    6 +++++
- kernel/ptrace.c                          |    4 ---
- kernel/trace/ftrace.c                    |    7 ++++--
- kernel/trace/trace.c                     |   10 +++++----
- lib/mpi/mpi-pow.c                        |    6 +----
- mm/mlock.c                               |    4 +--
- mm/vmscan.c                              |   27 ++++++++++++++-----------
- net/bluetooth/l2cap_core.c               |    2 -
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 +++++-
- scripts/decode_stacktrace.sh             |    2 -
- sound/core/seq/oss/seq_oss_ioctl.c       |    2 -
- sound/core/seq/oss/seq_oss_rw.c          |    2 -
- sound/firewire/amdtp-am824.c             |    2 -
- sound/pci/hda/patch_realtek.c            |    1=20
- sound/soc/codecs/cs4265.c                |    2 -
- sound/soc/codecs/max98090.c              |   16 +++++++++++++++
- sound/soc/codecs/rt274.c                 |    3 +-
- sound/soc/soc-pcm.c                      |    3 +-
- sound/soc/sunxi/sun4i-i2s.c              |    6 ++++-
- sound/usb/line6/pcm.c                    |    5 ++++
- sound/usb/mixer_quirks.c                 |    4 +--
- 55 files changed, 293 insertions(+), 129 deletions(-)
-
-Alex Deucher (1):
-      drm/amdgpu/gfx9: use reset default for PA_SC_FIFO_SIZE
-
-Alexandre Belloni (1):
-      usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-
-Amadeusz S=C5=82awi=C5=84ski (1):
-      SoC: rt274: Fix internal jack assignment in set_jack callback
-
-Ard Biesheuvel (1):
-      arm64: kaslr: keep modules inside module region when KASAN is enabled
-
-Chuck Lever (1):
-      svcrdma: Ignore source port when computing DRC hash
-
-Colin Ian King (2):
-      ALSA: seq: fix incorrect order of dest_client/dest_ports arguments
-      ALSA: usb-audio: fix sign unintended sign extension on left shifts
-
-Dennis Wassenberg (1):
-      ALSA: hda/realtek - Change front mic location for Lenovo M710q
-
-Dmitry Korotin (1):
-      MIPS: Add missing EHB in mtc0 -> mfc0 sequence.
-
-Don Brace (1):
-      scsi: hpsa: correct ioaccel2 chaining
-
-Eiichi Tsukata (1):
-      tracing/snapshot: Resize spare buffer if size changed
-
-Eric Biggers (1):
-      crypto: user - prevent operating on larval algorithms
-
-Greg Kroah-Hartman (1):
-      Linux 4.14.133
-
-Hauke Mehrtens (1):
-      MIPS: Fix bounds check virt_addr_valid
-
-Herbert Xu (1):
-      lib/mpi: Fix karactx leak in mpi_powm
-
-Hsin-Yi Wang (3):
-      drm/mediatek: fix unbind functions
-      drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
-      drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
-
-Jann Horn (1):
-      ptrace: Fix ->ptracer_cred handling for PTRACE_TRACEME
-
-Jason Wang (5):
-      vhost_net: introduce vhost_exceeds_weight()
-      vhost: introduce vhost_exceeds_weight()
-      vhost_net: fix possible infinite loop
-      vhost: vsock: add weight support
-      vhost: scsi: add weight support
-
-Joel Savitz (1):
-      cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-
-Josh Poimboeuf (1):
-      module: Fix livepatch/ftrace module text permissions race
-
-Libin Yang (1):
-      ASoC: soc-pcm: BE dai needs prepare when pause release after resume
-
-Linus Torvalds (1):
-      tty: rocket: fix incorrect forward declaration of 'rp_init()'
-
-Lucas De Marchi (1):
-      drm/i915/dmc: protect against reading random memory
-
-Manuel Traut (1):
-      scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
-
-Marcus Cooper (2):
-      ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
-      ASoC: sun4i-i2s: Add offset to RX channel select
-
-Matias Karhumaa (1):
-      Bluetooth: Fix faulty expression for minimum encryption key size check
-
-Matt Flax (1):
-      ASoC : cs4265 : readable register too low
-
-Nikolay Borisov (1):
-      btrfs: Ensure replaced device doesn't have pending chunk allocation
-
-Paolo Abeni (1):
-      vhost_net: use packet weight for rx handler, too
-
-Paolo Bonzini (1):
-      KVM: x86: degrade WARN to pr_warn_ratelimited
-
-Paul Burton (1):
-      MIPS: netlogic: xlr: Remove erroneous check in nlm_fmn_send()
-
-Petr Mladek (1):
-      ftrace/x86: Remove possible deadlock between register_kprobe() and ft=
-race_run_update_code()
-
-Robert Beckett (2):
-      drm/imx: notify drm core before sending event during crtc disable
-      drm/imx: only send event on crtc disable if kept disabled
-
-Robin Gong (1):
-      dmaengine: imx-sdma: remove BD_INTR for channel0
-
-Shakeel Butt (1):
-      mm/vmscan.c: prevent useless kswapd loops
-
-Stanislaw Gruszka (1):
-      stable/btrfs: fix backport bug in d819d97ea025 ("btrfs: honor path->s=
-kip_locking in backref code")
-
-Takashi Iwai (1):
-      ALSA: line6: Fix write on zero-sized buffer
-
-Takashi Sakamoto (1):
-      ALSA: firewire-lib/fireworks: fix miss detection of received MIDI mes=
-sages
-
-Vadim Pasternak (1):
-      platform/x86: mlx-platform: Fix parent device in i2c-mux-reg device r=
-egistration
-
-Vincent Whitchurch (1):
-      crypto: cryptd - Fix skcipher instance memory leak
-
-Vineet Gupta (1):
-      ARC: handle gcc generated __builtin_trap for older compiler
-
-Wanpeng Li (1):
-      KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable =
-LAPIC
-
-Wei Li (1):
-      ftrace: Fix NULL pointer dereference in free_ftrace_func_mapper()
-
-Young Xiao (1):
-      usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
-
-Yu-Hsuan Hsu (1):
-      ASoC: max98090: remove 24-bit format support if RJ is 0
-
-YueHaibing (1):
-      spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-
-haibinzhang(=E5=BC=A0=E6=B5=B7=E6=96=8C) (1):
-      vhost-net: set packet weight of tx polling to 2 * vq size
-
-swkhack (1):
-      mm/mlock.c: change count_mm_mlocked_page_nr return type
+Yeah, for those aplications, the ETHTOOL_A_FLAG_NAME could be omitted
 
 
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
+>cache them. Even if we omit the names in notifications (and possibly the
+>GET replies if client opts for it), this format still takes 12-16 bytes
+>per bit.
+>
+>So the problem I'm trying to address is that there are two types of
+>clients with very different mode of work and different preferences.
+>
+>Looking at the bitset.c, I would rather say that most of the complexity
+>and ugliness comes from dealing with both unsigned long based bitmaps
+>and u32 based ones. Originally, there were functions working with
+>unsigned long based bitmaps and the variants with "32" suffix were
+>wrappers around them which converted u32 bitmaps to unsigned long ones
+>and back. This became a problem when kernel started issuing warnings
+>about variable length arrays as getting rid of them meant two kmalloc()
+>and two kfree() for each u32 bitmap operation, even if most of the
+>bitmaps are in rather short in practice.
+>
+>Maybe the wrapper could do something like
+>
+>int ethnl_put_bitset32(const u32 *value, const u32 *mask,
+>		       unsigned int size,  ...)
+>{
+>	unsigned long fixed_value[2], fixed_mask[2];
+>	unsigned long *tmp_value = fixed_value;
+>	unsigned long *tmp_mask = fixed_mask;
+>
+>	if (size > sizeof(fixed_value) * BITS_PER_BYTE) {
+>		tmp_value = bitmap_alloc(size);
+>		if (!tmp_value)
+>			return -ENOMEM;
+>		tmp_mask = bitmap_alloc(size);
+>		if (!tmp_mask) {
+>			kfree(tmp_value);
+>			return -ENOMEM;
+>		}
+>	}
+>
+>	bitmap_from_arr32(tmp_value, value, size);
+>	bitmap_from_arr32(tmp_mask, mask, size);
+>	ret = ethnl_put_bitset(tmp_value, tmp_mask, size, ...);
+>}
+>
+>This way we would make bitset.c code cleaner while avoiding allocating
+>short bitmaps (which is the most common case). 
 
------BEGIN PGP SIGNATURE-----
+I'm primarily concerned about the uapi. Plus if the uapi approach is united
+for both index and string, we can omit this whole bitset abomination...
 
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl0l4ToACgkQONu9yGCS
-aT7POw/7Bf79L+L1U9laPSDOGXSKnwIH7DkxSfvhITaydizUvq7wf91WeHdjHv1L
-Izw1f/3ikscTqw4NEoPoWMRuSsefJxA+AE2VJW+9rBJSNfPJuR1QSmpCJ813letD
-E+rsuGZJgnwRkGmPDnUif+1jsKu/CJbMOCHKY4/wHhfU5zsM+2zLqF9qGuPgAvqt
-3UaD+fV21eBYZNIKhzxJq7/H/Ebb1q/7chhsLDyGSVjLb1TpPkHXglP6fUGCk+3S
-DSSkBBB3N6Fr3DterYJ0YPR3/f5CrIaGuNS/rQdR1U2yDqOLSlEMyvNC+GgE7rvR
-zI3QlSxjmkS3rGzCy3hFHvup4KwCouX9kCy3vZLkHJgRxhUyaVtwjyeFraKZ/7Ax
-KHQzphvIJ5a4PK5JY+i6/okbEuA8eSEDcMPzh4X32TsYqM4wuTDm1QUZ7EwjfEW5
-20JRVA0OYgCqtuhDuvuDdqAqkeuFTppZX7wk3VaIOjD0mLGp3WKmDpoA8WOms+60
-EDy3bF7J8cnXQ021kjc6l9ACMY+UDlWSrmrvBoLZnu6fx+takif/heYqij562FVH
-X4etDY2uC9/4HFSeobdLKUNoWHhvXe/ieRDoUhUQ7j8bmG88raYU0hYqthfsqLsC
-FalzGJAKIELsyx4DQuY4s9LQ4Am95rQpq5JLHZyzSUe5O9zcnbA=
-=pbjG
------END PGP SIGNATURE-----
 
---5vNYLRcllDrimb99--
+>
+>Michal
