@@ -2,99 +2,99 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C91C004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0AFC606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1402064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023422064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N0GNZJvG";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ve8RE78B"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M5thVoqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfGJL3k (ORCPT
+        id S1727254AbfGJLb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:29:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39682 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727206AbfGJL3k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:29:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 347276016D; Wed, 10 Jul 2019 11:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562758179;
-        bh=m2qwZf7JvuOLOVYBKh/GH/DshrBUucultC3DII2Hmqg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=N0GNZJvGjN7Bv5B8bfskoqQXzGgySYdIe00+XdCgQF84aIkkNublIQ63nSE4aYm+r
-         E8mxH4P+olwr7QwwPoEngLfD0JYebXnfy2dozS4UYx4ZvlhFcpwvMwgbAmggt2RG3q
-         KvNEbyiZ81+AGIzTSuNpGnoj7/cBPX3BF+ijp2Wk=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 10 Jul 2019 07:31:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:55879 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfGJLb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:31:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D2016055C;
-        Wed, 10 Jul 2019 11:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562758178;
-        bh=m2qwZf7JvuOLOVYBKh/GH/DshrBUucultC3DII2Hmqg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ve8RE78B9hyprIRWeUxbWQXZ5QrWGZZCwyYQtev2aLsz4wQuxXkX5OKHmd20EQaS+
-         zvlkD9B+IGhh9B9AwD6c3PEkcO0vhzmQ68CLtgHWBxm5pRT/LPUKc5WNr650OKz0Qm
-         elZf5k9eZjcCSbC/MimVt3qdrkOJoRBO6GxbuTpE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D2016055C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: sdm845: Add device node for Last level cache controller
-Date:   Wed, 10 Jul 2019 16:59:24 +0530
-Message-Id: <20190710112924.17724-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45kH8T4vd3z9s8m;
+        Wed, 10 Jul 2019 21:31:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562758314;
+        bh=m5bNgR67y/SQwBaN1hdKZQlFvCWv8aHyXrhC/bU/8YU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M5thVoqXJq7eH2BApOIjDZIe47hO3Es5e0UhXrl52VH0MuwgSnUb2YvlB9ZvHPEYy
+         Xdku5Rjjj3DzI7ApZDqS5ehakI+TUL+1zWnc4j8fNe2NXNVM4L3pJo6w3eRpmoC9cA
+         BdUe84vgI43phAe0Th/Tbx+tkoUuCnwTJPURcjXCWkANUS3yoH/G8mWKQSOToiliJ4
+         6UWfFxj/LBI3+9pr9SfQ7Tv/sDRPuzM5kdn2hV/9eQ634MrLJXfjjOObaiw99wFvtn
+         jHHgWffRV/h1Mfr0d0up0cJk+RFdRrvWS5CBkjNcofBLwFxhkImSlZufHnT65yEygb
+         HtpbnqR8a/7zA==
+Date:   Wed, 10 Jul 2019 21:31:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: linux-next: Fixes tag needs some work in the mmc tree
+Message-ID: <20190710213151.20acf4bb@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/zoS3FJeT1XxruqhG7T5mXyz"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+--Sig_/zoS3FJeT1XxruqhG7T5mXyz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Last level cache (aka. system cache) controller provides control
-over the last level cache present on SDM845. This cache lies after
-the memory noc, right before the DDR.
+Hi all,
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+In commit
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 4babff5f19b5..314241a99290 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1275,6 +1275,13 @@
- 			};
- 		};
- 
-+		cache-controller@1100000 {
-+			compatible = "qcom,sdm845-llcc";
-+			reg = <0 0x1100000 0 0x200000>, <0 0x1300000 0 0x50000>;
-+			reg-names = "llcc_base", "llcc_broadcast_base";
-+			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+  59592cc1f593 ("mmc: sdhci_am654: Add dependency on MMC_SDHCI_AM654")
 
+Fixes tag
+
+  Fixes: aff88ff23512 ("mmc: sdhci_am654: Add Initial Support for AM654 SDH=
+CI driver")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: 41fd4caeb00b ("mmc: sdhci_am654: Add Initial Support for AM654 SDHCI=
+ driver")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zoS3FJeT1XxruqhG7T5mXyz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lzKcACgkQAVBC80lX
+0Gwspgf/TWHYmJV4ST7tzicwdGXNf19V4wK1fN2ZolyYoDIxehXEZLWGk8VLZ8a4
+eniq72dUmbjRUl9irdbbhZnrSEtaFHlgGWE5qAja8hQQs8TbB9xY8jIvDFeq/99I
+FiYuQ7eqdcS7LiZm4Ec3MRK/4d+tzblTr04WD8SFuo21PwRLAA6oa8a7CoW8RFrs
+BlK+tmPWNjY43APS8xON/aqKNTjlWWsfCgflLmmZVyaG4uGDe/REKkVd6CAVHbr1
+7y6yC/wXKf7lpNK0mo464YpBcAMEtxcpg7ud082Rzn+fj4iC51jwBd1pert4qxZ2
+bMnDrDM08ok5u5FsvLjYgbBI9ByJ4A==
+=FDNY
+-----END PGP SIGNATURE-----
+
+--Sig_/zoS3FJeT1XxruqhG7T5mXyz--
