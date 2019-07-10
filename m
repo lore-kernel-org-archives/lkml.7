@@ -4,164 +4,311 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A3C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B69DC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A3F2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEC72064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="gUROxfvO"
+	dkim=pass (2048-bit key) header.d=mengyan1223.wang header.i=@mengyan1223.wang header.b="u7aob8J5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfGJP6S (ORCPT
+        id S1728274AbfGJP6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:58:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36246 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfGJP6R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jul 2019 11:58:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k21so2695015edq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 08:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a2hs0dyIQnh/sqo6KZ61rFm4L2r82B8qQvgfu80yNSo=;
-        b=gUROxfvOCyof5ttodsBwlj38d9Umt2I6xGHrwlqIsUPaybPlSEyo4PeNiLuLBswZBu
-         P2LmcnGTqODgeD4cMmrLHxkm4Iq/LqAXgBIhK2Dx55nA07tPc3wGPSLpk1/msnl6E/Zm
-         GYl49EaZAKHk8zVTYx91QARCB83H+wvpSxA90NlBeMIVCcAo15xoY54JpX7JHcIMTKoc
-         UsuJnGacdA2AzPTi8L4x6/cRVu1dtBW5/FSXWhxzF2GVvq1x5chEg9DO2wO+GpoyJpz8
-         bOu2Oyb4yZhXQsckMoHRzjJsZAv4Q7Jzrfqjb3xwTCrnMTLbJAEvxOBLVwkwPMyH9GOb
-         zn+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a2hs0dyIQnh/sqo6KZ61rFm4L2r82B8qQvgfu80yNSo=;
-        b=sK+KSrbv9hJxTj129BLp+YrtB/kavIYwXn3pFre7up2A+kfIeKkNEkexHCNoDFijli
-         V+gHLdvng3hpFy0zIhL+KelGY2tVfbH+80VKOL8aSiJDtGVwsmPF3rin2N05evlq2XhY
-         HM07ahcMImeapd1LJwNWa2AtkZTJXX/Z8sVYzyO7t8sBV/OWDo+pq2pUQGyr2R8IFvPO
-         22cSC5czQJrrR3lWwrNCJKCn/YzygHsHzN9+rUTZH0YFQ3zjl4lENcNsG5VHKUciVxBf
-         hteJHk88xNNrKv7BYebyTJCA6YB0t/AcFLfUnRmuWEDkDJ6yXm0U/BKZTtdpj+lWubUJ
-         4XSA==
-X-Gm-Message-State: APjAAAVp5VKCtlqt4qAPDRWsj6QNp1NEvIkdhnrZ1nmmH7a9TBXoYcQd
-        3mPmNA1crW0V05diQSF9RU+E+sDv7vABxmhNiqwruQ==
-X-Google-Smtp-Source: APXvYqzjnwEQ5TMXiUq18EB46BY4ST+24XYmOoYFpr+h9ihRCO3FuxJVvZCtqNTGY1LYXAg4KvZi2LZiyzoe+Acj8C8=
-X-Received: by 2002:a17:906:d1d0:: with SMTP id bs16mr26806724ejb.286.1562774294818;
- Wed, 10 Jul 2019 08:58:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190709182014.16052-1-pasha.tatashin@soleen.com> <0a141018-c09e-56e4-6a73-45b951e8490f@gmail.com>
-In-Reply-To: <0a141018-c09e-56e4-6a73-45b951e8490f@gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 10 Jul 2019 11:58:04 -0400
-Message-ID: <CA+CK2bBJydDGSGtQ49RDLR-WdiH=8G4WfDe5PEe8DE1rfEFONQ@mail.gmail.com>
-Subject: Re: [v2 0/5] arm64: allow to reserve memory for normal kexec kernel
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Received: from mengyan1223.wang ([89.208.246.23]:38962 "EHLO mengyan1223.wang"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727463AbfGJP6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:58:17 -0400
+Received: from [IPv6:2408:8270:a58:d980:697b:cb16:ae5f:f5aa] (unknown [IPv6:2408:8270:a58:d980:697b:cb16:ae5f:f5aa])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: xry111@mengyan1223.wang)
+        by mengyan1223.wang (Postfix) with ESMTPSA id EDE5C65B60;
+        Wed, 10 Jul 2019 11:58:08 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mengyan1223.wang;
+        s=mail; t=1562774296;
+        bh=5NzwbBGqtPoTMfsv3+OVP8wP42KNVmOMVqEYZiOBrx4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=u7aob8J5jToXtx8TioDj1zWKqG8nx0hwBHgJrF3J7+BreMBBph9klc+3T0UKEKFbA
+         LLb5/Z/9NDEx0J/nN/9lAv8VZIlNGLbo/gJB37UZdGfdI+4WgYZYYg5shLP676Dy/i
+         byIa88C2MxAATFJMnY4oFYTzjiiaboJNRSQTW8qvOC0ZUwgjw4oamotc9Jg0asOFbJ
+         FzHvf6Z3AfdxV0MtENWIQeTukJ6TYadBUfRiQ5ROkzofa79h2nOkBVTaPx+1w+JPna
+         UQBkvwa4o8ZqZ58GSNKlDj7Wk8kqmqOfvCQhF2FiN7fjKi+EBVD2gHIBpDomgCuHEw
+         epfhnTIyoBYhQ==
+Message-ID: <a822cf447949582e2a11b7899f22b11da02f0ece.camel@mengyan1223.wang>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+From:   Xi Ruoyao <xry111@mengyan1223.wang>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Jiri Kosina <jikos@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        xry111@mengyan1223.wang
+Date:   Wed, 10 Jul 2019 23:58:03 +0800
+In-Reply-To: <alpine.DEB.2.21.1907101709340.1758@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+         <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
+         <201907091727.91CC6C72D8@keescook>
+         <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
+         <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
+         <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
+         <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
+         <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
+         <20190710134433.GN3402@hirez.programming.kicks-ass.net>
+         <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
+         <20190710142653.GJ3419@hirez.programming.kicks-ass.net>
+         <alpine.DEB.2.21.1907101709340.1758@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:28 AM Matthias Brugger
-<matthias.bgg@gmail.com> wrote:
->
->
->
-> On 09/07/2019 20:20, Pavel Tatashin wrote:
-> > Changelog
-> > v1 - v2
-> >       - No changes to patches, addressed suggestion from James Morse
-> >         to add "arm64" tag to cover letter.
-> >       - Improved cover letter information based on discussion.
-> >
-> > Currently, it is only allowed to reserve memory for crash kernel, because
-> > it is a requirement in order to be able to boot into crash kernel without
-> > touching memory of crashed kernel is to have memory reserved.
-> >
-> > The second benefit for having memory reserved for kexec kernel is
-> > that it does not require a relocation after segments are loaded into
-> > memory.
-> >
-> > If kexec functionality is used for a fast system update, with a minimal
-> > downtime, the relocation of kernel + initramfs might take a significant
-> > portion of reboot.
-> >
-> > In fact, on the machine that we are using, that has ARM64 processor
-> > it takes 0.35s to relocate during kexec, thus taking 52% of kernel reboot
-> > time:
-> >
-> > kernel shutdown       0.03s
-> > relocation    0.35s
-> > kernel startup        0.29s
-> >
-> > Image: 13M and initramfs is 24M. If initramfs increases, the relocation
-> > time increases proportionally.
-> >
-> > While, it is possible to add 'kexeckernel=' parameters support to other
-> > architectures by modifying reserve_crashkernel(), in this series this is
-> > done for arm64 only.
-> >
->
-> I wonder if we couldn't use the crashkernel reserved memory area for that and
-> just add logic to kexec-tools to pass to the kernel a flag (a new magic reboot
-> number?) to use the crashkernel memory for that?
-> The kernel would then unload the crash/capture system in the reserved memory
-> area and reuse the latter for kexec.
-> This would also enable the feature for all architectures.
+On 2019-07-10 17:13 +0200, Thomas Gleixner wrote:
+> Something like the below. Builds and boots, must be perfect.
+> 
+> Thanks,
+> 
+> 	tglx
 
-I decided to take another route: enable MMU during kernel relocation
-on ARM64. This will eliminate the problem that I am experiencing with
-slow relocation.
+Tested-by: Xi Ruoyao <xry111@mengyan1223.wang>
 
-Pasha
+> 8<----------------
+> 
+>  arch/x86/include/asm/processor.h     |    1 
+>  arch/x86/include/asm/special_insns.h |   41 -------------------
+>  arch/x86/kernel/cpu/common.c         |   72 +++++++++++++++++++++++++++----
+> ----
+>  arch/x86/kernel/smpboot.c            |   14 ------
+>  arch/x86/xen/smp_pv.c                |    1 
+>  5 files changed, 61 insertions(+), 68 deletions(-)
+> 
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -741,6 +741,7 @@ extern void load_direct_gdt(int);
+>  extern void load_fixmap_gdt(int);
+>  extern void load_percpu_segment(int);
+>  extern void cpu_init(void);
+> +extern void cr4_init(void);
+>  
+>  static inline unsigned long get_debugctlmsr(void)
+>  {
+> --- a/arch/x86/include/asm/special_insns.h
+> +++ b/arch/x86/include/asm/special_insns.h
+> @@ -18,9 +18,7 @@
+>   */
+>  extern unsigned long __force_order;
+>  
+> -/* Starts false and gets enabled once CPU feature detection is done. */
+> -DECLARE_STATIC_KEY_FALSE(cr_pinning);
+> -extern unsigned long cr4_pinned_bits;
+> +void native_write_cr0(unsigned long val);
+>  
+>  static inline unsigned long native_read_cr0(void)
+>  {
+> @@ -29,24 +27,6 @@ static inline unsigned long native_read_
+>  	return val;
+>  }
+>  
+> -static inline void native_write_cr0(unsigned long val)
+> -{
+> -	unsigned long bits_missing = 0;
+> -
+> -set_register:
+> -	asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
+> -
+> -	if (static_branch_likely(&cr_pinning)) {
+> -		if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+> -			bits_missing = X86_CR0_WP;
+> -			val |= bits_missing;
+> -			goto set_register;
+> -		}
+> -		/* Warn after we've set the missing bits. */
+> -		WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
+> -	}
+> -}
+> -
+>  static inline unsigned long native_read_cr2(void)
+>  {
+>  	unsigned long val;
+> @@ -91,24 +71,7 @@ static inline unsigned long native_read_
+>  	return val;
+>  }
+>  
+> -static inline void native_write_cr4(unsigned long val)
+> -{
+> -	unsigned long bits_missing = 0;
+> -
+> -set_register:
+> -	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
+> -
+> -	if (static_branch_likely(&cr_pinning)) {
+> -		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
+> -			bits_missing = ~val & cr4_pinned_bits;
+> -			val |= bits_missing;
+> -			goto set_register;
+> -		}
+> -		/* Warn after we've set the missing bits. */
+> -		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+> -			  bits_missing);
+> -	}
+> -}
+> +void native_write_cr4(unsigned long val);
+>  
+>  #ifdef CONFIG_X86_64
+>  static inline unsigned long native_read_cr8(void)
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -366,10 +366,62 @@ static __always_inline void setup_umip(s
+>  	cr4_clear_bits(X86_CR4_UMIP);
+>  }
+>  
+> -DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+> -EXPORT_SYMBOL(cr_pinning);
+> -unsigned long cr4_pinned_bits __ro_after_init;
+> -EXPORT_SYMBOL(cr4_pinned_bits);
+> +static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+> +static unsigned long cr4_pinned_bits __ro_after_init;
+> +
+> +void native_write_cr0(unsigned long val)
+> +{
+> +	unsigned long bits_missing = 0;
+> +
+> +set_register:
+> +	asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
+> +
+> +	if (static_branch_likely(&cr_pinning)) {
+> +		if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+> +			bits_missing = X86_CR0_WP;
+> +			val |= bits_missing;
+> +			goto set_register;
+> +		}
+> +		/* Warn after we've set the missing bits. */
+> +		WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
+> +	}
+> +}
+> +EXPORT_SYMBOL(native_write_cr0);
+> +
+> +void native_write_cr4(unsigned long val)
+> +{
+> +	unsigned long bits_missing = 0;
+> +
+> +set_register:
+> +	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
+> +
+> +	if (static_branch_likely(&cr_pinning)) {
+> +		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
+> +			bits_missing = ~val & cr4_pinned_bits;
+> +			val |= bits_missing;
+> +			goto set_register;
+> +		}
+> +		/* Warn after we've set the missing bits. */
+> +		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+> +			  bits_missing);
+> +	}
+> +}
+> +EXPORT_SYMBOL(native_write_cr4);
+> +
+> +void cr4_init(void)
+> +{
+> +	unsigned long cr4 = __read_cr4();
+> +
+> +	if (boot_cpu_has(X86_FEATURE_PCID))
+> +		cr4 |= X86_CR4_PCIDE;
+> +	if (static_branch_likely(&cr_pinning))
+> +		cr4 |= cr4_pinned_bits;
+> +
+> +	__write_cr4(cr4);
+> +
+> +	/* Initialize cr4 shadow for this CPU. */
+> +	this_cpu_write(cpu_tlbstate.cr4, cr4);
+> +}
+>  
+>  /*
+>   * Once CPU feature detection is finished (and boot params have been
+> @@ -1723,12 +1775,6 @@ void cpu_init(void)
+>  
+>  	wait_for_master_cpu(cpu);
+>  
+> -	/*
+> -	 * Initialize the CR4 shadow before doing anything that could
+> -	 * try to read it.
+> -	 */
+> -	cr4_init_shadow();
+> -
+>  	if (cpu)
+>  		load_ucode_ap();
+>  
+> @@ -1823,12 +1869,6 @@ void cpu_init(void)
+>  
+>  	wait_for_master_cpu(cpu);
+>  
+> -	/*
+> -	 * Initialize the CR4 shadow before doing anything that could
+> -	 * try to read it.
+> -	 */
+> -	cr4_init_shadow();
+> -
+>  	show_ucode_info_early();
+>  
+>  	pr_info("Initializing CPU#%d\n", cpu);
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -210,28 +210,16 @@ static int enable_start_cpu0;
+>   */
+>  static void notrace start_secondary(void *unused)
+>  {
+> -	unsigned long cr4 = __read_cr4();
+> -
+>  	/*
+>  	 * Don't put *anything* except direct CPU state initialization
+>  	 * before cpu_init(), SMP booting is too fragile that we want to
+>  	 * limit the things done here to the most necessary things.
+>  	 */
+> -	if (boot_cpu_has(X86_FEATURE_PCID))
+> -		cr4 |= X86_CR4_PCIDE;
+> -	if (static_branch_likely(&cr_pinning))
+> -		cr4 |= cr4_pinned_bits;
+> -
+> -	__write_cr4(cr4);
+> +	cr4_init();
+>  
+>  #ifdef CONFIG_X86_32
+>  	/* switch away from the initial page table */
+>  	load_cr3(swapper_pg_dir);
+> -	/*
+> -	 * Initialize the CR4 shadow before doing anything that could
+> -	 * try to read it.
+> -	 */
+> -	cr4_init_shadow();
+>  	__flush_tlb_all();
+>  #endif
+>  	load_current_idt();
+> --- a/arch/x86/xen/smp_pv.c
+> +++ b/arch/x86/xen/smp_pv.c
+> @@ -58,6 +58,7 @@ static void cpu_bringup(void)
+>  {
+>  	int cpu;
+>  
+> +	cr4_init();
+>  	cpu_init();
+>  	touch_softlockup_watchdog();
+>  	preempt_disable();
+-- 
+Xi Ruoyao <xry111@mengyan1223.wang>
+School of Aerospace Science and Technology, Xidian University
 
->
-> Regards,
-> Matthias
->
-> > The reason it is so slow on arm64 to relocate kernel is because the code
-> > that does relocation does this with MMU disabled, and thus D-Cache and
-> > I-Cache must also be disabled.
-> >
-> > Alternative solution is more complicated: Setup a temporary page table
-> > for relocation_routine and also for code from cpu_soft_restart. Perform
-> > relocation with MMU enabled, do cpu_soft_restart where MMU and caching
-> > are disabled, jump to purgatory. A similar approach was suggested for
-> > purgatory and was rejected due to making purgatory too complicated.
-> > On, the other hand hibernate does something similar already, but there
-> > MMU never needs to be disabled, and also by the time machine_kexec()
-> > is called, allocator is not available, as we can't fail to do reboot,
-> > so page table must be pre-allocated during kernel load time.
-> >
-> > Note: the above time is relocation time only. Purgatory usually also
-> > computes checksum, but that is skipped, because --no-check is used when
-> > kernel image is loaded via kexec.
-> >
-> > Pavel Tatashin (5):
-> >   kexec: quiet down kexec reboot
-> >   kexec: add resource for normal kexec region
-> >   kexec: export common crashkernel/kexeckernel parser
-> >   kexec: use reserved memory for normal kexec reboot
-> >   arm64, kexec: reserve kexeckernel region
-> >
-> >  .../admin-guide/kernel-parameters.txt         |  7 ++
-> >  arch/arm64/kernel/setup.c                     |  5 ++
-> >  arch/arm64/mm/init.c                          | 83 ++++++++++++-------
-> >  include/linux/crash_core.h                    |  6 ++
-> >  include/linux/ioport.h                        |  1 +
-> >  include/linux/kexec.h                         |  6 +-
-> >  kernel/crash_core.c                           | 27 +++---
-> >  kernel/kexec_core.c                           | 50 +++++++----
-> >  8 files changed, 127 insertions(+), 58 deletions(-)
-> >
