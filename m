@@ -2,110 +2,72 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4999CC74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840C5C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6952064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B3E2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PlLcypq+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A0fzCeMq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EW4PziXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfGJOOo (ORCPT
+        id S1727466AbfGJOPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:14:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59054 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfGJOOo (ORCPT
+        Wed, 10 Jul 2019 10:15:12 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47690 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfGJOPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:14:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B4448616BA; Wed, 10 Jul 2019 14:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562768082;
-        bh=tT33zEBA9PtRD/IyowYg4/egpUqKgsUqXRsSxZ2TsDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PlLcypq+S5CJ+uDTIOt7PtM6y7uf12suXgocabiOn517FPnNl/Ie1GMLbc4PtqJsq
-         0STdtJnFsAv1YGvg9DDwJBlwf8/MN+OAGqH0SKQuAKh7cuzd0c/u7e8jc9UJ3lBIQU
-         F+3GLfH6X5SJEu/vfQu7MFwDko22xyg0UwpmHjRg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 5FB4E61157;
-        Wed, 10 Jul 2019 14:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562768077;
-        bh=tT33zEBA9PtRD/IyowYg4/egpUqKgsUqXRsSxZ2TsDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A0fzCeMqOmcCgRGdt06AnbTMN+K+nOl11BW5LXKKOg9nv0wJ4SqKwRNWRWSP8l31I
-         WD6h2jkw/gAXKmkKN7LJk+n3dnI/pwXhRA8no7A0PODXrfxo7f2fnWMaXp5LcqfmV9
-         t3WOvWrdtZRINX/fROacge/ouizD+RvUGse9pmII=
+        Wed, 10 Jul 2019 10:15:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oP0gIGEEx6vBWbdTS/L8mSLxPp1+udys1WsnbGP0k70=; b=EW4PziXcJ7fiQlFhzwZ/7WMV8
+        i0F9eimJo3/kcrvfcT5B//zjqgHB2Yfx0dtSiVWdmSJ4BpPaHPVMho50d6NFjDBkDapFEwisQUv4+
+        11ZNGycHQcwPgro5eauJIS7Ua1QK+oauNoNjoaL4bdrs7DfRGZVAvUB0QqwP+8FgZyAUk2+YVgiDN
+        sY4QmsltkG3CAp9d/swzvMdIHPEUdAedz1DnW7WMsZTo2Qsgx0TDavv/DqeRaOKlqk+ch2QjyxRa3
+        e5Swp8gdRIDgg8awYsUG8IlxYv2WmZwtXyQuLwqa0rMTujuu9EEK3iVVoMxkbmNRgCx5GXGtc/n27
+        FbjiTQmxQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlDN8-00055x-1x; Wed, 10 Jul 2019 14:15:02 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5D0FC20976EE7; Wed, 10 Jul 2019 16:15:00 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 16:15:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Wanpeng Li <wanpeng.li@hotmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] cputime: remove duplicate code in
+ account_process_tick
+Message-ID: <20190710141500.GQ3402@hirez.programming.kicks-ass.net>
+References: <20190709060100.214154-1-alex.shi@linux.alibaba.com>
+ <20190709060100.214154-2-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 10 Jul 2019 19:44:37 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org,
-        agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        saravanak@google.com, linux-kernel-owner@vger.kernel.org,
-        adharmap@codeaurora.org
-Subject: Re: [PATCH RFC 0/4] DDR/L3 Scaling support on SDM845 SoCs
-In-Reply-To: <20190701092949.afenn2et2qexostt@vireshk-i7>
-References: <20190627133424.4980-1-sibis@codeaurora.org>
- <20190701092949.afenn2et2qexostt@vireshk-i7>
-Message-ID: <d2e3b5bf3aa6ee740f004b7b770bef26@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709060100.214154-2-alex.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Viresh,
-
-On 2019-07-01 14:59, Viresh Kumar wrote:
-> On 27-06-19, 19:04, Sibi Sankar wrote:
->> This RFC series aims to extend cpu based scaling support to L3/DDR on
->> SDM845 SoCs. The patch series depends on "Introduce OPP bandwidth 
->> bindings"
->> series (https://patchwork.kernel.org/cover/10912993/). A part of the
->> series will still be applicable if we decide to go ahead with the 
->> proposal
->> from Saravana as well so I decided to post this out.
->> 
->> v2:
->> * Incorporated Viresh's comments from:
->> [1]https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
->> [2]https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+On Tue, Jul 09, 2019 at 02:01:00PM +0800, Alex Shi wrote:
+> In funcation account_process_tick, func actually do same things with
+> irqtime_account_process_tick, whenever if IRQ_TIME_ACCOUNTING set or
+> if sched_clock_irqtime enabled.
 > 
-> Did you get a chance to look at this ?
-> 
-> lore.kernel.org/lkml/20190622003449.33707-1-saravanak@google.com
+> So it's better to reuse one function for both.
 
-Yes, I have v2 of cpufreq passive governor
-patch in the works based on Saravana's
-series. I plan on posting it out end of
-week. I had sent this series out
-since a portion (specifically update_
-voltage helper and adding opp_tables
-to cpufreq-hw driver) would remain
-constant irrespective of the path
-we choose.
-
-FWIW, on SDM845 SoCs we cannot use a
-rpmh_write_batch based icc_set on
-cpufreq fast switch pathw since it
-uses the "wait_for_completion" api.
-
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+But it's not the exact same.. and you didn't say, not did you say why
+that is fine.
