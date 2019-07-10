@@ -2,199 +2,107 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32598C606D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC69C606D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2E120651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mstsLCtH"
+	by mail.kernel.org (Postfix) with ESMTP id 1212320651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfGJJrb (ORCPT
+        id S1727333AbfGJJs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:47:31 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34845 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfGJJra (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:47:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a127so1141909oii.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 02:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bzV97ZdiERZ42rZWsWCb0hOAee1RiY7/NGaFmcVPNbo=;
-        b=mstsLCtHadyks31Z9lCGNHdmPIycOBkJOxqQ5UkKwFgG9lMmu0w9BPn9D0HPMZ3pm2
-         mOjKgMR7/aBkKvMue+fDtVvZYHlidhvGfkYHFnNv8JbHIDL5t29vnLkw/TU63aMhrzXq
-         z4SWpOhnjBibihvBajL0LC4cl0UnpJ5h+2c8nvhq48ZSb/yalpK5eo6iE0iX/P/LRfPg
-         aDPSZMxdnHc9KgzwPR8tGtKJG6JpPAodrmvGicGP2c6tdC37mwqj4OYZZN5WarddV1RO
-         Hi6yP3DlQFxeF/y6paTYMsVxwo0f32bmcDJ+vTDTBth1O8khr/viW7UXy21EXlknraqO
-         jbcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bzV97ZdiERZ42rZWsWCb0hOAee1RiY7/NGaFmcVPNbo=;
-        b=BuKI1J5plVXFKryE3p1p3XoNrGqw2UhSq9/gfNG+BtyWBhbTmZhNWMkAfPf5eJ9FQG
-         oYZMMuTnBQanG06HWOFPInCt7Vkt5PxsJx+QqPREBQFhVosHFaVsroNawIv6hGbANzxF
-         d0kgsUXM6dWKJ5XJZ7xoFQ4Ibw+IT/W9XrlHb6z+rTQmzJ0M+1QPh/pu6yePxAwgXv1/
-         FM075V5MtFX1IXDEoihj5TPt2VYlVElxRyaFlA4ALmtdXUTfYrMknDSWUcf0N/n/lBWP
-         J5OsvVaz2KM/B328z6veF4+mjOF7YI2E2iJQGWRliJQSsy/xdv/F41BlF4jL1d4aowN2
-         7lqg==
-X-Gm-Message-State: APjAAAXuP2Mw0HMsVuh0dmq28R8Q0YZTRV1qBbPfEs/SjH2B0c+v/dHR
-        cI8xnfd1dEom2/aVOb/gMW64w2WBJxj6erFvZYIVBQ==
-X-Google-Smtp-Source: APXvYqznfFks6r5S5buZ9JmChEVpkgAFdEaVMCeevNK+H6vq3wW6vKxhG9d1P9GI7IKoNPDDVwjFdqGtsDhlz2syNG4=
-X-Received: by 2002:aca:b06:: with SMTP id 6mr2926203oil.175.1562752049415;
- Wed, 10 Jul 2019 02:47:29 -0700 (PDT)
+        Wed, 10 Jul 2019 05:48:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:58636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbfGJJs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:48:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9DEE344;
+        Wed, 10 Jul 2019 02:48:57 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F5283F246;
+        Wed, 10 Jul 2019 02:48:55 -0700 (PDT)
+Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-11-vincenzo.frascino@arm.com>
+ <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com>
+ <alpine.DEB.2.21.1907100811170.1758@nanos.tec.linutronix.de>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <b2dccce1-8cf2-1330-7ea9-7636e0da3c42@arm.com>
+Date:   Wed, 10 Jul 2019 10:48:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190710090852.9239-1-brgl@bgdev.pl> <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
-In-Reply-To: <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 10 Jul 2019 11:47:18 +0200
-Message-ID: <CAMpxmJUFEoVZOL++SxshUr3rH0pCzML_at0dji8smqVtpGpqsw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: em: remove the gpiochip before removing the irq domain
-To:     Phil Reid <preid@electromag.com.au>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Stable # 4 . 20+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <alpine.DEB.2.21.1907100811170.1758@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 10 lip 2019 o 11:37 Phil Reid <preid@electromag.com.au> napisa=C5=
-=82(a):
->
-> G'day Bartosz,
->
-> One comment below
->
-> On 10/07/2019 17:08, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > In commit 8764c4ca5049 ("gpio: em: use the managed version of
-> > gpiochip_add_data()") we implicitly altered the ordering of resource
-> > freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
-> > internally, we now can potentially use the irq_domain after it was
-> > destroyed in the remove() callback (as devm resources are freed after
-> > remove() has returned).
-> >
-> > Use devm_add_action() to keep the ordering right and entirely kill
-> > the remove() callback in the driver.
-> >
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add=
-_data()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >   drivers/gpio/gpio-em.c | 35 +++++++++++++++++------------------
-> >   1 file changed, 17 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-> > index b6af705a4e5f..c88028ac66f2 100644
-> > --- a/drivers/gpio/gpio-em.c
-> > +++ b/drivers/gpio/gpio-em.c
-> > @@ -259,6 +259,13 @@ static const struct irq_domain_ops em_gio_irq_doma=
-in_ops =3D {
-> >       .xlate  =3D irq_domain_xlate_twocell,
-> >   };
-> >
-> > +static void em_gio_irq_domain_remove(void *data)
-> > +{
-> > +     struct irq_domain *domain =3D data;
-> > +
-> > +     irq_domain_remove(domain);
-> > +}
-> > +
-> >   static int em_gio_probe(struct platform_device *pdev)
-> >   {
-> >       struct em_gio_priv *p;
-> > @@ -333,39 +340,32 @@ static int em_gio_probe(struct platform_device *p=
-dev)
-> >               return -ENXIO;
-> >       }
-> >
-> > +     ret =3D devm_add_action(&pdev->dev,
-> > +                           em_gio_irq_domain_remove, p->irq_domain);
->
-> Could devm_add_action_or_reset be used?
+On 10/07/2019 07:12, Thomas Gleixner wrote:
+> On Tue, 9 Jul 2019, John Stultz wrote:
+>> Though unfortunately, it seems the arm64 vdso code that just landed is
+>> breaking AOSP for me.
+>>
+>> I see a lot of the following errors:
+>> 01-01 01:22:14.097   755   755 F libc    : Fatal signal 11 (SIGSEGV),
+>> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 755 (cameraserver),
+>> pid 755 (cameraserver)
+>> 01-01 01:22:14.112   759   759 F libc    : Fatal signal 11 (SIGSEGV),
+>> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 759
+>> (android.hardwar), pid 759 (android.hardwar)
+>> 01-01 01:22:14.120   756   756 F libc    : Fatal signal 11 (SIGSEGV),
+>> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 756 (drmserver),
+>> pid 756 (drmserver)
+>>
+>> Which go away if I revert the vdso merge that went in via tip/timers.
+>>
+>> I tried to bisect things down a bit, but as some later fixes are
+>> required (at one point, date was returning the start epoch and never
+>> increasing), this hasn't worked too well. But I'm guessing since I
+>> see: "CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will
+>> not be built", and the system is half working, I'm guessing this is an
+>> issue with just the 32bit code failing.  While I can try to sort out
+>> the proper CROSS_COMPILE_COMPAT in my build environment, I assume
+>> userland shouldn't be crashing if that value isn't set.
+> 
+> The obvious question is whether the VDSO is mapped to the 32bit process in
+> that case. It shouldn't...
 >
 
-Of course it could and it should. :)
+Agreed. I am investing if/why this is happening and will post a fix accordingly.
 
-I'll resend tomorrow to not spam the mailing list.
+> Thanks,
+> 
+> 	tglx
+> 
 
-Thanks,
-Bart
-
-> > +     if (ret) {
-> > +             irq_domain_remove(p->irq_domain);
-> > +             return ret;
-> > +     }
-> > +
-> >       if (devm_request_irq(&pdev->dev, irq[0]->start,
-> >                            em_gio_irq_handler, 0, name, p)) {
-> >               dev_err(&pdev->dev, "failed to request low IRQ\n");
-> > -             ret =3D -ENOENT;
-> > -             goto err1;
-> > +             return -ENOENT;
-> >       }
-> >
-> >       if (devm_request_irq(&pdev->dev, irq[1]->start,
-> >                            em_gio_irq_handler, 0, name, p)) {
-> >               dev_err(&pdev->dev, "failed to request high IRQ\n");
-> > -             ret =3D -ENOENT;
-> > -             goto err1;
-> > +             return -ENOENT;
-> >       }
-> >
-> >       ret =3D devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
-> >       if (ret) {
-> >               dev_err(&pdev->dev, "failed to add GPIO controller\n");
-> > -             goto err1;
-> > +             return ret;
-> >       }
-> >
-> >       return 0;
-> > -
-> > -err1:
-> > -     irq_domain_remove(p->irq_domain);
-> > -     return ret;
-> > -}
-> > -
-> > -static int em_gio_remove(struct platform_device *pdev)
-> > -{
-> > -     struct em_gio_priv *p =3D platform_get_drvdata(pdev);
-> > -
-> > -     irq_domain_remove(p->irq_domain);
-> > -     return 0;
-> >   }
-> >
-> >   static const struct of_device_id em_gio_dt_ids[] =3D {
-> > @@ -376,7 +376,6 @@ MODULE_DEVICE_TABLE(of, em_gio_dt_ids);
-> >
-> >   static struct platform_driver em_gio_device_driver =3D {
-> >       .probe          =3D em_gio_probe,
-> > -     .remove         =3D em_gio_remove,
-> >       .driver         =3D {
-> >               .name   =3D "em_gio",
-> >               .of_match_table =3D em_gio_dt_ids,
-> >
->
->
-> --
-> Regards
-> Phil Reid
->
+-- 
+Regards,
+Vincenzo
