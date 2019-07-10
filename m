@@ -2,166 +2,169 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5A0C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD05FC73C7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4F420693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E0220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:01:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="g6Msjmv2";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O7c4ziHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfGJIBU (ORCPT
+        id S1727355AbfGJIBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:01:20 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:58975 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJIBU (ORCPT
+        Wed, 10 Jul 2019 04:01:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34472 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbfGJIBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:01:20 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MEmEf-1hjCXe129D-00GH64; Wed, 10 Jul 2019 10:01:09 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next] davinci_cpdma: don't cast dma_addr_t to pointer
-Date:   Wed, 10 Jul 2019 10:00:33 +0200
-Message-Id: <20190710080106.24237-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 10 Jul 2019 04:01:53 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 61F2660A0A; Wed, 10 Jul 2019 08:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562745712;
+        bh=rIznZf2yt/Ju/WZoNOrCPJnbSsTN0CABeMRKJ/LlwMs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=g6Msjmv2auj6CvjJeRycXXuGhTA9FVtG+NrOhe0O3C2CHr1GjjpbmSzb/nMrlbH0W
+         5VvyCDBOOBDS9QwoV6X1Ym/QVhU2b5Q67cxQLEqxNlgJh+LZcNXzPGeE7u1bXsAJqU
+         vkcnRDHZaU823rbMVz+75K/KAeXw1+fy9i5CNoE4=
+Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 531596049C;
+        Wed, 10 Jul 2019 08:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562745711;
+        bh=rIznZf2yt/Ju/WZoNOrCPJnbSsTN0CABeMRKJ/LlwMs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=O7c4ziHXlTo+KkiE96l2mLv/AOzWVeXqtnza4PsbFMSXJjNvtnH++gOoZ9yVdK53n
+         r9weiq21+0i9pPMh4cy5cHh0IxiTIgxxCJbDh6WQD8jyxQWYvHgFWgpasf36EQcWF4
+         Z/F9LCcKwNfllm0bxjzcOieFh6wt/ZXh7jnrFwbo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 531596049C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH RFC 2/9] OPP: Export a number of helpers to prevent code
+ duplication
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, andy.gross@linaro.org,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-pm@vger.kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, dianders@chromium.org
+References: <20190328152822.532-1-sibis@codeaurora.org>
+ <20190328152822.532-3-sibis@codeaurora.org>
+ <CAJMQK-gcBC=ZyscuHzOe4t6xQzviTYo9W9_DSsppoaTZuiEOcw@mail.gmail.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <474d4dba-581c-c57b-f510-dca5ba7fdce2@codeaurora.org>
+Date:   Wed, 10 Jul 2019 13:31:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bVw50YUbhjFNSqvDn/znOtxBYy7U05crbm2ZJFpSW93N8gDGrY2
- yKhDAkxa6B5UngkG8J++bupdMXKAjnX9PHJwkm+zkAu2qTUmEV5nOY49KM3Nes9yxylLLEV
- 5iQyfVxZhDiGLMksi129JmvYYelDIcijh561gabfmUVDKi43U8rQuQiXXQ6Xd3/navYEhM8
- dKhSyeFnqVaIh+8H13JWg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QjAE6gGIOb0=:GN1HHSywOl6HwnAlqtqh7h
- i3XIBXMRr+FpyoWZREjuI7rk21TyJYdAJgaNETV8BG+OOQxldQsl/RD8LTtt2rAEvILKiSAlv
- d5lzmt7BV5+71CASfpdeV+U7mexqSZBAXxIbkqFdkIrGEouKifBUItxtT9zQ5i8BQ9JekTxCv
- BYgTqnoAhk+f1DuWO/7X3k+QJ/Zpvm8MafBRh3k3XxQwtIAg4hLckpViIzUqKDjzk22EYF0gY
- j04ObnkBw1PPoIOA311jVL9HuOc9w5e7JZHOH5AdrQw/vZuI2Pnv1S0rLHaxqgwMo13nc8ZXK
- qeDHbKPBuj643K+D88+77Bq0cCfPSHgyIOZGyBEs+muhhaysFM+LqqYC1lC0hJzF9/d6ZZwUC
- 5sX53TJkeeG9bIEVWbwerBjvBWsBewrxn3SYelRkQ3N/WWON2w6Ajf6jMF9SXlySmU50ngR5m
- D7CInxsl+UlCvc13XJ393biG53/lXr5L5joH9pNLkBKn3TS76sYdWnQclni8mlwNSADvBCUfY
- zf6FVyUgjln/0T+LWqsLI9BFRD+yWLx5h1b+91SxbJJ9sgaUx++D3R8JJBresLxnH6CQ6RgYe
- Izu/GI+levnfXGCwWB0561pyXasWyPxRU0ecQi3sCpTGTwXh37vrMISoPzt37ad3MG+hEX80m
- HxISHIrMXPYqf3KQtwCD85ahn5TpVz7LxqJMcDqoLC329rfXAenE6N7E+Izgv+rUaxFYcNZGV
- 9iKk6fyd2wuBaBEkeaHEBYHVkr1wKjnOTBMspA==
+In-Reply-To: <CAJMQK-gcBC=ZyscuHzOe4t6xQzviTYo9W9_DSsppoaTZuiEOcw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_addr_t may be 64-bit wide on 32-bit architectures, so it is not
-valid to cast between it and a pointer:
+Hi Hsin-Yi,
 
-drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_submit_si':
-drivers/net/ethernet/ti/davinci_cpdma.c:1047:12: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
-drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_idle_submit_mapped':
-drivers/net/ethernet/ti/davinci_cpdma.c:1114:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
-drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_submit_mapped':
-drivers/net/ethernet/ti/davinci_cpdma.c:1164:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+I'll get this addressed in the next re-spin which I plan to post by
+end of this week.
 
-Solve this by using two separate members in 'struct submit_info'.
-Since this avoids the use of the 'flag' member, the structure does
-not even grow in typical configurations.
+On 7/8/19 8:58 AM, Hsin-Yi Wang wrote:
+> On Thu, Mar 28, 2019 at 3:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+> 
+>> +
+>> +/* The caller must call dev_pm_opp_put() after the OPP is used */
+>> +struct dev_pm_opp *dev_pm_opp_find_opp_of_np(struct opp_table *opp_table,
+>> +                                            struct device_node *opp_np)
+>> +{
+>> +       return _find_opp_of_np(opp_table, opp_np);
+>> +}
+> Hi Sibi,
+> 
+> Though this is not the latest version, we've seen following issue:
+> 
+> We would get lockdep warnings on this:
+> [   79.068957] Call trace:
+> [   79.071396]  _find_opp_of_np+0xa0/0xa8
+> [   79.075136]  dev_pm_opp_find_opp_of_np+0x24/0x30
+> [   79.079744]  devfreq_passive_event_handler+0x304/0x51c
+> [   79.084872]  devfreq_add_device+0x368/0x434
+> [   79.089046]  devm_devfreq_add_device+0x68/0xb0
+> [   79.093480]  mtk_cci_devfreq_probe+0x108/0x158
+> [   79.097915]  platform_drv_probe+0x80/0xb0
+> [   79.101915]  really_probe+0x1b4/0x28c
+> [   79.105568]  driver_probe_device+0x64/0xfc
+> [   79.109655]  __driver_attach+0x94/0xcc
+> [   79.113395]  bus_for_each_dev+0x84/0xcc
+> [   79.117221]  driver_attach+0x2c/0x38
+> [   79.120788]  bus_add_driver+0x120/0x1f4
+> [   79.124614]  driver_register+0x64/0xf8
+> [   79.128355]  __platform_driver_register+0x4c/0x58
+> [   79.133049]  mtk_cci_devfreq_init+0x1c/0x24
+> [   79.137224]  do_one_initcall+0x1c0/0x3e0
+> [   79.141138]  do_initcall_level+0x1f4/0x224
+> [   79.145225]  do_basic_setup+0x34/0x4c
+> [   79.148878]  kernel_init_freeable+0x10c/0x194
+> [   79.153225]  kernel_init+0x14/0x100
+> [   79.156705]  ret_from_fork+0x10/0x18
+> [   79.160270] irq event stamp: 238006
+> [   79.163750] hardirqs last  enabled at (238005):
+> [<ffffffa71fdea0a4>] _raw_spin_unlock_irqrestore+0x40/0x84
+> [   79.173391] hardirqs last disabled at (238006):
+> [<ffffffa71f480e78>] do_debug_exception+0x70/0x198
+> [   79.182337] softirqs last  enabled at (237998):
+> [<ffffffa71f48165c>] __do_softirq+0x45c/0x4a4
+> [   79.190850] softirqs last disabled at (237987):
+> [<ffffffa71f4bc0d4>] irq_exit+0xd8/0xf8
+> [   79.198842] ---[ end trace 0e66a55077a0abab ]---
+> 
+> In _find_opp_of_np()[1], there's
+> lockdep_assert_held(&opp_table_lock);
+> 
+> [1] https://elixir.bootlin.com/linux/latest/source/drivers/opp/of.c#L75
+> 
+> But in governor passive.c#cpufreq_passive_register(), it call
+> dev_pm_opp_find_opp_of_np() directly, so it wouldn't access
+> opp_table_lock lock.
+> 
+> Another similar place is in dev_pm_opp_of_add_table(), most devfreq
+> would call this to get opp table.
+> dev_pm_opp_of_add_table
+>   -->   _opp_add_static_v2
+>      -->    _of_opp_alloc_required_opps  // would goes here if opp
+> table contains "required-opps" property.
+>          -->    _find_opp_of_np
+> cpufreq-map governor needs devfreq to have "required-opps" property.
+> So it would also trigger above lockdep warning.
+> 
+> 
+> The question is: Is lockdep_assert_held(&opp_table_lock); needed in
+> above use cases? Since they don't need to modify device and opp lists.
+> 
+> Thanks
+> 
+> 
+> 
 
-Fixes: 6670acacd59e ("net: ethernet: ti: davinci_cpdma: add dma mapped submit")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/ti/davinci_cpdma.c | 26 ++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 0ca2a1a254de..a65edd2770e6 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -138,8 +138,8 @@ struct submit_info {
- 	struct cpdma_chan *chan;
- 	int directed;
- 	void *token;
--	void *data;
--	int flags;
-+	void *data_virt;
-+	dma_addr_t data_dma;
- 	int len;
- };
- 
-@@ -1043,12 +1043,12 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
- 	cpdma_desc_to_port(chan, mode, si->directed);
- 
--	if (si->flags & CPDMA_DMA_EXT_MAP) {
--		buffer = (dma_addr_t)si->data;
-+	if (si->data_dma) {
-+		buffer = si->data_dma;
- 		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
- 		swlen |= CPDMA_DMA_EXT_MAP;
- 	} else {
--		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
-+		buffer = dma_map_single(ctlr->dev, si->data_virt, len, chan->dir);
- 		ret = dma_mapping_error(ctlr->dev, buffer);
- 		if (ret) {
- 			cpdma_desc_free(ctlr->pool, desc, 1);
-@@ -1086,10 +1086,10 @@ int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
- 
- 	si.chan = chan;
- 	si.token = token;
--	si.data = data;
-+	si.data_virt = data;
-+	si.data_dma = 0;
- 	si.len = len;
- 	si.directed = directed;
--	si.flags = 0;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state == CPDMA_STATE_TEARDOWN) {
-@@ -1111,10 +1111,10 @@ int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
- 
- 	si.chan = chan;
- 	si.token = token;
--	si.data = (void *)data;
-+	si.data_virt = NULL;
-+	si.data_dma = data;
- 	si.len = len;
- 	si.directed = directed;
--	si.flags = CPDMA_DMA_EXT_MAP;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state == CPDMA_STATE_TEARDOWN) {
-@@ -1136,10 +1136,10 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 
- 	si.chan = chan;
- 	si.token = token;
--	si.data = data;
-+	si.data_virt = data;
-+	si.data_dma = 0;
- 	si.len = len;
- 	si.directed = directed;
--	si.flags = 0;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state != CPDMA_STATE_ACTIVE) {
-@@ -1161,10 +1161,10 @@ int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
- 
- 	si.chan = chan;
- 	si.token = token;
--	si.data = (void *)data;
-+	si.data_virt = NULL;
-+	si.data_dma = data;
- 	si.len = len;
- 	si.directed = directed;
--	si.flags = CPDMA_DMA_EXT_MAP;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state != CPDMA_STATE_ACTIVE) {
 -- 
-2.20.0
-
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
