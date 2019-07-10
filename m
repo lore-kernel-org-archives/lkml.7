@@ -2,150 +2,130 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DAEC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BA1C74A3E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BA720838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0361221019
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdDgOB6y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pMiktFKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfGJVuV (ORCPT
+        id S1727709AbfGJVvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:50:21 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45038 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfGJVuV (ORCPT
+        Wed, 10 Jul 2019 17:51:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40888 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfGJVvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:50:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so3988987wrf.11;
-        Wed, 10 Jul 2019 14:50:19 -0700 (PDT)
+        Wed, 10 Jul 2019 17:51:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so1706872pfp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bLuzUxUc0zNtNis3h91JRpefJIR6fwf3Ba4xYSd3aA4=;
-        b=OdDgOB6ygEtdXE2MH2aRjxspWRDbEivh8b5kYyeQzmyxmD9ZkRp5GsjSKdHRTAIXyL
-         MXJ2FP1DgGWrDgMhnp+OMdR2JQHqEb1DwcRLj3g6LcP7HU8tc+BUlYZucvKY1hWxZCYS
-         rZNM4godxBlsCJkt3WkothA6bnd/XMC37FawFR1pfPUcW1K5U231WOi9d0Jln1KJlWJX
-         PNPnV43CVp6nOtUzfFDmrrDoJ/udboEeX1cRTEhck8sIll5lNqrJMY8pZeeOmlCJTIfQ
-         +ORBxB6mCqo5vBDR6/d8Ipf18WRarpLOoDOqRRIsgPKUDQsUlSqnytR2c+bPJ+ZvdeDh
-         gO6g==
+        bh=4raB3IqyErqkg+JW+87rFy9oaXPi9i1d2UYtDB+hVu8=;
+        b=pMiktFKkY/frqdyoQe7sXxn6LL1Cu1eJU2aCdvxnAIjKEfBMVT2/a7GBTubBVbfWa+
+         VrkYciVMRwRGNBsyxWRacUlQbz9KrF+YgOEQ71hxJjkKxT2GbmMOnuU6hw3Edpz1rbCX
+         TVaEQ4RgH61os6AyO9go6PMGvQHfA26T17tshvtfCu+Y4EWNOD1RFFj6LJF3db0kSaGw
+         8Y52qRyryah4clumr06EeeGgyEUDxNrK5Yj8CqCVoefgScQMSh511m0RPf+Ki7n+w5rf
+         lcuyhHFh80YdhFGhsoBdDpij2xLcvg2j6MpWyUseC13csarlkuF/J5ijYVFflfpMRiG4
+         GUig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bLuzUxUc0zNtNis3h91JRpefJIR6fwf3Ba4xYSd3aA4=;
-        b=Pu7A4QN5J2u+ZQYMKpwhcRnOT4yXUFI3h/CJfjBNSSp8N7Nz/l74QHSq1s4y2fWAA8
-         gZvP5hQja02Ee5Sx2rQCkDIE70/pq7oTx1gvkNNDuAex3Y8hij3d2n4sR6HeOLQdziGt
-         q4R4stwDJuD/DoJeZQPcIRsNRYcf9DnNcMMf70jzP3wx4xpLhxyF3yRhYjZA4x89NI5f
-         A8i8btErXlHPkS89/CulF3JztRamWYCekwayNZlD+nhqSO3NVoNqhxl8AtfhydoTNE1b
-         UKE+eCw4cowyZJ5bwfHIw/wyOvj1cKSS3gN62Q3A2DfayBidg/NrqzdSmqcEXlf19EBE
-         KO2w==
-X-Gm-Message-State: APjAAAV+proYxfAMn7APo3ItElgCIMADtRfYeltQiym5mF8J1W0ZYXqu
-        9BEwkSxxd4zLdbLt4TeXpcftsUYn/6e8i+EOm+I=
-X-Google-Smtp-Source: APXvYqyJcfOKdqnNxQp5JjK89GxcKipPvGPQNaEYDxC+SlkLlaxmwChaULI3VgJahYqzcplyKG9/b4jwcvL3M6rtUpw=
-X-Received: by 2002:adf:e6c5:: with SMTP id y5mr34416075wrm.235.1562795418803;
- Wed, 10 Jul 2019 14:50:18 -0700 (PDT)
+        bh=4raB3IqyErqkg+JW+87rFy9oaXPi9i1d2UYtDB+hVu8=;
+        b=Ni6Tc8tINniwWOc/oSkF43orDneHCXZi0yzwvsmR2Ftle+QyqUY19DQyfA6cPb9kts
+         zC3RhXOSCV+RiNTzdjKwKMTKiWzlE6zLDHqElmaWiMuNhkmkWYgAMDK90kz212SgnzaP
+         dtpmaghLFfNRJtgttoRLnLDsSRvVPw7g3VvhB0LQ/TRZhzVhvDKogv8HCKJyNaIOKrzB
+         2CqLFgTgSASU3b9OkUQYYf7D3wtJ2E9CZJF/VsHkmV5Vl1rpn0nuuNdTt/DEwBA72ZIy
+         RILaKLvxTU72ZQgCX/3oL+qgxZSKKH7G8KDekTmZ4ZxnwZtRig4TzJ3Esd3wRyOtsg5Z
+         0D0w==
+X-Gm-Message-State: APjAAAURESH2dRC/xUQIYp2dFa/D3HeX5fz8lBJvz6nEVTgvk0zdHLLe
+        XDAEI/0jNPV0HjN8RXcLQttMZBU/Z0iYo3nIJuUckA==
+X-Google-Smtp-Source: APXvYqzpotPnFgfn8F3Q6TpCTjeRegyu0pJeMseHXkiht1BvBEBtrWB5K160JbdnR1FiaSX66t4gclal9uiAjRoVwZs=
+X-Received: by 2002:a17:90a:380d:: with SMTP id w13mr620824pjb.138.1562795512264;
+ Wed, 10 Jul 2019 14:51:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <201907101537.x6AFboMR015946@aserv0122.oracle.com>
- <201907101542.x6AFgOO9012232@userv0121.oracle.com> <20190710181227.GA9925@oracle.com>
- <c7f15d1d-1696-4d95-1729-4c4e97bdc43e@iogearbox.net> <20190710143048.3923d1d9@lwn.net>
- <1de27d29-65bb-89d3-9fca-7c452cd66934@iogearbox.net> <20190710213637.GB13962@oracle.com>
-In-Reply-To: <20190710213637.GB13962@oracle.com>
-From:   Brendan Gregg <brendan.d.gregg@gmail.com>
-Date:   Wed, 10 Jul 2019 14:49:52 -0700
-Message-ID: <CAE40pdeSVN+QhhUeQ4sEbsyzJ+NWkQA5XU5X0FrKAbRMHPzBsw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/1 (was 0/1 by accident)] tools/dtrace: initial
- implementation of DTrace
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Mason <clm@fb.com>,
-        "David S. Miller" <davem@davemloft.net>
+References: <20190710213238.91835-1-henryburns@google.com> <CALvZod7kMX5Xika8nqywyXHuBKqTfSPP7uZ1-OU2M4kmHLiuUw@mail.gmail.com>
+In-Reply-To: <CALvZod7kMX5Xika8nqywyXHuBKqTfSPP7uZ1-OU2M4kmHLiuUw@mail.gmail.com>
+From:   Henry Burns <henryburns@google.com>
+Date:   Wed, 10 Jul 2019 14:51:16 -0700
+Message-ID: <CAGQXPTip1aMtChuKAYtYOti1QcZQOz4=Jy0w9O478KTMoT1c0A@mail.gmail.com>
+Subject: Re: [PATCH] mm/z3fold.c: remove z3fold_migration trylock
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Snild Dolkow <snild@sony.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 2:36 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
->
-> On Wed, Jul 10, 2019 at 11:19:43PM +0200, Daniel Borkmann wrote:
-> > On 07/10/2019 10:30 PM, Jonathan Corbet wrote:
-> > > On Wed, 10 Jul 2019 21:32:25 +0200
-> > > Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > >
-> > >> Looks like you missed Brendan Gregg's prior feedback from v1 [0]. I haven't
-> > >> seen a strong compelling argument for why this needs to reside in the kernel
-> > >> tree given we also have all the other tracing tools and many of which also
-> > >> rely on BPF such as bcc, bpftrace, ply, systemtap, sysdig, lttng to just name
-> > >> a few.
-> > >
-> > > So I'm just watching from the sidelines here, but I do feel the need to
-> > > point out that Kris appears to be trying to follow the previous feedback
-> > > he got from Alexei, where creating tools/dtrace is exactly what he was
-> > > told to do:
-> > >
-> > >   https://lwn.net/ml/netdev/20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com/
-> > >
-> > > Now he's being told the exact opposite.  Not the best experience for
-> > > somebody who is trying to make the kernel better.
+> > z3fold_page_migrate() will never succeed because it attempts to acquire a
+> > lock that has already been taken by migrate.c in __unmap_and_move().
 > >
-> > Ugh, agree, sorry for the misleading direction. Alexei is currently offgrid
-> > this week, he might comment later.
+> > __unmap_and_move() migrate.c
+> >   trylock_page(oldpage)
+> >   move_to_new_page(oldpage_newpage)
+> >     a_ops->migrate_page(oldpage, newpage)
+> >       z3fold_page_migrate(oldpage, newpage)
+> >         trylock_page(oldpage)
 > >
-> > It has nothing to do with making the _kernel_ better, it's a /user space/ front
-> > end for the existing kernel infrastructure like many of the other tracers out
-> > there. Don't get me wrong, adding the missing /kernel parts/ for it is a totally
-> > different subject [and _that_ is what is making the kernel better, not the former].
->
-> I disagree.  Yes, the current patch obviously isn't making the kernel better
-> because it doesn't touch the kernel.  But DTrace as a whole is not just a
-> /front end/ to the existing kernel infrastructure, and I did make that point
-> at LPC 2018 and in my emails.  Some of its more advanced features will lead
-> to contributions to the kernel that (by virtue of being developed as part of
-> this DTrace re-implementation) will more often than not be able to benefit
-> other tracers as well.  I do think that aspect qualifies as working towards
-> making the kenrel better.
->
-> > Hypothetical question: does it make the _kernel_ better if we suddenly add a huge
-> > and complex project like tools/mysql/ to the kernel tree? Nope.
 > >
-> > > There are still people interested in DTrace out there.  How would you
-> > > recommend that Kris proceed at this point?
+> > Signed-off-by: Henry Burns <henryburns@google.com>
+>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>
+> Please add the Fixes tag as well.
+Fixes: 1f862989b04a ("mm/z3fold.c: support page migration")
+>
+> > ---
+> >  mm/z3fold.c | 6 ------
+> >  1 file changed, 6 deletions(-)
 > >
-> > My recommendation to proceed is to maintain the dtrace user space tooling in
-> > its own separate project like the vast majority of all the other tracing projects
-> > (see also the other advantages that Steven pointed out from his experience), and
-> > extend the kernel bits whenever needed.
->
-> I wish that would have been the initial recommendation because it certainly
-> would have avoided me going down a path that was going to lead to rejection.
->
-> Either way, I do hope that as work progresses and contributions to the kernel
-> code are submitted in support of advancing tracing on Linux, those patches
-> will receive a fair review and consideration.  I can appreciate that some
-> people do not like DTrace or feel that it is not necessary, but personal
-> opinions about tools should not be a deciding factor in whether a contribution
-> has merit or not.
-
-Hey Kris -- so you're referring to me, and I've used DTrace more than
-anyone over the past 15 years, and I don't think anyone has used all
-the different Linux tracers more than I have. I think my opinion has a
-lot of value.
-
-
-Brendan
+> > diff --git a/mm/z3fold.c b/mm/z3fold.c
+> > index 985732c8b025..9fe9330ab8ae 100644
+> > --- a/mm/z3fold.c
+> > +++ b/mm/z3fold.c
+> > @@ -1335,16 +1335,11 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+> >         zhdr = page_address(page);
+> >         pool = zhdr_to_pool(zhdr);
+> >
+> > -       if (!trylock_page(page))
+> > -               return -EAGAIN;
+> > -
+> >         if (!z3fold_page_trylock(zhdr)) {
+> > -               unlock_page(page);
+> >                 return -EAGAIN;
+> >         }
+> >         if (zhdr->mapped_count != 0) {
+> >                 z3fold_page_unlock(zhdr);
+> > -               unlock_page(page);
+> >                 return -EBUSY;
+> >         }
+> >         new_zhdr = page_address(newpage);
+> > @@ -1376,7 +1371,6 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+> >         queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
+> >
+> >         page_mapcount_reset(page);
+> > -       unlock_page(page);
+> >         put_page(page);
+> >         return 0;
+> >  }
+> > --
+> > 2.22.0.410.gd8fdbe21b5-goog
+> >
