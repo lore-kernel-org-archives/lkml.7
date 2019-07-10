@@ -2,132 +2,116 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD99CC73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D917C73C73
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8968A20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wx5xqLWo"
+	by mail.kernel.org (Postfix) with ESMTP id 6F21D20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfGJFtD (ORCPT
+        id S1727143AbfGJFtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:49:03 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40613 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJFtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:49:02 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so756057eds.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 22:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nNLQU0fvKqxQOdeOY7h0M4gaPPqFsFH7eX9dZuYhlJo=;
-        b=Wx5xqLWopuzrZN6/Fti0L/HiygA8LcbAeuOEgB1MaLtDXVdcAVuu97fpw/JTnnlMZz
-         NvAxhx0cPL9GBbxAeIy9TUW2x6Yw5q8CDhRK8nQ+zCyZ2Zq/uMCIrLLhi0fkcoB36CJs
-         8k/tSYVi8Mfd1a41oiAkCcv8lmjbXgIrRdtxGGAlSrh3xntE8aYWm7Y57cg9lXAXuTr+
-         l7bFLAo7Lvlsj6eed6w3trYXMK+v9fcQnmYQSGeJhj/CIXj3IDmFsInm4cWgPPG/xAzm
-         KTBbmrpDFAAAAbNoXObxFn0bRfY3TGkBX7rkv0pjHytlvxb/xoHYSTH3HVut+8JAiPdq
-         yJlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nNLQU0fvKqxQOdeOY7h0M4gaPPqFsFH7eX9dZuYhlJo=;
-        b=R+iZbzFO481bnf2m0UioDZGRoInoyy5v93Mwc0xTWnaZKLsdiW6IczvrdJ/vYaIcUN
-         Nc1D8PqtZZ32LawmsWFUoWOn/EfAbdLY2D54uGnd/yRpxCzjraATYETrvRgFV/knEEm+
-         gvQdR2S+HPuVJMtvy3l2hZ+jsJ5QnQP9uu8O5Q22i+coAC0FQo6ZT7a2JluI2PYoMwWB
-         mEuS/gCubBGknPsoSFfuSqQ694p4JOk1B9Fzv1vG7WYf0XCng6iMW2iqGqm8E5fWLA0R
-         8OSIZo9q1cVvs5TkvJ3gcBVY/2BQMDvt/gN+IQ2UDGmIrte7y3hm27GKnxsiEYu8qeYU
-         l4Jw==
-X-Gm-Message-State: APjAAAWflpLqq77FCNJC9HtN87H77rCqUj1Xf6rh5izfcLOVBoGq2C3T
-        fWvlfzC3uaKxQ8gegFpTw73eyPgjrCN/B8CxrsA=
-X-Google-Smtp-Source: APXvYqx5k1mBwxHKRaGd1as7NViJbwd5PtzsB2OpDgEGGDnqTUDJbGWp6BtFmMPnBGSQKSDdrhHaBPWs7ABr8c4MFmw=
-X-Received: by 2002:a50:ec0e:: with SMTP id g14mr2922382edr.210.1562737740861;
- Tue, 09 Jul 2019 22:49:00 -0700 (PDT)
+        Wed, 10 Jul 2019 01:49:42 -0400
+Received: from relay.sw.ru ([185.231.240.75]:49196 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfGJFtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:49:41 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hl5Ti-0002oO-18; Wed, 10 Jul 2019 08:49:18 +0300
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     Xiaoming Ni <nixiaoming@huawei.com>, adobriyan@gmail.com,
+        akpm@linux-foundation.org, anna.schumaker@netapp.com,
+        arjan@linux.intel.com, bfields@fieldses.org,
+        chuck.lever@oracle.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, jlayton@kernel.org, luto@kernel.org,
+        mingo@kernel.org, Nadia.Derbey@bull.net,
+        paulmck@linux.vnet.ibm.com, semen.protsenko@linaro.org,
+        stable@kernel.org, stern@rowland.harvard.edu, tglx@linutronix.de,
+        torvalds@linux-foundation.org, trond.myklebust@hammerspace.com,
+        viresh.kumar@linaro.org
+Cc:     alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+From:   Vasily Averin <vvs@virtuozzo.com>
+Message-ID: <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+Date:   Wed, 10 Jul 2019 08:49:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190708115349.GA14779@gmail.com>
-In-Reply-To: <20190708115349.GA14779@gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 9 Jul 2019 22:48:49 -0700
-Message-ID: <CANcMJZAYhqdO5sGbwW7GszL9NtNgMy0+uMe+bVSQHqyewQcy_g@mail.gmail.com>
-Subject: Re: [GIT PULL] scheduler changes for v5.3
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 9:33 AM Ingo Molnar <mingo@kernel.org> wrote:
-> Please pull the latest sched-core-for-linus git tree from:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
-....
-> Peter Zijlstra (1):
->       sched/core: Optimize try_to_wake_up() for local wakeups
+On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+> Registering the same notifier to a hook repeatedly can cause the hook
+> list to form a ring or lose other members of the list.
 
-Hey Peter, Ingo,
-   Since this change landed in Linus' tree, I've been seeing a lot of
-the following dmesg noise when running AOSP on the HiKey960 board.
+I think is not enough to _prevent_ 2nd register attempt,
+it's enough to detect just attempt and generate warning to mark host in bad state.
 
-[  173.162712] CPU: 2 PID: 731 Comm: ndroid.systemui Tainted: G S
-          5.2.0-rc5-00110-g6751c43d94d6 #447
-[  173.162721] Hardware name: HiKey960 (DT)
-[  173.171194] caller is try_to_wake_up+0x3e4/0x788
-[  173.179605] Call trace:
-[  173.179617]  dump_backtrace+0x0/0x140
-[  173.179626]  show_stack+0x14/0x20
-[  173.179638]  dump_stack+0x9c/0xc4
-[  173.179649]  debug_smp_processor_id+0x148/0x150
-[  173.179659]  try_to_wake_up+0x3e4/0x788
-[  173.179669]  wake_up_q+0x5c/0x98
-[  173.179681]  futex_wake+0x170/0x1a8
-[  173.179696]  do_futex+0x560/0xf30
-[  173.284541]  __arm64_sys_futex+0xfc/0x148
-[  173.288570]  el0_svc_common.constprop.0+0x64/0x188
-[  173.293371]  el0_svc_handler+0x28/0x78
-[  173.297131]  el0_svc+0x8/0xc
-[  173.300045] CPU: 0 PID: 1258 Comm: Binder:363_5 Tainted: G S
-        5.2.0-rc5-00110-g6751c43d94d6 #447
-[  173.301130] BUG: using smp_processor_id() in preemptible [00000000]
-code: ndroid.systemui/731
-[  173.310074] Hardware name: HiKey960 (DT)
-[  173.310084] Call trace:
-[  173.310112]  dump_backtrace+0x0/0x140
-[  173.310131]  show_stack+0x14/0x20
-[  173.318685] caller is try_to_wake_up+0x3e4/0x788
-[  173.322583]  dump_stack+0x9c/0xc4
-[  173.322595]  debug_smp_processor_id+0x148/0x150
-[  173.322605]  try_to_wake_up+0x3e4/0x788
-[  173.322615]  wake_up_q+0x5c/0x98
-[  173.322628]  futex_wake+0x170/0x1a8
-[  173.322641]  do_futex+0x560/0xf30
-[  173.358367]  __arm64_sys_futex+0xfc/0x148
-[  173.362397]  el0_svc_common.constprop.0+0x64/0x188
-[  173.367199]  el0_svc_handler+0x28/0x78
-[  173.370956]  el0_svc+0x8/0xc
+Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+and it can lead to host crash in any time: 
+you can unregister notifier on first attempt it can be too early, it can be still in use.
+on the other hand you can never call 2nd unregister at all.
 
-Reverting aacedf26fb76 ("sched/core: Optimize try_to_wake_up() for
-local wakeups") seems to quiet down these warnings.
+Unfortunately I do not see any ways to handle such cases properly,
+and it seems for me your patches does not resolve this problem.
 
-I've just bisected this down (and am about to crash for the night), so
-I've not had much time to look at what a fix might be, but I wanted to
-raise it with you.
-
-If you have suggestions for patches to try, I'll happily do so in the morning!
-
-thanks
--john
+Am I missed something probably?
+ 
+> case1: An infinite loop in notifier_chain_register() can cause soft lockup
+>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+> 
+> case2: An infinite loop in notifier_chain_register() can cause soft lockup
+>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>         atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
+> 
+> case3: lose other hook test2
+>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+> 
+> case4: Unregister returns 0, but the hook is still in the linked list,
+>         and it is not really registered. If you call notifier_call_chain
+>         after ko is unloaded, it will trigger oops. if the system is
+>        	configured with softlockup_panic and the same hook is repeatedly
+>        	registered on the panic_notifier_list, it will cause a loop panic.
+> 
+> so. need add a check in in notifier_chain_register() to avoid duplicate
+> registration
+> 
+> v1:
+> * use notifier_chain_cond_register replace notifier_chain_register
+> 
+> v2:
+> * Add a check in notifier_chain_register() to avoid duplicate registration
+> * remove notifier_chain_cond_register() to avoid duplicate code 
+> * remove blocking_notifier_chain_cond_register() to avoid duplicate code
+> 
+> v3:
+> * Add a cover letter.
+> 
+> Xiaoming Ni (3):
+>   kernel/notifier.c: avoid duplicate registration
+>   kernel/notifier.c: remove notifier_chain_cond_register()
+>   kernel/notifier.c: remove blocking_notifier_chain_cond_register()
+> 
+>  include/linux/notifier.h |  4 ----
+>  kernel/notifier.c        | 41 +++--------------------------------------
+>  net/sunrpc/rpc_pipe.c    |  2 +-
+>  3 files changed, 4 insertions(+), 43 deletions(-)
+> 
