@@ -2,119 +2,92 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56752C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92710C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C07520844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="BMhYT0+3";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="OevQzLcO"
+	by mail.kernel.org (Postfix) with ESMTP id 62BD221670
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562776544;
+	bh=h/1uTzMKlOKJst3NnJsnh16b5AsNQV/yJCBKBWrsTYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l0SmuhhoD2st3JYN8qfEJrSZ9aA8te/yp+Jm2lbFLd3hIGr2NQ5nZ/BhZALsBAj9j
+	 WQe7/GU1FghLTH5NdOHpERKMSl7M8aQTpiqhajaSJU12QxjRR0jJwm7ajLrCR7IyYz
+	 ShYR4jpX+PeB+7nAX2WTMKypqOkaHUsxSldyvl40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfGJQcW (ORCPT
+        id S1727848AbfGJQfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 12:32:22 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42160 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727230AbfGJQcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 12:32:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 17B8A8EE24C;
-        Wed, 10 Jul 2019 09:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562776341;
-        bh=AsLsb/ooY0lodDgUzHqyget5Lisb7UzWPjict/3/jQA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BMhYT0+3IHb/iITVaNiu4JvvXaO01SJwAb1HVCFbXx0jsbk63nMbOSGGdPwLBh6p2
-         zAdLzXyCXC2S3w6F9R63ACiec8IfXue820XLOvbKSbWVkpz0HUnp5H/YaOM1lLAMr0
-         abP69dHVdaLJpzeO/Chv1tfxy8qR0QaH71/W6rOE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xlKxOxUkpX0N; Wed, 10 Jul 2019 09:32:20 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
+        Wed, 10 Jul 2019 12:35:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727406AbfGJQfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 12:35:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 84AF38EE147;
-        Wed, 10 Jul 2019 09:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562776340;
-        bh=AsLsb/ooY0lodDgUzHqyget5Lisb7UzWPjict/3/jQA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=OevQzLcO5Fez4jn2lpVqMN71Ys5QjyEdYMweuU9FUcw0ULkoWnEi122Ez52w2+dTU
-         uABVyg0VNmIikwjOJb/vayL1ejoz5wFfTQVq7udoDA0byZX/xWCu05QkCKxT71hWP2
-         8MeSleAIYpvO2UNIZTtGkne0CHCl0vmJgl35LNHI=
-Message-ID: <1562776339.3213.50.camel@HansenPartnership.com>
-Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Paul Bolle <pebolle@tiscali.nl>, intel-gfx@lists.freedesktop.org
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 10 Jul 2019 09:32:19 -0700
-In-Reply-To: <93b8a186f4c8b4dae63845a20bd49ae965893143.camel@tiscali.nl>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <1562770874.3213.14.camel@HansenPartnership.com>
-         <93b8a186f4c8b4dae63845a20bd49ae965893143.camel@tiscali.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id BD06020844;
+        Wed, 10 Jul 2019 16:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562776542;
+        bh=h/1uTzMKlOKJst3NnJsnh16b5AsNQV/yJCBKBWrsTYw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NPyYp5EjnSzmapw3Ny/7iPEEjt/QnJCQo/tjOyrX0IsAhyQf7f2ydIwvecZcNCuNF
+         cpnY82hOHXiPKo0eoHuwWg5XCg2/Cp0kd/2aK3F/mZ0YCHiWOwy03KzYkxtP3Qhuct
+         xwOr3YDFSugMAU0iT5At+tdaWY28lkCxo/ofJ8i4=
+Date:   Wed, 10 Jul 2019 18:35:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Keyur Patel <iamkeyur96@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Alex Elder <elder@kernel.org>,
+        Johan Hovold <johan@kernel.org>, David Lin <dtwlin@gmail.com>,
+        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: greybus: add logging statement when kfifo_alloc
+ fails
+Message-ID: <20190710163538.GA30902@kroah.com>
+References: <20190710122018.2250-1-iamkeyur96@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710122018.2250-1-iamkeyur96@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-10 at 18:16 +0200, Paul Bolle wrote:
-> Hi James,
+On Wed, Jul 10, 2019 at 08:20:17AM -0400, Keyur Patel wrote:
+> Added missing logging statement when kfifo_alloc fails, to improve
+> debugging.
 > 
-> James Bottomley schreef op wo 10-07-2019 om 08:01 [-0700]:
-> > I've confirmed that 5.1 doesn't have the regression and I'm now
-> > trying to bisect the 5.2 merge window, but since the problem takes
-> > quite a while to manifest this will take some time.  Any hints
-> > about specific patches that might be the problem would be welcome.
+> Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+> ---
+>  drivers/staging/greybus/uart.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> (Perhaps my message of yesterday never reached you.)
+> diff --git a/drivers/staging/greybus/uart.c b/drivers/staging/greybus/uart.c
+> index b3bffe91ae99..86a395ae177d 100644
+> --- a/drivers/staging/greybus/uart.c
+> +++ b/drivers/staging/greybus/uart.c
+> @@ -856,8 +856,10 @@ static int gb_uart_probe(struct gbphy_device *gbphy_dev,
+>  
+>  	retval = kfifo_alloc(&gb_tty->write_fifo, GB_UART_WRITE_FIFO_SIZE,
+>  			     GFP_KERNEL);
+> -	if (retval)
+> +	if (retval) {
+> +		pr_err("kfifo_alloc failed\n");
+>  		goto exit_buf_free;
+> +	}
 
-No, sorry, if the list is followup to list, I'm not subscribed.  I see
-it now I look in the archives, though.
+You should have already gotten an error message from the log if this
+fails, from the kmalloc_array() call failing, right?
 
----
-> Upgrading to 5.2 (from 5.1.y) on a "Dell XPS 13 9350" (is that a
-> skylake too?)
+So why is this needed?  We have been trying to remove these types of
+messages and keep them in the "root" place where the failure happens.
 
-I believe so.  My laptop is a 9350.  I believe they're the earliest
-skylake produced. 
+thanks,
 
->  showed similar symptoms. There's no pattern to the freezes that I
-> can see. They're rather frequent too (think every few minutes). Eg,
-> two freezes while composing this message!
-
-You seem to be getting it to happen much more often than I can. Last
-night, on the below pull request it took me a good hour to see the
-freeze.
-
----
-> It seems I hit this problem quite easily. Bisecting v5.1..v5.2 could
-> be a real chore, so perhaps we could coordinate efforts (off-list)?
-
-Sure, my current testing indicates it's somewhere inside this pull
-request:
-
-Merge: 89c3b37af87e eb85d03e01c3
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed May 8 21:35:19 2019 -0700
-
-    Merge tag 'drm-next-2019-05-09' of git://anongit.freedesktop.org/drm/drm
-    
-    Pull drm updates from Dave Airlie:
-
-So I was about to test out the i915 changes in that but since my laptop
-is what I use for daily work, it's a bit hard (can't freeze up on video
-calls for instance).
-
-James
-
+greg k-h
