@@ -7,57 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D25C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B02FC74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45942087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E8520844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562772899;
-	bh=Gabu5f7Li7fMzVgZAe8wzw6YY9Peb8Q3wy9F/ljfp8c=;
+	s=default; t=1562772902;
+	bh=uQlV1GIPquId2RgSZiLFYLjs8hd9/+CMYQebpE8Z+fs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=PeriHbDclYryvcMkvwcUlBvp8mZpIDQ5hfwTq+duH8okGhrQiw5ZyYQD1Ym0vAxNo
-	 Ugr5lTFC7ixCJFYJC9zDYAnFtBlFFJPGabpbauPfCHKvkWBI/9wx5pLyRcTpeXQLws
-	 BGFDmAjW0/XU55EAy4K0uJc6tLGNUE+LP63/zmq0=
+	b=sOigoPBsPZ77xdBSJE+kXUlZ2TSrxqxOeDH4u6eq6xKXKbiIUmJRAG0pbFcAqwBJK
+	 XjL5fwekpPvvx2hJdXSDs9fWqQTmW3PZT+vKf80UCZBzE3oM0ER5Sxwhb6RgwqiZTR
+	 YBkCAvF5TjJkKYHVAenB8s3NkoAZcW0rf8FeIxQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfGJPe5 (ORCPT
+        id S1727796AbfGJPfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:34:57 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45796 "EHLO
+        Wed, 10 Jul 2019 11:35:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45840 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfGJPez (ORCPT
+        with ESMTP id S1727522AbfGJPe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:34:55 -0400
+        Wed, 10 Jul 2019 11:34:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=zEYE/fM+fUJTvgouP0rSljrDT6m2g/ZvpYi2J8zq2LE=; b=I4oKAsPY+oqd
-        VXcXW9Fd5O5Vlz4I+Fw2ljqe+xYQ/Tv983hPXypZ6SbOwTqMunupGDIJAsnA5mHq8K+G2y7Spa4d4
-        znZh/swdVLUrESDCmBL493UFuhgVHwY9XpZ++QhtqouX7oMfPRZ8qVHXBj5Yq8Ag2HdXjRBYBagDm
-        mAn+o=;
+        List-Archive; bh=SwHG6LTAEAh13sjDvyFHVD4GV3/BS+B3YNOvIoOotQs=; b=nTP0/1VSUJm0
+        ngl2m7yQueHy4gxqaEnAj8ukmW3EdIcRETyiGGUXXIaU9+UZn9oYJjHu+PXZOqKIZMcoAc25jbAeg
+        BVljbvfzBgMIotY8bigzHBvqsgmbQHO3g9uBA3Bc/fje/Zq0p5alIwEyytWbRfjD/8BGiK+Lsifcs
+        xW1sk=;
 Received: from [217.140.106.53] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hlEcL-00083I-Nr; Wed, 10 Jul 2019 15:34:49 +0000
+        id 1hlEcQ-00083t-6C; Wed, 10 Jul 2019 15:34:54 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 62FF6D02DA6; Wed, 10 Jul 2019 16:34:49 +0100 (BST)
+        id DF598D02D7C; Wed, 10 Jul 2019 16:34:53 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     alsa-devel <alsa-devel@alsa-project.org>,
-        alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
-        Derek Fang <derek.fang@realtek.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>
-Subject: Applied "ASoC: rt1308: Remove executable attribute from source files" to the asoc tree
-In-Reply-To: <d198a3e6ed3a0e9070afeb6aca69903c3e985149.camel@perches.com>
+To:     Han Xu <han.xu@nxp.com>
+Cc:     ashish.kumar@nxp.com, broonie@kernel.org, han.xu@nxp.com,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: spi-fsl-qspi: change i.MX7D RX FIFO size" to the spi tree
+In-Reply-To: <20190710023128.13115-3-han.xu@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190710153449.62FF6D02DA6@fitzroy.sirena.org.uk>
-Date:   Wed, 10 Jul 2019 16:34:49 +0100 (BST)
+Message-Id: <20190710153453.DF598D02D7C@fitzroy.sirena.org.uk>
+Date:   Wed, 10 Jul 2019 16:34:53 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rt1308: Remove executable attribute from source files
+   spi: spi-fsl-qspi: change i.MX7D RX FIFO size
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,29 +87,34 @@ to this mail.
 Thanks,
 Mark
 
-From 72365164cbefe3afa7a146d27d502ed688bf7323 Mon Sep 17 00:00:00 2001
-From: Joe Perches <joe@perches.com>
-Date: Tue, 9 Jul 2019 10:22:16 -0700
-Subject: [PATCH] ASoC: rt1308: Remove executable attribute from source files
+From d6b197a14863818a7ed7890e91f043fab49e8c60 Mon Sep 17 00:00:00 2001
+From: Han Xu <han.xu@nxp.com>
+Date: Wed, 10 Jul 2019 10:31:27 +0800
+Subject: [PATCH] spi: spi-fsl-qspi: change i.MX7D RX FIFO size
 
-These are source files not executable.
+The RX FIFO should be 128 byte rather than 512 byte. It's a typo on
+reference manual.
 
-Signed-off-by: Joe Perches <joe@perches.com>
-Link: https://lore.kernel.org/r/d198a3e6ed3a0e9070afeb6aca69903c3e985149.camel@perches.com
+Signed-off-by: Han Xu <han.xu@nxp.com>
+Link: https://lore.kernel.org/r/20190710023128.13115-3-han.xu@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/rt1308.c | 0
- sound/soc/codecs/rt1308.h | 0
- 2 files changed, 0 insertions(+), 0 deletions(-)
- mode change 100755 => 100644 sound/soc/codecs/rt1308.c
- mode change 100755 => 100644 sound/soc/codecs/rt1308.h
+ drivers/spi/spi-fsl-qspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt1308.c b/sound/soc/codecs/rt1308.c
-old mode 100755
-new mode 100644
-diff --git a/sound/soc/codecs/rt1308.h b/sound/soc/codecs/rt1308.h
-old mode 100755
-new mode 100644
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index 41a49b93ca60..448c00e4065b 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -206,7 +206,7 @@ static const struct fsl_qspi_devtype_data imx6sx_data = {
+ };
+ 
+ static const struct fsl_qspi_devtype_data imx7d_data = {
+-	.rxfifo = SZ_512,
++	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
 -- 
 2.20.1
 
