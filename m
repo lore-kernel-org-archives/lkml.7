@@ -2,70 +2,201 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82BCC74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55BBC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B562B2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D27620645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562787848;
-	bh=eHGI2UH/1bx+uOYu8VQv93m0Mv4AyHid8CuZx3p8J24=;
+	s=default; t=1562787854;
+	bh=KQ9dpBUN+zkkfv1JhBanSAaY9RnA/Nj1iA945a/BcG4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nitVns8S2hM6aR77czAfNxCfWy+TuAUI2LfjId1SO5F8yjO7S9FzdnjfJVqP5+1dz
-	 BhUM4A5mahE3iD14NaP6Q7n+E5idGGZbBcLUYPIVFSbG1Blc2wqBlIzqyLpYapVVLS
-	 PJqiGCp/B6OX6KJTaQFUw/74ioUk6mbHymyDd+f4=
+	b=HFA+mSzEAuE19yHpnyN7Q0ZaJtUm1WItk0yXtpwWKki8q9Pig01ChDgd0gjbGlvPr
+	 XHYYzx0FqHGTTetOfSRdb2pZ2YVOU7CbPaCJC/JjSuF7UATGk4/Uc1erN5qX8z6U34
+	 W4Q41jU1znkStCJyND4g1Mv4dhp30WWtNwQn0crU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfGJToH (ORCPT
+        id S1728093AbfGJToN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:44:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46482 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727618AbfGJToH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:44:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 15100AC37;
-        Wed, 10 Jul 2019 19:44:05 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 21:44:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Hillf Danton <hdanton@sina.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@suse.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [Question] Should direct reclaim time be bounded?
-Message-ID: <20190710194403.GR29695@dhcp22.suse.cz>
-References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
- <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
- <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
+        Wed, 10 Jul 2019 15:44:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727846AbfGJToN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:44:13 -0400
+Received: from lore-desk-wlan.lan (unknown [151.66.63.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A935B2087F;
+        Wed, 10 Jul 2019 19:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562787851;
+        bh=KQ9dpBUN+zkkfv1JhBanSAaY9RnA/Nj1iA945a/BcG4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kReqj31G3gpMk681VjGLc1NjF9uqTpJjvf0QCoIrZoZDaNnJQFvnXCyd55XD6o+V0
+         lRRx0x34f5Twyj3QftyZd4pE5y+5PjinXtI+Q6oAr2v5xtHnvkWR2dAR0dLcYJnvW3
+         zztPHQohMHqeZ0hcBfXylERq3kaM/KD+OnV/gGfw=
+Date:   Wed, 10 Jul 2019 21:44:05 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        bbrezillon@knernel.org, Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v3 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
+ LSM6DSO and LSM6DSR
+Message-ID: <20190710194405.GA10520@lore-desk-wlan.lan>
+References: <cover.1562767521.git.vitor.soares@synopsys.com>
+ <73955529ae0c31f428221abb88031ab3b4165659.1562767521.git.vitor.soares@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
 Content-Disposition: inline
-In-Reply-To: <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <73955529ae0c31f428221abb88031ab3b4165659.1562767521.git.vitor.soares@synopsys.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 11:42:40, Mike Kravetz wrote:
-[...]
-> As Michal suggested, I'm going to do some testing to see what impact
-> dropping the __GFP_RETRY_MAYFAIL flag for these huge page allocations
-> will have on the number of pages allocated.
 
-Just to clarify. I didn't mean to drop __GFP_RETRY_MAYFAIL from the
-allocation request. I meant to drop the special casing of the flag in
-should_continue_reclaim. I really have hard time to argue for this
-special casing TBH. The flag is meant to retry harder but that shouldn't
-be reduced to a single reclaim attempt because that alone doesn't really
-help much with the high order allocation. It is more about compaction to
-be retried harder.
--- 
-Michal Hocko
-SUSE Labs
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
+> spi and i2c mode.
+>=20
+> The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
+> them.
+
+Hi Vitor,
+
+just few comments inline.
+
+Regards,
+Lorenzo
+
+>=20
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+> Changes in v3:
+>   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
+>   Use st_lsm6dsx_probe new form
+>=20
+> Changes in v2:
+>   Add support for LSM6DSR
+>   Set pm_ops to st_lsm6dsx_pm_ops
+>=20
+>  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+>  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 61 +++++++++++++++++++++++=
+++++++
+>  3 files changed, 69 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+>=20
+
+[...]
+
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/im=
+u/st_lsm6dsx/st_lsm6dsx_i3c.c
+> new file mode 100644
+> index 0000000..f683754
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
+> + *
+> + * Author: Vitor Soares <vitor.soares@synopsys.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/i3c/device.h>
+> +#include <linux/i3c/master.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "st_lsm6dsx.h"
+> +
+> +static const struct i3c_device_id st_lsm6dsx_i3c_ids[];
+> +
+
+why do we need this? I guess you can just move st_lsm6dsx_i3c_ids definitio=
+n here
+
+> +static const struct regmap_config st_lsm6dsx_i3c_regmap_config =3D {
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +};
+> +
+> +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
+> +{
+> +	const struct i3c_device_id *id =3D i3c_device_match_id(i3cdev,
+> +							    st_lsm6dsx_i3c_ids);
+
+i3c_device_match_id can theoretically fail so is it better to check
+return value here? (maybe I am too paranoid :))
+
+> +	struct regmap *regmap;
+> +	int hw_id =3D (int)id->data;
+
+I guess we do not need this since we use it just in st_lsm6dsx_probe(),
+we can just do:
+
+return st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
+> +
+> +	regmap =3D devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
+> +			(int)PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	return st_lsm6dsx_probe(&i3cdev->dev, 0, hw_id, regmap);
+> +}
+> +
+> +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] =3D {
+> +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
+> +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
+> +
+> +static struct i3c_driver st_lsm6dsx_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "st_lsm6dsx_i3c",
+> +		.pm =3D &st_lsm6dsx_pm_ops,
+> +	},
+> +	.probe =3D st_lsm6dsx_i3c_probe,
+> +	.id_table =3D st_lsm6dsx_i3c_ids,
+> +};
+> +module_i3c_driver(st_lsm6dsx_driver);
+> +
+> +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
+> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 2.7.4
+>=20
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXSZAAgAKCRA6cBh0uS2t
+rEdhAP9qPkBeOryzKC0RGfqKR+Qp8cZ9cqsNUGpjjM+aDt3PkgD/Z4fhMOTocnhw
+qCQjPYrnX4PkPS1JmbrgxP6WO3svsgs=
+=KFKC
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
