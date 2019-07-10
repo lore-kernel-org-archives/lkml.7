@@ -2,144 +2,180 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C670C004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A451C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F67B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:46:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Lb8OPWRR"
+	by mail.kernel.org (Postfix) with ESMTP id 2956920861
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562755701;
+	bh=l5bXPa9Krh19WBIdTDbx3cYjfjP/Ft2cdEUJ4xd6qm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TP5IYjNCy+XsKEB29gNVfI0bdj5uMle3WU9QbUPRvpS/nG9IrDSjpkPsMQLXVsEY+
+	 v/gUxIm/cq3KFfZkkWmuNJ3fac96Lchhk9zct9EnO9Aa1Jw81Tb1oFjrYQjd/XMAys
+	 /4dn71rxgorJqfd/YccH/o/MWPHbWMQt7LK/Bslo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfGJKqf (ORCPT
+        id S1727407AbfGJKsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:46:35 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45866 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGJKqe (ORCPT
+        Wed, 10 Jul 2019 06:48:19 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44058 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfGJKsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:46:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jvMZpPPrD/tSFkNyX/FfJWti0dh2u8MlHDBE38NmrZQ=; b=Lb8OPWRRj9rcMiZ8SIEM/9MnV
-        EVogylyL2oO9c6HyXAl3XNcVpDjhqVahYg5Wo32pWa0ksOqSKPWY4rIGXj3XWm0yY6YQU2Ak9DD89
-        LM6tHs0zQfSGnUogfZhpQY77Y7RD64o1m6XCXZtzVq1g0jKnSt4ijyx9WlyrOFmnie0zKBWaaqd3K
-        9hD6O59yc+ilHFCj3l+tu0JFbKN2jCc71dQ8+vjN0gRHJXD5aUvbMrqTuvZtOfGTfm/25tT2Tr+ZB
-        +WET8Yka2YhKze87KCQplyslmm6onP0p4r9u6C4wm+fZPkVPGYi/yQTEh3gADupUEmyif0wvHCtAT
-        6/m+yZhXg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60336)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hlA7I-0006BT-R5; Wed, 10 Jul 2019 11:46:28 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hlA7H-0003qR-Af; Wed, 10 Jul 2019 11:46:27 +0100
-Date:   Wed, 10 Jul 2019 11:46:27 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Question about ARM FASTFPE
-Message-ID: <20190710104627.5lam7ipqljks3iji@shell.armlinux.org.uk>
-References: <CAK7LNASSCvLSXVikR7GenXyb8KywpWKVc1Z=5v3c93rxJ+G73w@mail.gmail.com>
- <20190710082335.uzusesefimzpjd3f@shell.armlinux.org.uk>
- <CAK7LNAQpiY4CBawEFhQHeTPSrbrRkNoYCtK4jBak+skyyMqESA@mail.gmail.com>
- <20190710100206.yls4piu36wciefbz@shell.armlinux.org.uk>
- <CAK7LNAT3NDem7_oTyPuDVC7QGY=HuyG-GBE9QQhUuuL_Q=CeNg@mail.gmail.com>
+        Wed, 10 Jul 2019 06:48:19 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so1021831plr.11;
+        Wed, 10 Jul 2019 03:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SVbHqdqp8YOEjHzGDlrAyL6DJKyDMTvzdc6bOUeWR1I=;
+        b=DD7J5KViJCMsZS754qIX6Y4jUrX0fWg/3IHZql0k5fRn26Pk0TShCitXRx7OTTseDY
+         6v3lMMHATfhEJ3tiNCmpVNgPQ9kaPGY7EJsmhtkxPsqM64T02mvWG4PsHdCOQYJbz9ux
+         eawlllSZ9RTrEvcD586DFY7lQs3yNlPtKpDmNyqNYspV05+EF1r2SnXxWA5KYG4s8oHd
+         MUiWMcdjZYD3DoBxH2u4MxdefIL/a2JpZmK6Q3i57t/yGIXAIfs/0/MhnxTtvzV8ZGuA
+         ndWAIgY4RLJO9XTIrPapP37/aV5PqRocILYKPeBhv2l5fEbxLR7CuF/KjYxb4Vy9+aAT
+         nmPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SVbHqdqp8YOEjHzGDlrAyL6DJKyDMTvzdc6bOUeWR1I=;
+        b=WXdQHRAJhFpLH/fkCqA/h03TuJbbaZSKpBAvhYCyrsggyo3jLmRcRs5QC0fF2ZmLe7
+         xgKp+h3T6azL6AaISM24LD/j2RLLzb7uw6KzKrpiHA/WotPf8mZLCwDHggYDdo3qZCD+
+         tdXhdwKztIa1o7fgR3iwNh1ihYjCbBdBTfvWDogUMR1m/BzpCmUTh+OsYnwdMyLPc+/f
+         Pm5oEYzbhbHgbJKhf5te2omGBY7VLgCcTyYdDeFNhLxxruWlnzPF2C3i/cDaZsWWnctW
+         +jas2Ud6IGxCxzoc2QTihWFB0sP7IFuea9ATnvDFnBBUMtcBW2nwHeOGczaKBcrsjza/
+         XI+A==
+X-Gm-Message-State: APjAAAV1jzX7aaUb9YfVi7INj/yI3Y/sbjP+vpwer23Jh91HHQaNkvd1
+        60OX0Rhw5i19Vrs/nfBudoE=
+X-Google-Smtp-Source: APXvYqyUjXTFy7JIc4o6O8Fp/ORN4uEPxjM/KP3u/BWYZDGiSMFzR6sgSRyiktvoDcFkwIiWFQwugg==
+X-Received: by 2002:a17:902:da4:: with SMTP id 33mr35095869plv.209.1562755698240;
+        Wed, 10 Jul 2019 03:48:18 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id p1sm2002534pff.74.2019.07.10.03.48.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 03:48:16 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 19:48:09 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 4/5] mm: introduce MADV_PAGEOUT
+Message-ID: <20190710104809.GA186559@google.com>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627115405.255259-5-minchan@kernel.org>
+ <20190709095518.GF26380@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAT3NDem7_oTyPuDVC7QGY=HuyG-GBE9QQhUuuL_Q=CeNg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190709095518.GF26380@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 07:43:19PM +0900, Masahiro Yamada wrote:
-> On Wed, Jul 10, 2019 at 7:02 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Wed, Jul 10, 2019 at 06:54:06PM +0900, Masahiro Yamada wrote:
-> > > On Wed, Jul 10, 2019 at 5:23 PM Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > On Wed, Jul 10, 2019 at 01:30:24PM +0900, Masahiro Yamada wrote:
-> > > > > Hi.
-> > > > >
-> > > > > I have a question about the following code
-> > > > > in arch/arm/Makefile:
-> > > > >
-> > > > >
-> > > > > # Do we have FASTFPE?
-> > > > > FASTFPE :=arch/arm/fastfpe
-> > > > > ifeq ($(FASTFPE),$(wildcard $(FASTFPE)))
-> > > > > FASTFPE_OBJ :=$(FASTFPE)/
-> > > > > endif
-> > > > >
-> > > > >
-> > > > > Since arch/arm/fastfpe does not exist in the upstream tree,
-> > > > > I guess this is a hook to compile downstream source code.
-> > > > >
-> > > > > If a user puts arch/arm/fastfpe/ into their local source tree,
-> > > > > Kbuild is supposed to compile the files in it.
-> > > > >
-> > > > > Is this correct?
-> > > > >
-> > > > >
-> > > > > If so, I am afraid this would not work for O= building.
-> > > > >
-> > > > > $(wildcard ...) checks if this directory exists in the *objtree*,
-> > > > > while scripts/Makefile.build needs to include
-> > > > > arch/arm/fastfpe/Makefile from *srctree*.
-> > > > >
-> > > > > I think the correct code should be like follows:
-> > > > >
-> > > > > # Do we have FASTFPE?
-> > > > > FASTFPE :=arch/arm/fastfpe
-> > > > > ifneq ($(wildcard $(srctree)/$(FASTFPE)),)
-> > > > > FASTFPE_OBJ :=$(FASTFPE)/
-> > > > > endif
-> > > > >
-> > > > >
-> > > > > Having said that, I am not sure this code is worth fixing.
-> > > > >
-> > > > > This code was added around v2.5.1.9,
-> > > >
-> > > > ... as a _result_ of a discussion and deciding not to upstream it,
-> > > > but to still allow its use.  Fastfpe is faster than nwfpe (so has
-> > > > a definite advantage for FP intensive applications) but we decided
-> > > > we didn't want two FP emulation codes in the kernel.  However, if
-> > > > someone wants to use it, it has to be built into the kernel, it
-> > > > can't be modular.
-> > >
-> > >
-> > > IMHO, the entry in Makefile and Kconfig should be removed
-> > > from upstream, then moved to a part of the fastfpe local patch.
-> >
-> > Nope.  It means that rather than it being merely a drop-in, it has
-> > to be maintained against changes to both these files.  Sorry, that's
-> > more work.
+On Tue, Jul 09, 2019 at 11:55:19AM +0200, Michal Hocko wrote:
+> On Thu 27-06-19 20:54:04, Minchan Kim wrote:
+> > When a process expects no accesses to a certain memory range
+> > for a long time, it could hint kernel that the pages can be
+> > reclaimed instantly but data should be preserved for future use.
+> > This could reduce workingset eviction so it ends up increasing
+> > performance.
+> > 
+> > This patch introduces the new MADV_PAGEOUT hint to madvise(2)
+> > syscall. MADV_PAGEOUT can be used by a process to mark a memory
+> > range as not expected to be used for a long time so that kernel
+> > reclaims *any LRU* pages instantly. The hint can help kernel in
+> > deciding which pages to evict proactively.
+> > 
+> > - man-page material
+> > 
+> > MADV_PAGEOUT (since Linux x.x)
+> > 
+> > Do not expect access in the near future so pages in the specified
+> > regions could be reclaimed instantly regardless of memory pressure.
+> > Thus, access in the range after successful operation could cause
+> > major page fault but never lose the up-to-date contents unlike
+> > MADV_DONTNEED.
 > 
+> > It works for only private anonymous mappings and
+> > non-anonymous mappings that belong to files that the calling process
+> > could successfully open for writing; otherwise, it could be used for
+> > sidechannel attack.
 > 
-> This is the motivation of upstreaming for everybody.
+> I would rephrase this way:
+> "
+> Pages belonging to a shared mapping are only processed if a write access
+> is allowed for the calling process.
+> "
 > 
-> We never know the code that does not exist in upstream.
-> Downstream code must pay maintenance cost for ever.
+> I wouldn't really mention side channel attacks for a man page. You can
+> mention can_do_mincore check and the side channel prevention in the
+> changelog that is not aimed for the man page.
 
-I'm the maintainer of the files in question.  I also care-take
-fastfpe.  It's my choice to make.
+Agree. I will rephrase with one you suggested.
+Thanks for the suggestion.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> 
+> > MADV_PAGEOUT cannot be applied to locked pages, Huge TLB pages, or
+> > VM_PFNMAP pages.
+> > 
+> > * v2
+> >  * add comment about SWAP_CLUSTER_MAX - mhocko
+> >  * add permission check to prevent sidechannel attack - mhocko
+> >  * add man page stuff - dave
+> > 
+> > * v1
+> >  * change pte to old and rely on the other's reference - hannes
+> >  * remove page_mapcount to check shared page - mhocko
+> > 
+> > * RFC v2
+> >  * make reclaim_pages simple via factoring out isolate logic - hannes
+> > 
+> > * RFCv1
+> >  * rename from MADV_COLD to MADV_PAGEOUT - hannes
+> >  * bail out if process is being killed - Hillf
+> >  * fix reclaim_pages bugs - Hillf
+> > 
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > ---
+> 
+> 
+> I am still not convinced about the SWAP_CLUSTER_MAX batching and the
+> udnerlying OOM argument. Is one pmd worth of pages really an OOM risk?
+> Sure you can have many invocations in parallel and that would add on
+> but the same might happen with SWAP_CLUSTER_MAX. So I would just remove
+> the batching for now and think of it only if we really see this being a
+> problem for real. Unless you feel really strong about this, of course.
+
+I don't have the number to support SWAP_CLUSTER_MAX batching for hinting
+operations. However, I wanted to be consistent with other LRU batching
+logic so that it could affect altogether if someone try to increase
+SWAP_CLUSTER_MAX which is more efficienty for batching operation, later.
+(AFAIK, someone tried it a few years ago but rollback soon, I couldn't
+rebemeber what was the reason at that time, anyway).
+
+> 
+> Anyway the patch looks ok to me otherwise.
+> 
+> Acked-by: Michal Hocko <mhocko@suse.co>
+
+Thanks!
