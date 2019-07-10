@@ -6,70 +6,100 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B7BC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A185C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C1D2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED88B20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfGJLd4 (ORCPT
+        id S1727334AbfGJLfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:33:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47452 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJLd4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:33:56 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlAr8-0001Cm-7T; Wed, 10 Jul 2019 13:33:50 +0200
-Date:   Wed, 10 Jul 2019 13:33:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Pu Wen <puwen@hygon.cn>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [RFC PATCH] x86: Remove X86_FEATURE_MFENCE_RDTSC
-In-Reply-To: <4a13c6a3-a13e-d3e5-0008-41a6d47a6eff@redhat.com>
-Message-ID: <alpine.DEB.2.21.1907101333250.1758@nanos.tec.linutronix.de>
-References: <d990aa51e40063acb9888e8c1b688e41355a9588.1562255067.git.jpoimboe@redhat.com> <45f247d2-80f5-6c8c-d11e-965a3da8a88f@amd.com> <4a13c6a3-a13e-d3e5-0008-41a6d47a6eff@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 07:35:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8416 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbfGJLfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:35:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 04:35:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,474,1557212400"; 
+   d="scan'208";a="189143865"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Jul 2019 04:35:05 -0700
+Subject: Re: [PATCH v2 00/11] Arasan SDHCI enhancements and ZynqMP Tap Delays
+ Handling
+To:     Manish Narani <manish.narani@xilinx.com>, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        michal.simek@xilinx.com, christoph.muellner@theobroma-systems.com,
+        philipp.tomsich@theobroma-systems.com, viresh.kumar@linaro.org,
+        scott.branden@broadcom.com, ayaka@soulik.info, kernel@esmil.dk,
+        tony.xie@rock-chips.com, rajan.vaja@xilinx.com,
+        jolly.shah@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org,
+        olof@lixom.net
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <d4a733c4-9760-a790-5752-be3f14c53bec@intel.com>
+Date:   Wed, 10 Jul 2019 14:33:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Paolo Bonzini wrote:
-> On 08/07/19 21:32, Lendacky, Thomas wrote:
-> >> AMD and Intel both have serializing lfence (X86_FEATURE_LFENCE_RDTSC).
-> >> They've both had it for a long time, and AMD has had it enabled in Linux
-> >> since Spectre v1 was announced.
-> >>
-> >> Back then, there was a proposal to remove the serializing mfence feature
-> >> bit (X86_FEATURE_MFENCE_RDTSC), since both AMD and Intel have
-> >> serializing lfence.  At the time, it was (ahem) speculated that some
-> >> hypervisors might not yet support its removal, so it remained for the
-> >> time being.
-> >>
-> >> Now a year-and-a-half later, it should be safe to remove.
-> >
-> > I vaguely remember a concern from a migration point of view, maybe? Adding
-> > Paolo to see if he has any concerns.
+On 1/07/19 8:29 AM, Manish Narani wrote:
+> This patch series does the following:
+>  - Reorganize the Clock Handling in Arasan SD driver
+>  - Adds new sampling clock in Arasan SD driver
+>  - Adds support to set Clock Delays in SD Arasan Driver
+>  - Add SDIO Tap Delay handling in ZynqMP firmware driver
+>  - Add support for ZynqMP Tap Delays setting in Arasan SD driver
 > 
-> It would be a problem to remove the conditional "if
-> (boot_cpu_has(X86_FEATURE_LFENCE_RDTSC))" from svm_get_msr_feature.  But
-> removing support for X86_FEATURE_MFENCE_RDTSC essentially amounts to
-> removing support for hypervisors that haven't been updated pre-Spectre.
->  That's fair enough, I think.
+> Changes in v2:
+> 	- Replaced the deprecated calls to clock framework APIs
+> 	- Added support for dev_clk_get() call to work for SD card clock
+> 	- Separated the clock data struct
+> 	- Fragmented the patch series in smaller patches to make it more
+> 	  readable
+> 
+> This patch series contains a DT patch, which I think should be there to
+> maintain the order of commits.
+> 
+> Manish Narani (11):
+>   dt-bindings: mmc: arasan: Update documentation for SD Card Clock
+>   arm64: dts: rockchip: Add optional clock property indicating sdcard
+>     clock
+>   mmc: sdhci-of-arasan: Replace deprecated clk API calls
+>   mmc: sdhci-of-arasan: Separate out clk related data to another
+>     structure
+>   dt-bindings: mmc: arasan: Update Documentation for the input clock
+>   mmc: sdhci-of-arasan: Add sampling clock for a phy to use
+>   dt-bindings: mmc: arasan: Add optional properties for Arasan SDHCI
+>   mmc: sdhci-of-arasan: Add support to set clock phase delays for SD
+>   firmware: xilinx: Add SDIO Tap Delay APIs
+>   dt-bindings: mmc: arasan: Document 'xlnx,zynqmp-8.9a' controller
+>   mmc: sdhci-of-arasan: Add support for ZynqMP Platform Tap Delays Setup
+> 
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  49 ++-
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   4 +-
+>  drivers/firmware/xilinx/zynqmp.c                   |  48 +++
+>  drivers/mmc/host/sdhci-of-arasan.c                 | 453 ++++++++++++++++++++-
+>  include/linux/firmware/xlnx-zynqmp.h               |  15 +-
+>  5 files changed, 540 insertions(+), 29 deletions(-)
+> 
 
-Yes, they have other more interesting problems :)
+For SDHCI:
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
