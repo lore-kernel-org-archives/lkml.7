@@ -2,116 +2,114 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D32BC74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27790C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D322C20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D1320651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mengyan1223.wang header.i=@mengyan1223.wang header.b="E9qTiaTS"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="F9uV7Mji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfGJOos (ORCPT
+        id S1727774AbfGJOqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:44:48 -0400
-Received: from mengyan1223.wang ([89.208.246.23]:38848 "EHLO mengyan1223.wang"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbfGJOos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:44:48 -0400
-Received: from [IPv6:2408:8270:a58:d980:697b:cb16:ae5f:f5aa] (unknown [IPv6:2408:8270:a58:d980:697b:cb16:ae5f:f5aa])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: xry111@mengyan1223.wang)
-        by mengyan1223.wang (Postfix) with ESMTPSA id 4312965B50;
-        Wed, 10 Jul 2019 10:44:38 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mengyan1223.wang;
-        s=mail; t=1562769888;
-        bh=LQJx49Lk+JlaaB/PDCeOfvrpjy0Ym/c/NLkIXQM/GWI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=E9qTiaTSWnaQZ3HQWSZkMlqHuN5ZDk/8ztSuZ+iIYU8Fs6QiZl6Y4Hj6oyshxUlqY
-         47Lh9qvtD2HVsuEsowWuQXFJ5RgcfwOjETtbE0ssaS6/E7JxiMSNPi8/0ASNRrFTje
-         Ml5ZMTvwUMQJDDi0vAn/Ed1cZ6aZuocgbrOXBXVylNyUajLmoeKaqMeij7ypAipjWP
-         N5fPwXUjCCFU2akj4ag4migh5QpTaS5+dT5RzHHfEvLzfUbazXEEdVpU9BufE3VRJe
-         yIVHqxprfIsRLQOoRgokbWmTEjjkfBbYmOOddm2XlUR3G8dpPMaV9kNDLw2fc944kJ
-         OVYkK2NI1l1Cg==
-Message-ID: <00e7f454c2d531cdc6033cd6e3761e8a0d60c2e0.camel@mengyan1223.wang>
-Subject: Re: [GIT PULL] x86/topology changes for v5.3
-From:   Xi Ruoyao <xry111@mengyan1223.wang>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        xry111@mengyan1223.wang
-Date:   Wed, 10 Jul 2019 22:44:33 +0800
-In-Reply-To: <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
-References: <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
-         <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
-         <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
-         <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
-         <201907091727.91CC6C72D8@keescook>
-         <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
-         <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
-         <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
-         <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
-         <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
-         <20190710134433.GN3402@hirez.programming.kicks-ass.net>
-         <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 
+        Wed, 10 Jul 2019 10:46:38 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37622 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727671AbfGJOqi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 10:46:38 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d15so2077487qkl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 07:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZOo+HIvtnGeDjn4M9ja4kY1nWK9vaSMpBmDscZRAu/o=;
+        b=F9uV7MjikC39N7Z+mGrSWIh/WJjoQEa3TFGorbASmstt1fOczlcFWWfpxmOSVWfZ85
+         JD/XNAVlipIovCqNDZFwtuP91XvcG1HtnmePpr3s2PFcIfs+iJFuO384oIJDXARkfWgs
+         5Gs5ansx5gY9m1G5yUl14dSjku2aqKWfuLsQ1xCpKPXYhHz9s9u0MWfs0itlqK022TPz
+         X/zhUNL3Khr9V7qMBqwFR+XIr2X1/0jHM5u4YjKMmxNnbbVeVhFKjJeZYmcM7josFQ8L
+         Ys5wq33297sygc5sQYerkz4uAJ8k5rX5hwkwPQimxPEqvM0XHfGWqNzMtryvMXrZzTlg
+         6odw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZOo+HIvtnGeDjn4M9ja4kY1nWK9vaSMpBmDscZRAu/o=;
+        b=lbbzbJcV8Y1beVSJVIHN9MYoKMeFNVQE+Whe4RtLGd59Ei4g9CRP7HC4MghleFEvvA
+         41+onh6yqyt9gnwI9Ct8xoVhOmJ1/my4CoW9HnNEec4p1eem8+a13k7+SfuDvYjCFKsP
+         tHoXoReZnZdF1+21WNAV4d8YqcshSjQQgiO0PEJuHfgCUxeLZNySmnXhfzW+BTo8l2DG
+         ZaH3tnTDAbc04N6R7XvA4FwNOqmxnOn/SRB48NLsxYocB0EvLQ9lkbGXZJoKAILRz/2/
+         1+nvo3Q58abjLx+h3FMTstO78qcEuR3H/7ZccIv04ALLn62gZYk2wya+NPhvszQYUu3G
+         RPwg==
+X-Gm-Message-State: APjAAAVO1MQ1i0URnx9nqzRhosFVMnUObOAWGqFNQxuCzwA9GC7r/BAD
+        cgKZlvrTI+sbnsrXb7862k02+A==
+X-Google-Smtp-Source: APXvYqzgAsqcicTC3uYfs0bv1X70M1RUqm2tfrYF9UoRPj0OHibx5L7ZXAAsXar79xXLNpgRyLGW/Q==
+X-Received: by 2002:a05:620a:124f:: with SMTP id a15mr24276909qkl.173.1562769997487;
+        Wed, 10 Jul 2019 07:46:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id u126sm1100041qkf.132.2019.07.10.07.46.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jul 2019 07:46:37 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlDrg-0002WC-LU; Wed, 10 Jul 2019 11:46:36 -0300
+Date:   Wed, 10 Jul 2019 11:46:36 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: [PATCH -next] rdma/siw: Add missing dependencies on LIBCRC32C
+ and DMA_VIRT_OPS
+Message-ID: <20190710144636.GC4051@ziepe.ca>
+References: <20190710133930.26591-1-geert@linux-m68k.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710133930.26591-1-geert@linux-m68k.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-10 16:22 +0200, Jiri Kosina wrote:
-> On Wed, 10 Jul 2019, Peter Zijlstra wrote:
+On Wed, Jul 10, 2019 at 03:39:30PM +0200, Geert Uytterhoeven wrote:
+> If LIBCRC32C and DMA_VIRT_OPS are not enabled:
 > 
-> > If we mark the key as RO after init, and then try and modify the key to
-> > link module usage sites, things might go bang as described.
-> > 
-> > Thanks!
-> > 
-> > 
-> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> > index 27d7864e7252..5bf7a8354da2 100644
-> > --- a/arch/x86/kernel/cpu/common.c
-> > +++ b/arch/x86/kernel/cpu/common.c
-> > @@ -366,7 +366,7 @@ static __always_inline void setup_umip(struct
-> > cpuinfo_x86 *c)
-> >  	cr4_clear_bits(X86_CR4_UMIP);
-> >  }
-> >  
-> > -DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
-> > +DEFINE_STATIC_KEY_FALSE(cr_pinning);
+>     drivers/infiniband/sw/siw/siw_main.o: In function `siw_newlink':
+>     siw_main.c:(.text+0x35c): undefined reference to `dma_virt_ops'
+>     drivers/infiniband/sw/siw/siw_qp_rx.o: In function `siw_csum_update':
+>     siw_qp_rx.c:(.text+0x16): undefined reference to `crc32c'
 > 
-> Good catch, I guess that is going to fix it.
+> Fix the first issue by adding a select of DMA_VIRT_OPS.
+> Fix the second issue by replacing the unneeded dependency on
+> CRYPTO_CRC32 by a dependency on LIBCRC32C.
+> 
+> Reported-by: noreply@ellerman.id.au (first issue)
+> Fixes: c0cf5bdde46c664d ("rdma/siw: addition to kernel build environment")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>  drivers/infiniband/sw/siw/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/sw/siw/Kconfig b/drivers/infiniband/sw/siw/Kconfig
+> index 94f684174ce3556e..b622fc62f2cd6d46 100644
+> +++ b/drivers/infiniband/sw/siw/Kconfig
+> @@ -1,6 +1,7 @@
+>  config RDMA_SIW
+>  	tristate "Software RDMA over TCP/IP (iWARP) driver"
+> -	depends on INET && INFINIBAND && CRYPTO_CRC32
+> +	depends on INET && INFINIBAND && LIBCRC32C
 
-Yes it works.
+Is this the best practice? 
 
-> At the same time though, it sort of destroys the original intent of Kees' 
-> patch, right? The exploits will just have to call static_key_disable() 
-> prior to calling native_write_cr4() again, and the protection is gone.
+siw is using both the libcrc32c API and the
+'crypto_alloc_shash("crc32c", 0, 0);' version. Is it right to get that
+transitively through LIBCRC32C?
 
-I think I should do some study and try to understand the full story of Kees'
-change...
--- 
-Xi Ruoyao <xry111@mengyan1223.wang>
-School of Aerospace Science and Technology, Xidian University
-
+Jason
