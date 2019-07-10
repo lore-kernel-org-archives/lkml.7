@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D36C73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F77C73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A794520651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF5B20861
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfGJFEm (ORCPT
+        id S1726341AbfGJFEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:04:42 -0400
-Received: from smtprelay0106.hostedemail.com ([216.40.44.106]:43564 "EHLO
+        Wed, 10 Jul 2019 01:04:49 -0400
+Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:60978 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726234AbfGJFEk (ORCPT
+        by vger.kernel.org with ESMTP id S1726266AbfGJFEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:04:40 -0400
+        Wed, 10 Jul 2019 01:04:45 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 25A6A18224D98;
-        Wed, 10 Jul 2019 05:04:39 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8C625180A68C9;
+        Wed, 10 Jul 2019 05:04:44 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: low85_b4e0cac78b5d
-X-Filterd-Recvd-Size: 1713
+X-HE-Tag: field67_c1e6bf171f03
+X-Filterd-Recvd-Size: 1754
 Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
         (Authenticated sender: joe@perches.com)
         by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jul 2019 05:04:37 +0000 (UTC)
+        Wed, 10 Jul 2019 05:04:43 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/12] drm: aspeed_gfx: Fix misuse of GENMASK macro
-Date:   Tue,  9 Jul 2019 22:04:16 -0700
-Message-Id: <cddd7ad7e9f81dec1e86c106f04229d21fc21920.1562734889.git.joe@perches.com>
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 06/12] mmc: meson-mx-sdio: Fix misuse of GENMASK macro
+Date:   Tue,  9 Jul 2019 22:04:19 -0700
+Message-Id: <94dcbeb13b08a67ae9f404aa590c1c1459bc5287.1562734889.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <cover.1562734889.git.joe@perches.com>
 References: <cover.1562734889.git.joe@perches.com>
@@ -51,22 +51,22 @@ Arguments are supposed to be ordered high then low.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/gpu/drm/aspeed/aspeed_gfx.h | 2 +-
+ drivers/mmc/host/meson-mx-sdio.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/aspeed/aspeed_gfx.h b/drivers/gpu/drm/aspeed/aspeed_gfx.h
-index a10358bb61ec..095ea03e5833 100644
---- a/drivers/gpu/drm/aspeed/aspeed_gfx.h
-+++ b/drivers/gpu/drm/aspeed/aspeed_gfx.h
-@@ -74,7 +74,7 @@ int aspeed_gfx_create_output(struct drm_device *drm);
- /* CTRL2 */
- #define CRT_CTRL_DAC_EN			BIT(0)
- #define CRT_CTRL_VBLANK_LINE(x)		(((x) << 20) & CRT_CTRL_VBLANK_LINE_MASK)
--#define CRT_CTRL_VBLANK_LINE_MASK	GENMASK(20, 31)
-+#define CRT_CTRL_VBLANK_LINE_MASK	GENMASK(31, 20)
- 
- /* CRT_HORIZ0 */
- #define CRT_H_TOTAL(x)			(x)
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 2d736e416775..ba9a63db73da 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -73,7 +73,7 @@
+ 	#define MESON_MX_SDIO_IRQC_IF_CONFIG_MASK		GENMASK(7, 6)
+ 	#define MESON_MX_SDIO_IRQC_FORCE_DATA_CLK		BIT(8)
+ 	#define MESON_MX_SDIO_IRQC_FORCE_DATA_CMD		BIT(9)
+-	#define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK		GENMASK(10, 13)
++	#define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK		GENMASK(13, 10)
+ 	#define MESON_MX_SDIO_IRQC_SOFT_RESET			BIT(15)
+ 	#define MESON_MX_SDIO_IRQC_FORCE_HALT			BIT(30)
+ 	#define MESON_MX_SDIO_IRQC_HALT_HOLE			BIT(31)
 -- 
 2.15.0
 
