@@ -1,201 +1,152 @@
-Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B1CC73C66
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE14C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D373720844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA84A2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LafklzLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfGIXs2 (ORCPT
+        id S1726658AbfGJABo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 19:48:28 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:36398 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726133AbfGIXs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 19:48:28 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id E64D43DC978;
-        Wed, 10 Jul 2019 09:48:20 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hkzpI-0000zG-My; Wed, 10 Jul 2019 09:47:12 +1000
-Date:   Wed, 10 Jul 2019 09:47:12 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Boaz Harrosh <openosd@gmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking
-Message-ID: <20190709234712.GL7689@dread.disaster.area>
-References: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <20190705233157.GD7689@dread.disaster.area>
- <20190708133114.GC20507@quack2.suse.cz>
+        Tue, 9 Jul 2019 20:01:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:43261 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfGJABn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 20:01:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jzr24tKxz9sN4;
+        Wed, 10 Jul 2019 10:01:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562716900;
+        bh=ZWT4dSLXGeBs9XVigkI+30TBQ9J8kSZ60+J4UqtPvYM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LafklzLdksK/zVUdYrI/ey0rB/HWstyncJSsMtWq0eDwGu/awoMl+ujmWHD7c4DaB
+         YJ0E6aD4Ze7MsDDVdb8YGIKMnKFs9s6D+fJJxoRMVAVNmNLBnsC+vDk3hkPrJcsYtH
+         2jYoYNrr+0/xY8N8ORenC23+mytneUu6m5ru81PAxTO0g/4wKOxzFhEqnDHz9Y36Gg
+         s8T1W63kTEUAQQXDAKWnFc3op6KPsi4weshNR7W6WtHYMwVYxFnZK/5bmEgBRcnoy1
+         lTKUmHzIhqB5LpjynDDRCwxu3llfOiNbP7biNmOyCwIiC398/Mr372LjiojWqCseaP
+         DHlxys483Ll+A==
+Date:   Wed, 10 Jul 2019 10:01:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sage Weil <sage@newdream.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20190710100138.0aa36d47@canb.auug.org.au>
+In-Reply-To: <20190709165459.11b353d8@canb.auug.org.au>
+References: <20190709165459.11b353d8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708133114.GC20507@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=rxuHOKLteiQnnr429Q0A:9 a=0n0zNvapn8EemG9u:21
-        a=17OF_ookA9SLsmvY:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/K8zLqV=lrMVaNpLiLljZFRd"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 03:31:14PM +0200, Jan Kara wrote:
-> On Sat 06-07-19 09:31:57, Dave Chinner wrote:
-> > On Wed, Jul 03, 2019 at 03:04:45AM +0300, Boaz Harrosh wrote:
-> > > On 20/06/2019 01:37, Dave Chinner wrote:
-> > > <>
-> > > > 
-> > > > I'd prefer it doesn't get lifted to the VFS because I'm planning on
-> > > > getting rid of it in XFS with range locks. i.e. the XFS_MMAPLOCK is
-> > > > likely to go away in the near term because a range lock can be
-> > > > taken on either side of the mmap_sem in the page fault path.
-> > > > 
-> > > <>
-> > > Sir Dave
-> > > 
-> > > Sorry if this was answered before. I am please very curious. In the zufs
-> > > project I have an equivalent rw_MMAPLOCK that I _read_lock on page_faults.
-> > > (Read & writes all take read-locks ...)
-> > > The only reason I have it is because of lockdep actually.
-> > > 
-> > > Specifically for those xfstests that mmap a buffer then direct_IO in/out
-> > > of that buffer from/to another file in the same FS or the same file.
-> > > (For lockdep its the same case).
-> > 
-> > Which can deadlock if the same inode rwsem is taken on both sides of
-> > the mmap_sem, as lockdep tells you...
-> > 
-> > > I would be perfectly happy to recursively _read_lock both from the top
-> > > of the page_fault at the DIO path, and under in the page_fault. I'm
-> > > _read_locking after all. But lockdep is hard to convince. So I stole the
-> > > xfs idea of having an rw_MMAPLOCK. And grab yet another _write_lock at
-> > > truncate/punch/clone time when all mapping traversal needs to stop for
-> > > the destructive change to take place. (Allocations are done another way
-> > > and are race safe with traversal)
-> > > 
-> > > How do you intend to address this problem with range-locks? ie recursively
-> > > taking the same "lock"? because if not for the recursive-ity and lockdep I would
-> > > not need the extra lock-object per inode.
-> > 
-> > As long as the IO ranges to the same file *don't overlap*, it should
-> > be perfectly safe to take separate range locks (in read or write
-> > mode) on either side of the mmap_sem as non-overlapping range locks
-> > can be nested and will not self-deadlock.
-> 
-> I'd be really careful with nesting range locks. You can have nasty
-> situations like:
-> 
-> Thread 1		Thread 2
-> read_lock(0,1000)	
-> 			write_lock(500,1500) -> blocks due to read lock
-> read_lock(1001,1500) -> blocks due to write lock (or you have to break
->   fairness and then deal with starvation issues).
+--Sig_/K8zLqV=lrMVaNpLiLljZFRd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Tue, 9 Jul 2019 16:54:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
 >
-> So once you allow nesting of range locks, you have to very carefully define
-> what is and what is not allowed.
+> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+>=20
+> drivers/block/rbd.c: In function 'wake_lock_waiters':
+> drivers/block/rbd.c:3933:2: error: implicit declaration of function 'lock=
+dep_assert_held_exclusive'; did you mean 'lockdep_assert_held_write'? [-Wer=
+ror=3Dimplicit-function-declaration]
+>   lockdep_assert_held_exclusive(&rbd_dev->lock_rwsem);
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   lockdep_assert_held_write
+>=20
+> Caused by commit
+>=20
+>   9ffbe8ac05db ("locking/lockdep: Rename lockdep_assert_held_exclusive() =
+-> lockdep_assert_held_write()")
+>=20
+> interacting with commits
+>=20
+>   637cd060537d ("rbd: new exclusive lock wait/wake code")
+>   a2b1da09793d ("rbd: lock should be quiesced on reacquire")
+>=20
+> from the ceph tree.
+>=20
+> I have added the following merge fix patch for today.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 9 Jul 2019 16:46:12 +1000
+> Subject: [PATCH] rbd: fix up for lockdep_assert_held_exclusive rename
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/block/rbd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index 723c3ef4bd59..02216fbdb854 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -3930,7 +3930,7 @@ static void wake_lock_waiters(struct rbd_device *rb=
+d_dev, int result)
+>  	struct rbd_img_request *img_req;
+> =20
+>  	dout("%s rbd_dev %p result %d\n", __func__, rbd_dev, result);
+> -	lockdep_assert_held_exclusive(&rbd_dev->lock_rwsem);
+> +	lockdep_assert_held_write(&rbd_dev->lock_rwsem);
+> =20
+>  	cancel_delayed_work(&rbd_dev->lock_dwork);
+>  	if (!completion_done(&rbd_dev->acquire_wait)) {
+> @@ -4209,7 +4209,7 @@ static bool rbd_quiesce_lock(struct rbd_device *rbd=
+_dev)
+>  	bool need_wait;
+> =20
+>  	dout("%s rbd_dev %p\n", __func__, rbd_dev);
+> -	lockdep_assert_held_exclusive(&rbd_dev->lock_rwsem);
+> +	lockdep_assert_held_write(&rbd_dev->lock_rwsem);
+> =20
+>  	if (rbd_dev->lock_state !=3D RBD_LOCK_STATE_LOCKED)
+>  		return false;
 
-Yes. I do understand the problem with rwsem read nesting and how
-that can translate to reange locks.
-
-That's why my range locks don't even try to block on other pending
-waiters. The case where read nesting vs write might occur like above
-is something like copy_file_range() vs truncate, but otherwise for
-IO locks we simply don't have arbitrarily deep nesting of range
-locks.
-
-i.e. for your example my range lock would result in:
-
-Thread 1		Thread 2
-read_lock(0,1000)	
-			write_lock(500,1500)
-			<finds conflicting read lock>
-			<marks read lock as having a write waiter>
-			<parks on range lock wait list>
-<...>
-read_lock_nested(1001,1500)
-<no overlapping range in tree>
-<gets nested range lock>
-
-<....>
-read_unlock(1001,1500)	<stays blocked because nothing is waiting
-		         on (1001,1500) so no wakeup>
-<....>
-read_unlock(0,1000)
-<sees write waiter flag, runs wakeup>
-			<gets woken>
-			<retries write lock>
-			<write lock gained>
-
-IOWs, I'm not trying to complicate the range lock implementation
-with complex stuff like waiter fairness or anti-starvation semantics
-at this point in time. Waiters simply don't impact whether a new lock
-can be gained or not, and hence the limitations of rwsem semantics
-don't apply.
-
-If such functionality is necessary (and I suspect it will be to
-prevent AIO from delaying truncate and fallocate-like operations
-indefinitely) then I'll add a "barrier" lock type (e.g.
-range_lock_write_barrier()) that will block new range lock attempts
-across it's span.
-
-However, because this can cause deadlocks like the above, a barrier
-lock will not block new *_lock_nested() or *_trylock() calls, hence
-allowing runs of nested range locking to complete and drain without
-deadlocking on a conflicting barrier range. And that still can't be
-modelled by existing rwsem semantics....
-
-> That's why in my range lock implementation
-> ages back I've decided to treat range lock as a rwsem for deadlock
-> verification purposes.
-
-IMO, treating a range lock as a rwsem for deadlock purposes defeats
-the purpose of adding range locks in the first place. The
-concurrency models are completely different, and some of the
-limitations on rwsems are a result of implementation choices rather
-than limitations of a rwsem construct.
-
-In reality I couldn't care less about what lockdep can or can't
-verify. I've always said lockdep is a crutch for people who don't
-understand locks and the concurrency model of the code they
-maintain. That obviously extends to the fact that lockdep
-verification limitations should not limit what we allow new locking
-primitives to do.
-
+This fix now needs to be applied to the merge of the ceph tree.
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/K8zLqV=lrMVaNpLiLljZFRd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lKuIACgkQAVBC80lX
+0Gzkhwf9HBh6ZtEpp4PTwOrsoynTc3CYF5zxyUoT7jOwCjrWBNvxSwhzrM/fdbKs
+0YSAtiOQEWC7BJo1DpYgs0XQIig/LkJAoVFuOETE7AB14qTLaxjlvLnJ1dkhaM2l
+9sZmbsbuJgGlJV/MbxVgVlbh0hb4S/lg+DQqXndjgxgt5C0rA+K4FjCBx0mwMv99
+lmJIn+o1car8FcF+BXQKs2X+dzFByjhQCnrWzso+HvJnL09vLga6DYsrcsZUTeEm
+wQ2L6JzM0GvPjnuZHaf/nlLOE1FVv4tPnsvf5CmDBlDiZT10XiUEXUP85rMKvn6E
+B3VSAWgTYDkkkarDl7NhNf/NtDWy4A==
+=o5q5
+-----END PGP SIGNATURE-----
+
+--Sig_/K8zLqV=lrMVaNpLiLljZFRd--
