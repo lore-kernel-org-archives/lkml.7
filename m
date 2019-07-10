@@ -2,139 +2,164 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE8AC73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF589C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A192064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839FC2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=birdec.com header.i=@birdec.com header.b="WEi8z93d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfGJGjZ (ORCPT
+        id S1726692AbfGJGkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 02:39:25 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27331 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725844AbfGJGjY (ORCPT
+        Wed, 10 Jul 2019 02:40:08 -0400
+Received: from host.euro-space.net ([87.117.239.2]:56336 "EHLO
+        host.euro-space.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfGJGkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 02:39:24 -0400
-X-UUID: 0ed553817a1347c0a387db5d197cb9de-20190710
-X-UUID: 0ed553817a1347c0a387db5d197cb9de-20190710
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 686314786; Wed, 10 Jul 2019 14:39:17 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 10 Jul 2019 14:39:16 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 10 Jul 2019 14:39:16 +0800
-Message-ID: <1562740756.1879.1.camel@mtksdaap41>
-Subject: Re: [PATCH v10 03/12] dt-binding: gce: add binding for gce client
- reg property
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        CK HU <ck.hu@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>
-Date:   Wed, 10 Jul 2019 14:39:16 +0800
-In-Reply-To: <20190701074842.15401-4-bibby.hsieh@mediatek.com>
-References: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
-         <20190701074842.15401-4-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+        Wed, 10 Jul 2019 02:40:07 -0400
+X-Greylist: delayed 2969 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 02:40:05 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=birdec.com;
+         s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:MIME-Version
+        :Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VdUiBxCjMnnmnjRuqrh2wCzPM35P1D7GGN/3U9qGim4=; b=WEi8z93dlEvDji1OYcR9r4X+7l
+        x8qMDa/++VDfFFL3krpXjXvEmDLcDD2axsSVHU77qip5WiZmVe7mqUXQYDzRGI6zwpDvOQxdikdlE
+        uFmqY4KfKtUj6v5gLULr6CdWY4Hue0C5hKbjAv3g1s92MwZG56l/KJGQbplFLBniNRXV9vM80FwB9
+        FcvBt+GppAYBL7IOgvdN9AU8tiy7GEQs3oi3dZBJBISYA09CgHSh4Gt6Gm42gdoiXNaZK6kBbZS0g
+        li0FE2LqF1ZWT1klTvnJ2tiF6grxK+24OgvYbzvdsGxOIP09tMKWCFaNqZDcSYTGppL7msKeS8vg8
+        gktyp/IQ==;
+Received: from x4dbf9360.dyn.telefonica.de ([77.191.147.96]:58102 helo=gentoo0.localdomain)
+        by host.euro-space.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <kmarinushkin@birdec.com>)
+        id 1hl5Uw-0002Cb-DB; Wed, 10 Jul 2019 06:50:34 +0100
+From:   Kirill Marinushkin <kmarinushkin@birdec.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Kirill Marinushkin <kmarinushkin@birdec.com>
+Subject: [PATCH] ASoC: Relocate my e-mail to .com domain zone
+Date:   Wed, 10 Jul 2019 07:51:35 +0200
+Message-Id: <20190710055135.21377-1-kmarinushkin@birdec.com>
+X-Mailer: git-send-email 2.13.6
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - host.euro-space.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - birdec.com
+X-Get-Message-Sender-Via: host.euro-space.net: authenticated_id: kmarinushkin@birdec.com
+X-Authenticated-Sender: host.euro-space.net: kmarinushkin@birdec.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Rob,
+Signed-off-by: Kirill Marinushkin <kmarinushkin@birdec.com>
+---
+ MAINTAINERS                    | 2 +-
+ sound/soc/codecs/pcm3060-i2c.c | 4 ++--
+ sound/soc/codecs/pcm3060-spi.c | 4 ++--
+ sound/soc/codecs/pcm3060.c     | 4 ++--
+ sound/soc/codecs/pcm3060.h     | 2 +-
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
-Sorry to bother you, could you please review this patch when you are
-available? Thanks.
-
-
-On Mon, 2019-07-01 at 15:48 +0800, Bibby Hsieh wrote:
-> cmdq driver provide a function that get the relationship
-> of sub system number from device node for client.
-> add specification for #subsys-cells, mediatek,gce-client-reg.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  .../devicetree/bindings/mailbox/mtk-gce.txt    | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 1f7f8f2a3f49..d48282d6b02d 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -21,12 +21,21 @@ Required properties:
->  	priority: Priority of GCE thread.
->  	atomic_exec: GCE processing continuous packets of commands in atomic
->  		way.
-> +- #subsys-cells: Should be 3.
-> +	<&phandle subsys_number start_offset size>
-> +	phandle: Label name of a gce node.
-> +	subsys_number: specify the sub-system id which is corresponding
-> +		       to the register address.
-> +	start_offset: the start offset of register address that GCE can access.
-> +	size: the total size of register address that GCE can access.
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
->    property and list of phandle, mailbox specifiers.
-> -- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
-> -  to the register address.
-> +Optional properties for a client device:
-> +- mediatek,gce-client-reg: Specify the sub-system id which is corresponding
-> +  to the register address, it should have this property and list of phandle,
-> +  sub-system specifiers.
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
->  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> @@ -40,6 +49,7 @@ Example:
->  		clocks = <&infracfg CLK_INFRA_GCE>;
->  		clock-names = "gce";
->  		#mbox-cells = <3>;
-> +		#subsys-cells = <3>;
->  	};
->  
->  Example for a client device:
-> @@ -48,9 +58,9 @@ Example for a client device:
->  		compatible = "mediatek,mt8173-mmsys";
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
->  		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
->  				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> -
-> +		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
-> +					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
->  		...
->  	};
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 558acf24ea1e..9cdc10e80d78 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15829,7 +15829,7 @@ S:	Maintained
+ F:	drivers/net/ethernet/ti/netcp*
+ 
+ TI PCM3060 ASoC CODEC DRIVER
+-M:	Kirill Marinushkin <kmarinushkin@birdec.tech>
++M:	Kirill Marinushkin <kmarinushkin@birdec.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/sound/pcm3060.txt
+diff --git a/sound/soc/codecs/pcm3060-i2c.c b/sound/soc/codecs/pcm3060-i2c.c
+index cdc8314882bc..abcdeb922201 100644
+--- a/sound/soc/codecs/pcm3060-i2c.c
++++ b/sound/soc/codecs/pcm3060-i2c.c
+@@ -2,7 +2,7 @@
+ //
+ // PCM3060 I2C driver
+ //
+-// Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.tech>
++// Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.com>
+ 
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+@@ -56,5 +56,5 @@ static struct i2c_driver pcm3060_i2c_driver = {
+ module_i2c_driver(pcm3060_i2c_driver);
+ 
+ MODULE_DESCRIPTION("PCM3060 I2C driver");
+-MODULE_AUTHOR("Kirill Marinushkin <kmarinushkin@birdec.tech>");
++MODULE_AUTHOR("Kirill Marinushkin <kmarinushkin@birdec.com>");
+ MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/pcm3060-spi.c b/sound/soc/codecs/pcm3060-spi.c
+index f6f19fa80932..3b79734b832b 100644
+--- a/sound/soc/codecs/pcm3060-spi.c
++++ b/sound/soc/codecs/pcm3060-spi.c
+@@ -2,7 +2,7 @@
+ //
+ // PCM3060 SPI driver
+ //
+-// Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.tech>
++// Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.com>
+ 
+ #include <linux/module.h>
+ #include <linux/spi/spi.h>
+@@ -55,5 +55,5 @@ static struct spi_driver pcm3060_spi_driver = {
+ module_spi_driver(pcm3060_spi_driver);
+ 
+ MODULE_DESCRIPTION("PCM3060 SPI driver");
+-MODULE_AUTHOR("Kirill Marinushkin <kmarinushkin@birdec.tech>");
++MODULE_AUTHOR("Kirill Marinushkin <kmarinushkin@birdec.com>");
+ MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/pcm3060.c b/sound/soc/codecs/pcm3060.c
+index 32b26f1c2282..b2358069cf9b 100644
+--- a/sound/soc/codecs/pcm3060.c
++++ b/sound/soc/codecs/pcm3060.c
+@@ -2,7 +2,7 @@
+ //
+ // PCM3060 codec driver
+ //
+-// Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.tech>
++// Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.com>
+ 
+ #include <linux/module.h>
+ #include <sound/pcm_params.h>
+@@ -342,5 +342,5 @@ int pcm3060_probe(struct device *dev)
+ EXPORT_SYMBOL(pcm3060_probe);
+ 
+ MODULE_DESCRIPTION("PCM3060 codec driver");
+-MODULE_AUTHOR("Kirill Marinushkin <kmarinushkin@birdec.tech>");
++MODULE_AUTHOR("Kirill Marinushkin <kmarinushkin@birdec.com>");
+ MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/pcm3060.h b/sound/soc/codecs/pcm3060.h
+index 75931c9a9d85..18d51e5dac2c 100644
+--- a/sound/soc/codecs/pcm3060.h
++++ b/sound/soc/codecs/pcm3060.h
+@@ -2,7 +2,7 @@
+ /*
+  * PCM3060 codec driver
+  *
+- * Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.tech>
++ * Copyright (C) 2018 Kirill Marinushkin <kmarinushkin@birdec.com>
+  */
+ 
+ #ifndef _SND_SOC_PCM3060_H
 -- 
-Bibby
+2.13.6
 
