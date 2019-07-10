@@ -2,127 +2,159 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A13AC74A33
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B98CC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202F72087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B112087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZThtyI8C"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IDIaT7hw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfGJROS (ORCPT
+        id S1727831AbfGJROa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:14:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50192 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfGJROR (ORCPT
+        Wed, 10 Jul 2019 13:14:30 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13796 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbfGJRO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:14:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so3089012wml.0;
-        Wed, 10 Jul 2019 10:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/REE+n6sa4ljuFXYbZ1ldo6oCamSgjSpDC/XEdgtKL0=;
-        b=ZThtyI8C23gqa+FFWJSWAFiSs3t84AkKmwhInxRS6XnP3MRA6LtdwA1sCJhDFhf8lw
-         7MHHB5C027WnSeubZvQgnP73c44gDIQAMNMfsQVIax2GgwH1gde62/F1O9aeyhBynyDU
-         rGZjDauOKVlzsaJA+kekmN+Fpegbq/OMelBOo3yHxeSo3Xcmg7egnQHn3GHafZ1GfrmO
-         NklZFv+JSqjHtjLUrlgb91sow7uc0TbJw4V6IKyNbv99oglLsRFfLbsomO2xQMIWx5kx
-         RO3B/Tdv35bohJIBXzh/3AKmXYIfbgoYfYtqglxLIjEqJ69gw5kcYxDIWHGYJJxwRxss
-         3qbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/REE+n6sa4ljuFXYbZ1ldo6oCamSgjSpDC/XEdgtKL0=;
-        b=c/f2TrzWkyPnYRLR1xq1+TZh3d9wdfPdQCNcs4ldPb7hVd3WQj3Z3v9BR83TAqjWBy
-         rmN9eYGfJCi33v+zssLblUJsmTL4uO4Iya01UUJiunWR+s9S+1Gcdyy1J6G6K2Eco0Sx
-         dOtAZi6zXhTfJ7fJ5wQY/8yyCmFUKSQBGTnQNBouC+b/AJqk/vh3jeycvX9y5gzz31hr
-         m413ncBC0iCW3b8YAYtg4dHqGNJQlIZGsx2Y+KnVgLCmvps0Jfv5Pcd9ijzg//MQa9t3
-         GF/A173XtXrrWdQhBQ+1yz7+gadBAq200gM5S9+nPU2BuM1W/snLF2VlQ//Oj5pjvRiJ
-         8fEQ==
-X-Gm-Message-State: APjAAAWHRAAmIGLUbJR+/+hUSCiDKKI4vWF5HO6/iUZCseQ3nC+OeUpF
-        3I6bB2YCr83Ff/cVhYBEzHk=
-X-Google-Smtp-Source: APXvYqzMY7xSsdA1gkDvtyp28Ctkl1M8qO9UfJd/E5dxUId8rDi+Y8m97M2ONoiqOAbmrFv9z2ueYw==
-X-Received: by 2002:a1c:9813:: with SMTP id a19mr6097592wme.11.1562778855617;
-        Wed, 10 Jul 2019 10:14:15 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id i18sm2968727wrp.91.2019.07.10.10.14.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 10:14:14 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 10:14:13 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] [net-next] net/mlx5e: avoid uninitialized variable use
-Message-ID: <20190710171413.GB80585@archlinux-threadripper>
-References: <20190710130638.1846846-1-arnd@arndb.de>
+        Wed, 10 Jul 2019 13:14:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d261cf30000>; Wed, 10 Jul 2019 10:14:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 10 Jul 2019 10:14:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 10 Jul 2019 10:14:28 -0700
+Received: from [10.25.74.6] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 17:14:23 +0000
+Subject: Re: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-9-vidyas@nvidia.com>
+ <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <95103fa2-9181-247e-3fd5-1b0bd95e8bb9@nvidia.com>
+Date:   Wed, 10 Jul 2019 22:44:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710130638.1846846-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562778867; bh=CCe2cpbcTfj8PcVYEgcYHWQ29tSTq4v82/vz3Ha3bvM=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IDIaT7hwrXY0e2aFy5qoHGyfhPqHrmC06v3yAqQpH3QWKIbHjK1TiJmxlfbYnvK+S
+         11zGdae9e8G8gihUUhW8kewo+e9ilAfgeFBoZ6Fw8gPOKv6e/txU0NMcDqiEtaRKEK
+         nfjc3NjcplCTdBkmDWuQKtPF8gvWVcHdOLmd8B+xEWGloRMLXsSJ9LNmF/xNat9Ffw
+         ToQVm9aCL62P0BKMp1MbCu4L/p/+IkCC1wR+OOHO27FYKLmI7dEYTALN03dkFL6fyq
+         NOwTeOBDzk3shnZQTTwy/+4zQYXF54Qk5sh0dbt5bJhpdi3fB0jhyWPLT40R75GATG
+         tJwWeTIf914CQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 03:06:25PM +0200, Arnd Bergmann wrote:
-> clang points to a variable being used in an unexpected
-> code path:
+On 7/10/2019 8:58 PM, Lorenzo Pieralisi wrote:
+> On Wed, Jul 10, 2019 at 11:52:08AM +0530, Vidya Sagar wrote:
+>> Some host controllers need to know the existence of clkreq signal routing to
+>> downstream devices to be able to advertise low power features like ASPM L1
+>> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
+>> states might lead to downstream devices falling off the bus. Hence a new device
 > 
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:251:2: warning: variable 'rec_seq_sz' is used uninitialized whenever switch default is taken [-Wsometimes-uninitialized]
->         default:
->         ^~~~~~~
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:255:46: note: uninitialized use occurs here
->         skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
->                                                     ^~~~~~~~~~
-> 
-> From looking at the function logic, it seems that there is no
-> sensible way to continue here, so just return early and hope
-> for the best.
-> 
-> Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-> index 3f5f4317a22b..5c08891806f0 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-> @@ -250,6 +250,7 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
->  	}
->  	default:
->  		WARN_ON(1);
-> +		return;
->  	}
->  
->  	skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
-> -- 
-> 2.20.0
-> 
+> You mean "being disconnected from the bus" right ? I will update it.
+Yes. I meant the same.
 
-Looks like my identical patch got picked up in net-next:
+> 
+> Lorenzo
+> 
+>> tree property 'supports-clkreq' is added to make such host controllers
+>> aware of clkreq signal routing to downstream devices.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> V13:
+>> * None
+>>
+>> V12:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> V11:
+>> * None
+>>
+>> V10:
+>> * None
+>>
+>> V9:
+>> * None
+>>
+>> V8:
+>> * None
+>>
+>> V7:
+>> * None
+>>
+>> V6:
+>> * s/Documentation\/devicetree/dt-bindings/ in the subject
+>>
+>> V5:
+>> * None
+>>
+>> V4:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> V3:
+>> * None
+>>
+>> V2:
+>> * This is a new patch in v2 series
+>>
+>>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> index 2a5d91024059..29bcbd88f457 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> @@ -27,6 +27,11 @@ driver implementation may support the following properties:
+>>   - reset-gpios:
+>>      If present this property specifies PERST# GPIO. Host drivers can parse the
+>>      GPIO and apply fundamental reset to endpoints.
+>> +- supports-clkreq:
+>> +   If present this property specifies that CLKREQ signal routing exists from
+>> +   root port to downstream device and host bridge drivers can do programming
+>> +   which depends on CLKREQ signal existence. For example, programming root port
+>> +   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
+>>   
+>>   PCI-PCI Bridge properties
+>>   -------------------------
+>> -- 
+>> 2.17.1
+>>
 
-https://git.kernel.org/davem/net-next/c/1ff2f0fa450ea4e4f87793d9ed513098ec6e12be
-
-Good to know the fix was the same.
-
-Cheers,
-Nathan
