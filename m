@@ -2,106 +2,104 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6A4C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452D8C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A91220651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:31:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcSDpgWZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1F79720651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfGJCbG (ORCPT
+        id S1726951AbfGJCbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 22:31:06 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40502 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfGJCbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 22:31:05 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so414012pgj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 19:31:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=4cRP2WCZtummGCJmZjETlwBuipDUxE57gp0VCpL4ho0=;
-        b=TcSDpgWZpw8sLhLS8hOEKXei4aNVrcM8KH61CL66GmWu2wgPFvVSi1uI0KpG/X5wx7
-         U3/NtP/DhFikSl/ERcT7WzTpI5aoHCqbd5myNR8Lqz5jvDq4I3tPLttR77m+WWBI53+R
-         8yIev1fHE3BiekEOcKVZVG0TKmytVuJFlSoSFRh/HvdVgEHk3NCAuIxVczM6S0shEyQ7
-         4aZlPQDVNc6BSxjU1WKFcr54DcTQIU13U03lCUhpxuAkHl18SC1YRIcwceeVqWwyAJ+4
-         P/tIyqBMyaX4otCiZMtZiPFWxHTr93pRnBMiin2SlBQeTPbbVs2efCYCtLRWHWjR8Dry
-         hoZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=4cRP2WCZtummGCJmZjETlwBuipDUxE57gp0VCpL4ho0=;
-        b=D0fIuFQPVp7Fjjj7VLMSp+7cHUnBQdKpxdBglcWwHuX0UKBS2rdJUIQCCVIxxcPktE
-         ZiFbaooe71Zjtx9GaOu/XMRahaemkiNNf7cheQEouMuuq3HwnCv3ahUKxszZzZFkiplQ
-         kIyN2UFa+g2oib1grWjDUnWAK+IkkfZ8c05oVG6XRTG5nUHKgxmUwDWk/sjRao0PvV9p
-         5H/N1toJfTzBkOOzz2vyblmjmYJS1/cRWukHHI11olQM6UUYUVHI5dDN9lRHhGjgElzc
-         WEoFG1VZ1ukOa2iaLT+kIfQCqovY0hu7gAtRkYkDiK1ZB09D0YTCi1Xy8jG8V/x4FKuO
-         XLPQ==
-X-Gm-Message-State: APjAAAVGbDAQLl8+mP9qy1LZ4VN6/Bl9IqLndNsN73k5QxuhRNGW0uQT
-        YzydFYz0J0I8NpXJREdRntM=
-X-Google-Smtp-Source: APXvYqzY/mS53Xz6A6fiZt/w7HVVhNTxk8ojhH/ywhjWnS0wRHa/saBxl3uWe++xDS6GzuH2JUorYg==
-X-Received: by 2002:a17:90a:8c18:: with SMTP id a24mr3622949pjo.111.1562725864971;
-        Tue, 09 Jul 2019 19:31:04 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id r7sm387790pfl.134.2019.07.09.19.31.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 19:31:04 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 08:00:59 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sound: pci: lx6464es: Remove unneeded variable err
-Message-ID: <20190710023059.GA14204@hari-Inspiron-1545>
+        Tue, 9 Jul 2019 22:31:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55040 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfGJCbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 22:31:36 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4796E5AFE9;
+        Wed, 10 Jul 2019 02:31:34 +0000 (UTC)
+Received: from treble (ovpn-112-43.rdu2.redhat.com [10.10.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A90BE5F9D8;
+        Wed, 10 Jul 2019 02:31:25 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 21:31:23 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org,
+        sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
+        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
+        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
+        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Message-ID: <20190710023123.ifnt5osimvzoe5hf@treble>
+References: <20190709063023.251446-1-brendanhiggins@google.com>
+ <20190709063023.251446-9-brendanhiggins@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190709063023.251446-9-brendanhiggins@google.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 10 Jul 2019 02:31:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below issue reported by coccicheck
-sound/pci/lx6464es/lx6464es.c:256:5-8: Unneeded variable: "err". Return
-"0" on line 258
+On Mon, Jul 08, 2019 at 11:30:13PM -0700, Brendan Higgins wrote:
+> Fix the following warning seen on GCC 7.3:
+>   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+> 
+> kunit_try_catch_throw is a function added in the following patch in this
+> series; it allows KUnit, a unit testing framework for the kernel, to
+> bail out of a broken test. As a consequence, it is a new __noreturn
+> function that objtool thinks is broken (as seen above). So fix this
+> warning by adding kunit_try_catch_throw to objtool's noreturn list.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> ---
+>  tools/objtool/check.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 172f991957269..98db5fe85c797 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -134,6 +134,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+>  		"usercopy_abort",
+>  		"machine_real_restart",
+>  		"rewind_stack_do_exit",
+> +		"kunit_try_catch_throw",
+>  	};
+>  
+>  	if (func->bind == STB_WEAK)
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
 
-We cannot change return value as its registered with snd_pcm_ops->close
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- sound/pci/lx6464es/lx6464es.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/sound/pci/lx6464es/lx6464es.c b/sound/pci/lx6464es/lx6464es.c
-index 1771a6d..583ca73 100644
---- a/sound/pci/lx6464es/lx6464es.c
-+++ b/sound/pci/lx6464es/lx6464es.c
-@@ -253,9 +253,8 @@ static int lx_pcm_open(struct snd_pcm_substream *substream)
- 
- static int lx_pcm_close(struct snd_pcm_substream *substream)
- {
--	int err = 0;
- 	dev_dbg(substream->pcm->card->dev, "->lx_pcm_close\n");
--	return err;
-+	return 0;
- }
- 
- static snd_pcm_uframes_t lx_pcm_stream_pointer(struct snd_pcm_substream
 -- 
-2.7.4
-
+Josh
