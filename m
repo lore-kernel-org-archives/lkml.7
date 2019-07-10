@@ -2,90 +2,196 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E447C73C73
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27168C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6655A20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:57:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zc9YnkmE"
+	by mail.kernel.org (Postfix) with ESMTP id E30EF2083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562738323;
+	bh=kkYg0gO8+9adIERzkGaCgOmbLYhWyJxWi0YOpXZQTeI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=X2R7V1bFPXmua4CEnsdEjCz7ydnxGluuCvk+TQykSu432n/TYoSJYtALEbgi77IEq
+	 QyrAXt3PQwYdQlEzQJmW2UTOMDG/0hTEp7bDiz4UZjK5X/g2QqtyFAH/6d5Axc1GeE
+	 elsBQOadrHGp+3KM+2MF57el7VYH7PXBu4z4mwOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfGJF5R (ORCPT
+        id S1726896AbfGJF6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:57:17 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35130 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfGJF5Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:57:16 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w20so816075edd.2;
-        Tue, 09 Jul 2019 22:57:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gJAx2qQTU93m+bCh71C22HskJxiWkG6DmgTcMb27tPM=;
-        b=Zc9YnkmEMq3c54zuojXF8A546raU1kiI5/Y9LDUZmrLw/kY7ScY9kaqFx1tfhkUubE
-         C1ECA9L9ZptcBpmXNg+5IWtRNBDi9PIjxrf1LG4Z14MkcMZcJr1XYqgRmVRAIZq3BDks
-         56sMW8abqRu1E+hOo90chE1hxY34HEy7d6IBXYsliK2n6kUVc0SK4nSv7Q0Rswl03WEc
-         fUTUNt1brqmS2w9ix6eD/ytHhE2/kbeEAsvfbzQ/5XiRwJJVrMj74rwAD+zCgu88QNN6
-         jNzuVN5lf7q7Om1JFh12rbS1apM/g7lcBrGd74HX9P9igE49SPYBqwizmX6BfDdBHE4f
-         1KkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gJAx2qQTU93m+bCh71C22HskJxiWkG6DmgTcMb27tPM=;
-        b=MQPtz+KFywpzwi7NY+sttMkNo6mxcKHalD/PGDuQJZCEDCnyM3YwvJuX+Lyeda++II
-         qZfNHInsbuPtI5O+yLioorBdSTZDqJBQS0BgebrBvLYHCq4jOrrGTvjxIFkJamhzHl5y
-         RNWU23ac8mwYa8ECsAPNeunjv6glIcelDZiw46vk2OT51OKZT5hm5aObwJbQaN478AjZ
-         Rl2k1s2aHtlFPmM4dzqtS5PwYW5/qx0i+adFOMv2Hvq9drFWddahw4/lcw8nKRS4+7WX
-         5IoSxpovEWFkhMuTzR6FW3gw2pxk78geX6kdUrefdP3JeBZcGjvzyBRvFllDN+oZVVc4
-         +fFw==
-X-Gm-Message-State: APjAAAV/nybX2OvpmJF0NH5MOp3K3+Sj0EhzoG/2K+GjCVZ6F0hm9T3S
-        ZWOoNZH0VIbcmcsBP5SV/whq2NH1jZsofA==
-X-Google-Smtp-Source: APXvYqw8Cpc8UEm2hUL901ll/sUhvLcWmh051Kcc1OYlue0B7D5yMOFjcx94Sy69k5uU/qfayrrBYw==
-X-Received: by 2002:a17:906:84f:: with SMTP id f15mr8820492ejd.22.1562738234262;
-        Tue, 09 Jul 2019 22:57:14 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id k25sm142727ejp.65.2019.07.09.22.57.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 22:57:13 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 22:57:11 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     saeedm@mellanox.com, leon@kernel.org, borisp@mellanox.com,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ndesaulniers@google.com
-Subject: Re: [PATCH v2] net/mlx5e: Refactor switch statements to avoid using
- uninitialized variables
-Message-ID: <20190710055711.GA52052@archlinux-epyc>
-References: <20190708231154.89969-1-natechancellor@gmail.com>
- <20190710044748.3924-1-natechancellor@gmail.com>
- <20190709.223657.1108624224137142530.davem@davemloft.net>
+        Wed, 10 Jul 2019 01:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbfGJF6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:58:41 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D549F20838;
+        Wed, 10 Jul 2019 05:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562738320;
+        bh=kkYg0gO8+9adIERzkGaCgOmbLYhWyJxWi0YOpXZQTeI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VzxOrenO8ceaoxr7j9lXczeM5fSvNEREEN9TQiou/7ma/l6J/SZIHnNHYr4hnIF+q
+         lCIZDArVzHAradd4eHG2CCtuoQXacwMCHEFN49fYDnAjqqXEI8lnd26dmvFh+Ty5sR
+         DyuriaxjZ8ZGaFU+R9zUiutPqJgxVXQMLF4s8bzs=
+Date:   Tue, 9 Jul 2019 22:58:38 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>
+Cc:     syzkaller-bugs@googlegroups.com
+Subject: Reminder: 5 open syzbot bugs in lockdep subsystem
+Message-ID: <20190710055838.GC2152@sol.localdomain>
+Mail-Followup-To: linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190709.223657.1108624224137142530.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:36:57PM -0700, David Miller wrote:
-> 
-> I applied your simpler addition of the return statement so that I could
-> get the net-next pull request out tonight, just FYI...
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-Thanks for the heads up, I'll spin up a v3 just focusing on the
-refactoring.
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 5 of them as possibly being bugs in the lockdep subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-Cheers,
-Nathan
+Of these 5 bugs, 3 were seen in mainline in the last week.
+
+Of these 5 bugs, 1 was bisected to a commit from the following person:
+
+	Bart Van Assche <bvanassche@acm.org>
+
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
+
+If you believe I misattributed a bug to the lockdep subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+Last occurred:      0 days ago
+Reported:           102 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=55fb46b50c9b08dfe294667f184db5840f9cdecc
+Original thread:    https://lkml.kernel.org/lkml/0000000000005ff8b20585395280@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+	Author: Bart Van Assche <bvanassche@acm.org>
+	Date:   Thu Feb 14 23:00:54 2019 +0000
+
+	  kernel/workqueue: Use dynamic lockdep keys for workqueues
+
+The original thread for this bug received 2 replies; the last was 0 hours ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 0 hours ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/0000000000005ff8b20585395280@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+Last occurred:      0 days ago
+Reported:           125 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=381cb436fe60dc03d7fd2a092b46d7f09542a72a
+Original thread:    https://lkml.kernel.org/lkml/000000000000b7fd51058370d0d9@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 1 reply, 89 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b7fd51058370d0d9@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: MAX_LOCKDEP_CHAINS too low!
+Last occurred:      5 days ago
+Reported:           284 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=bf037f4725d40a8d350b2b1b3b3e0947c6efae85
+Original thread:    https://lkml.kernel.org/lkml/0000000000007523a60576e80a47@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 3 replies; the last was 284 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007523a60576e80a47@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: MAX_LOCK_DEPTH too low! (2)
+Last occurred:      362 days ago
+Reported:           392 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=e4feb2f88affd6242e3153d5c14ebb8569b499b8
+Original thread:    https://lkml.kernel.org/lkml/000000000000798298056e76cbbb@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+802a5abb8abae86eb6de@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000798298056e76cbbb@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: MAX_LOCKDEP_ENTRIES too low!
+Last occurred:      23 days ago
+Reported:           22 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
+Original thread:    https://lkml.kernel.org/lkml/000000000000ec7273058b877e1f@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ec7273058b877e1f@google.com
+
