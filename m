@@ -2,127 +2,127 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00446C74A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A13AC74A33
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27A820844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202F72087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZThtyI8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfGJRMe (ORCPT
+        id S1727473AbfGJROS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:12:34 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26586 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfGJRMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:12:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 10:12:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,475,1557212400"; 
-   d="scan'208";a="249532861"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga001.jf.intel.com with SMTP; 10 Jul 2019 10:12:31 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 10 Jul 2019 20:12:30 +0300
-From:   Ville Syrjala <ville.syrjala@linux.intel.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH v2] drm/i915: Copy name string into ring buffer for intel_update/disable_plane tracepoints
-Date:   Wed, 10 Jul 2019 20:12:30 +0300
-Message-Id: <20190710171230.7471-1-ville.syrjala@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190710120110.17394e73@gandalf.local.home>
-References: <20190710120110.17394e73@gandalf.local.home>
+        Wed, 10 Jul 2019 13:14:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50192 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfGJROR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:14:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so3089012wml.0;
+        Wed, 10 Jul 2019 10:14:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/REE+n6sa4ljuFXYbZ1ldo6oCamSgjSpDC/XEdgtKL0=;
+        b=ZThtyI8C23gqa+FFWJSWAFiSs3t84AkKmwhInxRS6XnP3MRA6LtdwA1sCJhDFhf8lw
+         7MHHB5C027WnSeubZvQgnP73c44gDIQAMNMfsQVIax2GgwH1gde62/F1O9aeyhBynyDU
+         rGZjDauOKVlzsaJA+kekmN+Fpegbq/OMelBOo3yHxeSo3Xcmg7egnQHn3GHafZ1GfrmO
+         NklZFv+JSqjHtjLUrlgb91sow7uc0TbJw4V6IKyNbv99oglLsRFfLbsomO2xQMIWx5kx
+         RO3B/Tdv35bohJIBXzh/3AKmXYIfbgoYfYtqglxLIjEqJ69gw5kcYxDIWHGYJJxwRxss
+         3qbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/REE+n6sa4ljuFXYbZ1ldo6oCamSgjSpDC/XEdgtKL0=;
+        b=c/f2TrzWkyPnYRLR1xq1+TZh3d9wdfPdQCNcs4ldPb7hVd3WQj3Z3v9BR83TAqjWBy
+         rmN9eYGfJCi33v+zssLblUJsmTL4uO4Iya01UUJiunWR+s9S+1Gcdyy1J6G6K2Eco0Sx
+         dOtAZi6zXhTfJ7fJ5wQY/8yyCmFUKSQBGTnQNBouC+b/AJqk/vh3jeycvX9y5gzz31hr
+         m413ncBC0iCW3b8YAYtg4dHqGNJQlIZGsx2Y+KnVgLCmvps0Jfv5Pcd9ijzg//MQa9t3
+         GF/A173XtXrrWdQhBQ+1yz7+gadBAq200gM5S9+nPU2BuM1W/snLF2VlQ//Oj5pjvRiJ
+         8fEQ==
+X-Gm-Message-State: APjAAAWHRAAmIGLUbJR+/+hUSCiDKKI4vWF5HO6/iUZCseQ3nC+OeUpF
+        3I6bB2YCr83Ff/cVhYBEzHk=
+X-Google-Smtp-Source: APXvYqzMY7xSsdA1gkDvtyp28Ctkl1M8qO9UfJd/E5dxUId8rDi+Y8m97M2ONoiqOAbmrFv9z2ueYw==
+X-Received: by 2002:a1c:9813:: with SMTP id a19mr6097592wme.11.1562778855617;
+        Wed, 10 Jul 2019 10:14:15 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id i18sm2968727wrp.91.2019.07.10.10.14.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 10:14:14 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 10:14:13 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] [net-next] net/mlx5e: avoid uninitialized variable use
+Message-ID: <20190710171413.GB80585@archlinux-threadripper>
+References: <20190710130638.1846846-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710130638.1846846-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Wed, Jul 10, 2019 at 03:06:25PM +0200, Arnd Bergmann wrote:
+> clang points to a variable being used in an unexpected
+> code path:
+> 
+> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:251:2: warning: variable 'rec_seq_sz' is used uninitialized whenever switch default is taken [-Wsometimes-uninitialized]
+>         default:
+>         ^~~~~~~
+> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:255:46: note: uninitialized use occurs here
+>         skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
+>                                                     ^~~~~~~~~~
+> 
+> From looking at the function logic, it seems that there is no
+> sensible way to continue here, so just return early and hope
+> for the best.
+> 
+> Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+> index 3f5f4317a22b..5c08891806f0 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+> @@ -250,6 +250,7 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
+>  	}
+>  	default:
+>  		WARN_ON(1);
+> +		return;
+>  	}
+>  
+>  	skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
+> -- 
+> 2.20.0
+> 
 
-Currently the intel_update_plane and intel_disable_plane tracepoints record
-the address of plane->name in the ring buffer, and then when reading the
-ring buffer uses %s to get the name. The issue with this, is that those two
-events can be minutes, hours or even days apart. It is very dangerous to
-dereference a string pointer without knowing if it still exists or not.
+Looks like my identical patch got picked up in net-next:
 
-The proper way to handle this is to use the __string() macro in the
-tracepoint which will save the string into the ring buffer at the time of
-recording. Then there's no worries if the original string still exists in
-memory when the ring buffer is read.
+https://git.kernel.org/davem/net-next/c/1ff2f0fa450ea4e4f87793d9ed513098ec6e12be
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-[vsyrjala: Rebase on top of drm-tip]
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
----
- drivers/gpu/drm/i915/i915_trace.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Good to know the fix was the same.
 
-diff --git a/drivers/gpu/drm/i915/i915_trace.h b/drivers/gpu/drm/i915/i915_trace.h
-index cce426b23a24..da18b8d6b80c 100644
---- a/drivers/gpu/drm/i915/i915_trace.h
-+++ b/drivers/gpu/drm/i915/i915_trace.h
-@@ -293,16 +293,16 @@ TRACE_EVENT(intel_update_plane,
- 
- 	    TP_STRUCT__entry(
- 			     __field(enum pipe, pipe)
--			     __field(const char *, name)
- 			     __field(u32, frame)
- 			     __field(u32, scanline)
- 			     __array(int, src, 4)
- 			     __array(int, dst, 4)
-+			     __string(name, plane->name)
- 			     ),
- 
- 	    TP_fast_assign(
-+			   __assign_str(name, plane->name);
- 			   __entry->pipe = crtc->pipe;
--			   __entry->name = plane->name;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
- 			   memcpy(__entry->src, &plane->state->src, sizeof(__entry->src));
-@@ -310,7 +310,7 @@ TRACE_EVENT(intel_update_plane,
- 			   ),
- 
- 	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u, " DRM_RECT_FP_FMT " -> " DRM_RECT_FMT,
--		      pipe_name(__entry->pipe), __entry->name,
-+		      pipe_name(__entry->pipe), __get_str(name),
- 		      __entry->frame, __entry->scanline,
- 		      DRM_RECT_FP_ARG((const struct drm_rect *)__entry->src),
- 		      DRM_RECT_ARG((const struct drm_rect *)__entry->dst))
-@@ -322,20 +322,20 @@ TRACE_EVENT(intel_disable_plane,
- 
- 	    TP_STRUCT__entry(
- 			     __field(enum pipe, pipe)
--			     __field(const char *, name)
- 			     __field(u32, frame)
- 			     __field(u32, scanline)
-+			     __string(name, plane->name)
- 			     ),
- 
- 	    TP_fast_assign(
-+			   __assign_str(name, plane->name);
- 			   __entry->pipe = crtc->pipe;
--			   __entry->name = plane->name;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
- 			   ),
- 
- 	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u",
--		      pipe_name(__entry->pipe), __entry->name,
-+		      pipe_name(__entry->pipe), __get_str(name),
- 		      __entry->frame, __entry->scanline)
- );
- 
--- 
-2.21.0
-
+Cheers,
+Nathan
