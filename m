@@ -2,138 +2,102 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B334C74A3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D76C74A3E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A1620645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37542087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562787987;
-	bh=8Wheg7fkojhFCTFeSxARuXmwozeoF6si9Jhn2gqN/jE=;
+	s=default; t=1562788044;
+	bh=5KipNZr+xCteNvNLez5lJ2ZMhnlda9bZn4KG9yh0eEM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mcfKQEzD4JRJwKrQWIsJO0LDgRWqPWvLr/ELSdsIwLsISu5JNP1pmAmKSN+2HI/+M
-	 XSU04NTmlfgUFu1hs++6TI3/p0Tj7EMoRVauRSJUUut9arJIMn+pBU+7ilLzjTpHNs
-	 YzHqzyJGZw2YwD8p8bOLv+jyrg0dwLzmTDdEr+b8=
+	b=Gy4x5LuGQo3JROMGx++lUzJHYzEWHDcixQw9qDMdzohoMj8H163L864FOdHfeXTk+
+	 Qo3OKCGOcH38gsoifkKWCA5bqrKyD7XiAcDJsfWovuL84UaHXeAChC0GCMeRF3Q0Z8
+	 P/+Aiz7pQmSlp8AL2u23LQaj51YhUQNY43uS0Khk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfGJTq0 (ORCPT
+        id S1727829AbfGJTrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfGJTqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:46:25 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D847E20645;
-        Wed, 10 Jul 2019 19:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562787984;
-        bh=8Wheg7fkojhFCTFeSxARuXmwozeoF6si9Jhn2gqN/jE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U8yQ5jzmPYkedYE9eKLlK6r/w0o6fbkuw6aQbZ32bajHQdbDyDuiA98yJfeBrTJ6G
-         9t9iwMUnGVGtKgkQyIGsGEnGkWyMLrzPLRQ7tkqlMCE404ujVuWcrSKTBrGV8qg0JS
-         ijG3JQaD52WEZZHNznlcoOP7z3WhRvagWtC/zdtE=
-Date:   Wed, 10 Jul 2019 12:46:22 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        keyrings@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
-        linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
-Message-ID: <20190710194620.GA83443@gmail.com>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        keyrings@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
-        linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <28477.1562362239@warthog.procyon.org.uk>
- <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
+        Wed, 10 Jul 2019 15:47:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47144 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727102AbfGJTrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:47:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E607ACA0;
+        Wed, 10 Jul 2019 19:47:21 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 21:47:19 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 4/5] mm: introduce MADV_PAGEOUT
+Message-ID: <20190710194719.GS29695@dhcp22.suse.cz>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627115405.255259-5-minchan@kernel.org>
+ <20190709095518.GF26380@dhcp22.suse.cz>
+ <20190710104809.GA186559@google.com>
+ <20190710111622.GI29695@dhcp22.suse.cz>
+ <20190710115356.GC186559@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
+In-Reply-To: <20190710115356.GC186559@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:35:07AM -0700, Linus Torvalds wrote:
-> On Fri, Jul 5, 2019 at 2:30 PM David Howells <dhowells@redhat.com> wrote:
-> >
-> > Here's my fourth block of keyrings changes for the next merge window.  They
-> > change the permissions model used by keys and keyrings to be based on an
-> > internal ACL by the following means:
+On Wed 10-07-19 20:53:56, Minchan Kim wrote:
+> On Wed, Jul 10, 2019 at 01:16:22PM +0200, Michal Hocko wrote:
+> > On Wed 10-07-19 19:48:09, Minchan Kim wrote:
+> > > On Tue, Jul 09, 2019 at 11:55:19AM +0200, Michal Hocko wrote:
+> > [...]
+> > > > I am still not convinced about the SWAP_CLUSTER_MAX batching and the
+> > > > udnerlying OOM argument. Is one pmd worth of pages really an OOM risk?
+> > > > Sure you can have many invocations in parallel and that would add on
+> > > > but the same might happen with SWAP_CLUSTER_MAX. So I would just remove
+> > > > the batching for now and think of it only if we really see this being a
+> > > > problem for real. Unless you feel really strong about this, of course.
+> > > 
+> > > I don't have the number to support SWAP_CLUSTER_MAX batching for hinting
+> > > operations. However, I wanted to be consistent with other LRU batching
+> > > logic so that it could affect altogether if someone try to increase
+> > > SWAP_CLUSTER_MAX which is more efficienty for batching operation, later.
+> > > (AFAIK, someone tried it a few years ago but rollback soon, I couldn't
+> > > rebemeber what was the reason at that time, anyway).
+> > 
+> > Then please drop this part. It makes the code more complex while any
+> > benefit is not demonstrated.
 > 
-> It turns out that this is broken, and I'll probably have to revert the
-> merge entirely.
-> 
-> With this merge in place, I can't boot any of the machines that have
-> an encrypted disk setup. The boot just stops at
-> 
->   systemd[1]: Started Forward Password Requests to Plymouth Directory Watch.
->   systemd[1]: Reached target Paths.
-> 
-> and never gets any further. I never get the prompt for a passphrase
-> for the disk encryption.
-> 
-> Apparently not a lot of developers are using encrypted volumes for
-> their development machines.
-> 
-> I'm not sure if the only requirement is an encrypted volume, or if
-> this is also particular to a F30 install in case you need to be able
-> to reproduce. But considering that you have a redhat email address,
-> I'm sure you can find a F30 install somewhere with an encrypted disk.
-> 
-> David, if you can fix this quickly, I'll hold off on the revert of it
-> all, but I can wait only so long. I've stopped merging stuff since I
-> noticed my machines don't work (this merge window has not been
-> pleasant so far - in addition to this issue I had another entirely
-> unrelated boot failure which made bisecting this one even more fun).
-> 
-> So if I don't see a quick fix, I'll just revert in order to then
-> continue to do pull requests later today. Because I do not want to do
-> further pulls with something that I can't boot as a base.
-> 
->                  Linus
+> The history says the benefit.
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/patch/?id=d37dd5dcb955dd8c2cdd4eaef1f15d1b7ecbc379
 
-This also broke 'keyctl new_session' and hence all the fscrypt tests
-(https://lkml.kernel.org/lkml/20190710011559.GA7973@sol.localdomain/), and it
-also broke loading in-kernel X.509 certificates
-(https://lore.kernel.org/lkml/27671.1562384658@turing-police/T/#u).
+Limiting the number of isolated pages is fine. All I am saying is that
+SWAP_CLUSTER_MAX is an arbitrary number same as 512 pages for one PMD as
+a unit of work. Both can lead to the same effect if there are too many
+parallel tasks doing the same thing.
 
-I'm *guessing* these are all some underlying issue where keyrings aren't being
-given all the needed permissions anymore.
-
-But just FYI, David had said he's on vacation with no laptop or email access for
-2 weeks starting from Sunday (3 days ago).  So I don't think you can expect a
-quick fix from him.
-
-I was planning to look into this to fix the fscrypt tests, but it might be a few
-days before I get to it.  And while I'm *guessing* it will be a simple fix, it
-might not be.  So I can't speak for David, but personally I'm fine with the
-commits being reverted for now.
-
-I'm also unhappy that the new keyctl KEYCTL_GRANT_PERMISSION doesn't have any
-documentation or tests.  (Which seems to be a common problem with David's
-work...  None of the new mount syscalls in v5.2 have any tests, for example, and
-the man pages are still work-in-progress and last sent out for review a year
-ago, despite API changes that occurred before the syscalls were merged.)
-
-- Eric
+I do not want you to change that in the reclaim path. All I am asking
+for is to add a bathing without any actual data to back that because
+that makes the code more complex without any gains.
+-- 
+Michal Hocko
+SUSE Labs
