@@ -2,161 +2,86 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333C9C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2A2C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09969208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562790385;
-	bh=O+bYbOvsbL9YAnSQuHo2cXKmXnxaBOokw0ed+mLJ3NE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IslClBtJpwYEBCuXeW+PrucQgIxIaIsmWUA3wuKJz0ELPNMrAArTsttQEvhLI4Krb
-	 I2bpp8gOEFwxwqxeCgmZzmg3tFmDj5sLNPEs1qIMkEnMAccsJeZbV7Gc5KmxYqwCUd
-	 UGKF/0B67EyOlB7GT74yKoarO8NahVMWWS6AtXrI=
+	by mail.kernel.org (Postfix) with ESMTP id 039A0208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfGJU0X (ORCPT
+        id S1727681AbfGJU1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 16:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 16:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727197AbfGJU0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 16:26:23 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727197AbfGJU1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 16:27:13 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51BC220693;
-        Wed, 10 Jul 2019 20:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562790382;
-        bh=O+bYbOvsbL9YAnSQuHo2cXKmXnxaBOokw0ed+mLJ3NE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VKxi7q3CLoy8r0jCaC4eKWHARHlR0tUFs2k8yPmwlYZIYS3GMACjl0lB4XwH24I9/
-         vZaeMDVNbwbHmg6HNaHT1X9OpH/S/TFlW46Q5PO/EWczDUCcSZjluvqdlCql1ZEfD4
-         9D+TZzaH2nZsTizxQ2MQuvp1YIQ6GjFEKJLs6gxI=
-Received: by mail-qt1-f180.google.com with SMTP id 44so3896922qtg.11;
-        Wed, 10 Jul 2019 13:26:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAULeJWFIbQr4GU68M5C1poqwNBK3uWUP+XW2nGM6fLijx6A0gGT
-        WWFKYR4XRppLfKmDCta0Y2n0GmW1AnO77/9WDA==
-X-Google-Smtp-Source: APXvYqwAjtEbE890QCGvV9/7B8+mjJlAA0PYJ02JaBqDlEwjZYfOylwFmKHq2pgemN8AMFjunT6LrW3kD4fW+BMKyZc=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr25872845qtc.143.1562790381567;
- Wed, 10 Jul 2019 13:26:21 -0700 (PDT)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3815E208C4;
+        Wed, 10 Jul 2019 20:27:11 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 16:27:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
+Message-ID: <20190710162709.1c306f8a@gandalf.local.home>
+In-Reply-To: <CAHk-=wh+J7ts6OrzzscMj5FONd3TRAwAKPZ=BQmEb2E8_-RXTA@mail.gmail.com>
+References: <20190704195555.580363209@infradead.org>
+        <20190704200050.534802824@infradead.org>
+        <CALCETrXvTvFBaQB-kEe4cRTCXUyTbWLbcveWsH-kX4j915c_=w@mail.gmail.com>
+        <CALCETrUzP4Wb=WNhGvc7k4oX7QQz1JXZ3-O8PQhs39kmZid0nw@mail.gmail.com>
+        <CAHk-=wh+J7ts6OrzzscMj5FONd3TRAwAKPZ=BQmEb2E8_-RXTA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190710110424.4254-1-biwen.li@nxp.com> <20190710110424.4254-2-biwen.li@nxp.com>
- <CADRPPNQ8nZQYq1ZXZ368LLeKnyrXpjB_X8XaHVhW890bw-tU6A@mail.gmail.com>
-In-Reply-To: <CADRPPNQ8nZQYq1ZXZ368LLeKnyrXpjB_X8XaHVhW890bw-tU6A@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 10 Jul 2019 14:26:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLr53neiaiOEpAcmAhDMnqCuxgPLC9qnFB2rZ4zRFxFLg@mail.gmail.com>
-Message-ID: <CAL_JsqLr53neiaiOEpAcmAhDMnqCuxgPLC9qnFB2rZ4zRFxFLg@mail.gmail.com>
-Subject: Re: [v2,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     Biwen Li <biwen.li@nxp.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:46 PM Li Yang <leoyang.li@nxp.com> wrote:
->
-> On Wed, Jul 10, 2019 at 6:35 AM Biwen Li <biwen.li@nxp.com> wrote:
+
+[ added stable folks ]
+
+On Sun, 7 Jul 2019 11:17:09 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Sun, Jul 7, 2019 at 8:11 AM Andy Lutomirski <luto@kernel.org> wrote:
 > >
-> > The patch adds binding for ftm alarm driver
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
->
-> Looks like I commented the older version just now.  Adding Rob to this
-> version too.
+> > FWIW, I'm leaning toward suggesting that we apply the trivial tracing
+> > fix and backport *that*.  Then, in -tip, we could revert it and apply
+> > this patch instead.  
+> 
+> You don't have to have the same fix in stable as in -tip.
+> 
+> It's fine to send something to stable that says "Fixed differently by
+> commit XYZ upstream". The main thing is to make sure that stable
+> doesn't have fixes that then get lost upstream (which we used to have
+> long long ago).
+> 
 
-More importantly, re-send the patch to the DT list so patchwork tracks it.
+But isn't it easier for them to just pull the quick fix in, if it is in
+your tree? That is, it shouldn't be too hard to make the "quick fix"
+that gets backported on your tree (and probably better testing), and
+then add the proper fix on top of it. The stable folks will then just
+use the commit sha to know what to take, and feel more confident about
+taking it.
 
->
-> > ---
-> > Change in v2:
-> >     - replace ls1043a with ls1088a as example
-> >     - add rcpm node and fsl,rcpm-wakeup property
-> >
-> >  .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 40 ++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > new file mode 100644
-> > index 0000000..010984a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > @@ -0,0 +1,40 @@
-> > +Freescale FlexTimer Module (FTM) Alarm
-> > +
-> > +Note: The driver need work with RCPM driver to wake up system in sleep.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
-
-fsl,ftm-alarm should be a fallback, not on its own.
-
-> > +              supported chips include
-> > +              "fsl,ls1012a-ftm-alarm"
-> > +              "fsl,ls1021a-ftm-alarm"
-> > +              "fsl,ls1028a-ftm-alarm"
-> > +              "fsl,ls1043a-ftm-alarm"
-> > +              "fsl,ls1046a-ftm-alarm"
-> > +              "fsl,ls1088a-ftm-alarm"
-> > +              "fsl,ls208xa-ftm-alarm"
-> > +- reg : Specifies base physical address and size of the register sets for the
-> > +  FlexTimer Module and base physical address of IP Powerdown Exception Control
-> > +  Register.
-> > +- reg-names: names of the mapped memory regions listed in regs property.
-> > +  should include the following entries:
-> > +  "ftm":    Address of the register sets for FlexTimer Module
-
-Says required, but not in the example. I'd just remove this as -names
-is pointless when there is only 1 entry.
-
-> > +- interrupts : Should be the FlexTimer Module interrupt.
-> > +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> > +       Documentation/devicetree/bindings/soc/fsl/rcpm.txt
->
-> Looks better.
->
-> > +- big-endian: If the host controller is big-endian mode, specify this property.
-> > +  The default endian mode is little-endian.
->
-> Same comment about optional property.
->
-> > +
-> > +Example:
-> > +rcpm: rcpm@1e34050 {
-> > +       compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> > +       reg = <0x0 0x1e34050 0x0 0x4>;
-> > +       fsl,#rcpm-wakeup-cells = <1>;
-
-1 cell here...
-
-> > +}
-> > +
-> > +ftm_alarm0: timer@2800000 {
-> > +       compatible = "fsl,ftm-alarm";
-> > +       reg = <0x0 0x2800000 0x0 0x10000>;
-> > +       fsl,rcpm-wakeup = <&rcpm 0x0 0x4000>;
-
-...and 2 cells here.
-
-> > +       interrupts = <0 44 4>;
-> > +}
-> > --
-> > 2.7.4
-> >
+-- Steve
