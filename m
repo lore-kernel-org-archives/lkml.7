@@ -2,105 +2,162 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B3BC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B0EC606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406C520838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69A72064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfGJJdE (ORCPT
+        id S1727212AbfGJJh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:33:04 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2199 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726080AbfGJJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:33:04 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DC934521168DE750CA9A;
-        Wed, 10 Jul 2019 17:32:59 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 10 Jul 2019 17:32:52 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <davem@davemloft.net>, <saeedm@mellanox.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH net-next] net: mlx5: Fix compiling error in tls.c
-Date:   Wed, 10 Jul 2019 17:38:52 +0800
-Message-ID: <20190710093852.34549-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Jul 2019 05:37:29 -0400
+Received: from anchovy3.45ru.net.au ([203.30.46.155]:40122 "EHLO
+        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbfGJJh2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:37:28 -0400
+Received: (qmail 20338 invoked by uid 5089); 10 Jul 2019 09:37:26 -0000
+Received: by simscan 1.2.0 ppid: 20261, pid: 20262, t: 0.0524s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy2.45ru.net.au with ESMTPA; 10 Jul 2019 09:37:25 -0000
+Subject: Re: [PATCH 1/2] gpio: em: remove the gpiochip before removing the irq
+ domain
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org
+References: <20190710090852.9239-1-brgl@bgdev.pl>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <510f14c9-fc3b-734c-53ff-cbf4a7579e32@electromag.com.au>
+Date:   Wed, 10 Jul 2019 17:37:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190710090852.9239-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some errors while compiling tls.c if
-CONFIG_MLX5_FPGA_TLS is not obvious on.
+G'day Bartosz,
 
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c: In function mlx5e_tls_set_ipv4_flow:
-./include/linux/mlx5/device.h:61:39: error: invalid application of sizeof to incomplete type struct mlx5_ifc_tls_flow_bits
- #define __mlx5_st_sz_bits(typ) sizeof(struct mlx5_ifc_##typ##_bits)
-                                       ^
-./include/linux/compiler.h:330:9: note: in definition of macro __compiletime_assert
-   if (!(condition))     \
-         ^~~~~~~~~
-...
+One comment below
 
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c: In function mlx5e_tls_build_netdev:
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:202:13: error: MLX5_ACCEL_TLS_TX undeclared (first use in this function); did you mean __MLX5_ACCEL_TLS_H__?
-  if (caps & MLX5_ACCEL_TLS_TX) {
-             ^~~~~~~~~~~~~~~~~
-             __MLX5_ACCEL_TLS_H__
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:207:13: error: MLX5_ACCEL_TLS_RX undeclared (first use in this function); did you mean MLX5_ACCEL_TLS_TX?
-  if (caps & MLX5_ACCEL_TLS_RX) {
-             ^~~~~~~~~~~~~~~~~
-             MLX5_ACCEL_TLS_TX
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:212:15: error: MLX5_ACCEL_TLS_LRO undeclared (first use in this function); did you mean MLX5_ACCEL_TLS_RX?
-  if (!(caps & MLX5_ACCEL_TLS_LRO)) {
-               ^~~~~~~~~~~~~~~~~~
-               MLX5_ACCEL_TLS_RX
-make[5]: *** [drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.o] Error 1
-make[5]: *** Waiting for unfinished jobs....
-make[4]: *** [drivers/net/ethernet/mellanox/mlx5/core] Error 2
-make[3]: *** [drivers/net/ethernet/mellanox] Error 2
-make[3]: *** Waiting for unfinished jobs....
-make[2]: *** [drivers/net/ethernet] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [drivers/net] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [drivers] Error 2
-make: *** Waiting for unfinished jobs....
+On 10/07/2019 17:08, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> In commit 8764c4ca5049 ("gpio: em: use the managed version of
+> gpiochip_add_data()") we implicitly altered the ordering of resource
+> freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
+> internally, we now can potentially use the irq_domain after it was
+> destroyed in the remove() callback (as devm resources are freed after
+> remove() has returned).
+> 
+> Use devm_add_action() to keep the ordering right and entirely kill
+> the remove() callback in the driver.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add_data()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   drivers/gpio/gpio-em.c | 35 +++++++++++++++++------------------
+>   1 file changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> index b6af705a4e5f..c88028ac66f2 100644
+> --- a/drivers/gpio/gpio-em.c
+> +++ b/drivers/gpio/gpio-em.c
+> @@ -259,6 +259,13 @@ static const struct irq_domain_ops em_gio_irq_domain_ops = {
+>   	.xlate	= irq_domain_xlate_twocell,
+>   };
+>   
+> +static void em_gio_irq_domain_remove(void *data)
+> +{
+> +	struct irq_domain *domain = data;
+> +
+> +	irq_domain_remove(domain);
+> +}
+> +
+>   static int em_gio_probe(struct platform_device *pdev)
+>   {
+>   	struct em_gio_priv *p;
+> @@ -333,39 +340,32 @@ static int em_gio_probe(struct platform_device *pdev)
+>   		return -ENXIO;
+>   	}
+>   
+> +	ret = devm_add_action(&pdev->dev,
+> +			      em_gio_irq_domain_remove, p->irq_domain);
 
-this patch is to fix this error using 'depends on MLX5_FPGA_TLS' when MLX5_TLS is set.
+Could devm_add_action_or_reset be used?
 
-Fixes: e2869fb2068b ("net/mlx5: Kconfig, Better organize compilation flags")
+> +	if (ret) {
+> +		irq_domain_remove(p->irq_domain);
+> +		return ret;
+> +	}
+> +
+>   	if (devm_request_irq(&pdev->dev, irq[0]->start,
+>   			     em_gio_irq_handler, 0, name, p)) {
+>   		dev_err(&pdev->dev, "failed to request low IRQ\n");
+> -		ret = -ENOENT;
+> -		goto err1;
+> +		return -ENOENT;
+>   	}
+>   
+>   	if (devm_request_irq(&pdev->dev, irq[1]->start,
+>   			     em_gio_irq_handler, 0, name, p)) {
+>   		dev_err(&pdev->dev, "failed to request high IRQ\n");
+> -		ret = -ENOENT;
+> -		goto err1;
+> +		return -ENOENT;
+>   	}
+>   
+>   	ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+>   	if (ret) {
+>   		dev_err(&pdev->dev, "failed to add GPIO controller\n");
+> -		goto err1;
+> +		return ret;
+>   	}
+>   
+>   	return 0;
+> -
+> -err1:
+> -	irq_domain_remove(p->irq_domain);
+> -	return ret;
+> -}
+> -
+> -static int em_gio_remove(struct platform_device *pdev)
+> -{
+> -	struct em_gio_priv *p = platform_get_drvdata(pdev);
+> -
+> -	irq_domain_remove(p->irq_domain);
+> -	return 0;
+>   }
+>   
+>   static const struct of_device_id em_gio_dt_ids[] = {
+> @@ -376,7 +376,6 @@ MODULE_DEVICE_TABLE(of, em_gio_dt_ids);
+>   
+>   static struct platform_driver em_gio_device_driver = {
+>   	.probe		= em_gio_probe,
+> -	.remove		= em_gio_remove,
+>   	.driver		= {
+>   		.name	= "em_gio",
+>   		.of_match_table = em_gio_dt_ids,
+> 
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-index 37fef8c..1da2770 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-@@ -139,6 +139,7 @@ config MLX5_TLS
- 	depends on MLX5_CORE_EN
- 	depends on TLS_DEVICE
- 	depends on TLS=y || MLX5_CORE=m
-+	depends on MLX5_FPGA_TLS
- 	select MLX5_ACCEL
- 	default n
- 	help
 -- 
-2.7.4
+Regards
+Phil Reid
 
