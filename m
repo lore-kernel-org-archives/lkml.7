@@ -2,206 +2,131 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20348C74A22
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9FBC74A22
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5DB20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2D820838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="44QOVwEm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c/D4TKl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfGJNU6 (ORCPT
+        id S1727359AbfGJNWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:20:58 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49210 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJNU5 (ORCPT
+        Wed, 10 Jul 2019 09:22:08 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47300 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJNWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:20:57 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ADInaE107782;
-        Wed, 10 Jul 2019 13:20:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=/5yLM4mbjzRmIXEHs2SJpsLnDoPmJ/wHA+9zC34Et+A=;
- b=44QOVwEm79DAncWafsxnHgQ4xniDJlHQMOsEiknXsA7lyLpqB7KM2/dWkubOaTVPDAc9
- IDm3SwNOrJtBwffuEY29Vs2VbyiFaMLSZ5BnDazCpwuliRyaqykaTT6N4CBXkJf1KRIG
- HNNMG2Bn9OKjYnxr8tvxthTRPWW0iCEC8A8XIGCwbfceBkM9qrqES3XtyQ49WE8EkstY
- ow7sw18v7F5Wzh8B/FD2o8HsHgFsqVwIQ2Uu9dohWBbNlEPpTY/LJSdnYXA6pY1VArko
- zjwKYMVTP+P/Q/U67OmDnOm+3CoEaMkRKs73qbGBfRm4Cx6Qu8y/vaf7AiU4TbVyx31Y tg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tjkkpt3jy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jul 2019 13:20:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ADIEJx030597;
-        Wed, 10 Jul 2019 13:20:07 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tnc8suxcx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jul 2019 13:20:07 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6ADK6dQ000835;
-        Wed, 10 Jul 2019 13:20:06 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Jul 2019 06:20:05 -0700
-Subject: Re: [PATCH v6 4/4] x86/xen: Add "nopv" support for HVM guest
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, jgross@suse.com,
-        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de
-References: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
- <1562490908-17882-5-git-send-email-zhenzhong.duan@oracle.com>
- <86b0dbb9-74a7-6883-e6d7-210bd35a6944@oracle.com>
- <6cbd7b78-3d8d-64ae-fd2e-82244dbe6a1e@oracle.com>
- <3d7db7c6-cea3-9dce-0519-a1c600b33273@oracle.com>
- <33876a98-9b6b-a1b9-e72f-352c3f95db89@oracle.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <71b06655-79d2-97ae-cb6d-e0e606c8237f@oracle.com>
-Date:   Wed, 10 Jul 2019 09:21:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 10 Jul 2019 09:22:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PYoGG4XgGb9OmgxUgb8QrgBzHVhHCuM+5r/uhCHECDw=; b=c/D4TKl86nDbNt/IHqHyVqCS+
+        L5WqFhF0eHfsr8Ao8uXvOBizfnhfVgM1Xuo2M6Ev83NkAo5rHORI7SzUDhHWQUJei5JxBvsXaCmMq
+        /msGHAW0bEJCks9K+i9noaPXjN3K5D33FKXSiqnjWdaTeBAlFDODx0/yQfCs60Z03uQ1YXHKnj5rl
+        96PEDRXVCQjXsWKR38yiaryXUqFuFREmXDBbNHYOJsZxe29qKUEl5/gWbyVLOqW5p98DD9NYC3xP+
+        aC9jaESoB/JT00WrE8mW9LqsZ+CUHR+Ejt1c7CwiL3ULpZqKCYfbt+VLheB26O5F+kCgDSl5odbtP
+        JgDl5P0Rw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlCXZ-0004SU-Mt; Wed, 10 Jul 2019 13:21:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 298CB20976EF0; Wed, 10 Jul 2019 15:21:44 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 15:21:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Xi Ruoyao <xry111@mengyan1223.wang>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+Message-ID: <20190710132144.GM3402@hirez.programming.kicks-ass.net>
+References: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+ <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
+ <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
+ <201907091727.91CC6C72D8@keescook>
+ <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
+ <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
+ <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
+ <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
 MIME-Version: 1.0
-In-Reply-To: <33876a98-9b6b-a1b9-e72f-352c3f95db89@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907100156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907100156
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/19 10:07 PM, Zhenzhong Duan wrote:
-> On 2019/7/9 22:54, Boris Ostrovsky wrote:
->> On 7/9/19 12:20 AM, Zhenzhong Duan wrote:
->>> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
->>> +static uint32_t __init xen_platform_hvm(void)
->>> +{
->>> +       uint32_t xen_domain = xen_cpuid_base();
->>> +       struct x86_hyper_init *h = &x86_hyper_xen_hvm.init;
->>> +
->>> +       if (xen_pv_domain())
->>> +               return 0;
->>> +
->>> +       if (xen_pvh_domain() && nopv) {
->>> +               /* Guest booting via the Xen-PVH boot entry goes
->>> here */
->>> +               pr_info("\"nopv\" parameter is ignored in PVH
->>> guest\n");
->>> +               nopv = false;
->>> +       } else if (nopv && xen_domain) {
->>> +               /*
->>> +                * Guest booting via normal boot entry (like via
->>> grub2) goes
->>> +                * here.
->>> +                *
->>> +                * Use interface functions for bare hardware if nopv,
->>> +                * xen_hvm_guest_late_init is an exception as we
->>> need to
->>> +                * detect PVH and panic there.
->>> +                */
->>> +               memcpy(h, (void *)&x86_init.hyper,
->>> sizeof(x86_init.hyper));
->>
->> And this worked? I'd think it would fail since h points to RO section.
-> Yes, I have below changes in the patch.
->
-> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
-> +struct hypervisor_x86 x86_hyper_xen_hvm __initdata = {
+On Wed, Jul 10, 2019 at 02:31:29PM +0200, Jiri Kosina wrote:
+> On Wed, 10 Jul 2019, Thomas Gleixner wrote:
+> 
+> > From the log:
+> > 
+> > BUG: unable to handle page fault for address: ffffffff9edc1598
+> > #PF: supervisor write access in kernel mode
+> > #PF: error_code(0x0003) - permissions violation
+> > PGD 1a20c067 P4D 1a20c067 PUD 1a20d063 PMD 8000000019e000e1 
+> > Oops: 0003 [#1] SMP PTI
+> > 2 PID: 151 Comm: systemd-udevd Not tainted 5.2.0+ #54
+> > Hardware name: LENOVO 20175/INVALID, BIOS 66CN54WW 01/21/2013
+> > RIP: 0010:static_key_set_mod.isra.0+0x10/0x30
+> > Code: 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f0 a8 03 75 0d 48 8b 37 83 e6 03 48 09 c6 <48> 89 37 c3 0f 0b 48 8b 37 83 e6 03 48 09 c6 48 89 37 c3 66 66 2e
+> > RSP: 0000:ffffa606c032bc98 EFLAGS: 00010286
+> > RAX: ffff9981ddce30a0 RBX: ffffffff9edc1590 RCX: 0000000000000000
+> > RDX: 0000000000000020 RSI: ffff9981ddce30a0 RDI: ffffffff9edc1598
+> > RBP: ffffffffc06f4000 R08: ffff9981e6003980 R09: ffff9981ddce30a0
+> > R10: 0000000000000000 R11: 0000000000028b56 R12: ffffffffc06f8880
+> > R13: ffff9981ddce3080 R14: ffffffffc06f4008 R15: ffffffffc06f6dc0
+> > FS:  00007f992dd9a680(0000) GS:ffff9981e7080000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: ffffffff9edc1598 CR3: 00000002233aa001 CR4: 00000000001606e0
+> > Call Trace:
+> >   jump_label_module_notify+0x1e7/0x2b0
+> >   notifier_call_chain+0x44/0x70
+> >   blocking_notifier_call_chain+0x43/0x60
+> >   load_module+0x1bcb/0x2490
+> >   ? vfs_read+0x11f/0x150
+> >   ? __do_sys_finit_module+0xbf/0xe0
+> >   __do_sys_finit_module+0xbf/0xe0
+> >   do_syscall_64+0x43/0x110
+> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > Josh, didn't you mention that yesterday or so?
+> 
+> That's what Tony yesterday indicated on IRC that his system is suffering 
+> from as well.
+> 
+> Adding Daniel to check whether this couldn't be some fallout of jumplabel 
+> batching.
 
+AFAICT this is _before_ we get to patching. The function that explodes
+is static_key_set_mod(), as called from jump_label_add_module().
 
-But hypervisors[] stays__initconst so that I thought could be a problem.
-But apparently it's not.
+What that function does is for all patch sites in the module, find the
+corresponding key; if that key is not also in that module, allocate a
+static_key_mod structure and link the module entries to the key. Such
+that we can find all instances from a given key.
 
->
->>
->>
->>> +               memcpy(&x86_hyper_xen_hvm.runtime, (void
->>> *)&x86_platform.hyper,
->>> +                      sizeof(x86_platform.hyper));
->>> +               h->guest_late_init = xen_hvm_guest_late_init;
->>
->> To me this still doesn't look right --- you are making assumptions about
->> x86_platform/x86_init.hyper and I don't think you can assume they have
->> not been set to point to another hypervisor, for example.
->
-> You mean copy_array() calls in init_hypervisor_platform()? But that
-> happens after
->
-> detect_hypervisor_vendor() shoose out the prefered hypervisor. In
-> detect stage,
->
-> x86_platform/x86_init.hyper has default value for bare hardware, or I
-> missed something?
-
-
-Right. My point though is that this ordering is opaque to
-hypervisor-specific code and can change. The same is true about making
-assumptions about x86_platform/x86_init.hyper values.
-
--boris
-
-
+I don't think anything here has changed in a while.
