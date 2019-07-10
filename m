@@ -2,105 +2,136 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BD2C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06259C74A25
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573DE20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2FC2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfGJNm7 (ORCPT
+        id S1727580AbfGJNoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:42:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:33560 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfGJNm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:42:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB6732B;
-        Wed, 10 Jul 2019 06:42:57 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 152993F71F;
-        Wed, 10 Jul 2019 06:42:54 -0700 (PDT)
-Subject: Re: [PATCH] arm64: vdso: Fix ABI regression in compat vdso
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, arnd@arndb.de, linux@armlinux.org.uk,
-        ralf@linux-mips.org, paul.burton@mips.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de, salyzyn@android.com,
-        pcc@google.com, shuah@kernel.org, 0x7f454c46@gmail.com,
-        linux@rasmusvillemoes.dk, huw@codeweavers.com,
-        sthotton@marvell.com, andre.przywara@arm.com, luto@kernel.org,
-        john.stultz@linaro.org
-References: <20190621095252.32307-11-vincenzo.frascino@arm.com>
- <20190710130452.44111-1-vincenzo.frascino@arm.com>
- <20190710132532.r27yryvt25ex76xk@willie-the-truck>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <4ea8fd8a-c50d-0cb7-af56-5bb90b0e50f8@arm.com>
-Date:   Wed, 10 Jul 2019 14:42:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 09:44:13 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37245 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJNoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:44:13 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 3A60CFF81A;
+        Wed, 10 Jul 2019 13:44:09 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: [PATCH v7 0/6] Add CPU clock support for Armada 7K/8K
+Date:   Wed, 10 Jul 2019 15:43:40 +0200
+Message-Id: <20190710134346.30239-1-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190710132532.r27yryvt25ex76xk@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/2019 14:25, Will Deacon wrote:
-> On Wed, Jul 10, 2019 at 02:04:52PM +0100, Vincenzo Frascino wrote:
->> Prior to the introduction of Unified vDSO support and compat layer for
->> vDSO on arm64, AT_SYSINFO_EHDR was not defined for compat tasks.
->> In the current implementation, AT_SYSINFO_EHDR is defined even if the
->> compat vdso layer is not built and this causes a regression in the
->> expected behavior of the ABI.
->>
->> Restore the ABI behavior making sure that AT_SYSINFO_EHDR for compat
->> tasks is defined only when CONFIG_GENERIC_COMPAT_VDSO and
->> CONFIG_COMPAT_VDSO are enabled.
-> 
-> I think you could do a better job in the changelog of explaining what's
-> actually going on here. The problem seems to be that you're advertising
-> the presence of a non-existent vDSO to userspace.
-> 
->> Reported-by: John Stultz <john.stultz@linaro.org>
->> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->> ---
->>  arch/arm64/include/asm/elf.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
->> index 3c7037c6ba9b..b7992bb9d414 100644
->> --- a/arch/arm64/include/asm/elf.h
->> +++ b/arch/arm64/include/asm/elf.h
->> @@ -202,7 +202,7 @@ typedef compat_elf_greg_t		compat_elf_gregset_t[COMPAT_ELF_NGREG];
->>  ({									\
->>  	set_thread_flag(TIF_32BIT);					\
->>   })
->> -#ifdef CONFIG_GENERIC_COMPAT_VDSO
->> +#if defined(CONFIG_COMPAT_VDSO) && defined(CONFIG_GENERIC_COMPAT_VDSO)
-> 
-> Can't this just be #ifdef CONFIG_COMPAT_VDSO ?
->
+Hello,
 
-Yes, I realized it after I pushed the patch that CONFIG_GENERIC_COMPAT_VDSO can
-be removed. Posting v2 shortly.
+This is the seventh version of a series allowing to manage the cpu
+clock for Armada 7K/8K.
 
-> John -- can you give this a whirl, please?
-> 
-> Cheers,
-> 
-> Will
-> 
+For these SoCs, the CPUs share the same clock by cluster, so actually
+the clock management is done at cluster level.
+
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
+
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
+
+Changelog v6->v7:
+
+   - Update binding documentation for the AP clock to mention that
+     they expose reference clocks for the cluster to make distinction
+     with the cluster clocks themselves exposed by the cpu clock.
+
+   - Add precision on the number of parent clock in the binding
+     documentation.
+
+   - Also fix the example by using the reg address in the node name.
+
+Changelog v5->v6:
+
+   - Restraint the reg property for the child node to not overlap the
+     other node.
+   - Give a specific compatible to ap_syscon1.
+
+Changelog v4->v5:
+
+ - As requested by the device tree maintainer make the reg property
+   mandatory
+
+ - Updated the device tree files accordingly with the new binding
+
+Changelog v3->v4:
+ - Rebased on v5.1-rc1
+ - Mention in the binding that a reg property can be used to make the
+   device tree maintainer happy in the hope that there will be finally
+   a review on this patch blocking the whole series.
+
+Changelog v2->v3:
+ - Add back the first patch documenting the binding
+
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
+
+Gregory CLEMENT (6):
+  dt-bindings: ap806: add the cluster clock node in the syscon file
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+
+ .../arm/marvell/ap806-system-controller.txt   |  31 ++-
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 11 files changed, 365 insertions(+), 44 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
 
 -- 
-Regards,
-Vincenzo
+2.20.1
+
