@@ -2,256 +2,193 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFBC74A2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C9EC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0B22064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711D82084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEAScme2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LKToBncg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfGJOzY (ORCPT
+        id S1727945AbfGJO4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:55:24 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:44660 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfGJOzY (ORCPT
+        Wed, 10 Jul 2019 10:56:46 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:46678 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725956AbfGJO4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:55:24 -0400
-Received: by mail-yb1-f196.google.com with SMTP id a14so835731ybm.11;
-        Wed, 10 Jul 2019 07:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QCiTMtxWZLPJb5y6myKW6/LqRAFmEt/hmzQDDMTW8VI=;
-        b=lEAScme2mzOQ+tU9R4si7PoXLwO6ANudoejGNvbvXY7MTia3jsDqXVK2sT7T4ezaA8
-         ZC4iXV3mp74Kk/A5sykoJYHMeB7eC9DYwai4hnX303CgGyj/Et2Ard1470VsuyZmEq/Q
-         Zrsjy/wNgl+wh/8Qa6Bvo92PqPEBBv4YzpXEHI+PRSQIT67cEGiWBA9o5HCZHpOPoKt0
-         GSIWFuXGblzSC+AcGxl/L1itQekXjckZxhNhibF3a6SHfKqVX96KeE3BwGm9mos3w+Gg
-         MtgEQDmPLzOv9/H64lLCIm/8VGZDhLyQzhq4IZ5azGRZUwNd6yPl+Vxnms0+Hd8bOeLt
-         WjBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QCiTMtxWZLPJb5y6myKW6/LqRAFmEt/hmzQDDMTW8VI=;
-        b=MmAazY1m+v3Yh2ZliV8OeyZ5FvlJ5kwQcQyj9Tz2kmHLf7PyK1OSi+4Za0+BTFN3aY
-         GCKwAQ2q8mYbNrpyFWFIkaPt52h9ZLECQs71SoAQ+aKE2gSgoPIxdrsGfoLvrDJp766v
-         sKYgBIiUKbIDxoi21akkwXR/ZYQ/UyPrNwoJpLfH6Hox3VMtNlUEWRfZJZEMinJ0x6ZH
-         c9dUCWZy/o5SViXU3Ln97q5OvwhX3htWGWe4D1PbAHSx9QczIboXE0YXCZxswzsDyDYk
-         tx7m99WbkWoYSVhOpYtPFaXlu+gHrFumM6ajJiN9PYjYDRNSOhGKWvGZTIfOtB/CBaMf
-         fxVg==
-X-Gm-Message-State: APjAAAUXzfrFCN5lpkMkO5D3nnwGQPH0DgbhnEVOOICblEQLbmrie2ZV
-        Q5/HhzIDmAlP8dX06Oq8TS6mME1HntziRPhS8YhsCA==
-X-Google-Smtp-Source: APXvYqy2ZYzPT4Hl6P3dw3H30HQZL3QHerrdT5q0XUMb6fhSaBXk0zgxuJcflF5qEH5p0TTt0jJmcKFd2E8H1UmCPlI=
-X-Received: by 2002:a25:aaea:: with SMTP id t97mr16794751ybi.126.1562770522978;
- Wed, 10 Jul 2019 07:55:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190710133403.855-1-acgoide@tycho.nsa.gov>
-In-Reply-To: <20190710133403.855-1-acgoide@tycho.nsa.gov>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 10 Jul 2019 17:55:11 +0300
-Message-ID: <CAOQ4uxhKP9AUHqYN24ELP5OcyaJQcpS9hdzuZOm5uJpokFAXvg@mail.gmail.com>
-Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-To:     Aaron Goidel <acgoide@tycho.nsa.gov>
-Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 10 Jul 2019 10:56:44 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BFFCDC29DA;
+        Wed, 10 Jul 2019 14:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562770604; bh=1V12/8vGPInih5p0qyGvRVu7+Sn4cjnbPSEjTahhJIU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=LKToBncgunSxfr2w1kcVAXG8s8lQF8yjGRfJUNWE8SXCQ1Qh/5SxyYlE0kee+Wv79
+         3uUsg0CKONgCu3UP3mUzOgRlDSer4Crk7zer/ZpK2bNJq2mp4l58UVdHNDy+span9j
+         z2CLPkbdZRIBnxMFHTSXDmTzVvC73UirF/GHw6cUkMzDDWX8Tt0D+Y4EO40Ba/fPAh
+         TYS3ULJ2IgTME+H5EB1OukR831gVIPv7jt41bDIYtve/KIc/FYMD+WZoxCiNpKDB04
+         YugI3T4lgi1npV1n4kB8N+v4xBqpJS1IbLr+uuImiY28oKrrhswAjhC1tZGxmEKvaT
+         GUZp3jsTjR4dQ==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 48A7CA005C;
+        Wed, 10 Jul 2019 14:56:42 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 061C23FA39;
+        Wed, 10 Jul 2019 16:56:42 +0200 (CEST)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     broonie@kernel.org, lorenzo@kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, bbrezillon@knernel.org, Joao.Pinto@synopsys.com,
+        Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH v3 3/3] iio: imu: st_lsm6dsx: add i3c basic support for LSM6DSO and LSM6DSR
+Date:   Wed, 10 Jul 2019 16:56:39 +0200
+Message-Id: <73955529ae0c31f428221abb88031ab3b4165659.1562767521.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1562767521.git.vitor.soares@synopsys.com>
+References: <cover.1562767521.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1562767521.git.vitor.soares@synopsys.com>
+References: <cover.1562767521.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 4:34 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
->
-> As of now, setting watches on filesystem objects has, at most, applied a
-> check for read access to the inode, and in the case of fanotify, requires
-> CAP_SYS_ADMIN. No specific security hook or permission check has been
-> provided to control the setting of watches. Using any of inotify, dnotify,
-> or fanotify, it is possible to observe, not only write-like operations, but
-> even read access to a file. Modeling the watch as being merely a read from
-> the file is insufficient. Furthermore, fanotify watches grant more power to
-> an application in the form of permission events. While notification events
-> are solely, unidirectional (i.e. they only pass information to the
-> receiving application), permission events are blocking. Permission events
-> make a request to the receiving application which will then reply with a
-> decision as to whether or not that action may be completed.
->
-> In order to solve these issues, a new LSM hook is implemented and has been
-> placed within the system calls for marking filesystem objects with inotify,
-> fanotify, and dnotify watches. These calls to the hook are placed at the
-> point at which the target inode has been resolved and are provided with
-> both the inode and the mask of requested notification events. The mask has
-> already been translated into common FS_* values shared by the entirety of
-> the fs notification infrastructure.
->
-> This only provides a hook at the point of setting a watch, and presumes
-> that permission to set a particular watch implies the ability to receive
-> all notification about that object which match the mask. This is all that
-> is required for SELinux. If other security modules require additional hooks
-> or infrastructure to control delivery of notification, these can be added
-> by them. It does not make sense for us to propose hooks for which we have
-> no implementation. The understanding that all notifications received by the
-> requesting application are all strictly of a type for which the application
-> has been granted permission shows that this implementation is sufficient in
-> its coverage.
->
-> Fanotify further has the issue that it returns a file descriptor with the
-> file mode specified during fanotify_init() to the watching process on
-> event. This is already covered by the LSM security_file_open hook if the
-> security module implements checking of the requested file mode there.
->
-> The selinux_inode_notify hook implementation works by adding three new
-> file permissions: watch, watch_reads, and watch_with_perm (descriptions
-> about which will follow). The hook then decides which subset of these
-> permissions must be held by the requesting application based on the
-> contents of the provided mask. The selinux_file_open hook already checks
-> the requested file mode and therefore ensures that a watching process
-> cannot escalate its access through fanotify.
->
-> The watch permission is the baseline permission for setting a watch on an
-> object and is a requirement for any watch to be set whatsoever. It should
-> be noted that having either of the other two permissions (watch_reads and
-> watch_with_perm) does not imply the watch permission, though this could be
-> changed if need be.
->
-> The watch_reads permission is required to receive notifications from
-> read-exclusive events on filesystem objects. These events include accessing
-> a file for the purpose of reading and closing a file which has been opened
-> read-only. This distinction has been drawn in order to provide a direct
-> indication in the policy for this otherwise not obvious capability. Read
-> access to a file should not necessarily imply the ability to observe read
-> events on a file.
->
-> Finally, watch_with_perm only applies to fanotify masks since it is the
-> only way to set a mask which allows for the blocking, permission event.
-> This permission is needed for any watch which is of this type. Though
-> fanotify requires CAP_SYS_ADMIN, this is insufficient as it gives implicit
-> trust to root, which we do not do, and does not support least privilege.
->
-> Signed-off-by: Aaron Goidel <acgoide@tycho.nsa.gov>
-> ---
->  fs/notify/dnotify/dnotify.c         | 14 +++++++++++---
->  fs/notify/fanotify/fanotify_user.c  | 11 +++++++++--
->  fs/notify/inotify/inotify_user.c    | 12 ++++++++++--
->  include/linux/lsm_hooks.h           |  2 ++
->  include/linux/security.h            |  7 +++++++
->  security/security.c                 |  5 +++++
->  security/selinux/hooks.c            | 22 ++++++++++++++++++++++
->  security/selinux/include/classmap.h |  2 +-
->  8 files changed, 67 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
-> index 250369d6901d..e91ce092efb1 100644
-> --- a/fs/notify/dnotify/dnotify.c
-> +++ b/fs/notify/dnotify/dnotify.c
-> @@ -22,6 +22,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/dnotify.h>
->  #include <linux/init.h>
-> +#include <linux/security.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
->  #include <linux/fdtable.h>
-> @@ -288,6 +289,16 @@ int fcntl_dirnotify(int fd, struct file *filp, unsigned long arg)
->                 goto out_err;
->         }
->
-> +       /*
-> +        * convert the userspace DN_* "arg" to the internal FS_*
-> +        * defined in fsnotify
-> +        */
-> +       mask = convert_arg(arg);
-> +
-> +       error = security_inode_notify(inode, mask);
-> +       if (error)
-> +               goto out_err;
-> +
->         /* expect most fcntl to add new rather than augment old */
->         dn = kmem_cache_alloc(dnotify_struct_cache, GFP_KERNEL);
->         if (!dn) {
-> @@ -302,9 +313,6 @@ int fcntl_dirnotify(int fd, struct file *filp, unsigned long arg)
->                 goto out_err;
->         }
->
-> -       /* convert the userspace DN_* "arg" to the internal FS_* defines in fsnotify */
-> -       mask = convert_arg(arg);
-> -
->         /* set up the new_fsn_mark and new_dn_mark */
->         new_fsn_mark = &new_dn_mark->fsn_mark;
->         fsnotify_init_mark(new_fsn_mark, dnotify_group);
-> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-> index a90bb19dcfa2..c0d9fa998377 100644
-> --- a/fs/notify/fanotify/fanotify_user.c
-> +++ b/fs/notify/fanotify/fanotify_user.c
-> @@ -528,7 +528,7 @@ static const struct file_operations fanotify_fops = {
->  };
->
->  static int fanotify_find_path(int dfd, const char __user *filename,
-> -                             struct path *path, unsigned int flags)
-> +                             struct path *path, unsigned int flags, __u64 mask)
->  {
->         int ret;
->
-> @@ -567,8 +567,15 @@ static int fanotify_find_path(int dfd, const char __user *filename,
->
->         /* you can only watch an inode if you have read permissions on it */
->         ret = inode_permission(path->dentry->d_inode, MAY_READ);
-> +       if (ret) {
-> +               path_put(path);
-> +               goto out;
-> +       }
-> +
-> +       ret = security_inode_notify(path->dentry->d_inode, mask);
->         if (ret)
->                 path_put(path);
-> +
->  out:
->         return ret;
->  }
-> @@ -1014,7 +1021,7 @@ static int do_fanotify_mark(int fanotify_fd, unsigned int flags, __u64 mask,
->                 goto fput_and_out;
->         }
->
-> -       ret = fanotify_find_path(dfd, pathname, &path, flags);
-> +       ret = fanotify_find_path(dfd, pathname, &path, flags, mask);
->         if (ret)
->                 goto fput_and_out;
->
+For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
+spi and i2c mode.
 
-So the mark_type doesn't matter to SELinux?
-You have no need for mount_noitify and sb_notify hooks?
-A watch permission on the mount/sb root inode implies permission
-(as CAP_SYS_ADMIN) to watch all events in mount/sb?
+The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
+them.
 
-[...]
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+Changes in v3:
+  Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
+  Use st_lsm6dsx_probe new form
 
-> +static int selinux_inode_notify(struct inode *inode, u64 mask)
-> +{
-> +       u32 perm = FILE__WATCH; // basic permission, can a watch be set?
-> +
-> +       struct common_audit_data ad;
-> +
-> +       ad.type = LSM_AUDIT_DATA_INODE;
-> +       ad.u.inode = inode;
-> +
-> +       // check if the mask is requesting ability to set a blocking watch
-> +       if (mask & (FS_OPEN_PERM | FS_OPEN_EXEC_PERM | FS_ACCESS_PERM))
+Changes in v2:
+  Add support for LSM6DSR
+  Set pm_ops to st_lsm6dsx_pm_ops
 
-Better ALL_FSNOTIFY_PERM_EVENTS
+ drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+ drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 61 +++++++++++++++++++++++++++++
+ 3 files changed, 69 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
 
-Thanks,
-Amir.
+diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+index 9e59297..6b5a73c 100644
+--- a/drivers/iio/imu/st_lsm6dsx/Kconfig
++++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+@@ -1,11 +1,12 @@
+ 
+ config IIO_ST_LSM6DSX
+ 	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
+-	depends on (I2C || SPI)
++	depends on (I2C || SPI || I3C)
+ 	select IIO_BUFFER
+ 	select IIO_KFIFO_BUF
+ 	select IIO_ST_LSM6DSX_I2C if (I2C)
+ 	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
++	select IIO_ST_LSM6DSX_I3C if (I3C)
+ 	help
+ 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+ 	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+@@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
+ 	tristate
+ 	depends on IIO_ST_LSM6DSX
+ 	select REGMAP_SPI
++
++config IIO_ST_LSM6DSX_I3C
++	tristate
++	depends on IIO_ST_LSM6DSX
++	select REGMAP_I3C
+diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
+index e5f733c..c676965 100644
+--- a/drivers/iio/imu/st_lsm6dsx/Makefile
++++ b/drivers/iio/imu/st_lsm6dsx/Makefile
+@@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
+ obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
+ obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
+ obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
++obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+new file mode 100644
+index 0000000..f683754
+--- /dev/null
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
++ *
++ * Author: Vitor Soares <vitor.soares@synopsys.com>
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/i3c/device.h>
++#include <linux/i3c/master.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++
++#include "st_lsm6dsx.h"
++
++static const struct i3c_device_id st_lsm6dsx_i3c_ids[];
++
++static const struct regmap_config st_lsm6dsx_i3c_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
++static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
++{
++	const struct i3c_device_id *id = i3c_device_match_id(i3cdev,
++							    st_lsm6dsx_i3c_ids);
++	struct regmap *regmap;
++	int hw_id = (int)id->data;
++
++	regmap = devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
++			(int)PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	return st_lsm6dsx_probe(&i3cdev->dev, 0, hw_id, regmap);
++}
++
++static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
++	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
++	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
++
++static struct i3c_driver st_lsm6dsx_driver = {
++	.driver = {
++		.name = "st_lsm6dsx_i3c",
++		.pm = &st_lsm6dsx_pm_ops,
++	},
++	.probe = st_lsm6dsx_i3c_probe,
++	.id_table = st_lsm6dsx_i3c_ids,
++};
++module_i3c_driver(st_lsm6dsx_driver);
++
++MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
++MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
+
