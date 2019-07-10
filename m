@@ -2,125 +2,122 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D9FC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162FCC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789C6208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E347C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 16:46:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cAyGu57g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfGJQpr (ORCPT
+        id S1728154AbfGJQq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 12:45:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:36582 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfGJQpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 12:45:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85F4C360;
-        Wed, 10 Jul 2019 09:45:46 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12B3A3F246;
-        Wed, 10 Jul 2019 09:45:44 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 3/3] iommu/arm-smmu: Add support for
- DOMAIN_ATTR_SPLIT_TABLES
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        freedreno@lists.freedesktop.org
-Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
-        hoegsberg@google.com, dianders@chromium.org,
-        baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <1562612447-19856-1-git-send-email-jcrouse@codeaurora.org>
- <1562612447-19856-4-git-send-email-jcrouse@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <aeae2aa1-9473-d661-dcf3-f086fe36d02a@arm.com>
-Date:   Wed, 10 Jul 2019 17:45:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Jul 2019 12:46:27 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42741 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfGJQq1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 12:46:27 -0400
+Received: by mail-ed1-f68.google.com with SMTP id v15so2821963eds.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 09:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uI+5nY7XDdUozZn2ePMYhLurWiDfFbelgLstEGLSrzU=;
+        b=cAyGu57gbAQyE13Us/MLHPU4v7/XxDe2mavAEkjAhv5wVIt7cwMgbvQbCmNOq4Uhds
+         jENjmnGzOLQq7AwZHeVRaB2yanqQRHyGxNQvXFYMvRFpGVslUyB61RxDdPlMC4TSlQIR
+         OKq0ihnd6b82L5buDsdq9D49nYXqBveHF62Cs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=uI+5nY7XDdUozZn2ePMYhLurWiDfFbelgLstEGLSrzU=;
+        b=f1avgJh2TGTeWf+1GdXSYIVH6NvxKyB8k5Pr9+EY8wA3W1/qqDodLOUF47Nt2VVRmT
+         CkAu/BCgPiNYCpSGiuWG99fVHVeljplMRMLvtCyRndnz2W2z7vp9+0vZSkeL4CFobwyN
+         YtLzh3EohX2sn0O36cA4xEFuZ6RRRSbt2uwF8qVgEGebiXyhhFqGdm87QgeXL9dFhZ9h
+         OA5YSO4HD4BLrQmxtiHOcZDor+7CZzAFXrYJGjqBqc2KdmfzAO7X4i+7VRy+y+020J1a
+         UU5jnNZE6iTltVBbSKLVm3JDBrQTGtfcLbZ6oMM1d0gXvv4RbwEWdKts/IwL8F9QVkLq
+         1dFg==
+X-Gm-Message-State: APjAAAUTjpeWhJNyolw7/ZEe++9EQXlbsV1AgSIucGCtK91nI7S0Ibpz
+        2Szp/fac3pa/2hmuh7rxJIS7UA==
+X-Google-Smtp-Source: APXvYqx35KoS1Wn0RwEDuvd3T+zLAeKQdcZhzZWd4E0Y4NS5zUOWLNZfHnNlW68SKf8txrnyIHEBQA==
+X-Received: by 2002:a50:b155:: with SMTP id l21mr31948432edd.186.1562777185813;
+        Wed, 10 Jul 2019 09:46:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id x11sm625141eju.26.2019.07.10.09.46.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 09:46:25 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 18:46:23 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Simon Ser <contact@emersion.fr>,
+        Oleg Vasilev <oleg.vasilev@intel.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] drm/vkms: Use alpha value for blending
+Message-ID: <20190710164622.GA15868@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>, Simon Ser <contact@emersion.fr>,
+        Oleg Vasilev <oleg.vasilev@intel.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <cover.1562695974.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1562612447-19856-4-git-send-email-jcrouse@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1562695974.git.rodrigosiqueiramelo@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2019 20:00, Jordan Crouse wrote:
-> When DOMAIN_ATTR_SPLIT_TABLES is specified for pass ARM_64_LPAE_SPLIT_S1
-> to io_pgtable_ops to allocate and initialize TTBR0 and TTBR1 pagetables.
-> 
-> v3: Moved all the pagetable specific work into io-pgtable-arm
-> in a previous patch.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->   drivers/iommu/arm-smmu.c | 16 +++++++++++++++-
->   1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 653b6b3..7a6b4bb 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -257,6 +257,7 @@ struct arm_smmu_domain {
->   	bool				non_strict;
->   	struct mutex			init_mutex; /* Protects smmu pointer */
->   	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
-> +	u32 attributes;
->   	struct iommu_domain		domain;
->   };
->   
-> @@ -832,7 +833,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->   		ias = smmu->va_size;
->   		oas = smmu->ipa_size;
->   		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
-> -			fmt = ARM_64_LPAE_S1;
-> +			if (smmu_domain->attributes &
-> +				(1 << DOMAIN_ATTR_SPLIT_TABLES))
-> +				fmt = ARM_64_LPAE_SPLIT_S1;
-> +			else
-> +				fmt = ARM_64_LPAE_S1;
->   		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
->   			fmt = ARM_32_LPAE_S1;
->   			ias = min(ias, 32UL);
-> @@ -1582,6 +1587,10 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->   		case DOMAIN_ATTR_NESTING:
->   			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
->   			return 0;
-> +		case DOMAIN_ATTR_SPLIT_TABLES:
-> +			*(int *)data = !!(smmu_domain->attributes &
-> +				(1 << DOMAIN_ATTR_SPLIT_TABLES));
+On Tue, Jul 09, 2019 at 10:52:02PM -0300, Rodrigo Siqueira wrote:
+> The first patch of this series reworks part of the blend function to
+> improve the readability and also for preparing it for using alpha value.
+> The second patch updates the blend function for applying alpha value for
+> a fully transparent blend. After applying this patchset,
+> pipe-a-cursor-alpha-transparent in kms_cursor_crc start to pass.
 
-I'm not really a fan of always claiming to support this but silently 
-ignoring it depending on hardware/kernel configuration - it seems 
-somewhat tricky to make callers properly robust against making false 
-assumptions (e.g. consider if the system is booted with 
-"arm-smmu.force_stage=2").
+Looking at the series I wonder whether we should go right ahead to
+reworking the entire composer pipeline to future proof it for multiple
+planes and other pixel modes. Or whether enabling alpha blending with what
+we have now is a better idea, but that means more complicated refactoring
+later on ...
 
-Robin.
+> This patchset depends on:
+> https://patchwork.freedesktop.org/series/61738/
 
-> +			return 0;
->   		default:
->   			return -ENODEV;
->   		}
-> @@ -1622,6 +1631,11 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->   			else
->   				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
->   			break;
-> +		case DOMAIN_ATTR_SPLIT_TABLES:
-> +			if (*((int *)data))
-> +				smmu_domain->attributes |=
-> +					(1 << DOMAIN_ATTR_SPLIT_TABLES);
-> +			break;
->   		default:
->   			ret = -ENODEV;
->   		}
+Ok I guess I need to look at this one here first.
+-Daniel
+
 > 
+> Rodrigo Siqueira (2):
+>   drm/vkms: Rework blend function
+>   drm/vkms: Use alpha channel for blending cursor with primary
+> 
+>  drivers/gpu/drm/vkms/vkms_composer.c | 54 ++++++++++++++++++++--------
+>  1 file changed, 39 insertions(+), 15 deletions(-)
+> 
+> -- 
+> 2.21.0
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
