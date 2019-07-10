@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC0DC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13213C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2661208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD447208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562772913;
-	bh=OdbQuz38tplaMdrkN1L5wTVHFfdOklXzNLtiN6XkxXc=;
+	s=default; t=1562772917;
+	bh=ea2CnYZ3pJTmbi9a9Ns/TbFol/GOl0zrR3orFcaBEC0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Xm5RtlCQwvYoVds2CAeTx1u9o+hJfU+eEcQYoYyYwmqh0SAjdd/csDrCjSVvcKx7K
-	 tSJRIyVD1kpDOEtNxlAQSefDv01aCgqVItoa6Fa5KiCO4BhLXKqKP8xKmHjr2NG5el
-	 jQ52zHsltD8lTJ2t1Ix3/R94aru6ThyY9bZDxA8Q=
+	b=uzF1X4iHQs4b+x6l4r96snzBvfmNUqXExfKdNLyks4CeCaCIWZT9zMcEX3k0p1Vvr
+	 0ftYVrDXf+Cxs+rlXd6YGTjwud2b9B+X2cLK3IHmVGY3kSJcqpMzUgajsoYJh6X+34
+	 IEpJ3yeh75zulB1WSwRAZ0Lh/mOdpTiRMjI6FXz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbfGJPfM (ORCPT
+        id S1728227AbfGJPfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:35:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45838 "EHLO
+        Wed, 10 Jul 2019 11:35:16 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45800 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727521AbfGJPe4 (ORCPT
+        with ESMTP id S1727515AbfGJPe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jul 2019 11:34:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,27 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=7QYvFls9cFFESC1iCFjHNVMcABi/vx5KKko2y+ogruc=; b=DCTWJJmqSBmc
-        Cg/2D57XqG2bNMWH+/z9If72M7H90alUmHKY3e9c6j1/+lRKN4s6EColac2SYyUKff/GYuQNU2VNa
-        K/a5wqetVmYCREYGAqrxPv2DOK2JWZWcXqx+po0mBGD7H+p0vw/ZBCgci4yiOCi0PEnJ+ieTi+ZlB
-        8DybQ=;
+        List-Archive; bh=OJOmdq13zo6Dlox6R8w0maL9PomW9D3dvtCqc3uExQc=; b=Uv1gESDPPiCo
+        lPtmbPmjX2y7Nie7E7zeXLbxWyxlbzrpfP4w0oixJ3/Zqlg2FvIFK8z6fGrvMBqFjZ0Z8+X0MmVno
+        muBDH6DP8ngecW5Z1u8tR2AB8XQzu6nVOPXyibfEuYRa0JuncpO6LvvNfjnCeCFHpPlABQ0A42tud
+        Raqcw=;
 Received: from [217.140.106.53] (helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1hlEcQ-00083v-8X; Wed, 10 Jul 2019 15:34:54 +0000
+        id 1hlEcG-00082w-Ir; Wed, 10 Jul 2019 15:34:44 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id F057BD02D84; Wed, 10 Jul 2019 16:34:53 +0100 (BST)
+        id 3A14AD02D7C; Wed, 10 Jul 2019 16:34:44 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Applied "spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg" to the spi tree
-In-Reply-To: <20190709192631.16394-1-robh@kernel.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        cheng.shengyu@zte.com.cn, jonathanh@nvidia.com,
+        kuninori.morimoto.gx@renesas.com,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, tiwai@suse.com,
+        wang.yi59@zte.com.cn, xue.zhihong@zte.com.cn
+Subject: Applied "ASoC: simple-card: fix an use-after-free in simple_for_each_link()" to the asoc tree
+In-Reply-To:  <1562743509-30496-3-git-send-email-wen.yang99@zte.com.cn>
 X-Patchwork-Hint: ignore
-Message-Id: <20190710153453.F057BD02D84@fitzroy.sirena.org.uk>
-Date:   Wed, 10 Jul 2019 16:34:53 +0100 (BST)
+Message-Id: <20190710153444.3A14AD02D7C@fitzroy.sirena.org.uk>
+Date:   Wed, 10 Jul 2019 16:34:44 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg
+   ASoC: simple-card: fix an use-after-free in simple_for_each_link()
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,38 +91,51 @@ to this mail.
 Thanks,
 Mark
 
-From 43167bb1f6bb7efa73adc40d2dd700bb6546cc2c Mon Sep 17 00:00:00 2001
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 9 Jul 2019 13:26:31 -0600
-Subject: [PATCH] spi: dt-bindings: spi-controller: remove unnecessary
- 'maxItems: 1' from reg
+From 27862d5a3325bc531ec15e3c607e44aa0fd57f6f Mon Sep 17 00:00:00 2001
+From: Wen Yang <wen.yang99@zte.com.cn>
+Date: Wed, 10 Jul 2019 15:25:07 +0800
+Subject: [PATCH] ASoC: simple-card: fix an use-after-free in
+ simple_for_each_link()
 
-Mixing array constraints like 'maxItems' and string or integer value
-constraints like 'minimum' don't make sense. Also, with only value
-constraints, it is implied we have a single value. So lets remove
-'maxItems: 1'.
+The codec variable is still being used after the of_node_put() call,
+which may result in use-after-free.
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20190709192631.16394-1-robh@kernel.org
+Fixes: d947cdfd4be2 ("ASoC: simple-card: cleanup DAI link loop method - step1")
+Link: https://lore.kernel.org/r/1562743509-30496-3-git-send-email-wen.yang99@zte.com.cn
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/spi-controller.yaml | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/generic/simple-card.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-index 876c0623f322..a02e2fe2bfb2 100644
---- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-@@ -73,7 +73,6 @@ patternProperties:
-           Compatible of the SPI device.
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index 4117e54884e5..ef849151ba56 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -364,8 +364,6 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
+ 			goto error;
+ 		}
  
-       reg:
--        maxItems: 1
-         minimum: 0
-         maximum: 256
-         description:
+-		of_node_put(codec);
+-
+ 		/* get convert-xxx property */
+ 		memset(&adata, 0, sizeof(adata));
+ 		for_each_child_of_node(node, np)
+@@ -387,11 +385,13 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
+ 				ret = func_noml(priv, np, codec, li, is_top);
+ 
+ 			if (ret < 0) {
++				of_node_put(codec);
+ 				of_node_put(np);
+ 				goto error;
+ 			}
+ 		}
+ 
++		of_node_put(codec);
+ 		node = of_get_next_child(top, node);
+ 	} while (!is_top && node);
+ 
 -- 
 2.20.1
 
