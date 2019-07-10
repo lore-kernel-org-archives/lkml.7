@@ -2,99 +2,137 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA46AC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93083C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFFA20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5427620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuNcOFBP"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MBtSsTma";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="kIbkEPjx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfGJK0n (ORCPT
+        id S1727298AbfGJKd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:26:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46766 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfGJK0n (ORCPT
+        Wed, 10 Jul 2019 06:33:58 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:55968 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbfGJKd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:26:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i8so1020772pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 03:26:43 -0700 (PDT)
+        Wed, 10 Jul 2019 06:33:57 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 98DA0C0167;
+        Wed, 10 Jul 2019 10:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562754837; bh=1hMf7QxxYpiL2DjBcQK0XBZelYzP+0nPC5LuDTJrJsM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=MBtSsTmarLyCnSAhcVnnAo44H4E9TtWms9RlNeYlpUw+BTRzP7+ZVhgUatE5G0ZfD
+         qr4D57ErTmQz3kqIyB9sm6s0yO4NwlcOpykoDudugFYwS8HO9fkTuY5sUUlW8+2m3O
+         7fnG3IRiNf6AmyQX9tM2KDshyj+lvk3wglaks3zr2ea/+RBlRt1/1+O7JmbpSLkFQB
+         zhs7J899xRlp2Lga3ofSM8Gi3dyr8mX924CIMxhWwD+LzULwLIVYZ0WNbBay8rvtXM
+         XKY5x0zZkhDF0dojisK+CrATY9Yz18DjHScINq6A4u80Qo6S4bwcXxhcnGPPUvrBDS
+         OurZINiWqQ8wA==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 9E321A009A;
+        Wed, 10 Jul 2019 10:33:48 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 10 Jul 2019 03:33:48 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 10 Jul 2019 03:33:48 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=85BGws/O2/x8Hh97uEaqbM8uDSOfynBf5b84MXFpylY=;
-        b=uuNcOFBPSBE6CLV/X72nYWisfAXdtWj0WQ7usY4zK84QoNKtM0+XsWbFtr1qCxbLVu
-         9x40rd6bAIY+pZeQU9XUsy4V/9iXFk62WFUE6p0dEKZeMDoH3uowZHMSqQpT/G1QwWjm
-         HgfUe+MgvOuzCCDqPCIumx1NuzTTO9Jb+SZ11j4AsEK49TvvQjvXLBxyMtueqPC3neI/
-         0o0wUC4sRffpTJylLjKG+g1WTkP0oGwIlq89lZasHKf2K4f5cDRwRKXJdDy8wqhP+AHb
-         /6j6ziNaBy/87k7GFp/TotPUTNhV8sSD7x9drY+8CnT2CK8EbRW0nhHQb4JKQswIZWfo
-         UbcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=85BGws/O2/x8Hh97uEaqbM8uDSOfynBf5b84MXFpylY=;
-        b=WPPPRly6PArecPXjK4f/EWAagszAdnY6MfVtGM4jsqRqjV+wqajSNVzN/xw8wH9NoO
-         AEoa7BMxSXtkp29b9yvEHLQPdzK0TBVfpEbsv1a9JIEmlTHL/uQPXP7MZLwxNcZQIlb0
-         hhdVFlcRf0J5YjpoUremx9AL6hCr2TjtgW3Mst/YteLsLFm2BUFNWgSFiRtv55CI+/n1
-         jkRBXy5ve0EJdKJgxja74hn+oHITncyERGPVBxNeyrXw5Rq04szZn6YzUg6eDK1XNhwb
-         NVM8r/N9BB5rNypHqJf0jOAwNpdtz48XAhuPQvMiACaRe1su5GQAeKHSnaMY60r3Pplm
-         lL0g==
-X-Gm-Message-State: APjAAAUQf7AA7vaspeclV9X6ccF/6MRb7tlHrtnzJ3IAwpga5juSCg+X
-        /+4HFDMlyeash3HhWaJwtmk=
-X-Google-Smtp-Source: APXvYqyFtEN7ijsGT5VEadU8zygjMAvqFqbCiuu/hEw9S4jnvRnpL5hm84ehC5SIENU1gu4GFvccIg==
-X-Received: by 2002:a17:90a:9a95:: with SMTP id e21mr5971516pjp.98.1562754403043;
-        Wed, 10 Jul 2019 03:26:43 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.7])
-        by smtp.gmail.com with ESMTPSA id g6sm1601983pgh.64.2019.07.10.03.26.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Jul 2019 03:26:42 -0700 (PDT)
-From:   bsauce <bsauce00@gmail.com>
-To:     alexander.h.duyck@intel.com
-Cc:     vbabka@suse.cz, mgorman@suse.de, l.stach@pengutronix.de,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org, alex@ghiti.fr,
-        adobriyan@gmail.com, mike.kravetz@oracle.com, rientjes@google.com,
-        rppt@linux.vnet.ibm.com, mhocko@suse.com, ksspiers@google.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        bsauce <bsauce00@gmail.com>
-Subject: [PATCH] fs/seq_file.c: Fix a UAF vulnerability in seq_release()
-Date:   Wed, 10 Jul 2019 18:26:29 +0800
-Message-Id: <1562754389-29217-1-git-send-email-bsauce00@gmail.com>
-X-Mailer: git-send-email 2.7.4
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1hMf7QxxYpiL2DjBcQK0XBZelYzP+0nPC5LuDTJrJsM=;
+ b=kIbkEPjxwLcz+fzaGETFiWeO8YXvSXfB3hfAf+z861d9s7pB+tL3cMaNqIAPw+aeoXKOeU/apC1CpRSs/aJ/pRkUrTP1gPRq6b6R6FPvenY9gl7tv5txG9bey0fehNxiUZ80SBL30WNAdbO/aNn7UyJ+SgNkPiu2xJcAU1jdgb0=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3603.namprd12.prod.outlook.com (20.178.212.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Wed, 10 Jul 2019 10:33:46 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 10:33:46 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 08/12] net: stmmac: Fix misuses of GENMASK macro
+Thread-Topic: [PATCH 08/12] net: stmmac: Fix misuses of GENMASK macro
+Thread-Index: AQHVNt0RSTk/ZLig7EqtmWvteU3zKqbDp4tA
+Date:   Wed, 10 Jul 2019 10:33:46 +0000
+Message-ID: <BN8PR12MB3266C01DFCB92FF8A9BDBADAD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1562734889.git.joe@perches.com>
+ <b38b0b67e724cd026709194b68c2be5ee1058c57.1562734889.git.joe@perches.com>
+In-Reply-To: <b38b0b67e724cd026709194b68c2be5ee1058c57.1562734889.git.joe@perches.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: be8102ad-26b5-4a41-7e7a-08d7052216d6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3603;
+x-ms-traffictypediagnostic: BN8PR12MB3603:
+x-microsoft-antispam-prvs: <BN8PR12MB360355AAD18F2FA8D700BE24D3F00@BN8PR12MB3603.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1169;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(396003)(136003)(366004)(189003)(199004)(229853002)(110136005)(6436002)(9686003)(3846002)(53936002)(25786009)(8936002)(4326008)(33656002)(478600001)(55016002)(6246003)(66066001)(71200400001)(54906003)(4744005)(76176011)(14454004)(7416002)(316002)(99286004)(7696005)(186003)(102836004)(26005)(52536014)(446003)(11346002)(71190400001)(7736002)(486006)(81156014)(5660300002)(8676002)(476003)(81166006)(6506007)(74316002)(68736007)(66946007)(6116002)(66446008)(66476007)(64756008)(2906002)(256004)(86362001)(76116006)(305945005)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3603;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YMAj++/Mek0ZoQXIjqzeYtjoM6G6n3D4oboFPjSo9tk+GKEtusGAFEYPF6LjTMQTxpPNUuAcXn8gzZEBsiydwBDcHwl9UiuSEghpZSIRjVlcG2vmLwhUT3gkkHTxAPA3VMsM7FdiS4SLkV3boO6jaHMRcfAcomZTFSRnnUCUYEvr3ztCMIu+g+NF+1GkPGZ0Jt5LiIHKLfeQsHl89f/31zSmRnEUXqB9o+uPQza3uDsPNII7pBWJgLKyKV8hK7KwGY9KjwEeGQksCvyuENUHNh/NXOH4Qp+sYgeBNKPdMM0Av4UyysW88fLx8pEKRzQ/55rbn1s8ABE3rfPrP/RIn+QPyQ2x1o461IxTkPrTpSWuWyaLu81IbvBQ2xri1We0ucaRJ3FZuw2RDqjbdgU6BJc48SeZ82oMDkNUDI3ibHk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: be8102ad-26b5-4a41-7e7a-08d7052216d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 10:33:46.5417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3603
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In seq_release(), 'm->buf' points to a chunk. It is freed but not cleared to null right away. It can be reused by seq_read() or srm_env_proc_write().
-For example, /arch/alpha/kernel/srm_env.c provide several interfaces to userspace, like 'single_release', 'seq_read' and 'srm_env_proc_write'.
-Thus in userspace, one can exploit this UAF vulnerability to escape privilege.
-Even if 'm->buf' is cleared by kmem_cache_free(), one can still create several threads to exploit this vulnerability.
-And 'm->buf' should be cleared right after being freed.
+From: Joe Perches <joe@perches.com>
+Date: Jul/10/2019, 06:04:21 (UTC+00:00)
 
-Signed-off-by: bsauce <bsauce00@gmail.com>
+> Arguments are supposed to be ordered high then low.
+>=20
+> Signed-off-by: Joe Perches <joe@perches.com>
+
+If you submit another version please add:
+
+Fixes: 293e4365a1ad ("stmmac: change descriptor layout")
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+
 ---
- fs/seq_file.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index abe27ec..de5e266 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -358,6 +358,7 @@ int seq_release(struct inode *inode, struct file *file)
- {
- 	struct seq_file *m = file->private_data;
- 	kvfree(m->buf);
-+	m->buf = NULL;
- 	kmem_cache_free(seq_file_cache, m);
- 	return 0;
- }
--- 
-2.7.4
-
+Thanks,
+Jose Miguel Abreu
