@@ -2,189 +2,195 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CA2C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7EAC004EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE2C20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8yKh+6C"
+	by mail.kernel.org (Postfix) with ESMTP id BD58820838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfGJIhZ (ORCPT
+        id S1727401AbfGJIhf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:37:25 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42938 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfGJIhZ (ORCPT
+        Wed, 10 Jul 2019 04:37:35 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:52820 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbfGJIhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:37:25 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t132so881812pgb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 01:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uULVVNf+00uTXLBlTk+5ZpHg9JZ7/DLSlO8BujKHgOA=;
-        b=Z8yKh+6C8SBN1Mos1npqTjLIAXadVhs0pYArp4XHXzVQcUhEq7SBlkne2dUIJUHFiZ
-         aASwenuNR/xGEM3udLpaONc7GSg7Od+yKG8LRt3V+PnMvETokuduR4HeES3wVjGgRWPZ
-         FB8hqs14ywgMeEek3j89BnPbCqDFBrvuA8Sz3xCIVnJ+ttc4aaOw86Q7BV8HhZhhWVeB
-         RKcphfAn3OU3RN4FktbNxkMakv/6AMmtKRMJeWRxN09osj7npSeIsGGk3O6F8KO0K8IG
-         Km4vEJDhKw91EBNsgUAxAy2fkBZIK+8VkMOWEsWlLsxgxBvOk/vVWkzXyG0F4sOAMU3v
-         g2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uULVVNf+00uTXLBlTk+5ZpHg9JZ7/DLSlO8BujKHgOA=;
-        b=cDmJnbfQqbe+OwlrT/K79xtfXUbMfqx03Y9eT84n+yQaoGe0p2AweDBSbLHObon7Vf
-         xoRxVBlYzcAti5E8Bdt/1xAEtX2zUD2bx6XmZoJQb5adoeD5OILSJXO2qQ6JkmQUdIVC
-         Q71sNGxIQjRj8C6pwbGBXZ3tLTnCAMQ/S7MqCabFRsyvCZwBn2dN/tzfKqE2OGmhlUwW
-         2n7rcvpXMLAHUIZL7gNTkGuQfJBYPYLM4056gcIL+anm9XhaMMjBycJ7owtFNYCQl5Bl
-         p2kklctgJwAfXW0KYjGzjG1ROMIgh6NnVMh471/M4UfEoR8+8O8FSBYG9Fs07nL9Qvyp
-         70GA==
-X-Gm-Message-State: APjAAAWvBih+kRRVlokwH9plhv6G08nCe9mHyqX8cGnljWoMUdi1wlkx
-        s/dH1nztt6ogcO6h9E6Zjg==
-X-Google-Smtp-Source: APXvYqyV8BGGYxZMldErHuMZ25Le9QBc4K9Gg2WB0AjAq7NBLwrUpHgyb3ycy6oeRIf/7XcKncfnZg==
-X-Received: by 2002:a65:5144:: with SMTP id g4mr1168743pgq.202.1562747844462;
-        Wed, 10 Jul 2019 01:37:24 -0700 (PDT)
-Received: from mylaptop.nay.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id r188sm3809271pfr.16.2019.07.10.01.37.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 01:37:23 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     x86@kernel.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] smp: force all cpu to boot once under maxcpus option
-Date:   Wed, 10 Jul 2019 16:37:03 +0800
-Message-Id: <1562747823-16972-1-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
+        Wed, 10 Jul 2019 04:37:35 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6A8aotx005820, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6A8aotx005820
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 10 Jul 2019 16:36:50 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Wed, 10 Jul
+ 2019 16:36:50 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] rtw88: pci: Rearrange the memory usage for skb in RX ISR
+Thread-Topic: [PATCH v2 1/2] rtw88: pci: Rearrange the memory usage for skb
+ in RX ISR
+Thread-Index: AQHVNkAp+Pmh+ukZi0a1oZ+M+t8Cp6bDiFdg
+Date:   Wed, 10 Jul 2019 08:36:49 +0000
+Message-ID: <F7CD281DE3E379468C6D07993EA72F84D1864779@RTITMBSVM04.realtek.com.tw>
+References: <20190708063252.4756-1-jian-hong@endlessm.com>
+ <20190709102059.7036-1-jian-hong@endlessm.com>
+In-Reply-To: <20190709102059.7036-1-jian-hong@endlessm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.183]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On x86 it's required to boot all logical CPUs at least once so that the
-init code can get a chance to set CR4.MCE on each CPU. Otherwise, a
-broadacasted MCE observing CR4.MCE=0b on any core will shutdown the
-machine.
+> Subject: [PATCH v2 1/2] rtw88: pci: Rearrange the memory usage for skb in
+> RX ISR
+> 
+> Testing with RTL8822BE hardware, when available memory is low, we
+> frequently see a kernel panic and system freeze.
+> 
+> First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
+> 
+> rx routine starvation
+> WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:822
+> rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+> [ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+> 
+> Then we see a variety of different error conditions and kernel panics,
+> such as this one (trimmed):
+> 
+> rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+> skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415
+> head:00000000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0
+> dev:<NULL>
+> ------------[ cut here ]------------
+> kernel BUG at net/core/skbuff.c:105!
+> invalid opcode: 0000 [#1] SMP NOPTI
+> RIP: 0010:skb_panic+0x43/0x45
+> 
+> When skb allocation fails and the "rx routine starvation" is hit, the
+> function returns immediately without updating the RX ring. At this
+> point, the RX ring may continue referencing an old skb which was already
+> handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+> bad things happen.
+> 
+> This patch allocates a new, data-sized skb first in RX ISR. After
+> copying the data in, we pass it to the upper layers. However, if skb
+> allocation fails, we effectively drop the frame. In both cases, the
+> original, full size ring skb is reused.
+> 
+> In addition, to fixing the kernel crash, the RX routine should now
+> generally behave better under low memory conditions.
+> 
+> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204053
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+>  drivers/net/wireless/realtek/rtw88/pci.c | 49 +++++++++++-------------
+>  1 file changed, 22 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> b/drivers/net/wireless/realtek/rtw88/pci.c
+> index cfe05ba7280d..e9fe3ad896c8 100644
+> --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> @@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
+> struct rtw_pci *rtwpci,
+>  	u32 pkt_offset;
+>  	u32 pkt_desc_sz = chip->rx_pkt_desc_sz;
+>  	u32 buf_desc_sz = chip->rx_buf_desc_sz;
+> +	u32 new_len;
+>  	u8 *rx_desc;
+>  	dma_addr_t dma;
+> 
+> @@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
+> struct rtw_pci *rtwpci,
+>  		pkt_offset = pkt_desc_sz + pkt_stat.drv_info_sz +
+>  			     pkt_stat.shift;
+> 
+> -		if (pkt_stat.is_c2h) {
+> -			/* keep rx_desc, halmac needs it */
+> -			skb_put(skb, pkt_stat.pkt_len + pkt_offset);
+> +		/* discard current skb if the new skb cannot be allocated as a
+> +		 * new one in rx ring later
+> +		 */
+> +		new_len = pkt_stat.pkt_len + pkt_offset;
+> +		new = dev_alloc_skb(new_len);
+> +		if (WARN_ONCE(!new, "rx routine starvation\n"))
+> +			goto next_rp;
+> +
+> +		/* put the DMA data including rx_desc from phy to new skb */
+> +		skb_put_data(new, skb->data, new_len);
+> 
+> -			/* pass offset for further operation */
+> -			*((u32 *)skb->cb) = pkt_offset;
+> -			skb_queue_tail(&rtwdev->c2h_queue, skb);
+> +		if (pkt_stat.is_c2h) {
+> +			 /* pass rx_desc & offset for further operation */
+> +			*((u32 *)new->cb) = pkt_offset;
+> +			skb_queue_tail(&rtwdev->c2h_queue, new);
+>  			ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_work);
+>  		} else {
+> -			/* remove rx_desc, maybe use skb_pull? */
+> -			skb_put(skb, pkt_stat.pkt_len);
+> -			skb_reserve(skb, pkt_offset);
+> -
+> -			/* alloc a smaller skb to mac80211 */
+> -			new = dev_alloc_skb(pkt_stat.pkt_len);
+> -			if (!new) {
+> -				new = skb;
+> -			} else {
+> -				skb_put_data(new, skb->data, skb->len);
+> -				dev_kfree_skb_any(skb);
+> -			}
+> -			/* TODO: merge into rx.c */
+> -			rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
+> +			/* remove rx_desc */
+> +			skb_pull(new, pkt_offset);
+> +
+> +			rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+>  			memcpy(new->cb, &rx_status, sizeof(rx_status));
+>  			ieee80211_rx_irqsafe(rtwdev->hw, new);
+>  		}
+> 
+> -		/* skb delivered to mac80211, alloc a new one in rx ring */
+> -		new = dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+> -		if (WARN(!new, "rx routine starvation\n"))
+> -			return;
+> -
+> -		ring->buf[cur_rp] = new;
+> -		rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc_sz);
+> +next_rp:
+> +		/* new skb delivered to mac80211, re-enable original skb DMA */
+> +		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
+> 
+>  		/* host read next element in ring */
+>  		if (++cur_rp >= ring->r.len)
+> --
+> 2.22.0
 
-The option 'nosmt' has already complied with the above rule. In the case of
-maxcpus, the initialization of capped out cpus may be deferred indefinitely
-until a user brings them up. This exposes the machine under the risk of
-sudden shutdown indefinitely.
+Now it looks good to me. Thanks.
 
-Minimize the risk window by initializing all cpus at boot time.
+Acked-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/smp.h |  1 +
- kernel/cpu.c        | 20 ++++++++++++++++++--
- kernel/smp.c        |  4 ++++
- 3 files changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index a56f08f..9d2c692 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -130,6 +130,7 @@ extern void __init setup_nr_cpu_ids(void);
- extern void __init smp_init(void);
- 
- extern int __boot_cpu_id;
-+extern bool smp_boot_done;
- 
- static inline int get_boot_cpu_id(void)
- {
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index ef1c565..ab19dc8 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -439,6 +439,21 @@ static inline bool cpu_smt_allowed(unsigned int cpu)
- static inline bool cpu_smt_allowed(unsigned int cpu) { return true; }
- #endif
- 
-+static inline bool maxcpus_allowed(unsigned int cpu)
-+{
-+	/* maxcpus only takes effect during system bootup */
-+	if (smp_boot_done)
-+		return true;
-+	if (num_online_cpus() < setup_max_cpus)
-+		return true;
-+	/*
-+	 * maxcpus should allow cpu to set CR4.MCE asap, otherwise the set may
-+	 * be deferred indefinitely.
-+	 */
-+	if (!per_cpu(cpuhp_state, cpu).booted_once)
-+		return true;
-+}
-+
- static inline enum cpuhp_state
- cpuhp_set_state(struct cpuhp_cpu_state *st, enum cpuhp_state target)
- {
-@@ -525,8 +540,9 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	 * CPU marked itself as booted_once in cpu_notify_starting() so the
- 	 * cpu_smt_allowed() check will now return false if this is not the
- 	 * primary sibling.
-+	 * In case of maxcpus, the capped out cpus comply with the same rule.
- 	 */
--	if (!cpu_smt_allowed(cpu))
-+	if (!cpu_smt_allowed(cpu) || !maxcpus_allowed(cpu))
- 		return -ECANCELED;
- 
- 	if (st->target <= CPUHP_AP_ONLINE_IDLE)
-@@ -1177,7 +1193,7 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
- 		err = -EBUSY;
- 		goto out;
- 	}
--	if (!cpu_smt_allowed(cpu)) {
-+	if (!cpu_smt_allowed(cpu) || !maxcpus_allowed(cpu)) {
- 		err = -EPERM;
- 		goto out;
- 	}
-diff --git a/kernel/smp.c b/kernel/smp.c
-index d155374..a5f82d53 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -560,6 +560,9 @@ void __init setup_nr_cpu_ids(void)
- 	nr_cpu_ids = find_last_bit(cpumask_bits(cpu_possible_mask),NR_CPUS) + 1;
- }
- 
-+bool smp_boot_done __read_mostly;
-+EXPORT_SYMBOL(smp_boot_done);
-+
- /* Called by boot processor to activate the rest. */
- void __init smp_init(void)
- {
-@@ -587,6 +590,7 @@ void __init smp_init(void)
- 
- 	/* Any cleanup work */
- 	smp_cpus_done(setup_max_cpus);
-+	smp_boot_done = true;
- }
- 
- /*
--- 
-2.7.5
-
+Yan-Hsuan
