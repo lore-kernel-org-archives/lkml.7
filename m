@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB479C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108D6C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A802D21537
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68E021537
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771006;
-	bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MLXVqvmd6WMjbt9Y3GNC9RvYCg+Itkud/eXSCQvYyHdKDOopnk1wO2WRRzNhS9rzU
-	 DE4MMjos4IBC9olMiBTsdrNzqK5TInYFMK6G0Scu4ShiYZkZKD/7qUXOlluXM6FK7e
-	 C2Q7HO3HJdAKxsFlSZZhkp8+03Mg13LklJVOJs0A=
+	s=default; t=1562771013;
+	bh=CbmMWEeV6MOMCbYKjw+SxwbG0mG1v/wTHIyvOGV82N4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ihYbiCxA6Zxx1rGXlFPbjiL+xJNPty8h1iCTREBDGKLkFIUrHatpNwLIL+6XfbsWH
+	 M9jLacdYFvUi7RsdEJH7KGhco1pORmJMjGz1j1MSwjCD9r/hGaH7G1Kfrr6ibgeN3l
+	 t4neAYi/VuMcJjIPpTGAj+iptZL4rCmC7af5BsgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfGJPDZ (ORCPT
+        id S1728205AbfGJPDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfGJPDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:22 -0400
+        id S1728167AbfGJPD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FBC12086D;
-        Wed, 10 Jul 2019 15:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66C7A2064A;
+        Wed, 10 Jul 2019 15:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562771001;
-        bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RCUdBvudkYP1BHBYiB6E8fw3PyhRJrBQAc2Pc1SqBduI2Q4oPkegM1TP9bkp/RcX4
-         mOH0E7yFpFldPb5/SbK4bO3Me4jtruThxwssqAiU0i7VGdNI/mowM/oYXUj4RjFS+1
-         MONdfl1f5ObfskOhb9Qd7ysKCBbOY/ZzD/puTYwc=
+        s=default; t=1562771007;
+        bh=CbmMWEeV6MOMCbYKjw+SxwbG0mG1v/wTHIyvOGV82N4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Wk+3KErBooiH15vwv4gT1Z4FFSdo2CSPaG+zmVbD5/GDsi7ytzKFqvljVZmNhEJae
+         TeSX+OYvaZ4pLWcp4eSmHVfUgQJbg2a/f1c6zyeOJigGQkjoFGFIq1vw9KK8tGxn6c
+         74zfg/QkWoh34N1MsSv9DTcMFs6ZKvkLM1qEjqeo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Hellermann <stefan@the2masters.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 1/8] MIPS: ath79: fix ar933x uart parity mode
-Date:   Wed, 10 Jul 2019 11:03:11 -0400
-Message-Id: <20190710150319.7258-1-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Fangrui Song <maskray@google.com>,
+        Peter Smith <peter.smith@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 3/8] arm64/efi: Mark __efistub_stext_offset as an absolute symbol explicitly
+Date:   Wed, 10 Jul 2019 11:03:13 -0400
+Message-Id: <20190710150319.7258-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190710150319.7258-1-sashal@kernel.org>
+References: <20190710150319.7258-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,40 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hellermann <stefan@the2masters.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
+[ Upstream commit aa69fb62bea15126e744af2e02acc0d6cf3ed4da ]
 
-While trying to get the uart with parity working I found setting even
-parity enabled odd parity insted. Fix the register settings to match
-the datasheet of AR9331.
+After r363059 and r363928 in LLVM, a build using ld.lld as the linker
+with CONFIG_RANDOMIZE_BASE enabled fails like so:
 
-A similar patch was created by 8devices, but not sent upstream.
-https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
+ld.lld: error: relocation R_AARCH64_ABS32 cannot be used against symbol
+__efistub_stext_offset; recompile with -fPIC
 
-Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
+Fangrui and Peter figured out that ld.lld is incorrectly considering
+__efistub_stext_offset as a relative symbol because of the order in
+which symbols are evaluated. _text is treated as an absolute symbol
+and stext is a relative symbol, making __efistub_stext_offset a
+relative symbol.
+
+Adding ABSOLUTE will force ld.lld to evalute this expression in the
+right context and does not change ld.bfd's behavior. ld.lld will
+need to be fixed but the developers do not see a quick or simple fix
+without some research (see the linked issue for further explanation).
+Add this simple workaround so that ld.lld can continue to link kernels.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/561
+Link: https://github.com/llvm/llvm-project/commit/025a815d75d2356f2944136269aa5874721ec236
+Link: https://github.com/llvm/llvm-project/commit/249fde85832c33f8b06c6b4ac65d1c4b96d23b83
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Debugged-by: Fangrui Song <maskray@google.com>
+Debugged-by: Peter Smith <peter.smith@linaro.org>
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+[will: add comment]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/image.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-index c2917b39966b..bba2c8837951 100644
---- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-+++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-@@ -27,8 +27,8 @@
- #define AR933X_UART_CS_PARITY_S		0
- #define AR933X_UART_CS_PARITY_M		0x3
- #define	  AR933X_UART_CS_PARITY_NONE	0
--#define	  AR933X_UART_CS_PARITY_ODD	1
--#define	  AR933X_UART_CS_PARITY_EVEN	2
-+#define	  AR933X_UART_CS_PARITY_ODD	2
-+#define	  AR933X_UART_CS_PARITY_EVEN	3
- #define AR933X_UART_CS_IF_MODE_S	2
- #define AR933X_UART_CS_IF_MODE_M	0x3
- #define	  AR933X_UART_CS_IF_MODE_NONE	0
+diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
+index 40f9f0b078a4..12af2ba8d558 100644
+--- a/arch/arm64/kernel/image.h
++++ b/arch/arm64/kernel/image.h
+@@ -73,7 +73,11 @@
+ 
+ #ifdef CONFIG_EFI
+ 
+-__efistub_stext_offset = stext - _text;
++/*
++ * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
++ * https://github.com/ClangBuiltLinux/linux/issues/561
++ */
++__efistub_stext_offset = ABSOLUTE(stext - _text);
+ 
+ /*
+  * The EFI stub has its own symbol namespace prefixed by __efistub_, to
 -- 
 2.20.1
 
