@@ -2,102 +2,91 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D76C74A3E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D83EC74A3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37542087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562788044;
-	bh=5KipNZr+xCteNvNLez5lJ2ZMhnlda9bZn4KG9yh0eEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gy4x5LuGQo3JROMGx++lUzJHYzEWHDcixQw9qDMdzohoMj8H163L864FOdHfeXTk+
-	 Qo3OKCGOcH38gsoifkKWCA5bqrKyD7XiAcDJsfWovuL84UaHXeAChC0GCMeRF3Q0Z8
-	 P/+Aiz7pQmSlp8AL2u23LQaj51YhUQNY43uS0Khk=
+	by mail.kernel.org (Postfix) with ESMTP id 3004D20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfGJTrW (ORCPT
+        id S1728044AbfGJTr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:47:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47144 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727102AbfGJTrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:47:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0E607ACA0;
-        Wed, 10 Jul 2019 19:47:21 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 21:47:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v3 4/5] mm: introduce MADV_PAGEOUT
-Message-ID: <20190710194719.GS29695@dhcp22.suse.cz>
-References: <20190627115405.255259-1-minchan@kernel.org>
- <20190627115405.255259-5-minchan@kernel.org>
- <20190709095518.GF26380@dhcp22.suse.cz>
- <20190710104809.GA186559@google.com>
- <20190710111622.GI29695@dhcp22.suse.cz>
- <20190710115356.GC186559@google.com>
+        Wed, 10 Jul 2019 15:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbfGJTr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:47:56 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5922E2086D;
+        Wed, 10 Jul 2019 19:47:54 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 15:47:52 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Chris Mason <clm@fb.com>, brendan.d.gregg@gmail.com,
+        davem@davemloft.net
+Subject: Re: [PATCH V2 1/1 (was 0/1 by accident)] tools/dtrace: initial
+ implementation of DTrace
+Message-ID: <20190710154752.76e36e8a@gandalf.local.home>
+In-Reply-To: <c7f15d1d-1696-4d95-1729-4c4e97bdc43e@iogearbox.net>
+References: <201907101537.x6AFboMR015946@aserv0122.oracle.com>
+        <201907101542.x6AFgOO9012232@userv0121.oracle.com>
+        <20190710181227.GA9925@oracle.com>
+        <c7f15d1d-1696-4d95-1729-4c4e97bdc43e@iogearbox.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710115356.GC186559@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 20:53:56, Minchan Kim wrote:
-> On Wed, Jul 10, 2019 at 01:16:22PM +0200, Michal Hocko wrote:
-> > On Wed 10-07-19 19:48:09, Minchan Kim wrote:
-> > > On Tue, Jul 09, 2019 at 11:55:19AM +0200, Michal Hocko wrote:
-> > [...]
-> > > > I am still not convinced about the SWAP_CLUSTER_MAX batching and the
-> > > > udnerlying OOM argument. Is one pmd worth of pages really an OOM risk?
-> > > > Sure you can have many invocations in parallel and that would add on
-> > > > but the same might happen with SWAP_CLUSTER_MAX. So I would just remove
-> > > > the batching for now and think of it only if we really see this being a
-> > > > problem for real. Unless you feel really strong about this, of course.
-> > > 
-> > > I don't have the number to support SWAP_CLUSTER_MAX batching for hinting
-> > > operations. However, I wanted to be consistent with other LRU batching
-> > > logic so that it could affect altogether if someone try to increase
-> > > SWAP_CLUSTER_MAX which is more efficienty for batching operation, later.
-> > > (AFAIK, someone tried it a few years ago but rollback soon, I couldn't
-> > > rebemeber what was the reason at that time, anyway).
-> > 
-> > Then please drop this part. It makes the code more complex while any
-> > benefit is not demonstrated.
-> 
-> The history says the benefit.
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/patch/?id=d37dd5dcb955dd8c2cdd4eaef1f15d1b7ecbc379
+On Wed, 10 Jul 2019 21:32:25 +0200
+Daniel Borkmann <daniel@iogearbox.net> wrote:
 
-Limiting the number of isolated pages is fine. All I am saying is that
-SWAP_CLUSTER_MAX is an arbitrary number same as 512 pages for one PMD as
-a unit of work. Both can lead to the same effect if there are too many
-parallel tasks doing the same thing.
 
-I do not want you to change that in the reclaim path. All I am asking
-for is to add a bathing without any actual data to back that because
-that makes the code more complex without any gains.
--- 
-Michal Hocko
-SUSE Labs
+> Looks like you missed Brendan Gregg's prior feedback from v1 [0]. I haven't
+> seen a strong compelling argument for why this needs to reside in the kernel
+> tree given we also have all the other tracing tools and many of which also
+> rely on BPF such as bcc, bpftrace, ply, systemtap, sysdig, lttng to just name
+> a few. Given all the other tracers manage to live outside the kernel tree just
+> fine, so can dtrace as well; it's _not_ special in this regard in any way. It
+> will be tons of code in long term which is better off in its separate project,
+> and if we add tools/dtrace/, other projects will come as well asking for kernel
+> tree inclusion 'because tools/dtrace' is now there, too. While it totally makes
+> sense to extend the missing kernel bits where needed, it doesn't make sense to
+> have another big tracing project similar to perf in the tree. Therefore, I'm
+> not applying this patch, sorry.
+
+I agree with this.
+
+Note, trace-cmd is very tied to ftrace just as much as perf is to the
+code in tree. There was a window in time I had a choice to add it to
+tools/ as well, but after careful consideration, I decided it's best
+against it. The only thing being in tree gives you is marketing.
+Otherwise, it makes it too coupled. I keep having to compile perf
+separately, because a lot of perf distro packages appear to think that
+it requires the same kernel version.
+
+It also makes it easier to have your own release cycles, otherwise it
+forces you to be on a 2 1/2 month cycle that the kernel is on. And it
+forces you to have a clear separation between kernel and user space.
+
+That said, I'm working to put together libraries that interact with all
+the current tracers (perf, trace-cmd, lttng, bpftrace, etc) and call it
+the "Unified Tracing Platform". The purpose is to allow any tool to be
+able to take advantage of any of the supported tracers within the
+running kernel. This will be one of the topics at the Tracing MC at
+Linux Plumbers in September. I hope to see all of you there ;-)
+
+-- Steve
+
