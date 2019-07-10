@@ -2,285 +2,166 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3C4C73C75
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CD4C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F2020844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68B020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:24:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Dt/ChCzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfGJGYP (ORCPT
+        id S1727264AbfGJGYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 02:24:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45752 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfGJGYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 02:24:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 23:24:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,473,1557212400"; 
-   d="scan'208";a="173775588"
-Received: from npg-dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.66])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2019 23:24:08 -0700
-Date:   Wed, 10 Jul 2019 14:22:33 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com, idos@mellanox.com,
-        Rob Miller <rob.miller@broadcom.com>,
-        Ariel Adam <aadam@redhat.com>
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-Message-ID: <20190710062233.GA16212@___>
-References: <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
- <20190703130817.GA1978@___>
- <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
- <20190704062134.GA21116@___>
- <20190705084946.67b8f9f5@x1.home>
- <20190708061625.GA15936@___>
- <deae5ede-57e9-41e6-ea42-d84e07ca480a@redhat.com>
- <20190709063317.GA29300@___>
- <9aafdc4d-0203-b96e-c205-043db132eb06@redhat.com>
+        Wed, 10 Jul 2019 02:24:24 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9930 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfGJGYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 02:24:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2584910000>; Tue, 09 Jul 2019 23:24:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Jul 2019 23:24:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 09 Jul 2019 23:24:22 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 06:24:22 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 06:24:21 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jul 2019 06:24:21 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d2584900000>; Tue, 09 Jul 2019 23:24:21 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V13 10/12] dt-bindings: PHY: P2U: Add Tegra194 P2U block
+Date:   Wed, 10 Jul 2019 11:52:10 +0530
+Message-ID: <20190710062212.1745-11-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190710062212.1745-1-vidyas@nvidia.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9aafdc4d-0203-b96e-c205-043db132eb06@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562739857; bh=dywpvl7IO+l773kPWfHi2XZgVs31BhWTwqSrwo/wJEw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=Dt/ChCzkES66cEayHgVeG6hiLsZL5FQYU9gH49nEs1UoZpSoA8wOWqoWD0m0E49C3
+         OmaKWOtzNCSmGd+T498cf9PDeQ58Dmuf3VVOUhHL31IQ4A3ljiYvp1P3J4KkhOMFWB
+         mnlGj401ga6fF+Wj+q8jlxeX3YTpaBiwczTBWVIUbto9rqzN5AxUtEDfhUITzN5nTx
+         V56Ajfd4ZRLkKSnZF83g1jXuIa7TY7o9LS5OVsf4qK33o7Pz5VhY7jrcIkNxdAkaoL
+         J5FMUMFqDGcp6dA/BLF7STAKS4bExi946fji5kWs3luUAoCpkwfaH9ULRIjcBEnKmp
+         aV1ke07O0jvzA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:26:10AM +0800, Jason Wang wrote:
-> On 2019/7/9 下午2:33, Tiwei Bie wrote:
-> > On Tue, Jul 09, 2019 at 10:50:38AM +0800, Jason Wang wrote:
-> > > On 2019/7/8 下午2:16, Tiwei Bie wrote:
-> > > > On Fri, Jul 05, 2019 at 08:49:46AM -0600, Alex Williamson wrote:
-> > > > > On Thu, 4 Jul 2019 14:21:34 +0800
-> > > > > Tiwei Bie <tiwei.bie@intel.com> wrote:
-> > > > > > On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
-> > > > > > > On 2019/7/3 下午9:08, Tiwei Bie wrote:
-> > > > > > > > On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
-> > > > > > > > > On 2019/7/3 下午7:52, Tiwei Bie wrote:
-> > > > > > > > > > On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
-> > > > > > > > > > > On 2019/7/3 下午5:13, Tiwei Bie wrote:
-> > > > > > > > > > > > Details about this can be found here:
-> > > > > > > > > > > > 
-> > > > > > > > > > > > https://lwn.net/Articles/750770/
-> > > > > > > > > > > > 
-> > > > > > > > > > > > What's new in this version
-> > > > > > > > > > > > ==========================
-> > > > > > > > > > > > 
-> > > > > > > > > > > > A new VFIO device type is introduced - vfio-vhost. This addressed
-> > > > > > > > > > > > some comments from here:https://patchwork.ozlabs.org/cover/984763/
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Below is the updated device interface:
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Currently, there are two regions of this device: 1) CONFIG_REGION
-> > > > > > > > > > > > (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
-> > > > > > > > > > > > device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
-> > > > > > > > > > > > can be used to notify the device.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > 1. CONFIG_REGION
-> > > > > > > > > > > > 
-> > > > > > > > > > > > The region described by CONFIG_REGION is the main control interface.
-> > > > > > > > > > > > Messages will be written to or read from this region.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > The message type is determined by the `request` field in message
-> > > > > > > > > > > > header. The message size is encoded in the message header too.
-> > > > > > > > > > > > The message format looks like this:
-> > > > > > > > > > > > 
-> > > > > > > > > > > > struct vhost_vfio_op {
-> > > > > > > > > > > > 	__u64 request;
-> > > > > > > > > > > > 	__u32 flags;
-> > > > > > > > > > > > 	/* Flag values: */
-> > > > > > > > > > > >       #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
-> > > > > > > > > > > > 	__u32 size;
-> > > > > > > > > > > > 	union {
-> > > > > > > > > > > > 		__u64 u64;
-> > > > > > > > > > > > 		struct vhost_vring_state state;
-> > > > > > > > > > > > 		struct vhost_vring_addr addr;
-> > > > > > > > > > > > 	} payload;
-> > > > > > > > > > > > };
-> > > > > > > > > > > > 
-> > > > > > > > > > > > The existing vhost-kernel ioctl cmds are reused as the message
-> > > > > > > > > > > > requests in above structure.
-> > > > > > > > > > > Still a comments like V1. What's the advantage of inventing a new protocol?
-> > > > > > > > > > I'm trying to make it work in VFIO's way..
-> > > > > > > > > > > I believe either of the following should be better:
-> > > > > > > > > > > 
-> > > > > > > > > > > - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
-> > > > > > > > > > > extend it with e.g notify region. The advantages is that all exist userspace
-> > > > > > > > > > > program could be reused without modification (or minimal modification). And
-> > > > > > > > > > > vhost API hides lots of details that is not necessary to be understood by
-> > > > > > > > > > > application (e.g in the case of container).
-> > > > > > > > > > Do you mean reusing vhost's ioctl on VFIO device fd directly,
-> > > > > > > > > > or introducing another mdev driver (i.e. vhost_mdev instead of
-> > > > > > > > > > using the existing vfio_mdev) for mdev device?
-> > > > > > > > > Can we simply add them into ioctl of mdev_parent_ops?
-> > > > > > > > Right, either way, these ioctls have to be and just need to be
-> > > > > > > > added in the ioctl of the mdev_parent_ops. But another thing we
-> > > > > > > > also need to consider is that which file descriptor the userspace
-> > > > > > > > will do the ioctl() on. So I'm wondering do you mean let the
-> > > > > > > > userspace do the ioctl() on the VFIO device fd of the mdev
-> > > > > > > > device?
-> > > > > > > Yes.
-> > > > > > Got it! I'm not sure what's Alex opinion on this. If we all
-> > > > > > agree with this, I can do it in this way.
-> > > > > > 
-> > > > > > > Is there any other way btw?
-> > > > > > Just a quick thought.. Maybe totally a bad idea. I was thinking
-> > > > > > whether it would be odd to do non-VFIO's ioctls on VFIO's device
-> > > > > > fd. So I was wondering whether it's possible to allow binding
-> > > > > > another mdev driver (e.g. vhost_mdev) to the supported mdev
-> > > > > > devices. The new mdev driver, vhost_mdev, can provide similar
-> > > > > > ways to let userspace open the mdev device and do the vhost ioctls
-> > > > > > on it. To distinguish with the vfio_mdev compatible mdev devices,
-> > > > > > the device API of the new vhost_mdev compatible mdev devices
-> > > > > > might be e.g. "vhost-net" for net?
-> > > > > > 
-> > > > > > So in VFIO case, the device will be for passthru directly. And
-> > > > > > in VHOST case, the device can be used to accelerate the existing
-> > > > > > virtualized devices.
-> > > > > > 
-> > > > > > How do you think?
-> > > > > VFIO really can't prevent vendor specific ioctls on the device file
-> > > > > descriptor for mdevs, but a) we'd want to be sure the ioctl address
-> > > > > space can't collide with ioctls we'd use for vfio defined purposes and
-> > > > > b) maybe the VFIO user API isn't what you want in the first place if
-> > > > > you intend to mostly/entirely ignore the defined ioctl set and replace
-> > > > > them with your own.  In the case of the latter, you're also not getting
-> > > > > the advantages of the existing VFIO userspace code, so why expose a
-> > > > > VFIO device at all.
-> > > > Yeah, I totally agree.
-> > > 
-> > > I guess the original idea is to reuse the VFIO DMA/IOMMU API for this. Then
-> > > we have the chance to reuse vfio codes in qemu for dealing with e.g vIOMMU.
-> > Yeah, you are right. We have several choices here:
-> > 
-> > #1. We expose a VFIO device, so we can reuse the VFIO container/group
-> >      based DMA API and potentially reuse a lot of VFIO code in QEMU.
-> > 
-> >      But in this case, we have two choices for the VFIO device interface
-> >      (i.e. the interface on top of VFIO device fd):
-> > 
-> >      A) we may invent a new vhost protocol (as demonstrated by the code
-> >         in this RFC) on VFIO device fd to make it work in VFIO's way,
-> >         i.e. regions and irqs.
-> > 
-> >      B) Or as you proposed, instead of inventing a new vhost protocol,
-> >         we can reuse most existing vhost ioctls on the VFIO device fd
-> >         directly. There should be no conflicts between the VFIO ioctls
-> >         (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
-> > 
-> > #2. Instead of exposing a VFIO device, we may expose a VHOST device.
-> >      And we will introduce a new mdev driver vhost-mdev to do this.
-> >      It would be natural to reuse the existing kernel vhost interface
-> >      (ioctls) on it as much as possible. But we will need to invent
-> >      some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
-> >      choice, but it's too heavy and doesn't support vIOMMU by itself).
-> > 
-> > I'm not sure which one is the best choice we all want..
-> > Which one (#1/A, #1/B, or #2) would you prefer?
-> 
-> 
-> #2 looks better. One concern is that we may end up with similar API as what
-> VFIO does.
+Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
+module instantiated one for each PCIe lane between Synopsys DesignWare core
+based PCIe IP and Universal PHY block.
 
-Yeah, that's a major concern. If it's true, is it something
-that's not acceptable?
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+V13:
+* None
 
-> And I do see some new RFC for VFIO to add more DMA API.
+V12:
+* None
 
-Is there any pointers?
+V11:
+* None
 
-> 
-> Consider it was still in the stage of RFC, does it make sense if we try this
-> way with some sample parents?
+V10:
+* None
 
-I think it makes sense.
+V9:
+* None
 
-> 
-> 
-> > 
-> > > 
-> > > > > The mdev interface does provide a general interface for creating and
-> > > > > managing virtual devices, vfio-mdev is just one driver on the mdev
-> > > > > bus.  Parav (Mellanox) has been doing work on mdev-core to help clean
-> > > > > out vfio-isms from the interface, aiui, with the intent of implementing
-> > > > > another mdev bus driver for using the devices within the kernel.
-> > > > Great to know this! I found below series after some searching:
-> > > > 
-> > > > https://lkml.org/lkml/2019/3/8/821
-> > > > 
-> > > > In above series, the new mlx5_core mdev driver will do the probe
-> > > > by calling mlx5_get_core_dev() first on the parent device of the
-> > > > mdev device. In vhost_mdev, maybe we can also keep track of all
-> > > > the compatible mdev devices and use this info to do the probe.
-> > > 
-> > > I don't get why this is needed. My understanding is if we want to go this
-> > > way, there're actually two parts. 1) Vhost mdev that implements the device
-> > > managements and vhost ioctl. 2) Vhost it self, which can accept mdev fd as
-> > > it backend through VHOST_NET_SET_BACKEND.
-> > I think with vhost-mdev (or with vfio-mdev if we agree to do vhost
-> > ioctls on vfio device fd directly), we don't need to open /dev/vhost-net
-> > (and there is no VHOST_NET_SET_BACKEND needed) at all. Either way,
-> > after getting the fd of the mdev, we just need to do vhost ioctls
-> > on it directly.
-> 
-> 
-> The reason I ask is that vhost-net is designed to not tied to any kind of
-> backend. So it's better to have a single place to deal with ioctl. But it's
-> not must.
+V8:
+* None
 
-I think in vhost-mdev, there is a chance for us to have a
-unified interface in /dev for all vhost mediated devices
-(not limited to net) in the system (similar to the case of
-/dev/vfio/) instead of making it a backend of vhost-net.
+V7:
+* None
 
-For the code organization, it's possible for us to refactor
-drivers/vhost/ and let it provide some APIs for parent devices
-to handle generic vhost ioctls.
+V6:
+* Added Sob
+* Changed node name from "p2u@xxxxxxxx" to "phy@xxxxxxxx"
 
-Thanks,
-Tiwei
+V5:
+* None
 
-> 
-> Thanks
-> 
-> 
-> > 
-> > > 
-> > > > But we also need a way to allow vfio_mdev driver to distinguish
-> > > > and reject the incompatible mdev devices.
-> > > 
-> > > One issue for this series is that it doesn't consider DMA isolation at all.
-> > > 
-> > > 
-> > > > > It
-> > > > > seems like this vhost-mdev driver might be similar, using mdev but not
-> > > > > necessarily vfio-mdev to expose devices.  Thanks,
-> > > > Yeah, I also think so!
-> > > 
-> > > I've cced some driver developers for their inputs. I think we need a sample
-> > > parent drivers in the next version for us to understand the full picture.
-> > > 
-> > > 
-> > > Thanks
-> > > 
-> > > 
-> > > > Thanks!
-> > > > Tiwei
-> > > > 
-> > > > > Alex
+V4:
+* None
+
+V3:
+* Changed node label to reflect new format that includes either 'hsio' or
+  'nvhs' in its name to reflect which UPHY brick they belong to
+
+V2:
+* This is a new patch in v2 series
+
+ .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+new file mode 100644
+index 000000000000..d23ff90baad5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+@@ -0,0 +1,28 @@
++NVIDIA Tegra194 P2U binding
++
++Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
++Speed) each interfacing with 12 and 8 P2U instances respectively.
++A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
++interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
++lane.
++
++Required properties:
++- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
++- reg: Should be the physical address space and length of respective each P2U
++       instance.
++- reg-names: Must include the entry "ctl".
++
++Required properties for PHY port node:
++- #phy-cells: Defined by generic PHY bindings.  Must be 0.
++
++Refer to phy/phy-bindings.txt for the generic PHY binding properties.
++
++Example:
++
++p2u_hsio_0: phy@3e10000 {
++	compatible = "nvidia,tegra194-p2u";
++	reg = <0x03e10000 0x10000>;
++	reg-names = "ctl";
++
++	#phy-cells = <0>;
++};
+-- 
+2.17.1
+
