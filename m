@@ -2,101 +2,93 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA063C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0798FC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D19720651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rk0yxVoR"
+	by mail.kernel.org (Postfix) with ESMTP id C90CA20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGJHqG (ORCPT
+        id S1727240AbfGJHsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:46:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41064 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfGJHqG (ORCPT
+        Wed, 10 Jul 2019 03:48:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51374 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfGJHsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:46:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so782373pls.8;
-        Wed, 10 Jul 2019 00:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rV8XY23YcgGtmJ7pWfTCdKdGdKOHA29Wd8XEtkDo6dw=;
-        b=rk0yxVoRI1NSXQaTxJGnXTVDTyoh73Qr15nBHk581jpDGshkxfpn3RztceSyQs+tHe
-         ti7BzzdaHXnGOAGg6mqaBJ1SAJHD3e6CdgRxUu5ixvnbeMoOmTLMD9XC6iTWrjA6F+08
-         WKInMtFYRWZALcgK61SSZxrpio9iP4ILgs+n8XyfIl4/ijmVe2vKFVBz1EhdmKo7KRMx
-         genAn4wRFNkS02wbrK1nV8BTUxA/GLNMlgzTkAJyRvlOY05RHzqBLzUZl5A8vk4jqgvz
-         q4QPtcHkt2xMb3JPCE4OfqRs1uXAXn3kU5N3dvXfNh3+iHcvizhBiRoXII9PboSmzdrW
-         +bsw==
+        Wed, 10 Jul 2019 03:48:24 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 207so1159384wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:48:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rV8XY23YcgGtmJ7pWfTCdKdGdKOHA29Wd8XEtkDo6dw=;
-        b=tAtthZ/iazOow0jrm2CubXuUQaZ9nvi8EfaIT5a7aNFZ0EfgQnhDhX99kNIryooEH/
-         LAzBUad1DsfDAcfQQ/96IEgazuoJioScKvzuB8ITtxWN5jecZqR/D7ZBRc7k/s9qXQTM
-         I/zVf5673zQKfIYbN2wc9P5kxhYihc/r57kY1ZSWKAsLl9E4hNz7DBk0KQ6beIHLBzi9
-         Ut+BesFrU7Dc0Pbmh56KR1/ad6RdPMzHm9rcOLzjBoemfBjz+mlfwamO+Nf+rJfJZKbw
-         tp8DAdU7ON9l8y/9smGZeAIlJf0Bk8BJVyZAzc9reaaDZfa3K2GKASQwjQZfn6ZwPIiU
-         Amng==
-X-Gm-Message-State: APjAAAUdD8Ppq7xwXZAnf3+kVmpebaUsJkkx+SLYIjl7PJ1dz/lRC0xS
-        BnZVfzcBxEIdnepbJfT+Hd4=
-X-Google-Smtp-Source: APXvYqzTEtpXtNGzqCh1iEYjwJr8rhP0UH3QyDiHyaS+gj3onEv9axgpOacn/2/6w5KIyiizT1khyA==
-X-Received: by 2002:a17:902:20c8:: with SMTP id v8mr37589553plg.284.1562744765212;
-        Wed, 10 Jul 2019 00:46:05 -0700 (PDT)
-Received: from localhost.localdomain ([116.66.213.65])
-        by smtp.gmail.com with ESMTPSA id g14sm1252903pgn.8.2019.07.10.00.46.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Jul 2019 00:46:04 -0700 (PDT)
-From:   yangxingwu <xingwu.yang@gmail.com>
-To:     wensong@linux-vs.org
-Cc:     horms@verge.net.au, ja@ssi.bg, pablo@netfilter.org,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, yangxingwu <xingwu.yang@gmail.com>
-Subject: [PATCH] ipvs: remove unnecessary space
-Date:   Wed, 10 Jul 2019 15:45:52 +0800
-Message-Id: <20190710074552.74394-1-xingwu.yang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        bh=5pKvfGeJDZMFrUJE5dsk55XrwkeCdIBhXPGCJpJX3yQ=;
+        b=ihE3IlGVddfVt6YhZtvSFELhHnlLK2tEjva6bhKYdx91p0wjixJ0V1JwpzIzfnGwEn
+         Zwnc7Mddo5AZdmdLwYBKrs2pKhL9t28nzbvfpLEBOTIPOEqFqFf8knNCcjZoYqbbOHOM
+         YwtAI34KXn4LmNeQN8jgIbALWyVJ+cySPFpQjG2++CtXe61miuDizrXtuvJwOCeVTQmc
+         jXWIS1Q1hleBtiSuxslehs8sww3YSeNwQW6KhSVXVszt1a1bs39ImnP2+0S0oaGMwC3A
+         eoLbzDnXocAtCNOgenFAh/pW0s11AfgMLuIzszG6nw8xd7VZcW13AvzGBZDw4hKtscm7
+         Jd9w==
+X-Gm-Message-State: APjAAAUHtQvXclPEj+JNlQb/DORur49pw+Ac4mZm0MOwmGxft925Yr0z
+        3loA2ql42g9Am+Je1peb3gCuwV8kzeA=
+X-Google-Smtp-Source: APXvYqxBo7fXc7J0sh27HZaG+Ucnx/OPQLgxeNCFIGDoYdEKJeVURij5Mh83Y1Lvo9M9i95o4ynonQ==
+X-Received: by 2002:a05:600c:c6:: with SMTP id u6mr3766726wmm.153.1562744902060;
+        Wed, 10 Jul 2019 00:48:22 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:19db:ad53:90ea:9423? ([2001:b07:6468:f312:19db:ad53:90ea:9423])
+        by smtp.gmail.com with ESMTPSA id b8sm1168256wmh.46.2019.07.10.00.48.20
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 00:48:21 -0700 (PDT)
+Subject: Re: [PATCH 2/5] KVM: cpuid: extract do_cpuid_7_mask and support
+ multiple subleafs
+To:     Jing Liu <jing2.liu@linux.intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20190704140715.31181-1-pbonzini@redhat.com>
+ <20190704140715.31181-3-pbonzini@redhat.com>
+ <5af77de6-3a18-a3b9-b492-c280ac4310a1@linux.intel.com>
+ <d3454d11-97fb-42f2-0a0c-add0456b076c@redhat.com>
+ <752c2473-04d9-8420-a78f-fa677f806aca@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <841ba614-7657-8342-2814-ec6560e726af@redhat.com>
+Date:   Wed, 10 Jul 2019 09:48:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <752c2473-04d9-8420-a78f-fa677f806aca@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch removes the extra space.
+On 10/07/19 09:32, Jing Liu wrote:
+> 
+> 
+> On 7/10/2019 2:30 PM, Paolo Bonzini wrote:
+>> On 08/07/19 09:07, Jing Liu wrote:
+>>>>
+>>> And when adding subleaf 1, plan to add codes,
+>>>
+>>> case 1:
+>>>      entry->eax |= kvm_cpuid_7_1_eax_x86_features;
+>>>      entry->ebx = entry->ecx = entry->edx =0;
+>>>      break;
+>>>
+>>> What do you think?
+>>
+>> This should be "&=", not "|=".  Otherwise yes, that's the idea.
+>>
+> 
+> Yes! So let me send out the BFloat16 patch based on your patch set now
+> or you have merge plan soon?
 
-Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
----
- net/netfilter/ipvs/ip_vs_mh.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Just send it . :)
 
-diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs_mh.c
-index 94d9d34..98e358e 100644
---- a/net/netfilter/ipvs/ip_vs_mh.c
-+++ b/net/netfilter/ipvs/ip_vs_mh.c
-@@ -174,8 +174,8 @@ static int ip_vs_mh_populate(struct ip_vs_mh_state *s,
- 		return 0;
- 	}
- 
--	table =  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
--			 sizeof(unsigned long), GFP_KERNEL);
-+	table =	kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-+			sizeof(unsigned long), GFP_KERNEL);
- 	if (!table)
- 		return -ENOMEM;
- 
--- 
-1.8.3.1
+Paolo
 
