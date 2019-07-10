@@ -2,81 +2,85 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2A6C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68236C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0342064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F2C20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfGJHdw (ORCPT
+        id S1727174AbfGJHjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:33:52 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:36690 "EHLO mxct.zte.com.cn"
+        Wed, 10 Jul 2019 03:39:25 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32077 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfGJHdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:33:51 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 9744B65CB9B0520C0A0A;
-        Wed, 10 Jul 2019 15:33:46 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x6A7Vu2q076458;
-        Wed, 10 Jul 2019 15:31:56 +0800 (GMT-8)
-        (envelope-from yang.bin18@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019071015321609-2237267 ;
-          Wed, 10 Jul 2019 15:32:16 +0800 
-From:   Yang Bin <yang.bin18@zte.com.cn>
-To:     lduncan@suse.com
-Cc:     cleech@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        open-iscsi@googlegroups.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
-        " Yang Bin " <yang.bin18@zte.com.cn>
-Subject: [PATCH] Check sk before sendpage
-Date:   Wed, 10 Jul 2019 15:30:09 +0800
-Message-Id: <1562743809-31133-1-git-send-email-yang.bin18@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-10 15:32:16,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-10 15:31:59,
-        Serialize complete at 2019-07-10 15:31:59
-X-MAIL: mse-fl2.zte.com.cn x6A7Vu2q076458
+        id S1726132AbfGJHjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 03:39:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 00:39:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,473,1557212400"; 
+   d="scan'208";a="176757754"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2019 00:39:21 -0700
+Date:   Wed, 10 Jul 2019 15:22:34 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org
+Subject: Re: [PATCH v2 00/11] FPGA DFL updates
+Message-ID: <20190710072234.GA26817@hao-dev>
+References: <1562286238-11413-1-git-send-email-hao.wu@intel.com>
+ <20190710050746.GA28620@hao-dev>
+ <20190710055417.GA5778@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710055417.GA5778@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: " Yang Bin "<yang.bin18@zte.com.cn>
+On Wed, Jul 10, 2019 at 07:54:17AM +0200, Greg KH wrote:
+> On Wed, Jul 10, 2019 at 01:07:46PM +0800, Wu Hao wrote:
+> > On Fri, Jul 05, 2019 at 08:23:47AM +0800, Wu Hao wrote:
+> > > Hi Greg / Moritz
+> > > 
+> > > This is v2 patchset which adds more features to FPGA DFL. This patchset
+> > > is made on top of patch[1] and char-misc-next tree. Documentation patch
+> > > for DFL is dropped from this patchset, and will resubmit it later to
+> > > avoid conflict.
+> > 
+> > Hi Greg,
+> > 
+> > Did you get a chance to take a look at this new version to see if these
+> > patches are good to take?
+> > 
+> > Hope we can catch up with the merge window.
+> 
+> You sent them last Friday.  I actually tried to not do kernel work last
+> weekend.  The merge window opened up on Sunday.  My trees should have
+> been closed last week, so no, this missed this merge window, I'll
+> review these patches once 5.3-rc1 is out.
 
-Before xmit,iscsi may disconnect just now.
-So must check connection sock NULL or not,or kernel will crash for
-accessing NULL pointer.
+Oh..... I see...
 
-Signed-off-by: Yang Bin <yang.bin18@zte.com.cn>
----
- drivers/scsi/iscsi_tcp.c | 3 +++
- 1 file changed, 3 insertions(+)
+Ok. Then let me resend it with documentation patch added back once 5.3-rc1
+is out.
 
-diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
-index 7bedbe8..a59c49f 100644
---- a/drivers/scsi/iscsi_tcp.c
-+++ b/drivers/scsi/iscsi_tcp.c
-@@ -264,6 +264,9 @@ static int iscsi_sw_tcp_xmit_segment(struct iscsi_tcp_conn *tcp_conn,
- 	unsigned int copied = 0;
- 	int r = 0;
- 
-+	if (!sk)
-+		return -ENOTCONN;
-+
- 	while (!iscsi_tcp_segment_done(tcp_conn, segment, 0, r)) {
- 		struct scatterlist *sg;
- 		unsigned int offset, copy;
--- 
-1.8.3.1
+Thanks
+Hao
 
+> 
+> thanks
+> 
+> greg k-h
