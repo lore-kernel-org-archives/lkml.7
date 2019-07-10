@@ -2,76 +2,105 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE4AC004EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B3BC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33ECA2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562751107;
-	bh=vy0Mr4Uol6rxl9Ul5HNef3JkghGVfMZzH2ZYvBEDPNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w03/jYCGgJg033gW3WMNeROmweKUul4M7tmCdIwsmTSYXiChzXFluF2jHq5ma1jT1
-	 INqJ5n4L9ppME1YU6Ar+P9IjV2MQaxmT32MzCxytmm/okGhVS2F0MefYKkf5hSayPC
-	 kJHKrsKRNL+2p+v67ixu1M/CRRmzVjt9XoQKSPoM=
+	by mail.kernel.org (Postfix) with ESMTP id 406C520838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfGJJbp (ORCPT
+        id S1727345AbfGJJdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfGJJbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:31:45 -0400
-Received: from localhost (unknown [37.142.3.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C01A020838;
-        Wed, 10 Jul 2019 09:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562751104;
-        bh=vy0Mr4Uol6rxl9Ul5HNef3JkghGVfMZzH2ZYvBEDPNM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v3AUO4eYGlcdf0/mRSZxPbZ2Xs+pJEVLj+7ECL67ahfXbHScUC+ItJ93D0h1evUJv
-         X4xwiL//KM6HoaGu1aq2/XwMq3fleodsYyTzpDjOQ25Ie/Vz+b4bt39sAJRumpGlLl
-         PWR5BVOMD3BBROb3E3q6OTjafSO/4YRLR5rXa9ME=
-Date:   Wed, 10 Jul 2019 12:31:39 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH net-next v3] net/mlx5e: Convert single case statement
- switch statements into if statements
-Message-ID: <20190710093139.GG7034@mtr-leonro.mtl.com>
-References: <20190710044748.3924-1-natechancellor@gmail.com>
- <20190710060614.6155-1-natechancellor@gmail.com>
+        Wed, 10 Jul 2019 05:33:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2199 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726080AbfGJJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:33:04 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DC934521168DE750CA9A;
+        Wed, 10 Jul 2019 17:32:59 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 10 Jul 2019 17:32:52 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <saeedm@mellanox.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH net-next] net: mlx5: Fix compiling error in tls.c
+Date:   Wed, 10 Jul 2019 17:38:52 +0800
+Message-ID: <20190710093852.34549-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710060614.6155-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 11:06:15PM -0700, Nathan Chancellor wrote:
-> During the review of commit 1ff2f0fa450e ("net/mlx5e: Return in default
-> case statement in tx_post_resync_params"), Leon and Nick pointed out
-> that the switch statements can be converted to single if statements
-> that return early so that the code is easier to follow.
->
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+There are some errors while compiling tls.c if
+CONFIG_MLX5_FPGA_TLS is not obvious on.
 
-Thanks again,
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c: In function mlx5e_tls_set_ipv4_flow:
+./include/linux/mlx5/device.h:61:39: error: invalid application of sizeof to incomplete type struct mlx5_ifc_tls_flow_bits
+ #define __mlx5_st_sz_bits(typ) sizeof(struct mlx5_ifc_##typ##_bits)
+                                       ^
+./include/linux/compiler.h:330:9: note: in definition of macro __compiletime_assert
+   if (!(condition))     \
+         ^~~~~~~~~
+...
+
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c: In function mlx5e_tls_build_netdev:
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:202:13: error: MLX5_ACCEL_TLS_TX undeclared (first use in this function); did you mean __MLX5_ACCEL_TLS_H__?
+  if (caps & MLX5_ACCEL_TLS_TX) {
+             ^~~~~~~~~~~~~~~~~
+             __MLX5_ACCEL_TLS_H__
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:207:13: error: MLX5_ACCEL_TLS_RX undeclared (first use in this function); did you mean MLX5_ACCEL_TLS_TX?
+  if (caps & MLX5_ACCEL_TLS_RX) {
+             ^~~~~~~~~~~~~~~~~
+             MLX5_ACCEL_TLS_TX
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:212:15: error: MLX5_ACCEL_TLS_LRO undeclared (first use in this function); did you mean MLX5_ACCEL_TLS_RX?
+  if (!(caps & MLX5_ACCEL_TLS_LRO)) {
+               ^~~~~~~~~~~~~~~~~~
+               MLX5_ACCEL_TLS_RX
+make[5]: *** [drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.o] Error 1
+make[5]: *** Waiting for unfinished jobs....
+make[4]: *** [drivers/net/ethernet/mellanox/mlx5/core] Error 2
+make[3]: *** [drivers/net/ethernet/mellanox] Error 2
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [drivers/net/ethernet] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [drivers/net] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [drivers] Error 2
+make: *** Waiting for unfinished jobs....
+
+this patch is to fix this error using 'depends on MLX5_FPGA_TLS' when MLX5_TLS is set.
+
+Fixes: e2869fb2068b ("net/mlx5: Kconfig, Better organize compilation flags")
+
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+index 37fef8c..1da2770 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+@@ -139,6 +139,7 @@ config MLX5_TLS
+ 	depends on MLX5_CORE_EN
+ 	depends on TLS_DEVICE
+ 	depends on TLS=y || MLX5_CORE=m
++	depends on MLX5_FPGA_TLS
+ 	select MLX5_ACCEL
+ 	default n
+ 	help
+-- 
+2.7.4
+
