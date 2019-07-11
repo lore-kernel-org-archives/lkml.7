@@ -2,96 +2,118 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DF1C742A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DE8C742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30810208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E1920872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jbkXSzSR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y6k9SG6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfGKVhI (ORCPT
+        id S1729125AbfGKVjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 17:37:08 -0400
-Received: from ozlabs.org ([203.11.71.1]:50315 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfGKVhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 17:37:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45l8XK0yt8z9sMQ;
-        Fri, 12 Jul 2019 07:37:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562881025;
-        bh=lfLTT/KATA/r3uNfpQEyJnuc1pEDrlNuUNIolu/dtzQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jbkXSzSRpAPCj+d0kXPtV4inMWnB0YWEEHRmIkVNIccF6VkSo7iGOVvZgyFS4gPJR
-         sm4+6XzPuBDRq/VLrTnuTliWPgA9H0K/5r3PoxnpKkDYSiFNUU+K1iB9hvKfkqsxPH
-         ijEtglFn3E8c15aAWV4JKcgJyC1zGBkOZB/WTJyRhlqSJyP0WmkO/qs+ZOxNqSWufM
-         /wCwS/lGVmoH/cH+qrq/llCuqPrT0Pm80kvuu6uwB4597eiNL7+LukcY4PRg6Kd6mS
-         +bIHGVR8bJtBJMqRJfl4+hzeIJ5U5lc+SOQfSYftx2ucKQ+NvwhetKVYYaKViM5pVP
-         2Z90bV7s0JYxg==
-Date:   Fri, 12 Jul 2019 07:37:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: linux-next: Fixes tag needs some work in the tpmdd tree
-Message-ID: <20190712073703.6b6f7667@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/CUNmiBZjkePE7iQi0W5w8.r"; protocol="application/pgp-signature"
+        Thu, 11 Jul 2019 17:39:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41250 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfGKVjT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 17:39:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q4so3542243pgj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=hN7B8WFgbqERacE3IYOfjDfi2Lnw5rUXxCTjyYNVNg0=;
+        b=y6k9SG6CbD6cDUt9w3faCzDY41MjHi1ofuFcnSoPHwpygjpAIEzuM8BAYgIlQDSixx
+         WiNjtp2ZVShJSSxViBDywPgygDU5vmkrKB5iJ2vAdiUx1KsXCchYLPCxySK9xBcvmORS
+         HYSK7+BrQo1QyrEqeVnetfrV5JOPxjwiUqbq9T45uOqbzGnuTt8EXgmpul7XrkybKaAJ
+         aNnslKHEAU7ixWp/2h8zSgOc8cD7vC7+1hXwhmmAmNZ3GEIRKDM7FbeTIVPNyXVQ2NSS
+         YWI6973/UslklFCWPQVTZkUAqxtgzjdlswBjrQ9HpSMNjTuEQrKhIAjLBIp4T4dPas4c
+         b38Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hN7B8WFgbqERacE3IYOfjDfi2Lnw5rUXxCTjyYNVNg0=;
+        b=brGsnR6Y0uxTWy8Q+QSmrm5zQNJ0VZ2QIZeH1hXPIoZBzKjBmxTzEa1ZGDPk7DXF9N
+         9Q8lt2hLqTIQXH9NyPenkwi0ZvsY0AU8L3T7TUf8ojNLILx2AUjNtd1xFGDMX4XPOlmf
+         Sc/dcCFI5nQsQ5Iv06spunl9i0Clj8cxdAr4v3bhZ1aNP3tCaHn2y26uwCKe1oOHaKs/
+         Pic2B42fUXTmLg/w0U155s9CxA+TiO38UVHy/4LOpJ8JCDkr+1zQnnVulnr3EAKE16vX
+         SZ1ua4yyJ1QNJLZt4wTtMKqtXSCH7chALx45CGTqTsVsHlsAw+lnvyZrHTYWd9a/vBGU
+         7q2w==
+X-Gm-Message-State: APjAAAXmdqcM9XcG9mxCuwavV/rhhyVYo28YxcnFFDJgwSf0ippMy2ha
+        qY0xRmnfyfEZ4DZOdY8JzqtyzA==
+X-Google-Smtp-Source: APXvYqwO/qoRqMR7KW5Hqj+kJmxD1WculQ0AOIFkYECuq3ZtLW3ZsWIkD8ihV642dt3FmZRSpC2L6w==
+X-Received: by 2002:a63:4f45:: with SMTP id p5mr6766087pgl.326.1562881158410;
+        Thu, 11 Jul 2019 14:39:18 -0700 (PDT)
+Received: from localhost.localdomain ([27.7.91.104])
+        by smtp.gmail.com with ESMTPSA id w3sm5709795pgl.31.2019.07.11.14.39.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 14:39:17 -0700 (PDT)
+From:   Vaishali Thakkar <vaishali.thakkar@linaro.org>
+To:     agross@kernel.org
+Cc:     david.brown@linaro.org, gregkh@linuxfoundation.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
+        Vaishali Thakkar <vaishali.thakkar@linaro.org>
+Subject: [PATCH v5 0/5] soc: qcom: Add SoC info driver
+Date:   Fri, 12 Jul 2019 03:09:06 +0530
+Message-Id: <20190711213911.23180-1-vaishali.thakkar@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CUNmiBZjkePE7iQi0W5w8.r
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patchset adds SoC info driver which can provide information
+such as Chip ID, Chip family and serial number about Qualcomm SoCs
+to user space via sysfs. Furthermore, it allows userspace to get
+information about custom attributes and various image version
+information via debugfs.
 
-Hi all,
+The patchset cleanly applies on top of v5.2-rc7.
 
-In commit
+Changes since v1:
+        - Align ifdefs to left, remove unnecessary debugfs dir
+          creation check and fix function signatures in patch 3
+        - Fix comment for teh case when serial number is not
+          available in patch 1
 
-  0ce9bf1a55c9 ("tpm: tpm_ibm_vtpm: Fix unallocated banks")
+Changes since v2:
+        - Reorder patches [patch five -> patch two]
 
-Fixes tag
+Changes since v3:
+        - Add reviewed-bys from Greg
+        - Fix build warning when debugfs is disabled
+        - Remove extra checks for dir creations in patch 5
 
-  Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+Changes since v4:
+	- Added Reviewed-bys in multiple patches
+	- Bunch of nitpick fixes in patch 3
+	- Major refactoring for using core debugfs functions and
+	  eliminating duplicate code in patch 4 and 5 [detailed info
+	  can be found under --- in each patch]
 
-has these problem(s):
+Vaishali Thakkar (5):
+  base: soc: Add serial_number attribute to soc
+  base: soc: Export soc_device_register/unregister APIs
+  soc: qcom: Add socinfo driver
+  soc: qcom: socinfo: Expose custom attributes
+  soc: qcom: socinfo: Expose image information
 
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
+ Documentation/ABI/testing/sysfs-devices-soc |   7 +
+ drivers/base/soc.c                          |   9 +
+ drivers/soc/qcom/Kconfig                    |   8 +
+ drivers/soc/qcom/Makefile                   |   1 +
+ drivers/soc/qcom/smem.c                     |   9 +
+ drivers/soc/qcom/socinfo.c                  | 468 ++++++++++++++++++++
+ include/linux/sys_soc.h                     |   1 +
+ 7 files changed, 503 insertions(+)
+ create mode 100644 drivers/soc/qcom/socinfo.c
 
-Please do not split Fixes tags over more than one line.
+-- 
+2.17.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CUNmiBZjkePE7iQi0W5w8.r
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0nq/8ACgkQAVBC80lX
-0GxyUwgAjYSy9qM6m4ZxVvPOdDbNqvYSkv+oRUteCMvn4boobeBu1wj96xDmu/bE
-XLNAxeZfDKOgKBHOX+EmltW55P1QS9gDTkv0ruUlQnfXJwZbGT4k131s58usCXVB
-Kuv6yNAHC0Cd9CFegi8cZ2e6TVYK0nGAPx71YfiMpPsMJxUxwFhblVfj+9K/ALFX
-OL4TweQReYe8z6rKT/F1dPkW7J8ODkL6tf6gZ+8cGmhgO0n+XxvKew6xn0aufB1r
-V2jmtnAOW+Y4cIl4C8psD9G7BBo0p+z+kUru8U2Fx6gEAA7KuLwOq/a6YajPSHUx
-yU1tE+ppRLOG0TVWElR9RbELVD0nLA==
-=zbKg
------END PGP SIGNATURE-----
-
---Sig_/CUNmiBZjkePE7iQi0W5w8.r--
