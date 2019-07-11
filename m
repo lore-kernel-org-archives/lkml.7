@@ -2,91 +2,361 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3723FC74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEB9C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0323A216C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dR8W5eRi"
+	by mail.kernel.org (Postfix) with ESMTP id BC673216C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfGKLvV (ORCPT
+        id S1728583AbfGKLvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 11 Jul 2019 07:51:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55808 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728287AbfGKLvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jul 2019 07:51:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33350 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfGKLvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 07:51:20 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so2909973plo.0;
-        Thu, 11 Jul 2019 04:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YADbvn2K6/u8nqZ8q9ZPF7M9RWPIMSzuiJIm7lkbc3Y=;
-        b=dR8W5eRiA/e3yOi4FOC4uHJMU1ECzIkaS4bxgdBNsa6BXDCrKbvda7odCkmQbvNdcH
-         YZoMSxJR0BYz3/xfoJkaYuvvI1fPrP/ynaRDty9gWT67FWK53dMGLMMlKD/njJJnwG/2
-         ev4GNOw3od3Y/XeE6wdIhqYSrJSNF5oqRiVH634uOV7zxQMZMoJ71+aXW0u3rmgbG0OL
-         92E9bCnNpG9Ool9BikbAnYOLXmoUL1PxCXFNTVbkxD19su5nmpC3Vjiv1unpY8nDw+zF
-         k7FSnjPt3kEPNECLpxet7RvOHLPYL8wx5xQ8ETIxs3tM5xk8hgLMIr9b/A2K6AIpD8Zm
-         J8BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YADbvn2K6/u8nqZ8q9ZPF7M9RWPIMSzuiJIm7lkbc3Y=;
-        b=cfxQCez6+MQm+8vWcQaygU9GAqHJ5s6xft/3h29iiLdvySp2pDYzyQt6PgRO7c3sP1
-         QpgbmkoUAPYYe5UDqXBiuNi3UNpRuApUCdHAmomqpWJXWvBzqK+eZ3VHOdRqosEOOiKn
-         dlKVfOQBWZyYUlYFvAbgN55qu/1p5UIihiTqAuiHbEtJaQfH+jmd46jxv97TgymuyBC5
-         UIjWWFBKBlUzrPtIYIa8ol0q472ztXGE4RBtzEffuYwk26Jvm9eHzstrFHaJtim5flJ0
-         DvCR4qgZNKVTpKIGtHfd+PbW6U3kHJZyvYYtkP+zJdaju6McUaaXCbnvOSDS57b6nM0d
-         22EA==
-X-Gm-Message-State: APjAAAU2nTO7Pwc5Fh3Qdjk9sCEjhL9QT7+y39bZUxox3TbCp+U/5YoM
-        iCmaElTDdxhQqccyGJ5vXkA=
-X-Google-Smtp-Source: APXvYqxcGYiazPJSNg+VJyMqpy0EBBHqn2dYQ4xvLYGpGoGXyLLw8DgEU53NFyfiW27LNl5svYK7jQ==
-X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr4200056plp.221.1562845879704;
-        Thu, 11 Jul 2019 04:51:19 -0700 (PDT)
-Received: from icarus ([2001:268:c144:cf11:d03e:81be:e250:5da0])
-        by smtp.gmail.com with ESMTPSA id a21sm6426357pfi.27.2019.07.11.04.51.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 04:51:18 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 20:50:59 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        fabrice.gasnier@st.com, alexandre.torgue@st.com,
-        linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
- trigger driver
-Message-ID: <20190711115059.GA7778@icarus>
-References: <20190507091224.17781-1-benjamin.gaignard@st.com>
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4BF1A87621;
+        Thu, 11 Jul 2019 11:51:21 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-46.ams2.redhat.com [10.36.116.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46FC2600CD;
+        Thu, 11 Jul 2019 11:51:13 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com,
+        zhangfei.gao@gmail.com
+Subject: [PATCH v9 10/14] dma-iommu: Implement NESTED_MSI cookie
+Date:   Thu, 11 Jul 2019 13:49:55 +0200
+Message-Id: <20190711114959.15675-11-eric.auger@redhat.com>
+In-Reply-To: <20190711114959.15675-1-eric.auger@redhat.com>
+References: <20190711114959.15675-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190507091224.17781-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 11 Jul 2019 11:51:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:12:24AM +0200, Benjamin Gaignard wrote:
-> Quadrature feature is now hosted on it own framework.
-> Remove quadrature related code from stm32-trigger driver to avoid
-> code duplication and simplify the ABI.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Up to now, when the type was UNMANAGED, we used to
+allocate IOVA pages within a reserved IOVA MSI range.
 
-What is the status of this patch? Are there any objections currently for
-its inclusion?
+If both the host and the guest are exposed with SMMUs, each
+would allocate an IOVA. The guest allocates an IOVA (gIOVA)
+to map onto the guest MSI doorbell (gDB). The Host allocates
+another IOVA (hIOVA) to map onto the physical doorbell (hDB).
 
-William Breathitt Gray
+So we end up with 2 unrelated mappings, at S1 and S2:
+         S1             S2
+gIOVA    ->     gDB
+               hIOVA    ->    hDB
+
+The PCI device would be programmed with hIOVA.
+No stage 1 mapping would existing, causing the MSIs to fault.
+
+iommu_dma_bind_guest_msi() allows to pass gIOVA/gDB
+to the host so that gIOVA can be used by the host instead of
+re-allocating a new hIOVA.
+
+         S1           S2
+gIOVA    ->    gDB    ->    hDB
+
+this time, the PCI device can be programmed with the gIOVA MSI
+doorbell which is correctly mapped through both stages.
+
+Nested mode is not compatible with HW MSI regions as in that
+case gDB and hDB should have a 1-1 mapping. This check will
+be done when attaching each device to the IOMMU domain.
+
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+
+---
+
+v7 -> v8:
+- correct iommu_dma_(un)bind_guest_msi when
+  !CONFIG_IOMMU_DMA
+- Mentioned nested mode is not compatible with HW MSI regions
+  in commit message
+- protect with msi_lock on unbind
+
+v6 -> v7:
+- removed device handle
+
+v3 -> v4:
+- change function names; add unregister
+- protect with msi_lock
+
+v2 -> v3:
+- also store the device handle on S1 mapping registration.
+  This garantees we associate the associated S2 mapping binds
+  to the correct physical MSI controller.
+
+v1 -> v2:
+- unmap stage2 on put()
+---
+ drivers/iommu/dma-iommu.c | 139 +++++++++++++++++++++++++++++++++++++-
+ include/linux/dma-iommu.h |  16 +++++
+ 2 files changed, 152 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index f802255219d3..52eb2c787cff 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -26,12 +26,15 @@
+ struct iommu_dma_msi_page {
+ 	struct list_head	list;
+ 	dma_addr_t		iova;
++	dma_addr_t		gpa;
+ 	phys_addr_t		phys;
++	size_t			s1_granule;
+ };
+ 
+ enum iommu_dma_cookie_type {
+ 	IOMMU_DMA_IOVA_COOKIE,
+ 	IOMMU_DMA_MSI_COOKIE,
++	IOMMU_DMA_NESTED_MSI_COOKIE,
+ };
+ 
+ struct iommu_dma_cookie {
+@@ -96,14 +99,17 @@ EXPORT_SYMBOL(iommu_get_dma_cookie);
+  *
+  * Users who manage their own IOVA allocation and do not want DMA API support,
+  * but would still like to take advantage of automatic MSI remapping, can use
+- * this to initialise their own domain appropriately. Users should reserve a
++ * this to initialise their own domain appropriately. Users may reserve a
+  * contiguous IOVA region, starting at @base, large enough to accommodate the
+  * number of PAGE_SIZE mappings necessary to cover every MSI doorbell address
+- * used by the devices attached to @domain.
++ * used by the devices attached to @domain. The other way round is to provide
++ * usable iova pages through the iommu_dma_bind_doorbell API (nested stages
++ * use case)
+  */
+ int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
+ {
+ 	struct iommu_dma_cookie *cookie;
++	int nesting, ret;
+ 
+ 	if (domain->type != IOMMU_DOMAIN_UNMANAGED)
+ 		return -EINVAL;
+@@ -111,7 +117,12 @@ int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
+ 	if (domain->iova_cookie)
+ 		return -EEXIST;
+ 
+-	cookie = cookie_alloc(IOMMU_DMA_MSI_COOKIE);
++	ret =  iommu_domain_get_attr(domain, DOMAIN_ATTR_NESTING, &nesting);
++	if (!ret && nesting)
++		cookie = cookie_alloc(IOMMU_DMA_NESTED_MSI_COOKIE);
++	else
++		cookie = cookie_alloc(IOMMU_DMA_MSI_COOKIE);
++
+ 	if (!cookie)
+ 		return -ENOMEM;
+ 
+@@ -132,6 +143,7 @@ void iommu_put_dma_cookie(struct iommu_domain *domain)
+ {
+ 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+ 	struct iommu_dma_msi_page *msi, *tmp;
++	bool s2_unmap = false;
+ 
+ 	if (!cookie)
+ 		return;
+@@ -139,7 +151,15 @@ void iommu_put_dma_cookie(struct iommu_domain *domain)
+ 	if (cookie->type == IOMMU_DMA_IOVA_COOKIE && cookie->iovad.granule)
+ 		put_iova_domain(&cookie->iovad);
+ 
++	if (cookie->type == IOMMU_DMA_NESTED_MSI_COOKIE)
++		s2_unmap = true;
++
+ 	list_for_each_entry_safe(msi, tmp, &cookie->msi_page_list, list) {
++		if (s2_unmap && msi->phys) {
++			size_t size = cookie_msi_granule(cookie);
++
++			WARN_ON(iommu_unmap(domain, msi->gpa, size) != size);
++		}
+ 		list_del(&msi->list);
+ 		kfree(msi);
+ 	}
+@@ -148,6 +168,92 @@ void iommu_put_dma_cookie(struct iommu_domain *domain)
+ }
+ EXPORT_SYMBOL(iommu_put_dma_cookie);
+ 
++/**
++ * iommu_dma_bind_guest_msi - Allows to pass the stage 1
++ * binding of a virtual MSI doorbell used by @dev.
++ *
++ * @domain: domain handle
++ * @iova: guest iova
++ * @gpa: gpa of the virtual doorbell
++ * @size: size of the granule used for the stage1 mapping
++ *
++ * In nested stage use case, the user can provide IOVA/IPA bindings
++ * corresponding to a guest MSI stage 1 mapping. When the host needs
++ * to map its own MSI doorbells, it can use @gpa as stage 2 input
++ * and map it onto the physical MSI doorbell.
++ */
++int iommu_dma_bind_guest_msi(struct iommu_domain *domain,
++			     dma_addr_t iova, phys_addr_t gpa, size_t size)
++{
++	struct iommu_dma_cookie *cookie = domain->iova_cookie;
++	struct iommu_dma_msi_page *msi;
++	int ret = 0;
++
++	if (!cookie)
++		return -EINVAL;
++
++	if (cookie->type != IOMMU_DMA_NESTED_MSI_COOKIE)
++		return -EINVAL;
++
++	iova = iova & ~(dma_addr_t)(size - 1);
++	gpa = gpa & ~(phys_addr_t)(size - 1);
++
++	spin_lock(&cookie->msi_lock);
++
++	list_for_each_entry(msi, &cookie->msi_page_list, list) {
++		if (msi->iova == iova)
++			goto unlock; /* this page is already registered */
++	}
++
++	msi = kzalloc(sizeof(*msi), GFP_ATOMIC);
++	if (!msi) {
++		ret = -ENOMEM;
++		goto unlock;
++	}
++
++	msi->iova = iova;
++	msi->gpa = gpa;
++	msi->s1_granule = size;
++	list_add(&msi->list, &cookie->msi_page_list);
++unlock:
++	spin_unlock(&cookie->msi_lock);
++	return ret;
++}
++EXPORT_SYMBOL(iommu_dma_bind_guest_msi);
++
++void iommu_dma_unbind_guest_msi(struct iommu_domain *domain, dma_addr_t giova)
++{
++	struct iommu_dma_cookie *cookie = domain->iova_cookie;
++	struct iommu_dma_msi_page *msi;
++
++	if (!cookie)
++		return;
++
++	if (cookie->type != IOMMU_DMA_NESTED_MSI_COOKIE)
++		return;
++
++	spin_lock(&cookie->msi_lock);
++
++	list_for_each_entry(msi, &cookie->msi_page_list, list) {
++		dma_addr_t aligned_giova =
++			giova & ~(dma_addr_t)(msi->s1_granule - 1);
++
++		if (msi->iova == aligned_giova) {
++			if (msi->phys) {
++				/* unmap the stage 2 */
++				size_t size = cookie_msi_granule(cookie);
++
++				WARN_ON(iommu_unmap(domain, msi->gpa, size) != size);
++			}
++			list_del(&msi->list);
++			kfree(msi);
++			break;
++		}
++	}
++	spin_unlock(&cookie->msi_lock);
++}
++EXPORT_SYMBOL(iommu_dma_unbind_guest_msi);
++
+ /**
+  * iommu_dma_get_resv_regions - Reserved region driver helper
+  * @dev: Device from iommu_get_resv_regions()
+@@ -1149,6 +1255,33 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 		if (msi_page->phys == msi_addr)
+ 			return msi_page;
+ 
++	/*
++	 * In nested stage mode, we do not allocate an MSI page in
++	 * a range provided by the user. Instead, IOVA/IPA bindings are
++	 * individually provided. We reuse thise IOVAs to build the
++	 * GIOVA -> GPA -> MSI HPA nested stage mapping.
++	 */
++	if (cookie->type == IOMMU_DMA_NESTED_MSI_COOKIE) {
++		list_for_each_entry(msi_page, &cookie->msi_page_list, list)
++			if (!msi_page->phys) {
++				int ret;
++
++				/* do the stage 2 mapping */
++				ret = iommu_map(domain,
++						msi_page->gpa, msi_addr, size,
++						IOMMU_MMIO | IOMMU_WRITE);
++				if (ret) {
++					pr_warn("MSI S2 mapping failed (%d)\n",
++						ret);
++					return NULL;
++				}
++				msi_page->phys = msi_addr;
++				return msi_page;
++			}
++		pr_warn("%s no MSI binding found\n", __func__);
++		return NULL;
++	}
++
+ 	msi_page = kzalloc(sizeof(*msi_page), GFP_ATOMIC);
+ 	if (!msi_page)
+ 		return NULL;
+diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+index 2112f21f73d8..d4317c7ecf58 100644
+--- a/include/linux/dma-iommu.h
++++ b/include/linux/dma-iommu.h
+@@ -12,6 +12,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/iommu.h>
+ #include <linux/msi.h>
++#include <uapi/linux/iommu.h>
+ 
+ /* Domain management interface for IOMMU drivers */
+ int iommu_get_dma_cookie(struct iommu_domain *domain);
+@@ -36,6 +37,9 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+ 			       struct msi_msg *msg);
+ 
+ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
++int iommu_dma_bind_guest_msi(struct iommu_domain *domain,
++			     dma_addr_t iova, phys_addr_t gpa, size_t size);
++void iommu_dma_unbind_guest_msi(struct iommu_domain *domain, dma_addr_t giova);
+ 
+ #else /* CONFIG_IOMMU_DMA */
+ 
+@@ -74,6 +78,18 @@ static inline void iommu_dma_compose_msi_msg(struct msi_desc *desc,
+ {
+ }
+ 
++static inline int
++iommu_dma_bind_guest_msi(struct iommu_domain *domain,
++			 dma_addr_t iova, phys_addr_t gpa, size_t size)
++{
++	return -ENODEV;
++}
++
++static inline void
++iommu_dma_unbind_guest_msi(struct iommu_domain *domain, dma_addr_t giova);
++{
++}
++
+ static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
+ {
+ }
+-- 
+2.20.1
+
