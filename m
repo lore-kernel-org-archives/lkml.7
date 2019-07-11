@@ -2,128 +2,194 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB165C74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB8BC74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B134120863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC008208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKv2sJnd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kqlroZe7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfGKRaf (ORCPT
+        id S1728641AbfGKRje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:30:35 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35647 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbfGKRaf (ORCPT
+        Thu, 11 Jul 2019 13:39:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39544 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbfGKRje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:30:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y4so7201626wrm.2;
-        Thu, 11 Jul 2019 10:30:33 -0700 (PDT)
+        Thu, 11 Jul 2019 13:39:34 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so3280333pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=U3b0G1E1maoK6A4e9Ca/0e/KTMO66Xm7oZqBqZ5gCxk=;
-        b=TKv2sJnddYV0SAh+0b25B0nWCvHDEp0nnayzul0ypf+gYb78r4UALyCCXmyeh68S/m
-         sjP6uWt6XmfRcwXRmgGIaKwlUSAZzvz53a63//yW2whDjrf/6C+me2WXbjMrlmMN4Bjb
-         I9Z1gXRMyU9ijAsFrOosCFBUaSdU+6VVK5lVAPDwWzpPQDqqDeFIsQPB3tmmooIh9ba6
-         Z0kn2DXQm4CVS+vfU0zlPIfnfjTBdUJgFMfkb+wqXBKTEDtzl9x1bcnE24sJaHK3vjtf
-         DLeXLpYO0DrHvwK6apIx/3ugeAzRva63nTwZDd6HrqHMQJ/VZAFvC3GzlNc1w0z5mKTh
-         kmRA==
+        bh=HFZ1x9Bwz0GUDiOhP+7WxNPTOOqtjhEpu7L1QSIu54o=;
+        b=kqlroZe7s+T13xYRD1th/uV6N3YkpWdMDzxIIFwQ3gDiLT3wa7qh4YgQEuuSkugzgL
+         /uXB2s+618wSOpYeEZEOx6Zo55mhAdfZv/xCopvHTtWqNOKJeYU4lgzerllcKFHYhijw
+         gdiTnf31KYPqhs4yGxw35020hpX2r6WA+B2RPXfPw4V4of15OtygEKGbF714c9A1Xd5W
+         4wKQiw62KZEMrT6SZa0nDXpVHa8q9AvAxMR3hm6Po+LZ12pKj2EMBkKdJf4QBV/ilvFC
+         eleQlxQf1VpsKLBBysZ3aGGheMnoi1f+o6NOiqHTH4Qo35DRdhokkSp4EOoU6am5pStB
+         1e6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U3b0G1E1maoK6A4e9Ca/0e/KTMO66Xm7oZqBqZ5gCxk=;
-        b=YPbYacoRBN3GKXlHPvhivqhhyJoGQVIL/ZFHFw2+086hLDYlh+zfjn37u1rZTGlpgy
-         Tg3l+qn5jz9eLfmvXXjnAFEqLeXYjUZFwcb9CCcdYMAgBi5XmqnC5Qa8dTh+YuT3qztM
-         aaNKlpb1aBOH2+WXqQggVEX7z+IjRpOvHgPnVTyFxZPaNhyzHSGONQYZpK3N7a6/fuGR
-         mRYuYc93j0FSykrcD8uT79PHiDmfhb9OVY1t7kIGRKxk/FeQeWGL1pmGkgMNmasi7nIS
-         3rNFx8kC3P+wZE9DpExBOLru94uFT9x6CWISRe7GGcbIP6FecAExX/+1L0uA7Wfc5/TY
-         rFwg==
-X-Gm-Message-State: APjAAAWpxj1e4tMdDkKw/KbvydW2AQHo8oP2OyjPS3ENqHKcQ3DAhEul
-        5SkP0eXhAne70PgqBxjnGa4=
-X-Google-Smtp-Source: APXvYqzo3byxyxCxShNQCAttoD2gEStU3rn0zpqaJflGhfsxBtoj91oh78aSJNGNESC/oRF2RhYVPg==
-X-Received: by 2002:adf:90e7:: with SMTP id i94mr5935660wri.224.1562866232510;
-        Thu, 11 Jul 2019 10:30:32 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id y7sm4588363wmm.19.2019.07.11.10.30.31
+        bh=HFZ1x9Bwz0GUDiOhP+7WxNPTOOqtjhEpu7L1QSIu54o=;
+        b=rBKPNAvUG3saWl9FKtkNiq3c1LJ/9zZ1Hugrazh50Yq5aRZv/uHp8T/4zzi87CJ6/G
+         CobMWzuiqIwf1Ml2YmfDbc1/1dlzpoyFzHf3b87cvNruVPtCVlW7YhFUbkJ0eSU8td+r
+         7gQNlJunua1pI7AseOGcz85jlSC3aWJn2PaaRKTEsj/VjkZP7/J3YbHala96voqWp/6i
+         y06G1WiUFXLxJqnaWj7Vc6SBP13sO8fioGiGZ1kjCH1/1CVbDTldydfAUPj2BBueAWT3
+         dkjSZqpZ1umDZRfj7yc/kodKNdkKm36ZCyRb+VGpRlZnMryCCuomWT+nxhfC1kWK5Y/q
+         VrRg==
+X-Gm-Message-State: APjAAAXJibYCYWy6pAHUm0C4iDM9qdHVv3P+JPkSzQTAFUJPtA32rqFz
+        gvdOPtSD0cgr600W1XiyWdY4Mg==
+X-Google-Smtp-Source: APXvYqx53DWisrIUx8wtw7I10qDwRqbUe57mjMuQjMcDn74PJCZFUDQRHQVTvfGYi0yrHyXySpJJsw==
+X-Received: by 2002:a17:90a:7148:: with SMTP id g8mr6263776pjs.51.1562866772910;
+        Thu, 11 Jul 2019 10:39:32 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i124sm13165127pfe.61.2019.07.11.10.39.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 10:30:31 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 10:30:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Bernard Metzler <BMT@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190711173030.GA844@archlinux-threadripper>
-References: <20190710174800.34451-1-natechancellor@gmail.com>
- <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
- <20190711081434.GA86557@archlinux-threadripper>
- <20190711133915.GA25807@ziepe.ca>
- <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
- <20190711171808.GF25807@ziepe.ca>
+        Thu, 11 Jul 2019 10:39:32 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 10:40:43 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        georgi.djakov@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, saravanak@google.com
+Subject: Re: [PATCH RFC 2/4] OPP: Add and export helper to set bandwidth
+Message-ID: <20190711174043.GU7234@tuxbook-pro>
+References: <20190627133424.4980-1-sibis@codeaurora.org>
+ <20190627133424.4980-3-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190711171808.GF25807@ziepe.ca>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190627133424.4980-3-sibis@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 02:18:08PM -0300, Jason Gunthorpe wrote:
-> On Thu, Jul 11, 2019 at 10:16:44AM -0700, Nick Desaulniers wrote:
-> > On Thu, Jul 11, 2019 at 6:39 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
-> > > > Maybe time to start plumbing Clang into your test flow until it can get
-> > > > intergrated with more CI setups? :) It can catch some pretty dodgy
-> > > > behavior that GCC doesn't:
-> > >
-> > > I keep asking how to use clang to build the kernel and last I was told
-> > > it still wasn't ready..
-> > >
-> > > Is it ready now? Is there some flow that will compile with clang
-> > > warning free, on any arch? (at least the portion of the kernel I check)
-> > 
-> > $ make CC=clang ...
-> > 
-> > Let us know if you find something we haven't already.
-> > https://clangbuiltlinux.github.io/
-> > https://github.com/ClangBuiltLinux/linux/issues
+On Thu 27 Jun 06:34 PDT 2019, Sibi Sankar wrote:
+
+> Add and export 'dev_pm_opp_set_bw' to set the bandwidth
+> levels associated with an OPP for a given frequency.
 > 
-> What clang version?
+
+While this looks quite reasonable I'm uncertain about the overall OPP
+API.
+
+With the profiling based (bwmon/llcc) approach we would acquire the peak
+bandwidth from the OPP table and calculate the average dynamically,
+based on measurements and heuristics.
+
+For that I think we will have a struct dev_pm_opp at hand (e.g. from
+devfreq_recommended_opp() or similar), from which we want to read the
+peak value and then apply the icc vote. Or would we want to update the
+avg bw and then apply the opp using a method like this? (In which case
+we probably don't want to pass a freq, but a struct dev_pm_opp *, to
+avoid the additional lookup)
+
+Regards,
+Bjorn
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/opp/core.c     | 46 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h |  6 ++++++
+>  2 files changed, 52 insertions(+)
 > 
-> Jason
-
-You'll need clang-9 for x86 because of the asm-goto requirement (or a
-selective set of reverts for clang-8) but everything else should be
-good with clang-8:
-
-https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/118745131
-
-We wrote a Python script that builds an LLVM 9 toolchain suitable for
-kernel development that is self contained (doesn't install anything to
-your system):
-
-https://github.com/ClangBuiltLinux/tc-build
-
-Let me know if there are any issues with it if you give it a go, I've
-already fixed one from Thomas Gleixner:
-
-https://lore.kernel.org/lkml/alpine.DEB.2.21.1906262140570.32342@nanos.tec.linutronix.de/
-
-Cheers,
-Nathan
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index c85c04dc2c7de..78f42960860d1 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -746,6 +746,52 @@ static int _set_required_opps(struct device *dev,
+>  	return ret;
+>  }
+>  
+> +/**
+> + * dev_pm_opp_set_bw() - Configures OPP bandwidth levels
+> + * @dev:	device for which we do this operation
+> + * @freq:	bandwidth values to set with matching 'freq'
+> + *
+> + * This configures the bandwidth to the levels specified
+> + * by the OPP corresponding to the given frequency.
+> + *
+> + * Return: 0 on success or a negative error value.
+> + */
+> +int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
+> +{
+> +	struct opp_table *opp_table;
+> +	struct dev_pm_opp *opp;
+> +	int ret = 0;
+> +	int i;
+> +
+> +	opp = dev_pm_opp_find_freq_exact(dev, freq, true);
+> +	if (IS_ERR(opp))
+> +		return PTR_ERR(opp);
+> +
+> +	opp_table = _find_opp_table(dev);
+> +	if (IS_ERR(opp_table)) {
+> +		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
+> +		ret = PTR_ERR(opp_table);
+> +		goto put_opp;
+> +	}
+> +
+> +	if (IS_ERR_OR_NULL(opp_table->paths)) {
+> +		ret = -ENODEV;
+> +		goto put_opp_table;
+> +	}
+> +
+> +	for (i = 0; i < opp_table->path_count; i++) {
+> +		ret = icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
+> +				 opp->bandwidth[i].peak);
+> +	}
+> +
+> +put_opp_table:
+> +	dev_pm_opp_put_opp_table(opp_table);
+> +put_opp:
+> +	dev_pm_opp_put(opp);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
+> +
+>  /**
+>   * dev_pm_opp_set_rate() - Configure new OPP based on frequency
+>   * @dev:	 device for which we do this operation
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index a17c462974851..1cdc2d0a2b20e 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -152,6 +152,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+>  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+>  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+>  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+> +int dev_pm_opp_set_bw(struct device *dev, unsigned long freq);
+>  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+>  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+>  void dev_pm_opp_remove_table(struct device *dev);
+> @@ -336,6 +337,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
+>  	return -ENOTSUPP;
+>  }
+>  
+> +static inline int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+>  static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
+>  {
+>  	return -ENOTSUPP;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
