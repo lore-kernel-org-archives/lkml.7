@@ -2,181 +2,103 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9417CC74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1B3C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6715921537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562865220;
-	bh=bvCqdNXA0lNVRHiKVn7GV3+2W08VEttCRx0QEFub0cs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=EUVpUhgvnLnNBhiI1YUXX5S6oajdhiI2AWFXqMHw9hBsBevIAmxo8b9el8cUyDlXc
-	 1l6p9UHLXU3tJRKVXjRA0mPjtLL8fzQaT9H3HUwLXVp/sYiMYv416Sb713N9WGJCGi
-	 PbQ0VIa57+Yec2MrH/f4eDXhv1hHHwBQBywCsFRc=
+	by mail.kernel.org (Postfix) with ESMTP id E56D720872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Da22eipD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfGKRNj (ORCPT
+        id S1728879AbfGKROX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728549AbfGKRNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:13:38 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7453C20872;
-        Thu, 11 Jul 2019 17:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562865217;
-        bh=bvCqdNXA0lNVRHiKVn7GV3+2W08VEttCRx0QEFub0cs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=0TqnHc8qfAgJztGG94YdRuN4xG2kZaS6sbf1z74YUdhdwMk2kV4Stu438wlgeKV8L
-         oh3vC96kARmmtfPmwIhzbWFROiLU1zK2h36Bc/YzMJEobAdVQGMHqA8iWxDsHuoFlw
-         sJBgH8E0onMZ8EOj+HQItpmYf2qEOsOwt7zk0lAw=
-Date:   Thu, 11 Jul 2019 10:13:36 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] f2fs for 5.3
-Message-ID: <20190711171336.GA66396@jaegeuk-macbookpro.roam.corp.google.com>
+        Thu, 11 Jul 2019 13:14:23 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33719 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfGKROX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:14:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c14so3358951plo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ucw9rSRviGvxmtHa1eJcbGqoOfZIZgp2Nd0u5B3lWZA=;
+        b=Da22eipDrFV3sVjp5lhMK1Ag4ov7GIbghnsCPMLPbWr4HTpMO+0Xb4J2rn8DRx6qHT
+         raOPgwKUlI6vG5+eZKye7qCGQQETow7AmhpRoh5cHUdPCXlRT2cKL12Jq3MiFeBw679W
+         wk1YpqERzczakZBDQQ8pko2DW4C1f70wJ9S/ns+5k4w9umeU1hYehewCAr5tVqqhs2DW
+         GqdMBotLNyKw4ICag2o2Axnjtx62CvFcXWSjSNMUtdvoLBIYxzy7ujuT7vx9Sj96r9wA
+         vjLfAdfQxMO9pCXH+JWhO4dfi00ckikjgNwJov9+WJZ2h2rnzwxooDe//g0ahmSlempo
+         WnFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ucw9rSRviGvxmtHa1eJcbGqoOfZIZgp2Nd0u5B3lWZA=;
+        b=thPFdvTZKKdCRkLGLNNPOrFWggGW2HHzK4c7qWA+wWIKsr1pTZGYi6VM8cGgBYSL7i
+         SSMFYXnDm+LqsMias+nj0QZrZyypVJnZfKkqjPBZu0ivkCRHUEHjYttIItFcPFD1+EVv
+         L0xMD+fYj8fQhNwZA0bHeemNcACmfSHiCLYQ6YiVWFIuK8UBhmU31WlnDaQdjNrbQbMM
+         Z3dt7UWBjIpL9XGUvPgf0IzvJvjfuDG5yM4i/D5Jm+u6qrs6rbgZxi0PHZT1FcyPc8wB
+         QgfC/clyTIo9YVjzCqz8spJoY9C2c35lgM+8fSl81adxvdAKzVnrlaevxxlwN9fwim2E
+         5zbQ==
+X-Gm-Message-State: APjAAAWQjuQ25Fnd66r3QsliJjoLN+OyBSb4VViRs/ciBbh4LZvutWvZ
+        R0bJDAs2yxIXeWCDangcZViMbtJx2/JFGpC9H+5XlA==
+X-Google-Smtp-Source: APXvYqyCiqSqHnYjKAeXDLQuC0c8sZpZJD60JXgP1quXPWouPH4pF7fZdEdLqQyRgFNNeHBCL0hiMDCMtYcdYDM2b4s=
+X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr5777071plq.223.1562865261987;
+ Thu, 11 Jul 2019 10:14:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.8.2 (2017-04-18)
+References: <20190710130206.1670830-1-arnd@arndb.de> <33511b0e-6d7b-c156-c415-7a609b049567@arm.com>
+ <CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 11 Jul 2019 10:14:10 -0700
+Message-ID: <CAKwvOdkubvsRCnJKCaesB=PF=DgXfsBzwzR8kyE9NzWPU8Gehg@mail.gmail.com>
+Subject: Re: [PATCH] vsyscall: use __iter_div_u64_rem()
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jul 11, 2019 at 5:28 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> clang does not like an inline assembly with a "=q" contraint for
+> a 64-bit output:
 
-Could you please consider this pull request?
+Seems like starting in GCC 7, GCC may not like it either:
+https://godbolt.org/z/UyBUfh
+it simply warns then proceeds with code gen.  Another difference may
+come from when GCC vs Clang perform dead code elimination (DCE) vs
+semantic analysis.
 
+-- 
 Thanks,
-
-The following changes since commit e0654264c4806dc436b291294a0fbf9be7571ab6:
-
-  Merge tag 'backlight-next-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight (2019-05-14 10:45:03 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-5.3
-
-for you to fetch changes up to 2d008835ec2fcf6eef3285e41e62a5eabd1fe76b:
-
-  f2fs: improve print log in f2fs_sanity_check_ckpt() (2019-07-10 18:44:47 -0700)
-
-----------------------------------------------------------------
-f2fs-for-5.3-rc1
-
-In this round, we've introduced native swap file support which can exploit DIO,
-enhanced existing checkpoint=disable feature with additional mount option to
-tune the triggering condition, and allowed user to preallocate physical blocks
-in a pinned file which will be useful to avoid f2fs fragmentation in append-only
-workloads. In addition, we've fixed subtle quota corruption issue.
-
-Enhancement:
- - add swap file support which uses DIO
- - allocate blocks for pinned file
- - allow SSR and mount option to enhance checkpoint=disable
- - enhance IPU IOs
- - add more sanity checks such as memory boundary access
-
-Bug fix:
- - quota corruption in very corner case of error-injected SPO case
- - fix root_reserved on remount and some wrong counts
- - add missing fsck flag
-
-Some patches were also introduced to clean up ambiguous i_flags and debugging
-messages codes.
-
-----------------------------------------------------------------
-Chao Yu (10):
-      f2fs: fix to check layout on last valid checkpoint park
-      f2fs: add bio cache for IPU
-      f2fs: fix to avoid deadloop if data_flush is on
-      f2fs: fix to do sanity check on segment bitmap of LFS curseg
-      f2fs: fix sparse warning
-      f2fs: avoid get_valid_blocks() for cleanup
-      f2fs: print kernel message if filesystem is inconsistent
-      f2fs: use generic EFSBADCRC/EFSCORRUPTED
-      f2fs: set SBI_NEED_FSCK for xattr corruption case
-      f2fs: improve print log in f2fs_sanity_check_ckpt()
-
-Daniel Rosenberg (4):
-      f2fs: Lower threshold for disable_cp_again
-      f2fs: Fix root reserved on remount
-      f2fs: Fix accounting for unusable blocks
-      f2fs: Add option to limit required GC for checkpoint=disable
-
-Eric Biggers (1):
-      f2fs: separate f2fs i_flags from fs_flags and ext4 i_flags
-
-Geert Uytterhoeven (1):
-      f2fs: Use DIV_ROUND_UP() instead of open-coding
-
-Heng Xiao (1):
-      f2fs: fix to avoid long latency during umount
-
-Jaegeuk Kim (7):
-      f2fs: link f2fs quota ops for sysfile
-      f2fs: allow ssr block allocation during checkpoint=disable period
-      f2fs: add missing sysfs entries in documentation
-      f2fs: add a rw_sem to cover quota flag changes
-      f2fs: allocate blocks for pinned file
-      f2fs: support swap file w/ DIO
-      f2fs: allow all the users to pin a file
-
-Joe Perches (1):
-      f2fs: introduce f2fs_<level> macros to wrap f2fs_printk()
-
-Kimberly Brown (1):
-      f2fs: replace ktype default_attrs with default_groups
-
-Ocean Chen (1):
-      f2fs: avoid out-of-range memory access
-
-Park Ju Hyung (1):
-      f2fs: always assume that the device is idle under gc_urgent
-
-Qiuyang Sun (1):
-      f2fs: ioctl for removing a range from F2FS
-
-Sahitya Tummala (3):
-      f2fs: add error prints for debugging mount failure
-      f2fs: fix f2fs_show_options to show nodiscard mount option
-      f2fs: fix is_idle() check for discard type
-
-Wang Shilong (1):
-      f2fs: only set project inherit bit for directory
-
- Documentation/ABI/testing/sysfs-fs-f2fs |   8 +
- Documentation/filesystems/f2fs.txt      | 133 ++++++-
- fs/f2fs/checkpoint.c                    | 107 +++---
- fs/f2fs/data.c                          | 249 +++++++++++--
- fs/f2fs/debug.c                         |   7 +
- fs/f2fs/dir.c                           |  16 +-
- fs/f2fs/extent_cache.c                  |   7 +-
- fs/f2fs/f2fs.h                          | 129 +++----
- fs/f2fs/file.c                          | 302 ++++++++++------
- fs/f2fs/gc.c                            | 196 +++++++++-
- fs/f2fs/inline.c                        |  16 +-
- fs/f2fs/inode.c                         |  78 ++--
- fs/f2fs/namei.c                         |  10 +-
- fs/f2fs/node.c                          |  38 +-
- fs/f2fs/recovery.c                      |  43 +--
- fs/f2fs/segment.c                       | 170 +++++++--
- fs/f2fs/segment.h                       |  16 +-
- fs/f2fs/super.c                         | 610 +++++++++++++++-----------------
- fs/f2fs/sysfs.c                         |  28 +-
- fs/f2fs/xattr.c                         |  10 +-
- include/trace/events/f2fs.h             |  11 +-
- 21 files changed, 1409 insertions(+), 775 deletions(-)
+~Nick Desaulniers
