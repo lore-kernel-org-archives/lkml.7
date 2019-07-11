@@ -2,97 +2,173 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF9C74A51
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059DFC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D25E20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C806C21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:40:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EIiddrbX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zu0TjO2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfGKJiN (ORCPT
+        id S1728319AbfGKJkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:38:13 -0400
-Received: from mga05.intel.com ([192.55.52.43]:49129 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbfGKJiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:38:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 02:38:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,478,1557212400"; 
-   d="scan'208";a="167976225"
-Received: from spoledic-mobl.ger.corp.intel.com (HELO localhost) ([10.252.50.84])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2019 02:38:08 -0700
-Date:   Thu, 11 Jul 2019 12:38:09 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        kai.svahn@intel.com, kai.huang@intel.com
-Subject: Re: [RFC PATCH v2 0/3] An alternative __vdso_sgx_enter_enclave() to
- allow enclave/host parameter passing using untrusted stack
-Message-ID: <20190711093809.4ogxe25laeoyp4ve@linux.intel.com>
-References: <cover.1555965327.git.cedric.xing@intel.com>
- <20190424062623.4345-1-cedric.xing@intel.com>
- <20190710111719.nnoedfo4wvbfghq7@linux.intel.com>
- <686e47d2-f45c-6828-39d1-48374925de6c@intel.com>
- <20190710224628.epjxwlpqqxdurmzo@linux.intel.com>
- <20190710231538.dkc7tyeyvns53737@linux.intel.com>
- <27cf0fc7-71c6-7dc1-f031-86bf887f1fe1@intel.com>
+        Thu, 11 Jul 2019 05:40:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55176 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfGKJkG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:40:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id ACBC960159; Thu, 11 Jul 2019 09:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562838004;
+        bh=0ssG2GNR8L/+/10jXcM2XYnH8GTmRCIhHCfYEyrmC/k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EIiddrbXCHEs/KMWWFvs3Rn7jxtmZW0YCwgZ1sNths5dqmNLuEM2UgniiotNdE6qJ
+         OSthxSlePOoiEjm9i2Gd9NlpIvr2EQVhTf/HMW8UZaC9MgSiP9CF01JmIrEJCaQX2+
+         eIuNTlGnCAcQatuYRUPy3kdfWAew8D9r7raUiBxU=
+Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5AA8060159;
+        Thu, 11 Jul 2019 09:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562838003;
+        bh=0ssG2GNR8L/+/10jXcM2XYnH8GTmRCIhHCfYEyrmC/k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Zu0TjO2NTVBlKFtxKpxwS3EHPfiDH1CyM/Z/AQ/N8KJoe6XxRg6o3y3E+bTYaXOcL
+         MKHEiEXpIGm3xyECqSUcpxgEk9WT1xdSHpG0Ku9u055z2ylCI4YVCvjS3BMSVfms4b
+         ryChf+200QeX18UmQRIRcj3qMReo3JqYG4wArnIQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5AA8060159
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH] opp: Return genpd virtual devices from
+ dev_pm_opp_attach_genpd()
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+References: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <2ed7993d-523b-270a-2be9-83ad2426e946@codeaurora.org>
+Date:   Thu, 11 Jul 2019 15:09:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27cf0fc7-71c6-7dc1-f031-86bf887f1fe1@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 04:37:41PM -0700, Xing, Cedric wrote:
-> On 7/10/2019 4:15 PM, Jarkko Sakkinen wrote:
-> > On Thu, Jul 11, 2019 at 01:46:28AM +0300, Jarkko Sakkinen wrote:
-> > > On Wed, Jul 10, 2019 at 11:08:37AM -0700, Xing, Cedric wrote:
-> > > > > With these conclusions I think the current vDSO API is sufficient for
-> > > > > Linux.
-> > > > 
-> > > > The new vDSO API is to support data exchange on stack. It has nothing to do
-> > > > with debugging. BTW, the community has closed on this.
-> > > 
-> > > And how that is useful?
-> > > 
-> > > > The CFI directives are for stack unwinding. They don't affect what the code
-> > > > does so you can just treat them as NOPs if you don't understand what they
-> > > > do. However, they are useful to not only debuggers but also exception
-> > > > handling code. libunwind also has a setjmp()/longjmp() implementation based
-> > > > on CFI directives.
-> > > 
-> > > Of course I won't merge code of which usefulness I don't understand.
-> > 
-> > I re-read the cover letter [1] because it usually is the place
-> > to "pitch" a feature.
-> > 
-> > It fails to address two things:
-> > 
-> > 1. How and in what circumstances is an untrusted stack is a better
-> >     vessel for handling exceptions than the register based approach
-> >     that we already have?
+
+On 7/8/2019 11:30 AM, Viresh Kumar wrote:
+> The cpufreq drivers don't need to do runtime PM operations on the
+> virtual devices returned by dev_pm_domain_attach_by_name() and so the
+> virtual devices weren't shared with the callers of
+> dev_pm_opp_attach_genpd() earlier.
 > 
-> We are not judging which vessel is better (or the best) among all possible
-> vessels. We are trying to enable more vessels. Every vessel has its pros and
-> cons so there's *no* single best vessel.
+> But the IO device drivers would want to do that. This patch updates the
+> prototype of dev_pm_opp_attach_genpd() to accept another argument to
+> return the pointer to the array of genpd virtual devices.
+> 
+> Reported-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> @Rajendra: Can you please test this one ? I have only compile tested it.
 
-I think reasonable metric is actually the coverage of the Intel SDK
-based enclaves. How widely are they in the wild? If the user base is
-large, it should be reasonable to support this just based on that.
+Sorry for the delay, I seem to have completely missed this patch.
+I just gave this a try and here are some observations,
 
-/Jarkko
+I have a case where I have one device with 2 power domains, one of them
+is scale-able (supports perf state) and the other one supports only being
+turned on and off.
+
+1. In the driver I now need to use dev_pm_domain_attach_by_name/id to attach the
+power domain which supports only on/off and then use dev_pm_opp_attach_genpd()
+for the one which supports perf states.
+
+2. My OPP table has only 1 required_opps, so the required_opp_count for the OPP table is 1.
+Now if my device tree has my scale-able powerdomain at index 1 (it works if its at index 0)
+then I end up with this error
+
+[    2.858628] ufshcd-qcom 1d84000.ufshc: Index can't be greater than required-opp-count - 1, rpmh_pd (1 : 1)
+
+so it looks like a lot of the OPP core today just assumes that if a device has multiple power domains,
+all of them are scale-able which isn't necessarily true.
+
+> 
+>   drivers/opp/core.c     | 5 ++++-
+>   include/linux/pm_opp.h | 4 ++--
+>   2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 2958cc7bbb58..07b6f1187b3b 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1775,6 +1775,7 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>    * dev_pm_opp_attach_genpd - Attach genpd(s) for the device and save virtual device pointer
+>    * @dev: Consumer device for which the genpd is getting attached.
+>    * @names: Null terminated array of pointers containing names of genpd to attach.
+> + * @virt_devs: Pointer to return the array of virtual devices.
+>    *
+>    * Multiple generic power domains for a device are supported with the help of
+>    * virtual genpd devices, which are created for each consumer device - genpd
+> @@ -1789,7 +1790,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>    * This helper needs to be called once with a list of all genpd to attach.
+>    * Otherwise the original device structure will be used instead by the OPP core.
+>    */
+> -struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
+> +struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+> +		const char **names, struct device ***virt_devs)
+>   {
+>   	struct opp_table *opp_table;
+>   	struct device *virt_dev;
+> @@ -1850,6 +1852,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+>   		name++;
+>   	}
+>   
+> +	*virt_devs = opp_table->genpd_virt_devs;
+>   	mutex_unlock(&opp_table->genpd_virt_dev_lock);
+>   
+>   	return opp_table;
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index be570761b77a..7c2fe2952f40 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -131,7 +131,7 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char * name);
+>   void dev_pm_opp_put_clkname(struct opp_table *opp_table);
+>   struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev, int (*set_opp)(struct dev_pm_set_opp_data *data));
+>   void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
+> -struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names);
+> +struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs);
+>   void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+>   int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+>   int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+> @@ -295,7 +295,7 @@ static inline struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const
+>   
+>   static inline void dev_pm_opp_put_clkname(struct opp_table *opp_table) {}
+>   
+> -static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
+> +static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs)
+>   {
+>   	return ERR_PTR(-ENOTSUPP);
+>   }
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
