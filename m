@@ -2,119 +2,152 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79124C742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69817C742A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACEA21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF5D21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wSdjRR9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbfGKWit (ORCPT
+        id S1728940AbfGKWl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 18:38:49 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43548 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfGKWir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 18:38:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 15:38:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
-   d="scan'208";a="156961083"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jul 2019 15:38:46 -0700
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
-Date:   Thu, 11 Jul 2019 15:38:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 11 Jul 2019 18:41:26 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37186 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfGKWlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 18:41:25 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 747E1891AB;
+        Fri, 12 Jul 2019 10:41:22 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1562884882;
+        bh=/afLfoMEh0vwaMWFdX+oVPFuipVJFjrbBFfHelfO80k=;
+        h=From:To:Cc:Subject:Date;
+        b=wSdjRR9XzevQVMvnElPoEiozqz2jpm3R48ElhGZoWzw9QyvM8cvmDfE9c7zw/ke7Z
+         eEicH99+Jis4Z/ai6KYeLoympLnlBbVZcJYK3Yn7zWZgwTYeDC+9b24y128gF2xgwg
+         XqRKK535cxlKUUSe3AQFPQRPyxZ6MP6CShxg4VdtK3jXTCMbq8LSr5VYgHVRe1Ckyr
+         EYiyBm7ZKYJU5FIuLcvJAdIEix/AvaDYhtONaHkmAmR8ISMi8cKt5qcjYYHZbn4JOz
+         Q2Qfwwfcq1UTlUQivrT9ULtTQm5eTQwSLVDM53QmI7n6TThupKFi6+4lTuAO0VWo3E
+         UmCDhZWaCOqPw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d27bb120000>; Fri, 12 Jul 2019 10:41:22 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 010FD13EECF;
+        Fri, 12 Jul 2019 10:41:24 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 2C68B1E1D80; Fri, 12 Jul 2019 10:41:22 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     jon.maloy@ericsson.com, eric.dumazet@gmail.com,
+        ying.xue@windriver.com, davem@davemloft.net
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2] tipc: ensure head->lock is initialised
+Date:   Fri, 12 Jul 2019 10:41:15 +1200
+Message-Id: <20190711224115.21499-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/11/19 7:25 AM, Alexandre Chartre wrote:
-> - Kernel code mapped to the ASI page-table has been reduced to:
->   . the entire kernel (I still need to test with only the kernel text)
->   . the cpu entry area (because we need the GDT to be mapped)
->   . the cpu ASI session (for managing ASI)
->   . the current stack
-> 
-> - Optionally, an ASI can request the following kernel mapping to be added:
->   . the stack canary
->   . the cpu offsets (this_cpu_off)
->   . the current task
->   . RCU data (rcu_data)
->   . CPU HW events (cpu_hw_events).
+tipc_named_node_up() creates a skb list. It passes the list to
+tipc_node_xmit() which has some code paths that can call
+skb_queue_purge() which relies on the list->lock being initialised.
 
-I don't see the per-cpu areas in here.  But, the ASI macros in
-entry_64.S (and asi_start_abort()) use per-cpu data.
+The spin_lock is only needed if the messages end up on the receive path
+but when the list is created in tipc_named_node_up() we don't
+necessarily know if it is going to end up there.
 
-Also, this stuff seems to do naughty stuff (calling C code, touching
-per-cpu data) before the PTI CR3 writes have been done.  But, I don't
-see anything excluding PTI and this code from coexisting.
+Once all the skb list users are updated in tipc it will then be possible
+to update them to use the unlocked variants of the skb list functions
+and initialise the lock when we know the message will follow the receive
+path.
+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+
+I'm updating our products to use the latest kernel. One change that we ha=
+ve that
+doesn't appear to have been upstreamed is related to the following soft l=
+ockup.
+
+NMI watchdog: BUG: soft lockup - CPU#3 stuck for 23s! [swapper/3:0]
+Modules linked in: tipc jitterentropy_rng echainiv drbg platform_driver(O=
+) ipifwd(PO)
+CPU: 3 PID: 0 Comm: swapper/3 Tainted: P           O    4.4.6-at1 #1
+task: a3054e00 ti: ac6b4000 task.ti: a307a000
+NIP: 806891c4 LR: 804f5060 CTR: 804f50d0
+REGS: ac6b59b0 TRAP: 0901   Tainted: P           O     (4.4.6-at1)
+MSR: 00029002 <CE,EE,ME>  CR: 84002088  XER: 20000000
+
+GPR00: 804f50fc ac6b5a60 a3054e00 00029002 00000101 01001011 00000000 000=
+00001
+GPR08: 00021002 c1502d1c ac6b5ae4 00000000 804f50d0
+NIP [806891c4] _raw_spin_lock_irqsave+0x44/0x80
+LR [804f5060] skb_dequeue+0x20/0x90
+Call Trace:
+[ac6b5a80] [804f50fc] skb_queue_purge+0x2c/0x50
+[ac6b5a90] [c1511058] tipc_node_xmit+0x138/0x170 [tipc]
+[ac6b5ad0] [c1509e58] tipc_named_node_up+0x88/0xa0 [tipc]
+[ac6b5b00] [c150fc1c] tipc_netlink_compat_stop+0x9bc/0xf50 [tipc]
+[ac6b5b20] [c1511638] tipc_rcv+0x418/0x9b0 [tipc]
+[ac6b5bc0] [c150218c] tipc_bcast_stop+0xfc/0x7b0 [tipc]
+[ac6b5bd0] [80504e38] __netif_receive_skb_core+0x468/0xa10
+[ac6b5c70] [805082fc] netif_receive_skb_internal+0x3c/0xe0
+[ac6b5ca0] [80642a48] br_handle_frame_finish+0x1d8/0x4d0
+[ac6b5d10] [80642f30] br_handle_frame+0x1f0/0x330
+[ac6b5d60] [80504ec8] __netif_receive_skb_core+0x4f8/0xa10
+[ac6b5e00] [805082fc] netif_receive_skb_internal+0x3c/0xe0
+[ac6b5e30] [8044c868] _dpa_rx+0x148/0x5c0
+[ac6b5ea0] [8044b0c8] priv_rx_default_dqrr+0x98/0x170
+[ac6b5ed0] [804d1338] qman_p_poll_dqrr+0x1b8/0x240
+[ac6b5f00] [8044b1c0] dpaa_eth_poll+0x20/0x60
+[ac6b5f20] [805087cc] net_rx_action+0x15c/0x320
+[ac6b5f80] [8002594c] __do_softirq+0x13c/0x250
+[ac6b5fe0] [80025c34] irq_exit+0xb4/0xf0
+[ac6b5ff0] [8000d81c] call_do_irq+0x24/0x3c
+[a307be60] [80004acc] do_IRQ+0x8c/0x120
+[a307be80] [8000f450] ret_from_except+0x0/0x18
+--- interrupt: 501 at arch_cpu_idle+0x24/0x70
+
+Eyeballing the code I think it can still happen since tipc_named_node_up
+allocates struct sk_buff_head head on the stack so it could have arbitrar=
+y
+content.
+
+Changes in v2:
+- fixup commit subject
+- add more information to commit message from mailing list discussion
+
+ net/tipc/name_distr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/tipc/name_distr.c b/net/tipc/name_distr.c
+index 61219f0b9677..44abc8e9c990 100644
+--- a/net/tipc/name_distr.c
++++ b/net/tipc/name_distr.c
+@@ -190,7 +190,7 @@ void tipc_named_node_up(struct net *net, u32 dnode)
+ 	struct name_table *nt =3D tipc_name_table(net);
+ 	struct sk_buff_head head;
+=20
+-	__skb_queue_head_init(&head);
++	skb_queue_head_init(&head);
+=20
+ 	read_lock_bh(&nt->cluster_scope_lock);
+ 	named_distribute(net, &head, dnode, &nt->cluster_scope);
+--=20
+2.22.0
+
