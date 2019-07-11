@@ -2,356 +2,66 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A755CC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F10C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722B420665
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="gPFFOd4m"
+	by mail.kernel.org (Postfix) with ESMTP id EA69220872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfGKMR6 (ORCPT
+        id S1728749AbfGKMSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:17:58 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35915 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728724AbfGKMR5 (ORCPT
+        Thu, 11 Jul 2019 08:18:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49787 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728488AbfGKMSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:17:57 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q26so3912870lfc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 05:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RrsD3KUbljKvcn/hTr1tzlZHGQrSAvr0S9K4UihQZu8=;
-        b=gPFFOd4m36WM6dZd5CejiVx7RdfnZc4j/86D1XlTScWoQsHCx2yBODthaivogk8816
-         bB2hGxI+PMmzsRKI2aOTxeNpcNXyzHXuM9GL7E+KILvF98Zcs1qaOKfKqWbj9ME7mYPQ
-         YowjcBp2AzvI8k5puyqJMwVxLeeaU+mTDht+w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RrsD3KUbljKvcn/hTr1tzlZHGQrSAvr0S9K4UihQZu8=;
-        b=ogYefBMwZzSvnHSnchmPsa49sWqbRBTdGGwlZNpVD+rEk1+BlI7OdH1dFvlUDwOWsf
-         ql/azeabgQpdgGrqro/3DHFXCGSnEqO7zlNUaN/6MnWRQnJwfqJb1aZAMOoGZGzr2OC1
-         gpWz71vJnenJzKD8ZEBRF8pXZidKWqTb0QjmJopMi814hHXwxfa5SuGlTmzqyQyyfvb8
-         2ZHZwjQgm7q+d2h5dTTL4lT07o8UOIMkmYo9HmPsJRz6wSH5vlTGq5C7K5DNbPuERWPC
-         neoO6M0s3tbk6q0PikeB6g8zwiYJEv1AsSyLh9uDj9j2CLn9tKkFGPv3X595eo1FXG53
-         BGQA==
-X-Gm-Message-State: APjAAAVgOWN3Y7YjzPltWCVB018AdYbB7rvOaqhS7Quaifj67V4jLQPK
-        V24RVAt0LMrTIt1+3/goMJQMHWLpeGZs26GSFK9Znw==
-X-Google-Smtp-Source: APXvYqw/AFHC6mXj2InF033lRSoV20fz1hXzm0KNG263CeACzfnfgIlYQMKtoMaN8NEU5ji7jend5en4rm8fFfDzCP4=
-X-Received: by 2002:a19:8c08:: with SMTP id o8mr1709672lfd.57.1562847474848;
- Thu, 11 Jul 2019 05:17:54 -0700 (PDT)
+        Thu, 11 Jul 2019 08:18:10 -0400
+Received: from [5.158.153.55] (helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hlY1V-00069G-TR; Thu, 11 Jul 2019 14:18:06 +0200
+Date:   Thu, 11 Jul 2019 14:18:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christoph Hellwig <hch@lst.de>
+cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH] dma-direct: Force unencrypted DMA under SME for certain
+ DMA masks
+In-Reply-To: <20190711100516.GB5853@lst.de>
+Message-ID: <alpine.DEB.2.21.1907111417480.1889@nanos.tec.linutronix.de>
+References: <10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com> <20190711100516.GB5853@lst.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-6-krzesimir@kinvolk.io>
- <CAEf4BzYYdrcwJKg271ZL7kPJNYyZEGdxQeuUNbfPk=EjewuHeQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYYdrcwJKg271ZL7kPJNYyZEGdxQeuUNbfPk=EjewuHeQ@mail.gmail.com>
-From:   Krzesimir Nowak <krzesimir@kinvolk.io>
-Date:   Thu, 11 Jul 2019 14:17:44 +0200
-Message-ID: <CAGGp+cHoujaAF_DSFitwgV3sshjj6_q6CL_hKPZUDhZC825PUQ@mail.gmail.com>
-Subject: Re: [bpf-next v3 05/12] selftests/bpf: Allow passing more information
- to BPF prog test run
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 3:17 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wro=
-te:
-> >
-> > The test case can now specify a custom length of the data member,
-> > context data and its length, which will be passed to
-> > bpf_prog_test_run_xattr. For backward compatilibity, if the data
-> > length is 0 (which is what will happen when the field is left
-> > unspecified in the designated initializer of a struct), then the
-> > length passed to the bpf_prog_test_run_xattr is TEST_DATA_LEN.
-> >
-> > Also for backward compatilibity, if context data length is 0, NULL is
-> > passed as a context to bpf_prog_test_run_xattr. This is to avoid
-> > breaking other tests, where context data being NULL and context data
-> > length being 0 is handled differently from the case where context data
-> > is not NULL and context data length is 0.
-> >
-> > Custom lengths still can't be greater than hardcoded 64 bytes for data
-> > and 192 for context data.
-> >
-> > 192 for context data was picked to allow passing struct
-> > bpf_perf_event_data as a context for perf event programs. The struct
-> > is quite large, because it contains struct pt_regs.
-> >
-> > Test runs for perf event programs will not allow the copying the data
-> > back to data_out buffer, so they require data_out_size to be zero and
-> > data_out to be NULL. Since test_verifier hardcodes it, make it
-> > possible to override the size. Overriding the size to zero will cause
-> > the buffer to be NULL.
-> >
-> > Changes since v2:
-> > - Allow overriding the data out size and buffer.
-> >
-> > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> > ---
-> >  tools/testing/selftests/bpf/test_verifier.c | 105 +++++++++++++++++---
-> >  1 file changed, 93 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testin=
-g/selftests/bpf/test_verifier.c
-> > index 1640ba9f12c1..6f124cc4ee34 100644
-> > --- a/tools/testing/selftests/bpf/test_verifier.c
-> > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > @@ -54,6 +54,7 @@
-> >  #define MAX_TEST_RUNS  8
-> >  #define POINTER_VALUE  0xcafe4all
-> >  #define TEST_DATA_LEN  64
-> > +#define TEST_CTX_LEN   192
-> >
-> >  #define F_NEEDS_EFFICIENT_UNALIGNED_ACCESS     (1 << 0)
-> >  #define F_LOAD_WITH_STRICT_ALIGNMENT           (1 << 1)
-> > @@ -96,7 +97,12 @@ struct bpf_test {
-> >         enum bpf_prog_type prog_type;
-> >         uint8_t flags;
-> >         __u8 data[TEST_DATA_LEN];
-> > +       __u32 data_len;
-> > +       __u8 ctx[TEST_CTX_LEN];
-> > +       __u32 ctx_len;
-> >         void (*fill_helper)(struct bpf_test *self);
-> > +       bool override_data_out_len;
-> > +       __u32 overridden_data_out_len;
-> >         uint8_t runs;
-> >         struct {
-> >                 uint32_t retval, retval_unpriv;
-> > @@ -104,6 +110,9 @@ struct bpf_test {
-> >                         __u8 data[TEST_DATA_LEN];
-> >                         __u64 data64[TEST_DATA_LEN / 8];
-> >                 };
-> > +               __u32 data_len;
-> > +               __u8 ctx[TEST_CTX_LEN];
-> > +               __u32 ctx_len;
-> >         } retvals[MAX_TEST_RUNS];
-> >  };
-> >
-> > @@ -818,21 +827,35 @@ static int set_admin(bool admin)
-> >  }
-> >
-> >  static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expecte=
-d_val,
-> > -                           void *data, size_t size_data)
-> > +                           void *data, size_t size_data, void *ctx,
-> > +                           size_t size_ctx, u32 *overridden_data_out_s=
-ize)
-> >  {
-> > -       __u8 tmp[TEST_DATA_LEN << 2];
-> > -       __u32 size_tmp =3D sizeof(tmp);
-> > -       int saved_errno;
-> > -       int err;
-> >         struct bpf_prog_test_run_attr attr =3D {
-> >                 .prog_fd =3D fd_prog,
-> >                 .repeat =3D 1,
-> >                 .data_in =3D data,
-> >                 .data_size_in =3D size_data,
-> > -               .data_out =3D tmp,
-> > -               .data_size_out =3D size_tmp,
-> > +               .ctx_in =3D ctx,
-> > +               .ctx_size_in =3D size_ctx,
-> >         };
-> > +       __u8 tmp[TEST_DATA_LEN << 2];
-> > +       __u32 size_tmp =3D sizeof(tmp);
-> > +       __u32 size_buf =3D size_tmp;
-> > +       __u8 *buf =3D tmp;
-> > +       int saved_errno;
-> > +       int err;
-> >
-> > +       if (overridden_data_out_size)
-> > +               size_buf =3D *overridden_data_out_size;
-> > +       if (size_buf > size_tmp) {
-> > +               printf("FAIL: out data size (%d) greater than a buffer =
-size (%d) ",
-> > +                      size_buf, size_tmp);
-> > +               return -EINVAL;
-> > +       }
-> > +       if (!size_buf)
-> > +               buf =3D NULL;
-> > +       attr.data_size_out =3D size_buf;
-> > +       attr.data_out =3D buf;
-> >         if (unpriv)
-> >                 set_admin(true);
-> >         err =3D bpf_prog_test_run_xattr(&attr);
-> > @@ -956,13 +979,45 @@ static void do_test_single(struct bpf_test *test,=
- bool unpriv,
-> >         if (!alignment_prevented_execution && fd_prog >=3D 0) {
-> >                 uint32_t expected_val;
-> >                 int i;
-> > +               __u32 size_data;
-> > +               __u32 size_ctx;
-> > +               bool bad_size;
-> > +               void *ctx;
-> > +               __u32 *overridden_data_out_size;
-> >
-> >                 if (!test->runs) {
-> > +                       if (test->data_len > 0)
-> > +                               size_data =3D test->data_len;
-> > +                       else
-> > +                               size_data =3D sizeof(test->data);
-> > +                       if (test->override_data_out_len)
-> > +                               overridden_data_out_size =3D &test->ove=
-rridden_data_out_len;
-> > +                       else
-> > +                               overridden_data_out_size =3D NULL;
-> > +                       size_ctx =3D test->ctx_len;
-> > +                       bad_size =3D false;
->
-> I hated all this duplication of logic, which with this patch becomes
-> even more expansive, so I removed it. Please see [0]. Can you please
-> apply that patch and add all this new logic only once?
->
->   [0] https://patchwork.ozlabs.org/patch/1130601/
+On Thu, 11 Jul 2019, Christoph Hellwig wrote:
 
-Will do.
+> Hi Tom,
+> 
+> this looks good to me.  I'll wait a bit for feedback from the x86 folks,
+> and if everything is fine I'll apply it to the dma-mapping tree.
 
->
-> >                         expected_val =3D unpriv && test->retval_unpriv =
-?
-> >                                 test->retval_unpriv : test->retval;
-> >
-> > -                       err =3D do_prog_test_run(fd_prog, unpriv, expec=
-ted_val,
-> > -                                              test->data, sizeof(test-=
->data));
-> > +                       if (size_data > sizeof(test->data)) {
-> > +                               printf("FAIL: data size (%u) greater th=
-an TEST_DATA_LEN (%lu) ", size_data, sizeof(test->data));
-> > +                               bad_size =3D true;
-> > +                       }
-> > +                       if (size_ctx > sizeof(test->ctx)) {
-> > +                               printf("FAIL: ctx size (%u) greater tha=
-n TEST_CTX_LEN (%lu) ", size_ctx, sizeof(test->ctx));
->
-> These look like way too long lines, wrap them?
+Go ahead.
 
-Ah, yeah, these can be wrapped easily. Will do.
-
->
-> > +                               bad_size =3D true;
-> > +                       }
-> > +                       if (size_ctx)
-> > +                               ctx =3D test->ctx;
-> > +                       else
-> > +                               ctx =3D NULL;
->
-> nit: single line:
->
-> ctx =3D size_ctx ? test->ctx : NULL;
->
-> > +                       if (bad_size)
-> > +                               err =3D 1;
-> > +                       else
-> > +                               err =3D do_prog_test_run(fd_prog, unpri=
-v, expected_val,
-> > +                                                      test->data, size=
-_data,
-> > +                                                      ctx, size_ctx,
-> > +                                                      overridden_data_=
-out_size);
-> >                         if (err)
-> >                                 run_errs++;
-> >                         else
-> > @@ -970,14 +1025,40 @@ static void do_test_single(struct bpf_test *test=
-, bool unpriv,
-> >                 }
-> >
-> >                 for (i =3D 0; i < test->runs; i++) {
-> > +                       if (test->retvals[i].data_len > 0)
-> > +                               size_data =3D test->retvals[i].data_len=
-;
-> > +                       else
-> > +                               size_data =3D sizeof(test->retvals[i].d=
-ata);
-> > +                       if (test->override_data_out_len)
-> > +                               overridden_data_out_size =3D &test->ove=
-rridden_data_out_len;
-> > +                       else
-> > +                               overridden_data_out_size =3D NULL;
-> > +                       size_ctx =3D test->retvals[i].ctx_len;
-> > +                       bad_size =3D false;
-> >                         if (unpriv && test->retvals[i].retval_unpriv)
-> >                                 expected_val =3D test->retvals[i].retva=
-l_unpriv;
-> >                         else
-> >                                 expected_val =3D test->retvals[i].retva=
-l;
-> >
-> > -                       err =3D do_prog_test_run(fd_prog, unpriv, expec=
-ted_val,
-> > -                                              test->retvals[i].data,
-> > -                                              sizeof(test->retvals[i].=
-data));
-> > +                       if (size_data > sizeof(test->retvals[i].data)) =
-{
-> > +                               printf("FAIL: data size (%u) at run %i =
-greater than TEST_DATA_LEN (%lu) ", size_data, i + 1, sizeof(test->retvals[=
-i].data));
-> > +                               bad_size =3D true;
-> > +                       }
-> > +                       if (size_ctx > sizeof(test->retvals[i].ctx)) {
-> > +                               printf("FAIL: ctx size (%u) at run %i g=
-reater than TEST_CTX_LEN (%lu) ", size_ctx, i + 1, sizeof(test->retvals[i].=
-ctx));
-> > +                               bad_size =3D true;
-> > +                       }
-> > +                       if (size_ctx)
-> > +                               ctx =3D test->retvals[i].ctx;
-> > +                       else
-> > +                               ctx =3D NULL;
-> > +                       if (bad_size)
-> > +                               err =3D 1;
-> > +                       else
-> > +                               err =3D do_prog_test_run(fd_prog, unpri=
-v, expected_val,
-> > +                                                      test->retvals[i]=
-.data, size_data,
-> > +                                                      ctx, size_ctx,
-> > +                                                      overridden_data_=
-out_size);
-> >                         if (err) {
-> >                                 printf("(run %d/%d) ", i + 1, test->run=
-s);
-> >                                 run_errs++;
-> > --
-> > 2.20.1
-> >
-
-
-
---=20
-Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
-Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago L=
-=C3=B3pez Galeiras
-Registergericht/Court of registration: Amtsgericht Charlottenburg
-Registernummer/Registration number: HRB 171414 B
-Ust-ID-Nummer/VAT ID number: DE302207000
