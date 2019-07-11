@@ -2,94 +2,114 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5C6C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC06C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3A82084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FAA2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562848854;
-	bh=fBvTdE9EJZ85xLYjGQdJYlwP6IuerljHtOrpJo0l+QY=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=UJHYwZ0us9aHm1BYAO47IXpyaOso30JpMTxR15qy83ML+KYovKXOGxzd0Pl2aGRcW
-	 MddMHsFq1NWZiaf/sS+RPCaiCAzypyRJtDVmxftA4Fx/4FWmIjCghI7HelhoSymX+U
-	 LyEK808pJsJIQWBAIg2QwMrbTRPYPxZGA5APhgYg=
+	s=default; t=1562848882;
+	bh=AXa6lEVYSl7hyrzHvmax9PDImrLvoBLD1OpFlRNmNY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ACjSD0lJotberbS3dBOrWqG41J/cKTfWGt7dxx9lQAc9+QSfhJLJWat62Ml7cPqAr
+	 wT4ibxdHaLqqmMtQsGGYhfcrP+zMFY4T1XYCegeJoLnPkUbwB0XTc4f3PY4G14u1rW
+	 SBvSF1B/2KBnPwGdbJh776S30T5YGbgYf0AIe904=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfGKMkw (ORCPT
+        id S1728561AbfGKMlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:40:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46475 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfGKMkw (ORCPT
+        Thu, 11 Jul 2019 08:41:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45820 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728491AbfGKMlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:40:52 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 65so4328167oid.13;
-        Thu, 11 Jul 2019 05:40:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=3r8RKtycl9G1tLYjoZAbYjqh6Yg25nxXvfCqJ3/8bm0=;
-        b=UnQ6KemIIrDWirK13JLkFFJW7RTFYVWlfJLcokSiENLRkXePvuO453C6qzufciu12M
-         1Xg1Fd6RMOanTMVGX01HV3UgSjdrbavBW+U/xubbVIdpEra3dq9EoX1zQZoXm3W+J/S4
-         mToIMDROmBmnoY/GHkjCejVzo+bU7FxImjFoCIqvtwHnfy641PAzKmb7+e/dVZcXmeQK
-         H7I70prvnpm404LJbVyABGydhNFPFdbIZ+N9KInPpDVNuzZJ69U2OiX+5PnfdseWP0zD
-         SePkLH2HAb2igkOHvcCzP0ckw6GOnz/Gjip0+NuLIfOqBZO8iEP3iGt8/IvTkmmp7a97
-         YnqA==
-X-Gm-Message-State: APjAAAULcuWWQxuez7I1ix2EzuxHyRaORE5Bq6dCtovArooSpnG7NS0s
-        beXwBLpQsfgqwEYCwvhNmYCHvHahAnm/II9Mu9z5bSW1
-X-Google-Smtp-Source: APXvYqxT5dZUSbX1DZlSvKZsT9GBLXHmwUGOqKziTTCbEXunvEyJyGkiwy3m6EKspZmwSnuVmxRaMeJCn6FYxcv+vr8=
-X-Received: by 2002:aca:cdd3:: with SMTP id d202mr2006883oig.115.1562848851832;
- Thu, 11 Jul 2019 05:40:51 -0700 (PDT)
+        Thu, 11 Jul 2019 08:41:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Rr0MZjQ0enn7b2r5LEgcRCN3jvJJD/0EMA3V9vYZvWs=; b=UDLBt7E8UoJ7o2qIBgnTeal3C
+        lLQeQRKz9lplnUqwPjw/OYRT4o5Fjj3bFYs1wMvfkD0YgHW+RQVYa/qYvTNp+4cunXUIN+jkSalXh
+        BMnyulH5dC6wtvXAa+4UK0HoW2RGcAXq3JGLS0Iei7fY+RKVO/2YQyyo7vGWzvz1s8mHQ=;
+Received: from [217.140.106.52] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hlYNy-0002MO-3f; Thu, 11 Jul 2019 12:41:18 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 41E59D02DA8; Thu, 11 Jul 2019 13:41:17 +0100 (BST)
+Date:   Thu, 11 Jul 2019 13:41:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Han Xu <han.xu@nxp.com>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB
+ memory for FSPI
+Message-ID: <20190711124117.GG14859@sirena.co.uk>
+References: <20190710023128.13115-1-han.xu@nxp.com>
+ <20190710023128.13115-2-han.xu@nxp.com>
+ <20190710151628.GF14859@sirena.co.uk>
+ <AM6PR04MB49672BE152440416ACCE275197F00@AM6PR04MB4967.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 11 Jul 2019 14:40:40 +0200
-Message-ID: <CAJZ5v0jTMK6rMomux6JfmRX_nRxZ+JqA_V8WKt-UJTGus6TfOQ@mail.gmail.com>
-Subject: [GIT PULL] ACPI fix for v5.3-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4ndw/alBWmZEhfcZ"
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB49672BE152440416ACCE275197F00@AM6PR04MB4967.eurprd04.prod.outlook.com>
+X-Cookie: Visit beautiful Vergas, Minnesota.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Please pull from the tag
+--4ndw/alBWmZEhfcZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.3-rc1-2
+On Wed, Jul 10, 2019 at 03:35:46PM +0000, Han Xu wrote:
 
-with top-most commit 6cf7fb5a95dec9743f4bfd96f9ece580a355cdd1
+> > > dynamically alloc AHB memory for FSPI controller
 
- Revert "ACPICA: Update table load object initialization"
+> > Why?  This is currently done at probe which is what you'd expect to happen
+> > here, there's no explanation as to why this change is being made.
 
-on top of commit 4b4704520d97b74e045154fc3b844b73ae4e7ebd
+> Explained in cover letter, It failed to alloc the whole memory mapping area during
+> probe on some platforms, since the AHB memory area could be pretty large. The
+> error may look like:
 
- Merge tag 'acpi-5.3-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+> [    1.129404] fsl-quadspi 1550000.spi: ioremap failed for resource [mem 0x40000000-0x7fffffff]
 
-to receive an ACPI fix for 5.3-rc1.
+The commit itself needs to have some explanation of what it's
+doing so it's in the git log, particularly for something odd like
+this.  More generally this just doesn't feel like it's solving
+the problem - essentially we're just deferring the mapping and
+then keep on failing operations until the allocation succeeds for
+some reason.  That's going to be disruptive for users of the
+device and it doesn't seem like it's going to be a robust
+solution.  Why does the allocation not work initially and why is
+it more likely to work later on?
 
-This reverts a recent ACPICA commit causing systems to hang
-at boot time.
+--4ndw/alBWmZEhfcZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks!
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0nLmwACgkQJNaLcl1U
+h9A+Bgf6AwDQOAxz8HNRuZUiqA0sCkEKXRDLd50GzqscTcokWsglR/zwhB8hT2o4
+ui8ywL3XMsPaiJANgZ9jjXoCroNHhl52Xsjb/d3B8fcVGk/w7XRk4jmsgpcDkmCC
+7KqbRkhIqOnqAbeEkgh2q3JXrJMrZr4f1dAcukG9t39z2I1gPu7okG8+Zqaso/py
+7mpD7AMzeBKLuktxUGv866HhtZyrVS8s/QK3l6alqZmmSA5A9WQWIzNBmDTu8QCZ
+FwG3G85vE+EOj2Z18nFN759QMzVyxLuYFjrRs7W4CP42oEJze7ixXOjHvqFw5hWn
+IIc9v+dlFMmZ+/YZ10LuImjktd5eMg==
+=rGo2
+-----END PGP SIGNATURE-----
 
----------------
-
-Rafael J. Wysocki (1):
-      Revert "ACPICA: Update table load object initialization"
-
----------------
-
- drivers/acpi/acpica/exconfig.c | 16 ++++++++++------
- drivers/acpi/acpica/tbxfload.c | 10 +++++++---
- 2 files changed, 17 insertions(+), 9 deletions(-)
+--4ndw/alBWmZEhfcZ--
