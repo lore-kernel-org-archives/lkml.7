@@ -2,196 +2,135 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B512BC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826B5C74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4FB2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6297921537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfGKPDS (ORCPT
+        id S1728896AbfGKPEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 11:03:18 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58333 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbfGKPDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 11:03:16 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 516F740008;
-        Thu, 11 Jul 2019 15:03:12 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Hanna Hawa <hannah@marvell.com>
-Subject: [PATCH v2 2/4] iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum #582743
-Date:   Thu, 11 Jul 2019 17:02:40 +0200
-Message-Id: <20190711150242.25290-3-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190711150242.25290-1-gregory.clement@bootlin.com>
-References: <20190711150242.25290-1-gregory.clement@bootlin.com>
+        Thu, 11 Jul 2019 11:04:08 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:34798 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbfGKPEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 11:04:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 6BEB8FB03;
+        Thu, 11 Jul 2019 17:04:05 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vble_Z4Bb27E; Thu, 11 Jul 2019 17:04:04 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id D10E042CB4; Thu, 11 Jul 2019 17:04:03 +0200 (CEST)
+Date:   Thu, 11 Jul 2019 17:04:03 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM driver
+Message-ID: <20190711150403.GB23195@bogon.m.sigxcpu.org>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanna Hawa <hannah@marvell.com>
+Hi Robert,
+On Wed, Jun 26, 2019 at 04:32:08PM +0300, Robert Chiras wrote:
+> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
+> and 8QXP). Following, are the new features added and fixes from this
+> patch-set:
+> 
+> 1. Add support for drm_bridge
+> On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
+> display connector, where an LCD panel can be attached, but instead it is
+> connected to DSI controller. Since this DSI stands between the display
+> controller (eLCDIF) and the physical connector, the DSI can be implemented
+> as a DRM bridge. So, in order to be able to connect the mxsfb driver to
+> the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
+> driver (the actual driver for the eLCDIF block).
 
-Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit to
-ARM SMMUv2 registers.
+So I wanted to test this but with both my somewhat cleaned up nwl
+driver¹ and the nwl driver forward ported from the nxp vendor tree I'm
+looking at a black screen with current mainline - while my dcss forward
+port gives me nice output on mipi dsi. Do you have a tree that uses mipi
+dsi on imx8mq where I could look at to check for differences?
 
-This patch split the writeq/readq to two accesses of writel/readl.
+Cheers,
+ -- Guido
 
-We also mask the MMU_IDR2.PTFSv8 fields to not use AArch64 format but
-only AARCH32_L. Indeed with AArch64 format 32 bits acces is not
-supported.
+> 
+> 2. Add support for additional pixel formats
+> Some of the pixel formats needed by Android were not implemented in this
+> driver, but they were actually supported. So, add support for them.
+> 
+> 3. Add support for horizontal stride
+> Having support for horizontal stride allows the use of eLCDIF with a GPU
+> (for example) that can only output resolution sizes multiple of a power of
+> 8. For example, 1080 is not a power of 16, so in order to support 1920x1080
+> output from GPUs that can produce linear buffers only in sizes multiple to 16,
+> this feature is needed.
+> 
+> 3. Few minor features and bug-fixing
+> The addition of max-res DT property was actually needed in order to limit
+> the bandwidth usage of the eLCDIF block. This is need on systems where
+> multiple display controllers are presend and the memory bandwidth is not
+> enough to handle all of them at maximum capacity (like it is the case on
+> 8MQ, where there are two display controllers: DCSS and eLCDIF).
+> The rest of the patches are bug-fixes.
+> 
+> Mirela Rabulea (1):
+>   drm/mxsfb: Signal mode changed when bpp changed
+> 
+> Robert Chiras (9):
+>   drm/mxsfb: Update mxsfb to support a bridge
+>   drm/mxsfb: Update mxsfb with additional pixel formats
+>   drm/mxsfb: Fix the vblank events
+>   dt-bindings: display: Add max-res property for mxsfb
+>   drm/mxsfb: Add max-res property for MXSFB
+>   drm/mxsfb: Update mxsfb to support LCD reset
+>   drm/mxsfb: Improve the axi clock usage
+>   drm/mxsfb: Clear OUTSTANDING_REQS bits
+>   drm/mxsfb: Add support for horizontal stride
+> 
+>  .../devicetree/bindings/display/mxsfb.txt          |   6 +
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 290 ++++++++++++++++++---
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 189 +++++++++++---
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  10 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 128 ++++++---
+>  6 files changed, 531 insertions(+), 118 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-Note that separate writes/reads to 2 is not problem regards to
-atomicity, because the driver use the readq/writeq while initialize
-the SMMU, report for SMMU fault, and use spinlock in one
-case (iova_to_phys).
-
-Signed-off-by: Hanna Hawa <hannah@marvell.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- Documentation/arm64/silicon-errata.txt |  2 ++
- drivers/iommu/arm-smmu.c               | 42 +++++++++++++++++++++++---
- 2 files changed, 40 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-index d1e2bb801e1b..3f78ae7a7690 100644
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -72,6 +72,8 @@ stable kernels.
- | Cavium         | ThunderX2 SMMUv3| #74             | N/A                         |
- | Cavium         | ThunderX2 SMMUv3| #126            | N/A                         |
- |                |                 |                 |                             |
-+| Marvell        | ARM-MMU-500     | #582743         | N/A                         |
-+|                |                 |                 |                             |
- | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
- |                |                 |                 |                             |
- | Hisilicon      | Hip0{5,6,7}     | #161010101      | HISILICON_ERRATUM_161010101 |
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index ac0784b5b675..32536ccae22d 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -126,6 +126,7 @@ enum arm_smmu_arch_version {
- enum arm_smmu_implementation {
- 	GENERIC_SMMU,
- 	ARM_MMU500,
-+	MRVL_MMU500,
- 	CAVIUM_SMMUV2,
- 	QCOM_SMMUV2,
- };
-@@ -301,13 +302,35 @@ static inline void smmu_writeq_relaxed(struct arm_smmu_device *smmu,
- 				       u64 val,
- 				       void __iomem *addr)
- {
--	writeq_relaxed(val, addr);
-+	/*
-+	 * Marvell Armada-AP806 erratum #582743.
-+	 * Split all the writeq to double writel
-+	 */
-+	if (smmu->model != MRVL_MMU500) {
-+		writeq_relaxed(val, addr);
-+		return;
-+	}
-+
-+	writel_relaxed(upper_32_bits(val), addr + 4);
-+	writel_relaxed(lower_32_bits(val), addr);
- }
- 
- static inline u64 smmu_readq_relaxed(struct arm_smmu_device *smmu,
- 				     void __iomem *addr)
- {
--	return readq_relaxed(addr);
-+	u64 val;
-+
-+	/*
-+	 * Marvell Armada-AP806 erratum #582743.
-+	 * Split all the readq to double readl
-+	 */
-+	if (smmu->model != MRVL_MMU500)
-+		return readq_relaxed(addr);
-+
-+	val = (u64)readl_relaxed(addr + 4) << 32;
-+	val |= readl_relaxed(addr);
-+
-+	return val;
- }
- 
- static void parse_driver_options(struct arm_smmu_device *smmu)
-@@ -1741,7 +1764,7 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
- 	for (i = 0; i < smmu->num_mapping_groups; ++i)
- 		arm_smmu_write_sme(smmu, i);
- 
--	if (smmu->model == ARM_MMU500) {
-+	if (smmu->model == ARM_MMU500 || smmu->model == MRVL_MMU500) {
- 		/*
- 		 * Before clearing ARM_MMU500_ACTLR_CPRE, need to
- 		 * clear CACHE_LOCK bit of ACR first. And, CACHE_LOCK
-@@ -1770,7 +1793,7 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
- 		 * Disable MMU-500's not-particularly-beneficial next-page
- 		 * prefetcher for the sake of errata #841119 and #826419.
- 		 */
--		if (smmu->model == ARM_MMU500) {
-+		if (smmu->model == ARM_MMU500 || smmu->model == MRVL_MMU500) {
- 			reg = readl_relaxed(cb_base + ARM_SMMU_CB_ACTLR);
- 			reg &= ~ARM_MMU500_ACTLR_CPRE;
- 			writel_relaxed(reg, cb_base + ARM_SMMU_CB_ACTLR);
-@@ -1987,6 +2010,15 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 	if (id & ID2_VMID16)
- 		smmu->features |= ARM_SMMU_FEAT_VMID16;
- 
-+	/*
-+	 * Armada-AP806 erratum #582743.
-+	 * Hide the SMMU_IDR2.PTFSv8 fields to sidestep the AArch64
-+	 * formats altogether and allow using 32 bits access on the
-+	 * interconnect.
-+	 */
-+	if (smmu->model == MRVL_MMU500)
-+		id &= ~(ID2_PTFS_4K | ID2_PTFS_16K | ID2_PTFS_64K);
-+
- 	/*
- 	 * What the page table walker can address actually depends on which
- 	 * descriptor format is in use, but since a) we don't know that yet,
-@@ -2053,6 +2085,7 @@ ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
-+ARM_SMMU_MATCH_DATA(mrvl_mmu500, ARM_SMMU_V2, MRVL_MMU500);
- ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
- ARM_SMMU_MATCH_DATA(qcom_smmuv2, ARM_SMMU_V2, QCOM_SMMUV2);
- 
-@@ -2062,6 +2095,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,mmu-400", .data = &smmu_generic_v1 },
- 	{ .compatible = "arm,mmu-401", .data = &arm_mmu401 },
- 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
-+	{ .compatible = "marvell,mmu-500", .data = &mrvl_mmu500 },
- 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
- 	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
- 	{ },
--- 
-2.20.1
-
+¹ https://lists.freedesktop.org/archives/dri-devel/2019-March/209685.html
