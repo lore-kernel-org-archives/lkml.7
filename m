@@ -2,106 +2,113 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4B0C74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3615C73C66
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE17221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB154208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1U5AoD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfGKRrU (ORCPT
+        id S1728860AbfGKRtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:47:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60658 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbfGKRrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:47:20 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C2DD630C2533;
-        Thu, 11 Jul 2019 17:47:19 +0000 (UTC)
-Received: from redhat.com (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 20E4760600;
-        Thu, 11 Jul 2019 17:47:09 +0000 (UTC)
-Date:   Thu, 11 Jul 2019 13:47:08 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        dan.j.williams@intel.com, yuval.shaia@oracle.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, lcapitulino@redhat.com
-Subject: Re: [PATCH v2] virtio_pmem: fix sparse warning
-Message-ID: <20190711134648-mutt-send-email-mst@kernel.org>
-References: <20190710175832.17252-1-pagupta@redhat.com>
+        Thu, 11 Jul 2019 13:49:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36913 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbfGKRtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:49:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 19so3103453pfa.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Mrtm+42mKXJyXI1jqGIgzb23Y5WaFCmewuRRxjnIfds=;
+        b=a1U5AoD3hkSIItL8HiNNo7PFR4wX/QYAlw457C7RrSX5rOFi4TkzHWxCKO0LUF0Ofp
+         StIat4u1q9RTPUeU3gX0H4AqbIljtz35UoRLLzRRW6SSj996v3KIWMhtvagA9QVhw7HA
+         iI9EgguM0sZmy7c130Md82ABD0glJ/vJHtfphaRS/45jT4LJviORGdt33qqmfIHw51zk
+         heocyYKTaZ7DQjn5Z6+nv/Cb/1Md7cGwkrxCv5LpsVR19I+OpLBEp8OJCH+AZuYxh4yy
+         CPKwXb9o7FPmndgG0JcHMZovsY254hE4eg8SN1ZDRGl4yULogViTchMWdeiXGCfv+cis
+         yxlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Mrtm+42mKXJyXI1jqGIgzb23Y5WaFCmewuRRxjnIfds=;
+        b=WYZ8PfepkGaGTmgbaJzHx3evJDxnTc+o1agv+aCQjfsW+JFaN4+MNj69VPTCqfQaJ+
+         tR59xyKQF5iSmanNShgbNKjPhGdEbGE+lsoBwAQOplyr6eJKBMQ1upTsMWE2XIxQzwi9
+         nA0SSyKn1VS/ZPYae3XMy6LDSNoMcTeGq1pzZXErlZUEpMkGG1qui2NudqfZO0Ic/6bt
+         nT1TTAP3SgfhiSAHoivvZ1bE/5OpWh3Zv5ty4AulEY5yLc26U9V6KyIm2reXgmwm9XUJ
+         XU/ksY2qPy5Lf2k+akuIdQuP5ZO0ZMzBH8qzbLMuBiH/JTXLwVscNwU0qPlnMANkq0Ip
+         hcEA==
+X-Gm-Message-State: APjAAAWOTcd/vi1kcXAF72PNALCzfosrsnSrZPpqcRXqDblN8r3hgCOK
+        04f+88SccVFPH+GUaXECfwA=
+X-Google-Smtp-Source: APXvYqxCyTB+WLKmBXb76xa7SlBiPdhWde9HUOK2ZWNCd4igyy/yrwmLGCWZ37b9pSSSIlPgtws65Q==
+X-Received: by 2002:a63:b46:: with SMTP id a6mr5801358pgl.235.1562867354148;
+        Thu, 11 Jul 2019 10:49:14 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id b11sm6834267pfd.18.2019.07.11.10.49.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 10:49:13 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 23:19:06 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Gen Zhang <blackgod016574@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: soc: codecs: wcd9335: fix "conversion to bool not
+ needed here"
+Message-ID: <20190711174906.GA10867@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710175832.17252-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 11 Jul 2019 17:47:19 +0000 (UTC)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:28:32PM +0530, Pankaj Gupta wrote:
-> This patch fixes below sparse warning related to __virtio
-> type in virtio pmem driver. This is reported by Intel test
-> bot on linux-next tree.
-> 
-> nd_virtio.c:56:28: warning: incorrect type in assignment 
-> 				(different base types)
-> nd_virtio.c:56:28:    expected unsigned int [unsigned] [usertype] type
-> nd_virtio.c:56:28:    got restricted __virtio32
-> nd_virtio.c:93:59: warning: incorrect type in argument 2 
-> 				(different base types)
-> nd_virtio.c:93:59:    expected restricted __virtio32 [usertype] val
-> nd_virtio.c:93:59:    got unsigned int [unsigned] [usertype] ret
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
-> 
-> This fixes a warning, so submitting it as a separate
-> patch on top of virtio pmem series.
-> 
->  include/uapi/linux/virtio_pmem.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
-> index efcd72f2d20d..7a7435281362 100644
-> --- a/include/uapi/linux/virtio_pmem.h
-> +++ b/include/uapi/linux/virtio_pmem.h
-> @@ -10,7 +10,7 @@
->  #ifndef _UAPI_LINUX_VIRTIO_PMEM_H
->  #define _UAPI_LINUX_VIRTIO_PMEM_H
->  
-> -#include <linux/types.h>
-> +#include <linux/virtio_types.h>
->  #include <linux/virtio_ids.h>
->  #include <linux/virtio_config.h>
->  
-> @@ -23,12 +23,12 @@ struct virtio_pmem_config {
->  
->  struct virtio_pmem_resp {
->  	/* Host return status corresponding to flush request */
-> -	__u32 ret;
-> +	__virtio32 ret;
->  };
->  
->  struct virtio_pmem_req {
->  	/* command type */
-> -	__u32 type;
-> +	__virtio32 type;
->  };
->  
->  #endif
+Fix below issue reported by coccicheck
+sound/soc/codecs/wcd9335.c:3991:25-30: WARNING: conversion to bool not
+needed here
 
-Same comment as previously: pls use __le and fix accessors.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ sound/soc/codecs/wcd9335.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-> -- 
-> 2.20.1
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index 1bbbe42..85a8d10 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -3988,12 +3988,7 @@ static irqreturn_t wcd9335_slimbus_irq(int irq, void *data)
+ 		regmap_read(wcd->if_regmap,
+ 				WCD9335_SLIM_PGD_PORT_INT_RX_SOURCE0 + j, &val);
+ 		if (val) {
+-			if (!tx)
+-				reg = WCD9335_SLIM_PGD_PORT_INT_EN0 +
+-					(port_id / 8);
+-			else
+-				reg = WCD9335_SLIM_PGD_PORT_INT_TX_EN0 +
+-					(port_id / 8);
++			reg = WCD9335_SLIM_PGD_PORT_INT_TX_EN0 + (port_id / 8);
+ 			regmap_read(
+ 				wcd->if_regmap, reg, &int_val);
+ 			/*
+-- 
+2.7.4
+
