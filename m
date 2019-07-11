@@ -2,120 +2,115 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32261C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EDBC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0595621537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1F421537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KBh9k81O"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lMbDPIbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfGKOxi (ORCPT
+        id S1728951AbfGKOyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:53:38 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:22229 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGKOxi (ORCPT
+        Thu, 11 Jul 2019 10:54:06 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37625 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbfGKOyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:53:38 -0400
+        Thu, 11 Jul 2019 10:54:06 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v6so4381891vsq.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:54:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562856817; x=1594392817;
-  h=from:to:cc:message-id:in-reply-to:references:
-   mime-version:subject:resent-from:resent-cc:date:
-   content-transfer-encoding;
-  bh=6PsnZ60xKF4Mvc0cy+iEXp9w4rM1XglvTNVhZlgYFao=;
-  b=KBh9k81Oh8l7kFh1IlN1pNFdGH1f6VXX3QhEm1kuT8MC99fJx1KYth0l
-   I9mbWuShA5/VH12rioeO8KbF44aXI3JJSBdgslsh0KcEr5zm8u8tBJgHM
-   VKJwo6olIbfhxtXQFrQJMXcNUcPeIBN9a1V+SQJfzky97DxyUphldjiqu
-   4=;
-X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
-   d="scan'208";a="810658320"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Jul 2019 14:53:35 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 2970BA226A;
-        Thu, 11 Jul 2019 14:53:35 +0000 (UTC)
-Received: from EX13D24UWB004.ant.amazon.com (10.43.161.4) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:53:34 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D24UWB004.ant.amazon.com (10.43.161.4) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:53:34 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
- mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:53:32 +0000
-Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:32 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:32 +0000
-Received: from email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com
- (10.25.10.214) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:32
- +0000
-Received: by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix)
-        id B8715A2356; Wed, 10 Jul 2019 16:45:31 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com
- (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214]) by
- email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS
- id CC9BAA1EF8; Wed, 10 Jul 2019 16:45:30 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
- u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
- x6AGjQ24021402; Wed, 10 Jul 2019 19:45:26 +0300
-Received: (from jonnyc@localhost)
-        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjOtL021367;
-        Wed, 10 Jul 2019 19:45:24 +0300
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
-        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Message-ID: <20190710164519.17883-2-jonnyc@amazon.com>
-In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
-Content-Type: text/plain
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OSRL99BIaLodkBG8Ur8XBaGK7O8DpdxuI0IXmHEfTNw=;
+        b=lMbDPIbb0vvyUGWQdnCiasoDr4Yy47wih84OLLO3r9IgeHn7AFQirkDsZ+9bZv6a+X
+         DJEbz83leO6ygDTze7wSrzwTG8b303QISowRG65eVyF3T+qaRAD97sq//wM3/4jpKRQH
+         aHJYj7vqQUIQ92pFm8jlret5UmI8TNCWExeMqDLj6SM+yz0lJDsUEPy9ql4ZK/mymEY2
+         C/lYAWQe9OeEl1jh9NtOjpnr3J0/mSWN6rpdBR3WGPbPaKQT6CJT6hAvOFDJdQziH1wH
+         6od1oUQ52AMEnuaTZLM6eWhyh/Sw+Mb1IzzbgWpP9Ng+oJkpeLSGW9ubE23lLgR2MP0k
+         dY7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OSRL99BIaLodkBG8Ur8XBaGK7O8DpdxuI0IXmHEfTNw=;
+        b=dHl2cgv6CyyndH7HnZfrWVvGAKkBHjPx+E07ASdCywmJa3gKrtIDOEYGFFWtpzBjOD
+         /jynSvBaL11xwRO2HSLNoFRfmWFno1WbGhh7rsY/0dL4s4HSPTQlxiHMVN4ZsM/kUXAL
+         NnZeS8W6eHdatiw/HJ7ZnoikF0kt5s9uip8owpz9DaL66tvibItjvXmzDS5wuGqnXSMw
+         kI5aYJXpoKCMpietNw0wCzmx2AtC4SGizIuXV8d9973yMM6zoV7EdKjdFHiwNRkIDPME
+         uowEzlgzkip9+vTvBNzdetDc6Q/i//mA+PJAq4c8c5J9z7zd8DVDLBtyCwegeNUBGnRO
+         sGdQ==
+X-Gm-Message-State: APjAAAXAvDWBnEBi6XKkucz04XfQOz3qLEeS+8tBY4kOd6OY2pE4qldx
+        ng+dim5auIcIz8RPM9o5m4tg8A==
+X-Google-Smtp-Source: APXvYqzGv5XLpzcelYU2tuSxvoVuhMY+giJViUABBr/Bp/cZiVAevwOuDoKjZcXPaQJW1DVRDkKdnA==
+X-Received: by 2002:a67:f492:: with SMTP id o18mr4970890vsn.62.1562856845452;
+        Thu, 11 Jul 2019 07:54:05 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id l20sm2290597vkl.2.2019.07.11.07.54.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 07:54:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlaSS-00068i-61; Thu, 11 Jul 2019 11:54:04 -0300
+Date:   Thu, 11 Jul 2019 11:54:04 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Qian Cai <cai@lca.pw>
+Cc:     leonro@mellanox.com, saeedm@mellanox.com, talgi@mellanox.com,
+        yaminf@mellanox.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] RDMA/core: fix -Wunused-const-variable warnings
+Message-ID: <20190711145404.GA23576@ziepe.ca>
+References: <1562853356-11595-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Subject: [PATCH 1/8] PCI: Add Amazon's Annapurna Labs vendor ID
-Date:   Thu, 11 Jul 2019 17:53:31 +0300
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562853356-11595-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Amazon's Annapurna Labs vendor ID to pci_ids.h.
+On Thu, Jul 11, 2019 at 09:55:56AM -0400, Qian Cai wrote:
+> The linux-next commit "linux/dim: Implement RDMA adaptive moderation
+> (DIM)" [1] introduced a few compilation warnings.
+> 
+> In file included from ./include/rdma/ib_verbs.h:64,
+>                  from ./include/linux/mlx5/device.h:37,
+>                  from ./include/linux/mlx5/driver.h:51,
+>                  from drivers/net/ethernet/mellanox/mlx5/core/uar.c:36:
+> ./include/linux/dim.h:378:1: warning: 'rdma_dim_prof' defined but not
+> used [-Wunused-const-variable=]
+>  rdma_dim_prof[RDMA_DIM_PARAMS_NUM_PROFILES] = {
+>  ^~~~~~~~~~~~~
+> In file included from ./include/rdma/ib_verbs.h:64,
+>                  from ./include/linux/mlx5/device.h:37,
+>                  from ./include/linux/mlx5/driver.h:51,
+>                  from
+> drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c:37:
+> ./include/linux/dim.h:378:1: warning: 'rdma_dim_prof' defined but not
+> used [-Wunused-const-variable=]
+>  rdma_dim_prof[RDMA_DIM_PARAMS_NUM_PROFILES] = {
+>  ^~~~~~~~~~~~~
+> 
+> Since only ib_cq_rdma_dim_work() in drivers/infiniband/core/cq.c uses
+> it, just move the definition over there.
+> 
+> [1] https://patchwork.kernel.org/patch/11031455/
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  drivers/infiniband/core/cq.c | 13 +++++++++++++
+>  include/linux/dim.h          | 13 -------------
+>  2 files changed, 13 insertions(+), 13 deletions(-)
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+Applied to for-next, thanks
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 0dd239f11e91..ed350fd522c6 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2568,6 +2568,8 @@
-=20
- #define PCI_VENDOR_ID_ASMEDIA		0x1b21
-=20
-+#define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
-+
- #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
- #define PCI_SUBSYSTEM_ID_CIRCUITCO_MINNOWBOARD	0x0001
-=20
---=20
-2.17.1
-
-
+Jason
