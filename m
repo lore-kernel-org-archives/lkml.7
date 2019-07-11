@@ -2,114 +2,97 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256BCC74A48
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025A9C74A48
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8B021537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562827558;
-	bh=QO+IixaEINnRUlMplYokoVhew/W3TcWPGiXzmUqgm7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dzFYlEwx3JjPzeJFrhjOGxIi35usNv9RNI6vid+3cW3ZtdQa6FQndE+V1ecmqqnof
-	 VvVE4A6tfbMKWiwvhEqkmwYtwpqgbkSw3fpePutDDVhR4yxctM+3cJ4JtscLXX4xm4
-	 k7fZCSuSzGrIcDoerKiPGBqqPpW9HHirBt93vEcQ=
+	by mail.kernel.org (Postfix) with ESMTP id D5B9B20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfGKGp4 (ORCPT
+        id S1728113AbfGKGrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 02:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfGKGp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 02:45:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A15420838;
-        Thu, 11 Jul 2019 06:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562827555;
-        bh=QO+IixaEINnRUlMplYokoVhew/W3TcWPGiXzmUqgm7o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E4uwDe7hAN9V7ID7Uhs6z8LLObasbqynt8fY1jOyrIF2+mm5V1AucAT5rS8vAJvqM
-         wIAqXgaIbvOCTAjumznze5OfEmXwOf8MaRD+PxoVYBSbL64P3L7OkWCL2SLTC0aVRw
-         nudkd/v0vOH5s8bJH4EQrHWl+pE0He/XkxfFILgc=
-Date:   Thu, 11 Jul 2019 08:45:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com,
-        stable <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
-Message-ID: <20190711064552.GB10089@kroah.com>
-References: <20190704195555.580363209@infradead.org>
- <20190704200050.534802824@infradead.org>
- <CALCETrXvTvFBaQB-kEe4cRTCXUyTbWLbcveWsH-kX4j915c_=w@mail.gmail.com>
- <CALCETrUzP4Wb=WNhGvc7k4oX7QQz1JXZ3-O8PQhs39kmZid0nw@mail.gmail.com>
- <CAHk-=wh+J7ts6OrzzscMj5FONd3TRAwAKPZ=BQmEb2E8_-RXTA@mail.gmail.com>
- <20190710162709.1c306f8a@gandalf.local.home>
+        Thu, 11 Jul 2019 02:47:17 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10111
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbfGKGrR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 02:47:17 -0400
+X-IronPort-AV: E=Sophos;i="5.63,476,1557180000"; 
+   d="scan'208";a="313140146"
+Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 08:47:00 +0200
+Date:   Thu, 11 Jul 2019 08:46:56 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     wen.yang99@zte.com.cn
+cc:     Markus.Elfring@web.de, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, benh@kernel.crashing.org,
+        cheng.shengyu@zte.com.cn, galak@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org, oss@buserror.net,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: Coccinelle: Checking of_node_put() calls with SmPL
+In-Reply-To: <201907111435459627761@zte.com.cn>
+Message-ID: <alpine.DEB.2.20.1907110845551.3626@hadrien>
+References: 201907101533443009168@zte.com.cn,9d515026-5b74-cf0c-0c64-4fe242d4104e@web.de <201907111435459627761@zte.com.cn>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710162709.1c306f8a@gandalf.local.home>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/mixed; boundary="=====_001_next====="
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 04:27:09PM -0400, Steven Rostedt wrote:
-> 
-> [ added stable folks ]
-> 
-> On Sun, 7 Jul 2019 11:17:09 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> > On Sun, Jul 7, 2019 at 8:11 AM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > FWIW, I'm leaning toward suggesting that we apply the trivial tracing
-> > > fix and backport *that*.  Then, in -tip, we could revert it and apply
-> > > this patch instead.  
-> > 
-> > You don't have to have the same fix in stable as in -tip.
-> > 
-> > It's fine to send something to stable that says "Fixed differently by
-> > commit XYZ upstream". The main thing is to make sure that stable
-> > doesn't have fixes that then get lost upstream (which we used to have
-> > long long ago).
-> > 
-> 
-> But isn't it easier for them to just pull the quick fix in, if it is in
-> your tree? That is, it shouldn't be too hard to make the "quick fix"
-> that gets backported on your tree (and probably better testing), and
-> then add the proper fix on top of it. The stable folks will then just
-> use the commit sha to know what to take, and feel more confident about
-> taking it.
+--=====_001_next=====
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-It all depends on what the "quick fix" is.  The reason I want to take
-the exact same patch that is in Linus's tree is that 95% of the time
-that we do a "one off" patch for stable only, it's wrong.  We _ALWAYS_
-get it wrong somehow, it's crazy how bad we are at this.  I don't know
-why this is, but we have the stats to prove it.
 
-Because of this, I now require the "one off" stable only fixes to get a
-bunch of people reviewing it and write up a bunch of explaination as to
-why this is the way it is and why we can't just take whatever is in
-mainline.
 
-thanks,
+On Thu, 11 Jul 2019, wen.yang99@zte.com.cn wrote:
 
-greg k-h
+> > > we developed a coccinelle script to detect such problems.
+> >
+> > Would you find the implementation of the function “dt_init_idle_driver”
+> > suspicious according to discussed source code search patterns?
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/cpuidle/dt_idle_states.c?id=e9a83bd2322035ed9d7dcf35753d3f984d76c6a5#n208
+> > https://elixir.bootlin.com/linux/v5.2/source/drivers/cpuidle/dt_idle_states.c#L208
+> >
+> >
+> > > This script is still being improved.
+> >
+> > Will corresponding software development challenges become more interesting?
+>
+> Hello Markus,
+> This is the simplified code pattern for it:
+>
+> 172         for (i = 0; ; i++) {
+> 173                 state_node = of_parse_phandle(...);     ---> Obtain here
+> ...
+> 177                 match_id = of_match_node(matches, state_node);
+> 178                 if (!match_id) {
+> 179                         err = -ENODEV;
+> 180                         break;                         --->  Jump out of the loop without releasing it
+> 181                 }
+> 182
+> 183                 if (!of_device_is_available(state_node)) {
+> 184                         of_node_put(state_node);
+> 185                         continue;                    --->  Release the object references within a loop
+> 186                 }
+> ...
+> 208                 of_node_put(state_node);  -->  Release the object references within a loop
+> 209         }
+> 210
+> 211         of_node_put(state_node);       -->    There may be double free here.
+>
+> This code pattern is very interesting and the coccinelle software should also recognize this pattern.
+
+In my experience, when you start looking at these of_node_put things, all
+sorts of strange things appear...
+
+julia
+--=====_001_next=====--
