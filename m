@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29001C74A46
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5348CC74A45
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CA220838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA2620838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jAODMvDC"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="dl2hS4bC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfGKFpy (ORCPT
+        id S1728104AbfGKFp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:45:54 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:59471 "EHLO
+        Thu, 11 Jul 2019 01:45:56 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:59468 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbfGKFpx (ORCPT
+        with ESMTP id S1727956AbfGKFpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jul 2019 01:45:53 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x6B5ip8L031345;
-        Thu, 11 Jul 2019 14:44:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6B5ip8L031345
+        by conuserg-08.nifty.com with ESMTP id x6B5ip8U031345;
+        Thu, 11 Jul 2019 14:44:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6B5ip8U031345
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562823893;
-        bh=mjkkjTnXRVjdI3ciIRz1HWZFd7z2yTHWDPrWodufX/o=;
+        s=dec2015msa; t=1562823899;
+        bh=Ns+sXHJZbzo/hYCT2LP+L4TcrC5zi8mC7e+kBaXavh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAODMvDCKfqR1Zhn7vZaIDr1Mbtv7fOKReJCqG98rha6TTAsX3wWiAChWv1gg25W8
-         r6Sxv0+lEkZ6VZJ30c30gqKTqg0NArc0RYsEIpt5p8cSYVpQn3Pmos6nn6KXvJhJxf
-         ITaMDCsE1YIxfHHN0wFCEuVLsMZARh5uJMs3XIUoxQ/++Uu5X8WcHhi8yJ1B4FsWyW
-         3Ujk0mejbaMkFCqygqJzfrj168G2a3v9D1O9RJBbuwJFxBPATN8UUyzrMpvxqjFmbA
-         gDWmtm80d1Y3qgfdivmIgylOveCorw2YRsKLGa1cAUtCwLiXXVpDXtsr/aqbzzhvRv
-         8GEcsS8bddsvA==
+        b=dl2hS4bC47jOuAJKxFYhxgx3/mkDJGp+FB6ejQdwkgRoovkUEhE77ghFexiCV2vT5
+         vBqiBj5ksQJ3d5oP8rj84I3y6UD90fpM+LXgCjiaHzzQ/cVpbULJdtRZ0rS4u9alla
+         Ss/kfRge6YJqs/ZHn2xR+FCDGxcotVTP4Ctu8lHLKgEG8XIZmZEr/hvg+pP078mSiY
+         Ecbpm6nCsIxKRRxzvQ1ZwBMoelhFBzyXAR+fxKxECBAl1roq8sYso2vcJoE3Khngvh
+         CMgCTAMLzMmw8VXUcPgApuV/V7kUFCU6/L/zQHFPpIEZB495HVHumyXjkRTbgYRgyh
+         O6NDviHp/qF6g==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     Sam Ravnborg <sam@ravnborg.org>, Nicolas Pitre <nico@fluxnic.net>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/11] kbuild: do not create empty modules.order in the prepare stage
-Date:   Thu, 11 Jul 2019 14:44:24 +0900
-Message-Id: <20190711054434.1177-2-yamada.masahiro@socionext.com>
+Subject: [PATCH v2 10/11] kbuild: remove 'prepare1' target
+Date:   Thu, 11 Jul 2019 14:44:33 +0900
+Message-Id: <20190711054434.1177-11-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190711054434.1177-1-yamada.masahiro@socionext.com>
 References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
@@ -55,80 +55,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, $(objtree)/modules.order is touched in two places.
-
-In the 'prepare0' rule, scripts/Makefile.build creates an empty
-modules.order while processing 'obj=.'
-
-In the 'modules' rule, the top-level Makefile overwrites it with
-the correct list of modules.
-
-While this might be a good side-effect that modules.order is made
-empty every time (probably this is not intended functionality),
-I personally do not like this behavior.
-
-Create modules.order only when it is sensible to do so.
-
-This avoids creating the following pointless files:
-
-  scripts/basic/modules.order
-  scripts/dtc/modules.order
-  scripts/gcc-plugins/modules.order
-  scripts/genksyms/modules.order
-  scripts/mod/modules.order
-  scripts/modules.order
-  scripts/selinux/genheaders/modules.order
-  scripts/selinux/mdp/modules.order
-  scripts/selinux/modules.order
-
-Going forward, $(objtree)/modules.order lists the modules that
-was built in the last successful build.
+Now that there is no rule for 'prepare1', it can go away.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-Changes in v2:
- - inverted the logic "preparing" -> need-modorder
+Changes in v2: None
 
- Makefile               | 4 ++--
- scripts/Makefile.build | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ Makefile | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 5c75ea7177f6..d8421d245f75 100644
+index 4243b6daffcf..8de893e41149 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1076,7 +1076,7 @@ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
+@@ -1093,7 +1093,7 @@ scripts: scripts_basic scripts_dtc
+ # archprepare is used in arch Makefiles and when processed asm symlink,
+ # version.h and scripts_basic is processed / created.
  
- PHONY += $(vmlinux-dirs)
- $(vmlinux-dirs): prepare
--	$(Q)$(MAKE) $(build)=$@ need-builtin=1
-+	$(Q)$(MAKE) $(build)=$@ need-builtin=1 need-modorder=1
+-PHONY += prepare archprepare prepare1 prepare3
++PHONY += prepare archprepare prepare3
  
- filechk_kernel.release = \
- 	echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
-@@ -1611,7 +1611,7 @@ $(objtree)/Module.symvers:
- module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
- PHONY += $(module-dirs) modules
- $(module-dirs): prepare $(objtree)/Module.symvers
--	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
-+	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@) need-modorder=1
- 
- modules: $(module-dirs)
- 	@$(kecho) '  Building modules, stage 2.';
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 776842b7e6a3..e9b3d88257dd 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -63,7 +63,7 @@ ifneq ($(strip $(real-obj-y) $(need-builtin)),)
- builtin-target := $(obj)/built-in.a
+ # prepare3 is used to check if we are building in a separate output directory,
+ # and if so do:
+@@ -1110,10 +1110,8 @@ ifneq ($(srctree),.)
+ 	fi;
  endif
  
--ifdef CONFIG_MODULES
-+ifeq ($(CONFIG_MODULES)$(need-modorder),y1)
- modorder-target := $(obj)/modules.order
- endif
+-prepare1: prepare3 outputmakefile asm-generic $(version_h) $(autoksyms_h) \
+-						include/generated/utsrelease.h
+-
+-archprepare: archheaders archscripts prepare1 scripts
++archprepare: archheaders archscripts scripts prepare3 outputmakefile \
++	asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h
  
+ prepare0: archprepare
+ 	$(Q)$(MAKE) $(build)=scripts/mod
 -- 
 2.17.1
 
