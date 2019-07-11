@@ -2,138 +2,114 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66592C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF25C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A2520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACCB20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGg9JsD2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prH0vyvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfGKINI (ORCPT
+        id S1728274AbfGKIOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:13:08 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38365 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbfGKINH (ORCPT
+        Thu, 11 Jul 2019 04:14:42 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38410 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbfGKIOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:13:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so10656625ioa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 01:13:07 -0700 (PDT)
+        Thu, 11 Jul 2019 04:14:39 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g17so5216391wrr.5;
+        Thu, 11 Jul 2019 01:14:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=30pilBQN5K/2ltdYDfw8gEKWSGfu9hSs2Mdh/j4fb7E=;
-        b=SGg9JsD2ZHUvmaIuaZMWifZZ/T5piLkeojgYKoeWYhkiOFdJnRfZLevtFPYpVJYW0x
-         +AoHMksHO94btFeT9l9WZwVlqdkiq6A5OW6BAaZAN9sTHk46Zck+eMHEQLz3VY4bX31g
-         XawXD5XRTe2z2k2/ebodudqjTSjULPy55AKV+fczidHWQZczWtE4I5wSZn3/vAXPMW3Y
-         o+yuuUAcdC2uffEbuHN6McR/nwa9Ryb4mHE8DFSIo9Tkvu0CquHFjbmsLLUi+VQrOwkh
-         e5TainhD2beU3j5P/If776x9cr4XQgkt4900RuQqmhFzGE+HP2vH0e19sZQXObCim2hY
-         v4OQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EBNvFukZ7/NgqmL3xXApO1AFyylxTtfZ1K1rGvSfK44=;
+        b=prH0vyvv4OLNS3zAqZHn3+FYdgW9OjZ+S4TdQTdJkDjAnzMgDy1hx0JGJPrLdhQ9CI
+         V2r9Y2mfQbNoxYPE66LHkFXmvI0Z3++qwhCYtAxfT001nWzpaVKBw28fZlnXoJkUBdv/
+         wWVZvg18ANbFwmrMqej6a24AtPfFnboO4CJlpIrc3FKJgL0EGc7zYJE4LsnHtww82HMt
+         whRYv2gXXhU293VdSfYcL6PIDjjkuYC5JX9oCYkM+x/pwHGJnuweRl0//W4ZBS+Kz8ZK
+         aLtOaA7J62q2ctU79b7mC+pa6mkfSF49Wxd3wfFxaIbHg9LXXRe0bD8rNsG/hDADlCPH
+         GMTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=30pilBQN5K/2ltdYDfw8gEKWSGfu9hSs2Mdh/j4fb7E=;
-        b=EjO+2eXXKj+ri4OfVcuF85138XQwPjeT949aNNG8iQFYUK6gt5ciV5y8hJwq9pcwFC
-         fBIIWv3EMePa9LDJFhjd603rEIovzF8EnlSROlXbVoi6qmOnTMelPaDksRc/yshAtbP3
-         BjkOfMSSdLhdcKKDVMIzh+B3aw1e5bQzTLJYeqGk23PJ0DPzv/oU9li5g/uUN0cVjVUH
-         fmkZsU1lySGPRmAns/JPhHYi6J71+Tgp2QUd06bchAj1Q546LYftNBmzKBLnBnIcBJRw
-         qEG/8CDIkGYSDNoVYwAhm60dU89rfocSgk3aRo58XotksJyTc1qbbbrhzuFS4m/+9S5s
-         LEiA==
-X-Gm-Message-State: APjAAAUPOS9GfEha1A+g6gJB1twkFEa1tT2e3f5zp/+izgXko29BClNI
-        9slA6g1zGwk/bnHlyV57DIvZjXV1fromPoRBYl9pwPsTG/8=
-X-Google-Smtp-Source: APXvYqwDewLl9DbvCamfY8YJry20mEo/IJBKdtJOFavUXcx9Q3H2L5TrJrKktN4dZI9+ZWcjMABAEugR1a1mfssloqk=
-X-Received: by 2002:a02:662f:: with SMTP id k47mr3159761jac.4.1562832786713;
- Thu, 11 Jul 2019 01:13:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EBNvFukZ7/NgqmL3xXApO1AFyylxTtfZ1K1rGvSfK44=;
+        b=O/wLGAOgyBQ+i/qRZwpyige7++dgzq2w6LcGI3+z0xw0hzKwc/Y3n8uj4eX0fYHvGC
+         li3aPB0W9sjVUn7A6xdsy9uctCFy2xdaIwtCcSR+gBaXj2b6Kl/H2KTjlTjEXUHEYc5n
+         XJp7DiSC3Pgi/GyvUBU4avtieHz2y6S0vayUT/Ybpx0eVN6IFh/hBy6PbSL8fq9278th
+         0mHKOwT/mNlK1SrW13ayGd2Nku44lerv1n+VufeOwenw82mN1BRAwLThAyues7xRbjdX
+         L81GAMlyYjuh3LupDQjAlXr0pKZ9kSZXdPsGUOZz0MzdTxY79GsDqeu8Rnj2GvH+x0pE
+         GwiQ==
+X-Gm-Message-State: APjAAAVSU6e5KYTtYVqYN8NRuDxrB6UFeZKd7qaJ1BRrnkZzqQTQpu7h
+        h3ZTaDs0oBzci7wviGmwumM=
+X-Google-Smtp-Source: APXvYqzx6C/agFrZs2zKfV/BzdVwHzifwsFzqKKkGP1IEhFxy4LuEztUi6hwMa9M2mK74Kh/v25u+g==
+X-Received: by 2002:adf:ebcd:: with SMTP id v13mr3314591wrn.263.1562832877025;
+        Thu, 11 Jul 2019 01:14:37 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id x16sm3143957wmj.4.2019.07.11.01.14.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 01:14:35 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 01:14:34 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Message-ID: <20190711081434.GA86557@archlinux-threadripper>
+References: <20190710174800.34451-1-natechancellor@gmail.com>
+ <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
 MIME-Version: 1.0
-From:   Uros Bizjak <ubizjak@gmail.com>
-Date:   Thu, 11 Jul 2019 10:12:55 +0200
-Message-ID: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
-Subject: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop targets
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, Andrew Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: multipart/mixed; boundary="000000000000188ebb058d635dff"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000188ebb058d635dff
-Content-Type: text/plain; charset="UTF-8"
+Hi Bernard,
 
-Recent patch [1] disabled a self-snoop feature on a list of processor
-models with a known errata, so we are confident that the feature
-should work on remaining models also for other purposes than to speed
-up MTRR programming.
+On Thu, Jul 11, 2019 at 07:44:22AM +0000, Bernard Metzler wrote:
+> Nathan, thanks very much. That's correct.
 
-I would like to resurrect an old patch [2] that avoids calling clflush
-and wbinvd
-to invalidate caches when CPU supports selfsnoop.
+Thanks for the confirmation that the fix was correct.
 
-The patch was ported to latest Fedora kernel (5.1.16) and tested with
-CONFIG_CPA_DEBUG on INTEL_FAM6_IVYBRIDGE_X. The relevant ports of
-dmesg show:
+> I don't know how this could pass w/o warning.
 
-...
-< hundreds of CPA protect messages, resulting from set_memory_rw CPA
-undo test in mm/init_64.c >
-CPA  protect  Rodata RO: 0xffffffffbd1fe000 - 0xffffffffbd1fefff PFN
-1461fe req 8000000000000063 prevent 0000000000000002
-CPA  protect  Rodata RO: 0xffff889c461fe000 - 0xffff889c461fefff PFN
-1461fe req 8000000000000063 prevent 0000000000000002
-Testing CPA: again
-Freeing unused kernel image memory: 2016K
-Freeing unused kernel image memory: 4K
-x86/mm: Checked W+X mappings: passed, no W+X pages found.
-rodata_test: all tests were successful
-x86/mm: Checking user space page tables
-x86/mm: Checked W+X mappings: passed, no W+X pages found.
+Unfortunately, it appears that GCC only warns when two different
+enumerated types are directly compared, not when they are implicitly
+converted between.
 
-and from CPA selftest:
+https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wenum-compare
 
-CPA self-test:
- 4k 36352 large 4021 gb 0 x 81[ffff889b00098000-ffff889bdf7ff000] miss 133120
- 4k 180224 large 3740 gb 0 x 81[ffff889b00098000-ffff889bdf7ff000] miss 133120
- 4k 180224 large 3740 gb 0 x 81[ffff889b00098000-ffff889bdf7ff000] miss 133120
-ok.
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78736
 
-[1] https://lkml.org/lkml/2019/6/27/828
-[2] https://lkml.org/lkml/2009/4/8/508
+If it did, I wouldn't have fixed as many warnings as I have.
 
-Uros.
+https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aissue+is%3Aclosed+label%3A-Wenum-conversion
 
---000000000000188ebb058d635dff
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-Disable-CPA-cache-flush-for-selfsnoop-targets.patch"
-Content-Disposition: attachment; 
-	filename="0001-Disable-CPA-cache-flush-for-selfsnoop-targets.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jxye9wlt0>
-X-Attachment-Id: f_jxye9wlt0
+Maybe time to start plumbing Clang into your test flow until it can get
+intergrated with more CI setups? :) It can catch some pretty dodgy
+behavior that GCC doesn't:
 
-RnJvbSAxN2NiYWQ1ZDQ1YjZhZTI2ZGJjZmUwMmRlYmE1OTdjODNjZDYzYTBkIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBVcm9zIEJpemphayA8dWJpempha0BnbWFpbC5jb20+CkRhdGU6
-IFdlZCwgMTAgSnVsIDIwMTkgMTU6MDE6NDQgKzAyMDAKU3ViamVjdDogW1BBVENIXSBEaXNhYmxl
-IENQQSBjYWNoZSBmbHVzaCBmb3Igc2VsZnNub29wIHRhcmdldHMKClNpZ25lZC1vZmYtYnk6IFVy
-b3MgQml6amFrIDx1Yml6amFrQGdtYWlsLmNvbT4KLS0tCiBhcmNoL3g4Ni9tbS9wYWdlYXR0ci5j
-IHwgNyArKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9u
-cygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L21tL3BhZ2VhdHRyLmMgYi9hcmNoL3g4Ni9tbS9w
-YWdlYXR0ci5jCmluZGV4IDZhOWE3N2E0MDNjOS4uODg5M2VmNWY3MGNkIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9tbS9wYWdlYXR0ci5jCisrKyBiL2FyY2gveDg2L21tL3BhZ2VhdHRyLmMKQEAgLTE3
-MjUsMTAgKzE3MjUsMTEgQEAgc3RhdGljIGludCBjaGFuZ2VfcGFnZV9hdHRyX3NldF9jbHIodW5z
-aWduZWQgbG9uZyAqYWRkciwgaW50IG51bXBhZ2VzLAogCQlnb3RvIG91dDsKIAogCS8qCi0JICog
-Tm8gbmVlZCB0byBmbHVzaCwgd2hlbiB3ZSBkaWQgbm90IHNldCBhbnkgb2YgdGhlIGNhY2hpbmcK
-LQkgKiBhdHRyaWJ1dGVzOgorCSAqIE5vIG5lZWQgdG8gZmx1c2ggd2hlbiBDUFUgc3VwcG9ydHMg
-c2VsZiBzbm9vcCBvcgorCSAqIHdoZW4gd2UgZGlkIG5vdCBzZXQgYW55IG9mIHRoZSBjYWNoaW5n
-IGF0dHJpYnV0ZXM6CiAJICovCi0JY2FjaGUgPSAhIXBncHJvdDJjYWNoZW1vZGUobWFza19zZXQp
-OworCWNhY2hlID0gIXN0YXRpY19jcHVfaGFzKFg4Nl9GRUFUVVJFX1NFTEZTTk9PUCkgJiYKKwkJ
-cGdwcm90MmNhY2hlbW9kZShtYXNrX3NldCk7CiAKIAkvKgogCSAqIE9uIGVycm9yOyBmbHVzaCBl
-dmVyeXRoaW5nIHRvIGJlIHN1cmUuCi0tIAoyLjIxLjAKCg==
---000000000000188ebb058d635dff--
+https://github.com/ClangBuiltLinux/linux/issues/390
+
+https://github.com/ClangBuiltLinux/linux/issues/544
+
+Kernel CI has added support for it (although they don't email the
+authors of patches individually) and 0day is currently working on it.
+Feel free to reach out if you decide to explore it, I'm always happy
+to help.
+
+Cheers,
+Nathan
