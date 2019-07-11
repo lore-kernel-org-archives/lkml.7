@@ -2,121 +2,103 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE4C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061F5C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D593208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:28:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="epwk97CN"
+	by mail.kernel.org (Postfix) with ESMTP id D30B0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562869942;
+	bh=ZGJHGxvWjkmLrsWM1dhqmklzcHtzVUWFgm5DE5lo7Vk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Rv+J92H/uL6/wL14gcNGUIrweuWI6U85N3jsJxM7roKG9GuYsJOmE5YtMJwcXidNw
+	 6Cy8AL5wH7CXtjmRehR7rwOUPdwH+uWimu/hhpoCGwLoPZAmxnlfyY9ZsBAB3e9sUu
+	 Z37udMosk544QNYQeRjUcGMyZVcq/vcQnCfjpm+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfGKS21 (ORCPT
+        id S1728747AbfGKScV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 14:28:27 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57008 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728325AbfGKS21 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:28:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HxCzNxOIQZt0+rty3Kl/rNo0J5gMjFED9BopvcOajow=; b=epwk97CN0mtq8nEP+YnTndzhY
-        eiJZj4hzSx9Fpv/RQqX7l0ibb7481zhrONbKlzm0pe2U/PRSrQ6Z6XF5elLj1aWrui5xqC6PSAx/M
-        jm1VgmsHDeXrgz+vl46Xgr/ikJ36vbx4RNDFmvwTXIRFgspHztzGlTY93BGCEuHnKiTMgrO8jKody
-        8wwirJTLm1WgPSBvKuF55rw+zNV+HGzF44AsIE6kSy6s7LT709k8AhEKBvohJlF3JQLpDrhvWxZEL
-        geNIixKjs+lWlpzGEeDrxEA4fM0HefqVvYb3yqhZURQd5N3eJ2CW/1k103OL3t2i1vnGfC7a4NzU3
-        Vj59dIuzQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hldnY-0005x9-Sl; Thu, 11 Jul 2019 18:28:05 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7F5D720B627C7; Thu, 11 Jul 2019 20:28:02 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 20:28:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-Subject: Re: [PATCH v3 6/6] x86/entry/64: Remove TRACE_IRQS_*_DEBUG
-Message-ID: <20190711182802.GH3402@hirez.programming.kicks-ass.net>
-References: <20190711114054.406765395@infradead.org>
- <20190711114336.174080643@infradead.org>
- <CALCETrWYZHhP80PBxOcm5sc=p=StUbuwdvjDj-E3ma7wi3w-Pg@mail.gmail.com>
+        Thu, 11 Jul 2019 14:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728325AbfGKScV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 14:32:21 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCCFC208E4;
+        Thu, 11 Jul 2019 18:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562869940;
+        bh=ZGJHGxvWjkmLrsWM1dhqmklzcHtzVUWFgm5DE5lo7Vk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=b6ciN7n2S8VrPN4nnZomJ4JBTxlYIC22zJ1StXo74zKXooJfhdnfniXtRh1lAIK4Z
+         crnfOC4kwGnwtVP8oaPtKGBCXDWwT1rxywsgwZ8Cv4ftplvtrIpakvL18Ejq0eoFgI
+         KEs7evYWfVKEd/96mEGrdxMkJFAG4lVWQ+7Dv2Z8=
+Date:   Thu, 11 Jul 2019 14:32:18 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-kernel@microsoft.com
+Subject: [GIT PULL] hyper-v patches for 5.3
+Message-ID: <20190711183218.GA10104@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CALCETrWYZHhP80PBxOcm5sc=p=StUbuwdvjDj-E3ma7wi3w-Pg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 07:45:56AM -0700, Andy Lutomirski wrote:
-> On Thu, Jul 11, 2019 at 4:51 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Since INT3/#BP no longer runs on an IST, this workaround is no longer
-> > required.
-> >
-> > Tested by running lockdep+ftrace as described in the initial commit:
-> >
-> >   5963e317b1e9 ("ftrace/x86: Do not change stacks in DEBUG when calling lockdep")
-> >
-> > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> I would definitely like to see this happen, but there are all kinds of
-> possibly nasties here.  Ideally we'd like get rid of IST for #DB, but
-> we can't due to the MOV SS mess.  There are a few relevant cases we
-> care about:
-> 
-> #DB from user mode -> anything that hits in C code: irrelevant --
-> we've exited the IST stack already.
-> 
-> #DB from user mode -> NMI/MCE in the asm -> #DB: The NMI code tries to
-> get this right.  The MCE code does not.
-> 
-> #DB from kernel mode -> NMI/MCE -> #DB: same as above.
-> 
-> MOV SS -> #DB from entry -> #DB again: ugh.  We get some protection
-> from shift_ist.
-> 
-> IMO we would ideally just clear DR7 in sensitive contexts.  Or extend
-> the debug_stack_set_zero(), etc hack.
-> 
-> All that being said, the actual _DEBUG macros shouldn't matter here, I
-> think.  But I'd like to sleep on it.   So not-yet-acked-by me.
+Hi Linus,
 
-How about something lovely like:
+Please pull the signed tag below for two Hyper-V commits for 5.3.
 
-#DB from kernel space; in say lockdep.
-the #DB entry calls back into lockdep through trace_irq
-which then hits the same #DB
+You will see a conflict in arch/x86/include/asm/mshyperv.h due to
+few Hyper-V related patches that went through tglx's tree, please
+resolve that by keeping the header inclusion at the end but removing the
+TSC related code. For reference, this is a correct resolution in
+linux-next:
+https://lore.kernel.org/lkml/20190709195358.25af244b@canb.auug.org.au/ .
 
-and we get recursive #DB.
+Yes, this conflict is new-ish, but mostly because we split a series of
+patches between this tree and tglx's. The patch in question is the same
+as it was when I've accepted it back in May, and is well tested at this
+point.
 
-Now, I don't think we can actually make that happen, because most/all
-the relevant functions have NOKPROBE_SYMBOL() on. Even the idtentry
-generates _ASM_NOKPROBE().
+The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
 
-Still, it might make sense to have #DB itself clear/restore DR7 if it
-doesn't already.
+  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
 
-Also, the comment on do_debug() seems wrong; we can set watchpoints on
-kernel text just fine these days.
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
+
+for you to fetch changes up to 765e33f5211ab620c117ff1ee0c4f38c10f7a973:
+
+  Drivers: hv: vmbus: Break out ISA independent parts of mshyperv.h (2019-07-08 19:06:27 -0400)
+
+----------------------------------------------------------------
+- Add a module description to the Hyper-V vmbus module.
+- Rework some vmbus code to separate architecture specifics out to
+arch/x86/. This is part of the work of adding arm64 support to Hyper-V.
+
+----------------------------------------------------------------
+Joseph Salisbury (1):
+      drivers: hv: Add a module description line to the hv_vmbus driver
+
+Michael Kelley (1):
+      Drivers: hv: vmbus: Break out ISA independent parts of mshyperv.h
+
+ MAINTAINERS                     |   1 +
+ arch/x86/include/asm/mshyperv.h | 148 ++--------------------------------------------------
+ drivers/hv/vmbus_drv.c          |   1 +
+ include/asm-generic/mshyperv.h  | 180 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 187 insertions(+), 143 deletions(-)
+ create mode 100644 include/asm-generic/mshyperv.h
