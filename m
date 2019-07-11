@@ -2,58 +2,159 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA25FC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD69C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351B721019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ahsFFFgB"
+	by mail.kernel.org (Postfix) with ESMTP id 0C15321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfGKNBc (ORCPT
+        id S1728679AbfGKNEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:01:32 -0400
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:11810 "EHLO
-        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbfGKNBb (ORCPT
+        Thu, 11 Jul 2019 09:04:05 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:56606 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbfGKNEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:01:31 -0400
-Date:   Thu, 11 Jul 2019 13:01:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1562850089;
-        bh=Y+rm/2SzmJgxdgAH4hhSh/eSUNJ8TI9/ob3EPQDemO0=;
-        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
-        b=ahsFFFgBidOqFh9x/BhFtfv0VfxmTq9UkOxHlxb70dvJA0YUnab5qksINauO5trdw
-         9GZhw2WMtBwwz1rFEkDEm3XHEv27iAG6pX0WUbpz6pdEoXnlekFuqNFEPSz3XdlYhb
-         VmN2QxssoFO++16E+UttVdkmei16xrCaMVgtq3wA=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Subject: =?UTF-8?Q?Fair_Pay_Project_is_now:_Od=C3=A9n_OS?=
-Message-ID: <OlRBTjSHu2VQ5oCicx8H5NNsXwVoXplHBLzhInvc6TMUuaDnDLBeRc0NiAmSfkfS2Ne07fZQDYtsqlKS1CC18e19cTXTnrwmsYNKSXE4Cq0=@protonmail.com>
-Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 09:04:05 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id bR422000r05gfCL01R42Ad; Thu, 11 Jul 2019 15:04:03 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hlYjy-00085u-IG; Thu, 11 Jul 2019 15:04:02 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hlYjy-0000cu-GL; Thu, 11 Jul 2019 15:04:02 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Yao Lihua <Lihua.Yao@desay-svautomotive.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] clk: renesas: cpg-mssr: Fix reset control race condition
+Date:   Thu, 11 Jul 2019 15:03:59 +0200
+Message-Id: <20190711130359.1060-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I had the most brilliant idea - Fair Pay Project is now: Od=C3=A9n OS.
+The module reset code in the Renesas CPG/MSSR driver uses
+read-modify-write (RMW) operations to write to a Software Reset Register
+(SRCRn), and simple writes to write to a Software Reset Clearing
+Register (SRSTCLRn), as was mandated by the R-Car Gen2 and Gen3 Hardware
+User's Manuals.
 
-Us norse always liked a bit faster OS.
+However, this may cause a race condition when two devices are reset in
+parallel: if the reset for device A completes in the middle of the RMW
+operation for device B, device A may be reset again, causing subtle
+failures (e.g. i2c timeouts):
 
-Still at:
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
+	thread A			thread B
+	--------			--------
 
-(Variant spelling is latinization of the runic "Odin, the original meadscal=
-d God)
+	val = SRCRn
+	val |= bit A
+	SRCRn = val
 
-Peace.
+	delay
+
+					val = SRCRn (bit A is set)
+
+	SRSTCLRn = bit A
+	(bit A in SRCRn is cleared)
+
+					val |= bit B
+					SRCRn = val (bit A and B are set)
+
+This can be reproduced on e.g. Salvator-XS using:
+
+    $ while true; do i2cdump -f -y 4 0x6A b > /dev/null; done &
+    $ while true; do i2cdump -f -y 2 0x10 b > /dev/null; done &
+
+    i2c-rcar e6510000.i2c: error -110 : 40000002
+    i2c-rcar e66d8000.i2c: error -110 : 40000002
+
+According to the R-Car Gen3 Hardware Manual Errata for Rev.
+0.80 of Feb 28, 2018, reflected in Rev. 1.00 of the R-Car Gen3 Hardware
+User's Manual, writes to SRCRn do not require read-modify-write cycles.
+
+Note that the R-Car Gen2 Hardware User's Manual has not been updated
+yet, and still says a read-modify-write sequence is required.  According
+to the hardware team, the reset hardware block is the same on both R-Car
+Gen2 and Gen3, though.
+
+Hence fix the issue by replacing the read-modify-write operations on
+SRCRn by simple writes.
+
+Reported-by: Yao Lihua <Lihua.Yao@desay-svautomotive.com>
+Fixes: 6197aa65c4905532 ("clk: renesas: cpg-mssr: Add support for reset control")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+So far I haven't been able to reproduce the issue on R-Car Gen2 (after
+forcing i2c reset on Gen2, too).  Perhaps my Koelsch doesn't have enough
+CPU cores.  What about Lager?
+
+Hi Mike, Stephen,
+
+As this is a bugfix, can you please take this directly, if accepted?
+
+Thanks!
+---
+ drivers/clk/renesas/renesas-cpg-mssr.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+index 52bbb9ce3807db31..d4075b13067429cd 100644
+--- a/drivers/clk/renesas/renesas-cpg-mssr.c
++++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+@@ -572,17 +572,11 @@ static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
+ 	unsigned int reg = id / 32;
+ 	unsigned int bit = id % 32;
+ 	u32 bitmask = BIT(bit);
+-	unsigned long flags;
+-	u32 value;
+ 
+ 	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+ 
+ 	/* Reset module */
+-	spin_lock_irqsave(&priv->rmw_lock, flags);
+-	value = readl(priv->base + SRCR(reg));
+-	value |= bitmask;
+-	writel(value, priv->base + SRCR(reg));
+-	spin_unlock_irqrestore(&priv->rmw_lock, flags);
++	writel(bitmask, priv->base + SRCR(reg));
+ 
+ 	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+ 	udelay(35);
+@@ -599,16 +593,10 @@ static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
+ 	unsigned int reg = id / 32;
+ 	unsigned int bit = id % 32;
+ 	u32 bitmask = BIT(bit);
+-	unsigned long flags;
+-	u32 value;
+ 
+ 	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+ 
+-	spin_lock_irqsave(&priv->rmw_lock, flags);
+-	value = readl(priv->base + SRCR(reg));
+-	value |= bitmask;
+-	writel(value, priv->base + SRCR(reg));
+-	spin_unlock_irqrestore(&priv->rmw_lock, flags);
++	writel(bitmask, priv->base + SRCR(reg));
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
 
