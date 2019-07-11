@@ -2,113 +2,164 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D7CC74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB091C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601C020872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcgcIoO8"
+	by mail.kernel.org (Postfix) with ESMTP id A02D221721
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfGKQfu (ORCPT
+        id S1728798AbfGKQge convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 12:35:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40031 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGKQfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:35:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so3197371pgj.7;
-        Thu, 11 Jul 2019 09:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MmkG53WQLXsnChwuW4VZaCFghSpsaEReR7YJG6XS3wY=;
-        b=BcgcIoO8JWuECr/LI3atzQ4qxt5OBmIaOr0AK+el9EA3EwjCtUKJeEJJMz56x6JCEc
-         9RwB/rq61Hn0aUG50lVV0QnO1bj+XHfUbDFoFhwT1uFEjMaZCyq15Z7lRwifB1sJX2QJ
-         kTOLQL38vSoh8eB+AE4q+dzITIvB10BnRneK7HpRWENFWI4PGgSoDANFf8Uzbw43MGsC
-         SkuNFR1DrFzdJHgQvOL684DxIMJl+EviFz/JnLXYEqDWxQpGzl7pF0OSX5H4GGnDYvqZ
-         J9YGhdo8mrVV1uZWvnM/vf4nwBpnIwXx+Ttk4b8eT7nTUcRpVCvgk+HZQXzl536USxba
-         ukYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MmkG53WQLXsnChwuW4VZaCFghSpsaEReR7YJG6XS3wY=;
-        b=tWhuc9wY7alzfH1iSUZ8BeLHuOthliFXRWhV0MSVwAwSyJn1t/XYfZzxtdZhrnSF41
-         7rkfAAIL8VzOd8y/xpknYkdkBU7uAXxjQpiap+9hl8b5/bAWY4V/PwylObeTblYg/pdT
-         X9qBBK9M80cwG9rBJLVWJzpM0hAeGPri4baDTd+95pv04Aet2oeNWRx12xeNisOuh5UN
-         CbEhLo3PwZFq3xCE6z9gigZ4pA4JgbRHpoYzHl7VOriLOPizO7BNvF7gBrSLntlp9OBD
-         Hr1L7c+X89aCM9wDElSHjvSlpNsBvknSeH8xctcZqQzWUj2XtDB4H90RbDJM1859vG3g
-         hlNg==
-X-Gm-Message-State: APjAAAW5Naf+dZhcc+3HGHAf8h7mOvtmHAy0eSGFB3h0rj/45gZYUdYS
-        5NdkDxCxLjT9eIMFUA6sDg0=
-X-Google-Smtp-Source: APXvYqyvGaG6S4s96AFzUFqGjV97xe/yb4IsOBocn5ACV+MMJMiG3jRLvG0CUcuacfGGqhXQuabsEg==
-X-Received: by 2002:a63:c106:: with SMTP id w6mr5390973pgf.422.1562862949567;
-        Thu, 11 Jul 2019 09:35:49 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w187sm6560127pfb.4.2019.07.11.09.35.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 09:35:49 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 09:35:48 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Lei YU <mine260309@gmail.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon (occ): Fix division by zero issue
-Message-ID: <20190711163548.GA19747@roeck-us.net>
-References: <1562813088-23708-1-git-send-email-mine260309@gmail.com>
+        Thu, 11 Jul 2019 12:36:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38936 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbfGKQgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 12:36:33 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0CA637F7CB;
+        Thu, 11 Jul 2019 16:36:33 +0000 (UTC)
+Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C984460BFB;
+        Thu, 11 Jul 2019 16:36:02 +0000 (UTC)
+Subject: Re: [RFC][Patch v11 1/2] mm: page_hinting: core infrastructure
+To:     Dave Hansen <dave.hansen@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
+        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
+        david@redhat.com, mst@redhat.com, dodgen@google.com,
+        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com, john.starks@microsoft.com,
+        mhocko@suse.com
+References: <20190710195158.19640-1-nitesh@redhat.com>
+ <20190710195158.19640-2-nitesh@redhat.com>
+ <3f9a7e7b-c026-3530-e985-804fc7f1ec31@intel.com>
+ <0b871cf1-e54f-f072-1eaf-511a03c2907f@redhat.com>
+ <c41671f0-2080-b925-39e2-79e33a84088b@intel.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <fd49381e-cdfa-7ac9-e938-ac790995df24@redhat.com>
+Date:   Thu, 11 Jul 2019 12:36:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562813088-23708-1-git-send-email-mine260309@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <c41671f0-2080-b925-39e2-79e33a84088b@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 11 Jul 2019 16:36:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 10:44:48AM +0800, Lei YU wrote:
-> The code in occ_get_powr_avg() invokes div64_u64() without checking the
-> divisor. In case the divisor is zero, kernel gets an "Division by zero
-> in kernel" error.
-> 
-> Check the divisor and make it return 0 if the divisor is 0.
-> 
-> Signed-off-by: Lei YU <mine260309@gmail.com>
-> Reviewed-by: Eddie James <eajames@linux.ibm.com>
 
-Applied.
+On 7/11/19 12:22 PM, Dave Hansen wrote:
+> On 7/11/19 8:25 AM, Nitesh Narayan Lal wrote:
+>> On 7/10/19 4:45 PM, Dave Hansen wrote:
+>>> On 7/10/19 12:51 PM, Nitesh Narayan Lal wrote:
+>>>> +struct zone_free_area {
+>>>> +	unsigned long *bitmap;
+>>>> +	unsigned long base_pfn;
+>>>> +	unsigned long end_pfn;
+>>>> +	atomic_t free_pages;
+>>>> +	unsigned long nbits;
+>>>> +} free_area[MAX_NR_ZONES];
+>>> Why do we need an extra data structure.  What's wrong with putting
+>>> per-zone data in ... 'struct zone'?
+>> Will it be acceptable to add fields in struct zone, when they will only
+>> be used by page hinting?
+> Wait a sec...  MAX_NR_ZONES the number of zone types not the maximum
+> number of *zones* in the system.
+>
+> Did you test this on a NUMA system?
+Yes, I tested it with a guest having 2 and 3 NUMA nodes.
+> In any case, yes, you can put these in 'struct zone'.  It will waste
+> less space that way, on average, than what you have here (one you scale
+> it to MAX_NR_ZONE*MAX_NUM_NODES.
+>>>   The cover letter claims that it
+>>> doesn't touch core-mm infrastructure, but if it depends on mechanisms
+>>> like this, I think that's a very bad thing.
+>>>
+>>> To be honest, I'm not sure this series is worth reviewing at this point.
+>>>  It's horribly lightly commented and full of kernel antipatterns lik
+>>>
+>>> void func()
+>>> {
+>>> 	if () {
+>>> 		... indent entire logic
+>>> 		... of function
+>>> 	}
+>>> }
+>> I usually run checkpatch to detect such indentation issues. For the
+>> patches, I shared it didn't show me any issues.
+> Just because checkpatch doesn't complain does not mean it is good form.
+>  We write the above as:
+>
+> void func()
+> {
+> 	if (!something)
+> 		goto out;
+>
+> 	... logic of function here
+> out:
+> 	// cleanup
+> }
 
-Thanks,
-Guenter
+Yeap, I got it. I will correct this.
 
-> ---
->  drivers/hwmon/occ/common.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-> index 13a6290..f02aa40 100644
-> --- a/drivers/hwmon/occ/common.c
-> +++ b/drivers/hwmon/occ/common.c
-> @@ -402,8 +402,10 @@ static ssize_t occ_show_power_1(struct device *dev,
->  
->  static u64 occ_get_powr_avg(u64 *accum, u32 *samples)
->  {
-> -	return div64_u64(get_unaligned_be64(accum) * 1000000ULL,
-> -			 get_unaligned_be32(samples));
-> +	u64 divisor = get_unaligned_be32(samples);
-> +
-> +	return (divisor == 0) ? 0 :
-> +		div64_u64(get_unaligned_be64(accum) * 1000000ULL, divisor);
->  }
->  
->  static ssize_t occ_show_power_2(struct device *dev,
+
+-- 
+Thanks
+Nitesh
+
