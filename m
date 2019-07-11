@@ -2,85 +2,239 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACF5C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD5EC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB6E2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C3A21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itMw7Ebp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfGKOS6 (ORCPT
+        id S1728606AbfGKOVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:18:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2207 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728045AbfGKOS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:18:58 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 50C1B3222C970C39F9BC;
-        Thu, 11 Jul 2019 22:18:52 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 11 Jul 2019
- 22:18:45 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <mpe@ellerman.id.au>, <aik@ozlabs.ru>,
-        <david@gibson.dropbear.id.au>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] powerpc/powernv/ioda: using kfree_rcu() to simplify the code
-Date:   Thu, 11 Jul 2019 22:18:18 +0800
-Message-ID: <20190711141818.18044-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Thu, 11 Jul 2019 10:21:32 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38172 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbfGKOVb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 10:21:31 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y15so2841854pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Awpujz9r/neB3EOz35gTs3qfspG2l2LEyx+qOFwQWtc=;
+        b=itMw7Ebpfg3uMHx+Cp6KsA/Jzruj3ROpTQpU9KFExu0AV2HoMbkQ4B5z08DRqTZ4LZ
+         kd2MMKFWuwP4QkUSsyb7fRuNAYfFPwlgP9KidEUMzEO8/HNsW+pUHEiZnagno2r1/1uW
+         Bjo8poHGBtyy3cYaA0ViTzf9RPiXyGmVyMOfuwdibIqkoHOjOdcL4c1LYOAKWFYuSXjH
+         GdkkY22AYUXcV9hRqzXd4wVDoHHdaYxxndjmYX1x1OiSq+BN/rZYViGkXGyLq6XwRR4O
+         HsgqkdvgeflDjPyOPM07rlJTP8EkWvCrhlJfx3i8B2kKgtrQK4muI0eWSOdKkCHnawZj
+         a5Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Awpujz9r/neB3EOz35gTs3qfspG2l2LEyx+qOFwQWtc=;
+        b=X7MaXiKK1jtYM96q+OO89arN7Man2YLyCyhHh+C1NmbJ8bNs9QQtuO7CxGMtGzwpK4
+         OeDd1ZeyNIgRXRmO1ZfbKdnQVJoBxT9EFC0iVyQx3XjSFOJSs7TvOTJ1Ope4SMXJ9v5i
+         pqhHz5zN14v5O7mNE9tP1Gc3d44Kj1iH4Vn9X5RqsZO7EVUvtg95MY50/MFo45S/xYwk
+         HaTm8wsI2XOB7s6CH5QwqI0+/ego6YHzsGbeXslv8FlSuDJ0uj17LgFypnR0D4hy+UW5
+         //PnkEVim4hsU1OjZZn3TQk9dcAW/HkXdQhCXyH/x35N4SU/7qgeia3M0qdeAiXvS7os
+         iYxw==
+X-Gm-Message-State: APjAAAVQF3SNPlbkf8wyPXOIhxihzFbVCfjtACQL2WUlTwkp07Xc/S4p
+        QRGciIJmleuRwihYbRnfv8QGq9W7LJ90yQ==
+X-Google-Smtp-Source: APXvYqwXCzJ0oJtitLVGfwHJo2XK58B5/l/357wPbMNsJfi7bE/SM5jnO449QeEKT1JYb29a4ctIEA==
+X-Received: by 2002:a63:5d54:: with SMTP id o20mr4769342pgm.413.1562854889992;
+        Thu, 11 Jul 2019 07:21:29 -0700 (PDT)
+Received: from localhost ([49.248.58.252])
+        by smtp.gmail.com with ESMTPSA id q4sm5408674pjq.27.2019.07.11.07.21.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 07:21:29 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH v2] PM: QoS: Get rid of unused flags
+Date:   Thu, 11 Jul 2019 19:51:25 +0530
+Message-Id: <e9e7bc3be3b51e68ae1a0f934c3724bd86f5f9af.1562854650.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1562854650.git.amit.kucheria@linaro.org>
+References: <cover.1562854650.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The callback function of call_rcu() just calls a kfree(), so we
-can use kfree_rcu() instead of call_rcu() + callback function.
+The network_latency and network_throughput flags for PM-QoS have not
+found much use in drivers or in userspace since they were introduced.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Commit 4a733ef1bea7 ("mac80211: remove PM-QoS listener") removed the
+only user PM_QOS_NETWORK_LATENCY in the kernel a while ago and there
+don't seem to be any userspace tools using the character device files
+either.
+
+PM_QOS_MEMORY_BANDWIDTH was never even added to the trace events.
+
+Remove all the flags except cpu_dma_latency.
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda-tce.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+Changes from v1:
+- Rebased on linux-next to deal with .rst conversion of docs
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda-tce.c b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-index e28f03e..05f80b1 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-@@ -332,14 +332,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 	return -ENOMEM;
- }
+I've looked around for use of /dev/network_throughput and
+/dev/network_bandwidth) and not found any userspace programs that seem to
+use this currently. So this shouldn't be breaking our ABI contract with
+userspace.
+
+
+ Documentation/power/pm_qos_interface.rst |  5 +--
+ include/linux/pm_qos.h                   |  6 ---
+ include/trace/events/power.h             |  8 +---
+ kernel/power/qos.c                       | 48 ------------------------
+ 4 files changed, 4 insertions(+), 63 deletions(-)
+
+diff --git a/Documentation/power/pm_qos_interface.rst b/Documentation/power/pm_qos_interface.rst
+index 945fc6d760c9..a00d607107ec 100644
+--- a/Documentation/power/pm_qos_interface.rst
++++ b/Documentation/power/pm_qos_interface.rst
+@@ -7,8 +7,7 @@ performance expectations by drivers, subsystems and user space applications on
+ one of the parameters.
  
--static void pnv_iommu_table_group_link_free(struct rcu_head *head)
--{
--	struct iommu_table_group_link *tgl = container_of(head,
--			struct iommu_table_group_link, rcu);
+ Two different PM QoS frameworks are available:
+-1. PM QoS classes for cpu_dma_latency, network_latency, network_throughput,
+-memory_bandwidth.
++1. PM QoS classes for cpu_dma_latency
+ 2. the per-device PM QoS framework provides the API to manage the per-device latency
+ constraints and PM QoS flags.
+ 
+@@ -79,7 +78,7 @@ cleanup of a process, the interface requires the process to register its
+ parameter requests in the following way:
+ 
+ To register the default pm_qos target for the specific parameter, the process
+-must open one of /dev/[cpu_dma_latency, network_latency, network_throughput]
++must open /dev/cpu_dma_latency
+ 
+ As long as the device node is held open that process has a registered
+ request on the parameter.
+diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
+index 6ea1ae373d77..2a3c237b1910 100644
+--- a/include/linux/pm_qos.h
++++ b/include/linux/pm_qos.h
+@@ -13,9 +13,6 @@
+ enum {
+ 	PM_QOS_RESERVED = 0,
+ 	PM_QOS_CPU_DMA_LATENCY,
+-	PM_QOS_NETWORK_LATENCY,
+-	PM_QOS_NETWORK_THROUGHPUT,
+-	PM_QOS_MEMORY_BANDWIDTH,
+ 
+ 	/* insert new class ID */
+ 	PM_QOS_NUM_CLASSES,
+@@ -33,9 +30,6 @@ enum pm_qos_flags_status {
+ #define PM_QOS_LATENCY_ANY_NS	((s64)PM_QOS_LATENCY_ANY * NSEC_PER_USEC)
+ 
+ #define PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE	(2000 * USEC_PER_SEC)
+-#define PM_QOS_NETWORK_LAT_DEFAULT_VALUE	(2000 * USEC_PER_SEC)
+-#define PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE	0
+-#define PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE	0
+ #define PM_QOS_RESUME_LATENCY_DEFAULT_VALUE	PM_QOS_LATENCY_ANY
+ #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT	PM_QOS_LATENCY_ANY
+ #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT_NS	PM_QOS_LATENCY_ANY_NS
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index f7aece721aed..7457e238e1b7 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -379,9 +379,7 @@ DECLARE_EVENT_CLASS(pm_qos_request,
+ 
+ 	TP_printk("pm_qos_class=%s value=%d",
+ 		  __print_symbolic(__entry->pm_qos_class,
+-			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" },
+-			{ PM_QOS_NETWORK_LATENCY,	"NETWORK_LATENCY" },
+-			{ PM_QOS_NETWORK_THROUGHPUT,	"NETWORK_THROUGHPUT" }),
++			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" }),
+ 		  __entry->value)
+ );
+ 
+@@ -426,9 +424,7 @@ TRACE_EVENT(pm_qos_update_request_timeout,
+ 
+ 	TP_printk("pm_qos_class=%s value=%d, timeout_us=%ld",
+ 		  __print_symbolic(__entry->pm_qos_class,
+-			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" },
+-			{ PM_QOS_NETWORK_LATENCY,	"NETWORK_LATENCY" },
+-			{ PM_QOS_NETWORK_THROUGHPUT,	"NETWORK_THROUGHPUT" }),
++			{ PM_QOS_CPU_DMA_LATENCY,	"CPU_DMA_LATENCY" }),
+ 		  __entry->value, __entry->timeout_us)
+ );
+ 
+diff --git a/kernel/power/qos.c b/kernel/power/qos.c
+index 33e3febaba53..9568a2fe7c11 100644
+--- a/kernel/power/qos.c
++++ b/kernel/power/qos.c
+@@ -78,57 +78,9 @@ static struct pm_qos_object cpu_dma_pm_qos = {
+ 	.name = "cpu_dma_latency",
+ };
+ 
+-static BLOCKING_NOTIFIER_HEAD(network_lat_notifier);
+-static struct pm_qos_constraints network_lat_constraints = {
+-	.list = PLIST_HEAD_INIT(network_lat_constraints.list),
+-	.target_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
+-	.default_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
+-	.no_constraint_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
+-	.type = PM_QOS_MIN,
+-	.notifiers = &network_lat_notifier,
+-};
+-static struct pm_qos_object network_lat_pm_qos = {
+-	.constraints = &network_lat_constraints,
+-	.name = "network_latency",
+-};
 -
--	kfree(tgl);
--}
 -
- void pnv_pci_unlink_table_and_group(struct iommu_table *tbl,
- 		struct iommu_table_group *table_group)
- {
-@@ -355,7 +347,7 @@ void pnv_pci_unlink_table_and_group(struct iommu_table *tbl,
- 	list_for_each_entry_rcu(tgl, &tbl->it_group_list, next) {
- 		if (tgl->table_group == table_group) {
- 			list_del_rcu(&tgl->next);
--			call_rcu(&tgl->rcu, pnv_iommu_table_group_link_free);
-+			kfree_rcu(tgl, rcu);
- 			found = true;
- 			break;
- 		}
+-static BLOCKING_NOTIFIER_HEAD(network_throughput_notifier);
+-static struct pm_qos_constraints network_tput_constraints = {
+-	.list = PLIST_HEAD_INIT(network_tput_constraints.list),
+-	.target_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
+-	.default_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
+-	.no_constraint_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
+-	.type = PM_QOS_MAX,
+-	.notifiers = &network_throughput_notifier,
+-};
+-static struct pm_qos_object network_throughput_pm_qos = {
+-	.constraints = &network_tput_constraints,
+-	.name = "network_throughput",
+-};
+-
+-
+-static BLOCKING_NOTIFIER_HEAD(memory_bandwidth_notifier);
+-static struct pm_qos_constraints memory_bw_constraints = {
+-	.list = PLIST_HEAD_INIT(memory_bw_constraints.list),
+-	.target_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
+-	.default_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
+-	.no_constraint_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
+-	.type = PM_QOS_SUM,
+-	.notifiers = &memory_bandwidth_notifier,
+-};
+-static struct pm_qos_object memory_bandwidth_pm_qos = {
+-	.constraints = &memory_bw_constraints,
+-	.name = "memory_bandwidth",
+-};
+-
+-
+ static struct pm_qos_object *pm_qos_array[] = {
+ 	&null_pm_qos,
+ 	&cpu_dma_pm_qos,
+-	&network_lat_pm_qos,
+-	&network_throughput_pm_qos,
+-	&memory_bandwidth_pm_qos,
+ };
+ 
+ static ssize_t pm_qos_power_write(struct file *filp, const char __user *buf,
 -- 
-2.7.4
-
+2.17.1
 
