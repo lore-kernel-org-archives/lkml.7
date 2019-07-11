@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7417AC74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCC8C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A09620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D059C20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbfGKMP1 (ORCPT
+        id S1728719AbfGKMPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:15:27 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:39613 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbfGKMPY (ORCPT
+        Thu, 11 Jul 2019 08:15:31 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:45913 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfGKMPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:15:24 -0400
+        Thu, 11 Jul 2019 08:15:21 -0400
 Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C93F0240025;
-        Thu, 11 Jul 2019 12:15:20 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 51A21100017;
+        Thu, 11 Jul 2019 12:15:18 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Hans Verkuil <hans.verkuil@cisco.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -36,9 +36,9 @@ Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v6 4/5] ARM: dts: sun7i: Add CSI0 controller
-Date:   Thu, 11 Jul 2019 14:15:06 +0200
-Message-Id: <d98fad047cf18fc76b623287f346c1927b357582.1562847292.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v6 2/5] media: sunxi: Refactor the Makefile and Kconfig
+Date:   Thu, 11 Jul 2019 14:15:04 +0200
+Message-Id: <a68df210e89e53e58e6bb2da64f634e8598066ae.1562847292.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
 References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
@@ -49,35 +49,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CSI controller embedded in the A20 can be supported by our new driver.
-Let's add it to our DT.
+The Makefile and Kconfig for the sun6i CSI driver are included in the main
+Makefile / KConfig file. Since we're going to add a new CSI driver for an
+older chip, and the Cedrus driver eventually, it makes more sense to put
+those in our directory.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/media/platform/Kconfig        | 2 +-
+ drivers/media/platform/Makefile       | 2 +-
+ drivers/media/platform/sunxi/Kconfig  | 1 +
+ drivers/media/platform/sunxi/Makefile | 1 +
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 9ad8e445b240..13051fa8b4cb 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -376,6 +376,17 @@
- 			num-cs = <1>;
- 		};
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 8a19654b393a..2abf4ea8b9b1 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -146,7 +146,7 @@ source "drivers/media/platform/am437x/Kconfig"
+ source "drivers/media/platform/xilinx/Kconfig"
+ source "drivers/media/platform/rcar-vin/Kconfig"
+ source "drivers/media/platform/atmel/Kconfig"
+-source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
++source "drivers/media/platform/sunxi/Kconfig"
  
-+		csi0: csi@1c09000 {
-+			compatible = "allwinner,sun7i-a20-csi0",
-+				     "allwinner,sun4i-a10-csi0";
-+			reg = <0x01c09000 0x1000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-+				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-+			clock-names = "bus", "mod", "isp", "ram";
-+			resets = <&ccu RST_CSI0>;
-+		};
-+
- 		emac: ethernet@1c0b000 {
- 			compatible = "allwinner,sun4i-a10-emac";
- 			reg = <0x01c0b000 0x1000>;
+ config VIDEO_TI_CAL
+ 	tristate "TI CAL (Camera Adaptation Layer) driver"
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 7cbbd925124c..6ee7eb0d36f4 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -100,4 +100,4 @@ obj-y					+= meson/
+ 
+ obj-y					+= cros-ec-cec/
+ 
+-obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
++obj-y					+= sunxi/
+diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
+new file mode 100644
+index 000000000000..1b6e89cb78b2
+--- /dev/null
++++ b/drivers/media/platform/sunxi/Kconfig
+@@ -0,0 +1 @@
++source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
+diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
+new file mode 100644
+index 000000000000..8d06f98500ee
+--- /dev/null
++++ b/drivers/media/platform/sunxi/Makefile
+@@ -0,0 +1 @@
++obj-y		+= sun6i-csi/
 -- 
 git-series 0.9.1
