@@ -2,235 +2,82 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661B4C74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7417AC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5432166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562847324;
-	bh=dMCunlzF7bPD5kQyasmhgt9LE1KsjBIn2NiBAv7v+3c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uqi3U4k77yRm+7qhuVgH6/ViW1PWIQCCaI5wFoh50OuR7Nqhm1FX2UdTvnUC7MqzC
-	 50zi8Bxd/qH/cW3auWJL8x9Io0yq43MISr0gMsvr5aASWGzgkT2NB8SVqrPb+6I//+
-	 wen2/tRAhOrH9QIXeE1h59pOjpVUX71D9S6Tj06c=
+	by mail.kernel.org (Postfix) with ESMTP id 4A09620665
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbfGKMPW (ORCPT
+        id S1728703AbfGKMP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:15:22 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43432 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbfGKMPU (ORCPT
+        Thu, 11 Jul 2019 08:15:27 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:39613 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfGKMPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:15:20 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w79so4284319oif.10;
-        Thu, 11 Jul 2019 05:15:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=13tAYVAzEeE1jz6kXjnZWkMBObht4qqKsVB3VpRfnmE=;
-        b=h4jTkF9CLzzuS4TXQukHKhEIQpXpqSEo7LIbRXmgDKptyn2z9KwPdMbnKnupHzlNnc
-         hgex/j3kKelo7sJmYWtYxriy7i6vtEOHxVOfcOVwrt3Bixqltg9tGSoYH9Cc60QBsaaa
-         HV5kuuRwHA8lkkvm7L6Ge7N+66Q6eSLHnxoO8z15OqRQqLN6Ux/dYOQLqmnSthDZuP13
-         dLC27zwL/MQslbKUnUje/OgoJNJh7Ooh6rHQFdBKVk7niZ2cl8ORdwvcYD73fFQ81S+e
-         3XhKyJfAtP6Pw/NeX9b9bXK1XMxmJ3K+sbgvnKOIJkZlsMB2hjEPlFvV3KWaHJOMnvXi
-         2VKA==
-X-Gm-Message-State: APjAAAUxWAjNXN3Mltsj5cqliA8ma20XoR7lvhzbRfDe/oqLTpvRfJFP
-        S/5JhtIM+xRIpxEzPN9PlNPrsCqyNgrRSx/Y5sY=
-X-Google-Smtp-Source: APXvYqzdK2CQq61826CRbr01vnBj/ymkGOHfnIRoa/RscJQcUVrYJmXWq7QIWSPEn3cOdkau8BJBSnKIwFvFLEFuW4g=
-X-Received: by 2002:aca:cdd3:: with SMTP id d202mr1947808oig.115.1562847319746;
- Thu, 11 Jul 2019 05:15:19 -0700 (PDT)
+        Thu, 11 Jul 2019 08:15:24 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C93F0240025;
+        Thu, 11 Jul 2019 12:15:20 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v6 4/5] ARM: dts: sun7i: Add CSI0 controller
+Date:   Thu, 11 Jul 2019 14:15:06 +0200
+Message-Id: <d98fad047cf18fc76b623287f346c1927b357582.1562847292.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
+References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-References: <cover.1562751312.git.amit.kucheria@linaro.org> <ed318d093fde671dc0bae0aeb8cf07e56a72cf27.1562751312.git.amit.kucheria@linaro.org>
-In-Reply-To: <ed318d093fde671dc0bae0aeb8cf07e56a72cf27.1562751312.git.amit.kucheria@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 11 Jul 2019 14:15:08 +0200
-Message-ID: <CAJZ5v0hq2yLBOp1OVswS0u-PGOLjq65wfjUqWZB2Tf5oPhOQpQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] PM: QoS: Get rid of unused flags
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 12:12 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> The network_latency and network_throughput flags for PM-QoS have not
-> found much use in drivers or in userspace since they were introduced.
->
-> Commit 4a733ef1bea7 ("mac80211: remove PM-QoS listener") removed the
-> only user PM_QOS_NETWORK_LATENCY in the kernel a while ago and there
-> don't seem to be any userspace tools using the character device files
-> either.
->
-> PM_QOS_MEMORY_BANDWIDTH was never even added to the trace events.
->
-> Remove all the flags except cpu_dma_latency.
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+The CSI controller embedded in the A20 can be supported by our new driver.
+Let's add it to our DT.
 
-I agree with the rationale, but the patch will clash with some PM QoS
-changes from Viresh already in linux-next AFAICS.  Can you please
-rebase it on top of that material?
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> ---
-> I've looked around for use of /dev/network_throughput and
-> /dev/network_bandwidth) and not found any userspace programs that seem to
-> use this currently. So this shouldn't be breaking our ABI contract with
-> userspace.
->
->  Documentation/power/pm_qos_interface.txt |  5 +--
->  include/linux/pm_qos.h                   |  6 ---
->  include/trace/events/power.h             |  8 +---
->  kernel/power/qos.c                       | 48 ------------------------
->  4 files changed, 4 insertions(+), 63 deletions(-)
->
-> diff --git a/Documentation/power/pm_qos_interface.txt b/Documentation/power/pm_qos_interface.txt
-> index 19c5f7b1a7bab..ac53ca4ae24e1 100644
-> --- a/Documentation/power/pm_qos_interface.txt
-> +++ b/Documentation/power/pm_qos_interface.txt
-> @@ -5,8 +5,7 @@ performance expectations by drivers, subsystems and user space applications on
->  one of the parameters.
->
->  Two different PM QoS frameworks are available:
-> -1. PM QoS classes for cpu_dma_latency, network_latency, network_throughput,
-> -memory_bandwidth.
-> +1. PM QoS classes for cpu_dma_latency
->  2. the per-device PM QoS framework provides the API to manage the per-device latency
->  constraints and PM QoS flags.
->
-> @@ -74,7 +73,7 @@ cleanup of a process, the interface requires the process to register its
->  parameter requests in the following way:
->
->  To register the default pm_qos target for the specific parameter, the process
-> -must open one of /dev/[cpu_dma_latency, network_latency, network_throughput]
-> +must open /dev/cpu_dma_latency
->
->  As long as the device node is held open that process has a registered
->  request on the parameter.
-> diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
-> index 6ea1ae373d77c..2a3c237b1910d 100644
-> --- a/include/linux/pm_qos.h
-> +++ b/include/linux/pm_qos.h
-> @@ -13,9 +13,6 @@
->  enum {
->         PM_QOS_RESERVED = 0,
->         PM_QOS_CPU_DMA_LATENCY,
-> -       PM_QOS_NETWORK_LATENCY,
-> -       PM_QOS_NETWORK_THROUGHPUT,
-> -       PM_QOS_MEMORY_BANDWIDTH,
->
->         /* insert new class ID */
->         PM_QOS_NUM_CLASSES,
-> @@ -33,9 +30,6 @@ enum pm_qos_flags_status {
->  #define PM_QOS_LATENCY_ANY_NS  ((s64)PM_QOS_LATENCY_ANY * NSEC_PER_USEC)
->
->  #define PM_QOS_CPU_DMA_LAT_DEFAULT_VALUE       (2000 * USEC_PER_SEC)
-> -#define PM_QOS_NETWORK_LAT_DEFAULT_VALUE       (2000 * USEC_PER_SEC)
-> -#define PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE        0
-> -#define PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE  0
->  #define PM_QOS_RESUME_LATENCY_DEFAULT_VALUE    PM_QOS_LATENCY_ANY
->  #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT    PM_QOS_LATENCY_ANY
->  #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT_NS PM_QOS_LATENCY_ANY_NS
-> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-> index f7aece721aed7..7457e238e1b74 100644
-> --- a/include/trace/events/power.h
-> +++ b/include/trace/events/power.h
-> @@ -379,9 +379,7 @@ DECLARE_EVENT_CLASS(pm_qos_request,
->
->         TP_printk("pm_qos_class=%s value=%d",
->                   __print_symbolic(__entry->pm_qos_class,
-> -                       { PM_QOS_CPU_DMA_LATENCY,       "CPU_DMA_LATENCY" },
-> -                       { PM_QOS_NETWORK_LATENCY,       "NETWORK_LATENCY" },
-> -                       { PM_QOS_NETWORK_THROUGHPUT,    "NETWORK_THROUGHPUT" }),
-> +                       { PM_QOS_CPU_DMA_LATENCY,       "CPU_DMA_LATENCY" }),
->                   __entry->value)
->  );
->
-> @@ -426,9 +424,7 @@ TRACE_EVENT(pm_qos_update_request_timeout,
->
->         TP_printk("pm_qos_class=%s value=%d, timeout_us=%ld",
->                   __print_symbolic(__entry->pm_qos_class,
-> -                       { PM_QOS_CPU_DMA_LATENCY,       "CPU_DMA_LATENCY" },
-> -                       { PM_QOS_NETWORK_LATENCY,       "NETWORK_LATENCY" },
-> -                       { PM_QOS_NETWORK_THROUGHPUT,    "NETWORK_THROUGHPUT" }),
-> +                       { PM_QOS_CPU_DMA_LATENCY,       "CPU_DMA_LATENCY" }),
->                   __entry->value, __entry->timeout_us)
->  );
->
-> diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-> index 33e3febaba53f..9568a2fe7c116 100644
-> --- a/kernel/power/qos.c
-> +++ b/kernel/power/qos.c
-> @@ -78,57 +78,9 @@ static struct pm_qos_object cpu_dma_pm_qos = {
->         .name = "cpu_dma_latency",
->  };
->
-> -static BLOCKING_NOTIFIER_HEAD(network_lat_notifier);
-> -static struct pm_qos_constraints network_lat_constraints = {
-> -       .list = PLIST_HEAD_INIT(network_lat_constraints.list),
-> -       .target_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-> -       .default_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-> -       .no_constraint_value = PM_QOS_NETWORK_LAT_DEFAULT_VALUE,
-> -       .type = PM_QOS_MIN,
-> -       .notifiers = &network_lat_notifier,
-> -};
-> -static struct pm_qos_object network_lat_pm_qos = {
-> -       .constraints = &network_lat_constraints,
-> -       .name = "network_latency",
-> -};
-> -
-> -
-> -static BLOCKING_NOTIFIER_HEAD(network_throughput_notifier);
-> -static struct pm_qos_constraints network_tput_constraints = {
-> -       .list = PLIST_HEAD_INIT(network_tput_constraints.list),
-> -       .target_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-> -       .default_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-> -       .no_constraint_value = PM_QOS_NETWORK_THROUGHPUT_DEFAULT_VALUE,
-> -       .type = PM_QOS_MAX,
-> -       .notifiers = &network_throughput_notifier,
-> -};
-> -static struct pm_qos_object network_throughput_pm_qos = {
-> -       .constraints = &network_tput_constraints,
-> -       .name = "network_throughput",
-> -};
-> -
-> -
-> -static BLOCKING_NOTIFIER_HEAD(memory_bandwidth_notifier);
-> -static struct pm_qos_constraints memory_bw_constraints = {
-> -       .list = PLIST_HEAD_INIT(memory_bw_constraints.list),
-> -       .target_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
-> -       .default_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
-> -       .no_constraint_value = PM_QOS_MEMORY_BANDWIDTH_DEFAULT_VALUE,
-> -       .type = PM_QOS_SUM,
-> -       .notifiers = &memory_bandwidth_notifier,
-> -};
-> -static struct pm_qos_object memory_bandwidth_pm_qos = {
-> -       .constraints = &memory_bw_constraints,
-> -       .name = "memory_bandwidth",
-> -};
-> -
-> -
->  static struct pm_qos_object *pm_qos_array[] = {
->         &null_pm_qos,
->         &cpu_dma_pm_qos,
-> -       &network_lat_pm_qos,
-> -       &network_throughput_pm_qos,
-> -       &memory_bandwidth_pm_qos,
->  };
->
->  static ssize_t pm_qos_power_write(struct file *filp, const char __user *buf,
-> --
-> 2.17.1
->
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 9ad8e445b240..13051fa8b4cb 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -376,6 +376,17 @@
+ 			num-cs = <1>;
+ 		};
+ 
++		csi0: csi@1c09000 {
++			compatible = "allwinner,sun7i-a20-csi0",
++				     "allwinner,sun4i-a10-csi0";
++			reg = <0x01c09000 0x1000>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
++				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
++			clock-names = "bus", "mod", "isp", "ram";
++			resets = <&ccu RST_CSI0>;
++		};
++
+ 		emac: ethernet@1c0b000 {
+ 			compatible = "allwinner,sun4i-a10-emac";
+ 			reg = <0x01c0b000 0x1000>;
+-- 
+git-series 0.9.1
