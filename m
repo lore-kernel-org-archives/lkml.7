@@ -2,153 +2,62 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28673C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD37C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0105F21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE822064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbfGKJ5t (ORCPT
+        id S1728357AbfGKKDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:57:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:44082 "EHLO foss.arm.com"
+        Thu, 11 Jul 2019 06:03:36 -0400
+Received: from verein.lst.de ([213.95.11.211]:56801 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbfGKJ5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:57:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7565337;
-        Thu, 11 Jul 2019 02:57:47 -0700 (PDT)
-Received: from [10.162.42.96] (p8cg001049571a15.blr.arm.com [10.162.42.96])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64DD13F71F;
-        Thu, 11 Jul 2019 02:57:36 -0700 (PDT)
-Subject: Re: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback
- definition
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org
-References: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <542893ae-ed64-55b2-11ee-1f19710a25e4@arm.com>
-Date:   Thu, 11 Jul 2019 15:28:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728303AbfGKKDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 06:03:35 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3471C68B05; Thu, 11 Jul 2019 12:03:33 +0200 (CEST)
+Date:   Thu, 11 Jul 2019 12:03:32 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     miles.chen@mediatek.com, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        wsd_upstream@mediatek.com, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] kernel/dma: export dma_alloc_from_contiguous to modules
+Message-ID: <20190711100332.GA5853@lst.de>
+References: <20190711053343.28873-1-miles.chen@mediatek.com> <7d14b94f-454f-d512-bc8f-589f71bc07ea@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d14b94f-454f-d512-bc8f-589f71bc07ea@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 11, 2019 at 09:50:58AM +0100, Robin Murphy wrote:
+> On 11/07/2019 06:33, miles.chen@mediatek.com wrote:
+>> From: Miles Chen <miles.chen@mediatek.com>
+>>
+>> This change exports dma_alloc_from_contiguous and
+>> dma_release_from_contiguous to modules.
+>>
+>> Currently, we can add a reserve a memory node in dts files, make
+>> it a CMA memory by setting compatible = "shared-dma-pool",
+>> and setup the dev->cma_area by using of_reserved_mem_device_init_by_idx().
+>>
+>> Export dma_alloc_from_contiguous and dma_release_from_contiguous, so we
+>> can allocate/free from/to dev->cma_area in kernel modules.
+>
+> As far as I understand, this was never intended for drivers to call 
+> directly. If a device has its own private CMA area, then regular 
+> dma_alloc_attrs() should allocate from that automatically; if that's not 
+> happening already, then there's a bug somewhere.
 
-
-On 07/05/2019 11:00 AM, Anshuman Khandual wrote:
-> Architectures like parisc enable CONFIG_KROBES without having a definition
-> for kprobe_fault_handler() which results in a build failure. Arch needs to
-> provide kprobe_fault_handler() as it is platform specific and cannot have
-> a generic working alternative. But in the event when platform lacks such a
-> definition there needs to be a fallback.
-> 
-> This adds a stub kprobe_fault_handler() definition which not only prevents
-> a build failure but also makes sure that kprobe_page_fault() if called will
-> always return negative in absence of a sane platform specific alternative.
-> 
-> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
-> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
-> just be dropped. Only on x86 it needs to be added back locally as it gets
-> used in a !CONFIG_KPROBES function do_general_protection().
-> 
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Enrico Weigelt <info@metux.net>
-> Cc: Richard Fontana <rfontana@redhat.com>
-> Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: x86@kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-
-Any updates or suggestions on this patch ? Currently there is a build failure on
-parisc architecture due to the lack of a kprobe_fault_handler() definition when
-CONFIG_KPROBES is enabled and this build failure needs to be fixed.
-
-This patch solves the build problem. But otherwise I am also happy to just define
-a stub definition for kprobe_fault_handler() on parisc arch when CONFIG_KPROBES
-is enabled, which will avoid the build failure. Please suggest.
+Agreed.
