@@ -2,85 +2,106 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80AC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE02EC74A4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D757C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14EB21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfGKH5k (ORCPT
+        id S1728020AbfGKH66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 03:57:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33774 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726088AbfGKH5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 03:57:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 41042AC4C;
-        Thu, 11 Jul 2019 07:57:38 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D9EF31E43B9; Thu, 11 Jul 2019 09:48:59 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 09:48:59 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190711074859.GA8727@quack2.suse.cz>
-References: <20190703195302.GJ1729@bombadil.infradead.org>
- <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org>
- <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
- <20190710190204.GB14701@quack2.suse.cz>
- <20190711030855.GO32320@bombadil.infradead.org>
+        Thu, 11 Jul 2019 03:58:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44672 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfGKH66 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 03:58:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e189so3763013oib.11;
+        Thu, 11 Jul 2019 00:58:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YfAMEG8L/owsmlbfRme+xFoHE9pScAhhFraw9xAGnXw=;
+        b=HnQdzQnPbHoAadBXZ5W8Oosf2VALObPgnrRxEZYRNjTRT+FQnzp4tHGWASqFsf0SfZ
+         GJ8DKhpgj1Gph0JfwuepjVmwnF4abKP5CAZ5YWfj4/iRmzZZ3ubpPDc3cEttpc8tl03B
+         9UCemc7dozLq4SryJewR3yQP5tzu5GlZLxs2xv/+lCpHiUswJ//J6V6ojGVZ2tjn3Msa
+         0e+05GWzddB+qw31lnsLGs2MAT/u6MM3K08SjmjcMNwIFVTi5/iGL5ONc116rPiRmkmG
+         iduqbFi1hppnpFu7EFhGG7b602HwghUasxoaT6tOLUEbjsKSbBYPlkkruH2YYHq3J8T4
+         /uHA==
+X-Gm-Message-State: APjAAAUNAXzj3Z3ZCIYFH7UwdlCgZtPaFGShAIzT+yagJmriqMsFtl36
+        5GsItXPOIHLLNBWXrPSH6zNdKpqX5hvQRbM3O8U=
+X-Google-Smtp-Source: APXvYqy+qhB+skKoLFhPAEjb4GZrKBj+3TQMMBpCauOxz49hztroQJQAGrQPnhc/7czzr1iT/kmzGTHYyw3wfMVw7Vw=
+X-Received: by 2002:aca:bd43:: with SMTP id n64mr1483995oif.148.1562831937398;
+ Thu, 11 Jul 2019 00:58:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711030855.GO32320@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190710133930.26591-1-geert@linux-m68k.org> <20190710144636.GC4051@ziepe.ca>
+In-Reply-To: <20190710144636.GC4051@ziepe.ca>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 11 Jul 2019 09:58:46 +0200
+Message-ID: <CAMuHMdW4GP5FDhDuY1w3u0NypSCE84pPB-T7JoA+4odaPnhT5Q@mail.gmail.com>
+Subject: Re: [PATCH -next] rdma/siw: Add missing dependencies on LIBCRC32C and DMA_VIRT_OPS
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Next <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 20:08:55, Matthew Wilcox wrote:
-> On Wed, Jul 10, 2019 at 09:02:04PM +0200, Jan Kara wrote:
-> > @@ -848,7 +853,7 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
-> >  	if (unlikely(dax_is_locked(entry))) {
-> >  		void *old_entry = entry;
-> >  
-> > -		entry = get_unlocked_entry(xas);
-> > +		entry = get_unlocked_entry(xas, 0);
-> >  
-> >  		/* Entry got punched out / reallocated? */
-> >  		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
-> 
-> I'm not sure about this one.  Are we sure there will never be a dirty
-> PMD entry?  Even if we can't create one today, it feels like a bit of
-> a landmine to leave for someone who creates one in the future.
+Hi Jason,
 
-I was thinking about this but dax_writeback_one() doesn't really care what
-entry it gets. Yes, in theory it could get a PMD when previously there was
-PTE or vice-versa but we check that PFN's match and if they really do
-match, there's no harm in doing the flushing whatever entry we got back...
-And the checks are simpler this way.
+On Wed, Jul 10, 2019 at 4:46 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> On Wed, Jul 10, 2019 at 03:39:30PM +0200, Geert Uytterhoeven wrote:
+> > If LIBCRC32C and DMA_VIRT_OPS are not enabled:
+> >
+> >     drivers/infiniband/sw/siw/siw_main.o: In function `siw_newlink':
+> >     siw_main.c:(.text+0x35c): undefined reference to `dma_virt_ops'
+> >     drivers/infiniband/sw/siw/siw_qp_rx.o: In function `siw_csum_update':
+> >     siw_qp_rx.c:(.text+0x16): undefined reference to `crc32c'
+> >
+> > Fix the first issue by adding a select of DMA_VIRT_OPS.
+> > Fix the second issue by replacing the unneeded dependency on
+> > CRYPTO_CRC32 by a dependency on LIBCRC32C.
+> >
+> > Reported-by: noreply@ellerman.id.au (first issue)
+> > Fixes: c0cf5bdde46c664d ("rdma/siw: addition to kernel build environment")
+> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> >  drivers/infiniband/sw/siw/Kconfig | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/infiniband/sw/siw/Kconfig b/drivers/infiniband/sw/siw/Kconfig
+> > index 94f684174ce3556e..b622fc62f2cd6d46 100644
+> > +++ b/drivers/infiniband/sw/siw/Kconfig
+> > @@ -1,6 +1,7 @@
+> >  config RDMA_SIW
+> >       tristate "Software RDMA over TCP/IP (iWARP) driver"
+> > -     depends on INET && INFINIBAND && CRYPTO_CRC32
+> > +     depends on INET && INFINIBAND && LIBCRC32C
+>
+> Is this the best practice?
+>
+> siw is using both the libcrc32c API and the
+> 'crypto_alloc_shash("crc32c", 0, 0);' version. Is it right to get that
+> transitively through LIBCRC32C?
 
-								Honza
+Yes, I think so.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
