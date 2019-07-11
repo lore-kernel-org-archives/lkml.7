@@ -2,155 +2,128 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8322C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18178C74A46
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD34C21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1CA321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pvQMD/53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfGKDZB (ORCPT
+        id S1728000AbfGKD2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:25:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46430 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 23:28:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33101 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfGKDZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:25:01 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726353AbfGKD17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 23:27:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81CB0206B8;
-        Thu, 11 Jul 2019 03:24:59 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 23:24:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, bp@alien8.de, mingo@kernel.org,
-        luto@kernel.org, torvalds@linux-foundation.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, jgross@suse.com,
-        linux-kernel@vger.kernel.org, zhe.he@windriver.com,
-        joel@joelfernandes.org, devel@etsukata.com
-Subject: Re: [PATCH v2 6/7] x86/entry/64: Remove TRACE_IRQS_*_DEBUG
-Message-ID: <20190710232456.5f2de961@oasis.local.home>
-In-Reply-To: <20190704200050.591915266@infradead.org>
-References: <20190704195555.580363209@infradead.org>
-        <20190704200050.591915266@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45khMb6z4nz9s4Y;
+        Thu, 11 Jul 2019 13:27:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562815676;
+        bh=AF1YyH/59p2PdlXj1kEV8rgQSQxkXM7X3NhUx89uKKY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pvQMD/53hY2AX4+FL71jwT8Uu6vSWUw/M8GGAHSPsV2idIaXU+F3+mo6cqkwdDmnq
+         pz3kAQEqUqo7TKxv57QF6l5fJX7IPbLcdmPmBsRapK0+HqfHVTaw7M+GD5plYC5NEV
+         IvjAuSDwPmdDb1VcKBqmB/FW8GDTkQrGXv3jzGzm9B+Qh6S3bwoAUL6fxbPRT+jEZT
+         38iP1dviDC/A5OWYovbvXwCNGxu3xEmkTMeTPa365Dsxb+rIf8Zs4IKAcZSjcuO+1v
+         Fy8on1JRF4o0axnQZIyIj5XasAn++nWcshew+ogRMk30VHYi7OLwwb8GCFajwKQdMv
+         wixzonvTEPm1Q==
+Date:   Thu, 11 Jul 2019 13:27:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190711132755.0d4f45c9@canb.auug.org.au>
+In-Reply-To: <20190711131603.6b11b831@canb.auug.org.au>
+References: <20190709135636.4d36e19f@canb.auug.org.au>
+        <20190709064346.GF7034@mtr-leonro.mtl.com>
+        <20190710175212.GM2887@mellanox.com>
+        <20190711115054.7d7f468c@canb.auug.org.au>
+        <20190711015854.GC22409@mellanox.com>
+        <20190711131344.452fc064@canb.auug.org.au>
+        <20190711131603.6b11b831@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/lgR/euJAAvPcdiADQ4kmX/m"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jul 2019 21:56:01 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+--Sig_/lgR/euJAAvPcdiADQ4kmX/m
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Since INT3/#BP no longer runs on an IST, this workaround is no longer
-> required.
-> 
-> Tested by running lockdep+ftrace as described in the initial commit:
-> 
->   5963e317b1e9 ("ftrace/x86: Do not change stacks in DEBUG when calling lockdep")
+Hi all,
 
-It looks like a clean revert, and it passed my ftrace smoke tests with
-lockdep enabled (although I triggered a locked warning unrelated to
-this, with the text_mutex and module_mutex, but I'm hoping my tree has
-the fixes for that).
+On Thu, 11 Jul 2019 13:16:03 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> On Thu, 11 Jul 2019 13:13:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > On Thu, 11 Jul 2019 02:26:27 +0000 Jason Gunthorpe <jgg@mellanox.com> w=
+rote: =20
+> > >
+> > > On Thu, Jul 11, 2019 at 11:50:54AM +1000, Stephen Rothwell wrote:
+> > >    =20
+> > > > So today this failed to build after I merged the rdma tree (previou=
+sly
+> > > > it didn;t until after the net-next tree was merged (I assume a
+> > > > dependency changed).  It failed because in_dev_for_each_ifa_rcu (and
+> > > > in_dev_for_each_ifa_rtnl) is only defined in a commit in the net-ne=
+xt
+> > > > tree :-(     =20
+> > >=20
+> > > ? I'm confused..=20
+> > >=20
+> > > rdma.git builds fine stand alone (I hope!)   =20
+> >=20
+> > I have "Fixup to build SIW issue" from Leon (which switches to using
+> > in_dev_for_each_ifa_rcu) included in the rmda tree merge commit because
+> > without that the rdma tree would not build for me.  Are you saying that
+> > I don't need that at all, now? =20
+>=20
+> Actually , I get it now, "Fixup to build SIW issue" is really just a
+> fixup for the net-next and rdma trees merge ... OK, I will fix that up
+> tomorrow.  Sorry for my confusion.
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Actually, I have rewound my tree and am starting from the merge of the
+rdma tree again, so hopefully it should all be good today.
 
-Hmm, does this mean we can remove the IDT switching in the NMI handler
-as well?
+--=20
+Cheers,
+Stephen Rothwell
 
--- Steve
+--Sig_/lgR/euJAAvPcdiADQ4kmX/m
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/entry/entry_64.S |   46 ++--------------------------------------------
->  1 file changed, 2 insertions(+), 44 deletions(-)
-> 
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -68,44 +68,6 @@ END(native_usergs_sysret64)
->  .endm
->  
->  /*
-> - * When dynamic function tracer is enabled it will add a breakpoint
-> - * to all locations that it is about to modify, sync CPUs, update
-> - * all the code, sync CPUs, then remove the breakpoints. In this time
-> - * if lockdep is enabled, it might jump back into the debug handler
-> - * outside the updating of the IST protection. (TRACE_IRQS_ON/OFF).
-> - *
-> - * We need to change the IDT table before calling TRACE_IRQS_ON/OFF to
-> - * make sure the stack pointer does not get reset back to the top
-> - * of the debug stack, and instead just reuses the current stack.
-> - */
-> -#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_TRACE_IRQFLAGS)
-> -
-> -.macro TRACE_IRQS_OFF_DEBUG
-> -	call	debug_stack_set_zero
-> -	TRACE_IRQS_OFF
-> -	call	debug_stack_reset
-> -.endm
-> -
-> -.macro TRACE_IRQS_ON_DEBUG
-> -	call	debug_stack_set_zero
-> -	TRACE_IRQS_ON
-> -	call	debug_stack_reset
-> -.endm
-> -
-> -.macro TRACE_IRQS_IRETQ_DEBUG
-> -	btl	$9, EFLAGS(%rsp)		/* interrupts off? */
-> -	jnc	1f
-> -	TRACE_IRQS_ON_DEBUG
-> -1:
-> -.endm
-> -
-> -#else
-> -# define TRACE_IRQS_OFF_DEBUG			TRACE_IRQS_OFF
-> -# define TRACE_IRQS_ON_DEBUG			TRACE_IRQS_ON
-> -# define TRACE_IRQS_IRETQ_DEBUG			TRACE_IRQS_IRETQ
-> -#endif
-> -
-> -/*
->   * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
->   *
->   * This is the only entry point used for 64-bit system calls.  The
-> @@ -879,11 +841,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
->  	GET_CR2_INTO(%rdx);			/* can clobber %rax */
->  	.endif
->  
-> -	.if \shift_ist != -1
-> -	TRACE_IRQS_OFF_DEBUG			/* reload IDT in case of recursion */
-> -	.else
->  	TRACE_IRQS_OFF
-> -	.endif
->  
->  	.if \paranoid == 0
->  	testb	$3, CS(%rsp)
-> @@ -1292,7 +1250,7 @@ END(paranoid_entry)
->  ENTRY(paranoid_exit)
->  	UNWIND_HINT_REGS
->  	DISABLE_INTERRUPTS(CLBR_ANY)
-> -	TRACE_IRQS_OFF_DEBUG
-> +	TRACE_IRQS_OFF
->  
->  	/* Handle GS depending on FSGSBASE availability */
->  	ALTERNATIVE "jmp .Lparanoid_exit_checkgs", "nop",X86_FEATURE_FSGSBASE
-> @@ -1312,7 +1270,7 @@ ENTRY(paranoid_exit)
->  	jmp	.Lparanoid_exit_restore
->  
->  .Lparanoid_exit_no_swapgs:
-> -	TRACE_IRQS_IRETQ_DEBUG
-> +	TRACE_IRQS_IRETQ
->  	/* Always restore stashed CR3 value (see paranoid_entry) */
->  	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
->  
-> 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0mrLsACgkQAVBC80lX
+0GzMigf+IwlW8eRSZ9yFVzhO+0aH3niLMNP7eUgPB4yVpdDGlbu/l7g3BXSDTSHC
+pYNkeiuycHgr8F5K7xUDwuPtOR/8NL4PxGywtwP56cJxDj0WxIDj4aFbSbdjWK5m
+AlTFbV+C2Pwcr8sSwgx4aX0u+FWSYjjWHtKnqi9MaAvQouAJR2y2+Rb7rwSp9mlw
+2V3SC+hZxjKMeJ8bAwyrgCH5tZxHfTldZ6wMzIWIAJFooP3zJaGp3xY4Trau6Znb
+y+tpS/Cqz/QPEUOzKVBCX/xuDE+BGojRcDFgw72RYMPFtOKCh9buXnw1SgbE7Z1W
+Py2d8jKfKMvG0AYPyk/T2kT3ZQeTDA==
+=gNA9
+-----END PGP SIGNATURE-----
 
+--Sig_/lgR/euJAAvPcdiADQ4kmX/m--
