@@ -2,103 +2,124 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7789C74A51
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABAFC74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904EE208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTsGVGK5"
+	by mail.kernel.org (Postfix) with ESMTP id 87F2B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfGKJcE (ORCPT
+        id S1728375AbfGKJcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:32:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34250 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfGKJcA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:32:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so5513672wrm.1;
-        Thu, 11 Jul 2019 02:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XCX9jE72PgkcoZQV6rWjyFaKhpvGYfcrX9M8ab1CPrw=;
-        b=WTsGVGK5wpMdV1mszZheZ2DQv0yLpDGFfIyiS1+/TxS4VN0VpW8T8t2ABpexq/WJX1
-         Ea//oqxGdlspsprOkrHgui7Ok3o+FO32SUph1iJ3VvTLYFXQm/2e7Aw6JdlP8KfMfjSg
-         5xOQQozfObgyyKVLdJ27hwhbMYEoM5LxRxaoBVArkQN5wUTv9K0oNOUHV9gr8B9Qr/Tx
-         sBKgTLeV+lshzWg7G7Wv9NQHBGGV+mfoTvLQb3IWU4IOqgI2Wu5QPW5/63YuCHL8ZXSa
-         96zKO50Wb19A6fspkb8/MFtt6idQujk3OYq00JyasM4vZtsOm7pmLNfficN6YzT4SJEz
-         ERsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XCX9jE72PgkcoZQV6rWjyFaKhpvGYfcrX9M8ab1CPrw=;
-        b=WOvpkH6E1nwIMx1WBp21x0jPcCADEbn1EvZNb098nED3ZxB7cnE8ql93+5YSQ/sLUI
-         fsI0IQfYTjKCMYiPKaUgDU62hbwKlO3TmYwSgZ/59J6PpuNXR8Lts5BMzEjN256aWixI
-         j8rAvUhza4P+feO4GrCpJ55wtgaBw0khSiK8/Wmmbto1DwYkVq+o+q6wBbTnriuOi2Tn
-         R01mO3OxGL58ci7jqqFfn6qaJJbHSs2Oh7fsAlUCbtYT/nH7oNfn46UPZt7P8AFAF3RQ
-         4IvlvC1BDzaPNVZwYU9c+80hMoGnM8suMhcs7JDO0BPO73aYanNcfVZ+ucGB/i3pbnnH
-         ABgA==
-X-Gm-Message-State: APjAAAX8/XXLVCoOKy7EHABV7CH9tbppF6q+lsUwCVFKTVg1asEzHn51
-        YcucUU1WPhrgJFOIOzIWYvs=
-X-Google-Smtp-Source: APXvYqw9tEdX1PMjiyEKwGEihr7O9qyS3mFTiivnSPv8Ia0a0OF+Ojy6Q+d5m3MpzGXET/E1Ynczmw==
-X-Received: by 2002:adf:db07:: with SMTP id s7mr3841329wri.10.1562837517725;
-        Thu, 11 Jul 2019 02:31:57 -0700 (PDT)
-Received: from gmail.com (net-5-95-187-49.cust.vodafonedsl.it. [5.95.187.49])
-        by smtp.gmail.com with ESMTPSA id k17sm1236382wrq.83.2019.07.11.02.31.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 02:31:57 -0700 (PDT)
-From:   Paolo Pisati <p.pisati@gmail.com>
-To:     --in-reply-to= <20190710231439.GD32439@tassilo.jf.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiong Wang <jiong.wang@netronome.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] bpf, selftest: fix checksum value for test #13
-Date:   Thu, 11 Jul 2019 11:31:53 +0200
-Message-Id: <1562837513-745-3-git-send-email-p.pisati@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
-References: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
+        Thu, 11 Jul 2019 05:32:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:43814 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfGKJcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:32:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B681F337;
+        Thu, 11 Jul 2019 02:32:17 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 987363F71F;
+        Thu, 11 Jul 2019 02:32:15 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 10:32:10 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Message-ID: <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+ <20190710164519.17883-6-jonnyc@amazon.com>
+ <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Pisati <paolo.pisati@canonical.com>
+On Thu, Jul 11, 2019 at 10:12:35AM +0300, Shenhar, Talel wrote:
+> 
+> On 7/10/2019 7:45 PM, Jonathan Chocron wrote:
+> > Document Amazon's Annapurna Labs PCIe host bridge.
+> 
+> That is the way! (best to keep same wordings (Amazon's)
 
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
----
- tools/testing/selftests/bpf/verifier/array_access.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Guys,
 
-diff --git a/tools/testing/selftests/bpf/verifier/array_access.c b/tools/testing/selftests/bpf/verifier/array_access.c
-index bcb83196e459..4698f560d756 100644
---- a/tools/testing/selftests/bpf/verifier/array_access.c
-+++ b/tools/testing/selftests/bpf/verifier/array_access.c
-@@ -255,7 +255,7 @@
- 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
- 	.fixup_map_array_ro = { 3 },
- 	.result = ACCEPT,
--	.retval = -29,
-+	.retval = 28,
- },
- {
- 	"invalid write map access into a read-only array 1",
--- 
-2.17.1
+as a heads-up, the original posting, for whatever reason, did not hit
+linux-pci@vger, which means that from a PCI patches queue review point
+of view it does not exist.
 
+It ought to be fixed otherwise we won't be able to review the code.
+
+Lorenzo
+
+> > 
+> > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > ---
+> >   .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+> >   MAINTAINERS                                   |  1 +
+> >   2 files changed, 46 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > new file mode 100644
+> > index 000000000000..d92cc529490e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > @@ -0,0 +1,45 @@
+> > +* Amazon Annapurna Labs PCIe host bridge
+> > +
+> > +Annapurna Labs' PCIe Host Controller is based on the Synopsys DesignWare
+> 
+> Amazon's
+> 
+> 
+> and what is the s' ? should it be for all
+> 
+> > +Example:
+> > +
+> > +	pcie-external0 {
+> probably should have a reference with the address
+> > +		compatible = "amazon,al-pcie";
+> > +		reg = <0x0 0xfb600000 0x0 0x00100000
+> > +		       0x0 0xfd800000 0x0 0x00010000
+> > +		       0x0 0xfd810000 0x0 0x00001000>;
+> > +		reg-names = "config", "controller", "dbi";
+> > +		bus-range = <0 255>;
+> > +		device_type = "pci";
+> > +		#address-cells = <3>;
+> > +		#size-cells = <2>;
+> > +		#interrupt-cells = <1>;
+> > +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-map-mask = <0x00 0 0 7>;
+> > +		interrupt-map = <0x0000 0 0 1 &gic_main GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
+> gic_main->gic
+> > +		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+> > +	};
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 5a6137df3f0e..d555beb794bb 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12205,6 +12205,7 @@ PCIE DRIVER FOR ANNAPURNA LABS
+> AMAZON!
+> >   M:	Jonathan Chocron <jonnyc@amazon.com>
+> >   L:	linux-pci@vger.kernel.org
+> >   S:	Maintained
+> > +F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+> >   F:	drivers/pci/controller/dwc/pcie-al.c
+> >   PCIE DRIVER FOR AMLOGIC MESON
