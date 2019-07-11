@@ -2,172 +2,161 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C14C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B326C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7687E20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JHCJ6Nkf"
+	by mail.kernel.org (Postfix) with ESMTP id 1A35A21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfGKIVM (ORCPT
+        id S1728261AbfGKIXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:21:12 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34955 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKIVK (ORCPT
+        Thu, 11 Jul 2019 04:23:08 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58865 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfGKIXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:21:10 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w20so4879904edd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 01:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8WLxEYKvp+G8KVX29UoMgnN82gOfXefm67IW7Lz3ELM=;
-        b=JHCJ6NkfSauIaS7Bo2XYssW3dhuhO/NV0eotPKteo5zLIaB9b7e3IA+Y/QeAgV4Pei
-         GQdbYgkUoo7ykifVmSN1xww1gmuVSU84cqx+KY7d0p0mgMCDFWknSKzmvbbT9r1xCle/
-         dRKacixn3HqsZyDeWUFzylwCk5+vpFeZtmAEI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=8WLxEYKvp+G8KVX29UoMgnN82gOfXefm67IW7Lz3ELM=;
-        b=n540rpmC8Ja5COc2xW5KvF/ULdk4UMPpcZbZyaGhUQWns29WFNGXu6X3cx0SHXfr5g
-         Dj8zm0d2X/lIz5mvY7JgaUfm9jc5RTo8dixqTQVfLQSsWaWGGdiOwMn1hAlU87vm+9nF
-         FS6Pzth8PEPJITMVMZmLIzXwtZjVyE3zZdGNqPEiF1oOKYFQ4QavsB9joTsAOiVqG/Xp
-         Lwooe5Dq4ZTLpNhOYvHN6hfnS+q/JTAujFMWOml6tcv0kPQt7WnO1KzzxPwgzclNieBF
-         vrCSiZgNxTjeKYgZ5t0QZKBc4ElB4Ot6yKC0DhSl0Ir0+NkwQctDAoHYvPVErRz/RCvQ
-         hT6w==
-X-Gm-Message-State: APjAAAVxSLrKS3+CHcoyiqueqXbVLAe9rka90D/lC+qyuTX5UETcWorZ
-        W+n7q2xJnrJcJyRfqJUEkmI=
-X-Google-Smtp-Source: APXvYqxTHd8KSqi16wrHTqcM+LyLoZpCL/IQ+COZ9g2UG8zZBuEvORHbRxJBqYrz5yHutJ6G8Pb26Q==
-X-Received: by 2002:a17:906:4d88:: with SMTP id s8mr1946987eju.225.1562833268556;
-        Thu, 11 Jul 2019 01:21:08 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id c48sm1499881edb.10.2019.07.11.01.21.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 01:21:07 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 10:21:05 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
-Message-ID: <20190711082105.GI15868@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
- <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
+        Thu, 11 Jul 2019 04:23:07 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8A20D20005;
+        Thu, 11 Jul 2019 08:18:08 +0000 (UTC)
+Date:   Thu, 11 Jul 2019 10:18:08 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>
+Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        vivek.kasireddy@intel.com, sakari.ailus@linux.intel.com,
+        s.nawrocki@samsung.com, niklas.soderlund+renesas@ragnatech.se,
+        ezequiel@collabora.com, boris.brezillon@collabora.com,
+        robert.chiras@nxp.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel format
+Message-ID: <20190711081808.GA15389@aptenodytes>
+References: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
-> The compute_crc() function is responsible for calculating the
-> framebuffer CRC value; due to the XRGB format, this function has to
-> ignore the alpha channel during the CRC computation. Therefore,
-> compute_crc() set zero to the alpha channel directly in the input
-> framebuffer, which is not a problem since this function receives a copy
-> of the original buffer. However, if we want to use this function in a
-> context without a buffer copy, it will change the initial value. This
-> patch makes compute_crc() calculate the CRC value without modifying the
-> input framebuffer.
+Hi,
 
-Uh why? For writeback we're writing the output too, so we can write
-whatever we want to into the alpha channel. For writeback we should never
-accept a pixel format where alpha actually matters, that doesn't make
-sense. You can't see through a real screen either, they are all opaque :-)
--Daniel
-
+On Wed 03 Jul 19, 18:15, Mirela Rabulea wrote:
+> The added format is V4L2_PIX_FMT_YUV24, this is a packed
+> YUV 4:4:4 format, with 8 bits for each component, 24 bits
+> per sample.
 > 
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
+> JPEG encoder/decoder.
+
+So this format is not aligned to 32-bit words at all and we can expect
+to see cases where a single 32-bit word contains data for two pixels?
+
+Nothing wrong with that, just checking whether I understood this right :)
+
+Cheers,
+
+Paul
+
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 > ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 12 deletions(-)
+>  Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
+>  include/uapi/linux/videodev2.h                     |  1 +
+>  3 files changed, 38 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index 51a270514219..8126aa0f968f 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -6,33 +6,40 @@
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_gem_framebuffer_helper.h>
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+> index 41b60fa..5750ff6 100644
+> --- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+> +++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+> @@ -17,7 +17,8 @@ Description
+>  ===========
 >  
-> +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
-> +				 const struct vkms_composer *composer)
-> +{
-> +	int src_offset = composer->offset + (y * composer->pitch)
-> +					  + (x * composer->cpp);
+>  Similar to the packed RGB formats these formats store the Y, Cb and Cr
+> -component of each pixel in one 16 or 32 bit word.
+> +component of each pixel next to each other in memory. They occupy 16, 24 or 32
+> +bits per pixel.
+>  
+>  
+>  .. raw:: latex
+> @@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
+>  
+>        -  :cspan:`15`
+>  
+> +    * .. _V4L2-PIX-FMT-YUV24:
 > +
-> +	return *(u32 *)&buffer[src_offset];
-> +}
+> +      - ``V4L2_PIX_FMT_YUV24``
+> +      - 'YUV3'
 > +
->  /**
->   * compute_crc - Compute CRC value on output frame
->   *
-> - * @vaddr_out: address to final framebuffer
-> + * @vaddr: address to final framebuffer
->   * @composer: framebuffer's metadata
->   *
->   * returns CRC value computed using crc32 on the visible portion of
->   * the final framebuffer at vaddr_out
->   */
-> -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
-> +static uint32_t compute_crc(const u8 *vaddr,
-> +			    const struct vkms_composer *composer)
->  {
-> -	int i, j, src_offset;
-> +	int x, y;
->  	int x_src = composer->src.x1 >> 16;
->  	int y_src = composer->src.y1 >> 16;
->  	int h_src = drm_rect_height(&composer->src) >> 16;
->  	int w_src = drm_rect_width(&composer->src) >> 16;
-> -	u32 crc = 0;
-> +	u32 crc = 0, pixel = 0;
+> +      - Y'\ :sub:`7`
+> +      - Y'\ :sub:`6`
+> +      - Y'\ :sub:`5`
+> +      - Y'\ :sub:`4`
+> +      - Y'\ :sub:`3`
+> +      - Y'\ :sub:`2`
+> +      - Y'\ :sub:`1`
+> +      - Y'\ :sub:`0`
+> +
+> +      - Cb\ :sub:`7`
+> +      - Cb\ :sub:`6`
+> +      - Cb\ :sub:`5`
+> +      - Cb\ :sub:`4`
+> +      - Cb\ :sub:`3`
+> +      - Cb\ :sub:`2`
+> +      - Cb\ :sub:`1`
+> +      - Cb\ :sub:`0`
+> +
+> +      - Cr\ :sub:`7`
+> +      - Cr\ :sub:`6`
+> +      - Cr\ :sub:`5`
+> +      - Cr\ :sub:`4`
+> +      - Cr\ :sub:`3`
+> +      - Cr\ :sub:`2`
+> +      - Cr\ :sub:`1`
+> +      - Cr\ :sub:`0`
+> +
+> +      -  :cspan:`7`
+> +
+>      * .. _V4L2-PIX-FMT-YUV32:
 >  
-> -	for (i = y_src; i < y_src + h_src; ++i) {
-> -		for (j = x_src; j < x_src + w_src; ++j) {
-> -			src_offset = composer->offset
-> -				     + (i * composer->pitch)
-> -				     + (j * composer->cpp);
-> +	for (y = y_src; y < y_src + h_src; ++y) {
-> +		for (x = x_src; x < x_src + w_src; ++x) {
->  			/* XRGB format ignores Alpha channel */
-> -			memset(vaddr_out + src_offset + 24, 0,  8);
-> -			crc = crc32_le(crc, vaddr_out + src_offset,
-> -				       sizeof(u32));
-> +			pixel = get_pixel_from_buffer(x, y, vaddr, composer);
-> +			bitmap_clear((void *)&pixel, 0, 8);
-> +			crc = crc32_le(crc, (void *)&pixel, sizeof(u32));
->  		}
->  	}
->  
+>        - ``V4L2_PIX_FMT_YUV32``
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index b1f4b99..9bb6579 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1215,6 +1215,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>  	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
+>  	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
+>  	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
+> +	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
+>  	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
+>  	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
+>  	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 9d9705c..752dd33 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -577,6 +577,7 @@ struct v4l2_pix_format {
+>  #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
+>  #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
+>  #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
+> +#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
+>  #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
+>  #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
+>  #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
 > -- 
-> 2.21.0
+> 2.7.4
+> 
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
