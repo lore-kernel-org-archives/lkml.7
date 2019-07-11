@@ -2,80 +2,140 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01C7C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7100C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC2720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562855983;
-	bh=yf/l1b+WnsdaAQ2WLuFErpShgZDrJzy46Zq/tr7SuvU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0Sxx5GpUAlrtib666Tpi5ieWNjIwREYz9tvVJjxLi+IYxbXpvWhk6MDZ/ecovCu8J
-	 mkEj8SD1xALRNDlp57qYHvQ3Qg+em9miknu8xAh7cxmBhUPiUpHSu+N5MzFFWpSX29
-	 bdQZ7LcNnjaZBoQEXkrWjnb5FrWI5bjdI9wnjlEo=
+	by mail.kernel.org (Postfix) with ESMTP id 85F0321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfGKOjm (ORCPT
+        id S1728685AbfGKOlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfGKOjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:39:42 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E387520872
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562855981;
-        bh=yf/l1b+WnsdaAQ2WLuFErpShgZDrJzy46Zq/tr7SuvU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yX9CWv+lRLgAbbP1gRnAIhvcii36NmPewby/Spu8HqZEjDyJKqS2ygTZ9/yaGZemA
-         kW0ghZJSU8voSgt83mUzQPlYrnkmb4q1oDrsIWkKM9UnVGTPFSRnq2lu8qMH4COw2d
-         og78WtohyDeyyoxgp/BPwbsZBYzjKghhRQ51/w54=
-Received: by mail-wm1-f50.google.com with SMTP id 207so5966376wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:39:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAVRiWU7ChD6XciCMG3tnQHJvHOreNXAa/dWAeG6w0eRDEJNlN/Z
-        XO+GeJOX/OzK84dp/YTdLwKEUmGRKbG4k7V3+97NkQ==
-X-Google-Smtp-Source: APXvYqz8N1dZdg83jxlzHPt+dQ4ZrsrdoZi9iTRkIKVAnzyTcdv1fVeD13J+YEiEh/ES5agsUMp+6L5SwFNx1NmcdNU=
-X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr4687433wmk.79.1562855979520;
- Thu, 11 Jul 2019 07:39:39 -0700 (PDT)
+        Thu, 11 Jul 2019 10:41:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26304 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728311AbfGKOlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 10:41:12 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BEWkfC071322
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:41:11 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tp5y5bm08-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:41:10 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tyreld@linux.vnet.ibm.com>;
+        Thu, 11 Jul 2019 15:41:10 +0100
+Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Jul 2019 15:41:06 +0100
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BEf5nC64684456
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 14:41:05 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 251406A054;
+        Thu, 11 Jul 2019 14:41:05 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 83C096A051;
+        Thu, 11 Jul 2019 14:41:02 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.80.233.139])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jul 2019 14:41:02 +0000 (GMT)
+Subject: Re: Coccinelle: Checking of_node_put() calls with SmPL
+To:     wen.yang99@zte.com.cn, Markus.Elfring@web.de, julia.lawall@lip6.fr
+Cc:     wang.yi59@zte.com.cn, linux-pm@vger.kernel.org, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, oss@buserror.net, paulus@samba.org,
+        xue.zhihong@zte.com.cn, linuxppc-dev@lists.ozlabs.org,
+        cheng.shengyu@zte.com.cn
+References: <201907111435459627761@zte.com.cn>
+From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Date:   Thu, 11 Jul 2019 07:41:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
-In-Reply-To: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 11 Jul 2019 07:39:28 -0700
-X-Gmail-Original-Message-ID: <CALCETrXKgVMiqSfaWoBoM+WCZGHDihV8frSOdG5BFsRr2=mGJw@mail.gmail.com>
-Message-ID: <CALCETrXKgVMiqSfaWoBoM+WCZGHDihV8frSOdG5BFsRr2=mGJw@mail.gmail.com>
-Subject: Re: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop targets
-To:     Uros Bizjak <ubizjak@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <201907111435459627761@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071114-0004-0000-0000-000015268C22
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011408; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01230664; UDB=6.00648235; IPR=6.01011939;
+ MB=3.00027680; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-11 14:41:09
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071114-0005-0000-0000-00008C69C428
+Message-Id: <23e06fc0-b969-44e9-a44d-f11b19dfdeca@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 1:13 AM Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> Recent patch [1] disabled a self-snoop feature on a list of processor
-> models with a known errata, so we are confident that the feature
-> should work on remaining models also for other purposes than to speed
-> up MTRR programming.
->
-> I would like to resurrect an old patch [2] that avoids calling clflush
-> and wbinvd
-> to invalidate caches when CPU supports selfsnoop.
+On 07/10/2019 11:35 PM, wen.yang99@zte.com.cn wrote:
+>>> we developed a coccinelle script to detect such problems.
+>>
+>> Would you find the implementation of the function “dt_init_idle_driver”
+>> suspicious according to discussed source code search patterns?
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/cpuidle/dt_idle_states.c?id=e9a83bd2322035ed9d7dcf35753d3f984d76c6a5#n208
+>> https://elixir.bootlin.com/linux/v5.2/source/drivers/cpuidle/dt_idle_states.c#L208
+>>
+>>
+>>> This script is still being improved.
+>>
+>> Will corresponding software development challenges become more interesting?
+> 
+> Hello Markus,
+> This is the simplified code pattern for it:
+> 
+> 172         for (i = 0; ; i++) {
 
-The big question here is: what are all the reasons that we might need
-to flush?  Certainly, for stuff like SEV and MKTME, we need to flush
-regardless of any self-snoop capability.
+This loop can only be exited on a break.
+
+> 173                 state_node = of_parse_phandle(...);     ---> Obtain here
+> ...
+> 177                 match_id = of_match_node(matches, state_node);
+> 178                 if (!match_id) {
+> 179                         err = -ENODEV;                              
+> 180                         break;                         --->  Jump out of the loop without releasing it
+> 181                 }
+> 182 
+> 183                 if (!of_device_is_available(state_node)) {
+> 184                         of_node_put(state_node);
+> 185                         continue;                    --->  Release the object references within a loop
+> 186                 }
+> ...
+> 208                 of_node_put(state_node);  -->  Release the object references within a loop
+
+This is required at the end of every loop or continue to free the reference.
+Only a break will exit the loop where we hit the below of_node_put().
+
+> 209         }
+> 210 
+> 211         of_node_put(state_node);       -->    There may be double free here.
+
+None of the break conditions call of_node_put(), so it needs to be called here.
+
+-Tyrel
+
+> 
+> This code pattern is very interesting and the coccinelle software should also recognize this pattern.
+> 
+> Regards,
+> Wen
+> 
+
