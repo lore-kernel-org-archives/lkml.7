@@ -2,578 +2,625 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDC7C74A4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F3AC74A4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1BF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BF320838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:10:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BZafYq7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfGKIHI (ORCPT
+        id S1727829AbfGKIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:07:08 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55721 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfGKIHH (ORCPT
+        Thu, 11 Jul 2019 04:10:31 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41683 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbfGKIKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:07:07 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hlU5Y-0008A6-U7; Thu, 11 Jul 2019 10:06:00 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hlU5O-00060U-8y; Thu, 11 Jul 2019 10:05:50 +0200
-Date:   Thu, 11 Jul 2019 10:05:50 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Leon Luo <leonl@leopardimaging.com>,
-        Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Wenyou Yang <wenyou.yang@microchip.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mats Randgaard <matrandg@cisco.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] media: i2c: Convert to new i2c device probe()
-Message-ID: <20190711080550.r4i7atizllldvrut@pengutronix.de>
-References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
- <20190710215149.9208-7-kieran.bingham+renesas@ideasonboard.com>
+        Thu, 11 Jul 2019 04:10:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p15so4846818eds.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 01:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n+dvTrBf0uIEHmgrQiWLE1pIWRGhwHdadcLbGup9mXA=;
+        b=BZafYq7pnMX8JmZDrFo7QLhUZp1oSLN5xBigHodzEe+wdQ9+N72UWoBVNzzWXwbdRc
+         AesuuZ9BJ+0eMgW06Uy5d4HRW4leJlg9oxiWJKwTcYzHhXSEGG1cs5x0hECEBGlHEhrl
+         xtqt/CrLzfyApu5KGGbg72UwYkNBjENsbnNEw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=n+dvTrBf0uIEHmgrQiWLE1pIWRGhwHdadcLbGup9mXA=;
+        b=DAnDhJt0w/1AYH8Ia/HkAyAQQ6knWUqHZ0dB/b2l482X2LSr0jXNmn6l8FCa6sh7HS
+         hQqn9xqeZ8CW6A72D/51dvVS6/KBexGUbsFS3IpoF5ZJzZQ2kN4Ip+QQVG9kByqatplC
+         lJCMlDkz+AaDitST/vR5ZWJWvkNTCoUG9LbfRYPa2Op7W2tHL5Zylk0bVAALSvwjQMJE
+         BN27Yo0C20WiZSwlCvzBG6VUjUBfHGBdclqneBxCVPe4fVlfg/BVxoKPDQTK3tFvSR8Q
+         xY7ffnd22Ab+ywnj/lVCZmtgBFIJylacJjLtdXy6M+20jQO7agxGMffU9FHzohC01Or1
+         M4Vw==
+X-Gm-Message-State: APjAAAWzaMuMr5Tzg+6gZj4DyTs/DperhuqKIoWlu+RLkgg7F6n/gHfP
+        3W0l5qETHbFuRHvIWFw6w0YHm0Ao
+X-Google-Smtp-Source: APXvYqzDJi870HwikXF8E6sjMzS8wiGvb562D53aM3SOKZvDj7olEpgNxuhjmK+5cyHn48bozy+FEQ==
+X-Received: by 2002:a17:906:190e:: with SMTP id a14mr1971380eje.69.1562832627886;
+        Thu, 11 Jul 2019 01:10:27 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id b30sm1452512ede.88.2019.07.11.01.10.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 01:10:27 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 10:10:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/5] drm/vkms: Rename vkms_crc.c into vkms_composer.c
+Message-ID: <20190711081025.GG15868@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <dea62063077ebf5cc1dfce8876e56788d15367e6.1561491964.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710215149.9208-7-kieran.bingham+renesas@ideasonboard.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:04:26 up 54 days, 14:22, 51 users,  load average: 0.20, 0.65,
- 0.46
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <dea62063077ebf5cc1dfce8876e56788d15367e6.1561491964.git.rodrigosiqueiramelo@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+On Tue, Jun 25, 2019 at 10:37:05PM -0300, Rodrigo Siqueira wrote:
+> As a preparation work for introducing writeback to vkms, this patch
+> renames the file vkms_crc.c into vkms_composer.c. Accordingly, it also
+> adjusts the functions and data structures to match the changes.
+> 
+> No functional change.
+> 
+> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 
-On 19-07-10 22:51, Kieran Bingham wrote:
-> The I2C core framework provides a simplified probe framework from commit
-> b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
-> 
-> These drivers do not utilise the i2c_device_id table in the probe, so we
-> can easily convert them to utilise the simplfied i2c driver
-> registration.
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Too lazy to check it still compiles :-)
+-Daniel
+
+
 > ---
->  drivers/media/i2c/adv7343.c  | 5 ++---
->  drivers/media/i2c/imx274.c   | 5 ++---
->  drivers/media/i2c/max2175.c  | 5 ++---
->  drivers/media/i2c/mt9m001.c  | 5 ++---
->  drivers/media/i2c/mt9m111.c  | 5 ++---
->  drivers/media/i2c/ov2640.c   | 5 ++---
->  drivers/media/i2c/ov2659.c   | 5 ++---
->  drivers/media/i2c/ov5640.c   | 5 ++---
->  drivers/media/i2c/ov5645.c   | 5 ++---
->  drivers/media/i2c/ov5647.c   | 5 ++---
->  drivers/media/i2c/ov772x.c   | 5 ++---
->  drivers/media/i2c/ov7740.c   | 5 ++---
->  drivers/media/i2c/ov9650.c   | 5 ++---
->  drivers/media/i2c/s5k5baf.c  | 5 ++---
->  drivers/media/i2c/s5k6a3.c   | 5 ++---
->  drivers/media/i2c/tc358743.c | 5 ++---
->  drivers/media/i2c/ths8200.c  | 5 ++---
->  drivers/media/i2c/tvp5150.c  | 5 ++---
->  drivers/media/i2c/tvp7002.c  | 4 ++--
->  19 files changed, 38 insertions(+), 56 deletions(-)
+>  drivers/gpu/drm/vkms/Makefile                 |  2 +-
+>  .../drm/vkms/{vkms_crc.c => vkms_composer.c}  | 98 ++++++++++---------
+>  drivers/gpu/drm/vkms/vkms_crtc.c              | 30 +++---
+>  drivers/gpu/drm/vkms/vkms_drv.c               |  4 +-
+>  drivers/gpu/drm/vkms/vkms_drv.h               | 28 +++---
+>  drivers/gpu/drm/vkms/vkms_plane.c             | 36 +++----
+>  6 files changed, 101 insertions(+), 97 deletions(-)
+>  rename drivers/gpu/drm/vkms/{vkms_crc.c => vkms_composer.c} (65%)
 > 
-> diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343.c
-> index 4a441ee99dd8..63e94dfcb5d3 100644
-> --- a/drivers/media/i2c/adv7343.c
-> +++ b/drivers/media/i2c/adv7343.c
-> @@ -428,8 +428,7 @@ adv7343_get_pdata(struct i2c_client *client)
->  	return pdata;
->  }
+> diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
+> index 89f09bec7b23..0b767d7efa24 100644
+> --- a/drivers/gpu/drm/vkms/Makefile
+> +++ b/drivers/gpu/drm/vkms/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_crc.o
+> +vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_composer.o
 >  
-> -static int adv7343_probe(struct i2c_client *client,
-> -				const struct i2c_device_id *id)
-> +static int adv7343_probe(struct i2c_client *client)
->  {
->  	struct adv7343_state *state;
->  	int err;
-> @@ -524,7 +523,7 @@ static struct i2c_driver adv7343_driver = {
->  		.of_match_table = of_match_ptr(adv7343_of_match),
->  		.name	= "adv7343",
->  	},
-> -	.probe		= adv7343_probe,
-> +	.probe_new	= adv7343_probe,
->  	.remove		= adv7343_remove,
->  	.id_table	= adv7343_id,
-
-Can we remove the id_table too if it isn't required anymore? This
-applies to the other drivers as well.
-
-Regards,
-  Marco
-
->  };
-> diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
-> index f3ff1af209f9..6011cec5e351 100644
-> --- a/drivers/media/i2c/imx274.c
-> +++ b/drivers/media/i2c/imx274.c
-> @@ -1821,8 +1821,7 @@ static const struct i2c_device_id imx274_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, imx274_id);
->  
-> -static int imx274_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int imx274_probe(struct i2c_client *client)
->  {
->  	struct v4l2_subdev *sd;
->  	struct stimx274 *imx274;
-> @@ -1984,7 +1983,7 @@ static struct i2c_driver imx274_i2c_driver = {
->  		.name	= DRIVER_NAME,
->  		.of_match_table	= imx274_of_id_table,
->  	},
-> -	.probe		= imx274_probe,
-> +	.probe_new	= imx274_probe,
->  	.remove		= imx274_remove,
->  	.id_table	= imx274_id,
->  };
-> diff --git a/drivers/media/i2c/max2175.c b/drivers/media/i2c/max2175.c
-> index 7b226fadcdb8..19a3ceea3bc2 100644
-> --- a/drivers/media/i2c/max2175.c
-> +++ b/drivers/media/i2c/max2175.c
-> @@ -1271,8 +1271,7 @@ static int max2175_refout_load_to_bits(struct i2c_client *client, u32 load,
->  	return 0;
->  }
->  
-> -static int max2175_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int max2175_probe(struct i2c_client *client)
->  {
->  	bool master = true, am_hiz = false;
->  	u32 refout_load, refout_bits = 0;	/* REFOUT disabled */
-> @@ -1433,7 +1432,7 @@ static struct i2c_driver max2175_driver = {
->  		.name	= DRIVER_NAME,
->  		.of_match_table = max2175_of_ids,
->  	},
-> -	.probe		= max2175_probe,
-> +	.probe_new	= max2175_probe,
->  	.remove		= max2175_remove,
->  	.id_table	= max2175_id,
->  };
-> diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
-> index 2df743cbe09d..5613072908ac 100644
-> --- a/drivers/media/i2c/mt9m001.c
-> +++ b/drivers/media/i2c/mt9m001.c
-> @@ -726,8 +726,7 @@ static const struct v4l2_subdev_ops mt9m001_subdev_ops = {
->  	.pad	= &mt9m001_subdev_pad_ops,
->  };
->  
-> -static int mt9m001_probe(struct i2c_client *client,
-> -			 const struct i2c_device_id *did)
-> +static int mt9m001_probe(struct i2c_client *client)
->  {
->  	struct mt9m001 *mt9m001;
->  	struct i2c_adapter *adapter = client->adapter;
-> @@ -872,7 +871,7 @@ static struct i2c_driver mt9m001_i2c_driver = {
->  		.pm = &mt9m001_pm_ops,
->  		.of_match_table = mt9m001_of_match,
->  	},
-> -	.probe		= mt9m001_probe,
-> +	.probe_new	= mt9m001_probe,
->  	.remove		= mt9m001_remove,
->  	.id_table	= mt9m001_id,
->  };
-> diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-> index d10fe3712036..b5fa60068850 100644
-> --- a/drivers/media/i2c/mt9m111.c
-> +++ b/drivers/media/i2c/mt9m111.c
-> @@ -1246,8 +1246,7 @@ static int mt9m111_probe_fw(struct i2c_client *client, struct mt9m111 *mt9m111)
->  	return ret;
->  }
->  
-> -static int mt9m111_probe(struct i2c_client *client,
-> -			 const struct i2c_device_id *did)
-> +static int mt9m111_probe(struct i2c_client *client)
->  {
->  	struct mt9m111 *mt9m111;
->  	struct i2c_adapter *adapter = client->adapter;
-> @@ -1391,7 +1390,7 @@ static struct i2c_driver mt9m111_i2c_driver = {
->  		.name = "mt9m111",
->  		.of_match_table = of_match_ptr(mt9m111_of_match),
->  	},
-> -	.probe		= mt9m111_probe,
-> +	.probe_new	= mt9m111_probe,
->  	.remove		= mt9m111_remove,
->  	.id_table	= mt9m111_id,
->  };
-> diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
-> index 30e7e6b2b293..4df7ffa83217 100644
-> --- a/drivers/media/i2c/ov2640.c
-> +++ b/drivers/media/i2c/ov2640.c
-> @@ -1193,8 +1193,7 @@ static int ov2640_probe_dt(struct i2c_client *client,
->  /*
->   * i2c_driver functions
+>  obj-$(CONFIG_DRM_VKMS) += vkms.o
+> diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> similarity index 65%
+> rename from drivers/gpu/drm/vkms/vkms_crc.c
+> rename to drivers/gpu/drm/vkms/vkms_composer.c
+> index 30b048b67a32..eb7ea8be1f98 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -10,25 +10,25 @@
+>   * compute_crc - Compute CRC value on output frame
+>   *
+>   * @vaddr_out: address to final framebuffer
+> - * @crc_out: framebuffer's metadata
+> + * @composer: framebuffer's metadata
+>   *
+>   * returns CRC value computed using crc32 on the visible portion of
+>   * the final framebuffer at vaddr_out
 >   */
-> -static int ov2640_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *did)
-> +static int ov2640_probe(struct i2c_client *client)
+> -static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
+> +static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
 >  {
->  	struct ov2640_priv	*priv;
->  	struct i2c_adapter	*adapter = client->adapter;
-> @@ -1305,7 +1304,7 @@ static struct i2c_driver ov2640_i2c_driver = {
->  		.name = "ov2640",
->  		.of_match_table = of_match_ptr(ov2640_of_match),
->  	},
-> -	.probe    = ov2640_probe,
-> +	.probe_new = ov2640_probe,
->  	.remove   = ov2640_remove,
->  	.id_table = ov2640_id,
->  };
-> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> index 5ed2413eac8a..18d996e90739 100644
-> --- a/drivers/media/i2c/ov2659.c
-> +++ b/drivers/media/i2c/ov2659.c
-> @@ -1386,8 +1386,7 @@ ov2659_get_pdata(struct i2c_client *client)
->  	return pdata;
->  }
+>  	int i, j, src_offset;
+> -	int x_src = crc_out->src.x1 >> 16;
+> -	int y_src = crc_out->src.y1 >> 16;
+> -	int h_src = drm_rect_height(&crc_out->src) >> 16;
+> -	int w_src = drm_rect_width(&crc_out->src) >> 16;
+> +	int x_src = composer->src.x1 >> 16;
+> +	int y_src = composer->src.y1 >> 16;
+> +	int h_src = drm_rect_height(&composer->src) >> 16;
+> +	int w_src = drm_rect_width(&composer->src) >> 16;
+>  	u32 crc = 0;
 >  
-> -static int ov2659_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int ov2659_probe(struct i2c_client *client)
->  {
->  	const struct ov2659_platform_data *pdata = ov2659_get_pdata(client);
->  	struct v4l2_subdev *sd;
-> @@ -1515,7 +1514,7 @@ static struct i2c_driver ov2659_i2c_driver = {
->  		.name	= DRIVER_NAME,
->  		.of_match_table = of_match_ptr(ov2659_of_match),
->  	},
-> -	.probe		= ov2659_probe,
-> +	.probe_new	= ov2659_probe,
->  	.remove		= ov2659_remove,
->  	.id_table	= ov2659_id,
->  };
-> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> index 759d60c6d630..80d9c0060153 100644
-> --- a/drivers/media/i2c/ov5640.c
-> +++ b/drivers/media/i2c/ov5640.c
-> @@ -2936,8 +2936,7 @@ static int ov5640_check_chip_id(struct ov5640_dev *sensor)
->  	return ret;
->  }
->  
-> -static int ov5640_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int ov5640_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct fwnode_handle *endpoint;
-> @@ -3095,7 +3094,7 @@ static struct i2c_driver ov5640_i2c_driver = {
->  		.of_match_table	= ov5640_dt_ids,
->  	},
->  	.id_table = ov5640_id,
-> -	.probe    = ov5640_probe,
-> +	.probe_new = ov5640_probe,
->  	.remove   = ov5640_remove,
->  };
->  
-> diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-> index 124c8df04633..42cf3ebd0831 100644
-> --- a/drivers/media/i2c/ov5645.c
-> +++ b/drivers/media/i2c/ov5645.c
-> @@ -1086,8 +1086,7 @@ static const struct v4l2_subdev_ops ov5645_subdev_ops = {
->  	.pad = &ov5645_subdev_pad_ops,
->  };
->  
-> -static int ov5645_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int ov5645_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct device_node *endpoint;
-> @@ -1355,7 +1354,7 @@ static struct i2c_driver ov5645_i2c_driver = {
->  		.of_match_table = of_match_ptr(ov5645_of_match),
->  		.name  = "ov5645",
->  	},
-> -	.probe  = ov5645_probe,
-> +	.probe_new = ov5645_probe,
->  	.remove = ov5645_remove,
->  	.id_table = ov5645_id,
->  };
-> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-> index 4589631798c9..e7d2e5b4ad4b 100644
-> --- a/drivers/media/i2c/ov5647.c
-> +++ b/drivers/media/i2c/ov5647.c
-> @@ -547,8 +547,7 @@ static int ov5647_parse_dt(struct device_node *np)
->  	return ret;
->  }
->  
-> -static int ov5647_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int ov5647_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct ov5647 *sensor;
-> @@ -644,7 +643,7 @@ static struct i2c_driver ov5647_driver = {
->  		.of_match_table = of_match_ptr(ov5647_of_match),
->  		.name	= SENSOR_NAME,
->  	},
-> -	.probe		= ov5647_probe,
-> +	.probe_new	= ov5647_probe,
->  	.remove		= ov5647_remove,
->  	.id_table	= ov5647_id,
->  };
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> index 2e9a758736a1..2cc6a678069a 100644
-> --- a/drivers/media/i2c/ov772x.c
-> +++ b/drivers/media/i2c/ov772x.c
-> @@ -1352,8 +1352,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
->   * i2c_driver function
+>  	for (i = y_src; i < y_src + h_src; ++i) {
+>  		for (j = x_src; j < x_src + w_src; ++j) {
+> -			src_offset = crc_out->offset
+> -				     + (i * crc_out->pitch)
+> -				     + (j * crc_out->cpp);
+> +			src_offset = composer->offset
+> +				     + (i * composer->pitch)
+> +				     + (j * composer->cpp);
+>  			/* XRGB format ignores Alpha channel */
+>  			memset(vaddr_out + src_offset + 24, 0,  8);
+>  			crc = crc32_le(crc, vaddr_out + src_offset,
+> @@ -43,8 +43,8 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
+>   * blend - belnd value at vaddr_src with value at vaddr_dst
+>   * @vaddr_dst: destination address
+>   * @vaddr_src: source address
+> - * @crc_dst: destination framebuffer's metadata
+> - * @crc_src: source framebuffer's metadata
+> + * @dest_composer: destination framebuffer's metadata
+> + * @src_composer: source framebuffer's metadata
+>   *
+>   * Blend value at vaddr_src with value at vaddr_dst.
+>   * Currently, this function write value at vaddr_src on value
+> @@ -55,31 +55,31 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
+>   *	 instead of overwriting it.
 >   */
->  
-> -static int ov772x_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *did)
-> +static int ov772x_probe(struct i2c_client *client)
+>  static void blend(void *vaddr_dst, void *vaddr_src,
+> -		  struct vkms_crc_data *crc_dst,
+> -		  struct vkms_crc_data *crc_src)
+> +		  struct vkms_composer *dest_composer,
+> +		  struct vkms_composer *src_composer)
 >  {
->  	struct ov772x_priv	*priv;
->  	int			ret;
-> @@ -1486,7 +1485,7 @@ static struct i2c_driver ov772x_i2c_driver = {
->  		.name = "ov772x",
->  		.of_match_table = ov772x_of_match,
->  	},
-> -	.probe    = ov772x_probe,
-> +	.probe_new = ov772x_probe,
->  	.remove   = ov772x_remove,
->  	.id_table = ov772x_id,
->  };
-> diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
-> index 70bb870b1d08..181934c807c2 100644
-> --- a/drivers/media/i2c/ov7740.c
-> +++ b/drivers/media/i2c/ov7740.c
-> @@ -1066,8 +1066,7 @@ static const struct regmap_config ov7740_regmap_config = {
->  	.max_register	= OV7740_MAX_REGISTER,
->  };
+>  	int i, j, j_dst, i_dst;
+>  	int offset_src, offset_dst;
 >  
-> -static int ov7740_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int ov7740_probe(struct i2c_client *client)
->  {
->  	struct ov7740 *ov7740;
->  	struct v4l2_subdev *sd;
-> @@ -1229,7 +1228,7 @@ static struct i2c_driver ov7740_i2c_driver = {
->  		.pm = &ov7740_pm_ops,
->  		.of_match_table = of_match_ptr(ov7740_of_match),
->  	},
-> -	.probe    = ov7740_probe,
-> +	.probe_new = ov7740_probe,
->  	.remove   = ov7740_remove,
->  	.id_table = ov7740_id,
->  };
-> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-> index eefd57ec2a73..2262ee3e3687 100644
-> --- a/drivers/media/i2c/ov9650.c
-> +++ b/drivers/media/i2c/ov9650.c
-> @@ -1488,8 +1488,7 @@ static int ov965x_detect_sensor(struct v4l2_subdev *sd)
->  	return ret;
+> -	int x_src = crc_src->src.x1 >> 16;
+> -	int y_src = crc_src->src.y1 >> 16;
+> +	int x_src = src_composer->src.x1 >> 16;
+> +	int y_src = src_composer->src.y1 >> 16;
+>  
+> -	int x_dst = crc_src->dst.x1;
+> -	int y_dst = crc_src->dst.y1;
+> -	int h_dst = drm_rect_height(&crc_src->dst);
+> -	int w_dst = drm_rect_width(&crc_src->dst);
+> +	int x_dst = src_composer->dst.x1;
+> +	int y_dst = src_composer->dst.y1;
+> +	int h_dst = drm_rect_height(&src_composer->dst);
+> +	int w_dst = drm_rect_width(&src_composer->dst);
+>  
+>  	int y_limit = y_src + h_dst;
+>  	int x_limit = x_src + w_dst;
+>  
+>  	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
+>  		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
+> -			offset_dst = crc_dst->offset
+> -				     + (i_dst * crc_dst->pitch)
+> -				     + (j_dst++ * crc_dst->cpp);
+> -			offset_src = crc_src->offset
+> -				     + (i * crc_src->pitch)
+> -				     + (j * crc_src->cpp);
+> +			offset_dst = dest_composer->offset
+> +				     + (i_dst * dest_composer->pitch)
+> +				     + (j_dst++ * dest_composer->cpp);
+> +			offset_src = src_composer->offset
+> +				     + (i * src_composer->pitch)
+> +				     + (j * src_composer->cpp);
+>  
+>  			memcpy(vaddr_dst + offset_dst,
+>  			       vaddr_src + offset_src, sizeof(u32));
+> @@ -88,25 +88,27 @@ static void blend(void *vaddr_dst, void *vaddr_src,
+>  	}
 >  }
 >  
-> -static int ov965x_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int ov965x_probe(struct i2c_client *client)
+> -static void compose_cursor(struct vkms_crc_data *cursor_crc,
+> -			   struct vkms_crc_data *primary_crc, void *vaddr_out)
+> +static void compose_cursor(struct vkms_composer *cursor_composer,
+> +			   struct vkms_composer *primary_composer,
+> +			   void *vaddr_out)
 >  {
->  	const struct ov9650_platform_data *pdata = client->dev.platform_data;
->  	struct v4l2_subdev *sd;
-> @@ -1616,7 +1615,7 @@ static struct i2c_driver ov965x_i2c_driver = {
->  		.name	= DRIVER_NAME,
->  		.of_match_table = of_match_ptr(ov965x_of_match),
->  	},
-> -	.probe		= ov965x_probe,
-> +	.probe_new	= ov965x_probe,
->  	.remove		= ov965x_remove,
->  	.id_table	= ov965x_id,
->  };
-> diff --git a/drivers/media/i2c/s5k5baf.c b/drivers/media/i2c/s5k5baf.c
-> index 727db7c0670a..1b912d2c1146 100644
-> --- a/drivers/media/i2c/s5k5baf.c
-> +++ b/drivers/media/i2c/s5k5baf.c
-> @@ -1949,8 +1949,7 @@ static int s5k5baf_configure_regulators(struct s5k5baf *state)
->  	return ret;
+>  	struct drm_gem_object *cursor_obj;
+>  	struct vkms_gem_object *cursor_vkms_obj;
+>  
+> -	cursor_obj = drm_gem_fb_get_obj(&cursor_crc->fb, 0);
+> +	cursor_obj = drm_gem_fb_get_obj(&cursor_composer->fb, 0);
+>  	cursor_vkms_obj = drm_gem_to_vkms_gem(cursor_obj);
+>  
+>  	if (WARN_ON(!cursor_vkms_obj->vaddr))
+>  		return;
+>  
+> -	blend(vaddr_out, cursor_vkms_obj->vaddr, primary_crc, cursor_crc);
+> +	blend(vaddr_out, cursor_vkms_obj->vaddr,
+> +	      primary_composer, cursor_composer);
 >  }
 >  
-> -static int s5k5baf_probe(struct i2c_client *c,
-> -			const struct i2c_device_id *id)
-> +static int s5k5baf_probe(struct i2c_client *c)
+> -static uint32_t _vkms_get_crc(struct vkms_crc_data *primary_crc,
+> -			      struct vkms_crc_data *cursor_crc)
+> +static uint32_t _vkms_get_crc(struct vkms_composer *primary_composer,
+> +			      struct vkms_composer *cursor_composer)
 >  {
->  	struct s5k5baf *state;
->  	int ret;
-> @@ -2049,7 +2048,7 @@ static struct i2c_driver s5k5baf_i2c_driver = {
->  		.of_match_table = s5k5baf_of_match,
->  		.name = S5K5BAF_DRIVER_NAME
->  	},
-> -	.probe		= s5k5baf_probe,
-> +	.probe_new	= s5k5baf_probe,
->  	.remove		= s5k5baf_remove,
->  	.id_table	= s5k5baf_id,
->  };
-> diff --git a/drivers/media/i2c/s5k6a3.c b/drivers/media/i2c/s5k6a3.c
-> index 2e140272794b..ebef5a1a372f 100644
-> --- a/drivers/media/i2c/s5k6a3.c
-> +++ b/drivers/media/i2c/s5k6a3.c
-> @@ -278,8 +278,7 @@ static const struct v4l2_subdev_ops s5k6a3_subdev_ops = {
->  	.pad = &s5k6a3_pad_ops,
->  };
+> -	struct drm_framebuffer *fb = &primary_crc->fb;
+> +	struct drm_framebuffer *fb = &primary_composer->fb;
+>  	struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
+>  	struct vkms_gem_object *vkms_obj = drm_gem_to_vkms_gem(gem_obj);
+>  	void *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
+> @@ -124,10 +126,10 @@ static uint32_t _vkms_get_crc(struct vkms_crc_data *primary_crc,
 >  
-> -static int s5k6a3_probe(struct i2c_client *client,
-> -				const struct i2c_device_id *id)
-> +static int s5k6a3_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct s5k6a3 *sensor;
-> @@ -381,7 +380,7 @@ static struct i2c_driver s5k6a3_driver = {
->  		.of_match_table	= of_match_ptr(s5k6a3_of_match),
->  		.name		= S5K6A3_DRV_NAME,
->  	},
-> -	.probe		= s5k6a3_probe,
-> +	.probe_new	= s5k6a3_probe,
->  	.remove		= s5k6a3_remove,
->  	.id_table	= s5k6a3_ids,
->  };
-> diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-> index bc2e35e5ce61..dbbab75f135e 100644
-> --- a/drivers/media/i2c/tc358743.c
-> +++ b/drivers/media/i2c/tc358743.c
-> @@ -2026,8 +2026,7 @@ static inline int tc358743_probe_of(struct tc358743_state *state)
+>  	memcpy(vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
+>  
+> -	if (cursor_crc)
+> -		compose_cursor(cursor_crc, primary_crc, vaddr_out);
+> +	if (cursor_composer)
+> +		compose_cursor(cursor_composer, primary_composer, vaddr_out);
+>  
+> -	crc = compute_crc(vaddr_out, primary_crc);
+> +	crc = compute_crc(vaddr_out, primary_composer);
+>  
+>  	kfree(vaddr_out);
+>  
+> @@ -135,35 +137,35 @@ static uint32_t _vkms_get_crc(struct vkms_crc_data *primary_crc,
 >  }
->  #endif
 >  
-> -static int tc358743_probe(struct i2c_client *client,
-> -			  const struct i2c_device_id *id)
-> +static int tc358743_probe(struct i2c_client *client)
->  {
->  	static struct v4l2_dv_timings default_timing =
->  		V4L2_DV_BT_CEA_640X480P59_94;
-> @@ -2222,7 +2221,7 @@ static struct i2c_driver tc358743_driver = {
->  		.name = "tc358743",
->  		.of_match_table = of_match_ptr(tc358743_of_match),
->  	},
-> -	.probe = tc358743_probe,
-> +	.probe_new = tc358743_probe,
->  	.remove = tc358743_remove,
->  	.id_table = tc358743_id,
->  };
-> diff --git a/drivers/media/i2c/ths8200.c b/drivers/media/i2c/ths8200.c
-> index f5ee28058ea2..c52fe84cba1b 100644
-> --- a/drivers/media/i2c/ths8200.c
-> +++ b/drivers/media/i2c/ths8200.c
-> @@ -436,8 +436,7 @@ static const struct v4l2_subdev_ops ths8200_ops = {
->  	.pad = &ths8200_pad_ops,
->  };
->  
-> -static int ths8200_probe(struct i2c_client *client,
-> -			 const struct i2c_device_id *id)
-> +static int ths8200_probe(struct i2c_client *client)
->  {
->  	struct ths8200_state *state;
->  	struct v4l2_subdev *sd;
-> @@ -502,7 +501,7 @@ static struct i2c_driver ths8200_driver = {
->  		.name = "ths8200",
->  		.of_match_table = of_match_ptr(ths8200_of_match),
->  	},
-> -	.probe = ths8200_probe,
-> +	.probe_new = ths8200_probe,
->  	.remove = ths8200_remove,
->  	.id_table = ths8200_id,
->  };
-> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> index eaddd977ba40..7f4f23f4c7ac 100644
-> --- a/drivers/media/i2c/tvp5150.c
-> +++ b/drivers/media/i2c/tvp5150.c
-> @@ -1691,8 +1691,7 @@ static const char * const tvp5150_test_patterns[2] = {
->  	"Black screen"
->  };
->  
-> -static int tvp5150_probe(struct i2c_client *c,
-> -			 const struct i2c_device_id *id)
-> +static int tvp5150_probe(struct i2c_client *c)
->  {
->  	struct tvp5150 *core;
->  	struct v4l2_subdev *sd;
-> @@ -1841,7 +1840,7 @@ static struct i2c_driver tvp5150_driver = {
->  		.of_match_table = of_match_ptr(tvp5150_of_match),
->  		.name	= "tvp5150",
->  	},
-> -	.probe		= tvp5150_probe,
-> +	.probe_new	= tvp5150_probe,
->  	.remove		= tvp5150_remove,
->  	.id_table	= tvp5150_id,
->  };
-> diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
-> index 1b8175cab017..de313b1306da 100644
-> --- a/drivers/media/i2c/tvp7002.c
-> +++ b/drivers/media/i2c/tvp7002.c
-> @@ -930,7 +930,7 @@ tvp7002_get_pdata(struct i2c_client *client)
->   * Returns zero when successful, -EINVAL if register read fails or
->   * -EIO if i2c access is not available.
+>  /**
+> - * vkms_crc_work_handle - ordered work_struct to compute CRC
+> + * vkms_composer_worker - ordered work_struct to compute CRC
+>   *
+>   * @work: work_struct
+>   *
+> - * Work handler for computing CRCs. work_struct scheduled in
+> + * Work handler for composing and computing CRCs. work_struct scheduled in
+>   * an ordered workqueue that's periodically scheduled to run by
+>   * _vblank_handle() and flushed at vkms_atomic_crtc_destroy_state().
 >   */
-> -static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
-> +static int tvp7002_probe(struct i2c_client *c)
+> -void vkms_crc_work_handle(struct work_struct *work)
+> +void vkms_composer_worker(struct work_struct *work)
 >  {
->  	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
->  	struct v4l2_subdev *sd;
-> @@ -1075,7 +1075,7 @@ static struct i2c_driver tvp7002_driver = {
->  		.of_match_table = of_match_ptr(tvp7002_of_match),
->  		.name = TVP7002_MODULE_NAME,
->  	},
-> -	.probe = tvp7002_probe,
-> +	.probe_new = tvp7002_probe,
->  	.remove = tvp7002_remove,
->  	.id_table = tvp7002_id,
+>  	struct vkms_crtc_state *crtc_state = container_of(work,
+>  						struct vkms_crtc_state,
+> -						crc_work);
+> +						composer_work);
+>  	struct drm_crtc *crtc = crtc_state->base.crtc;
+>  	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+> -	struct vkms_crc_data *primary_crc = NULL;
+> -	struct vkms_crc_data *cursor_crc = NULL;
+> +	struct vkms_composer *primary_composer = NULL;
+> +	struct vkms_composer *cursor_composer = NULL;
+>  	u32 crc32 = 0;
+>  	u64 frame_start, frame_end;
+>  	bool crc_pending;
+>  
+> -	spin_lock_irq(&out->crc_lock);
+> +	spin_lock_irq(&out->composer_lock);
+>  	frame_start = crtc_state->frame_start;
+>  	frame_end = crtc_state->frame_end;
+>  	crc_pending = crtc_state->crc_pending;
+>  	crtc_state->frame_start = 0;
+>  	crtc_state->frame_end = 0;
+>  	crtc_state->crc_pending = false;
+> -	spin_unlock_irq(&out->crc_lock);
+> +	spin_unlock_irq(&out->composer_lock);
+>  
+>  	/*
+>  	 * We raced with the vblank hrtimer and previous work already computed
+> @@ -173,13 +175,13 @@ void vkms_crc_work_handle(struct work_struct *work)
+>  		return;
+>  
+>  	if (crtc_state->num_active_planes >= 1)
+> -		primary_crc = crtc_state->active_planes[0]->crc_data;
+> +		primary_composer = crtc_state->active_planes[0]->composer;
+>  
+>  	if (crtc_state->num_active_planes == 2)
+> -		cursor_crc = crtc_state->active_planes[1]->crc_data;
+> +		cursor_composer = crtc_state->active_planes[1]->composer;
+>  
+> -	if (primary_crc)
+> -		crc32 = _vkms_get_crc(primary_crc, cursor_crc);
+> +	if (primary_composer)
+> +		crc32 = _vkms_get_crc(primary_composer, cursor_composer);
+>  
+>  	/*
+>  	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
+> @@ -237,7 +239,7 @@ int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name)
+>  	ret = vkms_crc_parse_source(src_name, &enabled);
+>  
+>  	spin_lock_irq(&out->lock);
+> -	out->crc_enabled = enabled;
+> +	out->composer_enabled = enabled;
+>  	spin_unlock_irq(&out->lock);
+>  
+>  	return ret;
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index a648892379c3..04c6f4250dea 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -24,14 +24,14 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+>  	if (!ret)
+>  		DRM_ERROR("vkms failure on handling vblank");
+>  
+> -	state = output->crc_state;
+> -	if (state && output->crc_enabled) {
+> +	state = output->composer_state;
+> +	if (state && output->composer_enabled) {
+>  		u64 frame = drm_crtc_accurate_vblank_count(crtc);
+>  
+> -		/* update frame_start only if a queued vkms_crc_work_handle()
+> +		/* update frame_start only if a queued vkms_composer_worker()
+>  		 * has read the data
+>  		 */
+> -		spin_lock(&output->crc_lock);
+> +		spin_lock(&output->composer_lock);
+>  		if (!state->crc_pending)
+>  			state->frame_start = frame;
+>  		else
+> @@ -39,11 +39,11 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+>  					 state->frame_start, frame);
+>  		state->frame_end = frame;
+>  		state->crc_pending = true;
+> -		spin_unlock(&output->crc_lock);
+> +		spin_unlock(&output->composer_lock);
+>  
+> -		ret = queue_work(output->crc_workq, &state->crc_work);
+> +		ret = queue_work(output->composer_workq, &state->composer_work);
+>  		if (!ret)
+> -			DRM_DEBUG_DRIVER("vkms_crc_work_handle already queued\n");
+> +			DRM_DEBUG_DRIVER("Composer worker already queued\n");
+>  	}
+>  
+>  	spin_unlock(&output->lock);
+> @@ -114,7 +114,7 @@ vkms_atomic_crtc_duplicate_state(struct drm_crtc *crtc)
+>  
+>  	__drm_atomic_helper_crtc_duplicate_state(crtc, &vkms_state->base);
+>  
+> -	INIT_WORK(&vkms_state->crc_work, vkms_crc_work_handle);
+> +	INIT_WORK(&vkms_state->composer_work, vkms_composer_worker);
+>  
+>  	return &vkms_state->base;
+>  }
+> @@ -126,7 +126,7 @@ static void vkms_atomic_crtc_destroy_state(struct drm_crtc *crtc,
+>  
+>  	__drm_atomic_helper_crtc_destroy_state(state);
+>  
+> -	WARN_ON(work_pending(&vkms_state->crc_work));
+> +	WARN_ON(work_pending(&vkms_state->composer_work));
+>  	kfree(vkms_state->active_planes);
+>  	kfree(vkms_state);
+>  }
+> @@ -141,7 +141,7 @@ static void vkms_atomic_crtc_reset(struct drm_crtc *crtc)
+>  
+>  	__drm_atomic_helper_crtc_reset(crtc, &vkms_state->base);
+>  	if (vkms_state)
+> -		INIT_WORK(&vkms_state->crc_work, vkms_crc_work_handle);
+> +		INIT_WORK(&vkms_state->composer_work, vkms_composer_worker);
+>  }
+>  
+>  static const struct drm_crtc_funcs vkms_crtc_funcs = {
+> @@ -222,7 +222,7 @@ static void vkms_crtc_atomic_begin(struct drm_crtc *crtc,
+>  	struct vkms_output *vkms_output = drm_crtc_to_vkms_output(crtc);
+>  
+>  	/* This lock is held across the atomic commit to block vblank timer
+> -	 * from scheduling vkms_crc_work_handle until the crc_data is updated
+> +	 * from scheduling vkms_composer_worker until the composer is updated
+>  	 */
+>  	spin_lock_irq(&vkms_output->lock);
+>  }
+> @@ -245,7 +245,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
+>  		crtc->state->event = NULL;
+>  	}
+>  
+> -	vkms_output->crc_state = to_vkms_crtc_state(crtc->state);
+> +	vkms_output->composer_state = to_vkms_crtc_state(crtc->state);
+>  
+>  	spin_unlock_irq(&vkms_output->lock);
+>  }
+> @@ -274,10 +274,10 @@ int vkms_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
+>  	drm_crtc_helper_add(crtc, &vkms_crtc_helper_funcs);
+>  
+>  	spin_lock_init(&vkms_out->lock);
+> -	spin_lock_init(&vkms_out->crc_lock);
+> +	spin_lock_init(&vkms_out->composer_lock);
+>  
+> -	vkms_out->crc_workq = alloc_ordered_workqueue("vkms_crc_workq", 0);
+> -	if (!vkms_out->crc_workq)
+> +	vkms_out->composer_workq = alloc_ordered_workqueue("vkms_composer", 0);
+> +	if (!vkms_out->composer_workq)
+>  		return -ENOMEM;
+>  
+>  	return ret;
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> index 966b3d653189..ac790b6527e4 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> @@ -56,7 +56,7 @@ static void vkms_release(struct drm_device *dev)
+>  	drm_atomic_helper_shutdown(&vkms->drm);
+>  	drm_mode_config_cleanup(&vkms->drm);
+>  	drm_dev_fini(&vkms->drm);
+> -	destroy_workqueue(vkms->output.crc_workq);
+> +	destroy_workqueue(vkms->output.composer_workq);
+>  }
+>  
+>  static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+> @@ -82,7 +82,7 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+>  		struct vkms_crtc_state *vkms_state =
+>  			to_vkms_crtc_state(old_crtc_state);
+>  
+> -		flush_work(&vkms_state->crc_work);
+> +		flush_work(&vkms_state->composer_work);
+>  	}
+>  
+>  	drm_atomic_helper_cleanup_planes(dev, old_state);
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> index e2d1aa089dec..fc6cda164336 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -20,7 +20,7 @@
+>  
+>  extern bool enable_cursor;
+>  
+> -struct vkms_crc_data {
+> +struct vkms_composer {
+>  	struct drm_framebuffer fb;
+>  	struct drm_rect src, dst;
+>  	unsigned int offset;
+> @@ -31,29 +31,29 @@ struct vkms_crc_data {
+>  /**
+>   * vkms_plane_state - Driver specific plane state
+>   * @base: base plane state
+> - * @crc_data: data required for CRC computation
+> + * @composer: data required for composing computation
+>   */
+>  struct vkms_plane_state {
+>  	struct drm_plane_state base;
+> -	struct vkms_crc_data *crc_data;
+> +	struct vkms_composer *composer;
 >  };
+>  
+>  /**
+>   * vkms_crtc_state - Driver specific CRTC state
+>   * @base: base CRTC state
+> - * @crc_work: work struct to compute and add CRC entries
+> + * @composer_work: work struct to compose and add CRC entries
+>   * @n_frame_start: start frame number for computed CRC
+>   * @n_frame_end: end frame number for computed CRC
+>   */
+>  struct vkms_crtc_state {
+>  	struct drm_crtc_state base;
+> -	struct work_struct crc_work;
+> +	struct work_struct composer_work;
+>  
+>  	int num_active_planes;
+>  	/* stack of active planes for crc computation, should be in z order */
+>  	struct vkms_plane_state **active_planes;
+>  
+> -	/* below three are protected by vkms_output.crc_lock */
+> +	/* below three are protected by vkms_output.composer_lock */
+>  	bool crc_pending;
+>  	u64 frame_start;
+>  	u64 frame_end;
+> @@ -66,16 +66,16 @@ struct vkms_output {
+>  	struct hrtimer vblank_hrtimer;
+>  	ktime_t period_ns;
+>  	struct drm_pending_vblank_event *event;
+> -	/* ordered wq for crc_work */
+> -	struct workqueue_struct *crc_workq;
+> -	/* protects concurrent access to crc_data */
+> +	/* ordered wq for composer_work */
+> +	struct workqueue_struct *composer_workq;
+> +	/* protects concurrent access to composer */
+>  	spinlock_t lock;
+>  
+>  	/* protected by @lock */
+> -	bool crc_enabled;
+> -	struct vkms_crtc_state *crc_state;
+> +	bool composer_enabled;
+> +	struct vkms_crtc_state *composer_state;
+>  
+> -	spinlock_t crc_lock;
+> +	spinlock_t composer_lock;
+>  };
+>  
+>  struct vkms_device {
+> @@ -143,6 +143,8 @@ const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
+>  int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name);
+>  int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
+>  			   size_t *values_cnt);
+> -void vkms_crc_work_handle(struct work_struct *work);
+> +
+> +/* Composer Support */
+> +void vkms_composer_worker(struct work_struct *work);
+>  
+>  #endif /* _VKMS_DRV_H_ */
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+> index 18c630cfc485..8b60d3434d75 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -18,20 +18,20 @@ static struct drm_plane_state *
+>  vkms_plane_duplicate_state(struct drm_plane *plane)
+>  {
+>  	struct vkms_plane_state *vkms_state;
+> -	struct vkms_crc_data *crc_data;
+> +	struct vkms_composer *composer;
+>  
+>  	vkms_state = kzalloc(sizeof(*vkms_state), GFP_KERNEL);
+>  	if (!vkms_state)
+>  		return NULL;
+>  
+> -	crc_data = kzalloc(sizeof(*crc_data), GFP_KERNEL);
+> -	if (!crc_data) {
+> -		DRM_DEBUG_KMS("Couldn't allocate crc_data\n");
+> +	composer = kzalloc(sizeof(*composer), GFP_KERNEL);
+> +	if (!composer) {
+> +		DRM_DEBUG_KMS("Couldn't allocate composer\n");
+>  		kfree(vkms_state);
+>  		return NULL;
+>  	}
+>  
+> -	vkms_state->crc_data = crc_data;
+> +	vkms_state->composer = composer;
+>  
+>  	__drm_atomic_helper_plane_duplicate_state(plane,
+>  						  &vkms_state->base);
+> @@ -49,12 +49,12 @@ static void vkms_plane_destroy_state(struct drm_plane *plane,
+>  		/* dropping the reference we acquired in
+>  		 * vkms_primary_plane_update()
+>  		 */
+> -		if (drm_framebuffer_read_refcount(&vkms_state->crc_data->fb))
+> -			drm_framebuffer_put(&vkms_state->crc_data->fb);
+> +		if (drm_framebuffer_read_refcount(&vkms_state->composer->fb))
+> +			drm_framebuffer_put(&vkms_state->composer->fb);
+>  	}
+>  
+> -	kfree(vkms_state->crc_data);
+> -	vkms_state->crc_data = NULL;
+> +	kfree(vkms_state->composer);
+> +	vkms_state->composer = NULL;
+>  
+>  	__drm_atomic_helper_plane_destroy_state(old_state);
+>  	kfree(vkms_state);
+> @@ -91,21 +91,21 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
+>  {
+>  	struct vkms_plane_state *vkms_plane_state;
+>  	struct drm_framebuffer *fb = plane->state->fb;
+> -	struct vkms_crc_data *crc_data;
+> +	struct vkms_composer *composer;
+>  
+>  	if (!plane->state->crtc || !fb)
+>  		return;
+>  
+>  	vkms_plane_state = to_vkms_plane_state(plane->state);
+>  
+> -	crc_data = vkms_plane_state->crc_data;
+> -	memcpy(&crc_data->src, &plane->state->src, sizeof(struct drm_rect));
+> -	memcpy(&crc_data->dst, &plane->state->dst, sizeof(struct drm_rect));
+> -	memcpy(&crc_data->fb, fb, sizeof(struct drm_framebuffer));
+> -	drm_framebuffer_get(&crc_data->fb);
+> -	crc_data->offset = fb->offsets[0];
+> -	crc_data->pitch = fb->pitches[0];
+> -	crc_data->cpp = fb->format->cpp[0];
+> +	composer = vkms_plane_state->composer;
+> +	memcpy(&composer->src, &plane->state->src, sizeof(struct drm_rect));
+> +	memcpy(&composer->dst, &plane->state->dst, sizeof(struct drm_rect));
+> +	memcpy(&composer->fb, fb, sizeof(struct drm_framebuffer));
+> +	drm_framebuffer_get(&composer->fb);
+> +	composer->offset = fb->offsets[0];
+> +	composer->pitch = fb->pitches[0];
+> +	composer->cpp = fb->format->cpp[0];
+>  }
+>  
+>  static int vkms_plane_atomic_check(struct drm_plane *plane,
 > -- 
-> 2.20.1
-> 
+> 2.21.0
 > 
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
