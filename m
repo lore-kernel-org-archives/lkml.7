@@ -2,182 +2,82 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECD1C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E687FC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58BA20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:11:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LwqsOLoO"
+	by mail.kernel.org (Postfix) with ESMTP id C4E0B20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfGKNL5 (ORCPT
+        id S1728685AbfGKNV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:11:57 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34865 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfGKNL5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:11:57 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190711131155euoutp0291ea854961e1eba2cc58814dfce85569~wXHH2qA1F0289002890euoutp025
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:11:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190711131155euoutp0291ea854961e1eba2cc58814dfce85569~wXHH2qA1F0289002890euoutp025
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562850715;
-        bh=A+nnjQatvmXOarwKNwWj8FEyKdvOWMGUijR8qmV+HFI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=LwqsOLoORbuJ84tBJs2VYFuNVS2a5pvGvqPo3CNN9l1h184spaJVDblTy3uXlzZUG
-         whAekOqRXyOkIqW6GgVHnbDYoA3lV2c37jdglNYKePEpPAOIoL0OWbpMtLK2GLqKfc
-         mxpLQnhIx8ZmXx6i/6uDJZcROyovPgcqVq2/Zv3Y=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190711131154eucas1p1de5161ddfd5eec47f8c1ae424fd27364~wXHHPz5M22081420814eucas1p1z;
-        Thu, 11 Jul 2019 13:11:54 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4C.D2.04325.A95372D5; Thu, 11
-        Jul 2019 14:11:54 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190711131153eucas1p17e1221ea0392ba004fd531a3350ebdf9~wXHGjdp6I2079720797eucas1p1f;
-        Thu, 11 Jul 2019 13:11:53 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190711131153eusmtrp130912cf28dbd4314cb6fb6f5a0d7ef2e~wXHGVMr5c0407904079eusmtrp17;
-        Thu, 11 Jul 2019 13:11:53 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-87-5d27359a9ac2
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id BE.BE.04146.995372D5; Thu, 11
-        Jul 2019 14:11:53 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190711131153eusmtip29d95ddab3c7a0ff71d021ba29ffaee5f~wXHF0--tu0112201122eusmtip2O;
-        Thu, 11 Jul 2019 13:11:53 +0000 (GMT)
-Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
-To:     Mark Brown <broonie@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, robdclark@gmail.com, bjorn.andersson@linaro.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
-Date:   Thu, 11 Jul 2019 15:11:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.0
+        Thu, 11 Jul 2019 09:21:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50030 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbfGKNV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:21:29 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 195C15D88BFEB4F3D97C;
+        Thu, 11 Jul 2019 21:21:26 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.137) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 11 Jul 2019
+ 21:21:20 +0800
+Subject: Re: [PATCH] hpet: Fix division by zero in hpet_time_div()
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Clemens Ladisch <clemens@ladisch.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190711112619.57256-1-wangkefeng.wang@huawei.com>
+ <CAK8P3a3M3cNZm4meO+_vPkJcjtq7Fu5SrnJ11FAkOtGW3WBvNw@mail.gmail.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <54205e31-30e3-ec2f-015d-7ba65d0d4927@huawei.com>
+Date:   Thu, 11 Jul 2019 21:21:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190706010604.GG20625@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAK8P3a3M3cNZm4meO+_vPkJcjtq7Fu5SrnJ11FAkOtGW3WBvNw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFKsWRmVeSWpSXmKPExsWy7djP87qzTNVjDdZfEbHoPXeSyeL0/ncs
-        FlMfPmGz+L9tIrPFla/v2Szaln9jtuicuITdYuL+s+wWl3fNYbN4vvAHswOXx95vC1g8ds66
-        y+4xu2Mmq8emVZ1sHneu7WHz2P7tAavH/e7jTB6fN8kFcERx2aSk5mSWpRbp2yVwZWx+sImx
-        4LBgxacb7xkbGD/wdjFyckgImEjM3T6RsYuRi0NIYAWjxJxLR1ggnC+MEpumr2CHcD4zShx8
-        cw8owwHW8nSdN0R8OaPEs2OvWSGct4wSj5ZOYAKZKwxUtG7pAWYQW0TAR6Jh+n42EJtZ4C6j
-        xO5N/CA2m4CmxN/NN8HivAJ2EktvLWQFsVkEVCWuL5sFZosKhEn8XNAJVSMocXLmExYQm1PA
-        WKL73Vl2iJkGEkcWzWGFsOUltr+dwwxhi0vcejKfCeQ4CYF77BIn989hhHjaRaJn1WcWCFtY
-        4tXxLewQtozE6ck9UPF6ifsrWpghmjsYJbZu2MkMkbCWOHz8IiuE7Six6PtiaLDwSdx4Kwix
-        mE9i0rbpzBBhXomONiGIakWJ+2e3Qk0Rl1h64SvbBEalWUhem4XknVlI3pmF5J0FjCyrGMVT
-        S4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxAlPY6X/Hv+5g3Pcn6RCjAAejEg8vx1vVWCHWxLLi
-        ytxDjBIczEoivPvclWOFeFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgWEkhPLEnNTk0tSC2C
-        yTJxcEo1MOp8PWf4KOaCZFL47KPXL5xsqp78n4FBNawn5NrRHe1fJybP8NntdTbn8l1Rm79i
-        B0TjVl380GhY/fOflb/ofYlfBRX7tPifO6/8ynKhRK6gSNp3ipjy7oW8Um/2iG/yL/Pff/7j
-        YudnVqeqJ73v2DI5hfuNpM5apaWKpV2R8/bsP+4seSR31UolluKMREMt5qLiRAAExmsjXQMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xe7ozTdVjDd78l7foPXeSyeL0/ncs
-        FlMfPmGz+L9tIrPFla/v2Szaln9jtuicuITdYuL+s+wWl3fNYbN4vvAHswOXx95vC1g8ds66
-        y+4xu2Mmq8emVZ1sHneu7WHz2P7tAavH/e7jTB6fN8kFcETp2RTll5akKmTkF5fYKkUbWhjp
-        GVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZWx+sImx4LBgxacb7xkbGD/wdjFycEgI
-        mEg8XefdxcjFISSwlFHiwPSXrF2MnEBxcYnd898yQ9jCEn+udbFBFL1mlHhy/A1YQhioed3S
-        A2C2iICPRMP0/WBFzAJ3GSW2HnvHDtHxjlHi3Zx/YFVsApoSfzffZAOxeQXsJJbeWgi2jkVA
-        VeL6slmsICeJCoRJHD2RB1EiKHFy5hMWEJtTwFii+91ZdhCbWUBPYsf1X6wQtrzE9rdzmCFs
-        cYlbT+YzTWAUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMGK3
-        Hfu5eQfjpY3BhxgFOBiVeHh/3FONFWJNLCuuzD3EKMHBrCTCu89dOVaINyWxsiq1KD++qDQn
-        tfgQoynQbxOZpUST84HJJK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8T
-        B6dUA6PH9tb+B2dFJhpsypITefplxvWLm5VEThcy8FUmcLp2Jga8erTwetThFOOYTnO9RVu4
-        FTxT/j4oaN24Vumq6dplpw8d7XvBbXFdxz2Jrd++55P2h+W+FY/eZE22flsqx1YSzNbDI7lW
-        o+PGracCusIckg+1dY4HnLc6vnJ/go7/4hJLMZX9n5RYijMSDbWYi4oTAUQO67zuAgAA
-X-CMS-MailID: 20190711131153eucas1p17e1221ea0392ba004fd531a3350ebdf9
-X-Msg-Generator: CA
-X-RootMTR: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
-References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
-        <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
-        <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
-        <20190706010604.GG20625@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.217.137]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.07.2019 03:06, Mark Brown wrote:
-> On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
->> Add basic support with a simple implementation that utilizes the generic
->> read/write commands to allow device registers to be configured.
-> This looks good to me but I really don't know anything about DSI,
-> I'd appreciate some review from other people who do.  I take it
-> there's some spec thing in DSI that says registers and bytes must
-> both be 8 bit?
 
 
-I am little bit confused about regmap usage here. On the one hand it
-nicely fits to this specific driver, probably because it already uses
-regmap_i2c.
+On 2019/7/11 20:32, Arnd Bergmann wrote:
+> On Thu, Jul 11, 2019 at 1:20 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>> The base value in do_div() called by hpet_time_div() is truncated from
+>> unsigned long to uint32_t, resulting in a divide-by-zero exception.
+> 
+> Good catch!
+> 
+>> --- a/drivers/char/hpet.c
+>> +++ b/drivers/char/hpet.c
+>> @@ -567,7 +567,7 @@ static inline unsigned long hpet_time_div(struct hpets *hpets,
+>>         unsigned long long m;
+>>
+>>         m = hpets->hp_tick_freq + (dis >> 1);
+>> -       do_div(m, dis);
+>> +       div64_ul(m, dis);
+>>         return (unsigned long)m;
+>>  }
+> 
+> This still looks wrong to me: div64_ul() unlike do_div() does not
+> modify its argument, so you have to assign the output like
+> 
+>        return div64_ul(m, dis);
 
-On the other it will be unusable for almost all current DSI drivers and
-probably for most new drivers. Why?
+right, should check div64_ul more carefully， will resend v2, thanks
 
-1. DSI protocol defines actually more than 30 types of transactions[1],
-but this patchset implements only few of them (dsi generic write/read
-family). Is it possible to implement multiple types of transactions in
-regmap?
-
-2. There is already some set of helpers which uses dsi bus, rewriting it
-on regmap is possible or driver could use of regmap and direct access
-together, the question is if it is really necessary.
-
-3. DSI devices are no MFDs so regmap abstraction has no big value added
-(correct me, if there are other significant benefits).
-
-
-[1]:
-https://elixir.bootlin.com/linux/latest/source/include/video/mipi_display.h#L15
-
-
-Regards
-
-Andrzej
-
-
->
-> A couple of minor comments, no need to resend just for these:
->
->> +       payload[0] = (char)reg;
->> +       payload[1] = (char)val;
-> Do you need the casts?
->
->> +	ret = mipi_dsi_generic_write(dsi, payload, 2);
->> +	return ret < 0 ? ret : 0;
-> Please just write an if statement, it helps with legibility.
->
->> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
->> +				 const struct regmap_config *config,
->> +				 struct lock_class_key *lock_key,
->> +				 const char *lock_name)
->> +{
->> +	return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
->> +			     lock_key, lock_name);
->> +}
->> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
-> Perhaps validate that the config is OK (mainly the register/value
-> sizes)?  Though I'm not sure it's worth it so perhaps not - up to
-> you.
-
+> 
+>        Arnd
+> 
+> 
 
