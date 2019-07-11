@@ -2,154 +2,120 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D359C74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619A3C74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD34A21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0AA21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a6sSMETd"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hSpyP6xx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfGKNgu (ORCPT
+        id S1728597AbfGKNjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:36:50 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:44214 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbfGKNgu (ORCPT
+        Thu, 11 Jul 2019 09:39:18 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:43774 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfGKNjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:36:50 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190711133648euoutp0246ea9933db77d02a9b3550caf7813dfd~wXc2Gaxl81713617136euoutp02C
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:36:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190711133648euoutp0246ea9933db77d02a9b3550caf7813dfd~wXc2Gaxl81713617136euoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562852208;
-        bh=hapnjd460596E34R5EF9h7HtShY2YdFfJ/cJBJjjuB8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=a6sSMETdviIDhrWlA/cN3THO5YD/K8ol53OpmCB0ezjXTle1BI1qsMeH9ZjasWxnd
-         JYoBPsFOTqGqXLZbDI43JJPAkVVbJhiWz0TThQTCLhLAgp4usbqH9EGVSLNxPYlWD5
-         8EA3a64DFJ0oa4sSfSUYYs3T//V604ed0CrZBxnc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190711133647eucas1p10e90994cb5ce5a56b1b9f13c3f6937f3~wXc1PY2YM1292912929eucas1p14;
-        Thu, 11 Jul 2019 13:36:47 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 21.D6.04377.E6B372D5; Thu, 11
-        Jul 2019 14:36:46 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190711133646eucas1p17268f944b0a1f3ab0a023b0379481326~wXc0fRNOx0579005790eucas1p1g;
-        Thu, 11 Jul 2019 13:36:46 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190711133646eusmtrp14a1606e8fd467e4612fa8ac535f42643~wXc0Q58Mf1914719147eusmtrp1x;
-        Thu, 11 Jul 2019 13:36:46 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-b5-5d273b6ed68f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 06.69.04140.D6B372D5; Thu, 11
-        Jul 2019 14:36:45 +0100 (BST)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190711133645eusmtip2fdfcf3a65fdaf9568af38b0b88a7aefc~wXczjIZwg1545915459eusmtip2Q;
-        Thu, 11 Jul 2019 13:36:45 +0000 (GMT)
-Subject: Re: [PATCH 2/3] devfreq: exynos-bus: convert to use
- dev_pm_opp_set_rate()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
-Message-ID: <a5da4135-0471-3628-c78a-c4fffc75723b@partner.samsung.com>
-Date:   Thu, 11 Jul 2019 15:36:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Thu, 11 Jul 2019 09:39:18 -0400
+Received: by mail-ua1-f68.google.com with SMTP id o2so2463531uae.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 06:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KazpKbhHu00FeDDiPuVEMFaRWnbqcqwHcNdLtMoOcsY=;
+        b=hSpyP6xxjo+eds0vrJb/JDa7NP4AH5hQ5XuifWkBcJeQ7QMVBqpHtOBM+0SNoecQAT
+         pZT3btPHtTfKXQPkK/OXxLy6gRcJGFjS5Z2RHHVat3M/YCDQrA523q7tXlIp0lCiXGul
+         gaBSTMYQbNyZ1yVHI/m2ZeEucJqTcl3pqzEIlLRHIlwgqIMBIEppENpnpEqEwHpKCREG
+         MQHdsD9Cd241lCqj0guf5qqEEFCmEVcVWA6YxxBpFe9sovxZgSWkAX0Rh3GBfcGN2mAf
+         JNmgWPxLUVhOlTE6KR119OqXGM0GjC6IgKU82Ldw162Zz78+g5B4OrxU0yHOfeTy50TL
+         BwgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KazpKbhHu00FeDDiPuVEMFaRWnbqcqwHcNdLtMoOcsY=;
+        b=CpuxlirWMINTnbTC4tEtXUcUzKZYIx5sc7Fcs2sYzAdNKrO4/LcRWGoH6/rT1ocec3
+         Jqqi1sNWcJChmjdK503abcKlE5pn0IjEx+EXnVc1+2cWXl1+pLymbVuDRNf+lc4wIpGb
+         WLmuw58QyNQCCcvNuTNOjdvlqtfXceqSaA7JhvdoliSXZbJFs9fEvgD65BSvK4E7fTVm
+         IxeX/bDzi6JffiNbi7H6mtHJzNZwVydpq+2EGft7lcC08IaqlzpLxctPQrD70/4aqBtg
+         shzV+m0Ft0ONMptL2/xqXtFvABY9KMIMU91IHh/yVwXUVI6TxzIQvi1O5XJa3GPGE4Uu
+         +59Q==
+X-Gm-Message-State: APjAAAXpQoIniS83i31SjC+RwJauksJ4DIS9ohDwr7n9itQhHP78coNN
+        BqpNZRx4AIhA8Exg4DRauS7Vtw==
+X-Google-Smtp-Source: APXvYqxZqbGbb8rEAZtuGWj3Z/ByRS0P9lJZBtlaYx5SRTsxdaUIbZMmBZGoyMBP+H11pK7IY+SnlA==
+X-Received: by 2002:ab0:2756:: with SMTP id c22mr4174211uap.22.1562852357161;
+        Thu, 11 Jul 2019 06:39:17 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id s67sm2549736vkb.30.2019.07.11.06.39.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 06:39:16 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlZI3-0007pP-MZ; Thu, 11 Jul 2019 10:39:15 -0300
+Date:   Thu, 11 Jul 2019 10:39:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Message-ID: <20190711133915.GA25807@ziepe.ca>
+References: <20190710174800.34451-1-natechancellor@gmail.com>
+ <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
+ <20190711081434.GA86557@archlinux-threadripper>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfWr-2t_e3f6oi7E6KLLRAbskzgEKz26XyK5n_9C8wV1w@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUhUURTGu/NWB0eeY+FJo2BEwkCtKLqVmUHLCEUWBW1SYz1M0qlmcssk
-        l1wzDSvSUcaETJnMnSaXBtFBK7VnlnulaCmZQqGhgUvOPCX/+53vfIdzvstlCfkA5cQGqW/w
-        GrUqWEFLyZdNfwV39e6N/psHRjxxeVYphbunRimcZ35P4YzhnwQWhDIGt8WNM7hiuIvCH2ty
-        aTx5z4xwlmCS4BfmLwwu6P4gwf2xRTQen2mT4ITXZgbPd5WTuHKwifaxVxbri5GywpBCKyuf
-        3lamVxmQsrnHKFFOVqz3o89IvS7xwUFhvMbT+4L0stDmdy2HidB3PGNi0AKVimxY4LbBUJuR
-        SEVSVs4VITA8qUdiMYUgY7ZTIhaTCPJKO8jlkbS3JsLCcq4QQUnOddE0gaCz6Y/V5MCdgMa7
-        gnXHas4NuuemKYuJ4GZIiBmrtppobgcMGVslFpZxB6Gu/4tVJzlX6BvopS28hjsF78x6UvTY
-        w9vsb4vMsjbcMXhTFmSRCc4R+r7lSUTeAMaJXGse4BJYGCl/SIhX71+MM0SL7ABjzVWMyOug
-        5UHaUrJw+J6fzojDdxAMJv1eauyGxuYPlGUxsZimtMZTlPdBaVy99R7g7KBnwl68wQ4yXz4m
-        RFkGyYly0e0O+oXWpWd3htSFEuo+UuhWBNOtSKNbkUb3f+8TRBqQIx+qDQnktVvVfLiHVhWi
-        DVUHely8GlKBFr9dy3zz1CtUMxvQgDgWKWxlPTs3+sspVZg2MqQBAUsoVstMh1z85bJLqsib
-        vObqeU1oMK9tQM4sqXCURa0aPCvnAlU3+Cs8f43XLHclrI1TDPIiyxnvN8m+0eOZrSRvl8bn
-        j0pjt5+zHTlZ/YNJr3MTUl4UChOfEg/hj0ecWB+Xr2f1h48bvNqjPFzT4jtNvaZP26a7yKSR
-        PTbScGMtjq4jkgt8s0vC1nbW7nKPGV3wihiL/ywcSD6a9Gtt6um7c8ytpOr2vdm+z1+NPTIG
-        dMcrSO1l1ZZNhEar+gesG9MScgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRmVeSWpSXmKPExsVy+t/xe7p51uqxBluFLDbOWM9qcf3Lc1aL
-        +UfOsVr0P37NbHH+/AZ2i7NNb9gtNj2+xmpxedccNovPvUcYLWac38dksfbIXXaLpdcvMlnc
-        blzBZvHmx1kmi9a9R9gt/l3byGKx+cExNgdBjzXz1jB6bFrVyeaxeUm9R9+WVYwex29sZ/L4
-        vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5B
-        L+P82YCC2ewV8y4tY29g/M/axcjJISFgItFzch9zFyMXh5DAUkaJjXNmM0IkpCUaT69mgrCF
-        Jf5c62KDKHrNKPHj6mxmkISwQIjE4e7zYJNEBDQlrv/9zgpSxCzwh0Wiq3EGI0THLCaJs5vf
-        gVWxCZhLPNp+Bmwsr4CbxJ7bd1lAbBYBVYlb92+ygdiiAhESk67tZIGoEZQ4OfMJkM3BwSkQ
-        KHFiQyZImFlAXeLPvEvMELa4xK0n85kgbHmJ7W/nME9gFJqFpHsWkpZZSFpmIWlZwMiyilEk
-        tbQ4Nz232EivODG3uDQvXS85P3cTIzC+tx37uWUHY9e74EOMAhyMSjy8NyzVY4VYE8uKK3MP
-        MUpwMCuJ8O5zV44V4k1JrKxKLcqPLyrNSS0+xGgK9NtEZinR5Hxg6skriTc0NTS3sDQ0NzY3
-        NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cDo/FlD3l5zWX/3uzCfuCt1WyrXfQoImTTl
-        5mfNn9Mm6jpedt67++uX5NPRJ8suBM254Mv94VuIX8nmkMpozyNz5KfoGlWFf5kd+Els7jdH
-        iR/rHor75fiwFTAfqnNeOVnk1L4/xXWzrzrlPD+t6HlikvDO5sdnDRbbz0ifY3Co5Y6u9MPD
-        H2uXKbEUZyQaajEXFScCAGLPHXUFAwAA
-X-CMS-MailID: 20190711133646eucas1p17268f944b0a1f3ab0a023b0379481326
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190708141200eucas1p144ca3b2a5b4019aaa5773d23c0236f31
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190708141200eucas1p144ca3b2a5b4019aaa5773d23c0236f31
-References: <CGME20190708141200eucas1p144ca3b2a5b4019aaa5773d23c0236f31@eucas1p1.samsung.com>
-        <20190708141140.24379-1-k.konieczny@partner.samsung.com>
-        <20190708141140.24379-3-k.konieczny@partner.samsung.com>
-        <CAJKOXPfWr-2t_e3f6oi7E6KLLRAbskzgEKz26XyK5n_9C8wV1w@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711081434.GA86557@archlinux-threadripper>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10.07.2019 19:04, Krzysztof Kozlowski wrote:
-> On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
->>
->> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>
->> Reuse opp core code for setting bus clock and voltage. As a side
->> effect this allow useage of coupled regulators feature (required
->> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
->> uses regulator_set_voltage_triplet() for setting regulator voltage
->> while the old code used regulator_set_voltage_tol() with fixed
->> tolerance. This patch also removes no longer needed parsing of DT
->> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
+> Hi Bernard,
 > 
-> Please also update the bindings in such case. Both with removal of
-> unused property and with example/recommended regulator couplings.
+> On Thu, Jul 11, 2019 at 07:44:22AM +0000, Bernard Metzler wrote:
+> > Nathan, thanks very much. That's correct.
+> 
+> Thanks for the confirmation that the fix was correct.
+> 
+> > I don't know how this could pass w/o warning.
+> 
+> Unfortunately, it appears that GCC only warns when two different
+> enumerated types are directly compared, not when they are implicitly
+> converted between.
+> 
+> https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wenum-compare
+> 
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78736
+> 
+> If it did, I wouldn't have fixed as many warnings as I have.
+> 
+> https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aissue+is%3Aclosed+label%3A-Wenum-conversion
+> 
+> Maybe time to start plumbing Clang into your test flow until it can get
+> intergrated with more CI setups? :) It can catch some pretty dodgy
+> behavior that GCC doesn't:
 
-Right, I will remove it.
+I keep asking how to use clang to build the kernel and last I was told
+it still wasn't ready..
 
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+Is it ready now? Is there some flow that will compile with clang
+warning free, on any arch? (at least the portion of the kernel I check)
 
+> Kernel CI has added support for it (although they don't email the
+> authors of patches individually) 
+
+Well.. we didn't see any emails till yours, so if others are looking
+they aren't communicating?
+
+Jason
