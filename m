@@ -2,108 +2,126 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6DEC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7660AC742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6005208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41617208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhwebymS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHNjCuU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbfGKXso (ORCPT
+        id S1729516AbfGKXup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 19:48:44 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45536 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728491AbfGKXso (ORCPT
+        Thu, 11 Jul 2019 19:50:45 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45757 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbfGKXuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 19:48:44 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x22so1411264qtp.12;
-        Thu, 11 Jul 2019 16:48:43 -0700 (PDT)
+        Thu, 11 Jul 2019 19:50:44 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x22so1415314qtp.12;
+        Thu, 11 Jul 2019 16:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j14GQzrD4oSijzpopT5rfc1BSXQi49Lm8QoGCpYkFwM=;
-        b=QhwebymSsYreNq4Cd+ekVWxhtXre7tVlRMfVJGHsvgZE2F/4JU2dp4e4WQtmbq01nj
-         XzknUQDtdD4FrsFuFwd3EMGTjBKOC4z45NpIzLDYEY8SpMD9llZ62FK1DM7PW+/Q/OmX
-         j1eRQGI788kLcRxL6Y/yN6RU/J4vmr8bgpRTawIwkeFYuBhgMremhW1FtWBIZRYfX2cg
-         xD0D/y1IGQSccW3n/DAhfz7mZYERFV09MOV0oCWm6q1xlGbr21zz0x+ivJcZXIuOO+Rj
-         bq8lHyL/j+ldbWmV0+cCGlzSch2ICCzA3UgZ0PyxDfyXDnCTcukDUryo3sp5cHXJIlUj
-         lc9g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wuTNjs1AJzVSPfomxhglY+rjhXorfZWV3dSJ2jI2rn8=;
+        b=lHNjCuU//O0PYvZcPHyNlgDrIP/JmdlwJkCURyOzv2OTxDzyJ5F9OV+LxvO1YgNcTd
+         3badbLyWNUwSh/hhUC12gInEmr9Az7jKuOSEhOn7IqECEFnfXc4JM1WfAwQnLh8MJL4n
+         SZ8QQ09G4hEI0DmHcXjFAfQEiMpEDmBsXcbjb/bzM7JLVxFD1FmR2pV27sIT58nkpW5H
+         Fi6oSphodQTJK/sJ7oFnFp5HSsLlYI5cdGw9pIbmqzR5qBEtbohHoq8IlYgpfK8LnO/8
+         ZFU8DUicggdmlWtcF3oCOz4Ebjv/m9NBB8Aysg0kOsLkr1L8QVUcrrmqY18WY/2JDdvl
+         PVNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j14GQzrD4oSijzpopT5rfc1BSXQi49Lm8QoGCpYkFwM=;
-        b=j/MpeXU3ebC48XAzM9MxYuXp7qvQqvrR4JehcEbRjB2lfENTgVVfumk4J30WLkJXRT
-         fxQj3ALf3/dWAedm81WJ32TcUh2Op9Bai4pHFUuhLVLk45Lk1jCP6QgJKxvWojAcanV0
-         fZtE2c9EWMtXqIc6+4hi9eGiKYGVr8O+7q48TdTFjPZR78teUNvOVgB/r7anIxuXjsSe
-         SoMMogiN3Ngg3A/cD4MVy9XwP1skJbqcAVJido10jINYBSPKWdOLx9uPuaaG4nknIqsB
-         iRlJfUFw+1ymuzAyIQX0XN8UePqlNfcOdPRSm8TAq7quoniisbM/Vpe+5fpKwVG4lUat
-         ZZvQ==
-X-Gm-Message-State: APjAAAWFX9HEXnbYmiipOT2hwDNWHQfhT+Ri9W/IvbVRvs3P/fC5T8O7
-        ykfIFGtiIqnOaU4ClROnhQ==
-X-Google-Smtp-Source: APXvYqxYj0IIpLEdyIrtoCH4en4GeHH53ZzMWL5qkRyNdlxU/lMLtOAX0LrvV+fUGnelC0aPD8Vn8A==
-X-Received: by 2002:aed:2063:: with SMTP id 90mr3906973qta.307.1562888923405;
-        Thu, 11 Jul 2019 16:48:43 -0700 (PDT)
-Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
-        by smtp.googlemail.com with ESMTPSA id n5sm3359957qta.29.2019.07.11.16.48.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 16:48:42 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     iamkeyur96@gmail.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: aha1740: Use !x in place of NULL comparisons
-Date:   Thu, 11 Jul 2019 19:48:33 -0400
-Message-Id: <20190711234833.27475-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wuTNjs1AJzVSPfomxhglY+rjhXorfZWV3dSJ2jI2rn8=;
+        b=V8q53Yql8cOg+8gk5+ppmG343Ns3oZh/U5EIQq5pk2oDf+lSWZkXP0eUmj189wWhma
+         8B5em/ROhji2htFbel4DFxIROS1WqEoPT0zy4A6HNDHKgEY4hfAI2XWTtRgIoE8WrU9p
+         /svIKoPoPej2Fwkzl1o9DNrS+uVvfOmWH3231pcCHzSb3cXTNyMOdFpJO0nT6VEm+xvB
+         f7R76R7r8ZBkn9ze62OgCN6J9mMAlXQ/jBu9pdvjdaRVWRMr1ZfVu3zU9lPpXTGNwMYF
+         H0Se9JmFfgcelT2+nGQ8azAvUvFd1I6Q7OwDJP+jhWiGdREj22gUnCUfwbFtHDHtqNKb
+         Jk6g==
+X-Gm-Message-State: APjAAAX0S4327S9hOdPhemzDVyTeTYS/7a2SMGqD7x3ctXtXTmbiQq0h
+        nQw+hkhRL9PToC4GPDyvMot/9mTMtcB+F8XcydM=
+X-Google-Smtp-Source: APXvYqxi5uC3T9mdtDBKrfzoMfUO2bPhfXojvxDD1+S09q+TEBQcHeoRdC3Rji4gs+Y+3hL1bahWQt+YEvRtNbQD8Y0=
+X-Received: by 2002:ac8:2d56:: with SMTP id o22mr3917172qta.171.1562889043498;
+ Thu, 11 Jul 2019 16:50:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
+In-Reply-To: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 11 Jul 2019 16:50:32 -0700
+Message-ID: <CAEf4BzbGLmuZ48vFUCrDW6VC7_YrkW_0NpgpgXNQEzF_dEqgnA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Fold checksum at the end of bpf_csum_diff and fix
+To:     Paolo Pisati <p.pisati@gmail.com>
+Cc:     "--in-reply-to=" <20190710231439.GD32439@tassilo.jf.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change (x == NULL) to !x and (x != NULL) to x, to fix
-following checkpatch.pl warnings:
-CHECK: Comparison to NULL could be written "!x".
+On Thu, Jul 11, 2019 at 2:32 AM Paolo Pisati <p.pisati@gmail.com> wrote:
+>
+> From: Paolo Pisati <paolo.pisati@canonical.com>
+>
+> After applying patch 0001, all checksum implementations i could test (x86-64, arm64 and
+> arm), now agree on the return value.
+>
+> Patch 0002 fix the expected return value for test #13: i did the calculation manually,
+> and it correspond.
+>
+> Unfortunately, after applying patch 0001, other test cases now fail in
+> test_verifier:
+>
+> $ sudo ./tools/testing/selftests/bpf/test_verifier
+> ...
+> #417/p helper access to variable memory: size = 0 allowed on NULL (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
+> #419/p helper access to variable memory: size = 0 allowed on != NULL stack pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
+> #423/p helper access to variable memory: size possible = 0 allowed on != NULL packet pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- drivers/scsi/aha1740.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm not entirely sure this fix is correct, given these failures, to be honest.
 
-diff --git a/drivers/scsi/aha1740.c b/drivers/scsi/aha1740.c
-index da4150c17781..ec81b7be0a60 100644
---- a/drivers/scsi/aha1740.c
-+++ b/drivers/scsi/aha1740.c
-@@ -385,7 +385,7 @@ static int aha1740_queuecommand_lck(struct scsi_cmnd * SCpnt,
- 	SCpnt->host_scribble = dma_alloc_coherent (&host->edev->dev,
- 						   sizeof (struct aha1740_sg),
- 						   &sg_dma, GFP_ATOMIC);
--	if(SCpnt->host_scribble == NULL) {
-+	if (!(SCpnt->host_scribble)) {
- 		printk(KERN_WARNING "aha1740: out of memory in queuecommand!\n");
- 		return 1;
- 	}
-@@ -576,7 +576,7 @@ static int aha1740_probe (struct device *dev)
- 	       translation ? "en" : "dis");
- 	shpnt = scsi_host_alloc(&aha1740_template,
- 			      sizeof(struct aha1740_hostdata));
--	if(shpnt == NULL)
-+	if (!shpnt)
- 		goto err_release_region;
- 
- 	shpnt->base = 0;
--- 
-2.22.0
+Let's wait for someone who understands intended semantics for
+bpf_csum_diff, before changing returned value so drastically.
 
+But in any case, fixes for these test failures should be in your patch
+series as well.
+
+
+> ...
+> Summary: 1500 PASSED, 0 SKIPPED, 3 FAILED
+>
+> And there are probably other fallouts in other selftests - someone familiar
+> should take a look before applying these patches.
+>
+> Paolo Pisati (2):
+>   bpf: bpf_csum_diff: fold the checksum before returning the
+>     value
+>   bpf, selftest: fix checksum value for test #13
+>
+>  net/core/filter.c                                   | 2 +-
+>  tools/testing/selftests/bpf/verifier/array_access.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> --
+> 2.17.1
+>
