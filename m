@@ -2,145 +2,156 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847D2C74A46
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09776C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA66208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3B9208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKVvEwgF"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="snO+I7nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfGKGJN (ORCPT
+        id S1728073AbfGKGJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 02:09:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36923 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfGKGJM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 02:09:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so4399890wme.2;
-        Wed, 10 Jul 2019 23:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DxU4NDGj7+LedYgqXtgps+S6xA8I2Zxp+hJPjIb5+Zg=;
-        b=UKVvEwgFYOj+lH7N/zeP46wV1RgqVIi/vvhU/8owpDy6XNP21uzoC214VqgueVgQUs
-         KZHg0yUnvxBAwU5azFmxlyvQ/tW/OXJr/rqwEqtqc0Ig1I24GfVq6hSGtfCUj+/LQDyY
-         CmORPvIVodqgaYUKFyX3XmSO3FVpxH0Cc8CIsoQFsas3+4MOcOqjOU36gM9iZ9c6Ft1B
-         5lK9RuF9ckmVxYb4CqoNkwKKt2jH8Kh6pRavTiKIeMs6sqYOvVfKphHhIhSdOl9HdiFr
-         yaJLNsXvzfI+XFX5cNuD6JBiWZ60kiT4+p25QFbBK0ElEdvyu6JX6HwHwDILkEni4KOU
-         bY8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DxU4NDGj7+LedYgqXtgps+S6xA8I2Zxp+hJPjIb5+Zg=;
-        b=R9RLmS69/CUTV6erHnLNpGVs453Eblvym00PF8sWHlKV+4wiCNhGcG3xLNtmKf8zG9
-         eQ2XpdAVyqLVxzgSSg3KAyFHbCjKAIN0ZgjlOq1/oDzPw8hHsHYhh9uemWsGIe6hcANR
-         YpHZiZAGfqux8cHv3rSejzYn6awW6MAv4tx95v/bPxtsdB9gJWHcr2WPB3NWSWAz+leW
-         jX2COA/mRstapyIkwGssvWga8cc/iN4zCVC2MBJHyNPR9uEzZXwX+hI1LmCA6N8fAlLN
-         y//U/PkS4p8roLerguiGwvtM0qYPy1e6QhklRQZRp/xNfPSnGZQUXmXCuq/qBiXE+XO7
-         mfRg==
-X-Gm-Message-State: APjAAAWNn512tYmDUnLVFeTIG5rGmviL6xM1c4EvpnmvKdPP5ANAO1m5
-        X4wTXNvWNG4rNXIjL3BYxQs=
-X-Google-Smtp-Source: APXvYqyf27KFztCU1OEa/3veH1hwu7VtYutQ0u3AzJWujweE+gQJQMZe7zSO2dr8HjtJv3FlTcb3Yw==
-X-Received: by 2002:a05:600c:212:: with SMTP id 18mr1887413wmi.88.1562825349529;
-        Wed, 10 Jul 2019 23:09:09 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id o185sm3828748wmo.45.2019.07.10.23.09.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 23:09:08 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 23:09:07 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Saeed Mahameed <saeedm@dev.mellanox.co.il>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] net/mlx5e: Move priv variable into case statement in
- mlx5e_setup_tc
-Message-ID: <20190711060907.GA103505@archlinux-threadripper>
-References: <20190710190502.104010-1-natechancellor@gmail.com>
- <CALzJLG9Aw=sVPDiewHr+4Jiuaod_1q=10vzMzCUVg-rCCXD6cQ@mail.gmail.com>
+        Thu, 11 Jul 2019 02:09:58 -0400
+Received: from mail-eopbgr140041.outbound.protection.outlook.com ([40.107.14.41]:23170
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726363AbfGKGJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 02:09:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hK2zxCQB1xA7uBSqu+gnbHHiQZKWdAl6l32a3JOYE3Yf58HC8QPTho5VtPs/JROHmlwgdoaLpbbXzUKfaXGpcZ/4mXf/yeEZaWJITLEKRv0ERUAdFyKHvi6LQsbAj6Ir5JxaCfW9CCiAi76NPqzlLYnvsQtn0LEuelRWvEs3jkX1BpSLzNLD4mqorUPtD5qUq7ctzonTKPQJxfDJtc10slW6P+NbWziPcPinqahUvpE0bjuVz+04TaQkxy9ez70JskjNGlR8h5eToqdZXtSeWhnLXawdsAbpIgs/OjKeNojdPshM1xtkeJpzxHEQD5AC+aMdlzfnJnE7isSdkcS2FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OLN3mEu8vtoWUHhO3H+NHA4Vwhislb+d6gaHJl1WQ8k=;
+ b=kwDZfj+j6vQLppiz2ZU0f8jnULk+SoNlnCshZDUmlOcS4MAY/p8CLfAfrL3qXVGFQ0yDEryUPqh23tM1YTCjautVft08m3CT6E6InZw5DDfD0UEmgd32yrg4imRUiganzO8yj9j1t+Vr1a2A+6nPKJN7OkJgFW9c93keA8FopNVITprvQtjoL+eFlt/x85gTIQW/R1+bMAcogsofYwHwAgZBZE4tyzs7PbC+2mO2PbZbs106SBcf3MS/SMaWzoHMeOurjIwO0hl4l9vrbDhQHzUC41o2x+Op6nd7h/M3A2Hu2O8zYqog1SOJSanAUjk95gNYgtVgW9YwYVREryhS1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OLN3mEu8vtoWUHhO3H+NHA4Vwhislb+d6gaHJl1WQ8k=;
+ b=snO+I7nbDOaQaQAKk3HiS9vvZBz+MJEn70G4QW4T1+nxgocBc94kfQkvi6GXnVYo50+hLYR5SDKgytIMcHiPqJQfJ7tutIJ84eX9UsTWyXFAGbk9XyNSEipOv00tKYOwhrlYWtqBha7HFkuBg8wHTes19Qpdon7AoojSYmLxb1M=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6413.eurprd04.prod.outlook.com (20.179.232.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.10; Thu, 11 Jul 2019 06:09:53 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::218e:ee37:1e81:e157]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::218e:ee37:1e81:e157%3]) with mapi id 15.20.2052.019; Thu, 11 Jul 2019
+ 06:09:53 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3 2/2] ASoC: fsl_esai: recover the channel swap after
+ xrun
+Thread-Topic: [PATCH V3 2/2] ASoC: fsl_esai: recover the channel swap after
+ xrun
+Thread-Index: AdU3rxXN4oVmSlwnSCSsxmm6rhEC4A==
+Date:   Thu, 11 Jul 2019 06:09:53 +0000
+Message-ID: <VE1PR04MB64798D6D1D9AD9EC206EDCE1E3F30@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 279107f3-88de-4917-d9ba-08d705c6640d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6413;
+x-ms-traffictypediagnostic: VE1PR04MB6413:
+x-microsoft-antispam-prvs: <VE1PR04MB6413E348D70402D8DBA1C0D2E3F30@VE1PR04MB6413.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0095BCF226
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(99286004)(68736007)(486006)(102836004)(316002)(71190400001)(71200400001)(86362001)(1411001)(54906003)(478600001)(476003)(6506007)(66556008)(7736002)(74316002)(305945005)(26005)(5660300002)(2906002)(6916009)(64756008)(7696005)(3846002)(14454004)(33656002)(6116002)(6436002)(4326008)(186003)(81166006)(25786009)(52536014)(9686003)(8936002)(66066001)(81156014)(53936002)(14444005)(6246003)(229853002)(76116006)(256004)(66946007)(66476007)(8676002)(55016002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6413;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KDr2Y05m3GRhW9TisCUiaaX0abhf5Gw7NecjXfEhUauYTPKC7HlhsxXMzuIXU50jZyCo3pda9S1A48LjVoCLSAFwuLBjQf5oVYkfrxn+elfpmcxygdF41QAJLxaV33FCccUY+3rFCZFvtghXSUrwocy399d8WrDZN+cfIfd43NS/AQX3nJR4+l8bxwh8yq8ICwRF4gb9TzNgOI2ESuKl/F6NqEgZgjlH1/g01HnhniMCznqwNqBnkblU8SYmi6skthlfzKwOjJjX3O4R9eW0aaxk4EjZ25wd67ym2AwT1fk38cyGoIB3JC4A4Gr8h0pfBZs6bMIpQvEJ7E9a/He6M8yAVN7dvjh+EfaGkZ8gxY2IzSVJi0GdO+rXje6jHgyAlGVyCHCreT9fplXBnDwUe6Rf5YAwbz2nUIg6QmNEP+8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALzJLG9Aw=sVPDiewHr+4Jiuaod_1q=10vzMzCUVg-rCCXD6cQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 279107f3-88de-4917-d9ba-08d705c6640d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 06:09:53.5138
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: shengjiu.wang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:02:00PM -0700, Saeed Mahameed wrote:
-> On Wed, Jul 10, 2019 at 12:05 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > There is an unused variable warning on arm64 defconfig when
-> > CONFIG_MLX5_ESWITCH is unset:
-> >
-> > drivers/net/ethernet/mellanox/mlx5/core/en_main.c:3467:21: warning:
-> > unused variable 'priv' [-Wunused-variable]
-> >         struct mlx5e_priv *priv = netdev_priv(dev);
-> >                            ^
-> > 1 warning generated.
-> >
-> > Move it down into the case statement where it is used.
-> >
-> > Fixes: 4e95bc268b91 ("net: flow_offload: add flow_block_cb_setup_simple()")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/597
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > index 6d0ae87c8ded..651eb714eb5b 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> > @@ -3464,15 +3464,16 @@ static LIST_HEAD(mlx5e_block_cb_list);
-> >  static int mlx5e_setup_tc(struct net_device *dev, enum tc_setup_type type,
-> >                           void *type_data)
-> >  {
-> > -       struct mlx5e_priv *priv = netdev_priv(dev);
-> > -
-> >         switch (type) {
-> >  #ifdef CONFIG_MLX5_ESWITCH
-> > -       case TC_SETUP_BLOCK:
-> > +       case TC_SETUP_BLOCK: {
-> > +               struct mlx5e_priv *priv = netdev_priv(dev);
+
+>=20
+> Hi Shengjiu,
+>=20
+> Mostly looks good to me, just some small comments.
+>=20
+> On Mon, Jul 08, 2019 at 02:38:52PM +0800, shengjiu.wang@nxp.com wrote:
+>=20
+> > +static void fsl_esai_hw_reset(unsigned long arg) {
+> > +     struct fsl_esai *esai_priv =3D (struct fsl_esai *)arg;
+> > +     u32 saisr, tfcr, rfcr;
+> > +     bool tx =3D true, rx =3D false, enabled[2];
+>=20
+> Could we swap the lines of u32 and bool? It'd look better.
+>=20
+> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> > +                        ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> > +                        ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+>=20
+> Let's add a line of comments for these two:
+>         /* Enforce ESAI personal resets for both TX and RX */
+>=20
+> > +     /*
+> > +      * Restore registers by regcache_sync, and ignore
+> > +      * return value
+> > +      */
+>=20
+> Could fit into single-line?
+>=20
+> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> > +                        ESAI_xCR_xPR_MASK, 0);
+> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> > +                        ESAI_xCR_xPR_MASK, 0);
 > > +
-> >                 return flow_block_cb_setup_simple(type_data,
-> >                                                   &mlx5e_block_cb_list,
-> >                                                   mlx5e_setup_tc_block_cb,
-> >                                                   priv, priv, true);
-> > +       }
-> 
-> Hi Nathan,
-> 
-> We have another patch internally that fixes this, and it is already
-> queued up in my queue.
-> it works differently as we want to pass priv instead of netdev to
-> mlx5e_setup_tc_mqprio below,
-> which will also solve warning ..
-> 
-> So i would like to submit that patch if it is ok with you ?
+> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
+> > +                        ESAI_PRRC_PDC_MASK, ESAI_PRRC_PDC(ESAI_GPIO));
+> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
+> > +                        ESAI_PCRC_PC_MASK, ESAI_PCRC_PC(ESAI_GPIO));
+>=20
+> Could remove the blank line and add a line of comments:
+>         /* Remove ESAI personal resets by configuring PCRC and PRRC also =
+*/
+>=20
+> Btw, I still feel this personal reset can be stuffed into one of the wrap=
+per
+> functions. But let's keep this simple for now.
+>=20
+> > +     regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
+>=20
+> Why do we read saisr here? All its bits would get cleared by the hardware
+> reset. If it's a must to clear again, we should add a line of comments to
+> emphasize it.
 
-Hi Saeed,
+This line can be removed.=20
 
-Whatever works best for you, I just care that the warning gets fixed,
-not how it is done :) I wouldn't mind being put on CC so I can pick it
-up for my local tests.
-
-Thanks for the follow up!
-Nathan
+Best regards
+Wang Shengjiu
