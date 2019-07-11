@@ -2,51 +2,62 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3664C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACE4C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFDD2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D0E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="I6dRjcYr";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="I6dRjcYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729202AbfGKX22 (ORCPT
+        id S1729025AbfGKXkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 19:28:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:41197 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728757AbfGKX22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 19:28:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 16:28:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
-   d="scan'208,223";a="160222077"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga008.jf.intel.com with ESMTP; 11 Jul 2019 16:28:26 -0700
-Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jul 2019 16:28:26 -0700
-Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.206]) by
- fmsmsx116.amr.corp.intel.com ([169.254.2.161]) with mapi id 14.03.0439.000;
- Thu, 11 Jul 2019 16:28:26 -0700
-From:   "Souza, Jose" <jose.souza@intel.com>
-To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
+        Thu, 11 Jul 2019 19:40:35 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43594 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728683AbfGKXkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 19:40:35 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 9B0EA8EE2F6;
+        Thu, 11 Jul 2019 16:40:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1562888434;
+        bh=LPWxrwSL9QuLgyS7B1V+52X0AUkrSksPcOGkIpwdVc8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=I6dRjcYrHijkDI3dduJ59RjnBnmm4vBWSLWsIt+DQpfRPDRFX9YfEsuvIfSTgfKsl
+         C4MR1iI/3Hxhzve7JGB7fVii7Z4Vgppjl+vbNNZCztX1SKtFUApCyZD95hEOTVb1x/
+         4nj9Kc0h2kV9sWZxle6F2eVa94xy7isBU7zhTSSM=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rYjmMKygacgS; Thu, 11 Jul 2019 16:40:34 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D5D508EE0C7;
+        Thu, 11 Jul 2019 16:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1562888434;
+        bh=LPWxrwSL9QuLgyS7B1V+52X0AUkrSksPcOGkIpwdVc8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=I6dRjcYrHijkDI3dduJ59RjnBnmm4vBWSLWsIt+DQpfRPDRFX9YfEsuvIfSTgfKsl
+         C4MR1iI/3Hxhzve7JGB7fVii7Z4Vgppjl+vbNNZCztX1SKtFUApCyZD95hEOTVb1x/
+         4nj9Kc0h2kV9sWZxle6F2eVa94xy7isBU7zhTSSM=
+Message-ID: <1562888433.2915.0.camel@HansenPartnership.com>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     "Souza, Jose" <jose.souza@intel.com>,
+        "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
         "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
         "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QCAAADBAIAAGPCAgAAIRACAAANRAIAABuIAgAAHAoA=
-Date:   Thu, 11 Jul 2019 23:28:26 +0000
-Message-ID: <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 11 Jul 2019 16:40:33 -0700
+In-Reply-To: <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
 References: <1561834612.3071.6.camel@HansenPartnership.com>
          <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
          <1562875878.2840.0.camel@HansenPartnership.com>
@@ -56,79 +67,51 @@ References: <1561834612.3071.6.camel@HansenPartnership.com>
          <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
          <1562884722.15001.3.camel@HansenPartnership.com>
          <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-In-Reply-To: <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.24.9.133]
-Content-Type: multipart/mixed;
-        boundary="_002_55f4d1c242d684ca2742e8c14613d810a9ee9504camelintelcom_"
-MIME-Version: 1.0
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---_002_55f4d1c242d684ca2742e8c14613d810a9ee9504camelintelcom_
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0BB81FDAC0A0F248B3189E827A380C2D@intel.com>
-Content-Transfer-Encoding: base64
+On Thu, 2019-07-11 at 23:28 +0000, Souza, Jose wrote:
+> On Fri, 2019-07-12 at 01:03 +0200, Paul Bolle wrote:
+> > James Bottomley schreef op do 11-07-2019 om 15:38 [-0700]:
+> > > On Thu, 2019-07-11 at 22:26 +0000, Souza, Jose wrote:
+> > > > It eventually comes back from screen freeze? Like moving the
+> > > > mouse or typing brings it back?
+> > > 
+> > > No, it seems to be frozen for all time (at least until I got
+> > > bored waiting, which was probably 20 minutes).  Even if I reboot
+> > > the machine, the current screen state stays until the system
+> > > powers off.
+> > 
+> > As I mentioned earlier, a suspend/resume cycle unfreezes the
+> > screen.
+> > 
+> > And I seem to remember that, if the gnome screen-locking eventually
+> > kicks in, unlocking the screen still works, as the screen then
+> > isn't frozen anymore.
+> > 
+> > Thanks,
+> 
+> Thanks for all the information Paul.
+> 
+> Could test with the patch attached?
 
-T24gRnJpLCAyMDE5LTA3LTEyIGF0IDAxOjAzICswMjAwLCBQYXVsIEJvbGxlIHdyb3RlOg0KPiBK
-YW1lcyBCb3R0b21sZXkgc2NocmVlZiBvcCBkbyAxMS0wNy0yMDE5IG9tIDE1OjM4IFstMDcwMF06
-DQo+ID4gT24gVGh1LCAyMDE5LTA3LTExIGF0IDIyOjI2ICswMDAwLCBTb3V6YSwgSm9zZSB3cm90
-ZToNCj4gPiA+IEl0IGV2ZW50dWFsbHkgY29tZXMgYmFjayBmcm9tIHNjcmVlbiBmcmVlemU/IExp
-a2UgbW92aW5nIHRoZQ0KPiA+ID4gbW91c2Ugb3INCj4gPiA+IHR5cGluZyBicmluZ3MgaXQgYmFj
-az8NCj4gPiANCj4gPiBObywgaXQgc2VlbXMgdG8gYmUgZnJvemVuIGZvciBhbGwgdGltZSAoYXQg
-bGVhc3QgdW50aWwgSSBnb3QgYm9yZWQNCj4gPiB3YWl0aW5nLCB3aGljaCB3YXMgcHJvYmFibHkg
-MjAgbWludXRlcykuICBFdmVuIGlmIEkgcmVib290IHRoZQ0KPiA+IG1hY2hpbmUsDQo+ID4gdGhl
-IGN1cnJlbnQgc2NyZWVuIHN0YXRlIHN0YXlzIHVudGlsIHRoZSBzeXN0ZW0gcG93ZXJzIG9mZi4N
-Cj4gDQo+IEFzIEkgbWVudGlvbmVkIGVhcmxpZXIsIGEgc3VzcGVuZC9yZXN1bWUgY3ljbGUgdW5m
-cmVlemVzIHRoZSBzY3JlZW4uDQo+IA0KPiBBbmQgSSBzZWVtIHRvIHJlbWVtYmVyIHRoYXQsIGlm
-IHRoZSBnbm9tZSBzY3JlZW4tbG9ja2luZyBldmVudHVhbGx5DQo+IGtpY2tzIGluLA0KPiB1bmxv
-Y2tpbmcgdGhlIHNjcmVlbiBzdGlsbCB3b3JrcywgYXMgdGhlIHNjcmVlbiB0aGVuIGlzbid0IGZy
-b3plbg0KPiBhbnltb3JlLg0KPiANCj4gVGhhbmtzLA0KDQpUaGFua3MgZm9yIGFsbCB0aGUgaW5m
-b3JtYXRpb24gUGF1bC4NCg0KQ291bGQgdGVzdCB3aXRoIHRoZSBwYXRjaCBhdHRhY2hlZD8NCg0K
-SWYgdGhlIGlzc3VlIGhhcHBlbnMgYWdhaW4gY291bGQgc2VuZCB0aGUgb3V0cHV0IG9mOg0KDQov
-c3lzL2tlcm5lbC9kZWJ1Zy9kcmkvMC9lRFAtMS9pOTE1X3Bzcl9zaW5rX3N0YXR1cw0KL3N5cy9r
-ZXJuZWwvZGVidWcvZHJpLzAvaTkxNV9lZHBfcHNyX3N0YXR1cw0KDQpUaGFua3Mgc28gbXVjaCBm
-b3IgYWxsIHRoZSBoZWxwDQoNCj4gDQo+IA0KPiBQYXVsIEJvbGxlDQo+IA0K
+Applied and running with it now.
 
---_002_55f4d1c242d684ca2742e8c14613d810a9ee9504camelintelcom_
-Content-Type: text/x-patch;
-	name="0001-hack-drm-i915-psr-Always-set-PSR1-training-times-to-.patch"
-Content-Description: 0001-hack-drm-i915-psr-Always-set-PSR1-training-times-to-.patch
-Content-Disposition: attachment;
-	filename="0001-hack-drm-i915-psr-Always-set-PSR1-training-times-to-.patch";
-	size=1330; creation-date="Thu, 11 Jul 2019 23:28:25 GMT";
-	modification-date="Thu, 11 Jul 2019 23:28:25 GMT"
-Content-ID: <625E70F7BD10A945933B96A284864956@intel.com>
-Content-Transfer-Encoding: base64
+> If the issue happens again could send the output of:
+> 
+> /sys/kernel/debug/dri/0/eDP-1/i915_psr_sink_status
+> /sys/kernel/debug/dri/0/i915_edp_psr_status
+> 
+> Thanks so much for all the help
 
-RnJvbSBlZTQ5NWUyZTg3OWU3MTgxODNkMWI2NWFmMzczOTNiNTM1ZWViOTY2IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiA9P1VURi04P3E/Sm9zPUMzPUE5PTIwUm9iZXJ0bz0yMGRlPTIw
-U291emE/PSA8am9zZS5zb3V6YUBpbnRlbC5jb20+CkRhdGU6IFRodSwgMTEgSnVsIDIwMTkgMTY6
-MTk6MTIgLTA3MDAKU3ViamVjdDogW1BBVENIXSBoYWNrOiBkcm0vaTkxNS9wc3I6IEFsd2F5cyBz
-ZXQgUFNSMSB0cmFpbmluZyB0aW1lcyB0byBtYXgKTUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1U
-eXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PVVURi04CkNvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6
-IDhiaXQKClNpZ25lZC1vZmYtYnk6IEpvc8OpIFJvYmVydG8gZGUgU291emEgPGpvc2Uuc291emFA
-aW50ZWwuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9pOTE1L2ludGVsX3Bzci5jIHwgNCArKysr
-CiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL2k5MTUvaW50ZWxfcHNyLmMgYi9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pbnRlbF9wc3Iu
-YwppbmRleCA5NjM2NjNiYTBlZGYuLjgzY2EyNmUxMTliNiAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL2k5MTUvaW50ZWxfcHNyLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxf
-cHNyLmMKQEAgLTQ0NCw2ICs0NDQsNyBAQCBzdGF0aWMgdTMyIGludGVsX3BzcjFfZ2V0X3RwX3Rp
-bWUoc3RydWN0IGludGVsX2RwICppbnRlbF9kcCkKIAlpZiAoSU5URUxfR0VOKGRldl9wcml2KSA+
-PSAxMSkKIAkJdmFsIHw9IEVEUF9QU1JfVFA0X1RJTUVfMFVTOwogCisJLyoKIAlpZiAoZGV2X3By
-aXYtPnZidC5wc3IudHAxX3dha2V1cF90aW1lX3VzID09IDApCiAJCXZhbCB8PSBFRFBfUFNSX1RQ
-MV9USU1FXzB1czsKIAllbHNlIGlmIChkZXZfcHJpdi0+dmJ0LnBzci50cDFfd2FrZXVwX3RpbWVf
-dXMgPD0gMTAwKQpAQCAtNDYxLDYgKzQ2Miw5IEBAIHN0YXRpYyB1MzIgaW50ZWxfcHNyMV9nZXRf
-dHBfdGltZShzdHJ1Y3QgaW50ZWxfZHAgKmludGVsX2RwKQogCQl2YWwgfD0gRURQX1BTUl9UUDJf
-VFAzX1RJTUVfNTAwdXM7CiAJZWxzZQogCQl2YWwgfD0gRURQX1BTUl9UUDJfVFAzX1RJTUVfMjUw
-MHVzOworCSovCisJdmFsIHw9IEVEUF9QU1JfVFAxX1RJTUVfMjUwMHVzOworCXZhbCB8PSBFRFBf
-UFNSX1RQMl9UUDNfVElNRV8yNTAwdXM7CiAKIAlpZiAoaW50ZWxfZHBfc291cmNlX3N1cHBvcnRz
-X2hicjIoaW50ZWxfZHApICYmCiAJICAgIGRybV9kcF90cHMzX3N1cHBvcnRlZChpbnRlbF9kcC0+
-ZHBjZCkpCi0tIAoyLjIyLjAKCg==
+Sure,
 
---_002_55f4d1c242d684ca2742e8c14613d810a9ee9504camelintelcom_--
+James
+
