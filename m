@@ -2,108 +2,105 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D63C74A41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9E7C74A41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F68920844
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562810370;
-	bh=yctOEGr15lqaEv9xSMz2miuVt2G/lSyyty867n1nn/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
-	b=e7AExg9EvmsgPo/hK4YAatWrWzSTy+BvvBj+rnUYjd6ENrOXVtyYSKfPtpCk3BJ50
-	 I4JtycbJJnrQIcoKoMw34RwqcnHRBCz0kN/nBnKqy7/Dc1HKHzKLKouF4ljFMlRyER
-	 lCaAsgErIqLdgWB13kYFZP6eHfCflFfBWljmEtlQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4C08020872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:14:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFV3Tm8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfGKB73 (ORCPT
+        id S1727889AbfGKCOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 21:59:29 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46790 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbfGKB71 (ORCPT
+        Wed, 10 Jul 2019 22:14:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41198 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbfGKCOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 21:59:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z15so2888435lfh.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 18:59:26 -0700 (PDT)
+        Wed, 10 Jul 2019 22:14:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d17so4701767qtj.8;
+        Wed, 10 Jul 2019 19:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=NiaFfYJ216nYjgBrBY5JKQAHNiRjdATog8sl2JxZW+g=;
-        b=MQOzZI79mvoiVs1sgBWHfqE+YJM9b7M05jQpHMpAAyRFe0Cs7GZ1SKjYmbrPj6ztHM
-         B7Jmo2E1tOKxmtYLHAeJfiv0Yw5iWNpJ6su3Aywbxq++FWe46hRTt1FaTYFdrs51gDai
-         Fc+1NUhQh/izklmNT0WE5mkHqoWlVg+hybjs0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NxUDKpndtdH37r02jtP/ZlIzOK2B9SJpZuT4uAg/0AU=;
+        b=hFV3Tm8hMjw81TGWqaIE/iJ+vYJ+ZRUmqg0O5TaWBdgjuwlk6M9QhZcQST2Xy6yng5
+         PFmQad7oIAcfhCR4hKFyu1acp5IHAIvShwlUaKTx/AJ9fyl3EIvyJPLZjevZAU60+IpA
+         6uCZLiNrLDo7+SJgEcp0Tz+469D9PTW2+svWg+z9Pq4hKY7lkSl9ARYm6WL6YGuVeYIv
+         S/kXxX3OlTnqNjf/H2hemRFvGHJa+6N6PCkF4kM6Etkjr+/2Gn7SiYt7BYSXh9mXLV8D
+         eUoyR1Bbzfdd5Qt4gJfbEWL5KNrwdSbTYE9AWGsOrtqbk/G0k88vZStlyOB8PT4zlXC6
+         19Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=NiaFfYJ216nYjgBrBY5JKQAHNiRjdATog8sl2JxZW+g=;
-        b=qTSH2wmJBH0cpMqLnb+JytSLtQ2VyJXRwPOgIPWyX60owE2ULtO8gjtMgjDMmdkuOK
-         7QU4hUIwepVU1es8vKe/Mx+B3mXUCRhe3G+F4KjpSxIfwFfbXxpUGrShCd9vpK6HlfO0
-         4KnTyCn+ha433WFduGQ7+rctG/1iBEU/ClYhjrb9A+Ec1cSELbEr8zVE7lE6dnV1p9sU
-         Lz3Iz7NmqjJK43E/xNdRIQMFUMd9oZyBx1v6JBtuil1As8FjE0bDQU+jaCvxSWw95KWb
-         4Ki+qK49wdbXFAUG2AGNpKKOjpC1EgS+Sh1RiA4jC5l4lhJNekM5ghEskXvI/UhgnvmQ
-         ZRXQ==
-X-Gm-Message-State: APjAAAVJztc93WPKZo8b3HT55Ig6wv3CkFAWYfFzpUGUVO/2jZ9mSTVz
-        Cn9r95YBZkku/ZyM4pXAxulALG3/RgY=
-X-Google-Smtp-Source: APXvYqzoVSudajDxn9SMoJLBQgRwcK0Q/+Jex0v0sQ9JBn7YTWUEIFg+7uC4zZchM0tqiW7Kzy88mA==
-X-Received: by 2002:ac2:5c1d:: with SMTP id r29mr351352lfp.72.1562810365227;
-        Wed, 10 Jul 2019 18:59:25 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id f16sm599088lfc.81.2019.07.10.18.59.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 18:59:23 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id v85so2902113lfa.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 18:59:21 -0700 (PDT)
-X-Received: by 2002:ac2:4839:: with SMTP id 25mr355474lft.79.1562810361547;
- Wed, 10 Jul 2019 18:59:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NxUDKpndtdH37r02jtP/ZlIzOK2B9SJpZuT4uAg/0AU=;
+        b=Nb30tgQh75WPuncY6jhJwcTwxKuWCdhXSTPkIQ7MZVjFCRVmZjzd5FBuMJAwlVkv7i
+         F6FsV3GAyILU03+ukGy7IttIPh+L7VolKj83nZTL8EOscTVXj52hUFpe6ibjZCmLvkH4
+         LyHHw/9iLTdQsYqQNiPnuZp5yp1Dx1h5zpRzxP7YGHmtZ08nwJhtTjT5hkWrsYydsHLv
+         nJtgDlDEL7DkZ8booyLVqSlm84V1xjVqJW3oNmpJWE+1N0MPpJBofEfUQaDSQZthfJpi
+         LVPqk8J22geD2H+6Qm9pziWxITxohFNvebzq58wAL9UwCwRcLFkMVoLmmnqOGhM6R+HX
+         /msA==
+X-Gm-Message-State: APjAAAX/5VYr9RvCzYsdKQWlS69X6z7OxqsZgxcisqjBc8ifHgpLtgTI
+        lNuA2Nsg9FY2vTIMxk4jPBM=
+X-Google-Smtp-Source: APXvYqwcTL4Hz3BceOiBvx+YeI0TA01sIV9kq2hfQaUvYx0b2wfMacpnvDvFd4ZChJOeO+tfcRXTDA==
+X-Received: by 2002:a0c:f78d:: with SMTP id s13mr842039qvn.156.1562811255491;
+        Wed, 10 Jul 2019 19:14:15 -0700 (PDT)
+Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id f20sm1699187qkh.15.2019.07.10.19.14.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 19:14:14 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] drm/modes: Don't apply cmdline's rotation if it wasn't specified
+Date:   Thu, 11 Jul 2019 05:13:13 +0300
+Message-Id: <20190711021313.29445-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <28477.1562362239@warthog.procyon.org.uk> <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
- <20190710194620.GA83443@gmail.com> <20190710201552.GB83443@gmail.com>
-In-Reply-To: <20190710201552.GB83443@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 10 Jul 2019 18:59:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
-Message-ID: <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>, keyrings@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-nfs@vger.kernel.org,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:15 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> Also worth noting that the key ACL patches were only in linux-next for 9 days
-> before the pull request was sent.
+The rotation mode from cmdline shouldn't be taken into account if it
+wasn't specified in the cmdline. This fixes ignored default display
+orientation when display mode is given using cmdline without the
+rotation being specified.
 
-Yes. I was not entirely happy with the whole key subsystem situation.
-See my concerns in
+Fixes: 1bf4e09227c3 ("drm/modes: Allow to specify rotation and reflection on the commandline")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/gpu/drm/drm_client_modeset.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  https://lore.kernel.org/lkml/CAHk-=wjEowdfG7v_4ttu3xhf9gqopj1+q1nGG86+mGfGDTEBBg@mail.gmail.com/
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index 56d36779d213..c8922b7cac09 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -859,7 +859,7 @@ bool drm_client_rotation(struct drm_mode_set *modeset, unsigned int *rotation)
+ 	 * simple XOR between the two handle the addition nicely.
+ 	 */
+ 	cmdline = &connector->cmdline_mode;
+-	if (cmdline->specified) {
++	if (cmdline->specified && cmdline->rotation_reflection) {
+ 		unsigned int cmdline_rest, panel_rest;
+ 		unsigned int cmdline_rot, panel_rot;
+ 		unsigned int sum_rot, sum_rest;
+-- 
+2.22.0
 
-for more. That was before I realized it was buggy.
-
-So it really would be good to have more people involved, and more
-structure to the keys development (and, I suspect, much else under
-security/)
-
-Anyway, since it does seem like David is offline, I've just reverted
-this from my tree, and will be continuing my normal merge window pull
-requests (the other issues I have seen have fixes in their respective
-trees).
-
-                 Linus
