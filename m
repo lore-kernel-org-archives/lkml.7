@@ -2,132 +2,113 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F497C74A58
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390F2C74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BF721707
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="W1JL3mvt"
+	by mail.kernel.org (Postfix) with ESMTP id 136C820872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562856653;
+	bh=Ocj4zZLj5XMa6FzzP993HGgTm9Zqj2jS9MLZOx4n57w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TfFVonMJeW0W6SttMpEs+/sSvW9qpAAhKpf9f9KueWOS5HNDLrpvBEvbWxaKb71+k
+	 xemm3EnTDJxphhvZ0NOQEJKXY4rkHbIKyi8yPjKpB96oeGaxCY3t8mh1g06KQ+b1Ur
+	 MEVDbpgxXWZ6xErfvmGG5gYCQ/X6J6qH+w+Jootk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfGKOuM (ORCPT
+        id S1728897AbfGKOuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:50:12 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:43577 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728538AbfGKOuL (ORCPT
+        Thu, 11 Jul 2019 10:50:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37458 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGKOuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:50:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562856610; x=1594392610;
-  h=from:to:cc:message-id:mime-version:subject:resent-from:
-   resent-cc:date:content-transfer-encoding;
-  bh=cbNKXHdWGGN5N4ljL3044bGhDdetj8MItmt22zUHnUM=;
-  b=W1JL3mvtD1ckvn701aIaobkIN0tnEssc01Evbi2tdkgi2u+HZz76kB8x
-   uOGKuC5Mcf+w/6WcnZVlAjTI4ozNfjQslB1b3RKdwPe1tNMwNYzuxjbuU
-   vfUwtqOaEa566drug8FLMdmov1YOqo2WnIIpIi6EhHD1Ctp3LIZcoTeJr
-   w=;
-X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
-   d="scan'208";a="741352044"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Jul 2019 14:50:08 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 9F981A17B9;
-        Thu, 11 Jul 2019 14:50:07 +0000 (UTC)
-Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:50:06 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:50:06 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
- mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:50:05 +0000
-Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:28 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:28 +0000
-Received: from email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com
- (10.25.10.214) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:28
- +0000
-Received: by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix)
-        id 1D462A2387; Wed, 10 Jul 2019 16:45:28 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com
- (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70]) by
- email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS
- id 50D71A2361; Wed, 10 Jul 2019 16:45:27 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
- u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
- x6AGjNOk021313; Wed, 10 Jul 2019 19:45:23 +0300
-Received: (from jonnyc@localhost)
-        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjK5C021200;
-        Wed, 10 Jul 2019 19:45:20 +0300
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
-        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Message-ID: <20190710164519.17883-1-jonnyc@amazon.com>
-Content-Type: text/plain
+        Thu, 11 Jul 2019 10:50:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Gsyd3BVYBKHHuqTtU8Si5TwOMYs0YHflhumMkSpsWz8=; b=abIjBhdhQHG5fF3QMgDo3bBn0
+        gsx4nTm6PFNW5T3bhzNJH8WC8W9MjCoWKhX/NTHqGE2jgLt4rues1e3vXtg3TZlaEwIQI0893S9tC
+        TA65kPIByTxyxaOQvkLNOjMUmI7sSlkKP7xjotTj9M9IM63CCWB19DcBWvUSdtNsXK1/E=;
+Received: from [217.140.106.52] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hlaPG-0002V8-5h; Thu, 11 Jul 2019 14:50:46 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 5FEC5D02DA8; Thu, 11 Jul 2019 15:50:45 +0100 (BST)
+Date:   Thu, 11 Jul 2019 15:50:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, robdclark@gmail.com, bjorn.andersson@linaro.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+Message-ID: <20190711145045.GI14859@sirena.co.uk>
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+ <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+ <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
+ <20190706010604.GG20625@sirena.org.uk>
+ <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/8] Amazon's Annapurna Labs DT-based PCIe host controller
- driver
-Date:   Thu, 11 Jul 2019 17:50:03 +0300
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="k9xkV0rc9XGsukaG"
+Content-Disposition: inline
+In-Reply-To: <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+X-Cookie: Visit beautiful Vergas, Minnesota.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for Amazon's Annapurna Labs DT-based PCIe host
-controller driver.
-Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patch=
-es.
 
-Regarding the 2nd DWC patch (PCI flags support), do you think this should
-be done in the context of a host-bridge driver at all (as opposed to PCI
-system-wide code)?
+--k9xkV0rc9XGsukaG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Jul 11, 2019 at 03:11:56PM +0200, Andrzej Hajda wrote:
 
-Ali Saidi (1):
-  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+> 1. DSI protocol defines actually more than 30 types of transactions[1],
+> but this patchset implements only few of them (dsi generic write/read
+> family). Is it possible to implement multiple types of transactions in
+> regmap?
 
-Jonathan Chocron (7):
-  PCI: Add Amazon's Annapurna Labs vendor ID
-  PCI/VPD: Add VPD release quirk for Amazon Annapurna Labs host bridge
-  PCI: Add quirk to disable MSI support for Amazon's Annapurna Labs host
-    bridge
-  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
-  PCI: al: Add support for DW based driver type
-  PCI: dw: Add validation that PCIe core is set to correct mode
-  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+You can, there's a couple of different ways depending on how
+exactly things are done.
 
- .../devicetree/bindings/pci/pcie-al.txt       |  45 ++
- MAINTAINERS                                   |   1 +
- drivers/pci/controller/dwc/Kconfig            |  11 +
- drivers/pci/controller/dwc/pcie-al.c          | 397 ++++++++++++++++++
- .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
- .../pci/controller/dwc/pcie-designware-host.c |  31 +-
- drivers/pci/quirks.c                          |  27 ++
- drivers/pci/vpd.c                             |  12 +
- include/linux/pci_ids.h                       |   2 +
- 9 files changed, 530 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+> 3. DSI devices are no MFDs so regmap abstraction has no big value added
+> (correct me, if there are other significant benefits).
 
---=20
-2.17.1
+There's a few extra bits even if you're not using the marshalling
+code to get things onto the bus - the main ones are the register
+cache support (which people often use for simpler suspend/resume
+support) and the debug and trace facilities (things like
+tracepoints and debugfs for dumping the register map).  There's
+no real connection to MFDs, I'd say the majority of users are not
+MFDs.
 
+--k9xkV0rc9XGsukaG
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0nTMQACgkQJNaLcl1U
+h9COWwf/Sq+8m5v5HZV9s4Y2bMQej7xG12IRt++iYd71CPndpoCN0S7TYrkCXSA4
+WlzXW7E6jgYQEkk1JB1NDuwsgknq28mrWy+K/qCYRCF+V4xoRyKZM30gvXjt+2Jk
+bgCYj9df40V+IgPwvtwY6gmry8XdyGT0Ps9w2kHmO/mvcQJja6GsJQHZ/xNBdPDm
+DympAQuAa/c7dEh/147U1OiWAnLenr2aVD4JzztuVQzphIosmjd8Q9HCKUDwAubq
+xcUOLg3nkJ5S7tEtLiTKnQcUjTvpCrQA8n/6/rMOUv8FKAjHZxiL1xBw22j4ueoP
+uP8ZYMKLBefiJQen3owvVaLCUFHAfg==
+=NDQM
+-----END PGP SIGNATURE-----
+
+--k9xkV0rc9XGsukaG--
