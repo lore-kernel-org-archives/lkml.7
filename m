@@ -2,122 +2,160 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3335BC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82F8C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1678820838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D1520838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:11:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfGKIKk (ORCPT
+        id S1728112AbfGKIL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:10:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38514 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728055AbfGKIKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:10:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 039EBADEC;
-        Thu, 11 Jul 2019 08:10:35 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8129F1E43B9; Thu, 11 Jul 2019 10:06:49 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 10:06:49 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190711080649.GB8727@quack2.suse.cz>
-References: <20190703195302.GJ1729@bombadil.infradead.org>
- <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org>
- <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
- <20190710190204.GB14701@quack2.suse.cz>
- <20190711033555.GP32320@bombadil.infradead.org>
+        Thu, 11 Jul 2019 04:11:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54893 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727974AbfGKIL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 04:11:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 01:11:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
+   d="scan'208";a="166324409"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.196.76]) ([10.239.196.76])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Jul 2019 01:11:55 -0700
+Subject: Re: [PATCH] trace:add "gfp_t" support in synthetic_events
+To:     Tom Zanussi <zanussi@kernel.org>, rostedt@goodmis.org,
+        mingo@redhat.com, tom.zanussi@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org
+References: <20190704025506.30199-1-zhengjun.xing@linux.intel.com>
+ <1562788297.6330.7.camel@kernel.org>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <50bc3608-d68c-da42-367b-a72f8745abd8@linux.intel.com>
+Date:   Thu, 11 Jul 2019 16:11:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711033555.GP32320@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1562788297.6330.7.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 20:35:55, Matthew Wilcox wrote:
-> On Wed, Jul 10, 2019 at 09:02:04PM +0200, Jan Kara wrote:
-> > So how about the attached patch? That keeps the interface sane and passes a
-> > smoketest for me (full fstest run running). Obviously it also needs a
-> > proper changelog...
+Hi Tom,
+
+On 7/11/2019 3:51 AM, Tom Zanussi wrote:
+> Hi Zhengjun,
 > 
-> Changelog and slightly massaged version along the lines of my two comments
-> attached.
+> On Thu, 2019-07-04 at 10:55 +0800, Zhengjun Xing wrote:
+>> Add "gfp_t" support in synthetic_events, then the "gfp_t" type
+>> parameter in some functions can be traced.
+>>
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>> ---
+>>   kernel/trace/trace_events_hist.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/kernel/trace/trace_events_hist.c
+>> b/kernel/trace/trace_events_hist.c
+>> index ca6b0dff60c5..0d3ab01b7cb5 100644
+>> --- a/kernel/trace/trace_events_hist.c
+>> +++ b/kernel/trace/trace_events_hist.c
+>> @@ -752,6 +752,8 @@ static int synth_field_size(char *type)
+>>   		size = sizeof(unsigned long);
+>>   	else if (strcmp(type, "pid_t") == 0)
+>>   		size = sizeof(pid_t);
+>> +	else if (strcmp(type, "gfp_t") == 0)
+>> +		size = sizeof(gfp_t);
+>>   	else if (synth_field_is_string(type))
+>>   		size = synth_field_string_size(type);
+>>   
+>> @@ -792,6 +794,8 @@ static const char *synth_field_fmt(char *type)
+>>   		fmt = "%lu";
+>>   	else if (strcmp(type, "pid_t") == 0)
+>>   		fmt = "%d";
+>> +	else if (strcmp(type, "gfp_t") == 0)
+>> +		fmt = "%u";
+>>   	else if (synth_field_is_string(type))
+>>   		fmt = "%s";
+>>   
+> 
+> This will work, but I think it would be better to display as hex, and
+> also show the flags in human-readable form.
+> 
+> How about adding something like this on top of your patch?:
+> 
+Thanks, I will add it to the v2 version patch.
+> 
+> [PATCH] tracing: Add verbose gfp_flag printing to synthetic events
+> 
+> Add on top of 'trace:add "gfp_t" support in synthetic_events'.
+> 
+> Prints the gfp flags as hex in addition to the human-readable flag
+> string.  Example output:
+> 
+>    whoopsie-630 [000] ...1 78.969452: testevent: bar=b20 (GFP_ATOMIC|__GFP_ZERO)
+>      rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
+>      rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+> 
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> ---
+>   kernel/trace/trace_events_hist.c | 17 ++++++++++++++++-
+>   1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 0d3ab01..aeb4449 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -13,6 +13,10 @@
+>   #include <linux/rculist.h>
+>   #include <linux/tracefs.h>
+>   
+> +/* for gfp flag names */
+> +#include <linux/trace_events.h>
+> +#include <trace/events/mmflags.h>
+> +
+>   #include "tracing_map.h"
+>   #include "trace.h"
+>   #include "trace_dynevent.h"
+> @@ -795,7 +799,7 @@ static const char *synth_field_fmt(char *type)
+>   	else if (strcmp(type, "pid_t") == 0)
+>   		fmt = "%d";
+>   	else if (strcmp(type, "gfp_t") == 0)
+> -		fmt = "%u";
+> +		fmt = "%x";
+>   	else if (synth_field_is_string(type))
+>   		fmt = "%s";
+>   
+> @@ -838,9 +842,20 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+>   					 i == se->n_fields - 1 ? "" : " ");
+>   			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+>   		} else {
+> +			struct trace_print_flags __flags[] =
+> +				{ __def_gfpflag_names, { -1, NULL }};
+> +
+>   			trace_seq_printf(s, print_fmt, se->fields[i]->name,
+>   					 entry->fields[n_u64],
+>   					 i == se->n_fields - 1 ? "" : " ");
+> +
+> +			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
+> +				trace_seq_puts(s, " (");
+> +				trace_print_flags_seq(s, "|",
+> +						      entry->fields[n_u64],
+> +						      __flags);
+> +				trace_seq_putc(s, ')');
+> +			}
+>   			n_u64++;
+>   		}
+>   	}
 > 
 
-> From 57b63fdd38e7bea7eb8d6332f0163fb028570def Mon Sep 17 00:00:00 2001
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Date: Wed, 3 Jul 2019 23:21:25 -0400
-> Subject: [PATCH] dax: Fix missed wakeup with PMD faults
-> 
-> RocksDB can hang indefinitely when using a DAX file.  This is due to
-> a bug in the XArray conversion when handling a PMD fault and finding a
-> PTE entry.  We use the wrong index in the hash and end up waiting on
-> the wrong waitqueue.
-> 
-> There's actually no need to wait; if we find a PTE entry while looking
-> for a PMD entry, we can return immediately as we know we should fall
-> back to a PTE fault (which may not conflict with the lock held).
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: b15cd800682f ("dax: Convert page fault handlers to XArray")
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-Just one nit below. Otherwise feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-> index 052e06ff4c36..fb25452bcfa4 100644
-> --- a/include/linux/xarray.h
-> +++ b/include/linux/xarray.h
-> @@ -169,7 +169,9 @@ static inline bool xa_is_internal(const void *entry)
->  	return ((unsigned long)entry & 3) == 2;
->  }
->  
-> +#define XA_RETRY_ENTRY		xa_mk_internal(256)
->  #define XA_ZERO_ENTRY		xa_mk_internal(257)
-> +#define XA_DAX_CONFLICT_ENTRY	xa_mk_internal(258)
->  
->  /**
->   * xa_is_zero() - Is the entry a zero entry?
-
-As I wrote in my previous email, won't it be nicer if we just defined
-DAX_CONFLICT_ENTRY (or however we name it) inside dax code say to
-XA_ZERO_ENTRY?  Generic xarray code just doesn't care about that value and
-I can imagine in future there'll be other xarray user's who'd like to have
-some special value(s) for use similarly to DAX and we don't want to clutter
-xarray definitions with those as well. If you don't like XA_ZERO_ENTRY, I
-could also imagine having XA_USER_RESERVED value that's guaranteed to be
-unused by xarray and we'd define DAX_CONFLICT_ENTRY to it. Overall I don't
-care too much so I can live even with what you have now but it would seem
-cleaner that way to me.
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Zhengjun Xing
