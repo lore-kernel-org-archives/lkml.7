@@ -2,196 +2,263 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C4C74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FFDC74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E49C2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E802084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VE858to2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LA7j/cO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfGKQyR (ORCPT
+        id S1728687AbfGKQy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 12:54:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35218 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbfGKQyR (ORCPT
+        Thu, 11 Jul 2019 12:54:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33235 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbfGKQy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:54:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y4so7092363wrm.2;
-        Thu, 11 Jul 2019 09:54:14 -0700 (PDT)
+        Thu, 11 Jul 2019 12:54:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m4so3234203pgk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 09:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NesWXuGbkASvqkB3OfHXJkarfZRKXQiML61VfYbpfEw=;
-        b=VE858to2y7ZF+Yho6XDdzelgR7kQDjL4jiugFGdBeGx66hyP15ePL8ltL11wvW7IMw
-         rjuLr3ip9sXleNjnR0pKFBQTRbGImm6L7qCJy0z81Jn6sHSFCJjgzGrP67Ul5n3CPtwD
-         CzIHOI3K61AHNyNoUAOZ0pzNxQmgTDbJW+FBiNPlxPOb7DiqxgrReUbfigk5dPI8cPp/
-         irSBolZvC3tkywfQncRHDp2IenZ1VnlIHTNqvGN8hfLzWISdPsF9E6oGjTYQ7203Cai2
-         YbIlgvUDy9/2zLTYRKwKV5789L/Qx+uEu7ItJmpUNCen4ZX464uMO0qbRzOKdAja2I2A
-         fWtQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fq6WHQqIPWVCMU7ZkFfC4oSgGVvcorBZ3Dq6pBzcxHo=;
+        b=LA7j/cO4M89kcVx3e6n4nfhoFhINbRv6vd7JT7WJFzQOUPxwSckcJ2rYqU0v25WI5S
+         Nyu5P+fdvPArJtJiIRE4OtkE0R1mRE53Oy+cJ7vQhTEvC5EcUfIVHjn5ivS0d3IMVvSn
+         H5paRse+u29OFk6/lI0zgNuYMtXB+YcG+hOn+ogRkN85B2ldAtfhs7Su1fS9QqNyRq2I
+         Cg9cDAGjAy34fvB0WMKnUbGuLtm5YeIehXbJbqyRZYJ7yRXHl6WAjgPk+i22kMxSv12N
+         vaaJdmrwDM30Ly4SACH6+d0qgs1QMUEif0V+ygVHgVxTGla7U5Vtfnfqy3l5MiRbjsOj
+         wyGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NesWXuGbkASvqkB3OfHXJkarfZRKXQiML61VfYbpfEw=;
-        b=n4ksfA/Aq6UtGxPWsIwV/O8yYL5LhDv4sjzFhs03iMF9t5RB+Xt60wWKTqoUzVpemT
-         nxTuo/8gW0rOeZdGL/L2MyQotc/lZzAtLpmD7ZSoh6sSsPPltBQS+vEsLufBW25sOTRc
-         vO4q0W7ipTz77fz2YKbDsCB4dBx6NXsOp717k8GU/VWq63v+TcnMFqnQme4mVhIvt8Ig
-         jkn74Lf5A29gZmpQBfBpkzlP9CN+8Ppp/4e1ZavlNQK8ZbCLs8woxj0XKtblljaSlX4S
-         ZDmE+9edpCMDUGBABOcTdbnSD5HjPwsjnogeZVTqdKu3dox66IQNCk32whdypV7zh31S
-         WCKA==
-X-Gm-Message-State: APjAAAV9yOPuUnXGFxLhiavrvYOxENCZWEIPEIc7OqgVGBLgDaA5jXEm
-        V/HcwD5+BMNLvC4kSxl+E2Y=
-X-Google-Smtp-Source: APXvYqxvQMOsPbq3fIdc8FXV42JE16f8lykhebXezEpi2QhaD/xtj/HV+Ano6Jw7WoDgSdzUkOiTFw==
-X-Received: by 2002:adf:e941:: with SMTP id m1mr6267917wrn.279.1562864054220;
-        Thu, 11 Jul 2019 09:54:14 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d16sm4577249wrv.55.2019.07.11.09.54.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 09:54:13 -0700 (PDT)
-Subject: Re: [PATCH v6 2/6] ARM: Disable instrumentation for some code
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>, christoffer.dall@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>, jinb.park7@gmail.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Rob Landley <rob@landley.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>, thgarnie@google.com,
-        David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        julien.thierry@arm.com, drjones@redhat.com, philip@cog.systems,
-        mhocko@suse.com, kirill.shutemov@linux.intel.com,
-        kasan-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvmarm@lists.cs.columbia.edu,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-References: <20190617221134.9930-1-f.fainelli@gmail.com>
- <20190617221134.9930-3-f.fainelli@gmail.com>
- <CACRpkdb3P6oQTK9FGUkMj4kax8us3rKH6c36pX=HD1_wMqcoJQ@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <aa45795c-7fa1-ebb8-5d26-cce4c8a60e1a@gmail.com>
-Date:   Thu, 11 Jul 2019 09:53:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fq6WHQqIPWVCMU7ZkFfC4oSgGVvcorBZ3Dq6pBzcxHo=;
+        b=HnexGZX382421w2oeQlDcZnFsfaCYtblcUAjXXgfNkoSBSC6y3VHd67dZpcRgcN9s7
+         W7ZyZu3vvd0nAXl9ODD3TwUYcJEqoYIhbYZFj3qUGz3Pyzvv5ZiPUPCxIZfO1mNvzLwK
+         EKmjeTbGQlMvFSuDUKjbQR7y1IIpJvCTza0PEjNIkfc3fvgEoPUItQfw8skaaoAF1muY
+         oL2Iy38VH9swQ4xdIFiZ+BDDv0PpkCXQF/OQnIll9fbP4TbhFMtpBYgIIU352GO4fT7+
+         VRidQx2ZUjvt1WNlWpVf7BmRzmk7Gyh1bo8RtvhYNryswxDXqUWhQu7WXY+dSsdoN5CH
+         ixVQ==
+X-Gm-Message-State: APjAAAWqndwDz11mNU8S0EUfAuFoveOouqMWst+oDYm6iAwYoeaw6/x3
+        bSG31xHneOjoGrp2NZ649zs=
+X-Google-Smtp-Source: APXvYqyC06UAsgjIIOFjc1j8lXIWIQBK1kitqWKAvKUudWZ44wALY9Iy7uk5Az9zegjynRwH9ESbRw==
+X-Received: by 2002:a17:90a:f488:: with SMTP id bx8mr5899804pjb.91.1562864067277;
+        Thu, 11 Jul 2019 09:54:27 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id h26sm6256695pfq.64.2019.07.11.09.54.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 09:54:27 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 09:54:58 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     shengjiu.wang@nxp.com
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 2/2] ASoC: fsl_esai: recover the channel swap after
+ xrun
+Message-ID: <20190711165458.GA17728@Asurada-Nvidia.nvidia.com>
+References: <cover.1562842206.git.shengjiu.wang@nxp.com>
+ <326035cb99975361699d9ed748054b08bc06a341.1562842206.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdb3P6oQTK9FGUkMj4kax8us3rKH6c36pX=HD1_wMqcoJQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <326035cb99975361699d9ed748054b08bc06a341.1562842206.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 2:56 PM, Linus Walleij wrote:
-> On Tue, Jun 18, 2019 at 12:11 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Thu, Jul 11, 2019 at 06:49:46PM +0800, shengjiu.wang@nxp.com wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
 > 
->> @@ -236,7 +236,8 @@ static int unwind_pop_register(struct unwind_ctrl_block *ctrl,
->>                 if (*vsp >= (unsigned long *)ctrl->sp_high)
->>                         return -URC_FAILURE;
->>
->> -       ctrl->vrs[reg] = *(*vsp)++;
->> +       ctrl->vrs[reg] = READ_ONCE_NOCHECK(*(*vsp));
->> +       (*vsp)++;
+> There is chip errata ERR008000, the reference doc is
+> (https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf),
 > 
-> I would probably even put in a comment here so it is clear why we
-> do this. Passers-by may not know that READ_ONCE_NOCHECK() is
-> even related to KASan.
+> The issue is "While using ESAI transmit or receive and
+> an underrun/overrun happens, channel swap may occur.
+> The only recovery mechanism is to reset the ESAI."
+> 
+> This issue exist in imx3/imx5/imx6(partial) series.
+> 
+> In this commit add a tasklet to handle reset of ESAI
+> after xrun happens to recover the channel swap.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Makes sense, I will add that, thanks!
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-> 
-> Other than that,
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Yours,
-> Linus Walleij
-> 
+Thanks
 
-
--- 
-Florian
+> ---
+>  sound/soc/fsl/fsl_esai.c | 74 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+> 
+> diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+> index ab460d6d7432..4ce8ac769244 100644
+> --- a/sound/soc/fsl/fsl_esai.c
+> +++ b/sound/soc/fsl/fsl_esai.c
+> @@ -32,6 +32,7 @@
+>   * @extalclk: esai clock source to derive HCK, SCK and FS
+>   * @fsysclk: system clock source to derive HCK, SCK and FS
+>   * @spbaclk: SPBA clock (optional, depending on SoC design)
+> + * @task: tasklet to handle the reset operation
+>   * @fifo_depth: depth of tx/rx FIFO
+>   * @slot_width: width of each DAI slot
+>   * @slots: number of slots
+> @@ -42,6 +43,7 @@
+>   * @sck_div: if using PSR/PM dividers for SCKx clock
+>   * @slave_mode: if fully using DAI slave mode
+>   * @synchronous: if using tx/rx synchronous mode
+> + * @reset_at_xrun: flags for enable reset operaton
+>   * @name: driver name
+>   */
+>  struct fsl_esai {
+> @@ -53,6 +55,7 @@ struct fsl_esai {
+>  	struct clk *extalclk;
+>  	struct clk *fsysclk;
+>  	struct clk *spbaclk;
+> +	struct tasklet_struct task;
+>  	u32 fifo_depth;
+>  	u32 slot_width;
+>  	u32 slots;
+> @@ -65,6 +68,7 @@ struct fsl_esai {
+>  	bool sck_div[2];
+>  	bool slave_mode;
+>  	bool synchronous;
+> +	bool reset_at_xrun;
+>  	char name[32];
+>  };
+>  
+> @@ -73,8 +77,16 @@ static irqreturn_t esai_isr(int irq, void *devid)
+>  	struct fsl_esai *esai_priv = (struct fsl_esai *)devid;
+>  	struct platform_device *pdev = esai_priv->pdev;
+>  	u32 esr;
+> +	u32 saisr;
+>  
+>  	regmap_read(esai_priv->regmap, REG_ESAI_ESR, &esr);
+> +	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
+> +
+> +	if ((saisr & (ESAI_SAISR_TUE | ESAI_SAISR_ROE)) &&
+> +	    esai_priv->reset_at_xrun) {
+> +		dev_dbg(&pdev->dev, "reset module for xrun\n");
+> +		tasklet_schedule(&esai_priv->task);
+> +	}
+>  
+>  	if (esr & ESAI_ESR_TINIT_MASK)
+>  		dev_dbg(&pdev->dev, "isr: Transmission Initialized\n");
+> @@ -635,10 +647,17 @@ static void fsl_esai_trigger_start(struct fsl_esai *esai_priv, bool tx)
+>  			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(mask));
+>  	regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
+>  			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
+> +
+> +	/* Enable Exception interrupt */
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+> +			   ESAI_xCR_xEIE_MASK, ESAI_xCR_xEIE);
+>  }
+>  
+>  static void fsl_esai_trigger_stop(struct fsl_esai *esai_priv, bool tx)
+>  {
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+> +			   ESAI_xCR_xEIE_MASK, 0);
+> +
+>  	regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+>  			   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
+>  	regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
+> @@ -653,6 +672,51 @@ static void fsl_esai_trigger_stop(struct fsl_esai *esai_priv, bool tx)
+>  			   ESAI_xFCR_xFR, 0);
+>  }
+>  
+> +static void fsl_esai_hw_reset(unsigned long arg)
+> +{
+> +	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
+> +	bool tx = true, rx = false, enabled[2];
+> +	u32 tfcr, rfcr;
+> +
+> +	/* Save the registers */
+> +	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
+> +	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
+> +	enabled[tx] = tfcr & ESAI_xFCR_xFEN;
+> +	enabled[rx] = rfcr & ESAI_xFCR_xFEN;
+> +
+> +	/* Stop the tx & rx */
+> +	fsl_esai_trigger_stop(esai_priv, tx);
+> +	fsl_esai_trigger_stop(esai_priv, rx);
+> +
+> +	/* Reset the esai, and ignore return value */
+> +	fsl_esai_hw_init(esai_priv);
+> +
+> +	/* Enforce ESAI personal resets for both TX and RX */
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> +			   ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> +			   ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+> +
+> +	/* Restore registers by regcache_sync, and ignore return value */
+> +	fsl_esai_register_restore(esai_priv);
+> +
+> +	/* Remove ESAI personal resets by configuring PCRC and PRRC also */
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> +			   ESAI_xCR_xPR_MASK, 0);
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> +			   ESAI_xCR_xPR_MASK, 0);
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
+> +			   ESAI_PRRC_PDC_MASK, ESAI_PRRC_PDC(ESAI_GPIO));
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
+> +			   ESAI_PCRC_PC_MASK, ESAI_PCRC_PC(ESAI_GPIO));
+> +
+> +	/* Restart tx / rx, if they already enabled */
+> +	if (enabled[tx])
+> +		fsl_esai_trigger_start(esai_priv, tx);
+> +	if (enabled[rx])
+> +		fsl_esai_trigger_start(esai_priv, rx);
+> +}
+> +
+>  static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+>  			    struct snd_soc_dai *dai)
+>  {
+> @@ -857,6 +921,10 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  	esai_priv->pdev = pdev;
+>  	snprintf(esai_priv->name, sizeof(esai_priv->name), "%pOFn", np);
+>  
+> +	if (of_device_is_compatible(np, "fsl,vf610-esai") ||
+> +	    of_device_is_compatible(np, "fsl,imx35-esai"))
+> +		esai_priv->reset_at_xrun = true;
+> +
+>  	/* Get the addresses and IRQ */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	regs = devm_ioremap_resource(&pdev->dev, res);
+> @@ -956,6 +1024,9 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	tasklet_init(&esai_priv->task, fsl_esai_hw_reset,
+> +		     (unsigned long)esai_priv);
+> +
+>  	pm_runtime_enable(&pdev->dev);
+>  
+>  	regcache_cache_only(esai_priv->regmap, true);
+> @@ -969,7 +1040,10 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  
+>  static int fsl_esai_remove(struct platform_device *pdev)
+>  {
+> +	struct fsl_esai *esai_priv = platform_get_drvdata(pdev);
+> +
+>  	pm_runtime_disable(&pdev->dev);
+> +	tasklet_kill(&esai_priv->task);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.21.0
+> 
