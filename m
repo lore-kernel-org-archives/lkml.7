@@ -2,108 +2,122 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5522C74A41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E01FC74A41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7058E21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F399C21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="NpTdo9jW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZuX85ZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfGKCfX (ORCPT
+        id S1727917AbfGKCfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 22:35:23 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43379 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfGKCfW (ORCPT
+        Wed, 10 Jul 2019 22:35:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32836 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727622AbfGKCfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 22:35:22 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so2178581plb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 19:35:22 -0700 (PDT)
+        Wed, 10 Jul 2019 22:35:53 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so9293106iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 19:35:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IN1HYshmaqAJriNIg/bZOqzewRr8acPoLDBpyQjw6+k=;
-        b=NpTdo9jWQZX+yg26ULYTVFecxuZR8Diixxrm8vyFz2JYll+MhEYCs4UVOBVCzJLB9Z
-         LfpWYi3JX8muO231TyRgQBCW3aX3MOjm9aE3IdqBt8HMO/bd8TtmPePnOVrJWptGEA7M
-         LXOhB14Vfa8mbVPvKbxolV00g/Ee70qS3osH/1lyfJjiuoBr0Pes07tYp3Y64hP1kSIu
-         4EgPGSCFK8dX//H8s8thCqUv0wtsVIr5JM0x21sf6cz7cIVUrxflbRuk4fF0mZHZ7D8f
-         rQ1aWwjNKff3WzCtOt90BPLVVhQE7rv06Fy07AvCwQ7W5WLrKr6EmZvAp7ZOOMKfNRRz
-         ClMw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C1FC0kkhG8SE4KxZI9/vd1vvZYlqKizf2ehICOMyQFw=;
+        b=gZuX85ZCmj/43wOQW8QDrAr8gsP1kGWGDwQXP7ruMAHyiaKt3g7NjtaA+MEVdHmPOT
+         wKDPWmEBpa83TiEvIwO+ugF++ClLRUvAzQLBP51kB4e6VSC6Snkjk3d4n8a6/wkm9/Ra
+         D7155hJwNevtJn/VruKCuIazOesSrERBBV8vHwGFFkNSHxznLmqbfHO6yEdsHe98bC30
+         T7PKRJ7+sCT5Xa2XQQwi9kRh5LcipaXeyRjPVyu6OVHm/E8NeQJY6UH3Mv4YtROKhPbf
+         uYVC+T7pV39I8wXcfcxdqZB0y5IdoQR5bzuyil6Rc7DsmYrELvsBAixhWonuRgUpjKBt
+         FjYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IN1HYshmaqAJriNIg/bZOqzewRr8acPoLDBpyQjw6+k=;
-        b=g/2oSe8QJuf41j/dGK+CI4Zpvh6LYvtkAu52Vm+BJk2OvyxT3UytIjA0fZIZJGGA5e
-         aOrxzvjlE4XRmDYLouPZa2S8Np14RYXl9jq2R6fRKeZcE/7kG+v3qTl9x5JuyrRLvfze
-         cAtMkeUwr2Sxw5+R27SQ9czV1tDJjkDUFF5dUGCahZba5SPupPXrgrc7d4Cvpqd35rIS
-         jXx4mnMIxzRqpEKsRwYq0kTzYNx+qQr4lGhAFe1yxw8TXSN1wy7k1JLkO15bOtQgoXQS
-         gxA1e2ZzPVfOWE1zIAnJZlZ/5Z/wYn7IKMpl8UpiTuKJNeXix/V1iKN89r8axXqfnplL
-         8iGA==
-X-Gm-Message-State: APjAAAWxv19S/N/UAr0rtjbgR+tfLUsYyYqpBDTpvILsu95uYTRxVBtG
-        aPvUFMmNxyoDMG06hXDVoRc=
-X-Google-Smtp-Source: APXvYqzNfOYkq9qVmHQ0rwjBDo8PtN9hhp2nffMbsSK+LkN5hlfLyTQJFjhh4zk81Uazs5dd59+fjA==
-X-Received: by 2002:a17:902:e202:: with SMTP id ce2mr1711323plb.272.1562812522261;
-        Wed, 10 Jul 2019 19:35:22 -0700 (PDT)
-Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id p1sm4390411pff.74.2019.07.10.19.35.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 19:35:21 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     tglx@linutronix.de, peterz@infradead.org,
-        torvalds@linux-foundation.org, rostedt@goodmis.org,
-        jpoimboe@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH] x86/stacktrace: Fix infinite loop in arch_stack_walk_user()
-Date:   Thu, 11 Jul 2019 11:35:01 +0900
-Message-Id: <20190711023501.963-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C1FC0kkhG8SE4KxZI9/vd1vvZYlqKizf2ehICOMyQFw=;
+        b=j0B6FEsYI36XbLw44pMNqXHcvb1lxIHlpPZEpeGXugSOebT6wAEwOyJwJN7BfNruNp
+         WWHHbaby6fDLSpDctL2w+2mzfdDF5h9JsQCyA5RkOoXZHwi2au9cODgQy75YKHXgaD7k
+         dRHwdTRiRxGsKsbGMwLUamT/FFokKlvDDIqfqV2uZiL7muu+9RbA+c0X+F+lDabzkn4d
+         s1eWehx4hZJMlI+88t+Y8nw3Y0r9/Y9+peaAV36OXmpSYF29MojpUCCw/5FJTL/+A5Od
+         UTZJwv5mDIFruTFKGqL0NitU1b4DoHrmSmE6M3CUut1ZDM56e7ZMgZ1m6BhikTmqk7Kx
+         nKYg==
+X-Gm-Message-State: APjAAAWskIrnFeBRbSwzJvFA7y5/7USX0IqyeGvHADxxK68f5mttg1wr
+        3p6lKjRQHP6aFdQ1UMsJyur06+6xtGIGLlFQiDk=
+X-Google-Smtp-Source: APXvYqySOQ0NQmFWxVA1kPgmyB8lKtJqH6UcCGrrUDZnNcuPCHHrmvDjUvwMLLqlPMPNkYUmdbrvZzQlXxg4BT1y+pw=
+X-Received: by 2002:a5d:8e08:: with SMTP id e8mr1665361iod.139.1562812552660;
+ Wed, 10 Jul 2019 19:35:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190702141903.1131-1-kraxel@redhat.com> <20190702141903.1131-9-kraxel@redhat.com>
+ <CAPaKu7QP=A2kV_kqcT20Pmc831HviaBJN1RpOFoa=V1g6SmE_g@mail.gmail.com>
+ <20190704112534.v7icsuverf7wrbjq@sirius.home.kraxel.org> <CAPaKu7SQS5USJf0Y+K41tuRA=4qZJf5CnTu9EqAPZvz+GJCP2w@mail.gmail.com>
+In-Reply-To: <CAPaKu7SQS5USJf0Y+K41tuRA=4qZJf5CnTu9EqAPZvz+GJCP2w@mail.gmail.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Wed, 10 Jul 2019 19:35:41 -0700
+Message-ID: <CAPaKu7RQo8T81iGtPbtgmv7WtV-uDO9+BsT3vMd=iggZ0Q_Yew@mail.gmail.com>
+Subject: Re: [PATCH v6 08/18] drm/virtio: rework virtio_gpu_execbuffer_ioctl fencing
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current arch_stack_walk_user() checks `if (fp == frame.next_fp)`
-to prevent infinite loop by self reference but it's not enogh for
-circular reference.
+On Thu, Jul 4, 2019 at 11:46 AM Chia-I Wu <olvaffe@gmail.com> wrote:
+>
+> On Thu, Jul 4, 2019 at 4:25 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> >
+> >   Hi,
+> >
+> > > >         if (fence)
+> > > >                 virtio_gpu_fence_emit(vgdev, hdr, fence);
+> > > > +       if (vbuf->objs) {
+> > > > +               virtio_gpu_array_add_fence(vbuf->objs, &fence->f);
+> > > > +               virtio_gpu_array_unlock_resv(vbuf->objs);
+> > > > +       }
+> > > This is with the spinlock held.  Maybe we should move the
+> > > virtio_gpu_array_unlock_resv call out of the critical section.
+> >
+> > That would bring back the race ...
+> Right...
+> >
+> > > I am actually more concerned about virtio_gpu_array_add_fence, but it
+> > > is also harder to move.  Should we add a kref to the object array?
+> >
+> > Yep, refcounting would be the other way to fix the race.
+> >
+> > > This bothers me because I recently ran into a CPU-bound game with very
+> > > bad lock contention here.
+> >
+> > Hmm.  Any clue where this comes from?  Multiple threads competing for
+> > virtio buffers I guess?  Maybe we should have larger virtqueues?
+> The game was single-threaded.  I guess it was the game and Xorg
+> competing for virtio buffers.  That was also on an older kernel
+> without explicit fences.  The userspace had to create dummy resources
+> frequently to do VIRTIO_IOCTL_RESOURCE_WAIT.
+>
+> I think this is fine for now as far as I am concerned.  I can look
+> into this more closely after this series lands.
+It was virtio_gpu_dequeue_ctrl_func who wanted to grab the lock to
+handle the responses.  I sent a patch for it
 
-Once we find a lack of return address, there is no need to continue
-loop, so let's break out.
+  https://patchwork.freedesktop.org/series/63529/
 
-Fixes: 02b67518e2b1 ("tracing: add support for userspace stacktraces in tracing/iter_ctrl")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
----
- arch/x86/kernel/stacktrace.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 2abf27d7df6b..b1a1f4b4c943 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -129,11 +129,8 @@ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
- 			break;
- 		if ((unsigned long)fp < regs->sp)
- 			break;
--		if (frame.ret_addr) {
--			if (!consume_entry(cookie, frame.ret_addr, false))
--				return;
--		}
--		if (fp == frame.next_fp)
-+		if (!frame.ret_addr ||
-+		    !consume_entry(cookie, frame.ret_addr, false))
- 			break;
- 		fp = frame.next_fp;
- 	}
--- 
-2.21.0
-
+>
+>
+> >
+> > cheers,
+> >   Gerd
+> >
