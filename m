@@ -2,61 +2,61 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A22CC74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA73C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76C5208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CE320665
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="gqHdZrhy"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="ektyVvNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfGKMF1 (ORCPT
+        id S1728601AbfGKMHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:05:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34096 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728531AbfGKMF0 (ORCPT
+        Thu, 11 Jul 2019 08:07:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45664 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728531AbfGKMHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:05:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p17so5524885ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 05:05:24 -0700 (PDT)
+        Thu, 11 Jul 2019 08:07:37 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so5479224lje.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 05:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=YFCxGO6KV5W4HnGiTTvC8J1Y11PoOncGzlRaAH+YitY=;
-        b=gqHdZrhydiZVnlVQy4pXamlOAmehSSQyqPVvYp1XIWDNaJIflXL/y4ej78BNjvmDaT
-         wjE4YsuM3hdrMdUB0VaTKvxtXl2poyXQwc/m8RN1z/8tvvHBETHl3ZTSZM6RniSAVqwV
-         pZOz19hsGlInW+f5P9Q5Ejvr2x52m5Xtb4Ick=
+        bh=/GkyJO/XzCdLnefrckS27eNcOWh/ymnRvDaUSAxjqU8=;
+        b=ektyVvNoHno+vGzdhSyNvexrE2XG1HdIQjty5SZHH7PS1BFMLEd9bZ81vw7XjKeA4d
+         UapLshT+pX16Xoyw5FdEWffeXedaspH6Q5KXdfoJfSBzRQQbVXsHKOs/NrzEDeCvzSIy
+         YQdagHOcmHKLQ2NAJx6GwCW8s9RwY9K0qshog=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YFCxGO6KV5W4HnGiTTvC8J1Y11PoOncGzlRaAH+YitY=;
-        b=VNE8sdxNuTb/z2pBe3eg4ytIhm3iwonB70siYw4fFArY4TWekOuM6K+oi0gTbHqCz+
-         PP//OQn2U36RbvOIfv0jJsapER7yLOpFRsVyufp89UqckcCYmkNsr9mFOPm1pkPjsBro
-         7u1ZxylEDPVBm6BrSVmhx3JNMtvkgpEBcWewwnpooohkt1MsBiCqRr82GiC/i5tkH5U4
-         Hm1koCvzvwWXT/mHSpW000xrf2Csoh30I+ZYr2+RtGiiSwQRwsKDuVM6VcQHD3Geulou
-         wDQXR+yk05EvFxyPCCtSWWbv492gxZBGnOZPru4Vx5+Mk+WBVX9TgtXNCP2EBYcRcvw1
-         z8UA==
-X-Gm-Message-State: APjAAAUf6bA58dasP2yM5fPExN9Cp7Th+LuB6XzRT5e+RqOMKGMmBauz
-        nzvPgZYhtQ8yv/xaah3Fe1CbEN5FTbUJUMqmNvMBcw==
-X-Google-Smtp-Source: APXvYqy/Vz9FGOUgNf13SFed5ZNaL8L9LUuJauqPxNNzGUQUaWoOaZowfSiu0Yr4jPIs+S/05vQRVoFtTPtN+Yo+kKc=
-X-Received: by 2002:a2e:9754:: with SMTP id f20mr2286572ljj.151.1562846722686;
- Thu, 11 Jul 2019 05:05:22 -0700 (PDT)
+        bh=/GkyJO/XzCdLnefrckS27eNcOWh/ymnRvDaUSAxjqU8=;
+        b=hF/CIedoN6UYAM6dqID2KCfXfD6YoNX3rhrLqTQeH3q+znhUcvJfXzCthqS/vO1dXR
+         3HlcGk1IC0zeoY88fNGZT92f8iTWC4d33tAp4oOhTpohBvypuv8p4tViFqySugw4VWF2
+         YjDV56BhD3mKi9q+zNTehirvZ69+4QFzwCVlzmGW+HA7X8c9AELGSrNyMFHVnBWfCNar
+         qhhoqaIgcnRoLtyBaWFNkvierXmZarzqHWAXyHlPhEDsYHdKcIdxSuuQjVi38FAzyDYw
+         3LGt6J+WOStbayB00lI4fOmI/YFtqTH8qowy7KUWMnDBjLabioZS+6mdJt81zR4qpYhn
+         g8iA==
+X-Gm-Message-State: APjAAAXTvYrWmEI56ml94zMNDIszpu9Ur2Gp7HtAYp3nhUAKO0VO3MaW
+        AE1fhTwbzSJkW6b7qv68ErKYSyt27vK9ZeLJVDpY/w==
+X-Google-Smtp-Source: APXvYqzP22RRcZcUhDujyqUU5IP2zXoX9fJ3k2M6/GT1tQ3bZzzFR2TqUW6TndXcmnVlqSvHUPDoPdHjVwPeutIGhko=
+X-Received: by 2002:a2e:9754:: with SMTP id f20mr2293534ljj.151.1562846855331;
+ Thu, 11 Jul 2019 05:07:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-4-krzesimir@kinvolk.io>
- <CAEf4BzbM6EiCkN5mwK1YP-NC2bavkkHV7nFR-PXCWGOvVt7nTg@mail.gmail.com>
-In-Reply-To: <CAEf4BzbM6EiCkN5mwK1YP-NC2bavkkHV7nFR-PXCWGOvVt7nTg@mail.gmail.com>
+References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-5-krzesimir@kinvolk.io>
+ <CAEf4BzZoOw=1B8vV53iAxz8LDULOPVF-he4C_usoUQSdXU+oSg@mail.gmail.com>
+In-Reply-To: <CAEf4BzZoOw=1B8vV53iAxz8LDULOPVF-he4C_usoUQSdXU+oSg@mail.gmail.com>
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
-Date:   Thu, 11 Jul 2019 14:05:11 +0200
-Message-ID: <CAGGp+cHi0siwc1+q--JM_+a0QOO6tWgJiOkqsdbjGxjMP3G1Zw@mail.gmail.com>
-Subject: Re: [bpf-next v3 03/12] selftests/bpf: Avoid another case of errno clobbering
+Date:   Thu, 11 Jul 2019 14:07:24 +0200
+Message-ID: <CAGGp+cGUYbdEeHJxVCk0VZvOMSoR6Fz5aUJD0Ye71w5dxETXMA@mail.gmail.com>
+Subject: Re: [bpf-next v3 04/12] selftests/bpf: Use bpf_prog_test_run_xattr
 To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     open list <linux-kernel@vger.kernel.org>,
         Alban Crequy <alban@kinvolk.io>,
@@ -79,74 +79,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 1:57 AM Andrii Nakryiko
+On Thu, Jul 11, 2019 at 2:03 AM Andrii Nakryiko
 <andrii.nakryiko@gmail.com> wrote:
 >
 > On Mon, Jul 8, 2019 at 3:43 PM Krzesimir Nowak <krzesimir@kinvolk.io> wro=
 te:
 > >
-> > Commit 8184d44c9a57 ("selftests/bpf: skip verifier tests for
-> > unsupported program types") added a check for an unsupported program
-> > type. The function doing it changes errno, so test_verifier should
-> > save it before calling it if test_verifier wants to print a reason why
-> > verifying a BPF program of a supported type failed.
+> > The bpf_prog_test_run_xattr function gives more options to set up a
+> > test run of a BPF program than the bpf_prog_test_run function.
 > >
-> > Changes since v2:
-> > - Move the declaration to fit the reverse christmas tree style.
+> > We will need this extra flexibility to pass ctx data later.
 > >
-> > Fixes: 8184d44c9a57 ("selftests/bpf: skip verifier tests for unsupporte=
-d program types")
-> > Cc: Stanislav Fomichev <sdf@google.com>
 > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 > > ---
 >
+> lgtm, with some nits below
+>
 > Acked-by: Andrii Nakryiko <andriin@fb.com>
 >
-> >  tools/testing/selftests/bpf/test_verifier.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >  tools/testing/selftests/bpf/test_verifier.c | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
 > >
 > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testin=
 g/selftests/bpf/test_verifier.c
-> > index 3fe126e0083b..c7541f572932 100644
+> > index c7541f572932..1640ba9f12c1 100644
 > > --- a/tools/testing/selftests/bpf/test_verifier.c
 > > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > @@ -864,6 +864,7 @@ static void do_test_single(struct bpf_test *test, b=
-ool unpriv,
-> >         int run_errs, run_successes;
-> >         int map_fds[MAX_NR_MAPS];
-> >         const char *expected_err;
-> > +       int saved_errno;
-> >         int fixup_skips;
+> > @@ -822,14 +822,20 @@ static int do_prog_test_run(int fd_prog, bool unp=
+riv, uint32_t expected_val,
+> >  {
+> >         __u8 tmp[TEST_DATA_LEN << 2];
+> >         __u32 size_tmp =3D sizeof(tmp);
 >
-> nit: combine those ints? or even with i and err below as well?
+> nit: this is now is not needed as a separate local variable, inline?
 
-Will do.
+I think I'm using this variable in a followup commit, but I'll look closely=
+.
 
 >
-> >         __u32 pflags;
-> >         int i, err;
-> > @@ -894,6 +895,7 @@ static void do_test_single(struct bpf_test *test, b=
-ool unpriv,
-> >                 pflags |=3D BPF_F_ANY_ALIGNMENT;
-> >         fd_prog =3D bpf_verify_program(prog_type, prog, prog_len, pflag=
-s,
-> >                                      "GPL", 0, bpf_vlog, sizeof(bpf_vlo=
-g), 4);
-> > +       saved_errno =3D errno;
-> >         if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
-> >                 printf("SKIP (unsupported program type %d)\n", prog_typ=
-e);
-> >                 skips++;
-> > @@ -910,7 +912,7 @@ static void do_test_single(struct bpf_test *test, b=
-ool unpriv,
-> >         if (expected_ret =3D=3D ACCEPT) {
-> >                 if (fd_prog < 0) {
-> >                         printf("FAIL\nFailed to load prog '%s'!\n",
-> > -                              strerror(errno));
-> > +                              strerror(saved_errno));
-> >                         goto fail_log;
+> > -       uint32_t retval;
+> >         int saved_errno;
+> >         int err;
+> > +       struct bpf_prog_test_run_attr attr =3D {
+> > +               .prog_fd =3D fd_prog,
+> > +               .repeat =3D 1,
+> > +               .data_in =3D data,
+> > +               .data_size_in =3D size_data,
+> > +               .data_out =3D tmp,
+> > +               .data_size_out =3D size_tmp,
+> > +       };
+> >
+> >         if (unpriv)
+> >                 set_admin(true);
+> > -       err =3D bpf_prog_test_run(fd_prog, 1, data, size_data,
+> > -                               tmp, &size_tmp, &retval, NULL);
+> > +       err =3D bpf_prog_test_run_xattr(&attr);
+> >         saved_errno =3D errno;
+> >         if (unpriv)
+> >                 set_admin(false);
+> > @@ -846,9 +852,9 @@ static int do_prog_test_run(int fd_prog, bool unpri=
+v, uint32_t expected_val,
+> >                         return err;
 > >                 }
-> >  #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+> >         }
+> > -       if (retval !=3D expected_val &&
+> > +       if (attr.retval !=3D expected_val &&
+> >             expected_val !=3D POINTER_VALUE) {
+>
+> this if condition now fits one line, can you please combine? thanks!
+
+Sure.
+
+>
+> > -               printf("FAIL retval %d !=3D %d ", retval, expected_val)=
+;
+> > +               printf("FAIL retval %d !=3D %d ", attr.retval, expected=
+_val);
+> >                 return 1;
+> >         }
+> >
 > > --
 > > 2.20.1
 > >
