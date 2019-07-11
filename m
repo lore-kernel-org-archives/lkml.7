@@ -2,157 +2,364 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301D3C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369E4C742A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE98221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF98D2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="F1KsBtXV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bs26fGes"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbfGKX0U (ORCPT
+        id S1728968AbfGKX1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 19:26:20 -0400
-Received: from mail-eopbgr740122.outbound.protection.outlook.com ([40.107.74.122]:20938
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728532AbfGKX0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 19:26:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IjzKzilVToEhzIAI5is0DdsC4vgYNMB0Wj5MmC6ubWwqo7xyuW5Yq1IBU4TdXHO48I/oIXa7RUmQuwZSZRIoZtyUJGjjNV9QWGMMu7diFbTxS5876h8lW26ICF4H+Dq0LjtOdyncx/YPxx6jDUBuSoAuHFrgPsA9wicUFi9DuloY8MPYWmF1fjCfFebn9FxV/Ktz/8yCIHWTYPody6Wpz8yCkn4If4awSoTRzHYEHPvIsSkNeihVd44tQP6GW6TLy2ylgmopskzim04OEneCR8dMCr/fiR86evyZsmfOhQQer+dR7M79RcrIlqvkjOsY3hdhmjgkKMOoHBZzO59L/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yt5BUf8uBdI0zBKA0tmArK7CJjsxGHX3sXRCl8E7/Uo=;
- b=R4tFND1NM4rop1hBP66km/bpX5akbjarYsmgHZneKxX+vekCLftwiR1u7GxZsrqitzGDC9J9nhJIKNifTddGLNmact7Yf6I5KguWUUD2GAaXJEZPs+hZZMZ6Uw1Oyq6iGMV2j9j2wNf7QY1bFE5GK9XbXKpB+CQlKrJ+qN+xrkJMdgwI4SeF4fVkCGs/DIFrGRSH4gIOSwWzF2Sdyp5YowSgO7mTspU76WXRyEMWrZRMfKC+Y+wECbAV+Sqow5Vslvna1WJ86Kn2CdacB2QJ9MF2AKv3ZKFXKkzm/K5Vf9bACPXo+/1CvwP9CT9ajpARyVokJUvL64jQr1cu/Lv6BA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=os.amperecomputing.com;dmarc=pass action=none
- header.from=os.amperecomputing.com;dkim=pass
- header.d=os.amperecomputing.com;arc=none
+        Thu, 11 Jul 2019 19:27:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44324 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbfGKX1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 19:27:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so3637447pgl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 16:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yt5BUf8uBdI0zBKA0tmArK7CJjsxGHX3sXRCl8E7/Uo=;
- b=F1KsBtXVLMSi1zMKdRSaLfSyHDwqJkQi+wtKfH0kbEU4LixQ39NYs78lY2c+AEESNP9BZCu2DZ+/xSvKUH0dfd+TcTQ5cgSiT4L32E/XWJmfae6SxQYgav2CQhityuWQENyIoiJgtrpkoAPlTXcjdTu9zBHwZoylgbVgJTJWWXw=
-Received: from BYAPR01MB4085.prod.exchangelabs.com (52.135.237.22) by
- BYAPR01MB5557.prod.exchangelabs.com (20.179.88.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Thu, 11 Jul 2019 23:25:56 +0000
-Received: from BYAPR01MB4085.prod.exchangelabs.com
- ([fe80::9dbb:1b4c:bace:ef80]) by BYAPR01MB4085.prod.exchangelabs.com
- ([fe80::9dbb:1b4c:bace:ef80%7]) with mapi id 15.20.2052.020; Thu, 11 Jul 2019
- 23:25:56 +0000
-From:   Hoan Tran OS <hoan@os.amperecomputing.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-CC:     "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Hoan Tran OS <hoan@os.amperecomputing.com>
-Subject: [PATCH v2 5/5] s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-Thread-Topic: [PATCH v2 5/5] s390: Kconfig: Remove
- CONFIG_NODES_SPAN_OTHER_NODES
-Thread-Index: AQHVOD/9mGRS/XlnZESkAFQmCjkqtw==
-Date:   Thu, 11 Jul 2019 23:25:56 +0000
-Message-ID: <1562887528-5896-6-git-send-email-Hoan@os.amperecomputing.com>
-References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
-In-Reply-To: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CY4PR19CA0045.namprd19.prod.outlook.com
- (2603:10b6:903:103::31) To BYAPR01MB4085.prod.exchangelabs.com
- (2603:10b6:a03:56::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hoan@os.amperecomputing.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [4.28.12.214]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dd1a597e-2e44-4157-c4a8-08d706571fc9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR01MB5557;
-x-ms-traffictypediagnostic: BYAPR01MB5557:
-x-microsoft-antispam-prvs: <BYAPR01MB5557B45CBF88F8B331D5CFF2F1F30@BYAPR01MB5557.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(1496009)(346002)(376002)(136003)(39850400004)(396003)(366004)(189003)(199004)(52116002)(66476007)(66556008)(66946007)(64756008)(66446008)(14454004)(5660300002)(1511001)(6506007)(386003)(71190400001)(71200400001)(6436002)(53936002)(66066001)(4744005)(102836004)(25786009)(68736007)(6512007)(86362001)(3846002)(11346002)(2616005)(186003)(81166006)(26005)(2906002)(446003)(478600001)(4326008)(76176011)(6486002)(7736002)(305945005)(54906003)(8936002)(110136005)(7416002)(6116002)(99286004)(476003)(316002)(8676002)(107886003)(81156014)(486006)(256004)(50226002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR01MB5557;H:BYAPR01MB4085.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: os.amperecomputing.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ef+hznBXN4myNBzMO+crFklQrkxl3woJDcHEtEGbtkSTBtF+FhbMuzXn0YWK9JzlERYgQ1oWA5mukf+CM4Nf23+mMlM05cpBYrM2if/e1uE/ntUxwqQ/awrcr2FlshYZIQWDolmpLqBzoxDcFPEXiIeg0M3mlqlXaLPtGXn+IvqaLdvbg/iMyiPa2DZjkGRvcJ1ifKZHfiVTssO4oLIhNbK9CR9HJNEC3Rk3AtfWLRE+aMyUvol2NyVIVj1IQlXc27+vPavojbgNzWs5nshmirt3G3gOn2tZ0YfphazGi5INi0R9CJHu7Si7ZsXqNP3ur7XuskxxiDLSqNbJ0jd/2rMrC6iqCBhknF3Kye0rkkbarElU1uyWfMAg7Ah0QJX0YlAnhKetdJzg3bJRv+2WUHA22MFseloe345Oi/oAN00=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xQ/UPpkf43M39Y65vxIKz0SurwBx2n5nYoAUMAZvqZo=;
+        b=bs26fGesVGhtAlKpxGQKx/4yxesmmf4BVK6RslfTMoW4o2RTYdTga3DXd0tl70DHAJ
+         Hk4iRwq3kK9H92U7C2A8J8QL9mCYhRZTJYinFmXYWqDJuZuYJjkb9f36EpocDd8Yh85I
+         lc/sbwwCH2VbBIFd8Gr1P7HJHiMRbnNnalYL9DzfglTi9z4ixW/rfMl3vfd8jQxI0Lun
+         869Ei6CVv/H/7kJNBm4f6oZBo9nGXGLDvvOqw0QaAL3JwyeV5vTCfhsyDjija2iGx1lS
+         XqvYEDLKbpciwVkfTK0r2CW4Age20yQWOmoM+KPbPyBA6iubaJwLD4/pH7YJlrPIl5CL
+         3GxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xQ/UPpkf43M39Y65vxIKz0SurwBx2n5nYoAUMAZvqZo=;
+        b=SOenEJX7Hl4dYCxZs2YxFvUAWi52hWNyudNMVViQ9bzzx+XW5WWjeEGMkxRc1LXMG+
+         f1qrQ/yxEpwtxosZ6bN02L1Uv4tvbuQUO7gZGx4SLUMI9fM1HMAYtSUi91n5wQXMQPF0
+         a0otB/yjgGmQY7PZOm5zodc1h9wCxaLGLW/MgX8VbSeyaHIcxowye7snV24pwbf0ynmk
+         9XZRr/tjJBgQfkD7AJBbkjQA989CZieHuculcfXAg3+Bm/kEwEZXDqoCHfsN3T2VBhKO
+         /3x6i0rwkaBwp0r0zXxsFnPOb+Q6jbf4OnQUzZU24w54LlyAYu0QDjuk3GVzHrys7jhG
+         XldA==
+X-Gm-Message-State: APjAAAX8nG77eD4pYFp9eEH3DICRce7QTYEXyOjB1lHnZyJmy/6VSFz3
+        KlTAs91z7sVBSmh3nAaKlT2RnXC3qahb1G/CQlMpDA==
+X-Google-Smtp-Source: APXvYqx9Lvvdz2ECX8kvqwrUFdD7paFWZ0RppTN9lCPPNeAKdZpjp6ZOBV9wpD1zdS1TNxRwDh8b9WAJMGDLgfZekwA=
+X-Received: by 2002:a63:eb51:: with SMTP id b17mr6896421pgk.384.1562887643142;
+ Thu, 11 Jul 2019 16:27:23 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd1a597e-2e44-4157-c4a8-08d706571fc9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 23:25:56.4780
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hoan@os.amperecomputing.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5557
+References: <20160818175505.GM3296@wotan.suse.de> <20160825074313.GC18622@lst.de>
+ <20160825201919.GE3296@wotan.suse.de> <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
+ <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
+ <20190627045052.GA7594@lst.de> <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
+ <40f70582-c16a-7de0-cfd6-c7d5ff9ead71@metux.net> <20190703173555.GW19023@42.do-not-panic.com>
+ <9a2ae341-9ea7-d4c6-7c3e-b12bb6515905@metux.net> <20190703224234.GY19023@42.do-not-panic.com>
+In-Reply-To: <20190703224234.GY19023@42.do-not-panic.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 11 Jul 2019 16:27:11 -0700
+Message-ID: <CAFd5g454UVYqm+HgA1nXsy-cAg_3gvjvZ4KQmW4P5gqpDp1WMg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Cristina Moraru <cristina.moraru09@gmail.com>,
+        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
+        Valentin Rothberg <valentinrothberg@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <mmarek@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Bolle <pebolle@tiscali.nl>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Tejun Heo <tj@kernel.org>,
+        Jej B <James.Bottomley@hansenpartnership.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Daniel Jonsson <danijons@student.chalmers.se>,
+        Andrzej Wasowski <wasowski@itu.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove CONFIG_NODES_SPAN_OTHER_NODES as it's enabled
-by default with NUMA.
+On Wed, Jul 3, 2019 at 3:42 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Wed, Jul 03, 2019 at 09:31:33PM +0200, Enrico Weigelt, metux IT consult wrote:
+> > On 03.07.19 19:35, Luis Chamberlain wrote:
+> >
+> > Hi,
+> >
+> > >> Okay, but IIRC this will add more boilerplate those modules.
+> > >
+> > > Just one module attribute.
+> >
+> > Yes, but still one per module. This raises the question whether
+> > maintainers are willing to cope w/ tons of tiny patches for just
+> > one line - for something that will take quite some time to become
+> > actually useful (doesn't help much if only few drivers support it),
+> > and is only helpful in a few use cases.
+>
+> This can be wrapped in kconfig and disabled by default.
+>
+> > And to make it really useful, we also need some way to automatically
+> > derive which other symbols to enable (subsystems, etc), w/o auto-
+> > enabling stuff one doesn't need here. (are the defaults sane for
+> > this usecase ?)
+>
+> No, that's a separate problem.
 
-Signed-off-by: Hoan Tran <Hoan@os.amperecomputing.com>
----
- arch/s390/Kconfig | 8 --------
- 1 file changed, 8 deletions(-)
+I am interested in this use case, but I agree that this is a separate issue.
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 109243f..788a8e9 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -438,14 +438,6 @@ config HOTPLUG_CPU
- 	  can be controlled through /sys/devices/system/cpu/cpu#.
- 	  Say N if you want to disable CPU hotplug.
-=20
--# Some NUMA nodes have memory ranges that span
--# other nodes.	Even though a pfn is valid and
--# between a node's start and end pfns, it may not
--# reside on that node.	See memmap_init_zone()
--# for details. <- They meant memory holes!
--config NODES_SPAN_OTHER_NODES
--	def_bool NUMA
--
- config NUMA
- 	bool "NUMA support"
- 	depends on SMP && SCHED_TOPOLOGY
---=20
-2.7.4
+Luis, I saw you cc'ed me on an email with the SAT solver people and
+that they are still working on this. Enrico, want me to CC you on that
+and we can continue this discussion there?
 
+> > The main problem here, IMHO, is that the kconfig system doesn't really
+> > know what makes up a module (it only knows that something w =y cant
+> > depend on something thats =m).
+> >
+> > So it smalls like we'd need some config language that really understands
+> > things like modules, subsystems, arches, etc with their properties and
+> > is used by both kconfig and kbuild. Then we could put all metadata there
+> > instead of the current macro calls. At that point we could also put
+> > things like match tables in here, which would solve the problem of
+> > finding the right driver by hardware descriptions.
+> >
+> > But that's really a *big* topic, it's not easy.
+>
+> Christoph's sugggestion goes along the lines with addressing some of
+> this, yet 2 years havegone by and no one is working on it and its hugely
+> intrusive. I'd welcome the patches.
+
+I would like to see those. I would also very much like to see code
+dependencies, not just kconfig dependencies, tracked in Kbuild
+somehow.
+
+> > >> And I wonder whether target binaries are the right place for those
+> > >> things at all - IMHO that's something one wants to derive from the
+> > >> source code  / .config's.
+> > >
+> > > For the use cases mentioned for why the module attribute is being
+> > > suggested it would help to not have to download kernel sources.
+> >
+> > Are we still talking about compiling custom kernels ?
+> > (how to do that w/o source code ?)
+>
+> There is a difference between getting kernel sources for your current
+> running kernel Vs getting kernel sources from say Linus' tree or the
+> stable tree, or whatever subsystem you work on. I'm saying that with
+> a module attribute being present you would *not* have to get the kernel
+> sources for the current kernel you are running.
+>
+> > > The only question we want to answer is: for the hardware components
+> > > present on this system, which configs options do I need to enable
+> > > to support these components?
+> >
+> > What else would one need that data, if not compiling a custom kernel
+> > (which in turn needs the source) ?
+>
+> One is compiling a custom kernel.
+>
+> > > At least for virtualization we decided to support at least these two to
+> > > help:
+> > >
+> > >   * make kvmconfig
+> > >   * make xenconfig
+> >
+> > These two are rather simple. Most times there isn't much variance in
+> > virtual hardware (unless one starts directly mapping in pci or usb
+> > devices ...)
+>
+> Actually no, there is huge variance on the qemu level and that problem
+> is not solved by the above.
+>
+> > > Similar problem would be found if one wanted to find a desirable kernel
+> > > config for a remote system. One should be able to somehow scrape some
+> > > hardware information, dump that to a file, and then somehow generate
+> > > a working config for that system.
+> >
+> > Yes. That's actually pretty much the same usecase (in my case I'd also
+> > have dts, lspci/lsusb output, etc)
+> >
+> > > The module attribute being suggested would enable at least one way
+> > > to gather some of the required config symbols: symbols for *hardware*
+> > > and where one can run a modern kernel, with many features / hardware
+> > > enabled already.
+> >
+> > But only for a pretty specific usecase.
+>
+> Two: build time, and backports.
+
+I think testing is another potential use case. Admittedly, I might
+want something more general, but the general idea of being able to map
+a config to code is super useful for automated testing.
+
+For example, I want to run all tests. I enable all configs,cool. But
+how do I know that the desired code under test actually ran?
+
+Another example, okay I ran my tests and some of them failed. All my
+test debug information is all mixed together and there is a lot of
+noise present, also I am afraid that something else not part of the
+test influenced the test or code under test behavior. So I want to
+rerun the failed tests and the code that they test and nothing else.
+
+> > I'm not opposed to this, but
+> > I wonder whether maintainers are willing to accept that stuff for just
+> > that specific usecase.
+>
+> This is why we are discussing this on this thread.
+>
+> Since we have 'make localmodconfig' already upstream, and since this
+> would help both users of that and backports I'd argue it makes sense
+> upstream. Otherwise I find it that having upstream 'make localmodconfig'
+> but not wanting to improve that problem space rather odd.
+>
+> > > However, folks producing embedded systems *do* / *should* have a lot of
+> > > knowledge of their systems, and so the type of scheme you have devised
+> > > seems sensible for it.
+> >
+> > Usually we have (unless we need to do reverse engineering :o). But it's
+> > a pretty time-consuming task. Especially if the requirements change
+> > several times in the development or lifetime of a specific product.
+> >
+> > For example "oh, we now need eth", "naah, we don't wanna use usb
+> > anymore", "let's take a different SoM", ... not that have pretty
+> > orthogonal sets of configs we need to maintain: hardware- and non-
+> > hardware-related ones. And hardware-related ones can fall into different
+> > categories like fixed-attached/onboard vs. hotpluggable ones.
+> >
+> > Recently I had a case where the customer requested xattr support, so
+> > I had to enable general xattr support as well as per-filesystem.
+> > Pretty simple, but having lots of those cases quickly sums up. One of
+> > the reasons why I've written my own little config generator.
+>
+> I agree that the problem space you are dealing with should be made
+> easier.
+>
+> > >> In embedded world, we often have scenarios where we want a really
+> > >> minimal kernel, but need to enable/disable certain hi-level peripherals
+> > >> in the middle of the project (eg. "oh, we also need ethernet, but we
+> > >> wanna drop usb"). There we'll have to find out what actual chip is,
+> > >> its corresponding driver, required subsystems, etc, and also kick off
+> > >> everything we don't need anymore.
+> > >
+> > > Right. One *should* be able to tell some tool, hey, here is the list of
+> > > my desirable .config options. Go and figure out what I need to make that
+> > > work and give me a resulting .config. Its not easy.
+> >
+> > I think I've already got into a pretty usable state - at least for my
+> > projects. For now only supports a few boards and limited set of
+> > features, but patches are always welcomed :)
+>
+> A solution upstream would be better ;)
+>
+> > >> I've thought about implementing some actual dependency tracking
+> > >> (at least recording the auto-enabled symbols), but didn't expect that
+> > >> to become practically usable anytime soon,
+> > >
+> > > The ability to easily ask the kernel to enable the components needed
+> > > for a respective config option *is* very useful but indeed not easy.
+> >
+> > Yes, it would need to understand things like conditional definitions
+> > to deduce that certain things need to be enabled first, before certain
+> > drivers become choosable.
+> >
+> > > This is not the only space where this problem exists. Similar problem
+> > > exists for distribution packages, and dependencies. Challenges have
+> > > been made for proper research towards these problems, and such research
+> > > has lead distributions to opt to enable some of these algorithms.
+> >
+> > The problem w/ dependencies is that there can be different types of
+> > dependencies, as well as different types of software objects. Just
+> > solving the expressions is only a part of the problem.
+> >
+> > > This begs the question if we could learn from similar efforts on Linux
+> > > for these sorts of questions. One possibility here is to evaluate the
+> > > prospect of using a SAT solver with Minimally Unsatisfiable Subformulas
+> > > (MUSes) support, which should be be able to address thir problem. This
+> > > prospect is ongoing and currrent R&D is active, for details refer to:
+> > >
+> > > https://kernelnewbies.org/KernelProjects/kconfig-sat
+> >
+> > Good tip, I'll have a look at it.
+> >
+> > > It certainly can be useful for components, ie, not hardware. But for
+> > > hardware a one-to-one mapping of one driver to one config would be of
+> > > much more use.
+> >
+> > Unfortunately, we don't have this 1:1 mapping. Often drivers support
+> > different sets of devices, depending on other factors, sometimes sub-
+> > options (eg. different hw versions), sometimes depending on other
+> > subsystems, sometimes arch-specific, etc, etc.
+> >
+> > I think we should work towards that, but I doubt we'd reach that goal
+> > anytime soon, and begs the question whether it's really worth all the
+> > effort required for that.
+>
+> Code speaks, and fortunately its being worked on.
+>
+> > > It would be wonderful if for instance kconfig
+> > > supported a way to group a major set of components under *one* config
+> > > symbol and then say: "I want this major component enabled" and then it'd
+> > > go and enable all the defaults which would be required for it.
+> >
+> > Yes, thought about that, too. For example have syms for selecting whole
+> > boards and features of them - a bit like this:
+> >
+> >   --> Preconfigure for specific boards
+> >       --> board A
+> >       --> board B
+> >       ...
+> >   --> Enable board features
+> >       --> Ethernet port
+> >       --> Display
+> >           --> Touch panel
+> >       --> Audio
+> >       ....
+> >
+> > BUT: this would turn into maintenance hell, so I dropped that idea.
+
+I wonder if that would work for the testing scenario? I don't think it
+is unreasonable for a test owner to provide a defconfig that makes it
+possible to run their test. We could then merge these together to
+create a kconfig to run all desired tests. Doesn't address all the
+issues I mentioned here, but it's a start.
+
+> > > An example is if you
+> > > wanted to enable PCI on a system which didn't support it. Because of
+> > > this, it seems you'd want *all* desirable configs and let a piece of
+> > > software figure out what you need / can enable. And.. this is precisely
+> > > where the SAT solver with MUSes could help...
+> >
+> > Yes, but this piece of software first needs to know whether eg. PCI
+> > is available on that HW. Oh, and things like PCI could be a dependency
+> > as well as an feature on its own, depending on how you gonna use it.
+> > (eg. if directly access from userland or VMs).
+>
+> Yes, but that is a separate problem. The way 'make localmodconfig'
+> addresses this is by keeping as modules things which are already
+> modules. And keeping things it found as =y as buit-in in your kernel as
+> well.
+
+Cheers!
