@@ -2,99 +2,104 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E6CC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052FEC74A45
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93777208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:34:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="UpphnqOP"
+	by mail.kernel.org (Postfix) with ESMTP id D329721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562823609;
+	bh=zvuDGhOQ3cg7jcGK8yft/tWYQtU9QCFMuievf8sS0Lo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=atMmYoTQ1FG2jm74cYSoTChaj64sgB1rPDZqNEGOBUcTbS0z7ULjqo4zITC6Gjq8X
+	 I3jiB+kNOXW60qYj2x4G/Sgs/hJ8QIt6Td7CAZCg1QjeTngS7IxlWelY5ZzswBeETZ
+	 wxh2AcqUGkTTfiNnvUwyniVgs7Bs+mZRea2ekJYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfGKFed (ORCPT
+        id S1727834AbfGKFkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:34:33 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34740 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKFec (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:34:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so4780331wrm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0ARpJ/V7oPnYvJoBHI+9Ruk+sXdy3kbv33tZdnVTgxM=;
-        b=UpphnqOPq3Ku0ZCUFmz9lmcfA4YjgU81oRKs2j58gnusawOayAueeiyVcl+WCLbLqx
-         S6NMWqaVvplGHSo7B63jivjr8oDXs8IDdRn0wxZ1Jg7owOF4bEsALZjWQ3ALTTfuvzrD
-         C73ChZLveYFqKcoIDSCd6miulT/yX/kls7w2XWqX3RNLLidmtNULEuJtLvMC+3/IxLRc
-         iUiqwAKx3quscpGVWCgEWPP3txaA2zg/oLpA0M/b5oRVgM5vWMZG6jFYA/QRhFpJvCn1
-         /i8QLNLDbuLKRkA0QDuIiOunJS453u1JZxLdZXa4WXQo7ENcDvOmVBe8P6e3zgUwKEOp
-         muWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0ARpJ/V7oPnYvJoBHI+9Ruk+sXdy3kbv33tZdnVTgxM=;
-        b=lYXOPwgG7ogX4M15XO6wWrUyxs2LknDe072498IcYIwTqEunvW2txHDd0E48ORk5NJ
-         nGss6Lie5sgJeFs9T5b+68EdeHrGW49ukkRIDQVE4sYzHBUY81Mm5E3nUbEympyInxPz
-         abnzREt1n5K+IhYwypO8RmAMED3G5sNZESVmNM8FRLt1wzhSVP8U6p7zONG6azI1MHut
-         iNCrLQiLmUW4By2r/ZPmlZN8mhfbagLiioXKFJ9J11RRKuC1WdN+5S0fir37v23Xzica
-         AMlkZ58P9nula433IoVwwA45KjKBxjlx89hU3U7nJ+xTj7rBZ1l1L77zi+JJ6MHb91lU
-         72qQ==
-X-Gm-Message-State: APjAAAUzrbk1ZFqe81iYnneAvznoQGQwOJInlFGcpVCbI3ZLPE0K8jja
-        r9EVIayR/Ijg7elpkNEYR9Y=
-X-Google-Smtp-Source: APXvYqzRRfXuXV9/R5eyrIeytqJVsDFHv1dOUR0WPFNUItLrQSBKslM0xpblE4I7jaVNY4ktAfRLMg==
-X-Received: by 2002:adf:eac4:: with SMTP id o4mr2082285wrn.290.1562823270417;
-        Wed, 10 Jul 2019 22:34:30 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id c9sm3133110wml.41.2019.07.10.22.34.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 22:34:29 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 07:34:29 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] clone3 for v5.3
-Message-ID: <20190711053428.ofapcx7nn5xkyru4@brauner.io>
-References: <20190708150042.11590-1-christian@brauner.io>
- <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
+        Thu, 11 Jul 2019 01:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbfGKFkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 01:40:08 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8093220838;
+        Thu, 11 Jul 2019 05:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562823607;
+        bh=zvuDGhOQ3cg7jcGK8yft/tWYQtU9QCFMuievf8sS0Lo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tTgtdkClydOYcqmy3q/DgbDsZr7eimMgrWjMOm+CFxe7TnzsWd99fP1aPHuXMBqgs
+         p8KGViDX4Ecr0jo1dNXOZupa4/Wsi8b0UbCW1zm60b+4ebLDSmW1tVha3oWMXn7v9t
+         28Yuxykh+iK5jn36PX7XT19Eo5baZq/71UIYg9C4=
+Date:   Thu, 11 Jul 2019 08:40:03 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190711054003.GA23598@mtr-leonro.mtl.com>
+References: <20190709135636.4d36e19f@canb.auug.org.au>
+ <20190709064346.GF7034@mtr-leonro.mtl.com>
+ <20190710175212.GM2887@mellanox.com>
+ <20190711115054.7d7f468c@canb.auug.org.au>
+ <20190711015854.GC22409@mellanox.com>
+ <20190711131344.452fc064@canb.auug.org.au>
+ <20190711131603.6b11b831@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190711131603.6b11b831@canb.auug.org.au>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:24:26PM -0700, Linus Torvalds wrote:
-> On Mon, Jul 8, 2019 at 8:05 AM Christian Brauner <christian@brauner.io> wrote:
+On Thu, Jul 11, 2019 at 01:16:03PM +1000, Stephen Rothwell wrote:
+> Hi all,
+>
+> On Thu, 11 Jul 2019 13:13:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > >
-> > /* Syscall number 435 */
-> > clone3() uses syscall number 435 and is coordinated with pidfd_open() which
-> > uses syscall number 434. I'm not aware of any other syscall targeted for
-> > 5.3 that has chosen the same number.
-> 
-> You say that, and 434/435 would make sense, but that's not what the
-> code I see in the pull request actually does.
-> 
-> It seems to use syscall 436.
-> 
-> I think it's because openat2() is looking to use 435, but I'm a bit
-> nervous about the conflict between the code and your commentary..
+> > On Thu, 11 Jul 2019 02:26:27 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
+> > >
+> > > On Thu, Jul 11, 2019 at 11:50:54AM +1000, Stephen Rothwell wrote:
+> > >
+> > > > So today this failed to build after I merged the rdma tree (previously
+> > > > it didn;t until after the net-next tree was merged (I assume a
+> > > > dependency changed).  It failed because in_dev_for_each_ifa_rcu (and
+> > > > in_dev_for_each_ifa_rtnl) is only defined in a commit in the net-next
+> > > > tree :-(
+> > >
+> > > ? I'm confused..
+> > >
+> > > rdma.git builds fine stand alone (I hope!)
+> >
+> > I have "Fixup to build SIW issue" from Leon (which switches to using
+> > in_dev_for_each_ifa_rcu) included in the rmda tree merge commit because
+> > without that the rdma tree would not build for me.  Are you saying that
+> > I don't need that at all, now?
+>
+> Actually , I get it now, "Fixup to build SIW issue" is really just a
+> fixup for the net-next and rdma trees merge ... OK, I will fix that up
+> tomorrow.  Sorry for my confusion.
 
-Sorry, that was just me being dumb and forgetting that there was
-close_range() which had a chance of going through Al's tree. So I left a
-hole for it.
+Yes, it was for build only.
 
-I don't terribly mind if it's 435 or 436. People pointed out you might
-even renumber yourself if something makes more sense to you.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-Christian
+
