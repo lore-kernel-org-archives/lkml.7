@@ -2,144 +2,128 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55230C74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB165C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF7A20863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B134120863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BaihPN4b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKv2sJnd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfGKR2R (ORCPT
+        id S1728540AbfGKRaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:28:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40059 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbfGKR2P (ORCPT
+        Thu, 11 Jul 2019 13:30:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35647 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbfGKRaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:28:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so14261465iom.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:28:15 -0700 (PDT)
+        Thu, 11 Jul 2019 13:30:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so7201626wrm.2;
+        Thu, 11 Jul 2019 10:30:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vlOTOKurwzR/la0b/iCejRsNnafnIihAt0zVt5OFE78=;
-        b=BaihPN4bmFQ12DBMpDILNYZZCzVbZNCbYwaQW9drSZFi/rNxK3SO3tOShcsqGOQmbW
-         SnfGbaFZbEXJ8Ih/5JxO+dNJu7aqvSVUTy/ZUHoOwXj8K6/QjdZT0dzc9W1qMESvbIwf
-         9vVQ+4PsFvbopH7FtMIVmop3gj6s2tpQSPjEI=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U3b0G1E1maoK6A4e9Ca/0e/KTMO66Xm7oZqBqZ5gCxk=;
+        b=TKv2sJnddYV0SAh+0b25B0nWCvHDEp0nnayzul0ypf+gYb78r4UALyCCXmyeh68S/m
+         sjP6uWt6XmfRcwXRmgGIaKwlUSAZzvz53a63//yW2whDjrf/6C+me2WXbjMrlmMN4Bjb
+         I9Z1gXRMyU9ijAsFrOosCFBUaSdU+6VVK5lVAPDwWzpPQDqqDeFIsQPB3tmmooIh9ba6
+         Z0kn2DXQm4CVS+vfU0zlPIfnfjTBdUJgFMfkb+wqXBKTEDtzl9x1bcnE24sJaHK3vjtf
+         DLeXLpYO0DrHvwK6apIx/3ugeAzRva63nTwZDd6HrqHMQJ/VZAFvC3GzlNc1w0z5mKTh
+         kmRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vlOTOKurwzR/la0b/iCejRsNnafnIihAt0zVt5OFE78=;
-        b=EMkv2FCjHjw8z3ecPcJA4xzrHu4qUgfg0MC8SBBD18LFsdQhURDTcNwKcHYB2RJnhw
-         +fc+vKjE3xuo+SLuzADHrMpQ0cqDE1y6zHrdKwfk/K5dasbuJjk5uleAATghikW2Lii/
-         vhgooezfMcQlwYtznp4MlWGyC4np09o/PUinrEtzTbhJkZcUAB/W5xhSsWzkdEX28M3J
-         v1KPoQkN7dezE8rqjLs8iUQJI4e22ovZqRZv6gvED4YFKvMJXncylaTy6Dd3RT1TBjo+
-         hr2CjLqOtPwfTM1qtSyjvY2kEiAdpHYt2MhT6meQ35V8NeIPTD3eNJi1Dg9llnH2vJYc
-         KMSQ==
-X-Gm-Message-State: APjAAAV2zKntMDFt52JK2HVaUtAh+P4WL4iGFanWMuvfHeVbIzqsTiUu
-        KblOhvmhlLM5j1Lp2daxfHmGe/Fmh6A=
-X-Google-Smtp-Source: APXvYqwm5BmDUy8KrwvdLAkOflKphpq9+YAo56HM3s9361NvcpvcVHOn3dBc5eg3puQD3HJf9nBPUw==
-X-Received: by 2002:a02:c95a:: with SMTP id u26mr5713767jao.15.1562866094514;
-        Thu, 11 Jul 2019 10:28:14 -0700 (PDT)
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com. [209.85.166.51])
-        by smtp.gmail.com with ESMTPSA id l11sm4549911ioj.32.2019.07.11.10.28.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 10:28:13 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id j5so10068629ioj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:28:13 -0700 (PDT)
-X-Received: by 2002:a6b:5103:: with SMTP id f3mr1553212iob.142.1562866093394;
- Thu, 11 Jul 2019 10:28:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190711162919.23813-1-dianders@chromium.org> <20190711163915.GD25807@ziepe.ca>
- <20190711170437.GA7544@kroah.com> <20190711171726.GE25807@ziepe.ca> <20190711172630.GA11371@kroah.com>
-In-Reply-To: <20190711172630.GA11371@kroah.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 11 Jul 2019 10:28:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U0ue_4FyS7MO+iaKQ5gr0PhuLZaTV1adPY3ZtNhKTmHA@mail.gmail.com>
-Message-ID: <CAD=FV=U0ue_4FyS7MO+iaKQ5gr0PhuLZaTV1adPY3ZtNhKTmHA@mail.gmail.com>
-Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, "# 4.0+" <stable@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U3b0G1E1maoK6A4e9Ca/0e/KTMO66Xm7oZqBqZ5gCxk=;
+        b=YPbYacoRBN3GKXlHPvhivqhhyJoGQVIL/ZFHFw2+086hLDYlh+zfjn37u1rZTGlpgy
+         Tg3l+qn5jz9eLfmvXXjnAFEqLeXYjUZFwcb9CCcdYMAgBi5XmqnC5Qa8dTh+YuT3qztM
+         aaNKlpb1aBOH2+WXqQggVEX7z+IjRpOvHgPnVTyFxZPaNhyzHSGONQYZpK3N7a6/fuGR
+         mRYuYc93j0FSykrcD8uT79PHiDmfhb9OVY1t7kIGRKxk/FeQeWGL1pmGkgMNmasi7nIS
+         3rNFx8kC3P+wZE9DpExBOLru94uFT9x6CWISRe7GGcbIP6FecAExX/+1L0uA7Wfc5/TY
+         rFwg==
+X-Gm-Message-State: APjAAAWpxj1e4tMdDkKw/KbvydW2AQHo8oP2OyjPS3ENqHKcQ3DAhEul
+        5SkP0eXhAne70PgqBxjnGa4=
+X-Google-Smtp-Source: APXvYqzo3byxyxCxShNQCAttoD2gEStU3rn0zpqaJflGhfsxBtoj91oh78aSJNGNESC/oRF2RhYVPg==
+X-Received: by 2002:adf:90e7:: with SMTP id i94mr5935660wri.224.1562866232510;
+        Thu, 11 Jul 2019 10:30:32 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id y7sm4588363wmm.19.2019.07.11.10.30.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 10:30:31 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 10:30:30 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Message-ID: <20190711173030.GA844@archlinux-threadripper>
+References: <20190710174800.34451-1-natechancellor@gmail.com>
+ <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
+ <20190711081434.GA86557@archlinux-threadripper>
+ <20190711133915.GA25807@ziepe.ca>
+ <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
+ <20190711171808.GF25807@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711171808.GF25807@ziepe.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Jul 11, 2019 at 10:26 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 11, 2019 at 02:17:26PM -0300, Jason Gunthorpe wrote:
-> > On Thu, Jul 11, 2019 at 07:04:37PM +0200, Greg KH wrote:
-> > > On Thu, Jul 11, 2019 at 01:39:15PM -0300, Jason Gunthorpe wrote:
-> > > > On Thu, Jul 11, 2019 at 09:29:19AM -0700, Douglas Anderson wrote:
-> > > > > From: Vadim Sukhomlinov <sukhomlinov@google.com>
-> > > > >
-> > > > > commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
-> > > > >
-> > > > > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-> > > > > future TPM operations. TPM 1.2 behavior was different, future TPM
-> > > > > operations weren't disabled, causing rare issues. This patch ensures
-> > > > > that future TPM operations are disabled.
-> > > > >
-> > > > > Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-> > > > > [dianders: resolved merge conflicts with mainline]
-> > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > This is the backport of the patch referenced above to 4.19 as was done
-> > > > > in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
-> > > > > presumably applies to some older kernels.  NOTE that the problem
-> > > > > itself has existed for a long time, but continuing to backport this
-> > > > > exact solution to super old kernels is out of scope for me.  For those
-> > > > > truly interested feel free to reference the past discussion [1].
-> > > > >
-> > > > > Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
-> > > > > chip power gating out of tpm_transmit()") and commit 719b7d81f204
-> > > > > ("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
-> > > > > seem like a good idea to backport 17 patches to avoid the conflict.
-> > > >
-> > > > Careful with this, you can't backport this to any kernels that don't
-> > > > have the sysfs ops locking changes or they will crash in sysfs code.
+On Thu, Jul 11, 2019 at 02:18:08PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jul 11, 2019 at 10:16:44AM -0700, Nick Desaulniers wrote:
+> > On Thu, Jul 11, 2019 at 6:39 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > > >
-> > > And what commit added that?
-> >
-> > commit 2677ca98ae377517930c183248221f69f771c921
-> > Author: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Date:   Sun Nov 4 11:38:27 2018 +0200
-> >
-> >     tpm: use tpm_try_get_ops() in tpm-sysfs.c.
-> >
-> >     Use tpm_try_get_ops() in tpm-sysfs.c so that we can consider moving
-> >     other decorations (locking, localities, power management for example)
-> >     inside it. This direction can be of course taken only after other call
-> >     sites for tpm_transmit() have been treated in the same way.
-> >
-> > The last sentence suggests there are other patches needed too though..
->
-> So 5.1.  So does this original patch need to go into the 5.2 and 5.1
-> kernels?
+> > > On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
+> > > > Maybe time to start plumbing Clang into your test flow until it can get
+> > > > intergrated with more CI setups? :) It can catch some pretty dodgy
+> > > > behavior that GCC doesn't:
+> > >
+> > > I keep asking how to use clang to build the kernel and last I was told
+> > > it still wasn't ready..
+> > >
+> > > Is it ready now? Is there some flow that will compile with clang
+> > > warning free, on any arch? (at least the portion of the kernel I check)
+> > 
+> > $ make CC=clang ...
+> > 
+> > Let us know if you find something we haven't already.
+> > https://clangbuiltlinux.github.io/
+> > https://github.com/ClangBuiltLinux/linux/issues
+> 
+> What clang version?
+> 
+> Jason
 
-The patch ("Fix TPM 1.2 Shutdown sequence to prevent future TPM
-operations")?  It's already done.  It just got merge conflicts when
-going back to 4.19 which is why I sent the backport.
+You'll need clang-9 for x86 because of the asm-goto requirement (or a
+selective set of reverts for clang-8) but everything else should be
+good with clang-8:
 
--Doug
+https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/118745131
+
+We wrote a Python script that builds an LLVM 9 toolchain suitable for
+kernel development that is self contained (doesn't install anything to
+your system):
+
+https://github.com/ClangBuiltLinux/tc-build
+
+Let me know if there are any issues with it if you give it a go, I've
+already fixed one from Thomas Gleixner:
+
+https://lore.kernel.org/lkml/alpine.DEB.2.21.1906262140570.32342@nanos.tec.linutronix.de/
+
+Cheers,
+Nathan
