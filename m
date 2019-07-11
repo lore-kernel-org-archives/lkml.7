@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A10C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62693C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC9421537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 362C321537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zzCfgYA1"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bHwi8ztP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfGKFqF (ORCPT
+        id S1728162AbfGKFqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:46:05 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:59469 "EHLO
+        Thu, 11 Jul 2019 01:46:10 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:59529 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbfGKFpx (ORCPT
+        with ESMTP id S1728031AbfGKFp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:45:53 -0400
+        Thu, 11 Jul 2019 01:45:56 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x6B5ip8R031345;
-        Thu, 11 Jul 2019 14:44:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6B5ip8R031345
+        by conuserg-08.nifty.com with ESMTP id x6B5ip8M031345;
+        Thu, 11 Jul 2019 14:44:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6B5ip8M031345
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562823897;
-        bh=3stWZci9Q+1wdEeQ+22mZim0UiOILKQPDAUatPWkXUI=;
+        s=dec2015msa; t=1562823894;
+        bh=X0Z9xUjl6EX9XPtrMZWPoQaJCvf/QCS9Lre9ezeX1dQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzCfgYA12HxNWflkTTSLjdaoGUyyLL9M/njlyZm5txsFXwvgJ74ShigkKw5imyZss
-         kj8ERkblQ7mqx44PHmO/10pfcCrbHP5C/I9wot+jrNFccigeDUKEnwI04V+fgBncmL
-         RFD4T5FPwZVADdTjjOw5g4GNWzpH+f6O7a5KIby/9/DHMvVBZ1t5CXpuE1bcFvCDv1
-         B9COiiUpEIyfHCm4A1D3SVkjPGegRCEiJiDVrbEW8klESO24PwaNQyujT+yJyhVqVj
-         b1pEjy1iPZmi52NbIXi0UIkMjHpL/b8CmEV9dE8qeFlVDFMl+/sWdQm/YPGlzlVjSR
-         OwrXibzngaTQQ==
+        b=bHwi8ztPYdyDa6tI8DH5CsZJ9IRYV8xVu2KGAUcQqdXoBTMAQBFNRrPA/qm0dig9/
+         94BEql1ASPfq7azRtzByUL1CC+q9fawkzTaxeS/lVdBimCwn85p6aWt25RVHphZm1L
+         76hwfT1SufnxyQURYMqZ9IJYzuBxOwXF02FW+Zo/c8w6so/zB5l6H9bReYwP8vRVFu
+         KB00hqisImA3lP6sxtEm8M8PKKnlzeySyfrOqLJDS3/zG8GILIlHza9zm5njCno6IR
+         pnbLTyF4I8ZxLRYoj4TK5fbGVtulUhsXTjz+GcmlgmbQSs2GAkOW4PYnQfFjjAmEWx
+         ElTKeO9I3b0IQ==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     Sam Ravnborg <sam@ravnborg.org>, Nicolas Pitre <nico@fluxnic.net>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/11] kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod
-Date:   Thu, 11 Jul 2019 14:44:30 +0900
-Message-Id: <20190711054434.1177-8-yamada.masahiro@socionext.com>
+Subject: [PATCH v2 02/11] kbuild: get rid of kernel/ prefix from in-tree modules.{order,builtin}
+Date:   Thu, 11 Jul 2019 14:44:25 +0900
+Message-Id: <20190711054434.1177-3-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190711054434.1177-1-yamada.masahiro@socionext.com>
 References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
@@ -55,60 +55,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Towards the goal of removing MODVERDIR, read out modules.order to get
-the list of modules to be processed. This is simpler than parsing *.mod
-files in $(MODVERDIR).
+Removing the 'kernel/' prefix will make our life easier because we can
+simply do 'cat modules.order' to get all built modules with full paths.
 
-For external modules, $(KBUILD_EXTMOD)/modules.order should be read.
+Currently, we parse the first line of '*.mod' files in $(MODVERDIR).
+Since we have duplicated functionality here, I plan to remove MODVERDIR
+entirely.
+
+In fact, modules.order is generated also for external modules in a
+broken format. It adds the 'kernel/' prefix to the absolute path of
+the module, like this:
+
+  kernel//path/to/your/external/module/foo.ko
+
+This is fine for now since modules.order is not used for external
+modules. However, I want to sanitize the format everywhere towards
+the goal of removing MODVERDIR.
+
+We cannot change the format of installed module.{order,builtin}.
+So, 'make modules_install' will add the 'kernel/' prefix while copying
+them to $(MODLIB)/.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
 Changes in v2: None
 
- scripts/Makefile.modpost | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ Makefile                    | 4 ++--
+ scripts/Makefile.build      | 2 +-
+ scripts/Makefile.modbuiltin | 2 +-
+ scripts/modules-check.sh    | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index fec6ec2ffa47..2ab1694a7df3 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -8,9 +8,10 @@
- # b) A <module>.o file which is the .o files above linked together
- # c) A <module>.mod file in $(MODVERDIR)/, listing the name of the
- #    the preliminary <module>.o file, plus all .o files
-+# d) modules.order, which lists all the modules
+diff --git a/Makefile b/Makefile
+index d8421d245f75..b5e21d676ee2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1333,8 +1333,8 @@ _modinst_:
+ 		rm -f $(MODLIB)/build ; \
+ 		ln -s $(CURDIR) $(MODLIB)/build ; \
+ 	fi
+-	@cp -f $(objtree)/modules.order $(MODLIB)/
+-	@cp -f $(objtree)/modules.builtin $(MODLIB)/
++	@sed 's:^:kernel/:' modules.order > $(MODLIB)/modules.order
++	@sed 's:^:kernel/:' modules.builtin > $(MODLIB)/modules.builtin
+ 	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
  
- # Stage 2 is handled by this file and does the following
--# 1) Find all modules from the files listed in $(MODVERDIR)/
-+# 1) Find all modules listed in modules.order
- # 2) modpost is then used to
- # 3)  create one <module>.mod.c file pr. module
- # 4)  create one Module.symvers file with CRC for all exported symbols
-@@ -60,10 +61,10 @@ include scripts/Makefile.lib
- kernelsymfile := $(objtree)/Module.symvers
- modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index e9b3d88257dd..f21d691c776a 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -426,7 +426,7 @@ endif # builtin-target
+ modorder-cmds =						\
+ 	$(foreach m, $(modorder),			\
+ 		$(if $(filter %/modules.order, $m),	\
+-			cat $m;, echo kernel/$m;))
++			cat $m;, echo $m;))
  
--# Step 1), find all modules listed in $(MODVERDIR)/
--MODLISTCMD := find $(MODVERDIR) -name '*.mod' | xargs -r grep -h '\.ko$$' | sort -u
--__modules := $(shell $(MODLISTCMD))
--modules   := $(patsubst %.o,%.ko, $(wildcard $(__modules:.ko=.o)))
-+modorder := $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)modules.order
-+
-+# Step 1), find all modules listed in modules.order
-+modules := $(sort $(shell cat $(modorder)))
+ $(modorder-target): $(subdir-ym) FORCE
+ 	$(Q)(cat /dev/null; $(modorder-cmds)) > $@
+diff --git a/scripts/Makefile.modbuiltin b/scripts/Makefile.modbuiltin
+index ea90a90b41a0..12ac300fe51b 100644
+--- a/scripts/Makefile.modbuiltin
++++ b/scripts/Makefile.modbuiltin
+@@ -40,7 +40,7 @@ __modbuiltin: $(modbuiltin-target) $(subdir-ym)
+ 	@:
  
- # Stop after building .o files if NOFINAL is set. Makes compile tests quicker
- _modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
-@@ -84,7 +85,7 @@ MODPOST_OPT=$(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
+ $(modbuiltin-target): $(subdir-ym) FORCE
+-	$(Q)(for m in $(modbuiltin-mods); do echo kernel/$$m; done;	\
++	$(Q)(for m in $(modbuiltin-mods); do echo $$m; done;	\
+ 	cat /dev/null $(modbuiltin-subdirs)) > $@
  
- # We can go over command line length here, so be careful.
- quiet_cmd_modpost = MODPOST $(words $(filter-out vmlinux FORCE, $^)) modules
--      cmd_modpost = $(MODLISTCMD) | sed 's/\.ko$$/.o/' | $(modpost) $(MODPOST_OPT) -s -T -
-+      cmd_modpost = sed 's/ko$$/o/' $(modorder) | $(modpost) $(MODPOST_OPT) -s -T -
+ PHONY += FORCE
+diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+index 39e8cb36ba19..f51f446707b8 100755
+--- a/scripts/modules-check.sh
++++ b/scripts/modules-check.sh
+@@ -9,7 +9,7 @@ check_same_name_modules()
+ 	for m in $(sed 's:.*/::' modules.order | sort | uniq -d)
+ 	do
+ 		echo "warning: same module names found:" >&2
+-		sed -n "/\/$m/s:^kernel/:  :p" modules.order >&2
++		sed -n "/\/$m/s:^:  :p" modules.order >&2
+ 	done
+ }
  
- PHONY += __modpost
- __modpost: $(modules:.ko=.o) FORCE
 -- 
 2.17.1
 
