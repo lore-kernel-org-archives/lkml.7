@@ -2,113 +2,125 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EB2C74261
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93719C73C66
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499F2208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6977E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMt8nkUK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrfPuLnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfGKRjm (ORCPT
+        id S1728613AbfGKRmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:39:42 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43955 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbfGKRjl (ORCPT
+        Thu, 11 Jul 2019 13:42:45 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42049 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbfGKRmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:39:41 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m14so4251246qka.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:39:40 -0700 (PDT)
+        Thu, 11 Jul 2019 13:42:45 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v15so6622892eds.9;
+        Thu, 11 Jul 2019 10:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wzqHLodjklfHBMQ2oXwe3rSiKOixJEtNc2HYoaPd72g=;
-        b=KMt8nkUKKA3uNV7EXX0FRWWqjZoFiTLUSIlTfEtUCMpKw3a1tDgd75azHHO1rVn4cz
-         9xRJWnkyXg+ABgLeUnfO9S03qDAIxen6nJiXSH8yFDBkhKaLcfV2bT2LG9MmmjvuCkt9
-         AvZzz17tqWEvpMsVedJYNIdVKeRqKwmhcCD66UA7YAjVRKjGzK1pPEQ7TCpAZgKGRR47
-         WtZ8RoOesLb/iuIlLx4c4wTeoIk11eZe2g8SaVuCZUJRhEpwezC2+aJblwwHvM/ponVG
-         ZLT9wbQEaGSl55GF260PK21NXHXc0GMcfCB/KVMQC/J9tkWq9XHGSw+wl/3W/8Lb3WsU
-         E0Pw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sDCTVVop4NPgBu2WxG9CKMJq6Rz5EG8pMIpMsrokx0Q=;
+        b=YrfPuLnRDGVP7eg9cdZpsaPagof75FJD/41u5WhkrwxGuDOcBTDryC1LGTVQDUE3Bf
+         rPk8w59kCJaAwUXAAxjhHXoC8HXSuyRcUwHai+6q84ZaQXDlpGjlXszEcKAPBQG7OtZJ
+         fQN//8VLoNKtd51RzFI3jX1+9S7kqlIl9b9p95xhpp1DrnuYxEwiL2RRhViwPJ1sqzzN
+         Rlnx1rYFqSF3+WHhZfNEudYW/p2m8AWHkGUoUsiJMOyTHIebhjbhnK0KXy9LKbjbEH8v
+         sZRR4WypeArW8HJbWs7UzZqWVkBIYNzEd4mfpizDhvtkOoSvggwr/l2AHDNYZgcIslT0
+         fcZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wzqHLodjklfHBMQ2oXwe3rSiKOixJEtNc2HYoaPd72g=;
-        b=ubuS21LJ1UmEMMhsx8e0cxFYbt9TbP0UeP2cCEFcIl20oerJSJxo+UQK0r3TeW64u9
-         eBv3738zGIT68i3pS2quFvO4NvNAp38VgYlHnlPw9lBv9CLLvHGBjePRZkIHcWaTVhQL
-         hfjG8TlBtywpn3kvyDbqVjlkXZLa7v4AA/bogiOzhUb898kDeNcZBUvNPjgLXo2Ms/PT
-         DUybjFyO/yzICR/nLi+PgxxfKpV+BDf3Z+Y0ey0r+Rg0UjWBcQpYVZM4MfR8cx72FB8d
-         rFueve7+l3adLNlydQsUxZpNGONxdan+p1QyZI9f4eM4J9dEItTDCCUunqjz0uQWlDK1
-         mDmw==
-X-Gm-Message-State: APjAAAVcXUDzk3wOGb2JhaxcGs9BHRzsPOOVm7Km9PgfvKcAZRK31urP
-        RGMzp/s9wDqZDFEJphN3aw==
-X-Google-Smtp-Source: APXvYqy/EP/CSPda0hTxfFy92POdFWAYBW2oeddiFyl8zyVPrCCXK2k0Mo8FTGCs+Hrkne/W6zE2Yw==
-X-Received: by 2002:a37:624b:: with SMTP id w72mr3124272qkb.368.1562866780185;
-        Thu, 11 Jul 2019 10:39:40 -0700 (PDT)
-Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
-        by smtp.googlemail.com with ESMTPSA id i23sm2266094qtm.17.2019.07.11.10.39.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 10:39:39 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     iamkeyur96@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Gromm <christian.gromm@microchip.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: most: remove redundant print statement when 
-Date:   Thu, 11 Jul 2019 13:39:12 -0400
-Message-Id: <20190711173915.24200-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190711110809.17089-1-iamkeyur96@gmail.com>
-References: <20190711110809.17089-1-iamkeyur96@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sDCTVVop4NPgBu2WxG9CKMJq6Rz5EG8pMIpMsrokx0Q=;
+        b=DuAD9q/yg0OJXx449hnrsqioiIcnJ2uhIXXo5frsyedn23xusXNTQs5nbpgInGMeTH
+         0YU2IG+XUwc3MUP6pYs/n+dCMs8NSNt8UlqdctPCLX3/hYx/jkPmVSPb0d/IuP74RYzs
+         891kQCxoIWfU14e2g4DfmqCvhefY/IJlwkpxol15gP7bqvelZQ20CY2kkCFvCLzqgAr5
+         I84VImvGN7vxD3luanqLTmwwcMq/du0v70m3SL2ZlB11P35PNnvWLrPqLLdR9Wwwlp0b
+         6Ks9RcZAtqesP6h1npom+/71mXsL2n+Omx7VbrFxv4vo6FI11tQIk95vM0oYyy02mFOS
+         z0qw==
+X-Gm-Message-State: APjAAAWKo+kwzbWB3FDm+5few+VlPoL/qqn2yqcd0l31VFVe4WJRTvGp
+        JOC5+7ZYn8RvF+4IRvmBOfhIuHi0L+uOBRghR4s=
+X-Google-Smtp-Source: APXvYqybvEj2gI8a+mKBgq/L1/X8hSAoV6wPjO69HykrLFeoq6zIaiUwmcQ6LeSMTx1h28aL9hhcTtZYF32EUx/Iurw=
+X-Received: by 2002:a50:9203:: with SMTP id i3mr4933489eda.302.1562866963151;
+ Thu, 11 Jul 2019 10:42:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190706203105.7810-1-robdclark@gmail.com> <20190711164908.GO5247@pendragon.ideasonboard.com>
+In-Reply-To: <20190711164908.GO5247@pendragon.ideasonboard.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 11 Jul 2019 10:42:31 -0700
+Message-ID: <CAF6AEGvF78tT4aHv1SO56zMD_0FaX=TF+2MmAATTM9rnqLvEsQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: use dev name for debugfs
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This print statement is redundant as kfifo_alloc just calls kmalloc_array=0D
-and without the __GFP_NOWARN flag, already does a dump_stack().=0D
-=0D
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>=0D
----=0D
-Changes in v2:=0D
-- Edit subject line.=0D
----=0D
- drivers/staging/most/cdev/cdev.c | 5 ++---=0D
- 1 file changed, 2 insertions(+), 3 deletions(-)=0D
-=0D
-diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/c=
-dev.c=0D
-index d0cc0b746107..bc0219ceac50 100644=0D
---- a/drivers/staging/most/cdev/cdev.c=0D
-+++ b/drivers/staging/most/cdev/cdev.c=0D
-@@ -463,10 +463,9 @@ static int comp_probe(struct most_interface *iface, in=
-t channel_id,=0D
- 	spin_lock_init(&c->unlink);=0D
- 	INIT_KFIFO(c->fifo);=0D
- 	retval =3D kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);=0D
--	if (retval) {=0D
--		pr_info("failed to alloc channel kfifo");=0D
-+	if (retval)=0D
- 		goto err_del_cdev_and_free_channel;=0D
--	}=0D
-+=0D
- 	init_waitqueue_head(&c->wq);=0D
- 	mutex_init(&c->io_mutex);=0D
- 	spin_lock_irqsave(&ch_list_lock, cl_flags);=0D
--- =0D
-2.22.0=0D
-=0D
+On Thu, Jul 11, 2019 at 9:49 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Rob,
+>
+> Thank you for the patch.
+>
+> On Sat, Jul 06, 2019 at 01:31:02PM -0700, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > This should be more future-proof if we ever encounter a device with two
+> > of these bridges.
+> >
+> > Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > index c8fb45e7b06d..9f4ff88d4a10 100644
+> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > @@ -204,7 +204,7 @@ DEFINE_SHOW_ATTRIBUTE(status);
+> >
+> >  static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
+> >  {
+> > -     pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
+> > +     pdata->debugfs = debugfs_create_dir(dev_name(pdata->dev), NULL);
+>
+> That should work, but won't it become quite confusing for users ? I
+> wonder if the directory name shouldn't be prefixed with the driver name.
+> Something like "ti_sn65dsi86:%s", dev_name(pdata->dev).
+
+*maybe*, if they are badly named in dt?  In the end the target
+audience is really to help developers and people bringing up a new
+board, so maybe my way encourages them to use sensible names in dt ;-)
+
+BR,
+-R
+
+
+>
+> >       debugfs_create_file("status", 0600, pdata->debugfs, pdata,
+> >                       &status_fops);
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
