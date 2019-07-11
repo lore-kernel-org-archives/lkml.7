@@ -2,96 +2,85 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03C9C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5A3C74A41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955E2214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B0B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="V9PkWY5t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J6mQidU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfGKDIy (ORCPT
+        id S1727976AbfGKDI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:08:54 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:51641 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfGKDIx (ORCPT
+        Wed, 10 Jul 2019 23:08:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40430 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfGKDI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:08:53 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x6B37xiF002252;
-        Thu, 11 Jul 2019 12:07:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6B37xiF002252
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562814480;
-        bh=wDYz/yHhx6nItjKqfKQXfYFVLdaXf3nRB8CNeDF+UBU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=V9PkWY5tLYehK0nfbUXdhff3w2l+B7zk5PrPFh+Bh61Od5q54W9mfsVEyvL+pOs5J
-         Qw71DbB7253tKzAcTJNAXzc+nVFyVJBaKopJ8kEnL5cjtLsbcAgc+SWblGsia9paLm
-         MztR4nDGrdQMERC39gVxPJOxC2h5GVdE0qWLLbeS1lCAraFH/Siydi+fKyM1Qfk+Zr
-         OWnXUaVSFWKbQxtSl/MTu9NnIixkYqLEkxq61cqjQsPKChxSCjpiOKBTDaoNcvPtL0
-         hBCN78ryQOPYwdw4q+qefZQOznnVVmc7SPSVj/0MgeMszvzV3mO3hSFZUbATP0mdp0
-         CEyADH22YtY2g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     patches@arm.linux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: fix O= building with CONFIG_FPE_FASTFPE
-Date:   Thu, 11 Jul 2019 12:07:56 +0900
-Message-Id: <20190711030756.4612-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jul 2019 23:08:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kCf95klSl4II9ASRgUO/dZ/BhEcTH5foAFI3YRAMrm8=; b=J6mQidU9Nu9jXP6cFQwFeAnGJ
+        xO6UGwej3f3LcKNTSHthSc5l6QnV9t/41sADhbPOtxwGJhusuqcizgdLeP6A0kw3iBBfdHJRpSfmH
+        HrFk1NE5ZhA60nEQ0f9kRYvHq9qW4BMY+rJnC41EK3bl1XcDYqvjRceaeLT967PsfjjZyFP2zaJz6
+        JsAXd3+NxpWOEegHY72GEy27CsmwX4tUoVZUaBek+uXF7HqnCAJ/0iblm1DktLNdt2bQUMAAZXlWZ
+        wXzYdRlP5JKjh9XlOpX3EA+YNRBDQAp0jhOLmGIXk/bqCHYDMwnqNSrVanzspV5s9nVHue31DN4lb
+        MtQRKZtSA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlPS3-0000Cr-Jj; Thu, 11 Jul 2019 03:08:55 +0000
+Date:   Wed, 10 Jul 2019 20:08:55 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Boaz Harrosh <openosd@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dax: Fix missed PMD wakeups
+Message-ID: <20190711030855.GO32320@bombadil.infradead.org>
+References: <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
+ <20190703195302.GJ1729@bombadil.infradead.org>
+ <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
+ <20190704032728.GK1729@bombadil.infradead.org>
+ <20190704165450.GH31037@quack2.suse.cz>
+ <20190704191407.GM1729@bombadil.infradead.org>
+ <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
+ <20190705191004.GC32320@bombadil.infradead.org>
+ <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
+ <20190710190204.GB14701@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710190204.GB14701@quack2.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To use Fastfpe, a user is supposed to enable CONFIG_FPE_FASTFPE
-and put downstream source files into arch/arm/fastfpe/.
+On Wed, Jul 10, 2019 at 09:02:04PM +0200, Jan Kara wrote:
+> @@ -848,7 +853,7 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
+>  	if (unlikely(dax_is_locked(entry))) {
+>  		void *old_entry = entry;
+>  
+> -		entry = get_unlocked_entry(xas);
+> +		entry = get_unlocked_entry(xas, 0);
+>  
+>  		/* Entry got punched out / reallocated? */
+>  		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
 
-It is not working for O= build because $(wildcard arch/arm/fastfpe)
-checks if it exists in $(objtree), not in $(srctree).
-
-Add the $(srctree)/ prefix to fix it.
-
-While I was here, I slightly refactored the code.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-KernelVersion: 5.2
-
- arch/arm/Makefile | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index f863c6935d0e..792f7fa16a24 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -271,14 +271,9 @@ endif
- 
- export	TEXT_OFFSET GZFLAGS MMUEXT
- 
--# Do we have FASTFPE?
--FASTFPE		:=arch/arm/fastfpe
--ifeq ($(FASTFPE),$(wildcard $(FASTFPE)))
--FASTFPE_OBJ	:=$(FASTFPE)/
--endif
--
- core-$(CONFIG_FPE_NWFPE)	+= arch/arm/nwfpe/
--core-$(CONFIG_FPE_FASTFPE)	+= $(FASTFPE_OBJ)
-+# Put arch/arm/fastfpe/ to use this.
-+core-$(CONFIG_FPE_FASTFPE)	+= $(patsubst $(srctree)/%,%,$(wildcard $(srctree)/arch/arm/fastfpe/))
- core-$(CONFIG_VFP)		+= arch/arm/vfp/
- core-$(CONFIG_XEN)		+= arch/arm/xen/
- core-$(CONFIG_KVM_ARM_HOST) 	+= arch/arm/kvm/
--- 
-2.17.1
+I'm not sure about this one.  Are we sure there will never be a dirty
+PMD entry?  Even if we can't create one today, it feels like a bit of
+a landmine to leave for someone who creates one in the future.
 
