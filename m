@@ -2,151 +2,138 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52236C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CD5C74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1BA20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBC720872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfGKN5k (ORCPT
+        id S1728718AbfGKN5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:57:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41646 "EHLO mx1.redhat.com"
+        Thu, 11 Jul 2019 09:57:52 -0400
+Received: from relay.sw.ru ([185.231.240.75]:55748 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbfGKN5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:57:39 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A978930821E0;
-        Thu, 11 Jul 2019 13:57:38 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-46.ams2.redhat.com [10.36.116.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BDED360A97;
-        Thu, 11 Jul 2019 13:57:08 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, robin.murphy@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com,
-        zhangfei.gao@gmail.com, tina.zhang@intel.com
-Subject: [PATCH v9 05/11] vfio/pci: Register an iommu fault handler
-Date:   Thu, 11 Jul 2019 15:56:19 +0200
-Message-Id: <20190711135625.20684-6-eric.auger@redhat.com>
-In-Reply-To: <20190711135625.20684-1-eric.auger@redhat.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
+        id S1728274AbfGKN5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:57:51 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hlZZp-0001WC-QI; Thu, 11 Jul 2019 16:57:37 +0300
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     Nixiaoming <nixiaoming@huawei.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+Cc:     "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+ <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+From:   Vasily Averin <vvs@virtuozzo.com>
+Message-ID: <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+Date:   Thu, 11 Jul 2019 16:57:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 11 Jul 2019 13:57:38 +0000 (UTC)
+In-Reply-To: <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register an IOMMU fault handler which records faults in
-the DMA FAULT region ring buffer. In a subsequent patch, we
-will add the signaling of a specific eventfd to allow the
-userspace to be notified whenever a new fault as shown up.
+On 7/11/19 4:55 AM, Nixiaoming wrote:
+> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
+>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+>>> Registering the same notifier to a hook repeatedly can cause the hook
+>>> list to form a ring or lose other members of the list.
+>>
+>> I think is not enough to _prevent_ 2nd register attempt,
+>> it's enough to detect just attempt and generate warning to mark host in bad state.
+>>
+> 
+> Duplicate registration is prevented in my patch, not just "mark host in bad state"
+> 
+> Duplicate registration is checked and exited in notifier_chain_cond_register()
+> 
+> Duplicate registration was checked in notifier_chain_register() but only 
+> the alarm was triggered without exiting. added by commit 831246570d34692e 
+> ("kernel/notifier.c: double register detection")
+> 
+> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
+>  which triggers an alarm and exits when a duplicate registration is detected.
+> 
+>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+>> and it can lead to host crash in any time: 
+>> you can unregister notifier on first attempt it can be too early, it can be still in use.
+>> on the other hand you can never call 2nd unregister at all.
+> 
+> Since the member was not added to the linked list at the time of the second registration, 
+> no linked list ring was formed. 
+> The member is released on the first unregistration and -ENOENT on the second unregistration.
+> After patching, the fault has been alleviated
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+You are wrong here.
+2nd notifier's registration is a pure bug, this should never happen.
+If you know the way to reproduce this situation -- you need to fix it. 
 
----
+2nd registration can happen in 2 cases:
+1) missed rollback, when someone forget to call unregister after successfull registration, 
+and then tried to call register again. It can lead to crash for example when according module will be unloaded.
+2) some subsystem is registered twice, for example from  different namespaces.
+in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
+in second namespace, it also can lead to unexpacted behaviour.
 
-v8 -> v9:
-- handler now takes an iommu_fault handle
-- eventfd signaling moved to a subsequent patch
-- check the fault type and return an error if != UNRECOV
-- still the fault handler registration can fail. We need to
-  reach an agreement about how to deal with the situation
+> It may be more helpful to return an error code when someone tries to register the same
+> notification program a second time.
 
-v3 -> v4:
-- move iommu_unregister_device_fault_handler to vfio_pci_release
----
- drivers/vfio/pci/vfio_pci.c | 42 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+You are wrong again here, it is senseless.
+If you have detected 2nd register -- your node is already in bad state.
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 3b091cfdaf46..c6fdbd64bfb2 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -27,6 +27,7 @@
- #include <linux/vfio.h>
- #include <linux/vgaarb.h>
- #include <linux/nospec.h>
-+#include <linux/circ_buf.h>
- 
- #include "vfio_pci_private.h"
- 
-@@ -281,6 +282,38 @@ static const struct vfio_pci_regops vfio_pci_dma_fault_regops = {
- 	.add_capability = vfio_pci_dma_fault_add_capability,
- };
- 
-+int vfio_pci_iommu_dev_fault_handler(struct iommu_fault *fault, void *data)
-+{
-+	struct vfio_pci_device *vdev = (struct vfio_pci_device *)data;
-+	struct vfio_region_dma_fault *reg =
-+		(struct vfio_region_dma_fault *)vdev->fault_pages;
-+	struct iommu_fault *new =
-+		(struct iommu_fault *)(vdev->fault_pages + reg->offset +
-+			reg->head * reg->entry_size);
-+	int head, tail, size;
-+	int ret = 0;
-+
-+	if (fault->type != IOMMU_FAULT_DMA_UNRECOV)
-+		return -ENOENT;
-+
-+	mutex_lock(&vdev->fault_queue_lock);
-+
-+	head = reg->head;
-+	tail = reg->tail;
-+	size = reg->nb_entries;
-+
-+	if (CIRC_SPACE(head, tail, size) < 1) {
-+		ret = -ENOSPC;
-+		goto unlock;
-+	}
-+
-+	*new = *fault;
-+	reg->head = (head + 1) % size;
-+unlock:
-+	mutex_unlock(&vdev->fault_queue_lock);
-+	return ret;
-+}
-+
- #define DMA_FAULT_RING_LENGTH 512
- 
- static int vfio_pci_init_dma_fault_region(struct vfio_pci_device *vdev)
-@@ -315,6 +348,13 @@ static int vfio_pci_init_dma_fault_region(struct vfio_pci_device *vdev)
- 	header->entry_size = sizeof(struct iommu_fault);
- 	header->nb_entries = DMA_FAULT_RING_LENGTH;
- 	header->offset = sizeof(struct vfio_region_dma_fault);
-+
-+	ret = iommu_register_device_fault_handler(&vdev->pdev->dev,
-+					vfio_pci_iommu_dev_fault_handler,
-+					vdev);
-+	if (ret)
-+		goto out;
-+
- 	return 0;
- out:
- 	kfree(vdev->fault_pages);
-@@ -530,6 +570,8 @@ static void vfio_pci_release(void *device_data)
- 	if (!(--vdev->refcnt)) {
- 		vfio_spapr_pci_eeh_release(vdev->pdev);
- 		vfio_pci_disable(vdev);
-+		/* TODO: Failure problematics */
-+		iommu_unregister_device_fault_handler(&vdev->pdev->dev);
- 	}
- 
- 	mutex_unlock(&vdev->reflck->lock);
--- 
-2.20.1
-
+> But I noticed that notifier_chain_cond_register() returns 0 when duplicate registration 
+> is detected. At the same time, in all the existing export function comments of notify,
+> "Currently always returns zero"
+> 
+> I am a bit confused: which is better?
+> 
+>>
+>> Unfortunately I do not see any ways to handle such cases properly,
+>> and it seems for me your patches does not resolve this problem.
+>>
+>> Am I missed something probably?
+>>
+>>> case1: An infinite loop in notifier_chain_register() can cause soft lockup
+>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+> 
+> Thanks
+> 
+> Xiaoming Ni
+> 
