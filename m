@@ -6,62 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB5C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8869EC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21676208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F55D208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562820019;
-	bh=XyCtee9fm5ygHg2MQYxM/NJrc318IJPhG1x70nQ29FU=;
+	s=default; t=1562820020;
+	bh=HzbaSkYNegZPeSfETFSWpJVZw37iuQryRylnFNyVoho=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xC3dy4uZDv5wesf/kan8EHzAQ8wCCBWVD/wYHj/4oy9Wr3WofGA3SiaNenNcRloFX
-	 OzHEztQnQJOSho2/cBNsBTRVL3k10phYzRfn7c6Il8vru2vdbJWHPpUUvHcGNctaHa
-	 /YusI2QC7BjivGn6hfok3TXNcLjIUsD9VrY2ow04=
+	b=T/JaxQJ/8KjID7fCCcRXERCyeq0CnW2TCClnfdTMq+Oe3/PFzdu5RaCrBvkKqcnju
+	 KUy/SzvEveQSyCEQD8a2W2YfXEv4czsrtilJFTnC728B/M7rvK0lvikb1qjAiTnVIF
+	 DD7aZG23L+GZMG5z1j8MMmupodX0+5KamYudELWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfGKEkR (ORCPT
+        id S1728243AbfGKEkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 00:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55982 "EHLO mail.kernel.org"
+        Thu, 11 Jul 2019 00:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727849AbfGKEkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 00:40:13 -0400
-Subject: Re: [GIT PULL] gfs2: 5.3 merge
+        id S1726311AbfGKEkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 00:40:06 -0400
+Subject: Re: [GIT PULL] vfs: fix copy_file_range bad behavior
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562820012;
-        bh=XyCtee9fm5ygHg2MQYxM/NJrc318IJPhG1x70nQ29FU=;
+        s=default; t=1562820005;
+        bh=HzbaSkYNegZPeSfETFSWpJVZw37iuQryRylnFNyVoho=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=rV8t1EOvevk0szrIWeUtC0mNX9o4K31W0C1hLcuGGSXNWGUaq50uo/2psxkwYz5ln
-         bsr1Re5E3MmDO9R9O7ZApkdFBq8K8HrIfh6gst9Lnbeo0FDfVbabmyELzBhW7lJD0o
-         +xKWQ6o1/YRgBso6inkkfZ/Kv0D9aRHPMJFtBwYk=
+        b=2kiiJXkLYKRmVPp18hhQnoxezHW0gx4//6wm4gS6dbIb1mMmZn2WOyREjG4DW9Kkv
+         NeN1z9X9q+coFZmbh+Hjep5r2a7LfeBO9BxNcygm9chUuu3xSxjCXqAvlNgB86l7bu
+         BUC8uU2Hug/V+NmTDAUG7Zcn+qsuiTqceZtUWRiM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190710222227.27623-1-agruenba@redhat.com>
-References: <20190710222227.27623-1-agruenba@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190710222227.27623-1-agruenba@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
- tags/gfs2-for-5.3
-X-PR-Tracked-Commit-Id: bb4cb25dd319fa5630cc304c5bfa926266736935
+In-Reply-To: <20190709163947.GE5164@magnolia>
+References: <20190709163947.GE5164@magnolia>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190709163947.GE5164@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/copy-file-range-fixes-1
+X-PR-Tracked-Commit-Id: fe0da9c09b2dc448ff781d1426ecb36d145ce51b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0248a8be6d21dad72b9ce80a7565cf13c11509d8
-Message-Id: <156282001257.18259.10553090508810604140.pr-tracker-bot@kernel.org>
-Date:   Thu, 11 Jul 2019 04:40:12 +0000
-To:     Andreas Gruenbacher <agruenba@redhat.com>
+X-PR-Merge-Commit-Id: 40f06c799539739a08a56be8a096f56aeed05731
+Message-Id: <156282000553.18259.7365960992420931129.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jul 2019 04:40:05 +0000
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        Amir Goldstein <amir73il@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 11 Jul 2019 00:22:27 +0200:
+The pull request you sent on Tue, 9 Jul 2019 09:39:48 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-5.3
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/copy-file-range-fixes-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0248a8be6d21dad72b9ce80a7565cf13c11509d8
+https://git.kernel.org/torvalds/c/40f06c799539739a08a56be8a096f56aeed05731
 
 Thank you!
 
