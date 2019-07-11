@@ -2,610 +2,166 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3D0C31E41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04670C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA79C21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C131320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIt2KqSq"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="wM3ebq/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbfGKRJb (ORCPT
+        id S1728840AbfGKRKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:09:31 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34772 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGKRJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:09:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p10so3252442pgn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QSNpgwHn0tFDDernTmZKY/DMxBm07k46zU4phUx519Y=;
-        b=HIt2KqSq8g1Nu0jFFBThPi6EWIjnYLT42tIB7+Um7tYgeZN5y3CN5R87WINkJ7UFBy
-         ek7T/4YSv7INFkn7PgntXuV2K5vFRe9MPACtuu56eB+cMep2K5lfckEnzbXwOYxKOZLL
-         jhkuLj9vhq2MM8vIf95KIDiD9F1fx7CASSzWRwMMnAAoyaVpPyxJM9Dai0jCxl58wQIX
-         3Pj+GdKrCDJzaU6XZGEQkfP4t/aebCNdy5pOXBwaK7WD8D81XjNngFiSfWZJIquU31F5
-         KpHfWzcaLgZeemOgqRa5Q5bGW0n0W5tDmW90Zycqa7kH9jWfyDnmzR3Ix6YWlxE3yPS+
-         wyaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QSNpgwHn0tFDDernTmZKY/DMxBm07k46zU4phUx519Y=;
-        b=VxsyFvn3j9oJFFhYJfpA81mCSAfi67iaJwshQsrJbAK06ALnFnUgJccWk/hSCtt1qF
-         N5RYp+/TlVw7FoePii/fbQQHdw2GB3ESC/8qMtNHU4GQvEzsG2bkPIZuyGk+MGZQoIOW
-         hZuImxoGbRIvnCcZxjcrtHzMa2ex86Vc8oeGbB7lOGjuMNBqY16EAFhb4ZuCa/mPlpKm
-         oDVmESSnJhJreEp/z2DDlR2epeVBDHClv4rNMbqJHS6gUrG0zNQoWF19meMRo9q1/WLd
-         /DOAndEUgtuTHPuXQ1VqSW377ctSe/pQ6iW7Tc6xiD+2WcBiegiM9+/gbmvVNH1u3E1h
-         t7NA==
-X-Gm-Message-State: APjAAAWtIUugT3nATa6v39mrY2qIdz80bbv9FbElfzbuyR0eGSkjjTjA
-        ARLgOOVp8u85JS1Z/u84BmAZeXV/qjxwOmDgEHa3t7LTQLg=
-X-Google-Smtp-Source: APXvYqyh++SihDKGwrCEDxgYGmh7h0fsXuU5ljGSXlfWcvsbJvIPag1mLtpyT5bx8XQ89FIGlrxuYEov9nZDEJGsNOc=
-X-Received: by 2002:a17:90a:b883:: with SMTP id o3mr6030158pjr.50.1562864968107;
- Thu, 11 Jul 2019 10:09:28 -0700 (PDT)
+        Thu, 11 Jul 2019 13:10:32 -0400
+Received: from mail-eopbgr790045.outbound.protection.outlook.com ([40.107.79.45]:53856
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728639AbfGKRKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:10:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iLxPExYfOy8/05vdQHnbK3qUD9aGXaay3T2cLAT1e16sqkoL+f1o1PzzX/+hHe2kfLvmVgBLwaH4UQRTGWUlq3nLBhky3asF3tXiX8Y07OBS4Q2E82zxeR6m+/tbaSyU2X9AEPL+ZtanYj2oVc0I0+Y79j8qEL2g55zGRxjgiZKrI3MmsbzERn/EAgKzdOeWquf1m6mvPXdzFDwSG28kE6XLOr3mAdtF5UdfryopydJklfJd/Yl7nCtWxmBzxkLAwC9ePM5mIEqnbecPSrTIB0W8aKotVikCXVfVFzGyPkuydMniFfVH5JCJPR/YvrV4VvtEQyeJCqB9cxMJ8K7KPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KtMwGOJugBJWpMC6xORFWKhdnSsFAcVcjn0o5vUGYGU=;
+ b=fFuNVPgxhZdfTb5gkmct46y81Llv4auvbkATZ2iF4cT3RljZzvdIxgYDUooLcavZ64sk7wjXhqPVDR6fpI0Jorvc4NNX44hULEZKttavGBzJH1EpCILMQhTWC6uryXeWRpOjXmpaqmqFuB/y+0M1W+jBWM7HCm+ZtLnrdMypjzALVa5gULaCXOKnhf+KMVF4pRHTHRmXEst9xnmw3yXzoksps9oIQBSJ4J40mFeurbH8CUs7/iAHnX+O0+Ct5zCalhDmBBfwB7GwrJ4DxOLhr4Ie4yVVZiaV/GytgIYV8ju/4SBV8nWLmcYSVknjKqLF/6FSE//5hf6k/jPLa2Zkig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KtMwGOJugBJWpMC6xORFWKhdnSsFAcVcjn0o5vUGYGU=;
+ b=wM3ebq/v/Zg+D+Idj67UBS39kqB6+DcpjOrOOGMGNYbeL7OqXNvcI8oc4Xw3ApujwNcBUJUyU4JhhCchIs9+T1hb1JcZnSUR6wf8nvsUewUeAufUgrlVRjJ8TKZfViqxUONZc6Bobo7dQ6tdcJMF/bJCl/rt+Wqmp1u/5aMOp50=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYASPR01MB0019.namprd05.prod.outlook.com (20.177.126.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.7; Thu, 11 Jul 2019 17:09:09 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2073.008; Thu, 11 Jul 2019
+ 17:09:09 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Xi Ruoyao <xry111@mengyan1223.wang>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+Thread-Topic: [GIT PULL] x86/topology changes for v5.3
+Thread-Index: AQHVNxtt0mU1kD//MEyJwVSBEnYucabD3RUDgAAKnYCAARnCAIAADgsAgAB3aYCAACGUAA==
+Date:   Thu, 11 Jul 2019 17:09:09 +0000
+Message-ID: <9C204E93-5638-4272-A209-205A591D9FC7@vmware.com>
+References: <201907091727.91CC6C72D8@keescook>
+ <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
+ <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
+ <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
+ <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
+ <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
+ <20190710134433.GN3402@hirez.programming.kicks-ass.net>
+ <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
+ <89EBC357-BEAC-4252-915F-E183C2D350C4@vmware.com>
+ <20190711080134.GT3402@hirez.programming.kicks-ass.net>
+ <201907110806.9C79329@keescook>
+In-Reply-To: <201907110806.9C79329@keescook>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [38.119.166.65]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ba4e6ffe-af67-4bc7-818a-08d706227d40
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYASPR01MB0019;
+x-ms-traffictypediagnostic: BYASPR01MB0019:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYASPR01MB001971C0DF1481C20569B1F9D0F30@BYASPR01MB0019.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0095BCF226
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(189003)(199004)(66066001)(99286004)(5660300002)(71190400001)(71200400001)(229853002)(6246003)(81156014)(8936002)(478600001)(305945005)(68736007)(66556008)(81166006)(66476007)(86362001)(256004)(14444005)(64756008)(66446008)(76116006)(66946007)(486006)(316002)(102836004)(966005)(476003)(6306002)(76176011)(7416002)(36756003)(14454004)(6116002)(3846002)(4326008)(6436002)(6916009)(7736002)(53936002)(26005)(33656002)(8676002)(25786009)(6486002)(6512007)(54906003)(2906002)(53546011)(6506007)(11346002)(446003)(186003)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYASPR01MB0019;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sw95ddQKUuRMWW9gUuJzo/B+dNe1Z9totsgOAhjtt8KhpJxdHmrMuMKmNvW7sGbFIVeMO9vWO2a7m/0sn6DlJSZMZduTzxbH1kkGyWOydQh2j0T26UcwxpIEc+hIxccJEnr1nmSTY71sOUcHGVMbc/ajsQV2YDC/6aWCADedsTiV0wIW80EKXeawxxaoQKtAu4RNEUdpIuTij2MlD9fk8m4CajDwBRZG9czwWZe/bRxlUbXa8Epuh8b98kXlKFmKuPt5S2w/RopLhVdIgkXodMScLlbnp3peLxWmqjXZ4etlPBs9pM5z/g0FWtae+z0P6USDXbj208kBE1SE/16d3dGdAaDOu0tHNBRwVxPn8KIikDbbTynYa+AbcYPxapmpy5rLfbgf8LBq4Oydlenhz/guVPI8aoXYKaeP3odaAKw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <88644E2445D4134FA69FA6B4D196EE0A@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190525165802.25944-1-xiyou.wangcong@gmail.com>
- <20190525165802.25944-5-xiyou.wangcong@gmail.com> <20190709155117.7cab28aa@gandalf.local.home>
-In-Reply-To: <20190709155117.7cab28aa@gandalf.local.home>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 11 Jul 2019 10:09:16 -0700
-Message-ID: <CAM_iQpXAWfUd5Kjug7HBALfeaiKZR+GN=czM-QaM2AzKH+_Ndw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] trace: introduce trace event injection
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba4e6ffe-af67-4bc7-818a-08d706227d40
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 17:09:09.5069
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYASPR01MB0019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 12:51 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
->
-> Hi Cong,
->
-> I finally got around to looking at these patches. Sorry for such a long
-> time, I've been terribly busy :-(
->
-> BTW, it's best to look at how other commits in a subsystem do their
-> subject lines. The subsystem is "tracing" not "trace", and Linus
-> prefers to have the first letter after that capitalized. For example, I
-> changed your subject to:
->
->  "tracing: Introduce trace event injection"
-
-Sure, will update it.
-
-
->
->
-> On Sat, 25 May 2019 09:58:02 -0700
-> Cong Wang <xiyou.wangcong@gmail.com> wrote:
->
-> > For example, for the net/net_dev_queue tracepoint, we can inject:
-> >
-> >   INJECT=/sys/kernel/debug/tracing/events/net/net_dev_queue/inject
-> >   echo "" > $INJECT
-> >   echo "name='test'" > $INJECT
-> >   echo "name='test' len=1024" > $INJECT
->
-> I think you meant "dev='test'" not "name='test'"
-
-No, the filed name is "name", "dev" is just what shows in the output:
-
-        TP_printk("dev=%s skbaddr=%p len=%u",
-                __get_str(name), __entry->skbaddr, __entry->len)
-
-I was confused too when I saw it at first. :)
-
->
-> >   cat /sys/kernel/debug/tracing/trace
-> >   ...
-> >    <...>-614   [000] ....    36.571483: net_dev_queue: dev= skbaddr=00000000fbf338c2 len=0
-> >    <...>-614   [001] ....   136.588252: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=0
-> >    <...>-614   [001] .N..   208.431878: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=1024
-> >
-> > Triggers could be triggered as usual too:
-> >
-> >   echo "stacktrace if len == 1025" > /sys/kernel/debug/tracing/events/net/net_dev_queue/trigger
-> >   echo "len=1025" > $INJECT
-> >   cat /sys/kernel/debug/tracing/trace
-> >   ...
-> >       bash-614   [000] ....    36.571483: net_dev_queue: dev= skbaddr=00000000fbf338c2 len=0
-> >       bash-614   [001] ....   136.588252: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=0
-> >       bash-614   [001] .N..   208.431878: net_dev_queue: dev=test skbaddr=00000000fbf338c2 len=1024
-> >       bash-614   [001] .N.1   284.236349: <stack trace>
-> >  => event_inject_write
-> >  => vfs_write
-> >  => ksys_write
-> >  => do_syscall_64
-> >  => entry_SYSCALL_64_after_hwframe
-> >
-> > The only thing that can't be injected is string pointers as they
-> > require constant string pointers, this can't be done at run time.
-> >
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-> > ---
-> >  kernel/trace/Makefile              |   1 +
-> >  kernel/trace/trace.h               |   1 +
-> >  kernel/trace/trace_events.c        |   4 +
-> >  kernel/trace/trace_events_inject.c | 330 +++++++++++++++++++++++++++++
-> >  4 files changed, 336 insertions(+)
-> >  create mode 100644 kernel/trace/trace_events_inject.c
-> >
-> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> > index c2b2148bb1d2..3c7bbacf4c18 100644
-> > --- a/kernel/trace/Makefile
-> > +++ b/kernel/trace/Makefile
-> > @@ -69,6 +69,7 @@ obj-$(CONFIG_EVENT_TRACING) += trace_event_perf.o
-> >  endif
-> >  obj-$(CONFIG_EVENT_TRACING) += trace_events_filter.o
-> >  obj-$(CONFIG_EVENT_TRACING) += trace_events_trigger.o
-> > +obj-$(CONFIG_EVENT_TRACING) += trace_events_inject.o
-> >  obj-$(CONFIG_HIST_TRIGGERS) += trace_events_hist.o
-> >  obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
-> >  obj-$(CONFIG_KPROBE_EVENTS) += trace_kprobe.o
-> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> > index 1974ce818ddb..69b5ce0ad597 100644
-> > --- a/kernel/trace/trace.h
-> > +++ b/kernel/trace/trace.h
-> > @@ -1583,6 +1583,7 @@ extern struct list_head ftrace_events;
-> >
-> >  extern const struct file_operations event_trigger_fops;
-> >  extern const struct file_operations event_hist_fops;
-> > +extern const struct file_operations event_inject_fops;
-> >
-> >  #ifdef CONFIG_HIST_TRIGGERS
-> >  extern int register_trigger_hist_cmd(void);
-> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > index 98df044d34ce..d23d6d6685e7 100644
-> > --- a/kernel/trace/trace_events.c
-> > +++ b/kernel/trace/trace_events.c
-> > @@ -2018,6 +2018,10 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
-> >       trace_create_file("format", 0444, file->dir, call,
-> >                         &ftrace_event_format_fops);
-> >
-> > +     if (call->event.type && call->class->reg)
-> > +             trace_create_file("inject", 0200, file->dir, file,
-> > +                               &event_inject_fops);
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-> > new file mode 100644
-> > index 000000000000..cdd7db7f2724
-> > --- /dev/null
-> > +++ b/kernel/trace/trace_events_inject.c
-> > @@ -0,0 +1,330 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * trace_events_inject - trace event injection
-> > + *
-> > + * Copyright (C) 2019 Cong Wang <cwang@twitter.com>
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/ctype.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/rculist.h>
-> > +
-> > +#include "trace.h"
-> > +
-> > +static int
-> > +trace_inject_entry(struct trace_event_file *file, void *rec, int len)
-> > +{
-> > +     struct trace_event_buffer fbuffer;
-> > +     struct ring_buffer *buffer;
-> > +     int written = 0;
-> > +     void *entry;
-> > +
-> > +     buffer = file->tr->trace_buffer.buffer;
-> > +     ring_buffer_nest_start(buffer);
->
-> I'm curious about why you added the ring_buffer_nest_start().
-
-
-This is a copy-n-paste, I can remove it if it is not needed in this context.
-
-
->
-> > +
-> > +     entry = trace_event_buffer_reserve(&fbuffer, file, len);
-> > +     if (entry) {
-> > +             memcpy(entry, rec, len);
-> > +             written = len;
-> > +             trace_event_buffer_commit(&fbuffer);
-> > +     }
-> > +
-> > +     ring_buffer_nest_end(buffer);
-> > +     return written;
-> > +}
-> > +
-> > +static int
-> > +parse_field(char *str, struct trace_event_call *call,
-> > +         struct ftrace_event_field **pf, u64 *pv)
-> > +{
-> > +     struct ftrace_event_field *field;
-> > +     char *field_name;
-> > +     int s, i = 0;
-> > +     char *p;
-> > +     int len;
-> > +     u64 val;
-> > +
-> > +     if (!str[i])
-> > +             return 0;
-> > +     /* First find the field to associate to */
-> > +     while (isspace(str[i]))
-> > +             i++;
-> > +     s = i;
-> > +     while (isalnum(str[i]) || str[i] == '_')
-> > +             i++;
-> > +     len = i - s;
-> > +     if (!len)
-> > +             return -EINVAL;
-> > +
-> > +     field_name = kmemdup_nul(str + s, len, GFP_KERNEL);
-> > +     if (!field_name)
-> > +             return -ENOMEM;
-> > +     field = trace_find_event_field(call, field_name);
-> > +     kfree(field_name);
-> > +     if (!field)
-> > +             return -ENOENT;
-> > +
-> > +     *pf = field;
-> > +     p = strchr(str + i, '=');
-> > +     if (!p)
-> > +             return -EINVAL;
-> > +     i = p + 1 - str;
-> > +     while (isspace(str[i]))
-> > +             i++;
-> > +     s = i;
-> > +     if (isdigit(str[i]) || str[i] == '-') {
-> > +             char num_buf[24];       /* Big enough to hold an address */
->
-> Do you really need this buffer? See below.
->
-> > +             int ret;
-> > +
-> > +             /* Make sure the field is not a string */
-> > +             if (is_string_field(field))
-> > +                     return -EINVAL;
-> > +
-> > +             if (str[i] == '-')
-> > +                     i++;
-> > +
-> > +             /* We allow 0xDEADBEEF */
-> > +             while (isalnum(str[i]))
-> > +                     i++;
-> > +
-> > +             len = i - s;
-> > +             /* 0xfeedfacedeadbeef is 18 chars max */
-> > +             if (len >= sizeof(num_buf))
-> > +                     return -EINVAL;
-> > +
-> > +             strncpy(num_buf, str + s, len);
-> > +             num_buf[len] = 0;
->
-> Instead of using num_buf[], as str is already modified in the else
-> statement, we could do:
->
->                 char *num;
->                 char c;
->
->                 num = str + s;
->                 c = str[i];
->                 str[i] = '\0';
->                 [..]
->                         ret = kstrtoll(num, 0, &val);
->                 [..]
->                 str[i] = c;
-
-Good point, I think it probably can be removed as you said, let
-me do a double check.
-
->
->
-> > +
-> > +             /* Make sure it is a value */
-> > +             if (field->is_signed)
-> > +                     ret = kstrtoll(num_buf, 0, &val);
-> > +             else
-> > +                     ret = kstrtoull(num_buf, 0, &val);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             *pv = val;
-> > +             return i;
-> > +     } else if (str[i] == '\'' || str[i] == '"') {
-> > +             char q = str[i];
-> > +
-> > +             /* Make sure the field is OK for strings */
-> > +             if (!is_string_field(field))
-> > +                     return -EINVAL;
-> > +
-> > +             for (i++; str[i]; i++) {
->
-> Should we allow for \' and \"?
->
->                         if (str[i] == '\\' && str[i + 1]) {
->                                 i++;
->                                 continue;
->                         }
-
-Good suggestion. I think it is good to have it.
-
-
->
->
-> > +                     if (str[i] == q)
-> > +                             break;
-> > +             }
-> > +             if (!str[i])
-> > +                     return -EINVAL;
-> > +
-> > +             /* Skip quotes */
-> > +             s++;
-> > +             len = i - s;
-> > +             if (len >= MAX_FILTER_STR_VAL)
-> > +                     return -EINVAL;
-> > +
-> > +             *pv = (unsigned long)(str + s);
-> > +             str[i] = 0;
-> > +             /* go past the last quote */
-> > +             i++;
-> > +             return i;
-> > +     }
-> > +
-> > +     return -EINVAL;
-> > +}
-> > +
-> > +static int trace_get_entry_size(struct trace_event_call *call)
-> > +{
-> > +     struct ftrace_event_field *field;
-> > +     struct list_head *head;
-> > +     int size = 0;
-> > +
-> > +     head = trace_get_fields(call);
-> > +     list_for_each_entry(field, head, link)
->
-> Add a '{' for the loop. We only allow for removing braces for non
-> complex statements.
-
-OK.
-
->
->
-> > +             if (field->size + field->offset > size)
-> > +                     size = field->size + field->offset;
-> > +
-> > +     return size;
-> > +}
-> > +
-> > +static void *trace_alloc_entry(struct trace_event_call *call, int *size)
-> > +{
-> > +     int entry_size = trace_get_entry_size(call);
-> > +     struct ftrace_event_field *field;
-> > +     struct list_head *head;
-> > +     void *entry = NULL;
-> > +
-> > +     /* We need an extra '\0' at the end. */
-> > +     entry = kzalloc(entry_size + 1, GFP_KERNEL);
-> > +     if (!entry)
-> > +             return NULL;
-> > +
-> > +     head = trace_get_fields(call);
-> > +     list_for_each_entry(field, head, link) {
-> > +             if (!is_string_field(field))
-> > +                     continue;
-> > +             if (field->filter_type == FILTER_STATIC_STRING)
-> > +                     continue;
-> > +             if (field->filter_type == FILTER_DYN_STRING) {
-> > +                     u32 *str_item;
-> > +                     int str_len = 0;
-> > +                     int str_loc = entry_size & 0xffff;
-> > +
-> > +                     str_item = (u32 *)(entry + field->offset);
-> > +                     *str_item = (str_len << 16) | str_loc;
-> > +             } else {
-> > +                     char **paddr;
-> > +
-> > +                     paddr = (char **)(entry + field->offset);
-> > +                     *paddr = "";
-> > +             }
-> > +     }
-> > +
-> > +     *size = entry_size + 1;
-> > +     return entry;
-> > +}
-> > +
-> > +#define INJECT_STRING "STATIC STRING CAN NOT BE INJECTED"
-> > +
-> > +static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
-> > +{
-> > +     struct ftrace_event_field *field;
-> > +     unsigned long irq_flags;
-> > +     void *entry = NULL;
-> > +     int entry_size;
-> > +     u64 val;
-> > +     int len;
-> > +
-> > +     entry = trace_alloc_entry(call, &entry_size);
-> > +     *pentry = entry;
-> > +     if (!entry)
-> > +             return -ENOMEM;
-> > +
-> > +     local_save_flags(irq_flags);
-> > +     tracing_generic_entry_update(entry, call->event.type, irq_flags,
-> > +                                  preempt_count());
-> > +
-> > +     while ((len = parse_field(str, call, &field, &val)) > 0) {
-> > +             if (is_function_field(field))
-> > +                     return -EINVAL;
-> > +
-> > +             if (is_string_field(field)) {
-> > +                     char *addr = (char *)(unsigned long) val;
-> > +
-> > +                     if (field->filter_type == FILTER_STATIC_STRING) {
-> > +                             strlcpy(entry + field->offset, addr, field->size);
-> > +                     } else if (field->filter_type == FILTER_DYN_STRING) {
-> > +                             u32 *str_item;
-> > +                             int str_len = strlen(addr) + 1;
-> > +                             int str_loc = entry_size & 0xffff;
-> > +
-> > +                             entry_size += str_len;
-> > +                             *pentry = krealloc(entry, entry_size, GFP_KERNEL);
-> > +                             entry = *pentry;
-> > +                             if (!entry)
-> > +                                     return -ENOMEM;
->
-> Add a comment here that states that *pentry gets freed by the caller
-> even on error, otherwise, to a reviewer this looks like a possible
-> memory leak. Or worse, we add a new caller that doesn't free it.
-> Perhaps we should add a comment above the function.
-
-Agreed, I will add a comment above this function.
-
-
->
-> > +
-> > +                             strlcpy(entry + (entry_size - str_len), addr, str_len);
-> > +                             str_item = (u32 *)(entry + field->offset);
-> > +                             *str_item = (str_len << 16) | str_loc;
-> > +                     } else {
-> > +                             char **paddr;
-> > +
-> > +                             /* TODO: can we find the constant string? */
->
-> Honestly, char * is dangerous in tracing. Because the time you read the
-> pointer, what you pointed at during the recording could be long gone. I
-> really should have them removed in the code. In other words, don't
-> worry about pointer strings and such.
->
-> You can keep this as is.
-
-Ok, good to know.
-
-
->
-> > +                             paddr = (char **)(entry + field->offset);
-> > +                             *paddr = INJECT_STRING;
-> > +                     }
-> > +             } else {
-> > +                     switch (field->size) {
-> > +                     case 1: {
-> > +                             u8 tmp = (u8) val;
-> > +
-> > +                             memcpy(entry + field->offset, &tmp, 1);
-> > +                             break;
-> > +                     }
-> > +                     case 2: {
-> > +                             u16 tmp = (u16) val;
-> > +
-> > +                             memcpy(entry + field->offset, &tmp, 2);
-> > +                             break;
-> > +                     }
-> > +                     case 4: {
-> > +                             u32 tmp = (u32) val;
-> > +
-> > +                             memcpy(entry + field->offset, &tmp, 4);
-> > +                             break;
-> > +                     }
-> > +                     case 8:
-> > +                             memcpy(entry + field->offset, &val, 8);
-> > +                             break;
-> > +                     default:
-> > +                             return -EINVAL;
-> > +                     }
-> > +             }
-> > +
-> > +             str += len;
-> > +     }
-> > +
-> > +     if (len < 0)
-> > +             return len;
-> > +
-> > +     return entry_size;
-> > +}
-> > +
-> > +static ssize_t
-> > +event_inject_write(struct file *filp, const char __user *ubuf, size_t cnt,
-> > +                loff_t *ppos)
-> > +{
-> > +     struct trace_event_call *call;
-> > +     struct trace_event_file *file;
-> > +     int err = -ENODEV, size;
-> > +     void *entry = NULL;
-> > +     char *buf;
-> > +
-> > +     if (cnt >= PAGE_SIZE)
-> > +             return -EINVAL;
-> > +
-> > +     buf = memdup_user_nul(ubuf, cnt);
-> > +     if (IS_ERR(buf))
-> > +             return PTR_ERR(buf);
-> > +     strim(buf);
-> > +
-> > +     mutex_lock(&event_mutex);
-> > +     file = event_file_data(filp);
-> > +     if (file) {
-> > +             call = file->event_call;
-> > +             size = parse_entry(buf, call, &entry);
-> > +             if (size < 0)
-> > +                     err = size;
-> > +             else
-> > +                     err = trace_inject_entry(file, entry, size);
-> > +     }
-> > +     mutex_unlock(&event_mutex);
-> > +
-> > +     kfree(entry);
-> > +     kfree(buf);
-> > +
-> > +     if (err < 0)
-> > +             return err;
-> > +
-> > +     *ppos += err;
-> > +     return cnt;
-> > +}
-> > +
-> > +static ssize_t
-> > +event_inject_read(struct file *file, char __user *buf, size_t size,
-> > +               loff_t *ppos)
-> > +{
-> > +     return -EPERM;
-> > +}
-> > +
-> > +const struct file_operations event_inject_fops = {
-> > +     .open = tracing_open_generic,
-> > +     .read = event_inject_read,
-> > +     .write = event_inject_write,
-> > +};
-> > +
->
-> The rest looks fine. Note, I'm sorry for the late response, but as the
-> merge window opened, I'll probably wait till after the merge window
-> closes before adding this.
-
-No problem.
-
->
-> That said, I'll apply the first three patches and get them in this
-> merge window, as they are mostly clean ups.
-
-Sounds good, I read this as I will only have to update and resend
-the last patch in this series.
-
-Thanks.
+PiBPbiBKdWwgMTEsIDIwMTksIGF0IDg6MDggQU0sIEtlZXMgQ29vayA8a2Vlc2Nvb2tAY2hyb21p
+dW0ub3JnPiB3cm90ZToNCj4gDQo+IE9uIFRodSwgSnVsIDExLCAyMDE5IGF0IDEwOjAxOjM0QU0g
+KzAyMDAsIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPj4gT24gVGh1LCBKdWwgMTEsIDIwMTkgYXQg
+MDc6MTE6MTlBTSArMDAwMCwgTmFkYXYgQW1pdCB3cm90ZToNCj4+Pj4gT24gSnVsIDEwLCAyMDE5
+LCBhdCA3OjIyIEFNLCBKaXJpIEtvc2luYSA8amlrb3NAa2VybmVsLm9yZz4gd3JvdGU6DQo+Pj4+
+IA0KPj4+PiBPbiBXZWQsIDEwIEp1bCAyMDE5LCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4+Pj4g
+DQo+Pj4+PiBJZiB3ZSBtYXJrIHRoZSBrZXkgYXMgUk8gYWZ0ZXIgaW5pdCwgYW5kIHRoZW4gdHJ5
+IGFuZCBtb2RpZnkgdGhlIGtleSB0bw0KPj4+Pj4gbGluayBtb2R1bGUgdXNhZ2Ugc2l0ZXMsIHRo
+aW5ncyBtaWdodCBnbyBiYW5nIGFzIGRlc2NyaWJlZC4NCj4+Pj4+IA0KPj4+Pj4gVGhhbmtzIQ0K
+Pj4+Pj4gDQo+Pj4+PiANCj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L2Nv
+bW1vbi5jIGIvYXJjaC94ODYva2VybmVsL2NwdS9jb21tb24uYw0KPj4+Pj4gaW5kZXggMjdkNzg2
+NGU3MjUyLi41YmY3YTgzNTRkYTIgMTAwNjQ0DQo+Pj4+PiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwv
+Y3B1L2NvbW1vbi5jDQo+Pj4+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L2NvbW1vbi5jDQo+
+Pj4+PiBAQCAtMzY2LDcgKzM2Niw3IEBAIHN0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdm9pZCBzZXR1
+cF91bWlwKHN0cnVjdCBjcHVpbmZvX3g4NiAqYykNCj4+Pj4+IAljcjRfY2xlYXJfYml0cyhYODZf
+Q1I0X1VNSVApOw0KPj4+Pj4gfQ0KPj4+Pj4gDQo+Pj4+PiAtREVGSU5FX1NUQVRJQ19LRVlfRkFM
+U0VfUk8oY3JfcGlubmluZyk7DQo+Pj4+PiArREVGSU5FX1NUQVRJQ19LRVlfRkFMU0UoY3JfcGlu
+bmluZyk7DQo+Pj4+IA0KPj4+PiBHb29kIGNhdGNoLCBJIGd1ZXNzIHRoYXQgaXMgZ29pbmcgdG8g
+Zml4IGl0Lg0KPj4+PiANCj4+Pj4gQXQgdGhlIHNhbWUgdGltZSB0aG91Z2gsIGl0IHNvcnQgb2Yg
+ZGVzdHJveXMgdGhlIG9yaWdpbmFsIGludGVudCBvZiBLZWVzJyANCj4+Pj4gcGF0Y2gsIHJpZ2h0
+PyBUaGUgZXhwbG9pdHMgd2lsbCBqdXN0IGhhdmUgdG8gY2FsbCBzdGF0aWNfa2V5X2Rpc2FibGUo
+KSANCj4+Pj4gcHJpb3IgdG8gY2FsbGluZyBuYXRpdmVfd3JpdGVfY3I0KCkgYWdhaW4sIGFuZCB0
+aGUgcHJvdGVjdGlvbiBpcyBnb25lLg0KPj4+IA0KPj4+IEV2ZW4gd2l0aCBERUZJTkVfU1RBVElD
+X0tFWV9GQUxTRV9STygpLCBJIHByZXN1bWUgeW91IGNhbiBqdXN0IGNhbGwNCj4+PiBzZXRfbWVt
+b3J5X3J3KCksIG1ha2UgdGhlIHBhZ2UgdGhhdCBob2xkcyB0aGUga2V5IHdyaXRhYmxlLCBhbmQg
+dGhlbiBjYWxsDQo+Pj4gc3RhdGljX2tleV9kaXNhYmxlKCksIGZvbGxvd2VkIGJ5IGEgY2FsbCB0
+byBuYXRpdmVfd3JpdGVfY3I0KCkuDQo+PiANCj4+IE9yIGNhbGwgdGV4dF9wb2tlX2JwKCkgd2l0
+aCB0aGUgcmlnaHQgc2V0IG9mIGFyZ3VtZW50cy4NCj4gDQo+IFJpZ2h0IC0tIHRoZSBwb2ludCBp
+cyB0byBtYWtlIGl0IGRlZmVuZGVkIGFnYWluc3QgYW4gYXJiaXRyYXJ5IHdyaXRlLA0KPiBub3Qg
+YXJiaXRyYXJ5IGV4ZWN1dGlvbi4gTm90aGluZyBpcyBzYWZlIGZyb20gYXJiaXRyYXJ5IGV4ZWMs
+IGJ1dCB3ZSBjYW4NCj4gZG8gb3VyIGR1ZSBkaWxpZ2VuY2Ugb24gbWFraW5nIHRoaW5ncyByZWFk
+LW9ubHkuDQoNCkkgZG9u4oCZdCB1bmRlcnN0YW5kLg0KDQpJbiB0aGUgUG9DIHRoYXQgbW90aXZh
+dGVkIHRoaXMgdGhpcyBwYXRjaCBbMV0sIHRoZSBhdHRhY2tlciBnYWluZWQgdGhlDQphYmlsaXR5
+IHRvIGNhbGwgYSBmdW5jdGlvbiwgY29udHJvbCBpdHMgZmlyc3QgYXJndW1lbnQgYW5kIHVzZWQg
+aXQgdG8NCmRpc2FibGUgU01FUC9TTUFQIGJ5IGNhbGxpbmcgbmF0aXZlX3dyaXRlX2NyNCgpLCB3
+aGljaCBoZSBkaWQgYmVmb3JlIGRvaW5nDQphbiBhcmJpdHJhcnkgd3JpdGUgKGFub3RoZXIgYWJp
+bGl0eSBoZSBnYWluKS4NCg0KQWZ0ZXIgdGhpcyBwYXRjaCwgdGhlIGF0dGFja2VyIGNhbiBpbnN0
+ZWFkIGNhbGwgdGhyZWUgZnVuY3Rpb25zLCBhbmQgYnkNCmNvbnRyb2xsaW5nIHRoZWlyIGZpcnN0
+IGFyZ3VtZW50cyAoKikgZGlzYWJsZSBTTUVQLiBJIGRpZG7igJl0IHNlZSBzb21ldGhpbmcNCmlu
+IHRoZSBtb3RpdmF0aW5nIFBvQyB0aGF0IHByZXZlbnRlZCBjYWxsaW5nIDMgZnVuY3Rpb25zIG9u
+ZSBhdCBhIHRpbWUuDQoNClNvIGl0IHNlZW1zIHRvIG1lIHRoYXQgaXQgcmFpc2VkIHRoZSBiYXIg
+Zm9yIGFuIGF0dGFjayBieSB2ZXJ5IGxpdHRsZS4NCg0KLS0NCg0KKCopIHNldF9tZW1vcnlfcnco
+KSBoYXMgYSBzZWNvbmQgYXJndW1lbnQgLSB0aGUgbnVtYmVyIG9mIHBhZ2VzIC0gYnV0IG1hbnkN
+Cm5vbi16ZXJvIHZhbHVlcyBtYXkgYmUgZmluZSAoaWYgbm90IGEgd2FybmluZyBmcm9tIF9fY3Bh
+X3Byb2Nlc3NfZmF1bHQoKQ0KbWlnaHQgYXBwZWFyKS4NCg0KWzFdIGh0dHBzOi8vZ29vZ2xlcHJv
+amVjdHplcm8uYmxvZ3Nwb3QuY29tLzIwMTcvMDUvZXhwbG9pdGluZy1saW51eC1rZXJuZWwtdmlh
+LXBhY2tldC5odG1sDQoNCg==
