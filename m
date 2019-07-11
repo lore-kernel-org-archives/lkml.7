@@ -2,78 +2,76 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA983C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BFCC742A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD9921019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A1D208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MhB4/1cU"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BwhngOtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbfGKUpM (ORCPT
+        id S1728865AbfGKUpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:45:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36693 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728628AbfGKUpE (ORCPT
+        Thu, 11 Jul 2019 16:45:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45225 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728836AbfGKUpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:45:04 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r7so3299673pfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:45:04 -0700 (PDT)
+        Thu, 11 Jul 2019 16:45:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so3476634pgp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:45:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MLdzftGH/gFul7iiOHMklLGxy/NCS/NGh67QDWN64SU=;
-        b=MhB4/1cUL+NhY0J5GWsbsrd3eTLDSU+tbUVIlifszTmidPxecNapqdD0z5bq8OPmcV
-         BD68gn+Iz22nEW6WBNmOGATWc/CmyRFYE6uwNsJd4YRbbIoj+oXWV9pGjQI8zCvdS4eS
-         GRdqJ9Y1/ZJi4k0YQnQV7MG0weCWBo9tc0g6A=
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FAgMNOYOPvzfrhNLldHVb19fW7VpQgXrnLMhcZOOzzs=;
+        b=BwhngOtO8Nu7zYAeNU/xva2uz2AnFZ9jfpv+3OHWnK+riarbVIlSWPdfB25P++KWpM
+         QVxLEPUIHjMA+QqfkfkhctquS0azuY/r/ojtxpUWtUfoWtmq6qMLYBDzqHmuxtUJ30oy
+         MTd0LwPXNYB62gu7TJfWJlr+m4tzWAaTOQACU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MLdzftGH/gFul7iiOHMklLGxy/NCS/NGh67QDWN64SU=;
-        b=balrMMCVhawdhzFgjhdizQpJJJbH56fljtUV7sUFw/rxvh3q1U9xMYyjHIrw3HYn0S
-         KReqTrHeHdfnWrKQFIssmgExxy6Qsw7qi+/km3+5Kvpl3KCanNrBQkiikZAB0B/zxtJ2
-         iPi/ryBqvIfcPpdTWRXmMIznQrwQWdmzfDDHuOfGltAPauy3hINAVcfu/TVcKkyt9HTn
-         GazlSkqXDgDhXkPOkbtLDhBrfuiSDJhdZHk7g+5aPQVmOfbt7KxNroaXV1kELwvY/aNz
-         I1rOd36Ow5kHavb8wbUtcsvzzPFhqqAdj+MqVNLPqcAs9plr3RrVIjNP3MJEFbyEYZk2
-         ORPA==
-X-Gm-Message-State: APjAAAV5dymM8ckwhv3Fr8iyenjZ+F9Qno/kV3N1HqmrvEIoOTuK/ItS
-        zQrTa6aRzJXIfdhWmFzo/EV9vQ==
-X-Google-Smtp-Source: APXvYqwroM5R2J8TNfLYHSWaQlIk+XkN1UktVue3p11E50fR61dSB3pcJ91/MyRyFDfLxvoJmMQjww==
-X-Received: by 2002:a63:c20e:: with SMTP id b14mr6295215pgd.96.1562877903778;
-        Thu, 11 Jul 2019 13:45:03 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f17sm5320110pgv.16.2019.07.11.13.45.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FAgMNOYOPvzfrhNLldHVb19fW7VpQgXrnLMhcZOOzzs=;
+        b=QDzY6s2jgtUzios0FBOfdyNggHZcR9WuBSZvmQDlhgpugGe0QV64jS7Vt7NKh5pj/h
+         wiwvIugDXIqzDBLlUKLJIwNN5wGJqkI/vi6pNIY84oZHcZ6HME1kbaux0KNhBUG7zwW9
+         2piREg2DRL0pemnsuGMFx3OBOiksD+T8sSF7kC/51qFkrJl0EezPO051KsNSqgGlhmHL
+         sOb6dQfBMTlt2th1YJXNRhZdhCCl7vGjr2vgcFVEzK0XXio9su0Mn/nw5j0n4rCQpkDZ
+         TZPME2bE8609PqUEtlWjrhEaKB7DBQzBR254i80vvBMUAo0PVnUD+HSPZJctaVSOIAR8
+         R5kg==
+X-Gm-Message-State: APjAAAUtCLdi4vYnhPdRWZF1ZESCq4zdojhyQu2TlC1tmr9IJeHYC6CC
+        UykST3s1wUGBfAdu/6SvHvtpLFvX
+X-Google-Smtp-Source: APXvYqzwqFWG5FAS708qmjT7OvxwSnxErqOKN+3y3GLJgx3B9ybHEpj1LDsHWYbII1JJoa1at0PEqA==
+X-Received: by 2002:a63:4d50:: with SMTP id n16mr6518323pgl.146.1562877951310;
+        Thu, 11 Jul 2019 13:45:51 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id f19sm9047502pfk.180.2019.07.11.13.45.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 13:45:03 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        mka@chromium.org, Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v6 3/3] drm/panel: simple: Use display_timing for AUO b101ean01
-Date:   Thu, 11 Jul 2019 13:34:55 -0700
-Message-Id: <20190711203455.125667-4-dianders@chromium.org>
+        Thu, 11 Jul 2019 13:45:50 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, byungchul.park@lge.com,
+        kernel-team@android.com
+Subject: [PATCH] treewide: Rename  rcu_dereference_raw_notrace to _check
+Date:   Thu, 11 Jul 2019 16:45:41 -0400
+Message-Id: <20190711204541.28940-1-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190711203455.125667-1-dianders@chromium.org>
-References: <20190711203455.125667-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,70 +79,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the AUO b101ean01 from using a fixed mode to specifying a
-display timing with min/typ/max values.
+The rcu_dereference_raw_notrace() API name is confusing.
+It is equivalent to rcu_dereference_raw() except that it also does
+sparse pointer checking.
 
-The AUO b101ean01's datasheet says:
-* Vertical blanking min is 12
-* Horizontal blanking min is 60
-* Pixel clock is between 65.3 MHz and 75 MHz
+There are only a few users of rcu_dereference_raw_notrace(). This
+patches renames all of them to be rcu_dereference_raw_check with the
+"check" indicating sparse checking.
 
-The goal here is to be able to specify the proper timing in device
-tree to use on rk3288-veyron-minnie to match what the downstream
-kernel is using so that it can used the fixed PLL.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Changes in v4:
- - display_timing for AUO b101ean01 new for v4.
-Changes in v6:
- - Rebased to drm-misc next
- - Added tags
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
 ---
+Previous discussion is here:
+https://lore.kernel.org/linuxppc-dev/20190528200014.GV28207@linux.ibm.com/T/
 
- drivers/gpu/drm/panel/panel-simple.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ Documentation/RCU/Design/Requirements/Requirements.html | 2 +-
+ arch/powerpc/include/asm/kvm_book3s_64.h                | 2 +-
+ include/linux/rculist.h                                 | 4 ++--
+ include/linux/rcupdate.h                                | 2 +-
+ kernel/trace/ftrace_internal.h                          | 8 ++++----
+ kernel/trace/trace.c                                    | 4 ++--
+ 6 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 602809f6da6a..226f068fb679 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -595,22 +595,21 @@ static const struct panel_desc auo_b101aw03 = {
- 	},
- };
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+index f04c467e55c5..467251f7fef6 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.html
++++ b/Documentation/RCU/Design/Requirements/Requirements.html
+@@ -2514,7 +2514,7 @@ disabled across the entire RCU read-side critical section.
+ <p>
+ It is possible to use tracing on RCU code, but tracing itself
+ uses RCU.
+-For this reason, <tt>rcu_dereference_raw_notrace()</tt>
++For this reason, <tt>rcu_dereference_raw_check()</tt>
+ is provided for use by tracing, which avoids the destructive
+ recursion that could otherwise ensue.
+ This API is also used by virtualization in some architectures,
+diff --git a/arch/powerpc/include/asm/kvm_book3s_64.h b/arch/powerpc/include/asm/kvm_book3s_64.h
+index 21b1ed5df888..53388a311967 100644
+--- a/arch/powerpc/include/asm/kvm_book3s_64.h
++++ b/arch/powerpc/include/asm/kvm_book3s_64.h
+@@ -546,7 +546,7 @@ static inline void note_hpte_modification(struct kvm *kvm,
+  */
+ static inline struct kvm_memslots *kvm_memslots_raw(struct kvm *kvm)
+ {
+-	return rcu_dereference_raw_notrace(kvm->memslots[0]);
++	return rcu_dereference_raw_check(kvm->memslots[0]);
+ }
  
--static const struct drm_display_mode auo_b101ean01_mode = {
--	.clock = 72500,
--	.hdisplay = 1280,
--	.hsync_start = 1280 + 119,
--	.hsync_end = 1280 + 119 + 32,
--	.htotal = 1280 + 119 + 32 + 21,
--	.vdisplay = 800,
--	.vsync_start = 800 + 4,
--	.vsync_end = 800 + 4 + 20,
--	.vtotal = 800 + 4 + 20 + 8,
--	.vrefresh = 60,
-+static const struct display_timing auo_b101ean01_timing = {
-+	.pixelclock = { 65300000, 72500000, 75000000 },
-+	.hactive = { 1280, 1280, 1280 },
-+	.hfront_porch = { 18, 119, 119 },
-+	.hback_porch = { 21, 21, 21 },
-+	.hsync_len = { 32, 32, 32 },
-+	.vactive = { 800, 800, 800 },
-+	.vfront_porch = { 4, 4, 4 },
-+	.vback_porch = { 8, 8, 8 },
-+	.vsync_len = { 18, 20, 20 },
- };
+ extern void kvmppc_mmu_debugfs_init(struct kvm *kvm);
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index e91ec9ddcd30..10aab1d2d471 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -642,10 +642,10 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
+  * not do any RCU debugging or tracing.
+  */
+ #define hlist_for_each_entry_rcu_notrace(pos, head, member)			\
+-	for (pos = hlist_entry_safe (rcu_dereference_raw_notrace(hlist_first_rcu(head)),\
++	for (pos = hlist_entry_safe (rcu_dereference_raw_check(hlist_first_rcu(head)),\
+ 			typeof(*(pos)), member);			\
+ 		pos;							\
+-		pos = hlist_entry_safe(rcu_dereference_raw_notrace(hlist_next_rcu(\
++		pos = hlist_entry_safe(rcu_dereference_raw_check(hlist_next_rcu(\
+ 			&(pos)->member)), typeof(*(pos)), member))
  
- static const struct panel_desc auo_b101ean01 = {
--	.modes = &auo_b101ean01_mode,
--	.num_modes = 1,
-+	.timings = &auo_b101ean01_timing,
-+	.num_timings = 1,
- 	.bpc = 6,
- 	.size = {
- 		.width = 217,
+ /**
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 0c9b92799abc..e5161e377ad4 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -478,7 +478,7 @@ do {									      \
+  * The no-tracing version of rcu_dereference_raw() must not call
+  * rcu_read_lock_held().
+  */
+-#define rcu_dereference_raw_notrace(p) __rcu_dereference_check((p), 1, __rcu)
++#define rcu_dereference_raw_check(p) __rcu_dereference_check((p), 1, __rcu)
+ 
+ /**
+  * rcu_dereference_protected() - fetch RCU pointer when updates prevented
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 0515a2096f90..0456e0a3dab1 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -6,22 +6,22 @@
+ 
+ /*
+  * Traverse the ftrace_global_list, invoking all entries.  The reason that we
+- * can use rcu_dereference_raw_notrace() is that elements removed from this list
++ * can use rcu_dereference_raw_check() is that elements removed from this list
+  * are simply leaked, so there is no need to interact with a grace-period
+- * mechanism.  The rcu_dereference_raw_notrace() calls are needed to handle
++ * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
+  * concurrent insertions into the ftrace_global_list.
+  *
+  * Silly Alpha and silly pointer-speculation compiler optimizations!
+  */
+ #define do_for_each_ftrace_op(op, list)			\
+-	op = rcu_dereference_raw_notrace(list);			\
++	op = rcu_dereference_raw_check(list);			\
+ 	do
+ 
+ /*
+  * Optimized for just a single item in the list (as that is the normal case).
+  */
+ #define while_for_each_ftrace_op(op)				\
+-	while (likely(op = rcu_dereference_raw_notrace((op)->next)) &&	\
++	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
+ 	       unlikely((op) != &ftrace_list_end))
+ 
+ extern struct ftrace_ops __rcu *ftrace_ops_list;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2c92b3d9ea30..1d69110d9e5b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2642,10 +2642,10 @@ static void ftrace_exports(struct ring_buffer_event *event)
+ 
+ 	preempt_disable_notrace();
+ 
+-	export = rcu_dereference_raw_notrace(ftrace_exports_list);
++	export = rcu_dereference_raw_check(ftrace_exports_list);
+ 	while (export) {
+ 		trace_process_export(export, event);
+-		export = rcu_dereference_raw_notrace(export->next);
++		export = rcu_dereference_raw_check(export->next);
+ 	}
+ 
+ 	preempt_enable_notrace();
 -- 
 2.22.0.410.gd8fdbe21b5-goog
-
