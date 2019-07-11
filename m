@@ -2,131 +2,101 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4188BC31E42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C884C31E41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFBF2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuuDg3G9"
+	by mail.kernel.org (Postfix) with ESMTP id 6653E21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562864682;
+	bh=ZtQbjTKSuG5miBFoKtVBUh9w0F5SVtSPWCsiPg1i9Fo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HvIEG+TzkOt/EDkrZE/H0D0fsegVlDJOfAM1ugkdPvY2yLSXe309d9FY6713K2r5w
+	 RsLrAV3BmVWirwa2E2rnCd/Gj97lI5yqAwcohgcxmL9gXWYwRy7GvSpHM98Nj+BcMI
+	 kusWaotf75+fZ0a1c9geodG6ZFXZT22tXJMNHkR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfGKRD1 (ORCPT
+        id S1728748AbfGKREl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:03:27 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45980 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGKRD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:03:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so6487496lje.12;
-        Thu, 11 Jul 2019 10:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=poZMR+/iqhG3v4xOfyiATFmovw9vtsgxY+271Xi/Cog=;
-        b=BuuDg3G9UWeoBZfqsugcEKWYp/PJ8BC9sfdgtT3jAaN6afHGwxq7NkJky6nBxlHB3F
-         2D8S+jhp8NNjLxS5WXAZZUf0p+ytrEFiMB+BQY8VCxB3jH/37dPmG7Zg737wGW/9Mjxg
-         KbRJL3n8xwxPoQRisTnHY5lY1oOUS+LWTc7z23mptLbXhGbso7i53JJZXx6xJby78/WU
-         ssM25MxbIRLpvMEejsd+to+AQRuWGqhmDuvbMyoCFkV9IYgO6m8CEGZuqCfCDEofNlJE
-         Z9/efZ/efuimPX7mafjPtkh+dEGuwaF4NdccOOYmrZDSv6DkaNEvxNFT/lY7HUQy7+ZJ
-         IfGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=poZMR+/iqhG3v4xOfyiATFmovw9vtsgxY+271Xi/Cog=;
-        b=kI+nKsCE1rTB+nf2iQFleJp4nFIuU+PC2CmdGiRP++g3S6WkViNnFfKBlHgKJGHrF1
-         FDOCcXC+l8du1JMwjE5ZAkWP/qobLmh+oDLKFIycLCe6O2pmMZ1cbcJj5D2nYN14B/qn
-         LovhC1dpHvbn7ObLiVZlW1lQRG8MUqbq8K/JN+kDeu+a3faWNvRAGbynMUTS1xE2sfRc
-         19Jr4IP6bLmY4c66YTy+YtbZD4d5b5HEnmJVPDymj6GkjgMLY0s9XjNajByS8A82giMF
-         /L3Jlvj5TahEUZi/EW48RlRbtJze3ZiloATs87ZPlZ7td6N76E3pC08PqT0+9HnkvC6N
-         ihnQ==
-X-Gm-Message-State: APjAAAU+RfyDBwH+5mIHs4Jd0RReVvQmZhUdbtACdh5oWu68ouDwExcu
-        CmiHOEftp51wdDftVFqBgYKUPRgm
-X-Google-Smtp-Source: APXvYqzEw0D1L1Jf1yGuRGjXpk3Wr2+dEw8JPyoRdvwkR4c5Pb4ONMol/nsDmFw3szvS+rm9TpntNg==
-X-Received: by 2002:a2e:3013:: with SMTP id w19mr3187304ljw.73.1562864604445;
-        Thu, 11 Jul 2019 10:03:24 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id d21sm808224lfc.73.2019.07.11.10.03.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 10:03:23 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] ARM: tegra: Remove cpuidle drivers
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190711031312.10038-1-digetx@gmail.com>
- <20190711031312.10038-2-digetx@gmail.com>
- <c087a5cb-2ffa-1cf6-f0bf-631234759a22@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a6e4b43e-369c-c501-6d2e-69d5b940ff9c@gmail.com>
-Date:   Thu, 11 Jul 2019 20:03:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 11 Jul 2019 13:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbfGKREl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:04:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A67932084B;
+        Thu, 11 Jul 2019 17:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562864680;
+        bh=ZtQbjTKSuG5miBFoKtVBUh9w0F5SVtSPWCsiPg1i9Fo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GeFU5ITLxBKdmriot8FGzOsfEBIvdDqkmvEqLn63s1pW2FnpQGlQ0qEnhSPcurbc7
+         cFUwxVR8BFQ+AQBjr3ZTITnWKw3bNnoWsZ2xJUxOsmg//p7SOder5U6hq7WC2D6zlU
+         IIPMtd5MzVGC+UPI+46EJrH/6armNOEcFbsj84v0=
+Date:   Thu, 11 Jul 2019 19:04:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Douglas Anderson <dianders@chromium.org>, stable@vger.kernel.org,
+        groeck@chromium.org, sukhomlinov@google.com,
+        jarkko.sakkinen@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
+ operations
+Message-ID: <20190711170437.GA7544@kroah.com>
+References: <20190711162919.23813-1-dianders@chromium.org>
+ <20190711163915.GD25807@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <c087a5cb-2ffa-1cf6-f0bf-631234759a22@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711163915.GD25807@ziepe.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.07.2019 12:26, Jon Hunter пишет:
+On Thu, Jul 11, 2019 at 01:39:15PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jul 11, 2019 at 09:29:19AM -0700, Douglas Anderson wrote:
+> > From: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > 
+> > commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
+> > 
+> > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> > future TPM operations. TPM 1.2 behavior was different, future TPM
+> > operations weren't disabled, causing rare issues. This patch ensures
+> > that future TPM operations are disabled.
+> > 
+> > Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > [dianders: resolved merge conflicts with mainline]
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > This is the backport of the patch referenced above to 4.19 as was done
+> > in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
+> > presumably applies to some older kernels.  NOTE that the problem
+> > itself has existed for a long time, but continuing to backport this
+> > exact solution to super old kernels is out of scope for me.  For those
+> > truly interested feel free to reference the past discussion [1].
+> > 
+> > Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
+> > chip power gating out of tpm_transmit()") and commit 719b7d81f204
+> > ("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
+> > seem like a good idea to backport 17 patches to avoid the conflict.
 > 
-> On 11/07/2019 04:13, Dmitry Osipenko wrote:
->> Remove the old drivers to replace them cleanly with a new one later on.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  arch/arm/mach-tegra/Makefile           |  13 --
->>  arch/arm/mach-tegra/cpuidle-tegra114.c |  89 -----------
->>  arch/arm/mach-tegra/cpuidle-tegra20.c  | 212 -------------------------
->>  arch/arm/mach-tegra/cpuidle-tegra30.c  | 132 ---------------
->>  arch/arm/mach-tegra/cpuidle.c          |  50 ------
->>  arch/arm/mach-tegra/cpuidle.h          |  21 ---
->>  arch/arm/mach-tegra/irq.c              |  18 ---
->>  arch/arm/mach-tegra/irq.h              |  11 --
->>  arch/arm/mach-tegra/pm.c               |   7 -
->>  arch/arm/mach-tegra/pm.h               |   1 -
->>  arch/arm/mach-tegra/reset-handler.S    |  11 --
->>  arch/arm/mach-tegra/reset.h            |   9 +-
->>  arch/arm/mach-tegra/sleep-tegra20.S    | 190 +---------------------
->>  arch/arm/mach-tegra/sleep.h            |  12 --
->>  arch/arm/mach-tegra/tegra.c            |   3 -
->>  drivers/soc/tegra/Kconfig              |   1 -
->>  include/soc/tegra/cpuidle.h            |   4 -
->>  17 files changed, 5 insertions(+), 779 deletions(-)
->>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
->>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
->>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
->>  delete mode 100644 arch/arm/mach-tegra/cpuidle.c
->>  delete mode 100644 arch/arm/mach-tegra/cpuidle.h
->>  delete mode 100644 arch/arm/mach-tegra/irq.h
-> 
-> By removing all the above, it is really hard to review the diff. Is
-> there any way you could first consolidate the cpuidle drivers into say
-> the existing arch/arm/mach-tegra/cpuidle-tegra20.c and then move to
-> drivers/cpuidle?
+> Careful with this, you can't backport this to any kernels that don't
+> have the sysfs ops locking changes or they will crash in sysfs code.
 
-I'm afraid that it will make reviewing even more difficult because
-everything that is removed here is not returned in the further patches.
-The new driver is based on the older ones, but I wrote it from scratch
-and it's not only looks different, but also works a bit different as you
-may see.
+And what commit added that?
 
-Could you please clarify what exactly makes it hard to review? The diff
-looks pretty clean to me, while squashing everything into existing
-driver should be quite a mess.
+thanks,
+
+greg k-h
