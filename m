@@ -2,99 +2,119 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BA5C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B96BC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5BA21530
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562818313;
-	bh=1d8dAC60LzDPiVvA1D6bKHzeotgyr3lMgRRyxoQwW+0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LVIr7784kdXixeimCV6W7hiV6VHfPBqnuZWy6rLG9gpbsD+3r/SYHMTWD6utMMQq0
-	 VAv+Qn4YYHlUdRIufwVmCcm9ao2PtU0qKMAEcXXPYd1E0SVsf/ffWGzE+BlSy8NY5d
-	 sdJMvyoM6JQR8ylL/jSDHzQYjUAVpD3BhrnutN4A=
+	by mail.kernel.org (Postfix) with ESMTP id E3476206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQipN+bs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfGKEK3 (ORCPT
+        id S1727906AbfGKELx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 00:10:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38820 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKEK3 (ORCPT
+        Thu, 11 Jul 2019 00:11:53 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43384 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfGKELw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 00:10:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r9so4278688ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 21:10:28 -0700 (PDT)
+        Thu, 11 Jul 2019 00:11:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id cl9so2288439plb.10;
+        Wed, 10 Jul 2019 21:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=es3onYrqLbpa7Sg/jHlny3UgofAk0AnWsFMN4Hpiw40=;
-        b=cylJm6dVQKhOUgs7KIfMEf+l/0xCFn7M4HkOnMV5YehwokYf4o/DcNgerXxok/p0PA
-         f+Bsy7JLNvmc8jNeoObUhT7Npo7EhCVRNJoo+/Wd1axwaFiKpjPBQzcfKvpfOka2q786
-         MK+pdglCk6uEpoHUq3ooeJ3tXLxXaekEJyk+E=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bSqx5lRhnvQ+7sTCSs3xCfsXxcwdrD2eEqRPLZvVrbA=;
+        b=HQipN+bsvIBMHH7pXW047PoLn1gb24JU6O6094dySrF2kg2I9dihkWzrRRvEW5lmbx
+         1WmRCHYsgMmVisomKYe2R9zHJVAGjer/+fC5cNecSCiC9ZOFF88hNsN8Bgc+8fFyZmBk
+         pUnaMkAQL/N/+YyY12cO9ELzj3E7V5kOk18t/MYMKhvmpITlJVpl6YNlaTZ7p84fv+Q3
+         dNMGD77wMSl+tMmXnHw0QccYZfTcT27l2F0ZmVBkiorsIagbeZx//DAzWP/AI9R9kgMV
+         9RaUX0IuYTR0iL9W5nPOIGx73j+/VWjmf46iWkV3/kbhK7tEFEeWpcc+YkymY9Oc6szH
+         ClEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=es3onYrqLbpa7Sg/jHlny3UgofAk0AnWsFMN4Hpiw40=;
-        b=TvSC+PBzOkIQjgkP3MycjwE+lncNFjEcwv2mGw5ZvE0bCLfyjm4G2hewK8AOVGnpcc
-         ZvYtYObKdtSXv7uX2ay7x+4Vey/lEu/JYNJZeAMu5EG5y8y6kNA86F363bT79ZX6iNeF
-         QZjub9GpGljVx27oIKQ3Wo85VvDTE7zw40xJH5HhxtVmQdFlAGNlj0k88iSsuH9nIZLd
-         50vG34biHcF0uTckp2QgIXzqMCT2K8z8URQV9dJVIFvyvcaeb0f3zSiPRF+AbO/h9d2a
-         RV4rb48m58NnFZHQIHu1T8LsL7Z736rdMWIm5jkLnzBriFWktANGDno+BwtJ5fM30kZP
-         mbpw==
-X-Gm-Message-State: APjAAAULpg81wGnjRuxFGcx4DDdLNv15RPvyJAd3j8YRBd6oegos7tH1
-        aMqf0OFXzsGE621mO9ciXUZ6/xIQq74=
-X-Google-Smtp-Source: APXvYqzdeTTTQg19JDlfV7xRTP2ET3B7SV+3a+H5dQq41I5jf76YBfOsvgtNjav9OajwoLFmMI1YCg==
-X-Received: by 2002:a2e:800c:: with SMTP id j12mr571332ljg.22.1562818226835;
-        Wed, 10 Jul 2019 21:10:26 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id v17sm854674ljg.36.2019.07.10.21.10.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 21:10:26 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id c19so3056793lfm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 21:10:25 -0700 (PDT)
-X-Received: by 2002:a19:641a:: with SMTP id y26mr563262lfb.29.1562818225520;
- Wed, 10 Jul 2019 21:10:25 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bSqx5lRhnvQ+7sTCSs3xCfsXxcwdrD2eEqRPLZvVrbA=;
+        b=Ak27Wgk8I6t4u26yZB0FyFeYNGCAfl99mBjcrmMnJnxW+Wh1jDqHR/3aXBcOb+0+dX
+         SOye7VvLTUpcw5XCAD7WWEyfXLuVKxxIe4ZMWtVV40MTpkUsqHnw4XNiu2ySgWOuGeGl
+         ADOwsDGdFHqMKJPXYgzCvUjFgHgT3SIp+P9PtL47dzCb7WWI41cRmns/Fr14D35/GB2k
+         sALdKcAfko4VoqmgrY/i6sWJRqOQJQWpOR9MQLbslBNauNZXiG7x3sFT5PojOsIH0VWe
+         w9W1G9h5x0/Yy8ZvvYBF+KNdfkrt5qFy5UEg7WHg1rLORWtNxauJ2J14HGMNz58SMs1P
+         OGnQ==
+X-Gm-Message-State: APjAAAUaAiStmKGCw8J6P4GndXnoCJudtiJ/tRzAMHvt13q6VGyj6ptA
+        bKrHEYx8JZBZ+CQNDXT3sH8=
+X-Google-Smtp-Source: APXvYqz7t7+RwovcwFBuTIN5fXo1cdhnlVpoV9TKSdDMLz0WqLr7TyJkJsDJ2xPHxhsibEhdPdupFQ==
+X-Received: by 2002:a17:902:42d:: with SMTP id 42mr2105475ple.228.1562818312183;
+        Wed, 10 Jul 2019 21:11:52 -0700 (PDT)
+Received: from linux-l9pv.suse ([202.47.205.198])
+        by smtp.gmail.com with ESMTPSA id 12sm3586433pfi.60.2019.07.10.21.11.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 21:11:51 -0700 (PDT)
+From:   joeyli <joeyli.kernel@gmail.com>
+X-Google-Original-From: joeyli <jlee@suse.com>
+Date:   Thu, 11 Jul 2019 12:11:45 +0800
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH V34 10/29] hibernate: Disable when the kernel is locked
+ down
+Message-ID: <20190711041145.GA28145@linux-l9pv.suse>
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <20190622000358.19895-11-matthewgarrett@google.com>
+ <20190622175208.GB30317@amd>
+ <nycvar.YFH.7.76.1906241520500.27227@cbobk.fhfr.pm>
 MIME-Version: 1.0
-References: <20190711023501.963-1-devel@etsukata.com>
-In-Reply-To: <20190711023501.963-1-devel@etsukata.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 10 Jul 2019 21:10:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgd68CAFKXYKHojqEWu17Hrsk2UmMVcN3SQFuXnNMnc+w@mail.gmail.com>
-Message-ID: <CAHk-=wgd68CAFKXYKHojqEWu17Hrsk2UmMVcN3SQFuXnNMnc+w@mail.gmail.com>
-Subject: Re: [PATCH] x86/stacktrace: Fix infinite loop in arch_stack_walk_user()
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Anvin <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1906241520500.27227@cbobk.fhfr.pm>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 7:35 PM Eiichi Tsukata <devel@etsukata.com> wrote:
+Hi experts,
+
+On Mon, Jun 24, 2019 at 03:21:23PM +0200, Jiri Kosina wrote:
+> On Sat, 22 Jun 2019, Pavel Machek wrote:
+> 
+> > > There is currently no way to verify the resume image when returning
+> > > from hibernate.  This might compromise the signed modules trust model,
+> > > so until we can work with signed hibernate images we disable it when the
+> > > kernel is locked down.
+> > 
+> > I keep getting these...
+> > 
+> > IIRC suse has patches to verify the images.
+> 
+> Yeah, Joey Lee is taking care of those. CCing.
 >
-> Once we find a lack of return address, there is no need to continue
-> loop, so let's break out.
 
-Looks good to me, feel free to add
+The last time that I sent for hibernation encryption and authentication is
+here:
+    https://lkml.org/lkml/2019/1/3/281
 
-  Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+It needs some big changes after review:
+ - Simplify the design: remove keyring dependency and trampoline.
+ - Encrypted whole snapshot image instead of only data pages.
+ - Using TPM:
+        - Direct use TPM API in hibernation instead of keyring
+        - Localities (suggested by James Bottomley)
 
-and I'll assume this comes through the x86 -tip tree..
+I am still finding enough time to implement those changes, especial TPM
+parts.
 
-         Linus
+Thanks
+Joey Lee
