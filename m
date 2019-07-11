@@ -2,102 +2,127 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F1C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3732C74A51
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5A821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:53:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2Y9bC61"
+	by mail.kernel.org (Postfix) with ESMTP id B5AE921537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfGKJxE (ORCPT
+        id S1728378AbfGKJyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:53:04 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:39876 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbfGKJxE (ORCPT
+        Thu, 11 Jul 2019 05:54:38 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40028 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728295AbfGKJyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:53:04 -0400
-Received: by mail-pl1-f176.google.com with SMTP id b7so2754363pls.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 02:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=6NtT6DZ7mBm/hq/33Gk2DQ42P0ZV+m78SQV6jVayLo8=;
-        b=Z2Y9bC61KNVqyZKEhedmB5wwt4BD/sH6nP68A2fdBC05YFOlOPgvObOfNMhx87D0mV
-         NXqLmNH0r4NdnSRf0VlgVQHSe5wiAtYwIFPUWEYSHT7xccDkxM4D4xMgLd/k3RI+glcV
-         fgUlxNimfcOH+iJtp3bccl3mzx/N44IzqAcWN+QaPfETpYbucW9IwitcwsXVzJ3M5vlv
-         0W5RaNBNSzTsokzHGxQH08p31GqJJM7sZGqRMx4td2iF475UNCFVMm3L9OPU7+01KS4Z
-         siYaFh01HaplwBThr9IQkVYt5XbM5TjnZOfgm/WNY4DwXV+Jnfb1A68f5Ak4RB+kbkur
-         /ECQ==
+        Thu, 11 Jul 2019 05:54:37 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e8so5213061otl.7;
+        Thu, 11 Jul 2019 02:54:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=6NtT6DZ7mBm/hq/33Gk2DQ42P0ZV+m78SQV6jVayLo8=;
-        b=XeTMaCZzA+cn+QV6xtSFZ0o2fhhVpRrIbVCyrj8UgcUKfweEIHE3GJn0yaXDGruaQ5
-         7NZ8b19QoOV4qN/i1ayb/spF0P87e2XFiH5L3aoh7sfQkS06vTFA3wndjKrF7DKYfkoS
-         1Jtf4b1xCRSryaN1PpsPJDG5RTgBk8V/INtyQoGDIcZvuaJztsWG4oxBq27cD+Qmu6To
-         EQu0vjR9+oYNCqgBT3Jf1oVY/cQruindeziUyNIfqsC0Do0hD4c+eopf1SpSLqeBY1+v
-         K3uCmuxNlmgAYkg14wi3n1IDLYa9J5cMCrYg8dcihfO6NGY+lgmzO0hhgY7M3/SbiPok
-         Plrw==
-X-Gm-Message-State: APjAAAXXhfJwJwV8svttcLmgqcvFbNFauaZ+Eozxhg9fJhcRlx844CB9
-        41yHkheISh5wjMTT8x4tO+BXQNv+
-X-Google-Smtp-Source: APXvYqxwj8f3cqPOLxu+gRyG5fvLWKETGlbpKXGYJFLFIGvk8Xz3Dgr/RmnZ4HUIN6hy+IAAZYpkoQ==
-X-Received: by 2002:a17:902:b603:: with SMTP id b3mr3687188pls.9.1562838783694;
-        Thu, 11 Jul 2019 02:53:03 -0700 (PDT)
-Received: from localhost (193-116-118-149.tpgi.com.au. [193.116.118.149])
-        by smtp.gmail.com with ESMTPSA id 131sm7518856pfx.57.2019.07.11.02.53.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 02:53:02 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 19:50:05 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [v5 3/6] powerpc/memcpy: Add memcpy_mcsafe for pmem
-To:     linux-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Santosh Sivaraj <santosh@fossix.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20190709121524.18762-1-santosh@fossix.org>
-        <20190709121524.18762-4-santosh@fossix.org>
-In-Reply-To: <20190709121524.18762-4-santosh@fossix.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O/5PBzbOSkarM0fR7QZKIT7PJomPF+Mz3qw+l6PgF5Y=;
+        b=Hu51tSBYMtiyFmL7P/YCNrY6FxEQxrb9+bwKpBBN4mpWZqIpzliLeAIOuAakMiGEHL
+         o46CGg8HxLDn2wJRpUAXGLd1WR8i67ZCDfTuDwT2wKIW9ImEOngFuERJY0b9AkiOTQpS
+         VDkl5Awan0ModEZaq/I3e+R1+9j/UTEJNvI9FAAtMkzOohkS5+dQjMC6Ka5Atu1IzC70
+         6o3vndBPaZduPosJCiYj9dIK8yfk6ETBEITaNGBY/92F8IqwTiJjRDE6+cFiwSD7/7bI
+         xTy9uaYO0DzrmnWqeV4Vz6k2xKb1K0vnbRtt+gPtOFLpkI11t/9w/dBOFH4LjpktS+Ku
+         SlPA==
+X-Gm-Message-State: APjAAAUK/PgKKy/P3d6KyCJbludQsRlPeErcfT+zzix2T6HimGj2f1nQ
+        Sq/OK+JPgU+2MwN9obFWX1pa+LZxmXUVrBd3h0g=
+X-Google-Smtp-Source: APXvYqyK0DKq3ZkjRdl7YQmWxsya6hifOg7+4DokzYCRW2KnOdJBEZwbn4B17kuLWtHJCatZb6xcjHbBhlJ8ZYeniDE=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr2691084otn.297.1562838876685;
+ Thu, 11 Jul 2019 02:54:36 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1562838505.oes5qb0f1o.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+ <8500a069-9e29-d6ad-e5e4-22d5a3eead59@electromag.com.au> <CAMuHMdWLcr0pf-ZM3+iWQGwDLB2xoHAZaeCKAjtEVEaiNed63Q@mail.gmail.com>
+ <1fc3a5ad-6eb6-3356-5fd4-93ce0482bb7e@electromag.com.au>
+In-Reply-To: <1fc3a5ad-6eb6-3356-5fd4-93ce0482bb7e@electromag.com.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 11 Jul 2019 11:54:25 +0200
+Message-ID: <CAMuHMdXTyN0wHJyZJavER7b5h5j=7j8MADhZvFwBLpH60x39sA@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexander Graf <agraf@suse.de>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Santosh Sivaraj's on July 9, 2019 10:15 pm:
-> From: Balbir Singh <bsingharora@gmail.com>
->=20
-> The pmem infrastructure uses memcpy_mcsafe in the pmem layer so as to
-> convert machine check exceptions into a return value on failure in case
-> a machine check exception is encountered during the memcpy. The return
-> value is the number of bytes remaining to be copied.
->=20
-> This patch largely borrows from the copyuser_power7 logic and does not ad=
-d
-> the VMX optimizations, largely to keep the patch simple. If needed those
-> optimizations can be folded in.
+Hi Phil,
 
-Shouldn't this patch go after the exception table stuff now if you
-squashed them together?
+On Thu, Jul 11, 2019 at 11:24 AM Phil Reid <preid@electromag.com.au> wrote:
+> On 10/07/2019 18:21, Geert Uytterhoeven wrote:
+> > On Wed, Jul 10, 2019 at 4:00 AM Phil Reid <preid@electromag.com.au> wrote:
+> >> On 6/07/2019 00:05, Geert Uytterhoeven wrote:
+> >>> GPIO controllers are exported to userspace using /dev/gpiochip*
+> >>> character devices.  Access control to these devices is provided by
+> >>> standard UNIX file system permissions, on an all-or-nothing basis:
+> >>> either a GPIO controller is accessible for a user, or it is not.
+> >>> Currently no mechanism exists to control access to individual GPIOs.
+> >>>
+> >>> Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
+> >>> and expose them as a new gpiochip.  This is useful for implementing
+> >>> access control, and assigning a set of GPIOs to a specific user.
+> >>> Furthermore, it would simplify and harden exporting GPIOs to a virtual
+> >>> machine, as the VM can just grab the full virtual GPIO controller, and
+> >>> no longer needs to care about which GPIOs to grab and which not,
+> >>> reducing the attack surface.
+> >>>
+> >>> Virtual GPIO controllers are instantiated by writing to the "new_device"
+> >>> attribute file in sysfs:
+> >>>
+> >>>       $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+> >>>              "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+> >>>               > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+> >>>
+> >>> Likewise, virtual GPIO controllers can be destroyed after use:
+> >>>
+> >>>       $ echo gpio-virt-agg.<N> \
+> >>>               > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+> >>>
 
-Thanks,
-Nick
-=
+> >> Would it be possible to do the lookup via line names?
+> >
+> > Doesn't the fact that a GPIO has a line name means that it is in use, and
+> > thus cannot be aggregated and exported to another user?
+>
+> They can be given line names via the dt property gpio-line-names.
+> Which can be used by user space to find a gpio. Not sure if there's an equivalent api inkerenl.
+> But it looks like we can find the info via struct gpiochip_info / gpioline_info linfo and work
+> out the chip name and line offsets. So probably not required.
+>
+> Find the right gpio always seems tricky.
+> We have systems with multiple i2c gpio behind muxes that may or may not be present.
+> So i2c bus numbers are never consistent. And then different board revisions move the
+> same gpio line to a different pin (or cahnge the gpio chip type completely) to make routing easier etc.
+
+OK, so extending lookup to line names makes sense.
+This requires making gpio_name_to_desc() public.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
