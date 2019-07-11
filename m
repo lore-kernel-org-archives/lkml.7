@@ -2,95 +2,130 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC181C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A49CC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6A120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD0620838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:45:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kHHROSX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfGKFo1 (ORCPT
+        id S1728022AbfGKFpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:44:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64295 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfGKFo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:44:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 22:44:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
-   d="scan'208";a="167929709"
-Received: from liujing-dell.bj.intel.com ([10.238.145.70])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Jul 2019 22:44:25 -0700
-From:   Jing Liu <jing2.liu@linux.intel.com>
-To:     kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, linux-kernel@vger.kernel.org,
-        Jing Liu <jing2.liu@linux.intel.com>
-Subject: [PATCH v1] KVM: x86: expose AVX512_BF16 feature to guest
-Date:   Thu, 11 Jul 2019 13:49:57 +0800
-Message-Id: <1562824197-13658-1-git-send-email-jing2.liu@linux.intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 11 Jul 2019 01:45:53 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:59472 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfGKFpx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 01:45:53 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x6B5ip8V031345;
+        Thu, 11 Jul 2019 14:44:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6B5ip8V031345
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562823900;
+        bh=iRp9Du8hIMlIwOLhJe7rDNMn7P7N/4zadqD4+iwRwl8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kHHROSX5oyo66/pfhCsF+TrfXLXku+LACPJkW0iet8erC7xG/EvN4XWYSx5tsRd/W
+         lsFYztWkgGnh31I5CogAYVE1AD20ywUkiqdw7T2a/L9KKpjZ4e74xRXA4Peqey4nJ6
+         gowGCHXn/8v2uBm8G8bJdnfXKUn+mxBVNKfl4K7VKH6BOatc6BPFpwQWENIIJzddyh
+         ge9KxtwnrpMCyjXJRLm6OcUmdxeD2bEk99+ybLty2fZrElUbLtSesyNB+eHNlsaTnc
+         utDi+WeMxMGD4ZFlOGRLEAsSuC7BAGg7lUtPXje6fX8D/iDN7fK2xvGm5nMS3+DGR6
+         sQfWX0otXw6Jw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>, Nicolas Pitre <nico@fluxnic.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 11/11] kbuild: split out *.mod out of {single,multi}-used-m rules
+Date:   Thu, 11 Jul 2019 14:44:34 +0900
+Message-Id: <20190711054434.1177-12-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190711054434.1177-1-yamada.masahiro@socionext.com>
+References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AVX512 BFLOAT16 instructions support 16-bit BFLOAT16 floating-point
-format (BF16) for deep learning optimization.
+Currently, *.mod is created as a side-effect of obj-m.
 
-Intel adds AVX512 BFLOAT16 feature in CooperLake, which is CPUID.7.1.EAX[5].
+Split out *.mod as a dedicated build rule, which allows to unify
+the %.c -> %.o rule, and remove the single-used-m rule.
 
-Detailed information of the CPUID bit can be found here,
-https://software.intel.com/sites/default/files/managed/c5/15/\
-architecture-instruction-set-extensions-programming-reference.pdf.
+This also makes the incremental build of allmodconfig faster because
+it saves $(NM) invocation when there is no change in the module.
 
-Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-This patch depends on kernel patch https://lkml.org/lkml/2019/6/19/912
-and Paolo's patch set https://lkml.org/lkml/2019/7/4/468.
+Changes in v2: None
 
- arch/x86/kvm/cpuid.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ scripts/Makefile.build | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 8fc6039..0c125dd 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -358,9 +358,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
- 		F(MD_CLEAR);
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2709646b1a5d..63fc266b4985 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -67,8 +67,10 @@ ifeq ($(CONFIG_MODULES)$(need-modorder),y1)
+ modorder-target := $(obj)/modules.order
+ endif
  
-+	/* cpuid 7.1.eax */
-+	const u32 kvm_cpuid_7_1_eax_x86_features =
-+		F(AVX512_BF16);
++mod-targets := $(patsubst %.o, %.mod, $(obj-m))
 +
- 	switch (index) {
- 	case 0:
--		entry->eax = 0;
-+		entry->eax = min(entry->eax, 1);
- 		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
- 		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
- 		/* TSC_ADJUST is emulated */
-@@ -384,6 +388,12 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 		 */
- 		entry->edx |= F(ARCH_CAPABILITIES);
- 		break;
-+	case 1:
-+		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
-+		entry->ebx = 0;
-+		entry->ecx = 0;
-+		entry->edx = 0;
-+		break;
- 	default:
- 		WARN_ON_ONCE(1);
- 		entry->eax = 0;
+ __build: $(if $(KBUILD_BUILTIN),$(builtin-target) $(lib-target) $(extra-y)) \
+-	 $(if $(KBUILD_MODULES),$(obj-m) $(modorder-target)) \
++	 $(if $(KBUILD_MODULES),$(obj-m) $(mod-targets) $(modorder-target)) \
+ 	 $(subdir-ym) $(always)
+ 	@:
+ 
+@@ -266,7 +268,7 @@ endef
+ 
+ # List module undefined symbols (or empty line if not enabled)
+ ifdef CONFIG_TRIM_UNUSED_KSYMS
+-cmd_undef_syms = $(NM) $@ | sed -n 's/^  *U //p' | xargs echo
++cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | xargs echo
+ else
+ cmd_undef_syms = echo
+ endif
+@@ -276,11 +278,15 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ 	$(call cmd,force_checksrc)
+ 	$(call if_changed_rule,cc_o_c)
+ 
+-$(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+-	$(call cmd,force_checksrc)
+-	$(call if_changed_rule,cc_o_c)
+-	@{ echo $@; \
+-	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
++cmd_mod = { \
++	echo $(if $($*-objs)$($*-y)$($*-m), $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)), $(@:.mod=.o)); \
++	$(cmd_undef_syms); \
++	} > $@
++
++$(obj)/%.mod: $(obj)/%.o FORCE
++	$(call if_changed,mod)
++
++targets += $(mod-targets)
+ 
+ quiet_cmd_cc_lst_c = MKLST   $@
+       cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
+@@ -461,8 +467,6 @@ cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter %.o,$^) $(cmd_secanalysis
+ 
+ $(multi-used-m): FORCE
+ 	$(call if_changed,link_multi-m)
+-	@{ echo $(filter %.o,$^); \
+-	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
+ $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
+ 
+ targets += $(multi-used-m)
 -- 
-1.8.3.1
+2.17.1
 
