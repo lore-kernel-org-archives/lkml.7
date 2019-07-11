@@ -2,105 +2,121 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20131C74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDE1C71142
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33AC20863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F3D20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562865995;
+	bh=n/LavgywSbSYdxEOOVVhGMZtsE48Bn2F0pEkO7AYNA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2VhMT3mrKT3FP4DBcCdOkdbZD7nIXxSUfbedWiPVIh4Sq/IejICtANYRn0UYMEyD6
+	 J5GHE9LObJYCMvE0QcJ4gJY0tNfki1oWMYkgw0Z4UmNyaobguCNUM5NZRORUxQ7dML
+	 4TQvkWMTcuw7k/SByAksZ2652Dl1vR1xljr80xgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfGKR0Z (ORCPT
+        id S1728943AbfGKR0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:26:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39706 "EHLO mx1.redhat.com"
+        Thu, 11 Jul 2019 13:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbfGKR0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:26:25 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726213AbfGKR0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:26:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EF2BB307CB38;
-        Thu, 11 Jul 2019 17:26:24 +0000 (UTC)
-Received: from treble (ovpn-122-237.rdu2.redhat.com [10.10.122.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 405481001B28;
-        Thu, 11 Jul 2019 17:26:24 +0000 (UTC)
-Date:   Thu, 11 Jul 2019 12:26:21 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
-Message-ID: <20190711172621.a7ab7jorolicid3z@treble>
-References: <CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E2421019;
+        Thu, 11 Jul 2019 17:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562865993;
+        bh=n/LavgywSbSYdxEOOVVhGMZtsE48Bn2F0pEkO7AYNA8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A2vcvycnOqOc1dhR5lw8zBSQOrB1eXp/TZaXmEA6agkSjjIolTeAK5nwOsCTRpr+7
+         X49gZDBlCgCzFqZnvnLNYSMp4lVlJw/yTlu8aQgOLxoJTBuBTFSxF1ODdV+o8qNVz2
+         ECbLMuzxW6AB0a2pnW+twxLO0OXmSzGtPD8DzZnk=
+Date:   Thu, 11 Jul 2019 19:26:30 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Douglas Anderson <dianders@chromium.org>, stable@vger.kernel.org,
+        groeck@chromium.org, sukhomlinov@google.com,
+        jarkko.sakkinen@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
+ operations
+Message-ID: <20190711172630.GA11371@kroah.com>
+References: <20190711162919.23813-1-dianders@chromium.org>
+ <20190711163915.GD25807@ziepe.ca>
+ <20190711170437.GA7544@kroah.com>
+ <20190711171726.GE25807@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 11 Jul 2019 17:26:25 +0000 (UTC)
+In-Reply-To: <20190711171726.GE25807@ziepe.ca>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 02:40:06PM +0200, Arnd Bergmann wrote:
-> During randconfig testing with clang-9, I came across an object file
-> that makes objtool segfault, see attachment. Let me know if you need
-> more information to
-> debug this.
+On Thu, Jul 11, 2019 at 02:17:26PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jul 11, 2019 at 07:04:37PM +0200, Greg KH wrote:
+> > On Thu, Jul 11, 2019 at 01:39:15PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, Jul 11, 2019 at 09:29:19AM -0700, Douglas Anderson wrote:
+> > > > From: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > > > 
+> > > > commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
+> > > > 
+> > > > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> > > > future TPM operations. TPM 1.2 behavior was different, future TPM
+> > > > operations weren't disabled, causing rare issues. This patch ensures
+> > > > that future TPM operations are disabled.
+> > > > 
+> > > > Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > > > [dianders: resolved merge conflicts with mainline]
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > This is the backport of the patch referenced above to 4.19 as was done
+> > > > in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
+> > > > presumably applies to some older kernels.  NOTE that the problem
+> > > > itself has existed for a long time, but continuing to backport this
+> > > > exact solution to super old kernels is out of scope for me.  For those
+> > > > truly interested feel free to reference the past discussion [1].
+> > > > 
+> > > > Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
+> > > > chip power gating out of tpm_transmit()") and commit 719b7d81f204
+> > > > ("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
+> > > > seem like a good idea to backport 17 patches to avoid the conflict.
+> > > 
+> > > Careful with this, you can't backport this to any kernels that don't
+> > > have the sysfs ops locking changes or they will crash in sysfs code.
+> > 
+> > And what commit added that?
 > 
-> I also get a ton of objtool warnings building random configurations, but Nick
-> mentioned that there is still a bug related to asm-goto in the build I'm using
-> that may be the root cause. Once I have a fixed clang-9 build, I can have a look
-> at those as well.
+> commit 2677ca98ae377517930c183248221f69f771c921
+> Author: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Date:   Sun Nov 4 11:38:27 2018 +0200
+> 
+>     tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+>     
+>     Use tpm_try_get_ops() in tpm-sysfs.c so that we can consider moving
+>     other decorations (locking, localities, power management for example)
+>     inside it. This direction can be of course taken only after other call
+>     sites for tpm_transmit() have been treated in the same way.
+> 
+> The last sentence suggests there are other patches needed too though..
 
-Seg fault fix:
+So 5.1.  So does this original patch need to go into the 5.2 and 5.1
+kernels?
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 27818a93f0b1..ad18f8ef905a 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -902,7 +902,7 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
- 			    struct rela *table, struct rela *next_table)
- {
- 	struct rela *rela = table;
--	struct instruction *alt_insn;
-+	struct instruction *alt_insn, *prev_insn;
- 	struct alternative *alt;
- 	struct symbol *pfunc = insn->func->pfunc;
- 	unsigned int prev_offset = 0;
-@@ -924,6 +924,20 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
- 		if (!alt_insn)
- 			break;
- 
-+		if (!alt_insn->func) {
-+			/*
-+			 * Clang 9 has a quirk where a switch table may have
-+			 * unused entries in the middle of the table which
-+			 * point to just past the end of the function.  They're
-+			 * still part of the table but can be ignored.
-+			 */
-+			prev_insn = list_prev_entry(alt_insn, list);
-+			if (prev_insn->func && prev_insn->func->pfunc == pfunc)
-+				goto skip;
-+
-+			break;
-+		}
-+
- 		/* Make sure the jmp dest is in the function or subfunction: */
- 		if (alt_insn->func->pfunc != pfunc)
- 			break;
-@@ -936,6 +950,7 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
- 
- 		alt->insn = alt_insn;
- 		list_add_tail(&alt->list, &insn->alts);
-+skip:
- 		prev_offset = rela->offset;
- 	}
- 
+thanks,
+
+greg k-h
