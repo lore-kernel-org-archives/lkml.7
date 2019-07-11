@@ -2,144 +2,178 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE4C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F97C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3D120863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A408320863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vt08rtIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfGLIMQ (ORCPT
+        id S1726483AbfGLIMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:12:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2225 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726112AbfGLIMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:12:15 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 51D31B171A7986E02C84;
-        Fri, 12 Jul 2019 16:12:12 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 12 Jul 2019
- 16:12:10 +0800
-Subject: Re: [PATCH v2 0/5] Add NUMA-awareness to qspinlock
-To:     Jan Glauber <jglauber@marvell.com>,
-        Alex Kogan <alex.kogan@oracle.com>
-CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Fri, 12 Jul 2019 04:12:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33000 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfGLIMe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:12:34 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C89Jha099333;
+        Fri, 12 Jul 2019 08:11:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=pqd0p1GXeUPggPPvXgNNFelVAfyPsXqmmeemTWLVezY=;
+ b=Vt08rtIQ4pSnPnJ+H7ONebQ6+AySlLrp604xldWUxpRaxasHRQbCzRsfKgQZGQQ24eIi
+ s5+T67nk3RwOCHU7PoEsPVe1psrZbhvaYpka8P1OvmnoDUbA1cDgijo8OB9RABcbOrdM
+ AccTxS806NpbyBRBR8IcP8Ar2Icvb5BsodR6asWMYL9H7YgPdeN2wSKGkNRu8QCp2THj
+ QH44FLnXFlRT9gv850J5eHYM7287AtPBpk4+c0DsaBSRq3l4w972e6KovlfOYh8S8/Sx
+ SmdW6RdpTh6ioVifS7K9RrxzrUOJpIq7abJBHJRzBACwjX6m+5J0G6805hKDGgxxAg8l eA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2tjkkq44y2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 08:11:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C87aZX087491;
+        Fri, 12 Jul 2019 08:11:35 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2tmwgyn7hr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 08:11:34 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C8BXno016345;
+        Fri, 12 Jul 2019 08:11:34 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Jul 2019 01:11:33 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
+        srinivas.eeda@oracle.com,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "steven.sistare@oracle.com" <steven.sistare@oracle.com>,
-        "daniel.m.jordan@oracle.com" <daniel.m.jordan@oracle.com>,
-        "dave.dice@oracle.com" <dave.dice@oracle.com>,
-        "rahul.x.yadav@oracle.com" <rahul.x.yadav@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <CAEiAFz238Ywgn6iDAz9gM_3PgPhs-YuAVDptehUBv7MRRPx8Cw@mail.gmail.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <95683b80-f694-cf34-73fc-e6ec05462ee0@huawei.com>
-Date:   Fri, 12 Jul 2019 16:12:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAEiAFz238Ywgn6iDAz9gM_3PgPhs-YuAVDptehUBv7MRRPx8Cw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH v2] xen/pv: Fix a boot up hang revealed by int3 self test
+Date:   Thu, 11 Jul 2019 16:15:21 +0800
+Message-Id: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/3 19:58, Jan Glauber wrote:
-> Hi Alex,
-> I've tried this series on arm64 (ThunderX2 with up to SMT=4  and 224 CPUs)
-> with the borderline testcase of accessing a single file from all
-> threads. With that
-> testcase the qspinlock slowpath is the top spot in the kernel.
-> 
-> The results look really promising:
-> 
-> CPUs    normal    numa-qspinlocks
-> ---------------------------------------------
-> 56        149.41          73.90
-> 224      576.95          290.31
-> 
-> Also frontend-stalls are reduced to 50% and interconnect traffic is
-> greatly reduced.
-> Tested-by: Jan Glauber <jglauber@marvell.com>
+Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
+selftest") is used to ensure there is a gap setup in exception stack
+which could be used for inserting call return address.
 
-Tested this patchset on Kunpeng920 ARM64 server (96 cores,
-4 NUMA nodes), and with the same test case from Jan, I can
-see 150%+ boost! (Need to add a patch below [1].)
+This gap is missed in XEN PV int3 exception entry path, then below panic
+triggered:
 
-For the real workload such as Nginx I can see about 10%
-performance improvement as well.
+[    0.772876] general protection fault: 0000 [#1] SMP NOPTI
+[    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
+[    0.772893] RIP: e030:int3_magic+0x0/0x7
+[    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
+[    0.773334] Call Trace:
+[    0.773334]  alternative_instructions+0x3d/0x12e
+[    0.773334]  check_bugs+0x7c9/0x887
+[    0.773334]  ? __get_locked_pte+0x178/0x1f0
+[    0.773334]  start_kernel+0x4ff/0x535
+[    0.773334]  ? set_init_arg+0x55/0x55
+[    0.773334]  xen_start_kernel+0x571/0x57a
 
-Tested-by: Hanjun Guo <guohanjun@huawei.com>
+As xenint3 and int3 entry code are same except xenint3 doesn't generate
+a gap, we can fix it by using int3 and drop useless xenint3.
 
-Please cc me for new versions and I'm willing to test it.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ v2: fix up description.
+---
+ arch/x86/entry/entry_64.S    | 1 -
+ arch/x86/include/asm/traps.h | 2 +-
+ arch/x86/xen/enlighten_pv.c  | 2 +-
+ arch/x86/xen/xen-asm_64.S    | 1 -
+ 4 files changed, 2 insertions(+), 4 deletions(-)
 
-Thanks
-Hanjun
-
-[1]
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 657bbc5..72c1346 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -792,6 +792,20 @@ config NODES_SHIFT
-          Specify the maximum number of NUMA Nodes available on the target
-          system.  Increases memory reserved to accommodate various tables.
-
-+config NUMA_AWARE_SPINLOCKS
-+ bool "Numa-aware spinlocks"
-+ depends on NUMA
-+ default y
-+ help
-+   Introduce NUMA (Non Uniform Memory Access) awareness into
-+   the slow path of spinlocks.
-+
-+   The kernel will try to keep the lock on the same node,
-+   thus reducing the number of remote cache misses, while
-+   trading some of the short term fairness for better performance.
-+
-+   Say N if you want absolute first come first serve fairness.
-+
- config USE_PERCPU_NUMA_NODE_ID
-        def_bool y
-        depends on NUMA
-diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
-index 2994167..be5dd44 100644
---- a/kernel/locking/qspinlock_cna.h
-+++ b/kernel/locking/qspinlock_cna.h
-@@ -4,7 +4,7 @@
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 0ea4831..35a66fc 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1176,7 +1176,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
+ #ifdef CONFIG_XEN_PV
+ idtentry xennmi			do_nmi			has_error_code=0
+ idtentry xendebug		do_debug		has_error_code=0
+-idtentry xenint3		do_int3			has_error_code=0
  #endif
-
- #include <linux/random.h>
--
-+#include <linux/topology.h>
- /*
-  * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
-  *
-@@ -170,7 +170,7 @@ static __always_inline void cna_init_node(struct mcs_spinlock *node, int cpuid,
-                                          u32 tail)
- {
-        if (decode_numa_node(node->node_and_count) == -1)
--           store_numa_node(node, numa_cpu_node(cpuid));
-+         store_numa_node(node, cpu_to_node(cpuid));
-        node->encoded_tail = tail;
- }
+ 
+ idtentry general_protection	do_general_protection	has_error_code=1
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index 7d6f3f3..f2bd284 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -40,7 +40,7 @@
+ asmlinkage void xen_divide_error(void);
+ asmlinkage void xen_xennmi(void);
+ asmlinkage void xen_xendebug(void);
+-asmlinkage void xen_xenint3(void);
++asmlinkage void xen_int3(void);
+ asmlinkage void xen_overflow(void);
+ asmlinkage void xen_bounds(void);
+ asmlinkage void xen_invalid_op(void);
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 4722ba2..2138d69 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -596,7 +596,7 @@ struct trap_array_entry {
+ 
+ static struct trap_array_entry trap_array[] = {
+ 	{ debug,                       xen_xendebug,                    true },
+-	{ int3,                        xen_xenint3,                     true },
++	{ int3,                        xen_int3,                        true },
+ 	{ double_fault,                xen_double_fault,                true },
+ #ifdef CONFIG_X86_MCE
+ 	{ machine_check,               xen_machine_check,               true },
+diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
+index 1e9ef0b..ebf610b 100644
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -32,7 +32,6 @@ xen_pv_trap divide_error
+ xen_pv_trap debug
+ xen_pv_trap xendebug
+ xen_pv_trap int3
+-xen_pv_trap xenint3
+ xen_pv_trap xennmi
+ xen_pv_trap overflow
+ xen_pv_trap bounds
+-- 
+1.8.3.1
 
