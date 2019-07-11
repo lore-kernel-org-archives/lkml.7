@@ -2,83 +2,97 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F88C74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CA3C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AD620872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AB821655
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AecyH3z7"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="L+vpPUbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfGKMVn (ORCPT
+        id S1728644AbfGKMVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:21:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48942 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfGKMVm (ORCPT
+        Thu, 11 Jul 2019 08:21:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39296 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGKMVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:21:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L126jU2Qut/Cmlk8jA+23vne4GbXn8MhE5v9IRsKS9M=; b=AecyH3z7vXeAN3yErZeLBcVM3
-        1CLnyldEBELmTQSTRbZnMXHcVP9G88OdSk1+qmHTAzrHYdGK6X2RBRD0m2YVGIGHAhmvw13muh6/p
-        9GJhsJ49riwz9Ag6bx0hTFzZYSl0jfVOBOMIry49pOuciDHVGQ7pzTLM2m17QhjRIBw0OWSHwj0y8
-        SHzS2FYUdGLPdvuk6K4xOqnCow8cHyWcCtbbjGiw5fnl9K/i3o+rf9fe+PcsQ4GGcMlQuYpDnf5VA
-        zH4XaiqGEASDw2heBdtp6+vsTsZ78FrTtrkq+MYhRoH1tDLtqqJyc0CD3vB47FXtgmF24olza0mDX
-        dgvffZEKQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlY4m-00032z-35; Thu, 11 Jul 2019 12:21:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 801AC20B2B4DF; Thu, 11 Jul 2019 14:21:26 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 14:21:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
-Message-ID: <20190711122126.GN3419@hirez.programming.kicks-ass.net>
-References: <20190704195555.580363209@infradead.org>
- <20190704200050.534802824@infradead.org>
- <CALCETrXvTvFBaQB-kEe4cRTCXUyTbWLbcveWsH-kX4j915c_=w@mail.gmail.com>
- <CALCETrUzP4Wb=WNhGvc7k4oX7QQz1JXZ3-O8PQhs39kmZid0nw@mail.gmail.com>
- <CAHk-=wh+J7ts6OrzzscMj5FONd3TRAwAKPZ=BQmEb2E8_-RXTA@mail.gmail.com>
- <20190710162709.1c306f8a@gandalf.local.home>
+        Thu, 11 Jul 2019 08:21:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so2865564pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 05:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wKzIIBt+fcwYgb1WijLtPF2IxcS5FD6tOy9+Xwn7eRw=;
+        b=L+vpPUbDCRBwU4yazk9+F8bwJqmJigvHwVXp4eq3fOgsh9/qfyxNpBEqYZAa1ZGHw+
+         xPsbICepNF8tts7VNy9XEl411b8wrDJ4xP4ylGtHMjl51cfexb4NVqDVoq4ZDd9oVBdO
+         FWKtvQiH7KZ0cyqPId695lzZsnHo1DmocnbCdp57KCEBTh79/HuVVyl1yy9fkshmEsL8
+         kWOUUr+LabStYDubFOzEUDnqTvRvMsxenK0lo7Zjvgu1cBcO5y/6WrTZdijqyXEz3jrl
+         5fFidPqProEzoXu+IYxfAJGuawolucezD0gz3OaBr8howW7E7q0i3Ilfp/l7DPl6UmcP
+         Yizw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wKzIIBt+fcwYgb1WijLtPF2IxcS5FD6tOy9+Xwn7eRw=;
+        b=EGdf5Zf2Ze33c4eLFXh7rLfKSAFI3mah2FLZ0B2M1d12HCtoMcFivUaAjiXwmjUP5y
+         Fkdtbcn63XxyU3M0bGPFrGJKYVSYd70qGaARFrab9vBrvQEBaMInmyInM1Ic4tDcW1p3
+         Oik3uMHQdao9j/eki1kW21fLX2rFwjMtVMhEekYzeqFrCsPhgau3JijDYCGv/nojfO+S
+         HAAhA/s4rmGTMeIcI8SFfpiDP5h2CTuvWHky1qCDLSkYwT09pl2juPnpHiYaeHXEkMV8
+         qd2kFFaMtONXeg/2E1bdOsMKJxecWEFZ2Yu0I3YrxtYuu79Zh8AI/EwlPazccIQYNRB5
+         XW8Q==
+X-Gm-Message-State: APjAAAWUB/umQAn/0yBGW4QhByXArvk8BRzu/tZhBRtWPYSb+KKRFlNw
+        08udppOxoZpP8ESoyJ6oZ5A=
+X-Google-Smtp-Source: APXvYqxO5be22E/+NEO0kWVy0NthtjTtcUlIEV+ywC+Gd1B7Kzo1wwJW00IsEVZV2kMl/CRvK46uLg==
+X-Received: by 2002:a17:90a:ab01:: with SMTP id m1mr4366676pjq.69.1562847712344;
+        Thu, 11 Jul 2019 05:21:52 -0700 (PDT)
+Received: from localhost.localdomain (36-239-228-246.dynamic-ip.hinet.net. [36.239.228.246])
+        by smtp.gmail.com with ESMTPSA id q1sm11284536pfn.178.2019.07.11.05.21.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 05:21:51 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: rk808: Return REGULATOR_MODE_INVALID for invalid mode
+Date:   Thu, 11 Jul 2019 20:21:38 +0800
+Message-Id: <20190711122138.5221-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710162709.1c306f8a@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 04:27:09PM -0400, Steven Rostedt wrote:
+-EINVAL is not a valid return value for .of_map_mode, return
+REGULATOR_MODE_INVALID instead.
 
-> But isn't it easier for them to just pull the quick fix in, if it is in
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/rk808-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Steve, I've not yet seen a quick fix that actually fixes all the
-problems.
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index e7af0c53d449..61bd5ef0806c 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -606,7 +606,7 @@ static unsigned int rk8xx_regulator_of_map_mode(unsigned int mode)
+ 	case 2:
+ 		return REGULATOR_MODE_NORMAL;
+ 	default:
+-		return -EINVAL;
++		return REGULATOR_MODE_INVALID;
+ 	}
+ }
+ 
+-- 
+2.20.1
 
-Your initial one only fixes the IRQ tracing one, but leaves the context
-tracking one wide open.
