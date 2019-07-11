@@ -2,117 +2,131 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EE6C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722A2C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1733221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4659921019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="BWUkxdYr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c8TzrwqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfGKNp6 (ORCPT
+        id S1728372AbfGKNsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:45:58 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46049 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfGKNp5 (ORCPT
+        Thu, 11 Jul 2019 09:48:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55390 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfGKNsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:45:57 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e2so5841076edi.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 06:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Osxf+bNmRWplx05FCFX6Jw4X940F4YMRAtN+KD1L80M=;
-        b=BWUkxdYrwRk4QO6cw+CCGQLCmmrE9aF/PFrdYGs+8f6nNv6ByI7LCLurp8+DALuUUR
-         Z1ofWLt7DoC/hBA8wv3C0C/NgW+ci0hF3r5TLzfwBL3Y817KJ4oZgKdKUMCTOIDLihAP
-         TcLMIlJKhXcLtSwZAEtsiYHsnLi1LMj/o5VdCUPT9cjROEfYTJSjnbcurljYVIuzFkmh
-         BmCzjej4+rbPeeeaxK5+0+g2IrJSSaQdgKMnggKNWWTxVriZs7zE/es67goGvnNw0FRx
-         Ixonk4rG14acwMVibgqqmOaW2iHbtFW6WIsOVdFfoxOM5IKjEDueISVppPuBgvtLgXFo
-         Xhag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Osxf+bNmRWplx05FCFX6Jw4X940F4YMRAtN+KD1L80M=;
-        b=ZyPUpK54SxO7HC0nx5thoaPXVSX38UBZkSAgkbGBbmqBp4JjXB/C3MwqdXTSaJxBwL
-         CCOwvNjT12L7kNwthtePgd0NKYSrkJo2G/EcbuWmvGyZK6Gt529env7x6POwH3TXEBT8
-         xNktKxH5rBThbDTSZed6iZiR9tZXc1c5J29YbmZO+vjJywz/trpW52fA6rt4CD0iSGjA
-         T2HxNDCWkbvioWfTeEYxxT2KrqGhfe7iU/BDZeehKzuWzMkqALVAkK/qL7KW9zgCOVzf
-         wXkHfCbSqL4O0SyOOl6MFShApYoGFJLDOfi/gweXPsM/12f9zI5Yble4BqMi1JBwhd1S
-         IC9w==
-X-Gm-Message-State: APjAAAX0okQXycnCBoKhEuSXvNkNcYmY/tcq3CuxKCpdihS7C0O2rZ5o
-        oRVvAjJcwN0XyRqjcv3Rj/XHuYFcrgw=
-X-Google-Smtp-Source: APXvYqwd8Wy9UejCMZQY0P+7uYfmadKSV5vOhnywGcMFhKltfK819yupNBjvQoCQ1b/6nGfDct0ujQ==
-X-Received: by 2002:a50:941c:: with SMTP id p28mr3744158eda.103.1562852755782;
-        Thu, 11 Jul 2019 06:45:55 -0700 (PDT)
-Received: from brauner.io ([185.66.195.251])
-        by smtp.gmail.com with ESMTPSA id x21sm1678096edb.0.2019.07.11.06.45.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 06:45:55 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 15:45:53 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] clone3 for v5.3
-Message-ID: <20190711134552.jvahfwhvaxykbgfl@brauner.io>
-References: <20190708150042.11590-1-christian@brauner.io>
- <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
- <20190711053428.ofapcx7nn5xkyru4@brauner.io>
+        Thu, 11 Jul 2019 09:48:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=B8VPRtxAaRavzdJXhPNGPP7MJxy27D2BMEVGhwTkA7Q=; b=c8TzrwqUlt9qDq7vFPYtRVBn3H
+        DJX6fm8LSxp8r//78fWYTug6IOIH6geBZYWoJ4TYpizO7Auf6N1pg/+wvb4w6DAM26YzLByT0MSgp
+        evUPeJbSWAr5lJfEkWgcdX5J6Bhvf07xqbmj4/m9aTNZPLqXkp1S/1U+lAW3vBOvW0lDdC0zCdz/v
+        Lye8AT85BM2UXm31VdG3JBET4bqv6lc4kHnFgc3kqhq/OYyHtZiHN8dYc9gaJEqZToVuPqSSgsdnT
+        o6zqNnzdwABf4sX+eyYJckTDkvRP0lDq06+zAaJg0KxKy/92maynHWSddc2vAVyq71sQHEn1aeW9y
+        ZYlilr1Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlZQS-0003oU-9w; Thu, 11 Jul 2019 13:47:56 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B749D20B54EA8; Thu, 11 Jul 2019 15:47:54 +0200 (CEST)
+Date:   Thu, 11 Jul 2019 15:47:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        Mel Gorman <mgorman@suse.de>, riel@surriel.com
+Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
+ statistic
+Message-ID: <20190711134754.GD3402@hirez.programming.kicks-ass.net>
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190711053428.ofapcx7nn5xkyru4@brauner.io>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 07:34:28AM +0200, Christian Brauner wrote:
-> On Wed, Jul 10, 2019 at 10:24:26PM -0700, Linus Torvalds wrote:
-> > On Mon, Jul 8, 2019 at 8:05 AM Christian Brauner <christian@brauner.io> wrote:
-> > >
-> > > /* Syscall number 435 */
-> > > clone3() uses syscall number 435 and is coordinated with pidfd_open() which
-> > > uses syscall number 434. I'm not aware of any other syscall targeted for
-> > > 5.3 that has chosen the same number.
-> > 
-> > You say that, and 434/435 would make sense, but that's not what the
-> > code I see in the pull request actually does.
-> > 
-> > It seems to use syscall 436.
-> > 
-> > I think it's because openat2() is looking to use 435, but I'm a bit
-> > nervous about the conflict between the code and your commentary..
+On Wed, Jul 03, 2019 at 11:28:10AM +0800, 王贇 wrote:
+
+> @@ -3562,10 +3563,53 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+>  		seq_putc(m, '\n');
+>  	}
 > 
-> Sorry, that was just me being dumb and forgetting that there was
-> close_range() which had a chance of going through Al's tree. So I left a
-> hole for it.
+> +#ifdef CONFIG_NUMA_BALANCING
+> +	seq_puts(m, "locality");
+> +	for (nr = 0; nr < NR_NL_INTERVAL; nr++) {
+> +		int cpu;
+> +		u64 sum = 0;
+> +
+> +		for_each_possible_cpu(cpu)
+> +			sum += per_cpu(memcg->stat_numa->locality[nr], cpu);
+> +
+> +		seq_printf(m, " %u", jiffies_to_msecs(sum));
+> +	}
+> +	seq_putc(m, '\n');
+> +#endif
+> +
+>  	return 0;
+>  }
+>  #endif /* CONFIG_NUMA */
 > 
-> I don't terribly mind if it's 435 or 436. People pointed out you might
-> even renumber yourself if something makes more sense to you.
+> +#ifdef CONFIG_NUMA_BALANCING
+> +
+> +void memcg_stat_numa_update(struct task_struct *p)
+> +{
+> +	struct mem_cgroup *memcg;
+> +	unsigned long remote = p->numa_faults_locality[3];
+> +	unsigned long local = p->numa_faults_locality[4];
+> +	unsigned long idx = -1;
+> +
+> +	if (mem_cgroup_disabled())
+> +		return;
+> +
+> +	if (remote || local) {
+> +		idx = ((local * 10) / (remote + local)) - 2;
+> +		/* 0~29% in one slot for cache align */
+> +		if (idx < PERCENT_0_29)
+> +			idx = PERCENT_0_29;
+> +		else if (idx >= NR_NL_INTERVAL)
+> +			idx = NR_NL_INTERVAL - 1;
+> +	}
+> +
+> +	rcu_read_lock();
+> +	memcg = mem_cgroup_from_task(p);
+> +	if (idx != -1)
+> +		this_cpu_inc(memcg->stat_numa->locality[idx]);
 
-Just in case you prefer pulling from a __rebased__ tree. I prepared one.
-It does use syscall number 435 as advertised here and has the merge
-conflict I pointed out in the PR resolved:
+I thought cgroups were supposed to be hierarchical. That is, if we have:
 
-The following changes since commit 5450e8a316a64cddcbc15f90733ebc78aa736545:
+          R
+	 / \
+	 A
+	/\
+	  B
+	  \
+	   t1
 
-  Merge tag 'pidfd-updates-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux (2019-07-10 22:17:21 -0700)
+Then our task t1 should be accounted to B (as you do), but also to A and
+R.
 
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/clone3-rebased-v5.3
-
-for you to fetch changes up to 611e04b559151c441deedc79f1e57471c953bda7:
-
-  arch: handle arches who do not yet define clone3 (2019-07-11 14:59:15 +0200)
-
-Christian
+> +	rcu_read_unlock();
+> +}
+> +#endif
