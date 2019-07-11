@@ -2,114 +2,104 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AA1C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C747CC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4803C20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562876264;
-	bh=ecxQia7h6zY6lkWAw+wdMlXxzbuuZS5Qi/XXUMkiRSE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jqCGQPpREtKDKCK4FxG8LkEfdDbZs9iqQWAOcOS6c6zfF/HoSROHXZfbiu4+/qLGS
-	 V9Qq72hp/NLeia4a7H5Temoq2BeK8j2w3A7yaRiwiEu0VximTGBz2dJGVXXQTwPOZf
-	 G9SHIYv/dl4u4HnDw+a9FG54W6dCU8mMqv9VSI18=
+	by mail.kernel.org (Postfix) with ESMTP id 92E9320863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfGKURn (ORCPT
+        id S1728956AbfGKUZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:17:43 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36407 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfGKURm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:17:42 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so3606634plt.3;
-        Thu, 11 Jul 2019 13:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N9MaYRqFkwAqF71ONnWTbJHi2D4rYHtA0InGA4H4rtg=;
-        b=jRwO0RU1eD9uhuPJB7SM4XRu53do87oN8eoHLUW6PVVlTBOGDG6d2h/dRHNfz1pzLD
-         3GMYzI6zSDRQWN+Xoo2ZzIDTqZKzTudzwmH4OHBxRvP2KujXlP3iVMEV02h3x78JMN0I
-         VdwG1G++4ju7anDfUgVsizF+90IE+a3p5Fcux5x/M0o1QYIWVHsttw1HScD4Lovd99Z+
-         NVDaJKY2G7H3wNa71683ET7L5nemHP4SjzsAS5TjIHgl9QnczSmU6aRGT69id6YrWsi/
-         KZ1nWIqiPhksGN7A9+KjmZV6eBYv7BP+PTEAQeojBrCOZyDxzExqsG9g2T+I7DCsLQ7w
-         22sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N9MaYRqFkwAqF71ONnWTbJHi2D4rYHtA0InGA4H4rtg=;
-        b=JNlrFUuu8xVvIKomRso3IaCr+yknEBL2q8Xfaw8pGhQItuT/fwRWjhAvqJE4tpUue5
-         MaXPFhqLUi4WDZwiz9+lY6OWu1IZBIMSkJkA+OjdENtigxicqzcmq6MtmAuf6IW67PHP
-         yhyb9e6Bzi4qFYwe/Q9z5KujVqiVstzRkQnMiaydgGItOTI5+KVcQhMCwkJtRFbdq/5c
-         X79fcfDhZUYI+gHVOV5PDFxP0ZpIrk0ife3uCNQNxhj2rfvfFcTW8N71sUh0CFqzEhgn
-         5TLGLgzz7WpOfyrV9DcRm26mSwZP1jdPhYT4QwX5hC+xjGoxbHn8U2wYkAjGt1b53jCr
-         HXWw==
-X-Gm-Message-State: APjAAAWxYwVXjZNCZniK7sqlJNrNBwn4Hxa/NsWi+qb1Sowgu4dZFoHm
-        i7cqNO4z4NfByyVRsVMxMPM=
-X-Google-Smtp-Source: APXvYqyN8jV+gtWrH9cp4npV6WpiaPT8McmMqTbhekQ4Aituc/lP2flHFGQoYVZe04X31XueQMx80g==
-X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr6422191plb.76.1562876261867;
-        Thu, 11 Jul 2019 13:17:41 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:4153])
-        by smtp.gmail.com with ESMTPSA id e63sm5911276pgc.62.2019.07.11.13.17.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 13:17:39 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 13:17:36 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: Re: linux-next: build failure after merge of the block tree
-Message-ID: <20190711201736.GQ657710@devbig004.ftw2.facebook.com>
-References: <20190711151507.7ec1fd18@canb.auug.org.au>
+        Thu, 11 Jul 2019 16:25:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1758 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbfGKUZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 16:25:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 13:25:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
+   d="scan'208";a="168123117"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2019 13:25:20 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 11 Jul 2019 13:25:20 -0700
+Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.206]) by
+ FMSMSX154.amr.corp.intel.com ([169.254.6.214]) with mapi id 14.03.0439.000;
+ Thu, 11 Jul 2019 13:25:20 -0700
+From:   "Souza, Jose" <jose.souza@intel.com>
+To:     "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QA=
+Date:   Thu, 11 Jul 2019 20:25:19 +0000
+Message-ID: <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+In-Reply-To: <1562875878.2840.0.camel@HansenPartnership.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.24.9.133]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E314B7807B550846AB0B42284365433D@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711151507.7ec1fd18@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Yeah, my patche series raced with 8648de2c581e ("f2fs: add bio cache
-for IPU").  Jens, can you please apply this one too?
-
-On Thu, Jul 11, 2019 at 03:15:07PM +1000, Stephen Rothwell wrote:
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Thu, 11 Jul 2019 15:13:21 +1000
-> Subject: [PATCH] f2fs: fix for wbc_account_io rename
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  fs/f2fs/data.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 323306630f93..4eb2f3920140 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -513,7 +513,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
->  	}
->  
->  	if (fio->io_wbc)
-> -		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
-> +		wbc_account_cgroup_owner(fio->io_wbc, page, PAGE_SIZE);
-
-  Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
--- 
-tejun
+T24gVGh1LCAyMDE5LTA3LTExIGF0IDEzOjExIC0wNzAwLCBKYW1lcyBCb3R0b21sZXkgd3JvdGU6
+DQo+IE9uIFRodSwgMjAxOS0wNy0xMSBhdCAxMDoyOSArMDEwMCwgQ2hyaXMgV2lsc29uIHdyb3Rl
+Og0KPiA+IFF1b3RpbmcgSmFtZXMgQm90dG9tbGV5ICgyMDE5LTA2LTI5IDE5OjU2OjUyKQ0KPiA+
+ID4gVGhlIHN5bXB0b21zIGFyZSByZWFsbHkgd2VpcmQ6IHRoZSBzY3JlZW4gaW1hZ2UgaXMgbG9j
+a2VkIGluDQo+ID4gPiBwbGFjZS4gIFRoZSBtYWNoaW5lIGlzIHN0aWxsIGZ1bmN0aW9uYWwgYW5k
+IGlmIEkgbG9nIGluIG92ZXIgdGhlDQo+ID4gPiBuZXR3b3JrIGNhbiBkbyBhbnl0aGluZyBJIGxp
+a2UsIGluY2x1ZGluZyBraWxsaW5nIHRoZSBYIHNlcnZlcg0KPiA+ID4gYW5kDQo+ID4gPiB0aGUg
+ZGlzcGxheSB3aWxsIG5ldmVyIGFsdGVyLiAgSXQgYWxzbyBzZWVtcyB0aGF0IHRoZSBzeXN0ZW0g
+aXMNCj4gPiA+IGFjY2VwdGluZyBrZXlib2FyZCBpbnB1dCBiZWNhdXNlIHdoZW4gaXQgZnJlZXpl
+cyBJIGNhbiBjYXQNCj4gPiA+IGluZm9ybWF0aW9uIHRvIGEgZmlsZSAoaWYgdGhlIG1vdXNlIHdh
+cyBvdmVyIGFuIHh0ZXJtKSBhbmQgdmVyaWZ5DQo+ID4gPiBvdmVyIHRoZSBuZXR3b3JrIHRoZSBm
+aWxlIGNvbnRlbnRzLiBOb3RoaW5nIHVudXN1YWwgYXBwZWFycyBpbg0KPiA+ID4gZG1lc2cgd2hl
+biB0aGUgbG9ja3VwIGhhcHBlbnMuDQo+ID4gPiANCj4gPiA+IFRoZSBsYXN0IGtlcm5lbCBJIGJv
+b3RlZCBzdWNjZXNzZnVsbHkgb24gdGhlIHN5c3RlbSB3YXMgNS4wLCBzbw0KPiA+ID4gSSdsbCB0
+cnkgY29tcGlsaW5nIDUuMSB0byBuYXJyb3cgZG93biB0aGUgY2hhbmdlcy4NCj4gPiANCj4gPiBJ
+dCdzIGxpa2VseSB0aGlzIGlzIHBhbmVsIHNlbGYtcmVmcmVzaCBnb2luZyBoYXl3aXJlLg0KPiA+
+IA0KPiA+IGNvbW1pdCA4ZjZlODdkNmQ1NjFmMTBjZmE0OGE2ODczNDU1MTI0MTk4MzliNmQ4DQo+
+ID4gQXV0aG9yOiBKb3PDqSBSb2JlcnRvIGRlIFNvdXphIDxqb3NlLnNvdXphQGludGVsLmNvbT4N
+Cj4gPiBEYXRlOiAgIFRodSBNYXIgNyAxNjowMDo1MCAyMDE5IC0wODAwDQo+ID4gDQo+ID4gICAg
+IGRybS9pOTE1OiBFbmFibGUgUFNSMiBieSBkZWZhdWx0DQo+ID4gDQo+ID4gICAgIFRoZSBzdXBw
+b3J0IGZvciBQU1IyIHdhcyBwb2xpc2hlZCwgSUdUIHRlc3RzIGZvciBQU1IyIHdhcyBhZGRlZA0K
+PiA+IGFuZA0KPiA+ICAgICBpdCB3YXMgdGVzdGVkIHBlcmZvcm1pbmcgcmVndWxhciB1c2VyIHdv
+cmtsb2FkcyBsaWtlIGJyb3dzaW5nLA0KPiA+ICAgICBlZGl0aW5nIGRvY3VtZW50cyBhbmQgY29t
+cGlsaW5nIExpbnV4LCBzbyBpdCBpcyB0aW1lIHRvIGVuYWJsZQ0KPiA+IGl0DQo+ID4gYnkNCj4g
+PiAgICAgZGVmYXVsdCBhbmQgZW5qb3kgZXZlbiBtb3JlIHBvd2VyLXNhdmluZ3MuDQo+ID4gDQo+
+ID4gVGVtcG9yYXJ5IHdvcmthcm91bmQgd291bGQgYmUgdG8gc2V0IGk5MTUuZW5hYmxlX3Bzcj0w
+DQo+IA0KPiBJdCBsb29rcyBwbGF1c2libGUuICBJIGhhdmUgdG8gc2F5IEkgd2FzIGp1c3QgYWJv
+dXQgdG8gbWFyayBhIGJpc2VjdA0KPiBjb250YWluaW5nIHRoaXMgYXMgZ29vZCwgYnV0IHRoYXQg
+cHJvYmFibHkgcmVmbGVjdHMgbXkgZGlmZmljdWx0eQ0KPiByZXByb2R1Y2luZyB0aGUgaXNzdWUu
+DQoNClRha2UgYXQgbG9vayBvZiB3aGF0IFBTUiB2ZXJzaW9uIGlzIHN1cHBvcnRlZCBieSB5b3Vy
+IHBhbmVsLCBpdCBsaWtlbHkNCnRoYXQgYSBub3RlYm9vayBzaGlwcGVkIHdpdGggU2t5bGFrZSB3
+aWxsIGhhdmUgcGFuZWwgdGhhdCBzdXBwb3J0cyBvbmx5DQpQU1IxIHNvIHRoYXQgcGF0Y2ggaGFz
+IG5vIGVmZmVjdCBvbiB5b3VyIG1hY2hpbmUuDQoNCnN1ZG8gbW9yZSAvc3lzL2tlcm5lbC9kZWJ1
+Zy9kcmkvMC9pOTE1X2VkcF9wc3Jfc3RhdHVzDQpTaW5rIHN1cHBvcnQ6IHllcyBbMHgwMV0NCg0K
+T25seSBpZiB5b3UgaGF2ZSAweDAzIHlvdXIgcGFuZWwgaGF2ZSBzdXBwb3J0IGZvciBQU1IyLg0K
+DQpPciBjaGVjayB5b3VyIGRtZXNnOg0KW2RybTppbnRlbF9wc3JfaW5pdF9kcGNkIFtpOTE1XV0g
+ZURQIHBhbmVsIHN1cHBvcnRzIFBTUiB2ZXJzaW9uIDENCg0KPiANCj4gSmFtZXMNCj4gDQo+IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IEludGVsLWdm
+eCBtYWlsaW5nIGxpc3QNCj4gSW50ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ludGVsLWdmeA0K
