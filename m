@@ -2,93 +2,243 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F03DC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC83BC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E558206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB70208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="f5ixLevq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="ooWeI1qO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfGKUg6 (ORCPT
+        id S1728855AbfGKUk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:36:58 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38610 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbfGKUg6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:36:58 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z75so3484774pgz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U05ONlBbPINFuimdTBUsOatUpH+2O9AcUBX+vMez/GE=;
-        b=f5ixLevqIWQvivZ74pOXO929BcoCqmvzjZt0NEzOGVs7/8VfCjVUseMFq28qP41b27
-         cOSPs1pq8IYk6wGAz1bRA9/AXypLdgaVcgTIp7BbjCQ+m6OqNUXyptfSqS8hQVvBU/O9
-         NwzkTnyiPV5ItHlSsN30DKTmsB1znkoXR0lL7kRLhI+fl/KziS4Wjbk2WC9OA3bPIYtO
-         RpwywCQ/EA/W+6Z9xHcZvxrIe5QOCoBPuvDSHWo89ggxEQrm54Hgxc+O89Si9YaZnJ4q
-         f3DUt0VLnz4vss2+iw94D7wOidx2m/b3XiYE2TngB/aTZHyGN+TXGlBpw5eEpAvSrqdP
-         RNBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U05ONlBbPINFuimdTBUsOatUpH+2O9AcUBX+vMez/GE=;
-        b=EPx/OPrUd1l0SAuV7QHR/yHHmoJVxMRfk5zXnKnHCP3P73+rvQn01WzWBkbMXYuJN6
-         3cS5K/cZfDVt1TEmN8QE7EDD1RVDh8+QaiKuMrPmWP74VeA6W+m9nuhRonnJcP9c38+o
-         wz8vS53V+4LiNCcVnzgVQxjoDp9cdgPvpDBuIW1fvkZemn+aEtaIGtpfEmXzLokyVKyM
-         8ZA/nMtUSAnXqcN1w+gsE2LmQrk502ZenPSFQLDD40Nn5L+bPbCsVJWnOW+R2I/vCF0J
-         pbKl81xwtwz44MM0Z7T0fW7ttNm8ARAwA/g8A/4hFUSLz9gGJefIh6OvAzEbc+rxSnvq
-         MbTg==
-X-Gm-Message-State: APjAAAU2qbvoULLq3CHoyCwK5oxIwOWjswXefRed+pl6Krrse0SlNn2P
-        ADxg+bUCKACbmmoA3FaBHQFKLOFx8PQ=
-X-Google-Smtp-Source: APXvYqwt6420DCq/8aOZYasWpu+xq8Gcs291fC8EGXWmzL2/e3Wyu/TIHN36Mskj2KVBn2eC9v6zxg==
-X-Received: by 2002:a17:90a:d343:: with SMTP id i3mr7310376pjx.15.1562877417701;
-        Thu, 11 Jul 2019 13:36:57 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id q126sm6651473pfq.123.2019.07.11.13.36.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 13:36:56 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Tejun Heo <tj@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-References: <20190711151507.7ec1fd18@canb.auug.org.au>
- <20190711201736.GQ657710@devbig004.ftw2.facebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8c18d276-d8e9-148e-ba05-604e7a4d9dec@kernel.dk>
-Date:   Thu, 11 Jul 2019 14:36:54 -0600
+        Thu, 11 Jul 2019 16:40:26 -0400
+Received: from vern.gendns.com ([98.142.107.122]:36922 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728355AbfGKUkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 16:40:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xvThRjH3X1TUzxAtTyWv1hFEkruW/blvpY6bT/bSK9Q=; b=ooWeI1qO4BAdXV3DI7FZd6Y60X
+        5OT2yCa5stfUIYc8lfWRFqw3RbGl+nu/96D7q2kOUKvVTE3jtQzohMVzSYrbU1uOmuctOCiquEJym
+        hvStBGW/uQBo3oCYoXA87WVp3mnU5ROITWqGMhnZxBLa3aI0tgfoKbIuncs+hZ8UhIfVVQPU9FKmb
+        ZnRXszBoAwOsxS+d1BioxjB1/IdGczkE20RRxtpZ6zaH3gqeiG3VzuPpUlEX/6QTshmyncOlshWKq
+        7HcxlXZBwlngRvM7lpqJQFqyW4AIUEpFfUayjmKzjY8VI/GXIxB1njiwKs6C5Y3iN7IX9PEz1wa+m
+        LMVboQNA==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:60730 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hlfra-004iz1-AV; Thu, 11 Jul 2019 16:40:22 -0400
+Subject: Re: [PATCH 5/6] irqchip/irq-pruss-intc: Add API to trigger a PRU
+ sysevent
+To:     Suman Anna <s-anna@ti.com>, Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190708035243.12170-1-s-anna@ti.com>
+ <20190708035243.12170-6-s-anna@ti.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <49628f74-1081-894a-14a2-adc58b2051e8@lechnology.com>
+Date:   Thu, 11 Jul 2019 15:40:20 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190711201736.GQ657710@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190708035243.12170-6-s-anna@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/11/19 2:17 PM, Tejun Heo wrote:
-> Hello,
+On 7/7/19 10:52 PM, Suman Anna wrote:
+> From: "Andrew F. Davis" <afd@ti.com>
 > 
-> Yeah, my patche series raced with 8648de2c581e ("f2fs: add bio cache
-> for IPU").  Jens, can you please apply this one too?
+> The PRUSS INTC can generate an interrupt to various processor
+> subsystems on the SoC through a set of 64 possible PRU system
+> events. These system events can be used by PRU client drivers
+> or applications for event notifications/signalling between PRUs
+> and MPU or other processors. A new API, pruss_intc_trigger() is
+> provided to MPU-side PRU client drivers/applications to be able
+> to trigger an event/interrupt using IRQ numbers provided by the
+> PRUSS-INTC irqdomain chip.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>   drivers/irqchip/irq-pruss-intc.c | 31 +++++++++++++++++++++++++++++++
+>   include/linux/pruss_intc.h       | 26 ++++++++++++++++++++++++++
+>   2 files changed, 57 insertions(+)
+>   create mode 100644 include/linux/pruss_intc.h
+> 
+> diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+> index 8118c2a2ac43..a0ad50b95cd5 100644
+> --- a/drivers/irqchip/irq-pruss-intc.c
+> +++ b/drivers/irqchip/irq-pruss-intc.c
+> @@ -421,6 +421,37 @@ static void pruss_intc_irq_relres(struct irq_data *data)
+>   	module_put(THIS_MODULE);
+>   }
+>   
+> +/**
+> + * pruss_intc_trigger() - trigger a PRU system event
+> + * @irq: linux IRQ number associated with a PRU system event
+> + *
+> + * Trigger an interrupt by signaling a specific PRU system event.
+> + * This can be used by PRUSS client users to raise/send an event to
+> + * a PRU or any other core that is listening on the host interrupt
+> + * mapped to that specific PRU system event. The @irq variable is the
+> + * Linux IRQ number associated with a specific PRU system event that
+> + * a client user/application uses. The interrupt mappings for this is
+> + * provided by the PRUSS INTC irqchip instance.
+> + *
+> + * Returns 0 on success, or an error value upon failure.
+> + */
+> +int pruss_intc_trigger(unsigned int irq)
+> +{
+> +	struct irq_desc *desc;
+> +
+> +	if (irq <= 0)
+> +		return -EINVAL;
+> +
+> +	desc = irq_to_desc(irq);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	pruss_intc_irq_retrigger(&desc->irq_data);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pruss_intc_trigger);
 
-I can't really, as that commit isn't in Linus's tree yet. I'll
-keep an eye out for what hits mainline, I'll probably ship what
-I have on Monday.
+Although it is not quite as obvious, we can do the same thing with:
 
+irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
+
+So I don't think a new API is needed. We just need to implement the
+irq_set_irqchip_state callback as in the following patch.
+
+---
+ From c5991a11a19858d74e2a184b76c3ef5823f09ef6 Mon Sep 17 00:00:00 2001
+From: David Lechner <david@lechnology.com>
+Date: Thu, 11 Jul 2019 15:33:29 -0500
+Subject: [PATCH] irqchip/irq-pruss-intc: implement irq_{get,set}_irqchip_state
+
+This implements the irq_get_irqchip_state and irq_set_irqchip_state
+callbacks for the TI PRUSS INTC driver. The set callback can be used
+by drivers to "kick" a PRU by enabling a PRU system event.
+
+Example:
+
+     irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
+
+Signed-off-by: David Lechner <david@lechnology.com>
+---
+  drivers/irqchip/irq-pruss-intc.c | 41 ++++++++++++++++++++++++++++++--
+  1 file changed, 39 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+index dd14addfd0b4..129dfd52248b 100644
+--- a/drivers/irqchip/irq-pruss-intc.c
++++ b/drivers/irqchip/irq-pruss-intc.c
+@@ -7,6 +7,7 @@
+   *	Suman Anna <s-anna@ti.com>
+   */
+  
++#include <linux/interrupt.h>
+  #include <linux/irq.h>
+  #include <linux/irqchip/chained_irq.h>
+  #include <linux/irqdomain.h>
+@@ -46,8 +47,7 @@
+  #define PRU_INTC_HIEISR		0x0034
+  #define PRU_INTC_HIDISR		0x0038
+  #define PRU_INTC_GPIR		0x0080
+-#define PRU_INTC_SRSR0		0x0200
+-#define PRU_INTC_SRSR1		0x0204
++#define PRU_INTC_SRSR(x)	(0x0200 + (x) * 4)
+  #define PRU_INTC_SECR0		0x0280
+  #define PRU_INTC_SECR1		0x0284
+  #define PRU_INTC_ESR0		0x0300
+@@ -386,6 +386,41 @@ static void pruss_intc_irq_relres(struct irq_data *data)
+  	module_put(THIS_MODULE);
+  }
+  
++static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
++					    enum irqchip_irq_state which,
++					    bool *state)
++{
++	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
++	u32 reg, mask, srsr;
++
++	if (which != IRQCHIP_STATE_PENDING)
++		return -EINVAL;
++
++	reg = PRU_INTC_SRSR(data->hwirq / 32);
++	mask = BIT(data->hwirq % 32);
++
++	srsr = pruss_intc_read_reg(intc, reg);
++
++	*state = !!(srsr & mask);
++
++	return 0;
++}
++
++static int pruss_intc_irq_set_irqchip_state(struct irq_data *data,
++					    enum irqchip_irq_state which,
++					    bool state)
++{
++	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
++
++	if (which != IRQCHIP_STATE_PENDING)
++		return -EINVAL;
++	
++	if (state)
++		return pruss_intc_check_write(intc, PRU_INTC_SISR, data->hwirq);
++
++	return pruss_intc_check_write(intc, PRU_INTC_SICR, data->hwirq);
++}
++
+  static int
+  pruss_intc_irq_domain_xlate(struct irq_domain *d, struct device_node *node,
+  			    const u32 *intspec, unsigned int intsize,
+@@ -583,6 +618,8 @@ static int pruss_intc_probe(struct platform_device *pdev)
+  	irqchip->irq_retrigger = pruss_intc_irq_retrigger;
+  	irqchip->irq_request_resources = pruss_intc_irq_reqres;
+  	irqchip->irq_release_resources = pruss_intc_irq_relres;
++	irqchip->irq_get_irqchip_state = pruss_intc_irq_get_irqchip_state;
++	irqchip->irq_set_irqchip_state = pruss_intc_irq_set_irqchip_state;
+  	irqchip->parent_device = dev;
+  	irqchip->name = dev_name(dev);
+  	intc->irqchip = irqchip;
 -- 
-Jens Axboe
+2.17.1
 
