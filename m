@@ -2,82 +2,117 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DABC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2222C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3CC206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A997206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="a4nbuK6B"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="CCJ3BXQq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kS4vhQmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfGKEOy (ORCPT
+        id S1727874AbfGKETz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 00:14:54 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:53452 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfGKEOx (ORCPT
+        Thu, 11 Jul 2019 00:19:55 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35317 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726119AbfGKETz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 00:14:53 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x6B4EehG001381;
-        Thu, 11 Jul 2019 13:14:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6B4EehG001381
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562818481;
-        bh=LmHL0cs5B5tYwdkfq3PX+j/nTcIWEfzF4ptL7RyDxIU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a4nbuK6BvKkbk78YwHLqcwgkysQazGuqJNdIxWSOMnEGf9s7xzI/eqyZ+LiA8xQao
-         dXyOB2sFPS63KxLAlzmDDu9MsvHclFPpSzj0W+phTxABydK5ZWEQ7G+tu/wiH6cRwY
-         mA0Y1e2/1GAIB0HlVbjhtJCIO1lbLOZM6pmwDzKQyZufRK624dOoKOwLLjvhMDclYc
-         x0D6Y078V4fNocFw+oo5nXC0HYna0f9Rv/qRIyWt626jhvsOuyb1rnmEGlsXI6fijs
-         ih/TXgs6pDt/UOr8FARqhimIa5919bmvIFTTPcnT3hwV42k7ueUbT3qmSvqFPp+Ki0
-         eRvpTmltCGIgA==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id v20so1802645uao.3;
-        Wed, 10 Jul 2019 21:14:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAVN3fwJnJiyxq0UNiVKdZfy6DibE8upfoYMVvkiIPbf9yQqksCl
-        LBfCNbd2wCtDBXlyotvNwWxGwe5I1UdzAKeUEZM=
-X-Google-Smtp-Source: APXvYqwLYHnnTrutXlEq6mzJZ1SJJYPspIP0lAuUV9jnep0jOCM2CDpI05wpTLdbcZ0mSHAMSblnRduIRxyVpIN4mMo=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr904661uaf.95.1562818479734;
- Wed, 10 Jul 2019 21:14:39 -0700 (PDT)
+        Thu, 11 Jul 2019 00:19:55 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E93472EF8;
+        Thu, 11 Jul 2019 00:19:53 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 11 Jul 2019 00:19:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=D+2vsx8lqO236DJVmaN/p1Vy6V
+        CmDiyAuomD0yG8gKA=; b=CCJ3BXQquFOJYjeQjsvni7ZIGCxZB5FSivkldz3VMf
+        N1EAXqjfnlrW5W8ud2NrDRF+pgNW7fq4Enp8iLTqjrBC0+Dl8UlZZli9i12eN/w0
+        AZHDTmkdkzt9WIlale6AzOnpFxLk3s8FSRQ7vb2IMDFCmzxgFY9Su/Ic7soKuO/a
+        TolUb/WVuqZqUI+X+xri207s+f2t1+3CVfQxP3noOpFHJl3zclUBxYzR9h5k87Yx
+        lsJiEWJhRiuyiQJDV5N5NWf/oLoFklpZT789KdU+Ge6goWHwiR1RSTHZ+XkVPQkc
+        s0afp75Ly1zKzr7U2ugncz44O49QoojoUCdKKEaksVfw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=D+2vsx8lqO236DJVm
+        aN/p1Vy6VCmDiyAuomD0yG8gKA=; b=kS4vhQmMBnte9IQzEEyj5uDnmtgqKLLCK
+        f160Yuri42tbpoI0pyHZf7tArJR31gGYJFumACifqsWs3J43Y339Suzu4Ykbiujb
+        uH1AL6svjRELo5VfXPtTvYg2PHKw9tVezH2sc4GfvJGR1mL3lj6ZukC+z2hhsLxS
+        2ozGsvkNMu5PCfwdgR4yMwZIUlpT+zMl0VJ3KouwUFJpfEydBhvJV36fSnkJWrVf
+        iEgjCl09I0AWzlTLVwwX2eq0u8A0cGr4OdCfC3FyE5oQpjmn7hua4fLFCgcstQSh
+        UjClg2l77z6rLbk/SAH4ARnHviCo/0jw0nzflyIm735mY9jxnqewg==
+X-ME-Sender: <xms:6LgmXdgmqi3EiquA5u8XIh2ArReVOfm-FeCAAn_vT_fL1n1fAj2l9g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeejgdektdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhi
+    ugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:6LgmXdfnDr4TaUMIE0cdLtVB5AT55cpstAXyE3Gc8arQcMP4uDMmNg>
+    <xmx:6LgmXQn0wgTWSwvJyASnT1xklvt-QYcSPYHkovI8n2MBSo1Q1e475Q>
+    <xmx:6LgmXWvkug9i6n6RIriwnXUvirYuE5zdXo1ZBaQBa4RFla7GmT7EAg>
+    <xmx:6bgmXUjTP81wnRhDKoVPRQlfUQ1o0mJhsA1oUK1MkYFmq6wcETQaug>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4342F8005A;
+        Thu, 11 Jul 2019 00:19:48 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        ryanchen.aspeed@gmail.com, johnny_huang@aspeedtech.com,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] pinctrl: aspeed: Add AST2600 pinmux support
+Date:   Thu, 11 Jul 2019 13:49:36 +0930
+Message-Id: <20190711041942.23202-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190709132639.26802-1-geert@linux-m68k.org> <20190709163042.GA28716@infradead.org>
-In-Reply-To: <20190709163042.GA28716@infradead.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 11 Jul 2019 13:14:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARKaj9Tw+Am0hvQOOW8ZTh_LvY-tSPoZjvJWez4RaOPQA@mail.gmail.com>
-Message-ID: <CAK7LNARKaj9Tw+Am0hvQOOW8ZTh_LvY-tSPoZjvJWez4RaOPQA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Inform user to pass ARCH= for make mrproper
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:30 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> Is there any chance we could save ARCH in .config?  That would make
-> cross compile builds so much easier..  Same for CROSS_COMPILE.
+Hello!
 
+This series adds pinmux support for the AST2600. Some more rework was required
+on top of the previous cleanup series, but this rework was focussed on
+supporting features of the AST2600 pinmux rather than fixing issues with the
+existing infrastructure for the ASPEED drivers. Due to the dependences it's
+based on top of pinctrl/devel, so should avoid any more SPDX issues.
 
-Then, I have no idea how "make clean", "make help", etc. should work.
+ASPEED have been testing the patches on hardware, so even for an initial pass
+there's some confidence in the implementation.
 
-If a user has configured the kernel, do they work for CONFIG_ARCH
-stored in the .config file or still for the host-arch?
+Please review!
 
-If not yet, do they fall-back to host-arch?
+Andrew
 
+Andrew Jeffery (6):
+  dt-bindings: pinctrl: aspeed: Document AST2600 pinmux
+  pinctrl: aspeed: Rename pin declaration macros
+  pinctrl: aspeed: Add PIN_DECL_3() helper
+  pinctrl: aspeed: Add multiple pin group support for functions
+  pinctrl: aspeed: Add SIG_DESC_CLEAR() helper
+  pinctrl: aspeed: Add AST2600 pinmux support
 
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |  128 +
+ drivers/pinctrl/aspeed/Kconfig                |    8 +
+ drivers/pinctrl/aspeed/Makefile               |    1 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c    | 1821 +++++++------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c    | 1865 +++++++------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c    | 2395 +++++++++++++++++
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |  227 +-
+ 7 files changed, 4643 insertions(+), 1802 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
 
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
