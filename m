@@ -2,81 +2,77 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211C8C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEFFC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A0F20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6652F2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xyC1Qshs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DDXy799d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfGLMGj (ORCPT
+        id S1727123AbfGLMGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:06:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47776 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfGLMGi (ORCPT
+        Fri, 12 Jul 2019 08:06:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47298 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfGLMGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:06:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CC3vVq093722;
-        Fri, 12 Jul 2019 12:05:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=2/cY3ZWthVr4zF3BaBmwsNFGaTKeoOtuNhP6QeMTAA4=;
- b=xyC1Qshs4IHx5WGHrLRX7cxrBMMFxGYxcQ3ts00xuizD+H2N77utRDZ8V13HlWAe8VeR
- OjUKxmzKPrO9rasrb5+x1ZywsH+/3Y9w+ONk67rxTheNr+emRuR7wvD2NfUUYQSDf5d0
- qLlehspat5zeQhLUU0hMrk+r1et2R+smHTonjgq26cruMtnSR2SLwemTra9yZG9YigbI
- u/Wv2eeVJ2N7J5TdCuR8d/dGnlMWwVgzxurtZjBWsivtUVMKP7p+Sb2YYYtSzc3DUj2x
- MH/+Jgp5rj9FeQjbljF9Aqeq5asYu3oz4xpcjagLBNlgaIi2+VWAwN5rbK7kkwtS39B7 Xw== 
+        Fri, 12 Jul 2019 08:06:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CC3w0x008648;
+        Fri, 12 Jul 2019 12:06:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=YuCOXIRb/dHuU0bztnXWfWAbrWp+ScSgOTP4KoY+oi4=;
+ b=DDXy799dLKIIzXw5g+O0VFzQNqNZN4eUI0vkngwwQ8vP2u2FK/wUhdmgkwpKR2lcFeKC
+ BYdjKm2s26ZzACiuJaeLvjKQP3on05T7HQrPgf0/2xaxLFNThsuN+nOOnlINBCIQk3ma
+ QvFtENroV1rM6EsupkrzStZGhRFmIGOolGVvt4IvITWBZeiR/dggVJbVbfv9UuzFLWS3
+ IIkvenxZhyzA1BM67dybsKlxmpA/gf6zeDnw/kycnk8+KyRQaQvMh5zfOIKhX0WE0oB/
+ sED72dbfEP7ghsm7BBJXWL3TTTVlQslU8OrqNMHc7X6KSFiNYrR+i511ENDak5Y2vObf Mg== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq57ax-1
+        by userp2120.oracle.com with ESMTP id 2tjm9r57ka-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 12:05:56 +0000
+        Fri, 12 Jul 2019 12:06:06 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CC3RVf095667;
-        Fri, 12 Jul 2019 12:03:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2tpefd28vm-1
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CC3R7l095743;
+        Fri, 12 Jul 2019 12:04:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2tpefd28y9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 12:03:56 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6CC3r2t020605;
-        Fri, 12 Jul 2019 12:03:53 GMT
-Received: from tomti.i.net-space.pl (/10.175.167.233)
+        Fri, 12 Jul 2019 12:04:05 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6CC44JO006192;
+        Fri, 12 Jul 2019 12:04:04 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 04:58:14 -0700
-Date:   Fri, 12 Jul 2019 13:58:09 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc:     bp@alien8.de, corbet@lwn.net, dpsmith@apertussolutions.com,
-        eric.snowberg@oracle.com, hpa@zytor.com, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, mingo@redhat.com,
-        ross.philipson@oracle.com, tglx@linutronix.de
-Subject: Re: [PATCH v2 0/3] x86/boot: Introduce the kernel_info et consortes
-Message-ID: <20190712115809.slonryrqvpbgs6xh@tomti.i.net-space.pl>
-References: <20190704163612.14311-1-daniel.kiper@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704163612.14311-1-daniel.kiper@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        with ESMTP ; Fri, 12 Jul 2019 04:58:32 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v7 1/5] x86/xen: Mark xen_hvm_need_lapic() and xen_x2apic_para_available() as __init
+Date:   Thu, 11 Jul 2019 20:02:08 +0800
+Message-Id: <1562846532-32152-2-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562846532-32152-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1562846532-32152-1-git-send-email-zhenzhong.duan@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=647
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1907120132
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=703 adultscore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907120132
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,16 +80,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 06:36:09PM +0200, Daniel Kiper wrote:
-> Hi,
->
-> Due to very limited space in the setup_header this patch series introduces new
-> kernel_info struct which will be used to convey information from the kernel to
-> the bootloader. This way the boot protocol can be extended regardless of the
-> setup_header limitations. Additionally, the patch series introduces some
-> convenience features like the setup_indirect struct and the
-> kernel_info.setup_type_max field.
+.. as they are only called at early bootup stage. In fact, other
+functions in x86_hyper_xen_hvm.init.* are all marked as __init.
 
-Ping?
+Unexport xen_hvm_need_lapic as it's never used outside.
 
-Daniel
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ arch/x86/include/asm/xen/hypervisor.h | 6 +++---
+ arch/x86/xen/enlighten_hvm.c          | 3 +--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
+index 39171b3..42e1245 100644
+--- a/arch/x86/include/asm/xen/hypervisor.h
++++ b/arch/x86/include/asm/xen/hypervisor.h
+@@ -44,14 +44,14 @@ static inline uint32_t xen_cpuid_base(void)
+ }
+ 
+ #ifdef CONFIG_XEN
+-extern bool xen_hvm_need_lapic(void);
++extern bool __init xen_hvm_need_lapic(void);
+ 
+-static inline bool xen_x2apic_para_available(void)
++static inline bool __init xen_x2apic_para_available(void)
+ {
+ 	return xen_hvm_need_lapic();
+ }
+ #else
+-static inline bool xen_x2apic_para_available(void)
++static inline bool __init xen_x2apic_para_available(void)
+ {
+ 	return (xen_cpuid_base() != 0);
+ }
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index 0e75642..ac4943c 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -218,7 +218,7 @@ static __init int xen_parse_nopv(char *arg)
+ }
+ early_param("xen_nopv", xen_parse_nopv);
+ 
+-bool xen_hvm_need_lapic(void)
++bool __init xen_hvm_need_lapic(void)
+ {
+ 	if (xen_nopv)
+ 		return false;
+@@ -230,7 +230,6 @@ bool xen_hvm_need_lapic(void)
+ 		return false;
+ 	return true;
+ }
+-EXPORT_SYMBOL_GPL(xen_hvm_need_lapic);
+ 
+ static uint32_t __init xen_platform_hvm(void)
+ {
+-- 
+1.8.3.1
+
