@@ -2,262 +2,160 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B8AC74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7936C74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA5F2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="giqSPTD3"
+	by mail.kernel.org (Postfix) with ESMTP id B19BD2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562849051;
+	bh=lZFM/H31Fs5Z6ab6aWawrjKOVYQXr73MU24M7sjvFzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oWsQdqSR1T4O4EfOtcWfleWQUgsD3m4ASuT+DJcaHqqaQ1dIBMQSEKYHUOXrdxuC9
+	 IeJxyy5lKyPWSrJDUgOomvi3vwG3iB9yvR6rc8cdDBxh+kkJr+h/fVHQ2X2FW/HMfI
+	 s7RBGGfPyRr4bzEfNYGv/RDGLlyhK+8cCYg6CPGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfGKMmI (ORCPT
+        id S1728495AbfGKMoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:42:08 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9884 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfGKMmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:42:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d272ea30001>; Thu, 11 Jul 2019 05:42:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 11 Jul 2019 05:42:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 11 Jul 2019 05:42:05 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Jul
- 2019 12:42:03 +0000
-Subject: Re: [PATCH v2 2/6] ARM: tegra: Expose functions required for cpuidle
- driver
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190711031312.10038-1-digetx@gmail.com>
- <20190711031312.10038-3-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <bc6e96be-91ee-5d94-cbc2-46d2e2f25bce@nvidia.com>
-Date:   Thu, 11 Jul 2019 13:42:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 11 Jul 2019 08:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbfGKMoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 08:44:10 -0400
+Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA8A92084B;
+        Thu, 11 Jul 2019 12:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562849048;
+        bh=lZFM/H31Fs5Z6ab6aWawrjKOVYQXr73MU24M7sjvFzo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FG78Uq6t54M6qxvPOcrTnLDhy+6LJohKCZpA2CPYzB2MPWd9Qd9tY1vmmCipDQ+wW
+         iYDntFTTzMth2Ap++Ryozpuep3KcsORzj++qwyZ+DSpbxNE5D38yOoArb+RiplWHE7
+         ZALKy+/h4kyUrx7A2QSc/aaBvtAt16pbMdQ3qaes=
+Date:   Thu, 11 Jul 2019 14:44:02 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "bbrezillon@knernel.org" <bbrezillon@knernel.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v3 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
+ LSM6DSO and LSM6DSR
+Message-ID: <20190711124402.GC3452@localhost.localdomain>
+References: <cover.1562767521.git.vitor.soares@synopsys.com>
+ <73955529ae0c31f428221abb88031ab3b4165659.1562767521.git.vitor.soares@synopsys.com>
+ <20190710194405.GA10520@lore-desk-wlan.lan>
+ <SN6PR12MB2655AC6DF4A959A1705FC8A4AEF30@SN6PR12MB2655.namprd12.prod.outlook.com>
+ <SN6PR12MB2655939CB14D0EF848B4F4A8AEF30@SN6PR12MB2655.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190711031312.10038-3-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562848931; bh=VdhCBNmemBgHmjm4dmPOJmSaWdEMknvdN8yIjXMESN4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=giqSPTD3Ogjc7tHMOQCXN1+orV23Qt8jAt+J19on1UPuLuUgenj8tm12AiTrbaWVM
-         3l27UJp5swrJPEHCnCFlw1oIW1VpSoo3Tv1y7rueEegtIQJYdZCJHpUQriB9OAfS9y
-         hL4mr5Q6nbiy/i45wGRz+ERgQCI9byKj3mC9Q4JqiOwk4Oc+VC40S5SYtcVsp0l+ZY
-         x3OHfZhma4GcYV/XmHBtKFR3mTudncr+abEEolHwhm8Yt1IRyMWLxHFoBoWgTa2gva
-         zlklyGP1Ax0g/u5h35/MQleSYibeBHgnQcDV3H0aG3M5kQiQQ7DuFGdP1rXF9veO+F
-         uTp+Aqtv3o0pQ==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KDt/GgjP6HVcx58l"
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB2655939CB14D0EF848B4F4A8AEF30@SN6PR12MB2655.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 11/07/2019 04:13, Dmitry Osipenko wrote:
-> The upcoming unified CPUIDLE driver will be added to the drivers/cpuidle/
-> directory and it will require all these Tegra PM-core functions.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  arch/arm/mach-tegra/Makefile  |  2 +-
->  arch/arm/mach-tegra/platsmp.c |  2 --
->  arch/arm/mach-tegra/pm.c      | 16 +++++++---------
->  arch/arm/mach-tegra/pm.h      |  3 ---
->  arch/arm/mach-tegra/sleep.h   |  1 -
->  include/linux/clk/tegra.h     | 13 +++++++++++++
->  include/soc/tegra/pm.h        | 28 ++++++++++++++++++++++++++++
->  7 files changed, 49 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
-> index 5d93a0b36866..27bd5d9865e3 100644
-> --- a/arch/arm/mach-tegra/Makefile
-> +++ b/arch/arm/mach-tegra/Makefile
-> @@ -13,7 +13,7 @@ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= pm-tegra20.o
->  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= sleep-tegra30.o
->  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= pm-tegra30.o
->  obj-$(CONFIG_SMP)			+= platsmp.o
-> -obj-$(CONFIG_HOTPLUG_CPU)               += hotplug.o
-> +obj-y					+= hotplug.o
->  
->  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= sleep-tegra30.o
->  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= pm-tegra30.o
-> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
-> index e6911a14c096..c8a63719a143 100644
-> --- a/arch/arm/mach-tegra/platsmp.c
-> +++ b/arch/arm/mach-tegra/platsmp.c
-> @@ -183,8 +183,6 @@ const struct smp_operations tegra_smp_ops __initconst = {
->  	.smp_prepare_cpus	= tegra_smp_prepare_cpus,
->  	.smp_secondary_init	= tegra_secondary_init,
->  	.smp_boot_secondary	= tegra_boot_secondary,
-> -#ifdef CONFIG_HOTPLUG_CPU
->  	.cpu_kill		= tegra_cpu_kill,
->  	.cpu_die		= tegra_cpu_die,
-> -#endif
->  };
-> diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
-> index 6aaacb5757e1..f9c9bce9e15d 100644
-> --- a/arch/arm/mach-tegra/pm.c
-> +++ b/arch/arm/mach-tegra/pm.c
-> @@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
->  	spin_unlock(&tegra_lp2_lock);
->  }
->  
-> -bool tegra_set_cpu_in_lp2(void)
-> +void tegra_set_cpu_in_lp2(void)
->  {
->  	int phy_cpu_id = cpu_logical_map(smp_processor_id());
-> -	bool last_cpu = false;
-> -	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
->  	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
->  
->  	spin_lock(&tegra_lp2_lock);
-> @@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
->  	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
->  	*cpu_in_lp2 |= BIT(phy_cpu_id);
->  
-> -	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
-> -		last_cpu = true;
-> -
->  	spin_unlock(&tegra_lp2_lock);
-> -	return last_cpu;
->  }
+--KDt/GgjP6HVcx58l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think that the commit message should describe what is going on here or
-this should be a separate change.
+> From: Vitor Soares <soares@synopsys.com>
+> Date: Thu, Jul 11, 2019 at 11:12:34
+>=20
+> > Hi Lorenzo,
+> >=20
+> > From: Lorenzo Bianconi <lorenzo@kernel.org>
+> > Date: Wed, Jul 10, 2019 at 20:44:05
+> >=20
+> > > > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor =
+only in
+> > > > spi and i2c mode.
+> > > >=20
+> > > > The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c suppo=
+rt to
+> > > > them.
+> > >=20
+> > > Hi Vitor,
+> > >=20
+> > > just few comments inline.
+> > >=20
+> > > Regards,
+> > > Lorenzo
+> > >=20
+> > > >=20
+> > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > > ---
+> > > > Changes in v3:
+> > > >   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device =
+name
+> > > >   Use st_lsm6dsx_probe new form
+> > > >=20
+> > > > Changes in v2:
+> > > >   Add support for LSM6DSR
+> > > >   Set pm_ops to st_lsm6dsx_pm_ops
+> > > >=20
+> > > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+> > > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+> > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 61 +++++++++++++++++=
+++++++++++++
+> > > >  3 files changed, 69 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > >=20
+> > >=20
+> > > [...]
+> > > > +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
+> > > > +{
+> > > > +	const struct i3c_device_id *id =3D i3c_device_match_id(i3cdev,
+> > > > +							    st_lsm6dsx_i3c_ids);
+> > >=20
+> > > i3c_device_match_id can theoretically fail so is it better to check
+> > > return value here? (maybe I am too paranoid :))
+>=20
+> I was preparing the patch and if the i3c_device_match_id() fail it return=
+=20
+> NULL so the st_lsm6dsx_probe() will fail automatically.
+> Checking the spi_get_device_id(), the drivers don't test the return value=
+=20
+> too.
 
->  
->  static int tegra_sleep_cpu(unsigned long v2p)
-> @@ -195,14 +189,16 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
->  	tegra_pmc_enter_suspend_mode(mode);
->  }
->  
-> -void tegra_idle_lp2_last(void)
-> +int tegra_idle_lp2_last(void)
->  {
-> +	int err;
-> +
->  	tegra_pm_set(TEGRA_SUSPEND_LP2);
->  
->  	cpu_cluster_pm_enter();
->  	suspend_cpu_complex();
->  
-> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
-> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
->  
->  	/*
->  	 * Resume L2 cache if it wasn't re-enabled early during resume,
-> @@ -214,6 +210,8 @@ void tegra_idle_lp2_last(void)
->  
->  	restore_cpu_complex();
->  	cpu_cluster_pm_exit();
-> +
-> +	return err;
->  }
->  
->  enum tegra_suspend_mode tegra_pm_validate_suspend_mode(
-> diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
-> index 1e51a9b636eb..81525f5f4a44 100644
-> --- a/arch/arm/mach-tegra/pm.h
-> +++ b/arch/arm/mach-tegra/pm.h
-> @@ -23,9 +23,6 @@ void tegra20_sleep_core_init(void);
->  void tegra30_lp1_iram_hook(void);
->  void tegra30_sleep_core_init(void);
->  
-> -void tegra_clear_cpu_in_lp2(void);
-> -bool tegra_set_cpu_in_lp2(void);
-> -void tegra_idle_lp2_last(void);
->  extern void (*tegra_tear_down_cpu)(void);
->  
->  #ifdef CONFIG_PM_SLEEP
-> diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
-> index d219872b7546..0d9956e9a8ea 100644
-> --- a/arch/arm/mach-tegra/sleep.h
-> +++ b/arch/arm/mach-tegra/sleep.h
-> @@ -124,7 +124,6 @@ void tegra30_hotplug_shutdown(void);
->  #endif
->  
->  void tegra20_tear_down_cpu(void);
-> -int tegra30_sleep_cpu_secondary_finish(unsigned long);
->  void tegra30_tear_down_cpu(void);
->  
->  #endif
-> diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
-> index b8aef62cc3f5..cf0f2cb5e109 100644
-> --- a/include/linux/clk/tegra.h
-> +++ b/include/linux/clk/tegra.h
-> @@ -108,6 +108,19 @@ static inline void tegra_cpu_clock_resume(void)
->  
->  	tegra_cpu_car_ops->resume();
->  }
-> +#else
-> +static inline bool tegra_cpu_rail_off_ready(void)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline void tegra_cpu_clock_suspend(void)
-> +{
-> +}
-> +
-> +static inline void tegra_cpu_clock_resume(void)
-> +{
-> +}
->  #endif
->  
->  extern void tegra210_xusb_pll_hw_control_enable(void);
-> diff --git a/include/soc/tegra/pm.h b/include/soc/tegra/pm.h
-> index 951fcd738d55..fa18c2df5028 100644
-> --- a/include/soc/tegra/pm.h
-> +++ b/include/soc/tegra/pm.h
-> @@ -20,6 +20,12 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode);
->  
->  /* low-level resume entry point */
->  void tegra_resume(void);
-> +
-> +int tegra30_sleep_cpu_secondary_finish(unsigned long arg);
-> +void tegra_clear_cpu_in_lp2(void);
-> +void tegra_set_cpu_in_lp2(void);
-> +int tegra_idle_lp2_last(void);
-> +void tegra_cpu_die(unsigned int cpu);
->  #else
->  static inline enum tegra_suspend_mode
->  tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
-> @@ -30,6 +36,28 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
->  static inline void tegra_resume(void)
->  {
->  }
-> +
-> +static inline int tegra30_sleep_cpu_secondary_finish(unsigned long arg)
-> +{
-> +	return -1;
-> +}
+multiple drivers deference it directly so I am fine to skip this check.
 
--ENOTSUPP?
+Regards,
+Lorenzo
 
-Jon
+>=20
+> Do you think it is really necessary to test it before the=20
+> st_lsm6dsx_probe() function?
+>=20
+> Best regards,
+> Vitor Soares
 
--- 
-nvpublic
+--KDt/GgjP6HVcx58l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXScvDwAKCRA6cBh0uS2t
+rFqeAQCzrowWY6v6CrwXaKkUC1U9wBmyu7LaicNrBFZvExOFZQEAupmsvMoZ9yTZ
+gOS6GkPOJEh4byeeFrEweGB5tbWlNg8=
+=Ueu9
+-----END PGP SIGNATURE-----
+
+--KDt/GgjP6HVcx58l--
