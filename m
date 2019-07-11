@@ -2,97 +2,95 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CA3C74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0225FC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AB821655
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="L+vpPUbD"
+	by mail.kernel.org (Postfix) with ESMTP id CE78220872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfGKMVx (ORCPT
+        id S1728666AbfGKMXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:21:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39296 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGKMVx (ORCPT
+        Thu, 11 Jul 2019 08:23:10 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50895 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfGKMXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:21:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so2865564pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 05:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wKzIIBt+fcwYgb1WijLtPF2IxcS5FD6tOy9+Xwn7eRw=;
-        b=L+vpPUbDCRBwU4yazk9+F8bwJqmJigvHwVXp4eq3fOgsh9/qfyxNpBEqYZAa1ZGHw+
-         xPsbICepNF8tts7VNy9XEl411b8wrDJ4xP4ylGtHMjl51cfexb4NVqDVoq4ZDd9oVBdO
-         FWKtvQiH7KZ0cyqPId695lzZsnHo1DmocnbCdp57KCEBTh79/HuVVyl1yy9fkshmEsL8
-         kWOUUr+LabStYDubFOzEUDnqTvRvMsxenK0lo7Zjvgu1cBcO5y/6WrTZdijqyXEz3jrl
-         5fFidPqProEzoXu+IYxfAJGuawolucezD0gz3OaBr8howW7E7q0i3Ilfp/l7DPl6UmcP
-         Yizw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wKzIIBt+fcwYgb1WijLtPF2IxcS5FD6tOy9+Xwn7eRw=;
-        b=EGdf5Zf2Ze33c4eLFXh7rLfKSAFI3mah2FLZ0B2M1d12HCtoMcFivUaAjiXwmjUP5y
-         Fkdtbcn63XxyU3M0bGPFrGJKYVSYd70qGaARFrab9vBrvQEBaMInmyInM1Ic4tDcW1p3
-         Oik3uMHQdao9j/eki1kW21fLX2rFwjMtVMhEekYzeqFrCsPhgau3JijDYCGv/nojfO+S
-         HAAhA/s4rmGTMeIcI8SFfpiDP5h2CTuvWHky1qCDLSkYwT09pl2juPnpHiYaeHXEkMV8
-         qd2kFFaMtONXeg/2E1bdOsMKJxecWEFZ2Yu0I3YrxtYuu79Zh8AI/EwlPazccIQYNRB5
-         XW8Q==
-X-Gm-Message-State: APjAAAWUB/umQAn/0yBGW4QhByXArvk8BRzu/tZhBRtWPYSb+KKRFlNw
-        08udppOxoZpP8ESoyJ6oZ5A=
-X-Google-Smtp-Source: APXvYqxO5be22E/+NEO0kWVy0NthtjTtcUlIEV+ywC+Gd1B7Kzo1wwJW00IsEVZV2kMl/CRvK46uLg==
-X-Received: by 2002:a17:90a:ab01:: with SMTP id m1mr4366676pjq.69.1562847712344;
-        Thu, 11 Jul 2019 05:21:52 -0700 (PDT)
-Received: from localhost.localdomain (36-239-228-246.dynamic-ip.hinet.net. [36.239.228.246])
-        by smtp.gmail.com with ESMTPSA id q1sm11284536pfn.178.2019.07.11.05.21.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 05:21:51 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: rk808: Return REGULATOR_MODE_INVALID for invalid mode
-Date:   Thu, 11 Jul 2019 20:21:38 +0800
-Message-Id: <20190711122138.5221-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 11 Jul 2019 08:23:10 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 9FD24C0004;
+        Thu, 11 Jul 2019 12:23:07 +0000 (UTC)
+Date:   Thu, 11 Jul 2019 13:20:39 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Zeng Tao <prime.zeng@hisilicon.com>
+Cc:     kishon@ti.com, Chen-Yu Tsai <wens@csie.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] phy: Change the configuration interface param to void*
+ to make it more general
+Message-ID: <20190711112039.leuvelpm7opeoaxq@flea>
+References: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c2tecu4d2tdhze26"
+Content-Disposition: inline
+In-Reply-To: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--EINVAL is not a valid return value for .of_map_mode, return
-REGULATOR_MODE_INVALID instead.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/rk808-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--c2tecu4d2tdhze26
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index e7af0c53d449..61bd5ef0806c 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -606,7 +606,7 @@ static unsigned int rk8xx_regulator_of_map_mode(unsigned int mode)
- 	case 2:
- 		return REGULATOR_MODE_NORMAL;
- 	default:
--		return -EINVAL;
-+		return REGULATOR_MODE_INVALID;
- 	}
- }
- 
--- 
-2.20.1
+On Fri, Jul 12, 2019 at 02:04:08AM +0800, Zeng Tao wrote:
+> The phy framework now allows runtime configurations, but only limited
+> to mipi now, and it's not reasonable to introduce user specified
+> configurations into the union phy_configure_opts structure. An simple
+> way is to replace with a void *.
 
+I'm not sure why it's unreasonable?
+
+> We have already got some phy drivers which introduce private phy API
+> for runtime configurations, and with this patch, they can switch to
+> the phy_configure as a replace.
+
+If you have a custom mode of operation, then you'll need a custom
+phy_mode as well, and surely you can have a custom set of parameters.
+
+Since those functions are meant to provide a two-way negotiation of
+the various parameters, you'll have to have that structure shared
+between the two either way, so the only thing required in addition to
+what you would have passing a void is one line to add that structure
+in the union.
+
+That's barely unreasonable.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--c2tecu4d2tdhze26
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXScbegAKCRDj7w1vZxhR
+xR7EAP44QxBQgbt8VyM5okXONW5XGgzi5lMv3iAHBL15ZA3WXwEAnVGOHiv5Ouz3
+Bw95hMz8t5Qmcma+5/zZiPcoNIPCdwA=
+=sALA
+-----END PGP SIGNATURE-----
+
+--c2tecu4d2tdhze26--
