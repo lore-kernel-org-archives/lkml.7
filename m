@@ -2,133 +2,368 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D2FC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9182C74A59
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D7021670
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5CC21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LQSni2QX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCgbZrJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfGKPJB (ORCPT
+        id S1728984AbfGKPJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 11:09:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41053 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfGKPJA (ORCPT
+        Thu, 11 Jul 2019 11:09:12 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39342 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfGKPJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 11:09:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so3167862pls.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 08:09:00 -0700 (PDT)
+        Thu, 11 Jul 2019 11:09:11 -0400
+Received: by mail-io1-f67.google.com with SMTP id f4so13282736ioh.6;
+        Thu, 11 Jul 2019 08:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6Y7/EmhYa6i3GEsi4Y7y5f9hDRN5qiF/ifdOoyJesEU=;
-        b=LQSni2QXLXswE/M1jbF0EOI21lueLWhC/pRwpcUKf3JlktEQ9xnYvfv0m884j88kDu
-         xsqHchYyVuLK+mORVh1Y1kXPJC+w90SkovvGnf85vvxKir6kk8OO1QPCOuQDmJXyi6d2
-         OiUhDpscvaAWfWIUAIiYNc3bOwd6vjZ5oV23k=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YItf/moxjUgo7takqDZFQEc1UXgT30LlS+BEwqLzypw=;
+        b=CCgbZrJcbWzmaMpDdrUVBUdTnnC+C8Y4vkIvctOzh6QPtLu6TdwzLd/XF2HdeFLMg+
+         Z8H/0GK0PTciZzuykVN+q1zt7ANp+GEpd0rLXzeJ/Ure3Yyqb0kwdZvofqMxns6ch6Mx
+         YO44ymMb/iODSwl8vhTJnJUoetpIliPECiX+jA7tD8yAUcO9rEZndw6Ch9Rsv/DUmlo2
+         ho/f6wnHv4Yw4/m120myNLOw2AuY/XbNS+n29ZzaCGH2kXwWYldaIdh7sUzW8r2+kKdv
+         VoQIFuPOzCV7X8AgeOmCybtjVjzqKv5+KFM+zSTMkdewB8HK1ZXIjSe6beUzNsii7VNs
+         7YkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Y7/EmhYa6i3GEsi4Y7y5f9hDRN5qiF/ifdOoyJesEU=;
-        b=LTob9BC24Cb+L1M6Q//JlEKskAS4/JQE8xSPGFazE7L7svFrwGTKBzBnqXYs92hO83
-         q69JLn/qCUsEXW95mYDCOHVZcmRmZCU6FzuSqQjFy3UlGeunPMRKdObziXA7HhBhkE7s
-         Im+4t4P34iU5uRKfHY9jAdwGtEqPNVuXU/z5RsmHnlxM6gRMGmQbqB5nQeduLHjJjF8Z
-         A/UuWm95wpqUBsUQzWCghecnRPKIdHZsRFi9ysmnEKbc4I2iOrNebYbxZnf+TxpFgw6e
-         MnDDgZrWgs6xFT6aGHRHuLRI+te/gAeKCbjpBvXH7Cq3xFv5qhBQ5MJlPdxM3p3fBl/X
-         F/Zg==
-X-Gm-Message-State: APjAAAVoQ8sdAoWQWi1cp+peSHxtgeyMEf7qRwn0C5twJU87yZrtxKvt
-        hLqBDdKDJP3UUiadIf9GI4b6uQ==
-X-Google-Smtp-Source: APXvYqxKOdcWT8/jMUFvp2VRjTE1nnN9wmqs4QauNiOZLRPkNmkmt/lH4FZJPsf7Of+VP8sB3rRqqA==
-X-Received: by 2002:a17:902:da4:: with SMTP id 33mr4748129plv.209.1562857739978;
-        Thu, 11 Jul 2019 08:08:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p1sm6929343pff.74.2019.07.11.08.08.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 08:08:59 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 08:08:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nadav Amit <namit@vmware.com>, Jiri Kosina <jikos@kernel.org>,
-        Xi Ruoyao <xry111@mengyan1223.wang>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [GIT PULL] x86/topology changes for v5.3
-Message-ID: <201907110806.9C79329@keescook>
-References: <201907091727.91CC6C72D8@keescook>
- <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
- <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
- <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
- <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
- <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
- <20190710134433.GN3402@hirez.programming.kicks-ass.net>
- <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
- <89EBC357-BEAC-4252-915F-E183C2D350C4@vmware.com>
- <20190711080134.GT3402@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YItf/moxjUgo7takqDZFQEc1UXgT30LlS+BEwqLzypw=;
+        b=BQQLdyQAq+X7BCsSYfI0XOckU5jVnKxB5N1daBpXtQA8UqAK6qFn0nCvpBxog4NhiN
+         z38d9A+4+ipJJIWKNyw9lIE8twoq/cL6eM3fMThcAjm3Bd1fDxIFp1/XifBNmnic3gfU
+         JDWLPsX0YKJK12ybfGThp9aVD9+EWOPr+g9756jxNlfqdqzJ9OCGFqJxP++bF1x2BX/J
+         ZNR4WisUEblYAox0grQ2IQ+M9/61BQKnD28R39w8jbBN/TKD1uCO17xa1TNm82xbxs6M
+         xapV2g8Fu43UG0ST4q8F96yR0aM8vXA9n55zC6z3Sr47ZVhONe824CPO4Z+MFpjR2LHt
+         oIIA==
+X-Gm-Message-State: APjAAAU8E89q1xr+y57+8b5XNEh857lKZt14mSvdj1vuQosVCpKT6vmV
+        oLLrq3hDeukG1gV4bmKiUImUYk6hhn3JBK0Vq8k=
+X-Google-Smtp-Source: APXvYqz4B2avZS+TS0M6KCibhKSyfJ1EEW1jCWEcUpjsBihdusPoizZoHVid1GFAzjKDzb4Ord/yrQ6v/K7bbprG2fg=
+X-Received: by 2002:a02:cd82:: with SMTP id l2mr5105904jap.96.1562857750171;
+ Thu, 11 Jul 2019 08:09:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711080134.GT3402@hirez.programming.kicks-ass.net>
+References: <20190710195158.19640-1-nitesh@redhat.com> <CAKgT0Uf3J17zNFc-pBKQjTthSa8GG=TrTwaL4+Ns=Q88sFpxLQ@mail.gmail.com>
+ <901cb83e-fb6a-a7fc-a60e-e35b0c89139d@redhat.com> <CAKgT0UdMiArh+H54FvnEZTM9XsgOs_FJXO8VfJ1EXw6hiCqwRA@mail.gmail.com>
+ <fd2dcb88-2a71-3d7e-6079-819532317ddd@redhat.com>
+In-Reply-To: <fd2dcb88-2a71-3d7e-6079-819532317ddd@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 11 Jul 2019 08:08:59 -0700
+Message-ID: <CAKgT0Uc2f+h2dF-q2G9m6X-srWfdefSeBOePyD0CFyf+GX_qxA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v11 0/2] mm: Support for page hinting
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 10:01:34AM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 11, 2019 at 07:11:19AM +0000, Nadav Amit wrote:
-> > > On Jul 10, 2019, at 7:22 AM, Jiri Kosina <jikos@kernel.org> wrote:
-> > > 
-> > > On Wed, 10 Jul 2019, Peter Zijlstra wrote:
-> > > 
-> > >> If we mark the key as RO after init, and then try and modify the key to
-> > >> link module usage sites, things might go bang as described.
-> > >> 
-> > >> Thanks!
-> > >> 
-> > >> 
-> > >> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> > >> index 27d7864e7252..5bf7a8354da2 100644
-> > >> --- a/arch/x86/kernel/cpu/common.c
-> > >> +++ b/arch/x86/kernel/cpu/common.c
-> > >> @@ -366,7 +366,7 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
-> > >> 	cr4_clear_bits(X86_CR4_UMIP);
-> > >> }
-> > >> 
-> > >> -DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
-> > >> +DEFINE_STATIC_KEY_FALSE(cr_pinning);
-> > > 
-> > > Good catch, I guess that is going to fix it.
-> > > 
-> > > At the same time though, it sort of destroys the original intent of Kees' 
-> > > patch, right? The exploits will just have to call static_key_disable() 
-> > > prior to calling native_write_cr4() again, and the protection is gone.
-> > 
-> > Even with DEFINE_STATIC_KEY_FALSE_RO(), I presume you can just call
-> > set_memory_rw(), make the page that holds the key writable, and then call
-> > static_key_disable(), followed by a call to native_write_cr4().
-> 
-> Or call text_poke_bp() with the right set of arguments.
+On Thu, Jul 11, 2019 at 8:04 AM Nitesh Narayan Lal <nitesh@redhat.com> wrot=
+e:
+>
+>
+> On 7/11/19 10:58 AM, Alexander Duyck wrote:
+> > On Thu, Jul 11, 2019 at 4:31 AM Nitesh Narayan Lal <nitesh@redhat.com> =
+wrote:
+> >>
+> >> On 7/10/19 7:40 PM, Alexander Duyck wrote:
+> >>> On Wed, Jul 10, 2019 at 12:52 PM Nitesh Narayan Lal <nitesh@redhat.co=
+m> wrote:
+> >>>
+> >>> The results up here were redundant with what is below so I am just
+> >>> dropping them. I would suggest only including one set of results in
+> >>> any future cover page as it is confusing to duplicate it like that.
+> >>>
+> >>>> This approach tracks all freed pages of the order MAX_ORDER - 2 in b=
+itmaps.
+> >>>> A new hook after buddy merging is used to set the bits in the bitmap=
+.
+> >>>> Currently, the bits are only cleared when pages are hinted, not when=
+ pages are
+> >>>> re-allocated.
+> >>>>
+> >>>> Bitmaps are stored on a per-zone basis and are protected by the zone=
+ lock. A
+> >>>> workqueue asynchronously processes the bitmaps as soon as a pre-defi=
+ned memory
+> >>>> threshold is met, trying to isolate and report pages that are still =
+free.
+> >>>>
+> >>>> The isolated pages are reported via virtio-balloon, which is respons=
+ible for
+> >>>> sending batched pages to the host synchronously. Once the hypervisor=
+ processed
+> >>>> the hinting request, the isolated pages are returned back to the bud=
+dy.
+> >>>>
+> >>>> Changelog in v11:
+> >>>> * Added logic to take care of multiple NUMA nodes scenarios.
+> >>>> * Simplified the logic for reporting isolated pages to the host. (Eg=
+. replaced
+> >>>> dynamically allocated arrays with static ones, introduced wait event=
+ instead of
+> >>>> the loop in order to wait for a response from the host)
+> >>>> * Added a mutex to prevent race condition when page hinting is enabl=
+ed by
+> >>>> multiple drivers.
+> >>>> * Simplified the logic responsible for decrementing free page counte=
+r for each
+> >>>> zone.
+> >>>> * Simplified code structuring/naming.
+> >>>>
+> >>>> Known work items for the future:
+> >>>> * Test device assigned guests to ensure that hinting doesn't break i=
+t.
+> >>>> * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device-side support.
+> >>>> * Decide between MADV_DONTNEED and MADV_FREE.
+> >>>> * Look into memory hotplug, more efficient locking, better naming co=
+nventions to
+> >>>> avoid confusion with VIRTIO_BALLOON_F_FREE_PAGE_HINT support.
+> >>>> * Come up with proper/traceable error-message/logs and look into oth=
+er code
+> >>>> simplifications. (If necessary).
+> >>>>
+> >>>> Benefit analysis:
+> >>>> 1. Number of 5GB guests (each touching 4GB memory) that can be launc=
+hed without
+> >>>> swap usage on a system with 15GB:
+> >>>> unmodified kernel - 2, 3rd with 2.5GB
+> >>>> v11 page hinting - 6, 7th with 26MB
+> >>>> v1 bubble hinting - 6, 7th with 1.8GB
+> >>>>
+> >>>> Conclusion - In this particular testcase on using v11 page hinting a=
+nd
+> >>>> v1 bubble-hinting 4 more guests could be launched without swapping c=
+ompared
+> >>>> to an unmodified kernel.
+> >>>> For the 7th guest launch, v11 page hinting is slightly better than v=
+1 Bubble
+> >>>> hinting as it touches lesser swap space.
+> >>> I'm confused by the comment. From what I can tell bubble hinting came
+> >>> up with 1.8GB of memory while page hinting only managed to achieve
+> >>> .026GB (Using the same units makes it easier to visualize the
+> >>> difference). Also your test says "can be launched without swap usage"=
+,
+> >>> yet you say the bubble hinting is touching swap which makes not sense
+> >>> to me.
+> >> I will work on the cover to improve this part.
+> >> Basically, In each case, the first number indicates the number of the
+> >> guest which are launched without touching the swap space. For instance
+> >> with bubble hinting, I was able to launch 6 guests without any swap
+> >> usage. On launching the 7th guests initially there was no swap usage,
+> >> however, as the test app starts allocating 4GB memory the swap came in=
+to
+> >> the picture. 1.8 GB is the swap usage after the completion of the test
+> >> application.
+> >>>> Setup & procedure -
+> >>>> Total NUMA Node Memory ~ 15 GB (All guests are run on a single NUMA =
+node)
+> >>>> Guest Memory =3D 5GB
+> >>>> Number of CPUs in the guest =3D 1
+> >>>> Host swap =3D 4GB
+> >>>> Workload =3D test allocation program that allocates 4GB memory, touc=
+hes it via
+> >>>> memset and exits.
+> >>>> The first guest is launched and once its console is up, the test all=
+ocation
+> >>>> program is executed with 4 GB memory request (Due to this the guest =
+occupies
+> >>>> almost 4-5 GB of memory in the host in a system without page hinting=
+). Once
+> >>>> this program exits at that time another guest is launched in the hos=
+t and the
+> >>>> same process is followed. It is continued until the swap is not used=
+.
+> >>>>
+> >>>> 2. Memhog execution time (For 3 guests each of 6GB on a system with =
+15GB):
+> >>>> unmodified kernel - Guest1:21s, Guest2:27s, Guest3:2m37s swap used =
+=3D 3.7GB
+> >>>> v11 page hinting - Guest1:23s, Guest2:26s, Guest3:21s swap used =3D =
+0
+> >>>> v1 bubble hinting - Guest1:23, Guest2:11s, Guest3:26s swap used =3D =
+0
+> >>>>
+> >>>> For this particular test-case in a guest which doesn't require swap =
+access
+> >>>> "memhog 6G" execution time lies within a range of 15-30s.
+> >>>> Conclusion -
+> >>>> In the above test case for an unmodified kernel on executing memhog =
+in the
+> >>>> third guest execution time rises to above 2minutes due to swap acces=
+s.
+> >>>> Using either page-hinting or bubble hinting brings this execution ti=
+me to a
+> >>>> a normal range of 15-30s.
+> >>> So really this test doesn't add much in value. The whole reason why
+> >>> Guest3 runs so much slower is because it is going to swap. I initiall=
+y
+> >>> did this to demonstrate a point, but now running this test doesn't
+> >>> prove much as it isn't really meant to be a performance test. It is
+> >>> essentially just a duplicate of the "how many guests can you run" tes=
+t
+> >>> that is passing itself off as some sort of performance test.
+> >>>
+> >>> We could probably just drop this from future version of this as long
+> >>> as we verify that the memory hinting is freeing most of the memory
+> >>> back and the guest is reporting a size less than the total guest
+> >>> memory size.
+> >>>
+> >> +1, makes sense to keep just one of the above two.
+> >>>> Setup & procedure -
+> >>>> Total NUMA Node Memory ~ 15 GB (All guests are run on a single NUMA =
+node)
+> >>>> Guest Memory =3D 6GB
+> >>>> Number of CPUs in the guest =3D 4
+> >>>> Process =3D 3 Guests are launched and the =E2=80=98memhog 6G=E2=80=
+=99 execution time is monitored
+> >>>> one after the other in each of them.
+> >>>> Host swap =3D 4GB
+> >>>>
+> >>>> Performance Analysis:
+> >>>> 1. will-it-scale's page_faul1
+> >>>> Setup -
+> >>>> Guest Memory =3D 6GB
+> >>>> Number of cores =3D 24
+> >>>>
+> >>>> Unmodified kernel -
+> >>>> 0,0,100,0,100,0
+> >>>> 1,514453,95.84,519502,95.83,519502
+> >>>> 2,991485,91.67,932268,91.68,1039004
+> >>>> 3,1381237,87.36,1264214,87.64,1558506
+> >>>> 4,1789116,83.36,1597767,83.88,2078008
+> >>>> 5,2181552,79.20,1889489,80.08,2597510
+> >>>> 6,2452416,75.05,2001879,77.10,3117012
+> >>>> 7,2671047,70.90,2263866,73.22,3636514
+> >>>> 8,2930081,66.75,2333813,70.60,4156016
+> >>>> 9,3126431,62.60,2370108,68.28,4675518
+> >>>> 10,3211937,58.44,2454093,65.74,5195020
+> >>>> 11,3162172,54.32,2450822,63.21,5714522
+> >>>> 12,3154261,50.14,2272290,58.98,6234024
+> >>>> 13,3115174,46.02,2369679,57.74,6753526
+> >>>> 14,3150511,41.86,2470837,54.02,7273028
+> >>>> 15,3134158,37.71,2428129,51.98,7792530
+> >>>> 16,3143067,33.57,2340469,49.54,8312032
+> >>>> 17,3112457,29.43,2263627,44.81,8831534
+> >>>> 18,3089724,25.29,2181879,38.69,9351036
+> >>>> 19,3076878,21.15,2236505,40.01,9870538
+> >>>> 20,3091978,16.95,2266327,35.00,10390040
+> >>>> 21,3082927,12.84,2172578,28.12,10909542
+> >>>> 22,3055282,8.73,2176269,29.14,11429044
+> >>>> 23,3081144,4.56,2138442,24.87,11948546
+> >>>> 24,3075509,0.45,2173753,21.62,12468048
+> >>>>
+> >>>> page hinting -
+> >>>> 0,0,100,0,100,0
+> >>>> 1,491683,95.83,494366,95.82,494366
+> >>>> 2,988415,91.67,919660,91.68,988732
+> >>>> 3,1344829,87.52,1244608,87.69,1483098
+> >>>> 4,1797933,83.37,1625797,83.70,1977464
+> >>>> 5,2179009,79.21,1881534,80.13,2471830
+> >>>> 6,2449858,75.07,2078137,76.82,2966196
+> >>>> 7,2732122,70.90,2178105,73.75,3460562
+> >>>> 8,2910965,66.75,2340901,70.28,3954928
+> >>>> 9,3006665,62.61,2353748,67.91,4449294
+> >>>> 10,3164752,58.46,2377936,65.08,4943660
+> >>>> 11,3234846,54.32,2510149,63.14,5438026
+> >>>> 12,3165477,50.17,2412007,59.91,5932392
+> >>>> 13,3141457,46.05,2421548,57.85,6426758
+> >>>> 14,3135839,41.90,2378021,53.81,6921124
+> >>>> 15,3109113,37.75,2269290,51.76,7415490
+> >>>> 16,3093613,33.62,2346185,48.73,7909856
+> >>>> 17,3086542,29.49,2352140,46.19,8404222
+> >>>> 18,3048991,25.36,2217144,41.52,8898588
+> >>>> 19,2965500,21.18,2313614,38.18,9392954
+> >>>> 20,2928977,17.05,2175316,35.67,9887320
+> >>>> 21,2896667,12.91,2141311,28.90,10381686
+> >>>> 22,3047782,8.76,2177664,28.24,10876052
+> >>>> 23,2994503,4.58,2160976,22.97,11370418
+> >>>> 24,3038762,0.47,2053533,22.39,11864784
+> >>>>
+> >>>> bubble-hinting v1 -
+> >>>> 0,0,100,0,100,0
+> >>>> 1,515272,95.83,492355,95.81,515272
+> >>>> 2,985903,91.66,919653,91.68,1030544
+> >>>> 3,1475300,87.51,1353723,87.65,1545816
+> >>>> 4,1783938,83.36,1586307,83.78,2061088
+> >>>> 5,2093307,79.20,1867395,79.95,2576360
+> >>>> 6,2441370,75.05,2055421,76.65,3091632
+> >>>> 7,2650471,70.89,2246014,72.93,3606904
+> >>>> 8,2926782,66.75,2333601,70.41,4122176
+> >>>> 9,3107617,62.60,2383112,68.46,4637448
+> >>>> 10,3192332,58.44,2441626,65.84,5152720
+> >>>> 11,3268043,54.32,2235964,62.92,5667992
+> >>>> 12,3191105,50.18,2449045,60.49,6183264
+> >>>> 13,3145317,46.05,2377317,57.80,6698536
+> >>>> 14,3161552,41.91,2395814,53.26,7213808
+> >>>> 15,3140443,37.77,2333200,51.42,7729080
+> >>>> 16,3130866,33.65,2150967,46.11,8244352
+> >>>> 17,3112894,29.52,2372068,45.93,8759624
+> >>>> 18,3078424,25.39,2336211,39.85,9274896
+> >>>> 19,3036457,21.27,2224821,35.25,9790168
+> >>>> 20,3046330,17.13,2199755,37.43,10305440
+> >>>> 21,2981130,12.98,2214862,28.67,10820712
+> >>>> 22,3017481,8.84,2195996,29.69,11335984
+> >>>> 23,2979906,4.68,2173395,25.90,11851256
+> >>>> 24,2971170,0.52,2134311,21.89,12366528
+> >>> Okay, so this doesn't match up with the results you gave me last time
+> >>> (https://lore.kernel.org/lkml/afac6f92-74f5-4580-0303-12b7374e5011@re=
+dhat.com/),
+> >>> and actually more closely matches what I was expecting to see. The
+> >>> bubble-hinting patches are performing within a few percent of what th=
+e
+> >>> baseline kernel was doing.
+> >> Interestingly even with an unmodified kernel with every fresh boot, I
+> >> observed a certain amount of variability in the results which I stated
+> >> below.
+> >>> I am assuming the results from before had
+> >>> some additional debugging enabled for the bubble-hinting test that
+> >>> wasn't enabled for the other ones.
+> >> Nope, I had debugging options enabled for all the cases. This time
+> >> around I disabled all the debug options.
+> > We can agree to disagree I guess. Those debugging options had reduced
+> > the throughput by over 30% on the guest kernel in my test runs. I was
+> > never able to reproduce the data you reported as enabling the same
+> > debug features on an unmodified kernel had reduced the throughput for
+> > the test just the same as it did for the bubble hinting version. Were
+> > you running the debug options on the host kernel or the guest?
+> In the guest. Do the results which I shared without debug options, match
+> with what you have?
+> I am also curious to know if you see any variability in the results of
+> page_fault1 for an unmodified kernel with every fresh boot? If so how
+> often?
 
-Right -- the point is to make it defended against an arbitrary write,
-not arbitrary execution. Nothing is safe from arbitrary exec, but we can
-do our due diligence on making things read-only.
+I see some variability, but not much. Usually it can vary by +/- 5% or
+so. What I have been doing is collecting multiple runs, working out
+the average, and then comparing that against an average with the
+patches applied.
 
--- 
-Kees Cook
+One other thing you can probably do to limit the variability would be
+to look at disabling any power management features on the system. One
+thing you could be seeing is the effect of the CPU enabling turbo mode
+or going into sleep states if idle. That can easily throw the numbers
+around quite a bit.
