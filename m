@@ -2,86 +2,67 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7524BC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2F6C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF8921537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BE3216C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562870109;
+	bh=F2k0I3YJr1cB+GClQEeL2TgwA20r6xaiCbx0tiNOvwY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=itzAbQgdDoIUISi2EivLBhw062Pzt4/A2WtqugIx9bjy+Dqu5VCume83Z2oSOBi5E
+	 OfJYDwbrERvXdcX/vaKoLAaiKSVONcLTb2VCPT8LcMzn12+Hf4FZ01MUp6NkJHRZoU
+	 rGmZWO0OoazXnWtz1eaLi94NtAjz0U2SPiLkd84g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfGKSey (ORCPT
+        id S1729069AbfGKSfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 14:34:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27466 "EHLO mga05.intel.com"
+        Thu, 11 Jul 2019 14:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728959AbfGKSey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:34:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 11:34:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
-   d="scan'208";a="341469281"
-Received: from jolivell-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.50.138])
-  by orsmga005.jf.intel.com with ESMTP; 11 Jul 2019 11:34:49 -0700
-Date:   Thu, 11 Jul 2019 21:34:48 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     stable@vger.kernel.org, groeck@chromium.org,
-        gregkh@linuxfoundation.org, sukhomlinov@google.com,
-        Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>,
-        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
- operations
-Message-ID: <20190711183448.vqbr2nvyu5h237bb@linux.intel.com>
-References: <20190711162919.23813-1-dianders@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711162919.23813-1-dianders@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+        id S1729042AbfGKSfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 14:35:07 -0400
+Subject: Re: [GIT PULL] clone3 for v5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562870107;
+        bh=F2k0I3YJr1cB+GClQEeL2TgwA20r6xaiCbx0tiNOvwY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=JLJh5lqdxz70+igfz7K4pZ8d+rgY8IaPdN3cKVDmJtdYA0nWgj/jVOiaYXEimG/mi
+         kCLNwAC/T797KXM1jmz19/uyAP9v14r5adKxG/iBDheot5bb+u0ERkU/y0grhIr16s
+         QolIZ2VPQzqTc8SjWoQyL1CyswJcDcaSfSi0iiKk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190708150042.11590-1-christian@brauner.io>
+References: <20190708150042.11590-1-christian@brauner.io>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190708150042.11590-1-christian@brauner.io>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
+ tags/clone3-v5.3
+X-PR-Tracked-Commit-Id: d68dbb0c9ac8b1ff52eb09aa58ce6358400fa939
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8f6ccf6159aed1f04c6d179f61f6fb2691261e84
+Message-Id: <156287010730.13847.13561875228958547242.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jul 2019 18:35:07 +0000
+To:     Christian Brauner <christian@brauner.io>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 09:29:19AM -0700, Douglas Anderson wrote:
-> From: Vadim Sukhomlinov <sukhomlinov@google.com>
-> 
-> commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
-> 
-> TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-> future TPM operations. TPM 1.2 behavior was different, future TPM
-> operations weren't disabled, causing rare issues. This patch ensures
-> that future TPM operations are disabled.
-> 
-> Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-> [dianders: resolved merge conflicts with mainline]
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
-> This is the backport of the patch referenced above to 4.19 as was done
-> in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
-> presumably applies to some older kernels.  NOTE that the problem
-> itself has existed for a long time, but continuing to backport this
-> exact solution to super old kernels is out of scope for me.  For those
-> truly interested feel free to reference the past discussion [1].
-> 
-> Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
-> chip power gating out of tpm_transmit()") and commit 719b7d81f204
-> ("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
-> seem like a good idea to backport 17 patches to avoid the conflict.
+The pull request you sent on Mon,  8 Jul 2019 17:00:42 +0200:
 
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/clone3-v5.3
 
-/Jarkko
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8f6ccf6159aed1f04c6d179f61f6fb2691261e84
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
