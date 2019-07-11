@@ -2,124 +2,138 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABAFC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACB0C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F2B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1469A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BIrf/49k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfGKJcS (ORCPT
+        id S1728317AbfGKJeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:32:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:43814 "EHLO foss.arm.com"
+        Thu, 11 Jul 2019 05:34:11 -0400
+Received: from mout.web.de ([212.227.15.3]:54415 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfGKJcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:32:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B681F337;
-        Thu, 11 Jul 2019 02:32:17 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 987363F71F;
-        Thu, 11 Jul 2019 02:32:15 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 10:32:10 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Shenhar, Talel" <talel@amazon.com>
-Cc:     Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
-        barakw@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
- host bridge binding
-Message-ID: <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
- <20190710164519.17883-6-jonnyc@amazon.com>
- <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
+        id S1726088AbfGKJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:34:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1562837617;
+        bh=QMVNj5fg+/7lPtHz1QND/Mzp+oXxlM2TSpezOk+oacA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=BIrf/49kJehFww3FgmPUBhIlupe6E8wfnMm0rP93UdTfgan+9nAz3Do+9bixtk9pN
+         k/NJkynyNymuUy5z59p06M3+rXd+YrTwNcpx0qvZIsLOr6+tIcN/pwoxKEXqnilWpq
+         c/UdopFZvdnIiX6zz0LXGfeE/cduiE0nxOXpvW5o=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.182.165]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MT8cQ-1hslEN1gFa-00S8yH; Thu, 11
+ Jul 2019 11:33:37 +0200
+Subject: Re: Coccinelle: Checking of_node_put() calls with SmPL
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        kernel-janitors@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Scott Wood <oss@buserror.net>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+References: <201907111435459627761@zte.com.cn>
+ <alpine.DEB.2.20.1907110845551.3626@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e0e19253-afbc-3576-fcc3-22deea4db674@web.de>
+Date:   Thu, 11 Jul 2019 11:33:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.DEB.2.20.1907110845551.3626@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:vF7Ayn7m0WSIGgJ8Iz9/UhW4AwGPyUxCenUfU3dLIOT0/YlM2tW
+ TfiTE33m7hhXEzvlTZjY+0WbZCPqk2LVjXiX8ZvhzrOReIBnAAHee9bmNwL823cApnuMiis
+ 5suxy/KPx4ULhHsul/FMH6/QRTp9A8zmLPOXBEBRW3gcERlnf3lwVjVfRtShRvv7k/l8kZk
+ MNe4pFPkBA7oyeq61s6vw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CKzj7shNjl0=:ik0J8kqkgDqG/J3jlfZIgV
+ +DymDWKBDTwr4BlrQQ3jYCmOYQsx4dN9HZBuAXWbaCkroRiepiNB+/AQu264uYs2hAQNPwhSf
+ 0RfIa5YzUzhppN/OhuwFPL/1ezyFc0JnF1xSa1ezp0Oy/4k/4y5FEczxdHL+uVFpjgzrGBIGW
+ gxhvcV4+OGF2svvnFl5ZJKRetHfJ0ObAAFTUjF7m0IQDDbL0NrgFWbU/QWe4VmNlrBwJOhsg9
+ nmGSca7QZITK5/K191rI6KLYwijy0e8vezEEOlxXhYqA5bn4jgwlk2V0TPm3QrMZRzcw41RXc
+ CrTyybBWctNLDRINNQE4GemryLPzB4zqnBFyEbuRlmqp1AVQn7U0CjL85Hf6XWzGflW4gk2Ww
+ su0/erP3NfY1slyp+kNlXfPUYhrwb2zr/QIqsBXCSoGcadu3sYTEM+dUBUibtuw/s7dVo06s7
+ EEZft3bm99ZWRwwAqOuVtWuvDSG7kewNGkud3aC+clYD5zXSQ3fWK5kSrg3NEwtWIvZwTos5e
+ qXGinA4IetcSVdb9FVLZXXwIU6GatEhkr8EgWtt6MK3eUw4ctao2J/zObZISbURwh+9TWpCp0
+ xo3uuTIWJM+9/lyv4NQUikRKgKuzfXthRrmlKkPubJBYdkuhk7l/GjV9liIqM87jrufSjSLOQ
+ weXCvZQ8jBPYN5T56+3yRE2zy7gqhT8jqObX6v907lwWfi2uTFzuCl1JE2+Vo9bwhb7vX2dZK
+ TW9sjgMnhAD6wKf21CDPv6QvlpdqYd6KEX28v4brYVafJNdN5aQ92vsvQ/HtL2VsoCQEn5GNU
+ fDV1alc4m67crVqRtO8H209OfoY0YImHrBhs6PxeyJColvOIRpw5y7LZTQ19EPMw/hKoseXNY
+ dOBHuYKOJH3UIlc4wVt961g1yKDoSkoCISlXTMC6fSBQhzvq7NjShBkTbf9cZaNa5wauj2c8p
+ /o/D5CcClilZsuA92J2FgvjILErCMtHLxIMnOi3Atee4FYAvRj0uPMptnApyq8OHvkKR6g2z2
+ HJCu80cCQhR1wzQQ/iydeRz091QrH6dCv0CcKWMwP8TiOov04tHWoPflxpqiJa9Mqlu0r3L+G
+ RoMvQirUhdrHzsl/6CELsgyjXEWuLYM2tQq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 10:12:35AM +0300, Shenhar, Talel wrote:
-> 
-> On 7/10/2019 7:45 PM, Jonathan Chocron wrote:
-> > Document Amazon's Annapurna Labs PCIe host bridge.
-> 
-> That is the way! (best to keep same wordings (Amazon's)
+> In my experience, when you start looking at these of_node_put things,
+> all sorts of strange things appear...
 
-Guys,
+How much will this situation influence the achievement of further improvements
+also for your software?
 
-as a heads-up, the original posting, for whatever reason, did not hit
-linux-pci@vger, which means that from a PCI patches queue review point
-of view it does not exist.
-
-It ought to be fixed otherwise we won't be able to review the code.
-
-Lorenzo
-
-> > 
-> > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > ---
-> >   .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
-> >   MAINTAINERS                                   |  1 +
-> >   2 files changed, 46 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
-> > new file mode 100644
-> > index 000000000000..d92cc529490e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
-> > @@ -0,0 +1,45 @@
-> > +* Amazon Annapurna Labs PCIe host bridge
-> > +
-> > +Annapurna Labs' PCIe Host Controller is based on the Synopsys DesignWare
-> 
-> Amazon's
-> 
-> 
-> and what is the s' ? should it be for all
-> 
-> > +Example:
-> > +
-> > +	pcie-external0 {
-> probably should have a reference with the address
-> > +		compatible = "amazon,al-pcie";
-> > +		reg = <0x0 0xfb600000 0x0 0x00100000
-> > +		       0x0 0xfd800000 0x0 0x00010000
-> > +		       0x0 0xfd810000 0x0 0x00001000>;
-> > +		reg-names = "config", "controller", "dbi";
-> > +		bus-range = <0 255>;
-> > +		device_type = "pci";
-> > +		#address-cells = <3>;
-> > +		#size-cells = <2>;
-> > +		#interrupt-cells = <1>;
-> > +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-map-mask = <0x00 0 0 7>;
-> > +		interrupt-map = <0x0000 0 0 1 &gic_main GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
-> gic_main->gic
-> > +		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
-> > +	};
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5a6137df3f0e..d555beb794bb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12205,6 +12205,7 @@ PCIE DRIVER FOR ANNAPURNA LABS
-> AMAZON!
-> >   M:	Jonathan Chocron <jonnyc@amazon.com>
-> >   L:	linux-pci@vger.kernel.org
-> >   S:	Maintained
-> > +F:	Documentation/devicetree/bindings/pci/pcie-al.txt
-> >   F:	drivers/pci/controller/dwc/pcie-al.c
-> >   PCIE DRIVER FOR AMLOGIC MESON
+Regards,
+Markus
