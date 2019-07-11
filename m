@@ -2,123 +2,105 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF77BC71142
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0458C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B5220872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6EF520863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:07:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="D0oxmZqN"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="tF3TLrAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfGKSFN (ORCPT
+        id S1728974AbfGKSHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 14:05:13 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38829 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728632AbfGKSFN (ORCPT
+        Thu, 11 Jul 2019 14:07:31 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43305 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728304AbfGKSHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:05:13 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a27so4358868qkk.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 11:05:12 -0700 (PDT)
+        Thu, 11 Jul 2019 14:07:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so3413329plb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 11:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1D45VDmCAbr+E4SZBzLB6VIycjDuXVw9dZK5gxi0EWc=;
-        b=D0oxmZqNliGmZXYrGlhIuUh88RZXZ6IhsMAFjAuLmDmNgjdEH+q+K6YnRJrxj7arH8
-         ibDZ7U1n+0tp6aNzpggOFouDSSYnHYAgfPUKAbSjef7i4GZxiBjOBtSx6GyLsCG7I8Gs
-         3/nzEU52dHNo4HusV+6Qin1Wu1zmfGeiNhJFM51AbW2JxISWIxPoigumd2UMuNYyUbkq
-         HQs82H7FdUQfp1nyOXzSwBKVDw2umbdNTDuBDd1Dei8y+sOUVydROMLgz9de2iphEO20
-         x8ZsHURXfb0KYVdcJtWqFA4sItPUKHyTuyTeUp9pK4wUGCeP0d7cslj2oo39SjrAqRa+
-         aYKQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=HFqqVAf53kQZdQpKzWHw6YV0GKjGRqkuwN0W084Idiw=;
+        b=tF3TLrAgMwyyskndvYBbdeyeiTdA3ax3J7vfMGNXEegyPwcKqVxi0vW4QF8Sbo9L5W
+         6OJUTIJAIWTZ6kDHn9Rv2qLS2xtqXEkdbqacOfgHYFg6HZzoRJ/Ai5gJZYJ5hAWMIZ1i
+         UykxeqaETOYUXDlhn2iVJspR45SoeMH5gfP7RQBZC0w1ekRo0mYMhWilnnztwDL99w0v
+         2SQcmkV3JGGe7XtnqSV6bNjtH65hfzDSJfN5lILS8DFbRrsh5tasseTAZgiZmLzPNgyg
+         lZOSsTWjhmHGGU223CWsarbZthwmuT7ikTEsPom1WpjgEWZqxirlJhjcCi7DUoxUnQv9
+         XTzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1D45VDmCAbr+E4SZBzLB6VIycjDuXVw9dZK5gxi0EWc=;
-        b=HcLBeLsZdNx/xCCY9wNFTnA7rTw5XGat7/zItH3rOMsK06U8y5sbfYYmFbZlQC8tG0
-         VMFuJc4sfMYzov/8Aw+96cg7ZXVe21+9e+ZXRI6q2AXT+GrYLFr1+fJFRD3Fe03Y3/pk
-         W2Kr3EmAerx+ssOyYNL2YnWjKOebZMm5PU39W3A4JupN0JTEG9HN8FDLiFcQWdVVMnhM
-         aldLP8uDL8MXJ+sdDj0pWMhD3jjkJtmQ/e5XpKQkuHe8Ebm30NdAiRXUzf2kfn8ybCiw
-         4Xd/Ju0fpOKYqC7CwpLrLpvq9EONJ/F79vAic3ULd0vvsOI1MEtV9Syh3tw6bAw0Aq/q
-         KYYA==
-X-Gm-Message-State: APjAAAXP1zcMZlnbf8D7P6P48VC3JakH04wu+9ywnbvN0auw+faABUDk
-        EKzGD1gF5+YRwjeXOfxY1whWAw==
-X-Google-Smtp-Source: APXvYqy+KfKKXdR19a3uizpOypAq/2/Z4gaxG2jfIxckyfMiRmNY9/ODZSym3MEcVj/1lDRN0YQD1A==
-X-Received: by 2002:a05:620a:310:: with SMTP id s16mr2827756qkm.420.1562868312483;
-        Thu, 11 Jul 2019 11:05:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id z21sm2034477qto.48.2019.07.11.11.05.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 11:05:12 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hldRP-0000Da-MZ; Thu, 11 Jul 2019 15:05:11 -0300
-Date:   Thu, 11 Jul 2019 15:05:11 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/siw: Mark expected switch fall-throughs
-Message-ID: <20190711180511.GA816@ziepe.ca>
-References: <20190711161218.GA4989@embeddedor>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HFqqVAf53kQZdQpKzWHw6YV0GKjGRqkuwN0W084Idiw=;
+        b=WzIRMlTXlgo35RaxkjFwwXjHD00Mcl1+iO9kyULtceGkru9aTZz9OslO6IBFlj05Tu
+         CYVUQU2Qlg1uHRVJ8W1WMBRbEPi6A0l65Dc2oFRkyyoGJMFlMZdTbMxgxlYmN793ctv0
+         gu5e9HreV8taBOA33kieYU6jIbWa9gopTQoazaZH2hzr1xRDGkhsGnbGR06PjrxZ5V5k
+         aNbpZ94c2DUxzNinkp5jHg7tWu552u8KVEByKY6O2EMjq93p3ZHEQlQ8sDZVDNbCqtR/
+         q+WTboVnw0q/VyYFeoSaBwVDyJl+lH71nMUC+ElonJE9XEGBgtlNtBKmLSfvlllBBRQ4
+         B17w==
+X-Gm-Message-State: APjAAAWTT5av8vuPNfFZDPXSsymRvxbpF4j/38XVWekEV9YdGxWkgZpf
+        7BfQUDnFSPg4jxidd1APf28=
+X-Google-Smtp-Source: APXvYqzMAQG40OUqLYdym3Kco+SvImeO5ZcrWpZB4aqsTh7miN748rzlQ4W0jLflNC0KF2SfAxfUFg==
+X-Received: by 2002:a17:902:145:: with SMTP id 63mr6305306plb.55.1562868450408;
+        Thu, 11 Jul 2019 11:07:30 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:5385])
+        by smtp.gmail.com with ESMTPSA id w2sm2686882pgc.32.2019.07.11.11.07.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 11:07:29 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 14:07:27 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v4 3/4] mm: account nr_isolated_xxx in
+ [isolate|putback]_lru_page
+Message-ID: <20190711180727.GC20341@cmpxchg.org>
+References: <20190711012528.176050-1-minchan@kernel.org>
+ <20190711012528.176050-4-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190711161218.GA4989@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190711012528.176050-4-minchan@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 11:12:18AM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
+On Thu, Jul 11, 2019 at 10:25:27AM +0900, Minchan Kim wrote:
+> The isolate counting is pecpu counter so it would be not huge gain
+> to work them by batch. Rather than complicating to make them batch,
+> let's make it more stright-foward via adding the counting logic
+> into [isolate|putback]_lru_page API.
 > 
-> This patch fixes the following warnings:
+> * v1
+>  * fix accounting bug - Hillf
 > 
-> drivers/infiniband/sw/siw/siw_qp_rx.c: In function ‘siw_rdmap_complete’:
-> drivers/infiniband/sw/siw/siw_qp_rx.c:1214:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    wqe->rqe.flags |= SIW_WQE_SOLICITED;
->    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-> drivers/infiniband/sw/siw/siw_qp_rx.c:1215:2: note: here
->   case RDMAP_SEND:
->   ^~~~
-> 
-> drivers/infiniband/sw/siw/siw_qp_tx.c: In function ‘siw_qp_sq_process’:
-> drivers/infiniband/sw/siw/siw_qp_tx.c:1044:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     siw_wqe_put_mem(wqe, tx_type);
->     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/infiniband/sw/siw/siw_qp_tx.c:1045:3: note: here
->    case SIW_OP_INVAL_STAG:
->    ^~~~
-> drivers/infiniband/sw/siw/siw_qp_tx.c:1128:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     siw_wqe_put_mem(wqe, tx_type);
->     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/infiniband/sw/siw/siw_qp_tx.c:1129:3: note: here
->    case SIW_OP_INVAL_STAG:
->    ^~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> NOTE: -Wimplicit-fallthrough will be enabled globally in v5.3. So, I
->       suggest you to take this patch for 5.3-rc1.
+> Link: http://lkml.kernel.org/r/20190531165927.GA20067@cmpxchg.org
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-Okay, I queued this for the current merge window then
+This is tricky to review, but fwiw it looks correct to me.
 
-Jason
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
