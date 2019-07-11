@@ -2,97 +2,73 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F383C742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBF0C742A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEAF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DA5208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfGKT7f (ORCPT
+        id S1729002AbfGKUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 15:59:35 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:55458 "EHLO ajax.cs.uga.edu"
+        Thu, 11 Jul 2019 16:04:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27266 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbfGKT7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 15:59:34 -0400
-X-Greylist: delayed 2416 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Jul 2019 15:59:33 EDT
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x6BJJFVn054162
-        (version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=OK);
-        Thu, 11 Jul 2019 15:19:17 -0400
-Received: by mail-lf1-f50.google.com with SMTP id h28so4811584lfj.5;
-        Thu, 11 Jul 2019 12:19:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAWxheXejtPBkf3TaMAvpn/+tA0N+iGsz0xgfiAGKc7Mri0Xr5JA
-        R7Zu/l2iW5sxEp5lgEyrt7/Hg+Elaq5qCPaS1oc=
-X-Google-Smtp-Source: APXvYqwunc/O9uRDAgMduACqLWOqC09W6hXRDVHDdvBA5YcONGMc9t6fPqw9wsUN4kmB4dulWuL+7iJOiMAcA27WMv4=
-X-Received: by 2002:ac2:418f:: with SMTP id z15mr2543647lfh.177.1562872755598;
- Thu, 11 Jul 2019 12:19:15 -0700 (PDT)
+        id S1726505AbfGKUEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 16:04:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 13:04:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
+   d="scan'208";a="174250801"
+Received: from mmoerth-mobl6.ger.corp.intel.com (HELO localhost) ([10.249.35.82])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Jul 2019 13:04:25 -0700
+Date:   Thu, 11 Jul 2019 23:04:24 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
+        sumit.garg@linaro.org, rdunlap@infradead.org
+Subject: Re: [PATCH v8 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190711200424.5rfrztk666vhb4n5@linux.intel.com>
+References: <20190705204746.27543-1-sashal@kernel.org>
+ <20190705204746.27543-2-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1562830033-24239-1-git-send-email-wang6495@umn.edu> <CACVXFVO-gwVhZRajRx41_sYJKDTX2qZUnZVRXCB0NcegVVTGVw@mail.gmail.com>
-In-Reply-To: <CACVXFVO-gwVhZRajRx41_sYJKDTX2qZUnZVRXCB0NcegVVTGVw@mail.gmail.com>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Thu, 11 Jul 2019 14:18:42 -0500
-X-Gmail-Original-Message-ID: <CAAa=b7fUF1NSDa-dr7VqCZ4wBm1vChe9BRpgx9A_S8wM_OoNAg@mail.gmail.com>
-Message-ID: <CAAa=b7fUF1NSDa-dr7VqCZ4wBm1vChe9BRpgx9A_S8wM_OoNAg@mail.gmail.com>
-Subject: Re: [PATCH] block/bio-integrity: fix a memory leak bug
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705204746.27543-2-sashal@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 4:22 AM Ming Lei <tom.leiming@gmail.com> wrote:
->
-> On Thu, Jul 11, 2019 at 3:36 PM Wenwen Wang <wang6495@umn.edu> wrote:
-> >
-> > From: Wenwen Wang <wenwen@cs.uga.edu>
-> >
-> > In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-> > hold integrity metadata. Later on, the buffer will be attached to the bio
-> > structure through bio_integrity_add_page(), which returns the number of
-> > bytes of integrity metadata attached. Due to unexpected situations,
-> > bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-> > needs to be terminated with 'false' returned to indicate this error.
-> > However, the allocated kernel buffer is not freed on this execution path,
-> > leading to a memory leak.
-> >
-> > To fix this issue, free the allocated buffer before returning from
-> > bio_integrity_prep().
-> >
-> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> > ---
-> >  block/bio-integrity.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-> > index 4db6208..bfae10c 100644
-> > --- a/block/bio-integrity.c
-> > +++ b/block/bio-integrity.c
-> > @@ -276,8 +276,10 @@ bool bio_integrity_prep(struct bio *bio)
-> >                 ret = bio_integrity_add_page(bio, virt_to_page(buf),
-> >                                              bytes, offset);
-> >
-> > -               if (ret == 0)
-> > +               if (ret == 0) {
-> > +                       kfree(buf);
-> >                         return false;
-> > +               }
->
-> This way may not be enough, and the bio payload needs to be freed.
->
-> And you may refer to the error handling for 'IS_ERR(bip)', and bio->bi_status
-> needs to be set, and bio_endio() needs to be called too.
+On Fri, Jul 05, 2019 at 04:47:45PM -0400, Sasha Levin wrote:
+> This patch adds support for a software-only implementation of a TPM
+> running in TEE.
+> 
+> There is extensive documentation of the design here:
+> https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
+> 
+> As well as reference code for the firmware available here:
+> https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
+> 
+> Tested-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+> Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+> Co-authored-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Thanks for your comments! I will rework the patch.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Wenwen
+/Jarkko
