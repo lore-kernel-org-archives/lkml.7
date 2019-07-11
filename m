@@ -2,70 +2,132 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=BODY_SINGLE_WORD,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B068FC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F497C74A58
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9DD20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BF721707
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZfoYVp9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="W1JL3mvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfGKOt1 (ORCPT
+        id S1728883AbfGKOuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:49:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33412 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728471AbfGKOt1 (ORCPT
+        Thu, 11 Jul 2019 10:50:12 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:43577 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728538AbfGKOuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:49:27 -0400
-Received: by mail-io1-f68.google.com with SMTP id z3so13188681iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:49:26 -0700 (PDT)
+        Thu, 11 Jul 2019 10:50:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lx6jElU+VgfY4Bhw8zy9GLpHJyyAtrcr2M9tyhr/Psc=;
-        b=PZfoYVp9w+orcqxhn0RgEJDYDszb/ij2M+Xb1Rfob0X38xwVFepTuTK4GQowApAVLo
-         yvXCZ9vWsTJKt7CX9GrBIl7c9Z+J3FUNNNr/V84rKslZp5CdNzFRLYmrvGvlasrrZPqg
-         kwPidg7mZdKlRJCF8TlVBRQ8ruTRBb6A394OA1BAZPx1FhkgWih7IMzx/RB1czYT4nPB
-         BGaQfx/8d9SPe0jb3OW+l5/oxt18QmMhMRiid6I0e/VH2C8k4OmO3cRZonAv4IxB8nCa
-         5ixREfY0l4lb0e1+XhrRHm5Gwu994algfl4wG7/OOXEU2R1MxEcNjCF+zCsek+agBbZd
-         L6rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lx6jElU+VgfY4Bhw8zy9GLpHJyyAtrcr2M9tyhr/Psc=;
-        b=iHJVd44RvvAjLSJO1ry6Q7ybOYiE80+sf0gQo6q71ZMASppv49y7sTp8HtIVAmmIm7
-         /nTTsW84kTni6V0FANYv0L5+L/OVUOcCClEjzb1YXZd/Ddi4lhYc87iaZ7ZUE2W4UGmk
-         wo54uNifHXsC0UOnXtBy5DsbAGr2r1As9nHplWHAF/ypMgTLPufbb4iE+bN3ikXqzllr
-         utMg8gqQ+KrOEi7/7LbWcuUlppJFh8U/Rnw5LWInXoPaI0/g2WQfFNNogvmKetHFqyeP
-         pTn0607bGTqbzk6dvV32BPKjzmh0INZYC64JS+jVRBmZyYk0vDWgcZhDIVoOATMhNGWF
-         OxuQ==
-X-Gm-Message-State: APjAAAVI2qWU/62NEFfjWRki44/fYXNVpwZwbaABkjqU/c9cqwzRf6N2
-        RZbO6RlsTN/m4nIv95+LM33d4KkSPxADSDcWtZ0=
-X-Google-Smtp-Source: APXvYqxZQg9gmCNd9CO5UADhYdQTr+8XEM146+WZqrbqteXzrxKJ/9aWlv92Ercncs0hvYlqdh/GDlvo02YRcViHNEE=
-X-Received: by 2002:a5d:9416:: with SMTP id v22mr4996202ion.4.1562856565809;
- Thu, 11 Jul 2019 07:49:25 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1562856610; x=1594392610;
+  h=from:to:cc:message-id:mime-version:subject:resent-from:
+   resent-cc:date:content-transfer-encoding;
+  bh=cbNKXHdWGGN5N4ljL3044bGhDdetj8MItmt22zUHnUM=;
+  b=W1JL3mvtD1ckvn701aIaobkIN0tnEssc01Evbi2tdkgi2u+HZz76kB8x
+   uOGKuC5Mcf+w/6WcnZVlAjTI4ozNfjQslB1b3RKdwPe1tNMwNYzuxjbuU
+   vfUwtqOaEa566drug8FLMdmov1YOqo2WnIIpIi6EhHD1Ctp3LIZcoTeJr
+   w=;
+X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
+   d="scan'208";a="741352044"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Jul 2019 14:50:08 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 9F981A17B9;
+        Thu, 11 Jul 2019 14:50:07 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 14:50:06 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 14:50:06 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
+ mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:50:05 +0000
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
+ (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:28 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server
+ (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:28 +0000
+Received: from email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com
+ (10.25.10.214) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:28
+ +0000
+Received: by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix)
+        id 1D462A2387; Wed, 10 Jul 2019 16:45:28 +0000 (UTC)
+Received: from u9ff250417f405e.ant.amazon.com
+ (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70]) by
+ email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS
+ id 50D71A2361; Wed, 10 Jul 2019 16:45:27 +0000 (UTC)
+Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
+ u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
+ x6AGjNOk021313; Wed, 10 Jul 2019 19:45:23 +0300
+Received: (from jonnyc@localhost)
+        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjK5C021200;
+        Wed, 10 Jul 2019 19:45:20 +0300
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Message-ID: <20190710164519.17883-1-jonnyc@amazon.com>
+Content-Type: text/plain
 MIME-Version: 1.0
-References: <20190607182517.28266-1-tiny.windzz@gmail.com>
-In-Reply-To: <20190607182517.28266-1-tiny.windzz@gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Thu, 11 Jul 2019 22:49:14 +0800
-Message-ID: <CAEExFWvh9HMWNKeDNhx1vqTbUB=_117qCP1TjCxEFwiYV4N_FA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] random: remove unnecessary unlikely()
-To:     tytso@mit.edu, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 0/8] Amazon's Annapurna Labs DT-based PCIe host controller
+ driver
+Date:   Thu, 11 Jul 2019 17:50:03 +0300
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping...
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patch=
+es.
+
+Regarding the 2nd DWC patch (PCI flags support), do you think this should
+be done in the context of a host-bridge driver at all (as opposed to PCI
+system-wide code)?
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (7):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon Annapurna Labs host bridge
+  PCI: Add quirk to disable MSI support for Amazon's Annapurna Labs host
+    bridge
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: al: Add support for DW based driver type
+  PCI: dw: Add validation that PCIe core is set to correct mode
+  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  45 ++
+ MAINTAINERS                                   |   1 +
+ drivers/pci/controller/dwc/Kconfig            |  11 +
+ drivers/pci/controller/dwc/pcie-al.c          | 397 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  31 +-
+ drivers/pci/quirks.c                          |  27 ++
+ drivers/pci/vpd.c                             |  12 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 530 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+--=20
+2.17.1
+
+
