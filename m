@@ -2,128 +2,83 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18178C74A46
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF6BC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1CA321655
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pvQMD/53"
+	by mail.kernel.org (Postfix) with ESMTP id 0322C206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfGKD2A (ORCPT
+        id S1728015AbfGKDaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:28:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33101 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfGKD17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:27:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45khMb6z4nz9s4Y;
-        Thu, 11 Jul 2019 13:27:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562815676;
-        bh=AF1YyH/59p2PdlXj1kEV8rgQSQxkXM7X3NhUx89uKKY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pvQMD/53hY2AX4+FL71jwT8Uu6vSWUw/M8GGAHSPsV2idIaXU+F3+mo6cqkwdDmnq
-         pz3kAQEqUqo7TKxv57QF6l5fJX7IPbLcdmPmBsRapK0+HqfHVTaw7M+GD5plYC5NEV
-         IvjAuSDwPmdDb1VcKBqmB/FW8GDTkQrGXv3jzGzm9B+Qh6S3bwoAUL6fxbPRT+jEZT
-         38iP1dviDC/A5OWYovbvXwCNGxu3xEmkTMeTPa365Dsxb+rIf8Zs4IKAcZSjcuO+1v
-         Fy8on1JRF4o0axnQZIyIj5XasAn++nWcshew+ogRMk30VHYi7OLwwb8GCFajwKQdMv
-         wixzonvTEPm1Q==
-Date:   Thu, 11 Jul 2019 13:27:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190711132755.0d4f45c9@canb.auug.org.au>
-In-Reply-To: <20190711131603.6b11b831@canb.auug.org.au>
-References: <20190709135636.4d36e19f@canb.auug.org.au>
-        <20190709064346.GF7034@mtr-leonro.mtl.com>
-        <20190710175212.GM2887@mellanox.com>
-        <20190711115054.7d7f468c@canb.auug.org.au>
-        <20190711015854.GC22409@mellanox.com>
-        <20190711131344.452fc064@canb.auug.org.au>
-        <20190711131603.6b11b831@canb.auug.org.au>
+        Wed, 10 Jul 2019 23:30:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38628 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfGKDaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 23:30:39 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5FEEBF942977EC5AC0C3;
+        Thu, 11 Jul 2019 11:30:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 11 Jul 2019
+ 11:30:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lee.jones@linaro.org>, <tony.xie@rock-chips.com>,
+        <stefan@olimex.com>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] mfd: rk808: Mark rk8xx_resume and rk8xx_suspend as __maybe_unused
+Date:   Thu, 11 Jul 2019 11:30:06 +0800
+Message-ID: <20190711033006.55320-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/lgR/euJAAvPcdiADQ4kmX/m"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lgR/euJAAvPcdiADQ4kmX/m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Fix build warning:
 
-Hi all,
+drivers/mfd/rk808.c:752:12: warning: 'rk8xx_resume' defined but not used [-Wunused-function]
+drivers/mfd/rk808.c:732:12: warning: 'rk8xx_suspend' defined but not used [-Wunused-function]
 
-On Thu, 11 Jul 2019 13:16:03 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> On Thu, 11 Jul 2019 13:13:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > On Thu, 11 Jul 2019 02:26:27 +0000 Jason Gunthorpe <jgg@mellanox.com> w=
-rote: =20
-> > >
-> > > On Thu, Jul 11, 2019 at 11:50:54AM +1000, Stephen Rothwell wrote:
-> > >    =20
-> > > > So today this failed to build after I merged the rdma tree (previou=
-sly
-> > > > it didn;t until after the net-next tree was merged (I assume a
-> > > > dependency changed).  It failed because in_dev_for_each_ifa_rcu (and
-> > > > in_dev_for_each_ifa_rtnl) is only defined in a commit in the net-ne=
-xt
-> > > > tree :-(     =20
-> > >=20
-> > > ? I'm confused..=20
-> > >=20
-> > > rdma.git builds fine stand alone (I hope!)   =20
-> >=20
-> > I have "Fixup to build SIW issue" from Leon (which switches to using
-> > in_dev_for_each_ifa_rcu) included in the rmda tree merge commit because
-> > without that the rdma tree would not build for me.  Are you saying that
-> > I don't need that at all, now? =20
->=20
-> Actually , I get it now, "Fixup to build SIW issue" is really just a
-> fixup for the net-next and rdma trees merge ... OK, I will fix that up
-> tomorrow.  Sorry for my confusion.
+The function is declared unconditionally but only called
+while CONFIG_PM_SLEEP is set.
 
-Actually, I have rewound my tree and am starting from the merge of the
-rdma tree again, so hopefully it should all be good today.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/mfd/rk808.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 601cefb..9a9e631 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -729,7 +729,7 @@ static int rk808_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int rk8xx_suspend(struct device *dev)
++static int __maybe_unused rk8xx_suspend(struct device *dev)
+ {
+ 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+ 	int ret = 0;
+@@ -749,7 +749,7 @@ static int rk8xx_suspend(struct device *dev)
+ 	return ret;
+ }
+ 
+-static int rk8xx_resume(struct device *dev)
++static int __maybe_unused rk8xx_resume(struct device *dev)
+ {
+ 	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+ 	int ret = 0;
+-- 
+2.7.4
 
---Sig_/lgR/euJAAvPcdiADQ4kmX/m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0mrLsACgkQAVBC80lX
-0GzMigf+IwlW8eRSZ9yFVzhO+0aH3niLMNP7eUgPB4yVpdDGlbu/l7g3BXSDTSHC
-pYNkeiuycHgr8F5K7xUDwuPtOR/8NL4PxGywtwP56cJxDj0WxIDj4aFbSbdjWK5m
-AlTFbV+C2Pwcr8sSwgx4aX0u+FWSYjjWHtKnqi9MaAvQouAJR2y2+Rb7rwSp9mlw
-2V3SC+hZxjKMeJ8bAwyrgCH5tZxHfTldZ6wMzIWIAJFooP3zJaGp3xY4Trau6Znb
-y+tpS/Cqz/QPEUOzKVBCX/xuDE+BGojRcDFgw72RYMPFtOKCh9buXnw1SgbE7Z1W
-Py2d8jKfKMvG0AYPyk/T2kT3ZQeTDA==
-=gNA9
------END PGP SIGNATURE-----
-
---Sig_/lgR/euJAAvPcdiADQ4kmX/m--
