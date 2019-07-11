@@ -2,152 +2,68 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69817C742A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4E4C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF5D21670
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wSdjRR9X"
+	by mail.kernel.org (Postfix) with ESMTP id 5C6C021670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562885113;
+	bh=T9hjZeVkNdRpWOVn06WZ3sowWNuRtNjxDP3EB1+CnzA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=EqBKUkgHG/IVFiCgdayc0cwHYfJKd26YcC5PwuSc1iCW5lRU6rcpqvqrWzhc1Lw5G
+	 mBZrHz5WFlx50UFDEaqo+fiw0JD+jOI3UMzTOcR872g0hlq7rtqo4/BT2iAfo/DK8i
+	 qWYldHyJgrNyErJJ52Fu/8YJmC4nGqgjzfELHMZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfGKWl0 (ORCPT
+        id S1729482AbfGKWpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 18:41:26 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37186 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfGKWlZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 18:41:25 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 747E1891AB;
-        Fri, 12 Jul 2019 10:41:22 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562884882;
-        bh=/afLfoMEh0vwaMWFdX+oVPFuipVJFjrbBFfHelfO80k=;
-        h=From:To:Cc:Subject:Date;
-        b=wSdjRR9XzevQVMvnElPoEiozqz2jpm3R48ElhGZoWzw9QyvM8cvmDfE9c7zw/ke7Z
-         eEicH99+Jis4Z/ai6KYeLoympLnlBbVZcJYK3Yn7zWZgwTYeDC+9b24y128gF2xgwg
-         XqRKK535cxlKUUSe3AQFPQRPyxZ6MP6CShxg4VdtK3jXTCMbq8LSr5VYgHVRe1Ckyr
-         EYiyBm7ZKYJU5FIuLcvJAdIEix/AvaDYhtONaHkmAmR8ISMi8cKt5qcjYYHZbn4JOz
-         Q2Qfwwfcq1UTlUQivrT9ULtTQm5eTQwSLVDM53QmI7n6TThupKFi6+4lTuAO0VWo3E
-         UmCDhZWaCOqPw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d27bb120000>; Fri, 12 Jul 2019 10:41:22 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 010FD13EECF;
-        Fri, 12 Jul 2019 10:41:24 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 2C68B1E1D80; Fri, 12 Jul 2019 10:41:22 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jon.maloy@ericsson.com, eric.dumazet@gmail.com,
-        ying.xue@windriver.com, davem@davemloft.net
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] tipc: ensure head->lock is initialised
-Date:   Fri, 12 Jul 2019 10:41:15 +1200
-Message-Id: <20190711224115.21499-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+        Thu, 11 Jul 2019 18:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729461AbfGKWpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 18:45:11 -0400
+Subject: Re: [GIT PULL] livepatching for 5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562885111;
+        bh=T9hjZeVkNdRpWOVn06WZ3sowWNuRtNjxDP3EB1+CnzA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=vQhxGoZf193c6u5OMq5FZR9sDHwECS9p0k7twWQ/1Z3Gko+qGp2mxZsvROJF7Dzqb
+         4+QfOV05y9aPEDPkxmOnTyC446dW3oiOKrGvoidHqv3tfOK4Y2u9CtSjVbDAIGGRRd
+         LBuUvEzN4e3MlvScgob79wtM5sm8DJnap8HdAMV8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <nycvar.YFH.7.76.1907100127250.5899@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1907100127250.5899@cbobk.fhfr.pm>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1907100127250.5899@cbobk.fhfr.pm>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
+ for-linus
+X-PR-Tracked-Commit-Id: 38195dd5e916f3e55aec585703f2432562c2db02
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: db0457338ece7482378d88e50ad298191c3e6947
+Message-Id: <156288511109.25905.4136973094169718102.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jul 2019 22:45:11 +0000
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tipc_named_node_up() creates a skb list. It passes the list to
-tipc_node_xmit() which has some code paths that can call
-skb_queue_purge() which relies on the list->lock being initialised.
+The pull request you sent on Wed, 10 Jul 2019 01:34:19 +0200 (CEST):
 
-The spin_lock is only needed if the messages end up on the receive path
-but when the list is created in tipc_named_node_up() we don't
-necessarily know if it is going to end up there.
+> git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git for-linus
 
-Once all the skb list users are updated in tipc it will then be possible
-to update them to use the unlocked variants of the skb list functions
-and initialise the lock when we know the message will follow the receive
-path.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/db0457338ece7482378d88e50ad298191c3e6947
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+Thank you!
 
-I'm updating our products to use the latest kernel. One change that we ha=
-ve that
-doesn't appear to have been upstreamed is related to the following soft l=
-ockup.
-
-NMI watchdog: BUG: soft lockup - CPU#3 stuck for 23s! [swapper/3:0]
-Modules linked in: tipc jitterentropy_rng echainiv drbg platform_driver(O=
-) ipifwd(PO)
-CPU: 3 PID: 0 Comm: swapper/3 Tainted: P           O    4.4.6-at1 #1
-task: a3054e00 ti: ac6b4000 task.ti: a307a000
-NIP: 806891c4 LR: 804f5060 CTR: 804f50d0
-REGS: ac6b59b0 TRAP: 0901   Tainted: P           O     (4.4.6-at1)
-MSR: 00029002 <CE,EE,ME>  CR: 84002088  XER: 20000000
-
-GPR00: 804f50fc ac6b5a60 a3054e00 00029002 00000101 01001011 00000000 000=
-00001
-GPR08: 00021002 c1502d1c ac6b5ae4 00000000 804f50d0
-NIP [806891c4] _raw_spin_lock_irqsave+0x44/0x80
-LR [804f5060] skb_dequeue+0x20/0x90
-Call Trace:
-[ac6b5a80] [804f50fc] skb_queue_purge+0x2c/0x50
-[ac6b5a90] [c1511058] tipc_node_xmit+0x138/0x170 [tipc]
-[ac6b5ad0] [c1509e58] tipc_named_node_up+0x88/0xa0 [tipc]
-[ac6b5b00] [c150fc1c] tipc_netlink_compat_stop+0x9bc/0xf50 [tipc]
-[ac6b5b20] [c1511638] tipc_rcv+0x418/0x9b0 [tipc]
-[ac6b5bc0] [c150218c] tipc_bcast_stop+0xfc/0x7b0 [tipc]
-[ac6b5bd0] [80504e38] __netif_receive_skb_core+0x468/0xa10
-[ac6b5c70] [805082fc] netif_receive_skb_internal+0x3c/0xe0
-[ac6b5ca0] [80642a48] br_handle_frame_finish+0x1d8/0x4d0
-[ac6b5d10] [80642f30] br_handle_frame+0x1f0/0x330
-[ac6b5d60] [80504ec8] __netif_receive_skb_core+0x4f8/0xa10
-[ac6b5e00] [805082fc] netif_receive_skb_internal+0x3c/0xe0
-[ac6b5e30] [8044c868] _dpa_rx+0x148/0x5c0
-[ac6b5ea0] [8044b0c8] priv_rx_default_dqrr+0x98/0x170
-[ac6b5ed0] [804d1338] qman_p_poll_dqrr+0x1b8/0x240
-[ac6b5f00] [8044b1c0] dpaa_eth_poll+0x20/0x60
-[ac6b5f20] [805087cc] net_rx_action+0x15c/0x320
-[ac6b5f80] [8002594c] __do_softirq+0x13c/0x250
-[ac6b5fe0] [80025c34] irq_exit+0xb4/0xf0
-[ac6b5ff0] [8000d81c] call_do_irq+0x24/0x3c
-[a307be60] [80004acc] do_IRQ+0x8c/0x120
-[a307be80] [8000f450] ret_from_except+0x0/0x18
---- interrupt: 501 at arch_cpu_idle+0x24/0x70
-
-Eyeballing the code I think it can still happen since tipc_named_node_up
-allocates struct sk_buff_head head on the stack so it could have arbitrar=
-y
-content.
-
-Changes in v2:
-- fixup commit subject
-- add more information to commit message from mailing list discussion
-
- net/tipc/name_distr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/tipc/name_distr.c b/net/tipc/name_distr.c
-index 61219f0b9677..44abc8e9c990 100644
---- a/net/tipc/name_distr.c
-+++ b/net/tipc/name_distr.c
-@@ -190,7 +190,7 @@ void tipc_named_node_up(struct net *net, u32 dnode)
- 	struct name_table *nt =3D tipc_name_table(net);
- 	struct sk_buff_head head;
-=20
--	__skb_queue_head_init(&head);
-+	skb_queue_head_init(&head);
-=20
- 	read_lock_bh(&nt->cluster_scope_lock);
- 	named_distribute(net, &head, dnode, &nt->cluster_scope);
---=20
-2.22.0
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
