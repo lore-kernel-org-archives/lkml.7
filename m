@@ -2,164 +2,109 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D016AC742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54DFC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A132A20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:26:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="SEuD7woY"
+	by mail.kernel.org (Postfix) with ESMTP id 9132720872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfGKT0c (ORCPT
+        id S1728549AbfGKTce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 15:26:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41189 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbfGKT0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 15:26:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d24so6939798ljg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Gj/TpYGciG5OCmfbf2dVn6FNmz3afk+DosbRV4MzoY=;
-        b=SEuD7woYh9OiLSQ1qqz/ru6e3z42i2sBTpzp8MOwXfr7/I//sRjs+uMPX7Uo/WUtIs
-         +AwJVNrx3GqT2kwzv3pSL+VHr0NLxNPaFkjII1VDIRgs99twXT0eBytNhdx/yFwvy2lN
-         hqE6hLa4AwQSyZ5Uq5JGDUvkqjBS3OnLM/mNEAo7yqYb/bJSDeDx1HqZ1OWLN/QIHvJC
-         oZc12rA0Jp/ZDSkfpQDwufjD9Zu66J8QqnnlIo5Rk+H3P9eR8IQ0xYVMoO97sTQW4Xbe
-         3Ui0eh2fGCWuhxiRNtCiD29GEt8YFc4IsNdQiPVoehP3xpWACHJpaHEn9OCeYUOOlCKE
-         mTnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1Gj/TpYGciG5OCmfbf2dVn6FNmz3afk+DosbRV4MzoY=;
-        b=OSMMl52gK1t/aD024bEkww1T3q93L9xu6czML1e/Z8Cczds5zH7NdAcYqQTdvwW9iO
-         V2qS0P24ZGll0CoSzVErNlZj4azITbB4sSSSYHCKIW0ODeQvLj1o3h1GDwXQS6SALWB4
-         pB1T2ULXaTSmcwkleHMfHYxh+Ndh4s6ZWIQu8KFftMF7tGeQzmN8CqTwTbOsDz0ag3nV
-         w1p9zidvA9qipH84N/a4ZyygqgYjRvfiZxM9AHTDvPgF0VRLyJYz0RfH/j8AaqY7uwVZ
-         ErMmuiQRiTjbpykieqEJcDYoemo+jpDjWIxsLBU38qTumf4/hVCu25ZSz8zR9ftzYTN8
-         /ahg==
-X-Gm-Message-State: APjAAAWuX+Kq+8vVKLUjEARf9opar830+2M08Sf2QXh/wGDGF4MIFoIb
-        GIZxFZVD8NQzEEmcaPw2WXrJQQ==
-X-Google-Smtp-Source: APXvYqw0NR2+TFc5SfbPRhU4TviTWXjU5RRXRUxYbST9Ry9aqWtbT5Ta93nbQMGF/Y7Ssa+Uh36+Fg==
-X-Received: by 2002:a2e:9b84:: with SMTP id z4mr3542327lji.75.1562873189537;
-        Thu, 11 Jul 2019 12:26:29 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:6a9:2c74:93e5:edca:9c98:290d])
-        by smtp.gmail.com with ESMTPSA id j14sm1122764ljc.67.2019.07.11.12.26.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 12:26:28 -0700 (PDT)
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tokunori Ikegami <ikegami.t@gmail.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <e5a7866d-bc34-887d-31d3-de4f745c8d65@cogentembedded.com>
-Date:   Thu, 11 Jul 2019 22:26:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Thu, 11 Jul 2019 15:32:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49781 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfGKTcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 15:32:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 12:32:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
+   d="scan'208";a="168727080"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jul 2019 12:32:32 -0700
+Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.206]) by
+ FMSMSX108.amr.corp.intel.com ([169.254.9.235]) with mapi id 14.03.0439.000;
+ Thu, 11 Jul 2019 12:32:32 -0700
+From:   "Souza, Jose" <jose.souza@intel.com>
+To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Index: AQHVNzBm8CIMNghqKU6lUG8vwFsPdKbEfMKAgAAES4CAAAOcAIAADhGAgABJpoCAAAV9gIABY9wA
+Date:   Thu, 11 Jul 2019 19:32:31 +0000
+Message-ID: <a522eb05e65fe5068c519f0c2ce44d894a9526db.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <1562770874.3213.14.camel@HansenPartnership.com>
+         <93b8a186f4c8b4dae63845a20bd49ae965893143.camel@tiscali.nl>
+         <1562776339.3213.50.camel@HansenPartnership.com>
+         <5245d2b3d82f11d2f988a3154814eb42dcb835c5.camel@tiscali.nl>
+         <1562780135.3213.58.camel@HansenPartnership.com>
+         <a23e93d918f8be5aea4af0b87efbf9c3d143d2fb.camel@tiscali.nl>
+         <1562797129.3213.111.camel@HansenPartnership.com>
+In-Reply-To: <1562797129.3213.111.camel@HansenPartnership.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.24.9.133]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <63A26A140C29274B84ED02677C2B33C3@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190625075746.10439-4-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
-
-> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
-> Bus interface between a host system master and one or more slave
-> interfaces. HyperBus is used to connect microprocessor, microcontroller,
-> or ASIC devices with random access NOR flash memory (called HyperFlash)
-> or self refresh DRAM (called HyperRAM).
-> 
-> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-> signal and either Single-ended clock(3.0V parts) or Differential clock
-> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-> At bus level, it follows a separate protocol described in HyperBus
-> specification[1].
-> 
-> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
-> its equivalent to x16 parallel NOR flash with respect to bits per clock
-> cycle. But HyperBus operates at >166MHz frequencies.
-> HyperRAM provides direct random read/write access to flash memory
-> array.
-> 
-> But, HyperBus memory controllers seem to abstract implementation details
-> and expose a simple MMIO interface to access connected flash.
-> 
-> Add support for registering HyperFlash devices with MTD framework. MTD
-> maps framework along with CFI chip support framework are used to support
-> communicating with flash.
-> 
-> Framework is modelled along the lines of spi-nor framework. HyperBus
-> memory controller (HBMC) drivers calls hyperbus_register_device() to
-> register a single HyperFlash device. HyperFlash core parses MMIO access
-> information from DT, sets up the map_info struct, probes CFI flash and
-> registers it with MTD framework.
-> 
-> Some HBMC masters need calibration/training sequence[3] to be carried
-> out, in order for DLL inside the controller to lock, by reading a known
-> string/pattern. This is done by repeatedly reading CFI Query
-> Identification String. Calibration needs to be done before trying to detect
-> flash as part of CFI flash probe.
-> 
-> HyperRAM is not supported at the moment.
-> 
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[...]
-
-> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
-> new file mode 100644
-> index 000000000000..63a9e64895bc
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
-> @@ -0,0 +1,154 @@
-[...]
-> +int hyperbus_register_device(struct hyperbus_device *hbdev)
-> +{
-[...]
-> +	map->name = dev_name(dev);
-> +	map->bankwidth = 2;
-
-   I think this should really be 1, judging on the comment to that field (and on
-Cogent's own RPC-IF HF driver).
-
-> +	map->device_node = np;
-
-[...]
-
-MBR, Sergei
+SGkgSmFtZXMgYW5kIFBhdWwNCg0KQ291bGQgeW91IHNoYXJlIGEgZG1lc2cgb3V0cHV0IG9mIHlv
+dXIgc3lzdGVtIGFmdGVyIHRoZSBidWcgb2NjdXIgd2l0aA0KdGhpcyBrZXJuZWwgcGFyYW1ldGVy
+cyAiZHJtLmRlYnVnPTB4MWUgbG9nX2J1Zl9sZW49NE0iPyBBbHNvIHRoZSBvdXRwdXQNCm9mIC9z
+eXMva2VybmVsL2RlYnVnL2RyaS8wL2k5MTVfZWRwX3Bzcl9zdGF0dXMNCg0KVGhhbmtzDQoNCg0K
+T24gV2VkLCAyMDE5LTA3LTEwIGF0IDE1OjE4IC0wNzAwLCBKYW1lcyBCb3R0b21sZXkgd3JvdGU6
+DQo+IE9uIFdlZCwgMjAxOS0wNy0xMCBhdCAyMzo1OSArMDIwMCwgUGF1bCBCb2xsZSB3cm90ZToN
+Cj4gPiBKYW1lcyBCb3R0b21sZXkgc2NocmVlZiBvcCB3byAxMC0wNy0yMDE5IG9tIDEwOjM1IFst
+MDcwMF06DQo+ID4gPiBJIGNhbiBnZXQgYmFjayB0byBpdCB0aGlzIGFmdGVybm9vbiwgd2hlbiBJ
+J20gZG9uZSB3aXRoIHRoZQ0KPiA+ID4gbWVldGluZw0KPiA+ID4gcmVxdWlyZW1lbnRzIGFuZCBk
+b2luZyBvdGhlciBkZXYgc3R1ZmYuDQo+ID4gDQo+ID4gSSd2ZSBzdGFydGVkIGJpc2VjdGluZyB1
+c2luZyB5b3VyIHN1Z2dlc3Rpb24gb2YgdGhhdCBkcm0gbWVyZ2U6DQo+ID4gICAgICQgZ2l0IGJp
+c2VjdCBsb2cNCj4gPiAgICAgZ2l0IGJpc2VjdCBzdGFydA0KPiA+ICAgICAjIGdvb2Q6IFs4OWMz
+YjM3YWY4N2VjMTgzYjY2NmQ4MzQyOGNiMjhjYzQyMTY3MWE2XSBNZXJnZQ0KPiA+IGdpdDovL2dp
+dC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9kYXZlbS9pZGUNCj4gPiAgICAg
+Z2l0IGJpc2VjdCBnb29kIDg5YzNiMzdhZjg3ZWMxODNiNjY2ZDgzNDI4Y2IyOGNjNDIxNjcxYTYN
+Cj4gPiAgICAgIyBiYWQ6IFthMmQ2MzVkZWNiZmE5YzFlNGFlMTVjYjA1YjY4YjI1NTlmN2Y4Mjdj
+XSBNZXJnZSB0YWcNCj4gPiAnZHJtLQ0KPiA+IG5leHQtMjAxOS0wNS0wOScgb2YgZ2l0Oi8vYW5v
+bmdpdC5mcmVlZGVza3RvcC5vcmcvZHJtL2RybQ0KPiA+ICAgICBnaXQgYmlzZWN0IGJhZCBhMmQ2
+MzVkZWNiZmE5YzFlNGFlMTVjYjA1YjY4YjI1NTlmN2Y4MjdjDQo+ID4gICAgICMgYmFkOiBbYWQy
+YzQ2N2FhOTJlMjgzZTllODAwOWJiOWViMjlhNWM2YTJkMTIxN10gZHJtL2k5MTU6DQo+ID4gVXBk
+YXRlIERSSVZFUl9EQVRFIHRvIDIwMTkwNDE3DQo+ID4gICAgIGdpdCBiaXNlY3QgYmFkIGFkMmM0
+NjdhYTkyZTI4M2U5ZTgwMDliYjllYjI5YTVjNmEyZDEyMTcNCj4gPiANCj4gPiBHaXQgdG9sZCBt
+ZSBJIGhhdmUgbmluZSBzdGVwcyBhZnRlciB0aGlzLiBTbyBhdCB0d28gaG91cnMgcGVyIHN0ZXAN
+Cj4gPiBJDQo+ID4gbWlnaHQNCj4gPiBwaW5wb2ludCB0aGUgb2ZmZW5kaW5nIGNvbW1pdCBieSBG
+cmlkYXkgdGhlIDEydGguIElmIEknbSBsdWNreS4NCj4gPiAoVGhlcmUgYXJlDQo+ID4gb3RoZXIg
+dGhpbmdzIHRvIGRvIHRoYW4gYmlzZWN0aW5nIHRoaXMgaXNzdWUuKQ0KPiA+IA0KPiA+IElmIHlv
+dSBmaW5kIHRoYXQgY29tbWl0IGJlZm9yZSBJIGRvLCBJJ2xsIGJlIGFsbCBlYXJzLg0KPiANCj4g
+U3VyZSAuLi4gSSdtIGRvaW5nIHRoZSBob2xpc3RpYyB0aGluZyBhbmQgbG9va2luZyBhdCB0aGUg
+dHJlZSBpbiB0aGF0DQo+IGJyYW5jaC4gIEl0IHNlZW1zIHRvIGNvbnNpc3Qgb2YgNyBpOTE1IHVw
+ZGF0ZXMNCj4gDQo+IGMwOWQzOTE2NmQ4YTNmMzc4ODY4MGIzMmRiYjBhNDBhNzBkZTMyZTIgRFJJ
+VkVSX0RBVEUgdG8gMjAxOTAyMDcNCj4gNDdlZDU1YTliYjllMjg0ZDQ2ZDZmMjQ4OWUzMmE1M2I1
+OTE1MjgwOSBEUklWRVJfREFURSB0byAyMDE5MDIyMA0KPiBmNGVjYjhhZTcwZGU4NjcxMGU4NTEz
+OGNlNDlhZjVjNjg5OTUxOTUzIERSSVZFUl9EQVRFIHRvIDIwMTkwMzExDQo+IDEyODRlYzk4NTU3
+MjIzMmFjZTQ4MTc0NzZiYWViMmQ4MmI2MGJlN2EgRFJJVkVSX0RBVEUgdG8gMjAxOTAzMjANCj4g
+YTAxYjJjNmY0N2Q4NmM3ZDFhOWZhODIyYjNiOTFlYzIzM2I2MTc4NCBEUklWRVJfREFURSB0byAy
+MDE5MDMyOA0KPiAyOGQ2MThlOWFiODZmMjZhMzFhZjBiMjM1Y2VkNTViZWIzZTM0M2M4IERSSVZF
+Ul9EQVRFIHRvIDIwMTkwNDA0DQo+IGFkMmM0NjdhYTkyZTI4M2U5ZTgwMDliYjllYjI5YTVjNmEy
+ZDEyMTcgRFJJVkVSX0RBVEUgdG8gMjAxOTA0MTcNCj4gDQo+IFNvIEkgZmlndXJlZCBJJ2Qgc2Vl
+IGlmIEkgY2FuIGxvY2F0ZSB0aGUgcHJvYmxlbSBieSBiaXNlY3Rpb24gb2YNCj4gdGhvc2UNCj4g
+cGx1cyBpbnNwZWN0aW9uLg0KPiANCj4gSmFtZXMNCj4gDQo+IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IEludGVsLWdmeCBtYWlsaW5nIGxpc3QNCj4g
+SW50ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ludGVsLWdmeA0K
