@@ -2,227 +2,110 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA32DC71142
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B0EC74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8932520863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562865498;
-	bh=XoG0PrO159RtOOT6fP2sFpZA54IyqITi3iqq/2tn5rg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sTWtZA6wf7JbTvyB/o0tXAXnPx+18S8xaMm6M1bJ2ntFLrxCDPRFQqQCo1EA3o1gv
-	 3xdhwtw/TBFCaNSogI2YstHciaQCWy9DQy1Iw32Id6BP0152U5DFaZYa+QYr4LubvF
-	 tPgk/NBFn0Rn9YJSPrsXC4aQOTSRQ2PZuA/3cN1c=
+	by mail.kernel.org (Postfix) with ESMTP id 82F9220863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:21:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lh8bol5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfGKRSR (ORCPT
+        id S1728869AbfGKRVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728549AbfGKRSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:18:17 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1967A216C8;
-        Thu, 11 Jul 2019 17:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562865496;
-        bh=XoG0PrO159RtOOT6fP2sFpZA54IyqITi3iqq/2tn5rg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tlXo1DePP59eQcvth0n1dwI8IIqCnPckx/sEigfDSlpyeOwiHTy4KXunBJ+22zQQ9
-         1q38/0bxCmNiufaO+97lUwAx5UkuEtTNHxiPz9ppN81LDA9Qo0UaR0YHKDgr3CTxdF
-         Bzqzej4pdz06tQjZmcdh9/xcYkkYFzp98+YRyA+8=
-Received: by mail-qt1-f178.google.com with SMTP id r6so911563qtt.0;
-        Thu, 11 Jul 2019 10:18:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAWY74qVNIDjDwTB1WVW/YK7L/RvjYnRTIGIsdiveGY4jHUo3VZn
-        nvZbmBIF43cez1kWOJBlZE/cnv3t4uMYu5Nc8A==
-X-Google-Smtp-Source: APXvYqzxvypz6pY/DnP3GoyHHz/HAyb8X4uqpv/6KJUGr3o+YFaNGwIoSXWHesk4P656OBctJrbTqkzroQ5B6v8eLrc=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr2646300qtb.224.1562865495201;
- Thu, 11 Jul 2019 10:18:15 -0700 (PDT)
+        Thu, 11 Jul 2019 13:21:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46717 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGKRVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:21:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i8so3239700pgm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=gqIivKQ4VDY/9EJ1sbwK6dLkOFlogSrMQDe9qqiMbzY=;
+        b=Lh8bol5uLGKKTqXXXFbj8SySQvu9msm/TdCvjInq2ukTZqn6RGBCUjha/KUKBRGYls
+         i6SPZzkfh3QlXjGM0stTHbhpmRbzZER0lgqUd2/c16m4cGpkJDH8aZls4CblfcQNcXzG
+         LoAiNF1DZghDcr/hRzM1aXcAOXsDbHLwJ0H2MlDszfsXcsSXuBtuiGmjo+ACIZWElKGK
+         uskBrAlSsozclJqt6ZBMxoTN6wj6b5i0KlZdmNhijH4wNwZ2f4M4AgYvXPm04CpnFx4n
+         N65rrYxLXmfYOuHKxqWNXdOZDLT7sirf+iqxG8GfYZPC5lnvawYThxUaZxagNvqFOAjb
+         ya0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=gqIivKQ4VDY/9EJ1sbwK6dLkOFlogSrMQDe9qqiMbzY=;
+        b=AefZPj6cl2Wj2Xjv4xU+/Hnc2sVO3zzD4DflHfsxQiKVD9TgMsqUHYwkQox8MOhhb/
+         tNaO8Z7knb+tXkjCyOTiH8BFjkw1jEBDC+EL6gxuVzFpF3J+u1PaP+9Rx5+1ZeDxeW3y
+         I7SxrSkhIGEhrGD/kQCQfj7h2XDZmwg1nMRvMkcSHW5PeeBX1EYCR2Z7xsa8F5QL/1jO
+         cOMJUEh2by7Ju9IqjlEIepcppZlYVw3G2njPGYIHX04pIZwN3+NW2i/57WVHvUTYGsYB
+         A5olu2bUQSIbA9MbwsePP0QjXxc6VRj5KfVzwiLwvB4V0KDrj3bWW8q8wcQ5fDKnU7dJ
+         InxQ==
+X-Gm-Message-State: APjAAAUBubvTKHrueYkFHPNj6UAFF6u6Yvo3OsC5rNhH9H7cT3I6NJPw
+        VCyqk5xKeClRCtIg7Zp8KIA=
+X-Google-Smtp-Source: APXvYqzPcdiAOvWKSNm+hzapTSSmXf8/fGwVdxN3iKtzUnxAXQ7T2pQR9v94JJeawAjbMGky8hIJ4A==
+X-Received: by 2002:a17:90a:db08:: with SMTP id g8mr5893223pjv.39.1562865673539;
+        Thu, 11 Jul 2019 10:21:13 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id t7sm5111414pjq.15.2019.07.11.10.21.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 10:21:13 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 22:51:07 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: pci: rme9652: Unneeded variable: "result".
+Message-ID: <20190711172107.GA5008@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190711041942.23202-1-andrew@aj.id.au> <20190711041942.23202-2-andrew@aj.id.au>
-In-Reply-To: <20190711041942.23202-2-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 11 Jul 2019 11:18:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLvY_yxN=-tfUPGn_Bv=UNmntHjXqUhSD1aey79MXznQg@mail.gmail.com>
-Message-ID: <CAL_JsqLvY_yxN=-tfUPGn_Bv=UNmntHjXqUhSD1aey79MXznQg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: aspeed: Document AST2600 pinmux
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Ryan Chen <ryanchen.aspeed@gmail.com>,
-        Johnny Huang <johnny_huang@aspeedtech.com>,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:19 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The AST260 differs from the 2400 and 2500 in that it supports multiple
-> groups for a subset of functions.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 128 ++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..dd31f8e62433
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-> @@ -0,0 +1,128 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/aspeed,ast2600-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED AST2600 Pin Controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@aj.id.au>
-> +
-> +description: |+
-> +  The pin controller node should be the child of a syscon node with the
-> +  required property:
-> +
-> +  - compatible: Should be one of the following:
-> +                "aspeed,ast2600-scu", "syscon", "simple-mfd"
-> +
-> +  Refer to the the bindings described in
-> +  Documentation/devicetree/bindings/mfd/syscon.txt
-> +
-> +properties:
-> +  compatible:
-> +    const: aspeed,ast2600-pinctrl
-> +
-> +patternProperties:
-> +  '^.*$':
-> +    if:
-> +      type: object
-> +    then:
-> +      patternProperties:
-> +        "^function$":
+This patch fixes below issue reported by coccicheck
 
-That's a fixed string, not a pattern, so just put under 'properties'.
+sound/pci/rme9652/rme9652.c:2161:5-11: Unneeded variable: "result".
+Return "0" on line 2167
 
-> +          allOf:
-> +            - $ref: "/schemas/types.yaml#/definitions/string"
-> +            - enum: [ "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ sound/pci/rme9652/rme9652.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-You can drop the quoting here. I wouldn't really care, but yours is
-one of the few right now and everyone will copy.
+diff --git a/sound/pci/rme9652/rme9652.c b/sound/pci/rme9652/rme9652.c
+index cb9818a..4c851f8 100644
+--- a/sound/pci/rme9652/rme9652.c
++++ b/sound/pci/rme9652/rme9652.c
+@@ -2158,13 +2158,12 @@ static int snd_rme9652_prepare(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
+ 	unsigned long flags;
+-	int result = 0;
+ 
+ 	spin_lock_irqsave(&rme9652->lock, flags);
+ 	if (!rme9652->running)
+ 		rme9652_reset_hw_pointer(rme9652);
+ 	spin_unlock_irqrestore(&rme9652->lock, flags);
+-	return result;
++	return 0;
+ }
+ 
+ static const struct snd_pcm_hardware snd_rme9652_playback_subinfo =
+-- 
+2.7.4
 
-> +              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
-> +              "ADC8", "ADC9", "BMCINT", "ESPI", "ESPIALT", "FSI1", "FSI2",
-> +              "FWSPIABR", "FWSPID", "FWSPIWP", "GPIT0", "GPIT1", "GPIT2",
-> +              "GPIT3", "GPIT4", "GPIT5", "GPIT6", "GPIT7", "GPIU0", "GPIU1",
-> +              "GPIU2", "GPIU3", "GPIU4", "GPIU5", "GPIU6", "GPIU7", "I2C1",
-> +              "I2C10", "I2C11", "I2C12", "I2C13", "I2C14", "I2C15", "I2C16",
-> +              "I2C2", "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8", "I2C9",
-> +              "I3C3", "I3C4", "I3C5", "I3C6", "JTAGM", "LHPD", "LHSIRQ", "LPC",
-> +              "LPCHC", "LPCPD", "LPCPME", "LPCSMI", "LSIRQ", "MACLINK1",
-> +              "MACLINK2", "MACLINK3", "MACLINK4", "MDIO1", "MDIO2", "MDIO3",
-> +              "MDIO4", "NCTS1", "NCTS2", "NCTS3", "NCTS4", "NDCD1", "NDCD2",
-> +              "NDCD3", "NDCD4", "NDSR1", "NDSR2", "NDSR3", "NDSR4", "NDTR1",
-> +              "NDTR2", "NDTR3", "NDTR4", "NRI1", "NRI2", "NRI3", "NRI4",
-> +              "NRTS1", "NRTS2", "NRTS3", "NRTS4", "OSCCLK", "PEWAKE", "PWM0",
-> +              "PWM1", "PWM10", "PWM11", "PWM12", "PWM13", "PWM14", "PWM15",
-> +              "PWM2", "PWM3", "PWM4", "PWM5", "PWM6", "PWM7", "PWM8", "PWM9",
-> +              "RGMII1", "RGMII2", "RGMII3", "RGMII4", "RMII1", "RMII2",
-> +              "RMII3", "RMII4", "RXD1", "RXD2", "RXD3", "RXD4", "SALT1",
-> +              "SALT10", "SALT11", "SALT12", "SALT13", "SALT14", "SALT15",
-> +              "SALT16", "SALT2", "SALT3", "SALT4", "SALT5", "SALT6", "SALT7",
-> +              "SALT8", "SALT9", "SD1", "SD2", "SD3", "SD3DAT4", "SD3DAT5",
-> +              "SD3DAT6", "SD3DAT7", "SGPM1", "SGPS1", "SIOONCTRL", "SIOPBI",
-> +              "SIOPBO", "SIOPWREQ", "SIOPWRGD", "SIOS3", "SIOS5", "SIOSCI",
-> +              "SPI1", "SPI1ABR", "SPI1CS1", "SPI1WP", "SPI2", "SPI2CS1",
-> +              "SPI2CS2", "TACH0", "TACH1", "TACH10", "TACH11", "TACH12",
-> +              "TACH13", "TACH14", "TACH15", "TACH2", "TACH3", "TACH4", "TACH5",
-> +              "TACH6", "TACH7", "TACH8", "TACH9", "THRU0", "THRU1", "THRU2",
-> +              "THRU3", "TXD1", "TXD2", "TXD3", "TXD4", "UART10", "UART11",
-> +              "UART12", "UART13", "UART6", "UART7", "UART8", "UART9", "VB",
-> +              "VGAHS", "VGAVS", "WDTRST1", "WDTRST2", "WDTRST3", "WDTRST4", ]
-> +        "^groups$":
-> +          allOf:
-> +            - $ref: "/schemas/types.yaml#/definitions/string"
-> +            - enum: [ "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
-> +              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
-> +              "ADC8", "ADC9", "BMCINT", "ESPI", "ESPIALT", "FSI1", "FSI2",
-> +              "FWSPIABR", "FWSPID", "FWQSPID", "FWSPIWP", "GPIT0", "GPIT1",
-> +              "GPIT2", "GPIT3", "GPIT4", "GPIT5", "GPIT6", "GPIT7", "GPIU0",
-> +              "GPIU1", "GPIU2", "GPIU3", "GPIU4", "GPIU5", "GPIU6", "GPIU7",
-> +              "HVI3C3", "HVI3C4", "I2C1", "I2C10", "I2C11", "I2C12", "I2C13",
-> +              "I2C14", "I2C15", "I2C16", "I2C2", "I2C3", "I2C4", "I2C5",
-> +              "I2C6", "I2C7", "I2C8", "I2C9", "I3C3", "I3C4", "I3C5", "I3C6",
-> +              "JTAGM", "LHPD", "LHSIRQ", "LPC", "LPCHC", "LPCPD", "LPCPME",
-> +              "LPCSMI", "LSIRQ", "MACLINK1", "MACLINK2", "MACLINK3",
-> +              "MACLINK4", "MDIO1", "MDIO2", "MDIO3", "MDIO4", "NCTS1", "NCTS2",
-> +              "NCTS3", "NCTS4", "NDCD1", "NDCD2", "NDCD3", "NDCD4", "NDSR1",
-> +              "NDSR2", "NDSR3", "NDSR4", "NDTR1", "NDTR2", "NDTR3", "NDTR4",
-> +              "NRI1", "NRI2", "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS3",
-> +              "NRTS4", "OSCCLK", "PEWAKE", "PWM0", "PWM1", "PWM10G0",
-> +              "PWM10G1", "PWM11G0", "PWM11G1", "PWM12G0", "PWM12G1", "PWM13G0",
-> +              "PWM13G1", "PWM14G0", "PWM14G1", "PWM15G0", "PWM15G1", "PWM2",
-> +              "PWM3", "PWM4", "PWM5", "PWM6", "PWM7", "PWM8G0", "PWM8G1",
-> +              "PWM9G0", "PWM9G1", "QSPI1", "QSPI2", "RGMII1", "RGMII2",
-> +              "RGMII3", "RGMII4", "RMII1", "RMII2", "RMII3", "RMII4", "RXD1",
-> +              "RXD2", "RXD3", "RXD4", "SALT1", "SALT10G0", "SALT10G1",
-> +              "SALT11G0", "SALT11G1", "SALT12G0", "SALT12G1", "SALT13G0",
-> +              "SALT13G1", "SALT14G0", "SALT14G1", "SALT15G0", "SALT15G1",
-> +              "SALT16G0", "SALT16G1", "SALT2", "SALT3", "SALT4", "SALT5",
-> +              "SALT6", "SALT7", "SALT8", "SALT9G0", "SALT9G1", "SD1", "SD2",
-> +              "SD3", "SD3DAT4", "SD3DAT5", "SD3DAT6", "SD3DAT7", "SGPM1",
-> +              "SGPS1", "SIOONCTRL", "SIOPBI", "SIOPBO", "SIOPWREQ", "SIOPWRGD",
-> +              "SIOS3", "SIOS5", "SIOSCI", "SPI1", "SPI1ABR", "SPI1CS1",
-> +              "SPI1WP", "SPI2", "SPI2CS1", "SPI2CS2", "TACH0", "TACH1",
-> +              "TACH10", "TACH11", "TACH12", "TACH13", "TACH14", "TACH15",
-> +              "TACH2", "TACH3", "TACH4", "TACH5", "TACH6", "TACH7", "TACH8",
-> +              "TACH9", "THRU0", "THRU1", "THRU2", "THRU3", "TXD1", "TXD2",
-> +              "TXD3", "TXD4", "UART10", "UART11", "UART12G0", "UART12G1",
-> +              "UART13G0", "UART13G1", "UART6", "UART7", "UART8", "UART9", "VB",
-> +              "VGAHS", "VGAVS", "WDTRST1", "WDTRST2", "WDTRST3", "WDTRST4", ]
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    syscon: scu@1e6e2000 {
-> +        compatible = "aspeed,ast2600-scu", "syscon", "simple-mfd";
-> +        reg = <0x1e6e2000 0xf6c>;
-> +
-> +        pinctrl: pinctrl {
-> +            compatible = "aspeed,g6-pinctrl";
-> +
-> +            pinctrl_pwm10g1_default: pwm10g1_default {
-> +                function = "PWM10";
-> +                groups = "PWM10G1";
-> +            };
-> +
-> +            pinctrl_gpioh0_unbiased_default: gpioh0 {
-> +                pins = "A18";
-> +                bias-disable;
-
-This node and properties aren't getting checked. Need to figure out
-how to do that. That may mean needing some structure to the node
-names. You can worry about that later I suppose.
-
-Rob
