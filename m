@@ -2,146 +2,217 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE3EC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D100C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0725720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B691820872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:25:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="q1mTb7Xv"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WheCH8ID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfGKKZ1 (ORCPT
+        id S1728427AbfGKKZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 06:25:27 -0400
-Received: from mail-eopbgr80125.outbound.protection.outlook.com ([40.107.8.125]:23264
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727680AbfGKKZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 06:25:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZETWu3pUq3KnnpTWiuPgWsTfQGSFbtSXLebgHum6NWjlBtI5LDzeevJ+W/U5us9FPj0yRpMipQYIt1xrGYpdjQvayLMMvk8q5gbduNUiptGc++sWUzsbQWVh8bitKnJ/p1VoG60xmxGuCXRl/y9ucdEiCF17ex6Ywt+OaKQFaFWsfSzEhc7GF/fPZrCIoqbOdZo9YjbuWKuCb8xdDfkp6RP7ygxj3+xddFfRd8ksCxI8eNNXfkvqpYzFT5EcRT00fNzxSwojbzOifAiNfOIwLL1odpbuOEY9qJDa1R159HWtZHCdbNp0NYasih5FBvwWMeVA87BtfDMu5DovlevgiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vqegzccg5mgbuJhviu+qMN4asH3YvvBxrmBNQoevxYc=;
- b=Bfzyzi62GdGqtTIcwmnhiErSdyKekBCCBZW+pmHfTrG6r7rF9JFfTYrKcbUpaWjQ+d8ikMvQgqXRPPH15NeFn6mzkOJgBFkwJ17vU+fDJbgyAOREfCyEm5kdC7AXaZObCZTNkzTVzdGx0aCpTcCKjUfbNuJ0q+dhAuAoG2SYW2hAPoxpuK9mIFh470xQ70jKHEgi+BgTaS9QGapy18buQ1CcdQsx4azj1AiECaGmlpumZBCU3F2NlhzY9AuyOVQbpDpB7ufg22zgkcgJJe+AA/V2cRHnkFJOHW7hA3AAqul+cWdy9UIkrKuCEp/MJ2IEorE/V6m1/OLWY1KJwBTKwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=toradex.com;dmarc=pass action=none
- header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vqegzccg5mgbuJhviu+qMN4asH3YvvBxrmBNQoevxYc=;
- b=q1mTb7XvFOZM/luP/GFvZyFP7s+mgdFCxxdgxvJi1drl47dga+B89mRvvJ2Wq0xqo+iMVQ0RQL3IFcUWd9Bcm1aXU/8BQHQ+QRMdSbVugCVw6QkQmq0lq6nMPW76m9LxLI7g1c5kC28KK7cvH3jl+zP3Tg6szQETVqD0B/Nho/U=
-Received: from AM7PR05MB6741.eurprd05.prod.outlook.com (10.186.171.86) by
- AM7PR05MB6741.eurprd05.prod.outlook.com (10.186.171.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.11; Thu, 11 Jul 2019 10:25:23 +0000
-Received: from AM7PR05MB6741.eurprd05.prod.outlook.com
- ([fe80::55f7:56d8:e219:79f5]) by AM7PR05MB6741.eurprd05.prod.outlook.com
- ([fe80::55f7:56d8:e219:79f5%3]) with mapi id 15.20.2073.008; Thu, 11 Jul 2019
- 10:25:23 +0000
-From:   Igor Opaniuk <igor.opaniuk@toradex.com>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-CC:     Fabio Estevam <festevam@gmail.com>,
+        Thu, 11 Jul 2019 06:25:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40854 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727680AbfGKKZb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 06:25:31 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so5249417eds.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 03:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7U2G4EIDTohj4GLJBc1CsAdYb3Srm8+cHCV4KhEDuP0=;
+        b=WheCH8IDb1xLjYRkQ1wHhqBOQvwu9yadLjHXO+2GvTWatmnx3ohVHucMEFlWsb327e
+         8oBL/JN3VnzQDpfznayYp5BYRXFtNz+qzfi7kDxf+viYPUc2s5/GMiZFA6C2e95tFaaH
+         5eYJT5wwV5q1SpRg5tWMqZl9lM/DrKXjd8GJ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=7U2G4EIDTohj4GLJBc1CsAdYb3Srm8+cHCV4KhEDuP0=;
+        b=UsLYbGFHTDD32yglkfj5Z7EdAbohQ5ImDlL0omjmVMiGridPFuBkTZiNkyz5MsFNRF
+         D94dIAQxj0lpPvBtqvls6qukYieD1HPk3WT/BAHLjU0WXjzpGXzVu63FTUzbFeaq31GS
+         wccCvpkfg4YaywwUDYrggjbe5ansRBHDPQMp+EGQiULBpMifIDUQhuFTdPpn3JbHzkq1
+         gBWa6ngcBwAnvmYf48ZA2vv0+R2rFpIn7lnRsJzOu3SyUoK9RPSoyNqU0Jh2vgLCi/oZ
+         cnu8xpWhlD8WUXIM8LwaJEPY4HHNVTaZgw5jAq0wV+81OTJRqLWeITOMSDCH4d4VfP8+
+         ipLA==
+X-Gm-Message-State: APjAAAXmbdANpEuM/YZ77UX9T2ZnBWwq5S1PAVuYORZhn0/tODLeNfvt
+        cVqWznXGtAuTMsDLFWAHoD4=
+X-Google-Smtp-Source: APXvYqzOdFxx7QODvOuCnqI1mfdfr7m02Yx0mnJ15UPVOkEHhP7boRm7tJmqJjhEcUWKcHsDYq9N6A==
+X-Received: by 2002:aa7:cd17:: with SMTP id b23mr2648368edw.278.1562840729665;
+        Thu, 11 Jul 2019 03:25:29 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id y3sm1436461edr.27.2019.07.11.03.25.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 03:25:28 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 12:25:26 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Philippe CORNU <philippe.cornu@st.com>
+Cc:     Olivier MOYSAN <olivier.moysan@st.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH v2 3/6] ASoC: sgtl5000: Fix of unmute outputs on probe
-Thread-Topic: [PATCH v2 3/6] ASoC: sgtl5000: Fix of unmute outputs on probe
-Thread-Index: AQHVKyqTM6H+ZqUkgEmGrNSyaGiEVabFTeEA
-Date:   Thu, 11 Jul 2019 10:25:23 +0000
-Message-ID: <CAByghJYYVNCWB8kdmWvdeL_s2P8nnn7zegh6HwNW0pRC3gAXiw@mail.gmail.com>
-References: <20190625074937.2621-1-oleksandr.suvorov@toradex.com>
- <20190625074937.2621-4-oleksandr.suvorov@toradex.com>
-In-Reply-To: <20190625074937.2621-4-oleksandr.suvorov@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR0701CA0022.eurprd07.prod.outlook.com
- (2603:10a6:200:42::32) To AM7PR05MB6741.eurprd05.prod.outlook.com
- (2603:10a6:20b:13e::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=igor.opaniuk@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-gm-message-state: APjAAAW0d2NTFWbUMRkH+DsUMVT6i+T9nk/Z2184QsWLYhGHCiKCHVNn
-        /Yew4WEEHDjN6cGHtKJqQfJn3qDxUsfaoG0QSWA=
-x-google-smtp-source: APXvYqwh/1judZAE/L+wM0ZSzXPgB0nK6J9Ws7VbIEsYIvwpfSHvJbPfA+zVw9u0hdPt5B3+G90YuHD5dFH9n7sgi7A=
-x-received: by 2002:a17:906:31c9:: with SMTP id
- f9mr2485556ejf.168.1562840373867; Thu, 11 Jul 2019 03:19:33 -0700 (PDT)
-x-gmail-original-message-id: <CAByghJYYVNCWB8kdmWvdeL_s2P8nnn7zegh6HwNW0pRC3gAXiw@mail.gmail.com>
-x-originating-ip: [209.85.208.50]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4b8d71f4-0496-4e30-5ce8-08d705ea1568
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM7PR05MB6741;
-x-ms-traffictypediagnostic: AM7PR05MB6741:
-x-microsoft-antispam-prvs: <AM7PR05MB6741BD75EEFD7AFC120688309EF30@AM7PR05MB6741.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39850400004)(376002)(366004)(136003)(396003)(189003)(199004)(305945005)(81166006)(107886003)(71190400001)(3846002)(99286004)(81156014)(7736002)(8676002)(6436002)(71200400001)(76176011)(66446008)(6506007)(386003)(6486002)(95326003)(53546011)(64756008)(66476007)(66556008)(6116002)(5660300002)(25786009)(102836004)(2906002)(486006)(66946007)(8936002)(26005)(6862004)(14444005)(256004)(229853002)(44832011)(66574012)(316002)(68736007)(478600001)(61266001)(66066001)(53936002)(6636002)(6246003)(14454004)(498394004)(476003)(52116002)(446003)(4326008)(11346002)(61726006)(55446002)(186003)(9686003)(86362001)(54906003)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:AM7PR05MB6741;H:AM7PR05MB6741.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NX9aIKcNKvtMkRFExXW6ohqFV0a/zq+DKDIkoUUXgPtB/Q+fRBUxpesa20vV2IDVApNoF8mxEE+nf1TYAUhJN9dxIR4U6RdJgt5ZMyzHV3QEpO7GcdonrCrscxTSpeSQu14mdwObRJqvOfCrig6b3zeDH1lGBiGDUvNh4CBFbRhoqtc+Hr37F610xkD9lZw7uEDeTbEwHRsK9yOoCCZ3GaLrULvOJlyu0osnyQlke2aThDtCl12+JNiGCDWtjRzalFhoWVX4E4C1rts+dIU1BefjZ68DpW+93tYTTUYU4QiSS2ajxOHliSLI9baDxg17CM8U9gMvvtKqD0srRPuFt5vNJbOMUDtjiVQwCzQ9efYbU9zJqocsfGlUqx+qUSDRPTqvK0KUVBlTNXEw9PLMSeG+Hrv6mJaSuEX4yEhI6Go=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4BA652CA2230714284FFA5789C48A60D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "jsarha@ti.com" <jsarha@ti.com>
+Subject: Re: [PATCH] drm/bridge: sii902x: add audio graph card support
+Message-ID: <20190711102526.GK15868@phenom.ffwll.local>
+Mail-Followup-To: Philippe CORNU <philippe.cornu@st.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "Laurent.pinchart@ideasonboard.com" <Laurent.pinchart@ideasonboard.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "jsarha@ti.com" <jsarha@ti.com>
+References: <1562141052-26221-1-git-send-email-olivier.moysan@st.com>
+ <7c17b3f2-afee-7548-7620-b67d11d09b24@st.com>
+ <20190710152720.GR15868@phenom.ffwll.local>
+ <e29c1671-99fb-581d-bfb7-61ca2cfa8622@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b8d71f4-0496-4e30-5ce8-08d705ea1568
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 10:25:23.6672
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: igor.opaniuk@toradex.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR05MB6741
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e29c1671-99fb-581d-bfb7-61ca2cfa8622@st.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgMTA6NTQgQU0gT2xla3NhbmRyIFN1dm9yb3YNCjxvbGVr
-c2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4gd3JvdGU6DQo+DQo+IFRvIGVuYWJsZSAiemVybyBj
-cm9zcyBkZXRlY3QiIGZvciBBREMvSFAsIGNoYW5nZQ0KPiBIUF9aQ0RfRU4vQURDX1pDRF9FTiBi
-aXRzIG9ubHkgaW5zdGVhZCBvZiB3cml0aW5nIHRoZSB3aG9sZQ0KPiBDSElQX0FOQV9DVFJMIHJl
-Z2lzdGVyLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBPbGVrc2FuZHIgU3V2b3JvdiA8b2xla3NhbmRy
-LnN1dm9yb3ZAdG9yYWRleC5jb20+DQo+IC0tLQ0KPg0KPiAgc291bmQvc29jL2NvZGVjcy9zZ3Rs
-NTAwMC5jIHwgNiArKystLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMg
-ZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL3NndGw1MDAw
-LmMgYi9zb3VuZC9zb2MvY29kZWNzL3NndGw1MDAwLmMNCj4gaW5kZXggYmI1OGM5OTdjNjkxNC4u
-ZTgxM2EzNzkxMGFmNCAxMDA2NDQNCj4gLS0tIGEvc291bmQvc29jL2NvZGVjcy9zZ3RsNTAwMC5j
-DQo+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3Mvc2d0bDUwMDAuYw0KPiBAQCAtMTI4OSw2ICsxMjg5
-LDcgQEAgc3RhdGljIGludCBzZ3RsNTAwMF9wcm9iZShzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQg
-KmNvbXBvbmVudCkNCj4gICAgICAgICBpbnQgcmV0Ow0KPiAgICAgICAgIHUxNiByZWc7DQo+ICAg
-ICAgICAgc3RydWN0IHNndGw1MDAwX3ByaXYgKnNndGw1MDAwID0gc25kX3NvY19jb21wb25lbnRf
-Z2V0X2RydmRhdGEoY29tcG9uZW50KTsNCj4gKyAgICAgICB1bnNpZ25lZCBpbnQgemNkX21hc2sg
-PSBTR1RMNTAwMF9IUF9aQ0RfRU4gfCBTR1RMNTAwMF9BRENfWkNEX0VOOw0KPg0KPiAgICAgICAg
-IC8qIHBvd2VyIHVwIHNndGw1MDAwICovDQo+ICAgICAgICAgcmV0ID0gc2d0bDUwMDBfc2V0X3Bv
-d2VyX3JlZ3MoY29tcG9uZW50KTsNCj4gQEAgLTEzMTYsOSArMTMxNyw4IEBAIHN0YXRpYyBpbnQg
-c2d0bDUwMDBfcHJvYmUoc3RydWN0IHNuZF9zb2NfY29tcG9uZW50ICpjb21wb25lbnQpDQo+ICAg
-ICAgICAgICAgICAgIDB4MWYpOw0KPiAgICAgICAgIHNuZF9zb2NfY29tcG9uZW50X3dyaXRlKGNv
-bXBvbmVudCwgU0dUTDUwMDBfQ0hJUF9QQURfU1RSRU5HVEgsIHJlZyk7DQo+DQo+IC0gICAgICAg
-c25kX3NvY19jb21wb25lbnRfd3JpdGUoY29tcG9uZW50LCBTR1RMNTAwMF9DSElQX0FOQV9DVFJM
-LA0KPiAtICAgICAgICAgICAgICAgICAgICAgICBTR1RMNTAwMF9IUF9aQ0RfRU4gfA0KPiAtICAg
-ICAgICAgICAgICAgICAgICAgICBTR1RMNTAwMF9BRENfWkNEX0VOKTsNCj4gKyAgICAgICBzbmRf
-c29jX2NvbXBvbmVudF91cGRhdGVfYml0cyhjb21wb25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX0NU
-UkwsDQo+ICsgICAgICAgICAgICAgICB6Y2RfbWFzaywgemNkX21hc2spOw0KPg0KPiAgICAgICAg
-IHNuZF9zb2NfY29tcG9uZW50X3VwZGF0ZV9iaXRzKGNvbXBvbmVudCwgU0dUTDUwMDBfQ0hJUF9N
-SUNfQ1RSTCwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgU0dUTDUwMDBfQklBU19SX01BU0ss
-DQo+IC0tDQo+IDIuMjAuMQ0KPg0KDQpSZXZpZXdlZC1ieTogSWdvciBPcGFuaXVrIDxpZ29yLm9w
-YW5pdWtAdG9yYWRleC5jb20+DQoNCi0tIA0KQmVzdCByZWdhcmRzIC0gRnJldW5kbGljaGUgR3LD
-vHNzZSAtIE1laWxsZXVyZXMgc2FsdXRhdGlvbnMNCg0KU2VuaW9yIERldmVsb3BtZW50IEVuZ2lu
-ZWVyLA0KSWdvciBPcGFuaXVrDQoNClRvcmFkZXggQUcNCkFsdHNhZ2Vuc3RyYXNzZSA1IHwgNjA0
-OCBIb3J3L0x1emVybiB8IFN3aXR6ZXJsYW5kIHwgVDogKzQxIDQxIDUwMCA0OA0KMDAgKG1haW4g
-bGluZSkNCg==
+On Thu, Jul 11, 2019 at 09:27:30AM +0000, Philippe CORNU wrote:
+> Hi Daniel,
+> 
+> 
+> On 7/10/19 5:27 PM, Daniel Vetter wrote:
+> > On Fri, Jul 05, 2019 at 12:41:03PM +0000, Philippe CORNU wrote:
+> >> Hi Olivier,
+> >> and many thanks for your patch.
+> >> Good to have the audio graph card support, looks ok.
+> >> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
+> > 
+> > Since you have drm-misc commit rights I'm assuming you're going to push
+> > this too. Correct?
+> 
+> Regarding this patch in particular, there is still missing an acked-by 
+> from a "bridge" maintainer. Also it could be nice to wait for the 
+> reviewed-by from Jiry as it knows well this sii driver and sent recently 
+> good patches on it (already merged).
+
+The bridge maintainer is looking for new bridge maintainers (atm we have
+only one, defacto), so for bridge driver patches I really don't think it's
+a good idea to gate on that single bottle-neck. Infrastructure is a bit a
+different thing.
+
+> With that, Benjamin or I (or a bridge maintainer) can push this patch + 
+> the serie named "drm/bridge: sii902x: fix audio mclk management" as I 
+> think it is better to push this serie *before* this patch.
+
+Wahtever you feel like, just wanted to make sure you're not stuck
+twiddling thumbs. The entire point of drm-misc is to facility mesh review
+and maintainership, because the strict hierarchy just doesn't work for
+smaller things. Exactly because you're always blocked on a bottleneck
+somewhere.
+-Daniel
+
+> 
+> Thanks,
+> Philippe :-)
+> 
+> 
+> >> Philippe :-)
+> >>
+> >> On 7/3/19 10:04 AM, Olivier Moysan wrote:
+> >>> Implement get_dai_id callback of audio HDMI codec
+> >>> to support ASoC audio graph card.
+> >>> HDMI audio output has to be connected to sii902x port 3.
+> >>> get_dai_id callback maps this port to ASoC DAI index 0.
+> >>>
+> >>> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> >>> ---
+> >>>    drivers/gpu/drm/bridge/sii902x.c | 23 +++++++++++++++++++++++
+> >>>    1 file changed, 23 insertions(+)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+> >>> index dd7aa466b280..daf9ef3cd817 100644
+> >>> --- a/drivers/gpu/drm/bridge/sii902x.c
+> >>> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> >>> @@ -158,6 +158,8 @@
+> >>>    
+> >>>    #define SII902X_I2C_BUS_ACQUISITION_TIMEOUT_MS	500
+> >>>    
+> >>> +#define SII902X_AUDIO_PORT_INDEX		3
+> >>> +
+> >>>    struct sii902x {
+> >>>    	struct i2c_client *i2c;
+> >>>    	struct regmap *regmap;
+> >>> @@ -690,11 +692,32 @@ static int sii902x_audio_get_eld(struct device *dev, void *data,
+> >>>    	return 0;
+> >>>    }
+> >>>    
+> >>> +static int sii902x_audio_get_dai_id(struct snd_soc_component *component,
+> >>> +				    struct device_node *endpoint)
+> >>> +{
+> >>> +	struct of_endpoint of_ep;
+> >>> +	int ret;
+> >>> +
+> >>> +	ret = of_graph_parse_endpoint(endpoint, &of_ep);
+> >>> +	if (ret < 0)
+> >>> +		return ret;
+> >>> +
+> >>> +	/*
+> >>> +	 * HDMI sound should be located at reg = <3>
+> >>> +	 * Return expected DAI index 0.
+> >>> +	 */
+> >>> +	if (of_ep.port == SII902X_AUDIO_PORT_INDEX)
+> >>> +		return 0;
+> >>> +
+> >>> +	return -EINVAL;
+> >>> +}
+> >>> +
+> >>>    static const struct hdmi_codec_ops sii902x_audio_codec_ops = {
+> >>>    	.hw_params = sii902x_audio_hw_params,
+> >>>    	.audio_shutdown = sii902x_audio_shutdown,
+> >>>    	.digital_mute = sii902x_audio_digital_mute,
+> >>>    	.get_eld = sii902x_audio_get_eld,
+> >>> +	.get_dai_id = sii902x_audio_get_dai_id,
+> >>>    };
+> >>>    
+> >>>    static int sii902x_audio_codec_init(struct sii902x *sii902x,
+> >>>
+> > 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
