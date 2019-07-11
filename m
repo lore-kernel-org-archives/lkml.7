@@ -2,111 +2,108 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679E1C31E41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAB8C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3920021537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BE520863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iFaqmioG"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aHkrW0+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfGKRRk (ORCPT
+        id S1728932AbfGKRSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:17:40 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34130 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbfGKRRk (ORCPT
+        Thu, 11 Jul 2019 13:18:10 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40415 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728549AbfGKRSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:17:40 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so14278176iot.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:17:40 -0700 (PDT)
+        Thu, 11 Jul 2019 13:18:09 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a15so5082989qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8hnrjteetj+2DwTSHx574b1xFkzK5P+oCtU5/m2k/v4=;
-        b=iFaqmioGX5kHI6dwYSirYGjsZStbgKT76VP93fBwEQSnKvT9ujYB2lU5+d1kSK3oQa
-         A6dUBcfnCkw/Mb3hG674fHrhu0mzd1+4ia9bbjZbiG15LTx+Jvt7k6UxScvoriexwRm3
-         cheT2fAWqReF47CPT4sC71g7OEPworWmcsXFk=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UTxsWXTECGBMOG0GnFyPFPTi0lGjRsY0+YyFpMLhFhg=;
+        b=aHkrW0+ndgyKfgFDGXlpBhpn1+sV9FtQ/iMrxyBxCrjC01IoBpEqLL2eM7XRxus4Pj
+         5bOoD3jNgSBg3uLAke200qmPrEzjwaACw0IK5j/rOLyibFdsrkMqb1DRb+669yFiiw4+
+         3A5e123BmNr/XIGc9C3denUABqv9A1p5Yy1rc9sIAOfPcO6/dfdTjusBQDM+TziliOmI
+         JnVGUC1XyozrN0sc+ED/NbFiwglM26cCw/LnGTVfnz1+6BzyxITIc9p3xrGTHZjRqvG6
+         VB8nfDPboYdK6mQmvn8nGLDLpDluCTDp0ldJZnWhvrkb6vu4gH+vl6OzLWSNKkPPqG8E
+         k9mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8hnrjteetj+2DwTSHx574b1xFkzK5P+oCtU5/m2k/v4=;
-        b=UZC2mhInDxRR7/Bzg8uLKot6e4U+LRHePZ3Ulgb0W/ntVO3aoZC6TBzvRNRxu6IOMd
-         JiZTFzywdtiK/NUIOL+HuUQ3nF1cHaaxxa0kbcWpySd1QCWmbAT+vbgaTv9Uac/sP9vk
-         zJ4UX/OgHqSPdqWVN2j7eH3Yrj7NcShiPNe/DpLvcQhoRU/83rW8o5ytG824VPsX3ANt
-         UofNEZD6sXKaKxYRxW3wIGgClsp6DXB9P7cXp0+vWaszPeB6chwOWWjaWPZLdEHsiuA2
-         7YYn04Ai1vJJqzY0Kamp0VVH7kfy12nP1XJNslXcVAxlR8axOTSTSOroJUE1EGr1BkE/
-         cw9g==
-X-Gm-Message-State: APjAAAWldDkTYw5C1cj9l2FJ1QSI8GiVgZW2rF/D0nMSz25a5MuUnz44
-        7mUXIerZo7UI8KUSEpUfGgORVcOVyr5bs97N/2BoRA==
-X-Google-Smtp-Source: APXvYqyuHURRUXFC2opMgTDs57uqGeN+UsWBRMnuUszmwx8emg3WSj/00gidI4l8fcUlSPgJUS2GzFpyw/9XBb1Mqy4=
-X-Received: by 2002:a02:9f84:: with SMTP id a4mr953368jam.20.1562865459489;
- Thu, 11 Jul 2019 10:17:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UTxsWXTECGBMOG0GnFyPFPTi0lGjRsY0+YyFpMLhFhg=;
+        b=h8xc6i6heCN6lr36Fc2jvUfRDbHb2tXyTK+dgEASMB3P6DDjxp5jsI9lFRxdtIt9Tt
+         gsy5EsjVpHVDQzquV0VcdhR/cRLEcyxHH51eQdwofmqHq3h4rHX8Xh5g9IoMYil3zHVL
+         q5Q/eyHCGYtqiHI9mox9aMvxcXn/2jysgWl2/EriJtofF47F9bMVl0xVYt5XaAVgEX2T
+         0//r9EWzT0RXhbxdk3GCsLeFOtD4KcGVuW0+6a+BZYlsvFl+e9cISzJuaV5eneafh9uF
+         3NxiqWHFr2saHw2OaKOYBxZ/Jix0WMgVvmHg2THJSNhx60w6kFcZ0PSDVlDkGQbsLVVX
+         fPLQ==
+X-Gm-Message-State: APjAAAVtyXmGDAH+w1I+bN/BwVAv1UrOy4Cy0r+Tro2xTxBAE631AlbO
+        1K/Ho/EqiQm5eFuHaFDAv46O4w==
+X-Google-Smtp-Source: APXvYqxHKUD0V0Z3mECjZTXp2KOCMRJVQO1szSv2M6Gj1Gew096GN/XAN83pJ+5jpKYP9pb/eYa4gA==
+X-Received: by 2002:ac8:2194:: with SMTP id 20mr2673385qty.203.1562865488951;
+        Thu, 11 Jul 2019 10:18:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id p13sm1976377qkj.4.2019.07.11.10.18.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 10:18:08 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlchs-00086y-0u; Thu, 11 Jul 2019 14:18:08 -0300
+Date:   Thu, 11 Jul 2019 14:18:08 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Message-ID: <20190711171808.GF25807@ziepe.ca>
+References: <20190710174800.34451-1-natechancellor@gmail.com>
+ <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
+ <20190711081434.GA86557@archlinux-threadripper>
+ <20190711133915.GA25807@ziepe.ca>
+ <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190708181536.2125-1-yichengli@chromium.org>
-In-Reply-To: <20190708181536.2125-1-yichengli@chromium.org>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Thu, 11 Jul 2019 10:17:28 -0700
-Message-ID: <CAPUE2uvnPfA8y1bqppC3-vZyRKRwdF4evGY8X4c-xP=YZi4HRw@mail.gmail.com>
-Subject: Re: [PATCH] mfd: cros_ec: Update cros_ec_commands.h
-To:     Yicheng Li <yichengli@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnHz3uH4ZM20LGQJ3FYhLQQUYn4Lg0B-YMr7Y1L66TAsA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+On Thu, Jul 11, 2019 at 10:16:44AM -0700, Nick Desaulniers wrote:
+> On Thu, Jul 11, 2019 at 6:39 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
+> > > Maybe time to start plumbing Clang into your test flow until it can get
+> > > intergrated with more CI setups? :) It can catch some pretty dodgy
+> > > behavior that GCC doesn't:
+> >
+> > I keep asking how to use clang to build the kernel and last I was told
+> > it still wasn't ready..
+> >
+> > Is it ready now? Is there some flow that will compile with clang
+> > warning free, on any arch? (at least the portion of the kernel I check)
+> 
+> $ make CC=clang ...
+> 
+> Let us know if you find something we haven't already.
+> https://clangbuiltlinux.github.io/
+> https://github.com/ClangBuiltLinux/linux/issues
 
-Note there is a patch series that move cros_ec_commands.h from
-nclude/linux/mfd/ to include/linux/platform_data.
+What clang version?
 
-On Mon, Jul 8, 2019 at 11:16 AM Yicheng Li <yichengli@chromium.org> wrote:
->
-> Update cros_ec_commands.h to match the fingerprint MCU section in
-> the current ec_commands.h
->
-> Signed-off-by: Yicheng Li <yichengli@chromium.org>
-> ---
->
->  include/linux/mfd/cros_ec_commands.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-> index 7ccb8757b79d..98415686cbfa 100644
-> --- a/include/linux/mfd/cros_ec_commands.h
-> +++ b/include/linux/mfd/cros_ec_commands.h
-> @@ -5513,6 +5513,18 @@ struct ec_params_fp_seed {
->         uint8_t seed[FP_CONTEXT_TPM_BYTES];
->  } __ec_align4;
->
-> +#define EC_CMD_FP_ENC_STATUS 0x0409
-> +
-> +/* FP TPM seed has been set or not */
-> +#define FP_ENC_STATUS_SEED_SET BIT(0)
-> +
-> +struct ec_response_fp_encryption_status {
-> +       /* Used bits in encryption engine status */
-> +       uint32_t valid_flags;
-> +       /* Encryption engine status */
-> +       uint32_t status;
-> +} __ec_align4;
-> +
->  /*****************************************************************************/
->  /* Touchpad MCU commands: range 0x0500-0x05FF */
->
-> --
-> 2.20.1
->
+Jason
