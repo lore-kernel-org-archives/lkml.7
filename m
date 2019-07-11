@@ -2,140 +2,219 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A10C74A50
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE59AC74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CFA208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B998420872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TVq+40TB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="j3ssSlpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfGKITN (ORCPT
+        id S1728287AbfGKITS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:19:13 -0400
-Received: from mail-eopbgr50054.outbound.protection.outlook.com ([40.107.5.54]:27524
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727929AbfGKITN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:19:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hvgKQOx3TQOMnqFyD2o+7crNPLMTxXcy//5zmcmS2vQ=;
- b=TVq+40TBC2nARFt0rUIlhqnp1WxUuetfHry5RHjtLCUKPqPE7J2CLKwJ+Vg5+Rgb0u5UXi7qbpIrTJn4E9aPmOj5xVVB3G7ydH7P31LODwgi/+hKDGLHji3f+xJw4KnHcyFoFBXLogIpEP7ytHxG4+tS/SB8FVCjrxzGlWfK/rQ=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB5042.eurprd04.prod.outlook.com (20.177.41.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 11 Jul 2019 08:19:09 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::a126:d121:200:367]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::a126:d121:200:367%7]) with mapi id 15.20.2052.022; Thu, 11 Jul 2019
- 08:19:09 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 3/4] clk: imx8mm: Add system counter to clock tree
-Thread-Topic: [PATCH 3/4] clk: imx8mm: Add system counter to clock tree
-Thread-Index: AQHVJ/++eyD/ffxNeUuXAhbVfUjkiabFMp8A
-Date:   Thu, 11 Jul 2019 08:19:09 +0000
-Message-ID: <20190711081908.ray2pjtigbjaezyc@fsr-ub1664-175>
-References: <20190621070720.12395-1-Anson.Huang@nxp.com>
- <20190621070720.12395-3-Anson.Huang@nxp.com>
-In-Reply-To: <20190621070720.12395-3-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d5431ea-9207-4b60-2ca8-08d705d872d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5042;
-x-ms-traffictypediagnostic: AM0PR04MB5042:
-x-microsoft-antispam-prvs: <AM0PR04MB50425AC223D7AC8D924927F3F6F30@AM0PR04MB5042.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:337;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(366004)(376002)(396003)(346002)(136003)(39860400002)(189003)(199004)(4326008)(81156014)(81166006)(8676002)(186003)(66066001)(102836004)(26005)(54906003)(8936002)(11346002)(6862004)(71200400001)(446003)(7416002)(229853002)(99286004)(476003)(305945005)(3846002)(71190400001)(7736002)(2906002)(6116002)(486006)(6506007)(53546011)(5660300002)(316002)(25786009)(76176011)(6636002)(53936002)(68736007)(66946007)(86362001)(6512007)(9686003)(478600001)(1076003)(44832011)(33716001)(6246003)(64756008)(66476007)(76116006)(91956017)(14454004)(66556008)(66446008)(256004)(6486002)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5042;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rm6YTvqApxJjTFgcSp4Vj8A4skF1vxoxCBpM0HWi1zjXa4zyIsBY1Veg46KNfXqTcPXe2LGOYgShpv9KndG5AkhSI1/h0nJMuRdyc97OIpN9JqZxGojr/2hGahLz17QK+kJBHrjD4SdufZ/GD81NxElf3jLuOF/iK4WEgoL6qOnZW4jbXv9LulsFL0R4BNYJsugKE3kTUT48CyyNSr8IYChl/y+7Q3XoQ/WAsE5XL6zXH2QBVGlxpdcXulbbXhq1syCXZLxkoGJWlKFwnkJM5r7Qn+pMf33Tq0NOAhlTIiQnIKrZZ1Y6etrkazleeaKu6YAGqVgU6/eMxs8UWOX94ZcBHUD5cot2xE0v7Yc50SjMcSU37ae4Rf9dqmYPg5aiwy1sFwgSkU3MdZGCVkgSnZlV+0Zy5A0Z5NwzosyaQ8g=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5D9D0CDF90B35D4FB3BC742B2D394AB9@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 04:19:18 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33452 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbfGKITS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 04:19:18 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i11so4894763edq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 01:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q3/3DeARjpqDKrOiocguflEWJfLgc8iajX+V50d8eXY=;
+        b=j3ssSlptUwsg/Ru4XoPIm/vhppsSq9rWUJxH/pfzzVK0TcYmRRWLuGW1XQms8l9KOH
+         7xaFI8UVwDiBmt2gROE6dEvp/FN1DId7smdCHJgQG9GDXhVINqKW+oESG9li+45FZxCA
+         8j83NyZQSy72xcr/dsbR6YrGkjZw/k6aS9V7g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=q3/3DeARjpqDKrOiocguflEWJfLgc8iajX+V50d8eXY=;
+        b=FKcAarQbn/5aIul5VNxFMQLMfSAclwNwYFCcAo64vjDt+dtBHPIF9pVpJiU1JeNvVn
+         LH+W6+eY0sP6YCqxkb03XrNS7paRZlKBBdLSJOGUCeuHRSXJSodz3CMiHg8fJqPX0lik
+         +d72657cY8bRz1Z55WrbxDLqoimuIo7YI7EbRvcJ4fA5Xz1FiK62E0tPAoRt7oGQHsSN
+         nn5a08ebE355muv5QeAwEJ6VlEtcqm+aYb5lgiDvf/zMDY6ayevYaUnrM/uN4rAJPwB+
+         cf0wb0aI1Hj6RTdPB6PjGY9DHf+AI4sUNGLfwZlr/jvLF8nM/CUYUNSPruIwve0p66p5
+         8i0w==
+X-Gm-Message-State: APjAAAXedqxTthC2j8RcMcEFRSBfQVnEP4ai4KzMJCpINQbzdBXNR+ps
+        EQDhl7qTTUHG0f6YSZ9d2xw=
+X-Google-Smtp-Source: APXvYqyBQ+5xwEWc3sxBQXdac27XI2zZ8XzAl5ZBTEUm5Gz/1nLeqTVYgGOVSifhdFbLS0YSjzaJGg==
+X-Received: by 2002:a05:6402:14cf:: with SMTP id f15mr2074419edx.255.1562833156233;
+        Thu, 11 Jul 2019 01:19:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id n16sm1348746edo.81.2019.07.11.01.19.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 01:19:15 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 10:19:13 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 3/5] drm/vkms: Decouple crc operations from composer
+Message-ID: <20190711081913.GH15868@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <6e8a03dc7c666ee998ee36172a96cff39f8dd46d.1561491964.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d5431ea-9207-4b60-2ca8-08d705d872d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 08:19:09.2305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abel.vesa@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e8a03dc7c666ee998ee36172a96cff39f8dd46d.1561491964.git.rodrigosiqueiramelo@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-06-21 15:07:19, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
->=20
-> i.MX8MM timer-imx-sysctr driver needs system counter clock
-> for proper function, add it into clock tree.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
-
+On Tue, Jun 25, 2019 at 10:37:58PM -0300, Rodrigo Siqueira wrote:
+> In the vkms_composer.c, some of the functions related to CRC and compose
+> have interdependence between each other. This patch reworks some
+> functions inside vkms_composer to make crc and composer computation
+> decoupled.
+> 
+> This patch is preparation work for making vkms able to support new
+> features.
+> 
+> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 > ---
->  drivers/clk/imx/clk-imx8mm.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-> index 43fa9c3..56d53dd 100644
-> --- a/drivers/clk/imx/clk-imx8mm.c
-> +++ b/drivers/clk/imx/clk-imx8mm.c
-> @@ -645,6 +645,8 @@ static int __init imx8mm_clocks_init(struct device_no=
-de *ccm_node)
->  	clks[IMX8MM_CLK_DRAM_ALT_ROOT] =3D imx_clk_fixed_factor("dram_alt_root"=
-, "dram_alt", 1, 4);
->  	clks[IMX8MM_CLK_DRAM_CORE] =3D imx_clk_mux2_flags("dram_core_clk", base=
- + 0x9800, 24, 1, imx8mm_dram_core_sels, ARRAY_SIZE(imx8mm_dram_core_sels),=
- CLK_IS_CRITICAL);
-> =20
-> +	clks[IMX8MM_CLK_SYS_CTR] =3D imx_clk_fixed_factor("sys_ctr", "osc_24m",=
- 1, 3);
+>  drivers/gpu/drm/vkms/vkms_composer.c | 49 ++++++++++++++++------------
+>  1 file changed, 29 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> index eb7ea8be1f98..51a270514219 100644
+> --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -105,35 +105,31 @@ static void compose_cursor(struct vkms_composer *cursor_composer,
+>  	      primary_composer, cursor_composer);
+>  }
+>  
+> -static uint32_t _vkms_get_crc(struct vkms_composer *primary_composer,
+> -			      struct vkms_composer *cursor_composer)
+> +static int compose_planes(void **vaddr_out,
+> +			  struct vkms_composer *primary_composer,
+> +			  struct vkms_composer *cursor_composer)
+>  {
+>  	struct drm_framebuffer *fb = &primary_composer->fb;
+>  	struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
+>  	struct vkms_gem_object *vkms_obj = drm_gem_to_vkms_gem(gem_obj);
+> -	void *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
+> -	u32 crc = 0;
+>  
+> -	if (!vaddr_out) {
+> -		DRM_ERROR("Failed to allocate memory for output frame.");
+> -		return 0;
+> +	if (!*vaddr_out) {
+> +		*vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
+
+Uh allocating memory here isn't great, since you effectily can't handle
+the error at all. Also for big resolutions kzalloc will fall back to
+kvmalloc I think, which is rather expensive to set up.
+
+But I guess this is a preexisting issue, so welp.
+
+What I would do is pull out the allocation at least, so that
+compose_planes really only dos composing, can never fail because it
+doesn't need to allocate memory.
+
+> +		if (!*vaddr_out) {
+> +			DRM_ERROR("Cannot allocate memory for output frame.");
+> +			return -ENOMEM;
+> +		}
+>  	}
+>  
+> -	if (WARN_ON(!vkms_obj->vaddr)) {
+> -		kfree(vaddr_out);
+> -		return crc;
+> -	}
+> +	if (WARN_ON(!vkms_obj->vaddr))
+> +		return -EINVAL;
+>  
+> -	memcpy(vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
+> +	memcpy(*vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
+>  
+>  	if (cursor_composer)
+> -		compose_cursor(cursor_composer, primary_composer, vaddr_out);
+> +		compose_cursor(cursor_composer, primary_composer, *vaddr_out);
+>  
+> -	crc = compute_crc(vaddr_out, primary_composer);
+> -
+> -	kfree(vaddr_out);
+> -
+> -	return crc;
+> +	return 0;
+>  }
+>  
+>  /**
+> @@ -154,9 +150,11 @@ void vkms_composer_worker(struct work_struct *work)
+>  	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+>  	struct vkms_composer *primary_composer = NULL;
+>  	struct vkms_composer *cursor_composer = NULL;
+> +	void *vaddr_out = NULL;
+>  	u32 crc32 = 0;
+>  	u64 frame_start, frame_end;
+>  	bool crc_pending;
+> +	int ret;
+>  
+>  	spin_lock_irq(&out->composer_lock);
+>  	frame_start = crtc_state->frame_start;
+> @@ -180,14 +178,25 @@ void vkms_composer_worker(struct work_struct *work)
+>  	if (crtc_state->num_active_planes == 2)
+>  		cursor_composer = crtc_state->active_planes[1]->composer;
+>  
+> -	if (primary_composer)
+> -		crc32 = _vkms_get_crc(primary_composer, cursor_composer);
+> +	if (!primary_composer)
+> +		return;
 > +
->  	clks[IMX8MM_CLK_ARM] =3D imx_clk_cpu("arm", "arm_a53_div",
->  					   clks[IMX8MM_CLK_A53_DIV],
->  					   clks[IMX8MM_CLK_A53_SRC],
-> --=20
-> 2.7.4
-> =
+> +	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
+> +	if (ret) {
+> +		if (ret == -EINVAL)
+> +			kfree(vaddr_out);
+> +		return;
+> +	}
+> +
+> +	crc32 = compute_crc(vaddr_out, primary_composer);
+>  
+>  	/*
+>  	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
+>  	 */
+>  	while (frame_start <= frame_end)
+>  		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+> +
+> +	kfree(vaddr_out);
+
+Especially since you're freeing the memory _outside_ of compose_planes.
+
+Aside: This all kinda doesn't go in the right direction for
+high-performance composing, so I guess I need to get started with typing
+up what that should look like.
+-Daniel
+
+>  }
+>  
+>  static const char * const pipe_crc_sources[] = {"auto"};
+> -- 
+> 2.21.0
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
