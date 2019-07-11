@@ -2,96 +2,198 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A40C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 727C2C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6733208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562822687;
-	bh=iYMcVpQ5clOcfTfPZvn8pgaLNC4FxrNjOwB8wzJjHpw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gaNimJmI2Oa4Rr8mMrGfrPfsf5KpMpaBtDYp4s4IUVbW+8Leay8Qm7F39TU4ftFIe
-	 eh4CsXStiIhWb2MuZDbbMoLyiwW5/P49jYLwqwEwMOKX1naYgGxhXXM3nnbVN64wtg
-	 EDVNFgkZp5kMLzHWPcTJ8uz/wyj9HQqwe3MHEpvo=
+	by mail.kernel.org (Postfix) with ESMTP id 3C9FF208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:25:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="E/e3PBgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfGKFYq (ORCPT
+        id S1727960AbfGKFZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:24:46 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45305 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfGKFYq (ORCPT
+        Thu, 11 Jul 2019 01:25:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42354 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfGKFZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:24:46 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so4367019lje.12
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:24:44 -0700 (PDT)
+        Thu, 11 Jul 2019 01:25:07 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ay6so2387045plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:25:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w2QefrsAjIehGtDojO7YZaq80yDR8F0qCpFLc2+qa/0=;
-        b=H7VoW1U4KMDnSQnEks1lB1DXI/XutCdpSAI2x/EgYxR2MJk992T56S9+CXihWWwWVi
-         TgbEhtMy9NDRdx9/joyGodU/U8RbuWkLZ3SyK50GAgnauL2nI982f3JWYcBd+HTapx5s
-         monewQA3W2G1+RiPyY4Ljlmffi+ZPlRdhn68s=
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iAzKw0BoNuWYvRIzrLeTPP6dDrFST9kyO0Xv/W2qtaU=;
+        b=E/e3PBgQ9/O1mYNDctMgvQ9JP5Ck/4I3S80VZF4toBAPiVDAgrviyTwC2sZQvNSJ+8
+         rqBc9CSd+ScNVhuNdBxOzkoP/GY7op2PfRpfumWFKvyNfYd+2WJZFsK7sB3z1cURxgl0
+         uEmaJE4HpYFWhom5pmmYwT/Fd/cHzso1rmGL9J7mv2hpFfeSGo+ncCGrCLjqDp8psUAf
+         cuowLO5rLG0RFtKJHWOX4VAHvMNRblY7QbYQ7YtbKAHNhPg1o5zod0LM8I8oy3PixRg8
+         2YGfEGPhDll9EPsFbfAp2CIDgqoluJP0sp/xyDLe93LooAdg+y7uAqGK0s6oQgU+Mvjk
+         r8nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w2QefrsAjIehGtDojO7YZaq80yDR8F0qCpFLc2+qa/0=;
-        b=R98WBi1NjCKuS86o5fJFVaof7OayfDS+7khQZI5fwLW/OrCaUjLfI7+chAfsRFry4V
-         zumBkblqEvKtz6DEb28y+RrJQHtZvKg5L3xr72fGZH4knfUdTq9sNAyrrotfSt8rxigX
-         /FpHIT+wNI8YPfqD3p0wZR7VtzCDq0hISe2Uak2CMCLAuX7kkgkj8Vql0Nza5WKzGuov
-         A9SQ1Ohyz5K5Y9tnGUj1QvU5gyziPqJfjXf8vNoL6yF/zTfi22mfHhZTaBq3kb1TDspR
-         r2AF7F/Z0qDQifNnjrUONP9lpcUk34q33RC27RwXwdGT7SfBCAnvKxBC81w3JswukXB5
-         DBbg==
-X-Gm-Message-State: APjAAAV+iwHoSGYJKaN9Los12LcpsfDwvogHzC7wC5HmnGSlyWMxmx8/
-        NJisY2/Z9uzv8bilTfoM0bh3bFtdGOk=
-X-Google-Smtp-Source: APXvYqyiIYdACr4N2vVo9FuQEFlu/c/Sg0kyUY54s0qb6OSD8GhLMu9G8H/b3pYKF0NCbdO0JSarGA==
-X-Received: by 2002:a2e:89c8:: with SMTP id c8mr1187922ljk.70.1562822683731;
-        Wed, 10 Jul 2019 22:24:43 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id m17sm672220lfb.9.2019.07.10.22.24.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 22:24:42 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id s19so3129266lfb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:24:42 -0700 (PDT)
-X-Received: by 2002:ac2:44c5:: with SMTP id d5mr749470lfm.134.1562822681814;
- Wed, 10 Jul 2019 22:24:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iAzKw0BoNuWYvRIzrLeTPP6dDrFST9kyO0Xv/W2qtaU=;
+        b=NYvi5PrAIFAg5LIxOozgM568t1wQp1ZZ7ap022buzJAEGA1H7nibrIQ8HKQ1jFJ8Sc
+         zb6wAaHdES4aAOWVpUAarYCaeJxClTLP2vk3tpGhCjU1RDLHcMDedbXWl+8Wb/pcvXo9
+         0UmNm7idKtLXh4dHbaAD2mNFjPmG21hxrTe5AvjyOHmTqz0BmR3NfAeV50zbBcVemlJI
+         2dAZC9PmOnIFTN2LqXBTSkt8m/B+/NEy8AXbXcSHIU0JZxZeJNlUxrt3FTbn/o1k6GGN
+         Hg9tqExClI5c0JsYAVUfU1HEJMBAY5a7H0EXCZ6uZ0Tx2s37D6LYVRE+C/cocx03Lbwi
+         +LxQ==
+X-Gm-Message-State: APjAAAVLi/BVElYa6bYe0TKyKf2COb1cC9qRjxB2ZlRmUQw2E93mVjR+
+        cLWPPfhkFtGbzTg56bD2Dv3Vnw==
+X-Google-Smtp-Source: APXvYqxGCI9u1oZOuUKhbEq8FgFw3q63JFEadaGNOb5TRxahHVBCraKfOKWLZ0+otd5GC8em7POraQ==
+X-Received: by 2002:a17:902:b68f:: with SMTP id c15mr2535175pls.104.1562822705862;
+        Wed, 10 Jul 2019 22:25:05 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id 201sm5471345pfz.24.2019.07.10.22.25.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 22:25:05 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>, stable@vger.kernel.org
+Subject: [PATCH v4 1/2] rtw88: pci: Rearrange the memory usage for skb in RX ISR
+Date:   Thu, 11 Jul 2019 13:24:26 +0800
+Message-Id: <20190711052427.5582-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <CAPpJ_edDcaBq+0DocPmS-yYM10B4MkWvBn=f6wwbYdqzSGmp_g@mail.gmail.com>
+References: <CAPpJ_edDcaBq+0DocPmS-yYM10B4MkWvBn=f6wwbYdqzSGmp_g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190708150042.11590-1-christian@brauner.io>
-In-Reply-To: <20190708150042.11590-1-christian@brauner.io>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 10 Jul 2019 22:24:26 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
-Message-ID: <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
-Subject: Re: [GIT PULL] clone3 for v5.3
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 8:05 AM Christian Brauner <christian@brauner.io> wrote:
->
-> /* Syscall number 435 */
-> clone3() uses syscall number 435 and is coordinated with pidfd_open() which
-> uses syscall number 434. I'm not aware of any other syscall targeted for
-> 5.3 that has chosen the same number.
+Testing with RTL8822BE hardware, when available memory is low, we
+frequently see a kernel panic and system freeze.
 
-You say that, and 434/435 would make sense, but that's not what the
-code I see in the pull request actually does.
+First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
 
-It seems to use syscall 436.
+rx routine starvation
+WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:822 rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+[ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
 
-I think it's because openat2() is looking to use 435, but I'm a bit
-nervous about the conflict between the code and your commentary..
+Then we see a variety of different error conditions and kernel panics,
+such as this one (trimmed):
 
-              Linus
+rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415 head:00000000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0 dev:<NULL>
+------------[ cut here ]------------
+kernel BUG at net/core/skbuff.c:105!
+invalid opcode: 0000 [#1] SMP NOPTI
+RIP: 0010:skb_panic+0x43/0x45
+
+When skb allocation fails and the "rx routine starvation" is hit, the
+function returns immediately without updating the RX ring. At this
+point, the RX ring may continue referencing an old skb which was already
+handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+bad things happen.
+
+This patch allocates a new, data-sized skb first in RX ISR. After
+copying the data in, we pass it to the upper layers. However, if skb
+allocation fails, we effectively drop the frame. In both cases, the
+original, full size ring skb is reused.
+
+In addition, to fixing the kernel crash, the RX routine should now
+generally behave better under low memory conditions.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204053
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/net/wireless/realtek/rtw88/pci.c | 49 +++++++++++-------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index cfe05ba7280d..c415f5e94fed 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+ 	u32 pkt_offset;
+ 	u32 pkt_desc_sz = chip->rx_pkt_desc_sz;
+ 	u32 buf_desc_sz = chip->rx_buf_desc_sz;
++	u32 new_len;
+ 	u8 *rx_desc;
+ 	dma_addr_t dma;
+ 
+@@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+ 		pkt_offset = pkt_desc_sz + pkt_stat.drv_info_sz +
+ 			     pkt_stat.shift;
+ 
+-		if (pkt_stat.is_c2h) {
+-			/* keep rx_desc, halmac needs it */
+-			skb_put(skb, pkt_stat.pkt_len + pkt_offset);
++		/* allocate a new skb for this frame,
++		 * discard the frame if none available
++		 */
++		new_len = pkt_stat.pkt_len + pkt_offset;
++		new = dev_alloc_skb(new_len);
++		if (WARN_ONCE(!new, "rx routine starvation\n"))
++			goto next_rp;
++
++		/* put the DMA data including rx_desc from phy to new skb */
++		skb_put_data(new, skb->data, new_len);
+ 
+-			/* pass offset for further operation */
+-			*((u32 *)skb->cb) = pkt_offset;
+-			skb_queue_tail(&rtwdev->c2h_queue, skb);
++		if (pkt_stat.is_c2h) {
++			 /* pass rx_desc & offset for further operation */
++			*((u32 *)new->cb) = pkt_offset;
++			skb_queue_tail(&rtwdev->c2h_queue, new);
+ 			ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_work);
+ 		} else {
+-			/* remove rx_desc, maybe use skb_pull? */
+-			skb_put(skb, pkt_stat.pkt_len);
+-			skb_reserve(skb, pkt_offset);
+-
+-			/* alloc a smaller skb to mac80211 */
+-			new = dev_alloc_skb(pkt_stat.pkt_len);
+-			if (!new) {
+-				new = skb;
+-			} else {
+-				skb_put_data(new, skb->data, skb->len);
+-				dev_kfree_skb_any(skb);
+-			}
+-			/* TODO: merge into rx.c */
+-			rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
++			/* remove rx_desc */
++			skb_pull(new, pkt_offset);
++
++			rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+ 			memcpy(new->cb, &rx_status, sizeof(rx_status));
+ 			ieee80211_rx_irqsafe(rtwdev->hw, new);
+ 		}
+ 
+-		/* skb delivered to mac80211, alloc a new one in rx ring */
+-		new = dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+-		if (WARN(!new, "rx routine starvation\n"))
+-			return;
+-
+-		ring->buf[cur_rp] = new;
+-		rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc_sz);
++next_rp:
++		/* new skb delivered to mac80211, re-enable original skb DMA */
++		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
+ 
+ 		/* host read next element in ring */
+ 		if (++cur_rp >= ring->r.len)
+-- 
+2.22.0
+
