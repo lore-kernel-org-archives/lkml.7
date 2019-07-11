@@ -2,103 +2,93 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D5AC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F03DC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A812321537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562877344;
-	bh=hfnFl7VTYjBEMlwgwzL7ALQj3UVAUmLE8HOpQ1WsSVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aYIpLlwTZ/KD7Dy0NvzVlBjFyg5kVV/lNAFXfVaZGfMDc0RIzWc7jkwD5g9omqAqd
-	 xqdovc5AjsBXTtDCtXWBC76Sp6GbncyQBKzwwNRvSTgIaS9Bfa+hB7O2dRwJAhsfq1
-	 JjF3jeI7pi39swzvJtVCb7Kk30IZnpWKXNk1QdWw=
+	by mail.kernel.org (Postfix) with ESMTP id 1E558206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="f5ixLevq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfGKUfn (ORCPT
+        id S1728717AbfGKUg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbfGKUfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:35:43 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FBDB206B8;
-        Thu, 11 Jul 2019 20:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562877342;
-        bh=hfnFl7VTYjBEMlwgwzL7ALQj3UVAUmLE8HOpQ1WsSVE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xlEmSwZQoGr4heZcmHNdXp8tsiny7MLfd8yHumZE7vRH2pM8GvHXxRZABCE0+nRDx
-         uSFdLJCHt5hvibs9i6DmBfe+/RYnHvG7+kCdlc6O1kRYgCbsXmg2P2r008qk4oaAWc
-         mpHx/+x2o63yh0M0CmHoSsIIIxNt1p2MvWyS40kA=
-Date:   Thu, 11 Jul 2019 16:35:41 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com,
-        tee-dev@lists.linaro.org, sumit.garg@linaro.org,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v8 0/2] fTPM: firmware TPM running in TEE
-Message-ID: <20190711203541.GC10104@sasha-vm>
-References: <20190705204746.27543-1-sashal@kernel.org>
- <20190711200858.xydm3wujikufxjcw@linux.intel.com>
- <20190711201059.GA18260@apalos>
+        Thu, 11 Jul 2019 16:36:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38610 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbfGKUg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 16:36:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z75so3484774pgz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U05ONlBbPINFuimdTBUsOatUpH+2O9AcUBX+vMez/GE=;
+        b=f5ixLevqIWQvivZ74pOXO929BcoCqmvzjZt0NEzOGVs7/8VfCjVUseMFq28qP41b27
+         cOSPs1pq8IYk6wGAz1bRA9/AXypLdgaVcgTIp7BbjCQ+m6OqNUXyptfSqS8hQVvBU/O9
+         NwzkTnyiPV5ItHlSsN30DKTmsB1znkoXR0lL7kRLhI+fl/KziS4Wjbk2WC9OA3bPIYtO
+         RpwywCQ/EA/W+6Z9xHcZvxrIe5QOCoBPuvDSHWo89ggxEQrm54Hgxc+O89Si9YaZnJ4q
+         f3DUt0VLnz4vss2+iw94D7wOidx2m/b3XiYE2TngB/aTZHyGN+TXGlBpw5eEpAvSrqdP
+         RNBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U05ONlBbPINFuimdTBUsOatUpH+2O9AcUBX+vMez/GE=;
+        b=EPx/OPrUd1l0SAuV7QHR/yHHmoJVxMRfk5zXnKnHCP3P73+rvQn01WzWBkbMXYuJN6
+         3cS5K/cZfDVt1TEmN8QE7EDD1RVDh8+QaiKuMrPmWP74VeA6W+m9nuhRonnJcP9c38+o
+         wz8vS53V+4LiNCcVnzgVQxjoDp9cdgPvpDBuIW1fvkZemn+aEtaIGtpfEmXzLokyVKyM
+         8ZA/nMtUSAnXqcN1w+gsE2LmQrk502ZenPSFQLDD40Nn5L+bPbCsVJWnOW+R2I/vCF0J
+         pbKl81xwtwz44MM0Z7T0fW7ttNm8ARAwA/g8A/4hFUSLz9gGJefIh6OvAzEbc+rxSnvq
+         MbTg==
+X-Gm-Message-State: APjAAAU2qbvoULLq3CHoyCwK5oxIwOWjswXefRed+pl6Krrse0SlNn2P
+        ADxg+bUCKACbmmoA3FaBHQFKLOFx8PQ=
+X-Google-Smtp-Source: APXvYqwt6420DCq/8aOZYasWpu+xq8Gcs291fC8EGXWmzL2/e3Wyu/TIHN36Mskj2KVBn2eC9v6zxg==
+X-Received: by 2002:a17:90a:d343:: with SMTP id i3mr7310376pjx.15.1562877417701;
+        Thu, 11 Jul 2019 13:36:57 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id q126sm6651473pfq.123.2019.07.11.13.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 13:36:56 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Tejun Heo <tj@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+References: <20190711151507.7ec1fd18@canb.auug.org.au>
+ <20190711201736.GQ657710@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8c18d276-d8e9-148e-ba05-604e7a4d9dec@kernel.dk>
+Date:   Thu, 11 Jul 2019 14:36:54 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190711201059.GA18260@apalos>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190711201736.GQ657710@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 11:10:59PM +0300, Ilias Apalodimas wrote:
->On Thu, Jul 11, 2019 at 11:08:58PM +0300, Jarkko Sakkinen wrote:
->> On Fri, Jul 05, 2019 at 04:47:44PM -0400, Sasha Levin wrote:
->> > Changes from v7:
->> >
->> >  - Address Jarkko's comments.
->> >
->> > Sasha Levin (2):
->> >   fTPM: firmware TPM running in TEE
->> >   fTPM: add documentation for ftpm driver
->> >
->> >  Documentation/security/tpm/index.rst        |   1 +
->> >  Documentation/security/tpm/tpm_ftpm_tee.rst |  27 ++
->> >  drivers/char/tpm/Kconfig                    |   5 +
->> >  drivers/char/tpm/Makefile                   |   1 +
->> >  drivers/char/tpm/tpm_ftpm_tee.c             | 350 ++++++++++++++++++++
->> >  drivers/char/tpm/tpm_ftpm_tee.h             |  40 +++
->> >  6 files changed, 424 insertions(+)
->> >  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
->> >  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
->> >  create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
->> >
->> > --
->> > 2.20.1
->> >
->>
->> I applied the patches now. Appreciate a lot the patience with these.
->> Thank you.
+On 7/11/19 2:17 PM, Tejun Heo wrote:
+> Hello,
+> 
+> Yeah, my patche series raced with 8648de2c581e ("f2fs: add bio cache
+> for IPU").  Jens, can you please apply this one too?
 
-Thanks Jarkko!
+I can't really, as that commit isn't in Linus's tree yet. I'll
+keep an eye out for what hits mainline, I'll probably ship what
+I have on Monday.
 
->Will report back any issues when we start using it on real hardware
->rather than QEMU
+-- 
+Jens Axboe
 
-And thank you Ilias, let us know if we can help with the setup.
-
---
-Thanks,
-Sasha
