@@ -2,197 +2,179 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6242C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF48DC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C6F20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E13520872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfGKNH3 (ORCPT
+        id S1728750AbfGKNIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:07:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35250 "EHLO mx1.redhat.com"
+        Thu, 11 Jul 2019 09:08:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:45926 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfGKNH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:07:29 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 188D930820C9;
-        Thu, 11 Jul 2019 13:07:28 +0000 (UTC)
-Received: from [10.36.116.46] (ovpn-116-46.ams2.redhat.com [10.36.116.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EB7871001B0F;
-        Thu, 11 Jul 2019 13:07:20 +0000 (UTC)
-Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        Vincent Stehle <Vincent.Stehle@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
- <20190526161004.25232-27-eric.auger@redhat.com>
- <20190603163139.70fe8839@x1.home>
- <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
- <20190605154553.0d00ad8d@jacob-builder>
- <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
- <20190606132903.064f7ac4@jacob-builder>
- <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
- <20190607104301.6b1bbd74@jacob-builder>
- <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
- <20190610143134.7bff96e9@jacob-builder>
- <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
- <20190612115358.0d90b322@jacob-builder>
- <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <b441c7aa-7aab-d816-f87f-7981dfeebc48@redhat.com>
-Date:   Thu, 11 Jul 2019 15:07:19 +0200
+        id S1728655AbfGKNI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:08:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B73762B;
+        Thu, 11 Jul 2019 06:08:28 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4435C3F59C;
+        Thu, 11 Jul 2019 06:08:26 -0700 (PDT)
+Subject: Re: [PATCH] vsyscall: use __iter_div_u64_rem()
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20190710130206.1670830-1-arnd@arndb.de>
+ <33511b0e-6d7b-c156-c415-7a609b049567@arm.com>
+ <CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <049c3a69-e2da-4169-da4a-8e46cbcd323c@arm.com>
+Date:   Thu, 11 Jul 2019 14:08:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
+In-Reply-To: <CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 11 Jul 2019 13:07:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean, Jacob,
+Hi Arnd,
 
-On 6/18/19 4:04 PM, Jean-Philippe Brucker wrote:
-> On 12/06/2019 19:53, Jacob Pan wrote:
->>>> You are right, the worst case of the spurious PS is to terminate the
->>>> group prematurely. Need to know the scope of the HW damage in case
->>>> of mdev where group IDs can be shared among mdevs belong to the
->>>> same PF.  
->>>
->>> But from the IOMMU fault API point of view, the full page request is
->>> identified by both PRGI and PASID. Given that each mdev has its own
->>> set of PASIDs, it should be easy to isolate page responses per mdev.
->>>
->> On Intel platform, devices sending page request with private data must
->> receive page response with matching private data. If we solely depend
->> on PRGI and PASID, we may send stale private data to the device in
->> those incorrect page response. Since private data may represent PF
->> device wide contexts, the consequence of sending page response with
->> wrong private data may affect other mdev/PASID.
+On 11/07/2019 13:28, Arnd Bergmann wrote:
+> On Thu, Jul 11, 2019 at 2:14 PM Vincenzo Frascino
+> <vincenzo.frascino@arm.com> wrote:
 >>
->> One solution we are thinking to do is to inject the sequence #(e.g.
->> ktime raw mono clock) as vIOMMU private data into to the guest. Guest
->> would return this fake private data in page response, then host will
->> send page response back to the device that matches PRG1 and PASID and
->> private_data.
 >>
->> This solution does not expose HW context related private data to the
->> guest but need to extend page response in iommu uapi.
+>> Could you please tell me which version of the compiler did you use?
 >>
->> /**
->>  * struct iommu_page_response - Generic page response information
->>  * @version: API version of this structure
->>  * @flags: encodes whether the corresponding fields are valid
->>  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
->>  * @pasid: Process Address Space ID
->>  * @grpid: Page Request Group Index
->>  * @code: response code from &enum iommu_page_response_code
->>  * @private_data: private data for the matching page request
->>  */
->> struct iommu_page_response {
->> #define IOMMU_PAGE_RESP_VERSION_1	1
->> 	__u32	version;
->> #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
->> #define IOMMU_PAGE_RESP_PRIVATE_DATA	(1 << 1)
->> 	__u32	flags;
->> 	__u32	pasid;
->> 	__u32	grpid;
->> 	__u32	code;
->> 	__u32	padding;
->> 	__u64	private_data[2];
->> };
+>> My building command is:
 >>
->> There is also the change needed for separating storage for the real and
->> fake private data.
+>> # make mrproper && make CC=clang HOSTCC=clang i386_defconfig && make ARCH=i386
+>> CC=clang HOSTCC=clang -j56
 >>
->> Sorry for the last minute change, did not realize the HW implications.
->>
->> I see this as a future extension due to limited testing, 
 > 
-> I'm wondering how we deal with:
-> (1) old userspace that won't fill the new private_data field in
-> page_response. A new kernel still has to support it.
-> (2) old kernel that won't recognize the new PRIVATE_DATA flag. Currently
-> iommu_page_response() rejects page responses with unknown flags.
+> See below for the patch I am using locally to work around this.
+> That patch is probably wrong, so I have not submitted it yet, but it
+> gives you a clean build ;-)
 > 
-> I guess we'll need a two-way negotiation, where userspace queries
-> whether the kernel supports the flag (2), and the kernel learns whether
-> it should expect the private data to come back (1).
+>      Arnd
 > 
->> perhaps for
->> now, can you add paddings similar to page request? Make it 64B as well.
-> 
-> I don't think padding is necessary, because iommu_page_response is sent
-> by userspace to the kernel, unlike iommu_fault which is allocated by
-> userspace and filled by the kernel.
-> 
-> Page response looks a lot more like existing VFIO mechanisms, so I
-> suppose we'll wrap the iommu_page_response structure and include an
-> argsz parameter at the top:
-> 
-> 	struct vfio_iommu_page_response {
-> 		u32 argsz;
-> 		struct iommu_page_response pr;
-> 	};
-> 
-> 	struct vfio_iommu_page_response vpr = {
-> 		.argsz = sizeof(vpr),
-> 		.pr = ...
-> 		...
-> 	};
-> 
-> 	ioctl(devfd, VFIO_IOMMU_PAGE_RESPONSE, &vpr);
-> 
-> In that case supporting private data can be done by simply appending a
-> field at the end (plus the negotiation above).
 
-Sorry I did not quite follow the spurious response discussion but I just
-noticed we still do have, upstream, in
-iommu_unregister_device_fault_handler:
+Thank you, I will give it a go :-)
 
-	/* we cannot unregister handler if there are pending faults */
-	if (!list_empty(&param->fault_param->faults)) {
-		ret = -EBUSY;
-		goto unlock;
-	}
-
-So did you eventually decide to let
-iommu_unregister_device_fault_handler fail or is an oversight?
-
-Thanks
-
-Eric
-
-
+> 8<---
+> Subject: [PATCH] x86: percpu: fix clang 32-bit build
 > 
-> Thanks,
-> Jean
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> clang does not like an inline assembly with a "=q" contraint for
+> a 64-bit output:
 > 
+> arch/x86/events/perf_event.h:824:21: error: invalid output size for
+> constraint '=q'
+>         u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+>                            ^
+> include/linux/percpu-defs.h:447:2: note: expanded from macro '__this_cpu_read'
+>         raw_cpu_read(pcp);                                              \
+>         ^
+> include/linux/percpu-defs.h:421:28: note: expanded from macro 'raw_cpu_read'
+>  #define raw_cpu_read(pcp)
+> __pcpu_size_call_return(raw_cpu_read_, pcp)
+>                                         ^
+> include/linux/percpu-defs.h:322:23: note: expanded from macro
+> '__pcpu_size_call_return'
+>         case 1: pscr_ret__ = stem##1(variable); break;                  \
+>                              ^
+> <scratch space>:357:1: note: expanded from here
+> raw_cpu_read_1
+> ^
+> arch/x86/include/asm/percpu.h:394:30: note: expanded from macro 'raw_cpu_read_1'
+>  #define raw_cpu_read_1(pcp)             percpu_from_op(, "mov", pcp)
+>                                         ^
+> arch/x86/include/asm/percpu.h:189:15: note: expanded from macro 'percpu_from_op'
+>                     : "=q" (pfo_ret__)                  \
+>                             ^
+> 
+> According to the commit that introduced the "q" constraint, this was
+> needed to fix miscompilation, but it gives no further detail.
+> 
+> Using the normal "=r" constraint seems to work so far.
+> 
+> Fixes: 3c598766a2ba ("x86: fix percpu_{to,from}_op()")
+> Cc: Jan Beulich <jbeulich@suse.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+> index 2278797c769d..e791fbf4018f 100644
+> --- a/arch/x86/include/asm/percpu.h
+> +++ b/arch/x86/include/asm/percpu.h
+> @@ -99,7 +99,7 @@ do {                                                  \
+>         case 1:                                         \
+>                 asm qual (op "b %1,"__percpu_arg(0)     \
+>                     : "+m" (var)                        \
+> -                   : "qi" ((pto_T__)(val)));           \
+> +                   : "ri" ((pto_T__)(val)));           \
+>                 break;                                  \
+>         case 2:                                         \
+>                 asm qual (op "w %1,"__percpu_arg(0)     \
+> @@ -144,7 +144,7 @@ do {
+>                          \
+>                 else                                                    \
+>                         asm qual ("addb %1, "__percpu_arg(0)            \
+>                             : "+m" (var)                                \
+> -                           : "qi" ((pao_T__)(val)));                   \
+> +                           : "ri" ((pao_T__)(val)));                   \
+>                 break;                                                  \
+>         case 2:                                                         \
+>                 if (pao_ID__ == 1)                                      \
+> @@ -186,7 +186,7 @@ do {
+>                          \
+>         switch (sizeof(var)) {                          \
+>         case 1:                                         \
+>                 asm qual (op "b "__percpu_arg(1)",%0"   \
+> -                   : "=q" (pfo_ret__)                  \
+> +                   : "=r" (pfo_ret__)                  \
+>                     : "m" (var));                       \
+>                 break;                                  \
+>         case 2:                                         \
+> @@ -215,7 +215,7 @@ do {
+>                          \
+>         switch (sizeof(var)) {                          \
+>         case 1:                                         \
+>                 asm(op "b "__percpu_arg(P1)",%0"        \
+> -                   : "=q" (pfo_ret__)                  \
+> +                   : "=r" (pfo_ret__)                  \
+>                     : "p" (&(var)));                    \
+>                 break;                                  \
+>         case 2:                                         \
+> 
+
+-- 
+Regards,
+Vincenzo
