@@ -2,119 +2,277 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C286C71142
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6880C71142
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0101521537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7680920863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTp8ixgA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApmKnjpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfGKRV0 (ORCPT
+        id S1728878AbfGKRZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:21:26 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:49511 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGKRV0 (ORCPT
+        Thu, 11 Jul 2019 13:25:31 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34197 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGKRZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:21:26 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 145so3815991pfw.16
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:21:25 -0700 (PDT)
+        Thu, 11 Jul 2019 13:25:30 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b29so4621864lfq.1;
+        Thu, 11 Jul 2019 10:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=gOacuLj0WmQfTM/SGEvRKG9q+2Su5RYWQ+JdbWVt3D8=;
-        b=cTp8ixgA+Kq+0b/GvRG1DaYUMqAOi0uzKAp3ZHgjTG+9KeOcBd3L6FCnaC+ciWqBLA
-         AO43ikFBO228cCtYMrbmPSDZjvuSAajl5HC1fkquebNOuwy+AoCnK6oPzeNGbHq30as5
-         9D0Ts9pef0nwZ4Py8edQHAI+EAnA97rkIEQ7TcU5cqnHVHtKZ8XAmNkoXTGgmfWcboo9
-         yeiCTAknlCHZitm544zQ1/sIUDVDEl7TtcfVDLxMj2ynIDMBNUVcjw5gpis+3kNkcHEJ
-         THg3gFOAcLLdfBsai3GocaCWIyXF4Uh2yk91iUbMh+36Axne/8HFOe+CNmWjFPvP3yWu
-         QNNg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2YMfHUBjXHpo+j06pyniNllvZMRnbJcOo4hnaLC71sE=;
+        b=ApmKnjpVGrYMZYw9nmXLaN19GMQAPjPv7W7548PsMxVOiIztXhPoNpajU9makN5x2H
+         OU0g1aGH+1kMbq6R3KOSnFMvkR8XhQ2jFY2cP+EMCN/4OFxDNNoOwETRn6/Xy+NtZtX4
+         YKd4yvHwa1C/idpQfxRbeKHt3PemDXwQi4pah8oRvYDoaKqVfPRMzg0UDVwEfg5k4mUN
+         mDTv06DQjk2qoQ+t7NqHgN5e1oupNpskmuphiTmuBMeSlkwl8o6yFHkJAk5PuqFp0gHM
+         aTgj3TNmg6D7mj6G4ID7Ezg4KvEfhTp/OlYXv/nFMYo3JEp4+AtKyQmtxC3zmv1PZApN
+         IqIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=gOacuLj0WmQfTM/SGEvRKG9q+2Su5RYWQ+JdbWVt3D8=;
-        b=cFkZ2/+yyestwGM+k95XxQ2k7febtXwtBHd2aXnHUjvZe5+2SZo9KnJrLqj37ylz4b
-         OE2+WAQDnz4xjtqSaP9lVZJ4F1eX6mAmNVKlp+3eagD2Doe4vl5E8hdEHcscmIrLufpP
-         wrTsL86SEBIq2MC9KFqgkSycGSwCTYa5w03+TWLMvlwE+WNhAnxhrDCPX92ynuaDL2iV
-         CIHhwsXEtPDjbEt+/pOM6b7qKbr4iavGiI1h9m3jdoUyyoG44Q2KvOYsOBYLqJvo8E5n
-         PTxPTpdinURo2wLMuME/U5HWnnQTlguhp/TjU8/wtKe+8BLSs2yxBBlvirE1/TMW8vg7
-         RiaA==
-X-Gm-Message-State: APjAAAVEwaBLpfdi3VGFNRU6KUm6aKQKx2yS52Tv8dlI/SzVy53Xnr+4
-        nMxG7/sYETnvpQUK8492AGFe91jQ
-X-Google-Smtp-Source: APXvYqySNEvzt3pchVvgZJaCc430HruosxTXOgSSdHRm1JJwIN0uxmQV/e0uSNM6TNTT1KA7dVMAtE7P
-X-Received: by 2002:a63:1b07:: with SMTP id b7mr5486155pgb.133.1562865685025;
- Thu, 11 Jul 2019 10:21:25 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 10:21:19 -0700
-Message-Id: <20190711172119.236501-1-nums@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] Fix perf stat repeat segfault
-From:   Numfor Mbiziwo-Tiapo <nums@google.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com
-Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com, Numfor Mbiziwo-Tiapo <nums@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2YMfHUBjXHpo+j06pyniNllvZMRnbJcOo4hnaLC71sE=;
+        b=luE1FzP7fw951kVwYtvGw391QaIPfWDy6yMp5SznCzF8GaGtUDHD5M+BH0Uhbi9WAI
+         IZzo8KYEX/0lJKUOKnJrKsI8HC4LAI99wqCSorLGNn6kv1xsU2z0exhQndJ8gr6eMPCs
+         DDmd/mLT3z6I1I0CxArymII0UblBRnOoYg2spXFni8QbQC6aZu+Ah/w6GwZ+SRSVf/NK
+         A7cfS6AgT+KNlb3/GadnhseUiQZmPC8S2gZoSQjl58LRjHLy5QASMvJ/ANCCUJw9k/Z2
+         DIFf+3oZR58oFCMDmnIEiqV+UfDHeAlOIvbYYjSet6Exbkujf/Wu5PmDfCkUY0G/fnz9
+         l0iQ==
+X-Gm-Message-State: APjAAAUBI6g4wTozkiQscO5gs9rqK41juFEEnxWH1MG/+xWPdxkS3jfS
+        b9WQYCD0V5ng9+qJw+kFgLLBBPmo
+X-Google-Smtp-Source: APXvYqzfDDUhalkCcqE0q9tb+NTPSe5zxtMtKXFg82as9QK71ou16O9M+55H/j8aZ6Ikhc++VBbZ9A==
+X-Received: by 2002:ac2:52b7:: with SMTP id r23mr2490854lfm.120.1562865927145;
+        Thu, 11 Jul 2019 10:25:27 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id b1sm1084553ljj.26.2019.07.11.10.25.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 10:25:26 -0700 (PDT)
+Subject: Re: [PATCH v2 2/6] ARM: tegra: Expose functions required for cpuidle
+ driver
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190711031312.10038-1-digetx@gmail.com>
+ <20190711031312.10038-3-digetx@gmail.com>
+ <bc6e96be-91ee-5d94-cbc2-46d2e2f25bce@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <514c1cd6-2180-b55f-dacc-f0e08d9a366f@gmail.com>
+Date:   Thu, 11 Jul 2019 20:25:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <bc6e96be-91ee-5d94-cbc2-46d2e2f25bce@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When perf stat is called with event groups and the repeat option,
-a segfault occurs because the cpu ids are stored on each iteration
-of the repeat, when they should only be stored on the first iteration,
-which causes a buffer overflow.
+11.07.2019 15:42, Jon Hunter пишет:
+> 
+> On 11/07/2019 04:13, Dmitry Osipenko wrote:
+>> The upcoming unified CPUIDLE driver will be added to the drivers/cpuidle/
+>> directory and it will require all these Tegra PM-core functions.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  arch/arm/mach-tegra/Makefile  |  2 +-
+>>  arch/arm/mach-tegra/platsmp.c |  2 --
+>>  arch/arm/mach-tegra/pm.c      | 16 +++++++---------
+>>  arch/arm/mach-tegra/pm.h      |  3 ---
+>>  arch/arm/mach-tegra/sleep.h   |  1 -
+>>  include/linux/clk/tegra.h     | 13 +++++++++++++
+>>  include/soc/tegra/pm.h        | 28 ++++++++++++++++++++++++++++
+>>  7 files changed, 49 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+>> index 5d93a0b36866..27bd5d9865e3 100644
+>> --- a/arch/arm/mach-tegra/Makefile
+>> +++ b/arch/arm/mach-tegra/Makefile
+>> @@ -13,7 +13,7 @@ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= pm-tegra20.o
+>>  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= sleep-tegra30.o
+>>  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= pm-tegra30.o
+>>  obj-$(CONFIG_SMP)			+= platsmp.o
+>> -obj-$(CONFIG_HOTPLUG_CPU)               += hotplug.o
+>> +obj-y					+= hotplug.o
+>>  
+>>  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= sleep-tegra30.o
+>>  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= pm-tegra30.o
+>> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+>> index e6911a14c096..c8a63719a143 100644
+>> --- a/arch/arm/mach-tegra/platsmp.c
+>> +++ b/arch/arm/mach-tegra/platsmp.c
+>> @@ -183,8 +183,6 @@ const struct smp_operations tegra_smp_ops __initconst = {
+>>  	.smp_prepare_cpus	= tegra_smp_prepare_cpus,
+>>  	.smp_secondary_init	= tegra_secondary_init,
+>>  	.smp_boot_secondary	= tegra_boot_secondary,
+>> -#ifdef CONFIG_HOTPLUG_CPU
+>>  	.cpu_kill		= tegra_cpu_kill,
+>>  	.cpu_die		= tegra_cpu_die,
+>> -#endif
+>>  };
+>> diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+>> index 6aaacb5757e1..f9c9bce9e15d 100644
+>> --- a/arch/arm/mach-tegra/pm.c
+>> +++ b/arch/arm/mach-tegra/pm.c
+>> @@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
+>>  	spin_unlock(&tegra_lp2_lock);
+>>  }
+>>  
+>> -bool tegra_set_cpu_in_lp2(void)
+>> +void tegra_set_cpu_in_lp2(void)
+>>  {
+>>  	int phy_cpu_id = cpu_logical_map(smp_processor_id());
+>> -	bool last_cpu = false;
+>> -	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
+>>  	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
+>>  
+>>  	spin_lock(&tegra_lp2_lock);
+>> @@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
+>>  	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
+>>  	*cpu_in_lp2 |= BIT(phy_cpu_id);
+>>  
+>> -	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
+>> -		last_cpu = true;
+>> -
+>>  	spin_unlock(&tegra_lp2_lock);
+>> -	return last_cpu;
+>>  }
+> 
+> I think that the commit message should describe what is going on here or
+> this should be a separate change.
 
-This can be replicated by running (from the tip directory):
+Indeed, it could be not very obvious what's going on here without a
+thorough review. I'll factor out all these minor changes into separate
+commits.
 
-make -C tools/perf
+In particular there is no need to know whether CPU is the "last_cpu" for
+the new driver because CPU0 is always the "last" since it awaits for the
+secondaries in the coupled state.
 
-then running:
+>>  static int tegra_sleep_cpu(unsigned long v2p)
+>> @@ -195,14 +189,16 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
+>>  	tegra_pmc_enter_suspend_mode(mode);
+>>  }
+>>  
+>> -void tegra_idle_lp2_last(void)
+>> +int tegra_idle_lp2_last(void)
+>>  {
+>> +	int err;
+>> +
+>>  	tegra_pm_set(TEGRA_SUSPEND_LP2);
+>>  
+>>  	cpu_cluster_pm_enter();
+>>  	suspend_cpu_complex();
+>>  
+>> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+>> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+>>  
+>>  	/*
+>>  	 * Resume L2 cache if it wasn't re-enabled early during resume,
+>> @@ -214,6 +210,8 @@ void tegra_idle_lp2_last(void)
+>>  
+>>  	restore_cpu_complex();
+>>  	cpu_cluster_pm_exit();
+>> +
+>> +	return err;
+>>  }
+>>  
+>>  enum tegra_suspend_mode tegra_pm_validate_suspend_mode(
+>> diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
+>> index 1e51a9b636eb..81525f5f4a44 100644
+>> --- a/arch/arm/mach-tegra/pm.h
+>> +++ b/arch/arm/mach-tegra/pm.h
+>> @@ -23,9 +23,6 @@ void tegra20_sleep_core_init(void);
+>>  void tegra30_lp1_iram_hook(void);
+>>  void tegra30_sleep_core_init(void);
+>>  
+>> -void tegra_clear_cpu_in_lp2(void);
+>> -bool tegra_set_cpu_in_lp2(void);
+>> -void tegra_idle_lp2_last(void);
+>>  extern void (*tegra_tear_down_cpu)(void);
+>>  
+>>  #ifdef CONFIG_PM_SLEEP
+>> diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
+>> index d219872b7546..0d9956e9a8ea 100644
+>> --- a/arch/arm/mach-tegra/sleep.h
+>> +++ b/arch/arm/mach-tegra/sleep.h
+>> @@ -124,7 +124,6 @@ void tegra30_hotplug_shutdown(void);
+>>  #endif
+>>  
+>>  void tegra20_tear_down_cpu(void);
+>> -int tegra30_sleep_cpu_secondary_finish(unsigned long);
+>>  void tegra30_tear_down_cpu(void);
+>>  
+>>  #endif
+>> diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
+>> index b8aef62cc3f5..cf0f2cb5e109 100644
+>> --- a/include/linux/clk/tegra.h
+>> +++ b/include/linux/clk/tegra.h
+>> @@ -108,6 +108,19 @@ static inline void tegra_cpu_clock_resume(void)
+>>  
+>>  	tegra_cpu_car_ops->resume();
+>>  }
+>> +#else
+>> +static inline bool tegra_cpu_rail_off_ready(void)
+>> +{
+>> +	return false;
+>> +}
+>> +
+>> +static inline void tegra_cpu_clock_suspend(void)
+>> +{
+>> +}
+>> +
+>> +static inline void tegra_cpu_clock_resume(void)
+>> +{
+>> +}
+>>  #endif
+>>  
+>>  extern void tegra210_xusb_pll_hw_control_enable(void);
+>> diff --git a/include/soc/tegra/pm.h b/include/soc/tegra/pm.h
+>> index 951fcd738d55..fa18c2df5028 100644
+>> --- a/include/soc/tegra/pm.h
+>> +++ b/include/soc/tegra/pm.h
+>> @@ -20,6 +20,12 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode);
+>>  
+>>  /* low-level resume entry point */
+>>  void tegra_resume(void);
+>> +
+>> +int tegra30_sleep_cpu_secondary_finish(unsigned long arg);
+>> +void tegra_clear_cpu_in_lp2(void);
+>> +void tegra_set_cpu_in_lp2(void);
+>> +int tegra_idle_lp2_last(void);
+>> +void tegra_cpu_die(unsigned int cpu);
+>>  #else
+>>  static inline enum tegra_suspend_mode
+>>  tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
+>> @@ -30,6 +36,28 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
+>>  static inline void tegra_resume(void)
+>>  {
+>>  }
+>> +
+>> +static inline int tegra30_sleep_cpu_secondary_finish(unsigned long arg)
+>> +{
+>> +	return -1;
+>> +}
+> 
+> -ENOTSUPP?
 
-tools/perf/perf stat -e '{cycles,instructions}' -r 10 ls
-
-Since run_idx keeps track of the current iteration of the repeat,
-only storing the cpu ids on the first iteration (when run_idx < 1)
-fixes this issue.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
----
- tools/perf/builtin-stat.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 63a3afc7f32b..00a13ce17fd9 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -378,9 +378,10 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
- 	workload_exec_errno = info->si_value.sival_int;
- }
- 
--static bool perf_evsel__should_store_id(struct perf_evsel *counter)
-+static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
- {
--	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
-+	return (STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID)
-+		&& run_idx < 1;
- }
- 
- static bool is_target_alive(struct target *_target,
-@@ -503,7 +504,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		if (l > stat_config.unit_width)
- 			stat_config.unit_width = l;
- 
--		if (perf_evsel__should_store_id(counter) &&
-+		if (perf_evsel__should_store_id(counter, run_idx) &&
- 		    perf_evsel__store_ids(counter, evsel_list))
- 			return -1;
- 	}
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+Good point, thanks!
