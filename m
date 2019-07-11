@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D715C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397C9C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4604821670
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4AD21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PEK1VY+3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LYEr+9/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbfGKO2S (ORCPT
+        id S1728978AbfGKO2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:28:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37756 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728926AbfGKO2P (ORCPT
+        Thu, 11 Jul 2019 10:28:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39982 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbfGKO2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:28:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEO8vO001464;
-        Thu, 11 Jul 2019 14:26:48 GMT
+        Thu, 11 Jul 2019 10:28:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEOGvb100511;
+        Thu, 11 Jul 2019 14:27:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=2d2Yv2y5zLW9fLZ4ZOO2tadSx6yS9UU2pD1uUkqP2I4=;
- b=PEK1VY+3UVMeYt+RB002bYINLbdCxWtdVaXXuLcUErNmdDVQeXpj0b9OMDpmCIqqZa4Y
- 9PvB0Lnb9b0uhxGmrMFXcR44+qa8LQlt1HNPX0Dv/WgAESNOrwyxaWcdUWdyw5aYvMo9
- 6hMEg+A/C1vRmGh2CVcZaeUmibNGRM+Z0ynXpbec7GOZxoWF9wbcV+Bk5OzwKInmLI0/
- 2E7YCwLLpvnIvEy49dwDdr51/iqNr/GOk+NSxBuovD4OQOPclLfLK8Qy+EAEEUquuZ8L
- HADMT7wC0JoiunyhO1kAnDjpVZAnFUxpCSF1OfqJMoGYFOwX+PMYYSzDX1GbCZ5/xKmc PQ== 
+ bh=R7Xfip06p699muIVGHbRVSpcUyRHanu29pNDIpaJD54=;
+ b=LYEr+9/uvSyvI7OVyk9UP5FJcmH4YzsINobd9Ws4d1Sn7zQRqsU665EFWo2tRiz/cBWH
+ TQPi+azMpPQ50ca6ZxpYu/g0a8JuwQaUyBMwUTLzLIprNNem/R910eIUU8P5Bv98N3Zz
+ VQLKGIpKXFE80COh/4g3j2DCRhhYcgvjn2KBcjXSAHnxcqRegfAAZE4hnlxbfYZgQOEd
+ YTBZwZfCqCbfS+eDaW7yYwGctCL21NUDe7ydmDXBTvwj7gQ1BR2oLXZZ5z2nmPV3Av6O
+ uW3d4XWaCBCFsg3LcCI9MxRw/Tgth3Gipeew1Xr8UIl8LL6WLVneXw3ZkgDZG2ZEH0Xh 4A== 
 Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2tjk2u0e24-1
+        by aserp2120.oracle.com with ESMTP id 2tjkkq0cdp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 14:26:48 +0000
+        Thu, 11 Jul 2019 14:27:02 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcuC021444;
-        Thu, 11 Jul 2019 14:26:44 GMT
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcuF021444;
+        Thu, 11 Jul 2019 14:26:53 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,9 +50,9 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
         rppt@linux.vnet.ibm.com, alexandre.chartre@oracle.com
-Subject: [RFC v2 19/26] mm/asi: Add option to map RCU data
-Date:   Thu, 11 Jul 2019 16:25:31 +0200
-Message-Id: <1562855138-19507-20-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC v2 22/26] KVM: x86/asi: Introduce address_space_isolation module parameter
+Date:   Thu, 11 Jul 2019 16:25:34 +0200
+Message-Id: <1562855138-19507-23-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
@@ -67,57 +67,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an option to map RCU data when creating an ASI. This will map
-the percpu rcu_data (which is not exported by the kernel), and
-allow ASI to use RCU without faulting.
+From: Liran Alon <liran.alon@oracle.com>
 
+Add the address_space_isolation parameter to the kvm module.
+
+When set to true, KVM #VMExit handlers run in isolated address space
+which maps only KVM required code and per-VM information instead of
+entire kernel address space.
+
+This mechanism is meant to mitigate memory-leak side-channels CPU
+vulnerabilities (e.g. Spectre, L1TF and etc.) but can also be viewed
+as security in-depth as it also helps generically against info-leaks
+vulnerabilities in KVM #VMExit handlers and reduce the available
+gadgets for ROP attacks.
+
+This is set to false by default because it incurs a performance hit
+which some users will not want to take for security gain.
+
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/include/asm/asi.h |    1 +
- arch/x86/mm/asi.c          |    4 ++++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+ arch/x86/kvm/Makefile        |    3 ++-
+ arch/x86/kvm/vmx/isolation.c |   26 ++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 1 deletions(-)
+ create mode 100644 arch/x86/kvm/vmx/isolation.c
 
-diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-index a277e43..8199618 100644
---- a/arch/x86/include/asm/asi.h
-+++ b/arch/x86/include/asm/asi.h
-@@ -18,6 +18,7 @@
- #define ASI_MAP_STACK_CANARY	0x01	/* map stack canary */
- #define ASI_MAP_CPU_PTR		0x02	/* for get_cpu_var()/this_cpu_ptr() */
- #define ASI_MAP_CURRENT_TASK	0x04	/* map the current task */
-+#define ASI_MAP_RCU_DATA	0x08	/* map rcu data */
+diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+index 31ecf7a..71579ed 100644
+--- a/arch/x86/kvm/Makefile
++++ b/arch/x86/kvm/Makefile
+@@ -12,7 +12,8 @@ kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
+ 			   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
+ 			   hyperv.o page_track.o debugfs.o
  
- enum page_table_level {
- 	PGT_LEVEL_PTE,
-diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-index acd1135..20c23dc 100644
---- a/arch/x86/mm/asi.c
-+++ b/arch/x86/mm/asi.c
-@@ -7,6 +7,7 @@
+-kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
++kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o \
++			   vmx/evmcs.o vmx/nested.o vmx/isolation.o
+ kvm-amd-y		+= svm.o pmu_amd.o
  
- #include <linux/export.h>
- #include <linux/gfp.h>
-+#include <linux/irq_work.h>
- #include <linux/mm.h>
- #include <linux/printk.h>
- #include <linux/sched/debug.h>
-@@ -16,6 +17,8 @@
- #include <asm/bug.h>
- #include <asm/mmu_context.h>
- 
-+#include "../../../kernel/rcu/tree.h"
+ obj-$(CONFIG_KVM)	+= kvm.o
+diff --git a/arch/x86/kvm/vmx/isolation.c b/arch/x86/kvm/vmx/isolation.c
+new file mode 100644
+index 0000000..e25f663
+--- /dev/null
++++ b/arch/x86/kvm/vmx/isolation.c
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
++ *
++ * KVM Address Space Isolation
++ */
 +
- /* ASI sessions, one per cpu */
- DEFINE_PER_CPU_PAGE_ALIGNED(struct asi_session, cpu_asi_session);
- 
-@@ -29,6 +32,7 @@ struct asi_map_option asi_map_percpu_options[] = {
- 	{ ASI_MAP_STACK_CANARY, &fixed_percpu_data, sizeof(fixed_percpu_data) },
- 	{ ASI_MAP_CPU_PTR, &this_cpu_off, sizeof(this_cpu_off) },
- 	{ ASI_MAP_CURRENT_TASK, &current_task, sizeof(current_task) },
-+	{ ASI_MAP_RCU_DATA, &rcu_data, sizeof(rcu_data) },
- };
- 
- static void asi_log_fault(struct asi *asi, struct pt_regs *regs,
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++
++/*
++ * When set to true, KVM #VMExit handlers run in isolated address space
++ * which maps only KVM required code and per-VM information instead of
++ * entire kernel address space.
++ *
++ * This mechanism is meant to mitigate memory-leak side-channels CPU
++ * vulnerabilities (e.g. Spectre, L1TF and etc.) but can also be viewed
++ * as security in-depth as it also helps generically against info-leaks
++ * vulnerabilities in KVM #VMExit handlers and reduce the available
++ * gadgets for ROP attacks.
++ *
++ * This is set to false by default because it incurs a performance hit
++ * which some users will not want to take for security gain.
++ */
++static bool __read_mostly address_space_isolation;
++module_param(address_space_isolation, bool, 0444);
 -- 
 1.7.1
 
