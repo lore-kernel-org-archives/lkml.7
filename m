@@ -2,339 +2,159 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E559FC74A48
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D04C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C78208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WlnY5o6j"
+	by mail.kernel.org (Postfix) with ESMTP id 3A9CC208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfGKGMN (ORCPT
+        id S1727898AbfGKGSA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 02:12:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38392 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbfGKGMN (ORCPT
+        Thu, 11 Jul 2019 02:18:00 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:53143 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725963AbfGKGSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 02:12:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y15so2235442pfn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 23:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JjqHcbw1pBSBh/+FK6Hlik7p5Jx5rbYg1s03r+OqIc8=;
-        b=WlnY5o6jeAXhGiTNM8EnDcCVY8zQ1H9zLtceVVstwXNhXlV5X0m23PfB+cpXNrgQ8R
-         R7/c2qpu9RoNLhCKEfqPf4/kB9UmbGt51t+y2Foo4N0HeRYc3kpRjPADueRI9nmiGuZk
-         ToZYAf/7ovTvU3z6a5V3p/lcID19SFTpcHOeEN5H4ooYTOlxcj4xdKOrzR7BVdbE8IcM
-         7mHeO2ynBmvJtQws51pv6DmxTR0xseAyoP6BmctBSlsKAkoNZ+FamDWNq3ST2c8nXijH
-         aSpz6v507yUKkHI4/c1w2IF8aG1F4r/uls076FEDfd0BmSkvZP11fN3vIsXTR9LFvUUJ
-         du4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JjqHcbw1pBSBh/+FK6Hlik7p5Jx5rbYg1s03r+OqIc8=;
-        b=ou6dOhQz5Yhyq+YHdWb9Puxs8zTTguqJhbtvHBrUKTpFSVs3mVeFOkH8dmUF1ZD/HJ
-         y5XPlliPx8jwHR0gAKuc9fPYNyujNY6mx8OK4E04/hP85h1cxgk7wMDecmWs3thgAOGf
-         H6R7uy4+iVrzx6pg4n8QJbVmtDc9otd0FiOokyedFgYAJnYG8IXc0B3xHEtQHSP+Bkz5
-         P6oDQcbtV21kJRi28XVHxGdbtt9KDbbdXran5lE49i44X6ODbA28FQerP6DDoDfP3MPI
-         DTKHqZ7XWahyB5Okg/NJZ58S27iTNz1Jyp9TQ0LMm0K7BUj2ewQBL+Kum5fApD3nxnKV
-         alxA==
-X-Gm-Message-State: APjAAAWqG4GyAIvP+wDaJKR1RyFG/mo0zd1Paix5LGSqhzzPQRPS9EJU
-        aFMCachJ68AgF97vjAskGotGXQ==
-X-Google-Smtp-Source: APXvYqz+IRV9S4TRQfHzUTKweyyIYhjBuXJS09c+P73+ly5nwrMQwJz65cCIaPtXDlwqg4j/e9ltdg==
-X-Received: by 2002:a17:90a:2244:: with SMTP id c62mr2872730pje.29.1562825531957;
-        Wed, 10 Jul 2019 23:12:11 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id m9sm6449631pgr.24.2019.07.10.23.12.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 23:12:10 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 11:42:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Subject: Re: [PATCHv3 6/6] drivers/cpufreq: Add a CPUFreq driver for AMD
- processors (Fam17h and later)
-Message-ID: <20190711061208.yqxt4ps67vmsy7sp@vireshk-i7>
-References: <cover.1562781484.git.Janakarajan.Natarajan@amd.com>
- <e48c6b836f996a16472c777612f1e3343c542077.1562781484.git.Janakarajan.Natarajan@amd.com>
+        Thu, 11 Jul 2019 02:18:00 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 17214061-1500050 
+        for multiple; Thu, 11 Jul 2019 07:17:55 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e48c6b836f996a16472c777612f1e3343c542077.1562781484.git.Janakarajan.Natarajan@amd.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8BIT
+To:     Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20190710225720.58246f8e@oasis.local.home>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190614093914.58f41d8f@gandalf.local.home>
+ <156052491337.7796.17642747687124632554@skylake-alporthouse-com>
+ <20190614153837.GE538958@devbig004.ftw2.facebook.com>
+ <20190710225720.58246f8e@oasis.local.home>
+Message-ID: <156282587317.12280.11217721447100506162@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [BUG] lockdep splat with kernfs lockdep annotations and slab mutex from
+ drm patch??
+Date:   Thu, 11 Jul 2019 07:17:53 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-07-19, 18:37, Natarajan, Janakarajan wrote:
-> diff --git a/drivers/cpufreq/amd-cpufreq.c b/drivers/cpufreq/amd-cpufreq.c
-> +#define pr_fmt(fmt)	"AMD Cpufreq: " fmt
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/cpu.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/acpi.h>
-> +#include <linux/delay.h>
+Quoting Steven Rostedt (2019-07-11 03:57:20)
+> On Fri, 14 Jun 2019 08:38:37 -0700
+> Tejun Heo <tj@kernel.org> wrote:
+> 
+> > Hello,
+> > 
+> > On Fri, Jun 14, 2019 at 04:08:33PM +0100, Chris Wilson wrote:
+> > > #ifdef CONFIG_MEMCG
+> > >         if (slab_state >= FULL && err >= 0 && is_root_cache(s)) {
+> > >                 struct kmem_cache *c;
+> > > 
+> > >                 mutex_lock(&slab_mutex);
+> > > 
+> > > so it happens to hit the error + FULL case with the additional slabcaches?
+> > > 
+> > > Anyway, according to lockdep, it is dangerous to use the slab_mutex inside
+> > > slab_attr_store().  
+> > 
+> > Didn't really look into the code but it looks like slab_mutex is held
+> > while trying to remove sysfs files.  sysfs file removal flushes
+> > on-going accesses, so if a file operation then tries to grab a mutex
+> > which is held during removal, it leads to a deadlock.
+> > 
+> 
+> Looks like this never got fixed and now this bug is in 5.2.
 
-Please keep them in alphabetical order.
+git blame gives
 
-> +
-> +#include <asm/unaligned.h>
-> +
-> +#include <acpi/cppc_acpi.h>
-> +
-> +struct amd_desc {
-> +	int cpu_id;
-> +	struct cppc_ctrls ctrls;
-> +	struct kobject kobj;
-> +};
-> +
-> +struct amd_desc **all_cpu_data;
-> +
-> +static unsigned int cppc_enable;
-> +module_param(cppc_enable, uint, 0644);
-> +MODULE_PARM_DESC(cppc_enable,
-> +		 "1 - enable AMD CpuFreq, create CPPC sysfs entries.");
-> +
-> +#define to_amd_desc(a) container_of(a, struct amd_desc, kobj)
-> +
-> +#define show_func(access_fn, struct_name, member_name)			\
-> +	static ssize_t show_##member_name(struct kobject *kobj,		\
-> +					  struct kobj_attribute *attr,	\
-> +					  char *buf)			\
-> +	{								\
-> +		struct amd_desc *desc = to_amd_desc(kobj);		\
-> +		struct struct_name st_name = {0};			\
-> +		int ret;						\
-> +									\
-> +		ret = access_fn(desc->cpu_id, &st_name);		\
-> +		if (ret)						\
-> +			return ret;					\
-> +									\
-> +		return scnprintf(buf, PAGE_SIZE, "%llu\n",		\
-> +				 (u64)st_name.member_name);		\
-> +	}								\
-> +
-> +#define store_func(struct_name, member_name, reg_idx)			\
-> +	static ssize_t store_##member_name(struct kobject *kobj,	\
-> +					   struct kobj_attribute *attr,	\
-> +					   const char *buf, size_t count)\
-> +	{								\
-> +		struct amd_desc *desc = to_amd_desc(kobj);		\
-> +		struct struct_name st_name = {0};			\
-> +		u32 val;						\
-> +		int ret;						\
-> +									\
-> +		ret = kstrtou32(buf, 0, &val);				\
-> +		if (ret)						\
-> +			return ret;					\
-> +									\
-> +		st_name.member_name = val;				\
-> +									\
-> +		ret = cppc_set_reg(desc->cpu_id, &st_name, reg_idx);	\
-> +		if (ret)						\
-> +			return ret;					\
-> +									\
-> +		return count;						\
-> +	}								\
-> +
-> +#define define_one_rw(struct_name, access_fn, member_name, reg_idx)	\
-> +	show_func(access_fn, struct_name, member_name)			\
-> +	store_func(struct_name, member_name, reg_idx)			\
-> +	define_one_global_rw(member_name)
-> +
-> +define_one_rw(cppc_ctrls, cppc_get_ctrls, enable, ENABLE);
-> +define_one_rw(cppc_ctrls, cppc_get_ctrls, max_perf, MAX_PERF);
-> +define_one_rw(cppc_ctrls, cppc_get_ctrls, min_perf, MIN_PERF);
-> +define_one_rw(cppc_ctrls, cppc_get_ctrls, desired_perf, DESIRED_PERF);
-> +define_one_rw(cppc_ctrls, cppc_get_ctrls, auto_sel_enable, AUTO_SEL_ENABLE);
-> +
-> +static struct attribute *amd_cpufreq_attributes[] = {
-> +	&enable.attr,
-> +	&max_perf.attr,
-> +	&min_perf.attr,
-> +	&desired_perf.attr,
-> +	&auto_sel_enable.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group amd_cpufreq_attr_group = {
-> +	.attrs = amd_cpufreq_attributes,
-> +};
-> +
-> +static struct kobj_type amd_cpufreq_type = {
-> +	.sysfs_ops = &kobj_sysfs_ops,
-> +	.default_attrs = amd_cpufreq_attributes,
-> +};
-> +
-> +static int amd_cpufreq_cpu_init(struct cpufreq_policy *policy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int amd_cpufreq_cpu_exit(struct cpufreq_policy *policy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int amd_cpufreq_cpu_verify(struct cpufreq_policy *policy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int amd_cpufreq_cpu_target_index(struct cpufreq_policy *policy,
-> +					unsigned int index)
-> +{
-> +	return 0;
-> +}
+commit 107dab5c92d5f9c3afe962036e47c207363255c7
+Author: Glauber Costa <glommer@parallels.com>
+Date:   Tue Dec 18 14:23:05 2012 -0800
 
-All empty helpers ? There is nothing you need to do ?
+    slub: slub-specific propagation changes
 
-> +
-> +static struct cpufreq_driver amd_cpufreq_driver = {
-> +	.name = "amd_cpufreq",
-> +	.init = amd_cpufreq_cpu_init,
-> +	.exit = amd_cpufreq_cpu_exit,
-> +	.verify = amd_cpufreq_cpu_verify,
-> +	.target_index = amd_cpufreq_cpu_target_index,
-> +};
-> +
-> +static void amd_cpufreq_sysfs_delete_params(void)
-> +{
-> +	int i;
-> +
-> +	for_each_possible_cpu(i) {
-> +		if (all_cpu_data[i]) {
-> +			kobject_del(&all_cpu_data[i]->kobj);
+for adding the mutex underneath sysfs read, and I think
 
-Shouldn't you use kobject_put() instead of this ?
+commit d50d82faa0c964e31f7a946ba8aba7c715ca7ab0
+Author: Mikulas Patocka <mpatocka@redhat.com>
+Date:   Wed Jun 27 23:26:09 2018 -0700
 
-> +			kfree(all_cpu_data[i]);
-> +		}
-> +	}
-> +
-> +	kfree(all_cpu_data);
-> +}
-> +
-> +static int __init amd_cpufreq_sysfs_expose_params(void)
-> +{
-> +	struct device *cpu_dev;
-> +	int i, ret;
-> +
-> +	all_cpu_data = kcalloc(num_possible_cpus(), sizeof(void *),
-> +			       GFP_KERNEL);
-> +
-> +	if (!all_cpu_data)
-> +		return -ENOMEM;
-> +
-> +	for_each_possible_cpu(i) {
-> +		all_cpu_data[i] = kzalloc(sizeof(struct amd_desc), GFP_KERNEL);
-> +		if (!all_cpu_data[i]) {
-> +			ret = -ENOMEM;
-> +			goto free;
-> +		}
-> +
-> +		all_cpu_data[i]->cpu_id = i;
-> +		cpu_dev = get_cpu_device(i);
-> +		ret = kobject_init_and_add(&all_cpu_data[i]->kobj, &amd_cpufreq_type,
-> +					   &cpu_dev->kobj, "amd_cpufreq");
-> +		if (ret)
-> +			goto free;
-> +	}
-> +
-> +	return 0;
-> +free:
-> +	amd_cpufreq_sysfs_delete_params();
-> +	return ret;
-> +}
+    slub: fix failure when we delete and create a slab cache
 
-Instead of doing this once for all CPUs, it would be better to do it
-every time the ->init() callback of the driver gets called. If you
-have one cpufreq policy for each CPU (i.e. no CPUs share clock lines),
-then the init() callback will get called once for each CPU.
+added the sysfs removal underneath the slab_mutex.
 
-> +
-> +static int __init amd_cpufreq_init(void)
-> +{
-> +	int ret = 0;
-> +
-> +	/*
-> +	 * Use only if:
-> +	 * - AMD,
-> +	 * - Family 17h (or) newer and,
-> +	 * - Explicitly enabled
-> +	 */
-> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD ||
-> +	    boot_cpu_data.x86 < 0x17 || !cppc_enable)
-> +		return -ENODEV;
-> +
-> +	ret = cpufreq_register_driver(&amd_cpufreq_driver);
-> +	if (ret) {
-> +		pr_info("Failed to register driver\n");
-> +		goto out;
-> +	}
-> +
-> +	ret = amd_cpufreq_sysfs_expose_params();
-> +	if (ret) {
-> +		pr_info("Could not create sysfs entries\n");
-> +		cpufreq_unregister_driver(&amd_cpufreq_driver);
-> +		goto out;
-> +	}
-> +
-> +	pr_info("Using amd-cpufreq driver\n");
-> +	return ret;
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static void __exit amd_cpufreq_exit(void)
-> +{
-> +	amd_cpufreq_sysfs_delete_params();
-> +	cpufreq_unregister_driver(&amd_cpufreq_driver);
-> +}
-> +
-> +static const struct acpi_device_id amd_acpi_ids[] __used = {
-> +	{ACPI_PROCESSOR_DEVICE_HID, },
-> +	{}
-> +};
-> +
-> +device_initcall(amd_cpufreq_init);
-> +module_exit(amd_cpufreq_exit);
-> +MODULE_DEVICE_TABLE(acpi, amd_acpi_ids);
-
-All three should be placed directly below the struct/function they
-represent without any blank lines in between. As suggested in
-kernel documentation.
-
-> +
-> +MODULE_AUTHOR("Janakarajan Natarajan");
-> +MODULE_DESCRIPTION("AMD CPUFreq driver based on ACPI CPPC v6.1 spec");
-> +MODULE_LICENSE("GPL");
-
-Should this be "GPL v2" ?
-
-> -- 
-> 2.17.1
-
--- 
-viresh
+> Just got this:
+> 
+>  ======================================================
+>  WARNING: possible circular locking dependency detected
+>  5.2.0-test #15 Not tainted
+>  ------------------------------------------------------
+>  slub_cpu_partia/899 is trying to acquire lock:
+>  000000000f6f2dd7 (slab_mutex){+.+.}, at: slab_attr_store+0x6d/0xe0
+>  
+>  but task is already holding lock:
+>  00000000b23ffe3d (kn->count#160){++++}, at: kernfs_fop_write+0x125/0x230
+>  
+>  which lock already depends on the new lock.
+>  
+>  
+>  the existing dependency chain (in reverse order) is:
+>  
+>  -> #1 (kn->count#160){++++}:
+>         __kernfs_remove+0x413/0x4a0
+>         kernfs_remove_by_name_ns+0x40/0x80
+>         sysfs_slab_add+0x1b5/0x2f0
+>         __kmem_cache_create+0x511/0x560
+>         create_cache+0xcd/0x1f0
+>         kmem_cache_create_usercopy+0x18a/0x240
+>         kmem_cache_create+0x12/0x20
+>         is_active_nid+0xdb/0x230 [snd_hda_codec_generic]
+>         snd_hda_get_path_idx+0x55/0x80 [snd_hda_codec_generic]
+>         get_nid_path+0xc/0x170 [snd_hda_codec_generic]
+>         do_one_initcall+0xa2/0x394
+>         do_init_module+0xfd/0x370
+>         load_module+0x38c6/0x3bd0
+>         __do_sys_finit_module+0x11a/0x1b0
+>         do_syscall_64+0x68/0x250
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>  
+>  -> #0 (slab_mutex){+.+.}:
+>         lock_acquire+0xbd/0x1d0
+>         __mutex_lock+0xfc/0xb70
+>         slab_attr_store+0x6d/0xe0
+>         kernfs_fop_write+0x170/0x230
+>         vfs_write+0xe1/0x240
+>         ksys_write+0xba/0x150
+>         do_syscall_64+0x68/0x250
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>  
+>  other info that might help us debug this:
+>  
+>   Possible unsafe locking scenario:
+>  
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(kn->count#160);
+>                                 lock(slab_mutex);
+>                                 lock(kn->count#160);
+>    lock(slab_mutex);
+>  
+>   *** DEADLOCK ***
+>  
+> 
+> 
+> Attached is a config and the full dmesg.
+> 
+> -- Steve
+> 
