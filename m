@@ -2,103 +2,117 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C422C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EE6C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C2621019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1733221019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YrXbIX5q"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="BWUkxdYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfGKNpm (ORCPT
+        id S1728493AbfGKNp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:45:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55348 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfGKNpm (ORCPT
+        Thu, 11 Jul 2019 09:45:58 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46049 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfGKNp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:45:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=motTGlaLa78AkkT94ppPVZ2/Cr7h+cvS3zIYf8Ec2sw=; b=YrXbIX5qnEOqZJQGogVWSKOxdl
-        nGFNn6+c0qufC1VtyAe6+rL5HrRV67MuO+rpGnEO0OyUNgeIEPyNiSiZrfk6aZZrK5WNwcSr/8dyK
-        A26SZPB2XsuHf+D4zUZlaMuqB+7kEyEb+ngAnNP6xe5ohRPxdletoBrzIZXJ31TWB1dFGaguDRjL6
-        GRsekT6kNLxlJ7kZwHIlito+ouKUCAR/I/CsOhElJJb1HCWsIfFsFnE2fFyvtCjGYfq8lmKOXoZik
-        mAS0/IpGxoFZ8o1KHUmMwLXx5fGM8kctE7QQMdPbSolTQ9Qd+HRIStso/avMYCaTNCZnK6yy3EO1W
-        VNCWBhCQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlZO4-0003nk-NU; Thu, 11 Jul 2019 13:45:32 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7E86920B54EA8; Thu, 11 Jul 2019 15:45:27 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 15:45:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-Subject: Re: [PATCH 2/4] numa: append per-node execution info in
- memory.numa_stat
-Message-ID: <20190711134527.GC3402@hirez.programming.kicks-ass.net>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <825ebaf0-9f71-bbe1-f054-7fa585d61af1@linux.alibaba.com>
+        Thu, 11 Jul 2019 09:45:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e2so5841076edi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 06:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Osxf+bNmRWplx05FCFX6Jw4X940F4YMRAtN+KD1L80M=;
+        b=BWUkxdYrwRk4QO6cw+CCGQLCmmrE9aF/PFrdYGs+8f6nNv6ByI7LCLurp8+DALuUUR
+         Z1ofWLt7DoC/hBA8wv3C0C/NgW+ci0hF3r5TLzfwBL3Y817KJ4oZgKdKUMCTOIDLihAP
+         TcLMIlJKhXcLtSwZAEtsiYHsnLi1LMj/o5VdCUPT9cjROEfYTJSjnbcurljYVIuzFkmh
+         BmCzjej4+rbPeeeaxK5+0+g2IrJSSaQdgKMnggKNWWTxVriZs7zE/es67goGvnNw0FRx
+         Ixonk4rG14acwMVibgqqmOaW2iHbtFW6WIsOVdFfoxOM5IKjEDueISVppPuBgvtLgXFo
+         Xhag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Osxf+bNmRWplx05FCFX6Jw4X940F4YMRAtN+KD1L80M=;
+        b=ZyPUpK54SxO7HC0nx5thoaPXVSX38UBZkSAgkbGBbmqBp4JjXB/C3MwqdXTSaJxBwL
+         CCOwvNjT12L7kNwthtePgd0NKYSrkJo2G/EcbuWmvGyZK6Gt529env7x6POwH3TXEBT8
+         xNktKxH5rBThbDTSZed6iZiR9tZXc1c5J29YbmZO+vjJywz/trpW52fA6rt4CD0iSGjA
+         T2HxNDCWkbvioWfTeEYxxT2KrqGhfe7iU/BDZeehKzuWzMkqALVAkK/qL7KW9zgCOVzf
+         wXkHfCbSqL4O0SyOOl6MFShApYoGFJLDOfi/gweXPsM/12f9zI5Yble4BqMi1JBwhd1S
+         IC9w==
+X-Gm-Message-State: APjAAAX0okQXycnCBoKhEuSXvNkNcYmY/tcq3CuxKCpdihS7C0O2rZ5o
+        oRVvAjJcwN0XyRqjcv3Rj/XHuYFcrgw=
+X-Google-Smtp-Source: APXvYqwd8Wy9UejCMZQY0P+7uYfmadKSV5vOhnywGcMFhKltfK819yupNBjvQoCQ1b/6nGfDct0ujQ==
+X-Received: by 2002:a50:941c:: with SMTP id p28mr3744158eda.103.1562852755782;
+        Thu, 11 Jul 2019 06:45:55 -0700 (PDT)
+Received: from brauner.io ([185.66.195.251])
+        by smtp.gmail.com with ESMTPSA id x21sm1678096edb.0.2019.07.11.06.45.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 06:45:55 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 15:45:53 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] clone3 for v5.3
+Message-ID: <20190711134552.jvahfwhvaxykbgfl@brauner.io>
+References: <20190708150042.11590-1-christian@brauner.io>
+ <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
+ <20190711053428.ofapcx7nn5xkyru4@brauner.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <825ebaf0-9f71-bbe1-f054-7fa585d61af1@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190711053428.ofapcx7nn5xkyru4@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 11:29:15AM +0800, 王贇 wrote:
-
-> +++ b/include/linux/memcontrol.h
-> @@ -190,6 +190,7 @@ enum memcg_numa_locality_interval {
+On Thu, Jul 11, 2019 at 07:34:28AM +0200, Christian Brauner wrote:
+> On Wed, Jul 10, 2019 at 10:24:26PM -0700, Linus Torvalds wrote:
+> > On Mon, Jul 8, 2019 at 8:05 AM Christian Brauner <christian@brauner.io> wrote:
+> > >
+> > > /* Syscall number 435 */
+> > > clone3() uses syscall number 435 and is coordinated with pidfd_open() which
+> > > uses syscall number 434. I'm not aware of any other syscall targeted for
+> > > 5.3 that has chosen the same number.
+> > 
+> > You say that, and 434/435 would make sense, but that's not what the
+> > code I see in the pull request actually does.
+> > 
+> > It seems to use syscall 436.
+> > 
+> > I think it's because openat2() is looking to use 435, but I'm a bit
+> > nervous about the conflict between the code and your commentary..
 > 
->  struct memcg_stat_numa {
->  	u64 locality[NR_NL_INTERVAL];
-> +	u64 exectime;
-
-Maybe call the field jiffies, because that's what it counts.
-
->  };
+> Sorry, that was just me being dumb and forgetting that there was
+> close_range() which had a chance of going through Al's tree. So I left a
+> hole for it.
 > 
->  #endif
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 2edf3f5ac4b9..d5f48365770f 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -3575,6 +3575,18 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
->  		seq_printf(m, " %u", jiffies_to_msecs(sum));
->  	}
->  	seq_putc(m, '\n');
-> +
-> +	seq_puts(m, "exectime");
-> +	for_each_online_node(nr) {
-> +		int cpu;
-> +		u64 sum = 0;
-> +
-> +		for_each_cpu(cpu, cpumask_of_node(nr))
-> +			sum += per_cpu(memcg->stat_numa->exectime, cpu);
-> +
-> +		seq_printf(m, " %llu", jiffies_to_msecs(sum));
-> +	}
-> +	seq_putc(m, '\n');
->  #endif
-> 
->  	return 0;
+> I don't terribly mind if it's 435 or 436. People pointed out you might
+> even renumber yourself if something makes more sense to you.
+
+Just in case you prefer pulling from a __rebased__ tree. I prepared one.
+It does use syscall number 435 as advertised here and has the merge
+conflict I pointed out in the PR resolved:
+
+The following changes since commit 5450e8a316a64cddcbc15f90733ebc78aa736545:
+
+  Merge tag 'pidfd-updates-v5.3' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux (2019-07-10 22:17:21 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/clone3-rebased-v5.3
+
+for you to fetch changes up to 611e04b559151c441deedc79f1e57471c953bda7:
+
+  arch: handle arches who do not yet define clone3 (2019-07-11 14:59:15 +0200)
+
+Christian
