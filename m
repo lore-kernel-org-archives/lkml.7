@@ -2,497 +2,187 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE30C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D4AC742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E4620651
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:07:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Hnneda5R"
+	by mail.kernel.org (Postfix) with ESMTP id 877F7206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbfGKVHO (ORCPT
+        id S1728978AbfGKVMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 17:07:14 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33489 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfGKVHN (ORCPT
+        Thu, 11 Jul 2019 17:12:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25482 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726549AbfGKVM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 17:07:13 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r6so4847717qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LqrO7LCWTml+Nsbb5+JAJLQvNWnpW660x1DZWeoizgI=;
-        b=Hnneda5RIwEl9ghVJyuC4q8GZd79Q/fcs1GTaW6Zes1P63dt3j46wsmqmtqMG1zHb0
-         +yUcUWKXS/c9Nvv4J+S8nG/3esJg9f0WakJ+hOEkbuQN9w7sjpybIXBvuydyPmlcjkYH
-         6ZNhyvLuREHIevtGKsgQCaFxaJUTni6CxyKw14mp0Z+In4L60GUjhlx20bYwV1RwJ34N
-         a3cZBO4vkVtdbcZqbeoH1oTw1mlIR252Ky+OMnvaYMFnn5w2CTGDhqXV6jnsKRJHrtkY
-         GkpmK8Od/kpznBvEBjwmsuLHl4GfMz/aS7hgrUkZF55qnzo2tYsEeo0X2+nY7QuyhCuh
-         fxtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LqrO7LCWTml+Nsbb5+JAJLQvNWnpW660x1DZWeoizgI=;
-        b=cH8ZlIYCp1lYtL2fNjV1oB+g/z5A9Z2SGjbmlDhIoxueGIVlfpgj0a189XIYVFaLSj
-         zIu+DsiXav+03+z2ForEnR1ym6BRh7uJD+a9Ax0wMAdfiwYBpav1oNQMqiumBUpAgKwM
-         t90UOSNKDIamcVhA7iq0AERtLArovXl6NNCJxRjZBze00PlFgVdSm9Tnlcm1uwHGAMuU
-         MR6Ea5Xy/xw6xq8qKGAmr8nRgawv+C43kddjo+Ky7FXdIQwclLsp79H815gOIS/lRC61
-         nJwHFA3Y9wa92ZA1ywlZ8ZRgeBAp6+QTQit9oPFIyeief4sMwSXWwgTVAwg7faCTLLKo
-         xy3g==
-X-Gm-Message-State: APjAAAWh2h8JVz3reDcoIa6VNDiEf9TEBjnXJR5ErTZOmuLSpI00DEkf
-        J2DmVZgfTID4Dd7rSCD7zI3NIQ==
-X-Google-Smtp-Source: APXvYqyyCsY94XMY3HXb/BV51BNt02j+idNkeLDMfeCc1q0fJS1hbkYiWw+U6/INOL0hvA0GgykM9A==
-X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr3633529qkl.254.1562879231547;
-        Thu, 11 Jul 2019 14:07:11 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x205sm2796426qka.56.2019.07.11.14.07.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 14:07:10 -0700 (PDT)
-Message-ID: <1562879229.8510.24.camel@lca.pw>
-Subject: Re: list corruption in deferred_split_scan()
-From:   Qian Cai <cai@lca.pw>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 11 Jul 2019 17:07:09 -0400
-In-Reply-To: <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
-References: <1562795006.8510.19.camel@lca.pw>
-         <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
+        Thu, 11 Jul 2019 17:12:29 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BL8LWt088315
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 17:12:28 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpbtb1tu1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 17:12:28 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 11 Jul 2019 22:12:26 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Jul 2019 22:12:22 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BLCLb947972368
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 21:12:22 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4CFDA4053;
+        Thu, 11 Jul 2019 21:12:21 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E7E3A4057;
+        Thu, 11 Jul 2019 21:12:20 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.73])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jul 2019 21:12:20 +0000 (GMT)
+Subject: Re: possible deadlock in process_measurement
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Biggers <ebiggers3@gmail.com>
+Cc:     syzbot <syzbot+5ab61747675a87ea359d@syzkaller.appspotmail.com>,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, zohar@linux.vnet.ibm.com
+Date:   Thu, 11 Jul 2019 17:12:09 -0400
+In-Reply-To: <1562869533.4014.56.camel@linux.ibm.com>
+References: <00000000000054e5d1058a6df2eb@google.com>
+         <1562869533.4014.56.camel@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071121-0008-0000-0000-000002FC8AC5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071121-0009-0000-0000-00002269F47C
+Message-Id: <1562879529.4014.95.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=912 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110233
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-10 at 17:16 -0700, Yang Shi wrote:
-> Hi Qian,
-> 
-> 
-> Thanks for reporting the issue. But, I can't reproduce it on my machine. 
-> Could you please share more details about your test? How often did you 
-> run into this problem?
+Hi Eric,
 
-I can almost reproduce it every time on a HPE ProLiant DL385 Gen10 server. Here
-is some more information.
-
-# cat .config
-
-https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
-
-# numactl -H
-available: 8 nodes (0-7)
-node 0 cpus: 0 1 2 3 4 5 6 7 64 65 66 67 68 69 70 71
-node 0 size: 19984 MB
-node 0 free: 7251 MB
-node 1 cpus: 8 9 10 11 12 13 14 15 72 73 74 75 76 77 78 79
-node 1 size: 0 MB
-node 1 free: 0 MB
-node 2 cpus: 16 17 18 19 20 21 22 23 80 81 82 83 84 85 86 87
-node 2 size: 0 MB
-node 2 free: 0 MB
-node 3 cpus: 24 25 26 27 28 29 30 31 88 89 90 91 92 93 94 95
-node 3 size: 0 MB
-node 3 free: 0 MB
-node 4 cpus: 32 33 34 35 36 37 38 39 96 97 98 99 100 101 102 103
-node 4 size: 31524 MB
-node 4 free: 25165 MB
-node 5 cpus: 40 41 42 43 44 45 46 47 104 105 106 107 108 109 110 111
-node 5 size: 0 MB
-node 5 free: 0 MB
-node 6 cpus: 48 49 50 51 52 53 54 55 112 113 114 115 116 117 118 119
-node 6 size: 0 MB
-node 6 free: 0 MB
-node 7 cpus: 56 57 58 59 60 61 62 63 120 121 122 123 124 125 126 127
-node 7 size: 0 MB
-node 7 free: 0 MB
-node distances:
-node   0   1   2   3   4   5   6   7 
-  0:  10  16  16  16  32  32  32  32 
-  1:  16  10  16  16  32  32  32  32 
-  2:  16  16  10  16  32  32  32  32 
-  3:  16  16  16  10  32  32  32  32 
-  4:  32  32  32  32  10  16  16  16 
-  5:  32  32  32  32  16  10  16  16 
-  6:  32  32  32  32  16  16  10  16 
-  7:  32  32  32  32  16  16  16  10
-
-# lscpu
-Architecture:        x86_64
-CPU op-mode(s):      32-bit, 64-bit
-Byte Order:          Little Endian
-CPU(s):              128
-On-line CPU(s) list: 0-127
-Thread(s) per core:  2
-Core(s) per socket:  32
-Socket(s):           2
-NUMA node(s):        8
-Vendor ID:           AuthenticAMD
-CPU family:          23
-Model:               1
-Model name:          AMD EPYC 7601 32-Core Processor
-Stepping:            2
-CPU MHz:             2713.551
-BogoMIPS:            4391.39
-Virtualization:      AMD-V
-L1d cache:           32K
-L1i cache:           64K
-L2 cache:            512K
-L3 cache:            8192K
-NUMA node0 CPU(s):   0-7,64-71
-NUMA node1 CPU(s):   8-15,72-79
-NUMA node2 CPU(s):   16-23,80-87
-NUMA node3 CPU(s):   24-31,88-95
-NUMA node4 CPU(s):   32-39,96-103
-NUMA node5 CPU(s):   40-47,104-111
-NUMA node6 CPU(s):   48-55,112-119
-NUMA node7 CPU(s):   56-63,120-127
-
-Another possible lead is that without reverting the those commits below, kdump
-kernel would always also crash in shrink_slab_memcg() at this line,
-
-map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map, true);
-
-[    9.072036][    T1] BUG: KASAN: null-ptr-deref in shrink_slab+0x111/0x440
-[    9.072036][    T1] Read of size 8 at addr 0000000000000dc8 by task
-swapper/0/1
-[    9.072036][    T1] 
-[    9.072036][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.0-next-
-20190711+ #10
-[    9.072036][    T1] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
-Gen10, BIOS A40 01/25/2019
-[    9.072036][    T1] Call Trace:
-[    9.072036][    T1]  dump_stack+0x62/0x9a
-[    9.072036][    T1]  __kasan_report.cold.4+0xb0/0xb4
-[    9.072036][    T1]  ? unwind_get_return_address+0x40/0x50
-[    9.072036][    T1]  ? shrink_slab+0x111/0x440
-[    9.072036][    T1]  kasan_report+0xc/0xe
-[    9.072036][    T1]  __asan_load8+0x71/0xa0
-[    9.072036][    T1]  shrink_slab+0x111/0x440
-[    9.072036][    T1]  ? mem_cgroup_iter+0x98/0x840
-[    9.072036][    T1]  ? unregister_shrinker+0x110/0x110
-[    9.072036][    T1]  ? kasan_check_read+0x11/0x20
-[    9.072036][    T1]  ? mem_cgroup_protected+0x39/0x260
-[    9.072036][    T1]  shrink_node+0x31e/0xa30
-[    9.072036][    T1]  ? shrink_node_memcg+0x1560/0x1560
-[    9.072036][    T1]  ? ktime_get+0x93/0x110
-[    9.072036][    T1]  do_try_to_free_pages+0x22f/0x820
-[    9.072036][    T1]  ? shrink_node+0xa30/0xa30
-[    9.072036][    T1]  ? kasan_check_read+0x11/0x20
-[    9.072036][    T1]  ? check_chain_key+0x1df/0x2e0
-[    9.072036][    T1]  try_to_free_pages+0x242/0x4d0
-[    9.072036][    T1]  ? do_try_to_free_pages+0x820/0x820
-[    9.072036][    T1]  __alloc_pages_nodemask+0x9ce/0x1bc0
-[    9.072036][    T1]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-[    9.072036][    T1]  ? unwind_dump+0x260/0x260
-[    9.072036][    T1]  ? kernel_text_address+0x33/0xc0
-[    9.072036][    T1]  ? arch_stack_walk+0x8f/0xf0
-[    9.072036][    T1]  ? ret_from_fork+0x22/0x40
-[    9.072036][    T1]  alloc_page_interleave+0x18/0x130
-[    9.072036][    T1]  alloc_pages_current+0xf6/0x110
-[    9.072036][    T1]  allocate_slab+0x600/0x11f0
-[    9.072036][    T1]  new_slab+0x46/0x70
-[    9.072036][    T1]  ___slab_alloc+0x5d4/0x9c0
-[    9.072036][    T1]  ? create_object+0x3a/0x3e0
-[    9.072036][    T1]  ? fs_reclaim_acquire.part.15+0x5/0x30
-[    9.072036][    T1]  ? ___might_sleep+0xab/0xc0
-[    9.072036][    T1]  ? create_object+0x3a/0x3e0
-[    9.072036][    T1]  __slab_alloc+0x12/0x20
-[    9.072036][    T1]  ? __slab_alloc+0x12/0x20
-[    9.072036][    T1]  kmem_cache_alloc+0x32a/0x400
-[    9.072036][    T1]  create_object+0x3a/0x3e0
-[    9.072036][    T1]  kmemleak_alloc+0x71/0xa0
-[    9.072036][    T1]  kmem_cache_alloc+0x272/0x400
-[    9.072036][    T1]  ? kasan_check_read+0x11/0x20
-[    9.072036][    T1]  ? do_raw_spin_unlock+0xa8/0x140
-[    9.072036][    T1]  acpi_ps_alloc_op+0x76/0x122
-[    9.072036][    T1]  acpi_ds_execute_arguments+0x2f/0x18d
-[    9.072036][    T1]  acpi_ds_get_package_arguments+0x7d/0x84
-[    9.072036][    T1]  acpi_ns_init_one_package+0x33/0x61
-[    9.072036][    T1]  acpi_ns_init_one_object+0xfc/0x189
-[    9.072036][    T1]  acpi_ns_walk_namespace+0x114/0x1f2
-[    9.072036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
-[    9.072036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
-[    9.072036][    T1]  acpi_walk_namespace+0x9e/0xcb
-[    9.072036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
-[    9.072036][    T1]  acpi_ns_initialize_objects+0x99/0xed
-[    9.072036][    T1]  ? acpi_ns_find_ini_methods+0xa2/0xa2
-[    9.072036][    T1]  ? acpi_tb_load_namespace+0x2dc/0x2eb
-[    9.072036][    T1]  acpi_load_tables+0x61/0x80
-[    9.072036][    T1]  acpi_init+0x10d/0x44b
-[    9.072036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
-[    9.072036][    T1]  ? bus_uevent_filter+0x16/0x30
-[    9.072036][    T1]  ? kobject_uevent_env+0x109/0x980
-[    9.072036][    T1]  ? kernfs_get+0x13/0x20
-[    9.072036][    T1]  ? kobject_uevent+0xb/0x10
-[    9.072036][    T1]  ? kset_register+0x31/0x50
-[    9.072036][    T1]  ? kset_create_and_add+0x9f/0xd0
-[    9.072036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
-[    9.072036][    T1]  do_one_initcall+0xfe/0x45a
-[    9.072036][    T1]  ? initcall_blacklisted+0x150/0x150
-[    9.072036][    T1]  ? rwsem_down_read_slowpath+0x930/0x930
-[    9.072036][    T1]  ? kasan_check_write+0x14/0x20
-[    9.072036][    T1]  ? up_write+0x6b/0x190
-[    9.072036][    T1]  kernel_init_freeable+0x614/0x6a7
-[    9.072036][    T1]  ? rest_init+0x188/0x188
-[    9.072036][    T1]  kernel_init+0x11/0x138
-[    9.072036][    T1]  ? rest_init+0x188/0x188
-[    9.072036][    T1]  ret_from_fork+0x22/0x40
-[    9.072036][    T1]
-==================================================================
-[    9.072036][    T1] Disabling lock debugging due to kernel taint
-[    9.145712][    T1] BUG: kernel NULL pointer dereference, address:
-0000000000000dc8
-[    9.152036][    T1] #PF: supervisor read access in kernel mode
-[    9.152036][    T1] #PF: error_code(0x0000) - not-present page
-[    9.152036][    T1] PGD 0 P4D 0 
-[    9.152036][    T1] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN NOPTI
-[    9.152036][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted:
-G    B             5.2.0-next-20190711+ #10
-[    9.152036][    T1] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
-Gen10, BIOS A40 01/25/2019
-[    9.152036][    T1] RIP: 0010:shrink_slab+0x111/0x440
-[    9.152036][    T1] Code: c7 20 8d 44 82 e8 7f 8b e8 ff 85 c0 0f 84 e2 02 00
-00 4c 63 a5 4c ff ff ff 49 81 c4 b8 01 00 00 4b 8d 7c e6 08 e8 3f 07 0e 00 <4f>
-8b 64 e6 08 49 8d bc 24 20 03 00 00 e8 2d 07 0e 00 49 8b 84 24
-[    9.152036][    T1] RSP: 0018:ffff88905757f100 EFLAGS: 00010282
-[    9.152036][    T1] RAX: 0000000000000000 RBX: ffff88905757f1b0 RCX:
-ffffffff8112f288
-[    9.152036][    T1] RDX: 1ffffffff049c088 RSI: dffffc0000000000 RDI:
-ffffffff824e0440
-[    9.152036][    T1] RBP: ffff88905757f1d8 R08: fffffbfff049c089 R09:
-fffffbfff049c088
-[    9.152036][    T1] R10: fffffbfff049c088 R11: ffffffff824e0443 R12:
-00000000000001b8
-[    9.152036][    T1] R13: 0000000000000000 R14: 0000000000000000 R15:
-ffff88905757f440
-[    9.152036][    T1] FS:  0000000000000000(0000) GS:ffff889062800000(0000)
-knlGS:0000000000000000
-[    9.152036][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    9.152036][    T1] CR2: 0000000000000dc8 CR3: 0000001070212000 CR4:
-00000000001406b0
-[    9.152036][    T1] Call Trace:
-[    9.152036][    T1]  ? mem_cgroup_iter+0x98/0x840
-[    9.152036][    T1]  ? unregister_shrinker+0x110/0x110
-[    9.152036][    T1]  ? kasan_check_read+0x11/0x20
-[    9.152036][    T1]  ? mem_cgroup_protected+0x39/0x260
-[    9.152036][    T1]  shrink_node+0x31e/0xa30
-[    9.152036][    T1]  ? shrink_node_memcg+0x1560/0x1560
-[    9.152036][    T1]  ? ktime_get+0x93/0x110
-[    9.152036][    T1]  do_try_to_free_pages+0x22f/0x820
-[    9.152036][    T1]  ? shrink_node+0xa30/0xa30
-[    9.152036][    T1]  ? kasan_check_read+0x11/0x20
-[    9.152036][    T1]  ? check_chain_key+0x1df/0x2e0
-[    9.152036][    T1]  try_to_free_pages+0x242/0x4d0
-[    9.152036][    T1]  ? do_try_to_free_pages+0x820/0x820
-[    9.152036][    T1]  __alloc_pages_nodemask+0x9ce/0x1bc0
-[    9.152036][    T1]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-[    9.152036][    T1]  ? unwind_dump+0x260/0x260
-[    9.152036][    T1]  ? kernel_text_address+0x33/0xc0
-[    9.152036][    T1]  ? arch_stack_walk+0x8f/0xf0
-[    9.152036][    T1]  ? ret_from_fork+0x22/0x40
-[    9.152036][    T1]  alloc_page_interleave+0x18/0x130
-[    9.152036][    T1]  alloc_pages_current+0xf6/0x110
-[    9.152036][    T1]  allocate_slab+0x600/0x11f0
-[    9.152036][    T1]  new_slab+0x46/0x70
-[    9.152036][    T1]  ___slab_alloc+0x5d4/0x9c0
-[    9.152036][    T1]  ? create_object+0x3a/0x3e0
-[    9.152036][    T1]  ? fs_reclaim_acquire.part.15+0x5/0x30
-[    9.152036][    T1]  ? ___might_sleep+0xab/0xc0
-[    9.152036][    T1]  ? create_object+0x3a/0x3e0
-[    9.152036][    T1]  __slab_alloc+0x12/0x20
-[    9.152036][    T1]  ? __slab_alloc+0x12/0x20
-[    9.152036][    T1]  kmem_cache_alloc+0x32a/0x400
-[    9.152036][    T1]  create_object+0x3a/0x3e0
-[    9.152036][    T1]  kmemleak_alloc+0x71/0xa0
-[    9.152036][    T1]  kmem_cache_alloc+0x272/0x400
-[    9.152036][    T1]  ? kasan_check_read+0x11/0x20
-[    9.152036][    T1]  ? do_raw_spin_unlock+0xa8/0x140
-[    9.152036][    T1]  acpi_ps_alloc_op+0x76/0x122
-[    9.152036][    T1]  acpi_ds_execute_arguments+0x2f/0x18d
-[    9.152036][    T1]  acpi_ds_get_package_arguments+0x7d/0x84
-[    9.152036][    T1]  acpi_ns_init_one_package+0x33/0x61
-[    9.152036][    T1]  acpi_ns_init_one_object+0xfc/0x189
-[    9.152036][    T1]  acpi_ns_walk_namespace+0x114/0x1f2
-[    9.152036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
-[    9.152036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
-[    9.152036][    T1]  acpi_walk_namespace+0x9e/0xcb
-[    9.152036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
-[    9.152036][    T1]  acpi_ns_initialize_objects+0x99/0xed
-[    9.152036][    T1]  ? acpi_ns_find_ini_methods+0xa2/0xa2
-[    9.152036][    T1]  ? acpi_tb_load_namespace+0x2dc/0x2eb
-[    9.152036][    T1]  acpi_load_tables+0x61/0x80
-[    9.152036][    T1]  acpi_init+0x10d/0x44b
-[    9.152036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
-[    9.152036][    T1]  ? bus_uevent_filter+0x16/0x30
-[    9.152036][    T1]  ? kobject_uevent_env+0x109/0x980
-[    9.152036][    T1]  ? kernfs_get+0x13/0x20
-[    9.152036][    T1]  ? kobject_uevent+0xb/0x10
-[    9.152036][    T1]  ? kset_register+0x31/0x50
-[    9.152036][    T1]  ? kset_create_and_add+0x9f/0xd0
-[    9.152036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
-[    9.152036][    T1]  do_one_initcall+0xfe/0x45a
-[    9.152036][    T1]  ? initcall_blacklisted+0x150/0x150
-[    9.152036][    T1]  ? rwsem_down_read_slowpath+0x930/0x930
-[    9.152036][    T1]  ? kasan_check_write+0x14/0x20
-[    9.152036][    T1]  ? up_write+0x6b/0x190
-[    9.152036][    T1]  kernel_init_freeable+0x614/0x6a7
-[    9.152036][    T1]  ? rest_init+0x188/0x188
-[    9.152036][    T1]  kernel_init+0x11/0x138
-[    9.152036][    T1]  ? rest_init+0x188/0x188
-[    9.152036][    T1]  ret_from_fork+0x22/0x40
-[    9.152036][    T1] Modules linked in:
-[    9.152036][    T1] CR2: 0000000000000dc8
-[    9.152036][    T1] ---[ end trace 568acce4eca01945 ]---
-[    9.152036][    T1] RIP: 0010:shrink_slab+0x111/0x440
-[    9.152036][    T1] Code: c7 20 8d 44 82 e8 7f 8b e8 ff 85 c0 0f 84 e2 02 00
-00 4c 63 a5 4c ff ff ff 49 81 c4 b8 01 00 00 4b 8d 7c e6 08 e8 3f 07 0e 00 <4f>
-8b 64 e6 08 49 8d bc 24 20 03 00 00 e8 2d 07 0e 00 49 8b 84 24
-[    9.152036][    T1] RSP: 0018:ffff88905757f100 EFLAGS: 00010282
-[    9.152036][    T1] RAX: 0000000000000000 RBX: ffff88905757f1b0 RCX:
-ffffffff8112f288
-[    9.152036][    T1] RDX: 1ffffffff049c088 RSI: dffffc0000000000 RDI:
-ffffffff824e0440
-[    9.152036][    T1] RBP: ffff88905757f1d8 R08: fffffbfff049c089 R09:
-fffffbfff049c088
-[    9.152036][    T1] R10: fffffbfff049c088 R11: ffffffff824e0443 R12:
-00000000000001b8
-[    9.152036][    T1] R13: 0000000000000000 R14: 0000000000000000 R15:
-ffff88905757f440
-[    9.152036][    T1] FS:  0000000000000000(0000) GS:ffff889062800000(0000)
-knlGS:00000000
-
-> 
-> 
-> Regards,
-> 
-> Yang
-> 
-> 
-> 
-> On 7/10/19 2:43 PM, Qian Cai wrote:
-> > Running LTP oom01 test case with swap triggers a crash below. Revert the
-> > series
-> > "Make deferred split shrinker memcg aware" [1] seems fix the issue.
+> > the existing dependency chain (in reverse order) is:
 > > 
-> > aefde94195ca mm: thp: make deferred split shrinker memcg aware
-> > cf402211cacc mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix-2-fix
-> > ca37e9e5f18d mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix-2
-> > 5f419d89cab4 mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix
-> > c9d49e69e887 mm: shrinker: make shrinker not depend on memcg kmem
-> > 1c0af4b86bcf mm: move mem_cgroup_uncharge out of __page_cache_release()
-> > 4e050f2df876 mm: thp: extract split_queue_* into a struct
+> > -> #1 (&mm->mmap_sem#2){++++}:
+> >         down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+> >         get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+> >         __gup_longterm_unlocked mm/gup.c:2193 [inline]
+> >         get_user_pages_fast+0x43f/0x530 mm/gup.c:2245
+> >         iov_iter_get_pages+0x2c2/0xf80 lib/iov_iter.c:1287
+> >         dio_refill_pages fs/direct-io.c:171 [inline]
+> >         dio_get_page fs/direct-io.c:215 [inline]
+> >         do_direct_IO fs/direct-io.c:983 [inline]
+> >         do_blockdev_direct_IO+0x3f7b/0x8e00 fs/direct-io.c:1336
+> >         __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1422
+> >         ext4_direct_IO_write fs/ext4/inode.c:3782 [inline]
+> >         ext4_direct_IO+0xaa7/0x1bb0 fs/ext4/inode.c:3909
+> >         generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3110
+> >         __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3293
+> >         ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+> >         call_write_iter include/linux/fs.h:1870 [inline]
+> >         new_sync_write+0x4d3/0x770 fs/read_write.c:483
+> >         __vfs_write+0xe1/0x110 fs/read_write.c:496
+> >         vfs_write+0x268/0x5d0 fs/read_write.c:558
+> >         ksys_write+0x14f/0x290 fs/read_write.c:611
+> >         __do_sys_write fs/read_write.c:623 [inline]
+> >         __se_sys_write fs/read_write.c:620 [inline]
+> >         __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+> >         do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+> >         entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > > 
-> > [1] https://lore.kernel.org/linux-mm/1561507361-59349-1-git-send-email-yang.
-> > shi@
-> > linux.alibaba.com/
+> > -> #0 (&sb->s_type->i_mutex_key#10){+.+.}:
+> >         lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+> >         down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+> >         inode_lock include/linux/fs.h:778 [inline]
+> >         process_measurement+0x15ae/0x15e0  
+> > security/integrity/ima/ima_main.c:228
+> >         ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+> >         security_file_mprotect+0xd5/0x100 security/security.c:1430
+> >         do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+> >         __do_sys_pkey_mprotect mm/mprotect.c:590 [inline]
+> >         __se_sys_pkey_mprotect mm/mprotect.c:587 [inline]
+> >         __x64_sys_pkey_mprotect+0x97/0xf0 mm/mprotect.c:587
+> >         do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+> >         entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > > 
-> > [ 1145.730682][ T5764] list_del corruption, ffffea00251c8098->next is
-> > LIST_POISON1 (dead000000000100)
-> > [ 1145.739763][ T5764] ------------[ cut here ]------------
-> > [ 1145.745126][ T5764] kernel BUG at lib/list_debug.c:47!
-> > [ 1145.750320][ T5764] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN
-> > NOPTI
-> > [ 1145.757513][ T5764] CPU: 1 PID: 5764 Comm: oom01 Tainted:
-> > G        W         5.2.0-next-20190710+ #7
-> > [ 1145.766709][ T5764] Hardware name: HPE ProLiant DL385 Gen10/ProLiant
-> > DL385
-> > Gen10, BIOS A40 01/25/2019
-> > [ 1145.776000][ T5764] RIP: 0010:__list_del_entry_valid.cold.0+0x12/0x4a
-> > [ 1145.782491][ T5764] Code: c7 40 5a 33 af e8 ac fe bc ff 0f 0b 48 c7 c7 80
-> > 9e
-> > a1 af e8 f6 4c 01 00 4c 89 ea 48 89 de 48 c7 c7 20 59 33 af e8 8c fe bc ff
-> > <0f>
-> > 0b 48 c7 c7 40 9f a1 af e8 d6 4c 01 00 4c 89 e2 48 89 de 48 c7
-> > [ 1145.802078][ T5764] RSP: 0018:ffff888514d773c0 EFLAGS: 00010082
-> > [ 1145.808042][ T5764] RAX: 000000000000004e RBX: ffffea00251c8098 RCX:
-> > ffffffffae95d318
-> > [ 1145.815923][ T5764] RDX: 0000000000000000 RSI: 0000000000000008 RDI:
-> > ffff8888440bd380
-> > [ 1145.823806][ T5764] RBP: ffff888514d773d8 R08: ffffed1108817a71 R09:
-> > ffffed1108817a70
-> > [ 1145.831689][ T5764] R10: ffffed1108817a70 R11: ffff8888440bd387 R12:
-> > dead000000000122
-> > [ 1145.839571][ T5764] R13: dead000000000100 R14: ffffea00251c8034 R15:
-> > dead000000000100
-> > [ 1145.847455][ T5764] FS:  00007f765ad4d700(0000) GS:ffff888844080000(0000)
-> > knlGS:0000000000000000
-> > [ 1145.856299][ T5764] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [ 1145.862784][ T5764] CR2: 00007f8cebec7000 CR3: 0000000459338000 CR4:
-> > 00000000001406a0
-> > [ 1145.870664][ T5764] Call Trace:
-> > [ 1145.873835][ T5764]  deferred_split_scan+0x337/0x740
-> > [ 1145.878835][ T5764]  ? split_huge_page_to_list+0xe30/0xe30
-> > [ 1145.884364][ T5764]  ? __radix_tree_lookup+0x12d/0x1e0
-> > [ 1145.889539][ T5764]  ? node_tag_get.part.0.constprop.6+0x40/0x40
-> > [ 1145.895592][ T5764]  do_shrink_slab+0x244/0x5a0
-> > [ 1145.900159][ T5764]  shrink_slab+0x253/0x440
-> > [ 1145.904462][ T5764]  ? unregister_shrinker+0x110/0x110
-> > [ 1145.909641][ T5764]  ? kasan_check_read+0x11/0x20
-> > [ 1145.914383][ T5764]  ? mem_cgroup_protected+0x20f/0x260
-> > [ 1145.919645][ T5764]  shrink_node+0x31e/0xa30
-> > [ 1145.923949][ T5764]  ? shrink_node_memcg+0x1560/0x1560
-> > [ 1145.929126][ T5764]  ? ktime_get+0x93/0x110
-> > [ 1145.933340][ T5764]  do_try_to_free_pages+0x22f/0x820
-> > [ 1145.938429][ T5764]  ? shrink_node+0xa30/0xa30
-> > [ 1145.942906][ T5764]  ? kasan_check_read+0x11/0x20
-> > [ 1145.947647][ T5764]  ? check_chain_key+0x1df/0x2e0
-> > [ 1145.952474][ T5764]  try_to_free_pages+0x242/0x4d0
-> > [ 1145.957299][ T5764]  ? do_try_to_free_pages+0x820/0x820
-> > [ 1145.962566][ T5764]  __alloc_pages_nodemask+0x9ce/0x1bc0
-> > [ 1145.967917][ T5764]  ? kasan_check_read+0x11/0x20
-> > [ 1145.972657][ T5764]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-> > [ 1145.977920][ T5764]  ? kasan_check_read+0x11/0x20
-> > [ 1145.982659][ T5764]  ? check_chain_key+0x1df/0x2e0
-> > [ 1145.987487][ T5764]  ? do_anonymous_page+0x343/0xe30
-> > [ 1145.992489][ T5764]  ? lock_downgrade+0x390/0x390
-> > [ 1145.997230][ T5764]  ? __count_memcg_events+0x8b/0x1c0
-> > [ 1146.002404][ T5764]  ? kasan_check_read+0x11/0x20
-> > [ 1146.007145][ T5764]  ? __lru_cache_add+0x122/0x160
-> > [ 1146.011974][ T5764]  alloc_pages_vma+0x89/0x2c0
-> > [ 1146.016538][ T5764]  do_anonymous_page+0x3e1/0xe30
-> > [ 1146.021367][ T5764]  ? __update_load_avg_cfs_rq+0x2c/0x490
-> > [ 1146.026893][ T5764]  ? finish_fault+0x120/0x120
-> > [ 1146.031461][ T5764]  ? call_function_interrupt+0xa/0x20
-> > [ 1146.036724][ T5764]  handle_pte_fault+0x457/0x12c0
-> > [ 1146.041552][ T5764]  __handle_mm_fault+0x79a/0xa50
-> > [ 1146.046378][ T5764]  ? vmf_insert_mixed_mkwrite+0x20/0x20
-> > [ 1146.051817][ T5764]  ? kasan_check_read+0x11/0x20
-> > [ 1146.056557][ T5764]  ? __count_memcg_events+0x8b/0x1c0
-> > [ 1146.061732][ T5764]  handle_mm_fault+0x17f/0x370
-> > [ 1146.066386][ T5764]  __do_page_fault+0x25b/0x5d0
-> > [ 1146.071037][ T5764]  do_page_fault+0x4c/0x2cf
-> > [ 1146.075426][ T5764]  ? page_fault+0x5/0x20
-> > [ 1146.079553][ T5764]  page_fault+0x1b/0x20
-> > [ 1146.083594][ T5764] RIP: 0033:0x410be0
-> > [ 1146.087373][ T5764] Code: 89 de e8 e3 23 ff ff 48 83 f8 ff 0f 84 86 00 00
-> > 00
-> > 48 89 c5 41 83 fc 02 74 28 41 83 fc 03 74 62 e8 95 29 ff ff 31 d2 48 98 90
-> > <c6>
-> > 44 15 00 07 48 01 c2 48 39 d3 7f f3 31 c0 5b 5d 41 5c c3 0f 1f
-> > [ 1146.106959][ T5764] RSP: 002b:00007f765ad4cec0 EFLAGS: 00010206
-> > [ 1146.112921][ T5764] RAX: 0000000000001000 RBX: 00000000c0000000 RCX:
-> > 00007f98f2674497
-> > [ 1146.120804][ T5764] RDX: 0000000001d95000 RSI: 00000000c0000000 RDI:
-> > 0000000000000000
-> > [ 1146.128687][ T5764] RBP: 00007f74d9d4c000 R08: 00000000ffffffff R09:
-> > 0000000000000000
-> > [ 1146.136569][ T5764] R10: 0000000000000022 R11: 000000000[ 1147.588181][
-> > T5764] Shutting down cpus with NMI
-> > [ 1147.592756][ T5764] Kernel Offset: 0x2d400000 from 0xffffffff81000000
-> > (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> > [ 1147.604414][ T5764] ---[ end Kernel panic - not syncing: Fatal exception
-> > ]---
+> > other info that might help us debug this:
+> > 
+> >   Possible unsafe locking scenario:
+> > 
+> >         CPU0                    CPU1
+> >         ----                    ----
+> >    lock(&mm->mmap_sem#2);
+> >                                 lock(&sb->s_type->i_mutex_key#10);
+> >                                 lock(&mm->mmap_sem#2);
+> >    lock(&sb->s_type->i_mutex_key#10);
+> > 
+> >   *** DEADLOCK ***
+
+The locking on CPU1 shouldn't be nested.  Only after the call to
+security_file_mmap() would the mmap_sem be taken.
+
+Mimi
+
+
+> > 
+> > 1 lock held by syz-executor395/17373:
+> >   #0: 00000000e0714fc5 (&mm->mmap_sem#2){++++}, at:  
+> > do_mprotect_pkey+0x1f6/0xa30 mm/mprotect.c:485
+> > 
+> > stack backtrace:
+> > CPU: 1 PID: 17373 Comm: syz-executor395 Not tainted 5.2.0-rc2-next-20190531  
+> > #4
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >   print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1566
+> >   check_prev_add kernel/locking/lockdep.c:2311 [inline]
+> >   check_prevs_add kernel/locking/lockdep.c:2419 [inline]
+> >   validate_chain kernel/locking/lockdep.c:2801 [inline]
+> >   __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3790
+> >   lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+> >   down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+> >   inode_lock include/linux/fs.h:778 [inline]
+> >   process_measurement+0x15ae/0x15e0 security/integrity/ima/ima_main.c:228
+> >   ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+> >   security_file_mprotect+0xd5/0x100 security/security.c:1430
+> >   do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+> >   __do_sys_pkey_mprotect mm/mprotect.c:590 [inline]
+> >   __se_sys_pkey_mprotect mm/mprotect.c:587 [inline]
+> >   __x64_sys_pkey_mprotect+0x97/0xf0 mm/mprotect.c:587
+> >   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x440279
+> > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+> > ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007ffeec2f48d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000149
+> > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440279
+> > RDX: 000000000000000
+> > 
 > 
-> 
+
