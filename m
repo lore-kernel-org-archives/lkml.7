@@ -2,127 +2,143 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA1DC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A62C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C599208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7755C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dqbvOxsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfGKJYu (ORCPT
+        id S1728294AbfGKJZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:24:50 -0400
-Received: from anchovy1.45ru.net.au ([203.30.46.145]:34123 "EHLO
-        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbfGKJYu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:24:50 -0400
-Received: (qmail 30049 invoked by uid 5089); 11 Jul 2019 09:24:48 -0000
-Received: by simscan 1.2.0 ppid: 29900, pid: 29902, t: 0.0630s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy1.45ru.net.au with ESMTPA; 11 Jul 2019 09:24:47 -0000
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190705160536.12047-1-geert+renesas@glider.be>
- <8500a069-9e29-d6ad-e5e4-22d5a3eead59@electromag.com.au>
- <CAMuHMdWLcr0pf-ZM3+iWQGwDLB2xoHAZaeCKAjtEVEaiNed63Q@mail.gmail.com>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <1fc3a5ad-6eb6-3356-5fd4-93ce0482bb7e@electromag.com.au>
-Date:   Thu, 11 Jul 2019 17:24:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 11 Jul 2019 05:25:43 -0400
+Received: from mail-eopbgr780082.outbound.protection.outlook.com ([40.107.78.82]:12112
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728024AbfGKJZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:25:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mDFle8KYi5L+L3wjkkPB12ErVtquOcT3MqdB/MhjGiQ=;
+ b=dqbvOxsmXKFeQn67Xx6ElX0d4LDFR2YCM/WNUYuB4TF6r9Y7JYgvnur9yM0LpBf8T/UEzIWb8vYc2pY4syvpdI96ZYFpU1v7N9fIlWlnlSE30BMfMVw1eG2dwFlo9cZA1sAzc/Bpz1Q3Q3p2HcxZsKQxOzi42P0J8hDDdRxgQmk=
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.26.153) by
+ BN7PR02MB4244.namprd02.prod.outlook.com (52.135.251.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Thu, 11 Jul 2019 09:25:39 +0000
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::cba:ad22:b7fd:2cfe]) by BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::cba:ad22:b7fd:2cfe%5]) with mapi id 15.20.2052.022; Thu, 11 Jul 2019
+ 09:25:39 +0000
+From:   Kalyani Akula <kalyania@xilinx.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Stephan Mueller <smueller@chronox.de>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sarat Chand Savitala <saratcha@xilinx.com>
+Subject: RE: [RFC PATCH 4/5] crypto: Adds user space interface for
+ ALG_SET_KEY_TYPE
+Thread-Topic: [RFC PATCH 4/5] crypto: Adds user space interface for
+ ALG_SET_KEY_TYPE
+Thread-Index: AQHUrjLRC0KQY4vUUEiutylzuXEA7qWzVM+AgJUjQyCAA8MlgIAVaNiQgBkBuACAGpYxMIAAFOSAgCdEexA=
+Date:   Thu, 11 Jul 2019 09:25:38 +0000
+Message-ID: <BN7PR02MB5124F4680E424C25D77D178DAFF30@BN7PR02MB5124.namprd02.prod.outlook.com>
+References: <1547708541-23730-1-git-send-email-kalyani.akula@xilinx.com>
+ <18759853.IUaQuE38eh@tauon.chronox.de>
+ <SN6PR02MB5135CE53C3E3FB34CA5E6BA8AF320@SN6PR02MB5135.namprd02.prod.outlook.com>
+ <2554415.t45IJDmies@tauon.chronox.de>
+ <BN7PR02MB5124A7E685AC0F59AFBEFC8DAF130@BN7PR02MB5124.namprd02.prod.outlook.com>
+ <20190610063501.u3q2k2vgytvknxs3@gondor.apana.org.au>
+In-Reply-To: <20190610063501.u3q2k2vgytvknxs3@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kalyania@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7c51238a-e0b7-46c0-f32d-08d705e1bcfc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN7PR02MB4244;
+x-ms-traffictypediagnostic: BN7PR02MB4244:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <BN7PR02MB424488DD1D8E78B241AB09F2AFF30@BN7PR02MB4244.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0095BCF226
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(199004)(13464003)(189003)(54906003)(33656002)(26005)(53936002)(316002)(7696005)(486006)(99286004)(71190400001)(102836004)(71200400001)(76176011)(25786009)(68736007)(186003)(6506007)(9686003)(6306002)(4326008)(55016002)(14454004)(966005)(6246003)(107886003)(478600001)(6116002)(229853002)(256004)(6436002)(14444005)(66476007)(52536014)(66446008)(5660300002)(66066001)(66556008)(64756008)(86362001)(76116006)(7736002)(11346002)(3846002)(81156014)(6916009)(305945005)(74316002)(8936002)(66946007)(446003)(8676002)(476003)(81166006)(53546011)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4244;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: X2tYWxnTyyBUkx/MY7xHc8Fmhpiag7fY9zIa7Yz7vd4tVqR4p8mNNjCzdNSpGMSf/3+oKWbjaZVIOj0s0fQ52YqNJJuWx/gh7FFGwbSW2xP3JyCtzXxJQxl/mqfDvq7KSYEyzG+mfbo7z7uygwqtzV3bAVTUOrOwLR4Hlj10Y1xop6VgN56UU6YoJTdZ4PVwGSkZoJwCUlqyApA/fqUB8HHh2dS1l67AzPof0NvsBQtk5/PFfCPjCiZFxa76ZeW9ge+mt1VFJi4eoFUwaPIx0n9NXdferw9PljKd2EbwZghpU9eSYc8rA9UwSfxPREADzXZQ2haHQ/mJMM5+5pAJgNradjjREL+/pzgEQmM7UDq7uzk0YK7h4Ku9QidU/0OnKDQNBS7UjjRmj8cJymy39xRFCdn0STBRerF31rze/dQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWLcr0pf-ZM3+iWQGwDLB2xoHAZaeCKAjtEVEaiNed63Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c51238a-e0b7-46c0-f32d-08d705e1bcfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 09:25:38.9530
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kalyania@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/2019 18:21, Geert Uytterhoeven wrote:
-> Hi Phil,
-> 
-> On Wed, Jul 10, 2019 at 4:00 AM Phil Reid <preid@electromag.com.au> wrote:
->> On 6/07/2019 00:05, Geert Uytterhoeven wrote:
->>> GPIO controllers are exported to userspace using /dev/gpiochip*
->>> character devices.  Access control to these devices is provided by
->>> standard UNIX file system permissions, on an all-or-nothing basis:
->>> either a GPIO controller is accessible for a user, or it is not.
->>> Currently no mechanism exists to control access to individual GPIOs.
->>>
->>> Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
->>> and expose them as a new gpiochip.  This is useful for implementing
->>> access control, and assigning a set of GPIOs to a specific user.
->>> Furthermore, it would simplify and harden exporting GPIOs to a virtual
->>> machine, as the VM can just grab the full virtual GPIO controller, and
->>> no longer needs to care about which GPIOs to grab and which not,
->>> reducing the attack surface.
->>>
->>> Virtual GPIO controllers are instantiated by writing to the "new_device"
->>> attribute file in sysfs:
->>>
->>>       $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
->>>              "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
->>>               > /sys/bus/platform/drivers/gpio-virt-agg/new_device
->>>
->>> Likewise, virtual GPIO controllers can be destroyed after use:
->>>
->>>       $ echo gpio-virt-agg.<N> \
->>>               > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
->>>
->>
->> Nice.
->> This provides similar functionality to the "gpio inverter" driver currently on the list.
->> Other than being just a buffer.
-> 
-> Indeed, both drivers forward GPIO calls, but the gpio inverter modifies
-> some parameters passed.
-> 
-> The way the drivers obtain references to GPIOs is different, though: the
-> inverter driver obtains a fixed description from DT, while the virtual
-> aggregator receives the description at runtime, from sysfs.
-> 
-> But perhaps both drivers could share some code?
-Other than probing they're almost the same, except the inversion.
-This one's more complete for set / get multiple etc.
+Hi Herbert,
 
-> 
->> Would it be possible to do the lookup via line names?
-> 
-> Doesn't the fact that a GPIO has a line name means that it is in use, and
-> thus cannot be aggregated and exported to another user?
-> 
+Paes driver is using key expansion algorithm to encrypt and decrypt the pla=
+intext. HW capability of expanding the given plain key is checked based on =
+the provide key length. Here the HW key is the expended version of plain ke=
+y.
 
-They can be given line names via the dt property gpio-line-names.
-Which can be used by user space to find a gpio. Not sure if there's an equivalent api inkerenl.
-But it looks like we can find the info via struct gpiochip_info / gpioline_info linfo and work
-out the chip name and line offsets. So probably not required.
+Xilinx AES hardware has a capability to take plain keys/encrypted keys ( th=
+ese keys are user programmable but for security reasons they are not readab=
+le. Only AES accelerator has read access to these keys) stored on chip ( in=
+ eFuse/BBRAM etc, ) and used for AES encryption/decryption.
+Xilinx software is giving the Customer, the flexibility to choose among the=
+ different on-chip AES keys.
+So, we chosen a way to add AES_SEL_HW_KEY option.
 
-Find the right gpio always seems tricky.
-We have systems with multiple i2c gpio behind muxes that may or may not be present.
-So i2c bus numbers are never consistent. And then different board revisions move the
-same gpio line to a different pin (or cahnge the gpio chip type completely) to make routing easier etc.
+In Paes driver , The ALG_SET_KEY interface is used to distinguish between H=
+W Vs SW expansion of plain key based on the key_len.=20
 
+How about using same interface to distinguish between the User supplied key=
+ Vs HW key selection based on key_len parameter.
 
+Thanks
+kalyani  =09
 
-
--- 
-Regards
-Phil Reid
+> -----Original Message-----
+> From: Herbert Xu <herbert@gondor.apana.org.au>
+> Sent: Monday, June 10, 2019 12:05 PM
+> To: Kalyani Akula <kalyania@xilinx.com>
+> Cc: Stephan Mueller <smueller@chronox.de>; keyrings@vger.kernel.org;
+> davem@davemloft.net; linux-crypto@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Sarat Chand Savitala <saratcha@xilinx.com>
+> Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for
+> ALG_SET_KEY_TYPE
+>=20
+> On Mon, Jun 10, 2019 at 05:20:58AM +0000, Kalyani Akula wrote:
+> > Ping!!
+>=20
+> We already have existing drivers supporting hardware keys.  Please check
+> out how they're handling this.  You can grep for paes under drivers/crypt=
+o.
+>=20
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au> Home Page:
+> http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
