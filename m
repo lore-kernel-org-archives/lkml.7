@@ -2,101 +2,62 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1D1C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D24C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7EC21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB9421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbfGKUFZ (ORCPT
+        id S1729166AbfGKUFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:05:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50858 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbfGKUFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:05:17 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlfJb-0005Ri-9e; Thu, 11 Jul 2019 22:05:15 +0200
-Date:   Thu, 11 Jul 2019 20:02:36 -0000
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] timers/urgent for 5.3-rc1
-References: <156287535656.8320.16630272660351040656.tglx@nanos.tec.linutronix.de>
-Message-ID: <156287535656.8320.9605793923078784342.tglx@nanos.tec.linutronix.de>
+        Thu, 11 Jul 2019 16:05:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54951 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728644AbfGKUFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 16:05:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 13:05:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
+   d="scan'208";a="171340904"
+Received: from mmoerth-mobl6.ger.corp.intel.com (HELO localhost) ([10.249.35.82])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jul 2019 13:05:25 -0700
+Date:   Thu, 11 Jul 2019 23:05:23 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
+        sumit.garg@linaro.org, rdunlap@infradead.org
+Subject: Re: [PATCH v8 2/2] fTPM: add documentation for ftpm driver
+Message-ID: <20190711200523.2y6hgsyxfuui4yao@linux.intel.com>
+References: <20190705204746.27543-1-sashal@kernel.org>
+ <20190705204746.27543-3-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705204746.27543-3-sashal@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, Jul 05, 2019 at 04:47:46PM -0400, Sasha Levin wrote:
+> This patch adds basic documentation to describe the new fTPM driver.
+> 
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-please pull the latest timers-urgent-for-linus git tree from:
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
-
-up to:  0df1c9868c3a: timekeeping/vsyscall: Use __iter_div_u64_rem()
-
-Two small fixes from the timer departement:
-
- - Prevent the compiler from converting the nanoseconds adjustment loop in
-   the VDSO update function to a division (__udivdi3) by using the
-   __iter_div_u64_rem() inline function which exists to prevent exactly
-   that problem.
-
- - Fix the wrong argument order of the GENMASK macro in the NPCM timer driver
-
-Thanks,
-
-	tglx
-
------------------->
-Arnd Bergmann (1):
-      timekeeping/vsyscall: Use __iter_div_u64_rem()
-
-Joe Perches (1):
-      clocksource/drivers/npcm: Fix misuse of GENMASK macro
-
-
- drivers/clocksource/timer-npcm7xx.c | 2 +-
- kernel/time/vsyscall.c              | 6 +-----
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
-index 7a9bb5532d99..8a30da7f083b 100644
---- a/drivers/clocksource/timer-npcm7xx.c
-+++ b/drivers/clocksource/timer-npcm7xx.c
-@@ -32,7 +32,7 @@
- #define NPCM7XX_Tx_INTEN		BIT(29)
- #define NPCM7XX_Tx_COUNTEN		BIT(30)
- #define NPCM7XX_Tx_ONESHOT		0x0
--#define NPCM7XX_Tx_OPER			GENMASK(3, 27)
-+#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
- #define NPCM7XX_Tx_MIN_PRESCALE		0x1
- #define NPCM7XX_Tx_TDR_MASK_BITS	24
- #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-index a80893180826..8cf3596a4ce6 100644
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -104,11 +104,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
- 	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
- 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
--	while (nsec >= NSEC_PER_SEC) {
--		nsec = nsec - NSEC_PER_SEC;
--		vdso_ts->sec++;
--	}
--	vdso_ts->nsec	= nsec;
-+	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
- 
- 	if (__arch_use_vsyscall(vdata))
- 		update_vdso_data(vdata, tk);
-
+/Jarkko
