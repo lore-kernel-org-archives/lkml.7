@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EE3C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4CCC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809FC21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57C92166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbfGKPrx (ORCPT
+        id S1729077AbfGKPsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 11:47:53 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:11122 "EHLO
+        Thu, 11 Jul 2019 11:48:01 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:63238 "EHLO
         alexa-out-blr.qualcomm.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728248AbfGKPrs (ORCPT
+        by vger.kernel.org with ESMTP id S1728949AbfGKPrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 11:47:48 -0400
+        Thu, 11 Jul 2019 11:47:55 -0400
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
   by alexa-out-blr.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jul 2019 21:11:33 +0530
-X-IronPort-AV: E=McAfee;i="6000,8403,9314"; a="10317403"
+X-IronPort-AV: E=McAfee;i="6000,8403,9314"; a="10317414"
 Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 11 Jul 2019 21:11:10 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 11 Jul 2019 21:11:11 +0530
 Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id 16AEE35C0; Thu, 11 Jul 2019 21:11:09 +0530 (IST)
+        id 5754E35D6; Thu, 11 Jul 2019 21:11:09 +0530 (IST)
 From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 To:     agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org,
@@ -36,9 +36,9 @@ To:     agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         sricharan@codeaurora.org, gokulsri@codeaurora.org
-Subject: [PATCH 04/12] remoteproc: qcom: Add ssr subdevice identifier
-Date:   Thu, 11 Jul 2019 21:11:00 +0530
-Message-Id: <1562859668-14209-5-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH 09/12] mailbox: qcom: Add support for IPQ8074 APCS
+Date:   Thu, 11 Jul 2019 21:11:05 +0530
+Message-Id: <1562859668-14209-10-git-send-email-gokulsri@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
 References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
@@ -47,27 +47,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add name for ssr subdevice on IPQ8074 SoC.
+Add support of IPQ8074 with IPC register offset as 8.
 
 Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 1 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 5957114..6d3ef06 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -1156,6 +1156,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	.m3_firmware_name = "IPQ8074/m3_fw.mdt",
- 	.crash_reason_smem = 421,
- 	.aon_reset_required = true,
-+	.ssr_name = "q6wcss",
- 	.ops = &q6v5_wcss_ipq8074_ops,
- 	.requires_force_stop = true,
- 	.need_mem_protection = true,
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a..52185eb 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -119,6 +119,7 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
+ 	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
+ 	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
+ 	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
++	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = (void *)8 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
