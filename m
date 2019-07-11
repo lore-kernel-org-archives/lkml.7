@@ -2,150 +2,70 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDDBC74A51
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E34C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1F821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="BwUFcHBn"
+	by mail.kernel.org (Postfix) with ESMTP id 4D454208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfGKJ2A (ORCPT
+        id S1728311AbfGKJ3W convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:28:00 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43977 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728027AbfGKJ2A (ORCPT
+        Thu, 11 Jul 2019 05:29:22 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:63720 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726088AbfGKJ3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:28:00 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6B9Qltj019115;
-        Thu, 11 Jul 2019 11:27:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=ozuHaFSyD+aZJ4haNAizK22rnLxhHA6aUOrq7v4rYzM=;
- b=BwUFcHBnsNVm3nBNpAUuttYo/2pyWXJoO+rXajtM4GNAlGhVGMdHqALX7vzbQnDTZm5Q
- aFtg9FJCiobvdsNyuS4/Tr/a160Goosfo41RUowkcDnUBF2ZVSe/oWcUn4+zgRT3xPyS
- QHSn0h2dlB6RhitmkIdM9nizn91BYHGlYGcTP4AFV1VZ+GBu7PPiiM2f6Bjlqs8bOmGK
- fhQZGbqpP6OcMYoSPja1MduluPvVF/S+XvofNbfbK3I+49Z4X0OyHCkqNON7EapvLHCD
- 7OyZBcjV6Z/fL8+o62L1vLwyz3iSQo0M5GFQ12/vMmGjoivVQTuaZHmReke6Up4wkiXO 4A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2tmvx04bpn-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 11 Jul 2019 11:27:34 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4779442;
-        Thu, 11 Jul 2019 09:27:31 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 00F1C26BB;
-        Thu, 11 Jul 2019 09:27:30 +0000 (GMT)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 11 Jul
- 2019 11:27:30 +0200
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Thu, 11 Jul 2019 11:27:30 +0200
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Olivier MOYSAN <olivier.moysan@st.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Benjamin GAIGNARD" <benjamin.gaignard@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "jsarha@ti.com" <jsarha@ti.com>
-Subject: Re: [PATCH] drm/bridge: sii902x: add audio graph card support
-Thread-Topic: [PATCH] drm/bridge: sii902x: add audio graph card support
-Thread-Index: AQHVMXX5EUvh0puEZ0ygMEtXg5C9Kaa72VsAgAgKHwCAAS3HAA==
-Date:   Thu, 11 Jul 2019 09:27:30 +0000
-Message-ID: <e29c1671-99fb-581d-bfb7-61ca2cfa8622@st.com>
-References: <1562141052-26221-1-git-send-email-olivier.moysan@st.com>
- <7c17b3f2-afee-7548-7620-b67d11d09b24@st.com>
- <20190710152720.GR15868@phenom.ffwll.local>
-In-Reply-To: <20190710152720.GR15868@phenom.ffwll.local>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
+        Thu, 11 Jul 2019 05:29:21 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 17217972-1500050 
+        for multiple; Thu, 11 Jul 2019 10:29:19 +0100
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <97E4496BC2C9B749B2D4DC4A340B3153@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_01:,,
- signatures=0
+Content-Transfer-Encoding: 8BIT
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        intel-gfx@lists.freedesktop.org
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <1561834612.3071.6.camel@HansenPartnership.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+Message-ID: <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
+Date:   Thu, 11 Jul 2019 10:29:17 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQoNCk9uIDcvMTAvMTkgNToyNyBQTSwgRGFuaWVsIFZldHRlciB3cm90ZToN
-Cj4gT24gRnJpLCBKdWwgMDUsIDIwMTkgYXQgMTI6NDE6MDNQTSArMDAwMCwgUGhpbGlwcGUgQ09S
-TlUgd3JvdGU6DQo+PiBIaSBPbGl2aWVyLA0KPj4gYW5kIG1hbnkgdGhhbmtzIGZvciB5b3VyIHBh
-dGNoLg0KPj4gR29vZCB0byBoYXZlIHRoZSBhdWRpbyBncmFwaCBjYXJkIHN1cHBvcnQsIGxvb2tz
-IG9rLg0KPj4gUmV2aWV3ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5j
-b20+DQo+IA0KPiBTaW5jZSB5b3UgaGF2ZSBkcm0tbWlzYyBjb21taXQgcmlnaHRzIEknbSBhc3N1
-bWluZyB5b3UncmUgZ29pbmcgdG8gcHVzaA0KPiB0aGlzIHRvby4gQ29ycmVjdD8NCj4gLURhbmll
-bA0KDQpSZWdhcmRpbmcgdGhpcyBwYXRjaCBpbiBwYXJ0aWN1bGFyLCB0aGVyZSBpcyBzdGlsbCBt
-aXNzaW5nIGFuIGFja2VkLWJ5IA0KZnJvbSBhICJicmlkZ2UiIG1haW50YWluZXIuIEFsc28gaXQg
-Y291bGQgYmUgbmljZSB0byB3YWl0IGZvciB0aGUgDQpyZXZpZXdlZC1ieSBmcm9tIEppcnkgYXMg
-aXQga25vd3Mgd2VsbCB0aGlzIHNpaSBkcml2ZXIgYW5kIHNlbnQgcmVjZW50bHkgDQpnb29kIHBh
-dGNoZXMgb24gaXQgKGFscmVhZHkgbWVyZ2VkKS4NCg0KV2l0aCB0aGF0LCBCZW5qYW1pbiBvciBJ
-IChvciBhIGJyaWRnZSBtYWludGFpbmVyKSBjYW4gcHVzaCB0aGlzIHBhdGNoICsgDQp0aGUgc2Vy
-aWUgbmFtZWQgImRybS9icmlkZ2U6IHNpaTkwMng6IGZpeCBhdWRpbyBtY2xrIG1hbmFnZW1lbnQi
-IGFzIEkgDQp0aGluayBpdCBpcyBiZXR0ZXIgdG8gcHVzaCB0aGlzIHNlcmllICpiZWZvcmUqIHRo
-aXMgcGF0Y2guDQoNClRoYW5rcywNClBoaWxpcHBlIDotKQ0KDQoNCj4+IFBoaWxpcHBlIDotKQ0K
-Pj4NCj4+IE9uIDcvMy8xOSAxMDowNCBBTSwgT2xpdmllciBNb3lzYW4gd3JvdGU6DQo+Pj4gSW1w
-bGVtZW50IGdldF9kYWlfaWQgY2FsbGJhY2sgb2YgYXVkaW8gSERNSSBjb2RlYw0KPj4+IHRvIHN1
-cHBvcnQgQVNvQyBhdWRpbyBncmFwaCBjYXJkLg0KPj4+IEhETUkgYXVkaW8gb3V0cHV0IGhhcyB0
-byBiZSBjb25uZWN0ZWQgdG8gc2lpOTAyeCBwb3J0IDMuDQo+Pj4gZ2V0X2RhaV9pZCBjYWxsYmFj
-ayBtYXBzIHRoaXMgcG9ydCB0byBBU29DIERBSSBpbmRleCAwLg0KPj4+DQo+Pj4gU2lnbmVkLW9m
-Zi1ieTogT2xpdmllciBNb3lzYW4gPG9saXZpZXIubW95c2FuQHN0LmNvbT4NCj4+PiAtLS0NCj4+
-PiAgICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8IDIzICsrKysrKysrKysrKysr
-KysrKysrKysrDQo+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKykNCj4+Pg0K
-Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyBiL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jDQo+Pj4gaW5kZXggZGQ3YWE0NjZiMjgwLi5kYWY5
-ZWYzY2Q4MTcgMTAwNjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4
-LmMNCj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYw0KPj4+IEBAIC0x
-NTgsNiArMTU4LDggQEANCj4+PiAgICANCj4+PiAgICAjZGVmaW5lIFNJSTkwMlhfSTJDX0JVU19B
-Q1FVSVNJVElPTl9USU1FT1VUX01TCTUwMA0KPj4+ICAgIA0KPj4+ICsjZGVmaW5lIFNJSTkwMlhf
-QVVESU9fUE9SVF9JTkRFWAkJMw0KPj4+ICsNCj4+PiAgICBzdHJ1Y3Qgc2lpOTAyeCB7DQo+Pj4g
-ICAgCXN0cnVjdCBpMmNfY2xpZW50ICppMmM7DQo+Pj4gICAgCXN0cnVjdCByZWdtYXAgKnJlZ21h
-cDsNCj4+PiBAQCAtNjkwLDExICs2OTIsMzIgQEAgc3RhdGljIGludCBzaWk5MDJ4X2F1ZGlvX2dl
-dF9lbGQoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpkYXRhLA0KPj4+ICAgIAlyZXR1cm4gMDsN
-Cj4+PiAgICB9DQo+Pj4gICAgDQo+Pj4gK3N0YXRpYyBpbnQgc2lpOTAyeF9hdWRpb19nZXRfZGFp
-X2lkKHN0cnVjdCBzbmRfc29jX2NvbXBvbmVudCAqY29tcG9uZW50LA0KPj4+ICsJCQkJICAgIHN0
-cnVjdCBkZXZpY2Vfbm9kZSAqZW5kcG9pbnQpDQo+Pj4gK3sNCj4+PiArCXN0cnVjdCBvZl9lbmRw
-b2ludCBvZl9lcDsNCj4+PiArCWludCByZXQ7DQo+Pj4gKw0KPj4+ICsJcmV0ID0gb2ZfZ3JhcGhf
-cGFyc2VfZW5kcG9pbnQoZW5kcG9pbnQsICZvZl9lcCk7DQo+Pj4gKwlpZiAocmV0IDwgMCkNCj4+
-PiArCQlyZXR1cm4gcmV0Ow0KPj4+ICsNCj4+PiArCS8qDQo+Pj4gKwkgKiBIRE1JIHNvdW5kIHNo
-b3VsZCBiZSBsb2NhdGVkIGF0IHJlZyA9IDwzPg0KPj4+ICsJICogUmV0dXJuIGV4cGVjdGVkIERB
-SSBpbmRleCAwLg0KPj4+ICsJICovDQo+Pj4gKwlpZiAob2ZfZXAucG9ydCA9PSBTSUk5MDJYX0FV
-RElPX1BPUlRfSU5ERVgpDQo+Pj4gKwkJcmV0dXJuIDA7DQo+Pj4gKw0KPj4+ICsJcmV0dXJuIC1F
-SU5WQUw7DQo+Pj4gK30NCj4+PiArDQo+Pj4gICAgc3RhdGljIGNvbnN0IHN0cnVjdCBoZG1pX2Nv
-ZGVjX29wcyBzaWk5MDJ4X2F1ZGlvX2NvZGVjX29wcyA9IHsNCj4+PiAgICAJLmh3X3BhcmFtcyA9
-IHNpaTkwMnhfYXVkaW9faHdfcGFyYW1zLA0KPj4+ICAgIAkuYXVkaW9fc2h1dGRvd24gPSBzaWk5
-MDJ4X2F1ZGlvX3NodXRkb3duLA0KPj4+ICAgIAkuZGlnaXRhbF9tdXRlID0gc2lpOTAyeF9hdWRp
-b19kaWdpdGFsX211dGUsDQo+Pj4gICAgCS5nZXRfZWxkID0gc2lpOTAyeF9hdWRpb19nZXRfZWxk
-LA0KPj4+ICsJLmdldF9kYWlfaWQgPSBzaWk5MDJ4X2F1ZGlvX2dldF9kYWlfaWQsDQo+Pj4gICAg
-fTsNCj4+PiAgICANCj4+PiAgICBzdGF0aWMgaW50IHNpaTkwMnhfYXVkaW9fY29kZWNfaW5pdChz
-dHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCwNCj4+Pg0KPiA=
+Quoting James Bottomley (2019-06-29 19:56:52)
+> The symptoms are really weird: the screen image is locked in place. 
+> The machine is still functional and if I log in over the network I can
+> do anything I like, including killing the X server and the display will
+> never alter.  It also seems that the system is accepting keyboard input
+> because when it freezes I can cat information to a file (if the mouse
+> was over an xterm) and verify over the network the file contents. 
+> Nothing unusual appears in dmesg when the lockup happens.
+> 
+> The last kernel I booted successfully on the system was 5.0, so I'll
+> try compiling 5.1 to narrow down the changes.
+
+It's likely this is panel self-refresh going haywire.
+
+commit 8f6e87d6d561f10cfa48a687345512419839b6d8
+Author: José Roberto de Souza <jose.souza@intel.com>
+Date:   Thu Mar 7 16:00:50 2019 -0800
+
+    drm/i915: Enable PSR2 by default
+
+    The support for PSR2 was polished, IGT tests for PSR2 was added and
+    it was tested performing regular user workloads like browsing,
+    editing documents and compiling Linux, so it is time to enable it by
+    default and enjoy even more power-savings.
+
+Temporary workaround would be to set i915.enable_psr=0
+-Chris
