@@ -2,93 +2,70 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=BODY_SINGLE_WORD,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1573C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B068FC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A34920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9DD20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KvUJNONA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZfoYVp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfGKOrt (ORCPT
+        id S1728873AbfGKOt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:47:49 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34976 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbfGKOrt (ORCPT
+        Thu, 11 Jul 2019 10:49:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33412 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbfGKOt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:47:49 -0400
-Received: by mail-vs1-f67.google.com with SMTP id u124so4367991vsu.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:47:48 -0700 (PDT)
+        Thu, 11 Jul 2019 10:49:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id z3so13188681iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:49:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rUmlGY6yas6VrdYZGOaSdQwWGQVgRyYlGBxMRjwXy+U=;
-        b=KvUJNONAi7UUgCR2G0iyP9dC+TEMlGB52UsU1vpEIE5VUni18sfejiXR6iDDWn9v+L
-         DRT+7FMtOVb1Q5RVg/FNfJrxVYnjZ8hPBBJS3BgXxC8s+n22dFw04/QfQE/PzafV70Ux
-         yuO1IbahQooVuS+EAWoBqL1hRsJC012tPEX+7IwdPyb6Sc5P57LB6iGNOhObv3pivyMG
-         qit8V+zMIOigBTnd9LMt57Oty1F4rJVj6Pf6gsrZPQ7bDgZ+ma+hixUViT2TEmzDyLL8
-         q+MKCCA14cL/H81tWsOac2m2U5Ot90z2OirelMMAk6qnpIFHP4rxO/tfP0F2dHPgqOza
-         CtnA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lx6jElU+VgfY4Bhw8zy9GLpHJyyAtrcr2M9tyhr/Psc=;
+        b=PZfoYVp9w+orcqxhn0RgEJDYDszb/ij2M+Xb1Rfob0X38xwVFepTuTK4GQowApAVLo
+         yvXCZ9vWsTJKt7CX9GrBIl7c9Z+J3FUNNNr/V84rKslZp5CdNzFRLYmrvGvlasrrZPqg
+         kwPidg7mZdKlRJCF8TlVBRQ8ruTRBb6A394OA1BAZPx1FhkgWih7IMzx/RB1czYT4nPB
+         BGaQfx/8d9SPe0jb3OW+l5/oxt18QmMhMRiid6I0e/VH2C8k4OmO3cRZonAv4IxB8nCa
+         5ixREfY0l4lb0e1+XhrRHm5Gwu994algfl4wG7/OOXEU2R1MxEcNjCF+zCsek+agBbZd
+         L6rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rUmlGY6yas6VrdYZGOaSdQwWGQVgRyYlGBxMRjwXy+U=;
-        b=mvw1Riy60eeA9T8tLZwvk15fegDtT4zRHIheTvKDG2MEopFFH+mu8AzXXS5/xJH0eF
-         Rrc0Yubis7Tb6n9gw+oo1SDt+JfeRXVoynbvQOewHLgYRL4FyunzG5123jOAqOjtukAr
-         X5xkAhLXdbTMGc2V65tI30R/tDQeP83hsF34lnUmnHOYm2eOWhBHOuhUvyAPP23t5ZQU
-         m0Cs7ZmaX/dMJ8eOi393f36CJEAB9cYZF/u5/HPgx2imli9EC3DF3oW4jVLvzzvz94jI
-         nW4dfx/8BmXF9ZbffHwcbZGPTjW27/xXBswRnwML8Izl50/NRor7A2HPXqgBW5aVON4d
-         gK2A==
-X-Gm-Message-State: APjAAAUWs8szNCJm1Ys0Cf8KaJ22B0fmzKpBNmemQsIWoDaQbS5LR3yJ
-        qhkj+eoRQHRvhCon9FnJ5HaAcQ==
-X-Google-Smtp-Source: APXvYqweUoGqYduacnXihqjruL1/rYGti5hbwSoZmr/KlGD77Gaa/f8FIBkxNmOTelMEisrTtqxYMg==
-X-Received: by 2002:a67:2586:: with SMTP id l128mr4867052vsl.52.1562856467869;
-        Thu, 11 Jul 2019 07:47:47 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id z10sm1661564vsn.23.2019.07.11.07.47.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 07:47:47 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlaMM-0003UA-NL; Thu, 11 Jul 2019 11:47:46 -0300
-Date:   Thu, 11 Jul 2019 11:47:46 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     bmt@zurich.ibm.com, dledford@redhat.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH -next] rdma/siw: remove set but not used variable 's'
-Message-ID: <20190711144746.GA13376@ziepe.ca>
-References: <20190711071213.57880-1-yuehaibing@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lx6jElU+VgfY4Bhw8zy9GLpHJyyAtrcr2M9tyhr/Psc=;
+        b=iHJVd44RvvAjLSJO1ry6Q7ybOYiE80+sf0gQo6q71ZMASppv49y7sTp8HtIVAmmIm7
+         /nTTsW84kTni6V0FANYv0L5+L/OVUOcCClEjzb1YXZd/Ddi4lhYc87iaZ7ZUE2W4UGmk
+         wo54uNifHXsC0UOnXtBy5DsbAGr2r1As9nHplWHAF/ypMgTLPufbb4iE+bN3ikXqzllr
+         utMg8gqQ+KrOEi7/7LbWcuUlppJFh8U/Rnw5LWInXoPaI0/g2WQfFNNogvmKetHFqyeP
+         pTn0607bGTqbzk6dvV32BPKjzmh0INZYC64JS+jVRBmZyYk0vDWgcZhDIVoOATMhNGWF
+         OxuQ==
+X-Gm-Message-State: APjAAAVI2qWU/62NEFfjWRki44/fYXNVpwZwbaABkjqU/c9cqwzRf6N2
+        RZbO6RlsTN/m4nIv95+LM33d4KkSPxADSDcWtZ0=
+X-Google-Smtp-Source: APXvYqxZQg9gmCNd9CO5UADhYdQTr+8XEM146+WZqrbqteXzrxKJ/9aWlv92Ercncs0hvYlqdh/GDlvo02YRcViHNEE=
+X-Received: by 2002:a5d:9416:: with SMTP id v22mr4996202ion.4.1562856565809;
+ Thu, 11 Jul 2019 07:49:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711071213.57880-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190607182517.28266-1-tiny.windzz@gmail.com>
+In-Reply-To: <20190607182517.28266-1-tiny.windzz@gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 11 Jul 2019 22:49:14 +0800
+Message-ID: <CAEExFWvh9HMWNKeDNhx1vqTbUB=_117qCP1TjCxEFwiYV4N_FA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] random: remove unnecessary unlikely()
+To:     tytso@mit.edu, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 03:12:13PM +0800, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/infiniband/sw/siw/siw_cm.c: In function siw_cm_llp_state_change:
-> drivers/infiniband/sw/siw/siw_cm.c:1278:17: warning: variable s set but not used [-Wunused-but-set-variable]
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/infiniband/sw/siw/siw_cm.c | 3 ---
->  1 file changed, 3 deletions(-)
-
-Applied to for-next, thanks
-
-Jason
+ping...
