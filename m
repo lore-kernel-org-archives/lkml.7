@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C4CC74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F01EC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1442166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0EF216B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j/8IHCr9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HGyms/pI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfGKO1e (ORCPT
+        id S1728782AbfGKO1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:27:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41778 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbfGKO1c (ORCPT
+        Thu, 11 Jul 2019 10:27:38 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39270 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728440AbfGKO1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:27:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEO7tr013226;
-        Thu, 11 Jul 2019 14:26:10 GMT
+        Thu, 11 Jul 2019 10:27:36 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEOabr100891;
+        Thu, 11 Jul 2019 14:26:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=385wpu4NDusZzlrvO4wdMoGEKubdnUYw4N6zqr4muDU=;
- b=j/8IHCr9S0gUaWnFi3Upjzuz55gy9Ljh6nfaWePnOoytFJ9B7SnJKULz74C3ywY6RXqi
- e2nlqVa9W7MNYSdP2Vf2C/oYboYtNcwS8EW9VbU8cIsaN6Fl9HN5Irx/xBWUPbwuO3Rb
- pA8nC/jt3qZSlX5P9mWE6i1BavyZZ35GVGnmvivmjOvqS8a8/Z0v3tfm2TkPowKHagRD
- jG7N8dpzCgLK0VRzFa0NpGxGayMyo+vj0XV5/GWaoX6BlSffhi7TdWAzW0NBMvhvqMgW
- Mi7BkTLlSEZlEqWrGTNR/OK6j6uUWeCyQ/O4mFUX/8vA2YAylUPyhsIeKxT9HDn0UNu4 +A== 
+ bh=Ccv45kVv21CrVP2UQjHtQ159yrdddBRkfeerFm1lQZs=;
+ b=HGyms/pISRX5hcPdr6Z5qUYPoK8BQ52EIauuQPyhPhRre44rLyUHzvnoqOTRvXzrwhCv
+ OTY05ptHcmicwwbGGPPXQN6m4TPthhy/xClxEZa4yF8uHSsKm7ZSH9u/tLfCQHG6hg1K
+ +gEPReBvdFOuXQjB3QhAq8WvFQ4EtwdfdpRMWXWmCpj3REbSSnlT8iB9x+evcMVyxruc
+ OTPrrYVoOXTGYADVN58b8Xu0sMhIRq/VtBIXKZS/5/ya9K9aD3oXpTX8QexDk1Ib94j1
+ ij8M3PZb4/wsMYxdM8hN/VwLMvqwLeYU8gvZc6wjF0NGEF6IBAOdWQJA2MvUwBG0KojU 6Q== 
 Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2tjm9r0bn2-1
+        by aserp2120.oracle.com with ESMTP id 2tjkkq0c8m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 14:26:09 +0000
+        Thu, 11 Jul 2019 14:26:21 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcu0021444;
-        Thu, 11 Jul 2019 14:26:06 GMT
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcu4021444;
+        Thu, 11 Jul 2019 14:26:18 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,16 +50,16 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
         rppt@linux.vnet.ibm.com, alexandre.chartre@oracle.com
-Subject: [RFC v2 07/26] mm/asi: Add ASI page-table entry set functions
-Date:   Thu, 11 Jul 2019 16:25:19 +0200
-Message-Id: <1562855138-19507-8-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC v2 11/26] mm/asi: Functions to clear ASI page-table entries for a VA range
+Date:   Thu, 11 Jul 2019 16:25:23 +0200
+Message-Id: <1562855138-19507-12-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=905 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907110162
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,147 +67,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add wrappers around the page table entry (pgd/p4d/pud/pmd) set
-functions which check that an existing entry is not being
-overwritten.
+Provide functions to clear page-table entries in the ASI page-table for
+a specified VA range. Functions also check that the clearing effectively
+happens in the ASI page-table and there is no crossing of the ASI
+page-table boundary (through references to the kernel page table), so
+that the kernel page table is not modified by mistake.
+
+As information (address, size, page-table level) about VA ranges mapped
+to the ASI page-table is tracked, clearing is done with just specifying
+the start address of the range.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/mm/asi_pagetable.c |  124 +++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 124 insertions(+), 0 deletions(-)
+ arch/x86/include/asm/asi.h  |    1 +
+ arch/x86/mm/asi_pagetable.c |  134 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 135 insertions(+), 0 deletions(-)
 
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index be1c190..919129f 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -83,6 +83,7 @@ extern bool asi_fault(struct pt_regs *regs, unsigned long error_code,
+ extern int asi_map_range(struct asi *asi, void *ptr, size_t size,
+ 			 enum page_table_level level);
+ extern int asi_map(struct asi *asi, void *ptr, unsigned long size);
++extern void asi_unmap(struct asi *asi, void *ptr);
+ 
+ /*
+  * Copy the memory mapping for the current module. This is defined as a
 diff --git a/arch/x86/mm/asi_pagetable.c b/arch/x86/mm/asi_pagetable.c
-index 0fc6d59..e17af9e 100644
+index a09a22d..7aee236 100644
 --- a/arch/x86/mm/asi_pagetable.c
 +++ b/arch/x86/mm/asi_pagetable.c
-@@ -270,3 +270,127 @@ static bool asi_valid_offset(struct asi *asi, void *offset)
- 
- 	return p4d;
+@@ -670,3 +670,137 @@ int asi_map(struct asi *asi, void *ptr, unsigned long size)
+ 	return asi_map_range(asi, ptr, size, PGT_LEVEL_PTE);
  }
+ EXPORT_SYMBOL(asi_map);
++
++static void asi_clear_pte_range(struct asi *asi, pmd_t *pmd,
++				unsigned long addr, unsigned long end)
++{
++	pte_t *pte;
++
++	pte = asi_pte_offset(asi, pmd, addr);
++	if (IS_ERR(pte))
++		return;
++
++	do {
++		pte_clear(NULL, addr, pte);
++	} while (pte++, addr += PAGE_SIZE, addr < end);
++}
++
++static void asi_clear_pmd_range(struct asi *asi, pud_t *pud,
++				unsigned long addr, unsigned long end,
++				enum page_table_level level)
++{
++	unsigned long next;
++	pmd_t *pmd;
++
++	pmd = asi_pmd_offset(asi, pud, addr);
++	if (IS_ERR(pmd))
++		return;
++
++	do {
++		next = pmd_addr_end(addr, end);
++		if (pmd_none(*pmd) || pmd_present(*pmd))
++			continue;
++		if (level == PGT_LEVEL_PMD || pmd_trans_huge(*pmd) ||
++		    pmd_devmap(*pmd)) {
++			pmd_clear(pmd);
++			continue;
++		}
++		asi_clear_pte_range(asi, pmd, addr, next);
++	} while (pmd++, addr = next, addr < end);
++}
++
++static void asi_clear_pud_range(struct asi *asi, p4d_t *p4d,
++				unsigned long addr, unsigned long end,
++				enum page_table_level level)
++{
++	unsigned long next;
++	pud_t *pud;
++
++	pud = asi_pud_offset(asi, p4d, addr);
++	if (IS_ERR(pud))
++		return;
++
++	do {
++		next = pud_addr_end(addr, end);
++		if (pud_none(*pud))
++			continue;
++		if (level == PGT_LEVEL_PUD || pud_trans_huge(*pud) ||
++		    pud_devmap(*pud)) {
++			pud_clear(pud);
++			continue;
++		}
++		asi_clear_pmd_range(asi, pud, addr, next, level);
++	} while (pud++, addr = next, addr < end);
++}
++
++static void asi_clear_p4d_range(struct asi *asi, pgd_t *pgd,
++				unsigned long addr, unsigned long end,
++				enum page_table_level level)
++{
++	unsigned long next;
++	p4d_t *p4d;
++
++	p4d = asi_p4d_offset(asi, pgd, addr);
++	if (IS_ERR(p4d))
++		return;
++
++	do {
++		next = p4d_addr_end(addr, end);
++		if (p4d_none(*p4d))
++			continue;
++		if (level == PGT_LEVEL_P4D) {
++			p4d_clear(p4d);
++			continue;
++		}
++		asi_clear_pud_range(asi, p4d, addr, next, level);
++	} while (p4d++, addr = next, addr < end);
++}
++
++static void asi_clear_pgd_range(struct asi *asi, pgd_t *pagetable,
++				unsigned long addr, unsigned long end,
++				enum page_table_level level)
++{
++	unsigned long next;
++	pgd_t *pgd;
++
++	pgd = pgd_offset_pgd(pagetable, addr);
++	do {
++		next = pgd_addr_end(addr, end);
++		if (pgd_none(*pgd))
++			continue;
++		if (level == PGT_LEVEL_PGD) {
++			pgd_clear(pgd);
++			continue;
++		}
++		asi_clear_p4d_range(asi, pgd, addr, next, level);
++	} while (pgd++, addr = next, addr < end);
++}
 +
 +/*
-+ * asi_set_pXX() functions are equivalent to kernel set_pXX() functions
-+ * but, in addition, they ensure that they are not overwriting an already
-+ * existing reference in the page table. Otherwise an error is returned.
++ * Clear page table entries in the specified ASI page-table.
 + */
-+static int asi_set_pte(struct asi *asi, pte_t *pte, pte_t pte_value)
++void asi_unmap(struct asi *asi, void *ptr)
 +{
-+#ifdef DEBUG
-+	/*
-+	 * The pte pointer should come from asi_pte_alloc() or asi_pte_offset()
-+	 * both of which check if the pointer is in the kernel isolation page
-+	 * table. So this is a paranoid check to ensure the pointer is really
-+	 * in the kernel page table.
-+	 */
-+	if (!asi_valid_offset(asi, pte)) {
-+		pr_err("ASI %p: PTE %px not found\n", asi, pte);
-+		return -EINVAL;
-+	}
-+#endif
-+	set_pte(pte, pte_value);
++	struct asi_range_mapping *range_mapping;
++	unsigned long addr, end;
++	unsigned long flags;
 +
-+	return 0;
++	spin_lock_irqsave(&asi->lock, flags);
++
++	range_mapping = asi_get_range_mapping(asi, ptr);
++	if (!range_mapping) {
++		pr_debug("ASI %p: UNMAP %px - not mapped\n", asi, ptr);
++		goto done;
++	}
++
++	addr = (unsigned long)range_mapping->ptr;
++	end = addr + range_mapping->size;
++	pr_debug("ASI %p: UNMAP %px/%lx/%d\n", asi, ptr,
++		 range_mapping->size, range_mapping->level);
++	asi_clear_pgd_range(asi, asi->pgd, addr, end, range_mapping->level);
++	list_del(&range_mapping->list);
++	kfree(range_mapping);
++done:
++	spin_unlock_irqrestore(&asi->lock, flags);
 +}
-+
-+static int asi_set_pmd(struct asi *asi, pmd_t *pmd, pmd_t pmd_value)
-+{
-+#ifdef DEBUG
-+	/*
-+	 * The pmd pointer should come from asi_pmd_alloc() or asi_pmd_offset()
-+	 * both of which check if the pointer is in the kernel isolation page
-+	 * table. So this is a paranoid check to ensure the pointer is really
-+	 * in the kernel page table.
-+	 */
-+	if (!asi_valid_offset(asi, pmd)) {
-+		pr_err("ASI %p: PMD %px not found\n", asi, pmd);
-+		return -EINVAL;
-+	}
-+#endif
-+	if (pmd_val(*pmd) == pmd_val(pmd_value))
-+		return 0;
-+
-+	if (!pmd_none(*pmd)) {
-+		pr_err("ASI %p: PMD %px overwriting %lx with %lx\n",
-+		       asi, pmd, pmd_val(*pmd), pmd_val(pmd_value));
-+		return -EBUSY;
-+	}
-+
-+	set_pmd(pmd, pmd_value);
-+
-+	return 0;
-+}
-+
-+static int asi_set_pud(struct asi *asi, pud_t *pud, pud_t pud_value)
-+{
-+#ifdef DEBUG
-+	/*
-+	 * The pud pointer should come from asi_pud_alloc() or asi_pud_offset()
-+	 * both of which check if the pointer is in the kernel isolation page
-+	 * table. So this is a paranoid check to ensure the pointer is really
-+	 * in the kernel page table.
-+	 */
-+	if (!asi_valid_offset(asi, pud)) {
-+		pr_err("ASI %p: PUD %px not found\n", asi, pud);
-+		return -EINVAL;
-+	}
-+#endif
-+	if (pud_val(*pud) == pud_val(pud_value))
-+		return 0;
-+
-+	if (!pud_none(*pud)) {
-+		pr_err("ASI %p: PUD %px overwriting %lx with %lx\n",
-+		       asi, pud, pud_val(*pud), pud_val(pud_value));
-+		return -EBUSY;
-+	}
-+
-+	set_pud(pud, pud_value);
-+
-+	return 0;
-+}
-+
-+static int asi_set_p4d(struct asi *asi, p4d_t *p4d, p4d_t p4d_value)
-+{
-+#ifdef DEBUG
-+	/*
-+	 * The p4d pointer should come from asi_p4d_alloc() or asi_p4d_offset()
-+	 * both of which check if the pointer is in the kernel isolation page
-+	 * table. So this is a paranoid check to ensure the pointer is really
-+	 * in the kernel page table.
-+	 */
-+	if (!asi_valid_offset(asi, p4d)) {
-+		pr_err("ASI %p: P4D %px not found\n", asi, p4d);
-+		return -EINVAL;
-+	}
-+#endif
-+	if (p4d_val(*p4d) == p4d_val(p4d_value))
-+		return 0;
-+
-+	if (!p4d_none(*p4d)) {
-+		pr_err("ASI %p: P4D %px overwriting %lx with %lx\n",
-+		       asi, p4d, p4d_val(*p4d), p4d_val(p4d_value));
-+		return -EBUSY;
-+	}
-+
-+	set_p4d(p4d, p4d_value);
-+
-+	return 0;
-+}
-+
-+static int asi_set_pgd(struct asi *asi, pgd_t *pgd, pgd_t pgd_value)
-+{
-+	if (pgd_val(*pgd) == pgd_val(pgd_value))
-+		return 0;
-+
-+	if (!pgd_none(*pgd)) {
-+		pr_err("ASI %p: PGD %px overwriting %lx with %lx\n",
-+		       asi, pgd, pgd_val(*pgd), pgd_val(pgd_value));
-+		return -EBUSY;
-+	}
-+
-+	set_pgd(pgd, pgd_value);
-+
-+	return 0;
-+}
++EXPORT_SYMBOL(asi_unmap);
 -- 
 1.7.1
 
