@@ -2,308 +2,189 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60ACC74A36
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF322C74A41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2F720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b7KeucFx"
+	by mail.kernel.org (Postfix) with ESMTP id 8F69921670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562808342;
+	bh=Ndh2o6As/5/11HGrLoDAwE+M/LIuC+WmD4CuSiNolv0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NOpPgLlj1ZTmHBZqPndESc3QDrMl0yatxUhnZQvwJJK3Xzj5bNB8wHK75zhUxcfk1
+	 WHgiXuu66f8juB6HYtKzZRlOgRhGZwRKE6wsAP1xVgBAG6xFkeZEquEhVVpI6qpu4Z
+	 TgTirVPuB8yeFK+iDeAKvGIys895XWXqV0LIN7Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfGKBZ3 (ORCPT
+        id S1727881AbfGKBZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 21:25:29 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34100 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727517AbfGKBZ3 (ORCPT
+        Wed, 10 Jul 2019 21:25:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46878 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbfGKBZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 21:25:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so4019685edb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 18:25:27 -0700 (PDT)
+        Wed, 10 Jul 2019 21:25:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c2so2094391plz.13;
+        Wed, 10 Jul 2019 18:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=TrD+b9KcyDXAn9XTri87X4ww/nyNvMC/tz+poqou13c=;
-        b=b7KeucFxiHjYP2FVwS6/1td8lEwc2IDxW/qZw2UV4o4/6s270GwKj/wpo4/r1JNnwl
-         Gk0zcggU/AFy9AhHic9QAvhBDIjiGHgdLpX6RW96EiBiI9cZ/uhZ00sZTkDKVlRqB6GH
-         wTl7oZ+oJ9P0OGUibmo3rPp1Y887B8o1GxVWjCCo5y+ZiAepQz/CJhTzGRJsH67Jbse+
-         vwAPcLCzyqHmSRQ9CG35nymSV3XSekzouXQFvK1sjhYJKgXPIMn1kt9U81P/pQdmR8qI
-         DAEMtTFcwKKhtDOnJ8FL4yGLwXD8STvPEWSYUgBlOxqOIw053QEaVdgQmNo0UMhng4Ay
-         f7Jw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DTuMNMfkZBV3p2/r2diQjoAt92HjKen6nNck8jRv0YQ=;
+        b=AnhTAJMz00MDcKhRGnJRRhsgMQ1lyGWxqfRtjPfIxXRExEQkihioQanNbkUGnOd1oG
+         0W1RhNIF/ROIUqMGewQ8E7b1kEw1nE+NpTV4cqVpf4NnVlB+xhNrszTzSjKpOo2H5dRx
+         koXVPtzFJkuHSWsjmWAMMLq5jmaZyD6sywelp7ZhDiEOf6Cp9Dmdd/KH34B79xwXLqfY
+         uASHcTTtn2Ryw7xym3jV5w+adkKiLXFzwV7hs+YDW3Te5+QNfek1835F58hyaNXRS3vo
+         ygPS/I8b6jNHq5DnWlocM5Z4jlAUoeGkaCTY6fFfNVg+ZTsoHV7ODKXmS7XOznrKVkIt
+         VS9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=TrD+b9KcyDXAn9XTri87X4ww/nyNvMC/tz+poqou13c=;
-        b=IvL/8VnMxclwHaftWe/viYSMpULbDe1WQESypVFlg/V+cgiZO5Kc1ZeCdV6wrGMhiP
-         YVtVWTDAwHGB2nPYcf8/Ndfa27T/M4LCMX8o3CU551dNdW4NJQ3tIKmU10LNiM92qFgX
-         2R/1flY39PcUx7uuyaZDs+Wvna25vuIrl2+2wjd2NMXO7AVKruJXCVmIIpMbotmPcKeO
-         /XlJS8xD2rrHuJmuikoTP3YhaaFmrc44qngNaO0kPUjaPbwHzHPMebdsH5AsjKmDodky
-         XSfHhEupasghzoX2yB7Zx1s8Po2GiduF34c9ZJTwoy8/PWB2c5atRYb859F2Mr1a5A3B
-         V2Zw==
-X-Gm-Message-State: APjAAAUCRIuM58mvrdP8GgIKTFZlUJGKkCL67oVllFsHxr5e8JjmPL2W
-        3rYNCtlQMfgNpnNlq+9cfvmphHAgPTKEVBJimEe6uQ==
-X-Google-Smtp-Source: APXvYqy8HxLooNNckIHgDT11raVGawwoRblhEOxb5HkG1Ykl+pEoOU0HYMY4xR+iFSPe/HZr653nn9zLuX9hTeXTiRQ=
-X-Received: by 2002:a50:f4d8:: with SMTP id v24mr868769edm.166.1562808326390;
- Wed, 10 Jul 2019 18:25:26 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=DTuMNMfkZBV3p2/r2diQjoAt92HjKen6nNck8jRv0YQ=;
+        b=X2NOtV58IK3qhT6WXvG/sCZQQhUQ7O6Iv6yqifmC3cLwtWOPKinD9mWw868Y+MZ+6F
+         JwkRqjQrVNtBSOdeywlyX3v/z9lD7ZSdIT7ubgrq2ynto92xlWPIfqgAW6xKRt5E/cYw
+         BkUCAZKk+J8Al8+Cf80s0Yi+ln8BF9XCT1iSFAEB0h0OA3BUJ0aGCZxQIpY8cpsXiaiu
+         IS+DQ9DjOgSc+/oJZlFe+ldMOx2/q6JfCPZ4fxz3TAgGuKN7V7OBXkRtfP5IWBfFY/bn
+         ioPc7ynZRUuyvTAGceLP6ja0judglq9Wc9iukhr2nNEX+lFh/iSd0/5qs2OZQTppdJI0
+         3cTw==
+X-Gm-Message-State: APjAAAU3fxTtgBo7lTyL2/rT8pXhsUsyxyOOVNszABgkYec7BfsBDFRs
+        gSfAIn4UmA1EvKAiM+OiNBo=
+X-Google-Smtp-Source: APXvYqy66rSlhIyzjplSY0vGytonT+Lmtlly+k6UJY895bJ6YUVQDcuphMGDrTz9NwnE9ZHy8NPy3Q==
+X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr1480602plv.106.1562808339390;
+        Wed, 10 Jul 2019 18:25:39 -0700 (PDT)
+Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id b37sm10031974pjc.15.2019.07.10.18.25.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 18:25:38 -0700 (PDT)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v4 0/4] Introduce MADV_COLD and MADV_PAGEOUT
+Date:   Thu, 11 Jul 2019 10:25:24 +0900
+Message-Id: <20190711012528.176050-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-From:   Eric Hankland <ehankland@google.com>
-Date:   Wed, 10 Jul 2019 18:25:15 -0700
-Message-ID: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com>
-Subject: [PATCH v2] KVM: x86: PMU Event Filter
-To:     Wei Wang <wei.w.wang@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a VM ioctl that can control which events the guest can monitor.
+This patch is part of previous series:
+https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/
+Originally, it was created for external madvise hinting feature.
 
-Signed-off-by: ehankland <ehankland@google.com>
----
-Changes since v1:
--Moved to a vm ioctl rather than a vcpu one
--Changed from a whitelist to a configurable filter which can either be
-white or black
--Only restrict GP counters since fixed counters require extra handling
-and they can be disabled by setting the guest cpuid (though only by
-setting the number - they can't be disabled individually)
----
- Documentation/virtual/kvm/api.txt | 25 +++++++++++++
- arch/x86/include/asm/kvm_host.h   |  2 +
- arch/x86/include/uapi/asm/kvm.h   | 10 +++++
- arch/x86/kvm/pmu.c                | 61 +++++++++++++++++++++++++++++++
- arch/x86/kvm/pmu.h                |  1 +
- arch/x86/kvm/x86.c                |  6 +++
- include/uapi/linux/kvm.h          |  3 ++
- 7 files changed, 108 insertions(+)
+https://lkml.org/lkml/2019/5/31/463
+Michal wanted to separte the discussion from external hinting interface
+so this patchset includes only first part of my entire patchset
 
-diff --git a/Documentation/virtual/kvm/api.txt
-b/Documentation/virtual/kvm/api.txt
-index 91fd86fcc49f..a9ee8da36595 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -4065,6 +4065,31 @@ KVM_ARM_VCPU_FINALIZE call.
- See KVM_ARM_VCPU_INIT for details of vcpu features that require finalization
- using this ioctl.
+  - introduce MADV_COLD and MADV_PAGEOUT hint to madvise.
 
-+4.120 KVM_SET_PMU_EVENT_FILTER
-+
-+Capability: KVM_CAP_PMU_EVENT_FILTER
-+Architectures: x86
-+Type: vm ioctl
-+Parameters: struct kvm_pmu_event_filter (in)
-+Returns: 0 on success, -1 on error
-+
-+struct kvm_pmu_event_filter {
-+       __u32 type;
-+       __u32 nevents;
-+       __u64 events[0];
-+};
-+
-+This ioctl restricts the set of PMU events that the guest can program to either
-+a whitelist or a blacklist of events. The eventsel+umask of each event the
-+guest attempts to program is compared against the events field to determine
-+whether the guest should have access. This only affects general purpose
-+counters; fixed purpose counters can be disabled by changing the perfmon
-+CPUID leaf.
-+
-+Valid values for 'type':
-+#define KVM_PMU_EVENT_WHITELIST 0
-+#define KVM_PMU_EVENT_BLACKLIST 1
-+
+However, I keep entire description for others for easier understanding
+why this kinds of hint was born.
 
- 5. The kvm_run structure
- ------------------------
+Thanks.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f46a12a5cf2e..34d017bd1d1b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -933,6 +933,8 @@ struct kvm_arch {
+This patchset is against on next-20190710.
 
-        bool guest_can_read_msr_platform_info;
-        bool exception_payload_enabled;
-+
-+       struct kvm_pmu_event_filter *pmu_event_filter;
- };
+Below is description of previous entire patchset.
 
- struct kvm_vm_stat {
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index f9b021e16ebc..4d2e905b7d79 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -422,4 +422,14 @@ struct kvm_nested_state {
-        __u8 data[0];
- };
+================= &< =====================
 
-+/* for KVM_CAP_PMU_EVENT_FILTER */
-+struct kvm_pmu_event_filter {
-+       __u32 type;
-+       __u32 nevents;
-+       __u64 events[0];
-+};
-+
-+#define KVM_PMU_EVENT_WHITELIST 0
-+#define KVM_PMU_EVENT_BLACKLIST 1
-+
- #endif /* _ASM_X86_KVM_H */
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index dd745b58ffd8..d674b79ff8da 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -22,6 +22,9 @@
- #include "lapic.h"
- #include "pmu.h"
+- Background
 
-+/* This keeps the total size of the filter under 4k. */
-+#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
-+
- /* NOTE:
-  * - Each perf counter is defined as "struct kvm_pmc";
-  * - There are two types of perf counters: general purpose (gp) and fixed.
-@@ -144,6 +147,10 @@ void reprogram_gp_counter(struct kvm_pmc *pmc,
-u64 eventsel)
- {
-        unsigned config, type = PERF_TYPE_RAW;
-        u8 event_select, unit_mask;
-+       struct kvm_arch *arch = &pmc->vcpu->kvm->arch;
-+       struct kvm_pmu_event_filter *filter;
-+       int i;
-+       bool allow_event = true;
+The Android terminology used for forking a new process and starting an app
+from scratch is a cold start, while resuming an existing app is a hot start.
+While we continually try to improve the performance of cold starts, hot
+starts will always be significantly less power hungry as well as faster so
+we are trying to make hot start more likely than cold start.
 
-        if (eventsel & ARCH_PERFMON_EVENTSEL_PIN_CONTROL)
-                printk_once("kvm pmu: pin control bit is ignored\n");
-@@ -155,6 +162,24 @@ void reprogram_gp_counter(struct kvm_pmc *pmc,
-u64 eventsel)
-        if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE) || !pmc_is_enabled(pmc))
-                return;
+To increase hot start, Android userspace manages the order that apps should
+be killed in a process called ActivityManagerService. ActivityManagerService
+tracks every Android app or service that the user could be interacting with
+at any time and translates that into a ranked list for lmkd(low memory
+killer daemon). They are likely to be killed by lmkd if the system has to
+reclaim memory. In that sense they are similar to entries in any other cache.
+Those apps are kept alive for opportunistic performance improvements but
+those performance improvements will vary based on the memory requirements of
+individual workloads.
 
-+       rcu_read_lock();
-+       filter = rcu_dereference(arch->pmu_event_filter);
-+       if (filter) {
-+               for (i = 0; i < filter->nevents; i++)
-+                       if (filter->events[i] ==
-+                           (eventsel & AMD64_RAW_EVENT_MASK_NB))
-+                               break;
-+               if (filter->type == KVM_PMU_EVENT_WHITELIST &&
-+                   i == filter->nevents)
-+                       allow_event = false;
-+               if (filter->type == KVM_PMU_EVENT_BLACKLIST &&
-+                   i < filter->nevents)
-+                       allow_event = false;
-+       }
-+       rcu_read_unlock();
-+       if (!allow_event)
-+               return;
-+
-        event_select = eventsel & ARCH_PERFMON_EVENTSEL_EVENT;
-        unit_mask = (eventsel & ARCH_PERFMON_EVENTSEL_UMASK) >> 8;
+- Problem
 
-@@ -351,3 +376,39 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
- {
-        kvm_pmu_reset(vcpu);
- }
-+
-+int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
-+{
-+       struct kvm_pmu_event_filter tmp, *filter;
-+       size_t size;
-+       int r;
-+
-+       if (copy_from_user(&tmp, argp, sizeof(tmp)))
-+               return -EFAULT;
-+
-+       if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
-+               return -E2BIG;
-+
-+       size = sizeof(tmp) + sizeof(tmp.events[0]) * tmp.nevents;
-+       filter = vmalloc(size);
-+       if (!filter)
-+               return -ENOMEM;
-+
-+       r = -EFAULT;
-+       if (copy_from_user(filter, argp, size))
-+               goto cleanup;
-+
-+       /* Ensure nevents can't be changed between the user copies. */
-+       *filter = tmp;
-+
-+       mutex_lock(&kvm->lock);
-+       rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
-+                          mutex_is_locked(&kvm->lock));
-+       mutex_unlock(&kvm->lock);
-+
-+       synchronize_rcu();
-+       r = 0;
-+cleanup:
-+       kvfree(filter);
-+       return r;
-+}
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 22dff661145a..58265f761c3b 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -118,6 +118,7 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu);
- void kvm_pmu_reset(struct kvm_vcpu *vcpu);
- void kvm_pmu_init(struct kvm_vcpu *vcpu);
- void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
-+int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
+Naturally, cached apps were dominant consumers of memory on the system.
+However, they were not significant consumers of swap even though they are
+good candidate for swap. Under investigation, swapping out only begins
+once the low zone watermark is hit and kswapd wakes up, but the overall
+allocation rate in the system might trip lmkd thresholds and cause a cached
+process to be killed(we measured performance swapping out vs. zapping the
+memory by killing a process. Unsurprisingly, zapping is 10x times faster
+even though we use zram which is much faster than real storage) so kill
+from lmkd will often satisfy the high zone watermark, resulting in very
+few pages actually being moved to swap.
 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
+- Approach
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 2e302e977dac..9ddfc7193bc6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3135,6 +3135,7 @@ int kvm_vm_ioctl_check_extension(struct kvm
-*kvm, long ext)
-        case KVM_CAP_GET_MSR_FEATURES:
-        case KVM_CAP_MSR_PLATFORM_INFO:
-        case KVM_CAP_EXCEPTION_PAYLOAD:
-+       case KVM_CAP_PMU_EVENT_FILTER:
-                r = 1;
-                break;
-        case KVM_CAP_SYNC_REGS:
-@@ -4978,6 +4979,11 @@ long kvm_arch_vm_ioctl(struct file *filp,
-                r = kvm_vm_ioctl_hv_eventfd(kvm, &hvevfd);
-                break;
-        }
-+       case KVM_SET_PMU_EVENT_FILTER: {
-+               r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
-+               break;
-+
-+       }
-        default:
-                r = -ENOTTY;
-        }
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index c2152f3dd02d..b18ff80e356a 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -995,6 +995,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_SVE 170
- #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
- #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
-+#define KVM_CAP_PMU_EVENT_FILTER 173
+The approach we chose was to use a new interface to allow userspace to
+proactively reclaim entire processes by leveraging platform information.
+This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
+that are known to be cold from userspace and to avoid races with lmkd
+by reclaiming apps as soon as they entered the cached state. Additionally,
+it could provide many chances for platform to use much information to
+optimize memory efficiency.
 
- #ifdef KVM_CAP_IRQ_ROUTING
+To achieve the goal, the patchset introduce two new options for madvise.
+One is MADV_COLD which will deactivate activated pages and the other is
+MADV_PAGEOUT which will reclaim private pages instantly. These new options
+complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
+gain some free memory space. MADV_PAGEOUT is similar to MADV_DONTNEED in a way
+that it hints the kernel that memory region is not currently needed and
+should be reclaimed immediately; MADV_COLD is similar to MADV_FREE in a way
+that it hints the kernel that memory region is not currently needed and
+should be reclaimed when memory pressure rises.
 
-@@ -1329,6 +1330,8 @@ struct kvm_s390_ucas_mapping {
- #define KVM_PPC_GET_RMMU_INFO    _IOW(KVMIO,  0xb0, struct kvm_ppc_rmmu_info)
- /* Available with KVM_CAP_PPC_GET_CPU_CHAR */
- #define KVM_PPC_GET_CPU_CHAR     _IOR(KVMIO,  0xb1, struct kvm_ppc_cpu_char)
-+/* Availabile with KVM_CAP_PMU_EVENT_FILTER */
-+#define KVM_SET_PMU_EVENT_FILTER  _IOW(KVMIO, 0xb2, struct
-kvm_pmu_event_filter)
+* v3 - http://lore.kernel.org/lkml/20190627115405.255259-1-minchan@kernel.org
+* v2 - http://lore.kernel.org/lkml/20190610111252.239156-1-minchan@kernel.org
+* v1 - http://lore.kernel.org/lkml/20190603053655.127730-1-minchan@kernel.org
 
- /* ioctl for vm fd */
- #define KVM_CREATE_DEVICE        _IOWR(KVMIO,  0xe0, struct kvm_create_device)
+Minchan Kim (4):
+  mm: introduce MADV_COLD
+  mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
+  mm: account nr_isolated_xxx in [isolate|putback]_lru_page
+  mm: introduce MADV_PAGEOUT
+
+ include/linux/swap.h                   |   2 +
+ include/uapi/asm-generic/mman-common.h |   2 +
+ mm/compaction.c                        |   2 -
+ mm/gup.c                               |   7 +-
+ mm/internal.h                          |   2 +-
+ mm/khugepaged.c                        |   3 -
+ mm/madvise.c                           | 377 ++++++++++++++++++++++++-
+ mm/memory-failure.c                    |   3 -
+ mm/memory_hotplug.c                    |   4 -
+ mm/mempolicy.c                         |   6 +-
+ mm/migrate.c                           |  37 +--
+ mm/oom_kill.c                          |   2 +-
+ mm/swap.c                              |  42 +++
+ mm/vmscan.c                            |  83 +++++-
+ 14 files changed, 507 insertions(+), 65 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
