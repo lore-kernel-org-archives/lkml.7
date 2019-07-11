@@ -2,300 +2,281 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514A4C74A5C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AD1C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2112520644
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BHJF7aMj"
+	by mail.kernel.org (Postfix) with ESMTP id EA23C20645
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfGKP73 (ORCPT
+        id S1728582AbfGKQAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 11:59:29 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39367 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfGKP72 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 11:59:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so3150714pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 08:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z1TXVCEJuCBRp7RMzPbLjsuYtlEFOBFPBVvDsWzX7EY=;
-        b=BHJF7aMjbgg+nZdOU4F1oBUP70FwW4FDZSvRWzwFJv1nvUdeUI0rEfsi0EbYq8es3V
-         tz3mHHherNH4MuSxa5+a/8SuvMPTiplC2J2XRaUAOIjDUfZcm3xhMpaiKMMParmJGIK5
-         yWmOgxz/UcQaWzIpzokj2ioZsn/sHMR3qukGaF9v7kpLCGt4VFS1HEX/iWcap1OouY7p
-         J6Ncv1ly6Wtd74S3xbQtnbzeL1GR0NS3euyY+8eo6QcbmO57N0irBBl1wOTSyVzhGsI/
-         A6zqD9mznDFN++gUSnYg8z1IBJfakO1AfNStwfwkNqgU4XRP0WZLE0A9Ln7tnz+mN1Q8
-         /MUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z1TXVCEJuCBRp7RMzPbLjsuYtlEFOBFPBVvDsWzX7EY=;
-        b=JlpEUqJoh2NupfP4e7kpS96xU5xfPXqkK+uG+lCnE61sz4XAc+0vylUtVWIBuoD4Vf
-         VVJaXVo+TPJITb8/ERRJORCxT0vJrecBFoKR1FNLM1ytvZ1MsvqHP+uwM5w2iAKBdD6a
-         15BE8EZ1fzHPABBytb88LEcclHkxrNXMCkzkapoTGiy7cNuienuH3DUPJ33Xne/Y0TT5
-         YZbnv6b33aCLE6NLkp5/TAj7KbkJ5xs4BbI4hY4I9j8OSFoG0RAhK48ubsvZmcLkbdoq
-         66E5UMdcL/jyYpW+Z0916wN2Y/QCyji1rs3SOazuxQXO8wAjPum4SzYcMU3SDibK6lZ5
-         xgTA==
-X-Gm-Message-State: APjAAAX3t4hvhwLCPReocVCT9H7FKoqFY1ln7Ep/4XjGwA4iuiWHSteA
-        woc1wJCkSzDREQ5X0J2y2WqSbA==
-X-Google-Smtp-Source: APXvYqygyKQJJ7J6fQsTI8CdGQ2Ene4ldT26xvXqSG745rHtvBX+5QBvRDTYnxfpEVFPjrvAYD1Acw==
-X-Received: by 2002:a17:90a:d58c:: with SMTP id v12mr5586795pju.7.1562860767500;
-        Thu, 11 Jul 2019 08:59:27 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a12sm12653314pje.3.2019.07.11.08.59.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 08:59:26 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 09:00:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        jcrouse@codeaurora.org, rishabhb@codeaurora.org,
-        vnkgutta@codeaurora.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] soc: qcom: llcc-plat: Make the driver more generic
-Message-ID: <20190711160032.GR7234@tuxbook-pro>
-References: <20190711110340.16672-1-vivek.gautam@codeaurora.org>
- <20190711110340.16672-2-vivek.gautam@codeaurora.org>
+        Thu, 11 Jul 2019 12:00:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53400 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728248AbfGKQAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 12:00:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A01A1B05E;
+        Thu, 11 Jul 2019 16:00:38 +0000 (UTC)
+Subject: Re: [PATCH 3/5] Btrfs: only associate the locked page with one
+ async_cow struct
+To:     Tejun Heo <tj@kernel.org>, clm@fb.com,
+        David Sterba <dsterba@suse.com>, josef@toxicpanda.com
+Cc:     kernel-team@fb.com, axboe@kernel.dk, jack@suse.cz,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190710192818.1069475-1-tj@kernel.org>
+ <20190710192818.1069475-4-tj@kernel.org>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0522e068-57d0-f7f2-6500-f431225bdc73@suse.com>
+Date:   Thu, 11 Jul 2019 19:00:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711110340.16672-2-vivek.gautam@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190710192818.1069475-4-tj@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11 Jul 04:03 PDT 2019, Vivek Gautam wrote:
 
-> - Remove 'sdm845' from names, and use 'plat' instead.
-> - Move SCT_ENTRY macro to header file.
-> - Create a new config structure to asssign to of-match-data.
+
+On 10.07.19 г. 22:28 ч., Tejun Heo wrote:
+> From: Chris Mason <clm@fb.com>
 > 
+> The btrfs writepages function collects a large range of pages flagged
+> for delayed allocation, and then sends them down through the COW code
+> for processing.  When compression is on, we allocate one async_cow
 
-I interpret the intention of these two patches as that you want to add
-some new platform without having to create one llcc-xyz.c per platform.
+nit: The code no longer uses async_cow to represent in-flight chunks but
+the more aptly named async_chunk. Presumably this patchset predates
+those changes.
 
-If that's the case then the only user of this macro would be in plat.c,
-so I don't see a reason for moving it to the header file.
+> structure for every 512K, and then run those pages through the
+> compression code for IO submission.
+> 
+> writepages starts all of this off with a single page, locked by
+> the original call to extent_write_cache_pages(), and it's important to
+> keep track of this page because it has already been through
+> clear_page_dirty_for_io().
 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+IMO it will be beneficial to state what are the implications of
+clear_page_dirty_for_io being called, i.e what special handling should
+this particular page receive to the rest of its lifetime.
+
+> 
+> The btrfs async_cow struct has a pointer to the locked_page, and when
+> we're redirtying the page because compression had to fallback to
+> uncompressed IO, we use page->index to decide if a given async_cow
+> struct really owns that page.
+> 
+> But, this is racey.  If a given delalloc range is broken up into two
+> async_cows (cow_A and cow_B), we can end up with something like this:
+> 
+> compress_file_range(cowA)
+> submit_compress_extents(cowA)
+> submit compressed bios(cowA)
+> put_page(locked_page)
+> 
+> 				compress_file_range(cowB)
+> 				...
+
+This call trace is _really_ hand wavy and the correct one is more
+complex, hence it should be something like :
+
+async_cow_submit
+ submit_compressed_extents <--- falls back to buffered writeout
+  cow_file_range
+   extent_clear_unlock_delalloc
+    __process_pages_contig
+      put_page(locked_pages)
+
+                                           async_cow_submit
+
+> 
+> The end result is that cowA is completed and cleaned up before cowB even
+> starts processing.  This means we can free locked_page() and reuse it
+> elsewhere.  If we get really lucky, it'll have the same page->index in
+> its new home as it did before.
+> 
+> While we're processing cowB, we might decide we need to fall back to
+> uncompressed IO, and so compress_file_range() will call
+> __set_page_dirty_nobufers() on cowB->locked_page.
+> 
+> Without cgroups in use, this creates as a phantom dirty page, which> isn't great but isn't the end of the world.  With cgroups in use, we
+
+Having a phantom dirty page is not great but not terrible without
+cgroups but apart from that, does it have any other implications?
+
+
+> might crash in the accounting code because page->mapping->i_wb isn't
+> set.
+> 
+> [ 8308.523110] BUG: unable to handle kernel NULL pointer dereference at 00000000000000d0
+> [ 8308.531084] IP: percpu_counter_add_batch+0x11/0x70
+> [ 8308.538371] PGD 66534e067 P4D 66534e067 PUD 66534f067 PMD 0
+> [ 8308.541750] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
+> [ 8308.551948] CPU: 16 PID: 2172 Comm: rm Not tainted
+> [ 8308.566883] RIP: 0010:percpu_counter_add_batch+0x11/0x70
+> [ 8308.567891] RSP: 0018:ffffc9000a97bbe0 EFLAGS: 00010286
+> [ 8308.568986] RAX: 0000000000000005 RBX: 0000000000000090 RCX: 0000000000026115
+> [ 8308.570734] RDX: 0000000000000030 RSI: ffffffffffffffff RDI: 0000000000000090
+> [ 8308.572543] RBP: 0000000000000000 R08: fffffffffffffff5 R09: 0000000000000000
+> [ 8308.573856] R10: 00000000000260c0 R11: ffff881037fc26c0 R12: ffffffffffffffff
+> [ 8308.580099] R13: ffff880fe4111548 R14: ffffc9000a97bc90 R15: 0000000000000001
+> [ 8308.582520] FS:  00007f5503ced480(0000) GS:ffff880ff7200000(0000) knlGS:0000000000000000
+> [ 8308.585440] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 8308.587951] CR2: 00000000000000d0 CR3: 00000001e0459005 CR4: 0000000000360ee0
+> [ 8308.590707] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 8308.592865] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [ 8308.594469] Call Trace:
+> [ 8308.595149]  account_page_cleaned+0x15b/0x1f0
+> [ 8308.596340]  __cancel_dirty_page+0x146/0x200
+> [ 8308.599395]  truncate_cleanup_page+0x92/0xb0
+> [ 8308.600480]  truncate_inode_pages_range+0x202/0x7d0
+> [ 8308.617392]  btrfs_evict_inode+0x92/0x5a0
+> [ 8308.619108]  evict+0xc1/0x190
+> [ 8308.620023]  do_unlinkat+0x176/0x280
+> [ 8308.621202]  do_syscall_64+0x63/0x1a0
+> [ 8308.623451]  entry_SYSCALL_64_after_hwframe+0x42/0xb7
+> 
+> The fix here is to make asyc_cow->locked_page NULL everywhere but the
+> one async_cow struct that's allowed to do things to the locked page.
+> 
+> Signed-off-by: Chris Mason <clm@fb.com>
+> Fixes: 771ed689d2cd ("Btrfs: Optimize compressed writeback and reads")
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 > ---
->  drivers/soc/qcom/llcc-plat.c       | 77 ++++++++++++--------------------------
->  include/linux/soc/qcom/llcc-qcom.h | 45 ++++++++++++++++++++++
->  2 files changed, 68 insertions(+), 54 deletions(-)
+>  fs/btrfs/extent_io.c |  2 +-
+>  fs/btrfs/inode.c     | 25 +++++++++++++++++++++----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/soc/qcom/llcc-plat.c b/drivers/soc/qcom/llcc-plat.c
-> index 86600d97c36d..31cff0f75b53 100644
-> --- a/drivers/soc/qcom/llcc-plat.c
-> +++ b/drivers/soc/qcom/llcc-plat.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
->   *
->   */
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 5106008f5e28..a31574df06aa 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -1838,7 +1838,7 @@ static int __process_pages_contig(struct address_space *mapping,
+>  			if (page_ops & PAGE_SET_PRIVATE2)
+>  				SetPagePrivate2(pages[i]);
 >  
-> @@ -10,47 +10,7 @@
->  #include <linux/of_device.h>
->  #include <linux/soc/qcom/llcc-qcom.h>
->  
-> -/*
-> - * SCT(System Cache Table) entry contains of the following members:
+> -			if (pages[i] == locked_page) {
+> +			if (locked_page && pages[i] == locked_page) {
 
-Should have caught this during previous review, but this comment simply
-duplicates the kerneldoc for struct llcc_slice_config.
+Why not make the check just if (locked_page) then clean it up, since if
+__process_pages_contig is called from the owner of the page then it's
+guaranteed that the page will fall within it's range.
 
-> - * usecase_id: Unique id for the client's use case
-> - * slice_id: llcc slice id for each client
-> - * max_cap: The maximum capacity of the cache slice provided in KB
-> - * priority: Priority of the client used to select victim line for replacement
-> - * fixed_size: Boolean indicating if the slice has a fixed capacity
-> - * bonus_ways: Bonus ways are additional ways to be used for any slice,
-> - *		if client ends up using more than reserved cache ways. Bonus
-> - *		ways are allocated only if they are not reserved for some
-> - *		other client.
-> - * res_ways: Reserved ways for the cache slice, the reserved ways cannot
-> - *		be used by any other client than the one its assigned to.
-> - * cache_mode: Each slice operates as a cache, this controls the mode of the
-> - *             slice: normal or TCM(Tightly Coupled Memory)
-> - * probe_target_ways: Determines what ways to probe for access hit. When
-> - *                    configured to 1 only bonus and reserved ways are probed.
-> - *                    When configured to 0 all ways in llcc are probed.
-> - * dis_cap_alloc: Disable capacity based allocation for a client
-> - * retain_on_pc: If this bit is set and client has maintained active vote
-> - *               then the ways assigned to this client are not flushed on power
-> - *               collapse.
-> - * activate_on_init: Activate the slice immediately after the SCT is programmed
-> - */
-> -#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
+>  				put_page(pages[i]);
+>  				pages_locked++;
+>  				continue;
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index 6e6df0eab324..a81e9860ee1f 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -666,10 +666,12 @@ static noinline void compress_file_range(struct async_chunk *async_chunk,
+>  	 * to our extent and set things up for the async work queue to run
+>  	 * cow_file_range to do the normal delalloc dance.
+>  	 */
+> -	if (page_offset(async_chunk->locked_page) >= start &&
+> -	    page_offset(async_chunk->locked_page) <= end)
+> +	if (async_chunk->locked_page &&
+> +	    (page_offset(async_chunk->locked_page) >= start &&
+> +	     page_offset(async_chunk->locked_page)) <= end) {
 
-This simply maps macro arguments 1:1 to struct members, there's no need
-for a macro for this.
+DITTO since locked_page is now only set to the chunk that has the right
+to it then there is no need to check the offsets and this will simplify
+the code.
 
-> -	{					\
-> -		.usecase_id = uid,		\
-> -		.slice_id = sid,		\
-> -		.max_cap = mc,			\
-> -		.priority = p,			\
-> -		.fixed_size = fs,		\
-> -		.bonus_ways = bway,		\
-> -		.res_ways = rway,		\
-> -		.cache_mode = cmod,		\
-> -		.probe_target_ways = ptw,	\
-> -		.dis_cap_alloc = dca,		\
-> -		.retain_on_pc = rp,		\
-> -		.activate_on_init = a,		\
-> -	}
-> -
-> -static struct llcc_slice_config sdm845_data[] =  {
-> +static const struct llcc_slice_config sdm845_data[] =  {
->  	SCT_ENTRY(LLCC_CPUSS,    1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1),
->  	SCT_ENTRY(LLCC_VIDSC0,   2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
->  	SCT_ENTRY(LLCC_VIDSC1,   3,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
-> @@ -71,30 +31,39 @@ static struct llcc_slice_config sdm845_data[] =  {
->  	SCT_ENTRY(LLCC_AUDHW,    22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0),
->  };
->  
-> -static int sdm845_qcom_llcc_remove(struct platform_device *pdev)
-> +static const struct qcom_llcc_config sdm845_cfg = {
-> +	.sct_data	= sdm845_data,
-> +	.size		= ARRAY_SIZE(sdm845_data),
-> +};
-> +
-> +static int qcom_plat_llcc_remove(struct platform_device *pdev)
->  {
->  	return qcom_llcc_remove(pdev);
->  }
->  
-> -static int sdm845_qcom_llcc_probe(struct platform_device *pdev)
-> +static int qcom_plat_llcc_probe(struct platform_device *pdev)
->  {
-> -	return qcom_llcc_probe(pdev, sdm845_data, ARRAY_SIZE(sdm845_data));
-> +	const struct qcom_llcc_config *cfg;
-> +
-> +	cfg = of_device_get_match_data(&pdev->dev);
-> +
-> +	return qcom_llcc_probe(pdev, cfg->sct_data, cfg->size);
->  }
->  
-> -static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
-> -	{ .compatible = "qcom,sdm845-llcc", },
-> +static const struct of_device_id qcom_plat_llcc_of_match[] = {
-> +	{ .compatible = "qcom,sdm845-llcc", .data = &sdm845_cfg },
->  	{ }
->  };
->  
-> -static struct platform_driver sdm845_qcom_llcc_driver = {
-> +static struct platform_driver qcom_plat_llcc_driver = {
->  	.driver = {
-> -		.name = "sdm845-llcc",
-> -		.of_match_table = sdm845_qcom_llcc_of_match,
-> +		.name = "qcom-plat-llcc",
-
-With this being the "one and only llcc driver", why not making it
-"qcom_llcc"?
-
-> +		.of_match_table = qcom_plat_llcc_of_match,
->  	},
-> -	.probe = sdm845_qcom_llcc_probe,
-> -	.remove = sdm845_qcom_llcc_remove,
-> +	.probe = qcom_plat_llcc_probe,
-> +	.remove = qcom_plat_llcc_remove,
->  };
-> -module_platform_driver(sdm845_qcom_llcc_driver);
-> +module_platform_driver(qcom_plat_llcc_driver);
->  
-> -MODULE_DESCRIPTION("QCOM sdm845 LLCC driver");
-> +MODULE_DESCRIPTION("QCOM platform LLCC driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-
-This file should be describing the public interface to the llcc, the
-private pieces is better kept in drivers/soc/qcom/llcc.h
-
-But this patch makes me wonder if there's a need to split llcc-slice and
-llcc-plat (and have a header file to describe API between them) instead
-of just having one file.
-
-Regards,
-Bjorn
-
-> index eb71a50b8afc..8776bb5d3891 100644
-> --- a/include/linux/soc/qcom/llcc-qcom.h
-> +++ b/include/linux/soc/qcom/llcc-qcom.h
-> @@ -27,6 +27,46 @@
->  #define LLCC_MDMPNG      21
->  #define LLCC_AUDHW       22
->  
-> +/*
-> + * SCT(System Cache Table) entry contains of the following members:
-> + * usecase_id: Unique id for the client's use case
-> + * slice_id: llcc slice id for each client
-> + * max_cap: The maximum capacity of the cache slice provided in KB
-> + * priority: Priority of the client used to select victim line for replacement
-> + * fixed_size: Boolean indicating if the slice has a fixed capacity
-> + * bonus_ways: Bonus ways are additional ways to be used for any slice,
-> + *		if client ends up using more than reserved cache ways. Bonus
-> + *		ways are allocated only if they are not reserved for some
-> + *		other client.
-> + * res_ways: Reserved ways for the cache slice, the reserved ways cannot
-> + *		be used by any other client than the one its assigned to.
-> + * cache_mode: Each slice operates as a cache, this controls the mode of the
-> + *             slice: normal or TCM(Tightly Coupled Memory)
-> + * probe_target_ways: Determines what ways to probe for access hit. When
-> + *                    configured to 1 only bonus and reserved ways are probed.
-> + *                    When configured to 0 all ways in llcc are probed.
-> + * dis_cap_alloc: Disable capacity based allocation for a client
-> + * retain_on_pc: If this bit is set and client has maintained active vote
-> + *               then the ways assigned to this client are not flushed on power
-> + *               collapse.
-> + * activate_on_init: Activate the slice immediately after the SCT is programmed
-> + */
-> +#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
-> +	{					\
-> +		.usecase_id = uid,		\
-> +		.slice_id = sid,		\
-> +		.max_cap = mc,			\
-> +		.priority = p,			\
-> +		.fixed_size = fs,		\
-> +		.bonus_ways = bway,		\
-> +		.res_ways = rway,		\
-> +		.cache_mode = cmod,		\
-> +		.probe_target_ways = ptw,	\
-> +		.dis_cap_alloc = dca,		\
-> +		.retain_on_pc = rp,		\
-> +		.activate_on_init = a,		\
+>  		__set_page_dirty_nobuffers(async_chunk->locked_page);
+>  		/* unlocked later on in the async handlers */
 > +	}
-> +
->  /**
->   * llcc_slice_desc - Cache slice descriptor
->   * @slice_id: llcc slice id
-> @@ -67,6 +107,11 @@ struct llcc_slice_config {
->  	bool activate_on_init;
->  };
 >  
-> +struct qcom_llcc_config {
-> +	const struct llcc_slice_config *sct_data;
-> +	int size;
-> +};
+>  	if (redirty)
+>  		extent_range_redirty_for_io(inode, start, end);
+> @@ -759,7 +761,7 @@ static noinline void submit_compressed_extents(struct async_chunk *async_chunk)
+>  						  async_extent->start +
+>  						  async_extent->ram_size - 1,
+>  						  WB_SYNC_ALL);
+> -			else if (ret)
+> +			else if (ret && async_chunk->locked_page)
+>  				unlock_page(async_chunk->locked_page);
+>  			kfree(async_extent);
+>  			cond_resched();
+> @@ -1236,10 +1238,25 @@ static int cow_file_range_async(struct inode *inode, struct page *locked_page,
+>  		async_chunk[i].inode = inode;
+>  		async_chunk[i].start = start;
+>  		async_chunk[i].end = cur_end;
+> -		async_chunk[i].locked_page = locked_page;
+>  		async_chunk[i].write_flags = write_flags;
+>  		INIT_LIST_HEAD(&async_chunk[i].extents);
+>  
+> +		/*
+> +		 * The locked_page comes all the way from writepage and its
+> +		 * the original page we were actually given.  As we spread
+> +		 * this large delalloc region across multiple async_cow
+> +		 * structs, only the first struct needs a pointer to locked_page
+> +		 *
+> +		 * This way we don't need racey decisions about who is supposed
+> +		 * to unlock it.
+> +		 */
+> +		if (locked_page) {
+> +			async_chunk[i].locked_page = locked_page;
+> +			locked_page = NULL;
+> +		} else {
+> +			async_chunk[i].locked_page = NULL;
+> +		}
 > +
->  /**
->   * llcc_drv_data - Data associated with the llcc driver
->   * @regmap: regmap associated with the llcc device
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+>  		btrfs_init_work(&async_chunk[i].work,
+>  				btrfs_delalloc_helper,
+>  				async_cow_start, async_cow_submit,
 > 
