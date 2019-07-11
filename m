@@ -2,262 +2,121 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCBFC74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF859C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017C32084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DE42084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gAz4ET5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfGKQOM (ORCPT
+        id S1728595AbfGKQSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 12:14:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64600 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727612AbfGKQOM (ORCPT
+        Thu, 11 Jul 2019 12:18:04 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34625 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728194AbfGKQSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:14:12 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BGDdf9112748
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:14:11 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tp5y5fnrj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:14:10 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Thu, 11 Jul 2019 17:13:50 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Jul 2019 17:13:46 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BGDWXS31523146
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 16:13:32 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85D3F11C05C;
-        Thu, 11 Jul 2019 16:13:44 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BA7711C04A;
-        Thu, 11 Jul 2019 16:13:42 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.41.99.131])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Jul 2019 16:13:42 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v3] tpm: tpm_ibm_vtpm: Fix unallocated banks
-Date:   Thu, 11 Jul 2019 12:13:35 -0400
+        Thu, 11 Jul 2019 12:18:04 -0400
+Received: by mail-vs1-f67.google.com with SMTP id m23so4666761vso.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 09:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=b+cG1tTNIT8vyBDamuWQU7Q8BkXJo14FevzuM5Gnb24=;
+        b=gAz4ET5S3vPh5pe2Xkp4fm2GOI2krQN7MsVLeA6tR+Z7xtZ0VyhLDTOT2Ub4nlDnKq
+         Dbfdtp5Urdye3lqnltelIy8/uXcwd82CtHZ+KPzXEkZOI4YsXU+I4HEW7ZQwMdaBcGD9
+         BpoSO1nKdppKqVMcEMgYENHOKC4uO6HlaKhviQiG3wXZPji1TMEngmACIveXTurzCTBz
+         vusQFsrSVPf1maLNr1r2UILzU22+Qj1/lNvaam7ceZTN1kzqgF1m/NHYXT8kdqVu5tbl
+         Qd/JdXW29HvYepqvv1y3f9v6VXjzLKEVQOr5fyxWDlFJp8v/R0yqRptzksbbivYN5BPu
+         bsbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=b+cG1tTNIT8vyBDamuWQU7Q8BkXJo14FevzuM5Gnb24=;
+        b=YAzI6Py+dNkdtIBSLmsstfnGJcB762aA3gFUvxJ7CLNgqcRoBJV3xyq+BmzIaNPcac
+         BvoiXZUgv/41kjMQzDQl5A6FeC7yEB6Cf8/vqhn3ah0tVmOKNlTdhwVE84SGPLrjLQSr
+         GUvHzviDlOuxhjO66EtBitkA7GcrO3SraQM3ALgikMMH2iqfxVf91OE2VwpZwUeISu7u
+         hBKiy0vrTCoaL4TBaUfeRGd4P9n2SJ2kdANHzKCUeNsP5QTkRcyl5di2vqvz0aHbrcPU
+         b+m8UuvXejxPPZQ3zH24qXZqBSAfrgMmVJsM0vIlLfVRHKXk1s5hMBgJL8BkoItJjugx
+         QBlw==
+X-Gm-Message-State: APjAAAWOb08Vv5OtoMkejnmw9mVH6vLioutHZt6SBt5Z9idn0E9PZEvx
+        uIK3yB0YjGCm8BvymUpRkVM26A==
+X-Google-Smtp-Source: APXvYqxltyjmsNj/nb8bUQp+32rwb7mo8D5CMMYCV7KYmWTJRqhvB9IHbI2B3WokHDj4YgJGnwY77A==
+X-Received: by 2002:a05:6102:8c:: with SMTP id t12mr5568901vsp.143.1562861882866;
+        Thu, 11 Jul 2019 09:18:02 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id v5sm6960119vsi.24.2019.07.11.09.18.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 09:18:01 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     hch@lst.de, torvalds@linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] iommu/amd: fix a crash in iova_magazine_free_pfns
+Date:   Thu, 11 Jul 2019 12:17:45 -0400
+Message-Id: <1562861865-23660-1-git-send-email-cai@lca.pw>
 X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071116-0020-0000-0000-00000352D9C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071116-0021-0000-0000-000021A694B3
-Message-Id: <1562861615-11391-1-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907110183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nr_allocated_banks and allocated banks are initialized as part of
-tpm_chip_register. Currently, this is done as part of auto startup
-function. However, some drivers, like the ibm vtpm driver, do not run
-auto startup during initialization. This results in uninitialized memory
-issue and causes a kernel panic during boot.
+The commit b3aa14f02254 ("iommu: remove the mapping_error dma_map_ops
+method") incorrectly changed the checking from dma_ops_alloc_iova() in
+map_sg() causes a crash under memory pressure as dma_ops_alloc_iova()
+never return DMA_MAPPING_ERROR on failure but 0, so the error handling
+is all wrong.
 
-This patch moves the pcr allocation outside the auto startup function
-into tpm_chip_register. This ensures that allocated banks are initialized
-in any case.
+   kernel BUG at drivers/iommu/iova.c:801!
+    Workqueue: kblockd blk_mq_run_work_fn
+    RIP: 0010:iova_magazine_free_pfns+0x7d/0xc0
+    Call Trace:
+     free_cpu_cached_iovas+0xbd/0x150
+     alloc_iova_fast+0x8c/0xba
+     dma_ops_alloc_iova.isra.6+0x65/0xa0
+     map_sg+0x8c/0x2a0
+     scsi_dma_map+0xc6/0x160
+     pqi_aio_submit_io+0x1f6/0x440 [smartpqi]
+     pqi_scsi_queue_command+0x90c/0xdd0 [smartpqi]
+     scsi_queue_rq+0x79c/0x1200
+     blk_mq_dispatch_rq_list+0x4dc/0xb70
+     blk_mq_sched_dispatch_requests+0x249/0x310
+     __blk_mq_run_hw_queue+0x128/0x200
+     blk_mq_run_work_fn+0x27/0x30
+     process_one_work+0x522/0xa10
+     worker_thread+0x63/0x5b0
+     kthread+0x1d2/0x1f0
+     ret_from_fork+0x22/0x40
 
-Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
-PCR read")
-Reported-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Tested-by: Michal Suchánek <msuchanek@suse.de>
+Fixes: b3aa14f02254 ("iommu: remove the mapping_error dma_map_ops method")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
-Changelog:
-v3:
-* Includes Stefan's feedback correctly:
-  * Fixed handling of rc > 0 error
-* Includes Jarkko's feedback related to comment and the function.
 
-v2:
-* Includes Jarkko's feedbacks
-  * fixes the function name to tpm_get_pcr_allocation()
-  * adds new function tpm1_get_pcr_allocation()
-  * updates patch summary line
-  * fixes alignment
-  * adds Reported-by: Michal Suchanek <msuchanek@suse.de>
-* Includes Stefan's feedbacks
-  * Fixes overwriting of return code
-  * Fixes misplacing of tpm_chip_stop()
-* Adds Reviewed-by, Tested-by
+v2: Fix the offensive commit directly.
 
- drivers/char/tpm/tpm-chip.c | 20 ++++++++++++++++++++
- drivers/char/tpm/tpm.h      |  2 ++
- drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
- drivers/char/tpm/tpm2-cmd.c |  6 +-----
- 4 files changed, 47 insertions(+), 17 deletions(-)
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 8804c9e916fd..5a0396d6560d 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -550,6 +550,20 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
- 	return hwrng_register(&chip->hwrng);
- }
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 73740b969e62..b607a92791d3 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2533,7 +2533,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 	npages = sg_num_pages(dev, sglist, nelems);
  
-+static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-+{
-+	int rc;
-+
-+	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
-+	     tpm2_get_pcr_allocation(chip) :
-+	     tpm1_get_pcr_allocation(chip);
-+
-+	if (rc > 0)
-+		return -ENODEV;
-+
-+	return rc;
-+}
-+
- /*
-  * tpm_chip_register() - create a character device for the TPM chip
-  * @chip: TPM chip to use.
-@@ -569,6 +583,12 @@ int tpm_chip_register(struct tpm_chip *chip)
- 	if (rc)
- 		return rc;
- 	rc = tpm_auto_startup(chip);
-+	if (rc) {
-+		tpm_chip_stop(chip);
-+		return rc;
-+	}
-+
-+	rc = tpm_get_pcr_allocation(chip);
- 	tpm_chip_stop(chip);
- 	if (rc)
- 		return rc;
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index 2cce072f25b5..d571df3694c3 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -399,6 +399,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf);
- ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
- 		    const char *desc, size_t min_cap_length);
- int tpm1_get_random(struct tpm_chip *chip, u8 *out, size_t max);
-+int tpm1_get_pcr_allocation(struct tpm_chip *chip);
- unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
- int tpm_pm_suspend(struct device *dev);
- int tpm_pm_resume(struct device *dev);
-@@ -454,6 +455,7 @@ int tpm2_unseal_trusted(struct tpm_chip *chip,
- ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
- 			u32 *value, const char *desc);
+ 	address = dma_ops_alloc_iova(dev, dma_dom, npages, dma_mask);
+-	if (address == DMA_MAPPING_ERROR)
++	if (!address)
+ 		goto out_err;
  
-+ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip);
- int tpm2_auto_startup(struct tpm_chip *chip);
- void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
- unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
-diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-index 85dcf2654d11..260a3917f0fe 100644
---- a/drivers/char/tpm/tpm1-cmd.c
-+++ b/drivers/char/tpm/tpm1-cmd.c
-@@ -696,18 +696,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
- 		goto out;
- 	}
- 
--	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
--					GFP_KERNEL);
--	if (!chip->allocated_banks) {
--		rc = -ENOMEM;
--		goto out;
--	}
--
--	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
--	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
--	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
--	chip->nr_allocated_banks = 1;
--
- 	return rc;
- out:
- 	if (rc > 0)
-@@ -776,3 +764,27 @@ int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
- 	return rc;
- }
- 
-+/**
-+ * tpm1_get_pcr_allocation() - initialize the allocated bank
-+ * @chip: TPM chip to use.
-+ *
-+ * The function initializes the SHA1 allocated bank to extend PCR
-+ *
-+ * Return:
-+ * * 0 on success,
-+ * * < 0 on error.
-+ */
-+int tpm1_get_pcr_allocation(struct tpm_chip *chip)
-+{
-+	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
-+					GFP_KERNEL);
-+	if (!chip->allocated_banks)
-+		return -ENOMEM;
-+
-+	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
-+	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
-+	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
-+	chip->nr_allocated_banks = 1;
-+
-+	return 0;
-+}
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index e74c5b7b64bf..b4384d0e3741 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -841,7 +841,7 @@ struct tpm2_pcr_selection {
- 	u8  pcr_select[3];
- } __packed;
- 
--static ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
-+ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
- {
- 	struct tpm2_pcr_selection pcr_selection;
- 	struct tpm_buf buf;
-@@ -1041,10 +1041,6 @@ int tpm2_auto_startup(struct tpm_chip *chip)
- 			goto out;
- 	}
- 
--	rc = tpm2_get_pcr_allocation(chip);
--	if (rc)
--		goto out;
--
- 	rc = tpm2_get_cc_attrs_tbl(chip);
- 
- out:
+ 	prot = dir2prot(direction);
 -- 
-2.20.1
+1.8.3.1
 
