@@ -2,135 +2,114 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C50C742A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B31C742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE00521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAEDA208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="weyT2Xtq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUKjSbuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbfGKXov (ORCPT
+        id S1728916AbfGKXrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 19:44:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45664 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730505AbfGKXoe (ORCPT
+        Thu, 11 Jul 2019 19:47:22 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40059 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbfGKXrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 19:44:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o13so3647109pgp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 16:44:34 -0700 (PDT)
+        Thu, 11 Jul 2019 19:47:22 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so6294417qtn.7;
+        Thu, 11 Jul 2019 16:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2ZIVHYCgJL3yRIi6SYczqkcDc7iwVPEmctKSmd2Crvc=;
-        b=weyT2Xtq2vSltoDfjRS7QyAHHP5rgF8+biSlRsYiS8lJ0ThTHGlPYRoWyR8jXC62XM
-         l5SwCMDem7+8P/pejjNL1kUvgWDcvhvqPo2nGj5eahzpfUT6jCwtf4+D4JJiDwbxZ585
-         8qs6F1/k7sh09QSdaz8CSnrGSPZzQbFmNT4a4=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9mOzCmWu7iP2cO6YA87BG1jCD7rtcJcCtL3+itxwnEQ=;
+        b=DUKjSbuz4ZX9Efg/TfgRHhsM/7Mh1MYSAsvORQnwkxK5y/Muv4jwNrXTdin2IrZQ3k
+         wutgC/VJ+vDaojIy5zRaWnFwDMv4BJqsb2qKOjg5sSC7MaYFLpC5F6VEn7aOFH+U4UQJ
+         CWHeVauQaueQjDyqtWKhixGMTO/fWkv71C6C5aXW2VvcYVyscv0/a22XGdqj0wY5jdh8
+         Zo6ruAIrntyA6cPjSnl3WrnCqVCNg0BQY4zAqzQwaMhrcXMglj0RIGoWHZN9PFWBK0WI
+         CIVQGcAidUYQxEVByoarA09NA3yMnNPYInFPpMex4h8WWHgGCXHjsg2AaqKS9ao90cXn
+         jEHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2ZIVHYCgJL3yRIi6SYczqkcDc7iwVPEmctKSmd2Crvc=;
-        b=KpCJ0Teb4JhtgDfDgukfbs4dNM+hnfWNABVjwm88uPitjFvgrC47d5mFDy61xy3r8H
-         pPuDCfmuP/kFEGRwcZb2tqmPvbmxby75SjgDWcQMK7zUCRjCKOLBru48kLibNPsp/xhP
-         zQUWFqf14OjKzIT+J4FpC/+q8hrXffaQOUz9Hz7ehY4k8DxF8/v+XXxURdyzwh3RHVfc
-         UvnflDW9rj+gX5mW4BM17xDR7Hn1mgYHJ2crl+nlMY/KRRPgNlaCrOKUCfT05wKCgne4
-         bXc2RPMwic222wmAJDs17V/qB/35/LTXaxIOXJlbjQ8JpgFGUb4IP+lptEtFT1U+k30v
-         Otmg==
-X-Gm-Message-State: APjAAAVAecH4B7yTWgKUoVl46smtkWRHr9yDZgAH0YHGeudvoqGJ6Z99
-        ec0d1Aln95L0uDEjf8FuGYBvj/Sd
-X-Google-Smtp-Source: APXvYqxf45Rt48qewS/1TxXy9teNni48bxwe3+YaybaZjyCTXYiBUvRLNPvO6nnYPvEQInHLi90qmA==
-X-Received: by 2002:a17:90a:3aed:: with SMTP id b100mr7900731pjc.63.1562888673741;
-        Thu, 11 Jul 2019 16:44:33 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t10sm6163450pjr.13.2019.07.11.16.44.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 16:44:32 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH v1 5/6] x86/pci: Pass lockdep condition to pcm_mmcfg_list iterator
-Date:   Thu, 11 Jul 2019 19:44:00 -0400
-Message-Id: <20190711234401.220336-6-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190711234401.220336-1-joel@joelfernandes.org>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9mOzCmWu7iP2cO6YA87BG1jCD7rtcJcCtL3+itxwnEQ=;
+        b=tHOZrykSrJrUzLdC8wXmDy2IjzjyGNCphImLDFwle2dJ1JIxVibVdlWOeZXW3r40NB
+         0IzkUSXEWrFIbjwAooc/XTGzw3MpJzcSXnMChl2z+jkS1F+QmXqqYpNOkd610f96UA8g
+         MQjNw6qJHgXB4Tn/goqrI8GFsVCxYiS4Cfe9NlJdzbpH6bWYrjaDjHpHI8FrlHcVP0kJ
+         7mVad/KO6X+uD8EOEHSYIxZDQ8MCPheRKpgy9Sc0huli7wfHkMRXfUvAS1H1Tk8QqtxR
+         quCRsTGEkjLoPj+3bN3Odh1XKD9cHQLiE2YSYSGzvq2YNBptxfI3lMx6TAU67HSM5A4X
+         QwSg==
+X-Gm-Message-State: APjAAAW1dN4QsJab81zR5BFLhXc5zvdYw4nZR0bhYp9vKFibHWTDYdsV
+        2hS14N5UBfSGnogne1ydbYT2DJ68emWw24ZzH3E=
+X-Google-Smtp-Source: APXvYqwKrsSTIoIu312DM1OogO+Nt/7ng/6mozD5/JRx0tp1Wn7qacQRTEQMza7ICvZz3sOS3tE77a3A+izfO/l5gnI=
+X-Received: by 2002:ac8:32a1:: with SMTP id z30mr4043423qta.117.1562888841104;
+ Thu, 11 Jul 2019 16:47:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190710231439.GD32439@tassilo.jf.intel.com> <1562838037-1884-1-git-send-email-p.pisati@gmail.com>
+ <1562838037-1884-3-git-send-email-p.pisati@gmail.com>
+In-Reply-To: <1562838037-1884-3-git-send-email-p.pisati@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 11 Jul 2019 16:47:10 -0700
+Message-ID: <CAEf4BzZ13GoSgSrLc3KBhcUO4Aa0V+6kHZMhVgGqr2Mz0iVsyA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] bpf, selftest: fix checksum value for test #13
+To:     Paolo Pisati <p.pisati@gmail.com>
+Cc:     "--to=Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pcm_mmcfg_list is traversed with list_for_each_entry_rcu without a
-reader-lock held, because the pci_mmcfg_lock is already held. Make this
-known to the list macro so that it fixes new lockdep warnings that
-trigger due to lockdep checks added to list_for_each_entry_rcu().
+On Thu, Jul 11, 2019 at 2:41 AM Paolo Pisati <p.pisati@gmail.com> wrote:
+>
+> From: Paolo Pisati <paolo.pisati@canonical.com>
+>
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- arch/x86/pci/mmconfig-shared.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Please include description, in addition to subject.
 
-diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-index 7389db538c30..6fa42e9c4e6f 100644
---- a/arch/x86/pci/mmconfig-shared.c
-+++ b/arch/x86/pci/mmconfig-shared.c
-@@ -29,6 +29,7 @@
- static bool pci_mmcfg_running_state;
- static bool pci_mmcfg_arch_init_failed;
- static DEFINE_MUTEX(pci_mmcfg_lock);
-+#define pci_mmcfg_lock_held() lock_is_held(&(pci_mmcfg_lock).dep_map)
- 
- LIST_HEAD(pci_mmcfg_list);
- 
-@@ -54,7 +55,7 @@ static void list_add_sorted(struct pci_mmcfg_region *new)
- 	struct pci_mmcfg_region *cfg;
- 
- 	/* keep list sorted by segment and starting bus number */
--	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list) {
-+	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list, pci_mmcfg_lock_held()) {
- 		if (cfg->segment > new->segment ||
- 		    (cfg->segment == new->segment &&
- 		     cfg->start_bus >= new->start_bus)) {
-@@ -118,7 +119,7 @@ struct pci_mmcfg_region *pci_mmconfig_lookup(int segment, int bus)
- {
- 	struct pci_mmcfg_region *cfg;
- 
--	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
-+	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list, pci_mmcfg_lock_held())
- 		if (cfg->segment == segment &&
- 		    cfg->start_bus <= bus && bus <= cfg->end_bus)
- 			return cfg;
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Also, when submitting patches, please add bpf or bpf-next (e.g.,
+[PATCH bpf 2/2] to indicate which tree it's supposed to go into). For
+this one it's probably bpf.
 
+
+> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+> ---
+>  tools/testing/selftests/bpf/verifier/array_access.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/bpf/verifier/array_access.c b/tools/testing/selftests/bpf/verifier/array_access.c
+> index bcb83196e459..4698f560d756 100644
+> --- a/tools/testing/selftests/bpf/verifier/array_access.c
+> +++ b/tools/testing/selftests/bpf/verifier/array_access.c
+> @@ -255,7 +255,7 @@
+>         .prog_type = BPF_PROG_TYPE_SCHED_CLS,
+>         .fixup_map_array_ro = { 3 },
+>         .result = ACCEPT,
+> -       .retval = -29,
+> +       .retval = 28,
+>  },
+>  {
+>         "invalid write map access into a read-only array 1",
+> --
+> 2.17.1
+>
