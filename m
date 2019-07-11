@@ -2,579 +2,2348 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EE8C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93A2C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4084121537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562845212;
-	bh=9kFw02wyGt4H79c3shYb7BcO1i9P4ZeJrQfrKTvcnW0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ykcbAm+feckDzA502W0A+Q08ZLkP9ZND6JWBsXuZY39CuAyeFwrn00muLBDpFMbpK
-	 0vxpMasIS+JlOIjMzZEPQDt7Ko4N9zoRWw4EXH5nQtbZLGHxb72fQcWinReZM+KgXC
-	 ZU1FM+XM09TUfO+eAb+FidSmK+UIGsRJSuqMIFpo=
+	by mail.kernel.org (Postfix) with ESMTP id 771B2216C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:47:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linux-ipv6.be header.i=@linux-ipv6.be header.b="YJNB/++5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfGKLkL (ORCPT
+        id S1728335AbfGKLrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 07:40:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45166 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728026AbfGKLkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 07:40:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x21so5471447otq.12;
-        Thu, 11 Jul 2019 04:40:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nRXSvH7xIIcGxyuyt/g5VG2ze73FKXfT7TjPaunE5Mo=;
-        b=sGggdJMQsx5qlgo2rhFRkWpk57rUQW3Y9ooreSu0TtuI8Tz/3c2wfk3j3ERjgZjAkB
-         mUExkOtnRRBc+pILIcW3BYtxq7tdlUVPQUyY56MHMtI9iC+JQlsxPOkVSckCovWbeFNW
-         W73wKGHUAVBkr/pklPO83sOSpfJg7nKxdWLlvALiFJtZ4dBQyP5Yf5rSlFfoR3+J1NX6
-         GgauEdsrqhKAqzQ2Qeo3i+rwpqB/SkoBf3IRi55Ftu/X+tOwrr177HG2VRA1N5VXq7Ob
-         pQwcp5DwIlI83en1BzVHvfVrwNvNM68p1nUl5sGJ5c76/T4xHfezJWI9Kuc1ZksqcHvt
-         fE0g==
-X-Gm-Message-State: APjAAAUw+Qyue+hdhKn/LZESeCcL2lvcZMH0mNq01k9sA2lkah7or6qc
-        TexMbqao29QM6PMrdo3SghpznC1jqGYIG1+B9l0=
-X-Google-Smtp-Source: APXvYqyOABBfGyxVJRDgM6Qo5bWbj2UQDYNMPOst5YamciqWNCaeKb+QxIIh0/jimpota7lurrN2755rtb7lsYocW9M=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr2825092oto.118.1562845208468;
- Thu, 11 Jul 2019 04:40:08 -0700 (PDT)
+        Thu, 11 Jul 2019 07:47:10 -0400
+Received: from mail.tintel.eu ([54.36.12.13]:37610 "EHLO mail.tintel.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbfGKLrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 07:47:09 -0400
+X-Greylist: delayed 361 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Jul 2019 07:46:57 EDT
+Received: from localhost (localhost [IPv6:::1])
+        by mail.tintel.eu (Postfix) with ESMTP id BF4FD42341B3;
+        Thu, 11 Jul 2019 13:40:53 +0200 (CEST)
+Received: from mail.tintel.eu ([IPv6:::1])
+        by localhost (mail.tintel.eu [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id CkthbVVWLqcO; Thu, 11 Jul 2019 13:40:49 +0200 (CEST)
+Received: from localhost (localhost [IPv6:::1])
+        by mail.tintel.eu (Postfix) with ESMTP id A29A942341A2;
+        Thu, 11 Jul 2019 13:40:48 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.tintel.eu A29A942341A2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux-ipv6.be;
+        s=502B7754-045F-11E5-BBC5-64595FD46BE8; t=1562845248;
+        bh=NVrY+Zg4mYJb8Dm0rbDQdCIPsHDmpLL5utp9DlVyN7Y=;
+        h=From:To:Message-ID:Date:MIME-Version;
+        b=YJNB/++5Z2a7cYCaRMQGx6m+uMJuMUAJ2VviTtBWh0BeAQBs0lzoxcRbYjCmMqrhK
+         eSR7i+s4VT8zRdh7YFNSYFSwxZDuNvJq7xoaqeFQ5IImpfs31ZCVO/XamTorXD0VKs
+         JihzEQaLMfdCoQpsu4PHLWgBHB8+Dwae2TBFfLXQ=
+X-Virus-Scanned: amavisd-new at mail.tintel.eu
+Received: from mail.tintel.eu ([IPv6:::1])
+        by localhost (mail.tintel.eu [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id rfHVZ3-iEQdl; Thu, 11 Jul 2019 13:40:48 +0200 (CEST)
+Received: from sylvester.nomad.adlevio.net (unknown [212.3.228.181])
+        (Authenticated sender: stijn@tintel.eu)
+        by mail.tintel.eu (Postfix) with ESMTPSA id C55BF423414D;
+        Thu, 11 Jul 2019 13:40:47 +0200 (CEST)
+From:   Stijn Tintel <stijn@linux-ipv6.be>
+Subject: [BUG] linux-5.2.0: various messages and traces related to dw-dma /
+ sst-acpi
+To:     Viresh Kumar <vireshk@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <e4162892-6544-1759-337a-68f4945276b6@linux-ipv6.be>
+Date:   Thu, 11 Jul 2019 13:40:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <3121545.4lOhFoIcdQ@kreacher> <CAGETcx-FgohUahM+aLOBUQGgJKyPW6ptFAqRdcPJG2FkE6CN5w@mail.gmail.com>
-In-Reply-To: <CAGETcx-FgohUahM+aLOBUQGgJKyPW6ptFAqRdcPJG2FkE6CN5w@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 11 Jul 2019 13:39:56 +0200
-Message-ID: <CAJZ5v0grir9mLuOhgGcyicyUTqsiYzOQEwZw0=TPMJHgf6C6UA@mail.gmail.com>
-Subject: Re: [PATCH] driver core: Remove device link creation limitation
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 12:06 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Jul 10, 2019 at 3:19 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > If device_link_add() is called for a consumer/supplier pair with an
-> > existing device link between them and the existing link's type is
-> > not in agreement with the flags passed to that function by its
-> > caller, NULL will be returned.  That is seriously inconvenient,
-> > because it forces the callers of device_link_add() to worry about
-> > what others may or may not do even if that is not relevant to them
-> > for any other reasons.
-> >
-> > It turns out, however, that this limitation can be made go away
-> > relatively easily.
-> >
-> > The underlying observation is that if DL_FLAG_STATELESS has been
-> > passed to device_link_add() in flags for the given consumer/supplier
-> > pair at least once, calling either device_link_del() or
-> > device_link_remove() to release the link returned by it should work,
-> > but there are no other requirements associated with that flag.  In
-> > turn, if at least one of the callers of device_link_add() for the
-> > given consumer/supplier pair has not passed DL_FLAG_STATELESS to it
-> > in flags, the driver core should track the status of the link and act
-> > on it as appropriate (ie. the link should be treated as "managed").
-> > This means that DL_FLAG_STATELESS needs to be set for managed device
-> > links and it should be valid to call device_link_del() or
-> > device_link_remove() to drop references to them in certain
-> > sutiations.
-> >
-> > To allow that to happen, introduce a new (internal) device link flag
-> > called DL_FLAG_MANAGED and make device_link_add() set it automatically
-> > whenever DL_FLAG_STATELESS is not passed to it.  Also make it take
-> > additional references to existing device links that were previously
-> > stateless (that is, with DL_FLAG_STATELESS set and DL_FLAG_MANAGED
-> > unset) and will need to be managed going forward and initialize
-> > their status (which has been DL_STATE_NONE so far).
-> >
-> > Accordingly, when a managed device link is dropped automatically
-> > by the driver core, make it clear DL_FLAG_MANAGED, reset the link's
-> > status back to DL_STATE_NONE and drop the reference to it associated
-> > with DL_FLAG_MANAGED instead of just deleting it right away (to
-> > allow it to stay around in case it still needs to be released
-> > explicitly by someone).
-> >
-> > With that, since setting DL_FLAG_STATELESS doesn't mean that the
-> > device link in question is not managed any more, replace all of the
-> > status-tracking checks against DL_FLAG_STATELESS with analogous
-> > checks against DL_FLAG_MANAGED and update the documentation to
-> > reflect these changes.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  Documentation/driver-api/device_link.rst |    4
-> >  drivers/base/core.c                      |  169 +++++++++++++++++--------------
-> >  drivers/base/power/runtime.c             |    4
-> >  include/linux/device.h                   |    4
-> >  4 files changed, 102 insertions(+), 79 deletions(-)
-> >
-> > Index: linux-pm/drivers/base/core.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/base/core.c
-> > +++ linux-pm/drivers/base/core.c
-> > @@ -124,6 +124,50 @@ static int device_is_dependent(struct de
-> >         return ret;
-> >  }
-> >
-> > +static void device_link_init_status(struct device_link *link,
-> > +                                   struct device *consumer,
-> > +                                   struct device *supplier)
-> > +{
-> > +       switch (supplier->links.status) {
-> > +       case DL_DEV_PROBING:
-> > +               switch (consumer->links.status) {
-> > +               case DL_DEV_PROBING:
-> > +                       /*
-> > +                        * A consumer driver can create a link to a supplier
-> > +                        * that has not completed its probing yet as long as it
-> > +                        * knows that the supplier is already functional (for
-> > +                        * example, it has just acquired some resources from the
-> > +                        * supplier).
-> > +                        */
-> > +                       link->status = DL_STATE_CONSUMER_PROBE;
-> > +                       break;
-> > +               default:
-> > +                       link->status = DL_STATE_DORMANT;
-> > +                       break;
-> > +               }
-> > +               break;
-> > +       case DL_DEV_DRIVER_BOUND:
-> > +               switch (consumer->links.status) {
-> > +               case DL_DEV_PROBING:
-> > +                       link->status = DL_STATE_CONSUMER_PROBE;
-> > +                       break;
-> > +               case DL_DEV_DRIVER_BOUND:
-> > +                       link->status = DL_STATE_ACTIVE;
-> > +                       break;
-> > +               default:
-> > +                       link->status = DL_STATE_AVAILABLE;
-> > +                       break;
-> > +               }
-> > +               break;
-> > +       case DL_DEV_UNBINDING:
-> > +               link->status = DL_STATE_SUPPLIER_UNBIND;
-> > +               break;
-> > +       default:
-> > +               link->status = DL_STATE_DORMANT;
-> > +               break;
-> > +       }
-> > +}
-> > +
-> >  static int device_reorder_to_tail(struct device *dev, void *not_used)
-> >  {
-> >         struct device_link *link;
-> > @@ -179,9 +223,9 @@ void device_pm_move_to_tail(struct devic
-> >   * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
-> >   * ignored.
-> >   *
-> > - * If DL_FLAG_STATELESS is set in @flags, the link is not going to be managed by
-> > - * the driver core and, in particular, the caller of this function is expected
-> > - * to drop the reference to the link acquired by it directly.
-> > + * If DL_FLAG_STATELESS is set in @flags, the caller of this function is
-> > + * expected to release the link returned by it directly with the help of either
-> > + * device_link_del() or device_link_remove().
-> >   *
-> >   * If that flag is not set, however, the caller of this function is handing the
-> >   * management of the link over to the driver core entirely and its return value
-> > @@ -201,9 +245,16 @@ void device_pm_move_to_tail(struct devic
-> >   * be used to request the driver core to automaticall probe for a consmer
-> >   * driver after successfully binding a driver to the supplier device.
-> >   *
-> > - * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_CONSUMER
-> > - * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is invalid and
-> > - * will cause NULL to be returned upfront.
-> > + * The combination of DL_FLAG_STATELESS and one of DL_FLAG_AUTOREMOVE_CONSUMER,
-> > + * DL_FLAG_AUTOREMOVE_SUPPLIER, or DL_FLAG_AUTOPROBE_CONSUMER set in @flags at
-> > + * the same time is invalid and will cause NULL to be returned upfront.
-> > + * However, if a device link between the given @consumer and @supplier pair
-> > + * exists already when this function is called for them, the existing link will
-> > + * be returned regardless of its current type and status (the link's flags may
-> > + * be modified then).  The caller of this function is then expected to treat
-> > + * the link as though it has just been created, so (in particular) if
-> > + * DL_FLAG_STATELESS was passed in @flags, the link needs to be released
-> > + * explicitly when not needed any more (as stated above).
-> >   *
-> >   * A side effect of the link creation is re-ordering of dpm_list and the
-> >   * devices_kset list by moving the consumer device and all devices depending
-> > @@ -223,7 +274,8 @@ struct device_link *device_link_add(stru
-> >             (flags & DL_FLAG_STATELESS &&
-> >              flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
-> >                       DL_FLAG_AUTOREMOVE_SUPPLIER |
-> > -                     DL_FLAG_AUTOPROBE_CONSUMER)) ||
-> > +                     DL_FLAG_AUTOPROBE_CONSUMER |
-> > +                     DL_FLAG_MANAGED)) ||
-> >             (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
-> >              flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
-> >                       DL_FLAG_AUTOREMOVE_SUPPLIER)))
->
-> If DL_FLAG_MANAGED is meant to be an internal flag (as in caller
-> shouldn't use it), maybe it'll be better to just check for it in flags
-> and reject it? Because looks like you are setting it anyway if
-> STATELESS isn't set.
+Hi,
 
-Well, to be honest, I was kind of divided here, because passing
-MANAGED if STATELESS is not passed is technically not a bug and
-returning NULL in that case seemed a bit awkward to me.
+When booting 5.2.0 on my Dell XPS13 9343, I'm seeing various messages=20
+and traces related to the DesignWare DMA Controller / Intel SST loader.=20
+They seem to differ across different boots:
 
-That said, the function doesn't reject flags with unused bits set
-anyway and arguably it should, so I'll add that check and that'll
-cover MANAGED too.
+Boot #1:
 
->
-> > @@ -236,6 +288,9 @@ struct device_link *device_link_add(stru
-> >                 }
-> >         }
-> >
-> > +       if (!(flags & DL_FLAG_STATELESS))
-> > +               flags |= DL_FLAG_MANAGED;
-> > +
-> >         device_links_write_lock();
-> >         device_pm_lock();
-> >
-> > @@ -262,15 +317,6 @@ struct device_link *device_link_add(stru
-> >                 if (link->consumer != consumer)
-> >                         continue;
-> >
-> > -               /*
-> > -                * Don't return a stateless link if the caller wants a stateful
-> > -                * one and vice versa.
-> > -                */
-> > -               if (WARN_ON((flags & DL_FLAG_STATELESS) != (link->flags & DL_FLAG_STATELESS))) {
-> > -                       link = NULL;
-> > -                       goto out;
-> > -               }
-> > -
-> >                 if (flags & DL_FLAG_PM_RUNTIME) {
-> >                         if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
-> >                                 pm_runtime_new_link(consumer);
-> > @@ -281,6 +327,7 @@ struct device_link *device_link_add(stru
-> >                 }
-> >
-> >                 if (flags & DL_FLAG_STATELESS) {
-> > +                       link->flags |= DL_FLAG_STATELESS;
-> >                         kref_get(&link->kref);
-> >                         goto out;
-> >                 }
-> > @@ -299,6 +346,11 @@ struct device_link *device_link_add(stru
-> >                         link->flags &= ~(DL_FLAG_AUTOREMOVE_CONSUMER |
-> >                                          DL_FLAG_AUTOREMOVE_SUPPLIER);
-> >                 }
-> > +               if (!(link->flags & DL_FLAG_MANAGED)) {
-> > +                       kref_get(&link->kref);
-> > +                       link->flags |= DL_FLAG_MANAGED;
-> > +                       device_link_init_status(link, consumer, supplier);
-> > +               }
-> >                 goto out;
-> >         }
-> >
-> > @@ -325,48 +377,10 @@ struct device_link *device_link_add(stru
-> >         kref_init(&link->kref);
-> >
-> >         /* Determine the initial link state. */
-> > -       if (flags & DL_FLAG_STATELESS) {
-> > +       if (flags & DL_FLAG_STATELESS)
-> >                 link->status = DL_STATE_NONE;
-> > -       } else {
-> > -               switch (supplier->links.status) {
-> > -               case DL_DEV_PROBING:
-> > -                       switch (consumer->links.status) {
-> > -                       case DL_DEV_PROBING:
-> > -                               /*
-> > -                                * A consumer driver can create a link to a
-> > -                                * supplier that has not completed its probing
-> > -                                * yet as long as it knows that the supplier is
-> > -                                * already functional (for example, it has just
-> > -                                * acquired some resources from the supplier).
-> > -                                */
-> > -                               link->status = DL_STATE_CONSUMER_PROBE;
-> > -                               break;
-> > -                       default:
-> > -                               link->status = DL_STATE_DORMANT;
-> > -                               break;
-> > -                       }
-> > -                       break;
-> > -               case DL_DEV_DRIVER_BOUND:
-> > -                       switch (consumer->links.status) {
-> > -                       case DL_DEV_PROBING:
-> > -                               link->status = DL_STATE_CONSUMER_PROBE;
-> > -                               break;
-> > -                       case DL_DEV_DRIVER_BOUND:
-> > -                               link->status = DL_STATE_ACTIVE;
-> > -                               break;
-> > -                       default:
-> > -                               link->status = DL_STATE_AVAILABLE;
-> > -                               break;
-> > -                       }
-> > -                       break;
-> > -               case DL_DEV_UNBINDING:
-> > -                       link->status = DL_STATE_SUPPLIER_UNBIND;
-> > -                       break;
-> > -               default:
-> > -                       link->status = DL_STATE_DORMANT;
-> > -                       break;
-> > -               }
-> > -       }
-> > +       else
-> > +               device_link_init_status(link, consumer, supplier);
-> >
-> >         /*
-> >          * Some callers expect the link creation during consumer driver probe to
-> > @@ -528,7 +542,7 @@ static void device_links_missing_supplie
-> >   * mark the link as "consumer probe in progress" to make the supplier removal
-> >   * wait for us to complete (or bad things may happen).
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
->
-> Nitpick. It might be easier to read if you removed the double
-> negative. So something like:
-> Links without the DL_FLAG_MANAGED flag set are ignored.
+jul 08 17:40:05 sylvesterg kernel: sst-acpi INT3438:00: DesignWare DMA=20
+Controller, 8 channels
+jul 08 17:40:05 sylvesterg kernel: sst-acpi INT3438:00: DMAR: 32bit DMA=20
+uses non-identity mapping
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Not tainted 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+000000000000030d R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26a6384e20 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae944fc ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+0000000000000345 R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26a6384e20 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae944fd ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+000000000000037d R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa176010 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae944fe ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+00000000000003b5 R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa176010 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae944ff ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+00000000000003ed R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007fbfb014b681 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94500 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+0000000000000425 R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007fbfb014b681 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94501 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+000000000000045d R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa326ba0 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94502 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+0000000000000495 R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa326ba0 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94503 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+00000000000004cd R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa2fa6e0 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94504 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+0000000000000505 R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa2fa6e0 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94505 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+000000000000053d R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa3e3e88 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94506 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0000:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+0000000000000575 R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26aa3e3e88 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94507 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: list_add corruption. prev->next=20
+should be next (ffff8881b4a5c0a8), but was 0000000000000000.=20
+(prev=3Dffff8881b682b020).
+jul 08 17:40:05 sylvesterg kernel: WARNING: CPU: 3 PID: 1920 at=20
+lib/list_debug.c:28 __list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP: 0010:__list_add_valid+0x5f/0x80
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c2 4c 89 e6 48 c7 c7 08=20
+b5 08 82 e8 23 92 c1 ff 0f 0b 31 c0 eb e0 48 89 c1 48 89 de 48 c7 c7 58=20
+b5 08 82 e8 0b 92 c1 ff <0f> 0b 31 c0 eb c8 48 89 d9 4c 89 e2 48 89 ee=20
+48 c7 c7 a8 b5 08 82
+jul 08 17:40:05 sylvesterg kernel: RSP: 0018:ffffc900008678a8 EFLAGS:=20
+00010086
+jul 08 17:40:05 sylvesterg kernel: RAX: 0000000000000000 RBX:=20
+ffff8881b4a5c0a8 RCX: 0000000000000006
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000007 RSI:=20
+0000000000000096 RDI: ffff888217396510
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b682b020 R08:=20
+00000000000005ad R09: 0000000000000084
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881b682b020 R14:=20
+ffff8881b4a5c088 R15: ffff8881b682b020
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26a8b43058 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dwc_tx_submit+0x6c/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x6d/0x80=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94508 ]---
+jul 08 17:40:05 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 17:40:05 sylvesterg kernel: ------------[ cut here ]------------
+jul 08 17:40:05 sylvesterg kernel: kernel BUG at drivers/dma/dw/core.c:10=
+26!
+jul 08 17:40:05 sylvesterg kernel: invalid opcode: 0000 [#1] SMP PTI
+jul 08 17:40:05 sylvesterg kernel: CPU: 3 PID: 1920 Comm: systemd-udevd=20
+Tainted: G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.2.0-gentoo #1
+jul 08 17:40:05 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 17:40:05 sylvesterg kernel: RIP:=20
+0010:dwc_free_chan_resources+0xe3/0xf0
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c6 4c 89 e7 e8 4c 0d 41=20
+00 0f b6 43 60 f7 d0 20 85 81 01 00 00 74 05 5b 5d 41 5c c3 5b 48 89 ef=20
+5d 41 5c e9 3d fe ff ff <0f> 0b 0f 0b 0f 0b 0f 1f 80 00 00 00 00 0f 1f=20
+44 00 00 53 48 89 fb
+jul 08 17:40:05 sylvesterg kernel: RSP: 0018:ffffc900008679b8 EFLAGS:=20
+00010287
+jul 08 17:40:05 sylvesterg kernel: RAX: ffff8881b682b020 RBX:=20
+ffff8881b4a5c018 RCX: 0000000000000003
+jul 08 17:40:05 sylvesterg kernel: RDX: ffff8881b4a5c098 RSI:=20
+0000000000000001 RDI: ffff8881b4a5c018
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b716bc18 R08:=20
+ffff888216003380 R09: ffff8881bda953c0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b5786298
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881bdab0018 R14:=20
+ffffffffa0cad6ad R15: ffff8881bdab0018
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26a8b43058 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
+jul 08 17:40:05 sylvesterg kernel: Call Trace:
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dma_chan_put+0x6d/0xa0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 dma_release_channel+0x25/0x70
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_fw_new+0xd0/0x180=20
+[snd_soc_sst_firmware]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 17:40:05 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 17:40:05 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 17:40:05 sylvesterg kernel: RIP: 0033:0x7fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 17:40:05 sylvesterg kernel: RSP: 002b:00007fffcaa7a608 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 17:40:05 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+00005649adc19800 RCX: 00007fbfb00cec89
+jul 08 17:40:05 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fbfb0a29b8d RDI: 0000000000000011
+jul 08 17:40:05 sylvesterg kernel: RBP: 00007fbfb0a29b8d R08:=20
+0000000000000000 R09: 00005649adbfb1f0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 17:40:05 sylvesterg kernel: R13: 00005649adc30170 R14:=20
+0000000000020000 R15: 00005649adc19800
+jul 08 17:40:05 sylvesterg kernel: Modules linked in: mei_hdcp iTCO_wdt=20
+wmi_bmof dell_wmi snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal=20
+intel_powerclamp dell_laptop ledtrig_audio kvm_intel dell_smbios=20
+crct10dif_pclmul joydev mousedev crc32_pclmul crc32c_intel=20
+ghash_clmulni_intel dell_wmi_descriptor dcdbas btusb btintel aesni_intel=20
+crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf efi_pstore=20
+hid_multitouch efivars arc4 bluetooth iwlmvm ecdh_generic mac80211 ecc=20
+snd_hda_codec_hdmi intel_pch_thermal iwlwifi i2c_i801 snd_hda_intel=20
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_hda_codec cfg80211=20
+nf_tables_set rtsx_pci snd_hwdep mei_me processor_thermal_device=20
+intel_soc_dts_iosf nf_tables lpc_ich mei rfkill nfnetlink mfd_core=20
+snd_hda_core wmi battery int3403_thermal snd_soc_rt286 snd_soc_rl6347a=20
+snd_soc_core ac97_bus snd_pcm snd_timer snd i2c_hid soundcore tpm_crb(+)=20
+tpm_tis tpm_tis_core snd_soc_sst_acpi snd_soc_acpi_intel_match tpm=20
+snd_soc_acpi
+jul 08 17:40:05 sylvesterg kernel:=C2=A0 int3402_thermal rng_core intel_h=
+id=20
+int3400_thermal i2c_designware_platform i2c_designware_core=20
+acpi_thermal_rel int340x_thermal_zone evdev ac acpi_pad lz4 lz4_compress=20
+sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd auth_rpcgss=20
+nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic iscsi_tcp=20
+libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan ip6_udp_tunnel=20
+udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc fscache ext4=20
+mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log hid_sony=20
+hid_microsoft ff_memless hid_logitech hid_gyration hid_generic usbhid=20
+usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm irqbypass xhci_pci=20
+xhci_hcd usbcore usb_common sparse_keymap
+jul 08 17:40:05 sylvesterg kernel: ---[ end trace 2b0e8ca86ae94509 ]---
+jul 08 17:40:05 sylvesterg kernel: RIP:=20
+0010:dwc_free_chan_resources+0xe3/0xf0
+jul 08 17:40:05 sylvesterg kernel: Code: 48 89 c6 4c 89 e7 e8 4c 0d 41=20
+00 0f b6 43 60 f7 d0 20 85 81 01 00 00 74 05 5b 5d 41 5c c3 5b 48 89 ef=20
+5d 41 5c e9 3d fe ff ff <0f> 0b 0f 0b 0f 0b 0f 1f 80 00 00 00 00 0f 1f=20
+44 00 00 53 48 89 fb
+jul 08 17:40:05 sylvesterg kernel: RSP: 0018:ffffc900008679b8 EFLAGS:=20
+00010287
+jul 08 17:40:05 sylvesterg kernel: RAX: ffff8881b682b020 RBX:=20
+ffff8881b4a5c018 RCX: 0000000000000003
+jul 08 17:40:05 sylvesterg kernel: RDX: ffff8881b4a5c098 RSI:=20
+0000000000000001 RDI: ffff8881b4a5c018
+jul 08 17:40:05 sylvesterg kernel: RBP: ffff8881b716bc18 R08:=20
+ffff888216003380 R09: ffff8881bda953c0
+jul 08 17:40:05 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: ffff8881b5786298
+jul 08 17:40:05 sylvesterg kernel: R13: ffff8881bdab0018 R14:=20
+ffffffffa0cad6ad R15: ffff8881bdab0018
+jul 08 17:40:05 sylvesterg kernel: FS:=C2=A0 00007fbfb1283840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 17:40:05 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 17:40:05 sylvesterg kernel: CR2: 00007f26a8b43058 CR3:=20
+00000001bf67c004 CR4: 00000000003606e0
 
-Fair enough.
 
-> >  int device_links_check_suppliers(struct device *dev)
-> >  {
-> > @@ -538,7 +552,7 @@ int device_links_check_suppliers(struct
-> >         device_links_write_lock();
-> >
-> >         list_for_each_entry(link, &dev->links.suppliers, c_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 if (link->status != DL_STATE_AVAILABLE) {
-> > @@ -563,7 +577,7 @@ int device_links_check_suppliers(struct
-> >   *
-> >   * Also change the status of @dev's links to suppliers to "active".
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
-> >  void device_links_driver_bound(struct device *dev)
-> >  {
-> > @@ -572,7 +586,7 @@ void device_links_driver_bound(struct de
-> >         device_links_write_lock();
-> >
-> >         list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 /*
-> > @@ -593,7 +607,7 @@ void device_links_driver_bound(struct de
-> >         }
-> >
-> >         list_for_each_entry(link, &dev->links.suppliers, c_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
-> > @@ -605,6 +619,13 @@ void device_links_driver_bound(struct de
-> >         device_links_write_unlock();
-> >  }
-> >
-> > +static void device_link_drop_managed(struct device_link *link)
-> > +{
-> > +       link->flags &= ~DL_FLAG_MANAGED;
-> > +       WRITE_ONCE(link->status, DL_STATE_NONE);
-> > +       kref_put(&link->kref, __device_link_del);
-> > +}
-> > +
-> >  /**
-> >   * __device_links_no_driver - Update links of a device without a driver.
-> >   * @dev: Device without a drvier.
-> > @@ -615,18 +636,18 @@ void device_links_driver_bound(struct de
-> >   * unless they already are in the "supplier unbind in progress" state in which
-> >   * case they need not be updated.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
-> >  static void __device_links_no_driver(struct device *dev)
-> >  {
-> >         struct device_link *link, *ln;
-> >
-> >         list_for_each_entry_safe_reverse(link, ln, &dev->links.suppliers, c_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
-> > -                       __device_link_del(&link->kref);
-> > +                       device_link_drop_managed(link);
-> >                 else if (link->status == DL_STATE_CONSUMER_PROBE ||
-> >                          link->status == DL_STATE_ACTIVE)
-> >                         WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
-> > @@ -643,7 +664,7 @@ static void __device_links_no_driver(str
-> >   * %__device_links_no_driver() to update links to suppliers for it as
-> >   * appropriate.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
-> >  void device_links_no_driver(struct device *dev)
-> >  {
-> > @@ -652,7 +673,7 @@ void device_links_no_driver(struct devic
-> >         device_links_write_lock();
-> >
-> >         list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 /*
-> > @@ -680,7 +701,7 @@ void device_links_no_driver(struct devic
-> >   * invoke %__device_links_no_driver() to update links to suppliers for it as
-> >   * appropriate.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
-> >  void device_links_driver_cleanup(struct device *dev)
-> >  {
-> > @@ -689,7 +710,7 @@ void device_links_driver_cleanup(struct
-> >         device_links_write_lock();
-> >
-> >         list_for_each_entry_safe(link, ln, &dev->links.consumers, s_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 WARN_ON(link->flags & DL_FLAG_AUTOREMOVE_CONSUMER);
-> > @@ -702,7 +723,7 @@ void device_links_driver_cleanup(struct
-> >                  */
-> >                 if (link->status == DL_STATE_SUPPLIER_UNBIND &&
-> >                     link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
-> > -                       __device_link_del(&link->kref);
-> > +                       device_link_drop_managed(link);
-> >
-> >                 WRITE_ONCE(link->status, DL_STATE_DORMANT);
-> >         }
-> > @@ -724,7 +745,7 @@ void device_links_driver_cleanup(struct
-> >   *
-> >   * Return 'false' if there are no probing or active consumers.
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
-> >  bool device_links_busy(struct device *dev)
-> >  {
-> > @@ -734,7 +755,7 @@ bool device_links_busy(struct device *de
-> >         device_links_write_lock();
-> >
-> >         list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 if (link->status == DL_STATE_CONSUMER_PROBE
-> > @@ -764,7 +785,7 @@ bool device_links_busy(struct device *de
-> >   * driver to unbind and start over (the consumer will not re-probe as we have
-> >   * changed the state of the link already).
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   */
-> >  void device_links_unbind_consumers(struct device *dev)
-> >  {
-> > @@ -776,7 +797,7 @@ void device_links_unbind_consumers(struc
-> >         list_for_each_entry(link, &dev->links.consumers, s_node) {
-> >                 enum device_link_state status;
-> >
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 status = link->status;
-> > Index: linux-pm/drivers/base/power/runtime.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/base/power/runtime.c
-> > +++ linux-pm/drivers/base/power/runtime.c
-> > @@ -1624,7 +1624,7 @@ void pm_runtime_remove(struct device *de
-> >   * runtime PM references to the device, drop the usage counter of the device
-> >   * (as many times as needed).
-> >   *
-> > - * Links with the DL_FLAG_STATELESS flag set are ignored.
-> > + * Links with the DL_FLAG_MANAGED flag unset are ignored.
-> >   *
-> >   * Since the device is guaranteed to be runtime-active at the point this is
-> >   * called, nothing else needs to be done here.
-> > @@ -1641,7 +1641,7 @@ void pm_runtime_clean_up_links(struct de
-> >         idx = device_links_read_lock();
-> >
-> >         list_for_each_entry_rcu(link, &dev->links.consumers, s_node) {
-> > -               if (link->flags & DL_FLAG_STATELESS)
-> > +               if (!(link->flags & DL_FLAG_MANAGED))
-> >                         continue;
-> >
-> >                 while (refcount_dec_not_one(&link->rpm_active))
-> > Index: linux-pm/include/linux/device.h
-> > ===================================================================
-> > --- linux-pm.orig/include/linux/device.h
-> > +++ linux-pm/include/linux/device.h
-> > @@ -829,12 +829,13 @@ enum device_link_state {
-> >  /*
-> >   * Device link flags.
-> >   *
-> > - * STATELESS: The core won't track the presence of supplier/consumer drivers.
-> > + * STATELESS: The core will not remove this link automatically.
-> >   * AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driver unbind.
-> >   * PM_RUNTIME: If set, the runtime PM framework will use this link.
-> >   * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
-> >   * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
-> >   * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
-> > + * MANAGED: The core tracks presence of supplier/consumer drivers (internal).
-> >   */
-> >  #define DL_FLAG_STATELESS              BIT(0)
-> >  #define DL_FLAG_AUTOREMOVE_CONSUMER    BIT(1)
-> > @@ -842,6 +843,7 @@ enum device_link_state {
-> >  #define DL_FLAG_RPM_ACTIVE             BIT(3)
-> >  #define DL_FLAG_AUTOREMOVE_SUPPLIER    BIT(4)
-> >  #define DL_FLAG_AUTOPROBE_CONSUMER     BIT(5)
-> > +#define DL_FLAG_MANAGED                        BIT(6)
-> >
-> >  /**
-> >   * struct device_link - Device link representation.
-> > Index: linux-pm/Documentation/driver-api/device_link.rst
-> > ===================================================================
-> > --- linux-pm.orig/Documentation/driver-api/device_link.rst
-> > +++ linux-pm/Documentation/driver-api/device_link.rst
-> > @@ -78,8 +78,8 @@ typically deleted in its ``->remove`` ca
-> >  driver is compiled as a module, the device link is added on module load and
-> >  orderly deleted on unload.  The same restrictions that apply to device link
-> >  addition (e.g. exclusion of a parallel suspend/resume transition) apply equally
-> > -to deletion.  Device links with ``DL_FLAG_STATELESS`` unset (i.e. managed
-> > -device links) are deleted automatically by the driver core.
-> > +to deletion.  Device links managed by the driver core are deleted automatically
-> > +by it.
-> >
-> >  Several flags may be specified on device link addition, two of which
-> >  have already been mentioned above:  ``DL_FLAG_STATELESS`` to express that no
-> >
->
-> Other than those 2 minor comments, this looks good to me.
->
-> Reviewed-by: Saravana Kannan <saravanak@google.com>
+Boot #2:
 
-Thanks!
+jul 08 19:37:04 sylvesterg kernel: sst-acpi INT3438:00: DesignWare DMA=20
+Controller, 8 channels
+jul 08 19:37:04 sylvesterg kernel: sst-acpi INT3438:00: DMAR: 32bit DMA=20
+uses non-identity mapping
+jul 08 19:37:04 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 19:37:04 sylvesterg kernel: BUG: unable to handle page fault for=20
+address: 00000ffeffffffe8
+jul 08 19:37:04 sylvesterg kernel: #PF: supervisor read access in kernel=20
+mode
+jul 08 19:37:04 sylvesterg kernel: #PF: error_code(0x0000) - not-present=20
+page
+jul 08 19:37:04 sylvesterg kernel: PGD 0 P4D 0
+jul 08 19:37:04 sylvesterg kernel: Oops: 0000 [#1] SMP PTI
+jul 08 19:37:04 sylvesterg kernel: CPU: 3 PID: 1894 Comm: systemd-udevd=20
+Not tainted 5.2.0-gentoo #1
+jul 08 19:37:04 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 19:37:04 sylvesterg kernel: RIP:=20
+0010:dwc_scan_descriptors+0x1a9/0x400
+jul 08 19:37:04 sylvesterg kernel: Code: 8d 70 e0 48 39 c7 75 22 e9 73=20
+01 00 00 2b 96 88 00 00 00 89 95 98 00 00 00 48 8b 46 20 48 8d 70 e0 48=20
+39 c7 0f 84 56 01 00 00 <8b> 40 e8 49 39 c4 75 db 48 8b 03 48 8b 53 58=20
+48 89 0c 24 8b 72 1c
+jul 08 19:37:04 sylvesterg kernel: RSP: 0018:ffffc9000042b848 EFLAGS:=20
+00010086
+jul 08 19:37:04 sylvesterg kernel: RAX: 00000fff00000000 RBX:=20
+ffff8881b99fd018 RCX: 0000000000000286
+jul 08 19:37:04 sylvesterg kernel: RDX: 00000000465e33e9 RSI:=20
+00000ffeffffffe0 RDI: ffff8881b99fd0b8
+jul 08 19:37:04 sylvesterg kernel: RBP: ffff8881b99fd088 R08:=20
+ffff8881b99fd098 R09: 0000000000a2090c
+jul 08 19:37:04 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: 0000000000a2090c
+jul 08 19:37:04 sylvesterg kernel: R13: ffff8881b99fd088 R14:=20
+ffff8881c1da9000 R15: ffff8881b9a1cc18
+jul 08 19:37:04 sylvesterg kernel: FS:=C2=A0 00007f671bb82840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 19:37:04 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 19:37:04 sylvesterg kernel: CR2: 00000ffeffffffe8 CR3:=20
+00000001c4168001 CR4: 00000000003606e0
+jul 08 19:37:04 sylvesterg kernel: Call Trace:
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 ? dwc_desc_get+0x64/0xa0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 dwc_tx_status+0x5f/0x180
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 dma_sync_wait+0x83/0xc0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x75/0x80=20
+[snd_soc_sst_firmware]
+jul 08 19:37:04 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 19:37:04 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 19:37:04 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 19:37:04 sylvesterg kernel: RIP: 0033:0x7f671a9cdc89
+jul 08 19:37:04 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 19:37:04 sylvesterg kernel: RSP: 002b:00007ffc43d00c38 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 19:37:04 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+0000563f7b47f2c0 RCX: 00007f671a9cdc89
+jul 08 19:37:04 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007f671b328b8d RDI: 0000000000000011
+jul 08 19:37:04 sylvesterg kernel: RBP: 00007f671b328b8d R08:=20
+0000000000000000 R09: 0000563f7b4402f0
+jul 08 19:37:04 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 19:37:04 sylvesterg kernel: R13: 0000563f7b45c4b0 R14:=20
+0000000000020000 R15: 0000563f7b47f2c0
+jul 08 19:37:04 sylvesterg kernel: Modules linked in: wmi_bmof=20
+snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp snd_soc_sst_ipc=20
+snd_soc_sst_firmware dell_laptop ledtrig_audio dell_smbios=20
+x86_pkg_temp_thermal intel_powerclamp dell_wmi_descriptor kvm_intel=20
+dcdbas crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel=20
+aesni_intel crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf=20
+efi_pstore efivars mousedev joydev arc4 iwlmvm mac80211 nft_ct=20
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 hid_multitouch iwlwifi=20
+nf_tables_set i2c_i801 intel_pch_thermal snd_hda_codec_hdmi btusb=20
+nf_tables btintel nfnetlink snd_hda_intel cfg80211 bluetooth lpc_ich=20
+ecdh_generic mei_me rtsx_pci mei mfd_core rfkill snd_hda_codec snd_hwdep=20
+ecc processor_thermal_device intel_soc_dts_iosf snd_hda_core wmi battery=20
+int3403_thermal snd_soc_rt286 snd_soc_rl6347a snd_soc_core ac97_bus=20
+snd_pcm snd_timer i2c_hid snd soundcore tpm_crb(+) tpm_tis tpm_tis_core=20
+i2c_designware_platform snd_soc_sst_acpi i2c_designware_core=20
+snd_soc_acpi_intel_match
+jul 08 19:37:04 sylvesterg kernel:=C2=A0 snd_soc_acpi int3402_thermal=20
+int340x_thermal_zone tpm int3400_thermal intel_hid acpi_thermal_rel=20
+rng_core ac acpi_pad evdev lz4 lz4_compress sch_fq_codel zram zsmalloc=20
+coretemp nfsd hwmon msr auth_rpcgss nfs_acl cpuid efivarfs=20
+algif_skcipher aes_x86_64 sha512_generic iscsi_tcp libiscsi_tcp libiscsi=20
+scsi_transport_iscsi bonding vxlan ip6_udp_tunnel udp_tunnel macvlan=20
+fuse overlay nfs lockd grace sunrpc fscache ext4 mbcache jbd2=20
+dm_snapshot dm_mirror dm_region_hash dm_log hid_sony hid_microsoft=20
+ff_memless hid_logitech hid_gyration hid_generic usbhid usb_storage=20
+ehci_pci ehci_hcd sr_mod cdrom sg kvm xhci_pci irqbypass xhci_hcd=20
+usbcore usb_common sparse_keymap
+jul 08 19:37:04 sylvesterg kernel: CR2: 00000ffeffffffe8
+jul 08 19:37:04 sylvesterg kernel: ---[ end trace 9a1e9555f6173e23 ]---
+jul 08 19:37:04 sylvesterg kernel: RIP:=20
+0010:dwc_scan_descriptors+0x1a9/0x400
+jul 08 19:37:04 sylvesterg kernel: Code: 8d 70 e0 48 39 c7 75 22 e9 73=20
+01 00 00 2b 96 88 00 00 00 89 95 98 00 00 00 48 8b 46 20 48 8d 70 e0 48=20
+39 c7 0f 84 56 01 00 00 <8b> 40 e8 49 39 c4 75 db 48 8b 03 48 8b 53 58=20
+48 89 0c 24 8b 72 1c
+jul 08 19:37:04 sylvesterg kernel: RSP: 0018:ffffc9000042b848 EFLAGS:=20
+00010086
+jul 08 19:37:04 sylvesterg kernel: RAX: 00000fff00000000 RBX:=20
+ffff8881b99fd018 RCX: 0000000000000286
+jul 08 19:37:04 sylvesterg kernel: RDX: 00000000465e33e9 RSI:=20
+00000ffeffffffe0 RDI: ffff8881b99fd0b8
+jul 08 19:37:04 sylvesterg kernel: RBP: ffff8881b99fd088 R08:=20
+ffff8881b99fd098 R09: 0000000000a2090c
+jul 08 19:37:04 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: 0000000000a2090c
+jul 08 19:37:04 sylvesterg kernel: R13: ffff8881b99fd088 R14:=20
+ffff8881c1da9000 R15: ffff8881b9a1cc18
+jul 08 19:37:04 sylvesterg kernel: FS:=C2=A0 00007f671bb82840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 19:37:04 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 19:37:04 sylvesterg kernel: CR2: 00000ffeffffffe8 CR3:=20
+00000001c4168001 CR4: 00000000003606e0
+
+
+Boot #3:
+
+jul 08 20:02:56 sylvesterg kernel: sst-acpi INT3438:00: DesignWare DMA=20
+Controller, 8 channels
+jul 08 20:02:56 sylvesterg kernel: sst-acpi INT3438:00: DMAR: 32bit DMA=20
+uses non-identity mapping
+jul 08 20:02:56 sylvesterg kernel: iTCO_wdt: Intel TCO WatchDog Timer=20
+Driver v1.11
+jul 08 20:02:56 sylvesterg kernel: iTCO_wdt: Found a Wildcat Point_LP=20
+TCO device (Version=3D2, TCOBASE=3D0x1860)
+jul 08 20:02:56 sylvesterg kernel: iTCO_wdt: initialized. heartbeat=3D30=20
+sec (nowayout=3D0)
+jul 08 20:02:56 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 20:02:56 sylvesterg kernel: BUG: unable to handle page fault for=20
+address: 00000ffeffffffe8
+jul 08 20:02:56 sylvesterg kernel: #PF: supervisor read access in kernel=20
+mode
+jul 08 20:02:56 sylvesterg kernel: #PF: error_code(0x0000) - not-present=20
+page
+jul 08 20:02:56 sylvesterg kernel: PGD 0 P4D 0
+jul 08 20:02:56 sylvesterg kernel: Oops: 0000 [#1] SMP PTI
+jul 08 20:02:56 sylvesterg kernel: CPU: 3 PID: 1886 Comm: systemd-udevd=20
+Not tainted 5.2.0-gentoo #1
+jul 08 20:02:56 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 20:02:56 sylvesterg kernel: RIP:=20
+0010:dwc_scan_descriptors+0x1a9/0x400
+jul 08 20:02:56 sylvesterg kernel: Code: 8d 70 e0 48 39 c7 75 22 e9 73=20
+01 00 00 2b 96 88 00 00 00 89 95 98 00 00 00 48 8b 46 20 48 8d 70 e0 48=20
+39 c7 0f 84 56 01 00 00 <8b> 40 e8 49 39 c4 75 db 48 8b 03 48 8b 53 58=20
+48 89 0c 24 8b 72 1c
+jul 08 20:02:56 sylvesterg kernel: RSP: 0018:ffffc9000053f848 EFLAGS:=20
+00010086
+jul 08 20:02:56 sylvesterg kernel: RAX: 00000fff00000000 RBX:=20
+ffff8882116a1018 RCX: 0000000000000286
+jul 08 20:02:56 sylvesterg kernel: RDX: 00000000462c9de9 RSI:=20
+00000ffeffffffe0 RDI: ffff8882116a10b8
+jul 08 20:02:56 sylvesterg kernel: RBP: ffff8882116a1088 R08:=20
+ffff8882116a1098 R09: 0000000000a2090c
+jul 08 20:02:56 sylvesterg kernel: R10: 0000000000000aa6 R11:=20
+0000000000000000 R12: 0000000000a2090c
+jul 08 20:02:56 sylvesterg kernel: R13: ffff8882116a1088 R14:=20
+ffff8881b8e44000 R15: ffff8881b9d36218
+jul 08 20:02:56 sylvesterg kernel: FS:=C2=A0 00007fee9a543840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 20:02:56 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 20:02:56 sylvesterg kernel: CR2: 00000ffeffffffe8 CR3:=20
+00000002139f4002 CR4: 00000000003606e0
+jul 08 20:02:56 sylvesterg kernel: Call Trace:
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 ? dwc_desc_get+0x64/0xa0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 dwc_tx_status+0x5f/0x180
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 dma_sync_wait+0x83/0xc0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x75/0x80=20
+[snd_soc_sst_firmware]
+jul 08 20:02:56 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 20:02:56 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 20:02:56 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 20:02:56 sylvesterg kernel: RIP: 0033:0x7fee9938ec89
+jul 08 20:02:56 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 20:02:56 sylvesterg kernel: RSP: 002b:00007ffdf63901e8 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 20:02:56 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+0000564ac4ac15f0 RCX: 00007fee9938ec89
+jul 08 20:02:56 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007fee99ce9b8d RDI: 0000000000000011
+jul 08 20:02:56 sylvesterg kernel: RBP: 00007fee99ce9b8d R08:=20
+0000000000000000 R09: 0000564ac4acee10
+jul 08 20:02:56 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 20:02:56 sylvesterg kernel: R13: 0000564ac4af1c30 R14:=20
+0000000000020000 R15: 0000564ac4ac15f0
+jul 08 20:02:56 sylvesterg kernel: Modules linked in: iTCO_wdt dell_wmi=20
+wmi_bmof snd_soc_sst_haswell_pcm(+) snd_soc_sst_dsp snd_soc_sst_ipc=20
+snd_soc_sst_firmware x86_pkg_temp_thermal intel_powerclamp dell_laptop=20
+kvm_intel ledtrig_audio dell_smbios dell_wmi_descriptor dcdbas=20
+crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel=20
+aesni_intel crypto_simd cryptd glue_helper intel_cstate intel_rapl_perf=20
+mousedev joydev arc4 efi_pstore efivars snd_soc_rt286 snd_soc_rl6347a=20
+nft_ct nf_conntrack intel_pch_thermal iwlmvm snd_hda_codec_hdmi mac80211=20
+snd_hda_intel i2c_i801 nf_defrag_ipv6 hid_multitouch nf_defrag_ipv4=20
+iwlwifi nf_tables_set btusb btintel nf_tables nfnetlink snd_soc_core=20
+snd_hda_codec bluetooth snd_hwdep mei_me lpc_ich rtsx_pci cfg80211=20
+snd_hda_core ac97_bus ecdh_generic mfd_core snd_pcm mei rfkill ecc=20
+snd_timer processor_thermal_device intel_soc_dts_iosf snd soundcore=20
+i2c_hid wmi tpm_crb(+) tpm_tis tpm_tis_core int3403_thermal battery tpm=20
+int3402_thermal rng_core int340x_thermal_zone snd_soc_sst_acpi
+jul 08 20:02:56 sylvesterg kernel:=C2=A0 snd_soc_acpi_intel_match=20
+snd_soc_acpi i2c_designware_platform i2c_designware_core lz4=20
+lz4_compress int3400_thermal intel_hid acpi_thermal_rel acpi_pad ac=20
+evdev sch_fq_codel zram zsmalloc coretemp hwmon msr cpuid nfsd=20
+auth_rpcgss nfs_acl efivarfs algif_skcipher aes_x86_64 sha512_generic=20
+iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi bonding vxlan=20
+ip6_udp_tunnel udp_tunnel macvlan fuse overlay nfs lockd grace sunrpc=20
+fscache ext4 mbcache jbd2 dm_snapshot dm_mirror dm_region_hash dm_log=20
+hid_sony hid_microsoft ff_memless hid_logitech hid_gyration hid_generic=20
+usbhid usb_storage ehci_pci ehci_hcd sr_mod cdrom sg kvm xhci_pci=20
+irqbypass xhci_hcd usbcore usb_common sparse_keymap
+jul 08 20:02:56 sylvesterg kernel: CR2: 00000ffeffffffe8
+jul 08 20:02:56 sylvesterg kernel: ---[ end trace f9f2a4f40d7d353e ]---
+jul 08 20:02:56 sylvesterg kernel: RIP:=20
+0010:dwc_scan_descriptors+0x1a9/0x400
+jul 08 20:02:56 sylvesterg kernel: Code: 8d 70 e0 48 39 c7 75 22 e9 73=20
+01 00 00 2b 96 88 00 00 00 89 95 98 00 00 00 48 8b 46 20 48 8d 70 e0 48=20
+39 c7 0f 84 56 01 00 00 <8b> 40 e8 49 39 c4 75 db 48 8b 03 48 8b 53 58=20
+48 89 0c 24 8b 72 1c
+jul 08 20:02:56 sylvesterg kernel: RSP: 0018:ffffc9000053f848 EFLAGS:=20
+00010086
+jul 08 20:02:56 sylvesterg kernel: RAX: 00000fff00000000 RBX:=20
+ffff8882116a1018 RCX: 0000000000000286
+jul 08 20:02:56 sylvesterg kernel: RDX: 00000000462c9de9 RSI:=20
+00000ffeffffffe0 RDI: ffff8882116a10b8
+jul 08 20:02:56 sylvesterg kernel: RBP: ffff8882116a1088 R08:=20
+ffff8882116a1098 R09: 0000000000a2090c
+jul 08 20:02:56 sylvesterg kernel: R10: 0000000000000aa6 R11:=20
+0000000000000000 R12: 0000000000a2090c
+jul 08 20:02:56 sylvesterg kernel: R13: ffff8882116a1088 R14:=20
+ffff8881b8e44000 R15: ffff8881b9d36218
+jul 08 20:02:56 sylvesterg kernel: FS:=C2=A0 00007fee9a543840(0000)=20
+GS:ffff888217380000(0000) knlGS:0000000000000000
+jul 08 20:02:56 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 20:02:56 sylvesterg kernel: CR2: 00000ffeffffffe8 CR3:=20
+00000002139f4002 CR4: 00000000003606e0
+
+
+Boot #4:
+
+jul 08 20:20:23 sylvesterg kernel: sst-acpi INT3438:00: DesignWare DMA=20
+Controller, 8 channels
+jul 08 20:20:23 sylvesterg kernel: sst-acpi INT3438:00: DMAR: 32bit DMA=20
+uses non-identity mapping
+jul 08 20:20:23 sylvesterg kernel: dma dma1chan0: BUG: All descriptors=20
+done, but channel not idle!
+jul 08 20:20:23 sylvesterg kernel: BUG: unable to handle page fault for=20
+address: 00000ffeffffffe8
+jul 08 20:20:23 sylvesterg kernel: #PF: supervisor read access in kernel=20
+mode
+jul 08 20:20:23 sylvesterg kernel: #PF: error_code(0x0000) - not-present=20
+page
+jul 08 20:20:23 sylvesterg kernel: PGD 0 P4D 0
+jul 08 20:20:23 sylvesterg kernel: Oops: 0000 [#1] SMP PTI
+jul 08 20:20:23 sylvesterg kernel: CPU: 0 PID: 1914 Comm: systemd-udevd=20
+Not tainted 5.2.0-gentoo #1
+jul 08 20:20:23 sylvesterg kernel: Hardware name: Dell Inc. XPS 13=20
+9343/0310JH, BIOS A15 01/23/2018
+jul 08 20:20:23 sylvesterg kernel: RIP:=20
+0010:dwc_scan_descriptors+0x1a9/0x400
+jul 08 20:20:23 sylvesterg kernel: Code: 8d 70 e0 48 39 c7 75 22 e9 73=20
+01 00 00 2b 96 88 00 00 00 89 95 98 00 00 00 48 8b 46 20 48 8d 70 e0 48=20
+39 c7 0f 84 56 01 00 00 <8b> 40 e8 49 39 c4 75 db 48 8b 03 48 8b 53 58=20
+48 89 0c 24 8b 72 1c
+jul 08 20:20:23 sylvesterg kernel: RSP: 0018:ffffc9000085f848 EFLAGS:=20
+00010086
+jul 08 20:20:23 sylvesterg kernel: RAX: 00000fff00000000 RBX:=20
+ffff8881bc10c818 RCX: 0000000000000286
+jul 08 20:20:23 sylvesterg kernel: RDX: 00000000eebf3fe9 RSI:=20
+00000ffeffffffe0 RDI: ffff8881bc10c8b8
+jul 08 20:20:23 sylvesterg kernel: RBP: ffff8881bc10c888 R08:=20
+ffff8881bc10c898 R09: 0000000000a2090c
+jul 08 20:20:23 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: 0000000000a2090c
+jul 08 20:20:23 sylvesterg kernel: R13: ffff8881bc10c888 R14:=20
+ffff8881bdcef000 R15: ffff88821140c018
+jul 08 20:20:23 sylvesterg kernel: FS:=C2=A0 00007f0e329c6840(0000)=20
+GS:ffff888217200000(0000) knlGS:0000000000000000
+jul 08 20:20:23 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 20:20:23 sylvesterg kernel: CR2: 00000ffeffffffe8 CR3:=20
+00000001c4078002 CR4: 00000000003606f0
+jul 08 20:20:23 sylvesterg kernel: Call Trace:
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 ? dwc_desc_get+0x64/0xa0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 dwc_tx_status+0x5f/0x180
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 dma_sync_wait+0x83/0xc0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 sst_dsp_dma_copy+0x75/0x80=20
+[snd_soc_sst_firmware]
+jul 08 20:20:23 sylvesterg kernel: sst_module_alloc_blocks+0xac/0x170=20
+[snd_soc_sst_firmware]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 hsw_parse_fw_image+0x148/0x220=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 sst_fw_new+0xa9/0x180=20
+[snd_soc_sst_firmware]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 sst_hsw_module_load+0x76/0x100=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 sst_hsw_dsp_init+0x1c3/0x390=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 hsw_pcm_dev_probe+0x49/0xc0=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 platform_drv_probe+0x38/0x80
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 really_probe+0xed/0x290
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 driver_probe_device+0x50/0xc0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 device_driver_attach+0x4f/0x60
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 __driver_attach+0x51/0xb0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 ? device_driver_attach+0x60/0x60
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 bus_for_each_dev+0x93/0xe0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 bus_add_driver+0x1a6/0x1c0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 driver_register+0x6b/0xb0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 ?=20
+trace_event_define_fields_hsw_device_config_req+0xab/0xab=20
+[snd_soc_sst_haswell_pcm]
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 do_one_initcall+0x5b/0x1f4
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 do_init_module+0x5a/0x220
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 load_module+0x1fad/0x2180
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 ? __do_sys_finit_module+0xd2/0xf=
+0
+jul 08 20:20:23 sylvesterg kernel: __do_sys_finit_module+0xd2/0xf0
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 do_syscall_64+0x5f/0x1b0
+jul 08 20:20:23 sylvesterg kernel: entry_SYSCALL_64_after_hwframe+0x44/0x=
+a9
+jul 08 20:20:23 sylvesterg kernel: RIP: 0033:0x7f0e31811c89
+jul 08 20:20:23 sylvesterg kernel: Code: 00 00 00 75 05 48 83 c4 18 c3=20
+e8 a2 8d 01 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89=20
+c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 71 2c=20
+00 f7 d8 64 89 01 48
+jul 08 20:20:23 sylvesterg kernel: RSP: 002b:00007ffd11175c88 EFLAGS:=20
+00000246 ORIG_RAX: 0000000000000139
+jul 08 20:20:23 sylvesterg kernel: RAX: ffffffffffffffda RBX:=20
+000055db4a9ba960 RCX: 00007f0e31811c89
+jul 08 20:20:23 sylvesterg kernel: RDX: 0000000000000000 RSI:=20
+00007f0e3216cb8d RDI: 0000000000000011
+jul 08 20:20:23 sylvesterg kernel: RBP: 00007f0e3216cb8d R08:=20
+0000000000000000 R09: 000055db4a976fa0
+jul 08 20:20:23 sylvesterg kernel: R10: 0000000000000011 R11:=20
+0000000000000246 R12: 0000000000000000
+jul 08 20:20:23 sylvesterg kernel: R13: 000055db4a9a0a90 R14:=20
+0000000000020000 R15: 000055db4a9ba960
+jul 08 20:20:23 sylvesterg kernel: Modules linked in:=20
+snd_soc_sst_haswell_pcm(+) dell_wmi wmi_bmof snd_soc_sst_dsp=20
+snd_soc_sst_ipc snd_soc_sst_firmware x86_pkg_temp_thermal joydev arc4=20
+mousedev intel_powerclamp hid_multitouch iwlmvm kvm_intel mac80211=20
+crct10dif_pclmul crc32_pclmul dell_laptop crc32c_intel ledtrig_audio=20
+ghash_clmulni_intel snd_hda_codec_hdmi iwlwifi dell_smbios snd_hda_intel=20
+nft_ct nf_conntrack mei_me nf_defrag_ipv6 nf_defrag_ipv4 efi_pstore=20
+dell_wmi_descriptor dcdbas nf_tables_set efivars intel_pch_thermal btusb=20
+i2c_i801 aesni_intel crypto_simd cryptd glue_helper intel_cstate=20
+intel_rapl_perf btintel bluetooth cfg80211 nf_tables snd_hda_codec=20
+lpc_ich ecdh_generic ecc nfnetlink mei rfkill rtsx_pci mfd_core=20
+processor_thermal_device intel_soc_dts_iosf snd_hwdep snd_hda_core=20
+snd_soc_rt286 snd_soc_rl6347a wmi snd_soc_core ac97_bus battery snd_pcm=20
+i2c_hid int3403_thermal snd_timer snd soundcore snd_soc_sst_acpi=20
+tpm_crb(+) snd_soc_acpi_intel_match snd_soc_acpi tpm_tis tpm_tis_core=20
+int3400_thermal
+jul 08 20:20:23 sylvesterg kernel:=C2=A0 int3402_thermal acpi_thermal_rel=
+=20
+int340x_thermal_zone evdev ac acpi_pad i2c_designware_platform=20
+i2c_designware_core tpm intel_hid rng_core lz4 lz4_compress sch_fq_codel=20
+zram zsmalloc coretemp hwmon msr nfsd auth_rpcgss nfs_acl cpuid efivarfs=20
+algif_skcipher aes_x86_64 sha512_generic iscsi_tcp libiscsi_tcp libiscsi=20
+scsi_transport_iscsi bonding vxlan ip6_udp_tunnel udp_tunnel macvlan=20
+fuse overlay nfs lockd grace sunrpc fscache ext4 mbcache jbd2=20
+dm_snapshot dm_mirror dm_region_hash dm_log hid_sony hid_microsoft=20
+ff_memless hid_logitech hid_gyration hid_generic usbhid usb_storage=20
+ehci_pci ehci_hcd sr_mod cdrom sg xhci_pci kvm irqbypass xhci_hcd=20
+usbcore usb_common sparse_keymap
+jul 08 20:20:23 sylvesterg kernel: CR2: 00000ffeffffffe8
+jul 08 20:20:23 sylvesterg kernel: ---[ end trace 0c373117ce9a75c6 ]---
+jul 08 20:20:23 sylvesterg kernel: RIP:=20
+0010:dwc_scan_descriptors+0x1a9/0x400
+jul 08 20:20:23 sylvesterg kernel: Code: 8d 70 e0 48 39 c7 75 22 e9 73=20
+01 00 00 2b 96 88 00 00 00 89 95 98 00 00 00 48 8b 46 20 48 8d 70 e0 48=20
+39 c7 0f 84 56 01 00 00 <8b> 40 e8 49 39 c4 75 db 48 8b 03 48 8b 53 58=20
+48 89 0c 24 8b 72 1c
+jul 08 20:20:23 sylvesterg kernel: RSP: 0018:ffffc9000085f848 EFLAGS:=20
+00010086
+jul 08 20:20:23 sylvesterg kernel: RAX: 00000fff00000000 RBX:=20
+ffff8881bc10c818 RCX: 0000000000000286
+jul 08 20:20:23 sylvesterg kernel: RDX: 00000000eebf3fe9 RSI:=20
+00000ffeffffffe0 RDI: ffff8881bc10c8b8
+jul 08 20:20:23 sylvesterg kernel: RBP: ffff8881bc10c888 R08:=20
+ffff8881bc10c898 R09: 0000000000a2090c
+jul 08 20:20:23 sylvesterg kernel: R10: 0000000000000000 R11:=20
+0000000000000030 R12: 0000000000a2090c
+jul 08 20:20:23 sylvesterg kernel: R13: ffff8881bc10c888 R14:=20
+ffff8881bdcef000 R15: ffff88821140c018
+jul 08 20:20:23 sylvesterg kernel: FS:=C2=A0 00007f0e329c6840(0000)=20
+GS:ffff888217200000(0000) knlGS:0000000000000000
+jul 08 20:20:23 sylvesterg kernel: CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0:=20
+0000000080050033
+jul 08 20:20:23 sylvesterg kernel: CR2: 00000ffeffffffe8 CR3:=20
+00000001c4078002 CR4: 00000000003606f0
+
+Boot #5:
+
+jul 08 20:48:57 sylvesterg kernel: sst-acpi INT3438:00: DesignWare DMA=20
+Controller, 8 channels
+jul 08 20:48:57 sylvesterg kernel: sst-acpi INT3438:00: DMAR: 32bit DMA=20
+uses non-identity mapping
+jul 08 20:48:58 sylvesterg kernel: bpfilter: Loaded bpfilter_umh pid 2122
+jul 08 20:48:59 sylvesterg kernel: Bluetooth: hci0: Waiting for firmware=20
+download to complete
+jul 08 20:48:59 sylvesterg kernel: Bluetooth: hci0: Firmware loaded in=20
+1802308 usecs
+jul 08 20:48:59 sylvesterg kernel: Bluetooth: hci0: Waiting for device=20
+to boot
+jul 08 20:48:59 sylvesterg kernel: Bluetooth: hci0: Device booted in=20
+11692 usecs
+jul 08 20:48:59 sylvesterg kernel: Bluetooth: hci0: Found Intel DDC=20
+parameters: intel/ibt-12-16.ddc
+jul 08 20:48:59 sylvesterg kernel: Bluetooth: hci0: Applying Intel DDC=20
+parameters completed
+jul 08 20:49:02 sylvesterg kernel: sst-acpi INT3438:00: dma_sync_wait:=20
+timeout!
+jul 08 20:49:02 sylvesterg kernel: Bluetooth: BNEP (Ethernet Emulation)=20
+ver 1.3
+jul 08 20:49:02 sylvesterg kernel: Bluetooth: BNEP filters: protocol=20
+multicast
+jul 08 20:49:02 sylvesterg kernel: Bluetooth: BNEP socket layer initializ=
+ed
+jul 08 20:49:07 sylvesterg kernel: sst-acpi INT3438:00: dma_sync_wait:=20
+timeout!
+jul 08 20:49:12 sylvesterg kernel: sst-acpi INT3438:00: dma_sync_wait:=20
+timeout!
+jul 08 20:49:17 sylvesterg kernel: sst-acpi INT3438:00: dma_sync_wait:=20
+timeout!
+
+
+As my system behaved very unstable, I decided to boot back into 5.1.15=20
+at this point, which does not show any of these traces or=20
+"dma_sync_wait: timeout!" or "All descriptors done, but channel not=20
+idle!" messages.
+
+Stijn
+
