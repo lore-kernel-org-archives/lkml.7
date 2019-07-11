@@ -2,110 +2,102 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE1EC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE5AC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74182084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214152084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SuTADCom"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9HpTO2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfGKDNv (ORCPT
+        id S1728057AbfGKDNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:13:51 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57123 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbfGKDNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:13:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45kh3F3SsSz9sNF;
-        Thu, 11 Jul 2019 13:13:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562814826;
-        bh=PhG2hG4cwurJt26BRZUTaDAqGL6edeBLrcMEroPsEj0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SuTADComobW495yn0VS+70Awano2ExGgqtgVV+QRwhFeli/zdhgoqwIrbhBgrPn1x
-         4skLMs9TYL/picxQWd1RBtOB0LxHHRHUYfMJHorysnA3jMGk8ILvjBrauq1KPJYZco
-         r906QruX68qilfJIrw4VLnkLPi232pQysd6Q223G7NRGZDFF/Wg4ETXkqkfbzcCp58
-         okM9iCm5cdnDg2Lx2up0BhHzb7mspbEB3whIj7l2FlYrPfXpC9aijxxuexB3zwwP1P
-         pqtgOryYP2L4Cg/I4P+umsvAx942+39ZvTIqbod59+sp8+dHTTPld3NmnKTAwX6rKo
-         km/sisSjD5EZA==
-Date:   Thu, 11 Jul 2019 13:13:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190711131344.452fc064@canb.auug.org.au>
-In-Reply-To: <20190711015854.GC22409@mellanox.com>
-References: <20190709135636.4d36e19f@canb.auug.org.au>
-        <20190709064346.GF7034@mtr-leonro.mtl.com>
-        <20190710175212.GM2887@mellanox.com>
-        <20190711115054.7d7f468c@canb.auug.org.au>
-        <20190711015854.GC22409@mellanox.com>
+        Wed, 10 Jul 2019 23:13:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44831 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbfGKDNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 23:13:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so4162841ljc.11;
+        Wed, 10 Jul 2019 20:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3Bk1blV5oQEyQV3BicG+2hmfkOduACJXlcdjcBUfd1g=;
+        b=c9HpTO2ig6B+SiMO23kHDjqljR4JBbZCFeobLD2jX3lQ25AoPcT5cW/Qdxfj8dY9AC
+         BLhc2+GyJmGwP+rJPxnHZnBCwtdwYlABjvo0SJQ2IXa4VKg2Jw6DQ2x5gdUlen033rAO
+         tIv5ebyR0k/6U9ZdSHD7OgHgimv4PTPR4rt0Aus4fIW9Xb+SXR9w/dKtD6SfXgI1Ft3X
+         3FUw0a4w9VFWwMxzUlpN7vxY0h5M4qggdSAmmt6PjAMetkForHZaq4ZhzXJco01HQTQu
+         hiuKVDzAhB/rHWIhU5QgYu3kvjnrQsxZjVDrdgJnsb0UBNvkqzCnFIW8zA9F4Yb2SMt/
+         84Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3Bk1blV5oQEyQV3BicG+2hmfkOduACJXlcdjcBUfd1g=;
+        b=PvIIZmTpEE0/OpI0Rx2S9XU0usdXpOeq4NbJE22ETxLpZyMpjkFnaMthkwRMeh8A/L
+         hrZJG/8Ik9p80su2K9Uinl20fMGCi7l9Px7035Gbgnu3pldk0EJ3iIfnnNcPhfKKlKAF
+         iaRouTZ3sCH77lkSia21THsdiYLFZAbhFgoV+i2WkKm1bEb/D3XXp3l72fUJspjtxUNv
+         /j0xgOBCqB2Wrc6V5kD0mHM4KPvEsUVeSMaMjQldef9+4B92rcdRX0KzB55wQ6H3ictG
+         CyKDJB4kewBWuMj/TwD6q/e7HzQQa9Esd1TdVIMcrmSZj2D/UZUmV16E7tdGpM6Kpx1x
+         upOA==
+X-Gm-Message-State: APjAAAWaNpt7qaQ8Jhwxi8GYTW1v7xVEXkhRzhyIMWs+IZ4GfMbCPZhZ
+        RWIMctNkM2nEUIrEUS9RbVU=
+X-Google-Smtp-Source: APXvYqz1xa5euZ79IKq4iDtYx9Cl2OrfI1H9xAMWaAw4WTe5wxF75jFFc1u3Yr810Lfq079dF9Shew==
+X-Received: by 2002:a2e:9045:: with SMTP id n5mr453281ljg.66.1562814820197;
+        Wed, 10 Jul 2019 20:13:40 -0700 (PDT)
+Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id h84sm753915ljf.42.2019.07.10.20.13.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 20:13:39 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/6] ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
+Date:   Thu, 11 Jul 2019 06:13:11 +0300
+Message-Id: <20190711031312.10038-6-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190711031312.10038-1-digetx@gmail.com>
+References: <20190711031312.10038-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/6ThWdQ5XpS0.NYkNCCb3CV2"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6ThWdQ5XpS0.NYkNCCb3CV2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The Tegra CPU Idle driver was moved out into driver/cpuidle/ directory and
+it is now a proper platform driver.
 
-Hi Jason,
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, 11 Jul 2019 02:26:27 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Thu, Jul 11, 2019 at 11:50:54AM +1000, Stephen Rothwell wrote:
->=20
-> > So today this failed to build after I merged the rdma tree (previously
-> > it didn;t until after the net-next tree was merged (I assume a
-> > dependency changed).  It failed because in_dev_for_each_ifa_rcu (and
-> > in_dev_for_each_ifa_rtnl) is only defined in a commit in the net-next
-> > tree :-( =20
->=20
-> ? I'm confused..=20
->=20
-> rdma.git builds fine stand alone (I hope!)
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 6a40bc2ef271..2c0fc7968c42 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -107,6 +107,7 @@ CONFIG_CPU_IDLE=y
+ CONFIG_ARM_CPUIDLE=y
+ CONFIG_ARM_ZYNQ_CPUIDLE=y
+ CONFIG_ARM_EXYNOS_CPUIDLE=y
++CONFIG_ARM_TEGRA_CPUIDLE=y
+ CONFIG_KERNEL_MODE_NEON=y
+ CONFIG_RASPBERRYPI_FIRMWARE=y
+ CONFIG_TRUSTED_FOUNDATIONS=y
+-- 
+2.22.0
 
-I have "Fixup to build SIW issue" from Leon (which switches to using
-in_dev_for_each_ifa_rcu) included in the rmda tree merge commit because
-without that the rdma tree would not build for me.  Are you saying that
-I don't need that at all, now?
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6ThWdQ5XpS0.NYkNCCb3CV2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0mqWgACgkQAVBC80lX
-0GwurQgAgB9bMJLhS8GhhH0OUWvzmBFfu1x4BKqe6qXkABkKMZBip4oPpREIfhLP
-DUayvBrwM+7oOKZ0BWe7tJMSjPj61XmQzHL7g9aHO9PvnDfHtsRkjshY3R16UWfJ
-RfdWvByMRu+gxWbNxB+xFjVeE4le7mQbeP/Kwyu1WqG/HYIBFZMrFzAsmfgLhozB
-1/h8/ir4oA591iwhksdIutmW3jUG0sc666gK5cvnyBmZKCAFpepzOcbI4pefV1+S
-1Zw49JKsDi8ZD0Sh/SK7kxbcyQHsCC0YypycStBvMMEohdPxOktcxsgzxX1/Ptea
-Xy4Cmv7CmXCG/n1wgfxwsMyTDRbYCA==
-=YQjt
------END PGP SIGNATURE-----
-
---Sig_/6ThWdQ5XpS0.NYkNCCb3CV2--
