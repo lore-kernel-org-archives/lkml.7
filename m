@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCD5C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036C2C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFCB21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1BA21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IZOylVir"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="keVQsRLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfGKO2E (ORCPT
+        id S1728837AbfGKO1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:28:04 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37516 "EHLO
+        Thu, 11 Jul 2019 10:27:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37316 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbfGKO2C (ORCPT
+        with ESMTP id S1728823AbfGKO1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:28:02 -0400
+        Thu, 11 Jul 2019 10:27:54 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEO8Kr001447;
-        Thu, 11 Jul 2019 14:26:44 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEOAvB001518;
+        Thu, 11 Jul 2019 14:26:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=j5hNYpa6Ps4ofAY49xQlyVzas1I7FTDoeSXSCbctYus=;
- b=IZOylVirFWDOmZYSdGDrwFnJwm9CEHLxntE+KdhdKKVzqt1gSAfqZTTsVwqNsGzmUzgE
- PAj74VbhDOsq4BCutkFXYEtKMfHv6uDQN4EwPs/i8mhcZpVyCpdqZIKiMK3B0iniWbhc
- nCHcdwRFI9A6XWvL9fDPRjGkqCOObfWGxfS7XmG6Q9mdYcz4LapWwYkhkHzoQvWylY6M
- ysC+FaRK07kBZ2670+CaYM92TpCurpQy/wzZmTZFtJvwBPFzsFwFvWvwJU5DIkIsFNK3
- zM5EMYBeH4z52ZPL8IQ1EjyFUcZnoz5RUscIoFGUEJ9sBLvHsPC7wF+/3bg5aRqA88yQ 5g== 
+ bh=Ag0k+tMlXoCUCjgmP3NxD1Cl4FnNgcaLg1SLsqSglmA=;
+ b=keVQsRLhZyNb/dFJnnzguyu+6Vl7qT1iW80eQJUi6p8HUYNezOn2M6QRB0NcNQhQI7JT
+ 5HACwzQ7vK/fKkmWqNIFxS0mv8uBEA1J5s9pHNXY/wHvMqw/x77ya8pCk5djXXg3w8tA
+ Y+DFHNzDwpT4d81yj2dhIMIFubn8ssOAMPMn8hTz8Cg2l5maUEKHDpqBF2nYVJbVIius
+ zq+q7wJ21XaxrzeREUMqbHN8popuelxmyOtwjWh5plKHWNmsE8C4KEMn9NIt7tf3KMir
+ nsOpTlKGCKH8e0WHGLCVGvgf9UFWaCxJYPAxRKOlsGhf5idexkvlsNaYd43tN8SZVOoQ SA== 
 Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2tjk2u0e1m-1
+        by userp2130.oracle.com with ESMTP id 2tjk2u0dyw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 14:26:44 +0000
+        Thu, 11 Jul 2019 14:26:28 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcuB021444;
-        Thu, 11 Jul 2019 14:26:41 GMT
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcu6021444;
+        Thu, 11 Jul 2019 14:26:25 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,16 +50,16 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
         rppt@linux.vnet.ibm.com, alexandre.chartre@oracle.com
-Subject: [RFC v2 18/26] rcu: Make percpu rcu_data non-static
-Date:   Thu, 11 Jul 2019 16:25:30 +0200
-Message-Id: <1562855138-19507-19-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC v2 13/26] mm/asi: Add asi_remap() function
+Date:   Thu, 11 Jul 2019 16:25:25 +0200
+Message-Id: <1562855138-19507-14-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=832 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907110162
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,38 +67,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make percpu rcu_data non-static so that it can be mapped into an
-isolation address space page-table. This will allow address space
-isolation to use RCU without faulting.
+Add a function to remap an already mapped buffer with a new address
+in an ASI page-table: the already mapped buffer is unmapped, and a
+new mapping is added for the specified new address.
+
+This is useful to track and remap a buffer which can be freed and
+then reallocated.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- kernel/rcu/tree.c |    2 +-
- kernel/rcu/tree.h |    1 +
- 2 files changed, 2 insertions(+), 1 deletions(-)
+ arch/x86/include/asm/asi.h  |    1 +
+ arch/x86/mm/asi_pagetable.c |   25 +++++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 0 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 44dd3b4..2827b2b 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -126,7 +126,7 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
- #define rcu_eqs_special_exit() do { } while (0)
- #endif
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index 912b6a7..cf5d198 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -84,6 +84,7 @@ extern int asi_map_range(struct asi *asi, void *ptr, size_t size,
+ 			 enum page_table_level level);
+ extern int asi_map(struct asi *asi, void *ptr, unsigned long size);
+ extern void asi_unmap(struct asi *asi, void *ptr);
++extern int asi_remap(struct asi *asi, void **mapping, void *ptr, size_t size);
  
--static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
-+DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
- 	.dynticks_nesting = 1,
- 	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
- 	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 9790b58..a043fde 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -394,3 +394,4 @@ struct rcu_state {
- int rcu_dynticks_snap(struct rcu_data *rdp);
- void call_rcu(struct rcu_head *head, rcu_callback_t func);
- 
-+DECLARE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data);
+ /*
+  * Copy the memory mapping for the current module. This is defined as a
+diff --git a/arch/x86/mm/asi_pagetable.c b/arch/x86/mm/asi_pagetable.c
+index a4fe867..1ff0c47 100644
+--- a/arch/x86/mm/asi_pagetable.c
++++ b/arch/x86/mm/asi_pagetable.c
+@@ -842,3 +842,28 @@ int asi_map_percpu(struct asi *asi, void *percpu_ptr, size_t size)
+ 	return 0;
+ }
+ EXPORT_SYMBOL(asi_map_percpu);
++
++int asi_remap(struct asi *asi, void **current_ptrp, void *new_ptr, size_t size)
++{
++	void *current_ptr = *current_ptrp;
++	int err;
++
++	if (current_ptr == new_ptr) {
++		/* no change, already mapped */
++		return 0;
++	}
++
++	if (current_ptr) {
++		asi_unmap(asi, current_ptr);
++		*current_ptrp = NULL;
++	}
++
++	err = asi_map(asi, new_ptr, size);
++	if (err)
++		return err;
++
++	*current_ptrp = new_ptr;
++
++	return 0;
++}
++EXPORT_SYMBOL(asi_remap);
 -- 
 1.7.1
 
