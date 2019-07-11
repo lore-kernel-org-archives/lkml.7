@@ -2,150 +2,115 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5477C74A48
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B38C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBF820838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B6B20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bCJUZdgF"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N0bOZpjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfGKGWa (ORCPT
+        id S1728056AbfGKGZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 02:22:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35639 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfGKGWa (ORCPT
+        Thu, 11 Jul 2019 02:25:29 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51913 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfGKGZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 02:22:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so2482073plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 23:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2/izmyLx3zgLly59CRyGw1zLBbtbQty91ZENtAWD4Vk=;
-        b=bCJUZdgFXSL1JPheXWrE2SvDktcgz7ZRvLp8UkZ09vb/Prg3mHtmdw0CdPu+kNUcGI
-         a+TMxXx6wNfmwQtEtIXMhXKR2VzbJQGJVBT4Jcr78m07BpKzdxphTgR8GXJ75FNnpqAB
-         FNgXp0c4Bq/bsz0u8wFe6FU1NqqZn1sx5kV5TnReJTFWuqsfXI0nlrO3bGvOpcXDoF9E
-         kH2fUTOxrcxqE6WyOVzMskdFpKOYyKgmdeY68u0Bz7QfklwW+Yz9KVGimSXOF4E3tW+I
-         Ndk3OY2HRkZ2wOYaljBN7Ygo+45k9VGREMHudaTh1IrRGsaLJbxdRM0v/ZdSiMQ7S5FG
-         78xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2/izmyLx3zgLly59CRyGw1zLBbtbQty91ZENtAWD4Vk=;
-        b=RF/RMbpAxHP1luxjX/0j6nMVAZP2CvZ19GXZnqmpTb6x/7S/yte1WSEM++hVl8TN8c
-         +SzSFYoJD0Pom209gVXC4QHmkq+uP2xywmuN8RZdsA/+BHB7854nbs+xT8/eAyIWt8vl
-         1qIxwKK62MldHL2/8X5J5iC/IQw6TJ4vYSnbudDtci230lcGC4jFE036pZAzlfqcjE3S
-         AMgpdLSduxO/26uNPxErEfG5h75xBFlhNwjiv1ws0pQqs0yIpfoNURe+GVfZKt/lhjDZ
-         5ZFnUHxY0p4gVgDspPlKsDebpuwR5m/mD1ZFJxHFIvi1NTHF+5mtMr2yaR6vjrX/7/wo
-         rLaA==
-X-Gm-Message-State: APjAAAU1xUPb3TnK21xcPYy3STq109MY4P0PhkJkOvK0AhLkmM8vQUHY
-        eChVPis5873JxMC4GRw5PTCxEg==
-X-Google-Smtp-Source: APXvYqzBa57SST8CdNhPOntlhzTG7OeoEa6rXNRY1hYntSU2vCbtVOJveAMlqx/1mMk4cJDBYNLgNw==
-X-Received: by 2002:a17:902:da4:: with SMTP id 33mr2477954plv.209.1562826149501;
-        Wed, 10 Jul 2019 23:22:29 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id j19sm1516594pgn.19.2019.07.10.23.22.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 23:22:28 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 11:52:26 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     k.konieczny@partner.samsung.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
-Message-ID: <20190711062226.4i4bvbsyczshdlyr@vireshk-i7>
-References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
- <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
- <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+        Thu, 11 Jul 2019 02:25:29 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6B6PFuS2773761
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Jul 2019 23:25:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6B6PFuS2773761
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562826315;
+        bh=9NVI2l+CH+yEiWCjAD0BrsgJmmpUAM62JcwOjoeTemo=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=N0bOZpjXhw3kxTbBt80ktau/p5t4PNSkEt4xeiRCyJGlAw3kMPGcLWSHTcQr+YtUr
+         N145DHirneNzJFK0dqvId4XDFmDQ6Qy8BQhbDu+B/oiShI47wAf5pjPin/WlKJvqXm
+         iqgtTT+zJFv66shJWD6kwcWURzjc9FZVZHXK6ua7mK5ZSOCNyRQwc27GucSh+GaE8v
+         BD/ui5Evl0vjbqSl3AsYuGKSXX5QoFwbpX8Uma4MQLc4IlZWX0af08Ov9ItQGmtcIn
+         H837ei4VHkT00hJ53wXe7L9B7LVeQvc+C1bhAls5MxhlgvdShm6CSLSSSdFrHBhKI0
+         yMUAL9Bv7XadQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6B6PEMG2773758;
+        Wed, 10 Jul 2019 23:25:14 -0700
+Date:   Wed, 10 Jul 2019 23:25:14 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Eiichi Tsukata <tipbot@zytor.com>
+Message-ID: <tip-cbf5b73d162b22e044fe0b7d51dcaa33be065253@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, devel@etsukata.com,
+        tglx@linutronix.de, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com
+Reply-To: torvalds@linux-foundation.org, mingo@kernel.org,
+          tglx@linutronix.de, devel@etsukata.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190711023501.963-1-devel@etsukata.com>
+References: <20190711023501.963-1-devel@etsukata.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/stacktrace: Prevent infinite loop in
+ arch_stack_walk_user()
+Git-Commit-ID: cbf5b73d162b22e044fe0b7d51dcaa33be065253
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190708141140.24379-2-k.konieczny@partner.samsung.com>
-User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
-> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> 
-> Add enable regulators to dev_pm_opp_set_regulators() and disable
-> regulators to dev_pm_opp_put_regulators(). This prepares for
-> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
-> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  drivers/opp/core.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 0e7703fe733f..947cac452854 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
->  	if (ret)
->  		goto free_regulators;
->  
-> +	for (i = 0; i < opp_table->regulator_count; i++) {
-> +		ret = regulator_enable(opp_table->regulators[i]);
-> +		if (ret < 0)
-> +			goto disable;
-> +	}
+Commit-ID:  cbf5b73d162b22e044fe0b7d51dcaa33be065253
+Gitweb:     https://git.kernel.org/tip/cbf5b73d162b22e044fe0b7d51dcaa33be065253
+Author:     Eiichi Tsukata <devel@etsukata.com>
+AuthorDate: Thu, 11 Jul 2019 11:35:01 +0900
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 11 Jul 2019 08:22:03 +0200
 
-What about doing this in the same loop of regulator_get_optional() ?
+x86/stacktrace: Prevent infinite loop in arch_stack_walk_user()
 
-> +
->  	return opp_table;
->  
-> +disable:
-> +	while (i != 0)
-> +		regulator_disable(opp_table->regulators[--i]);
-> +
-> +	i = opp_table->regulator_count;
+arch_stack_walk_user() checks `if (fp == frame.next_fp)` to prevent a
+infinite loop by self reference but it's not enogh for circular reference.
 
-You also need to call _free_set_opp_data() here.
+Once a lack of return address is found, there is no point to continue the
+loop, so break out.
 
->  free_regulators:
->  	while (i != 0)
->  		regulator_put(opp_table->regulators[--i]);
-> @@ -1609,6 +1620,8 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
->  
->  	/* Make sure there are no concurrent readers while updating opp_table */
->  	WARN_ON(!list_empty(&opp_table->opp_list));
+Fixes: 02b67518e2b1 ("tracing: add support for userspace stacktraces in tracing/iter_ctrl")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lkml.kernel.org/r/20190711023501.963-1-devel@etsukata.com
 
-Preserve the blank line here.
+---
+ arch/x86/kernel/stacktrace.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-> +	for (i = opp_table->regulator_count - 1; i >= 0; i--)
-> +		regulator_disable(opp_table->regulators[i]);
->  
->  	for (i = opp_table->regulator_count - 1; i >= 0; i--)
->  		regulator_put(opp_table->regulators[i]);
-
-Only single loop should be sufficient for this.
-
-> -- 
-> 2.22.0
-
--- 
-viresh
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 2abf27d7df6b..4f36d3241faf 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -129,11 +129,9 @@ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+ 			break;
+ 		if ((unsigned long)fp < regs->sp)
+ 			break;
+-		if (frame.ret_addr) {
+-			if (!consume_entry(cookie, frame.ret_addr, false))
+-				return;
+-		}
+-		if (fp == frame.next_fp)
++		if (!frame.ret_addr)
++			break;
++		if (!consume_entry(cookie, frame.ret_addr, false))
+ 			break;
+ 		fp = frame.next_fp;
+ 	}
