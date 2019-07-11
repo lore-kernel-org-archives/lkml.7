@@ -2,113 +2,110 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3615C73C66
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C100DC71142
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB154208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E3B20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:51:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1U5AoD3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u1jW4w1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfGKRtP (ORCPT
+        id S1728863AbfGKRvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:49:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36913 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbfGKRtO (ORCPT
+        Thu, 11 Jul 2019 13:51:09 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36014 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbfGKRvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:49:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so3103453pfa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:49:14 -0700 (PDT)
+        Thu, 11 Jul 2019 13:51:08 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z4so5230229qtc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:51:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Mrtm+42mKXJyXI1jqGIgzb23Y5WaFCmewuRRxjnIfds=;
-        b=a1U5AoD3hkSIItL8HiNNo7PFR4wX/QYAlw457C7RrSX5rOFi4TkzHWxCKO0LUF0Ofp
-         StIat4u1q9RTPUeU3gX0H4AqbIljtz35UoRLLzRRW6SSj996v3KIWMhtvagA9QVhw7HA
-         iI9EgguM0sZmy7c130Md82ABD0glJ/vJHtfphaRS/45jT4LJviORGdt33qqmfIHw51zk
-         heocyYKTaZ7DQjn5Z6+nv/Cb/1Md7cGwkrxCv5LpsVR19I+OpLBEp8OJCH+AZuYxh4yy
-         CPKwXb9o7FPmndgG0JcHMZovsY254hE4eg8SN1ZDRGl4yULogViTchMWdeiXGCfv+cis
-         yxlg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WTCsPEunogKzV2kwceBfPefzG4vpX82bq73Wlt3bmJo=;
+        b=u1jW4w1cKMBrfRcTai3sUouwYbdIldXVywH50mU5qX75xOwSpd4OkMjCkdAdeOMXLO
+         /4N0OZPut0MTuvdDKDpwdwd/DjPUjelg1dxc/GJZmH+UeU250aM+HJhNmfy46rlRyUFs
+         rieToPJD45Nh/iu5bMdp2QMeyqUI9xm3Ys4om9tNSOEYnrW1G1+kzzHH90bsINRDrCLn
+         17RUlgAMrjF6ZfyZ/HwjbWmUT0D9Cu9hVigKYBIN6pqZt9Wizwq/9kCom9IznQjANl9Y
+         el9y4jX1GpxDwyHuzhi/SoQBd7cjB/Xr62nbYybSBO1CWNy4wWtR/Cek9+aXcpwKgTPu
+         ah/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Mrtm+42mKXJyXI1jqGIgzb23Y5WaFCmewuRRxjnIfds=;
-        b=WYZ8PfepkGaGTmgbaJzHx3evJDxnTc+o1agv+aCQjfsW+JFaN4+MNj69VPTCqfQaJ+
-         tR59xyKQF5iSmanNShgbNKjPhGdEbGE+lsoBwAQOplyr6eJKBMQ1upTsMWE2XIxQzwi9
-         nA0SSyKn1VS/ZPYae3XMy6LDSNoMcTeGq1pzZXErlZUEpMkGG1qui2NudqfZO0Ic/6bt
-         nT1TTAP3SgfhiSAHoivvZ1bE/5OpWh3Zv5ty4AulEY5yLc26U9V6KyIm2reXgmwm9XUJ
-         XU/ksY2qPy5Lf2k+akuIdQuP5ZO0ZMzBH8qzbLMuBiH/JTXLwVscNwU0qPlnMANkq0Ip
-         hcEA==
-X-Gm-Message-State: APjAAAWOTcd/vi1kcXAF72PNALCzfosrsnSrZPpqcRXqDblN8r3hgCOK
-        04f+88SccVFPH+GUaXECfwA=
-X-Google-Smtp-Source: APXvYqxCyTB+WLKmBXb76xa7SlBiPdhWde9HUOK2ZWNCd4igyy/yrwmLGCWZ37b9pSSSIlPgtws65Q==
-X-Received: by 2002:a63:b46:: with SMTP id a6mr5801358pgl.235.1562867354148;
-        Thu, 11 Jul 2019 10:49:14 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id b11sm6834267pfd.18.2019.07.11.10.49.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 10:49:13 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 23:19:06 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Gen Zhang <blackgod016574@gmail.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sound: soc: codecs: wcd9335: fix "conversion to bool not
- needed here"
-Message-ID: <20190711174906.GA10867@hari-Inspiron-1545>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WTCsPEunogKzV2kwceBfPefzG4vpX82bq73Wlt3bmJo=;
+        b=B9VwvgogWm9QM8LrmEtOAkaNkK2nD2P7e5EkDzsZrdWg9AKu8LWX/42qQB4riW1/hV
+         MSE6LkwdoqSNyyNMZ4bF4eGqFw/vPn/Vn1Cc/3julpFLeSRuCsIxXjeH/iczyL9S/g9W
+         z8ZNE+cMURjMwFbPNdCUmAxxqw2x4v6PcxayCwIQLcC7S0yYi9SsvlrmhHxIyiQ7jImq
+         WMbTfixJmT0My2MmSHVSU1UYe+o6T4D64PZh3vqJf1nRl/7gByuBV3SVYahn/tu+1c6o
+         /3XB4CQLwoitGFLvopzmxYjRujfNFpn0aGdd8QdkLyusFoIjQmpk7Yuw2KqUajGYWtoV
+         W0Fw==
+X-Gm-Message-State: APjAAAUjwjfj1baSdFxXFpvELy1y/E+/NTvmevM+MbjJqRZr6Su15lMz
+        Sf4vGZ0ONGF7H86yA+i5pw==
+X-Google-Smtp-Source: APXvYqxfR3f/fCPWThOEXsziSCmvYCJ6lC/eIaJ6hDOt9KP+p4C67YjxDl6skpF6wSR1/KtoI+UEbw==
+X-Received: by 2002:aed:3ed8:: with SMTP id o24mr2679693qtf.252.1562867467751;
+        Thu, 11 Jul 2019 10:51:07 -0700 (PDT)
+Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
+        by smtp.googlemail.com with ESMTPSA id g54sm2925494qtc.61.2019.07.11.10.51.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 10:51:07 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     iamkeyur96@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: most: remove redundant print statement when kfifo_alloc fails
+Date:   Thu, 11 Jul 2019 13:50:52 -0400
+Message-Id: <20190711175055.25157-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190711173915.24200-1-iamkeyur96@gmail.com>
+References: <20190711173915.24200-1-iamkeyur96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix below issue reported by coccicheck
-sound/soc/codecs/wcd9335.c:3991:25-30: WARNING: conversion to bool not
-needed here
+This print statement is redundant as kfifo_alloc just calls kmalloc_array
+and without the __GFP_NOWARN flag, already does a dump_stack().
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+Changes in v3:=0D
+- fix checkpatch warrning
 ---
- sound/soc/codecs/wcd9335.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/staging/most/cdev/cdev.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index 1bbbe42..85a8d10 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -3988,12 +3988,7 @@ static irqreturn_t wcd9335_slimbus_irq(int irq, void *data)
- 		regmap_read(wcd->if_regmap,
- 				WCD9335_SLIM_PGD_PORT_INT_RX_SOURCE0 + j, &val);
- 		if (val) {
--			if (!tx)
--				reg = WCD9335_SLIM_PGD_PORT_INT_EN0 +
--					(port_id / 8);
--			else
--				reg = WCD9335_SLIM_PGD_PORT_INT_TX_EN0 +
--					(port_id / 8);
-+			reg = WCD9335_SLIM_PGD_PORT_INT_TX_EN0 + (port_id / 8);
- 			regmap_read(
- 				wcd->if_regmap, reg, &int_val);
- 			/*
--- 
-2.7.4
+diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/c=
+dev.c
+index d0cc0b746107..724d098aeef0 100644
+--- a/drivers/staging/most/cdev/cdev.c
++++ b/drivers/staging/most/cdev/cdev.c
+@@ -463,10 +463,8 @@ static int comp_probe(struct most_interface *iface, in=
+t channel_id,
+ 	spin_lock_init(&c->unlink);
+ 	INIT_KFIFO(c->fifo);
+ 	retval =3D kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);
+-	if (retval) {
+-		pr_info("failed to alloc channel kfifo");
++	if (retval)
+ 		goto err_del_cdev_and_free_channel;
+-	}
+ 	init_waitqueue_head(&c->wq);
+ 	mutex_init(&c->io_mutex);
+ 	spin_lock_irqsave(&ch_list_lock, cl_flags);
+--=20
+2.22.0
 
