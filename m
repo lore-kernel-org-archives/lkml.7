@@ -2,85 +2,118 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96F9C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0722C74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E7E21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CD52166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562854707;
+	bh=zxkWNgWAcdgDEs1e0ke3VX57cNWOkZWU0UUe/G7zWoU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=THAWvbNgyip6UVcT3qrrOBT954K1qAWFTVc6IpLom6i1Vum3FE0fI5L8DqvvAAD1A
+	 4Rv499aUKGlqBqtrYQwlbLGJnbfuMCTuI+YcUiqB5C1Zknp8z88mCchSmwFsTd0jRn
+	 y0gTY3dvA7Bk/a3lwgl24N4ytUI7mr27GSKbScXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfGKOP5 (ORCPT
+        id S1728594AbfGKOS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:15:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2206 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728438AbfGKOP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:15:56 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 33F913F460D8909F38C3;
-        Thu, 11 Jul 2019 22:15:51 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 11 Jul 2019
- 22:15:44 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <jthumshirn@suse.de>, <dan.carpenter@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: aic94xx: Remove unnecessary null check
-Date:   Thu, 11 Jul 2019 22:15:39 +0800
-Message-ID: <20190711141539.13892-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 11 Jul 2019 10:18:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728421AbfGKOS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 10:18:26 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1F7321537;
+        Thu, 11 Jul 2019 14:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562854705;
+        bh=zxkWNgWAcdgDEs1e0ke3VX57cNWOkZWU0UUe/G7zWoU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=aBUUZFgsgg5wBsaDq5QRISmheVCa1Jl2f77SUULojLCZuYrYYoexyBVnGYtKo0D7O
+         WQwldng+7Ilw7o2enbcVZUz+LvsvppoBCQecvYxWonrb0tVdTRbB9B1PoJtFiMdv1D
+         R2L6mqtUtnEST5hxxcA8UvqM/m0Zpgb2zPRxIBv8=
+Date:   Thu, 11 Jul 2019 07:18:25 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: [GIT PULL] vfs: standardize parameter checking for
+ SETFLAGS/FSSETXATTR ioctls
+Message-ID: <20190711141825.GV1404256@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmem_cache_destroy() can handle NULL pointer correctly, so there is
-no need to check NULL pointer before calling kmem_cache_destroy().
+Hi Linus,
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/aic94xx/aic94xx_init.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Here's a patch series that sets up common parameter checking functions
+for the FS_IOC_SETFLAGS and FS_IOC_FSSETXATTR ioctl implementations.
+The goal here is to reduce the amount of behaviorial variance between
+the filesystems where those ioctls originated (ext2 and XFS,
+respectively) and everybody else.
 
-diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
-index 261d8e4..f5781e3 100644
---- a/drivers/scsi/aic94xx/aic94xx_init.c
-+++ b/drivers/scsi/aic94xx/aic94xx_init.c
-@@ -565,8 +565,7 @@ static void asd_destroy_ha_caches(struct asd_ha_struct *asd_ha)
- 	if (asd_ha->hw_prof.scb_ext)
- 		asd_free_coherent(asd_ha, asd_ha->hw_prof.scb_ext);
- 
--	if (asd_ha->hw_prof.ddb_bitmap)
--		kfree(asd_ha->hw_prof.ddb_bitmap);
-+	kfree(asd_ha->hw_prof.ddb_bitmap);
- 	asd_ha->hw_prof.ddb_bitmap = NULL;
- 
- 	for (i = 0; i < ASD_MAX_PHYS; i++) {
-@@ -641,12 +640,10 @@ static int asd_create_global_caches(void)
- 
- static void asd_destroy_global_caches(void)
- {
--	if (asd_dma_token_cache)
--		kmem_cache_destroy(asd_dma_token_cache);
-+	kmem_cache_destroy(asd_dma_token_cache);
- 	asd_dma_token_cache = NULL;
- 
--	if (asd_ascb_cache)
--		kmem_cache_destroy(asd_ascb_cache);
-+	kmem_cache_destroy(asd_ascb_cache);
- 	asd_ascb_cache = NULL;
- }
- 
--- 
-2.7.4
+The branch merges cleanly against this morning's HEAD and survived an
+overnight run of xfstests.  The merge was completely straightforward, so
+please let me know if you run into anything weird.
 
+--D
 
+The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
+
+  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/vfs-fix-ioctl-checking-3
+
+for you to fetch changes up to dbc77f31e58b2902a5e7643761c04bf69f57a32a:
+
+  vfs: only allow FSSETXATTR to set DAX flag on files and dirs (2019-07-01 08:25:36 -0700)
+
+----------------------------------------------------------------
+New for 5.3:
+- Standardize parameter checking for the SETFLAGS and FSSETXATTR ioctls
+  (which were the file attribute setters for ext4 and xfs and have now
+  been hoisted to the vfs)
+- Only allow the DAX flag to be set on files and directories.
+
+----------------------------------------------------------------
+Darrick J. Wong (5):
+      vfs: create a generic checking and prep function for FS_IOC_SETFLAGS
+      vfs: create a generic checking function for FS_IOC_FSSETXATTR
+      vfs: teach vfs_ioc_fssetxattr_check to check project id info
+      vfs: teach vfs_ioc_fssetxattr_check to check extent size hints
+      vfs: only allow FSSETXATTR to set DAX flag on files and dirs
+
+ fs/btrfs/ioctl.c    |  30 ++++------
+ fs/efivarfs/file.c  |  26 ++++++---
+ fs/ext2/ioctl.c     |  16 ++----
+ fs/ext4/ioctl.c     |  51 +++++------------
+ fs/gfs2/file.c      |  42 +++++++++-----
+ fs/hfsplus/ioctl.c  |  21 ++++---
+ fs/inode.c          |  86 +++++++++++++++++++++++++++++
+ fs/jfs/ioctl.c      |  22 +++-----
+ fs/nilfs2/ioctl.c   |   9 +--
+ fs/ocfs2/ioctl.c    |  13 +----
+ fs/orangefs/file.c  |  37 ++++++++++---
+ fs/reiserfs/ioctl.c |  10 ++--
+ fs/ubifs/ioctl.c    |  13 +----
+ fs/xfs/xfs_ioctl.c  | 154 +++++++++++++++++++++++-----------------------------
+ include/linux/fs.h  |  12 ++++
+ 15 files changed, 300 insertions(+), 242 deletions(-)
