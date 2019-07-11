@@ -2,156 +2,126 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF66C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2960C742A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE9E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:31:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OCVICqNm"
+	by mail.kernel.org (Postfix) with ESMTP id B1A4221019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfGKVb3 (ORCPT
+        id S1728748AbfGKVeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 17:31:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41812 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728994AbfGKVb2 (ORCPT
+        Thu, 11 Jul 2019 17:34:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42312 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfGKVeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 17:31:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q4so3534460pgj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h0li3xhz4+acWFDo/bMhBX18vS9tPI8VpxMt5WWQyBk=;
-        b=OCVICqNm8W4H6dNZrm4LsZBNnhLhAuV/wYUx2hDMtcrQp/IkL1pgwhhuY/wyqdENvi
-         bfWUObDrfwUe9pz9E2kfEAulHs0gVv950eOVE466Vj9tHtMSe5ay++FGL1Szy/21c1IF
-         3sqicaUTZHYSa1tNItHvOV+YRQW4JVn6Ow9D8aHHb/tVhVEz+wkOVBl/lktBNAptngS5
-         R5J69YBC4FUKgugJkznIDL3t3orZD/QtFD562NBHzLfUFTB60XUdPbVWB9EH+rIzgqHz
-         ZeG65Dk5X5i4zPw0++vu1aygFUHa1SILmNCk8Ddk8loqHKdQo8pZOwq2wr0Q9PWJQlx2
-         1jeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h0li3xhz4+acWFDo/bMhBX18vS9tPI8VpxMt5WWQyBk=;
-        b=H8sVh8A1h+x90LD4wCxeft+vCDDBFstnfXRhq4IinixZqi/FQohFsY6SuBPJI1E0ND
-         jhFXfP/ILjruiIhLWrRewBoYMelwTSMhT3XJSwrpjylarZLNcdRQNWXjsuohWBuV9LY8
-         vKRrnXrjca1wlGxWWUkL0YTlRIuOymzrHabcu8U+cVs3d+RpSJ1Cqn7WqK3o5lNh7Y2c
-         IQsnPv1b/mGn74c8cFZS5pIiahvd+889pC/R6Z3Aw90McSMbWXfLxBimpwm4VsdY/jHO
-         QVHdRvO4DEhKsedhzqqtRdF2wBa1e3+/VqrEeJbiC1cjj2FEhucbzYGMn+N3dPxuz1Pd
-         Dy3w==
-X-Gm-Message-State: APjAAAULlGWEygKJ/ctCKx56LtFtTONAcoIG8Al0strNli6TaKbXde0G
-        1Jb4llwexaugDAtHsqr8LIV3vhrMrcEBwTH1HvtM0Q==
-X-Google-Smtp-Source: APXvYqzfOsEAMRtBI+nHwZ9rZwKzA3V96eeiRwhIJCYj+RBGPbja6faXox7EbAjZQhXE55uENS8c06Vt+Q/F6xaW8Fo=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr6534778pge.201.1562880686976;
- Thu, 11 Jul 2019 14:31:26 -0700 (PDT)
+        Thu, 11 Jul 2019 17:34:18 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hlghS-000289-8D; Thu, 11 Jul 2019 23:33:58 +0200
+Date:   Thu, 11 Jul 2019 23:33:50 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+cc:     pbonzini@redhat.com, rkrcmar@redhat.com, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com
+Subject: Re: [RFC v2 01/26] mm/x86: Introduce kernel address space
+ isolation
+In-Reply-To: <1562855138-19507-2-git-send-email-alexandre.chartre@oracle.com>
+Message-ID: <alpine.DEB.2.21.1907112321570.1782@nanos.tec.linutronix.de>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <1562855138-19507-2-git-send-email-alexandre.chartre@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190624055253.31183-1-hch@lst.de> <20190624055253.31183-12-hch@lst.de>
- <20190624234304.GD7777@dread.disaster.area> <20190625101020.GI1462@lst.de>
- <20190628004542.GJ7777@dread.disaster.area> <20190628222756.GM19023@42.do-not-panic.com>
-In-Reply-To: <20190628222756.GM19023@42.do-not-panic.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 11 Jul 2019 14:31:15 -0700
-Message-ID: <CAFd5g46kRfQYkobqXta8GJibkEnUDv2oWXp+JZurRtydotbsuA@mail.gmail.com>
-Subject: Re: [PATCH 11/12] iomap: move the xfs writeback code to iomap.c
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 3:28 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->
-> On Fri, Jun 28, 2019 at 10:45:42AM +1000, Dave Chinner wrote:
-> > On Tue, Jun 25, 2019 at 12:10:20PM +0200, Christoph Hellwig wrote:
-> > > On Tue, Jun 25, 2019 at 09:43:04AM +1000, Dave Chinner wrote:
-> > > > I'm a little concerned this is going to limit what we can do
-> > > > with the XFS IO path because now we can't change this code without
-> > > > considering the direct impact on other filesystems. The QA burden of
-> > > > changing the XFS writeback code goes through the roof with this
-> > > > change (i.e. we can break multiple filesystems, not just XFS).
-> > >
-> > > Going through the roof is a little exaggerated.
-> >
-> > You've already mentioned two new users you want to add. I don't even
-> > have zone capable hardware here to test one of the users you are
-> > indicating will use this code, and I suspect that very few people
-> > do.  That's a non-trivial increase in testing requirements for
-> > filesystem developers and distro QA departments who will want to
-> > change and/or validate this code path.
->
-> A side topic here:
->
-> Looking towards the future of prosects here with regards to helping QA
-> and developers with more confidence in API changes (kunit is one
-> prospect we're evaluating)...
->
-> If... we could somehow... codify what XFS *requires* from the API
-> precisely...  would that help alleviate concerns or bring confidence in
-> the prospect of sharing code?
->
-> Or is it simply an *impossibility* to address these concerns in question by
-> codifying tests for the promised API?
->
-> Ie, are the concerns something which could be addressed with strict
-> testing on adherence to an API, or are the concerns *unknown* side
-> dependencies which could not possibly be codified?
+On Thu, 11 Jul 2019, Alexandre Chartre wrote:
+> +/*
+> + * When isolation is active, the address space doesn't necessarily map
+> + * the percpu offset value (this_cpu_off) which is used to get pointers
+> + * to percpu variables. So functions which can be invoked while isolation
+> + * is active shouldn't be getting pointers to percpu variables (i.e. with
+> + * get_cpu_var() or this_cpu_ptr()). Instead percpu variable should be
+> + * directly read or written to (i.e. with this_cpu_read() or
+> + * this_cpu_write()).
+> + */
+> +
+> +int asi_enter(struct asi *asi)
+> +{
+> +	enum asi_session_state state;
+> +	struct asi *current_asi;
+> +	struct asi_session *asi_session;
+> +
+> +	state = this_cpu_read(cpu_asi_session.state);
+> +	/*
+> +	 * We can re-enter isolation, but only with the same ASI (we don't
+> +	 * support nesting isolation). Also, if isolation is still active,
+> +	 * then we should be re-entering with the same task.
+> +	 */
+> +	if (state == ASI_SESSION_STATE_ACTIVE) {
+> +		current_asi = this_cpu_read(cpu_asi_session.asi);
+> +		if (current_asi != asi) {
+> +			WARN_ON(1);
+> +			return -EBUSY;
+> +		}
+> +		WARN_ON(this_cpu_read(cpu_asi_session.task) != current);
+> +		return 0;
+> +	}
+> +
+> +	/* isolation is not active so we can safely access the percpu pointer */
+> +	asi_session = &get_cpu_var(cpu_asi_session);
 
-Thanks for pointing this out, Luis. This is a really important
-distinction. In the former case, I think as has become apparent in
-your example below; KUnit has a strong potential to be able to
-formally specify API behavior and guarantee compliance.
+get_cpu_var()?? Where is the matching put_cpu_var() ? get_cpu_var()
+contains a preempt_disable ...
 
-However, as you point out there are many *unknown* dependencies which
-always have a way of sneaking into API informal specifications. I have
-some colleagues working on this problem for unknown server API
-dependencies; nevertheless, to my knowledge this is an unsolved
-problem.
+What's wrong with a simple this_cpu_ptr() here?
 
-One partial solution I have seen is to put a system in place to record
-live traffic so that it can be later replayed in a test environment.
+> +void asi_exit(struct asi *asi)
+> +{
+> +	struct asi_session *asi_session;
+> +	enum asi_session_state asi_state;
+> +	unsigned long original_cr3;
+> +
+> +	asi_state = this_cpu_read(cpu_asi_session.state);
+> +	if (asi_state == ASI_SESSION_STATE_INACTIVE)
+> +		return;
+> +
+> +	/* TODO: Kick sibling hyperthread before switching to kernel cr3 */
+> +	original_cr3 = this_cpu_read(cpu_asi_session.original_cr3);
+> +	if (original_cr3)
 
-Another partial solution is a modified form of fuzz testing similar to
-what Haskell's QuickCheck[1] does, which basically attempts to allow
-users to specify the kinds of data they expect to handle in such a way
-that QuickCheck is able to generate random data, pass it into the API,
-and verify the results satisfy the contract. I actually wrote a
-prototype of this for KUnit, but haven't publicly shared it yet since
-I thought it was kind of an out there idea (plus KUnit was pretty far
-away from being merged at the time).
+Why would this be 0 if the session is active?
 
-Still, a QuickCheck style test will always have the problem that the
-contract will likely underspecify things, and if not, the test may
-still never run long enough to cover all interesting cases. I have
-heard of attempts to solve this problem by combining the two prior
-approaches in novel ways (like using a QuckCheck style specification
-to mutate real recorded data).
+> +		write_cr3(original_cr3);
+> +
+> +	/* page-table was switched, we can now access the percpu pointer */
+> +	asi_session = &get_cpu_var(cpu_asi_session);
 
-Anyway, sorry for the tangent, but I would be really interested to
-know whether you think the problem is more of the just testing the
-formally specified contract or the problem lies in unknown
-dependencies that Luis mentioned, and in either case whether you would
-find any of these ideas useful.
+See above.
 
-> As an example of the extent possible to codify API promise (although
-> I beleive it was unintentional at first), see:
->
-> http://lkml.kernel.org/r/20190626021744.GU19023@42.do-not-panic.com
+> +	WARN_ON(asi_session->task != current);
+> +	asi_session->state = ASI_SESSION_STATE_INACTIVE;
+> +	asi_session->asi = NULL;
+> +	asi_session->task = NULL;
+> +	asi_session->original_cr3 = 0;
+> +}
 
-[1] http://www.cse.chalmers.se/~rjmh/QuickCheck/manual.html
+Thanks,
 
-Cheers!
+	tglx
