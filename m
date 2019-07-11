@@ -2,105 +2,74 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104D7C74A56
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992B9C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E602166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DWaYAaHL"
+	by mail.kernel.org (Postfix) with ESMTP id 7BD2521537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbfGKONx (ORCPT
+        id S1728588AbfGKON4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:13:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59354 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfGKONw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:13:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A+M9EKycY4/Na49/3ZTutvW03nTdeCovAhe5sPEc738=; b=DWaYAaHL39mYbsCRqEJ3S1QQ7
-        P02squV/NBUTgulBtI4yUhtjhZPbXviXwn5cZ64a18nBrxMDqHZ9sjyzYhy8rrWsIGViUL4cuiFNR
-        13jc9CGjCkCg9vUQQobNtgkPofyl56m4PinPfQAT8yXfkSrKa7TQw4y6e8ow4U8TMK37DxOKX3CX3
-        TtYqXc/uTk7W5yiypMbcKX93JyA6IotJW3FcTmtHuDWAS30qOioSZlpdonSH/3GJq3YRLQ3nWrWuK
-        /tXAoQynuvEE2hyzve6v52C027MqCmg4zh1ItcUY/JouC54bRwId30BRrUhafL+gbKxIhAS5QCvkO
-        4gn8QmF5Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlZpW-0001Os-V6; Thu, 11 Jul 2019 14:13:50 +0000
-Date:   Thu, 11 Jul 2019 07:13:50 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190711141350.GS32320@bombadil.infradead.org>
-References: <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org>
- <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
- <20190710190204.GB14701@quack2.suse.cz>
- <20190710201539.GN32320@bombadil.infradead.org>
- <20190710202647.GA7269@quack2.suse.cz>
+        Thu, 11 Jul 2019 10:13:56 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47838 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbfGKONz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 10:13:55 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ED862E47ECC0F52E1CD9;
+        Thu, 11 Jul 2019 22:13:52 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 11 Jul 2019
+ 22:13:43 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <qla2xxx-upstream@qlogic.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] scsi: qla2xxx: Remove unnecessary null check
+Date:   Thu, 11 Jul 2019 22:13:17 +0800
+Message-ID: <20190711141317.52192-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190711140908.26896-1-yuehaibing@huawei.com>
+References: <20190711140908.26896-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710202647.GA7269@quack2.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:26:47PM +0200, Jan Kara wrote:
-> On Wed 10-07-19 13:15:39, Matthew Wilcox wrote:
-> > On Wed, Jul 10, 2019 at 09:02:04PM +0200, Jan Kara wrote:
-> > > +#define DAX_ENTRY_CONFLICT dax_make_entry(pfn_to_pfn_t(1), DAX_EMPTY)
-> > 
-> > I was hoping to get rid of DAX_EMPTY ... it's almost unused now.  Once
-> > we switch to having a single DAX_LOCK value instead of a single bit,
-> > I think it can go away, freeing up two bits.
-> > 
-> > If you really want a special DAX_ENTRY_CONFLICT, I think we can make
-> > one in the 2..4094 range.
-> > 
-> > That aside, this looks pretty similar to the previous patch I sent, so
-> > if you're now happy with this, let's add
-> > 
-> > #define XA_DAX_CONFLICT_ENTRY xa_mk_internal(258)
-> > 
-> > to xarray.h and do it that way?
-> 
-> Yeah, that would work for me as well. The chosen value for DAX_ENTRY_CONFLICT
-> was pretty arbitrary. Or we could possibly use:
-> 
-> #define DAX_ENTRY_CONFLICT XA_ZERO_ENTRY
-> 
-> so that we don't leak DAX-specific internal definition into xarray.h?
+A null check before dma_pool_destroy is redundant,
+so remove it. This is detected by coccinelle.
 
-I don't want to use the ZERO entry as our conflict marker because that
-could legitimately appear in an XArray.  Not the i_pages XArray today,
-but I hold out hope for using that in place of the DAX_ZERO_PAGE bit too.
-That's going to be a bit more tricky since we currently distinguish
-between DAX_ZERO_PAGE and DAX_ZERO_PAGE | DAX_PMD.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: fix commit log
+---
+ drivers/scsi/qla2xxx/qla_os.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-However, the XA_RETRY_ENTRY might be a good choice.  It doesn't normally
-appear in an XArray (it may appear if you're looking at a deleted node,
-but since we're holding the lock, we can't see deleted nodes).
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 2e58cff..3c59157 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4731,8 +4731,7 @@ qla2x00_mem_free(struct qla_hw_data *ha)
+ 		}
+ 	}
+ 
+-	if (ha->dif_bundl_pool)
+-		dma_pool_destroy(ha->dif_bundl_pool);
++	dma_pool_destroy(ha->dif_bundl_pool);
+ 	ha->dif_bundl_pool = NULL;
+ 
+ 	qlt_mem_free(ha);
+-- 
+2.7.4
+
+
