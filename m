@@ -2,164 +2,389 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E733C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D3DC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA08821537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="U3UKbA9o"
+	by mail.kernel.org (Postfix) with ESMTP id 5D4E521537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfGKO6A (ORCPT
+        id S1729070AbfGKO6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:58:00 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14953 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbfGKO6A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:58:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562857079; x=1594393079;
-  h=from:to:cc:message-id:in-reply-to:references:
-   mime-version:subject:resent-from:resent-cc:date:
-   content-transfer-encoding;
-  bh=kBlveuRuLMfyuhTLyavKKcr81LjwYg6bfTMtC9Bgl7s=;
-  b=U3UKbA9oqtompUxBpLHxyZHTHIXOZJjcAu/JAfY+YTeZptq1JTx2VUXl
-   PNbJZ75P524YkMb4GA33BhcQJifZELeNvQ6z8r+Q9LvWLD8w6fmzfRj+1
-   36SOrLMWS8TXueagITfrWkjuHhfQbXQ/7MC38p6O0/QhgGq/tGk+Bs1sN
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
-   d="scan'208";a="410282856"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 11 Jul 2019 14:57:57 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 12344A22F2;
-        Thu, 11 Jul 2019 14:57:56 +0000 (UTC)
-Received: from EX13D04UEA001.ant.amazon.com (10.43.61.40) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:57:56 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D04UEA001.ant.amazon.com (10.43.61.40) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Jul 2019 14:57:56 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:57:55 +0000
-Received: from EX13D13UWB004.ant.amazon.com (10.43.161.218) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:55 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D13UWB004.ant.amazon.com (10.43.161.218) with Microsoft SMTP Server
- (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:54 +0000
-Received: from email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com
- (10.124.125.2) by mail-relay.amazon.com (10.43.60.129) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:54
- +0000
-Received: by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix)
-        id E2DCBA243C; Wed, 10 Jul 2019 16:45:52 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com
- (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70]) by
- email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS
- id 5579BA18F9; Wed, 10 Jul 2019 16:45:52 +0000 (UTC)
-Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
- u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
- x6AGjmRh022241; Wed, 10 Jul 2019 19:45:48 +0300
-Received: (from jonnyc@localhost)
-        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjknT022047;
-        Wed, 10 Jul 2019 19:45:46 +0300
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
-        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Message-ID: <20190710164519.17883-9-jonnyc@amazon.com>
-In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
-Content-Type: text/plain
+        Thu, 11 Jul 2019 10:58:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2208 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727612AbfGKO6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 10:58:21 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 18A63647E01EF924C3B9;
+        Thu, 11 Jul 2019 22:58:18 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 11 Jul
+ 2019 22:58:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2 01/24] erofs: add on-disk layout
+Date:   Thu, 11 Jul 2019 22:57:32 +0800
+Message-ID: <20190711145755.33908-2-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190711145755.33908-1-gaoxiang25@huawei.com>
+References: <20190711145755.33908-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Subject: [PATCH 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date:   Thu, 11 Jul 2019 17:57:54 +0300
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This basically aligns the usage of PCI_PROBE_ONLY and
-PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-pci_host_common_probe().
+This commit adds the on-disk layout header file of erofs.
+On-disk format is compatible with erofs-staging added in 4.19.
 
-Now it will be possible to control via the devicetree whether to just
-probe the PCI bus (in cases where FW already configured it) or to fully
-configure it.
-
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ fs/erofs/erofs_fs.h | 317 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 317 insertions(+)
+ create mode 100644 fs/erofs/erofs_fs.h
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
-i/controller/dwc/pcie-designware-host.c
-index d2ca748e4c85..0a294d8aa21a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
-=20
-+	of_pci_check_probe_only();
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+new file mode 100644
+index 000000000000..a0a8f44c603d
+--- /dev/null
++++ b/fs/erofs/erofs_fs.h
+@@ -0,0 +1,317 @@
++/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
++/*
++ * linux/fs/erofs/erofs_fs.h
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_FS_H
++#define __EROFS_FS_H
 +
- 	ret =3D devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
- 					&bridge->windows, &pp->io_base);
- 	if (ret)
-@@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-=20
- 	pp->root_bus_nr =3D pp->busn->start;
-=20
-+	/* Do not reassign bus nums if probe only */
-+	if (!pci_has_flag(PCI_PROBE_ONLY))
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
++/* Enhanced(Extended) ROM File System */
++#define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
++#define EROFS_SUPER_OFFSET      1024
 +
- 	bridge->dev.parent =3D dev;
- 	bridge->sysdata =3D pp;
- 	bridge->busnr =3D pp->root_bus_nr;
-@@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
-=20
--	pci_bus_size_bridges(pp->root_bus);
--	pci_bus_assign_resources(pp->root_bus);
++/*
++ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
++ * incompatible with this kernel version.
++ */
++#define EROFS_REQUIREMENT_LZ4_0PADDING	0x00000001
++#define EROFS_ALL_REQUIREMENTS		0
++
++struct erofs_super_block {
++/*  0 */__le32 magic;           /* in the little endian */
++/*  4 */__le32 checksum;        /* crc32c(super_block) */
++/*  8 */__le32 features;        /* (aka. feature_compat) */
++/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
++/* 13 */__u8 reserved;
++
++/* 14 */__le16 root_nid;
++/* 16 */__le64 inos;            /* total valid ino # (== f_files - f_favail) */
++
++/* 24 */__le64 build_time;      /* inode v1 time derivation */
++/* 32 */__le32 build_time_nsec;
++/* 36 */__le32 blocks;          /* used for statfs */
++/* 40 */__le32 meta_blkaddr;
++/* 44 */__le32 xattr_blkaddr;
++/* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
++/* 64 */__u8 volume_name[16];   /* volume name */
++/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
++
++/* 84 */__u8 reserved2[44];
++} __packed;                     /* 128 bytes */
++
++/*
++ * erofs inode data mapping:
++ * 0 - inode plain without inline data A:
++ * inode, [xattrs], ... | ... | no-holed data
++ * 1 - inode VLE compression B (legacy):
++ * inode, [xattrs], extents ... | ...
++ * 2 - inode plain with inline data C:
++ * inode, [xattrs], last_inline_data, ... | ... | no-holed data
++ * 3 - inode compression D:
++ * inode, [xattrs], map_header, extents ... | ...
++ * 4~7 - reserved
++ */
++enum {
++	EROFS_INODE_FLAT_PLAIN,
++	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
++	EROFS_INODE_FLAT_INLINE,
++	EROFS_INODE_FLAT_COMPRESSION,
++	EROFS_INODE_LAYOUT_MAX
++};
++
++static bool erofs_inode_is_data_compressed(unsigned int datamode)
++{
++	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
++		return true;
++	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
++}
++
++/* bit definitions of inode i_advise */
++#define EROFS_I_VERSION_BITS            1
++#define EROFS_I_DATA_MAPPING_BITS       3
++
++#define EROFS_I_VERSION_BIT             0
++#define EROFS_I_DATA_MAPPING_BIT        1
++
++struct erofs_inode_v1 {
++/*  0 */__le16 i_advise;
++
++/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
++/*  2 */__le16 i_xattr_icount;
++/*  4 */__le16 i_mode;
++/*  6 */__le16 i_nlink;
++/*  8 */__le32 i_size;
++/* 12 */__le32 i_reserved;
++/* 16 */union {
++		/* file total compressed blocks for data mapping 1 */
++		__le32 compressed_blocks;
++		__le32 raw_blkaddr;
++
++		/* for device files, used to indicate old/new device # */
++		__le32 rdev;
++	} i_u __packed;
++/* 20 */__le32 i_ino;           /* only used for 32-bit stat compatibility */
++/* 24 */__le16 i_uid;
++/* 26 */__le16 i_gid;
++/* 28 */__le32 i_reserved2;
++} __packed;
++
++/* 32 bytes on-disk inode */
++#define EROFS_INODE_LAYOUT_V1   0
++/* 64 bytes on-disk inode */
++#define EROFS_INODE_LAYOUT_V2   1
++
++struct erofs_inode_v2 {
++/*  0 */__le16 i_advise;
++
++/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
++/*  2 */__le16 i_xattr_icount;
++/*  4 */__le16 i_mode;
++/*  6 */__le16 i_reserved;
++/*  8 */__le64 i_size;
++/* 16 */union {
++		/* file total compressed blocks for data mapping 1 */
++		__le32 compressed_blocks;
++		__le32 raw_blkaddr;
++
++		/* for device files, used to indicate old/new device # */
++		__le32 rdev;
++	} i_u __packed;
++
++	/* only used for 32-bit stat compatibility */
++/* 20 */__le32 i_ino;
++
++/* 24 */__le32 i_uid;
++/* 28 */__le32 i_gid;
++/* 32 */__le64 i_ctime;
++/* 40 */__le32 i_ctime_nsec;
++/* 44 */__le32 i_nlink;
++/* 48 */__u8   i_reserved2[16];
++} __packed;                     /* 64 bytes */
++
++#define EROFS_MAX_SHARED_XATTRS         (128)
++/* h_shared_count between 129 ... 255 are special # */
++#define EROFS_SHARED_XATTR_EXTENT       (255)
++
++/*
++ * inline xattrs (n == i_xattr_icount):
++ * erofs_xattr_ibody_header(1) + (n - 1) * 4 bytes
++ *          12 bytes           /                   \
++ *                            /                     \
++ *                           /-----------------------\
++ *                           |  erofs_xattr_entries+ |
++ *                           +-----------------------+
++ * inline xattrs must starts in erofs_xattr_ibody_header,
++ * for read-only fs, no need to introduce h_refcount
++ */
++struct erofs_xattr_ibody_header {
++	__le32 h_reserved;
++	__u8   h_shared_count;
++	__u8   h_reserved2[7];
++	__le32 h_shared_xattrs[0];      /* shared xattr id array */
++} __packed;
++
++/* Name indexes */
++#define EROFS_XATTR_INDEX_USER              1
++#define EROFS_XATTR_INDEX_POSIX_ACL_ACCESS  2
++#define EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT 3
++#define EROFS_XATTR_INDEX_TRUSTED           4
++#define EROFS_XATTR_INDEX_LUSTRE            5
++#define EROFS_XATTR_INDEX_SECURITY          6
++
++/* xattr entry (for both inline & shared xattrs) */
++struct erofs_xattr_entry {
++	__u8   e_name_len;      /* length of name */
++	__u8   e_name_index;    /* attribute name index */
++	__le16 e_value_size;    /* size of attribute value */
++	/* followed by e_name and e_value */
++	char   e_name[0];       /* attribute name */
++} __packed;
++
++#define ondisk_xattr_ibody_size(count)	({\
++	u32 __count = le16_to_cpu(count); \
++	((__count) == 0) ? 0 : \
++	sizeof(struct erofs_xattr_ibody_header) + \
++		sizeof(__u32) * ((__count) - 1); })
++
++#define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
++#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
++	sizeof(struct erofs_xattr_entry) + \
++	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
++
++/* available compression algorithm types */
++enum {
++	Z_EROFS_COMPRESSION_LZ4,
++	Z_EROFS_COMPRESSION_MAX
++};
++
++/*
++ * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
++ *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
++ *                                  (4B) + 2B + (4B) if compacted 2B is on.
++ */
++#define Z_EROFS_ADVISE_COMPACTED_2B_BIT         0
++
++#define Z_EROFS_ADVISE_COMPACTED_2B     (1 << Z_EROFS_ADVISE_COMPACTED_2B_BIT)
++
++struct z_erofs_map_header {
++	__le32	h_reserved1;
++	__le16	h_advise;
 +	/*
-+	 * We insert PCI resources into the iomem_resource and
-+	 * ioport_resource trees in either pci_bus_claim_resources()
-+	 * or pci_bus_assign_resources().
++	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
++	 * bit 4-7 : algorithm type of head 2 (logical cluster type 11).
 +	 */
-+	if (pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_claim_resources(pp->root_bus);
-+	} else {
-+		pci_bus_size_bridges(pp->root_bus);
-+		pci_bus_assign_resources(pp->root_bus);
-=20
--	list_for_each_entry(child, &pp->root_bus->children, node)
--		pcie_bus_configure_settings(child);
-+		list_for_each_entry(child, &pp->root_bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
-=20
- 	pci_bus_add_devices(pp->root_bus);
- 	return 0;
---=20
++	__u8	h_algorithmtype;
++	/*
++	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
++	 * bit 3-4 : (physical - logical) cluster bits of head 1:
++	 *       For example, if logical clustersize = 4096, 1 for 8192.
++	 * bit 5-7 : (physical - logical) cluster bits of head 2.
++	 */
++	__u8	h_clusterbits;
++};
++
++#define Z_EROFS_VLE_LEGACY_HEADER_PADDING       8
++
++/*
++ * Z_EROFS Variable-sized Logical Extent cluster type:
++ *    0 - literal (uncompressed) cluster
++ *    1 - compressed cluster (for the head logical cluster)
++ *    2 - compressed cluster (for the other logical clusters)
++ *
++ * In detail,
++ *    0 - literal (uncompressed) cluster,
++ *        di_advise = 0
++ *        di_clusterofs = the literal data offset of the cluster
++ *        di_blkaddr = the blkaddr of the literal cluster
++ *
++ *    1 - compressed cluster (for the head logical cluster)
++ *        di_advise = 1
++ *        di_clusterofs = the decompressed data offset of the cluster
++ *        di_blkaddr = the blkaddr of the compressed cluster
++ *
++ *    2 - compressed cluster (for the other logical clusters)
++ *        di_advise = 2
++ *        di_clusterofs =
++ *           the decompressed data offset in its own head cluster
++ *        di_u.delta[0] = distance to its corresponding head cluster
++ *        di_u.delta[1] = distance to its corresponding tail cluster
++ *                (di_advise could be 0, 1 or 2)
++ */
++enum {
++	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD,
++	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD,
++	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED,
++	Z_EROFS_VLE_CLUSTER_TYPE_MAX
++};
++
++#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
++#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
++
++struct z_erofs_vle_decompressed_index {
++	__le16 di_advise;
++	/* where to decompress in the head cluster */
++	__le16 di_clusterofs;
++
++	union {
++		/* for the head cluster */
++		__le32 blkaddr;
++		/*
++		 * for the rest clusters
++		 * eg. for 4k page-sized cluster, maximum 4K*64k = 256M)
++		 * [0] - pointing to the head cluster
++		 * [1] - pointing to the tail cluster
++		 */
++		__le16 delta[2];
++	} di_u __packed;		/* 8 bytes */
++} __packed;
++
++#define Z_EROFS_VLE_LEGACY_INDEX_ALIGN(size) \
++	(round_up(size, sizeof(struct z_erofs_vle_decompressed_index)) + \
++	 sizeof(struct z_erofs_map_header) + Z_EROFS_VLE_LEGACY_HEADER_PADDING)
++
++/* dirent sorts in alphabet order, thus we can do binary search */
++struct erofs_dirent {
++	__le64 nid;     /*  0, node number */
++	__le16 nameoff; /*  8, start offset of file name */
++	__u8 file_type; /* 10, file type */
++	__u8 reserved;  /* 11, reserved */
++} __packed;
++
++/* file types used in inode_info->flags */
++enum {
++	EROFS_FT_UNKNOWN,
++	EROFS_FT_REG_FILE,
++	EROFS_FT_DIR,
++	EROFS_FT_CHRDEV,
++	EROFS_FT_BLKDEV,
++	EROFS_FT_FIFO,
++	EROFS_FT_SOCK,
++	EROFS_FT_SYMLINK,
++	EROFS_FT_MAX
++};
++
++#define EROFS_NAME_LEN      255
++
++/* check the EROFS on-disk layout strictly at compile time */
++static inline void erofs_check_ondisk_layout_definitions(void)
++{
++	BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
++	BUILD_BUG_ON(sizeof(struct erofs_inode_v1) != 32);
++	BUILD_BUG_ON(sizeof(struct erofs_inode_v2) != 64);
++	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
++	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
++	BUILD_BUG_ON(sizeof(struct z_erofs_map_header) != 8);
++	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
++	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
++
++	BUILD_BUG_ON(BIT(Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) <
++		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
++}
++
++#endif
++
+-- 
 2.17.1
-
 
