@@ -2,210 +2,93 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F1EC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F51CC74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4C7208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5896321537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfGKItc (ORCPT
+        id S1728204AbfGKIvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:49:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47194 "EHLO mx1.redhat.com"
+        Thu, 11 Jul 2019 04:51:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:43448 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfGKItb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:49:31 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 13A2D81F07;
-        Thu, 11 Jul 2019 08:49:30 +0000 (UTC)
-Received: from gondolin (ovpn-117-213.ams2.redhat.com [10.36.117.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 324321001B05;
-        Thu, 11 Jul 2019 08:49:15 +0000 (UTC)
-Date:   Thu, 11 Jul 2019 10:49:12 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
-        riel@surriel.com, david@redhat.com, mst@redhat.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com,
-        john.starks@microsoft.com, dave.hansen@intel.com, mhocko@suse.com
-Subject: Re: [QEMU Patch] virtio-baloon: Support for page hinting
-Message-ID: <20190711104912.2cd79aeb.cohuck@redhat.com>
-In-Reply-To: <20190710195303.19690-1-nitesh@redhat.com>
-References: <20190710195158.19640-1-nitesh@redhat.com>
-        <20190710195303.19690-1-nitesh@redhat.com>
-Organization: Red Hat GmbH
+        id S1725963AbfGKIvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 04:51:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3EDE2B;
+        Thu, 11 Jul 2019 01:51:00 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12F223F59C;
+        Thu, 11 Jul 2019 01:50:59 -0700 (PDT)
+Subject: Re: [PATCH] kernel/dma: export dma_alloc_from_contiguous to modules
+To:     miles.chen@mediatek.com, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        wsd_upstream@mediatek.com, linux-mediatek@lists.infradead.org
+References: <20190711053343.28873-1-miles.chen@mediatek.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7d14b94f-454f-d512-bc8f-589f71bc07ea@arm.com>
+Date:   Thu, 11 Jul 2019 09:50:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190711053343.28873-1-miles.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 11 Jul 2019 08:49:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019 15:53:03 -0400
-Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-
-
-$SUBJECT: s/baloon/balloon/
-
-> Enables QEMU to perform madvise free on the memory range reported
-> by the vm.
-
-[No comments on the actual functionality; just some stuff I noticed.]
-
+On 11/07/2019 06:33, miles.chen@mediatek.com wrote:
+> From: Miles Chen <miles.chen@mediatek.com>
 > 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> This change exports dma_alloc_from_contiguous and
+> dma_release_from_contiguous to modules.
+> 
+> Currently, we can add a reserve a memory node in dts files, make
+> it a CMA memory by setting compatible = "shared-dma-pool",
+> and setup the dev->cma_area by using of_reserved_mem_device_init_by_idx().
+> 
+> Export dma_alloc_from_contiguous and dma_release_from_contiguous, so we
+> can allocate/free from/to dev->cma_area in kernel modules.
+
+As far as I understand, this was never intended for drivers to call 
+directly. If a device has its own private CMA area, then regular 
+dma_alloc_attrs() should allocate from that automatically; if that's not 
+happening already, then there's a bug somewhere.
+
+Robin.
+
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 > ---
->  hw/virtio/trace-events                        |  1 +
->  hw/virtio/virtio-balloon.c                    | 59 +++++++++++++++++++
->  include/hw/virtio/virtio-balloon.h            |  2 +-
->  include/qemu/osdep.h                          |  7 +++
->  .../standard-headers/linux/virtio_balloon.h   |  1 +
->  5 files changed, 69 insertions(+), 1 deletion(-)
+>   kernel/dma/contiguous.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-
-(...)
-
-> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-> index 2112874055..5d186707b5 100644
-> --- a/hw/virtio/virtio-balloon.c
-> +++ b/hw/virtio/virtio-balloon.c
-> @@ -34,6 +34,9 @@
->  
->  #define BALLOON_PAGE_SIZE  (1 << VIRTIO_BALLOON_PFN_SHIFT)
->  
-> +#define VIRTIO_BALLOON_PAGE_HINTING_MAX_PAGES	16
-> +void free_mem_range(uint64_t addr, uint64_t len);
-> +
->  struct PartiallyBalloonedPage {
->      RAMBlock *rb;
->      ram_addr_t base;
-> @@ -328,6 +331,58 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
->      balloon_stats_change_timer(s, 0);
->  }
->  
-> +void free_mem_range(uint64_t addr, uint64_t len)
-> +{
-> +    int ret = 0;
-> +    void *hvaddr_to_free;
-> +    MemoryRegionSection mrs = memory_region_find(get_system_memory(),
-> +                                                 addr, 1);
-> +    if (!mrs.mr) {
-> +	warn_report("%s:No memory is mapped at address 0x%lu", __func__, addr);
-
-Indentation seems to be off here (also in other places; please double
-check.)
-
-> +        return;
-> +    }
-> +
-> +    if (!memory_region_is_ram(mrs.mr) && !memory_region_is_romd(mrs.mr)) {
-> +	warn_report("%s:Memory at address 0x%s is not RAM:0x%lu", __func__,
-> +		    HWADDR_PRIx, addr);
-> +        memory_region_unref(mrs.mr);
-> +        return;
-> +    }
-> +
-> +    hvaddr_to_free = qemu_map_ram_ptr(mrs.mr->ram_block, mrs.offset_within_region);
-> +    trace_virtio_balloon_hinting_request(addr, len);
-> +    ret = qemu_madvise(hvaddr_to_free,len, QEMU_MADV_FREE);
-> +    if (ret == -1) {
-> +	warn_report("%s: Madvise failed with error:%d", __func__, ret);
-> +    }
-> +}
-> +
-> +static void virtio_balloon_handle_page_hinting(VirtIODevice *vdev,
-> +					       VirtQueue *vq)
-> +{
-> +    VirtQueueElement *elem;
-> +    size_t offset = 0;
-> +    uint64_t gpa, len;
-> +    elem = virtqueue_pop(vq, sizeof(VirtQueueElement));
-> +    if (!elem) {
-> +        return;
-> +    }
-> +    /* For pending hints which are < max_pages(16), 'gpa != 0' ensures that we
-> +     * only read the buffer which holds a valid PFN value.
-> +     * TODO: Find a better way to do this.
-> +     */
-> +    while (iov_to_buf(elem->out_sg, elem->out_num, offset, &gpa, 8) == 8 && gpa != 0) {
-> +	offset += 8;
-> +	offset += iov_to_buf(elem->out_sg, elem->out_num, offset, &len, 8);
-> +	if (!qemu_balloon_is_inhibited()) {
-> +	    free_mem_range(gpa, len);
-> +	}
-> +    }
-> +    virtqueue_push(vq, elem, offset);
-> +    virtio_notify(vdev, vq);
-> +    g_free(elem);
-> +}
-> +
->  static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
->  {
->      VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-> @@ -694,6 +749,7 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
->      VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
->      f |= dev->host_features;
->      virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
-> +    virtio_add_feature(&f, VIRTIO_BALLOON_F_HINTING);
-
-I don't think you can add this unconditionally if you want to keep this
-migratable. This should be done via a property (as for deflate-on-oom
-and free-page-hint) so it can be turned off in compat machines.
-
->  
->      return f;
->  }
-> @@ -780,6 +836,7 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
->      s->ivq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
->      s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
->      s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
-> +    s->hvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_page_hinting);
-
-This should probably be conditional in the same way as the free page hint
-queue (also see above).
-
->  
->      if (virtio_has_feature(s->host_features,
->                             VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-> @@ -875,6 +932,8 @@ static void virtio_balloon_instance_init(Object *obj)
->  
->      object_property_add(obj, "guest-stats", "guest statistics",
->                          balloon_stats_get_all, NULL, NULL, s, NULL);
-> +    object_property_add(obj, "guest-page-hinting", "guest page hinting",
-> +                        NULL, NULL, NULL, s, NULL);
-
-This object does not have any accessors; what purpose does it serve?
-
->  
->      object_property_add(obj, "guest-stats-polling-interval", "int",
->                          balloon_stats_get_poll_interval,
-
-(...)
-
-> diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
-> index 9375ca2a70..f9e3e82562 100644
-> --- a/include/standard-headers/linux/virtio_balloon.h
-> +++ b/include/standard-headers/linux/virtio_balloon.h
-> @@ -36,6 +36,7 @@
->  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
->  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
->  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
->  
->  /* Size of a PFN in the balloon interface. */
->  #define VIRTIO_BALLOON_PFN_SHIFT 12
-
-Please split off any update to these headers into a separate patch, so
-that it can be replaced by a proper headers update when it is merged.
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index b2a87905846d..d5920bdedc77 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -197,6 +197,7 @@ struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
+>   
+>   	return cma_alloc(dev_get_cma_area(dev), count, align, no_warn);
+>   }
+> +EXPORT_SYMBOL_GPL(dma_alloc_from_contiguous);
+>   
+>   /**
+>    * dma_release_from_contiguous() - release allocated pages
+> @@ -213,6 +214,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+>   {
+>   	return cma_release(dev_get_cma_area(dev), pages, count);
+>   }
+> +EXPORT_SYMBOL_GPL(dma_release_from_contiguous);
+>   
+>   /*
+>    * Support for reserved memory regions defined in device tree
+> 
