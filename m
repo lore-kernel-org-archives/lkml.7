@@ -2,120 +2,253 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619A3C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C1CC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0AA21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD11421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hSpyP6xx"
+	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="HbnTNvTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbfGKNjS (ORCPT
+        id S1728654AbfGKNjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:39:18 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43774 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfGKNjS (ORCPT
+        Thu, 11 Jul 2019 09:39:48 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:33135 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbfGKNjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:39:18 -0400
-Received: by mail-ua1-f68.google.com with SMTP id o2so2463531uae.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 06:39:17 -0700 (PDT)
+        Thu, 11 Jul 2019 09:39:47 -0400
+Received: by mail-io1-f43.google.com with SMTP id z3so12649877iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 06:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KazpKbhHu00FeDDiPuVEMFaRWnbqcqwHcNdLtMoOcsY=;
-        b=hSpyP6xxjo+eds0vrJb/JDa7NP4AH5hQ5XuifWkBcJeQ7QMVBqpHtOBM+0SNoecQAT
-         pZT3btPHtTfKXQPkK/OXxLy6gRcJGFjS5Z2RHHVat3M/YCDQrA523q7tXlIp0lCiXGul
-         gaBSTMYQbNyZ1yVHI/m2ZeEucJqTcl3pqzEIlLRHIlwgqIMBIEppENpnpEqEwHpKCREG
-         MQHdsD9Cd241lCqj0guf5qqEEFCmEVcVWA6YxxBpFe9sovxZgSWkAX0Rh3GBfcGN2mAf
-         JNmgWPxLUVhOlTE6KR119OqXGM0GjC6IgKU82Ldw162Zz78+g5B4OrxU0yHOfeTy50TL
-         BwgQ==
+        d=digidescorp.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=OMzOtcTDaPuutCWarO8/hubDu6gmJZ+DgezGavT2Dc8=;
+        b=HbnTNvTwyjv1eO38XrDQkkiz1r9CiU+XRHdvwiMIj5h/28zc7QZiu18009Z6r3hbfR
+         aV9zORoeUaB7ON9O5YV+O/mczDD/AutN1Sd6xbexhOtkg6QulcQJs/w2pPqUWTeOua2K
+         DeyX95zVQ1un9efmd14Gsyr0o+UJc/z3M0Hxk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KazpKbhHu00FeDDiPuVEMFaRWnbqcqwHcNdLtMoOcsY=;
-        b=CpuxlirWMINTnbTC4tEtXUcUzKZYIx5sc7Fcs2sYzAdNKrO4/LcRWGoH6/rT1ocec3
-         Jqqi1sNWcJChmjdK503abcKlE5pn0IjEx+EXnVc1+2cWXl1+pLymbVuDRNf+lc4wIpGb
-         WLmuw58QyNQCCcvNuTNOjdvlqtfXceqSaA7JhvdoliSXZbJFs9fEvgD65BSvK4E7fTVm
-         IxeX/bDzi6JffiNbi7H6mtHJzNZwVydpq+2EGft7lcC08IaqlzpLxctPQrD70/4aqBtg
-         shzV+m0Ft0ONMptL2/xqXtFvABY9KMIMU91IHh/yVwXUVI6TxzIQvi1O5XJa3GPGE4Uu
-         +59Q==
-X-Gm-Message-State: APjAAAXpQoIniS83i31SjC+RwJauksJ4DIS9ohDwr7n9itQhHP78coNN
-        BqpNZRx4AIhA8Exg4DRauS7Vtw==
-X-Google-Smtp-Source: APXvYqxZqbGbb8rEAZtuGWj3Z/ByRS0P9lJZBtlaYx5SRTsxdaUIbZMmBZGoyMBP+H11pK7IY+SnlA==
-X-Received: by 2002:ab0:2756:: with SMTP id c22mr4174211uap.22.1562852357161;
-        Thu, 11 Jul 2019 06:39:17 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id s67sm2549736vkb.30.2019.07.11.06.39.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 06:39:16 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlZI3-0007pP-MZ; Thu, 11 Jul 2019 10:39:15 -0300
-Date:   Thu, 11 Jul 2019 10:39:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Bernard Metzler <BMT@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190711133915.GA25807@ziepe.ca>
-References: <20190710174800.34451-1-natechancellor@gmail.com>
- <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
- <20190711081434.GA86557@archlinux-threadripper>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711081434.GA86557@archlinux-threadripper>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OMzOtcTDaPuutCWarO8/hubDu6gmJZ+DgezGavT2Dc8=;
+        b=gvN0PTe6kymWRqFGul8FXnfPqut36Qvs74MSFWfI+6CsOMvb8EiIneTddWtBa5pwKZ
+         UaaQ384AsB75TN/Bruazv9V57RVKVXwNYF3jdfAfEJbqVp/AEqAsJFdS6C/XRCgGNcMU
+         +21TWT/jEEsk/FekdV41wOojV9YoicFKiSHIWbfrLvDtnM+oWqIXgK0g9+bSt4Qw/4fa
+         1ooYMtGc8+OMnPtfZ4U6V6kUfryIYRDb40rgFy2O6Q1lt8xGomYSLHpTAbVEHF7m+pKq
+         ntviZXF/v64aqYxX5EeS+h4G4hoFh3aiMGA/OLQTTgLf0DErYDO9nJ+hQQbJjrkomH63
+         MqgA==
+X-Gm-Message-State: APjAAAV5S92kWViFDYlMr/4BWV8kqzDcqrptHhdXqCPrSTPjkADG4PGX
+        ZyHHGFtKqgzZBkAo1zrphLKHzw==
+X-Google-Smtp-Source: APXvYqxmmOhhot0GSRBAbp875mT9MpKSjBOUXjMz3wkXmp1edLFpPOcavYzu2doQE/5DrG1poTDOcw==
+X-Received: by 2002:a05:6602:2289:: with SMTP id d9mr4455389iod.47.1562852386757;
+        Thu, 11 Jul 2019 06:39:46 -0700 (PDT)
+Received: from iscandar.digidescorp.com (104-51-28-62.lightspeed.cicril.sbcglobal.net. [104.51.28.62])
+        by smtp.googlemail.com with ESMTPSA id u4sm6035902iol.59.2019.07.11.06.39.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 06:39:46 -0700 (PDT)
+From:   "Steven J. Magnani" <steve.magnani@digidescorp.com>
+X-Google-Original-From: "Steven J. Magnani" <steve@digidescorp.com>
+To:     Jan Kara <jack@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        "Steven J . Magnani" <steve@digidescorp.com>
+Subject: [PATCH v2 1/2] udf: refactor VRS descriptor identification
+Date:   Thu, 11 Jul 2019 08:38:51 -0500
+Message-Id: <20190711133852.16887-1-steve@digidescorp.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 01:14:34AM -0700, Nathan Chancellor wrote:
-> Hi Bernard,
-> 
-> On Thu, Jul 11, 2019 at 07:44:22AM +0000, Bernard Metzler wrote:
-> > Nathan, thanks very much. That's correct.
-> 
-> Thanks for the confirmation that the fix was correct.
-> 
-> > I don't know how this could pass w/o warning.
-> 
-> Unfortunately, it appears that GCC only warns when two different
-> enumerated types are directly compared, not when they are implicitly
-> converted between.
-> 
-> https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wenum-compare
-> 
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78736
-> 
-> If it did, I wouldn't have fixed as many warnings as I have.
-> 
-> https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aissue+is%3Aclosed+label%3A-Wenum-conversion
-> 
-> Maybe time to start plumbing Clang into your test flow until it can get
-> intergrated with more CI setups? :) It can catch some pretty dodgy
-> behavior that GCC doesn't:
+Extract code that parses a Volume Recognition Sequence descriptor
+(component), in preparation for calling it twice against different
+locations in a block.
 
-I keep asking how to use clang to build the kernel and last I was told
-it still wasn't ready..
+Change from v1:
+Fix regression in debug logging of "open disc" condition
 
-Is it ready now? Is there some flow that will compile with clang
-warning free, on any arch? (at least the portion of the kernel I check)
+Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
 
-> Kernel CI has added support for it (although they don't email the
-> authors of patches individually) 
-
-Well.. we didn't see any emails till yours, so if others are looking
-they aren't communicating?
-
-Jason
+--- a/fs/udf/super.c	2019-07-10 18:57:41.192852154 -0500
++++ b/fs/udf/super.c	2019-07-10 20:47:50.438352500 -0500
+@@ -685,16 +685,62 @@ out_unlock:
+ 	return error;
+ }
+ 
+-/* Check Volume Structure Descriptors (ECMA 167 2/9.1) */
+-/* We also check any "CD-ROM Volume Descriptor Set" (ECMA 167 2/8.3.1) */
+-static loff_t udf_check_vsd(struct super_block *sb)
++static int identify_vsd(const struct volStructDesc *vsd)
++{
++	int vsd_id = 0;
++
++	if (!strncmp(vsd->stdIdent, VSD_STD_ID_CD001, VSD_STD_ID_LEN)) {
++		switch (vsd->structType) {
++		case 0:
++			udf_debug("ISO9660 Boot Record found\n");
++			break;
++		case 1:
++			udf_debug("ISO9660 Primary Volume Descriptor found\n");
++			break;
++		case 2:
++			udf_debug("ISO9660 Supplementary Volume Descriptor found\n");
++			break;
++		case 3:
++			udf_debug("ISO9660 Volume Partition Descriptor found\n");
++			break;
++		case 255:
++			udf_debug("ISO9660 Volume Descriptor Set Terminator found\n");
++			break;
++		default:
++			udf_debug("ISO9660 VRS (%u) found\n", vsd->structType);
++			break;
++		}
++	} else if (!strncmp(vsd->stdIdent, VSD_STD_ID_BEA01, VSD_STD_ID_LEN))
++		vsd_id = 1;
++	else if (!strncmp(vsd->stdIdent, VSD_STD_ID_NSR02, VSD_STD_ID_LEN))
++		vsd_id = 2;
++	else if (!strncmp(vsd->stdIdent, VSD_STD_ID_NSR03, VSD_STD_ID_LEN))
++		vsd_id = 3;
++	else if (!strncmp(vsd->stdIdent, VSD_STD_ID_BOOT2, VSD_STD_ID_LEN))
++		; /* vsd_id = 0 */
++	else if (!strncmp(vsd->stdIdent, VSD_STD_ID_CDW02, VSD_STD_ID_LEN))
++		; /* vsd_id = 0 */
++	else {
++		/* TEA01 or invalid id : end of volume recognition area */
++		vsd_id = 255;
++	}
++
++	return vsd_id;
++}
++
++/*
++ * Check Volume Structure Descriptors (ECMA 167 2/9.1)
++ * We also check any "CD-ROM Volume Descriptor Set" (ECMA 167 2/8.3.1)
++ * @return   2 if NSR02 found, 3 if NSR03 found,
++ *	    -1 if first sector read error, 0 otherwise
++ */
++static int udf_check_vsd(struct super_block *sb)
+ {
+ 	struct volStructDesc *vsd = NULL;
+ 	loff_t sector = VSD_FIRST_SECTOR_OFFSET;
+ 	int sectorsize;
+ 	struct buffer_head *bh = NULL;
+-	int nsr02 = 0;
+-	int nsr03 = 0;
++	int nsr = 0;
+ 	struct udf_sb_info *sbi;
+ 
+ 	sbi = UDF_SB(sb);
+@@ -718,71 +764,27 @@ static loff_t udf_check_vsd(struct super
+ 	 * activity. This actually happened with uninitialised SSD partitions
+ 	 * (all 0xFF) before the check for the limit and all valid IDs were
+ 	 * added */
+-	for (; !nsr02 && !nsr03 && sector < VSD_MAX_SECTOR_OFFSET;
++	for (; (nsr < 2) && sector < VSD_MAX_SECTOR_OFFSET;
+ 	     sector += sectorsize) {
++		int vsd_id;
++
+ 		/* Read a block */
+ 		bh = udf_tread(sb, sector >> sb->s_blocksize_bits);
+ 		if (!bh)
+ 			break;
+ 
+-		/* Look for ISO  descriptors */
+ 		vsd = (struct volStructDesc *)(bh->b_data +
+ 					      (sector & (sb->s_blocksize - 1)));
+ 
+-		if (!strncmp(vsd->stdIdent, VSD_STD_ID_CD001,
+-				    VSD_STD_ID_LEN)) {
+-			switch (vsd->structType) {
+-			case 0:
+-				udf_debug("ISO9660 Boot Record found\n");
+-				break;
+-			case 1:
+-				udf_debug("ISO9660 Primary Volume Descriptor found\n");
+-				break;
+-			case 2:
+-				udf_debug("ISO9660 Supplementary Volume Descriptor found\n");
+-				break;
+-			case 3:
+-				udf_debug("ISO9660 Volume Partition Descriptor found\n");
+-				break;
+-			case 255:
+-				udf_debug("ISO9660 Volume Descriptor Set Terminator found\n");
+-				break;
+-			default:
+-				udf_debug("ISO9660 VRS (%u) found\n",
+-					  vsd->structType);
+-				break;
+-			}
+-		} else if (!strncmp(vsd->stdIdent, VSD_STD_ID_BEA01,
+-				    VSD_STD_ID_LEN))
+-			; /* nothing */
+-		else if (!strncmp(vsd->stdIdent, VSD_STD_ID_TEA01,
+-				    VSD_STD_ID_LEN)) {
+-			brelse(bh);
+-			break;
+-		} else if (!strncmp(vsd->stdIdent, VSD_STD_ID_NSR02,
+-				    VSD_STD_ID_LEN))
+-			nsr02 = sector;
+-		else if (!strncmp(vsd->stdIdent, VSD_STD_ID_NSR03,
+-				    VSD_STD_ID_LEN))
+-			nsr03 = sector;
+-		else if (!strncmp(vsd->stdIdent, VSD_STD_ID_BOOT2,
+-				    VSD_STD_ID_LEN))
+-			; /* nothing */
+-		else if (!strncmp(vsd->stdIdent, VSD_STD_ID_CDW02,
+-				    VSD_STD_ID_LEN))
+-			; /* nothing */
+-		else {
+-			/* invalid id : end of volume recognition area */
+-			brelse(bh);
+-			break;
+-		}
++		vsd_id = identify_vsd(vsd);
++		if (vsd_id > nsr)
++			nsr = vsd_id;
++
+ 		brelse(bh);
+ 	}
+ 
+-	if (nsr03)
+-		return nsr03;
+-	else if (nsr02)
+-		return nsr02;
++	if ((nsr >= 2) && (nsr <= 3))
++		return nsr;
+ 	else if (!bh && sector - (sbi->s_session << sb->s_blocksize_bits) ==
+ 			VSD_FIRST_SECTOR_OFFSET)
+ 		return -1;
+@@ -1936,7 +1938,7 @@ static int udf_load_vrs(struct super_blo
+ 			int silent, struct kernel_lb_addr *fileset)
+ {
+ 	struct udf_sb_info *sbi = UDF_SB(sb);
+-	loff_t nsr_off;
++	int nsr = 0;
+ 	int ret;
+ 
+ 	if (!sb_set_blocksize(sb, uopt->blocksize)) {
+@@ -1947,13 +1949,13 @@ static int udf_load_vrs(struct super_blo
+ 	sbi->s_last_block = uopt->lastblock;
+ 	if (!uopt->novrs) {
+ 		/* Check that it is NSR02 compliant */
+-		nsr_off = udf_check_vsd(sb);
+-		if (!nsr_off) {
++		nsr = udf_check_vsd(sb);
++		if (!nsr) {
+ 			if (!silent)
+ 				udf_warn(sb, "No VRS found\n");
+ 			return -EINVAL;
+ 		}
+-		if (nsr_off == -1)
++		if (nsr == -1)
+ 			udf_debug("Failed to read sector at offset %d. "
+ 				  "Assuming open disc. Skipping validity "
+ 				  "check\n", VSD_FIRST_SECTOR_OFFSET);
