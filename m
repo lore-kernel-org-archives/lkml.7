@@ -2,62 +2,103 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F33C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020F3C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2642D21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE9D21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfGKLUK (ORCPT
+        id S1728294AbfGKLUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 07:20:10 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:40309 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728147AbfGKLUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 07:20:10 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud7.xs4all.net with ESMTPSA
-        id lX7Nh2wMx0SBqlX7QhCG0s; Thu, 11 Jul 2019 13:20:08 +0200
-Message-ID: <9a8ed0f8e880e1a7387db00c74a9b71210ce6aff.camel@tiscali.nl>
-Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        intel-gfx@lists.freedesktop.org
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Thu, 11 Jul 2019 13:20:05 +0200
-In-Reply-To: <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        Thu, 11 Jul 2019 07:20:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34606 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728026AbfGKLUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 07:20:30 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C6FBEEDFD71890BF039B;
+        Thu, 11 Jul 2019 19:20:27 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 11 Jul 2019 19:20:20 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <wangkefeng.wang@huawei.com>
+Subject: [PATCH] hpet: Fix division by zero in hpet_time_div()
+Date:   Thu, 11 Jul 2019 19:26:19 +0800
+Message-ID: <20190711112619.57256-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNwNcIuCG+YB5xGzqEPD2NzHhGlL7n9M3ZRb6YK+JaAwLgjKXtkBGV52kFfxpiLsvhdlL4O8m+rgTZWZSQcydPJO+JgOS5oORwLAjEVmpqt9WYW9eaW1
- IxrygzODvEO/gsJvhJEbmVWqo0DjSLsALfWqiGFhhqy8Mg+0ObAXgMktoQOTiwRio3MQ0I5TSzxFCyJeEIP06UU+lXMpEld2613TcDu2dlw4YuJrwfO50uqG
- HlapxireU4EjjuH1NTVAfbE9whSsibqxIEQ7f/sUH5oH1nEST7G/AqPdWdioCQ/5QLxhDJROPbAu3sDT/kVLfA==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Wilson schreef op do 11-07-2019 om 10:29 [+0100]:
-> Temporary workaround would be to set i915.enable_psr=0
+The base value in do_div() called by hpet_time_div() is truncated from
+unsigned long to uint32_t, resulting in a divide-by-zero exception.
 
-That workaround seems to work for me. Over an hour of uptime without any
-screen freezes.
+UBSAN: Undefined behaviour in ../drivers/char/hpet.c:572:2
+division by zero
+CPU: 1 PID: 23682 Comm: syz-executor.3 Not tainted 4.4.184.x86_64+ #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+ 0000000000000000 b573382df1853d00 ffff8800a3287b98 ffffffff81ad7561
+ ffff8800a3287c00 ffffffff838b35b0 ffffffff838b3860 ffff8800a3287c20
+ 0000000000000000 ffff8800a3287bb0 ffffffff81b8f25e ffffffff838b35a0
+Call Trace:
+ [<ffffffff81ad7561>] __dump_stack lib/dump_stack.c:15 [inline]
+ [<ffffffff81ad7561>] dump_stack+0xc1/0x120 lib/dump_stack.c:51
+ [<ffffffff81b8f25e>] ubsan_epilogue+0x12/0x8d lib/ubsan.c:166
+ [<ffffffff81b900cb>] __ubsan_handle_divrem_overflow+0x282/0x2c8 lib/ubsan.c:262
+ [<ffffffff823560dd>] hpet_time_div drivers/char/hpet.c:572 [inline]
+ [<ffffffff823560dd>] hpet_ioctl_common drivers/char/hpet.c:663 [inline]
+ [<ffffffff823560dd>] hpet_ioctl_common.cold+0xa8/0xad drivers/char/hpet.c:577
+ [<ffffffff81e63d56>] hpet_ioctl+0xc6/0x180 drivers/char/hpet.c:676
+ [<ffffffff81711590>] vfs_ioctl fs/ioctl.c:43 [inline]
+ [<ffffffff81711590>] file_ioctl fs/ioctl.c:470 [inline]
+ [<ffffffff81711590>] do_vfs_ioctl+0x6e0/0xf70 fs/ioctl.c:605
+ [<ffffffff81711eb4>] SYSC_ioctl fs/ioctl.c:622 [inline]
+ [<ffffffff81711eb4>] SyS_ioctl+0x94/0xc0 fs/ioctl.c:613
+ [<ffffffff82846003>] tracesys_phase2+0x90/0x95
 
-(I first tried fiddling with /sys/module/i915/parameters/enable_psr at
-runtime, but that apparently has no effect. Should that file be read-only?)
+The main C reproducer autogenerated by syzkaller,
 
-Feel free to ask me to test a fix (or a revert) once you've figured out what
-to do about this.
+  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+  memcpy((void*)0x20000100, "/dev/hpet\000", 10);
+  syscall(__NR_openat, 0xffffffffffffff9c, 0x20000100, 0, 0);
+  syscall(__NR_ioctl, r[0], 0x40086806, 0x40000000000000);
 
+Fix it by using div64_ul().
 
-Paul Bolle
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Zhang HongJun <zhanghongjun2@huawei.com>
+---
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 5c39f20378b8..dd52b63b62db 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -567,7 +567,7 @@ static inline unsigned long hpet_time_div(struct hpets *hpets,
+ 	unsigned long long m;
+ 
+ 	m = hpets->hp_tick_freq + (dis >> 1);
+-	do_div(m, dis);
++	div64_ul(m, dis);
+ 	return (unsigned long)m;
+ }
+ 
+-- 
+2.20.1
 
