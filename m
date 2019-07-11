@@ -2,154 +2,185 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1160BC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E39AC74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D981B216C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136E3216B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axG7bOAR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qtcfa93P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbfGKN5E (ORCPT
+        id S1728626AbfGKN5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:57:04 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33967 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbfGKN5C (ORCPT
+        Thu, 11 Jul 2019 09:57:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56678 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728569AbfGKN5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jul 2019 09:57:02 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so5923560edb.1;
-        Thu, 11 Jul 2019 06:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rOuNeNHVv9/VVG4l5Hr645r7uYLWPBnGXVkIWcZHk1k=;
-        b=axG7bOARPIoTxYMvOcDOF/i1jLKA7ugbJM5J2diOYTfJSi1G02UMeCwP0qKtKZ0x/b
-         XK+cwxGV7LGh3jue4qzcMwws9DmDl9mTsEBdza+3KVA3Db6NQuIjTKfAvOg3/CVJax2t
-         awEUyzFocfnhMkakkOvkn3qSWuLQtjSpUS8iRtOlJq74YbViyepwXTM4waUWH62+eGBp
-         dvASbyXaGReT3F55G9qNyr5sPN1zClC/3b6IBx8bLuihYRO/0qg1+awW6N94K50pwD9H
-         MbJNBC6xtCS4tJwiFQJA1lZOH0MrGUj1hfXdAGPSxWbMZtywtF1go93s2eE0m1EcT+ja
-         0aiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rOuNeNHVv9/VVG4l5Hr645r7uYLWPBnGXVkIWcZHk1k=;
-        b=kciljKD57CK0P9TG731+CMuh+Khj41YDYRsoff9avL+tBtshDWYqDyVP0dnaV+yTnb
-         xY9Vxr0aQtZRgdZ0JNbu0h/GD3qF0PId6MDibKFu5CUdypEKTVDihnwuAawNL3rtTSkc
-         iWduNtW+jMyAlpqP1bsPPBTAMtrZyTrGXRk9/wIvoioE26G0Xipm9jTaGliqQrvMK0Hy
-         i2NYdiH7NeULpWsFyBT3UFL8NXLybS9kgJqMd3r7cDfO1T0CIYGAWhjyDzxzn/Y/WRdT
-         +rfUpJ6Q7LjmqhjSBz010FJaOmXuNBWUjFfKJCX+/R2GuXDeX9hI4axOCLZNMBhCNwaj
-         Lljg==
-X-Gm-Message-State: APjAAAWAqsOWL2SkRDrV4xEcXImqQhTTdbwr9toJKOt5FxT3+m3eQMpE
-        EQQ+23m3JH2Q4th6dgtTM8HJu76NkjkblZjJAO8=
-X-Google-Smtp-Source: APXvYqzCXNLAVWTByGsPoZc2vVxWqyN7oxSE4kQB+14zl0pHNyO0KNu+RzsrXlqWTab7INRkE7CRqcAP/9FQebzVmI0=
-X-Received: by 2002:a50:8bfd:: with SMTP id n58mr3631650edn.272.1562853420690;
- Thu, 11 Jul 2019 06:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0TdTTvv9gzZPCqHVN09rsHZfcgoPwm7Gi1QT/oQm0qY=; b=qtcfa93Pmpg0IzzyXiBu0TpI7g
+        FlOPh39+Gsq5ONektm3WTqhDZYvBvRZat5iuAfWVWapUnx+gChRjB/4LL9cyKLBd4epmlFjmwzJEN
+        su1bngdlgE9OINFndq1VKV/dHzZg5DBhqRaclSI4UXci8KQQ+dB1U8stEkDCuSnJvxB+BVoeY8v+F
+        Wq/G5MnIWO/ZLLF90OzoOnzovyg0aqBX6zKxWHvP+xRJrrHtQArW3E5XIZYJjs+QswqPH41Gr4H3S
+        1uZlSt25IhO+u8VtMrXnG87GY6LjnPKT5sWNzMDx8BGOXRw5W8WkopRoRWhNbFmvxqDR1XUsLXYO+
+        6Qqs9yuQ==;
+Received: from [38.98.37.141] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlZZD-0004uL-J9; Thu, 11 Jul 2019 13:57:00 +0000
+Date:   Thu, 11 Jul 2019 15:56:54 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dma-mapping updates for 5.3
+Message-ID: <20190711135654.GA15312@infradead.org>
 MIME-Version: 1.0
-References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
- <20190703214512.41319-1-jeffrey.l.hugo@gmail.com> <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
- <20190706010604.GG20625@sirena.org.uk> <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
-In-Reply-To: <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 11 Jul 2019 06:56:47 -0700
-Message-ID: <CAF6AEGtGjKRA3A8v6pgaXLgpeiLZuz6HuDSFRjKrNp4iQNVZtA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 6:11 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
-> On 06.07.2019 03:06, Mark Brown wrote:
-> > On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
-> >> Add basic support with a simple implementation that utilizes the generic
-> >> read/write commands to allow device registers to be configured.
-> > This looks good to me but I really don't know anything about DSI,
-> > I'd appreciate some review from other people who do.  I take it
-> > there's some spec thing in DSI that says registers and bytes must
-> > both be 8 bit?
->
->
-> I am little bit confused about regmap usage here. On the one hand it
-> nicely fits to this specific driver, probably because it already uses
-> regmap_i2c.
->
-> On the other it will be unusable for almost all current DSI drivers and
-> probably for most new drivers. Why?
->
-> 1. DSI protocol defines actually more than 30 types of transactions[1],
-> but this patchset implements only few of them (dsi generic write/read
-> family). Is it possible to implement multiple types of transactions in
-> regmap?
->
-> 2. There is already some set of helpers which uses dsi bus, rewriting it
-> on regmap is possible or driver could use of regmap and direct access
-> together, the question is if it is really necessary.
->
-> 3. DSI devices are no MFDs so regmap abstraction has no big value added
-> (correct me, if there are other significant benefits).
->
+Hi Linus,
 
-I assume it is not *just* this one bridge that can be programmed over
-either i2c or dsi, depending on how things are wired up on the board.
-It certainly would be nice for regmap to support this case, so we
-don't have to write two different bridge drivers for the same bridge.
-I wouldn't expect a panel that is only programmed via dsi to use this.
+please pull the dma-mapping update below.  Note that the tree is based
+on an branch from Joergs iommu tree that you have pulled earlier this
+week.
 
-BR,
--R
+There are a few of the usual Kconfig conflicts where different trees
+touch the same area, but not the same symbols, just take the changes
+from both tree in that case (none of them is in your tree yet as of
+this time).
 
->
-> [1]:
-> https://elixir.bootlin.com/linux/latest/source/include/video/mipi_display.h#L15
->
->
-> Regards
->
-> Andrzej
->
->
-> >
-> > A couple of minor comments, no need to resend just for these:
-> >
-> >> +       payload[0] = (char)reg;
-> >> +       payload[1] = (char)val;
-> > Do you need the casts?
-> >
-> >> +    ret = mipi_dsi_generic_write(dsi, payload, 2);
-> >> +    return ret < 0 ? ret : 0;
-> > Please just write an if statement, it helps with legibility.
-> >
-> >> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
-> >> +                             const struct regmap_config *config,
-> >> +                             struct lock_class_key *lock_key,
-> >> +                             const char *lock_name)
-> >> +{
-> >> +    return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
-> >> +                         lock_key, lock_name);
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
-> > Perhaps validate that the config is OK (mainly the register/value
-> > sizes)?  Though I'm not sure it's worth it so perhaps not - up to
-> > you.
->
->
+In addition there is a conflict in genalloc.h against mainline where
+late patches in the 5.2 cycle added a new gen_pool_free_owner function
+and made gen_pool_free a wrapper around it.  This tree adds new
+helpers right next to it, the fix is again to take both changes
+manually.  Bonous points for keeping all the alloc functions above
+the free ones to keep the file ordering, unlike the default git
+presentation.
+
+
+The following changes since commit 1b961423158caaae49d3900b7c9c37477bbfa9b3:
+
+  iommu/dma: Fix condition check in iommu_dma_unmap_sg (2019-06-03 12:14:51 +0200)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.3
+
+for you to fetch changes up to 15ffe5e1acf5fe1512e98b20702e46ce9f25e2f7:
+
+  dma-mapping: mark dma_alloc_need_uncached as __always_inline (2019-07-08 14:19:33 -0700)
+
+----------------------------------------------------------------
+dma-mapping updates for Linux 5.3
+
+ - move the USB special case that bounced DMA through a device
+   bar into the USB code instead of handling it in the common
+   DMA code (Laurentiu Tudor and Fredrik Noring)
+ - don't dip into the global CMA pool for single page allocations
+   (Nicolin Chen)
+ - fix a crash when allocating memory for the atomic pool failed
+   during boot (Florian Fainelli)
+ - move support for MIPS-style uncached segments to the common
+   code and use that for MIPS and nios2 (me)
+ - make support for DMA_ATTR_NON_CONSISTENT and
+   DMA_ATTR_NO_KERNEL_MAPPING generic (me)
+ - convert nds32 to the generic remapping allocator (me)
+
+----------------------------------------------------------------
+Christoph Hellwig (17):
+      MIPS: remove the _dma_cache_wback_inv export
+      au1100fb: fix DMA API abuse
+      dma-direct: provide generic support for uncached kernel segments
+      MIPS: use the generic uncached segment support in dma-direct
+      dma-mapping: truncate dma masks to what dma_addr_t can hold
+      ARM: dma-mapping: allow larger DMA mask than supported
+      arm-nommu: remove the partial DMA_ATTR_NON_CONSISTENT support
+      arc: remove the partial DMA_ATTR_NON_CONSISTENT support
+      openrisc: remove the partial DMA_ATTR_NON_CONSISTENT support
+      dma-mapping: add a dma_alloc_need_uncached helper
+      dma-direct: handle DMA_ATTR_NON_CONSISTENT in common code
+      dma-direct: handle DMA_ATTR_NO_KERNEL_MAPPING in common code
+      arc: use the generic remapping allocator for coherent DMA allocations
+      nds32: use the generic remapping allocator for coherent DMA allocations
+      nios2: use the generic uncached segment support in dma-direct
+      MIPS: only select ARCH_HAS_UNCACHED_SEGMENT for non-coherent platforms
+      dma-mapping: mark dma_alloc_need_uncached as __always_inline
+
+Florian Fainelli (1):
+      dma-remap: Avoid de-referencing NULL atomic_pool
+
+Fredrik Noring (3):
+      lib/genalloc: add gen_pool_dma_zalloc() for zeroed DMA allocations
+      lib/genalloc.c: Add algorithm, align and zeroed family of DMA allocators
+      usb: host: Fix excessive alignment restriction for local memory allocations
+
+Laurentiu Tudor (4):
+      USB: use genalloc for USB HCs with local memory
+      usb: host: ohci-sm501: init genalloc for local memory
+      usb: host: ohci-tmio: init genalloc for local memory
+      USB: drop HCD_LOCAL_MEM flag
+
+Nicolin Chen (4):
+      dma-contiguous: add dma_{alloc,free}_contiguous() helpers
+      dma-contiguous: use fallback alloc_pages for single pages
+      dma-contiguous: fix !CONFIG_DMA_CMA version of dma_{alloc, free}_contiguous()
+      iommu/dma: Apply dma_{alloc,free}_contiguous functions
+
+ arch/Kconfig                    |   8 +
+ arch/arc/Kconfig                |   2 +
+ arch/arc/mm/dma.c               |  71 ++-------
+ arch/arm/mm/dma-mapping-nommu.c |  24 +--
+ arch/arm/mm/dma-mapping.c       |  20 +--
+ arch/mips/Kconfig               |   1 +
+ arch/mips/include/asm/page.h    |   3 -
+ arch/mips/jazz/jazzdma.c        |   6 -
+ arch/mips/mm/cache.c            |   2 -
+ arch/mips/mm/dma-noncoherent.c  |  26 ++--
+ arch/nds32/Kconfig              |   2 +
+ arch/nds32/kernel/dma.c         | 325 ++--------------------------------------
+ arch/nios2/Kconfig              |   1 +
+ arch/nios2/include/asm/page.h   |   6 -
+ arch/nios2/mm/dma-mapping.c     |  34 ++---
+ arch/openrisc/kernel/dma.c      |  22 ++-
+ arch/parisc/kernel/pci-dma.c    |  48 ++----
+ arch/xtensa/kernel/pci-dma.c    |   8 +-
+ drivers/iommu/dma-iommu.c       |  14 +-
+ drivers/usb/Kconfig             |   1 +
+ drivers/usb/core/buffer.c       |  17 ++-
+ drivers/usb/core/hcd.c          |  51 +++++--
+ drivers/usb/host/ehci-hcd.c     |   2 +-
+ drivers/usb/host/fotg210-hcd.c  |   2 +-
+ drivers/usb/host/ohci-hcd.c     |  25 +++-
+ drivers/usb/host/ohci-mem.c     |  37 ++++-
+ drivers/usb/host/ohci-sm501.c   |  50 +++----
+ drivers/usb/host/ohci-tmio.c    |  15 +-
+ drivers/usb/host/ohci.h         |   2 +
+ drivers/usb/host/uhci-hcd.c     |   2 +-
+ drivers/video/fbdev/au1100fb.c  |  24 +--
+ drivers/video/fbdev/au1100fb.h  |   1 +
+ include/linux/dma-contiguous.h  |  19 +++
+ include/linux/dma-noncoherent.h |  19 +++
+ include/linux/genalloc.h        |   9 ++
+ include/linux/usb/hcd.h         |   6 +-
+ kernel/dma/contiguous.c         |  56 +++++++
+ kernel/dma/direct.c             |  55 ++++---
+ kernel/dma/mapping.c            |  12 ++
+ kernel/dma/remap.c              |  16 +-
+ lib/genalloc.c                  | 125 +++++++++++++++-
+ 41 files changed, 515 insertions(+), 654 deletions(-)
