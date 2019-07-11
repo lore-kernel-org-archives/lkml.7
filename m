@@ -2,114 +2,114 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B966C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AA1C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E906F20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4803C20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562876264;
+	bh=ecxQia7h6zY6lkWAw+wdMlXxzbuuZS5Qi/XXUMkiRSE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jqCGQPpREtKDKCK4FxG8LkEfdDbZs9iqQWAOcOS6c6zfF/HoSROHXZfbiu4+/qLGS
+	 V9Qq72hp/NLeia4a7H5Temoq2BeK8j2w3A7yaRiwiEu0VximTGBz2dJGVXXQTwPOZf
+	 G9SHIYv/dl4u4HnDw+a9FG54W6dCU8mMqv9VSI18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfGKUR0 (ORCPT
+        id S1728969AbfGKURn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:17:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21792 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726207AbfGKUR0 (ORCPT
+        Thu, 11 Jul 2019 16:17:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36407 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfGKURm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:17:26 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BKHMjf103292
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 16:17:24 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpbeys6ra-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 16:17:24 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 11 Jul 2019 21:17:21 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Jul 2019 21:17:15 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BKHErw49217562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 20:17:14 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BFD152052;
-        Thu, 11 Jul 2019 20:17:14 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.204.152])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 2AD435205A;
-        Thu, 11 Jul 2019 20:17:09 +0000 (GMT)
-Date:   Thu, 11 Jul 2019 23:17:07 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        jwadams@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com
-Subject: Re: [RFC v2 02/26] mm/asi: Abort isolation on interrupt, exception
- and context switch
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <1562855138-19507-3-git-send-email-alexandre.chartre@oracle.com>
- <874l3sz5z4.fsf@firstfloor.org>
+        Thu, 11 Jul 2019 16:17:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k8so3606634plt.3;
+        Thu, 11 Jul 2019 13:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N9MaYRqFkwAqF71ONnWTbJHi2D4rYHtA0InGA4H4rtg=;
+        b=jRwO0RU1eD9uhuPJB7SM4XRu53do87oN8eoHLUW6PVVlTBOGDG6d2h/dRHNfz1pzLD
+         3GMYzI6zSDRQWN+Xoo2ZzIDTqZKzTudzwmH4OHBxRvP2KujXlP3iVMEV02h3x78JMN0I
+         VdwG1G++4ju7anDfUgVsizF+90IE+a3p5Fcux5x/M0o1QYIWVHsttw1HScD4Lovd99Z+
+         NVDaJKY2G7H3wNa71683ET7L5nemHP4SjzsAS5TjIHgl9QnczSmU6aRGT69id6YrWsi/
+         KZ1nWIqiPhksGN7A9+KjmZV6eBYv7BP+PTEAQeojBrCOZyDxzExqsG9g2T+I7DCsLQ7w
+         22sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N9MaYRqFkwAqF71ONnWTbJHi2D4rYHtA0InGA4H4rtg=;
+        b=JNlrFUuu8xVvIKomRso3IaCr+yknEBL2q8Xfaw8pGhQItuT/fwRWjhAvqJE4tpUue5
+         MaXPFhqLUi4WDZwiz9+lY6OWu1IZBIMSkJkA+OjdENtigxicqzcmq6MtmAuf6IW67PHP
+         yhyb9e6Bzi4qFYwe/Q9z5KujVqiVstzRkQnMiaydgGItOTI5+KVcQhMCwkJtRFbdq/5c
+         X79fcfDhZUYI+gHVOV5PDFxP0ZpIrk0ife3uCNQNxhj2rfvfFcTW8N71sUh0CFqzEhgn
+         5TLGLgzz7WpOfyrV9DcRm26mSwZP1jdPhYT4QwX5hC+xjGoxbHn8U2wYkAjGt1b53jCr
+         HXWw==
+X-Gm-Message-State: APjAAAWxYwVXjZNCZniK7sqlJNrNBwn4Hxa/NsWi+qb1Sowgu4dZFoHm
+        i7cqNO4z4NfByyVRsVMxMPM=
+X-Google-Smtp-Source: APXvYqyN8jV+gtWrH9cp4npV6WpiaPT8McmMqTbhekQ4Aituc/lP2flHFGQoYVZe04X31XueQMx80g==
+X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr6422191plb.76.1562876261867;
+        Thu, 11 Jul 2019 13:17:41 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:4153])
+        by smtp.gmail.com with ESMTPSA id e63sm5911276pgc.62.2019.07.11.13.17.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 13:17:39 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 13:17:36 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: Re: linux-next: build failure after merge of the block tree
+Message-ID: <20190711201736.GQ657710@devbig004.ftw2.facebook.com>
+References: <20190711151507.7ec1fd18@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <874l3sz5z4.fsf@firstfloor.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19071120-0012-0000-0000-00000331E9C1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071120-0013-0000-0000-0000216B57DD
-Message-Id: <20190711201706.GB20140@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=960 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907110224
+In-Reply-To: <20190711151507.7ec1fd18@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 01:11:43PM -0700, Andi Kleen wrote:
-> Alexandre Chartre <alexandre.chartre@oracle.com> writes:
-> >  	jmp	paranoid_exit
-> > @@ -1182,6 +1196,16 @@ ENTRY(paranoid_entry)
-> >  	xorl	%ebx, %ebx
-> >  
-> >  1:
-> > +#ifdef CONFIG_ADDRESS_SPACE_ISOLATION
-> > +	/*
-> > +	 * If address space isolation is active then abort it and return
-> > +	 * the original kernel CR3 in %r14.
-> > +	 */
-> > +	ASI_START_ABORT_ELSE_JUMP 2f
-> > +	movq	%rdi, %r14
-> > +	ret
-> > +2:
-> > +#endif
-> 
-> Unless I missed it you don't map the exception stacks into ASI, so it
-> has likely already triple faulted at this point.
+Hello,
 
-The exception stacks are in the CPU entry area, aren't they?
- 
-> -Andi
+Yeah, my patche series raced with 8648de2c581e ("f2fs: add bio cache
+for IPU").  Jens, can you please apply this one too?
+
+On Thu, Jul 11, 2019 at 03:15:07PM +1000, Stephen Rothwell wrote:
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 11 Jul 2019 15:13:21 +1000
+> Subject: [PATCH] f2fs: fix for wbc_account_io rename
 > 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  fs/f2fs/data.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 323306630f93..4eb2f3920140 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -513,7 +513,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+>  	}
+>  
+>  	if (fio->io_wbc)
+> -		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+> +		wbc_account_cgroup_owner(fio->io_wbc, page, PAGE_SIZE);
+
+  Acked-by: Tejun Heo <tj@kernel.org>
+
+Thanks.
 
 -- 
-Sincerely yours,
-Mike.
-
+tejun
