@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05C1C74A45
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E42C74A46
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00DD208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C41721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562820026;
-	bh=+i2fFwAiP6MU1zOB0IsdKhzvzjgRdMUVZPn20s/G4ww=;
+	s=default; t=1562820030;
+	bh=BlEwBoMZiqlTzcxCh2VUi0xFZw2gJ1VGjZXrg2TFvYY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=OVLRF2Y7iZi51CmJhQYbpYoSlrtEqrie1afcAxMzdCFnuP2DsiBTKpJx6Y38ae225
-	 2JHrrC68x465J5yyspLzUa2F2ERBPbc7z1T1X3yBmsY/iOOTTvwc1VdHp62tR0UJeO
-	 eOmtg/yObPQevTQWfzoUHkj8Se5E1zydhd4jZhMs=
+	b=Q6mpFtgjdIL/3WdkAj5/GI/qZf6w7UOQcmynHMlvWjRpHbIBzieMi3nqYe5MrgEQI
+	 uj1QTv7HchG96QNOex7POQcjzayW4l8IYAUTuuW2mrtunzat/nBKfLGiGv7VsylUvr
+	 Nnbg7L/vbzaS1W1p2cfqF0KbUwsGt8uaDZnxgIQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfGKEkZ (ORCPT
+        id S1728182AbfGKEkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 00:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55888 "EHLO mail.kernel.org"
+        Thu, 11 Jul 2019 00:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbfGKEkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 00:40:12 -0400
-Subject: Re: [GIT PULL] ext4 updates for 5.3-rc1
+        id S1726350AbfGKEkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 00:40:03 -0400
+Subject: Re: [GIT PULL] afs: Miscellany for 5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562820012;
-        bh=+i2fFwAiP6MU1zOB0IsdKhzvzjgRdMUVZPn20s/G4ww=;
+        s=default; t=1562820002;
+        bh=BlEwBoMZiqlTzcxCh2VUi0xFZw2gJ1VGjZXrg2TFvYY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=l0oDuuTllDVoNvXbLYQFDG5dniO/SfsXOCgOoBDMhNRcRQjdTaSseT7lalirIAxG7
-         BVpYGEMc2I8PgzwCpg5uPxVtgAt4VY+SWnRRbLW7W767n0QlV1jQAuNB9d4KgqTcir
-         Pk6SdJjc7ZftO+c8JLqaflY/OyShPyXzKCsO4niM=
+        b=Vq4GaLVMaq7bCnq4NiAJiRLf/PcD3bcRO7eE5sdJEYjXvSYHmjKYoPpm1j/UUcY17
+         vLFVWwFH+HuyIDjfGx/O57HbnThk0Ed6GGBe8BMTrl/82MGtFF8p5ouD4lT2L1+DDw
+         VjxUcFLrsmGDDRQsEHxPe1FWoO3WUxCVKKlzdrQg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190709225547.GA27938@mit.edu>
-References: <20190709225547.GA27938@mit.edu>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190709225547.GA27938@mit.edu>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
- tags/ext4_for_linus
-X-PR-Tracked-Commit-Id: 96fcaf86c3cb9340015fb475d79ef0a6fcf858ed
+In-Reply-To: <29485.1562363139@warthog.procyon.org.uk>
+References: <29485.1562363139@warthog.procyon.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <29485.1562363139@warthog.procyon.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+ tags/afs-next-20190628
+X-PR-Tracked-Commit-Id: 1eda8bab70ca7d353b4e865140eaec06fedbf871
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2e756758e5cb4ea29cba5865d00fad476ce94a93
-Message-Id: <156282001195.18259.12847518251698684552.pr-tracker-bot@kernel.org>
-Date:   Thu, 11 Jul 2019 04:40:11 +0000
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
+X-PR-Merge-Commit-Id: 8dda9957e3a1c871dfbabf84c4760f9b26032442
+Message-Id: <156282000248.18259.11105783387466270234.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jul 2019 04:40:02 +0000
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
+        jmorris@namei.org, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 9 Jul 2019 18:55:48 -0400:
+The pull request you sent on Fri, 05 Jul 2019 22:45:39 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-next-20190628
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2e756758e5cb4ea29cba5865d00fad476ce94a93
+https://git.kernel.org/torvalds/c/8dda9957e3a1c871dfbabf84c4760f9b26032442
 
 Thank you!
 
