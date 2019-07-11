@@ -2,114 +2,153 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93385C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EA0C74A5A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7036E21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFCC21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 15:15:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFbVfXvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfGKPMn (ORCPT
+        id S1728903AbfGKPPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 11:12:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48770 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728691AbfGKPMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 11:12:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B00F1AD36;
-        Thu, 11 Jul 2019 15:12:41 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 560501E43CB; Thu, 11 Jul 2019 17:04:36 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 17:04:36 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     " Steven J. Magnani " <steve.magnani@digidescorp.com>
-Cc:     Jan Kara <jack@suse.com>,
-        "Steven J . Magnani" <steve@digidescorp.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] udf: support 2048-byte spacing of VRS descriptors
- on 4K media
-Message-ID: <20190711150436.GA2449@quack2.suse.cz>
-References: <20190711133852.16887-1-steve@digidescorp.com>
- <20190711133852.16887-2-steve@digidescorp.com>
+        Thu, 11 Jul 2019 11:15:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45961 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728627AbfGKPPX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 11:15:23 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so2891233pfq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 08:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xSAfzihkBVubvwbGX9ZrlE6NTtzUO3EOukswRzxGahk=;
+        b=VFbVfXvYNAmrk8fEvvRWt5qmnjJGk0vBhLfcOJ5/cL7y3yFfU4LztkHnr7wHWcZ/Jv
+         VSNlf6h+TrpDM0KLVXdxI1373NscxYlyHtnQd7wW0W8Y3rbtGCo3w8guIQdXVhdB8Ts1
+         JOzHxHgsiXG6VcEN4oQkiWDLb7QnlGTmPBCzY8cMs0mfQzu3qwPhM2eM/GU9d7r/6AKl
+         yAMETZcXypWr0loYBlDTq4K336w8Y6ELlf8B38wdd3glvHhnUBX7LfJaB1tUosr0s+i8
+         GXzOju3i50puudzMmvEq/oGHcU3QBG4TSThxvls3piC9D/nG6E8V4iZmWXkb34ToNURI
+         2TjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xSAfzihkBVubvwbGX9ZrlE6NTtzUO3EOukswRzxGahk=;
+        b=Fmhq4wub18cKBDLsUSL+Fitm2bTDbH+uvs499qthRhkDhj3sxfPkg2YMLTig5rvViU
+         4MkuKdljBBWElMn7bPZ4cpe0IWx1bjNkOs9cEgho4PMDhRLp+mO7XZLP4wkwSut9uzie
+         sJYg9WyuZktqN08yKYVgESXC5wPxGp7o8/0NQnEnuCaU5DEObjd2PDk94edvqqhGfOBa
+         qEOIbskLGrZmJIMnpZ+4EFdvvKCRcz0nduANI6OhzJXWe0rwCmc2z+ps1ShUS/GY0+XW
+         A4LV76IFxJ792gFm/gkkQBq3poAPXzVZZ0Qz7LG+wN6MAcNTSu7JaH6+FySQ/H2Nk49d
+         czHg==
+X-Gm-Message-State: APjAAAX2+uDhPOl6dW15iUqciAzQ24ZIDTHj0DIu+Vvse0mWIzzdGTk/
+        epI5UVh5ukpZ3NHeVHH5tvzovg==
+X-Google-Smtp-Source: APXvYqzmMtkuBfKjFvauyK+dpeSUQ1cBgUt9Vc22gTwPWrIDaxvy+lhE4EouscliQ8F41wdlpdEGrQ==
+X-Received: by 2002:a17:90a:7d04:: with SMTP id g4mr5476744pjl.41.1562858122182;
+        Thu, 11 Jul 2019 08:15:22 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 64sm6083195pfe.128.2019.07.11.08.15.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 08:15:21 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 08:16:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com,
+        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org,
+        will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au,
+        heiko@sntech.de, sibis@codeaurora.org,
+        enric.balletbo@collabora.com, jagan@amarulasolutions.com,
+        olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org,
+        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+Subject: Re: [PATCH v3 08/14] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Message-ID: <20190711151631.GI7234@tuxbook-pro>
+References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
+ <20190625164733.11091-9-jorge.ramirez-ortiz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190711133852.16887-2-steve@digidescorp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190625164733.11091-9-jorge.ramirez-ortiz@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-07-19 08:38:52,  Steven J. Magnani  wrote:
-> Some UDF creators (specifically Microsoft, but perhaps others) mishandle
-> the ECMA-167 corner case that requires descriptors within a Volume
-> Recognition Sequence to be placed at 4096-byte intervals on media where
-> the block size is 4K. Instead, the descriptors are placed at the 2048-
-> byte interval mandated for media with smaller blocks. This nonconformity
-> currently prevents Linux from recognizing the filesystem as UDF.
+On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
+
+> When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
+> to keep the software model of the clock in line with reality, the
+> framework transverses the clock tree and disables those clocks that
+> were enabled by the firmware but have not been enabled by any device
+> driver.
 > 
-> Modify the driver to tolerate a misformatted VRS on 4K media.
+> If CPUFREQ is enabled, early during the system boot, it might attempt
+> to change the CPU frequency ("set_rate"). If the HFPLL is selected as
+> a provider, it will then change the rate for this clock.
 > 
-> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
+> As boot continues, clk_disable_unused_subtree will run. Since it wont
+> find a valid counter (enable_count) for a clock that is actually
+> enabled it will attempt to disable it which will cause the CPU to
+> stop.
 
-Thanks for the patches! I've added them to my tree and somewhat simplified
-the logic since we don't really care about nsr 2 vs 3 or whether we
-actually saw BEA or not. Everything seems to work fine for me but I'd
-appreciate if you could doublecheck - the result is pushed out to
+But if CPUfreq has acquired the CPU clock and the hfpll is the currently
+selected input, why does the clock framework not know about this clock
+being used?
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git for_next
-
-Thanks!
-
-								Honza
+> Notice that in this driver, calls to check whether the clock is
+> enabled are routed via the is_enabled callback which queries the
+> hardware.
 > 
-> --- a/fs/udf/super.c	2019-07-10 20:55:33.334359446 -0500
-> +++ b/fs/udf/super.c	2019-07-10 21:20:58.138382326 -0500
-> @@ -741,6 +741,7 @@ static int udf_check_vsd(struct super_bl
->  	int sectorsize;
->  	struct buffer_head *bh = NULL;
->  	int nsr = 0;
-> +	int quirk_nsr = 0;
->  	struct udf_sb_info *sbi;
->  
->  	sbi = UDF_SB(sb);
-> @@ -780,11 +781,27 @@ static int udf_check_vsd(struct super_bl
->  		if (vsd_id > nsr)
->  			nsr = vsd_id;
->  
-> +		/* Special handling for improperly formatted VRS (e.g., Win10)
-> +		 * where components are separated by 2048 bytes
-> +		 * even though sectors are 4K
+> The following commit, rather than marking the clock critical and
+> forcing the clock to be always enabled, addresses the above scenario
+> making sure the clock is not disabled but it continues to rely on the
+> firmware to enable the clock.
+> 
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+
+
+I can see that we have a real issue in the case where CPUfreq is not
+enabled and hence there are no clients, according to Linux. And that I
+don't know another way to guard against.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/clk/qcom/hfpll.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+> index 0ffed0d41c50..d5fd27938e7b 100644
+> --- a/drivers/clk/qcom/hfpll.c
+> +++ b/drivers/clk/qcom/hfpll.c
+> @@ -58,6 +58,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+>  		.parent_names = (const char *[]){ "xo" },
+>  		.num_parents = 1,
+>  		.ops = &clk_ops_hfpll,
+> +		/*
+> +		 * rather than marking the clock critical and forcing the clock
+> +		 * to be always enabled, we make sure that the clock is not
+> +		 * disabled: the firmware remains responsible of enabling this
+> +		 * clock (for more info check the commit log)
 > +		 */
-> +		if ((sb->s_blocksize == 4096) && (quirk_nsr < 2)) {
-> +			vsd_id = identify_vsd(vsd + 1);
-> +			if ((nsr == 1) || (quirk_nsr == 1)) {
-> +				/* BEA01 has been seen, allow quirk NSR */
-> +				if (vsd_id > quirk_nsr)
-> +					quirk_nsr = vsd_id;
-> +			} else if (vsd_id > 3)
-> +				quirk_nsr = vsd_id;  /* 0 -> 255 */
-> +		}
-> +
->  		brelse(bh);
->  	}
+> +		.flags = CLK_IGNORE_UNUSED,
+>  	};
 >  
->  	if ((nsr >= 2) && (nsr <= 3))
->  		return nsr;
-> +	else if ((quirk_nsr >= 2) && (quirk_nsr <= 3))
-> +		return quirk_nsr;
->  	else if (!bh && sector - (sbi->s_session << sb->s_blocksize_bits) ==
->  			VSD_FIRST_SECTOR_OFFSET)
->  		return -1;
+>  	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
+> -- 
+> 2.21.0
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
