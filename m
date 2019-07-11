@@ -2,125 +2,271 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0002DC74A3F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 00:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDB0C74A3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 00:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C427720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 00:05:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="htBotMQJ"
+	by mail.kernel.org (Postfix) with ESMTP id 563F621530
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 00:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562803756;
+	bh=TroXH6b+z6VUmvETeO8VawRRumArqBbJVLeMZoQA4ow=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OcqYgkaNxpprGQX124ZxguYDtgz13RA4ydN75dpMwddKL0tt89ldyt2UnSwZhUk4Q
+	 FQLlGJAy0799kj2GMYk2IYnvZfdzN/thTwYNurpPlP09HgwxB3+ZRRjyZY3523SLLu
+	 1XMuv70I48mT5DLAwN6AtiySjyjOeIsLWkTvSXM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfGKAFW (ORCPT
+        id S1727779AbfGKAJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 20:05:22 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35524 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfGKAFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 20:05:22 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so8693286ioo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 17:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ubdKGsXmNmNnrEmma+QqWUc+ucOLRj+HPkmSnpqQuV8=;
-        b=htBotMQJrwsoybVJZB28UjYjxet4BUak3it6nJxmo7QAH7wBc2t28AQTwHji8TEwqV
-         lEJ1V1JCIU46kmTU8Z1zYo8UhQgGw+JcvP5S7z1fLKCjPeaBh3MfYucDJAeMhtZqFL9F
-         awjetkAQgrmHTZm9n1P80LsDzB8GbQxYpbE+TGjVdwAfN7TTO8YJTNMMFi+kqW46y5wK
-         fOPD1hbzjf4CqbyghjrnhKhBk2UDSulSZC07u7wzr4j//tlrd1T/0FhVlAHmgptsaeZ5
-         akArVtvTsKtVw3MPjxVSrUMFcjLYLZCTIl1xzTJpOVGxlGxaqR3NYH/xdsvQNzlfkDuc
-         FCWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ubdKGsXmNmNnrEmma+QqWUc+ucOLRj+HPkmSnpqQuV8=;
-        b=l1JJxgzS15jhKEc10TxUksyK02MDctHVIvAQLUxyWmXzlljl2vfNkN4xpKbRaSvMTW
-         FyzUxX13psI90yf2azdAt0i8pdkJDwQFQHkL6UrGYK0lt5zz19Yuc6bj65YYkhgixF/9
-         DffJstR2K7Ug6Rdx3H6sjLyphbl0Dv6MU8q+F8hr8l3QbcKVAydWfENObf61bqIuQipN
-         AqZhAK2oH8SSc1ar4klxmq+tco9IO2/rgHuAqXMNgtmC1o851EbWIh1KlVvNMw9PQ2HA
-         6EmpMxI4byRqam3a64qoMa57bQPs9KYS8QSr9onEl9bkBTtayxZKEiayz7zv4xwQNdOR
-         PSZw==
-X-Gm-Message-State: APjAAAVDc2pFA708vmf0T952BUNdkIzDi59PUbLRXngG0SJOZ7WgrfQm
-        +kNw0pmAnb9D7NcFmxc/iKmXNw==
-X-Google-Smtp-Source: APXvYqzI0ZGsvCJlbPuVmTX4ExXT+ybqLhdjgIDQz807wMeSW6DorWjk/uf1GNcys8zFII1ozD2WRg==
-X-Received: by 2002:a6b:2c96:: with SMTP id s144mr958546ios.57.1562803521318;
-        Wed, 10 Jul 2019 17:05:21 -0700 (PDT)
-Received: from localhost (67-0-62-24.albq.qwest.net. [67.0.62.24])
-        by smtp.gmail.com with ESMTPSA id p3sm4076474iom.7.2019.07.10.17.05.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 17:05:20 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 17:05:19 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup Patel <Anup.Patel@wdc.com>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] RISC-V: Setup initial page tables in two stages
-In-Reply-To: <20190607060049.29257-3-anup.patel@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1907101703150.3422@viisi.sifive.com>
-References: <20190607060049.29257-1-anup.patel@wdc.com> <20190607060049.29257-3-anup.patel@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
+        Wed, 10 Jul 2019 20:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727188AbfGKAJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 20:09:14 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB7521019;
+        Thu, 11 Jul 2019 00:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562803752;
+        bh=TroXH6b+z6VUmvETeO8VawRRumArqBbJVLeMZoQA4ow=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A228QoebRkTzBExdH/RCvDw8F2iUQlpg+CzbfaOyjcYclDP5I3v2vvAEOy2V+98Ex
+         V6CbVVQWMMk8/K4VKIlWs343Ej7yQgmk9vtWYtQHFRhlbZo2feu7YLHUOSsXqqtqFU
+         C8g7t8qB44SSMtG7g2RJuwTP67u/7B8RIVQ9DIhM=
+Date:   Wed, 10 Jul 2019 17:09:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, sfr@canb.auug.org.au,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: next-20190708: kernel BUG at lib/lockref.c:189, softlockups in
+ shrink_dcache...?
+Message-Id: <20190710170912.dd53d6539127bb5b7536788d@linux-foundation.org>
+In-Reply-To: <20190710201311.GA8519@amd>
+References: <20190710201311.GA8519@amd>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019, Anup Patel wrote:
+On Wed, 10 Jul 2019 22:13:11 +0200 Pavel Machek <pavel@ucw.cz> wrote:
 
-> Currently, the setup_vm() does initial page table setup in one-shot
-> very early before enabling MMU. Due to this, the setup_vm() has to map
-> all possible kernel virtual addresses since it does not know size and
-> location of RAM. This means we have kernel mappings for non-existent
-> RAM and any buggy driver (or kernel) code doing out-of-bound access
-> to RAM will not fault and cause underterministic behaviour.
+> Hi!
 > 
-> Further, the setup_vm() creates PMD mappings (i.e. 2M mappings) for
-> RV64 systems. This means for PAGE_OFFSET=0xffffffe000000000 (i.e.
-> MAXPHYSMEM_128GB=y), the setup_vm() will require 129 pages (i.e.
-> 516 KB) of memory for initial page tables which is never freed. The
-> memory required for initial page tables will further increase if
-> we chose a lower value of PAGE_OFFSET (e.g. 0xffffff0000000000)
+> I'm getting some nastyness from lockref / memory management.
 > 
-> This patch implements two-staged initial page table setup, as follows:
-> 1. Early (i.e. setup_vm()): This stage maps kernel image and DTB in
-> a early page table (i.e. early_pg_dir). The early_pg_dir will be used
-> only by boot HART so it can be freed as-part of init memory free-up.
-> 2. Final (i.e. setup_vm_final()): This stage maps all possible RAM
-> banks in the final page table (i.e. swapper_pg_dir). The boot HART
-> will start using swapper_pg_dir at the end of setup_vm_final(). All
-> non-boot HARTs directly use the swapper_pg_dir created by boot HART.
+> Any ideas? Any ideas who to talk to?
 > 
-> We have following advantages with this new approach:
-> 1. Kernel mappings for non-existent RAM don't exists anymore.
-> 2. Memory consumed by initial page tables is now indpendent of the
-> chosen PAGE_OFFSET.
-> 3. Memory consumed by initial page tables on RV64 system is 2 pages
-> (i.e. 8 KB) which has significantly reduced and these pages will be
-> freed as-part of the init memory free-up.
-> 
-> The patch also provides a foundation for implementing strict kernel
-> mappings where we protect kernel text and rodata using PTE permissions.
-> 
-> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
 
-Thanks, updated to apply and to fix a checkpatch warning, and queued.  
+I'd be suspecting Al's a99d7580f66e737 ("Teach shrink_dcache_parent()
+to cope with mixed-filesystem shrink lists").
 
-This may not make it in for v5.3-rc1; if not, we'll submit it later.
+This appears to have been added to -next around the -rc6 timeframe,
+which seems awfully late?
 
 
-- Paul
+> 
+> 
+> 
+> [    0.000000] Linux version 5.2.0-next-20190708+ (pavel@pollux.denx.de) (gcc version 9.1.1 20190503 (Red Hat 9.1.1-1) (GCC)) #55 SMP Wed Jul 10 09:30:51 CEST 2019
+> [    0.000000] Disabled fast string operations
+> [    0.000000] x86/fpu: x87 FPU will use FXSAVE
+> [    0.000000] BIOS-provided physical RAM map:
+> [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable
+> ...
+> [ 5347.093378] wlan0: authenticate with 5c:f4:ab:10:d2:bb
+> [ 5347.093511] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
+> [ 5347.096461] wlan0: authenticated
+> [ 5347.100328] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
+> [ 5347.103232] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=0x411 status=0 aid=2)
+> [ 5347.105009] wlan0: associated
+> [ 6552.596393] ------------[ cut here ]------------
+> [ 6552.596412] kernel BUG at lib/lockref.c:189!
+> [ 6552.596433] invalid opcode: 0000 [#1] SMP PTI
+> [ 6552.596442] CPU: 0 PID: 8494 Comm: Chrome_ProcessL Not tainted 5.2.0-next-20190708+ #55
+> [ 6552.596447] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
+> [ 6552.596463] EIP: lockref_mark_dead+0x10/0x20
+> [ 6552.596471] Code: c0 01 be 01 00 00 00 89 43 20 89 d8 e8 f9 5d 93 00 89 f0 5b 5e 5d c3 8d 76 00 8b 10 85 d2 74 0a c7 40 20 80 ff ff ff c3 66 90 <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 c2 83 e0 0f c0
+> [ 6552.596478] EAX: ef4b7830 EBX: ef4b77d8 ECX: 00000001 EDX: 00000000
+> [ 6552.596484] ESI: e647a3f0 EDI: ef4b7830 EBP: d9bfde0c ESP: d9bfddfc
+> [ 6552.596491] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
+> [ 6552.596497] CR0: 80050033 CR2: 071e03d0 CR3: 203e2000 CR4: 000006b0
+> [ 6552.596502] Call Trace:
+> [ 6552.596515]  ? __dentry_kill+0x1f/0x160
+> [ 6552.596524]  shrink_dcache_parent+0xb0/0x110
+> [ 6552.596532]  d_invalidate+0x48/0xc0
+> [ 6552.596541]  proc_flush_task+0x78/0x150
+> [ 6552.596552]  release_task+0x4f/0x450
+> [ 6552.596560]  wait_consider_task+0x7c9/0x850
+> [ 6552.596568]  do_wait+0x11b/0x230
+> [ 6552.596575]  kernel_wait4+0x8b/0x130
+> [ 6552.596583]  ? task_stopped_code+0x40/0x40
+> [ 6552.596590]  sys_waitpid+0x13/0x15
+> [ 6552.596597]  do_int80_syscall_32+0x4b/0xf0
+> [ 6552.596608]  entry_INT80_32+0x110/0x110
+> [ 6552.596614] EIP: 0xb7f8cc42
+> [ 6552.596621] Code: 65 8b 15 04 00 00 00 8b 0e 8b 0c ca 83 f9 ff 75 0c 89 04 24 89 f0 e8 b3 fe ff ff eb 05 8b 46 04 01 c8 83 c4 14 5b 5e c3 cd 80 <c3> 8d b6 00 00 00 00 8d bc 27 00 00 00 00 8b 1c 24 c3 8d b6 00 00
+> [ 6552.596628] EAX: ffffffda EBX: 0000212d ECX: 00000000 EDX: 00000000
+> [ 6552.596635] ESI: 8aec3b40 EDI: 09004d20 EBP: 8aec3158 ESP: 8aec3110
+> [ 6552.596641] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000293
+> [ 6552.596647] Modules linked in:
+> [ 6552.596658] ---[ end trace 8058c26986d91112 ]---
+> [ 6552.596667] EIP: lockref_mark_dead+0x10/0x20
+> [ 6552.596674] Code: c0 01 be 01 00 00 00 89 43 20 89 d8 e8 f9 5d 93 00 89 f0 5b 5e 5d c3 8d 76 00 8b 10 85 d2 74 0a c7 40 20 80 ff ff ff c3 66 90 <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 c2 83 e0 0f c0
+> [ 6552.596681] EAX: ef4b7830 EBX: ef4b77d8 ECX: 00000001 EDX: 00000000
+> [ 6552.596687] ESI: e647a3f0 EDI: ef4b7830 EBP: d9bfde0c ESP: d9bfddfc
+> [ 6552.596693] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
+> [ 6552.596700] CR0: 80050033 CR2: 071e03d0 CR3: 203e2000 CR4: 000006b0
+> [ 6580.173598] watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [WorkerPool/7703:7703]
+> [ 6580.173608] Modules linked in:
+> [ 6580.173620] CPU: 1 PID: 7703 Comm: WorkerPool/7703 Tainted: G      D           5.2.0-next-20190708+ #55
+> [ 6580.173626] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
+> [ 6580.173642] EIP: queued_spin_lock_slowpath+0x40/0x1d0
+> [ 6580.173651] Code: f0 0f ba 29 08 0f 92 c2 8b 01 0f b6 d2 c1 e2 08 30 e4 09 d0 a9 00 01 ff ff 75 27 85 c0 74 13 8b 01 84 c0 74 0d 8d 74 26 00 90 <f3> 90 8b 01 84 c0 75 f8 b8 01 00 00 00 66 89 01 c3 8d b4 26 00 00
+> [ 6580.173658] EAX: 00000101 EBX: e647a448 ECX: e647a448 EDX: 00000000
+> [ 6580.173664] ESI: ddd18358 EDI: e647a448 EBP: eefe1b44 ESP: eefe1b3c
+> [ 6580.173671] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000202
+> [ 6580.173678] CR0: 80050033 CR2: 0a0e4748 CR3: 203e2000 CR4: 000006b0
+> [ 6580.173684] Call Trace:
+> [ 6580.173694]  ? do_raw_spin_lock+0xb9/0xc0
+> [ 6580.173705]  _raw_spin_lock+0x22/0x30
+> [ 6580.173715]  ? shrink_lock_dentry.part.0+0x9f/0xf0
+> [ 6580.173723]  shrink_lock_dentry.part.0+0x9f/0xf0
+> [ 6580.173731]  shrink_dentry_list+0x27/0x100
+> [ 6580.173739]  prune_dcache_sb+0x42/0x60
+> [ 6580.173747]  ? d_lru_shrink_move+0x50/0x50
+> [ 6580.173755]  super_cache_scan+0xc9/0x160
+> [ 6580.173763]  shrink_slab.constprop.0+0x1ae/0x390
+> [ 6580.173772]  shrink_node+0x7b1/0x9d0
+> [ 6580.173781]  do_try_to_free_pages+0xa1/0x250
+> [ 6580.173788]  ? do_try_to_free_pages+0xa1/0x250
+> [ 6580.173795]  try_to_free_pages+0x15e/0x430
+> [ 6580.173805]  __alloc_pages_nodemask+0x44d/0xd00
+> [ 6580.173816]  wp_page_copy+0x67/0x680
+> [ 6580.173825]  do_wp_page+0x75/0x450
+> [ 6580.173833]  ? _raw_spin_lock+0x22/0x30
+> [ 6580.173840]  handle_mm_fault+0x598/0xbd3
+> [ 6580.173848]  ? __lock_acquire.isra.0+0x2b8/0x4f0
+> [ 6580.173858]  __do_page_fault+0x15e/0x410
+> [ 6580.173865]  ? vmalloc_sync_all+0x220/0x220
+> [ 6580.173872]  do_page_fault+0x24/0x137
+> [ 6580.173879]  ? vmalloc_sync_all+0x220/0x220
+> [ 6580.173886]  common_exception+0x166/0x16e
+> [ 6580.173892] EIP: 0x8cad20
+> [ 6580.173899] Code: a8 73 5b fe 89 4c 24 04 c7 44 24 08 76 00 00 00 c7 04 24 01 00 00 00 89 44 24 4c e8 4a 98 ff ff 8b 44 24 4c 8b 4c 24 48 89 31 <89> 7e 04 e9 84 02 00 00 89 7c 24 08 89 44 24 04 89 34 24 e8 a8 ea
+> [ 6580.173907] EAX: 0f6c1230 EBX: 08d83524 ECX: 08fbc8c0 EDX: fffffb9b
+> [ 6580.173913] ESI: 0f85a000 EDI: fffffb9b EBP: b2af35d8 ESP: b2af30b0
+> [ 6580.173920] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
+> [ 6608.173599] watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [WorkerPool/7703:7703]
+> [ 6608.173607] Modules linked in:
+> [ 6608.173619] CPU: 1 PID: 7703 Comm: WorkerPool/7703 Tainted: G      D      L    5.2.0-next-20190708+ #55
+> [ 6608.173624] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
+> [ 6608.173640] EIP: queued_spin_lock_slowpath+0x44/0x1d0
+> [ 6608.173648] Code: 08 0f 92 c2 8b 01 0f b6 d2 c1 e2 08 30 e4 09 d0 a9 00 01 ff ff 75 27 85 c0 74 13 8b 01 84 c0 74 0d 8d 74 26 00 90 f3 90 8b 01 <84> c0 75 f8 b8 01 00 00 00 66 89 01 c3 8d b4 26 00 00 00 00 f6 c4
+> [ 6608.173655] EAX: 00000101 EBX: e647a448 ECX: e647a448 EDX: 00000000
+> [ 6608.173661] ESI: ddd18358 EDI: e647a448 EBP: eefe1b44 ESP: eefe1b3c
+> [ 6608.173668] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000202
+> [ 6608.173675] CR0: 80050033 CR2: 0a0e4748 CR3: 203e2000 CR4: 000006b0
+> [ 6608.173680] Call Trace:
+> [ 6608.173690]  ? do_raw_spin_lock+0xb9/0xc0
+> [ 6608.173701]  _raw_spin_lock+0x22/0x30
+> [ 6608.173712]  ? shrink_lock_dentry.part.0+0x9f/0xf0
+> [ 6608.173719]  shrink_lock_dentry.part.0+0x9f/0xf0
+> [ 6608.173727]  shrink_dentry_list+0x27/0x100
+> [ 6608.173735]  prune_dcache_sb+0x42/0x60
+> [ 6608.173743]  ? d_lru_shrink_move+0x50/0x50
+> [ 6608.173751]  super_cache_scan+0xc9/0x160
+> [ 6608.173760]  shrink_slab.constprop.0+0x1ae/0x390
+> [ 6608.173768]  shrink_node+0x7b1/0x9d0
+> [ 6608.173777]  do_try_to_free_pages+0xa1/0x250
+> [ 6608.173784]  ? do_try_to_free_pages+0xa1/0x250
+> [ 6608.173791]  try_to_free_pages+0x15e/0x430
+> [ 6608.173801]  __alloc_pages_nodemask+0x44d/0xd00
+> [ 6608.173813]  wp_page_copy+0x67/0x680
+> [ 6608.173822]  do_wp_page+0x75/0x450
+> [ 6608.173829]  ? _raw_spin_lock+0x22/0x30
+> [ 6608.173836]  handle_mm_fault+0x598/0xbd3
+> [ 6608.173844]  ? __lock_acquire.isra.0+0x2b8/0x4f0
+> [ 6608.173854]  __do_page_fault+0x15e/0x410
+> [ 6608.173862]  ? vmalloc_sync_all+0x220/0x220
+> [ 6608.173869]  do_page_fault+0x24/0x137
+> [ 6608.173876]  ? vmalloc_sync_all+0x220/0x220
+> [ 6608.173883]  common_exception+0x166/0x16e
+> [ 6608.173889] EIP: 0x8cad20
+> [ 6608.173896] Code: a8 73 5b fe 89 4c 24 04 c7 44 24 08 76 00 00 00 c7 04 24 01 00 00 00 89 44 24 4c e8 4a 98 ff ff 8b 44 24 4c 8b 4c 24 48 89 31 <89> 7e 04 e9 84 02 00 00 89 7c 24 08 89 44 24 04 89 34 24 e8 a8 ea
+> [ 6608.173903] EAX: 0f6c1230 EBX: 08d83524 ECX: 08fbc8c0 EDX: fffffb9b
+> [ 6608.173909] ESI: 0f85a000 EDI: fffffb9b EBP: b2af35d8 ESP: b2af30b0
+> [ 6608.173916] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
+> [ 6612.628114] rcu: INFO: rcu_sched self-detected stall on CPU
+> [ 6612.628114] rcu: 	1-....: (14999 ticks this GP) idle=07a/1/0x40000002 softirq=778997/778997 fqs=7465 
+> [ 6612.628114] 	(t=15000 jiffies g=940129 q=41142)
+> [ 6612.628146] NMI backtrace for cpu 1
+> [ 6612.628146] CPU: 1 PID: 7703 Comm: WorkerPool/7703 Tainted: G      D      L    5.2.0-next-20190708+ #55
+> [ 6612.628146] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
+> [ 6612.628165] Call Trace:
+> [ 6612.628165]  dump_stack+0x47/0x5e
+> [ 6612.628165]  nmi_cpu_backtrace.cold+0x10/0x48
+> [ 6612.628165]  ? lapic_can_unplug_cpu.cold+0x3d/0x3d
+> [ 6612.628165]  nmi_trigger_cpumask_backtrace+0x8f/0x91
+> [ 6612.628165]  arch_trigger_cpumask_backtrace+0x10/0x20
+> [ 6612.628165]  rcu_dump_cpu_stacks+0x6a/0x90
+> [ 6612.628165]  rcu_sched_clock_irq.cold+0x18f/0x352
+> [ 6612.628165]  update_process_times+0x23/0x60
+> [ 6612.628165]  tick_sched_handle.isra.0+0x2e/0x60
+> [ 6612.628165]  tick_sched_timer+0x3c/0x90
+> [ 6612.628165]  ? tick_sched_handle.isra.0+0x60/0x60
+> [ 6612.628165]  __hrtimer_run_queues+0x105/0x2e0
+> [ 6612.628165]  ? tick_sched_handle.isra.0+0x60/0x60
+> [ 6612.628165]  hrtimer_interrupt+0x10e/0x260
+> [ 6612.628165]  smp_apic_timer_interrupt+0x68/0x160
+> [ 6612.628165]  apic_timer_interrupt+0x11b/0x120
+> [ 6612.628165] EIP: queued_spin_lock_slowpath+0x42/0x1d0
+> [ 6612.628165] Code: ba 29 08 0f 92 c2 8b 01 0f b6 d2 c1 e2 08 30 e4 09 d0 a9 00 01 ff ff 75 27 85 c0 74 13 8b 01 84 c0 74 0d 8d 74 26 00 90 f3 90 <8b> 01 84 c0 75 f8 b8 01 00 00 00 66 89 01 c3 8d b4 26 00 00 00 00
+> [ 6612.628165] EAX: 00000101 EBX: e647a448 ECX: e647a448 EDX: 00000000
+> [ 6612.628165] ESI: ddd18358 EDI: e647a448 EBP: eefe1b44 ESP: eefe1b3c
+> [ 6612.628165] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000202
+> [ 6612.628165]  ? queued_spin_lock_slowpath+0x42/0x1d0
+> [ 6612.628165]  ? do_raw_spin_lock+0xb9/0xc0
+> [ 6612.628165]  _raw_spin_lock+0x22/0x30
+> [ 6612.628165]  ? shrink_lock_dentry.part.0+0x9f/0xf0
+> [ 6612.628165]  shrink_lock_dentry.part.0+0x9f/0xf0
+> [ 6612.628165]  shrink_dentry_list+0x27/0x100
+> [ 6612.628165]  prune_dcache_sb+0x42/0x60
+> [ 6612.628165]  ? d_lru_shrink_move+0x50/0x50
+> [ 6612.628165]  super_cache_scan+0xc9/0x160
+> [ 6612.628165]  shrink_slab.constprop.0+0x1ae/0x390
+> [ 6612.628165]  shrink_node+0x7b1/0x9d0
+> [ 6612.628165]  do_try_to_free_pages+0xa1/0x250
+> [ 6612.628165]  ? do_try_to_free_pages+0xa1/0x250
+> [ 6612.628165]  try_to_free_pages+0x15e/0x430
+> [ 6612.628165]  __alloc_pages_nodemask+0x44d/0xd00
+> [ 6612.628165]  wp_page_copy+0x67/0x680
+> [ 6612.628165]  do_wp_page+0x75/0x450
+> [ 6612.628165]  ? _raw_spin_lock+0x22/0x30
+> [ 6612.628165]  handle_mm_fault+0x598/0xbd3
+> [ 6612.628165]  ? __lock_acquire.isra.0+0x2b8/0x4f0
+> [ 6612.628165]  __do_page_fault+0x15e/0x410
+> [ 6612.628165]  ? vmalloc_sync_all+0x220/0x220
+> [ 6612.628165]  do_page_fault+0x24/0x137
+> [ 6612.628165]  ? vmalloc_sync_all+0x220/0x220
+> [ 6612.628165]  common_exception+0x166/0x16e
+> [ 6612.628165] EIP: 0x8cad20
+> [ 6612.628165] Code: a8 73 5b fe 89 4c 24 04 c7 44 24 08 76 00 00 00 c7 04 24 01 00 00 00 89 44 24 4c e8 4a 98 ff ff 8b 44 24 4c 8b 4c 24 48 89 31 <89> 7e 04 e9 84 02 00 00 89 7c 24 08 89 44 24 04 89 34 24 e8 a8 ea
+> [ 6612.628165] EAX: 0f6c1230 EBX: 08d83524 ECX: 08fbc8c0 EDX: fffffb9b
+> [ 6612.628165] ESI: 0f85a000 EDI: fffffb9b EBP: b2af35d8 ESP: b2af30b0
+> [ 6612.628165] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
+> 
+> 
+> 
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
