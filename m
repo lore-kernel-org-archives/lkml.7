@@ -2,130 +2,123 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AAFC73C66
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF77BC71142
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBE921019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B5220872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="D0oxmZqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbfGKSAB (ORCPT
+        id S1728960AbfGKSFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 14:00:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9996 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728451AbfGKSAB (ORCPT
+        Thu, 11 Jul 2019 14:05:13 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38829 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728632AbfGKSFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:00:01 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BHwqXJ098687
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:00:00 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tp8cfbxdt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:00:00 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.vnet.ibm.com>;
-        Thu, 11 Jul 2019 18:59:59 +0100
-Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Jul 2019 18:59:57 +0100
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BHxtwO53543170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 17:59:55 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EED3136051;
-        Thu, 11 Jul 2019 17:59:55 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4506913604F;
-        Thu, 11 Jul 2019 17:59:54 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.41.99.131])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Jul 2019 17:59:54 +0000 (GMT)
-Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>
-References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
- <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
- <1562624644.11461.66.camel@linux.ibm.com>
- <20190708224304.GA25838@infradead.org>
- <20190709163827.2u6jeflrhg44q7dy@linux.intel.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Date:   Thu, 11 Jul 2019 13:59:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 11 Jul 2019 14:05:13 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a27so4358868qkk.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 11:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1D45VDmCAbr+E4SZBzLB6VIycjDuXVw9dZK5gxi0EWc=;
+        b=D0oxmZqNliGmZXYrGlhIuUh88RZXZ6IhsMAFjAuLmDmNgjdEH+q+K6YnRJrxj7arH8
+         ibDZ7U1n+0tp6aNzpggOFouDSSYnHYAgfPUKAbSjef7i4GZxiBjOBtSx6GyLsCG7I8Gs
+         3/nzEU52dHNo4HusV+6Qin1Wu1zmfGeiNhJFM51AbW2JxISWIxPoigumd2UMuNYyUbkq
+         HQs82H7FdUQfp1nyOXzSwBKVDw2umbdNTDuBDd1Dei8y+sOUVydROMLgz9de2iphEO20
+         x8ZsHURXfb0KYVdcJtWqFA4sItPUKHyTuyTeUp9pK4wUGCeP0d7cslj2oo39SjrAqRa+
+         aYKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1D45VDmCAbr+E4SZBzLB6VIycjDuXVw9dZK5gxi0EWc=;
+        b=HcLBeLsZdNx/xCCY9wNFTnA7rTw5XGat7/zItH3rOMsK06U8y5sbfYYmFbZlQC8tG0
+         VMFuJc4sfMYzov/8Aw+96cg7ZXVe21+9e+ZXRI6q2AXT+GrYLFr1+fJFRD3Fe03Y3/pk
+         W2Kr3EmAerx+ssOyYNL2YnWjKOebZMm5PU39W3A4JupN0JTEG9HN8FDLiFcQWdVVMnhM
+         aldLP8uDL8MXJ+sdDj0pWMhD3jjkJtmQ/e5XpKQkuHe8Ebm30NdAiRXUzf2kfn8ybCiw
+         4Xd/Ju0fpOKYqC7CwpLrLpvq9EONJ/F79vAic3ULd0vvsOI1MEtV9Syh3tw6bAw0Aq/q
+         KYYA==
+X-Gm-Message-State: APjAAAXP1zcMZlnbf8D7P6P48VC3JakH04wu+9ywnbvN0auw+faABUDk
+        EKzGD1gF5+YRwjeXOfxY1whWAw==
+X-Google-Smtp-Source: APXvYqy+KfKKXdR19a3uizpOypAq/2/Z4gaxG2jfIxckyfMiRmNY9/ODZSym3MEcVj/1lDRN0YQD1A==
+X-Received: by 2002:a05:620a:310:: with SMTP id s16mr2827756qkm.420.1562868312483;
+        Thu, 11 Jul 2019 11:05:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id z21sm2034477qto.48.2019.07.11.11.05.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 11:05:12 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hldRP-0000Da-MZ; Thu, 11 Jul 2019 15:05:11 -0300
+Date:   Thu, 11 Jul 2019 15:05:11 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/siw: Mark expected switch fall-throughs
+Message-ID: <20190711180511.GA816@ziepe.ca>
+References: <20190711161218.GA4989@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190709163827.2u6jeflrhg44q7dy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19071117-0016-0000-0000-000009CCE165
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011410; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01230730; UDB=6.00648275; IPR=6.01012006;
- MB=3.00027681; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-11 17:59:59
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071117-0017-0000-0000-000043F9EA3D
-Message-Id: <0b705972-c483-a469-562c-f0d26aaa0471@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907110197
+In-Reply-To: <20190711161218.GA4989@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jarkko,
+On Thu, Jul 11, 2019 at 11:12:18AM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/infiniband/sw/siw/siw_qp_rx.c: In function ‘siw_rdmap_complete’:
+> drivers/infiniband/sw/siw/siw_qp_rx.c:1214:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    wqe->rqe.flags |= SIW_WQE_SOLICITED;
+>    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+> drivers/infiniband/sw/siw/siw_qp_rx.c:1215:2: note: here
+>   case RDMAP_SEND:
+>   ^~~~
+> 
+> drivers/infiniband/sw/siw/siw_qp_tx.c: In function ‘siw_qp_sq_process’:
+> drivers/infiniband/sw/siw/siw_qp_tx.c:1044:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     siw_wqe_put_mem(wqe, tx_type);
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/infiniband/sw/siw/siw_qp_tx.c:1045:3: note: here
+>    case SIW_OP_INVAL_STAG:
+>    ^~~~
+> drivers/infiniband/sw/siw/siw_qp_tx.c:1128:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     siw_wqe_put_mem(wqe, tx_type);
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/infiniband/sw/siw/siw_qp_tx.c:1129:3: note: here
+>    case SIW_OP_INVAL_STAG:
+>    ^~~~
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> NOTE: -Wimplicit-fallthrough will be enabled globally in v5.3. So, I
+>       suggest you to take this patch for 5.3-rc1.
 
+Okay, I queued this for the current merge window then
 
-On 07/09/2019 12:38 PM, Jarkko Sakkinen wrote:
-> On Mon, Jul 08, 2019 at 03:43:04PM -0700, Christoph Hellwig wrote:
->> On Mon, Jul 08, 2019 at 06:24:04PM -0400, Mimi Zohar wrote:
->>>> static int tpm_get_pcr_allocation(struct tpm_chip *chip)
->>>> {
->>>> 	int rc;
->>>>
->>>> 	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
->>>>       	     tpm2_get_pcr_allocation(chip) :
->>>>       	     tpm1_get_pcr_allocation(chip);
->>>> 	return rc > 0 ? -ENODEV : rc;
->>>> }
->>>>
->>>> This addresses the issue that Stefan also pointed out. You have to
->>>> deal with the TPM error codes.
->>> Hm, in the past I was told by Christoph not to use the ternary
->>> operator.  Have things changed?  Other than removing the comment, the
->>> only other difference is the return.
->> In the end it is a matter of personal preference, but I find the
->> quote version above using the ternary horribly obsfucated.
-> I fully agree that the return statement is an obsfucated mess and
-> not a good place at all for using ternary operator.
-
-I have posted the v3 version that includes the suggested corrections by 
-you and Stefan. Sorry for some delay.
-
-Michal and Sachin, I would appreciate if you can test the v3 version, 
-please ?
-
-Thanks & Regards,
-      - Nayna
-
+Jason
