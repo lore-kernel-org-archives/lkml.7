@@ -2,57 +2,57 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65ACC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6DEC742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8787208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866C2208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 23:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="POP2I6vc"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZR89dJ0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfGKXo3 (ORCPT
+        id S1730514AbfGKXog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 19:44:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37879 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbfGKXoX (ORCPT
+        Thu, 11 Jul 2019 19:44:36 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36566 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730477AbfGKXo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 19:44:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so3466423pfa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 16:44:23 -0700 (PDT)
+        Thu, 11 Jul 2019 19:44:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so3666850pgm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 16:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/GuW47+ITVwlHRyFWoit77iH8wSxBVV56wbG/AJ8g+A=;
-        b=POP2I6vcsX7mrpLNszrDZ3jHjn5JeGjYvt0TIBarOc+TTSSHTMCxN8ZJl3umrbGe13
-         LL/K6XJbcw8liWBMr5VJm7tJsyYXkpeSHOo93Z5cFDVSa8Vym2EQZ+vSjFXjz8J4Wkoy
-         ABgjJP8Cfel0JsMbqaLz7L8BjEej7RSdpehss=
+        bh=DxaBT1tnbAEQu4unrE+ZIdJanB1uVhDn4/7rfKQHrQ8=;
+        b=ZR89dJ0gCvmFd48H56kuCm2XzQpnVhPx64wtgiHyZvxa33ANSu0oXUTttSIxFI0x9Z
+         fHKlA+45Bqn3L3g08DQds8w60ml29tD/QN8R/vX0Ix2Z2Akl/LzUSDrgZDI4Q/+otrRY
+         I+DBueCyfUEugUlr0uSGpkRYwIAjZJZdHOtgc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/GuW47+ITVwlHRyFWoit77iH8wSxBVV56wbG/AJ8g+A=;
-        b=fFctspVvxJFR0InUfZtyUcwatW+fJ+LKg99RoYOg9pIbu4uu8VfsEsIz9zv3M2ssIm
-         FMEkb7jkPIgXuVTZQftVotb8hwjyp6AUZFCYYiXVR7m/7J5cd5ks9LaYjT7UaAeLghjN
-         yXKAwmW9IiVe8H+Yv2f+LPS6rceUU+2szOOr2vw/tBFK2nTg+nuzR3JlL9P8BUTc4Umt
-         gYggM8AJLCt0TASuOTqw5PxMY91Dht+5+JAIez5Xn5vVKyWvanRSg8IiVJd5su/p3ByK
-         r4a/ZBFtvszRMX1PXYgDf7xiQNH79t5HcCFO1sz0eN/zCb/jAW4aafNXBSCx8A9JCD3o
-         venA==
-X-Gm-Message-State: APjAAAUxruMM0lO9OdxxkrqtfBGyXEDQZlau7ZakZfO9fQXxFQn4V3yv
-        sBJq7uH6LuHG6e3hkRWb9Lwkmv7Q
-X-Google-Smtp-Source: APXvYqwL3radJMAbdECmS/G+TOrWXAIf4q3T6x0oa7czoYNYGbVr9jTCwdHXMM+5nal4G43CSaqnjQ==
-X-Received: by 2002:a63:3f48:: with SMTP id m69mr7029829pga.17.1562888662320;
-        Thu, 11 Jul 2019 16:44:22 -0700 (PDT)
+        bh=DxaBT1tnbAEQu4unrE+ZIdJanB1uVhDn4/7rfKQHrQ8=;
+        b=U5Lsb3mMgMYSLyO18cfy7hJCUk2OjuHJrjc9h+EOVCQVdVZTFBoPr0ynIibFO4EoGU
+         1uVWSaMGu8flZG6PwLvWMDTuqbBNsw0LP06jkAT8bvALc3AXTAYXNZZGXueTW9V5LX59
+         tM8wqfquBq15/2Pv8kEYZSAlIDfZyRwRTOeXxf9sFMVErxB84ez5TAH+s+ZajdNIbG14
+         2XZvTUmrc1prGAJkAPmBo4a//k1mvTLHnjRd38WgEcRbtAGLUqZNAvGeHr9tlchmf0zK
+         8I7iB0p5YpJWby5j0mV1c9K50gOfVFehzySB8wBUtIpxgBTQ/AJvfHhdLbgERRS8p0iM
+         CXBQ==
+X-Gm-Message-State: APjAAAUlyJRtD2DCtthU2tXMnnFiKD1GzjR1YfPmyNbI+Zl5aP2SwLJK
+        X7j3di33YCOQqwlqzb6PJSouvS9N
+X-Google-Smtp-Source: APXvYqzUKLrrGWpDYD2bC1yFQhR2A3bxbRxsjgXB3UX8GkC2wLperL0TYvgWXgyR72s0kBdwkN7Ihw==
+X-Received: by 2002:a63:5212:: with SMTP id g18mr2790151pgb.387.1562888666095;
+        Thu, 11 Jul 2019 16:44:26 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id t10sm6163450pjr.13.2019.07.11.16.44.18
+        by smtp.gmail.com with ESMTPSA id t10sm6163450pjr.13.2019.07.11.16.44.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 16:44:21 -0700 (PDT)
+        Thu, 11 Jul 2019 16:44:25 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -78,9 +78,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Tejun Heo <tj@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
         x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH v1 2/6] ipv4: add lockdep condition to fix for_each_entry
-Date:   Thu, 11 Jul 2019 19:43:57 -0400
-Message-Id: <20190711234401.220336-3-joel@joelfernandes.org>
+Subject: [PATCH v1 3/6] driver/core: Convert to use built-in RCU list checking
+Date:   Thu, 11 Jul 2019 19:43:58 -0400
+Message-Id: <20190711234401.220336-4-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190711234401.220336-1-joel@joelfernandes.org>
 References: <20190711234401.220336-1-joel@joelfernandes.org>
@@ -91,25 +91,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+list_for_each_entry_rcu has built-in RCU and lock checking. Make use of
+it in driver core.
+
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- net/ipv4/fib_frontend.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/base.h          |  1 +
+ drivers/base/core.c          | 10 ++++++++++
+ drivers/base/power/runtime.c | 15 ++++++++++-----
+ 3 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
-index b298255f6fdb..ef7c9f8e8682 100644
---- a/net/ipv4/fib_frontend.c
-+++ b/net/ipv4/fib_frontend.c
-@@ -127,7 +127,8 @@ struct fib_table *fib_get_table(struct net *net, u32 id)
- 	h = id & (FIB_TABLE_HASHSZ - 1);
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index b405436ee28e..0d32544b6f91 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -165,6 +165,7 @@ static inline int devtmpfs_init(void) { return 0; }
+ /* Device links support */
+ extern int device_links_read_lock(void);
+ extern void device_links_read_unlock(int idx);
++extern int device_links_read_lock_held(void);
+ extern int device_links_check_suppliers(struct device *dev);
+ extern void device_links_driver_bound(struct device *dev);
+ extern void device_links_driver_cleanup(struct device *dev);
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index fd7511e04e62..6c5ca9685647 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -68,6 +68,11 @@ void device_links_read_unlock(int idx)
+ {
+ 	srcu_read_unlock(&device_links_srcu, idx);
+ }
++
++int device_links_read_lock_held(void)
++{
++	return srcu_read_lock_held(&device_links_srcu);
++}
+ #else /* !CONFIG_SRCU */
+ static DECLARE_RWSEM(device_links_lock);
  
- 	head = &net->ipv4.fib_table_hash[h];
--	hlist_for_each_entry_rcu(tb, head, tb_hlist) {
-+	hlist_for_each_entry_rcu(tb, head, tb_hlist,
-+				 lockdep_rtnl_is_held()) {
- 		if (tb->tb_id == id)
- 			return tb;
- 	}
+@@ -91,6 +96,11 @@ void device_links_read_unlock(int not_used)
+ {
+ 	up_read(&device_links_lock);
+ }
++
++int device_links_read_lock_held(void)
++{
++	return lock_is_held(&device_links_lock);
++}
+ #endif /* !CONFIG_SRCU */
+ 
+ /**
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index 952a1e7057c7..7a10e8379a70 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -287,7 +287,8 @@ static int rpm_get_suppliers(struct device *dev)
+ {
+ 	struct device_link *link;
+ 
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
++	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
++				device_links_read_lock_held()) {
+ 		int retval;
+ 
+ 		if (!(link->flags & DL_FLAG_PM_RUNTIME) ||
+@@ -309,7 +310,8 @@ static void rpm_put_suppliers(struct device *dev)
+ {
+ 	struct device_link *link;
+ 
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
++	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
++				device_links_read_lock_held()) {
+ 		if (READ_ONCE(link->status) == DL_STATE_SUPPLIER_UNBIND)
+ 			continue;
+ 
+@@ -1640,7 +1642,8 @@ void pm_runtime_clean_up_links(struct device *dev)
+ 
+ 	idx = device_links_read_lock();
+ 
+-	list_for_each_entry_rcu(link, &dev->links.consumers, s_node) {
++	list_for_each_entry_rcu(link, &dev->links.consumers, s_node,
++				device_links_read_lock_held()) {
+ 		if (link->flags & DL_FLAG_STATELESS)
+ 			continue;
+ 
+@@ -1662,7 +1665,8 @@ void pm_runtime_get_suppliers(struct device *dev)
+ 
+ 	idx = device_links_read_lock();
+ 
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
++	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
++				device_links_read_lock_held())
+ 		if (link->flags & DL_FLAG_PM_RUNTIME) {
+ 			link->supplier_preactivated = true;
+ 			refcount_inc(&link->rpm_active);
+@@ -1683,7 +1687,8 @@ void pm_runtime_put_suppliers(struct device *dev)
+ 
+ 	idx = device_links_read_lock();
+ 
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
++	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
++				device_links_read_lock_held())
+ 		if (link->supplier_preactivated) {
+ 			link->supplier_preactivated = false;
+ 			if (refcount_dec_not_one(&link->rpm_active))
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
