@@ -2,163 +2,264 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09452C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDB9C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9AA20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DB920872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="saY8bvMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfGKDrB convert rfc822-to-8bit (ORCPT
+        id S1728068AbfGKDv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:47:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16529 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727462AbfGKDrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:47:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 20:47:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
-   d="scan'208";a="177043503"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2019 20:46:58 -0700
-Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 10 Jul 2019 20:46:57 -0700
-Received: from bgsmsx106.gar.corp.intel.com (10.223.43.196) by
- FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 10 Jul 2019 20:46:57 -0700
-Received: from bgsmsx101.gar.corp.intel.com ([169.254.1.46]) by
- BGSMSX106.gar.corp.intel.com ([169.254.1.194]) with mapi id 14.03.0439.000;
- Thu, 11 Jul 2019 09:16:54 +0530
-From:   "Gote, Nitin R" <nitin.r.gote@intel.com>
-To:     'Joe Perches' <joe@perches.com>, "corbet@lwn.net" <corbet@lwn.net>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>
-Subject: RE: [PATCH v4] Added warnings in checkpatch.pl script to :
-Thread-Topic: [PATCH v4] Added warnings in checkpatch.pl script to :
-Thread-Index: AQHVNm3hVzOhL9haf0KMxjtR64B8zqbCGIgAgAFiYNA=
-Date:   Thu, 11 Jul 2019 03:46:53 +0000
-Message-ID: <12356C813DFF6F479B608F81178A5615878BFA@BGSMSX101.gar.corp.intel.com>
-References: <20190709154806.26363-1-nitin.r.gote@intel.com>
- <040b50f00501ae131256bb13a5362731ebdd6bfe.camel@perches.com>
-In-Reply-To: <040b50f00501ae131256bb13a5362731ebdd6bfe.camel@perches.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGE2YzA0YmEtOGQ4MC00MTJkLTg5NTgtZDAwYTljOTVlYjYwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTlVmU3pPaTFySlpBV0ZVOEhBekFpcGYzQjJTS2JiZXAweWozOVBFeURlXC9TS3B1RVVtWHlnS21mUXBOQTduQTYifQ==
-x-originating-ip: [10.223.10.10]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 10 Jul 2019 23:51:29 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36302 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfGKDv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 23:51:28 -0400
+Received: by mail-io1-f68.google.com with SMTP id o9so9549834iom.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 20:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DcUphRJE8VDWWswonMjwWOgY+XW0K1YIqgJ7+SpeBD4=;
+        b=saY8bvMHnYCBiCzIcn9nYBAa2oFai2VGDCb5sU0DOkA0z8eFKTf7FamhLNlObwGORt
+         VR9zXgjgI1MgraHLdO/ByNu5qQILsQprOJiQYvRcFUa8+k+azErnFtCAN9KS8X4yIvwy
+         nrsTNfQr4U1oTthVkRRaD61Pv/zr0NWhUDSZsCfIGNj2YjlxCUJew+UfzkkMj+F1VMAX
+         kCYmdjj5nGuc6O8B3iyb44aBvwFcq851AXqdsV4AgSEOWl43wDH9xleDtLExgWNpXCx/
+         n8sGe7OHuul7GGqwPWz8DAjgVFYKMvzh4Yw7nDzfERlDXMJEe7puicT2byJgaVeNfZ0L
+         n/VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DcUphRJE8VDWWswonMjwWOgY+XW0K1YIqgJ7+SpeBD4=;
+        b=ipMirLwhqNJ/+ffLMOTIPo0Yv661OHIELsh6lia/TIbNyiHV7zfkOfcHylDSVuqzRs
+         TANbR/xPob8YSWZErCEwswA9mlNucU+IaLPujsMen6pqUZlVsZf5WIMGF+JUIBeKO22o
+         w7HosCkc+1IhR3pn1c6gdD0qg0LK82gJJPajFgxgAjBS30Hc/MedrB2FsRiplIeWJps7
+         zZ1xpxHfYaZ0+Mt9Fr0u0APi9YvDUH43Kx63o3X5f7wY/6mqULt9zLghWifv8hQ/3xS5
+         Ah6eHIG5tnw/bIjJPO8JkYDc+ym8LjxVDTa5Kt68Z2y6AUGso3XZT/svPwC6GhvUt74O
+         1vAA==
+X-Gm-Message-State: APjAAAXH7w79PZWIKtlS+bCNA3jvr4IsLo/qcHPt0CzGIDR+l0GDiUkm
+        na/JcDw7zj6YgDAuvkqJf9mihfISXbRuRkzkOUH86g==
+X-Google-Smtp-Source: APXvYqwKB8Dp5TQtyW9x2EbGV/t1Ec8ya9ucu+Ar38Ip3ApPlTT9c2GRddxstUEIwOEc7etUK9RGbVuF+mI33ju2BaM=
+X-Received: by 2002:a05:6602:2413:: with SMTP id s19mr1922145ioa.161.1562817087451;
+ Wed, 10 Jul 2019 20:51:27 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190709161550.GA8703@infradead.org> <20190710083825.7115-1-jian-hong@endlessm.com>
+ <81a2b91c4b084617bab8656fca932f6d@AcuMS.aculab.com>
+In-Reply-To: <81a2b91c4b084617bab8656fca932f6d@AcuMS.aculab.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Thu, 11 Jul 2019 11:50:50 +0800
+Message-ID: <CAPpJ_edDcaBq+0DocPmS-yYM10B4MkWvBn=f6wwbYdqzSGmp_g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] rtw88: pci: Rearrange the memory usage for skb in
+ RX ISR
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> -----Original Message-----
-> From: Joe Perches [mailto:joe@perches.com]
-> Sent: Tuesday, July 9, 2019 9:40 PM
-> To: Gote, Nitin R <nitin.r.gote@intel.com>; corbet@lwn.net
-> Cc: akpm@linux-foundation.org; apw@canonical.com;
-> keescook@chromium.org; linux-doc@vger.kernel.org; linux-
-> kernel@vger.kernel.org; kernel-hardening@lists.openwall.com
-> Subject: Re: [PATCH v4] Added warnings in checkpatch.pl script to :
-> 
-> On Tue, 2019-07-09 at 21:18 +0530, NitinGote wrote:
-> > From: Nitin Gote <nitin.r.gote@intel.com>
-> >
-> > 1. Deprecate strcpy() in favor of strscpy().
-> > 2. Deprecate strlcpy() in favor of strscpy().
-> > 3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
-> >
-> > Updated strncpy() section in Documentation/process/deprecated.rst
-> > to cover strscpy_pad() case.
-> 
-> Please slow down your patch submission rate for this instance and respond
-> appropriately to the comments you've been given.
-
-Sure, I will explore this things more. And sorry, I missed to incorporate one comment. 
-I will take care of such things.
-
-> 
-> This stuff is not critical bug fixing.
-> 
-Noted.
-
-> The subject could be something like:
-> 
-> Subject: [PATCH v#] Documentation/checkpatch: Prefer strscpy over
-> strcpy/strlcpy
-> 
-
-How about this  :
-Subject: [PATCH v#] Doc/checkpatch: Prefer strscpy/strscpy_pad over strcpy/strlcpy/strncpy
-
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -605,6 +605,20 @@ foreach my $entry (keys %deprecated_apis) {  }
-> > $deprecated_apis_search = "(?:${deprecated_apis_search})";
-> >
-> > +our %deprecated_string_apis = (
-> > +        "strcpy"				=> "strscpy",
-> > +        "strlcpy"				=> "strscpy",
-> > +        "strncpy"				=> "strscpy, strscpy_pad or
-> for non-NUL-terminated strings, strncpy() can still be used, but destinations
-> should be marked with the __nonstring",
-> 
-> 'the' is not necessary.
-
-Noted.
-
-> 
-> There could likely also be a strscat created for strcat, strlcat and strncat.
+David Laight <David.Laight@aculab.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8810=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:57=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-
-I have not found reference for strscat in kernel.
-Could you please give any reference for strscat ?
- 
-> btw:
-> 
-> There were several defects in the kernel for misuses of strlcpy.
-> 
-> Did you or anyone else have an opinion on stracpy to avoid duplicating the
-> first argument in a sizeof()?
-> 
-> 	strlcpy(foo, bar, sizeof(foo))
-> to
-> 	stracpy(foo, bar)
-> 
-> where foo must be char array compatible ?
-> 
-> https://lore.kernel.org/lkml/d1524130f91d7cfd61bc736623409693d2895f57.
-> camel@perches.com/
-> 
+> From: Jian-Hong Pan
+> > Sent: 10 July 2019 09:38
+> >
+> > Testing with RTL8822BE hardware, when available memory is low, we
+> > frequently see a kernel panic and system freeze.
+> >
+> > First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
+> >
+> > rx routine starvation
+> > WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:8=
+22
+> > rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+> > [ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpc=
+i]
+> >
+> > Then we see a variety of different error conditions and kernel panics,
+> > such as this one (trimmed):
+> >
+> > rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+> > skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415 head:0000=
+0000d2880c6f
+> > data:000000007a02b1ea tail:0x1df end:0xc0 dev:<NULL>
+> > ------------[ cut here ]------------
+> > kernel BUG at net/core/skbuff.c:105!
+> > invalid opcode: 0000 [#1] SMP NOPTI
+> > RIP: 0010:skb_panic+0x43/0x45
+> >
+> > When skb allocation fails and the "rx routine starvation" is hit, the
+> > function returns immediately without updating the RX ring. At this
+> > point, the RX ring may continue referencing an old skb which was alread=
+y
+> > handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+> > bad things happen.
+> >
+> > This patch allocates a new, data-sized skb first in RX ISR. After
+> > copying the data in, we pass it to the upper layers. However, if skb
+> > allocation fails, we effectively drop the frame. In both cases, the
+> > original, full size ring skb is reused.
+> >
+> > In addition, by fixing the kernel crash, the RX routine should now
+> > generally behave better under low memory conditions.
 >
+> A couple of minor nits (see below).
+> You may want to do a followup patch that changes the rx buffers
+> (used by the hardware) to by just memory buffers.
+> Nothing (probably) relies on them being skb with all the accociated
+> baggage.
 
-As I understood, your trying to give new interface like stracpy(), to avoid duplication of first 
-argument in a sizeof(), we can also make it more robust for users by adding check or warn in 
-checkpatch.pl to prefer stracpy().
+It is a good idea for later commit.
 
-Did you or anyone has opinion on this ?
+>         David
+>
+> >
+> > Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=3D204053
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > Cc: <stable@vger.kernel.org>
+> > ---
+> > v2:
+> >  - Allocate new data-sized skb and put data into it, then pass it to
+> >    mac80211. Reuse the original skb in RX ring by DMA sync.
+> >  - Modify the commit message.
+> >  - Introduce following [PATCH v3 2/2] rtw88: pci: Use DMA sync instead
+> >    of remapping in RX ISR.
+> >
+> > v3:
+> >  - Same as v2.
+> >
+> >  drivers/net/wireless/realtek/rtw88/pci.c | 49 +++++++++++-------------
+> >  1 file changed, 22 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wir=
+eless/realtek/rtw88/pci.c
+> > index cfe05ba7280d..e9fe3ad896c8 100644
+> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> > @@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, =
+struct rtw_pci *rtwpci,
+> >       u32 pkt_offset;
+> >       u32 pkt_desc_sz =3D chip->rx_pkt_desc_sz;
+> >       u32 buf_desc_sz =3D chip->rx_buf_desc_sz;
+> > +     u32 new_len;
+> >       u8 *rx_desc;
+> >       dma_addr_t dma;
+> >
+> > @@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev=
+, struct rtw_pci *rtwpci,
+> >               pkt_offset =3D pkt_desc_sz + pkt_stat.drv_info_sz +
+> >                            pkt_stat.shift;
+> >
+> > -             if (pkt_stat.is_c2h) {
+> > -                     /* keep rx_desc, halmac needs it */
+> > -                     skb_put(skb, pkt_stat.pkt_len + pkt_offset);
+> > +             /* discard current skb if the new skb cannot be allocated=
+ as a
+> > +              * new one in rx ring later
+> > +              */
+>
+> That comment isn't quite right.
+> maybe: "Allocate a new skb for this frame, discard if none available"
 
+Thanks!  I will tweak it.
 
-Thanks,
-Nitin Gote
+> > +             new_len =3D pkt_stat.pkt_len + pkt_offset;
+> > +             new =3D dev_alloc_skb(new_len);
+> > +             if (WARN_ONCE(!new, "rx routine starvation\n"))
+>
+> I think you should count these??
+
+Larry has a different idea here. [1]
+I agree with Larry that just need to know not enough memory here.
+
+[1] https://lkml.org/lkml/2019/7/8/1049
+
+Jian-Hong Pan
+
+> > +                     goto next_rp;
+> > +
+> > +             /* put the DMA data including rx_desc from phy to new skb=
+ */
+> > +             skb_put_data(new, skb->data, new_len);
+> >
+> > -                     /* pass offset for further operation */
+> > -                     *((u32 *)skb->cb) =3D pkt_offset;
+> > -                     skb_queue_tail(&rtwdev->c2h_queue, skb);
+> > +             if (pkt_stat.is_c2h) {
+> > +                      /* pass rx_desc & offset for further operation *=
+/
+> > +                     *((u32 *)new->cb) =3D pkt_offset;
+> > +                     skb_queue_tail(&rtwdev->c2h_queue, new);
+> >                       ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_wor=
+k);
+> >               } else {
+> > -                     /* remove rx_desc, maybe use skb_pull? */
+> > -                     skb_put(skb, pkt_stat.pkt_len);
+> > -                     skb_reserve(skb, pkt_offset);
+> > -
+> > -                     /* alloc a smaller skb to mac80211 */
+> > -                     new =3D dev_alloc_skb(pkt_stat.pkt_len);
+> > -                     if (!new) {
+> > -                             new =3D skb;
+> > -                     } else {
+> > -                             skb_put_data(new, skb->data, skb->len);
+> > -                             dev_kfree_skb_any(skb);
+> > -                     }
+> > -                     /* TODO: merge into rx.c */
+> > -                     rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
+> > +                     /* remove rx_desc */
+> > +                     skb_pull(new, pkt_offset);
+> > +
+> > +                     rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+> >                       memcpy(new->cb, &rx_status, sizeof(rx_status));
+> >                       ieee80211_rx_irqsafe(rtwdev->hw, new);
+> >               }
+> >
+> > -             /* skb delivered to mac80211, alloc a new one in rx ring =
+*/
+> > -             new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+> > -             if (WARN(!new, "rx routine starvation\n"))
+> > -                     return;
+> > -
+> > -             ring->buf[cur_rp] =3D new;
+> > -             rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc=
+_sz);
+> > +next_rp:
+> > +             /* new skb delivered to mac80211, re-enable original skb =
+DMA */
+> > +             rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc=
+_sz);
+> >
+> >               /* host read next element in ring */
+> >               if (++cur_rp >=3D ring->r.len)
+> > --
+> > 2.22.0
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
+ 1PT, UK
+> Registration No: 1397386 (Wales)
+>
