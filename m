@@ -2,102 +2,140 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3932C74A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFC0C74A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 717BF2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562829169;
-	bh=lURm8nlYnx34Q0B3lWlzdEhexGY9yIUU3Zix5gcyGb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aZ5iPX7YQV6lpCSaU0mbYjyHKTs5VcXDqbMEhmTCcayAxXKS8J2t4eAzAUFZqPOlH
-	 F4BEmxmanDMxStgrz3TRiF7BG0qZTb83eTv0pYdt6bl29LacY7kr0Q6WkR1crGd3RY
-	 LEst58rUY7Bpgg9M5j66gyF2lVyyP2xJAGxFqWF8=
+	by mail.kernel.org (Postfix) with ESMTP id 6E074208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:13:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uSpKp1UA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfGKHMs (ORCPT
+        id S1728257AbfGKHM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 03:12:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50246 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728118AbfGKHMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 03:12:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B1E01AD12;
-        Thu, 11 Jul 2019 07:12:46 +0000 (UTC)
-Date:   Thu, 11 Jul 2019 09:12:45 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Hillf Danton <hdanton@sina.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@suse.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [Question] Should direct reclaim time be bounded?
-Message-ID: <20190711071245.GB29483@dhcp22.suse.cz>
-References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
- <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
- <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
- <20190710194403.GR29695@dhcp22.suse.cz>
- <9d6c8b74-3cf6-4b9e-d3cb-a7ef49f838c7@oracle.com>
+        Thu, 11 Jul 2019 03:12:59 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:8482 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728228AbfGKHM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 03:12:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1562829178; x=1594365178;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=i0oqF+c0+Re2PcA5c78rq4daYcOFwAY+aLzqK4ocFpA=;
+  b=uSpKp1UA7/cx3Bnpju5SyjFsKPX2oPmeDZa/qHdLoCHOnR6Ovf3HJ6eA
+   RZze0z7L3XGkkuEvt1fNBjkK3JM13ql8TY622lkqBdsYcHITrGfE4sk66
+   0lijGNG36GsjGDoEKOUBT7FYN8G5f9yWVZmk7y6sCDl0IgF6pqoLB3ZKs
+   E=;
+X-IronPort-AV: E=Sophos;i="5.62,476,1554768000"; 
+   d="scan'208";a="810584310"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Jul 2019 07:12:54 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id 6B737A22BA;
+        Thu, 11 Jul 2019 07:12:50 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 07:12:49 +0000
+Received: from [10.125.238.52] (10.43.162.128) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 11 Jul
+ 2019 07:12:40 +0000
+Subject: Re: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+To:     Jonathan Chocron <jonnyc@amazon.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+ <20190710164519.17883-6-jonnyc@amazon.com>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
+Date:   Thu, 11 Jul 2019 10:12:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d6c8b74-3cf6-4b9e-d3cb-a7ef49f838c7@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190710164519.17883-6-jonnyc@amazon.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.162.128]
+X-ClientProxiedBy: EX13D01UWA004.ant.amazon.com (10.43.160.99) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 16:36:58, Mike Kravetz wrote:
-> On 7/10/19 12:44 PM, Michal Hocko wrote:
-> > On Wed 10-07-19 11:42:40, Mike Kravetz wrote:
-> > [...]
-> >> As Michal suggested, I'm going to do some testing to see what impact
-> >> dropping the __GFP_RETRY_MAYFAIL flag for these huge page allocations
-> >> will have on the number of pages allocated.
-> > 
-> > Just to clarify. I didn't mean to drop __GFP_RETRY_MAYFAIL from the
-> > allocation request. I meant to drop the special casing of the flag in
-> > should_continue_reclaim. I really have hard time to argue for this
-> > special casing TBH. The flag is meant to retry harder but that shouldn't
-> > be reduced to a single reclaim attempt because that alone doesn't really
-> > help much with the high order allocation. It is more about compaction to
-> > be retried harder.
-> 
-> Thanks Michal.  That is indeed what you suggested earlier.  I remembered
-> incorrectly.  Sorry.
-> 
-> Removing the special casing for __GFP_RETRY_MAYFAIL in should_continue_reclaim
-> implies that it will return false if nothing was reclaimed (nr_reclaimed == 0)
-> in the previous pass.
-> 
-> When I make such a modification and test, I see long stalls as a result
-> of should_compact_retry returning true too often.  On a system I am currently
-> testing, should_compact_retry has returned true 36000000 times.  My guess
-> is that this may stall forever.  Vlastmil previously asked about this behavior,
-> so I am capturing the reason.  Like before [1], should_compact_retry is
-> returning true mostly because compaction_withdrawn() returns COMPACT_DEFERRED.
 
-This smells like a problem to me. But somebody more familiar with
-compaction should comment.
+On 7/10/2019 7:45 PM, Jonathan Chocron wrote:
+> Document Amazon's Annapurna Labs PCIe host bridge.
 
-> 
-> Total 36000000
->       35437500	COMPACT_DEFERRED
->         562500  COMPACT_PARTIAL_SKIPPED
-> 
-> 
-> [1] https://lkml.org/lkml/2019/6/5/643
-> -- 
-> Mike Kravetz
+That is the way! (best to keep same wordings (Amazon's)
 
--- 
-Michal Hocko
-SUSE Labs
+>
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> ---
+>   .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+>   MAINTAINERS                                   |  1 +
+>   2 files changed, 46 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> new file mode 100644
+> index 000000000000..d92cc529490e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> @@ -0,0 +1,45 @@
+> +* Amazon Annapurna Labs PCIe host bridge
+> +
+> +Annapurna Labs' PCIe Host Controller is based on the Synopsys DesignWare
+
+Amazon's
+
+
+and what is the s' ? should it be for all
+
+> +Example:
+> +
+> +	pcie-external0 {
+probably should have a reference with the address
+> +		compatible = "amazon,al-pcie";
+> +		reg = <0x0 0xfb600000 0x0 0x00100000
+> +		       0x0 0xfd800000 0x0 0x00010000
+> +		       0x0 0xfd810000 0x0 0x00001000>;
+> +		reg-names = "config", "controller", "dbi";
+> +		bus-range = <0 255>;
+> +		device_type = "pci";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-map-mask = <0x00 0 0 7>;
+> +		interrupt-map = <0x0000 0 0 1 &gic_main GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
+gic_main->gic
+> +		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5a6137df3f0e..d555beb794bb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12205,6 +12205,7 @@ PCIE DRIVER FOR ANNAPURNA LABS
+AMAZON!
+>   M:	Jonathan Chocron <jonnyc@amazon.com>
+>   L:	linux-pci@vger.kernel.org
+>   S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+>   F:	drivers/pci/controller/dwc/pcie-al.c
+>   
+>   PCIE DRIVER FOR AMLOGIC MESON
