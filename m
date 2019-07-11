@@ -2,149 +2,113 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5B0C74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D7CC74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CB820863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601C020872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:35:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcgcIoO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfGKQcZ (ORCPT
+        id S1728777AbfGKQfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 12:32:25 -0400
-Received: from gateway30.websitewelcome.com ([192.185.147.85]:11584 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726213AbfGKQcZ (ORCPT
+        Thu, 11 Jul 2019 12:35:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40031 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGKQfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:32:25 -0400
-X-Greylist: delayed 1203 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Jul 2019 12:32:24 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 432E73CD3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 11:12:20 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id lbgChSOxd4FKplbgChfbxu; Thu, 11 Jul 2019 11:12:20 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:11787 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hlbgB-002TCu-9Q; Thu, 11 Jul 2019 11:12:19 -0500
-Date:   Thu, 11 Jul 2019 11:12:18 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] RDMA/siw: Mark expected switch fall-throughs
-Message-ID: <20190711161218.GA4989@embeddedor>
+        Thu, 11 Jul 2019 12:35:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so3197371pgj.7;
+        Thu, 11 Jul 2019 09:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MmkG53WQLXsnChwuW4VZaCFghSpsaEReR7YJG6XS3wY=;
+        b=BcgcIoO8JWuECr/LI3atzQ4qxt5OBmIaOr0AK+el9EA3EwjCtUKJeEJJMz56x6JCEc
+         9RwB/rq61Hn0aUG50lVV0QnO1bj+XHfUbDFoFhwT1uFEjMaZCyq15Z7lRwifB1sJX2QJ
+         kTOLQL38vSoh8eB+AE4q+dzITIvB10BnRneK7HpRWENFWI4PGgSoDANFf8Uzbw43MGsC
+         SkuNFR1DrFzdJHgQvOL684DxIMJl+EviFz/JnLXYEqDWxQpGzl7pF0OSX5H4GGnDYvqZ
+         J9YGhdo8mrVV1uZWvnM/vf4nwBpnIwXx+Ttk4b8eT7nTUcRpVCvgk+HZQXzl536USxba
+         ukYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MmkG53WQLXsnChwuW4VZaCFghSpsaEReR7YJG6XS3wY=;
+        b=tWhuc9wY7alzfH1iSUZ8BeLHuOthliFXRWhV0MSVwAwSyJn1t/XYfZzxtdZhrnSF41
+         7rkfAAIL8VzOd8y/xpknYkdkBU7uAXxjQpiap+9hl8b5/bAWY4V/PwylObeTblYg/pdT
+         X9qBBK9M80cwG9rBJLVWJzpM0hAeGPri4baDTd+95pv04Aet2oeNWRx12xeNisOuh5UN
+         CbEhLo3PwZFq3xCE6z9gigZ4pA4JgbRHpoYzHl7VOriLOPizO7BNvF7gBrSLntlp9OBD
+         Hr1L7c+X89aCM9wDElSHjvSlpNsBvknSeH8xctcZqQzWUj2XtDB4H90RbDJM1859vG3g
+         hlNg==
+X-Gm-Message-State: APjAAAW5Naf+dZhcc+3HGHAf8h7mOvtmHAy0eSGFB3h0rj/45gZYUdYS
+        5NdkDxCxLjT9eIMFUA6sDg0=
+X-Google-Smtp-Source: APXvYqyvGaG6S4s96AFzUFqGjV97xe/yb4IsOBocn5ACV+MMJMiG3jRLvG0CUcuacfGGqhXQuabsEg==
+X-Received: by 2002:a63:c106:: with SMTP id w6mr5390973pgf.422.1562862949567;
+        Thu, 11 Jul 2019 09:35:49 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w187sm6560127pfb.4.2019.07.11.09.35.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 09:35:49 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 09:35:48 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Lei YU <mine260309@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon (occ): Fix division by zero issue
+Message-ID: <20190711163548.GA19747@roeck-us.net>
+References: <1562813088-23708-1-git-send-email-mine260309@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.160.61.213
-X-Source-L: No
-X-Exim-ID: 1hlbgB-002TCu-9Q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net (embeddedor) [187.160.61.213]:11787
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <1562813088-23708-1-git-send-email-mine260309@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+On Thu, Jul 11, 2019 at 10:44:48AM +0800, Lei YU wrote:
+> The code in occ_get_powr_avg() invokes div64_u64() without checking the
+> divisor. In case the divisor is zero, kernel gets an "Division by zero
+> in kernel" error.
+> 
+> Check the divisor and make it return 0 if the divisor is 0.
+> 
+> Signed-off-by: Lei YU <mine260309@gmail.com>
+> Reviewed-by: Eddie James <eajames@linux.ibm.com>
 
-This patch fixes the following warnings:
+Applied.
 
-drivers/infiniband/sw/siw/siw_qp_rx.c: In function ‘siw_rdmap_complete’:
-drivers/infiniband/sw/siw/siw_qp_rx.c:1214:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   wqe->rqe.flags |= SIW_WQE_SOLICITED;
-   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_qp_rx.c:1215:2: note: here
-  case RDMAP_SEND:
-  ^~~~
+Thanks,
+Guenter
 
-drivers/infiniband/sw/siw/siw_qp_tx.c: In function ‘siw_qp_sq_process’:
-drivers/infiniband/sw/siw/siw_qp_tx.c:1044:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    siw_wqe_put_mem(wqe, tx_type);
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_qp_tx.c:1045:3: note: here
-   case SIW_OP_INVAL_STAG:
-   ^~~~
-drivers/infiniband/sw/siw/siw_qp_tx.c:1128:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    siw_wqe_put_mem(wqe, tx_type);
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_qp_tx.c:1129:3: note: here
-   case SIW_OP_INVAL_STAG:
-   ^~~~
-
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-
-NOTE: -Wimplicit-fallthrough will be enabled globally in v5.3. So, I
-      suggest you to take this patch for 5.3-rc1.
-
- drivers/infiniband/sw/siw/siw_qp_rx.c | 2 ++
- drivers/infiniband/sw/siw/siw_qp_tx.c | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/infiniband/sw/siw/siw_qp_rx.c b/drivers/infiniband/sw/siw/siw_qp_rx.c
-index 682a290bc11e..f87657a11657 100644
---- a/drivers/infiniband/sw/siw/siw_qp_rx.c
-+++ b/drivers/infiniband/sw/siw/siw_qp_rx.c
-@@ -1212,6 +1212,8 @@ static int siw_rdmap_complete(struct siw_qp *qp, int error)
- 	case RDMAP_SEND_SE:
- 	case RDMAP_SEND_SE_INVAL:
- 		wqe->rqe.flags |= SIW_WQE_SOLICITED;
-+		/* Fall through */
-+
- 	case RDMAP_SEND:
- 	case RDMAP_SEND_INVAL:
- 		if (wqe->wr_status == SIW_WR_IDLE)
-diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-index f0d949e2e318..43020d2040fc 100644
---- a/drivers/infiniband/sw/siw/siw_qp_tx.c
-+++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-@@ -1042,6 +1042,8 @@ int siw_qp_sq_process(struct siw_qp *qp)
- 		case SIW_OP_SEND_REMOTE_INV:
- 		case SIW_OP_WRITE:
- 			siw_wqe_put_mem(wqe, tx_type);
-+			/* Fall through */
-+
- 		case SIW_OP_INVAL_STAG:
- 		case SIW_OP_REG_MR:
- 			if (tx_flags(wqe) & SIW_WQE_SIGNALLED)
-@@ -1126,6 +1128,8 @@ int siw_qp_sq_process(struct siw_qp *qp)
- 		case SIW_OP_READ:
- 		case SIW_OP_READ_LOCAL_INV:
- 			siw_wqe_put_mem(wqe, tx_type);
-+			/* Fall through */
-+
- 		case SIW_OP_INVAL_STAG:
- 		case SIW_OP_REG_MR:
- 			siw_sqe_complete(qp, &wqe->sqe, wqe->bytes,
--- 
-2.21.0
-
+> ---
+>  drivers/hwmon/occ/common.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+> index 13a6290..f02aa40 100644
+> --- a/drivers/hwmon/occ/common.c
+> +++ b/drivers/hwmon/occ/common.c
+> @@ -402,8 +402,10 @@ static ssize_t occ_show_power_1(struct device *dev,
+>  
+>  static u64 occ_get_powr_avg(u64 *accum, u32 *samples)
+>  {
+> -	return div64_u64(get_unaligned_be64(accum) * 1000000ULL,
+> -			 get_unaligned_be32(samples));
+> +	u64 divisor = get_unaligned_be32(samples);
+> +
+> +	return (divisor == 0) ? 0 :
+> +		div64_u64(get_unaligned_be64(accum) * 1000000ULL, divisor);
+>  }
+>  
+>  static ssize_t occ_show_power_2(struct device *dev,
