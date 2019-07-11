@@ -2,129 +2,82 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86DBC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA8CC742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70C420872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="jFh0b+rr"
+	by mail.kernel.org (Postfix) with ESMTP id 3831B20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfGKWVq (ORCPT
+        id S1728747AbfGKWYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 18:21:46 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:49187 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfGKWVq (ORCPT
+        Thu, 11 Jul 2019 18:24:09 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:52290 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfGKWYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 18:21:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1562883705; x=1594419705;
-  h=from:to:cc:subject:date:message-id;
-  bh=3gnH5RFwGHOCrCZhZO/bJsPHw0TAU3IEAqyti5ky+0M=;
-  b=jFh0b+rrOlEV53NkaPH2Zz2Dxoo1rzVS0A1vSaP93NahysuwWnsMPkh9
-   G+ztqHCKmK9PXxjCn1KSKMBUHKyWd21Y/NgJFl9+Yy6m7hdzFYq2itCW2
-   qSp6FCAmmfqlu/oCtbGlNR8YTmfjjau6mtrRkYesWXEUqco6eH9Ucb1N2
-   4=;
-X-IronPort-AV: E=Sophos;i="5.62,480,1554768000"; 
-   d="scan'208";a="741422169"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Jul 2019 22:21:43 +0000
-Received: from u54e1ad5160425a4b64ea.ant.amazon.com (iad7-ws-svc-lb50-vlan2.amazon.com [10.0.93.210])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 976E5A17B3;
-        Thu, 11 Jul 2019 22:21:38 +0000 (UTC)
-Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
-        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x6BMLYLt019252;
-        Fri, 12 Jul 2019 00:21:34 +0200
-Received: (from karahmed@localhost)
-        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id x6BMLWVb019247;
-        Fri, 12 Jul 2019 00:21:32 +0200
-From:   KarimAllah Ahmed <karahmed@amazon.de>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
+        Thu, 11 Jul 2019 18:24:08 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45l9ZZ1D5Bz1rGSC;
+        Fri, 12 Jul 2019 00:24:06 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45l9ZZ0Lwtz1qqkC;
+        Fri, 12 Jul 2019 00:24:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id eWR6m9qiSq97; Fri, 12 Jul 2019 00:24:04 +0200 (CEST)
+X-Auth-Info: U5EJGg1A68vYHOMXUFHFoFMuag3MFYDQR2/iDcbPLeM=
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 12 Jul 2019 00:24:04 +0200 (CEST)
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Enrico Weigelt <info@metux.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH] arm: Extend the check for RAM in /dev/mem
-Date:   Fri, 12 Jul 2019 00:21:21 +0200
-Message-Id: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
-X-Mailer: git-send-email 2.7.4
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v2 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's mc34708
+Date:   Fri, 12 Jul 2019 00:23:43 +0200
+Message-Id: <20190711222346.5245-1-lukma@denx.de>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some valid RAM can live outside kernel control (e.g. using mem= kernel
-command-line). For these regions, pfn_valid would return "false" causing
-system RAM to be mapped as uncached. Use memblock instead to identify RAM.
+This patch set provides several enhancements to mc13xxx MFD family
+of devices by introducing mc34708 as a separate device.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Cc: Enrico Weigelt <info@metux.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Jun Yao <yaojun8558363@gmail.com>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
----
- arch/arm/mm/mmu.c   | 2 +-
- arch/arm64/mm/mmu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+This IC has dedicated pen detection feature, which allows better
+touchscreen experience.
 
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index 1aa2586..492774b 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -705,7 +705,7 @@ static void __init build_mem_type_table(void)
- pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 			      unsigned long size, pgprot_t vma_prot)
- {
--	if (!pfn_valid(pfn))
-+	if (!memblock_is_memory(__pfn_to_phys(pfn)))
- 		return pgprot_noncached(vma_prot);
- 	else if (file->f_flags & O_SYNC)
- 		return pgprot_writecombine(vma_prot);
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 3645f29..cdc3e8e 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -78,7 +78,7 @@ void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
- pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 			      unsigned long size, pgprot_t vma_prot)
- {
--	if (!pfn_valid(pfn))
-+	if (!memblock_is_memory(__pfn_to_phys(pfn)))
- 		return pgprot_noncached(vma_prot);
- 	else if (file->f_flags & O_SYNC)
- 		return pgprot_writecombine(vma_prot);
+This is the seconf version of this code (v2).
+Discussion regarding v1 can be found here:
+https://lkml.org/lkml/2018/4/12/351
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.html
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.html
+
+Sascha Hauer (3):
+  mfd: mc13xxx: Add mc34708 adc support
+  input: touchscreen mc13xxx: Make platform data optional
+  input: touchscreen mc13xxx: Add mc34708 support
+
+ drivers/input/touchscreen/mc13783_ts.c |  74 ++++++++++++++++++++----
+ drivers/mfd/mc13xxx-core.c             | 102 ++++++++++++++++++++++++++++++++-
+ drivers/mfd/mc13xxx.h                  |   3 +
+ include/linux/mfd/mc34708.h            |  37 ++++++++++++
+ 4 files changed, 204 insertions(+), 12 deletions(-)
+ create mode 100644 include/linux/mfd/mc34708.h
+
 -- 
-2.7.4
+2.11.0
 
