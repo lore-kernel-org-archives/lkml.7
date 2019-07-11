@@ -2,156 +2,339 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09776C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E559FC74A48
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3B9208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C78208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 06:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="snO+I7nb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WlnY5o6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbfGKGJ6 (ORCPT
+        id S1728039AbfGKGMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 02:09:58 -0400
-Received: from mail-eopbgr140041.outbound.protection.outlook.com ([40.107.14.41]:23170
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726363AbfGKGJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 02:09:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hK2zxCQB1xA7uBSqu+gnbHHiQZKWdAl6l32a3JOYE3Yf58HC8QPTho5VtPs/JROHmlwgdoaLpbbXzUKfaXGpcZ/4mXf/yeEZaWJITLEKRv0ERUAdFyKHvi6LQsbAj6Ir5JxaCfW9CCiAi76NPqzlLYnvsQtn0LEuelRWvEs3jkX1BpSLzNLD4mqorUPtD5qUq7ctzonTKPQJxfDJtc10slW6P+NbWziPcPinqahUvpE0bjuVz+04TaQkxy9ez70JskjNGlR8h5eToqdZXtSeWhnLXawdsAbpIgs/OjKeNojdPshM1xtkeJpzxHEQD5AC+aMdlzfnJnE7isSdkcS2FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OLN3mEu8vtoWUHhO3H+NHA4Vwhislb+d6gaHJl1WQ8k=;
- b=kwDZfj+j6vQLppiz2ZU0f8jnULk+SoNlnCshZDUmlOcS4MAY/p8CLfAfrL3qXVGFQ0yDEryUPqh23tM1YTCjautVft08m3CT6E6InZw5DDfD0UEmgd32yrg4imRUiganzO8yj9j1t+Vr1a2A+6nPKJN7OkJgFW9c93keA8FopNVITprvQtjoL+eFlt/x85gTIQW/R1+bMAcogsofYwHwAgZBZE4tyzs7PbC+2mO2PbZbs106SBcf3MS/SMaWzoHMeOurjIwO0hl4l9vrbDhQHzUC41o2x+Op6nd7h/M3A2Hu2O8zYqog1SOJSanAUjk95gNYgtVgW9YwYVREryhS1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OLN3mEu8vtoWUHhO3H+NHA4Vwhislb+d6gaHJl1WQ8k=;
- b=snO+I7nbDOaQaQAKk3HiS9vvZBz+MJEn70G4QW4T1+nxgocBc94kfQkvi6GXnVYo50+hLYR5SDKgytIMcHiPqJQfJ7tutIJ84eX9UsTWyXFAGbk9XyNSEipOv00tKYOwhrlYWtqBha7HFkuBg8wHTes19Qpdon7AoojSYmLxb1M=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6413.eurprd04.prod.outlook.com (20.179.232.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Thu, 11 Jul 2019 06:09:53 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::218e:ee37:1e81:e157]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::218e:ee37:1e81:e157%3]) with mapi id 15.20.2052.019; Thu, 11 Jul 2019
- 06:09:53 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Thread-Topic: [PATCH V3 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Thread-Index: AdU3rxXN4oVmSlwnSCSsxmm6rhEC4A==
-Date:   Thu, 11 Jul 2019 06:09:53 +0000
-Message-ID: <VE1PR04MB64798D6D1D9AD9EC206EDCE1E3F30@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 279107f3-88de-4917-d9ba-08d705c6640d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6413;
-x-ms-traffictypediagnostic: VE1PR04MB6413:
-x-microsoft-antispam-prvs: <VE1PR04MB6413E348D70402D8DBA1C0D2E3F30@VE1PR04MB6413.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(99286004)(68736007)(486006)(102836004)(316002)(71190400001)(71200400001)(86362001)(1411001)(54906003)(478600001)(476003)(6506007)(66556008)(7736002)(74316002)(305945005)(26005)(5660300002)(2906002)(6916009)(64756008)(7696005)(3846002)(14454004)(33656002)(6116002)(6436002)(4326008)(186003)(81166006)(25786009)(52536014)(9686003)(8936002)(66066001)(81156014)(53936002)(14444005)(6246003)(229853002)(76116006)(256004)(66946007)(66476007)(8676002)(55016002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6413;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KDr2Y05m3GRhW9TisCUiaaX0abhf5Gw7NecjXfEhUauYTPKC7HlhsxXMzuIXU50jZyCo3pda9S1A48LjVoCLSAFwuLBjQf5oVYkfrxn+elfpmcxygdF41QAJLxaV33FCccUY+3rFCZFvtghXSUrwocy399d8WrDZN+cfIfd43NS/AQX3nJR4+l8bxwh8yq8ICwRF4gb9TzNgOI2ESuKl/F6NqEgZgjlH1/g01HnhniMCznqwNqBnkblU8SYmi6skthlfzKwOjJjX3O4R9eW0aaxk4EjZ25wd67ym2AwT1fk38cyGoIB3JC4A4Gr8h0pfBZs6bMIpQvEJ7E9a/He6M8yAVN7dvjh+EfaGkZ8gxY2IzSVJi0GdO+rXje6jHgyAlGVyCHCreT9fplXBnDwUe6Rf5YAwbz2nUIg6QmNEP+8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 02:12:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38392 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727737AbfGKGMN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 02:12:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so2235442pfn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 23:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JjqHcbw1pBSBh/+FK6Hlik7p5Jx5rbYg1s03r+OqIc8=;
+        b=WlnY5o6jeAXhGiTNM8EnDcCVY8zQ1H9zLtceVVstwXNhXlV5X0m23PfB+cpXNrgQ8R
+         R7/c2qpu9RoNLhCKEfqPf4/kB9UmbGt51t+y2Foo4N0HeRYc3kpRjPADueRI9nmiGuZk
+         ToZYAf/7ovTvU3z6a5V3p/lcID19SFTpcHOeEN5H4ooYTOlxcj4xdKOrzR7BVdbE8IcM
+         7mHeO2ynBmvJtQws51pv6DmxTR0xseAyoP6BmctBSlsKAkoNZ+FamDWNq3ST2c8nXijH
+         aSpz6v507yUKkHI4/c1w2IF8aG1F4r/uls076FEDfd0BmSkvZP11fN3vIsXTR9LFvUUJ
+         du4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JjqHcbw1pBSBh/+FK6Hlik7p5Jx5rbYg1s03r+OqIc8=;
+        b=ou6dOhQz5Yhyq+YHdWb9Puxs8zTTguqJhbtvHBrUKTpFSVs3mVeFOkH8dmUF1ZD/HJ
+         y5XPlliPx8jwHR0gAKuc9fPYNyujNY6mx8OK4E04/hP85h1cxgk7wMDecmWs3thgAOGf
+         H6R7uy4+iVrzx6pg4n8QJbVmtDc9otd0FiOokyedFgYAJnYG8IXc0B3xHEtQHSP+Bkz5
+         P6oDQcbtV21kJRi28XVHxGdbtt9KDbbdXran5lE49i44X6ODbA28FQerP6DDoDfP3MPI
+         DTKHqZ7XWahyB5Okg/NJZ58S27iTNz1Jyp9TQ0LMm0K7BUj2ewQBL+Kum5fApD3nxnKV
+         alxA==
+X-Gm-Message-State: APjAAAWqG4GyAIvP+wDaJKR1RyFG/mo0zd1Paix5LGSqhzzPQRPS9EJU
+        aFMCachJ68AgF97vjAskGotGXQ==
+X-Google-Smtp-Source: APXvYqz+IRV9S4TRQfHzUTKweyyIYhjBuXJS09c+P73+ly5nwrMQwJz65cCIaPtXDlwqg4j/e9ltdg==
+X-Received: by 2002:a17:90a:2244:: with SMTP id c62mr2872730pje.29.1562825531957;
+        Wed, 10 Jul 2019 23:12:11 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id m9sm6449631pgr.24.2019.07.10.23.12.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 23:12:10 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 11:42:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Subject: Re: [PATCHv3 6/6] drivers/cpufreq: Add a CPUFreq driver for AMD
+ processors (Fam17h and later)
+Message-ID: <20190711061208.yqxt4ps67vmsy7sp@vireshk-i7>
+References: <cover.1562781484.git.Janakarajan.Natarajan@amd.com>
+ <e48c6b836f996a16472c777612f1e3343c542077.1562781484.git.Janakarajan.Natarajan@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 279107f3-88de-4917-d9ba-08d705c6640d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 06:09:53.5138
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: shengjiu.wang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6413
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e48c6b836f996a16472c777612f1e3343c542077.1562781484.git.Janakarajan.Natarajan@amd.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10-07-19, 18:37, Natarajan, Janakarajan wrote:
+> diff --git a/drivers/cpufreq/amd-cpufreq.c b/drivers/cpufreq/amd-cpufreq.c
+> +#define pr_fmt(fmt)	"AMD Cpufreq: " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/cpu.h>
+> +#include <linux/vmalloc.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/acpi.h>
+> +#include <linux/delay.h>
 
->=20
-> Hi Shengjiu,
->=20
-> Mostly looks good to me, just some small comments.
->=20
-> On Mon, Jul 08, 2019 at 02:38:52PM +0800, shengjiu.wang@nxp.com wrote:
->=20
-> > +static void fsl_esai_hw_reset(unsigned long arg) {
-> > +     struct fsl_esai *esai_priv =3D (struct fsl_esai *)arg;
-> > +     u32 saisr, tfcr, rfcr;
-> > +     bool tx =3D true, rx =3D false, enabled[2];
->=20
-> Could we swap the lines of u32 and bool? It'd look better.
->=20
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> > +                        ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> > +                        ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
->=20
-> Let's add a line of comments for these two:
->         /* Enforce ESAI personal resets for both TX and RX */
->=20
-> > +     /*
-> > +      * Restore registers by regcache_sync, and ignore
-> > +      * return value
-> > +      */
->=20
-> Could fit into single-line?
->=20
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> > +                        ESAI_xCR_xPR_MASK, 0);
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> > +                        ESAI_xCR_xPR_MASK, 0);
-> > +
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
-> > +                        ESAI_PRRC_PDC_MASK, ESAI_PRRC_PDC(ESAI_GPIO));
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
-> > +                        ESAI_PCRC_PC_MASK, ESAI_PCRC_PC(ESAI_GPIO));
->=20
-> Could remove the blank line and add a line of comments:
->         /* Remove ESAI personal resets by configuring PCRC and PRRC also =
-*/
->=20
-> Btw, I still feel this personal reset can be stuffed into one of the wrap=
-per
-> functions. But let's keep this simple for now.
->=20
-> > +     regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
->=20
-> Why do we read saisr here? All its bits would get cleared by the hardware
-> reset. If it's a must to clear again, we should add a line of comments to
-> emphasize it.
+Please keep them in alphabetical order.
 
-This line can be removed.=20
+> +
+> +#include <asm/unaligned.h>
+> +
+> +#include <acpi/cppc_acpi.h>
+> +
+> +struct amd_desc {
+> +	int cpu_id;
+> +	struct cppc_ctrls ctrls;
+> +	struct kobject kobj;
+> +};
+> +
+> +struct amd_desc **all_cpu_data;
+> +
+> +static unsigned int cppc_enable;
+> +module_param(cppc_enable, uint, 0644);
+> +MODULE_PARM_DESC(cppc_enable,
+> +		 "1 - enable AMD CpuFreq, create CPPC sysfs entries.");
+> +
+> +#define to_amd_desc(a) container_of(a, struct amd_desc, kobj)
+> +
+> +#define show_func(access_fn, struct_name, member_name)			\
+> +	static ssize_t show_##member_name(struct kobject *kobj,		\
+> +					  struct kobj_attribute *attr,	\
+> +					  char *buf)			\
+> +	{								\
+> +		struct amd_desc *desc = to_amd_desc(kobj);		\
+> +		struct struct_name st_name = {0};			\
+> +		int ret;						\
+> +									\
+> +		ret = access_fn(desc->cpu_id, &st_name);		\
+> +		if (ret)						\
+> +			return ret;					\
+> +									\
+> +		return scnprintf(buf, PAGE_SIZE, "%llu\n",		\
+> +				 (u64)st_name.member_name);		\
+> +	}								\
+> +
+> +#define store_func(struct_name, member_name, reg_idx)			\
+> +	static ssize_t store_##member_name(struct kobject *kobj,	\
+> +					   struct kobj_attribute *attr,	\
+> +					   const char *buf, size_t count)\
+> +	{								\
+> +		struct amd_desc *desc = to_amd_desc(kobj);		\
+> +		struct struct_name st_name = {0};			\
+> +		u32 val;						\
+> +		int ret;						\
+> +									\
+> +		ret = kstrtou32(buf, 0, &val);				\
+> +		if (ret)						\
+> +			return ret;					\
+> +									\
+> +		st_name.member_name = val;				\
+> +									\
+> +		ret = cppc_set_reg(desc->cpu_id, &st_name, reg_idx);	\
+> +		if (ret)						\
+> +			return ret;					\
+> +									\
+> +		return count;						\
+> +	}								\
+> +
+> +#define define_one_rw(struct_name, access_fn, member_name, reg_idx)	\
+> +	show_func(access_fn, struct_name, member_name)			\
+> +	store_func(struct_name, member_name, reg_idx)			\
+> +	define_one_global_rw(member_name)
+> +
+> +define_one_rw(cppc_ctrls, cppc_get_ctrls, enable, ENABLE);
+> +define_one_rw(cppc_ctrls, cppc_get_ctrls, max_perf, MAX_PERF);
+> +define_one_rw(cppc_ctrls, cppc_get_ctrls, min_perf, MIN_PERF);
+> +define_one_rw(cppc_ctrls, cppc_get_ctrls, desired_perf, DESIRED_PERF);
+> +define_one_rw(cppc_ctrls, cppc_get_ctrls, auto_sel_enable, AUTO_SEL_ENABLE);
+> +
+> +static struct attribute *amd_cpufreq_attributes[] = {
+> +	&enable.attr,
+> +	&max_perf.attr,
+> +	&min_perf.attr,
+> +	&desired_perf.attr,
+> +	&auto_sel_enable.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group amd_cpufreq_attr_group = {
+> +	.attrs = amd_cpufreq_attributes,
+> +};
+> +
+> +static struct kobj_type amd_cpufreq_type = {
+> +	.sysfs_ops = &kobj_sysfs_ops,
+> +	.default_attrs = amd_cpufreq_attributes,
+> +};
+> +
+> +static int amd_cpufreq_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int amd_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int amd_cpufreq_cpu_verify(struct cpufreq_policy *policy)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int amd_cpufreq_cpu_target_index(struct cpufreq_policy *policy,
+> +					unsigned int index)
+> +{
+> +	return 0;
+> +}
 
-Best regards
-Wang Shengjiu
+All empty helpers ? There is nothing you need to do ?
+
+> +
+> +static struct cpufreq_driver amd_cpufreq_driver = {
+> +	.name = "amd_cpufreq",
+> +	.init = amd_cpufreq_cpu_init,
+> +	.exit = amd_cpufreq_cpu_exit,
+> +	.verify = amd_cpufreq_cpu_verify,
+> +	.target_index = amd_cpufreq_cpu_target_index,
+> +};
+> +
+> +static void amd_cpufreq_sysfs_delete_params(void)
+> +{
+> +	int i;
+> +
+> +	for_each_possible_cpu(i) {
+> +		if (all_cpu_data[i]) {
+> +			kobject_del(&all_cpu_data[i]->kobj);
+
+Shouldn't you use kobject_put() instead of this ?
+
+> +			kfree(all_cpu_data[i]);
+> +		}
+> +	}
+> +
+> +	kfree(all_cpu_data);
+> +}
+> +
+> +static int __init amd_cpufreq_sysfs_expose_params(void)
+> +{
+> +	struct device *cpu_dev;
+> +	int i, ret;
+> +
+> +	all_cpu_data = kcalloc(num_possible_cpus(), sizeof(void *),
+> +			       GFP_KERNEL);
+> +
+> +	if (!all_cpu_data)
+> +		return -ENOMEM;
+> +
+> +	for_each_possible_cpu(i) {
+> +		all_cpu_data[i] = kzalloc(sizeof(struct amd_desc), GFP_KERNEL);
+> +		if (!all_cpu_data[i]) {
+> +			ret = -ENOMEM;
+> +			goto free;
+> +		}
+> +
+> +		all_cpu_data[i]->cpu_id = i;
+> +		cpu_dev = get_cpu_device(i);
+> +		ret = kobject_init_and_add(&all_cpu_data[i]->kobj, &amd_cpufreq_type,
+> +					   &cpu_dev->kobj, "amd_cpufreq");
+> +		if (ret)
+> +			goto free;
+> +	}
+> +
+> +	return 0;
+> +free:
+> +	amd_cpufreq_sysfs_delete_params();
+> +	return ret;
+> +}
+
+Instead of doing this once for all CPUs, it would be better to do it
+every time the ->init() callback of the driver gets called. If you
+have one cpufreq policy for each CPU (i.e. no CPUs share clock lines),
+then the init() callback will get called once for each CPU.
+
+> +
+> +static int __init amd_cpufreq_init(void)
+> +{
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * Use only if:
+> +	 * - AMD,
+> +	 * - Family 17h (or) newer and,
+> +	 * - Explicitly enabled
+> +	 */
+> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD ||
+> +	    boot_cpu_data.x86 < 0x17 || !cppc_enable)
+> +		return -ENODEV;
+> +
+> +	ret = cpufreq_register_driver(&amd_cpufreq_driver);
+> +	if (ret) {
+> +		pr_info("Failed to register driver\n");
+> +		goto out;
+> +	}
+> +
+> +	ret = amd_cpufreq_sysfs_expose_params();
+> +	if (ret) {
+> +		pr_info("Could not create sysfs entries\n");
+> +		cpufreq_unregister_driver(&amd_cpufreq_driver);
+> +		goto out;
+> +	}
+> +
+> +	pr_info("Using amd-cpufreq driver\n");
+> +	return ret;
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static void __exit amd_cpufreq_exit(void)
+> +{
+> +	amd_cpufreq_sysfs_delete_params();
+> +	cpufreq_unregister_driver(&amd_cpufreq_driver);
+> +}
+> +
+> +static const struct acpi_device_id amd_acpi_ids[] __used = {
+> +	{ACPI_PROCESSOR_DEVICE_HID, },
+> +	{}
+> +};
+> +
+> +device_initcall(amd_cpufreq_init);
+> +module_exit(amd_cpufreq_exit);
+> +MODULE_DEVICE_TABLE(acpi, amd_acpi_ids);
+
+All three should be placed directly below the struct/function they
+represent without any blank lines in between. As suggested in
+kernel documentation.
+
+> +
+> +MODULE_AUTHOR("Janakarajan Natarajan");
+> +MODULE_DESCRIPTION("AMD CPUFreq driver based on ACPI CPPC v6.1 spec");
+> +MODULE_LICENSE("GPL");
+
+Should this be "GPL v2" ?
+
+> -- 
+> 2.17.1
+
+-- 
+viresh
