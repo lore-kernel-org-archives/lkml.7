@@ -2,208 +2,123 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD753C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4E9C742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916DE21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFDF21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="AQ3DbKxl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QNSUIi6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfGKUbH (ORCPT
+        id S1731243AbfGKUcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:31:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38958 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731079AbfGKUbG (ORCPT
+        Thu, 11 Jul 2019 16:32:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36521 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730242AbfGKUcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:31:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b7so3616230pls.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:31:05 -0700 (PDT)
+        Thu, 11 Jul 2019 16:32:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k8so3625490plt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TV2jSvn5SJbiANqesUZ+all03sCywDkc0brqJHcrz/s=;
-        b=AQ3DbKxl1VudFwp2u0IRGvRKW0ik5qJpVbipJChEW6DyoxnPSNQmHAV/H5i6kL76WF
-         ZTj5PmgZHQ+Us8ylLM97QgZFpqYL8ZlRtYjJjZrJPE83dV2zmTv7ldWIQRJfPx2cgdrJ
-         91yMy5y+Fc5ZL2nQr7uABfRScoBToPqUQC+5zQJKQ5qzpUqV9gqWM9shlCUZca4vqGva
-         CIa7yvmdP/CyV25Y1szokHevNdrtgRmsVXAvYxv32I/79hY2/Z0SfgOaO9CBUQyLTWn4
-         NjQayNG+PwaHvmB7loPSmM7/mnn4YO5zAcV7znJTLoRU79XWs+p/0gZCIL9Dkd9IbTUB
-         eXEA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=XkYq7uT/CNUdv8Wag/pmsaqwtieqxy569t5n4hsEP2k=;
+        b=QNSUIi6/JywXvRsdcCggLLKKWxpsTFA7kv56Cen4r7ynWMCGwz2B/Pz5kms6GM+fBl
+         RfeMHSyFtMjCO1TbSWoqrXZcE9VcfVzxypHZu8ARhyLEq8Fh8NE+UbsJiDsyGKkmA+aR
+         JxLU7XINELxFSiUazt3yK0PZwgfe7MvstUqvK46xheV6QPS72UadCPivC5+W0Ofch2f5
+         sMtBQbkQTpO6x/khyX0tsnUTSH5EBvMICHSj+2bSL86eRNsqF16ui2ieJAoMJQ8Z+7o4
+         NaYn5ZpX1JD7KOeNKj32TxJ1Rhhj8CsHp8atPVcPgSjLYJUah3neBUMStpO7bfz8LB13
+         DkWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TV2jSvn5SJbiANqesUZ+all03sCywDkc0brqJHcrz/s=;
-        b=Qlfi8JPKROpUE4HuOohfhVsltebjNDuXpIw+fyBEIWj6d94I8rIoiNzd4vjnprNcvH
-         sDLdwVa8+9CVRu8492HMBn4RRTqrs19/kpgLB+cD9+L9NdHoKBstGAhHOPD6BB1Ii+dw
-         gfsXcBOah878X4V/U7g/RsOSb+jAza31w/IcjlWcBa62tcj1r5zmq//GAEHMvKmalVoI
-         Aox6rtnAzA9YzqytAczNyylsesxxL3iIgC7vwfYJ4W2qxAQntoyR1MEzXtlNkBgSQBCO
-         mVwH+MIa5r10wHFc28g6ddur2TqxzDqyld7gEfO2oBwoiepRouG4TQX354deO+XtCd3l
-         eDPg==
-X-Gm-Message-State: APjAAAXKxSiBZbSfxMOc5dguF2Fdy0UnbexTuy2CvPbBd0twFSKIRPWk
-        W0u0qD2bICd8vdx1NIUimQ0=
-X-Google-Smtp-Source: APXvYqz1HiiGkIF3jM4roVcn1A3U9HeG/I2Oi5xsnkmPIbL4o2zcAH8p7IgPBemIwtw1cVptETOBMg==
-X-Received: by 2002:a17:902:3283:: with SMTP id z3mr6758105plb.176.1562877065317;
-        Thu, 11 Jul 2019 13:31:05 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id s66sm7073008pfs.8.2019.07.11.13.30.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 13:30:59 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 13:30:59 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     linux-kernel@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
-        Iago =?iso-8859-1?Q?L=F3pez?= Galeiras <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org
-Subject: Re: [bpf-next v3 10/12] bpf: Implement bpf_prog_test_run for perf
- event programs
-Message-ID: <20190711203059.GB16709@mini-arch>
-References: <20190708163121.18477-1-krzesimir@kinvolk.io>
- <20190708163121.18477-11-krzesimir@kinvolk.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708163121.18477-11-krzesimir@kinvolk.io>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=XkYq7uT/CNUdv8Wag/pmsaqwtieqxy569t5n4hsEP2k=;
+        b=nSZ2D39GjjLp5zisyr4c8Qc2NM89HcYq6r2hZADuuJN967DsqWFVbYS69XPjJkaMX4
+         5TU6ANZuun7KDJ1XPaJURJJQA6GhxxcJ7Csj9x1nOaJJCJ/7NnirQ/fg4srHbJjSvZH8
+         43ofOxC5Iq5y+z1/uKiJtfRH8yoc4JHx9hgBULhcUKYnHiRusJgJ215ly8X/9kbelAfw
+         hijSCXGvmQf5GblSUV3+mhxc4xtfWruWiLKC1ZzS4fNnYvC2QansX/4WnYsV8URy3O4J
+         Glk9mfSBCA9F+nVwWvrgQbiGSxXKprSF0rzh7pdeADZEp6nZaKGylZj3QW1zFe3OJNVP
+         /LoQ==
+X-Gm-Message-State: APjAAAVhPniIdffJzgDY0Bv9cB//b9P929C0PtMqbDOSkGFkLDq26DD5
+        uUVIfhGFZLgl5lX2tewc4fiAYF+l1MnkJg==
+X-Google-Smtp-Source: APXvYqxuiqD/QeFdfWOG0tlJem3oeWCYlhK+OsGUOgkfx68FOnXwufxYAiSVysaUMbTd+tVTuRakEw==
+X-Received: by 2002:a17:902:9041:: with SMTP id w1mr6945324plz.132.1562877122722;
+        Thu, 11 Jul 2019 13:32:02 -0700 (PDT)
+Received: from localhost ([49.248.58.252])
+        by smtp.gmail.com with ESMTPSA id u7sm6104032pgr.94.2019.07.11.13.32.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 13:32:01 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        joe@perches.com, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH v2] thermal: Add some error messages
+Date:   Fri, 12 Jul 2019 02:01:58 +0530
+Message-Id: <31a29628894a14e716fff113fd9ce945fe649c05.1562876950.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1562876950.git.amit.kucheria@linaro.org>
+References: <cover.1562876950.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08, Krzesimir Nowak wrote:
-> As an input, test run for perf event program takes struct
-> bpf_perf_event_data as ctx_in and struct bpf_perf_event_value as
-> data_in. For an output, it basically ignores ctx_out and data_out.
-> 
-> The implementation sets an instance of struct bpf_perf_event_data_kern
-> in such a way that the BPF program reading data from context will
-> receive what we passed to the bpf prog test run in ctx_in. Also BPF
-> program can call bpf_perf_prog_read_value to receive what was passed
-> in data_in.
-> 
-> Changes since v2:
-> - drop the changes in perf event verifier test - they are not needed
->   anymore after reworked ctx size handling
-> 
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> ---
->  kernel/trace/bpf_trace.c | 60 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index ca1255d14576..b870fc2314d0 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -19,6 +19,8 @@
->  #include "trace_probe.h"
->  #include "trace.h"
->  
-> +#include <trace/events/bpf_test_run.h>
-> +
->  #define bpf_event_rcu_dereference(p)					\
->  	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
->  
-> @@ -1160,7 +1162,65 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
->  	.convert_ctx_access	= pe_prog_convert_ctx_access,
->  };
->  
-> +static int pe_prog_test_run(struct bpf_prog *prog,
-> +			    const union bpf_attr *kattr,
-> +			    union bpf_attr __user *uattr)
-> +{
-> +	struct bpf_perf_event_data_kern real_ctx = {0, };
-> +	struct perf_sample_data sample_data = {0, };
-> +	struct bpf_perf_event_data *fake_ctx;
-> +	struct bpf_perf_event_value *value;
-> +	struct perf_event event = {0, };
-> +	u32 retval = 0, duration = 0;
-> +	int err;
-> +
-> +	if (kattr->test.data_size_out || kattr->test.data_out)
-> +		return -EINVAL;
-> +	if (kattr->test.ctx_size_out || kattr->test.ctx_out)
-> +		return -EINVAL;
-> +
-> +	fake_ctx = bpf_receive_ctx(kattr, sizeof(struct bpf_perf_event_data));
-> +	if (IS_ERR(fake_ctx))
-> +		return PTR_ERR(fake_ctx);
-> +
-> +	value = bpf_receive_data(kattr, sizeof(struct bpf_perf_event_value));
-> +	if (IS_ERR(value)) {
-> +		kfree(fake_ctx);
-> +		return PTR_ERR(value);
-> +	}
-nit: maybe use bpf_test_ prefix for receive_ctx/data:
-* bpf_test_receive_ctx
-* bpf_test_receive_data
+When registering a thermal zone device, we currently return -EINVAL in
+four cases. This makes it a little hard to debug the real cause of the
+failure.
 
-? To signify that they are used for tests only.
+Print some error messages to make it easier for developer to figure out
+what happened.
 
-> +
-> +	real_ctx.regs = &fake_ctx->regs;
-> +	real_ctx.data = &sample_data;
-> +	real_ctx.event = &event;
-> +	perf_sample_data_init(&sample_data, fake_ctx->addr,
-> +			      fake_ctx->sample_period);
-> +	event.cpu = smp_processor_id();
-> +	event.oncpu = -1;
-> +	event.state = PERF_EVENT_STATE_OFF;
-> +	local64_set(&event.count, value->counter);
-> +	event.total_time_enabled = value->enabled;
-> +	event.total_time_running = value->running;
-> +	/* make self as a leader - it is used only for checking the
-> +	 * state field
-> +	 */
-> +	event.group_leader = &event;
-> +	err = bpf_test_run(prog, &real_ctx, kattr->test.repeat,
-> +			   BPF_TEST_RUN_PLAIN, &retval, &duration);
-> +	if (err) {
-> +		kfree(value);
-> +		kfree(fake_ctx);
-> +		return err;
-> +	}
-> +
-> +	err = bpf_test_finish(uattr, retval, duration);
-> +	trace_bpf_test_finish(&err);
-Can probably do:
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ drivers/thermal/thermal_core.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-	err = bpf_test_run(...)
-	if (!err) {
-		err = bpf_test_finish(uattr, retval, duration);
-		trace_bpf_test_finish(&err);
-	}
-	kfree(..);
-	kfree(..);
-	return err;
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 46cfb7de4eb2..e1c2c2638219 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -1238,17 +1238,26 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+ 	int count;
+ 	struct thermal_governor *governor;
+ 
+-	if (!type || strlen(type) == 0)
++	if (!type || strlen(type) == 0) {
++		pr_err("Error: No thermal zone type defined\n");
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	if (type && strlen(type) >= THERMAL_NAME_LENGTH)
++	if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
++		pr_err("Error: Thermal zone name (%s) too long, should be under %d chars\n",
++		       type, THERMAL_NAME_LENGTH);
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips)
++	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips) {
++		pr_err("Error: Incorrect number of thermal trips\n");
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	if (!ops)
++	if (!ops) {
++		pr_err("Error: Thermal zone device ops not defined\n");
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+ 	if (trips > 0 && (!ops->get_trip_type || !ops->get_trip_temp))
+ 		return ERR_PTR(-EINVAL);
+-- 
+2.17.1
 
-So you don't have to copy-paste the error handling.
-
-> +	kfree(value);
-> +	kfree(fake_ctx);
-> +	return err;
-> +}
-> +
->  const struct bpf_prog_ops perf_event_prog_ops = {
-> +	.test_run	= pe_prog_test_run,
->  };
->  
->  static DEFINE_MUTEX(bpf_event_mutex);
-> -- 
-> 2.20.1
-> 
