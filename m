@@ -2,194 +2,113 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB8BC74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EB2C74261
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC008208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499F2208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kqlroZe7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMt8nkUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfGKRje (ORCPT
+        id S1728644AbfGKRjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:39:34 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39544 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbfGKRje (ORCPT
+        Thu, 11 Jul 2019 13:39:42 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43955 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbfGKRjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:39:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so3280333pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:39:33 -0700 (PDT)
+        Thu, 11 Jul 2019 13:39:41 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so4251246qka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HFZ1x9Bwz0GUDiOhP+7WxNPTOOqtjhEpu7L1QSIu54o=;
-        b=kqlroZe7s+T13xYRD1th/uV6N3YkpWdMDzxIIFwQ3gDiLT3wa7qh4YgQEuuSkugzgL
-         /uXB2s+618wSOpYeEZEOx6Zo55mhAdfZv/xCopvHTtWqNOKJeYU4lgzerllcKFHYhijw
-         gdiTnf31KYPqhs4yGxw35020hpX2r6WA+B2RPXfPw4V4of15OtygEKGbF714c9A1Xd5W
-         4wKQiw62KZEMrT6SZa0nDXpVHa8q9AvAxMR3hm6Po+LZ12pKj2EMBkKdJf4QBV/ilvFC
-         eleQlxQf1VpsKLBBysZ3aGGheMnoi1f+o6NOiqHTH4Qo35DRdhokkSp4EOoU6am5pStB
-         1e6w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wzqHLodjklfHBMQ2oXwe3rSiKOixJEtNc2HYoaPd72g=;
+        b=KMt8nkUKKA3uNV7EXX0FRWWqjZoFiTLUSIlTfEtUCMpKw3a1tDgd75azHHO1rVn4cz
+         9xRJWnkyXg+ABgLeUnfO9S03qDAIxen6nJiXSH8yFDBkhKaLcfV2bT2LG9MmmjvuCkt9
+         AvZzz17tqWEvpMsVedJYNIdVKeRqKwmhcCD66UA7YAjVRKjGzK1pPEQ7TCpAZgKGRR47
+         WtZ8RoOesLb/iuIlLx4c4wTeoIk11eZe2g8SaVuCZUJRhEpwezC2+aJblwwHvM/ponVG
+         ZLT9wbQEaGSl55GF260PK21NXHXc0GMcfCB/KVMQC/J9tkWq9XHGSw+wl/3W/8Lb3WsU
+         E0Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HFZ1x9Bwz0GUDiOhP+7WxNPTOOqtjhEpu7L1QSIu54o=;
-        b=rBKPNAvUG3saWl9FKtkNiq3c1LJ/9zZ1Hugrazh50Yq5aRZv/uHp8T/4zzi87CJ6/G
-         CobMWzuiqIwf1Ml2YmfDbc1/1dlzpoyFzHf3b87cvNruVPtCVlW7YhFUbkJ0eSU8td+r
-         7gQNlJunua1pI7AseOGcz85jlSC3aWJn2PaaRKTEsj/VjkZP7/J3YbHala96voqWp/6i
-         y06G1WiUFXLxJqnaWj7Vc6SBP13sO8fioGiGZ1kjCH1/1CVbDTldydfAUPj2BBueAWT3
-         dkjSZqpZ1umDZRfj7yc/kodKNdkKm36ZCyRb+VGpRlZnMryCCuomWT+nxhfC1kWK5Y/q
-         VrRg==
-X-Gm-Message-State: APjAAAXJibYCYWy6pAHUm0C4iDM9qdHVv3P+JPkSzQTAFUJPtA32rqFz
-        gvdOPtSD0cgr600W1XiyWdY4Mg==
-X-Google-Smtp-Source: APXvYqx53DWisrIUx8wtw7I10qDwRqbUe57mjMuQjMcDn74PJCZFUDQRHQVTvfGYi0yrHyXySpJJsw==
-X-Received: by 2002:a17:90a:7148:: with SMTP id g8mr6263776pjs.51.1562866772910;
-        Thu, 11 Jul 2019 10:39:32 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i124sm13165127pfe.61.2019.07.11.10.39.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wzqHLodjklfHBMQ2oXwe3rSiKOixJEtNc2HYoaPd72g=;
+        b=ubuS21LJ1UmEMMhsx8e0cxFYbt9TbP0UeP2cCEFcIl20oerJSJxo+UQK0r3TeW64u9
+         eBv3738zGIT68i3pS2quFvO4NvNAp38VgYlHnlPw9lBv9CLLvHGBjePRZkIHcWaTVhQL
+         hfjG8TlBtywpn3kvyDbqVjlkXZLa7v4AA/bogiOzhUb898kDeNcZBUvNPjgLXo2Ms/PT
+         DUybjFyO/yzICR/nLi+PgxxfKpV+BDf3Z+Y0ey0r+Rg0UjWBcQpYVZM4MfR8cx72FB8d
+         rFueve7+l3adLNlydQsUxZpNGONxdan+p1QyZI9f4eM4J9dEItTDCCUunqjz0uQWlDK1
+         mDmw==
+X-Gm-Message-State: APjAAAVcXUDzk3wOGb2JhaxcGs9BHRzsPOOVm7Km9PgfvKcAZRK31urP
+        RGMzp/s9wDqZDFEJphN3aw==
+X-Google-Smtp-Source: APXvYqy/EP/CSPda0hTxfFy92POdFWAYBW2oeddiFyl8zyVPrCCXK2k0Mo8FTGCs+Hrkne/W6zE2Yw==
+X-Received: by 2002:a37:624b:: with SMTP id w72mr3124272qkb.368.1562866780185;
+        Thu, 11 Jul 2019 10:39:40 -0700 (PDT)
+Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
+        by smtp.googlemail.com with ESMTPSA id i23sm2266094qtm.17.2019.07.11.10.39.38
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 10:39:32 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 10:40:43 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        georgi.djakov@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, saravanak@google.com
-Subject: Re: [PATCH RFC 2/4] OPP: Add and export helper to set bandwidth
-Message-ID: <20190711174043.GU7234@tuxbook-pro>
-References: <20190627133424.4980-1-sibis@codeaurora.org>
- <20190627133424.4980-3-sibis@codeaurora.org>
+        Thu, 11 Jul 2019 10:39:39 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     iamkeyur96@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: most: remove redundant print statement when 
+Date:   Thu, 11 Jul 2019 13:39:12 -0400
+Message-Id: <20190711173915.24200-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190711110809.17089-1-iamkeyur96@gmail.com>
+References: <20190711110809.17089-1-iamkeyur96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627133424.4980-3-sibis@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 27 Jun 06:34 PDT 2019, Sibi Sankar wrote:
-
-> Add and export 'dev_pm_opp_set_bw' to set the bandwidth
-> levels associated with an OPP for a given frequency.
-> 
-
-While this looks quite reasonable I'm uncertain about the overall OPP
-API.
-
-With the profiling based (bwmon/llcc) approach we would acquire the peak
-bandwidth from the OPP table and calculate the average dynamically,
-based on measurements and heuristics.
-
-For that I think we will have a struct dev_pm_opp at hand (e.g. from
-devfreq_recommended_opp() or similar), from which we want to read the
-peak value and then apply the icc vote. Or would we want to update the
-avg bw and then apply the opp using a method like this? (In which case
-we probably don't want to pass a freq, but a struct dev_pm_opp *, to
-avoid the additional lookup)
-
-Regards,
-Bjorn
-
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/opp/core.c     | 46 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h |  6 ++++++
->  2 files changed, 52 insertions(+)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index c85c04dc2c7de..78f42960860d1 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -746,6 +746,52 @@ static int _set_required_opps(struct device *dev,
->  	return ret;
->  }
->  
-> +/**
-> + * dev_pm_opp_set_bw() - Configures OPP bandwidth levels
-> + * @dev:	device for which we do this operation
-> + * @freq:	bandwidth values to set with matching 'freq'
-> + *
-> + * This configures the bandwidth to the levels specified
-> + * by the OPP corresponding to the given frequency.
-> + *
-> + * Return: 0 on success or a negative error value.
-> + */
-> +int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
-> +{
-> +	struct opp_table *opp_table;
-> +	struct dev_pm_opp *opp;
-> +	int ret = 0;
-> +	int i;
-> +
-> +	opp = dev_pm_opp_find_freq_exact(dev, freq, true);
-> +	if (IS_ERR(opp))
-> +		return PTR_ERR(opp);
-> +
-> +	opp_table = _find_opp_table(dev);
-> +	if (IS_ERR(opp_table)) {
-> +		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
-> +		ret = PTR_ERR(opp_table);
-> +		goto put_opp;
-> +	}
-> +
-> +	if (IS_ERR_OR_NULL(opp_table->paths)) {
-> +		ret = -ENODEV;
-> +		goto put_opp_table;
-> +	}
-> +
-> +	for (i = 0; i < opp_table->path_count; i++) {
-> +		ret = icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
-> +				 opp->bandwidth[i].peak);
-> +	}
-> +
-> +put_opp_table:
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +put_opp:
-> +	dev_pm_opp_put(opp);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
-> +
->  /**
->   * dev_pm_opp_set_rate() - Configure new OPP based on frequency
->   * @dev:	 device for which we do this operation
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index a17c462974851..1cdc2d0a2b20e 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -152,6 +152,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
->  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
->  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
->  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
-> +int dev_pm_opp_set_bw(struct device *dev, unsigned long freq);
->  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
->  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
->  void dev_pm_opp_remove_table(struct device *dev);
-> @@ -336,6 +337,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
->  	return -ENOTSUPP;
->  }
->  
-> +static inline int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
->  {
->  	return -ENOTSUPP;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+This print statement is redundant as kfifo_alloc just calls kmalloc_array=0D
+and without the __GFP_NOWARN flag, already does a dump_stack().=0D
+=0D
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>=0D
+---=0D
+Changes in v2:=0D
+- Edit subject line.=0D
+---=0D
+ drivers/staging/most/cdev/cdev.c | 5 ++---=0D
+ 1 file changed, 2 insertions(+), 3 deletions(-)=0D
+=0D
+diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/c=
+dev.c=0D
+index d0cc0b746107..bc0219ceac50 100644=0D
+--- a/drivers/staging/most/cdev/cdev.c=0D
++++ b/drivers/staging/most/cdev/cdev.c=0D
+@@ -463,10 +463,9 @@ static int comp_probe(struct most_interface *iface, in=
+t channel_id,=0D
+ 	spin_lock_init(&c->unlink);=0D
+ 	INIT_KFIFO(c->fifo);=0D
+ 	retval =3D kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);=0D
+-	if (retval) {=0D
+-		pr_info("failed to alloc channel kfifo");=0D
++	if (retval)=0D
+ 		goto err_del_cdev_and_free_channel;=0D
+-	}=0D
++=0D
+ 	init_waitqueue_head(&c->wq);=0D
+ 	mutex_init(&c->io_mutex);=0D
+ 	spin_lock_irqsave(&ch_list_lock, cl_flags);=0D
+-- =0D
+2.22.0=0D
+=0D
