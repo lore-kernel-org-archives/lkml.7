@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2B7C742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DF1C742A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D0D208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30810208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rowiavIF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jbkXSzSR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfGKVfV (ORCPT
+        id S1729110AbfGKVhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 17:35:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44741 "EHLO ozlabs.org"
+        Thu, 11 Jul 2019 17:37:08 -0400
+Received: from ozlabs.org ([203.11.71.1]:50315 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfGKVfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 17:35:20 -0400
+        id S1726199AbfGKVhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 17:37:07 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45l8VF5Vllz9sMQ;
-        Fri, 12 Jul 2019 07:35:17 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45l8XK0yt8z9sMQ;
+        Fri, 12 Jul 2019 07:37:05 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562880917;
-        bh=Ox806JqLC4KGcGiKtSCTa+hWHfHKXpoAAPVesUdxloE=;
+        s=201702; t=1562881025;
+        bh=lfLTT/KATA/r3uNfpQEyJnuc1pEDrlNuUNIolu/dtzQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=rowiavIFbDxtbIMiuVQuw3gHNrCdCkAM/UWxR3IursQHi3LbfLri7JclNVBc8Lln9
-         LA54SckQhCulT4tAYUbtpN9EH/r66mH874yDMZu99Sv1iL24xidLff039xRgZ5oBuJ
-         wkLqPh6537GSP/RnKWm0nJZK+3ZIgrYf4yoMERJs7+M3ubIf+2Uyp6ryJOnANWzBLT
-         bLtQ+ATu1kg4YUZQXTWrUDXav3K3j4r6sx+ZBsFPD8rAFvzfKlucgegrz2nx4ItIBf
-         CNdVdLcYf7lVhH4RJBRRW3soiyVpbZjnl/yQWfHL3Zy83DAxe6EdUoZlZsOger0YfJ
-         fBL3n6709dLgw==
-Date:   Fri, 12 Jul 2019 07:35:11 +1000
+        b=jbkXSzSRpAPCj+d0kXPtV4inMWnB0YWEEHRmIkVNIccF6VkSo7iGOVvZgyFS4gPJR
+         sm4+6XzPuBDRq/VLrTnuTliWPgA9H0K/5r3PoxnpKkDYSiFNUU+K1iB9hvKfkqsxPH
+         ijEtglFn3E8c15aAWV4JKcgJyC1zGBkOZB/WTJyRhlqSJyP0WmkO/qs+ZOxNqSWufM
+         /wCwS/lGVmoH/cH+qrq/llCuqPrT0Pm80kvuu6uwB4597eiNL7+LukcY4PRg6Kd6mS
+         +bIHGVR8bJtBJMqRJfl4+hzeIJ5U5lc+SOQfSYftx2ucKQ+NvwhetKVYYaKViM5pVP
+         2Z90bV7s0JYxg==
+Date:   Fri, 12 Jul 2019 07:37:03 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the block tree
-Message-ID: <20190712073511.53bd6665@canb.auug.org.au>
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: linux-next: Fixes tag needs some work in the tpmdd tree
+Message-ID: <20190712073703.6b6f7667@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/W6E50f6AvBoAnPffVgCDwMG"; protocol="application/pgp-signature"
+ boundary="Sig_/CUNmiBZjkePE7iQi0W5w8.r"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/W6E50f6AvBoAnPffVgCDwMG
+--Sig_/CUNmiBZjkePE7iQi0W5w8.r
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
@@ -61,41 +61,37 @@ Hi all,
 
 In commit
 
-  8f3858763d33 ("nvme: fix NULL deref for fabrics options")
+  0ce9bf1a55c9 ("tpm: tpm_ibm_vtpm: Fix unallocated banks")
 
 Fixes tag
 
-  Fixes: 958f2a0f8 ("nvme-tcp: set the STABLE_WRITES flag when data digests
+  Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
 
 has these problem(s):
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
   - Subject has leading but no trailing parentheses
   - Subject has leading but no trailing quotes
 
-Please do not split Fixes tags over more than one line.  Also do not
-include blank lines among the tags.
+Please do not split Fixes tags over more than one line.
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_/W6E50f6AvBoAnPffVgCDwMG
+--Sig_/CUNmiBZjkePE7iQi0W5w8.r
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0nq48ACgkQAVBC80lX
-0GzNggf/YfwkoBjwGpdYd8/TYPaH2rF6OcwLw3yiqESsb7Z2TtBmUiHgZFhMYrjU
-XDd39iA3oqypBPLxn4Qx9HUEHY9y9vEWxU1lhZn50raORg4jWuWRZaGrZFKT4vVq
-aiDrrsH0n2CprBQ5m7RV5lLek+RG6FbsMxDEPp1qUg7Jt/GeIxQ41XAj+FG9YMIA
-mLxHCyEITlP41Bny9nFFHPXIm+YRFl6XVx8YNQUxY1NPwRBZbNaPPwu+/Uszbb4f
-XZniBQZ7dltDdCaatrjrPby3h7gXwTQVIGZprdZ1xCH/t4fSSfASqUTT/GZZV2rK
-ZiRc4Q0h4VqmrZmhrkhgCSsKM86crg==
-=8IcY
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0nq/8ACgkQAVBC80lX
+0GxyUwgAjYSy9qM6m4ZxVvPOdDbNqvYSkv+oRUteCMvn4boobeBu1wj96xDmu/bE
+XLNAxeZfDKOgKBHOX+EmltW55P1QS9gDTkv0ruUlQnfXJwZbGT4k131s58usCXVB
+Kuv6yNAHC0Cd9CFegi8cZ2e6TVYK0nGAPx71YfiMpPsMJxUxwFhblVfj+9K/ALFX
+OL4TweQReYe8z6rKT/F1dPkW7J8ODkL6tf6gZ+8cGmhgO0n+XxvKew6xn0aufB1r
+V2jmtnAOW+Y4cIl4C8psD9G7BBo0p+z+kUru8U2Fx6gEAA7KuLwOq/a6YajPSHUx
+yU1tE+ppRLOG0TVWElR9RbELVD0nLA==
+=zbKg
 -----END PGP SIGNATURE-----
 
---Sig_/W6E50f6AvBoAnPffVgCDwMG--
+--Sig_/CUNmiBZjkePE7iQi0W5w8.r--
