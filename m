@@ -2,158 +2,91 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D35C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3723FC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26082166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0323A216C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dR8W5eRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfGKLvO (ORCPT
+        id S1728567AbfGKLvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 07:51:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59402 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbfGKLvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 07:51:13 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E5CFC81DE0;
-        Thu, 11 Jul 2019 11:51:12 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-46.ams2.redhat.com [10.36.116.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 716CB6014E;
-        Thu, 11 Jul 2019 11:51:06 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, robin.murphy@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com,
-        zhangfei.gao@gmail.com
-Subject: [PATCH v9 09/14] iommu/smmuv3: Implement cache_invalidate
-Date:   Thu, 11 Jul 2019 13:49:54 +0200
-Message-Id: <20190711114959.15675-10-eric.auger@redhat.com>
-In-Reply-To: <20190711114959.15675-1-eric.auger@redhat.com>
-References: <20190711114959.15675-1-eric.auger@redhat.com>
+        Thu, 11 Jul 2019 07:51:21 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33350 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728287AbfGKLvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 07:51:20 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so2909973plo.0;
+        Thu, 11 Jul 2019 04:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YADbvn2K6/u8nqZ8q9ZPF7M9RWPIMSzuiJIm7lkbc3Y=;
+        b=dR8W5eRiA/e3yOi4FOC4uHJMU1ECzIkaS4bxgdBNsa6BXDCrKbvda7odCkmQbvNdcH
+         YZoMSxJR0BYz3/xfoJkaYuvvI1fPrP/ynaRDty9gWT67FWK53dMGLMMlKD/njJJnwG/2
+         ev4GNOw3od3Y/XeE6wdIhqYSrJSNF5oqRiVH634uOV7zxQMZMoJ71+aXW0u3rmgbG0OL
+         92E9bCnNpG9Ool9BikbAnYOLXmoUL1PxCXFNTVbkxD19su5nmpC3Vjiv1unpY8nDw+zF
+         k7FSnjPt3kEPNECLpxet7RvOHLPYL8wx5xQ8ETIxs3tM5xk8hgLMIr9b/A2K6AIpD8Zm
+         J8BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YADbvn2K6/u8nqZ8q9ZPF7M9RWPIMSzuiJIm7lkbc3Y=;
+        b=cfxQCez6+MQm+8vWcQaygU9GAqHJ5s6xft/3h29iiLdvySp2pDYzyQt6PgRO7c3sP1
+         QpgbmkoUAPYYe5UDqXBiuNi3UNpRuApUCdHAmomqpWJXWvBzqK+eZ3VHOdRqosEOOiKn
+         dlKVfOQBWZyYUlYFvAbgN55qu/1p5UIihiTqAuiHbEtJaQfH+jmd46jxv97TgymuyBC5
+         UIjWWFBKBlUzrPtIYIa8ol0q472ztXGE4RBtzEffuYwk26Jvm9eHzstrFHaJtim5flJ0
+         DvCR4qgZNKVTpKIGtHfd+PbW6U3kHJZyvYYtkP+zJdaju6McUaaXCbnvOSDS57b6nM0d
+         22EA==
+X-Gm-Message-State: APjAAAU2nTO7Pwc5Fh3Qdjk9sCEjhL9QT7+y39bZUxox3TbCp+U/5YoM
+        iCmaElTDdxhQqccyGJ5vXkA=
+X-Google-Smtp-Source: APXvYqxcGYiazPJSNg+VJyMqpy0EBBHqn2dYQ4xvLYGpGoGXyLLw8DgEU53NFyfiW27LNl5svYK7jQ==
+X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr4200056plp.221.1562845879704;
+        Thu, 11 Jul 2019 04:51:19 -0700 (PDT)
+Received: from icarus ([2001:268:c144:cf11:d03e:81be:e250:5da0])
+        by smtp.gmail.com with ESMTPSA id a21sm6426357pfi.27.2019.07.11.04.51.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 04:51:18 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 20:50:59 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        fabrice.gasnier@st.com, alexandre.torgue@st.com,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
+ trigger driver
+Message-ID: <20190711115059.GA7778@icarus>
+References: <20190507091224.17781-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 11 Jul 2019 11:51:13 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190507091224.17781-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement domain-selective and page-selective IOTLB invalidations.
+On Tue, May 07, 2019 at 11:12:24AM +0200, Benjamin Gaignard wrote:
+> Quadrature feature is now hosted on it own framework.
+> Remove quadrature related code from stm32-trigger driver to avoid
+> code duplication and simplify the ABI.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+What is the status of this patch? Are there any objections currently for
+its inclusion?
 
----
-v7 -> v8:
-- ASID based invalidation using iommu_inv_pasid_info
-- check ARCHID/PASID flags in addr based invalidation
-- use __arm_smmu_tlb_inv_context and __arm_smmu_tlb_inv_range_nosync
-
-v6 -> v7
-- check the uapi version
-
-v3 -> v4:
-- adapt to changes in the uapi
-- add support for leaf parameter
-- do not use arm_smmu_tlb_inv_range_nosync or arm_smmu_tlb_inv_context
-  anymore
-
-v2 -> v3:
-- replace __arm_smmu_tlb_sync by arm_smmu_cmdq_issue_sync
-
-v1 -> v2:
-- properly pass the asid
----
- drivers/iommu/arm-smmu-v3.c | 57 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8b3c35ea58b2..9b4654e2f25c 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2575,6 +2575,62 @@ static void arm_smmu_detach_pasid_table(struct iommu_domain *domain)
- 	mutex_unlock(&smmu_domain->init_mutex);
- }
- 
-+static int
-+arm_smmu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-+			  struct iommu_cache_invalidate_info *inv_info)
-+{
-+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+
-+	if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
-+		return -EINVAL;
-+
-+	if (!smmu)
-+		return -EINVAL;
-+
-+	if (inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-+		return -EINVAL;
-+
-+	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_IOTLB) {
-+		if (inv_info->granularity == IOMMU_INV_GRANU_PASID) {
-+			struct iommu_inv_pasid_info *info =
-+				&inv_info->pasid_info;
-+
-+			if (!(info->flags & IOMMU_INV_PASID_FLAGS_ARCHID) ||
-+			     (info->flags & IOMMU_INV_PASID_FLAGS_PASID))
-+				return -EINVAL;
-+
-+			__arm_smmu_tlb_inv_asid(smmu_domain,
-+						smmu_domain->s2_cfg->vmid,
-+						info->archid);
-+
-+		} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR) {
-+			struct iommu_inv_addr_info *info = &inv_info->addr_info;
-+			size_t size = info->nb_granules * info->granule_size;
-+			bool leaf = info->flags & IOMMU_INV_ADDR_FLAGS_LEAF;
-+
-+			if (!(info->flags & IOMMU_INV_ADDR_FLAGS_ARCHID) ||
-+			     (info->flags & IOMMU_INV_ADDR_FLAGS_PASID))
-+				return -EINVAL;
-+
-+			__arm_smmu_tlb_inv_s1_range_nosync(smmu_domain,
-+							   smmu_domain->s2_cfg->vmid,
-+							   info->archid,
-+							   info->addr, size,
-+							   info->granule_size,
-+							   leaf);
-+			arm_smmu_cmdq_issue_sync(smmu);
-+		} else {
-+			return -EINVAL;
-+		}
-+	}
-+	if (inv_info->cache & IOMMU_CACHE_INV_TYPE_PASID ||
-+	    inv_info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB) {
-+		return -ENOENT;
-+	}
-+	return 0;
-+}
-+
- static struct iommu_ops arm_smmu_ops = {
- 	.capable		= arm_smmu_capable,
- 	.domain_alloc		= arm_smmu_domain_alloc,
-@@ -2595,6 +2651,7 @@ static struct iommu_ops arm_smmu_ops = {
- 	.put_resv_regions	= arm_smmu_put_resv_regions,
- 	.attach_pasid_table	= arm_smmu_attach_pasid_table,
- 	.detach_pasid_table	= arm_smmu_detach_pasid_table,
-+	.cache_invalidate	= arm_smmu_cache_invalidate,
- 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
- };
- 
--- 
-2.20.1
-
+William Breathitt Gray
