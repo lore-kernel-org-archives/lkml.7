@@ -2,72 +2,169 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFDCC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99742C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24E8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562823015;
-	bh=rxXxLkkxpApXjLOWqL2u+u/hhAy8NMRZoTDymv1m3mI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=C5jebyrbs8kcQRiF4EdjaJJAAONCa/+TSaH7u/d7mRpZ8td1w14MbbagCZHD31I8o
-	 RJnUDkHZ4SduMykeXyQ+gDrnA18pqGVj0X/ECN4VXL89EtZFPGFlo2CsLIysodtSVH
-	 Pq35yFuFHlCs57mJwx2LFPfjXpYRfR+BoBIQevnc=
+	by mail.kernel.org (Postfix) with ESMTP id 67EFE208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="tlujGk14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfGKFaO (ORCPT
+        id S1728083AbfGKFbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfGKFaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:30:10 -0400
-Subject: Re: [git pull] m68k updates for 5.3 (take two)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562823009;
-        bh=rxXxLkkxpApXjLOWqL2u+u/hhAy8NMRZoTDymv1m3mI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=u2k3O5XDFCinNkwRvHJE5nZkxSDtoHx+W58taYcMsspUAnF1fQO6ZjRzc5nuFOuwp
-         MbIhl9TaBWYe/XEG0zckMpyu+RWmICjIqhJbSSymVIfzKWJo48c4Fj/rx2cSXJ7l94
-         OZJfFt09SWBYx2DlrX7AJ7duHfUrexaLcy/e16g4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190710121120.11156-1-geert@linux-m68k.org>
-References: <20190710121120.11156-1-geert@linux-m68k.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190710121120.11156-1-geert@linux-m68k.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git
- tags/m68k-for-v5.3-tag2
-X-PR-Tracked-Commit-Id: f28a1f16135c9c6366f3d3f20f2e58aefc99afa0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 29cd581b59496c26334c910a8b848baa81a6becd
-Message-Id: <156282300898.30654.3609784094329076966.pr-tracker-bot@kernel.org>
-Date:   Thu, 11 Jul 2019 05:30:08 +0000
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
+        Thu, 11 Jul 2019 01:31:04 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39390 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727595AbfGKFbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 01:31:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id f4so9866496ioh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pAQB/Y8xs+j93HMSHAN7MXn/ps2uNzO6vXJO40MXdLo=;
+        b=tlujGk14eGvspjpjzlMJmJGPW02ZKCrBcsclMROZe/a6wEB1zT6ARD+16mYnoln3Bd
+         C5cEIdwuz381gl7n0x/q4a0FTllb+DHxC/hdNoztgjK+LfHuKMvyJDxEIpk3c70Yt9gz
+         mJ0vwYH0yywTxG/5e+xw1ynpfgGLVwDzUfeTOAgFoFNWQx+JwCJoHo8zl4KHxwjMcTOR
+         /SIYSJWrDPkxsOeUfDnEo2EPW6NSmdvNpvBGvPRu7n6d81/r/U4NVmYRY2HbNgPr9wn2
+         WlqZeqQSLGUrw5O02HXV+ulvt9JbfIEGQKjQQneSyVVgMYBEkgIxvUHJD3saCpcGOCa2
+         basQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pAQB/Y8xs+j93HMSHAN7MXn/ps2uNzO6vXJO40MXdLo=;
+        b=WBGo0fDzy3pgkqt+E4cgHiyApVbvgOX0/5fi82CRHhPLOXYJPbnLWYzkMfdY0WLneW
+         XvFFL4Y5tNIOa93HOYnRIFi6dbgwWqJgUG2S2Ee8vtl/g1SBjjLr0I4iTIm4a1uXDKnb
+         sn7I/D+P1YYpCZnwn5aHgOFJRjQXvdjDUIGpWy4uGTuO0iQlHzi0c3uK6+1GgbPSxCw1
+         CT4Ts2Dm8dztVsmuDZKnBxb9eugR0FdD2AHws4nlnOeIxUlkRTe71s818AZQTLeoGBRI
+         rFGo+3z0pgA8TBMZj3oUMJdlQbHdEmtU0nAAEIbs102PWi7o+cIV5gvvrjZ4fa8UZjjm
+         6wZQ==
+X-Gm-Message-State: APjAAAWaX3EFQA65t4+y81NbVRr8Els2vGhOzmECSas4vfSFvVU3r/mx
+        a4F/nFGTje2xduEOVzbJ4HoJ0R8IrEtByRwqfnVi3w==
+X-Google-Smtp-Source: APXvYqzeXQAxMqqaOK5d+BWM+pZVriw+5T4jAe3tCL/W3XE/0CCY1rQEeU4zeQZbRtSaxxq/VzYEwl+DFPtWBgwCXUw=
+X-Received: by 2002:a5e:9e42:: with SMTP id j2mr2374159ioq.133.1562823062694;
+ Wed, 10 Jul 2019 22:31:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAPpJ_edDcaBq+0DocPmS-yYM10B4MkWvBn=f6wwbYdqzSGmp_g@mail.gmail.com>
+ <20190711052427.5582-1-jian-hong@endlessm.com> <20190711052427.5582-2-jian-hong@endlessm.com>
+In-Reply-To: <20190711052427.5582-2-jian-hong@endlessm.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Thu, 11 Jul 2019 13:30:25 +0800
+Message-ID: <CAPpJ_eeD67KHXEVG6y95EprKvM6MQNH30AyDcXQicjpTObwoSA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] rtw88: pci: Use DMA sync instead of remapping in
+ RX ISR
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-wireless@vger.kernel.org,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 10 Jul 2019 14:11:20 +0200:
+Jian-Hong Pan <jian-hong@endlessm.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8811=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=881:25=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> Since each skb in RX ring is reused instead of new allocation, we can
+> treat the DMA in a more efficient way by DMA synchronization.
+>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Cc: <stable@vger.kernel.org>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.3-tag2
+Sorry, also forget to place the version difference here
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/29cd581b59496c26334c910a8b848baa81a6becd
+v2:
+ - New patch by following [PATCH v3 1/2] rtw88: pci: Rearrange the
+   memory usage for skb in RX ISR.
 
-Thank you!
+v3:
+ - Remove rtw_pci_sync_rx_desc_cpu and call dma_sync_single_for_cpu in
+   rtw_pci_rx_isr directly.
+ - Remove the return value of rtw_pci_sync_rx_desc_device.
+ - Use DMA_FROM_DEVICE instead of PCI_DMA_FROMDEVICE.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+v4:
+ - Same as v3.
+
+>  drivers/net/wireless/realtek/rtw88/pci.c | 24 +++++++++++++++++++++---
+>  1 file changed, 21 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wirel=
+ess/realtek/rtw88/pci.c
+> index c415f5e94fed..68fae52151dd 100644
+> --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> @@ -206,6 +206,23 @@ static int rtw_pci_reset_rx_desc(struct rtw_dev *rtw=
+dev, struct sk_buff *skb,
+>         return 0;
+>  }
+>
+> +static void rtw_pci_sync_rx_desc_device(struct rtw_dev *rtwdev, dma_addr=
+_t dma,
+> +                                       struct rtw_pci_rx_ring *rx_ring,
+> +                                       u32 idx, u32 desc_sz)
+> +{
+> +       struct device *dev =3D rtwdev->dev;
+> +       struct rtw_pci_rx_buffer_desc *buf_desc;
+> +       int buf_sz =3D RTK_PCI_RX_BUF_SIZE;
+> +
+> +       dma_sync_single_for_device(dev, dma, buf_sz, DMA_FROM_DEVICE);
+> +
+> +       buf_desc =3D (struct rtw_pci_rx_buffer_desc *)(rx_ring->r.head +
+> +                                                    idx * desc_sz);
+> +       memset(buf_desc, 0, sizeof(*buf_desc));
+> +       buf_desc->buf_size =3D cpu_to_le16(RTK_PCI_RX_BUF_SIZE);
+> +       buf_desc->dma =3D cpu_to_le32(dma);
+> +}
+> +
+>  static int rtw_pci_init_rx_ring(struct rtw_dev *rtwdev,
+>                                 struct rtw_pci_rx_ring *rx_ring,
+>                                 u8 desc_size, u32 len)
+> @@ -782,8 +799,8 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, st=
+ruct rtw_pci *rtwpci,
+>                 rtw_pci_dma_check(rtwdev, ring, cur_rp);
+>                 skb =3D ring->buf[cur_rp];
+>                 dma =3D *((dma_addr_t *)skb->cb);
+> -               pci_unmap_single(rtwpci->pdev, dma, RTK_PCI_RX_BUF_SIZE,
+> -                                PCI_DMA_FROMDEVICE);
+> +               dma_sync_single_for_cpu(rtwdev->dev, dma, RTK_PCI_RX_BUF_=
+SIZE,
+> +                                       DMA_FROM_DEVICE);
+>                 rx_desc =3D skb->data;
+>                 chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_=
+status);
+>
+> @@ -818,7 +835,8 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, st=
+ruct rtw_pci *rtwpci,
+>
+>  next_rp:
+>                 /* new skb delivered to mac80211, re-enable original skb =
+DMA */
+> -               rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc=
+_sz);
+> +               rtw_pci_sync_rx_desc_device(rtwdev, dma, ring, cur_rp,
+> +                                           buf_desc_sz);
+>
+>                 /* host read next element in ring */
+>                 if (++cur_rp >=3D ring->r.len)
+> --
+> 2.22.0
+>
