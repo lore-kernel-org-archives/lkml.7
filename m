@@ -2,143 +2,115 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A62C74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F56AC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7755C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85E6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dqbvOxsm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bbF0YZqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfGKJZn (ORCPT
+        id S1728310AbfGKJ0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:25:43 -0400
-Received: from mail-eopbgr780082.outbound.protection.outlook.com ([40.107.78.82]:12112
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728024AbfGKJZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:25:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mDFle8KYi5L+L3wjkkPB12ErVtquOcT3MqdB/MhjGiQ=;
- b=dqbvOxsmXKFeQn67Xx6ElX0d4LDFR2YCM/WNUYuB4TF6r9Y7JYgvnur9yM0LpBf8T/UEzIWb8vYc2pY4syvpdI96ZYFpU1v7N9fIlWlnlSE30BMfMVw1eG2dwFlo9cZA1sAzc/Bpz1Q3Q3p2HcxZsKQxOzi42P0J8hDDdRxgQmk=
-Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.26.153) by
- BN7PR02MB4244.namprd02.prod.outlook.com (52.135.251.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 11 Jul 2019 09:25:39 +0000
-Received: from BN7PR02MB5124.namprd02.prod.outlook.com
- ([fe80::cba:ad22:b7fd:2cfe]) by BN7PR02MB5124.namprd02.prod.outlook.com
- ([fe80::cba:ad22:b7fd:2cfe%5]) with mapi id 15.20.2052.022; Thu, 11 Jul 2019
- 09:25:39 +0000
-From:   Kalyani Akula <kalyania@xilinx.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Stephan Mueller <smueller@chronox.de>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sarat Chand Savitala <saratcha@xilinx.com>
-Subject: RE: [RFC PATCH 4/5] crypto: Adds user space interface for
- ALG_SET_KEY_TYPE
-Thread-Topic: [RFC PATCH 4/5] crypto: Adds user space interface for
- ALG_SET_KEY_TYPE
-Thread-Index: AQHUrjLRC0KQY4vUUEiutylzuXEA7qWzVM+AgJUjQyCAA8MlgIAVaNiQgBkBuACAGpYxMIAAFOSAgCdEexA=
-Date:   Thu, 11 Jul 2019 09:25:38 +0000
-Message-ID: <BN7PR02MB5124F4680E424C25D77D178DAFF30@BN7PR02MB5124.namprd02.prod.outlook.com>
-References: <1547708541-23730-1-git-send-email-kalyani.akula@xilinx.com>
- <18759853.IUaQuE38eh@tauon.chronox.de>
- <SN6PR02MB5135CE53C3E3FB34CA5E6BA8AF320@SN6PR02MB5135.namprd02.prod.outlook.com>
- <2554415.t45IJDmies@tauon.chronox.de>
- <BN7PR02MB5124A7E685AC0F59AFBEFC8DAF130@BN7PR02MB5124.namprd02.prod.outlook.com>
- <20190610063501.u3q2k2vgytvknxs3@gondor.apana.org.au>
-In-Reply-To: <20190610063501.u3q2k2vgytvknxs3@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kalyania@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7c51238a-e0b7-46c0-f32d-08d705e1bcfc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN7PR02MB4244;
-x-ms-traffictypediagnostic: BN7PR02MB4244:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <BN7PR02MB424488DD1D8E78B241AB09F2AFF30@BN7PR02MB4244.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(199004)(13464003)(189003)(54906003)(33656002)(26005)(53936002)(316002)(7696005)(486006)(99286004)(71190400001)(102836004)(71200400001)(76176011)(25786009)(68736007)(186003)(6506007)(9686003)(6306002)(4326008)(55016002)(14454004)(966005)(6246003)(107886003)(478600001)(6116002)(229853002)(256004)(6436002)(14444005)(66476007)(52536014)(66446008)(5660300002)(66066001)(66556008)(64756008)(86362001)(76116006)(7736002)(11346002)(3846002)(81156014)(6916009)(305945005)(74316002)(8936002)(66946007)(446003)(8676002)(476003)(81166006)(53546011)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4244;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: X2tYWxnTyyBUkx/MY7xHc8Fmhpiag7fY9zIa7Yz7vd4tVqR4p8mNNjCzdNSpGMSf/3+oKWbjaZVIOj0s0fQ52YqNJJuWx/gh7FFGwbSW2xP3JyCtzXxJQxl/mqfDvq7KSYEyzG+mfbo7z7uygwqtzV3bAVTUOrOwLR4Hlj10Y1xop6VgN56UU6YoJTdZ4PVwGSkZoJwCUlqyApA/fqUB8HHh2dS1l67AzPof0NvsBQtk5/PFfCPjCiZFxa76ZeW9ge+mt1VFJi4eoFUwaPIx0n9NXdferw9PljKd2EbwZghpU9eSYc8rA9UwSfxPREADzXZQ2haHQ/mJMM5+5pAJgNradjjREL+/pzgEQmM7UDq7uzk0YK7h4Ku9QidU/0OnKDQNBS7UjjRmj8cJymy39xRFCdn0STBRerF31rze/dQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 05:26:19 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16056 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfGKJ0S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:26:18 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2700be0000>; Thu, 11 Jul 2019 02:26:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 11 Jul 2019 02:26:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 11 Jul 2019 02:26:17 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Jul
+ 2019 09:26:15 +0000
+Subject: Re: [PATCH v2 1/6] ARM: tegra: Remove cpuidle drivers
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190711031312.10038-1-digetx@gmail.com>
+ <20190711031312.10038-2-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c087a5cb-2ffa-1cf6-f0bf-631234759a22@nvidia.com>
+Date:   Thu, 11 Jul 2019 10:26:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c51238a-e0b7-46c0-f32d-08d705e1bcfc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 09:25:38.9530
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kalyania@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4244
+In-Reply-To: <20190711031312.10038-2-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562837182; bh=hqIKbaLc9u3UzCLBN+TeJmaoAdvZZzW+MJhMM3sW0uY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bbF0YZqRGy0UYIMDV+2nHio1AliAu0r+Pj2lye6MoUfl1nPCx6h3eIgTiVsMLPlNQ
+         Br5tEJk3HRK62aXro7HboHWQQHR/oVb4IRR7Ra5OaiIF/0srCD6aen9R59wAW5UDXB
+         hSIQoBLPYecQPq0mqcY8waaODaZ04MkZo9CuSoEwEOxvGbFO34ohFnXfk/s3B8xTcq
+         +3VPzdC/1IDOmHbIqRR4PDPhj+9iAeaqoRxjXgACWMvIqw1mxmTo8hfJh5CQu5ya7k
+         s7l5xpDZ8klmr83hfskwnKIMMC4w/qT/KG71NB3wrycPi8/yeCb6ph8Ek640Guq9dG
+         0WRkc6OdafrNw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Herbert,
 
-Paes driver is using key expansion algorithm to encrypt and decrypt the pla=
-intext. HW capability of expanding the given plain key is checked based on =
-the provide key length. Here the HW key is the expended version of plain ke=
-y.
+On 11/07/2019 04:13, Dmitry Osipenko wrote:
+> Remove the old drivers to replace them cleanly with a new one later on.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/Makefile           |  13 --
+>  arch/arm/mach-tegra/cpuidle-tegra114.c |  89 -----------
+>  arch/arm/mach-tegra/cpuidle-tegra20.c  | 212 -------------------------
+>  arch/arm/mach-tegra/cpuidle-tegra30.c  | 132 ---------------
+>  arch/arm/mach-tegra/cpuidle.c          |  50 ------
+>  arch/arm/mach-tegra/cpuidle.h          |  21 ---
+>  arch/arm/mach-tegra/irq.c              |  18 ---
+>  arch/arm/mach-tegra/irq.h              |  11 --
+>  arch/arm/mach-tegra/pm.c               |   7 -
+>  arch/arm/mach-tegra/pm.h               |   1 -
+>  arch/arm/mach-tegra/reset-handler.S    |  11 --
+>  arch/arm/mach-tegra/reset.h            |   9 +-
+>  arch/arm/mach-tegra/sleep-tegra20.S    | 190 +---------------------
+>  arch/arm/mach-tegra/sleep.h            |  12 --
+>  arch/arm/mach-tegra/tegra.c            |   3 -
+>  drivers/soc/tegra/Kconfig              |   1 -
+>  include/soc/tegra/cpuidle.h            |   4 -
+>  17 files changed, 5 insertions(+), 779 deletions(-)
+>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
+>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
+>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
+>  delete mode 100644 arch/arm/mach-tegra/cpuidle.c
+>  delete mode 100644 arch/arm/mach-tegra/cpuidle.h
+>  delete mode 100644 arch/arm/mach-tegra/irq.h
 
-Xilinx AES hardware has a capability to take plain keys/encrypted keys ( th=
-ese keys are user programmable but for security reasons they are not readab=
-le. Only AES accelerator has read access to these keys) stored on chip ( in=
- eFuse/BBRAM etc, ) and used for AES encryption/decryption.
-Xilinx software is giving the Customer, the flexibility to choose among the=
- different on-chip AES keys.
-So, we chosen a way to add AES_SEL_HW_KEY option.
+By removing all the above, it is really hard to review the diff. Is
+there any way you could first consolidate the cpuidle drivers into say
+the existing arch/arm/mach-tegra/cpuidle-tegra20.c and then move to
+drivers/cpuidle?
 
-In Paes driver , The ALG_SET_KEY interface is used to distinguish between H=
-W Vs SW expansion of plain key based on the key_len.=20
+Jon
 
-How about using same interface to distinguish between the User supplied key=
- Vs HW key selection based on key_len parameter.
-
-Thanks
-kalyani  =09
-
-> -----Original Message-----
-> From: Herbert Xu <herbert@gondor.apana.org.au>
-> Sent: Monday, June 10, 2019 12:05 PM
-> To: Kalyani Akula <kalyania@xilinx.com>
-> Cc: Stephan Mueller <smueller@chronox.de>; keyrings@vger.kernel.org;
-> davem@davemloft.net; linux-crypto@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Sarat Chand Savitala <saratcha@xilinx.com>
-> Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for
-> ALG_SET_KEY_TYPE
->=20
-> On Mon, Jun 10, 2019 at 05:20:58AM +0000, Kalyani Akula wrote:
-> > Ping!!
->=20
-> We already have existing drivers supporting hardware keys.  Please check
-> out how they're handling this.  You can grep for paes under drivers/crypt=
-o.
->=20
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au> Home Page:
-> http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+-- 
+nvpublic
