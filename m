@@ -2,219 +2,159 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3825C74A51
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B5C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1A32064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9246D2064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfGKKFV (ORCPT
+        id S1728224AbfGKKGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 06:05:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2202 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727881AbfGKKFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 06:05:19 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1FC3EE21183BD9091EEB;
-        Thu, 11 Jul 2019 18:05:13 +0800 (CST)
-Received: from dessert.huawei.com (10.69.192.158) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 11 Jul 2019 18:05:05 +0800
-From:   Zeng Tao <prime.zeng@hisilicon.com>
-To:     <prime.zeng@hisilicon.com>, <kishon@ti.com>
-CC:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] phy: Change the configuration interface param to void* to make it more general
-Date:   Fri, 12 Jul 2019 02:04:08 +0800
-Message-ID: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 11 Jul 2019 06:06:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59267 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727636AbfGKKGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 06:06:24 -0400
+X-UUID: 992731da7b244743b02a101ec454b63e-20190711
+X-UUID: 992731da7b244743b02a101ec454b63e-20190711
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 749532910; Thu, 11 Jul 2019 18:06:20 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 11 Jul 2019 18:06:19 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 11 Jul 2019 18:06:19 +0800
+Message-ID: <1562839579.5846.12.camel@mtksdccf07>
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+CC:     Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Thu, 11 Jul 2019 18:06:19 +0800
+In-Reply-To: <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+         <1560447999.15814.15.camel@mtksdccf07>
+         <1560479520.15814.34.camel@mtksdccf07>
+         <1560744017.15814.49.camel@mtksdccf07>
+         <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
+         <1560774735.15814.54.camel@mtksdccf07>
+         <1561974995.18866.1.camel@mtksdccf07>
+         <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+         <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
+         <1562640832.9077.32.camel@mtksdccf07>
+         <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.158]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: FCA1495ABCFBF051C3A138F429F412BB004A5166313DECBCF8F5873EED71160F2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy framework now allows runtime configurations, but only limited
-to mipi now, and it's not reasonable to introduce user specified
-configurations into the union phy_configure_opts structure. An simple
-way is to replace with a void *.
+On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
+> 
+> On 7/9/19 5:53 AM, Walter Wu wrote:
+> > On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
+> >>
+> >> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
+> >>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> 
+> >>>
+> >>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
+> >>> promise any dates because the next week I am on a conference, then
+> >>> again a backlog and an intern starting...
+> >>>
+> >>> Andrey, do you still have concerns re this patch? This change allows
+> >>> to print the free stack.
+> >>
+> >> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
+> >> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
+> >> Same for previously used tags for better use-after-free identification.
+> >>
+> > 
+> > Hi Andrey,
+> > 
+> > We ever tried to use object itself to determine use-after-free
+> > identification, but tag-based KASAN immediately released the pointer
+> > after call kfree(), the original object will be used by another
+> > pointer, if we use object itself to determine use-after-free issue, then
+> > it has many false negative cases. so we create a lite quarantine(ring
+> > buffers) to record recent free stacks in order to avoid those false
+> > negative situations.
+> 
+> I'm telling that *more* than one free stack and also tags per object can be stored.
+> If object reused we would still have information about n-last usages of the object.
+> It seems like much easier and more efficient solution than patch you proposing.
+> 
+To make the object reused, we must ensure that no other pointers uses it
+after kfree() release the pointer.
+Scenario:
+1). The object reused information is valid when no another pointer uses
+it.
+2). The object reused information is invalid when another pointer uses
+it.
+Do you mean that the object reused is scenario 1) ?
+If yes, maybe we can change the calling quarantine_put() location. It
+will be fully use that quarantine, but at scenario 2) it looks like to
+need this patch.
+If no, maybe i miss your meaning, would you tell me how to use invalid
+object information? or?
 
-We have already got some phy drivers which introduce private phy API
-for runtime configurations, and with this patch, they can switch to
-the phy_configure as a replace.
+> As for other concern about this particular patch
+>  - It wasn't tested. There is deadlock (sleep in atomic) on the report path which would have been noticed it tested.
+we already used it on qemu and ran kasan UT. It look like ok.
 
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
----
- drivers/phy/allwinner/phy-sun6i-mipi-dphy.c |  4 ++--
- drivers/phy/cadence/cdns-dphy.c             |  8 ++++----
- drivers/phy/phy-core.c                      |  4 ++--
- include/linux/phy/phy.h                     | 24 ++++++------------------
- 4 files changed, 14 insertions(+), 26 deletions(-)
+>    Also GFP_NOWAIT allocation which fails very noisy and very often, especially in memory constraint enviromnent where tag-based KASAN supposed to be used.
+> 
+Maybe, we can change it into GFP_KERNEL.
 
-diff --git a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-index 79c8af5..6a60473 100644
---- a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-+++ b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-@@ -105,12 +105,12 @@ static int sun6i_dphy_init(struct phy *phy)
- 	return 0;
- }
- 
--static int sun6i_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-+static int sun6i_dphy_configure(struct phy *phy, void *opts)
- {
- 	struct sun6i_dphy *dphy = phy_get_drvdata(phy);
- 	int ret;
- 
--	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
-+	ret = phy_mipi_dphy_config_validate(opts);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
-index 90c4e9b..0ec5013 100644
---- a/drivers/phy/cadence/cdns-dphy.c
-+++ b/drivers/phy/cadence/cdns-dphy.c
-@@ -233,23 +233,23 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
- }
- 
- static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
--			      union phy_configure_opts *opts)
-+			      void *opts)
- {
- 	struct cdns_dphy_cfg cfg = { 0 };
- 
- 	if (mode != PHY_MODE_MIPI_DPHY)
- 		return -EINVAL;
- 
--	return cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-+	return cdns_dphy_config_from_opts(phy, opts, &cfg);
- }
- 
--static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-+static int cdns_dphy_configure(struct phy *phy, void *opts)
- {
- 	struct cdns_dphy *dphy = phy_get_drvdata(phy);
- 	struct cdns_dphy_cfg cfg = { 0 };
- 	int ret;
- 
--	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-+	ret = cdns_dphy_config_from_opts(phy, opts, &cfg);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index e3880c4a1..048d4d6 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -420,7 +420,7 @@ EXPORT_SYMBOL_GPL(phy_calibrate);
-  *
-  * Returns: 0 if successful, an negative error code otherwise
-  */
--int phy_configure(struct phy *phy, union phy_configure_opts *opts)
-+int phy_configure(struct phy *phy, void *opts)
- {
- 	int ret;
- 
-@@ -455,7 +455,7 @@ EXPORT_SYMBOL_GPL(phy_configure);
-  * Returns: 0 if successful, an negative error code otherwise
-  */
- int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
--		 union phy_configure_opts *opts)
-+		 void *opts)
- {
- 	int ret;
- 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 15032f14..8948f94 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -16,8 +16,6 @@
- #include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
- 
--#include <linux/phy/phy-mipi-dphy.h>
--
- struct phy;
- 
- enum phy_mode {
-@@ -41,15 +39,6 @@ enum phy_mode {
- 	PHY_MODE_SATA
- };
- 
--/**
-- * union phy_configure_opts - Opaque generic phy configuration
-- *
-- * @mipi_dphy:	Configuration set applicable for phys supporting
-- *		the MIPI_DPHY phy mode.
-- */
--union phy_configure_opts {
--	struct phy_configure_opts_mipi_dphy	mipi_dphy;
--};
- 
- /**
-  * struct phy_ops - set of function pointers for performing phy operations
-@@ -80,7 +69,7 @@ struct phy_ops {
- 	 *
- 	 * Returns: 0 if successful, an negative error code otherwise
- 	 */
--	int	(*configure)(struct phy *phy, union phy_configure_opts *opts);
-+	int	(*configure)(struct phy *phy, void *opts);
- 
- 	/**
- 	 * @validate:
-@@ -99,7 +88,7 @@ struct phy_ops {
- 	 * error code otherwise
- 	 */
- 	int	(*validate)(struct phy *phy, enum phy_mode mode, int submode,
--			    union phy_configure_opts *opts);
-+			    void *opts);
- 	int	(*reset)(struct phy *phy);
- 	int	(*calibrate)(struct phy *phy);
- 	void	(*release)(struct phy *phy);
-@@ -207,9 +196,9 @@ int phy_power_off(struct phy *phy);
- int phy_set_mode_ext(struct phy *phy, enum phy_mode mode, int submode);
- #define phy_set_mode(phy, mode) \
- 	phy_set_mode_ext(phy, mode, 0)
--int phy_configure(struct phy *phy, union phy_configure_opts *opts);
-+int phy_configure(struct phy *phy, void *opts);
- int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
--		 union phy_configure_opts *opts);
-+		 void *opts);
- 
- static inline enum phy_mode phy_get_mode(struct phy *phy)
- {
-@@ -354,8 +343,7 @@ static inline int phy_calibrate(struct phy *phy)
- 	return -ENOSYS;
- }
- 
--static inline int phy_configure(struct phy *phy,
--				union phy_configure_opts *opts)
-+static inline int phy_configure(struct phy *phy, void *opts)
- {
- 	if (!phy)
- 		return 0;
-@@ -364,7 +352,7 @@ static inline int phy_configure(struct phy *phy,
- }
- 
- static inline int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
--			       union phy_configure_opts *opts)
-+			       void *opts)
- {
- 	if (!phy)
- 		return 0;
--- 
-2.7.4
+>  - Inefficient usage of memory:
+> 	48 bytes (sizeof (qlist_object) + sizeof(kasan_alloc_meta)) per kfree() call seems like a lot. It could be less.
+> 
+We will think it.
+
+> 	The same 'struct kasan_track' stored twice in two different places (in object and in quarantine).
+> 	Basically, at least some part of the quarantine always duplicates information that we already know about
+> 	recently freed object. 
+> 
+> 	Since now we call kmalloc() from kfree() path, every unique kfree() stacktrace now generates additional unique stacktrace that
+> 	takes space in stackdepot.
+> 
+Duplicate information is solved after change the calling
+quarantine_put() location.
+
+
+
+
+
 
