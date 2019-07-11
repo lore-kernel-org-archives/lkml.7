@@ -2,191 +2,154 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D982C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1160BC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19074216C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D981B216C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axG7bOAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfGKN46 (ORCPT
+        id S1728638AbfGKN5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:56:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60092 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbfGKN45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:56:57 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7AABF3086268;
-        Thu, 11 Jul 2019 13:56:56 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-46.ams2.redhat.com [10.36.116.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FB4860600;
-        Thu, 11 Jul 2019 13:56:45 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, robin.murphy@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com,
-        zhangfei.gao@gmail.com, tina.zhang@intel.com
-Subject: [PATCH v9 03/11] vfio: VFIO_IOMMU_SET_MSI_BINDING
-Date:   Thu, 11 Jul 2019 15:56:17 +0200
-Message-Id: <20190711135625.20684-4-eric.auger@redhat.com>
-In-Reply-To: <20190711135625.20684-1-eric.auger@redhat.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
+        Thu, 11 Jul 2019 09:57:04 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33967 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728178AbfGKN5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:57:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so5923560edb.1;
+        Thu, 11 Jul 2019 06:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rOuNeNHVv9/VVG4l5Hr645r7uYLWPBnGXVkIWcZHk1k=;
+        b=axG7bOARPIoTxYMvOcDOF/i1jLKA7ugbJM5J2diOYTfJSi1G02UMeCwP0qKtKZ0x/b
+         XK+cwxGV7LGh3jue4qzcMwws9DmDl9mTsEBdza+3KVA3Db6NQuIjTKfAvOg3/CVJax2t
+         awEUyzFocfnhMkakkOvkn3qSWuLQtjSpUS8iRtOlJq74YbViyepwXTM4waUWH62+eGBp
+         dvASbyXaGReT3F55G9qNyr5sPN1zClC/3b6IBx8bLuihYRO/0qg1+awW6N94K50pwD9H
+         MbJNBC6xtCS4tJwiFQJA1lZOH0MrGUj1hfXdAGPSxWbMZtywtF1go93s2eE0m1EcT+ja
+         0aiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rOuNeNHVv9/VVG4l5Hr645r7uYLWPBnGXVkIWcZHk1k=;
+        b=kciljKD57CK0P9TG731+CMuh+Khj41YDYRsoff9avL+tBtshDWYqDyVP0dnaV+yTnb
+         xY9Vxr0aQtZRgdZ0JNbu0h/GD3qF0PId6MDibKFu5CUdypEKTVDihnwuAawNL3rtTSkc
+         iWduNtW+jMyAlpqP1bsPPBTAMtrZyTrGXRk9/wIvoioE26G0Xipm9jTaGliqQrvMK0Hy
+         i2NYdiH7NeULpWsFyBT3UFL8NXLybS9kgJqMd3r7cDfO1T0CIYGAWhjyDzxzn/Y/WRdT
+         +rfUpJ6Q7LjmqhjSBz010FJaOmXuNBWUjFfKJCX+/R2GuXDeX9hI4axOCLZNMBhCNwaj
+         Lljg==
+X-Gm-Message-State: APjAAAWAqsOWL2SkRDrV4xEcXImqQhTTdbwr9toJKOt5FxT3+m3eQMpE
+        EQQ+23m3JH2Q4th6dgtTM8HJu76NkjkblZjJAO8=
+X-Google-Smtp-Source: APXvYqzCXNLAVWTByGsPoZc2vVxWqyN7oxSE4kQB+14zl0pHNyO0KNu+RzsrXlqWTab7INRkE7CRqcAP/9FQebzVmI0=
+X-Received: by 2002:a50:8bfd:: with SMTP id n58mr3631650edn.272.1562853420690;
+ Thu, 11 Jul 2019 06:57:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 11 Jul 2019 13:56:56 +0000 (UTC)
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+ <20190703214512.41319-1-jeffrey.l.hugo@gmail.com> <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
+ <20190706010604.GG20625@sirena.org.uk> <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+In-Reply-To: <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 11 Jul 2019 06:56:47 -0700
+Message-ID: <CAF6AEGtGjKRA3A8v6pgaXLgpeiLZuz6HuDSFRjKrNp4iQNVZtA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the VFIO_IOMMU_SET_MSI_BINDING ioctl which aim
-to (un)register the guest MSI binding to the host. This latter
-then can use those stage 1 bindings to build a nested stage
-binding targeting the physical MSIs.
+On Thu, Jul 11, 2019 at 6:11 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> On 06.07.2019 03:06, Mark Brown wrote:
+> > On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
+> >> Add basic support with a simple implementation that utilizes the generic
+> >> read/write commands to allow device registers to be configured.
+> > This looks good to me but I really don't know anything about DSI,
+> > I'd appreciate some review from other people who do.  I take it
+> > there's some spec thing in DSI that says registers and bytes must
+> > both be 8 bit?
+>
+>
+> I am little bit confused about regmap usage here. On the one hand it
+> nicely fits to this specific driver, probably because it already uses
+> regmap_i2c.
+>
+> On the other it will be unusable for almost all current DSI drivers and
+> probably for most new drivers. Why?
+>
+> 1. DSI protocol defines actually more than 30 types of transactions[1],
+> but this patchset implements only few of them (dsi generic write/read
+> family). Is it possible to implement multiple types of transactions in
+> regmap?
+>
+> 2. There is already some set of helpers which uses dsi bus, rewriting it
+> on regmap is possible or driver could use of regmap and direct access
+> together, the question is if it is really necessary.
+>
+> 3. DSI devices are no MFDs so regmap abstraction has no big value added
+> (correct me, if there are other significant benefits).
+>
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+I assume it is not *just* this one bridge that can be programmed over
+either i2c or dsi, depending on how things are wired up on the board.
+It certainly would be nice for regmap to support this case, so we
+don't have to write two different bridge drivers for the same bridge.
+I wouldn't expect a panel that is only programmed via dsi to use this.
 
----
+BR,
+-R
 
-v8 -> v9:
-- merge VFIO_IOMMU_BIND_MSI/VFIO_IOMMU_UNBIND_MSI into a single
-  VFIO_IOMMU_SET_MSI_BINDING ioctl
-- ioctl id changed
-
-v6 -> v7:
-- removed the dev arg
-
-v3 -> v4:
-- add UNBIND
-- unwind on BIND error
-
-v2 -> v3:
-- adapt to new proto of bind_guest_msi
-- directly use vfio_iommu_for_each_dev
-
-v1 -> v2:
-- s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
----
- drivers/vfio/vfio_iommu_type1.c | 55 +++++++++++++++++++++++++++++++++
- include/uapi/linux/vfio.h       | 20 ++++++++++++
- 2 files changed, 75 insertions(+)
-
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 307f059d3080..c858be878590 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1829,6 +1829,42 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
- 	return iommu_cache_invalidate(dc->domain, dev, &ustruct->info);
- }
- 
-+static int
-+vfio_bind_msi(struct vfio_iommu *iommu,
-+	      dma_addr_t giova, phys_addr_t gpa, size_t size)
-+{
-+	struct vfio_domain *d;
-+	int ret = 0;
-+
-+	mutex_lock(&iommu->lock);
-+
-+	list_for_each_entry(d, &iommu->domain_list, next) {
-+		ret = iommu_bind_guest_msi(d->domain, giova, gpa, size);
-+		if (ret)
-+			goto unwind;
-+	}
-+	goto unlock;
-+unwind:
-+	list_for_each_entry_continue_reverse(d, &iommu->domain_list, next) {
-+		iommu_unbind_guest_msi(d->domain, giova);
-+	}
-+unlock:
-+	mutex_unlock(&iommu->lock);
-+	return ret;
-+}
-+
-+static void
-+vfio_unbind_msi(struct vfio_iommu *iommu, dma_addr_t giova)
-+{
-+	struct vfio_domain *d;
-+
-+	mutex_lock(&iommu->lock);
-+	list_for_each_entry(d, &iommu->domain_list, next) {
-+		iommu_unbind_guest_msi(d->domain, giova);
-+	}
-+	mutex_unlock(&iommu->lock);
-+}
-+
- static long vfio_iommu_type1_ioctl(void *iommu_data,
- 				   unsigned int cmd, unsigned long arg)
- {
-@@ -1936,6 +1972,25 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 					    &ustruct);
- 		mutex_unlock(&iommu->lock);
- 		return ret;
-+	} else if (cmd == VFIO_IOMMU_SET_MSI_BINDING) {
-+		struct vfio_iommu_type1_set_msi_binding ustruct;
-+
-+		minsz = offsetofend(struct vfio_iommu_type1_set_msi_binding,
-+				    size);
-+
-+		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (ustruct.argsz < minsz)
-+			return -EINVAL;
-+
-+		if (ustruct.flags == VFIO_IOMMU_UNBIND_MSI)
-+			vfio_unbind_msi(iommu, ustruct.iova);
-+		else if (ustruct.flags == VFIO_IOMMU_BIND_MSI)
-+			return vfio_bind_msi(iommu, ustruct.iova, ustruct.gpa,
-+						ustruct.size);
-+		else
-+			return -EINVAL;
- 	}
- 
- 	return -ENOTTY;
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index b31c25b682c5..deadbd84f2cf 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -795,6 +795,26 @@ struct vfio_iommu_type1_cache_invalidate {
- };
- #define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 23)
- 
-+/**
-+ * VFIO_IOMMU_SET_MSI_BINDING - _IOWR(VFIO_TYPE, VFIO_BASE + 24,
-+ *			struct vfio_iommu_type1_set_msi_binding)
-+ *
-+ * Pass a stage 1 MSI doorbell mapping to the host so that this
-+ * latter can build a nested stage2 mapping. Or conversely tear
-+ * down a previously bound stage 1 MSI binding.
-+ */
-+struct vfio_iommu_type1_set_msi_binding {
-+	__u32   argsz;
-+	__u32   flags;
-+#define VFIO_IOMMU_BIND_MSI	(1 << 0)
-+#define VFIO_IOMMU_UNBIND_MSI	(1 << 1)
-+	__u64	iova;	/* MSI guest IOVA */
-+	/* Fields below are used on BIND */
-+	__u64	gpa;	/* MSI guest physical address */
-+	__u64	size;	/* size of stage1 mapping (bytes) */
-+};
-+#define VFIO_IOMMU_SET_MSI_BINDING      _IO(VFIO_TYPE, VFIO_BASE + 24)
-+
- /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
- 
- /*
--- 
-2.20.1
-
+>
+> [1]:
+> https://elixir.bootlin.com/linux/latest/source/include/video/mipi_display.h#L15
+>
+>
+> Regards
+>
+> Andrzej
+>
+>
+> >
+> > A couple of minor comments, no need to resend just for these:
+> >
+> >> +       payload[0] = (char)reg;
+> >> +       payload[1] = (char)val;
+> > Do you need the casts?
+> >
+> >> +    ret = mipi_dsi_generic_write(dsi, payload, 2);
+> >> +    return ret < 0 ? ret : 0;
+> > Please just write an if statement, it helps with legibility.
+> >
+> >> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
+> >> +                             const struct regmap_config *config,
+> >> +                             struct lock_class_key *lock_key,
+> >> +                             const char *lock_name)
+> >> +{
+> >> +    return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
+> >> +                         lock_key, lock_name);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
+> > Perhaps validate that the config is OK (mainly the register/value
+> > sizes)?  Though I'm not sure it's worth it so perhaps not - up to
+> > you.
+>
+>
