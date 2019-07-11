@@ -2,464 +2,118 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75699C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5993DC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EF520665
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F01520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 11:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdUE6Yqd"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="Bw634sPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfGKLeE (ORCPT
+        id S1728431AbfGKLfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 07:34:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42580 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728224AbfGKLeE (ORCPT
+        Thu, 11 Jul 2019 07:35:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39715 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728026AbfGKLfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 07:34:04 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t132so2798766pgb.9;
-        Thu, 11 Jul 2019 04:34:03 -0700 (PDT)
+        Thu, 11 Jul 2019 07:35:33 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so2808949pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 04:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PrHYFoGNkqmIBES6VjNIm8meeYGsDrmQkyT4aQ80neI=;
-        b=ZdUE6YqdlnUv0xml3DdoLfiwYTtNnr+BEr0PryuTrs5ySjCxv2wKBxFybcN+Y1loCO
-         R7MKFHADYAUtuSoDkHB/CZWWQDfGtRVMs35mQXC93lQmnlT61qyyIWokhIYm7/LLi6In
-         aQbQ1Rw67YthvoJcBDfPIBHIWSKJ+36q2alnU1LrXPuvxBknpAdmIJZoApvZjid59IHy
-         994eQKQrYYAnjBQgbqSG372zR79vqcci2SifiCckdD3rtbAgc2ctlO/ofxyL7t9/V2l3
-         gCOZNTxCLue9Biw4zEsXx4ShEDcrpuFtOhUzsUldjPFZ3at2VdNUEwd4XxwaCreDqw9K
-         YmrA==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=67fw6QhRHMwWqlxFHVRLJ0hZez6O5OTcXxHcRHOXrRA=;
+        b=Bw634sPwkFJg+urMc35C+PN+dJgCSDq+c7FSfQULCXzUlVD/R+BsYhUWWVnDBu7vo0
+         mDe3vsF94kpcJRLMUWi1fy2eOaYhh4jW6hVXR+XI5ysmorRSuLR0nK417pzQHlRiMPy2
+         X/K6Xna+0l9PvG8RNrh6KJh1jFtTsOK2k1xEIGguD/SQ2AKW8M+87kQ2GIMokUyGRgTm
+         e51Qym+vOAV1vqVwkEsmAsVFvu66bL9UPcmoMjvGw6iV7M0pkzldBK+9rFCHTPxcMIpt
+         2/NBcrcuSizPAicO+Zaf1aVNxQWJmYam3cV+8RUIf1vrUHJJN+lqQrarLCmuR9OWgsi5
+         X8ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PrHYFoGNkqmIBES6VjNIm8meeYGsDrmQkyT4aQ80neI=;
-        b=kG11H0+8vvFoOrbhAXKWyowLkVVooeXtGcpSySg4ArrOBvJojZv1TzGHasEIaqzkHd
-         +K3V5Z7XamXD9b4somyn/DXhx0c6ZNjYQaC2/hMtPdNUd4nzbqRG9XlgankFU5gO+AIg
-         2O++HLq7A0QjCGkBNYnH9k8Tz4iVPhnguMl/eKUjB4/m7lhBYN7umJdtW80cfgLCt9+L
-         PzEunUcfXEkgp5n/V8hgy7pNa1GQrhQMHgg4ayzOo1x1mVxEqVQQnw8G9OaDd3tK38Hg
-         lhOe3o1HKPq1D9XnaSp+8jOGrZtaEHRmGo0/TlW4DHhYU+SjR8gN/yTUuZxKWlLS11Fw
-         WpPw==
-X-Gm-Message-State: APjAAAVM509YDWrjc+uEKcHFtwlaFufIs4iX9ZgowlELud3Lximi1u+w
-        XFxkdu/+xt5sMZ5vHjC1SKQ=
-X-Google-Smtp-Source: APXvYqxe7gVh4kpuC2XUvkajAXwDVtpKkxJJrngRQmAuDILadw2e5MedtSEMsa9+f7dO5FzDwEdKmQ==
-X-Received: by 2002:a17:90a:270f:: with SMTP id o15mr4359681pje.56.1562844843301;
-        Thu, 11 Jul 2019 04:34:03 -0700 (PDT)
-Received: from icarus ([2001:268:c144:cf11:d03e:81be:e250:5da0])
-        by smtp.gmail.com with ESMTPSA id j1sm14047932pgl.12.2019.07.11.04.33.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 04:34:01 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 20:33:41 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com, Gwendal Grignou <gwendal@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/1] counter: cros_ec: Add synchronization sensor
-Message-ID: <20190711113341.GA5866@icarus>
-References: <cover.1562676020.git.fabien.lahoudere@collabora.com>
- <2f7d1c7582ad4005b16e5c8273bcd0100431ff1d.1562676020.git.fabien.lahoudere@collabora.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=67fw6QhRHMwWqlxFHVRLJ0hZez6O5OTcXxHcRHOXrRA=;
+        b=HEitnq9QaELHsNEHOg4Ug6ZaOefnLLAZuHyxsyODOWMhPWb29iKvdwYigT5FQl2xFn
+         NKzfBN/99hyOANfh+dai153leCYvGMC9/71suCbSgeSaoHvxzBaqKEwLW3cfOJ/dkdlk
+         v9JSyXka09zAvf+YZflYHsAC1VEhBiQwMwrxANI8VApIxh45UhOJI63qryfRDIJsjIhC
+         HHJ5nzNMy64U9+8qxNWhNlt80u9gMoH+x5Pmz6uJowQdVWY2ZtVcxt3qrFJcn6YEvoHx
+         DrR4pBmdhcu2exNTge9OzAN7vzfQg0dqlKng2i7hb4+yKEe1C0jTQRzsTueNlWK3o1Ph
+         H8cw==
+X-Gm-Message-State: APjAAAUFQKg6+QsBJW5E39c2PxuReBKo0RrWYhL0trEHgDCa09ENeW2l
+        9Ln74Uj87hOiDEYVycHcxbM=
+X-Google-Smtp-Source: APXvYqyp60bdd7qSmSHug9ug6C8p8ZGfqeTLTLKVzXst++Ph9HoLAjVLMACXBYwSjmGR40rfgzdk5Q==
+X-Received: by 2002:a63:3fc9:: with SMTP id m192mr3978050pga.429.1562844932022;
+        Thu, 11 Jul 2019 04:35:32 -0700 (PDT)
+Received: from localhost.localdomain (36-239-228-246.dynamic-ip.hinet.net. [36.239.228.246])
+        by smtp.gmail.com with ESMTPSA id a10sm4529617pgq.2.2019.07.11.04.35.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 04:35:30 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH RFT] regulator: lp87565: Fix probe failure for "ti,lp87565"
+Date:   Thu, 11 Jul 2019 19:35:17 +0800
+Message-Id: <20190711113517.26077-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2f7d1c7582ad4005b16e5c8273bcd0100431ff1d.1562676020.git.fabien.lahoudere@collabora.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 02:59:42PM +0200, Fabien Lahoudere wrote:
-> From: Gwendal Grignou <gwendal@chromium.org>
-> 
-> EC returns a counter when there is an event on camera vsync.
-> This patch comes from chromeos kernel 4.4
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> 
-> CROS EC sync sensor was originally designed as an IIO device.
-> Now that the counter subsystem will replace IIO_COUNTER, we
-> have to implement a new way to get sync count.
-> 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+The "ti,lp87565" compatible string is still in of_lp87565_match_table,
+but current code will return -EINVAL because lp87565->dev_type is unknown.
+This was working in earlier kernel versions, so fix it.
 
-Thank you for submitting this for inclusion in the mainline kernel. It's
-nice to see drivers merged in as well as updated to use the latest
-subsystems and improvements. :-)
+Fixes: 7ee63bd74750 ("regulator: lp87565: Add 4-phase lp87561 regulator support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+Hi Keerthy,
+The commit "regulator: lp87565: Add 4-phase lp87561 regulator support" does not
+mention why it returns -EINVAL for "ti,lp87565" (The data field is not set for
+.compatible = "ti,lp87565"), so I think the support for "ti,lp87565" was accidently
+removed.
+I don't have this h/w for test, maybe you can test it since you wrote this driver.
 
-The Counter subsystem has been introduced, so use of IIO_COUNT is now
-deprecated. However, The IIO_COUNT interface will remain for existing
-drivers in the mainline kernel (e.g. 104-QUAD-8), but new uses will not
-be accepted.
+ drivers/regulator/lp87565-regulator.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I see that you're still using IIO_COUNT in this driver. Since that
-interface is now deprecated, you should convert that code to the Counter
-subsystem equivalents. See inline comments for suggestions.
+diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
+index 5d067f7c2116..0c440c5e2832 100644
+--- a/drivers/regulator/lp87565-regulator.c
++++ b/drivers/regulator/lp87565-regulator.c
+@@ -163,7 +163,7 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
+ 	struct lp87565 *lp87565 = dev_get_drvdata(pdev->dev.parent);
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
+-	int i, min_idx = LP87565_BUCK_0, max_idx = LP87565_BUCK_3;
++	int i, min_idx, max_idx;
+ 
+ 	platform_set_drvdata(pdev, lp87565);
+ 
+@@ -182,9 +182,9 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
+ 		max_idx = LP87565_BUCK_3210;
+ 		break;
+ 	default:
+-		dev_err(lp87565->dev, "Invalid lp config %d\n",
+-			lp87565->dev_type);
+-		return -EINVAL;
++		min_idx = LP87565_BUCK_0;
++		max_idx = LP87565_BUCK_3;
++		break;
+ 	}
+ 
+ 	for (i = min_idx; i <= max_idx; i++) {
+-- 
+2.20.1
 
-> ---
->  drivers/counter/Kconfig                       |   9 +
->  drivers/counter/Makefile                      |   1 +
->  drivers/counter/cros_ec_sensors_sync.c        | 200 ++++++++++++++++++
->  .../cros_ec_sensors/cros_ec_sensors_core.c    |   1 +
->  drivers/mfd/cros_ec_dev.c                     |   3 +
->  5 files changed, 214 insertions(+)
->  create mode 100644 drivers/counter/cros_ec_sensors_sync.c
-> 
-> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-> index 2967d0a9ff91..22287f5715e5 100644
-> --- a/drivers/counter/Kconfig
-> +++ b/drivers/counter/Kconfig
-> @@ -59,4 +59,13 @@ config FTM_QUADDEC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ftm-quaddec.
->  
-> +config IIO_CROS_EC_SENSORS_SYNC
-> +	tristate "ChromeOS EC Counter Sensors"
-> +	depends on IIO_CROS_EC_SENSORS_CORE && IIO
-> +	help
-> +	  Module to handle synchronisation sensors presented by the ChromeOS EC
-> +	  Sensor hub.
-> +	  Synchronisation sensors are counter sensors triggered when events
-> +	  occurs from other subsystems.
-> +
->  endif # COUNTER
-> diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
-> index 40d35522937d..6fe4c98a446f 100644
-> --- a/drivers/counter/Makefile
-> +++ b/drivers/counter/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
->  obj-$(CONFIG_STM32_TIMER_CNT)	+= stm32-timer-cnt.o
->  obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
->  obj-$(CONFIG_FTM_QUADDEC)	+= ftm-quaddec.o
-> +obj-$(CONFIG_IIO_CROS_EC_SENSORS_SYNC) += cros_ec_sensors_sync.o
-> diff --git a/drivers/counter/cros_ec_sensors_sync.c b/drivers/counter/cros_ec_sensors_sync.c
-> new file mode 100644
-> index 000000000000..715a4860cade
-> --- /dev/null
-> +++ b/drivers/counter/cros_ec_sensors_sync.c
-> @@ -0,0 +1,200 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver of counter increaseded after events on interrupt line in EC.
-
-Do you mean "incremented" instead of "increaseded"?
-
-> + *
-> + * Copyright 2018 Google, Inc
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/counter.h>
-> +#include <linux/iio/common/cros_ec_sensors_core.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRV_NAME "cros-ec-sync"
-> +
-> +/*
-> + * One channel for counter, the other for timestamp.
-> + */
-> +#define MAX_CHANNELS (1 + 1)
-
-Since we'll be getting rid of the IIO_COUNT channel, this can simply be
-1 for the timestamp channel.
-
-> +
-> +/* State data for ec_sensors iio driver. */
-> +struct cros_ec_sensors_sync_state {
-> +	/* Shared by all sensors */
-> +	struct cros_ec_sensors_core_state core;
-> +	struct counter_device counter;
-> +	struct iio_chan_spec channels[MAX_CHANNELS];
-> +};
-> +
-> +static int cros_ec_sensors_sync_read(struct iio_dev *indio_dev,
-> +				     struct iio_chan_spec const *chan,
-> +				     int *val, int *val2, long mask)
-> +{
-> +	struct cros_ec_sensors_sync_state *st = iio_priv(indio_dev);
-> +	u16 data;
-> +	int ret;
-> +	int idx = chan->scan_index;
-> +
-> +	mutex_lock(&st->core.cmd_lock);
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = cros_ec_sensors_read_cmd(indio_dev, BIT(idx), &data);
-> +		if (ret < 0)
-> +			break;
-> +		ret = IIO_VAL_INT;
-> +		*val = data;
-> +		break;
-> +	default:
-> +		ret = cros_ec_sensors_core_read(&st->core, chan, val, val2,
-> +						mask);
-> +		break;
-> +	}
-> +	mutex_unlock(&st->core.cmd_lock);
-> +	return ret;
-> +}
-
-This function can be dedicated to your timestamp channel. Since this
-will only support one channel, you should be able to simplify the code
-in this function by hardcoding values like 'idx' since it will always be
-the same.
-
-> +
-> +static int cros_ec_sensors_write(struct iio_dev *indio_dev,
-> +				 struct iio_chan_spec const *chan,
-> +				 int val, int val2, long mask)
-> +{
-> +	struct cros_ec_sensors_sync_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	mutex_lock(&st->core.cmd_lock);
-> +
-> +	ret = cros_ec_sensors_core_write(&st->core, chan, val, val2, mask);
-> +
-> +	mutex_unlock(&st->core.cmd_lock);
-> +	return ret;
-> +}
-> +
-> +static struct iio_info cros_ec_sensors_sync_info = {
-> +	.read_raw = &cros_ec_sensors_sync_read,
-> +	.write_raw = &cros_ec_sensors_write,
-> +	.read_avail = &cros_ec_sensors_core_read_avail,
-> +};
-> +
-> +static struct counter_count cros_ec_sync_counts = {
-> +	.id = 0,
-> +	.name = "Cros EC sync counter",
-> +};
-> +
-> +static int cros_ec_sync_cnt_read(struct counter_device *counter,
-> +				struct counter_count *count,
-> +				struct counter_count_read_value *val)
-> +{
-> +	s16 cnt;
-> +	int ret;
-> +	struct iio_dev * indio_dev = counter->priv;
-> +	struct cros_ec_sensors_sync_state *const st = iio_priv(indio_dev);
-> +	unsigned long data;
-> +
-> +	mutex_lock(&st->core.cmd_lock);
-> +	ret = cros_ec_sensors_read_cmd(indio_dev, BIT(0), &cnt);
-> +	mutex_unlock(&st->core.cmd_lock);
-> +	if (ret != 0) {
-> +		dev_warn(&indio_dev->dev, "Unable to read sensor data\n");
-> +		return ret;
-> +	}
-> +
-> +	data = (unsigned long) cnt;
-
-This cast is not necessary since data is already unsigned long so the
-conversion can occur implicitly.
-
-> +	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &data);
-
-COUNTER_COUNT_POSITION is used to represent tracking of spatial
-positions, but this counter is instead used to count the number of
-camera vsync events. You will need to introduce a new count value type
-to represent this type of data.
-
-In particular, what are you doing with this data; is this just an always
-increasing value that you check as a log? If this is just tallying,
-perhaps COUNTER_COUNT_TALLY would be a good name.
-
-In order to introduce this new type, you will need to update a few
-files:
-
-* drivers/counter/counter.c:
-  Update counter_count_read_value_set and counter_count_write_value_get
-  to handle the COUNTER_COUNT_TALLY case; since it matches the interface
-  for COUNTER_COUNT_POSITION just fall-through to the
-  COUNTER_COUNT_POSITION case code in the switch statements.
-* include/linux/counter.h:
-  Add COUNTER_COUNT_TALLY to the enum counter_count_value_type
-  structure.
-* Documentation/driver-api/generic-counter.rst:
-  Update the documentation underneath the COUNTER_POSITION reference to
-  include COUNT_TALLY with a description describing it as "Unsigned
-  integer value representing a tally"
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct counter_ops cros_ec_sync_cnt_ops = {
-> +	.count_read = cros_ec_sync_cnt_read,
-> +};
-
-Does the hardware allow the counter to be reset back to zero, or is it
-purely read-only?
-
-> +
-> +static int cros_ec_sensors_sync_probe(struct platform_device *pdev)
-> +{
-> +	struct cros_ec_sensors_sync_state *state;
-> +	struct device *dev = &pdev->dev;
-> +	struct iio_chan_spec *channel;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	indio_dev->info = &cros_ec_sensors_sync_info;
-> +	state = iio_priv(indio_dev);
-> +
-> +	if (state->core.type != MOTIONSENSE_TYPE_SYNC)
-> +		return -EINVAL;
-> +
-> +	/* Initialize IIO device */
-> +	channel = state->channels;
-> +	channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +	channel->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_FREQUENCY);
-> +	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
-> +	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
-> +	channel->scan_type.shift = 0;
-> +	channel->scan_index = 0;
-> +	channel->ext_info = cros_ec_sensors_ext_info;
-> +	channel->scan_type.sign = 'u';
-> +	channel->type = IIO_COUNT;
-> +	state->core.calib[0] = 0;
-
-So with cros_ec_sensors_ext_info and the IIO_CHAN_INFO_FREQUENCY
-included above, that should result in three auxiliary attributes for
-your counter that are global for your device: frequency, calibrate,
-location. Did I understand that correctly?
-
-If these attributes are relevant for the counter (is "calibrate"
-relevant to the sensor, or just the camera?), you should include
-them in the new counter interface as well. You can implement them using
-struct counter_device_ext -- look at stm32_count_ext as a reference in
-drivers/counter/stm32-timer-cnt.c (although it uses the
-counter_count_ext structure, the idea is the same: set "ext" in your
-counter_device structure).
-
-Make sure to create a
-Documentation/ABI/testing/sysfs-bus-counter-cros-ec file similar to how
-you have a Documentation/ABI/testing/sysfs-bus-iio-cros-ec file.
-
-> +
-> +	/* Timestamp */
-> +	channel++;
-> +	channel->type = IIO_TIMESTAMP;
-> +	channel->channel = -1;
-> +	channel->scan_index = 1;
-> +	channel->scan_type.sign = 's';
-> +	channel->scan_type.realbits = 64;
-> +	channel->scan_type.storagebits = 64;
-
-As stated above, this timestamp channel is the only one needed here, so
-you can remove the other channel above.
-
-> +
-> +	indio_dev->channels = state->channels;
-> +	indio_dev->num_channels = MAX_CHANNELS;
-> +
-> +	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
-> +
-> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-> +					      cros_ec_sensors_capture, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_iio_device_register(dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Initialize counter device */
-> +	state->counter.name = dev_name(&pdev->dev);
-> +	state->counter.parent = &pdev->dev;
-> +	state->counter.counts = &cros_ec_sync_counts;
-> +	state->counter.num_counts = 1;
-> +	state->counter.priv = indio_dev;
-> +	state->counter.ops = &cros_ec_sync_cnt_ops;
-> +
-> +	return devm_counter_register(&pdev->dev, &state->counter);
-> +}
-> +
-> +static const struct platform_device_id cros_ec_sensors_sync_ids[] = {
-> +	{ .name = DRV_NAME, },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, cros_ec_sensors_sync_ids);
-> +
-> +static struct platform_driver cros_ec_sensors_sync_platform_driver = {
-> +	.driver = {
-> +		.name	= DRV_NAME,
-> +		.pm	= &cros_ec_sensors_pm_ops,
-> +	},
-> +	.probe		= cros_ec_sensors_sync_probe,
-> +	.id_table	= cros_ec_sensors_sync_ids,
-> +};
-> +module_platform_driver(cros_ec_sensors_sync_platform_driver);
-> +
-> +MODULE_DESCRIPTION("ChromeOS EC synchronisation sensor driver");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 805652250960..2bf183425eaf 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -22,6 +22,7 @@
->  static char *cros_ec_loc[] = {
->  	[MOTIONSENSE_LOC_BASE] = "base",
->  	[MOTIONSENSE_LOC_LID] = "lid",
-> +	[MOTIONSENSE_LOC_CAMERA] = "camera",
->  	[MOTIONSENSE_LOC_MAX] = "unknown",
->  };
->  
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index 41dccced5026..1c5c2c38af88 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -332,6 +332,9 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
->  		case MOTIONSENSE_TYPE_ACTIVITY:
->  			sensor_cells[id].name = "cros-ec-activity";
->  			break;
-> +		case MOTIONSENSE_TYPE_SYNC:
-> +			sensor_cells[id].name = "cros-ec-sync";
-> +			break;
->  		default:
->  			dev_warn(ec->dev, "unknown type %d\n", resp->info.type);
->  			continue;
-> -- 
-> 2.19.2
-
-Since this will be a new file, please also add it to the MAINTAINERS
-file so we can have a record of the maintainer for this driver.
-
-If you have any troubles or need help understanding the Counter
-interface, just let me know and I'll be happy to assist; this subsystem
-is new so it'll be good to get all the kinks out that you may find.
-
-Thanks,
-
-William Breathitt Gray
