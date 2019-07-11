@@ -2,111 +2,124 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A717C74A41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35237C74A41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D24214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0898C2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJnWvONw"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="McsBnG9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfGKDKm (ORCPT
+        id S1727959AbfGKDMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:10:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43110 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfGKDKj (ORCPT
+        Wed, 10 Jul 2019 23:12:37 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:28631 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfGKDMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:10:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so2024324pfg.10;
-        Wed, 10 Jul 2019 20:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zpbomds83eKGH676yLKqCCW5MqIqLtjKcYpM/+tbDr0=;
-        b=IJnWvONwVnZGohDdhtjmhBKs9vfW197GtuREVR7T+OLN0Qp6yJht+eJ5QIC2ynArly
-         4rbUKfUx1QqzxUxsk6PNS+SLoMIMJggtxcktut1Nm39FiAIWWHwhxAeO1QegLEIxs88i
-         bU5W1lasXrtkfyfvHX0wjIriVm6/4MtFGNZ3GogUhrvmN0NRBUeosbTFAJSev6oMmdls
-         0X3tTh5WaPJbRk9qRxcRl7cOq5Ez3m270vpobef+QsMchsZAiaSK/tfty/H2kYz7evZ6
-         5+4Uz4hE1OrPmAZjqlNbUCncwXbhSK5p981Rt1TUrlcPuREr+btHXswEpEqWgnxN0kH6
-         6qPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zpbomds83eKGH676yLKqCCW5MqIqLtjKcYpM/+tbDr0=;
-        b=Womn7hT+yA18ZnblRjV5uwKrv6GbwZe+/wgwn834H91zm+9gWck9UlLvz+5iV/NjZF
-         k/BXz50yvhhODTSYiXZEsoOqUH9egv9ktI9CXPJC87IUR6nGI1Glv/hy3bCTjEeIHVjh
-         GIMpbB8gm/vlxW5LZNdjcbHMQA52QJJ3qUQkX2VxxnAL0KwPkXYA85FwgzWx/6dewJ2A
-         0QiS8Z6MGbIy0L8euL+ccUgn4zJgfCQL6CsDa7lb6G/Bmw9iG2Ub9EfhJqwpa5t613Xg
-         hA9QijhHRcXegJsJduWRKjSzqRK+Mku7VVrlrtdZeniOqWUtab66ftM8nF1G72uktb+w
-         BMEw==
-X-Gm-Message-State: APjAAAXpkfE5tLnU4iUs1jLA6LP3Sv3S1Tg6eJgpx9Ajt+uRsjmT8xQG
-        4PjuDCTDCAxYHAvk8mSIqmOaFTQKotc=
-X-Google-Smtp-Source: APXvYqxJMOOX5pzW2SkgB5Jw0yk7MWvd1qsQJTyPiyIkjGwvQIKyRH12UMBGRnVXyYu7FXXirtNRRw==
-X-Received: by 2002:a17:90a:2343:: with SMTP id f61mr2084162pje.130.1562814638642;
-        Wed, 10 Jul 2019 20:10:38 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id l124sm3710309pgl.54.2019.07.10.20.10.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 20:10:38 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 2/2] dmaengine: pl330: use the same attriobutes when freeing pl330->mcode_cpu
-Date:   Thu, 11 Jul 2019 11:10:31 +0800
-Message-Id: <20190711031031.23558-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 10 Jul 2019 23:12:36 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6B3COO8015344
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:12:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6B3COO8015344
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562814745;
+        bh=bYunx1kcIHZGck01o8geflbRxYXWHGYyK1ZznzJtm3M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=McsBnG9zkvnvz6bIAkfQ7sdBJ6uFXW+YzdiRoIXWzsCCUR5Kl3WaPni0Rd0eFO1mJ
+         ZC+0Aw+c12ltg0ms5mY2YZROAexakwSITPinhTOgU964B7EhEiWrVQVowJH5po39W7
+         Vk8pej9OfTfm4HkjKZxt0ZyaN7CJ2ujtUj1J4YoIhCV3LmJNRCkW6Rmh/oGzX09EBL
+         J/x4LsA4gX/L5vnalMoE4C+/ejcM6jxHkuUStBKP/pGCZ6J1ZSgkHlqiIk+g5PqQAL
+         u4wC5ev4Sof5T5P/Af76As4yegA8WNnfO343zzB3rd37VIOLA5Wtk24GaMmgNWSnPQ
+         tANC2510pB2bQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id c4so1754739uad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 20:12:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAURkqceLQCWfVoe7RGpLLDKIFgP/obFrCjJvyh0MKbIw6GxCqv/
+        v9ylGNGyOQXnymmFA98Pie497rVSyM+XpOR6Cd8=
+X-Google-Smtp-Source: APXvYqwiLJ4hWuVL8sVPnorgY996BnkP1X/FMoK33NSeF4ex50i5Xh7WDVQXRMt31mL2wW/6aQKJG7l29s2ddfgsDhQ=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr840230uag.40.1562814744318;
+ Wed, 10 Jul 2019 20:12:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190711030713.4447-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190711030713.4447-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 11 Jul 2019 12:11:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQZ3zyLV_6CfkhOFUDJm1mwUoq+xoOXUWCzu1HL7HK7bA@mail.gmail.com>
+Message-ID: <CAK7LNAQZ3zyLV_6CfkhOFUDJm1mwUoq+xoOXUWCzu1HL7HK7bA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: fix O= building with CONFIG_FPE_FASTFPE
+To:     arm-soc <arm@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function dmac_alloc_recources(), pl330->mcode_cpu is allocated using
-dma_alloc_attrs() but freed with dma_free_coherent().
-Use the correct dma_free_attrs() function to free pl330->mcode_cpu.
+Arnd, Olof,
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/dma/pl330.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Please ignore this.
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 56f9fabc99c4..d9c6ae0732c6 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1918,9 +1918,10 @@ static int dmac_alloc_resources(struct pl330_dmac *pl330)
- 	if (ret) {
- 		dev_err(pl330->ddma.dev, "%s:%d Can't to create channels for DMAC!\n",
- 			__func__, __LINE__);
--		dma_free_coherent(pl330->ddma.dev,
-+		dma_free_attrs(pl330->ddma.dev,
- 				chans * pl330->mcbufsz,
--				pl330->mcode_cpu, pl330->mcode_bus);
-+				pl330->mcode_cpu, pl330->mcode_bus,
-+				DMA_ATTR_PRIVILEGED);
- 		return ret;
- 	}
- 
-@@ -1999,9 +2000,9 @@ static void pl330_del(struct pl330_dmac *pl330)
- 	/* Free DMAC resources */
- 	dmac_free_threads(pl330);
- 
--	dma_free_coherent(pl330->ddma.dev,
-+	dma_free_attrs(pl330->ddma.dev,
- 		pl330->pcfg.num_chan * pl330->mcbufsz, pl330->mcode_cpu,
--		pl330->mcode_bus);
-+		pl330->mcode_bus, DMA_ATTR_PRIVILEGED);
- }
- 
- /* forward declaration */
+I wanted to put this patch into Russell's patch tracker,
+but just sent it to a wrong ML.
+
+
+Masahiro Yamada
+
+On Thu, Jul 11, 2019 at 12:08 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> To use Fastfpe, a user is supposed to enable CONFIG_FPE_FASTFPE
+> and put downstream source files into arch/arm/fastfpe/.
+>
+> It is not working for O= build because $(wildcard arch/arm/fastfpe)
+> checks if it exists in $(objtree), not in $(srctree).
+>
+> Add the $(srctree)/ prefix to fix it.
+>
+> While I was here, I slightly refactored the code.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+> KernelVersion: 5.2
+>
+>  arch/arm/Makefile | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index f863c6935d0e..792f7fa16a24 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -271,14 +271,9 @@ endif
+>
+>  export TEXT_OFFSET GZFLAGS MMUEXT
+>
+> -# Do we have FASTFPE?
+> -FASTFPE                :=arch/arm/fastfpe
+> -ifeq ($(FASTFPE),$(wildcard $(FASTFPE)))
+> -FASTFPE_OBJ    :=$(FASTFPE)/
+> -endif
+> -
+>  core-$(CONFIG_FPE_NWFPE)       += arch/arm/nwfpe/
+> -core-$(CONFIG_FPE_FASTFPE)     += $(FASTFPE_OBJ)
+> +# Put arch/arm/fastfpe/ to use this.
+> +core-$(CONFIG_FPE_FASTFPE)     += $(patsubst $(srctree)/%,%,$(wildcard $(srctree)/arch/arm/fastfpe/))
+>  core-$(CONFIG_VFP)             += arch/arm/vfp/
+>  core-$(CONFIG_XEN)             += arch/arm/xen/
+>  core-$(CONFIG_KVM_ARM_HOST)    += arch/arm/kvm/
+> --
+> 2.17.1
+>
+
+
 -- 
-2.11.0
-
+Best Regards
+Masahiro Yamada
