@@ -2,267 +2,182 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCCBC74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECD1C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D707F21670
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58BA20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qW7/U0pU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LwqsOLoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfGKNIx (ORCPT
+        id S1728775AbfGKNL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:08:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46417 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbfGKNIx (ORCPT
+        Thu, 11 Jul 2019 09:11:57 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:34865 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfGKNL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:08:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c2so2991348plz.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 06:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bERwlcG3C4nlijCFRRI6OTUZ0wG24LbZHXp5D5LjinE=;
-        b=qW7/U0pUSWBXYYdu4uGqL2CtKwWUWkSrSSyzBaOT6PO0jcr3truea92twlsXMeiV1T
-         ksURAl7b7Br64uZp1KBabXWQBsq3pIpEXy3M0scKBzH90+A4/bdvN/La+Hsih+VYrsiV
-         sGcWqpV5iQFnGtKnEJ5ss0/GprmTbxdGUpE8k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bERwlcG3C4nlijCFRRI6OTUZ0wG24LbZHXp5D5LjinE=;
-        b=k9KDdtetn9bsUETDu0fr/Fdqw1mSHCCCX6c9vqWcrgoEVkuOBW8vaIKNRTeSIYueKN
-         oAmUWXbxX5m6f/8dWrWlj3t67Ms4n5Nv6s8DvVfLNK1aMwSUFxz5nPym/gkno8oWl9Eo
-         BEaLKiwbqifcfpCj+ABlPJ/5iqXgcm07RHKt+aaxxx3GMIa471J7cvgYUMGXMpsdmpKR
-         oihg8u2hNnQ0sJnz4xtMJlpvcY0iVlBHU/KTk+zgkn+lpinTtvhixkqn2ZTXMInSVdGX
-         DMnRCzfIQS4q70ENMQQ1wQ68Ja4+Y+9NXdfWz4z27p/ZPLq/YeIZIpSkPFI9LiYKtiJV
-         N1HQ==
-X-Gm-Message-State: APjAAAXV+V/15maA+iFBLIqS0r87500VelrRToA61TUzzcYj3LyHT1m0
-        VGJjkO10jbX7MVhVsoQWedY=
-X-Google-Smtp-Source: APXvYqx0BTW5i3GAwItQ8FIubZcjqgNjH2b/VFDz+UlvQS697hZqRSYcXKRLk4IIDQcqvcKUbwvL5w==
-X-Received: by 2002:a17:902:8696:: with SMTP id g22mr4483534plo.249.1562850531927;
-        Thu, 11 Jul 2019 06:08:51 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s24sm5885299pfh.133.2019.07.11.06.08.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 06:08:51 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 09:08:49 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Byungchul Park <byungchul.park@lge.com>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-Message-ID: <20190711130849.GA212044@google.com>
-References: <1562565609-12482-1-git-send-email-byungchul.park@lge.com>
- <20190708125013.GG26519@linux.ibm.com>
- <20190708130359.GA42888@google.com>
- <20190709055815.GA19459@X58A-UD3R>
- <20190709124102.GR26519@linux.ibm.com>
- <20190710012025.GA20711@X58A-UD3R>
- <20190711123052.GI26519@linux.ibm.com>
+        Thu, 11 Jul 2019 09:11:57 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190711131155euoutp0291ea854961e1eba2cc58814dfce85569~wXHH2qA1F0289002890euoutp025
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:11:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190711131155euoutp0291ea854961e1eba2cc58814dfce85569~wXHH2qA1F0289002890euoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562850715;
+        bh=A+nnjQatvmXOarwKNwWj8FEyKdvOWMGUijR8qmV+HFI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LwqsOLoORbuJ84tBJs2VYFuNVS2a5pvGvqPo3CNN9l1h184spaJVDblTy3uXlzZUG
+         whAekOqRXyOkIqW6GgVHnbDYoA3lV2c37jdglNYKePEpPAOIoL0OWbpMtLK2GLqKfc
+         mxpLQnhIx8ZmXx6i/6uDJZcROyovPgcqVq2/Zv3Y=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190711131154eucas1p1de5161ddfd5eec47f8c1ae424fd27364~wXHHPz5M22081420814eucas1p1z;
+        Thu, 11 Jul 2019 13:11:54 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4C.D2.04325.A95372D5; Thu, 11
+        Jul 2019 14:11:54 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190711131153eucas1p17e1221ea0392ba004fd531a3350ebdf9~wXHGjdp6I2079720797eucas1p1f;
+        Thu, 11 Jul 2019 13:11:53 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190711131153eusmtrp130912cf28dbd4314cb6fb6f5a0d7ef2e~wXHGVMr5c0407904079eusmtrp17;
+        Thu, 11 Jul 2019 13:11:53 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-87-5d27359a9ac2
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id BE.BE.04146.995372D5; Thu, 11
+        Jul 2019 14:11:53 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190711131153eusmtip29d95ddab3c7a0ff71d021ba29ffaee5f~wXHF0--tu0112201122eusmtip2O;
+        Thu, 11 Jul 2019 13:11:53 +0000 (GMT)
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+To:     Mark Brown <broonie@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, robdclark@gmail.com, bjorn.andersson@linaro.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+Date:   Thu, 11 Jul 2019 15:11:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711123052.GI26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190706010604.GG20625@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFKsWRmVeSWpSXmKPExsWy7djP87qzTNVjDdZfEbHoPXeSyeL0/ncs
+        FlMfPmGz+L9tIrPFla/v2Szaln9jtuicuITdYuL+s+wWl3fNYbN4vvAHswOXx95vC1g8ds66
+        y+4xu2Mmq8emVZ1sHneu7WHz2P7tAavH/e7jTB6fN8kFcERx2aSk5mSWpRbp2yVwZWx+sImx
+        4LBgxacb7xkbGD/wdjFyckgImEjM3T6RsYuRi0NIYAWjxJxLR1ggnC+MEpumr2CHcD4zShx8
+        cw8owwHW8nSdN0R8OaPEs2OvWSGct4wSj5ZOYAKZKwxUtG7pAWYQW0TAR6Jh+n42EJtZ4C6j
+        xO5N/CA2m4CmxN/NN8HivAJ2EktvLWQFsVkEVCWuL5sFZosKhEn8XNAJVSMocXLmExYQm1PA
+        WKL73Vl2iJkGEkcWzWGFsOUltr+dwwxhi0vcejKfCeQ4CYF77BIn989hhHjaRaJn1WcWCFtY
+        4tXxLewQtozE6ck9UPF6ifsrWpghmjsYJbZu2MkMkbCWOHz8IiuE7Six6PtiaLDwSdx4Kwix
+        mE9i0rbpzBBhXomONiGIakWJ+2e3Qk0Rl1h64SvbBEalWUhem4XknVlI3pmF5J0FjCyrGMVT
+        S4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxAlPY6X/Hv+5g3Pcn6RCjAAejEg8vx1vVWCHWxLLi
+        ytxDjBIczEoivPvclWOFeFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgWEkhPLEnNTk0tSC2C
+        yTJxcEo1MOp8PWf4KOaCZFL47KPXL5xsqp78n4FBNawn5NrRHe1fJybP8NntdTbn8l1Rm79i
+        B0TjVl380GhY/fOflb/ofYlfBRX7tPifO6/8ynKhRK6gSNp3ipjy7oW8Um/2iG/yL/Pff/7j
+        YudnVqeqJ73v2DI5hfuNpM5apaWKpV2R8/bsP+4seSR31UolluKMREMt5qLiRAAExmsjXQMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xe7ozTdVjDd78l7foPXeSyeL0/ncs
+        FlMfPmGz+L9tIrPFla/v2Szaln9jtuicuITdYuL+s+wWl3fNYbN4vvAHswOXx95vC1g8ds66
+        y+4xu2Mmq8emVZ1sHneu7WHz2P7tAavH/e7jTB6fN8kFcETp2RTll5akKmTkF5fYKkUbWhjp
+        GVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZWx+sImx4LBgxacb7xkbGD/wdjFycEgI
+        mEg8XefdxcjFISSwlFHiwPSXrF2MnEBxcYnd898yQ9jCEn+udbFBFL1mlHhy/A1YQhioed3S
+        A2C2iICPRMP0/WBFzAJ3GSW2HnvHDtHxjlHi3Zx/YFVsApoSfzffZAOxeQXsJJbeWgi2jkVA
+        VeL6slmsICeJCoRJHD2RB1EiKHFy5hMWEJtTwFii+91ZdhCbWUBPYsf1X6wQtrzE9rdzmCFs
+        cYlbT+YzTWAUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMGK3
+        Hfu5eQfjpY3BhxgFOBiVeHh/3FONFWJNLCuuzD3EKMHBrCTCu89dOVaINyWxsiq1KD++qDQn
+        tfgQoynQbxOZpUST84HJJK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8T
+        B6dUA6PH9tb+B2dFJhpsypITefplxvWLm5VEThcy8FUmcLp2Jga8erTwetThFOOYTnO9RVu4
+        FTxT/j4oaN24Vumq6dplpw8d7XvBbXFdxz2Jrd++55P2h+W+FY/eZE22flsqx1YSzNbDI7lW
+        o+PGracCusIckg+1dY4HnLc6vnJ/go7/4hJLMZX9n5RYijMSDbWYi4oTAUQO67zuAgAA
+X-CMS-MailID: 20190711131153eucas1p17e1221ea0392ba004fd531a3350ebdf9
+X-Msg-Generator: CA
+X-RootMTR: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+        <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+        <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
+        <20190706010604.GG20625@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 05:30:52AM -0700, Paul E. McKenney wrote:
-> On Wed, Jul 10, 2019 at 10:20:25AM +0900, Byungchul Park wrote:
-> > On Tue, Jul 09, 2019 at 05:41:02AM -0700, Paul E. McKenney wrote:
-> > > > Hi Paul,
-> > > > 
-> > > > IMHO, as much as we want to tune the time for fqs to be initiated, we
-> > > > can also want to tune the time for the help from scheduler to start.
-> > > > I thought only difference between them is a level of urgency. I might be
-> > > > wrong. It would be appreciated if you let me know if I miss something.
-> > > 
-> > > Hello, Byungchul,
-> > > 
-> > > I understand that one hypothetically might want to tune this at runtime,
-> > > but have you had need to tune this at runtime on a real production
-> > > workload?  If so, what problem was happening that caused you to want to
-> > > do this tuning?
-> > 
-> > Not actually.
-> > 
-> > > > And it's ok even if the patch is turned down based on your criteria. :)
-> > > 
-> > > If there is a real need, something needs to be provided to meet that
-> > > need.  But in the absence of a real need, past experience has shown
-> > > that speculative tuning knobs usually do more harm than good.  ;-)
-> > 
-> > It makes sense, "A speculative tuning knobs do more harm than good".
-> > 
-> > Then, it would be better to leave jiffies_till_{first,next}_fqs tunnable
-> > but jiffies_till_sched_qs until we need it.
-> > 
-> > However,
-> > 
-> > (1) In case that jiffies_till_sched_qs is tunnable:
-> > 
-> > 	We might need all of jiffies_till_{first,next}_qs,
-> > 	jiffies_till_sched_qs and jiffies_to_sched_qs because
-> > 	jiffies_to_sched_qs can be affected by any of them. So we
-> > 	should be able to read each value at any time.
-> > 
-> > (2) In case that jiffies_till_sched_qs is not tunnable:
-> > 
-> > 	I think we don't have to keep the jiffies_till_sched_qs any
-> > 	longer since that's only for setting jiffies_to_sched_qs at
-> > 	*booting time*, which can be done with jiffies_to_sched_qs too.
-> > 	It's meaningless to keep all of tree variables.
-> > 
-> > The simpler and less knobs that we really need we have, the better.
-> > 
-> > what do you think about it?
-> > 
-> > In the following patch, I (1) removed jiffies_till_sched_qs and then
-> > (2) renamed jiffies_*to*_sched_qs to jiffies_*till*_sched_qs because I
-> > think jiffies_till_sched_qs is a much better name for the purpose. I
-> > will resend it with a commit msg after knowing your opinion on it.
-> 
-> I will give you a definite "maybe".
-> 
-> Here are the two reasons for changing RCU's embarrassingly large array
-> of tuning parameters:
-> 
-> 1.	They are causing a problem in production.  This would represent a
-> 	bug that clearly must be fixed.  As you say, this change is not
-> 	in this category.
-> 
-> 2.	The change simplifies either RCU's code or the process of tuning
-> 	RCU, but without degrading RCU's ability to run everywhere and
-> 	without removing debugging tools.
-> 
-> The change below clearly simplifies things by removing a few lines of
-> code, and it does not change RCU's default self-configuration.  But are
-> we sure about the debugging aspect?  (Please keep in mind that many more
-> sites are willing to change boot parameters than are willing to patch
-> their kernels.)
-> 
-> What do you think?
-
-Just to add that independent of whether the runtime tunable make sense or
-not, may be it is still worth correcting the 0444 to be 0644 to be a separate
-patch?
- 
-> Finally, I urge you to join with Joel Fernandes and go through these
-> grace-period-duration tuning parameters.  Once you guys get your heads
-> completely around all of them and how they interact across the different
-> possible RCU configurations, I bet that the two of you will have excellent
-> ideas for improvement.
-
-Yes, I am quite happy to join forces. Byungchul, let me know what about this
-or other things you had in mind. I have some other RCU topics too I am trying
-to get my head around and planning to work on more patches.
-
-Paul, in case you had any other specific tunables or experiments in mind, let
-me know. I am quite happy to try out new experiments and learn something
-based on tuning something.
-
-thanks,
-
-- Joel
+On 06.07.2019 03:06, Mark Brown wrote:
+> On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
+>> Add basic support with a simple implementation that utilizes the generic
+>> read/write commands to allow device registers to be configured.
+> This looks good to me but I really don't know anything about DSI,
+> I'd appreciate some review from other people who do.  I take it
+> there's some spec thing in DSI that says registers and bytes must
+> both be 8 bit?
 
 
+I am little bit confused about regmap usage here. On the one hand it
+nicely fits to this specific driver, probably because it already uses
+regmap_i2c.
 
-> > Thanks,
-> > Byungchul
-> > 
-> > ---8<---
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index e72c184..94b58f5 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -3792,10 +3792,6 @@
-> >  			a value based on the most recent settings
-> >  			of rcutree.jiffies_till_first_fqs
-> >  			and rcutree.jiffies_till_next_fqs.
-> > -			This calculated value may be viewed in
-> > -			rcutree.jiffies_to_sched_qs.  Any attempt to set
-> > -			rcutree.jiffies_to_sched_qs will be cheerfully
-> > -			overwritten.
-> >  
-> >  	rcutree.kthread_prio= 	 [KNL,BOOT]
-> >  			Set the SCHED_FIFO priority of the RCU per-CPU
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index a2f8ba2..ad9dc86 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -421,10 +421,8 @@ static int rcu_is_cpu_rrupt_from_idle(void)
-> >   * How long the grace period must be before we start recruiting
-> >   * quiescent-state help from rcu_note_context_switch().
-> >   */
-> > -static ulong jiffies_till_sched_qs = ULONG_MAX;
-> > +static ulong jiffies_till_sched_qs = ULONG_MAX; /* See adjust_jiffies_till_sched_qs(). */
-> >  module_param(jiffies_till_sched_qs, ulong, 0444);
-> > -static ulong jiffies_to_sched_qs; /* See adjust_jiffies_till_sched_qs(). */
-> > -module_param(jiffies_to_sched_qs, ulong, 0444); /* Display only! */
-> >  
-> >  /*
-> >   * Make sure that we give the grace-period kthread time to detect any
-> > @@ -436,18 +434,13 @@ static void adjust_jiffies_till_sched_qs(void)
-> >  {
-> >  	unsigned long j;
-> >  
-> > -	/* If jiffies_till_sched_qs was specified, respect the request. */
-> > -	if (jiffies_till_sched_qs != ULONG_MAX) {
-> > -		WRITE_ONCE(jiffies_to_sched_qs, jiffies_till_sched_qs);
-> > -		return;
-> > -	}
-> >  	/* Otherwise, set to third fqs scan, but bound below on large system. */
-> >  	j = READ_ONCE(jiffies_till_first_fqs) +
-> >  		      2 * READ_ONCE(jiffies_till_next_fqs);
-> >  	if (j < HZ / 10 + nr_cpu_ids / RCU_JIFFIES_FQS_DIV)
-> >  		j = HZ / 10 + nr_cpu_ids / RCU_JIFFIES_FQS_DIV;
-> >  	pr_info("RCU calculated value of scheduler-enlistment delay is %ld jiffies.\n", j);
-> > -	WRITE_ONCE(jiffies_to_sched_qs, j);
-> > +	WRITE_ONCE(jiffies_till_sched_qs, j);
-> >  }
-> >  
-> >  static int param_set_first_fqs_jiffies(const char *val, const struct kernel_param *kp)
-> > @@ -1033,16 +1026,16 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
-> >  
-> >  	/*
-> >  	 * A CPU running for an extended time within the kernel can
-> > -	 * delay RCU grace periods: (1) At age jiffies_to_sched_qs,
-> > -	 * set .rcu_urgent_qs, (2) At age 2*jiffies_to_sched_qs, set
-> > +	 * delay RCU grace periods: (1) At age jiffies_till_sched_qs,
-> > +	 * set .rcu_urgent_qs, (2) At age 2*jiffies_till_sched_qs, set
-> >  	 * both .rcu_need_heavy_qs and .rcu_urgent_qs.  Note that the
-> >  	 * unsynchronized assignments to the per-CPU rcu_need_heavy_qs
-> >  	 * variable are safe because the assignments are repeated if this
-> >  	 * CPU failed to pass through a quiescent state.  This code
-> > -	 * also checks .jiffies_resched in case jiffies_to_sched_qs
-> > +	 * also checks .jiffies_resched in case jiffies_till_sched_qs
-> >  	 * is set way high.
-> >  	 */
-> > -	jtsq = READ_ONCE(jiffies_to_sched_qs);
-> > +	jtsq = READ_ONCE(jiffies_till_sched_qs);
-> >  	ruqp = per_cpu_ptr(&rcu_data.rcu_urgent_qs, rdp->cpu);
-> >  	rnhqp = &per_cpu(rcu_data.rcu_need_heavy_qs, rdp->cpu);
-> >  	if (!READ_ONCE(*rnhqp) &&
-> > @@ -3383,7 +3376,8 @@ static void __init rcu_init_geometry(void)
-> >  		jiffies_till_first_fqs = d;
-> >  	if (jiffies_till_next_fqs == ULONG_MAX)
-> >  		jiffies_till_next_fqs = d;
-> > -	adjust_jiffies_till_sched_qs();
-> > +	if (jiffies_till_sched_qs == ULONG_MAX)
-> > +		adjust_jiffies_till_sched_qs();
-> >  
-> >  	/* If the compile-time values are accurate, just leave. */
-> >  	if (rcu_fanout_leaf == RCU_FANOUT_LEAF &&
-> 
+On the other it will be unusable for almost all current DSI drivers and
+probably for most new drivers. Why?
+
+1. DSI protocol defines actually more than 30 types of transactions[1],
+but this patchset implements only few of them (dsi generic write/read
+family). Is it possible to implement multiple types of transactions in
+regmap?
+
+2. There is already some set of helpers which uses dsi bus, rewriting it
+on regmap is possible or driver could use of regmap and direct access
+together, the question is if it is really necessary.
+
+3. DSI devices are no MFDs so regmap abstraction has no big value added
+(correct me, if there are other significant benefits).
+
+
+[1]:
+https://elixir.bootlin.com/linux/latest/source/include/video/mipi_display.h#L15
+
+
+Regards
+
+Andrzej
+
+
+>
+> A couple of minor comments, no need to resend just for these:
+>
+>> +       payload[0] = (char)reg;
+>> +       payload[1] = (char)val;
+> Do you need the casts?
+>
+>> +	ret = mipi_dsi_generic_write(dsi, payload, 2);
+>> +	return ret < 0 ? ret : 0;
+> Please just write an if statement, it helps with legibility.
+>
+>> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
+>> +				 const struct regmap_config *config,
+>> +				 struct lock_class_key *lock_key,
+>> +				 const char *lock_name)
+>> +{
+>> +	return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
+>> +			     lock_key, lock_name);
+>> +}
+>> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
+> Perhaps validate that the config is OK (mainly the register/value
+> sizes)?  Though I'm not sure it's worth it so perhaps not - up to
+> you.
+
+
