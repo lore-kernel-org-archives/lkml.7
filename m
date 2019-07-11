@@ -2,173 +2,175 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBD3C74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525ADC74A55
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC1020872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3300920872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfGKM1a convert rfc822-to-8bit (ORCPT
+        id S1728730AbfGKM2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:27:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39917 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfGKM13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:27:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 05:27:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,478,1557212400"; 
-   d="scan'208";a="168007903"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2019 05:27:29 -0700
-Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jul 2019 05:27:29 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jul 2019 05:27:28 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.110]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.109]) with mapi id 14.03.0439.000;
- Thu, 11 Jul 2019 20:27:26 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: RE: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Thread-Topic: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Thread-Index: AQHVHsiVLTtm/WvGlEKSmQ2lKcl2F6ajfRGAgAC0NOCAAGOFgIABGcaQgAAh3QCABKzV8IAGRYaAgAfjTqCAAB3wAIABIjgQgAHqLACACa6T4A==
-Date:   Thu, 11 Jul 2019 12:27:26 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C257439F931F8@SHSMSX104.ccr.corp.intel.com>
-References: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
-        <1560000071-3543-10-git-send-email-yi.l.liu@intel.com>
-        <20190619222647.72efc76a@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F0164E@SHSMSX104.ccr.corp.intel.com>
-        <20190620150757.7b2fa405@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F02663@SHSMSX104.ccr.corp.intel.com>
-        <20190621095740.41e6e98e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
-        <20190628090741.51e8d18e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F1E9EC@SHSMSX104.ccr.corp.intel.com>
-        <20190703112212.146ac71c@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F1FF4E@SHSMSX104.ccr.corp.intel.com>
- <20190705095520.548331c2@x1.home>
-In-Reply-To: <20190705095520.548331c2@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmFjNjk0YmEtNDA2Ny00MDg3LTkxM2EtOWU4YmI0NmMzMzcyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNVU5WXU3ckhvUTZNVG5kb1VTOEhLNE9pUllaUVhCUFkyQWxVVGI4WHhmR2RNaXVVOEd2M3dcL1hLVXBaaXVOQlYifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 11 Jul 2019 08:28:23 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:41837 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfGKM2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 08:28:22 -0400
+Received: by mail-yw1-f67.google.com with SMTP id i138so3222261ywg.8;
+        Thu, 11 Jul 2019 05:28:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JhuJhWxP1rUZnb+Vp6G8TuOnOq95+bSLey7FrYy8zQY=;
+        b=sYl0JDrH8oAtoFVBl604Pm1yAHjqxTND8blSap7qhzjOw2Z2B2AhV419wvfZti0V9T
+         ilrxqcI9fIX7+ume5hJ1e1R1T6hD61MZlX6ORmHftFpuHQ4BitVFtsjqHPycbb0L6skh
+         9E4L9WsO0qATP8z553xv3X01J6wgQlJhB2qirzXyeOx0UCD0O003KB9U2A7SflMKIyCK
+         nmwXVXTnYRjkstFLdHf3IIXMsGnk+fDNBlW8a6+5/00tnPS281dQm/tWOmBgkFfHZdMB
+         2FkhPmLuP0nsO1GViWvUf/dyEi3jwn+LIqFTrXpfPeq1ErD4BtqSq8gq1WJJtNl1mzBJ
+         N3qw==
+X-Gm-Message-State: APjAAAUwTw5gtPpmKasXrEg5OYKKIFzMEQb7T6nGgAWiJFEyIoREC5ur
+        4PITQ1v0kQsopvlq+6sALp4JlhSI6QeOoqU5MT4=
+X-Google-Smtp-Source: APXvYqxnENs8rD53npbxsD00xL3VrlCkW1LR5JPpFwT+zi16w+B/f9HTckdF0z/FhReYSAwdlJwKNwtGWfJSorUq86s=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr1942490qtd.18.1562848101449;
+ Thu, 11 Jul 2019 05:28:21 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190710130206.1670830-1-arnd@arndb.de> <33511b0e-6d7b-c156-c415-7a609b049567@arm.com>
+In-Reply-To: <33511b0e-6d7b-c156-c415-7a609b049567@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 11 Jul 2019 14:28:04 +0200
+Message-ID: <CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com>
+Subject: Re: [PATCH] vsyscall: use __iter_div_u64_rem()
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Thu, Jul 11, 2019 at 2:14 PM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
+>
+>
+> Could you please tell me which version of the compiler did you use?
+>
+> My building command is:
+>
+> # make mrproper && make CC=clang HOSTCC=clang i386_defconfig && make ARCH=i386
+> CC=clang HOSTCC=clang -j56
+>
 
-> From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On Behalf
-> Of Alex Williamson
-> Sent: Friday, July 5, 2019 11:55 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> 
-> On Thu, 4 Jul 2019 09:11:02 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > Hi Alex,
-> >
-> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > Sent: Thursday, July 4, 2019 1:22 AM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-[...]
-> >
-> > > It's really unfortunate that we don't have the mdev inheriting the
-> > > iommu group of the iommu_device so that userspace can really understand
-> > > this relationship.  A separate group makes sense for the aux-domain
-> > > case, and is (I guess) not a significant issue in the case of a
-> > > singleton iommu_device group, but it's pretty awkward here.  Perhaps
-> > > this is something we should correct in design of iommu backed mdevs.
-> >
-> > Yeah, for aux-domain case, it is not significant issue as aux-domain essentially
-> > means singleton iommu_devie group. And in early time, when designing the
-> support
-> > for wrap pci as a mdev, we also considered to let vfio-mdev-pci to reuse
-> > iommu_device group. But this results in an iommu backed group includes mdev and
-> > physical devices, which might also be strange. Do you think it is valuable to
-> reconsider
-> > it?
-> 
-> From a group perspective, the cleanest solution would seem to be that
-> IOMMU backed mdevs w/o aux domain support should inherit the IOMMU
-> group of the iommu_device,
+See below for the patch I am using locally to work around this.
+That patch is probably wrong, so I have not submitted it yet, but it
+gives you a clean build ;-)
 
-A confirm here. Regards to inherit the IOMMU group of iommu_device, do
-you mean mdev device should be added to the IOMMU group of iommu_device
-or maintain a parent and inheritor relationship within vfio? I guess you mean the
-later one? :-)
+     Arnd
 
-> but I think the barrier here is that we have
-> a difficult time determining if the group is "viable" in that case.
-> For example a group where one devices is bound to a native host driver
-> and the other device bound to a vfio driver would typically be
-> considered non-viable as it breaks the isolation guarantees.  However
+8<---
+Subject: [PATCH] x86: percpu: fix clang 32-bit build
 
-yes, this is how vfio guarantee the isolation before allowing user to further
-add a group to a vfio container and so on.
+clang does not like an inline assembly with a "=q" contraint for
+a 64-bit output:
 
-> I think in this configuration, the parent device is effectively
-> participating in the isolation and "donating" its iommu group on behalf
-> of the mdev device.  I don't think we can simultaneously use that iommu
-> group for any other purpose. 
+arch/x86/events/perf_event.h:824:21: error: invalid output size for
+constraint '=q'
+        u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+                           ^
+include/linux/percpu-defs.h:447:2: note: expanded from macro '__this_cpu_read'
+        raw_cpu_read(pcp);                                              \
+        ^
+include/linux/percpu-defs.h:421:28: note: expanded from macro 'raw_cpu_read'
+ #define raw_cpu_read(pcp)
+__pcpu_size_call_return(raw_cpu_read_, pcp)
+                                        ^
+include/linux/percpu-defs.h:322:23: note: expanded from macro
+'__pcpu_size_call_return'
+        case 1: pscr_ret__ = stem##1(variable); break;                  \
+                             ^
+<scratch space>:357:1: note: expanded from here
+raw_cpu_read_1
+^
+arch/x86/include/asm/percpu.h:394:30: note: expanded from macro 'raw_cpu_read_1'
+ #define raw_cpu_read_1(pcp)             percpu_from_op(, "mov", pcp)
+                                        ^
+arch/x86/include/asm/percpu.h:189:15: note: expanded from macro 'percpu_from_op'
+                    : "=q" (pfo_ret__)                  \
+                            ^
 
-Agree. At least host cannot make use of the iommu group any more in such
-configuration.
+According to the commit that introduced the "q" constraint, this was
+needed to fix miscompilation, but it gives no further detail.
 
-> I'm sure we could come up with a way for
-> vifo-core to understand this relationship and add it to the white list,
+Using the normal "=r" constraint seems to work so far.
 
-The configuration is host driver still exists while we want to let mdev device
-to somehow "own" the iommu backed DMA isolation capability. So one possible
-way may be calling vfio_add_group_dev() which will creates a vfio_device instance
-for the iommu_device in vfio.c when creating a iommu backed mdev. Then the
-iommu group is fairly viable.
+Fixes: 3c598766a2ba ("x86: fix percpu_{to,from}_op()")
+Cc: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> I wonder though how confusing this might be to users who now understand
-> the group/driver requirement to be "all endpoints bound to vfio
-> drivers".  This might still be the best approach regardless of this.
-
-Yes, another thing I'm considering is how to prevent such a host driver from
-issuing DMA. If we finally get a device bound to vfio-pci and another device
-wrapped as mdev and passthru them to VM, the host driver is still capable to
-issue DMA. Though IOMMU can block some DMAs, but not all of them. If a
-DMA issued by host driver happens to have mapping in IOMMU side, then
-host is kind of doing things on behalf on VM. Though we may trust the host
-driver, but it looks to be a little bit awkward to me. :-(
-
-> Thanks,
-> 
-> Alex
-
-Regards,
-Yi Liu
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 2278797c769d..e791fbf4018f 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -99,7 +99,7 @@ do {                                                  \
+        case 1:                                         \
+                asm qual (op "b %1,"__percpu_arg(0)     \
+                    : "+m" (var)                        \
+-                   : "qi" ((pto_T__)(val)));           \
++                   : "ri" ((pto_T__)(val)));           \
+                break;                                  \
+        case 2:                                         \
+                asm qual (op "w %1,"__percpu_arg(0)     \
+@@ -144,7 +144,7 @@ do {
+                         \
+                else                                                    \
+                        asm qual ("addb %1, "__percpu_arg(0)            \
+                            : "+m" (var)                                \
+-                           : "qi" ((pao_T__)(val)));                   \
++                           : "ri" ((pao_T__)(val)));                   \
+                break;                                                  \
+        case 2:                                                         \
+                if (pao_ID__ == 1)                                      \
+@@ -186,7 +186,7 @@ do {
+                         \
+        switch (sizeof(var)) {                          \
+        case 1:                                         \
+                asm qual (op "b "__percpu_arg(1)",%0"   \
+-                   : "=q" (pfo_ret__)                  \
++                   : "=r" (pfo_ret__)                  \
+                    : "m" (var));                       \
+                break;                                  \
+        case 2:                                         \
+@@ -215,7 +215,7 @@ do {
+                         \
+        switch (sizeof(var)) {                          \
+        case 1:                                         \
+                asm(op "b "__percpu_arg(P1)",%0"        \
+-                   : "=q" (pfo_ret__)                  \
++                   : "=r" (pfo_ret__)                  \
+                    : "p" (&(var)));                    \
+                break;                                  \
+        case 2:                                         \
