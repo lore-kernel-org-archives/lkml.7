@@ -2,114 +2,94 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D6BC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797E9C74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69ACD208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528CD208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfGKIhO (ORCPT
+        id S1728192AbfGKIrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:37:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:39699 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbfGKIhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:37:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 01:37:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
-   d="scan'208";a="171170846"
-Received: from intel10-debian.sh.intel.com ([10.239.53.1])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jul 2019 01:37:11 -0700
-From:   Zhengjun Xing <zhengjun.xing@linux.intel.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, tom.zanussi@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, zhengjun.xing@linux.intel.com,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH v2] tracing: Add verbose gfp_flag printing to synthetic events
-Date:   Thu, 11 Jul 2019 16:46:42 +0800
-Message-Id: <20190711084642.28785-1-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 11 Jul 2019 04:47:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37104 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfGKIrG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 04:47:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s20so5056158otp.4;
+        Thu, 11 Jul 2019 01:47:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=InDqlUc6M2ei9HBm2FeFX9lOv0/+G+KcR9Zyp274VQk=;
+        b=uiD/6nAox5sf9MyASGX/o8MZNGjuDt893GGhyZyM0yokbC0BwLgxzh/3WK+53keFSE
+         21IDYx5JLMMn4D5a34N5oh0DcoVG//K54a8ht7uS4G0hKd0tnxG6dFAi2g1wur/GIF33
+         IIuoMEYVzg/KxZzINyg7LmKOQ2fqOtfhL8kMUNSTvsBEC7Su4hPtcoZ52iPVsoyKhjx4
+         F0E+pQd9lahOPvuFHPGBPlj3rLyf9MtZOebwrEK4YXvBYetmqFGhN6TPM3XJmOHrv7FF
+         Q6V8tPjdfaU/FXzCirYho8CNPjaqufTtj8cb8LwBX6xBss9z6hR9CRvHX/dFdm8h5thB
+         EP1g==
+X-Gm-Message-State: APjAAAXIDrYY5KQ8EF59BakSuln7Dv+mUIM55WLqkBUvusznFiABacn+
+        Mv1K6KAB18aZKXY+avo4onV0L5qJw3WfO2By5HBI1w==
+X-Google-Smtp-Source: APXvYqwz2SDh16EiNuG+bu35TpYvKuhn+aH+jK0by5wsHLtJnFoiw9CZshX3kBSUqbf5RMDgYOc6TuQLMHpZjylKYxI=
+X-Received: by 2002:a9d:69ce:: with SMTP id v14mr2507066oto.39.1562834825315;
+ Thu, 11 Jul 2019 01:47:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190711082936.8706-1-brgl@bgdev.pl>
+In-Reply-To: <20190711082936.8706-1-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 11 Jul 2019 10:46:54 +0200
+Message-ID: <CAMuHMdWzEOVLUZM_rFfMKqF_G_gZXBpV7TC-OXmN8YKw6_occQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: em: remove the gpiochip before removing the
+ irq domain
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Phil Reid <preid@electromag.com.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable <stable@vger.kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add on top of 'trace:add "gfp_t" support in synthetic_events'.
+CC Niklas, who has the hardware
 
-Prints the gfp flags as hex in addition to the human-readable flag
-string.  Example output:
+On Thu, Jul 11, 2019 at 10:29 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> In commit 8764c4ca5049 ("gpio: em: use the managed version of
+> gpiochip_add_data()") we implicitly altered the ordering of resource
+> freeing: since gpiochip_remove() calls gpiochip_irqchip_remove()
+> internally, we now can potentially use the irq_domain after it was
+> destroyed in the remove() callback (as devm resources are freed after
+> remove() has returned).
+>
+> Use devm_add_action_or_reset() to keep the ordering right and entirely
+> kill the remove() callback in the driver.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: 8764c4ca5049 ("gpio: em: use the managed version of gpiochip_add_data()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-  whoopsie-630 [000] ...1 78.969452: testevent: bar=b20 (GFP_ATOMIC|__GFP_ZERO)
-    rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
-    rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
----
- kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index ca6b0dff60c5..938ef3f54c5c 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -13,6 +13,10 @@
- #include <linux/rculist.h>
- #include <linux/tracefs.h>
- 
-+/* for gfp flag names */
-+#include <linux/trace_events.h>
-+#include <trace/events/mmflags.h>
-+
- #include "tracing_map.h"
- #include "trace.h"
- #include "trace_dynevent.h"
-@@ -752,6 +756,8 @@ static int synth_field_size(char *type)
- 		size = sizeof(unsigned long);
- 	else if (strcmp(type, "pid_t") == 0)
- 		size = sizeof(pid_t);
-+	else if (strcmp(type, "gfp_t") == 0)
-+		size = sizeof(gfp_t);
- 	else if (synth_field_is_string(type))
- 		size = synth_field_string_size(type);
- 
-@@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
- 		fmt = "%lu";
- 	else if (strcmp(type, "pid_t") == 0)
- 		fmt = "%d";
-+	else if (strcmp(type, "gfp_t") == 0)
-+		fmt = "%x";
- 	else if (synth_field_is_string(type))
- 		fmt = "%s";
- 
-@@ -834,9 +838,20 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 					 i == se->n_fields - 1 ? "" : " ");
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
-+			struct trace_print_flags __flags[] = {
-+			    __def_gfpflag_names, {-1, NULL} };
-+
- 			trace_seq_printf(s, print_fmt, se->fields[i]->name,
- 					 entry->fields[n_u64],
- 					 i == se->n_fields - 1 ? "" : " ");
-+
-+			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
-+				trace_seq_puts(s, " (");
-+				trace_print_flags_seq(s, "|",
-+						      entry->fields[n_u64],
-+						      __flags);
-+				trace_seq_putc(s, ')');
-+			}
- 			n_u64++;
- 		}
- 	}
+                        Geert
+
 -- 
-2.14.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
