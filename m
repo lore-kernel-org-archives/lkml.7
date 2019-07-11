@@ -2,186 +2,199 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3FAC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFAFC74A52
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839CB21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09C32166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="PX3hlwqf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OgaSn6Mc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfGKMzR (ORCPT
+        id S1728479AbfGKM6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:55:17 -0400
-Received: from mail-eopbgr740079.outbound.protection.outlook.com ([40.107.74.79]:6112
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725971AbfGKMzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:55:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JKCGbex8LSFEZD55rJhoZaAfa4vLX/uyUmcCYxaNCOAGBjg2vXoBAoi5JIPAXuN0s76b5ztnT2bvqQT16bSUBqEcVpb8y579/SOJzO1Sedy7k7J++AVnfLPzZnz+Hh2JojqWGPw+CcPwlDFn/hgaHL0UBmjT31SLvXegMgQy/ouMTmJFL73upjSHuPxil7vz3dzJxilYIislY2QiucRMN28eiFyk21A6MWvU25RVxgKsfpniOV2h+mg0qsyOp8cI9MdXc69QPbmDBY+Q4qzctE4+RtVufX8bnOk3Gl6iJvl8WQSmXCs15qwKqgAQqb860nzlFtXBdnJ5T1ox6jFAaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHusE5s48/RUxfaorid1+sFXXf8MjHECdJyzrTzuJ5o=;
- b=HiFl7rKNOqHHq2FV8N+2WuJCHAWdfb2ANXiXu6YL01gmxHQlmrJvT9GWgd9NxkaxX3joE5aDBiZRQp1LQKmPkHV1asHoXUSSsO/pFrcbPTOU8YtvAD0gP/52TJ7CjLeK6TMz79qBC6dRyEl4mzUUwrySAMlDM32kswoEASGf//HjT3BlIJb4pOIxdD/JJILiWa0c+N8pWnE3NZy5xJsdZ0RmJZtbtBj2sdYEZE1BL1SjblcpFBHK2ZWbZbesYfbh2v0uJqcPXwWBOQF+gzPh95gZN4SysAoJVDQyA1U47r4ufhximc5kIPnMv5RwwDma91SyKZ2ZPDBicYSL5hJ9Lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=ericsson.com;dmarc=pass action=none
- header.from=ericsson.com;dkim=pass header.d=ericsson.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHusE5s48/RUxfaorid1+sFXXf8MjHECdJyzrTzuJ5o=;
- b=PX3hlwqflal5WveTmExiAXYkhXzNODYJsKcSaywgQrG02l1gZ3HW2AcfJivGPUDxebYH+V0w7zj1lQ7ZWJ9xjFqGF87zoBBYho9Kv1lNIQ6znYbGeoJwXW7rpevLa627QN8T1Nlx9GIZJfJAbaCjzhGn+OQf8YIQABm/eJpsgl8=
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com (10.255.156.17) by
- CH2PR15MB3541.namprd15.prod.outlook.com (10.255.156.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Thu, 11 Jul 2019 12:55:12 +0000
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::ecc4:bffd:8512:a8b6]) by CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::ecc4:bffd:8512:a8b6%2]) with mapi id 15.20.2073.008; Thu, 11 Jul 2019
- 12:55:12 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Topic: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Index: AQHVNRbZCg2+IkEFUEKEsAEksjW2W6bFYzhw
-Date:   Thu, 11 Jul 2019 12:55:12 +0000
-Message-ID: <CH2PR15MB357528CF6DC0A587D2CB90689AF30@CH2PR15MB3575.namprd15.prod.outlook.com>
-References: <MN2PR15MB3581E1D6D56D6AA7DE8E357E9AF00@MN2PR15MB3581.namprd15.prod.outlook.com>
- <4d2ac0ce7f974184ac43b71f19aee7a3@svr-chch-ex1.atlnz.lc>
-In-Reply-To: <4d2ac0ce7f974184ac43b71f19aee7a3@svr-chch-ex1.atlnz.lc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [24.225.233.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5edbd025-63ac-427e-1034-08d705ff0341
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CH2PR15MB3541;
-x-ms-traffictypediagnostic: CH2PR15MB3541:
-x-microsoft-antispam-prvs: <CH2PR15MB3541F27B4B35FC7540CD0B149AF30@CH2PR15MB3541.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(13464003)(81166006)(33656002)(498600001)(68736007)(55016002)(6246003)(256004)(229853002)(76176011)(54906003)(110136005)(6436002)(7696005)(81156014)(186003)(9686003)(26005)(8676002)(53936002)(6506007)(53546011)(25786009)(6116002)(3846002)(99286004)(7736002)(5660300002)(66066001)(8936002)(476003)(486006)(14454004)(71190400001)(446003)(66446008)(4326008)(102836004)(76116006)(11346002)(66946007)(66476007)(64756008)(14444005)(52536014)(2906002)(66556008)(305945005)(2501003)(86362001)(2201001)(44832011)(71200400001)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR15MB3541;H:CH2PR15MB3575.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vQ1G1vIptql2053HrtulEvLcPkw0bO/A+fec8nlgvLcOGCZ3ENvI2T57C6AEhrOQLAb/vNL5BrOdZ6IjtON6ZWjiIiC31oS1Jn31tGADC9zgnkby8oLEeUaQFLCXN1h1MSK/hsXqW/BNbYQ4dabzoMUz4Q0084TM0Pg7mXRIHL/eeJmjVF2b4WtX/TXoM0d8RC9cX+6pBHyb5wbQgrAwoT8wO1tcqeGsrsAQR6UoZTCHyI4rSVJU1JTI3+4fcL7GfT5r5mWyTbO4DTKIehw0VaHwh4kR5IP4bUSEqdZlY+aYQTSWyimV6UymYsaVvJAFcBcxzR76HHPm2vNhztGGUZpb2j3yUjkR+sMQYTXmB599zD8RKbGeufbUheh+3ccXltrL8j8JvgaUWre/lFBisYOIsAUIybXzKUnxvPS+ci4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 08:58:03 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:38822 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbfGKM6C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 08:58:02 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190711125800euoutp0158a3f8afa29e26284681a7baf888e11c~wW6_n8iqW1548915489euoutp01e
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:58:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190711125800euoutp0158a3f8afa29e26284681a7baf888e11c~wW6_n8iqW1548915489euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562849880;
+        bh=vU9qDdY1dDbJlzQ9n1GbwihwW2hQxnIb8uEXqej1M0w=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=OgaSn6McuxgFj/ZbUKd5QfPd0NJAUGPGKUO+WkU/7vqTu0zOPxxQ4s2hEm1x0Nag3
+         nL+I8x0ztc68T7AhePCqkNhKwTe/ajJzsTQsyptLVPevNtG3jclZdAHdvXEHURzDHS
+         mi3zRs0Hta5ya2n7H1lplC54MUMK8DrYiXWBYr34=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190711125759eucas1p1eb80c893d814e311caf62e05af60d236~wW693jgVi2653926539eucas1p1W;
+        Thu, 11 Jul 2019 12:57:59 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 37.05.04298.752372D5; Thu, 11
+        Jul 2019 13:57:59 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190711125758eucas1p2726d34fa165f6645a51acd9f5b74ee68~wW69CUW4d2688026880eucas1p2j;
+        Thu, 11 Jul 2019 12:57:58 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190711125758eusmtrp11e5293de3383f2e2615ebddb8ffe54ec~wW680Bw2Z2705327053eusmtrp1A;
+        Thu, 11 Jul 2019 12:57:58 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-d6-5d2732576105
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6B.04.04140.652372D5; Thu, 11
+        Jul 2019 13:57:58 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190711125757eusmtip2f5b45b481281385eea833ffcf9a8fdf9~wW68Aeypy2342723427eusmtip2T;
+        Thu, 11 Jul 2019 12:57:57 +0000 (GMT)
+Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <fc404004-510e-5e76-df5f-ea78fdf51bf7@partner.samsung.com>
+Date:   Thu, 11 Jul 2019 14:58:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5edbd025-63ac-427e-1034-08d705ff0341
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 12:55:12.4390
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3541
+In-Reply-To: <20190711062226.4i4bvbsyczshdlyr@vireshk-i7>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUzMcRzHfe/3WHP27efUZxjb0YxNYTbfloXNwzF/mM3DWOXST6Gr3K8o
+        bPIYt0rY6E4qG2qhuuvJGsfqdLjU0iPC9WBE56mHFRZ+/Zj+e33fn/d7n/dn+/KU8JaZyu+O
+        TRCNsfoYLetNV9SONMzfsmhO6ILXdf7EmlXMkLaBdwzJddQz5Gz3R4o0NJRw5OmxPo7YulsZ
+        0lSVzZL+dAciWQ12FbnteMWR622NKvLyaAFL+oafqsjJew6OjLZaaWId1JFSdy27XNDdyrmF
+        dLbCM6yuo/Uuqyu9dkSXUVaIdM72SpWu3zZjA7fNe2mkGLN7v2gMDNnhHf3Aszbe7JPU1OKb
+        gobUJuTFA14MtzvKOBPy5gVcgKDl03VWHgh4AEF282qF+xEcL4J/gRFTClIC+Qgyb9hVysOD
+        wPXwPpJdk/EqaMnNp0yI5zV4HvQ+F2UPhUdoKGmycrKHxUugq7JOJbMar4YvXb1I9tPYH8o8
+        YbI8BW+FJ44cWrH4wGNzzxh74SCoyCoYi1LYD1705P7lmVDpyabkXYDTeRgaymCV1iuhvNRD
+        KTwZPjjLOIWng+tCGq3wAXh7NYNTwicQuFO//h0EQ42zkZHLUXguFFcFKvIK6D5To5JlwJOg
+        3eOjdJgE5ysuUYqshtOnBMU9H3J+1TEKTwPTryImE2kt4y6zjLvGMu4ay/+9eYguRH5iomSI
+        EqWFseKBAElvkBJjowJ2xhls6M/nc406v91Bg88iqhHmkXaimvf4hwqMfr+UbKhGwFNajdq+
+        ZlaooI7UJx8UjXHhxsQYUapG03ha66c+NMG9XcBR+gRxryjGi8Z/UxXvNTUF3ezZsy7O3aE5
+        Ohi5wV4SnGq8bzcXHhqocS1rbB22cFxvUcm7+jftV8JLL9vPueMNkd+HyzX7gka9PvSJq9LD
+        ijoTmfi560Vzp7PWsDTJfHhT9LB0sTwkc3ZAXpz1s+vSz10Rm+lq31TwT3v/6lGuxm9jV0T+
+        4I8MW5jRuldoTtLSUrR+4TzKKOl/A4oj3pV4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xe7phRuqxBtOOaFhsnLGe1eL6l+es
+        FvOPnGO16H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
+        uN24gs3izY+zTBate4+wW/y7tpHFYuNXD4vND46xOQh5rJm3htFj06pONo871/aweWxeUu/R
+        t2UVo8fxG9uZPD5vkgtgj9KzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rez
+        SUnNySxLLdK3S9DLOPDWs2CmYMXlq2INjN94uxg5OSQETCR+djUwgthCAksZJTbeK4CIS0s0
+        nl7NBGELS/y51sXWxcgFVPOaUWLW9j9gDcICrhJX5y9n7mLk4BAR0JJ4eTMVpIZZ4DeLxP6F
+        56EampgkZj1dAtbAJmAu8Wj7GbCpvAJuEh8evWQEaWYRUJXY8jYOJCwqECEx6dpOFogSQYmT
+        M5+A2ZwClhLbZqwAa2UWUJf4M+8SM4QtLnHryXyouLzE9rdzmCcwCs1C0j4LScssJC2zkLQs
+        YGRZxSiSWlqcm55bbKRXnJhbXJqXrpecn7uJERjt24793LKDsetd8CFGAQ5GJR7egIeqsUKs
+        iWXFlbmHGCU4mJVEePe5K8cK8aYkVlalFuXHF5XmpBYfYjQF+m0is5Rocj4wEeWVxBuaGppb
+        WBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamBM5jykK5VVkS2+NzU0cFbOogyP
+        tRfvPz9fVHWnOkbgZGGn0QIz3xmFNbyRNq9zzhmF5tv9+sr+TO/Yf6/A9Tc3+NRzufz1KbDk
+        z1D+NU2C/3fygk1F8/JZes3L7m6fwyxtbR6hrnt91We59JfT+hz/ipU/47y7uT42x0vw5fkf
+        l7Me+hyWuKvEUpyRaKjFXFScCADk5HCkDAMAAA==
+X-CMS-MailID: 20190711125758eucas1p2726d34fa165f6645a51acd9f5b74ee68
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190708141159eucas1p1751506975ff96a436e14940916623722
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190708141159eucas1p1751506975ff96a436e14940916623722
+References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
+        <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+        <20190711062226.4i4bvbsyczshdlyr@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11.07.2019 08:22, Viresh Kumar wrote:
+> On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
+>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>
+>> Add enable regulators to dev_pm_opp_set_regulators() and disable
+>> regulators to dev_pm_opp_put_regulators(). This prepares for
+>> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
+>>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> ---
+>>  drivers/opp/core.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index 0e7703fe733f..947cac452854 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>>  	if (ret)
+>>  		goto free_regulators;
+>>  
+>> +	for (i = 0; i < opp_table->regulator_count; i++) {
+>> +		ret = regulator_enable(opp_table->regulators[i]);
+>> +		if (ret < 0)
+>> +			goto disable;
+>> +	}
+> 
+> What about doing this in the same loop of regulator_get_optional() ?
 
+yes, this is good, it will simplify code
 
-> -----Original Message-----
-> From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-> Sent: 10-Jul-19 16:58
-> To: Jon Maloy <jon.maloy@ericsson.com>; Eric Dumazet
-> <eric.dumazet@gmail.com>; ying.xue@windriver.com;
-> davem@davemloft.net
-> Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
->=20
->=20
-> On 11/07/19 1:10 AM, Jon Maloy wrote:
-> >> -----Original Message-----
-> >> From: Eric Dumazet <eric.dumazet@gmail.com>
-> >> Sent: 10-Jul-19 04:00
-> >> To: Jon Maloy <jon.maloy@ericsson.com>; Eric Dumazet
-> >> <eric.dumazet@gmail.com>; Chris Packham
-> >> <Chris.Packham@alliedtelesis.co.nz>; ying.xue@windriver.com;
-> >> davem@davemloft.net
-> >> Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net;
-> >> linux- kernel@vger.kernel.org
-> >> Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
-> >>
-> >>
-> >>
-> >> On 7/9/19 10:15 PM, Jon Maloy wrote:
-> >>>
-> >>> It is not only for lockdep purposes, -it is essential.  But please
-> >>> provide details
-> >> about where you see that more fixes are needed.
-> >>>
-> >>
-> >> Simple fact that you detect a problem only when skb_queue_purge() is
-> >> called should talk by itself.
-> >>
-> >> As I stated, there are many places where the list is manipulated
-> >> _without_ its spinlock being held.
-> >
-> > Yes, and that is the way it should be on the send path.
-> >
-> >>
-> >> You want consistency, then
-> >>
-> >> - grab the spinlock all the time.
-> >> - Or do not ever use it.
-> >
-> > That is exactly what we are doing.
-> > - The send path doesn't need the spinlock, and never grabs it.
-> > - The receive path does need it, and always grabs it.
-> >
-> > However, since we don't know from the beginning which path a created
-> > message will follow, we initialize the queue spinlock "just in case"
-> > when it is created, even though it may never be used later.
-> > You can see this as a violation of the principle you are stating
-> > above, but it is a prize that is worth paying, given savings in code
-> > volume, complexity and performance.
-> >
-> >>
-> >> Do not initialize the spinlock just in case a path will use
-> >> skb_queue_purge() (instead of using __skb_queue_purge())
-> >
-> > I am ok with that. I think we can agree that Chris goes for that
-> > solution, so we can get this bug fixed.
->=20
-> So would you like a v2 with an improved commit message? I note that I sai=
-d
-> skb->lock instead of head->lock in the subject line so at least that shou=
-ld be
-> corrected.
+>> +
+>>  	return opp_table;
+>>  
+>> +disable:
+>> +	while (i != 0)
+>> +		regulator_disable(opp_table->regulators[--i]);
+>> +
+>> +	i = opp_table->regulator_count;
+> 
+> You also need to call _free_set_opp_data() here.
 
-Yes, unless Eric has any more objections.=20
-I addition, I have realized that we can change from skb_queue_head_init()  =
-to __skb_queue_head_init() at all the disputed locations in the socket code=
-.
-Then, we do a separate call to spin_lock_init(&list->lock) at the moment we=
- find that the message will follow the receive path, i.e., in tipc_node_xmi=
-t().
-That should make everybody happy.=20
-I will post a patch when net-next re-opens.
+good catch
+if I move enable in loop above, then this will not be needed
 
-BR
-///jon
+>>  free_regulators:
+>>  	while (i != 0)
+>>  		regulator_put(opp_table->regulators[--i]);
+>> @@ -1609,6 +1620,8 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+>>  
+>>  	/* Make sure there are no concurrent readers while updating opp_table */
+>>  	WARN_ON(!list_empty(&opp_table->opp_list));
+> 
+> Preserve the blank line here.
+> 
+>> +	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+>> +		regulator_disable(opp_table->regulators[i]);
+>>  
+>>  	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+>>  		regulator_put(opp_table->regulators[i]);
+> 
+> Only single loop should be sufficient for this.
 
+you are right, I will do this in single loop
+
+I will send v2
+
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
 
