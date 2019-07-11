@@ -2,161 +2,212 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B326C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8853FC74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A35A21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BE221019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 08:23:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="SlDVAnVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfGKIXI (ORCPT
+        id S1728287AbfGKIXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 04:23:08 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58865 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbfGKIXH (ORCPT
+        Thu, 11 Jul 2019 04:23:14 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:14050 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfGKIXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 04:23:07 -0400
-X-Originating-IP: 86.250.200.211
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8A20D20005;
-        Thu, 11 Jul 2019 08:18:08 +0000 (UTC)
-Date:   Thu, 11 Jul 2019 10:18:08 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        vivek.kasireddy@intel.com, sakari.ailus@linux.intel.com,
-        s.nawrocki@samsung.com, niklas.soderlund+renesas@ragnatech.se,
-        ezequiel@collabora.com, boris.brezillon@collabora.com,
-        robert.chiras@nxp.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel format
-Message-ID: <20190711081808.GA15389@aptenodytes>
-References: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
+        Thu, 11 Jul 2019 04:23:13 -0400
+Date:   Thu, 11 Jul 2019 08:23:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
+        s=protonmail; t=1562833387;
+        bh=OgHruR/8hfMeDLBEYOwTfEFvnoOfeQ+NrS6TSnWjCWk=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=SlDVAnVKjXvtCtdhhuGUULsRsWC7yAqQBVTnYK7yRVQc2vMteYxJVBeWVGzSS16l2
+         +p9wz52SNGKHSNlFHO8AZezeqp7jHI1IHE5w0V4mvby2GFqz/j1b8UG4ZqUsbOjNy6
+         a80rBN+Hy//KJ1kRcs1jPm45NC5xqkUhcJuQoaLM=
+To:     Daniel Vetter <daniel@ffwll.ch>
+From:   Simon Ser <contact@emersion.fr>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Reply-To: Simon Ser <contact@emersion.fr>
+Subject: Re: [PATCH V3 3/5] drm/vkms: Decouple crc operations from composer
+Message-ID: <3btolF-iC_bUcyzo-zi59zM7NaH48sTEQkbB-TAKZJOsm8DkUq4LhpApi6Mep0npPQ-slnIzxQfoatEXDVQi-H6Ypv-zwcctRvimXF0TZAo=@emersion.fr>
+In-Reply-To: <20190711081913.GH15868@phenom.ffwll.local>
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <6e8a03dc7c666ee998ee36172a96cff39f8dd46d.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <20190711081913.GH15868@phenom.ffwll.local>
+Feedback-ID: FsVprHBOgyvh0T8bxcZ0CmvJCosWkwVUg658e_lOUQMnA9qynD8O1lGeniuBDfPSkDAUuhiKfOIXUZBfarMyvA==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thursday, July 11, 2019 11:19 AM, Daniel Vetter <daniel@ffwll.ch> wrote:
+> Aside: This all kinda doesn't go in the right direction for
+> high-performance composing, so I guess I need to get started with typing
+> up what that should look like.
 
-On Wed 03 Jul 19, 18:15, Mirela Rabulea wrote:
-> The added format is V4L2_PIX_FMT_YUV24, this is a packed
-> YUV 4:4:4 format, with 8 bits for each component, 24 bits
-> per sample.
-> 
-> This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
-> JPEG encoder/decoder.
+Some related logs from IRC:
 
-So this format is not aligned to 32-bit words at all and we can expect
-to see cases where a single 32-bit word contains data for two pixels?
+2019-07-10 19:42:49     danvet  ickle, is there an idiot guide to reasonabl=
+e fast blending/composing with the cpu?
+2019-07-10 19:43:13     danvet  for vkms, so maitainability is high on the =
+wishlist, but it needs to be somewhat fast to be able to keep up
+2019-07-10 19:44:02     ickle   pixman for rectangles
+2019-07-10 19:45:00     ickle   if you want reasonably fast, you want simd
+2019-07-10 19:45:16     ickle   so better to use some prebaked library
+2019-07-10 19:45:38     ickle   but within vkms?
+2019-07-10 19:45:48     ickle   or just for igt/vkms?
+2019-07-10 19:46:40     ickle   within vkms for writeback blending I guess
+2019-07-10 19:51:38     ickle   http://paste.debian.net/1091097/
+2019-07-10 19:53:08     ickle   http://paste.debian.net/1091098/
+2019-07-10 19:54:36     emersion        danvet: what are your plans for the=
+ compositor refactoring?
+2019-07-10 19:55:21     emersion        are we still really using macros in=
+stead of functions
+2019-07-10 19:56:22     <--     nvishwa1 (~nvishwa1@192.55.54.44) has quit =
+(Remote host closed the connection)
+2019-07-10 19:56:44     emersion        is this coming from pixman, ickle?
+2019-07-10 19:56:50     -->     karolherbst (~kherbst@2a02:8308:b0be:6900:d=
+9e8:6dcd:2f6a:6cb5) has joined #intel-gfx
+2019-07-10 19:57:23     ickle   yes, take it as a reference on how to do ab=
+gr32 premultiplied alpha blending
+2019-07-10 19:57:33     <--     amathes (ajmathes@nat/intel/x-ywywuftprrqnd=
+baj) has quit (Ping timeout: 245 seconds)
+2019-07-10 19:57:48     emersion        yeah, that's a good idea
+2019-07-10 19:57:49     ickle   or argb32 actually
+2019-07-10 19:58:01     emersion        (asking for the source because lice=
+nse)
+2019-07-10 19:58:04     ickle   MIT
+2019-07-10 19:58:07     emersion        nice
+2019-07-10 20:00:12     <--     sandeep (sandeep@nat/intel/x-buwbzkgopszvwb=
+cr) has quit (Remote host closed the connection)
+2019-07-10 20:01:34     danvet  ickle, yeah vkms in the kernel
+2019-07-10 20:02:41     danvet  also might need more than 8 bits ...
+2019-07-10 20:02:57     danvet  and kinda hoped I could just tell gcc to si=
+mdify it for me
+2019-07-10 20:03:23     danvet  emersion, compositor refactoring
+2019-07-10 20:03:46     danvet  ickle, higher level I figured something lik=
+e a fetch fifo in a standard format
+2019-07-10 20:04:02     danvet  with some drm_format->standard format conve=
+rsion tools
+2019-07-10 20:04:08     danvet  and then one blender
+2019-07-10 20:04:39     danvet  and then either add that to the crc and tos=
+s it (again maybe scanline-by-scanline, or whatever fits reasonable into l1=
+$ all together)
+2019-07-10 20:04:44     danvet  or dump it into writeback
+2019-07-10 20:08:25     danvet  https://gcc.gnu.org/onlinedocs/gcc/Vector-E=
+xtensions.html <- this stuff essentially, using generics
+2019-07-10 20:08:38     danvet  *generic intrinsics
+2019-07-10 20:08:49     danvet  or is that going to be real awful?
+2019-07-10 20:09:35     ickle   shouldn't be required for _basic_ blending
+2019-07-10 20:09:52     danvet  yeah I think all we want is premultiplied a=
+lpha
+2019-07-10 20:09:53     ickle   if all you need is an over operator, then g=
+cc should be pretty good
+2019-07-10 20:09:57     <--     sdutt (sdutt@nat/intel/x-zhquyrigdztslyqh) =
+has quit (Ping timeout: 268 seconds)
+2019-07-10 20:09:59     danvet  maybe some yuv->rgb
+2019-07-10 20:10:19     danvet  expanding from whatever silly format we hav=
+e to the right vector
+2019-07-10 20:10:33     emersion        what would be your universal format=
+?
+2019-07-10 20:10:46     danvet  a16r16b16g16
+2019-07-10 20:10:50     danvet  except if gcc barfs on that
+2019-07-10 20:11:02     danvet  or maybe go all in on 4x float :-)
+2019-07-10 20:11:10     emersion        eh
+2019-07-10 20:11:29     emersion        fp16 would work, but would also mea=
+n rounding errors, probably?
+2019-07-10 20:11:35     danvet  uint16 is not going to be awesome for hdr, =
+but good enough for everything else
+2019-07-10 20:11:42     danvet  no cpu has fp16
+2019-07-10 20:11:52     emersion        ah, fp32
+2019-07-10 20:11:57     krh     wait for avx1024
+2019-07-10 20:12:01     emersion        seems kind of overkill
+2019-07-10 20:12:01     danvet  fg32 is probably fastest option we can get =
+on common hw
+2019-07-10 20:12:12     danvet  krh, very much aiming for good enough here
+2019-07-10 20:12:26     ickle   one plan is to sneak ksim into the kernel a=
+s generic gpu-on-x86
+2019-07-10 20:12:52     krh     can the kernel use avx2?
+2019-07-10 20:13:05     danvet  well, all stuff I'd need to figure out
+2019-07-10 20:13:07     danvet  I hope so
+2019-07-10 20:13:12     ickle   it can
+2019-07-10 20:13:19     ickle   easier than mmx
+2019-07-10 20:13:49     emersion        when you say gcc barfs on a16r16b16=
+g16: why?
+2019-07-10 20:13:57     danvet  kernel_fpu_begin/end + telling gcc to optim=
+ize the crap out of the file with the blending functions
+2019-07-10 20:14:11     emersion        uint64 too hard for gcc to optimize=
+?
+2019-07-10 20:14:14     danvet  emersion, I haven't checked, but if it gene=
+rates silly code then might be better to go with fp32
+2019-07-10 20:14:28     vsyrjala        the compiler always generates silly=
+ code
+2019-07-10 20:14:30     danvet  ideally it should all boil down to sse/avx
+2019-07-10 20:14:32     emersion        ahah
+2019-07-10 20:14:51     danvet  and ideally all with generic intrinsics so =
+the arm folks don't freak out
+2019-07-10 20:15:07     -->     sandeep (~sandeep@134.134.139.76) has joine=
+d #intel-gfx
+2019-07-10 20:15:23     emersion        +1 for generic intrinsics
+2019-07-10 20:15:42     danvet  the conversion from uint to fp32 might be h=
+ilarious
+2019-07-10 20:15:50     emersion        yeah, probably
+2019-07-10 20:15:52     danvet  perhaps the one place where we want to use =
+an sse or avx intrinsic
+2019-07-10 20:16:19     danvet  especially if we convert to simd16 instead =
+of something like 4x4
+2019-07-10 20:16:22     emersion        we should probably do some little e=
+xperiments before doing anything
+2019-07-10 20:16:24     danvet  simd4x4
+2019-07-10 20:16:31     danvet  yeah
+2019-07-10 20:16:41     danvet  that's why I'm asking here, since I have ro=
+ughly 0 clue about this
+2019-07-10 20:17:48     danvet  I don't think we ever need a dot or anythin=
+g like that, so plain simd is propably best
+2019-07-10 20:18:07     danvet  except the input is usually 4x or 3x vector=
+s
+2019-07-10 20:18:07     emersion        a dot?
+2019-07-10 20:18:12     danvet  dot product
+2019-07-10 20:18:14     emersion        ah
+2019-07-10 20:18:15     danvet  for vertex shaders
+2019-07-10 20:18:20     emersion        yeah, probably not
+2019-07-10 20:18:21     bwidawsk        danvet=E2=80=BA btw, I think "gener=
+ic intrinsic" is an ARM thing
+2019-07-10 20:18:29     bwidawsk        I think everywhere else, they just =
+say intrinsic
+2019-07-10 20:18:41     bwidawsk        at least, I've never heard the gene=
+ric prefix other than ARM compiler
+2019-07-10 20:19:19     vsyrjala        just make the max supported resolut=
+ion 8x8 or something and speed shouldn't be a huge issue
+2019-07-10 20:19:30     emersion        i think he meant generic intrinsic =
+vs. sse/avx/whatever
+2019-07-10 20:19:49     bwidawsk        emersion=E2=80=BA yes, I figured ou=
+t what he meant, I just mentioned it because it was a source of confusion
+2019-07-10 20:19:52     emersion        vsyrjala, helpful as always :)
+2019-07-10 20:20:32     danvet  oh gcc has all the casting implementing in =
+the intrinsics too
+2019-07-10 20:20:50     danvet  bwidawsk, gcc manpage also calls them gener=
+ic intrinsics
+2019-07-10 20:21:25     bwidawsk        danvet=E2=80=BA not my gcc manpage
+2019-07-10 20:21:40     danvet  well "generic vector operations"
+2019-07-10 20:21:46     danvet  ^^ that what you meant?
+2019-07-10 20:22:03     danvet  vs "machine-specific vector intrinsics"
+2019-07-10 20:22:38     bwidawsk        I thought the generic intrinsic ter=
+m came from ARM's proprietary compiler
+2019-07-10 20:22:40     bwidawsk        but I might be wrong
 
-Nothing wrong with that, just checking whether I understood this right :)
-
-Cheers,
-
-Paul
-
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> ---
->  Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
->  drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
->  include/uapi/linux/videodev2.h                     |  1 +
->  3 files changed, 38 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-> index 41b60fa..5750ff6 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-> @@ -17,7 +17,8 @@ Description
->  ===========
->  
->  Similar to the packed RGB formats these formats store the Y, Cb and Cr
-> -component of each pixel in one 16 or 32 bit word.
-> +component of each pixel next to each other in memory. They occupy 16, 24 or 32
-> +bits per pixel.
->  
->  
->  .. raw:: latex
-> @@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
->  
->        -  :cspan:`15`
->  
-> +    * .. _V4L2-PIX-FMT-YUV24:
-> +
-> +      - ``V4L2_PIX_FMT_YUV24``
-> +      - 'YUV3'
-> +
-> +      - Y'\ :sub:`7`
-> +      - Y'\ :sub:`6`
-> +      - Y'\ :sub:`5`
-> +      - Y'\ :sub:`4`
-> +      - Y'\ :sub:`3`
-> +      - Y'\ :sub:`2`
-> +      - Y'\ :sub:`1`
-> +      - Y'\ :sub:`0`
-> +
-> +      - Cb\ :sub:`7`
-> +      - Cb\ :sub:`6`
-> +      - Cb\ :sub:`5`
-> +      - Cb\ :sub:`4`
-> +      - Cb\ :sub:`3`
-> +      - Cb\ :sub:`2`
-> +      - Cb\ :sub:`1`
-> +      - Cb\ :sub:`0`
-> +
-> +      - Cr\ :sub:`7`
-> +      - Cr\ :sub:`6`
-> +      - Cr\ :sub:`5`
-> +      - Cr\ :sub:`4`
-> +      - Cr\ :sub:`3`
-> +      - Cr\ :sub:`2`
-> +      - Cr\ :sub:`1`
-> +      - Cr\ :sub:`0`
-> +
-> +      -  :cspan:`7`
-> +
->      * .. _V4L2-PIX-FMT-YUV32:
->  
->        - ``V4L2_PIX_FMT_YUV32``
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index b1f4b99..9bb6579 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1215,6 +1215,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->  	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
->  	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
->  	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
-> +	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
->  	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
->  	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
->  	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 9d9705c..752dd33 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -577,6 +577,7 @@ struct v4l2_pix_format {
->  #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
->  #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
->  #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
-> +#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
->  #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
->  #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
->  #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
-> -- 
-> 2.7.4
-> 
-
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
