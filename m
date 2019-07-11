@@ -2,115 +2,152 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EDBC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F405BC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1F421537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C0E21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lMbDPIbb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="coaZ6wBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfGKOyG (ORCPT
+        id S1728973AbfGKOzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:54:06 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37625 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728792AbfGKOyG (ORCPT
+        Thu, 11 Jul 2019 10:55:18 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:64396 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbfGKOzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:54:06 -0400
-Received: by mail-vs1-f66.google.com with SMTP id v6so4381891vsq.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 07:54:05 -0700 (PDT)
+        Thu, 11 Jul 2019 10:55:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OSRL99BIaLodkBG8Ur8XBaGK7O8DpdxuI0IXmHEfTNw=;
-        b=lMbDPIbb0vvyUGWQdnCiasoDr4Yy47wih84OLLO3r9IgeHn7AFQirkDsZ+9bZv6a+X
-         DJEbz83leO6ygDTze7wSrzwTG8b303QISowRG65eVyF3T+qaRAD97sq//wM3/4jpKRQH
-         aHJYj7vqQUIQ92pFm8jlret5UmI8TNCWExeMqDLj6SM+yz0lJDsUEPy9ql4ZK/mymEY2
-         C/lYAWQe9OeEl1jh9NtOjpnr3J0/mSWN6rpdBR3WGPbPaKQT6CJT6hAvOFDJdQziH1wH
-         6od1oUQ52AMEnuaTZLM6eWhyh/Sw+Mb1IzzbgWpP9Ng+oJkpeLSGW9ubE23lLgR2MP0k
-         dY7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OSRL99BIaLodkBG8Ur8XBaGK7O8DpdxuI0IXmHEfTNw=;
-        b=dHl2cgv6CyyndH7HnZfrWVvGAKkBHjPx+E07ASdCywmJa3gKrtIDOEYGFFWtpzBjOD
-         /jynSvBaL11xwRO2HSLNoFRfmWFno1WbGhh7rsY/0dL4s4HSPTQlxiHMVN4ZsM/kUXAL
-         NnZeS8W6eHdatiw/HJ7ZnoikF0kt5s9uip8owpz9DaL66tvibItjvXmzDS5wuGqnXSMw
-         kI5aYJXpoKCMpietNw0wCzmx2AtC4SGizIuXV8d9973yMM6zoV7EdKjdFHiwNRkIDPME
-         uowEzlgzkip9+vTvBNzdetDc6Q/i//mA+PJAq4c8c5J9z7zd8DVDLBtyCwegeNUBGnRO
-         sGdQ==
-X-Gm-Message-State: APjAAAXAvDWBnEBi6XKkucz04XfQOz3qLEeS+8tBY4kOd6OY2pE4qldx
-        ng+dim5auIcIz8RPM9o5m4tg8A==
-X-Google-Smtp-Source: APXvYqzGv5XLpzcelYU2tuSxvoVuhMY+giJViUABBr/Bp/cZiVAevwOuDoKjZcXPaQJW1DVRDkKdnA==
-X-Received: by 2002:a67:f492:: with SMTP id o18mr4970890vsn.62.1562856845452;
-        Thu, 11 Jul 2019 07:54:05 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id l20sm2290597vkl.2.2019.07.11.07.54.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jul 2019 07:54:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlaSS-00068i-61; Thu, 11 Jul 2019 11:54:04 -0300
-Date:   Thu, 11 Jul 2019 11:54:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Qian Cai <cai@lca.pw>
-Cc:     leonro@mellanox.com, saeedm@mellanox.com, talgi@mellanox.com,
-        yaminf@mellanox.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] RDMA/core: fix -Wunused-const-variable warnings
-Message-ID: <20190711145404.GA23576@ziepe.ca>
-References: <1562853356-11595-1-git-send-email-cai@lca.pw>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1562856916; x=1594392916;
+  h=from:to:cc:message-id:in-reply-to:references:
+   mime-version:subject:resent-from:resent-cc:date:
+   content-transfer-encoding;
+  bh=2uWtMbSEWSR31BNfuisTHPZlDNIB9iB1H2qKNaw569g=;
+  b=coaZ6wBN6nHeLhkHm6p9kpGDbUIoDx1ujhslPD9u1XozENEFZhblqX+C
+   Tor66DRYvD18VYmeSMJMmzeQYzenU+dgopbHKxQUnlNWnOmATjXgx8j3e
+   xOJ7DgZrWINycGcGWh3Tud/sSWSSNW8RwJBAxcZZGc4OFAi6oq3/VthHc
+   4=;
+X-IronPort-AV: E=Sophos;i="5.62,478,1554768000"; 
+   d="scan'208";a="741352753"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Jul 2019 14:55:15 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 56061A1C73;
+        Thu, 11 Jul 2019 14:55:15 +0000 (UTC)
+Received: from EX13D24UWB001.ant.amazon.com (10.43.161.93) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 14:55:14 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D24UWB001.ant.amazon.com (10.43.161.93) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Jul 2019 14:55:14 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.107.0.52) by
+ mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Thu, 11 Jul 2019 14:55:13 +0000
+Received: from EX13D13UWB002.ant.amazon.com (10.43.161.21) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server
+ (TLS) id 15.0.1367.3 via Mailbox Transport; Wed, 10 Jul 2019 16:45:35 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D13UWB002.ant.amazon.com (10.43.161.21) with Microsoft SMTP Server
+ (TLS) id 15.0.1367.3; Wed, 10 Jul 2019 16:45:35 +0000
+Received: from email-inbound-relay-2b-859fe132.us-west-2.amazon.com
+ (10.25.10.214) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:45:35
+ +0000
+Received: by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix)
+        id EEDAC221DD6; Wed, 10 Jul 2019 16:45:33 +0000 (UTC)
+Received: from u9ff250417f405e.ant.amazon.com
+ (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70]) by
+ email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS
+ id 63DF3221DC4; Wed, 10 Jul 2019 16:45:33 +0000 (UTC)
+Received: from u9ff250417f405e.ant.amazon.com (localhost [127.0.0.1]) by
+ u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Debian-10) with ESMTP id
+ x6AGjT1b021486; Wed, 10 Jul 2019 19:45:29 +0300
+Received: (from jonnyc@localhost)
+        by u9ff250417f405e.ant.amazon.com (8.15.2/8.15.2/Submit) id x6AGjRdN021449;
+        Wed, 10 Jul 2019 19:45:27 +0300
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Message-ID: <20190710164519.17883-3-jonnyc@amazon.com>
+In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+Content-Type: text/plain
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562853356-11595-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Subject: [PATCH 2/8] PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+Date:   Thu, 11 Jul 2019 17:55:12 +0300
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 09:55:56AM -0400, Qian Cai wrote:
-> The linux-next commit "linux/dim: Implement RDMA adaptive moderation
-> (DIM)" [1] introduced a few compilation warnings.
-> 
-> In file included from ./include/rdma/ib_verbs.h:64,
->                  from ./include/linux/mlx5/device.h:37,
->                  from ./include/linux/mlx5/driver.h:51,
->                  from drivers/net/ethernet/mellanox/mlx5/core/uar.c:36:
-> ./include/linux/dim.h:378:1: warning: 'rdma_dim_prof' defined but not
-> used [-Wunused-const-variable=]
->  rdma_dim_prof[RDMA_DIM_PARAMS_NUM_PROFILES] = {
->  ^~~~~~~~~~~~~
-> In file included from ./include/rdma/ib_verbs.h:64,
->                  from ./include/linux/mlx5/device.h:37,
->                  from ./include/linux/mlx5/driver.h:51,
->                  from
-> drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c:37:
-> ./include/linux/dim.h:378:1: warning: 'rdma_dim_prof' defined but not
-> used [-Wunused-const-variable=]
->  rdma_dim_prof[RDMA_DIM_PARAMS_NUM_PROFILES] = {
->  ^~~~~~~~~~~~~
-> 
-> Since only ib_cq_rdma_dim_work() in drivers/infiniband/core/cq.c uses
-> it, just move the definition over there.
-> 
-> [1] https://patchwork.kernel.org/patch/11031455/
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  drivers/infiniband/core/cq.c | 13 +++++++++++++
->  include/linux/dim.h          | 13 -------------
->  2 files changed, 13 insertions(+), 13 deletions(-)
+From: Ali Saidi <alisaidi@amazon.com>
 
-Applied to for-next, thanks
+The Amazon's Annapurna Labs root ports don't advertise an ACS
+capability, but they don't allow peer-to-peer transactions and do
+validate bus numbers through the SMMU. Additionally, it's not possible
+for one RP to pass traffic to another RP.
 
-Jason
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+---
+ drivers/pci/quirks.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index c66c0ca446c4..11850b030637 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4366,6 +4366,23 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev=
+, u16 acs_flags)
+ 	return ret;
+ }
+=20
++static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
++{
++	/*
++	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
++	 * but do include ACS-like functionality. The hardware doesn't support
++	 * peer-to-peer transactions via the root port and each has a unique
++	 * segment number.
++	 * Additionally, the root ports cannot send traffic to each other.
++	 */
++	acs_flags &=3D ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
++
++	if (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PORT)
++		return -ENOTTY;
++
++	return acs_flags ? 0 : 1;
++}
++
+ /*
+  * Sunrise Point PCH root ports implement ACS, but unfortunately as shown =
+in
+  * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
+@@ -4559,6 +4576,8 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
++	/* Amazon Annapurna Labs */
++	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+ 	{ 0 }
+ };
+=20
+--=20
+2.17.1
+
+
