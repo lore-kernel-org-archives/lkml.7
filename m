@@ -2,243 +2,125 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC83BC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D2FC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB70208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A630E21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="ooWeI1qO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rFWTCChF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfGKUk0 (ORCPT
+        id S1728286AbfGKUnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:40:26 -0400
-Received: from vern.gendns.com ([98.142.107.122]:36922 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbfGKUkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:40:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xvThRjH3X1TUzxAtTyWv1hFEkruW/blvpY6bT/bSK9Q=; b=ooWeI1qO4BAdXV3DI7FZd6Y60X
-        5OT2yCa5stfUIYc8lfWRFqw3RbGl+nu/96D7q2kOUKvVTE3jtQzohMVzSYrbU1uOmuctOCiquEJym
-        hvStBGW/uQBo3oCYoXA87WVp3mnU5ROITWqGMhnZxBLa3aI0tgfoKbIuncs+hZ8UhIfVVQPU9FKmb
-        ZnRXszBoAwOsxS+d1BioxjB1/IdGczkE20RRxtpZ6zaH3gqeiG3VzuPpUlEX/6QTshmyncOlshWKq
-        7HcxlXZBwlngRvM7lpqJQFqyW4AIUEpFfUayjmKzjY8VI/GXIxB1njiwKs6C5Y3iN7IX9PEz1wa+m
-        LMVboQNA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:60730 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hlfra-004iz1-AV; Thu, 11 Jul 2019 16:40:22 -0400
-Subject: Re: [PATCH 5/6] irqchip/irq-pruss-intc: Add API to trigger a PRU
- sysevent
-To:     Suman Anna <s-anna@ti.com>, Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Cc:     Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-6-s-anna@ti.com>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <49628f74-1081-894a-14a2-adc58b2051e8@lechnology.com>
-Date:   Thu, 11 Jul 2019 15:40:20 -0500
+        Thu, 11 Jul 2019 16:43:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41774 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfGKUnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 16:43:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BKcTBi021280;
+        Thu, 11 Jul 2019 20:42:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=tSjzKrUHQ1knMz+gwb7wzYG6sENMAxSGm0UkDSdi7as=;
+ b=rFWTCChF0oyIYzpmE5gque0fCM7T3jAST9DCJqUh+t3gKYfiFuveoO4uVhdNJh06LnTd
+ DKd8tWqs4dflR8Ey8detui0SFtEDZzR/WM6dPbb6hO37tOHhCEi0732WX+HW0Fo60voZ
+ Ezy1Hkp+Iuf5ZFtxRFZk4luBgxE+6viMmigJOwH+6Vmw1NBmmoyGKJ4K0b42CDgdVQTJ
+ ymmQku8IXTD35TjXu/FxCCu5vs6kFW+NiIDzvIbzZhB9P8PxXHol/uCuvV5pYgYQy9f9
+ aC1eSLXjTydoTYPA7XSnTPJ7LSiXNZzdy+b7f+W3XYYN8zAbC44UBjKC88OYPqYeF1AK bA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tjkkq28mt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 20:42:15 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BKbdeo158183;
+        Thu, 11 Jul 2019 20:42:14 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2tnc8tpsaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 20:42:14 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6BKg4ou031753;
+        Thu, 11 Jul 2019 20:42:10 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 13:42:04 -0700
+Subject: Re: [RFC v2 02/26] mm/asi: Abort isolation on interrupt, exception
+ and context switch
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andi Kleen <andi@firstfloor.org>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, konrad.wilk@oracle.com,
+        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
+        jwadams@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <1562855138-19507-3-git-send-email-alexandre.chartre@oracle.com>
+ <874l3sz5z4.fsf@firstfloor.org> <20190711201706.GB20140@rapoport-lnx>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <09fee00d-37a6-0895-7964-0e8a2d5b17d6@oracle.com>
+Date:   Thu, 11 Jul 2019 22:41:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190708035243.12170-6-s-anna@ti.com>
+In-Reply-To: <20190711201706.GB20140@rapoport-lnx>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907110228
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907110228
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/7/19 10:52 PM, Suman Anna wrote:
-> From: "Andrew F. Davis" <afd@ti.com>
+
+
+On 7/11/19 10:17 PM, Mike Rapoport wrote:
+> On Thu, Jul 11, 2019 at 01:11:43PM -0700, Andi Kleen wrote:
+>> Alexandre Chartre <alexandre.chartre@oracle.com> writes:
+>>>   	jmp	paranoid_exit
+>>> @@ -1182,6 +1196,16 @@ ENTRY(paranoid_entry)
+>>>   	xorl	%ebx, %ebx
+>>>   
+>>>   1:
+>>> +#ifdef CONFIG_ADDRESS_SPACE_ISOLATION
+>>> +	/*
+>>> +	 * If address space isolation is active then abort it and return
+>>> +	 * the original kernel CR3 in %r14.
+>>> +	 */
+>>> +	ASI_START_ABORT_ELSE_JUMP 2f
+>>> +	movq	%rdi, %r14
+>>> +	ret
+>>> +2:
+>>> +#endif
+>>
+>> Unless I missed it you don't map the exception stacks into ASI, so it
+>> has likely already triple faulted at this point.
 > 
-> The PRUSS INTC can generate an interrupt to various processor
-> subsystems on the SoC through a set of 64 possible PRU system
-> events. These system events can be used by PRU client drivers
-> or applications for event notifications/signalling between PRUs
-> and MPU or other processors. A new API, pruss_intc_trigger() is
-> provided to MPU-side PRU client drivers/applications to be able
-> to trigger an event/interrupt using IRQ numbers provided by the
-> PRUSS-INTC irqdomain chip.
-> 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->   drivers/irqchip/irq-pruss-intc.c | 31 +++++++++++++++++++++++++++++++
->   include/linux/pruss_intc.h       | 26 ++++++++++++++++++++++++++
->   2 files changed, 57 insertions(+)
->   create mode 100644 include/linux/pruss_intc.h
-> 
-> diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-> index 8118c2a2ac43..a0ad50b95cd5 100644
-> --- a/drivers/irqchip/irq-pruss-intc.c
-> +++ b/drivers/irqchip/irq-pruss-intc.c
-> @@ -421,6 +421,37 @@ static void pruss_intc_irq_relres(struct irq_data *data)
->   	module_put(THIS_MODULE);
->   }
+> The exception stacks are in the CPU entry area, aren't they?
 >   
-> +/**
-> + * pruss_intc_trigger() - trigger a PRU system event
-> + * @irq: linux IRQ number associated with a PRU system event
-> + *
-> + * Trigger an interrupt by signaling a specific PRU system event.
-> + * This can be used by PRUSS client users to raise/send an event to
-> + * a PRU or any other core that is listening on the host interrupt
-> + * mapped to that specific PRU system event. The @irq variable is the
-> + * Linux IRQ number associated with a specific PRU system event that
-> + * a client user/application uses. The interrupt mappings for this is
-> + * provided by the PRUSS INTC irqchip instance.
-> + *
-> + * Returns 0 on success, or an error value upon failure.
-> + */
-> +int pruss_intc_trigger(unsigned int irq)
-> +{
-> +	struct irq_desc *desc;
-> +
-> +	if (irq <= 0)
-> +		return -EINVAL;
-> +
-> +	desc = irq_to_desc(irq);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	pruss_intc_irq_retrigger(&desc->irq_data);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pruss_intc_trigger);
 
-Although it is not quite as obvious, we can do the same thing with:
+That's my understanding, stacks come from tss in the CPU entry area and
+the CPU entry area is part for the core ASI mappings (see patch 15/26).
 
-irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
-
-So I don't think a new API is needed. We just need to implement the
-irq_set_irqchip_state callback as in the following patch.
-
----
- From c5991a11a19858d74e2a184b76c3ef5823f09ef6 Mon Sep 17 00:00:00 2001
-From: David Lechner <david@lechnology.com>
-Date: Thu, 11 Jul 2019 15:33:29 -0500
-Subject: [PATCH] irqchip/irq-pruss-intc: implement irq_{get,set}_irqchip_state
-
-This implements the irq_get_irqchip_state and irq_set_irqchip_state
-callbacks for the TI PRUSS INTC driver. The set callback can be used
-by drivers to "kick" a PRU by enabling a PRU system event.
-
-Example:
-
-     irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
-
-Signed-off-by: David Lechner <david@lechnology.com>
----
-  drivers/irqchip/irq-pruss-intc.c | 41 ++++++++++++++++++++++++++++++--
-  1 file changed, 39 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-index dd14addfd0b4..129dfd52248b 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -7,6 +7,7 @@
-   *	Suman Anna <s-anna@ti.com>
-   */
-  
-+#include <linux/interrupt.h>
-  #include <linux/irq.h>
-  #include <linux/irqchip/chained_irq.h>
-  #include <linux/irqdomain.h>
-@@ -46,8 +47,7 @@
-  #define PRU_INTC_HIEISR		0x0034
-  #define PRU_INTC_HIDISR		0x0038
-  #define PRU_INTC_GPIR		0x0080
--#define PRU_INTC_SRSR0		0x0200
--#define PRU_INTC_SRSR1		0x0204
-+#define PRU_INTC_SRSR(x)	(0x0200 + (x) * 4)
-  #define PRU_INTC_SECR0		0x0280
-  #define PRU_INTC_SECR1		0x0284
-  #define PRU_INTC_ESR0		0x0300
-@@ -386,6 +386,41 @@ static void pruss_intc_irq_relres(struct irq_data *data)
-  	module_put(THIS_MODULE);
-  }
-  
-+static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
-+					    enum irqchip_irq_state which,
-+					    bool *state)
-+{
-+	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-+	u32 reg, mask, srsr;
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	reg = PRU_INTC_SRSR(data->hwirq / 32);
-+	mask = BIT(data->hwirq % 32);
-+
-+	srsr = pruss_intc_read_reg(intc, reg);
-+
-+	*state = !!(srsr & mask);
-+
-+	return 0;
-+}
-+
-+static int pruss_intc_irq_set_irqchip_state(struct irq_data *data,
-+					    enum irqchip_irq_state which,
-+					    bool state)
-+{
-+	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+	
-+	if (state)
-+		return pruss_intc_check_write(intc, PRU_INTC_SISR, data->hwirq);
-+
-+	return pruss_intc_check_write(intc, PRU_INTC_SICR, data->hwirq);
-+}
-+
-  static int
-  pruss_intc_irq_domain_xlate(struct irq_domain *d, struct device_node *node,
-  			    const u32 *intspec, unsigned int intsize,
-@@ -583,6 +618,8 @@ static int pruss_intc_probe(struct platform_device *pdev)
-  	irqchip->irq_retrigger = pruss_intc_irq_retrigger;
-  	irqchip->irq_request_resources = pruss_intc_irq_reqres;
-  	irqchip->irq_release_resources = pruss_intc_irq_relres;
-+	irqchip->irq_get_irqchip_state = pruss_intc_irq_get_irqchip_state;
-+	irqchip->irq_set_irqchip_state = pruss_intc_irq_set_irqchip_state;
-  	irqchip->parent_device = dev;
-  	irqchip->name = dev_name(dev);
-  	intc->irqchip = irqchip;
--- 
-2.17.1
-
+alex.
