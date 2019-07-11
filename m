@@ -2,239 +2,127 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FE3C742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BDFC742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831342166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="LczJZj1L"
+	by mail.kernel.org (Postfix) with ESMTP id EDCA621019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbfGKSm2 (ORCPT
+        id S1731022AbfGKSqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 14:42:28 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37195 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730370AbfGKSm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:42:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so3476547plr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 11:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ye/ueaLSHeuUbF2UmwC3qi+L8ppesjqbY1zG1QqAhZE=;
-        b=LczJZj1LMI38wtffmfcB6+DCfMF5aokwVwquBj7rOFWJQgRco8bf3jn7Y7DRGU5AKV
-         eyjU2kDty+AJg5gmH7znkDUWdSkh2RLvTYYxEUHfUOHIABMuT/zxz26VO2fWPMLpbI42
-         Q0nKfVbhqRFEaZHRqg01t1RLn3rSDiadjybENTkR+xzCP5NkdrHC11Iih4QtXXJJEJ+2
-         wAnVn52naxG/hzDpgjqUVpVG8nvWNFb9Nm9+54eKFTwbHQZW+h21HGKmNMQL9ThFb9Vb
-         wu6ijN+pWhsut8bcnEO8hAL8JYSaTWFrXUY1xJwZBT5S2jLMFydUdVKuRZGN4kxI/tkg
-         glJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ye/ueaLSHeuUbF2UmwC3qi+L8ppesjqbY1zG1QqAhZE=;
-        b=CYDOHOSoC199BDKPRftCcZyPp/W3liep4mPk2RQkfSAUC/GXB0vaBylgrm+6sBCO01
-         7boOfDkSS59+Q6nS5NDfFVDBnEE7Gx24VkSMjyP6/HKfIEQxBFHTroIegN/ATyB7VNA6
-         REmE2216L68NcLIUDyRulc3DFBzG/MEXmlD+rFA5NbtHu102T3/EANZXc4Ls/FGg3/a3
-         rbtfHn4eZdcLFQAE4cmMHGPYdHgmkjg7qF7MpTpqV4GlJq/8YDxXELQfvQ9edklqhUay
-         DKdseimSYi07uyr0SRZO5tT+ODf2ekVifYjQEO7FqYqqByYnK7H+1ygkChQKK/SOgIx5
-         pgvA==
-X-Gm-Message-State: APjAAAXjk3gmxlYGkdZ+VLedgo0BMUDantKvorHjujg0TxLbfRJJD3e4
-        dlnhtsAVtvPlW3QZ1gImN5CYpPrM
-X-Google-Smtp-Source: APXvYqyaXVTrExLmUq7EZsqLnA7MmMx/jzEwrsO/Wn15ERbU1WlzrYFkuyZ9jcRvlFh1JKkaVAl1hw==
-X-Received: by 2002:a17:902:aa88:: with SMTP id d8mr5969327plr.274.1562870546389;
-        Thu, 11 Jul 2019 11:42:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:5385])
-        by smtp.gmail.com with ESMTPSA id 85sm6717518pfv.130.2019.07.11.11.42.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 11:42:25 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 14:42:23 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v4 4/4] mm: introduce MADV_PAGEOUT
-Message-ID: <20190711184223.GD20341@cmpxchg.org>
-References: <20190711012528.176050-1-minchan@kernel.org>
- <20190711012528.176050-5-minchan@kernel.org>
+        Thu, 11 Jul 2019 14:46:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38816 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731006AbfGKSqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 14:46:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63C2130832E9;
+        Thu, 11 Jul 2019 18:46:12 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E05A5D720;
+        Thu, 11 Jul 2019 18:46:12 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 3C4B51818485;
+        Thu, 11 Jul 2019 18:46:12 +0000 (UTC)
+Date:   Thu, 11 Jul 2019 14:46:11 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        dan j williams <dan.j.williams@intel.com>,
+        yuval shaia <yuval.shaia@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, lcapitulino@redhat.com
+Message-ID: <1464566100.41069898.1562870771867.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190711134648-mutt-send-email-mst@kernel.org>
+References: <20190710175832.17252-1-pagupta@redhat.com> <20190711134648-mutt-send-email-mst@kernel.org>
+Subject: Re: [PATCH v2] virtio_pmem: fix sparse warning
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711012528.176050-5-minchan@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.73, 10.4.195.27]
+Thread-Topic: virtio_pmem: fix sparse warning
+Thread-Index: VglBfntAUfpmr8NxVnObWKSCyUc5eA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 11 Jul 2019 18:46:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 10:25:28AM +0900, Minchan Kim wrote:
-> @@ -480,6 +482,198 @@ static long madvise_cold(struct vm_area_struct *vma,
->  	return 0;
->  }
->  
-> +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> +				unsigned long end, struct mm_walk *walk)
-> +{
-> +	struct mmu_gather *tlb = walk->private;
-> +	struct mm_struct *mm = tlb->mm;
-> +	struct vm_area_struct *vma = walk->vma;
-> +	pte_t *orig_pte, *pte, ptent;
-> +	spinlock_t *ptl;
-> +	LIST_HEAD(page_list);
-> +	struct page *page;
-> +	unsigned long next;
-> +
-> +	if (fatal_signal_pending(current))
-> +		return -EINTR;
-> +
-> +	next = pmd_addr_end(addr, end);
-> +	if (pmd_trans_huge(*pmd)) {
-> +		pmd_t orig_pmd;
-> +
-> +		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
-> +		ptl = pmd_trans_huge_lock(pmd, vma);
-> +		if (!ptl)
-> +			return 0;
-> +
-> +		orig_pmd = *pmd;
-> +		if (is_huge_zero_pmd(orig_pmd))
-> +			goto huge_unlock;
-> +
-> +		if (unlikely(!pmd_present(orig_pmd))) {
-> +			VM_BUG_ON(thp_migration_supported() &&
-> +					!is_pmd_migration_entry(orig_pmd));
-> +			goto huge_unlock;
-> +		}
-> +
-> +		page = pmd_page(orig_pmd);
-> +		if (next - addr != HPAGE_PMD_SIZE) {
-> +			int err;
-> +
-> +			if (page_mapcount(page) != 1)
-> +				goto huge_unlock;
-> +			get_page(page);
-> +			spin_unlock(ptl);
-> +			lock_page(page);
-> +			err = split_huge_page(page);
-> +			unlock_page(page);
-> +			put_page(page);
-> +			if (!err)
-> +				goto regular_page;
-> +			return 0;
-> +		}
-> +
-> +		if (isolate_lru_page(page))
-> +			goto huge_unlock;
-> +
-> +		if (pmd_young(orig_pmd)) {
-> +			pmdp_invalidate(vma, addr, pmd);
-> +			orig_pmd = pmd_mkold(orig_pmd);
-> +
-> +			set_pmd_at(mm, addr, pmd, orig_pmd);
-> +			tlb_remove_tlb_entry(tlb, pmd, addr);
-> +		}
-> +
-> +		ClearPageReferenced(page);
-> +		test_and_clear_page_young(page);
-> +		list_add(&page->lru, &page_list);
-> +huge_unlock:
-> +		spin_unlock(ptl);
-> +		reclaim_pages(&page_list);
-> +		return 0;
-> +	}
-> +
-> +	if (pmd_trans_unstable(pmd))
-> +		return 0;
-> +regular_page:
-> +	tlb_change_page_size(tlb, PAGE_SIZE);
-> +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> +	flush_tlb_batched_pending(mm);
-> +	arch_enter_lazy_mmu_mode();
-> +	for (; addr < end; pte++, addr += PAGE_SIZE) {
-> +		ptent = *pte;
-> +		if (!pte_present(ptent))
-> +			continue;
-> +
-> +		page = vm_normal_page(vma, addr, ptent);
-> +		if (!page)
-> +			continue;
-> +
-> +		/*
-> +		 * creating a THP page is expensive so split it only if we
-> +		 * are sure it's worth. Split it if we are only owner.
-> +		 */
-> +		if (PageTransCompound(page)) {
-> +			if (page_mapcount(page) != 1)
-> +				break;
-> +			get_page(page);
-> +			if (!trylock_page(page)) {
-> +				put_page(page);
-> +				break;
-> +			}
-> +			pte_unmap_unlock(orig_pte, ptl);
-> +			if (split_huge_page(page)) {
-> +				unlock_page(page);
-> +				put_page(page);
-> +				pte_offset_map_lock(mm, pmd, addr, &ptl);
-> +				break;
-> +			}
-> +			unlock_page(page);
-> +			put_page(page);
-> +			pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
-> +			pte--;
-> +			addr -= PAGE_SIZE;
-> +			continue;
-> +		}
-> +
-> +		VM_BUG_ON_PAGE(PageTransCompound(page), page);
-> +
-> +		if (isolate_lru_page(page))
-> +			continue;
-> +
-> +		if (pte_young(ptent)) {
-> +			ptent = ptep_get_and_clear_full(mm, addr, pte,
-> +							tlb->fullmm);
-> +			ptent = pte_mkold(ptent);
-> +			set_pte_at(mm, addr, pte, ptent);
-> +			tlb_remove_tlb_entry(tlb, pte, addr);
-> +		}
-> +		ClearPageReferenced(page);
-> +		test_and_clear_page_young(page);
-> +		list_add(&page->lru, &page_list);
-> +	}
-> +
-> +	arch_leave_lazy_mmu_mode();
-> +	pte_unmap_unlock(orig_pte, ptl);
-> +	reclaim_pages(&page_list);
-> +	cond_resched();
-> +
-> +	return 0;
-> +}
 
-I know you have briefly talked about code sharing already.
+> 
+> On Wed, Jul 10, 2019 at 11:28:32PM +0530, Pankaj Gupta wrote:
+> > This patch fixes below sparse warning related to __virtio
+> > type in virtio pmem driver. This is reported by Intel test
+> > bot on linux-next tree.
+> > 
+> > nd_virtio.c:56:28: warning: incorrect type in assignment
+> > 				(different base types)
+> > nd_virtio.c:56:28:    expected unsigned int [unsigned] [usertype] type
+> > nd_virtio.c:56:28:    got restricted __virtio32
+> > nd_virtio.c:93:59: warning: incorrect type in argument 2
+> > 				(different base types)
+> > nd_virtio.c:93:59:    expected restricted __virtio32 [usertype] val
+> > nd_virtio.c:93:59:    got unsigned int [unsigned] [usertype] ret
+> > 
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> > 
+> > This fixes a warning, so submitting it as a separate
+> > patch on top of virtio pmem series.
+> > 
+> >  include/uapi/linux/virtio_pmem.h | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/uapi/linux/virtio_pmem.h
+> > b/include/uapi/linux/virtio_pmem.h
+> > index efcd72f2d20d..7a7435281362 100644
+> > --- a/include/uapi/linux/virtio_pmem.h
+> > +++ b/include/uapi/linux/virtio_pmem.h
+> > @@ -10,7 +10,7 @@
+> >  #ifndef _UAPI_LINUX_VIRTIO_PMEM_H
+> >  #define _UAPI_LINUX_VIRTIO_PMEM_H
+> >  
+> > -#include <linux/types.h>
+> > +#include <linux/virtio_types.h>
+> >  #include <linux/virtio_ids.h>
+> >  #include <linux/virtio_config.h>
+> >  
+> > @@ -23,12 +23,12 @@ struct virtio_pmem_config {
+> >  
+> >  struct virtio_pmem_resp {
+> >  	/* Host return status corresponding to flush request */
+> > -	__u32 ret;
+> > +	__virtio32 ret;
+> >  };
+> >  
+> >  struct virtio_pmem_req {
+> >  	/* command type */
+> > -	__u32 type;
+> > +	__virtio32 type;
+> >  };
+> >  
+> >  #endif
+> 
+> Same comment as previously: pls use __le and fix accessors.
 
-While I agree that sharing with MADV_FREE is maybe a stretch, I
-applied these patches and compared the pageout and the cold page table
-functions, and they are line for line the same EXCEPT for 2-3 lines at
-the very end, where one reclaims and the other deactivates. It would
-be good to share here, it shouldn't be hard or result in fragile code.
+Now, I think I got it. 
 
-Something like int madvise_cold_or_pageout_range(..., bool pageout)?
+__virtio is for legacy devices to solve the endianess. 
+By default virtio 1.0 and later are little endian.
+Will send updated patch soon.
+
+Thank you,
+Pankaj
+
+> 
+> > --
+> > 2.20.1
+> 
