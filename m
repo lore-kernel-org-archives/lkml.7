@@ -2,116 +2,92 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840AAC74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261A9C31E41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560C22166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32BB21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562864857;
-	bh=ksGdExp/Lk4LLa2w5sXSJSbI8xQ+wyR31E++OCMEcpc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w8/8LkKbhpwq/BIH9kHZx7QFuRKvAsVfZJcl8Fq2EAZh5lf5vdGheQn5roOmLaC9e
-	 j0SBz1FtQg+/XueIqWPIWHBvbHOQ4Z9U53Y8f4TT1JxxUfzc8KsgMB6Fh41ytQ4NWJ
-	 jlVjMwFAEg8bxZuxjF+gGd2IWVVAJQ7zSbNmyeeE=
+	s=default; t=1562864862;
+	bh=qPkVmYk3A9TPP0SwRw+m20d8TNwY50bShhzMBCl7dT4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uVqS1If8d9jg19esYj3loHQquCLJwiS3faRM+f1dJWqGNaczS30Cke+oLY587U0Ua
+	 wGEd7Ld7JolJloSra8nawxYf627iWi76tjl1lCw7frrvEhx4+xmUV9VCOrFht3Cdsw
+	 lX8tgBG7FQ3tPc2GdnlJgSOqWkZ+731LZRH7fDRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbfGKRHf (ORCPT
+        id S1728845AbfGKRHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbfGKRHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:07:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 371CD20872;
-        Thu, 11 Jul 2019 17:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562864854;
-        bh=ksGdExp/Lk4LLa2w5sXSJSbI8xQ+wyR31E++OCMEcpc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=npfPxHVePnTn2+ar8EuzWJHPE0lcxgJ6US5ujbak4/zukPdwe/40RsIoSQ6f7/lZw
-         dx0+sxGFlijzbAY9aZC5fQ3trlFZ8T59HGQXyx+EzoQ+1sa4WTyj00eKsgufYxCbg4
-         B344Ks9FBS4wZW1AB3A716MYGiRxp5t3gZ41jNpQ=
-Date:   Thu, 11 Jul 2019 19:07:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     corbet@lwn.net, solar@openwall.com, will@kernel.org,
-        keescook@chromium.org, peterz@infradead.org, tyhicks@canonical.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation/security-bugs: provide more information
- about linux-distros
-Message-ID: <20190711170732.GB7544@kroah.com>
-References: <20190711163637.30327-1-sashal@kernel.org>
+        Thu, 11 Jul 2019 13:07:40 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35865 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGKRHk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 13:07:40 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i21so6541297ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GmsM4rcAyqRmAgN7blbW8gwoy8S9te43rhm58w9v33o=;
+        b=SkSpsFg2+drWvcG0Nk80SPYN6DHF2p5nwZ5uYWyaFd4ho/itNExezNV+wlYumB7OUo
+         AZ8CIqzbymtTlVeYV3C73n55FbCqBuMajfNV9lStamc3as5kA/G0PBduIsCYYWOm2w55
+         rdSM4YnG+chaMIpj5Xu3L9qinXRgTE3ovDAyU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GmsM4rcAyqRmAgN7blbW8gwoy8S9te43rhm58w9v33o=;
+        b=nwHJi9SMxWIW03Bobo7j33rwJkwT/kVZ03Q84DMnt5pbHKGwrhRGRH600kh07LYNBD
+         pDvw6yJCB4vNX2tqcY3mPhvfZPgsYklMnLEWH3rb0SoJShnAtlA+/q3Rr5UR2stCaO9y
+         SOzfaV8s3ax6Z0lfgyPmbvooy8ds0fyYI/8ucYifMAR6vUrjxuQbrp4+YoUJ3+k+0df6
+         3Qrt3JS3kDP95VcgKNs3WHhqQ0DP4Sf5Temt4dmg+ughGTdTbDStE762y+UHSKlrNOqL
+         VCCZg7hc2YDEu0KLcVIBeiwJFMXl+j++FpssfECC7tAVlexOkZDZF9ts7a8KLkJhaMKx
+         RDhA==
+X-Gm-Message-State: APjAAAW/Un82HDQxwWju/dtN6bmkhlrBmeHBqo4tR740JeTQbUVX7L4M
+        7BR1Zqs4Pm6AUm3mwsTiZxr2BLw8owc=
+X-Google-Smtp-Source: APXvYqx5mYvL8HHqBfvLpSCnjGKr0uo1bpkPtwsT93rcLd+KxDVWOiyrAe27+T4ibXBRRUv0/LlDWA==
+X-Received: by 2002:a2e:9192:: with SMTP id f18mr3184675ljg.52.1562864858249;
+        Thu, 11 Jul 2019 10:07:38 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id 63sm1083808ljs.84.2019.07.11.10.07.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 10:07:37 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id i21so6541211ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 10:07:37 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr3081430lji.84.1562864856938;
+ Thu, 11 Jul 2019 10:07:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711163637.30327-1-sashal@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190708150042.11590-1-christian@brauner.io> <CAHk-=wg0jcyTO+iXgP-CpNwvJ4mTCcg3ts8dLj3R5nbbonkpyQ@mail.gmail.com>
+ <20190711053428.ofapcx7nn5xkyru4@brauner.io> <20190711134552.jvahfwhvaxykbgfl@brauner.io>
+In-Reply-To: <20190711134552.jvahfwhvaxykbgfl@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 11 Jul 2019 10:07:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wincfPnFxQyiFDJLpNH3gNfUgabeAygN6D3dKXHHaqqjg@mail.gmail.com>
+Message-ID: <CAHk-=wincfPnFxQyiFDJLpNH3gNfUgabeAygN6D3dKXHHaqqjg@mail.gmail.com>
+Subject: Re: [GIT PULL] clone3 for v5.3
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 12:36:37PM -0400, Sasha Levin wrote:
-> Provide more information about how to interact with the linux-distros
-> mailing list for disclosing security bugs.
-> 
-> First, clarify that the reporter must read and accept the linux-distros
-> policies prior to sending a report.
-> 
-> Second, clarify that the reported must provide a tentative public
-> disclosure date and time in his first contact with linux-distros.
-> 
-> Suggested-by: Solar Designer <solar@openwall.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  Documentation/admin-guide/security-bugs.rst | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/security-bugs.rst b/Documentation/admin-guide/security-bugs.rst
-> index dcd6c93c7aac..c62faced9256 100644
-> --- a/Documentation/admin-guide/security-bugs.rst
-> +++ b/Documentation/admin-guide/security-bugs.rst
-> @@ -61,14 +61,19 @@ Coordination
->  
->  Fixes for sensitive bugs, such as those that might lead to privilege
->  escalations, may need to be coordinated with the private
-> -<linux-distros@vs.openwall.org> mailing list so that distribution vendors
-> -are well prepared to issue a fixed kernel upon public disclosure of the
-> -upstream fix. Distros will need some time to test the proposed patch and
-> -will generally request at least a few days of embargo, and vendor update
-> -publication prefers to happen Tuesday through Thursday. When appropriate,
-> -the security team can assist with this coordination, or the reporter can
-> -include linux-distros from the start. In this case, remember to prefix
-> -the email Subject line with "[vs]" as described in the linux-distros wiki:
-> +<linux-distros@vs.openwall.org> mailing list so that distribution vendors are
-> +well prepared to issue a fixed kernel upon public disclosure of the upstream
-> +fix. As a reporter, you must read and accept the list's policy as outlined in
-> +the linux-distros wiki:
-> +<https://oss-security.openwall.org/wiki/mailing-lists/distros#list-policy-and-instructions-for-reporters>.
-> +When you report a bug, you must also provide a tentative disclosure date and
-> +time in your very first message to the list. Distros will need some time to
-> +test the proposed patch so please allow at least a few days of embargo, and
-> +vendor update publication prefers to happen Tuesday through Thursday. When
-> +appropriate, the security team can assist with this coordination, or the
-> +reporter can include linux-distros from the start. In this case, remember to
-> +prefix the email Subject line with "[vs]" as described in the linux-distros
-> +wiki:
->  <http://oss-security.openwall.org/wiki/mailing-lists/distros#how-to-use-the-lists>
+On Thu, Jul 11, 2019 at 6:45 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> Just in case you prefer pulling from a __rebased__ tree. I prepared one.
 
-Do we really need to describe all of the information on how to use the
-distro list here?  That's why we included the link, as it has all of
-this well spelled out and described.  If anything, I would say we should
-say less in this document about what linux-distros do, as that is
-independent of the Linux security team.
+No, I'd much rather just resolve the conflict.  I just wanted to know
+what the deal was with the number confusion.
 
-thanks,
+I'll make it use 435, we can sort out openat2 and close_range() when
+those happen.
 
-greg k-h
+                  Linus
