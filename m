@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B35C742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814C3C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C1120872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FC5214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcM5L6Gu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/mEcKa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfGKW0Q (ORCPT
+        id S1728920AbfGKW0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 18:26:16 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35530 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfGKW0N (ORCPT
+        Thu, 11 Jul 2019 18:26:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43825 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfGKW0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 18:26:13 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so16212945ioo.2;
-        Thu, 11 Jul 2019 15:26:12 -0700 (PDT)
+        Thu, 11 Jul 2019 18:26:16 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so16112075ios.10;
+        Thu, 11 Jul 2019 15:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BqFBk1FaYQjd5Lzc/850mm3V6XDniUot7IqB9zeZTao=;
-        b=JcM5L6GuN8ncWjv+3WRDFgbZGs1pMOi1cAzotJyME1JgQbkm4tcvyGJ382atCLNTDj
-         kQtZz8an0A/vJCcjYQeB3i2A0J1YQ0+IunvPdMm7A4XHVNnId/M1gwtcWYl9FG6b0M9i
-         C8gA21gINuWZUNk17WFs3F3exotOKJJ6DZw8itU9vM2roTObAQqEM2CcEFFDopW35tnS
-         U7lqrm1PCP/8zUAAq3F1euyodEVQ20d/hMJXIbSI7H10Ht3U7PxFmbNQhVz2SAiUsIjX
-         sR00BrA60UvSMxxokcGDSHQ+rEirvBADOF8XqOOSZIjGnkxDkfCRFxM3Viv/Da0OeQzU
-         7Pzg==
+        bh=ojyucIvKYu7CDUehRCpB+nredG5sCsEyfgfj3qkRIiw=;
+        b=i/mEcKa+xHrz06ZIZEmoKfO8o/1ZFEOiblV2dinwYFXK6eAxvmnu+0vvfkAbwYS6O4
+         fuAICrMduoNmJHBRxgAXr3bxwCy3RrjtDIpwobjGSj4QOlgWbSowotg9OI3XiSSNKK43
+         UQEru/kEstdUTG9/lvkyL3okm7v9jVQYdpYCMg1MNwEK9NogLATOPdfsnsaT/q07NdvZ
+         yIvN/NhQUCE5DdOz+bpGkADj5zI5L6QGyl5kJjqZgXolX4xQmTRFYsuZDK9jPdixYFCP
+         Qde3xuqEue7CeShjiNMlJRB43SqPt37mwJHiomcrbAlXKyHy/6HhJ9BiIcgkzR5y+Qgx
+         DGAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BqFBk1FaYQjd5Lzc/850mm3V6XDniUot7IqB9zeZTao=;
-        b=tcIILu4pUBoJx+SHhFz4Ai6rEJ9SKj7kFYinIQgznCxRLKKKQrzfTFLtiROaL391HR
-         vNmDqxvVYrR9Du2FuYreuTdrbXKqDuYRAmX/O2S9ZqebcfPrxQsSaLB8W3RnxzEqb38T
-         GAPHm5ui9nBl0JIqzmd1hm14e/TWznq/DDJqk/rNtFPnHTwfg9spdDqVpRaIdRWYI2rF
-         XYIZp7JeEvf+vtRvJJV97t5t202xNsm85gszTF3o1eAdwoN4FESmOONh0x7ZBwpfvz+u
-         W07sbns2YyUlGAZR0/Byr/nsCRPzLoZzM5H0yZO2jehS4AnTikl3tjFV4Oz1FeX619D/
-         Hetg==
-X-Gm-Message-State: APjAAAUS9y937vvchcpB8eCaq871bGw4KT2SX/PP45fcTII3BTE78Mgx
-        m+X7UEEfG4t2dbioppQoVVbs/avIV1bJpw==
-X-Google-Smtp-Source: APXvYqzbYgulXcThSGIMz/NMbDOKuJMQszIhPvb5qChUfwJv3PxF494BVb5b5byadTNBwnRJaOlrjA==
-X-Received: by 2002:a6b:f114:: with SMTP id e20mr4139658iog.169.1562883972052;
-        Thu, 11 Jul 2019 15:26:12 -0700 (PDT)
+        bh=ojyucIvKYu7CDUehRCpB+nredG5sCsEyfgfj3qkRIiw=;
+        b=dCP8dOhCILMoLLZ4iXxndTFfLOveB4vnkJbw9CzecJVY/X1Y+OsnRPfNvPELrr6KtC
+         G2sDINpdUMCrRqSFjaBOipLVb50Dg3fYUteHk08bjQnCCjiIReKHqeCYQcHzup+bBiMO
+         WFCNoH1DY2WvKhrRehWt2q6NCd9Bw1ASi+O99UfYM5imAF+78/0eXSYqzSIUUvVxEGdl
+         YMyHRVpHrhGPonYQ6+Io8rVJH9fs+FCNUu7S9KcpYw4DAbuigoRni2FuGrhgeIvbY9BH
+         0nslDywR8WyoqQniYuDEL8glbtmw7LvLSDLJ6BSz4WvyOJouZwSf91O8vmXeRafk2Jf/
+         5enQ==
+X-Gm-Message-State: APjAAAXkTZMSiA8WOnQPqyiGeBRw7S2Ee4dW3sJF0haeoUF5PG0IbPRM
+        XC1TE+qp8kJ0UAVUUaFyp2Bd68RWJM7adA==
+X-Google-Smtp-Source: APXvYqxVaWyX7BoBLPXUnidLV1bwccbWvm2pLjuPiRmmJRziC/3nXuJ9jBAfSDZji5oj4xFHzZojEQ==
+X-Received: by 2002:a5d:940b:: with SMTP id v11mr7205793ion.69.1562883974909;
+        Thu, 11 Jul 2019 15:26:14 -0700 (PDT)
 Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id s2sm4478982ioj.8.2019.07.11.15.26.10
+        by smtp.gmail.com with ESMTPSA id s2sm4478982ioj.8.2019.07.11.15.26.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 15:26:11 -0700 (PDT)
+        Thu, 11 Jul 2019 15:26:14 -0700 (PDT)
 From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
 To:     linux-pci@vger.kernel.org, bhelgaas@google.com,
         linux-kernel@vger.kernel.org
 Cc:     skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skunberg.kelsey@gmail.com
-Subject: [PATCH 01/11] PCI: Move #define PCI_PM_* lines to drivers/pci/pci.h
-Date:   Thu, 11 Jul 2019 16:23:31 -0600
-Message-Id: <20190711222341.111556-2-skunberg.kelsey@gmail.com>
+Subject: [PATCH 03/11] PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
+Date:   Thu, 11 Jul 2019 16:23:33 -0600
+Message-Id: <20190711222341.111556-4-skunberg.kelsey@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
 References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
@@ -76,48 +76,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The #define PCI_PM_* lines are only used within drivers/pci/ and they do not
-need to be seen by the rest of the kernel. Move #define PCI_* to
-drivers/pci/pci.h
+pci_get_host_bridge_device() and pci_put_host_bridge_device() are only
+called within drivers/pci/pci.h. Since declarations do not need to be visible
+to the rest of the kernel, move to drivers/pci/pci.h.
 
 Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- drivers/pci/pci.h   | 5 +++++
- include/linux/pci.h | 5 -----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/pci.h   | 3 +++
+ include/linux/pci.h | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 9cb99380c61e..7e30fbde5c84 100644
+index 800fe8989f48..f2ba33613c21 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -39,6 +39,11 @@ int pci_probe_reset_function(struct pci_dev *dev);
- int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
- int pci_bus_error_reset(struct pci_dev *dev);
+@@ -100,6 +100,9 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
+ bool pci_bridge_d3_possible(struct pci_dev *dev);
+ void pci_bridge_d3_update(struct pci_dev *dev);
  
-+#define PCI_PM_D2_DELAY         200
-+#define PCI_PM_D3_WAIT          10
-+#define PCI_PM_D3COLD_WAIT      100
-+#define PCI_PM_BUS_WAIT         50
++struct device *pci_get_host_bridge_device(struct pci_dev *dev);
++void pci_put_host_bridge_device(struct device *dev);
 +
- /**
-  * struct pci_platform_pm_ops - Firmware PM callbacks
-  *
+ static inline void pci_wakeup_event(struct pci_dev *dev)
+ {
+ 	/* Wait 100 ms before the system can be put into a sleep state. */
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index dd436da7eccc..3bda6a87a815 100644
+index cedebb08a32d..39e609ea316e 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -145,11 +145,6 @@ static inline const char *pci_power_name(pci_power_t state)
- 	return pci_power_names[1 + (__force int) state];
+@@ -639,9 +639,6 @@ static inline struct pci_dev *pci_upstream_bridge(struct pci_dev *dev)
+ 	return dev->bus->self;
  }
  
--#define PCI_PM_D2_DELAY		200
--#define PCI_PM_D3_WAIT		10
--#define PCI_PM_D3COLD_WAIT	100
--#define PCI_PM_BUS_WAIT		50
+-struct device *pci_get_host_bridge_device(struct pci_dev *dev);
+-void pci_put_host_bridge_device(struct device *dev);
 -
- /**
-  * The pci_channel state describes connectivity between the CPU and
-  * the PCI device.  If some PCI bus between here and the PCI device
+ #ifdef CONFIG_PCI_MSI
+ static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev)
+ {
 -- 
 2.20.1
 
