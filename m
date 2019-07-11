@@ -2,94 +2,71 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C25C74A56
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813FC74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6072166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="coBVf6pq"
+	by mail.kernel.org (Postfix) with ESMTP id 7258721537
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfGKOKs (ORCPT
+        id S1728517AbfGKOMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:10:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58376 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfGKOKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:10:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dmt+pyxw4T8mpV04yaOR9Ac6pmdUH/6jx5BRJ/VTKwk=; b=coBVf6pqOhCxhlHxZ9jfrb5HIq
-        ZIxMQPsvl/1QYBSuJZ2qrOQS7f4mGMfasw7bXNG0qpCNsuWadIMZLNwl7OYbGVCJd2UbbWWOT8ulL
-        jieZjB9EX28Ot8ElDXoevE6hXg5n/VAFcpM98wDmKV6665EcvkBeD9L5rJycn1WxB6LHzIxH8wXvq
-        ai4b9IGzqcLo5U+aVro7B8GQnPKYlV/UqE2Z+Q0QYcOCk2KgY8s9EUTYzgQoyOdASD0VX/9FFt6rL
-        IhYObU/yrPxXR0U5ksG4M3yFW1wLduESZnhsr2ZVMTiJV6QfLbdbuv0idzy2WmW/c3WpQM91jVDUb
-        pIsG/a8w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlZmS-00016J-Jn; Thu, 11 Jul 2019 14:10:40 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 661B320976D81; Thu, 11 Jul 2019 16:10:38 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 16:10:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-Subject: Re: [PATCH 3/4] numa: introduce numa group per task group
-Message-ID: <20190711141038.GE3402@hirez.programming.kicks-ass.net>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <93cf9333-2f9a-ca1e-a4a6-54fc388d1673@linux.alibaba.com>
+        Thu, 11 Jul 2019 10:12:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2205 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbfGKOM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 10:12:29 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EA90B653E1675FDF9488;
+        Thu, 11 Jul 2019 22:12:26 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 11 Jul 2019
+ 22:12:18 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <james.smart@broadcom.com>, <dick.kennedy@broadcom.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: lpfc: Remove unnecessary null check before kfree
+Date:   Thu, 11 Jul 2019 22:10:37 +0800
+Message-ID: <20190711141037.57880-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <93cf9333-2f9a-ca1e-a4a6-54fc388d1673@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 11:32:32AM +0800, 王贇 wrote:
-> By tracing numa page faults, we recognize tasks sharing the same page,
-> and try pack them together into a single numa group.
-> 
-> However when two task share lot's of cache pages while not much
-> anonymous pages, since numa balancing do not tracing cache page, they
-> have no chance to join into the same group.
-> 
-> While tracing cache page cost too much, we could use some hints from
+A null check before a kfree is redundant, so remove it.
+This is detected by coccinelle.
 
-I forgot; where again do we skip shared pages? task_numa_work() doesn't
-seem to skip file vmas.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/scsi/lpfc/lpfc_bsg.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> userland and cpu cgroup could be a good one.
-> 
-> This patch introduced new entry 'numa_group' for cpu cgroup, by echo
-> non-zero into the entry, we can now force all the tasks of this cgroup
-> to join the same numa group serving for task group.
-> 
-> In this way tasks are more likely to settle down on the same node, to
-> share closer cpu cache and gain benefit from NUMA on both file/anonymous
-> pages.
-> 
-> Besides, when multiple cgroup enabled numa group, they will be able to
-> exchange task location by utilizing numa migration, in this way they
-> could achieve single node settle down without breaking load balance.
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index b7216d6..c7f6623 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -1276,9 +1276,7 @@ lpfc_bsg_hba_set_event(struct bsg_job *job)
+ 	return 0; /* call job done later */
+ 
+ job_error:
+-	if (dd_data != NULL)
+-		kfree(dd_data);
+-
++	kfree(dd_data);
+ 	job->dd_data = NULL;
+ 	return rc;
+ }
+-- 
+2.7.4
 
-I dislike cgroup only interfaces; it there really nothing else we could
-use for this?
 
