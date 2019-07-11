@@ -2,134 +2,126 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6826FC74A5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0940CC31E42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41449206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:45:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fXMfPXQF"
+	by mail.kernel.org (Postfix) with ESMTP id D877B21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfGKQpM (ORCPT
+        id S1728654AbfGKQpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 12:45:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38522 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbfGKQpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:45:11 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z75so3211689pgz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 09:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jwuRR8Q1l0rKbX4Ve134b1iXf6no8US/0ODaV1OtfJg=;
-        b=fXMfPXQFw+BMXHj5sB7D5SZbRLL4yLO7dCFEcqra0z5M/ZOltBbf3Zj/Aao1hET4GD
-         3azphRfZ11zhgbXjs3N4nbnKMwUU7+4dw6YKKXllbd+DssNy3TxDGCgkmV1ikNcZxL7/
-         2ICwcXgXIJkPJwzLWiM4/yASDDXjIQa7HjC9IImhuA+FU4yWlR8FfIzidpqktofkWi8v
-         Va0bLm/egQy7D/+XBHgq+GtkBfu9c1Y6IPWhZN8mcQmY/Fa8JG1MM4eSiK3ha3usflxA
-         5VzG7L1PfesBb/hDoETF7jtEOnM6ltMdpQbSzf5oDTXZHnTRFG58VhAlAl5/e8gh0nzi
-         EL3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jwuRR8Q1l0rKbX4Ve134b1iXf6no8US/0ODaV1OtfJg=;
-        b=olGX3BHkIHwKdYDfm/WjYzj/mdYXZKMyHz/LeSVtfS5xnJvWCchRPMyS6u/YJgyfws
-         c1Kc2bEsppSOeuI/z/NB954GVOSs5rVPgST7loaIoh3hn8pKZc+yylZ/+LzKad9dsZig
-         3Yxh754baau5+dwdVMT+dKFbaAVDFnzpgNDq5g4HXOuno3CnG/2+7M/nvYFrbiFJZhg9
-         U8Lyh9Jup5S0C48QCBDIPGysiGUVq3VNM3sQptkE2RPiULM3oPUWwSV1EzYO76JDt6Bm
-         z7rUCM+AIuPg6EoZ2JQWUMwMH64q/tHZZdM6kmGeI4hnK5RptOTEowEGf77xC97MPq7W
-         NY2w==
-X-Gm-Message-State: APjAAAXHv0Nzh6m1iPy6Ts5i27ogpENjKwH6w7EB+L0KxaisPbRstTry
-        SJR/AmRZ9rxT8hBildxjWNe+Ww==
-X-Google-Smtp-Source: APXvYqy1hl1yTY2tAfPT4CfLcn/3WL5Tytxe1BBNzeHmDCMgcsWevHevzfTkFxpehMNWKiRgxKFHTg==
-X-Received: by 2002:a17:90a:2343:: with SMTP id f61mr6002098pje.130.1562863511049;
-        Thu, 11 Jul 2019 09:45:11 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l189sm7116203pfl.7.2019.07.11.09.45.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 09:45:10 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 09:46:19 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/phy/dsi_phy: silence -EPROBE_DEFER warnings
-Message-ID: <20190711164619.GT7234@tuxbook-pro>
-References: <20190706111138.2238-1-masneyb@onstation.org>
+        Thu, 11 Jul 2019 12:45:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:18091 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728274AbfGKQpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 12:45:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 09:45:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
+   d="scan'208";a="177221572"
+Received: from unknown (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga002.jf.intel.com with ESMTP; 11 Jul 2019 09:45:11 -0700
+Subject: Re: [RFC][Patch v11 1/2] mm: page_hinting: core infrastructure
+To:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
+        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
+        david@redhat.com, mst@redhat.com, dodgen@google.com,
+        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com, john.starks@microsoft.com,
+        mhocko@suse.com
+References: <20190710195158.19640-1-nitesh@redhat.com>
+ <20190710195158.19640-2-nitesh@redhat.com>
+ <3f9a7e7b-c026-3530-e985-804fc7f1ec31@intel.com>
+ <0b871cf1-e54f-f072-1eaf-511a03c2907f@redhat.com>
+ <c41671f0-2080-b925-39e2-79e33a84088b@intel.com>
+ <fd49381e-cdfa-7ac9-e938-ac790995df24@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <719ac813-01d7-7602-0951-6c90f1f7efc1@intel.com>
+Date:   Thu, 11 Jul 2019 09:45:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190706111138.2238-1-masneyb@onstation.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <fd49381e-cdfa-7ac9-e938-ac790995df24@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 06 Jul 04:11 PDT 2019, Brian Masney wrote:
+On 7/11/19 9:36 AM, Nitesh Narayan Lal wrote:
+>>>>> +struct zone_free_area {
+>>>>> +	unsigned long *bitmap;
+>>>>> +	unsigned long base_pfn;
+>>>>> +	unsigned long end_pfn;
+>>>>> +	atomic_t free_pages;
+>>>>> +	unsigned long nbits;
+>>>>> +} free_area[MAX_NR_ZONES];
+>>>> Why do we need an extra data structure.  What's wrong with putting
+>>>> per-zone data in ... 'struct zone'?
+>>> Will it be acceptable to add fields in struct zone, when they will only
+>>> be used by page hinting?
+>> Wait a sec...  MAX_NR_ZONES the number of zone types not the maximum
+>> number of *zones* in the system.
+>>
+>> Did you test this on a NUMA system?
+> Yes, I tested it with a guest having 2 and 3 NUMA nodes.
 
-> The following errors show up when booting the Nexus 5:
-> 
-> msm_dsi_phy fd922a00.dsi-phy: [drm:dsi_phy_driver_probe] *ERROR*
->  dsi_phy_regulator_init: failed to init regulator, ret=-517
-> msm_dsi_phy fd922a00.dsi-phy: [drm:dsi_phy_driver_probe] *ERROR*
->  dsi_phy_driver_probe: failed to init regulator
-> 
-> dsi_phy_regulator_init() already logs the error, so no need to log
-> the same error a second time in dsi_phy_driver_probe(). This patch
-> also changes dsi_phy_regulator_init() to not log the error if the
-> error code is -EPROBE_DEFER to reduce noise in dmesg.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> index 4097eca1b3ef..d0e1cc6728dc 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> @@ -396,8 +396,11 @@ static int dsi_phy_regulator_init(struct msm_dsi_phy *phy)
->  
->  	ret = devm_regulator_bulk_get(dev, num, s);
->  	if (ret < 0) {
-> -		DRM_DEV_ERROR(dev, "%s: failed to init regulator, ret=%d\n",
-> -						__func__, ret);
-> +		if (ret != -EPROBE_DEFER)
-> +			DRM_DEV_ERROR(dev,
-> +				      "%s: failed to init regulator, ret=%d\n",
-> +				      __func__, ret);
+How can this *possibly* have worked?
 
-Some {} wouldn't hurt here, but not a big deal.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> +
->  		return ret;
->  	}
->  
-> @@ -584,10 +587,8 @@ static int dsi_phy_driver_probe(struct platform_device *pdev)
->  	}
->  
->  	ret = dsi_phy_regulator_init(phy);
-> -	if (ret) {
-> -		DRM_DEV_ERROR(dev, "%s: failed to init regulator\n", __func__);
-> +	if (ret)
->  		goto fail;
-> -	}
->  
->  	phy->ahb_clk = msm_clk_get(pdev, "iface");
->  	if (IS_ERR(phy->ahb_clk)) {
-> -- 
-> 2.20.1
-> 
+Won't each same-typed zone just use the same free_area[] entry since
+zone_idx(zone1)==zone_idx(zone2) if zone1 and zone2 are (for example)
+both ZONE_NORMAL?
