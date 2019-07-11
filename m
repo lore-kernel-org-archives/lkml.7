@@ -2,182 +2,184 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E2EC742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527D2C742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF7B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5CA208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="camATY/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfGKTIO (ORCPT
+        id S1728372AbfGKTRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 15:08:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50684 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbfGKTIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 15:08:14 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3E17130C0DE2;
-        Thu, 11 Jul 2019 19:08:13 +0000 (UTC)
-Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B63B25C1B5;
-        Thu, 11 Jul 2019 19:08:12 +0000 (UTC)
-Date:   Thu, 11 Jul 2019 13:08:11 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Message-ID: <20190711130811.4e51437d@x1.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439F931F8@SHSMSX104.ccr.corp.intel.com>
-References: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
-        <1560000071-3543-10-git-send-email-yi.l.liu@intel.com>
-        <20190619222647.72efc76a@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F0164E@SHSMSX104.ccr.corp.intel.com>
-        <20190620150757.7b2fa405@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F02663@SHSMSX104.ccr.corp.intel.com>
-        <20190621095740.41e6e98e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
-        <20190628090741.51e8d18e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F1E9EC@SHSMSX104.ccr.corp.intel.com>
-        <20190703112212.146ac71c@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F1FF4E@SHSMSX104.ccr.corp.intel.com>
-        <20190705095520.548331c2@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F931F8@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        Thu, 11 Jul 2019 15:17:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36923 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfGKTRC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 15:17:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s20so6991326otp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eUSi3tY9WQJoS1EY1aQXpWympsTqMdn0wVqqZqVdQVk=;
+        b=camATY/NzLRiATqzHBSW98RoE1F6AG2h2nePD+8Gk0Wz6ld60tDwdfxnWllAlmsPC7
+         gJvgepZ+57xnsETY8vt58D4GWCUEFDBocuGs4tVA5m/lyEVEiVpjJJ5HTFryb0qLF467
+         hp15q3BDSM1b8agHxbKLbt1CgRB79eLzxHwwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eUSi3tY9WQJoS1EY1aQXpWympsTqMdn0wVqqZqVdQVk=;
+        b=B/uJOGW+Qg2NEzdCcBklxz2YuYERfyJww5VyZubQc6RpG1UG6VCk3HG5QZEueYUUB9
+         kYAPNIbwS0XEBJnhqJfs+bP10HDNuqvOiwuArHfnljw5a8oQrwQvfYmRyM22w2mO0lr3
+         25w4BcV+rRpgMOCMuCpn2FolgIvAdulMkVU/TIggYLnVj2GW5zURR13ETcnpObukXDAJ
+         +LZA/9sniDOfXDzaVA77xKIzybakLcNScvk2xwZc/JttCpgEqnLjWY1hkgplcTa/4Iwq
+         95d7Js3Or9QvhCxRUWD5BdRskJF6NE/srl9HnuzVo9SXYGVDSNEjRLBz5/x1/S5YDrY6
+         +eyw==
+X-Gm-Message-State: APjAAAVikeLusS47cPPBYkykuFlMWeAAU0RBzpj7CKKiAxnW5XzMtglW
+        uxW7q4Q1kDS30QMX9RcrQBBmVuga1vqmfAW00mTJPQ==
+X-Google-Smtp-Source: APXvYqyT3azAYT1KYEzwCu0KzckgoxzeydeLtzUfvllYHq5t/nPXgLIPQhVx2K9uef+PQK+83q8EDA+oX8va/BDSf+w=
+X-Received: by 2002:a9d:27c3:: with SMTP id c61mr4626820otb.291.1562872621393;
+ Thu, 11 Jul 2019 12:17:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 11 Jul 2019 19:08:13 +0000 (UTC)
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-3-dianders@chromium.org> <20190630202246.GB15102@ravnborg.org>
+ <20190630205514.GA17046@ravnborg.org> <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
+ <20190708175606.GB3511@ravnborg.org> <CAD=FV=VdkPLwyGhSnrHCcduQAPwby35Mqhk_r=O595bMoMT=6w@mail.gmail.com>
+In-Reply-To: <CAD=FV=VdkPLwyGhSnrHCcduQAPwby35Mqhk_r=O595bMoMT=6w@mail.gmail.com>
+From:   Sean Paul <seanpaul@chromium.org>
+Date:   Thu, 11 Jul 2019 15:16:50 -0400
+Message-ID: <CAEqLBR=jmc1zs75vfVP2b4d4dpLJjNpUX=5W5AYyCtCoLvK59A@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override typical timing
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jul 2019 12:27:26 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
-
-> Hi Alex,
-> 
-> > From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On Behalf
-> > Of Alex Williamson
-> > Sent: Friday, July 5, 2019 11:55 PM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
-> > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > 
-> > On Thu, 4 Jul 2019 09:11:02 +0000
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > Hi Alex,
-> > >  
-> > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > Sent: Thursday, July 4, 2019 1:22 AM
-> > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver  
-> [...]
-> > >  
-> > > > It's really unfortunate that we don't have the mdev inheriting the
-> > > > iommu group of the iommu_device so that userspace can really understand
-> > > > this relationship.  A separate group makes sense for the aux-domain
-> > > > case, and is (I guess) not a significant issue in the case of a
-> > > > singleton iommu_device group, but it's pretty awkward here.  Perhaps
-> > > > this is something we should correct in design of iommu backed mdevs.  
+On Wed, Jul 10, 2019 at 6:56 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Mon, Jul 8, 2019 at 10:56 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > On Mon, Jul 01, 2019 at 09:39:06AM -0700, Doug Anderson wrote:
+> > > Hi,
 > > >
-> > > Yeah, for aux-domain case, it is not significant issue as aux-domain essentially
-> > > means singleton iommu_devie group. And in early time, when designing the  
-> > support  
-> > > for wrap pci as a mdev, we also considered to let vfio-mdev-pci to reuse
-> > > iommu_device group. But this results in an iommu backed group includes mdev and
-> > > physical devices, which might also be strange. Do you think it is valuable to  
-> > reconsider  
-> > > it?  
-> > 
-> > From a group perspective, the cleanest solution would seem to be that
-> > IOMMU backed mdevs w/o aux domain support should inherit the IOMMU
-> > group of the iommu_device,  
-> 
-> A confirm here. Regards to inherit the IOMMU group of iommu_device, do
-> you mean mdev device should be added to the IOMMU group of iommu_device
-> or maintain a parent and inheritor relationship within vfio? I guess you mean the
-> later one? :-)
+> > > On Sun, Jun 30, 2019 at 1:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > > >
+> > > > Hi Douglas.
+> > > >
+> > > > > > +
+> > > > > > +   /* Only add timings if override was not there or failed to validate */
+> > > > > > +   if (num == 0 && panel->desc->num_timings)
+> > > > > > +           num = panel_simple_get_timings_modes(panel);
+> > > > > > +
+> > > > > > +   /*
+> > > > > > +    * Only add fixed modes if timings/override added no mode.
+> > > > >
+> > > > > This part I fail to understand.
+> > > > > If we have a panel where we in panel-simple have specified the timings,
+> > > > > and done so using display_timing so with proper {min, typ, max} then it
+> > > > > should be perfectly legal to specify a more precise variant in the DT
+> > > > > file.
+> > > > > Or what did I miss here?
+> > > >
+> > > > Got it now.
+> > > > If display_mode is used for timings this is what you call "fixed mode".
+> > > > Hmm, if I got confused someone else may also be confused by this naming.
+> > >
+> > > The name "fixed mode" comes from the old code, though I guess in the
+> > > old code it used to refer to a mode that came from either the
+> > > display_timing or the display_mode.
+> > >
+> > > How about if I call it "panel_simple_get_from_fixed_display_mode"?
+> > > ...or if you have another suggestion feel free to chime in.
+> > What we really want to distingush here is the use of display_mode
+> > and display_timings (if I got the names right).
+> > That display_mode specify a fixed timing and display_timing specify
+> > a valid range is something in the semantics of the two types.
+> > So naming that refer to display_mode versus display_timing will make the
+> > code simpler to understand. and then a nice comment that when
+> > display_mode
+> > is used one looses the possibility to use override_mode.
+> > That would be fine to have in the struct in the driver.
+>
+> OK, I can change the names here and try to find a good place to add a comment.
+>
+>
+> > > NOTE: Since this feedback is minor and this patch has been outstanding
+> > > for a while (and is blocking other work), I am assuming that the best
+> > > path forward is for Heiko to land this patch with Thierry's Ack and
+> > > I'll send a follow-up.  Please yell if you disagree.
+> > Let's give the patches a spin more as we have passed the possibility for
+> > the current merge window.
+>
+> Any way I can convince you to change your mind here?  There are no
+> functional changes requested so far in your feedback and no bugs--it's
+> just a few variable names and comments.  By landing the existing
+> patches as-is:
+>
+> 1. We stop spamming all the people CCed on this whole series (which
+> includes device tree patches) that might be interested in the series
+> as a whole but aren't interested in details.
+>
+> 2. We can debate the bikeshed-type issues on their own merit and I
+> don't have to debate removing existing Acks / Reviewed-by / Tested-by
+> tags as I make changes.
+>
+> 3. Even if it's not a good time to land the patches right now we know
+> that these patches will be ready to land as soon as the window opens.
+> As I mentioned earlier these patches are blocking other work [1] and
+> landing that patch is actually preventing Matthias from submitting
+> another series of patches to add support for rk3288-veyron-tiger and
+> rk3288-veyron-fievel.  Certainly I know that upstream doesn't make a
+> policy of landing things just to suit the timelines of a downstream
+> project, but in this case there seems very little downsides to landing
+> the existing patches and taking a later cleanup patch.
+>
 
-I was thinking the former, I'm not sure what the latter implies.  There
-is no hierarchy within or between IOMMU groups, it's simply a set of
-devices.  Maybe what you're getting at is that vfio needs to understand
-that the mdev is a child of the endpoint device in its determination of
-whether the group is viable.  That's true, but we can also have IOMMU
-groups composed of SR-IOV VFs along with their parent PF if the root of
-the IOMMU group is (for example) a downstream switch port above the PF.
-So we can't simply look at the parent/child relationship within the
-group, we somehow need to know that the parent device sharing the IOMMU
-group is operating in host kernel space on behalf of the mdev.
- 
-> > but I think the barrier here is that we have
-> > a difficult time determining if the group is "viable" in that case.
-> > For example a group where one devices is bound to a native host driver
-> > and the other device bound to a vfio driver would typically be
-> > considered non-viable as it breaks the isolation guarantees.  However  
-> 
-> yes, this is how vfio guarantee the isolation before allowing user to further
-> add a group to a vfio container and so on.
-> 
-> > I think in this configuration, the parent device is effectively
-> > participating in the isolation and "donating" its iommu group on behalf
-> > of the mdev device.  I don't think we can simultaneously use that iommu
-> > group for any other purpose.   
-> 
-> Agree. At least host cannot make use of the iommu group any more in such
-> configuration.
-> 
-> > I'm sure we could come up with a way for
-> > vifo-core to understand this relationship and add it to the white list,  
-> 
-> The configuration is host driver still exists while we want to let mdev device
-> to somehow "own" the iommu backed DMA isolation capability. So one possible
-> way may be calling vfio_add_group_dev() which will creates a vfio_device instance
-> for the iommu_device in vfio.c when creating a iommu backed mdev. Then the
-> iommu group is fairly viable.
+[sending from my @chromium.org address so any appearance of bias is
+explicit :) ]
 
-"fairly viable" ;)  It's a correct use of the term, it's a little funny
-though as "fairly" can also mean reasonably/sufficiently/adequately as
-well as I think the intended use here equivalent to justly. </tangent>
+Agree with Doug here, the naming and casting discussion is pretty
+subjective and non-functional. We've got an Ack from Thierry and a
+Review from Boris (both seasoned drm_panel'ers), this patch has been
+sitting in review for a while. Let's not let the perfect be the enemy
+of the good.
 
-That's an interesting idea to do an implicit vfio_add_group_dev() on
-the iommu_device in this case, if you've worked through how that could
-play out, it'd be interesting to see.
+Sean
 
-> > I wonder though how confusing this might be to users who now understand
-> > the group/driver requirement to be "all endpoints bound to vfio
-> > drivers".  This might still be the best approach regardless of this.  
-> 
-> Yes, another thing I'm considering is how to prevent such a host driver from
-> issuing DMA. If we finally get a device bound to vfio-pci and another device
-> wrapped as mdev and passthru them to VM, the host driver is still capable to
-> issue DMA. Though IOMMU can block some DMAs, but not all of them. If a
-> DMA issued by host driver happens to have mapping in IOMMU side, then
-> host is kind of doing things on behalf on VM. Though we may trust the host
-> driver, but it looks to be a little bit awkward to me. :-(
-
-vfio is allocating an iommu domain and placing the iommu_device into
-that domain, the user therefore own the iova context for the parent
-device, how would that not manage all DMA?   The vendor driver could
-theoretically also manipulate mappings within that domain, but that
-driver is a host kernel driver and therefore essentially trusted like
-any other host kernel driver.  The only unique thing here is that it's
-part of a channel providing access for an untrusted user, so it needs
-to be particularly concerned with keeping that user access within
-bounds.  Thanks,
-
-Alex
+>
+> > I am on vacation at the moment and thus slow in responses, but will be back
+> > at the home office next week and will be more responsive again.
+> >
+> >         Sam - who is enjoying the alps in Austria
+>
+> Hope you have had a great vacation!
+>
+> [1] https://lkml.kernel.org/r/20190625222629.154619-1-mka@chromium.org
+>
+> -Doug
