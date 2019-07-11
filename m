@@ -2,141 +2,227 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF97C742A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519DEC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C25216C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A615208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfGKSVv (ORCPT
+        id S1728584AbfGKSZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 14:21:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26507 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbfGKSVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:21:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 11:21:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
-   d="scan'208";a="156901295"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jul 2019 11:21:49 -0700
-Subject: Re: [RFC][Patch v11 1/2] mm: page_hinting: core infrastructure
-To:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        david@redhat.com, mst@redhat.com, dodgen@google.com,
-        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
-        alexander.duyck@gmail.com, john.starks@microsoft.com,
-        mhocko@suse.com
-References: <20190710195158.19640-1-nitesh@redhat.com>
- <20190710195158.19640-2-nitesh@redhat.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <f9bca947-f88e-51a7-fdaf-4403fda1b783@intel.com>
-Date:   Thu, 11 Jul 2019 11:21:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190710195158.19640-2-nitesh@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 11 Jul 2019 14:25:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728535AbfGKSZy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 14:25:54 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BIMZHF084385
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:25:53 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tp90ub9x7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:25:53 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 11 Jul 2019 19:25:50 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Jul 2019 19:25:46 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BIPjsP59703296
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 18:25:45 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F21B11C05B;
+        Thu, 11 Jul 2019 18:25:45 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1AF3211C04A;
+        Thu, 11 Jul 2019 18:25:44 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.74])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jul 2019 18:25:43 +0000 (GMT)
+Subject: Re: possible deadlock in process_measurement
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Biggers <ebiggers3@gmail.com>
+Cc:     syzbot <syzbot+5ab61747675a87ea359d@syzkaller.appspotmail.com>,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, zohar@linux.vnet.ibm.com
+Date:   Thu, 11 Jul 2019 14:25:33 -0400
+In-Reply-To: <00000000000054e5d1058a6df2eb@google.com>
+References: <00000000000054e5d1058a6df2eb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071118-4275-0000-0000-0000034C45AE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071118-4276-0000-0000-0000385C4DB5
+Message-Id: <1562869533.4014.56.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 12:51 PM, Nitesh Narayan Lal wrote:
-> +static void bm_set_pfn(struct page *page)
-> +{
-> +	struct zone *zone = page_zone(page);
-> +	int zone_idx = page_zonenum(page);
-> +	unsigned long bitnr = 0;
-> +
-> +	lockdep_assert_held(&zone->lock);
-> +	bitnr = pfn_to_bit(page, zone_idx);
-> +	/*
-> +	 * TODO: fix possible underflows.
-> +	 */
-> +	if (free_area[zone_idx].bitmap &&
-> +	    bitnr < free_area[zone_idx].nbits &&
-> +	    !test_and_set_bit(bitnr, free_area[zone_idx].bitmap))
-> +		atomic_inc(&free_area[zone_idx].free_pages);
-> +}
+Hi Eric,
 
-Let's say I have two NUMA nodes, each with ZONE_NORMAL and ZONE_MOVABLE
-and each zone with 1GB of memory:
+On Mon, 2019-06-03 at 09:35 -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    3c09c195 Add linux-next specific files for 20190531
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10f61a0ea00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6cfb24468280cd5c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5ab61747675a87ea359d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177c3d16a00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ec01baa00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+5ab61747675a87ea359d@syzkaller.appspotmail.com
+> 
+> get_swap_device: Bad swap file entry 6000000000000001
+> get_swap_device: Bad swap file entry 6400000000000001
+> get_swap_device: Bad swap file entry 6800000000000001
+> get_swap_device: Bad swap file entry 6c00000000000001
+> get_swap_device: Bad swap file entry 7000000000000001
+> get_swap_device: Bad swap file entry 7400000000000001
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.2.0-rc2-next-20190531 #4 Not tainted
+> ------------------------------------------------------
+> syz-executor395/17373 is trying to acquire lock:
+> 000000003d1a4a53 (&sb->s_type->i_mutex_key#10){+.+.}, at: inode_lock  
+> include/linux/fs.h:778 [inline]
+> 000000003d1a4a53 (&sb->s_type->i_mutex_key#10){+.+.}, at:  
+> process_measurement+0x15ae/0x15e0 security/integrity/ima/ima_main.c:228
+> 
+> but task is already holding lock:
+> 00000000e0714fc5 (&mm->mmap_sem#2){++++}, at: do_mprotect_pkey+0x1f6/0xa30  
+> mm/mprotect.c:485
+> 
+> which lock already depends on the new lock.
 
-Node:         0        1
-NORMAL   0->1GB   2->3GB
-MOVABLE  1->2GB   3->4GB
+More information is needed here.  Missing is the IMA policy.  In
+particular whether the IMA policy has "permit_directio" enabled?  Is
+it enabled for all files or particular ones.  If I'm reading the log
+properly, it looks like the IMA mmap policy rule does not exclude the
+pemitted_directio files.
 
-This code will allocate two bitmaps.  The ZONE_NORMAL bitmap will
-represent data from 0->3GB and the ZONE_MOVABLE bitmap will represent
-data from 1->4GB.  That's the result of this code:
+Do you have any suggestions on how to resolve this?
 
-> +			if (free_area[zone_idx].base_pfn) {
-> +				free_area[zone_idx].base_pfn =
-> +					min(free_area[zone_idx].base_pfn,
-> +					    zone->zone_start_pfn);
-> +				free_area[zone_idx].end_pfn =
-> +					max(free_area[zone_idx].end_pfn,
-> +					    zone->zone_start_pfn +
-> +					    zone->spanned_pages);
+Mimi
 
-But that means that both bitmaps will have space for PFNs in the other
-zone type, which is completely bogus.  This is fundamental because the
-data structures are incorrectly built per zone *type* instead of per zone.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (&mm->mmap_sem#2){++++}:
+>         down_read+0x3f/0x1e0 kernel/locking/rwsem.c:24
+>         get_user_pages_unlocked+0xfc/0x4a0 mm/gup.c:1174
+>         __gup_longterm_unlocked mm/gup.c:2193 [inline]
+>         get_user_pages_fast+0x43f/0x530 mm/gup.c:2245
+>         iov_iter_get_pages+0x2c2/0xf80 lib/iov_iter.c:1287
+>         dio_refill_pages fs/direct-io.c:171 [inline]
+>         dio_get_page fs/direct-io.c:215 [inline]
+>         do_direct_IO fs/direct-io.c:983 [inline]
+>         do_blockdev_direct_IO+0x3f7b/0x8e00 fs/direct-io.c:1336
+>         __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1422
+>         ext4_direct_IO_write fs/ext4/inode.c:3782 [inline]
+>         ext4_direct_IO+0xaa7/0x1bb0 fs/ext4/inode.c:3909
+>         generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3110
+>         __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3293
+>         ext4_file_write_iter+0x332/0x1070 fs/ext4/file.c:266
+>         call_write_iter include/linux/fs.h:1870 [inline]
+>         new_sync_write+0x4d3/0x770 fs/read_write.c:483
+>         __vfs_write+0xe1/0x110 fs/read_write.c:496
+>         vfs_write+0x268/0x5d0 fs/read_write.c:558
+>         ksys_write+0x14f/0x290 fs/read_write.c:611
+>         __do_sys_write fs/read_write.c:623 [inline]
+>         __se_sys_write fs/read_write.c:620 [inline]
+>         __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+>         do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> -> #0 (&sb->s_type->i_mutex_key#10){+.+.}:
+>         lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+>         down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+>         inode_lock include/linux/fs.h:778 [inline]
+>         process_measurement+0x15ae/0x15e0  
+> security/integrity/ima/ima_main.c:228
+>         ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+>         security_file_mprotect+0xd5/0x100 security/security.c:1430
+>         do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+>         __do_sys_pkey_mprotect mm/mprotect.c:590 [inline]
+>         __se_sys_pkey_mprotect mm/mprotect.c:587 [inline]
+>         __x64_sys_pkey_mprotect+0x97/0xf0 mm/mprotect.c:587
+>         do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> other info that might help us debug this:
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(&mm->mmap_sem#2);
+>                                 lock(&sb->s_type->i_mutex_key#10);
+>                                 lock(&mm->mmap_sem#2);
+>    lock(&sb->s_type->i_mutex_key#10);
+> 
+>   *** DEADLOCK ***
+> 
+> 1 lock held by syz-executor395/17373:
+>   #0: 00000000e0714fc5 (&mm->mmap_sem#2){++++}, at:  
+> do_mprotect_pkey+0x1f6/0xa30 mm/mprotect.c:485
+> 
+> stack backtrace:
+> CPU: 1 PID: 17373 Comm: syz-executor395 Not tainted 5.2.0-rc2-next-20190531  
+> #4
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1566
+>   check_prev_add kernel/locking/lockdep.c:2311 [inline]
+>   check_prevs_add kernel/locking/lockdep.c:2419 [inline]
+>   validate_chain kernel/locking/lockdep.c:2801 [inline]
+>   __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3790
+>   lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4300
+>   down_write+0x38/0xa0 kernel/locking/rwsem.c:66
+>   inode_lock include/linux/fs.h:778 [inline]
+>   process_measurement+0x15ae/0x15e0 security/integrity/ima/ima_main.c:228
+>   ima_file_mmap+0x11a/0x130 security/integrity/ima/ima_main.c:370
+>   security_file_mprotect+0xd5/0x100 security/security.c:1430
+>   do_mprotect_pkey+0x537/0xa30 mm/mprotect.c:550
+>   __do_sys_pkey_mprotect mm/mprotect.c:590 [inline]
+>   __se_sys_pkey_mprotect mm/mprotect.c:587 [inline]
+>   __x64_sys_pkey_mprotect+0x97/0xf0 mm/mprotect.c:587
+>   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x440279
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffeec2f48d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000149
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440279
+> RDX: 000000000000000
+> 
 
