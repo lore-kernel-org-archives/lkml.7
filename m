@@ -2,70 +2,110 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E34C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA15EC74A51
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D454208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2F0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGEXirOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfGKJ3W convert rfc822-to-8bit (ORCPT
+        id S1728301AbfGKJb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:29:22 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:63720 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726088AbfGKJ3V (ORCPT
+        Thu, 11 Jul 2019 05:31:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41026 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfGKJb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:29:21 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 17217972-1500050 
-        for multiple; Thu, 11 Jul 2019 10:29:19 +0100
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        intel-gfx@lists.freedesktop.org
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <1561834612.3071.6.camel@HansenPartnership.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-Message-ID: <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
-Date:   Thu, 11 Jul 2019 10:29:17 +0100
+        Thu, 11 Jul 2019 05:31:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so2289640wrm.8;
+        Thu, 11 Jul 2019 02:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=l4bEEAxzGIGnFBD/3jElNFp34ehWwPy0iGMb60Ja/qM=;
+        b=LGEXirOw0aMcPgnorDYhAX95/V+nn+qMQkpvwFvcG/FKF+nsqfqBtq+YBr9sTW7cs+
+         bicPHQ2DJeSeAt6FDWRizzeeEA0VSBSdFMdFN+GDwcL1yoln61rRciCl6pqBOlYWjOGD
+         x1jm8zjeksPQFNvU0SzDa78BuYHqjMKZ8FUaj+IzVIWNN76JyIgFR/cAf4m7KpdCD2HX
+         aeFCy8aUdVcvd/S+QZURH1POYFXsDHEF+8cxBT0ZBUZJXNNCJvDh5Q06q7cMUrKeRkyX
+         0eVVCePqlrXqanKMOhDOuQf4ZQ5tRCUBsavFILtljXTueQGq3oA+0TsS2UkuXe4e7bVg
+         oTEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l4bEEAxzGIGnFBD/3jElNFp34ehWwPy0iGMb60Ja/qM=;
+        b=F3H350j8dZdyREHovHQ6zb4iU67gsi2H8IqmhouhtajueAP+dTlPQJu9ZnyYMETNEb
+         spoqk0zacQdqRGockF8NNTCWhyUQ3FrKajML0CcIdPUlt9reqU956Qa9/BOdlGmCCb+9
+         BL+GpYvxQG83ZIyaVW+Uq7029xMDIosx9uDSQ8ln5ttPBJZA6WFnu4Dmu6ciiTM0vPPY
+         zEwTc+bzIOVY4unw+IV0EZYKuMn58pB+cxuW0K4fPWsfUpux8hWcx6sqv1u6cpairX6C
+         gngge1arf++FjFjGOZ1HFQPNpzYVKWec1FrAthFFvg4bKNPJTQey6pHuhM4rOAI5brIB
+         4cOQ==
+X-Gm-Message-State: APjAAAVKSSWjpGF5WKBuBRwW/UKLUrPUiJRde9nGQ/Ia9SVLZRuPqyDX
+        eNnFWISnomEbU82isgJuiavQ+X44b6I=
+X-Google-Smtp-Source: APXvYqz0OXD69emcOGH46hrtIm+cwY/xRJ7bJg/E0Xtb/ywPVDEIQWoLL7zGB5vyW+suzm7/ZgNwZw==
+X-Received: by 2002:adf:db0b:: with SMTP id s11mr3967901wri.7.1562837515183;
+        Thu, 11 Jul 2019 02:31:55 -0700 (PDT)
+Received: from gmail.com (net-5-95-187-49.cust.vodafonedsl.it. [5.95.187.49])
+        by smtp.gmail.com with ESMTPSA id r123sm5074455wme.7.2019.07.11.02.31.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 02:31:54 -0700 (PDT)
+From:   Paolo Pisati <p.pisati@gmail.com>
+To:     --in-reply-to= <20190710231439.GD32439@tassilo.jf.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Fold checksum at the end of bpf_csum_diff and fix
+Date:   Thu, 11 Jul 2019 11:31:51 +0200
+Message-Id: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting James Bottomley (2019-06-29 19:56:52)
-> The symptoms are really weird: the screen image is locked in place. 
-> The machine is still functional and if I log in over the network I can
-> do anything I like, including killing the X server and the display will
-> never alter.  It also seems that the system is accepting keyboard input
-> because when it freezes I can cat information to a file (if the mouse
-> was over an xterm) and verify over the network the file contents. 
-> Nothing unusual appears in dmesg when the lockup happens.
-> 
-> The last kernel I booted successfully on the system was 5.0, so I'll
-> try compiling 5.1 to narrow down the changes.
+From: Paolo Pisati <paolo.pisati@canonical.com>
 
-It's likely this is panel self-refresh going haywire.
+After applying patch 0001, all checksum implementations i could test (x86-64, arm64 and
+arm), now agree on the return value.
 
-commit 8f6e87d6d561f10cfa48a687345512419839b6d8
-Author: José Roberto de Souza <jose.souza@intel.com>
-Date:   Thu Mar 7 16:00:50 2019 -0800
+Patch 0002 fix the expected return value for test #13: i did the calculation manually,
+and it correspond.
 
-    drm/i915: Enable PSR2 by default
+Unfortunately, after applying patch 0001, other test cases now fail in
+test_verifier:
 
-    The support for PSR2 was polished, IGT tests for PSR2 was added and
-    it was tested performing regular user workloads like browsing,
-    editing documents and compiling Linux, so it is time to enable it by
-    default and enjoy even more power-savings.
+$ sudo ./tools/testing/selftests/bpf/test_verifier
+...
+#417/p helper access to variable memory: size = 0 allowed on NULL (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0 
+#419/p helper access to variable memory: size = 0 allowed on != NULL stack pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0 
+#423/p helper access to variable memory: size possible = 0 allowed on != NULL packet pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0 
+...
+Summary: 1500 PASSED, 0 SKIPPED, 3 FAILED
 
-Temporary workaround would be to set i915.enable_psr=0
--Chris
+And there are probably other fallouts in other selftests - someone familiar
+should take a look before applying these patches.
+
+Paolo Pisati (2):
+  bpf: bpf_csum_diff: fold the checksum before returning the
+    value
+  bpf, selftest: fix checksum value for test #13
+
+ net/core/filter.c                                   | 2 +-
+ tools/testing/selftests/bpf/verifier/array_access.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
