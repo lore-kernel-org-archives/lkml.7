@@ -2,142 +2,131 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D471CC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB9C74A45
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A01620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dev-mellanox-co-il.20150623.gappssmtp.com header.i=@dev-mellanox-co-il.20150623.gappssmtp.com header.b="RWonoSpy"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TmF19Edy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfGKFHX (ORCPT
+        id S1727831AbfGKFPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:07:23 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34150 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfGKFHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:07:22 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so3139199lfq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:07:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dev-mellanox-co-il.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6jRCkzFLYjyJ6X5g3ewnp6mfnb6gNJiKbFQr06/RqCA=;
-        b=RWonoSpyfsKOKFzSyn7qbthOrCYR6Lq+MKk+bt2ZdZEOydQDZU5kzpX2VaTo+FFsd3
-         9i2G5BURZS7Tgql+yjq5CMwdgkGKnak0B8WISX9kle588nx0WGGtmb+9zcOoAf/Ce2Q1
-         F5kceZJRBdX4e60TF0X5oSkWG+WCHNngVeaAeWOgPxOJM9GxlIF3wa40niTD0ootIkAJ
-         xcvqWHLJv31/vKvAdUsHmnF0Ee11uGiE3Fu1isZv6+6KemXLcixXSpiAs4yFFqTwTw/L
-         1dSup7BHLFOQ2LjRJPYFOJBDIC6/gJcBruA+kMHUa5uvbkwCbdfOER1a7glaKVm5Q2AA
-         CbKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6jRCkzFLYjyJ6X5g3ewnp6mfnb6gNJiKbFQr06/RqCA=;
-        b=WkGw5ryYAtaOIUff2O32sv0sGC5Vy/oBhUbwJ4eGYfoznCOJ302VUD7sbfEIFfJe9R
-         Hp/D8vqRrmDfb3eNBVFNbc+GvP+RZUBHyg9E9qx/koyD7BXa6PL8uUEu0mw9x/lK4G+t
-         r0BZqRwsnt2zl9ytGUXIvcJEqkJZmedO+RSF/kRVg/zQxS99ps4r2Q3vMAste8/cHcX8
-         JobjmVpp7zc5e/AVLyFqOr9wi78HZs7Z4B05du82TXHxmJByhYCNgJtXxuDKnROW+EYE
-         aGo6rovDyRlXI1+kMp8IKtpI5QsOrOMw0Rn1KFc6WgvXnaj2F7XexUQmXDXlS0pHwn45
-         OmxQ==
-X-Gm-Message-State: APjAAAXglbII53NTwLJAulDdUX4W49PPguBnAUdOZmqIq3SRiwWCVdbu
-        2mRz4aQCDS9qAdmI/5C7LC09J3bQgETsF8iDeqE=
-X-Google-Smtp-Source: APXvYqwhHgjr7lt9K1nz7gMRASQm5aYb0wE65pNOE2aog8ST987iGoImvhlhEtDtyfQgePppiptkwQcZMkfLp1u1qxE=
-X-Received: by 2002:a19:914c:: with SMTP id y12mr700422lfj.108.1562821640777;
- Wed, 10 Jul 2019 22:07:20 -0700 (PDT)
+        Thu, 11 Jul 2019 01:15:11 -0400
+Received: from ozlabs.org ([203.11.71.1]:39323 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbfGKFPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 01:15:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45kklJ4BVfz9sBt;
+        Thu, 11 Jul 2019 15:15:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562822108;
+        bh=A15oo3lnPBgimcgWn2uZygbu1s4lzeQ81MYn/Qa33K4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TmF19EdyXP1K7C9nH/XuS3+7l8a+wYFgFHCLK1/OFJzTaS8X5OwRcW6PQH8VWMYPH
+         0ShbiCyAOToFRs2xMQv9TgVNBobfTkv1v2h94Z3XnhimtHva4gaWXT8kpTnM8x5GT8
+         veSzwLRQi2PXlEJWxyqQ+VlBkDuT2OgkXUF786L86tFnV3TSV4KdGA5sbLf9glAe1m
+         tAnKquVK8OiPr1ZSz/1NEouSpuFNK7m7+MgvMyet9pwN9XatvQs4VSkHYz/PO55+uh
+         h0xFwAqdUwZqChuK3L01LAWTbtrvB/6rdNYNWGkd3Yu8poKZE8wSUWWd9pmh5qoHHQ
+         EF76t3vJDBgxw==
+Date:   Thu, 11 Jul 2019 15:15:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20190711151507.7ec1fd18@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190710093852.34549-1-maowenan@huawei.com>
-In-Reply-To: <20190710093852.34549-1-maowenan@huawei.com>
-From:   Saeed Mahameed <saeedm@dev.mellanox.co.il>
-Date:   Wed, 10 Jul 2019 22:07:09 -0700
-Message-ID: <CALzJLG8V=jZdMJ_pMZWxieWxm8NEP+48FNaBSnfcNuXMy2xUGw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: mlx5: Fix compiling error in tls.c
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/fQ6oCqxHszi+mJrDNm=bKkS"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 2:33 AM Mao Wenan <maowenan@huawei.com> wrote:
->
-> There are some errors while compiling tls.c if
-> CONFIG_MLX5_FPGA_TLS is not obvious on.
->
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c: In function mlx5e_tls_set_ipv4_flow:
-> ./include/linux/mlx5/device.h:61:39: error: invalid application of sizeof to incomplete type struct mlx5_ifc_tls_flow_bits
->  #define __mlx5_st_sz_bits(typ) sizeof(struct mlx5_ifc_##typ##_bits)
->                                        ^
-> ./include/linux/compiler.h:330:9: note: in definition of macro __compiletime_assert
->    if (!(condition))     \
->          ^~~~~~~~~
-> ...
->
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c: In function mlx5e_tls_build_netdev:
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:202:13: error: MLX5_ACCEL_TLS_TX undeclared (first use in this function); did you mean __MLX5_ACCEL_TLS_H__?
->   if (caps & MLX5_ACCEL_TLS_TX) {
->              ^~~~~~~~~~~~~~~~~
->              __MLX5_ACCEL_TLS_H__
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:207:13: error: MLX5_ACCEL_TLS_RX undeclared (first use in this function); did you mean MLX5_ACCEL_TLS_TX?
->   if (caps & MLX5_ACCEL_TLS_RX) {
->              ^~~~~~~~~~~~~~~~~
->              MLX5_ACCEL_TLS_TX
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c:212:15: error: MLX5_ACCEL_TLS_LRO undeclared (first use in this function); did you mean MLX5_ACCEL_TLS_RX?
->   if (!(caps & MLX5_ACCEL_TLS_LRO)) {
->                ^~~~~~~~~~~~~~~~~~
->                MLX5_ACCEL_TLS_RX
-> make[5]: *** [drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.o] Error 1
-> make[5]: *** Waiting for unfinished jobs....
-> make[4]: *** [drivers/net/ethernet/mellanox/mlx5/core] Error 2
-> make[3]: *** [drivers/net/ethernet/mellanox] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [drivers/net/ethernet] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [drivers/net] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [drivers] Error 2
-> make: *** Waiting for unfinished jobs....
->
-> this patch is to fix this error using 'depends on MLX5_FPGA_TLS' when MLX5_TLS is set.
->
+--Sig_/fQ6oCqxHszi+mJrDNm=bKkS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mao, Thanks for the patch. sorry for the delayed response, I was
-out of office.
+Hi all,
 
-Actually MLX5_TLS doesn't depend on MLX5_FPGA_TLS anymore.
-Tariq prepared a patch to fix this, we will submit it this week.
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
+fs/f2fs/data.c: In function 'f2fs_merge_page_bio':
+fs/f2fs/data.c:516:3: error: implicit declaration of function 'wbc_account_=
+io'; did you mean 'blk_account_rq'? [-Werror=3Dimplicit-function-declaratio=
+n]
+   wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+   ^~~~~~~~~~~~~~
+   blk_account_rq
 
-> Fixes: e2869fb2068b ("net/mlx5: Kconfig, Better organize compilation flags")
->
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-> index 37fef8c..1da2770 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
-> @@ -139,6 +139,7 @@ config MLX5_TLS
->         depends on MLX5_CORE_EN
->         depends on TLS_DEVICE
->         depends on TLS=y || MLX5_CORE=m
-> +       depends on MLX5_FPGA_TLS
->         select MLX5_ACCEL
->         default n
->         help
-> --
-> 2.7.4
->
+Caused by commit
+
+  34e51a5e1a6e ("blkcg, writeback: Rename wbc_account_io() to wbc_account_c=
+group_owner()")
+
+interacting with commit
+
+  8648de2c581e ("f2fs: add bio cache for IPU")
+
+from the f2fs tree.
+
+I added the following merge fix patch or today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 11 Jul 2019 15:13:21 +1000
+Subject: [PATCH] f2fs: fix for wbc_account_io rename
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/f2fs/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 323306630f93..4eb2f3920140 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -513,7 +513,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+ 	}
+=20
+ 	if (fio->io_wbc)
+-		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
++		wbc_account_cgroup_owner(fio->io_wbc, page, PAGE_SIZE);
+=20
+ 	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
+=20
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fQ6oCqxHszi+mJrDNm=bKkS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0mxdsACgkQAVBC80lX
+0Gyumgf/UyFml7MpbpYLD24HTtwSzldMXQGaillCox1LdkDuLoyaoFD46ik8w8Ob
+Jsf9tsY7i6Qa/UxLdyeQ9d5VmHXvvCMHr3m9EoT7pD6D3GHGnzZrl1dtJ1pk6gr5
+MfuWjM4nfBL6dRkfk9ncExi6bE7SpnReh5Om2+RfyVuHhKwfcqSLoiR2BoZZbSkI
+/6IsAbypmqJMz2R80C7jcHC4a6UhW7d+Ec6zFGTC6l2OKxOEmcOZI+QDtOcHG1pJ
+wh81kfAYZvJtC2TeIEVWrZZIERFDxiQZg/cty+BfZ4XNQKeMVohVVNHi1pZSy01Q
+U3zzmRxikc0gFLdKUHUmRnONb9P5jw==
+=yale
+-----END PGP SIGNATURE-----
+
+--Sig_/fQ6oCqxHszi+mJrDNm=bKkS--
