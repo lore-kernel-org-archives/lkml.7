@@ -2,117 +2,113 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F35BC74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA73EC74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EE52166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF14216B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UpGsaKxV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vYqpYvpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfGKO1i (ORCPT
+        id S1728798AbfGKO1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:27:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41874 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728738AbfGKO1g (ORCPT
+        Thu, 11 Jul 2019 10:27:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55754 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728505AbfGKO1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:27:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEOE8u013326;
-        Thu, 11 Jul 2019 14:26:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=x/IjzSr0NJXbBWkc/GbWFGd8aRvvo+k/bAxRCg2smaA=;
- b=UpGsaKxVuo2eIaT3MIyMj6uwvZYdjod6xr9sIWH6GLVIiGJo5xv5khjwyLVyDDuy1GvG
- yfeeGSjBWTuaMV/ezPA0NULlZQYuPGQftx9frpdHWZCWGt6EzWWMYPjn5VPHT47SjUpI
- A1Zvxp/4R+waiK8CFltSblp1Oe52CtoJA0LD+OBZSfdqHFgWhRLUnvbf0i9N2AFU9yvt
- 42HuhPrb/rYgNn3SpXtQLfgcHyAjGcS15pNxoiZQoNGdL0uAmA7B00OD3j6dk0aaUwQn
- KjZFUxYUuNzdESj/m6+MVakQNxN1UqdtuIgCsY0XLrDA5xHgNra+3zY3ilOMR4T3aYcQ vg== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2tjm9r0bpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 14:26:21 +0000
-Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcu2021444;
-        Thu, 11 Jul 2019 14:26:12 GMT
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, alexandre.chartre@oracle.com
-Subject: [RFC v2 09/26] mm/asi: Helper functions to map module into ASI
-Date:   Thu, 11 Jul 2019 16:25:21 +0200
-Message-Id: <1562855138-19507-10-git-send-email-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=896 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907110162
+        Thu, 11 Jul 2019 10:27:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kgSCqCMgkzHP3NI7bApdCQ2mgMy1VndTbhMfuP51VMY=; b=vYqpYvpe4pu04ng6B0A06A2Ebt
+        IEotIWqUDGlLiIeJXs3STCRzutaBfRE8kMERKV9c7ZRD5PB+jVgbutrHwHhFQdoFSNubb17mq05ay
+        pILpcnf6sG5BKWFktgHStubOK9UqnnoPCyptfIMcsrCDcCoV/zaZdI6rh/UVSFFCapTpb0LStSgYV
+        XEAUQnYOyieF5R42wT7u2kL17EUSlkCjtyvlmXvQQsct3CXPyDLrc3Cixv/gAoOluBL6Y/OSSpg9A
+        iqvrC7IKzdy209HkI4yhcxi7UtnvQ5PpTa86x0CyyEahVMeohTVHZCpUSg97S19SCOjj4iR+cjY8o
+        1+fQ8g6g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hla2n-0003zh-2O; Thu, 11 Jul 2019 14:27:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D714220213042; Thu, 11 Jul 2019 16:27:28 +0200 (CEST)
+Date:   Thu, 11 Jul 2019 16:27:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        Mel Gorman <mgorman@suse.de>, riel@surriel.com
+Subject: Re: [PATCH 4/4] numa: introduce numa cling feature
+Message-ID: <20190711142728.GF3402@hirez.programming.kicks-ass.net>
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <9a440936-1e5d-d3bb-c795-ef6f9839a021@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9a440936-1e5d-d3bb-c795-ef6f9839a021@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helper functions to easily map a module into an ASI.
+On Wed, Jul 03, 2019 at 11:34:16AM +0800, 王贇 wrote:
+> Although we paid so many effort to settle down task on a particular
+> node, there are still chances for a task to leave it's preferred
+> node, that is by wakeup, numa swap migrations or load balance.
+> 
+> When we are using cpu cgroup in share way, since all the workloads
+> see all the cpus, it could be really bad especially when there
+> are too many fast wakeup, although now we can numa group the tasks,
+> they won't really stay on the same node, for example we have numa
+> group ng_A, ng_B, ng_C, ng_D, it's very likely result as:
+> 
+> 	CPU Usage:
+> 		Node 0		Node 1
+> 		ng_A(600%)	ng_A(400%)
+> 		ng_B(400%)	ng_B(600%)
+> 		ng_C(400%)	ng_C(600%)
+> 		ng_D(600%)	ng_D(400%)
+> 
+> 	Memory Ratio:
+> 		Node 0		Node 1
+> 		ng_A(60%)	ng_A(40%)
+> 		ng_B(40%)	ng_B(60%)
+> 		ng_C(40%)	ng_C(60%)
+> 		ng_D(60%)	ng_D(40%)
+> 
+> Locality won't be too bad but far from the best situation, we want
+> a numa group to settle down thoroughly on a particular node, with
+> every thing balanced.
+> 
+> Thus we introduce the numa cling, which try to prevent tasks leaving
+> the preferred node on wakeup fast path.
 
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
----
- arch/x86/include/asm/asi.h |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-index 19656aa..b5dbc49 100644
---- a/arch/x86/include/asm/asi.h
-+++ b/arch/x86/include/asm/asi.h
-@@ -6,6 +6,7 @@
- 
- #ifndef __ASSEMBLY__
- 
-+#include <linux/module.h>
- #include <linux/spinlock.h>
- #include <asm/pgtable.h>
- #include <linux/xarray.h>
-@@ -81,6 +82,26 @@ extern int asi_map_range(struct asi *asi, void *ptr, size_t size,
- extern int asi_map(struct asi *asi, void *ptr, unsigned long size);
- 
- /*
-+ * Copy the memory mapping for the current module. This is defined as a
-+ * macro to ensure it is expanded in the module making the call so that
-+ * THIS_MODULE has the correct value.
-+ */
-+#define ASI_MAP_THIS_MODULE(asi)			\
-+	(asi_map(asi, THIS_MODULE->core_layout.base,	\
-+		 THIS_MODULE->core_layout.size))
-+
-+static inline int asi_map_module(struct asi *asi, char *module_name)
-+{
-+	struct module *module;
-+
-+	module = find_module(module_name);
-+	if (!module)
-+		return -ESRCH;
-+
-+	return asi_map(asi, module->core_layout.base, module->core_layout.size);
-+}
-+
-+/*
-  * Function to exit the current isolation. This is used to abort isolation
-  * when a task using isolation is scheduled out.
-  */
--- 
-1.7.1
+> @@ -6195,6 +6447,13 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+>  	if ((unsigned)i < nr_cpumask_bits)
+>  		return i;
+> 
+> +	/*
+> +	 * Failed to find an idle cpu, wake affine may want to pull but
+> +	 * try stay on prev-cpu when the task cling to it.
+> +	 */
+> +	if (task_numa_cling(p, cpu_to_node(prev), cpu_to_node(target)))
+> +		return prev;
+> +
+>  	return target;
+>  }
 
+Select idle sibling should never cross node boundaries and is thus the
+entirely wrong place to fix anything.
