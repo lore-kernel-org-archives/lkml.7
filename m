@@ -2,138 +2,121 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CD5C74A54
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE8EC74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBC720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D0320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 13:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cJX3dZ3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfGKN5w (ORCPT
+        id S1728744AbfGKN5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 09:57:52 -0400
-Received: from relay.sw.ru ([185.231.240.75]:55748 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbfGKN5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:57:51 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hlZZp-0001WC-QI; Thu, 11 Jul 2019 16:57:37 +0300
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Nixiaoming <nixiaoming@huawei.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc:     "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
+        Thu, 11 Jul 2019 09:57:55 -0400
+Received: from mail-eopbgr00087.outbound.protection.outlook.com ([40.107.0.87]:33639
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728335AbfGKN5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 09:57:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hjlhGb9nVfQhgbt1OK35TFvNLahZ/y2RAYYPmZc1WoDHI7VgUtGurS6E/2LhQnCFdTDr+07mhyzU0SKHiyztb7BkjZ2o58+2Dwu4gYjmVxhxOdcwvqiYUtF4UyZgnMvYlD+gGAcBQBUpOIUE6QPq8n5tWT3jLsZ3ZruBKF5Qymzf8LDQw5tuF3Q2s4ihhsZKgxf7Hda+9GdL2Xq7a0shS+nGIyKUDWt1oKaMGp7FYeyvW2IFM2Lx0X+2ull7xcMTgRkTS0O6HuWeAuFzAdWWNLOseSi2xhos2scOA44JuT4awQZxrlq0u1CRa28gHNmG0I5z1S3k2/218lk2Y7PGiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0+nr2/NRCxD+ND0zAvSh8w/LDGa38Uaw8O4zNhz3BXk=;
+ b=ef88NSqisBhbtOv4dYDof/aRHPefKz7piNj6b4RfYn6O3WASc0fzxSzkyPOil23JSTOZSDbydQBKHapschKgpplXE+E1/hxIgd1UwblwKnRu2T6Wo6awYM3WVYsmepMdrSf9Pqqz0MAxM49PsDpGK78FfIK9U8GkvhqF/eUoH5SPCZ2OGmKazwzeaMVyScwQeyS+180Ol1nuNuOXtob8ekIJB9vfru6QwQT1G9WGSZabTHHClTFrCI8fRueLQ349e11xCEufQI/FmtXPLmOZSGFnUaWayJb7YVPi/xa5VfbZ6rnNyrpqP7R+YYPq+bZ2lAsE3bHe0SatZuLhNJVh9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0+nr2/NRCxD+ND0zAvSh8w/LDGa38Uaw8O4zNhz3BXk=;
+ b=cJX3dZ3I6nvUCTbNQCfeIO0AMafMMbttlO4dwjPSj1ZkeRtHfYu8N/sYt/YdS7VHvqwKWsxyEI3A2Ux1fnG5eTOG6XB2VuaO9eQuZCkJOiyFhCUMJ0lCmXwxwaAOmORegLWoFfeG1d0lARy188bD9dUZ7F6U4Q2ahAbPDs7v2+I=
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.17.31) by
+ VI1PR0402MB2703.eurprd04.prod.outlook.com (10.172.255.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.10; Thu, 11 Jul 2019 13:57:50 +0000
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::a4cb:fecc:3079:494]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::a4cb:fecc:3079:494%4]) with mapi id 15.20.2052.022; Thu, 11 Jul 2019
+ 13:57:50 +0000
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
-Date:   Thu, 11 Jul 2019 16:57:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
+        "vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
+        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        "ezequiel@collabora.com" <ezequiel@collabora.com>
+Subject: Re: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel format
+Thread-Topic: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel format
+Thread-Index: AQHVN/CgZoYCDAU+vEW4YJIYV1JwUw==
+Date:   Thu, 11 Jul 2019 13:57:49 +0000
+Message-ID: <1562853469.9511.6.camel@nxp.com>
+References: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
+         <20190711081808.GA15389@aptenodytes>
+In-Reply-To: <20190711081808.GA15389@aptenodytes>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mirela.rabulea@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf5d72e1-b9d2-4c28-6cf4-08d70607c2f0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2703;
+x-ms-traffictypediagnostic: VI1PR0402MB2703:
+x-microsoft-antispam-prvs: <VI1PR0402MB2703172C065CA01D04DA2E188FF30@VI1PR0402MB2703.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0095BCF226
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(189003)(199004)(50226002)(76176011)(478600001)(11346002)(4326008)(5660300002)(256004)(99286004)(66066001)(2906002)(2351001)(7416002)(4744005)(6436002)(76116006)(6506007)(229853002)(186003)(2501003)(26005)(54906003)(7736002)(316002)(6486002)(19627235002)(305945005)(102836004)(25786009)(14454004)(71190400001)(6246003)(53936002)(486006)(103116003)(81166006)(68736007)(2616005)(86362001)(3846002)(6116002)(446003)(8936002)(8676002)(476003)(6916009)(44832011)(36756003)(66476007)(5640700003)(81156014)(66446008)(66556008)(64756008)(6512007)(91956017)(71200400001)(66946007)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2703;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9VxV6K03EXOA2XCVZVQ5XkcugNBMw0v1pNxZAvail5KwaUvz6np1tO39UmnHdBvsoBxfB03mUCHSxuEimew/mSljieFgoW60PAv2Q+QAfAVH8tKkkqBtn9xkCbxItPvKZke6qvx0VjJ+1xaPXr7KNJy/MfJwqeoO7f9gG8Q1IqU5tNVtxEPJVZKSSCezPAwkf4ZHc4Lg5R7zA7uXmyxl1BTrKyPKnPqs+skE5CPivjafy0xkZvIbdXUJXspgXHwLjFxLPtS11Y436gJq5pNTtMzF3SmkVweNMaUZXOvucB9jB2+5NgYmKvifvXXOI4j+pAkfrtrCLSK6D86qirRi/BgXkiRna/Sz0NB6ot/+Dc6TwNqLotsXHP/N2YKCm0SrkaDpkqhQCUe1OnzMV4/FHt1tBShheEPltNgfSmHmtsI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D8B2EC59A33BC44BBFB3E3A38C1ABD84@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf5d72e1-b9d2-4c28-6cf4-08d70607c2f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 13:57:49.9249
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mirela.rabulea@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2703
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/11/19 4:55 AM, Nixiaoming wrote:
-> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>> Registering the same notifier to a hook repeatedly can cause the hook
->>> list to form a ring or lose other members of the list.
->>
->> I think is not enough to _prevent_ 2nd register attempt,
->> it's enough to detect just attempt and generate warning to mark host in bad state.
->>
-> 
-> Duplicate registration is prevented in my patch, not just "mark host in bad state"
-> 
-> Duplicate registration is checked and exited in notifier_chain_cond_register()
-> 
-> Duplicate registration was checked in notifier_chain_register() but only 
-> the alarm was triggered without exiting. added by commit 831246570d34692e 
-> ("kernel/notifier.c: double register detection")
-> 
-> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->  which triggers an alarm and exits when a duplicate registration is detected.
-> 
->> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->> and it can lead to host crash in any time: 
->> you can unregister notifier on first attempt it can be too early, it can be still in use.
->> on the other hand you can never call 2nd unregister at all.
-> 
-> Since the member was not added to the linked list at the time of the second registration, 
-> no linked list ring was formed. 
-> The member is released on the first unregistration and -ENOENT on the second unregistration.
-> After patching, the fault has been alleviated
-
-You are wrong here.
-2nd notifier's registration is a pure bug, this should never happen.
-If you know the way to reproduce this situation -- you need to fix it. 
-
-2nd registration can happen in 2 cases:
-1) missed rollback, when someone forget to call unregister after successfull registration, 
-and then tried to call register again. It can lead to crash for example when according module will be unloaded.
-2) some subsystem is registered twice, for example from  different namespaces.
-in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
-in second namespace, it also can lead to unexpacted behaviour.
-
-> It may be more helpful to return an error code when someone tries to register the same
-> notification program a second time.
-
-You are wrong again here, it is senseless.
-If you have detected 2nd register -- your node is already in bad state.
-
-> But I noticed that notifier_chain_cond_register() returns 0 when duplicate registration 
-> is detected. At the same time, in all the existing export function comments of notify,
-> "Currently always returns zero"
-> 
-> I am a bit confused: which is better?
-> 
->>
->> Unfortunately I do not see any ways to handle such cases properly,
->> and it seems for me your patches does not resolve this problem.
->>
->> Am I missed something probably?
->>
->>> case1: An infinite loop in notifier_chain_register() can cause soft lockup
->>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
->>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
->>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
-> 
-> Thanks
-> 
-> Xiaoming Ni
-> 
+T24gSm8sIDIwMTktMDctMTEgYXQgMTA6MTggKzAyMDAsIFBhdWwgS29jaWFsa293c2tpIHdyb3Rl
+Og0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IEhpLA0KPiANCj4gT24gV2VkIDAzIEp1bCAx
+OSwgMTg6MTUsIE1pcmVsYSBSYWJ1bGVhIHdyb3RlOg0KPiA+IA0KPiA+IFRoZSBhZGRlZCBmb3Jt
+YXQgaXMgVjRMMl9QSVhfRk1UX1lVVjI0LCB0aGlzIGlzIGEgcGFja2VkDQo+ID4gWVVWIDQ6NDo0
+IGZvcm1hdCwgd2l0aCA4IGJpdHMgZm9yIGVhY2ggY29tcG9uZW50LCAyNCBiaXRzDQo+ID4gcGVy
+IHNhbXBsZS4NCj4gPiANCj4gPiBUaGlzIGZvcm1hdCBpcyB1c2VkIGJ5IHRoZSBpLk1YIDhRdWFk
+TWF4IGFuZCBpLk1YDQo+ID4gOER1YWxYUGx1cy84UXVhZFhQbHVzDQo+ID4gSlBFRyBlbmNvZGVy
+L2RlY29kZXIuDQo+IFNvIHRoaXMgZm9ybWF0IGlzIG5vdCBhbGlnbmVkIHRvIDMyLWJpdCB3b3Jk
+cyBhdCBhbGwgYW5kIHdlIGNhbg0KPiBleHBlY3QNCj4gdG8gc2VlIGNhc2VzIHdoZXJlIGEgc2lu
+Z2xlIDMyLWJpdCB3b3JkIGNvbnRhaW5zIGRhdGEgZm9yIHR3byBwaXhlbHM/DQo+IA0KPiBOb3Ro
+aW5nIHdyb25nIHdpdGggdGhhdCwganVzdCBjaGVja2luZyB3aGV0aGVyIEkgdW5kZXJzdG9vZCB0
+aGlzDQo+IHJpZ2h0IDopDQo+IA0KDQpIaSBQYXVsLA0KeWVzLCB5b3VyIHVuZGVyc3RhbmRpbmcg
+aXMgY29ycmVjdC4NCg0KUmVnYXJkcywNCk1pcmVsYQ==
