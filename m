@@ -2,125 +2,140 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D2FC742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B657C742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A630E21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6947A21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 20:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rFWTCChF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FKtfQs2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfGKUnq (ORCPT
+        id S1728561AbfGKUpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 16:43:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41774 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfGKUnq (ORCPT
+        Thu, 11 Jul 2019 16:45:01 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46176 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728394AbfGKUpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:43:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BKcTBi021280;
-        Thu, 11 Jul 2019 20:42:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=tSjzKrUHQ1knMz+gwb7wzYG6sENMAxSGm0UkDSdi7as=;
- b=rFWTCChF0oyIYzpmE5gque0fCM7T3jAST9DCJqUh+t3gKYfiFuveoO4uVhdNJh06LnTd
- DKd8tWqs4dflR8Ey8detui0SFtEDZzR/WM6dPbb6hO37tOHhCEi0732WX+HW0Fo60voZ
- Ezy1Hkp+Iuf5ZFtxRFZk4luBgxE+6viMmigJOwH+6Vmw1NBmmoyGKJ4K0b42CDgdVQTJ
- ymmQku8IXTD35TjXu/FxCCu5vs6kFW+NiIDzvIbzZhB9P8PxXHol/uCuvV5pYgYQy9f9
- aC1eSLXjTydoTYPA7XSnTPJ7LSiXNZzdy+b7f+W3XYYN8zAbC44UBjKC88OYPqYeF1AK bA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq28mt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 20:42:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BKbdeo158183;
-        Thu, 11 Jul 2019 20:42:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tnc8tpsaq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 20:42:14 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6BKg4ou031753;
-        Thu, 11 Jul 2019 20:42:10 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jul 2019 13:42:04 -0700
-Subject: Re: [RFC v2 02/26] mm/asi: Abort isolation on interrupt, exception
- and context switch
-To:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andi Kleen <andi@firstfloor.org>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        jwadams@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <1562855138-19507-3-git-send-email-alexandre.chartre@oracle.com>
- <874l3sz5z4.fsf@firstfloor.org> <20190711201706.GB20140@rapoport-lnx>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <09fee00d-37a6-0895-7964-0e8a2d5b17d6@oracle.com>
-Date:   Thu, 11 Jul 2019 22:41:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 11 Jul 2019 16:45:00 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so3608665plz.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 13:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PiSze+b8RyOCrdrl4z9soZ+cov9nAQWtcb1gx4qZEko=;
+        b=FKtfQs2vO8puHfi8u5Itf2xIOrp80ctPquUf87JLqr/dE/UjPpoKuPH3lPJMtzczUv
+         qmsjAe/JpyaR86mjQ3YQ6oLOQzCVzw9LlXoWOuuN3PkzIRWDV2tgKRefTsRzAfV8Rb2/
+         p+p1+DcWIo7mGUqiAZNYCbJwDivBgkEvwYPJw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PiSze+b8RyOCrdrl4z9soZ+cov9nAQWtcb1gx4qZEko=;
+        b=F6u90SqGE5j+vyAvC8C2azII81nCfuSA7obBDMNmdBkT6q0ECAHTHvsN7UWqpPa0MF
+         +b7MRTM6CmVAlwr+W7qWmxZ0WkxOQCTs4CQUWwBwtlppJzJFjPBmmIwNqG08pU16fZv3
+         QPNM/s0MgptdnJszPCgCmOhh5jy9RayKcC+cw0WTONYKNZKCMvdS0oNHLac6zwyR8dNN
+         EBcZ+dAYtkHNNQo78HU3/3uxaQQeRoC4YmeL/2uPU+H1I2ghz02mjqvC1gvpOCsmEuQK
+         qADd6ZWQm1JI+LZ2iWfiAC8qxJH+cOrr/ftnbNc9C2dBLuDDsap0FJBjlnB+iwpbyaPO
+         eOeg==
+X-Gm-Message-State: APjAAAUsNQt/nfibbjG8dmfX9XSfrQD1fp9CEaEYrW+rVDFQL/ldqAdj
+        4vu1tGN6ZgxCb4ijVYVrG3tQQA==
+X-Google-Smtp-Source: APXvYqx5OMVKLfuzSjyyKQdK5nWwU4ixzYuYMZrGSFfkXAOPPnXjXzBfWibAgOkF0K9yIsJfpGBE9Q==
+X-Received: by 2002:a17:902:9898:: with SMTP id s24mr6688486plp.226.1562877899981;
+        Thu, 11 Jul 2019 13:44:59 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id f17sm5320110pgv.16.2019.07.11.13.44.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 13:44:59 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-rockchip@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        mka@chromium.org, Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v6 0/3] drm/panel: simple: Add mode support to devicetree
+Date:   Thu, 11 Jul 2019 13:34:52 -0700
+Message-Id: <20190711203455.125667-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-In-Reply-To: <20190711201706.GB20140@rapoport-lnx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907110228
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907110228
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I'm reviving Sean Paul's old patchset to get mode support in device
+tree.  The cover letter for his v3 is at:
+https://lists.freedesktop.org/archives/dri-devel/2018-February/165162.html
 
+v6 of this patch is just a repost of the 3 DRM patches in v5 rebased
+atop drm-misc.  A few notes:
+- I've dropped the bindings patch.  Commit 821a1f7171ae ("dt-bindings:
+  display: Convert common panel bindings to DT schema") has landed and
+  Rob H said [1] that when that landed the bindings were implicitly
+  supported.
+- Since the bindings patch was dropped I am assuming that Heiko
+  can just pick up the .dts patches from the v5 series.  I
+  double-checked with him and he confirmed this is fine.  Thus I
+  have left the device tree patches out of this version.
 
-On 7/11/19 10:17 PM, Mike Rapoport wrote:
-> On Thu, Jul 11, 2019 at 01:11:43PM -0700, Andi Kleen wrote:
->> Alexandre Chartre <alexandre.chartre@oracle.com> writes:
->>>   	jmp	paranoid_exit
->>> @@ -1182,6 +1196,16 @@ ENTRY(paranoid_entry)
->>>   	xorl	%ebx, %ebx
->>>   
->>>   1:
->>> +#ifdef CONFIG_ADDRESS_SPACE_ISOLATION
->>> +	/*
->>> +	 * If address space isolation is active then abort it and return
->>> +	 * the original kernel CR3 in %r14.
->>> +	 */
->>> +	ASI_START_ABORT_ELSE_JUMP 2f
->>> +	movq	%rdi, %r14
->>> +	ret
->>> +2:
->>> +#endif
->>
->> Unless I missed it you don't map the exception stacks into ASI, so it
->> has likely already triple faulted at this point.
-> 
-> The exception stacks are in the CPU entry area, aren't they?
->   
+There were some coding style discussions on v5 of the path but it's
+been agreed that we can land this series as-is and after it lands we
+can address the minor style issues.
 
-That's my understanding, stacks come from tss in the CPU entry area and
-the CPU entry area is part for the core ASI mappings (see patch 15/26).
+[1] https://lkml.kernel.org/r/CAL_JsqJGtUTpJL+SDEKi09aDT4yDzY4x9KwYmz08NaZcn=nHfA@mail.gmail.com
 
-alex.
+Changes in v6:
+- Rebased to drm-misc next
+- Added tags
+
+Changes in v5:
+- Added Heiko's Tested-by
+
+Changes in v4:
+- Don't add mode from timing if override was specified (Thierry)
+- Add warning if timing and fixed mode was specified (Thierry)
+- Don't add fixed mode if timing was specified (Thierry)
+- Refactor/rename a bit to avoid extra indentation from "if" tests
+- i should be unsigned (Thierry)
+- Add annoying WARN_ONs for some cases (Thierry)
+- Simplify 'No display_timing found' handling (Thierry)
+- Rename to panel_simple_parse_override_mode() (Thierry)
+- display_timing for Innolux n116bge new for v4.
+- display_timing for AUO b101ean01 new for v4.
+
+Changes in v3:
+- No longer parse display-timings subnode, use panel-timing (Rob)
+
+Changes in v2:
+- Parse the full display-timings node (using the native-mode) (Rob)
+
+Douglas Anderson (2):
+  drm/panel: simple: Use display_timing for Innolux n116bge
+  drm/panel: simple: Use display_timing for AUO b101ean01
+
+Sean Paul (1):
+  drm/panel: simple: Add ability to override typical timing
+
+ drivers/gpu/drm/panel/panel-simple.c | 171 ++++++++++++++++++++++-----
+ 1 file changed, 139 insertions(+), 32 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
