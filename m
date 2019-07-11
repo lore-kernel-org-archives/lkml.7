@@ -3,58 +3,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77112C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD846C742A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F93920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67E420644
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 21:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfGKVnm (ORCPT
+        id S1728597AbfGKVxE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 17:43:42 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:47338 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfGKVnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 17:43:42 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8F41314DB02C0;
-        Thu, 11 Jul 2019 14:43:41 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 14:43:41 -0700 (PDT)
-Message-Id: <20190711.144341.734081163012422910.davem@davemloft.net>
-To:     xingwu.yang@gmail.com
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH] ipv6: Use ipv6_authlen for len
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190710131410.75825-1-xingwu.yang@gmail.com>
-References: <20190710131410.75825-1-xingwu.yang@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 11 Jul 2019 14:43:41 -0700 (PDT)
+        Thu, 11 Jul 2019 17:53:04 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:36472 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbfGKVxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 17:53:03 -0400
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hlgzr-0006th-0q; Thu, 11 Jul 2019 23:52:59 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 6/7] ARM: dts: rockchip: Specify rk3288-veyron-chromebook's display timings
+Date:   Thu, 11 Jul 2019 23:52:58 +0200
+Message-ID: <3703486.dL69t9P4Cl@diego>
+In-Reply-To: <4744731.Gbjux09qzx@diego>
+References: <20190401171724.215780-1-dianders@chromium.org> <20190401171724.215780-7-dianders@chromium.org> <4744731.Gbjux09qzx@diego>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangxingwu <xingwu.yang@gmail.com>
-Date: Wed, 10 Jul 2019 21:14:10 +0800
-
-> The length of AH header is computed manually as (hp->hdrlen+2)<<2.
-> However, in include/linux/ipv6.h, a macro named ipv6_authlen is
-> already defined for exactly the same job. This commit replaces
-> the manual computation code with the macro.
+Am Donnerstag, 11. Juli 2019, 23:27:44 CEST schrieb Heiko Stübner:
+> Am Montag, 1. April 2019, 19:17:23 CEST schrieb Douglas Anderson:
+> > Let's document the display timings that most veyron chromebooks (like
+> > jaq, jerry, mighty, speedy) have been using out in the field.  This
+> > uses the standard blankings but a slightly slower clock rate, thus
+> > getting a refresh rate 58.3 Hz.
+> > 
+> > NOTE: this won't really do anything except cause DRM to properly
+> > report the refresh rate since vop_crtc_mode_fixup() was rounding the
+> > pixel clock to 74.25 MHz anyway.  Apparently the adjusted rate isn't
+> > exposed to userspace so it's important that the rate we're trying to
+> > achieve is mostly right.
+> > 
+> > For the downstream kernel change related to this see See
+> > https://crrev.com/c/324558.
+> > 
+> > NOTE: minnie uses a different panel will be fixed up in a future
+> > patch, so for now we'll just delete the panel timings there.
+> > 
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > 
-> Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
+> applied for 5.3
 
-Applied.
+5.4 obviously
+[just to not confuse people reading that later]
+
+
