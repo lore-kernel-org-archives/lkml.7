@@ -2,99 +2,153 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0BCC74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28673C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B0821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIh85Idm"
+	by mail.kernel.org (Postfix) with ESMTP id 0105F21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfGKJz7 (ORCPT
+        id S1728384AbfGKJ5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:55:59 -0400
-Received: from mail-pg1-f171.google.com ([209.85.215.171]:35645 "EHLO
-        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbfGKJz7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:55:59 -0400
-Received: by mail-pg1-f171.google.com with SMTP id s27so2697446pgl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 02:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=q4aTVXnmJvx0+ZI6UEfBVpgkZHcZDIxsB4G/ZiMf9pM=;
-        b=SIh85Idmmnmu84Er31UhNLbVafgqi0UkV82OpvVm7rtrxdNqU0AhgtRNEDYXqq1Rnd
-         ugoF2aZF4eWlgQOGXYnlVOibsauiHFEV10Ne5Io7r7KiKdqT4/Zbq/e97dKABlp2y/JK
-         rim13rddkbLQIxqq6Ue2WPkqomeZg+m1Umlth521X+2g4GgLgREy/079n7cdVwiRR8kE
-         CP+XnaBtURhybFsdjMQjhtImN2cnppq3JBkuHelKJSc0HRvYBnYEg6DBuEMzbtug3iS0
-         SCZ8IVEyQcU3kuZdSkRE9cPSfELrqMZY3JoiNNYaRHuJ0Sil5qisb5/bBUcP7Bwi6jBD
-         FNWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=q4aTVXnmJvx0+ZI6UEfBVpgkZHcZDIxsB4G/ZiMf9pM=;
-        b=GdrMxCERQK8dg/9pC5EaE8EA5fwTMXnZQQGkpOVw9T8yxu8DYViTV53EgkemWGMHTV
-         x1dHu6yO1kc9Q9dPSm9iJohun7l5PZiX2P0CNx/mxRAEe7hx+7HB/irJCgYsOBl6H6QR
-         1MAivXmZ8/K4edHrvsf9usnOWA3HIqOgQiJENPjb19dwIe/xHbgpVJihp6aET0X5MFqw
-         3BpEAQrI/mefs4rDGcrFFPDmeqt53LG5o3N+deCIoM62ChYA4sU9DbvJWzLH+wwkKsqQ
-         TmHVJgy8X8cx+kZ9HJcyo48MDGrrqBIZwofl16VrPA8XFg2sgzNDkQnLpCjYydsHGmJ6
-         bYEg==
-X-Gm-Message-State: APjAAAVLrT89uSIpuMeQImf4x6K3bOKnUN84KBm2638NZA4k63xHSZE6
-        eUGosbqTPs5iV9nxltGaMZ4Ud3/j
-X-Google-Smtp-Source: APXvYqwvy8CZPo/ZKAxkPcg+J1VB346XgSM3stuTnmFgdJfcOxtjIO4tApyo1mgLo+tzQKgwBPC0UA==
-X-Received: by 2002:a63:181:: with SMTP id 123mr3550274pgb.63.1562838958158;
-        Thu, 11 Jul 2019 02:55:58 -0700 (PDT)
-Received: from localhost (193-116-118-149.tpgi.com.au. [193.116.118.149])
-        by smtp.gmail.com with ESMTPSA id f3sm6828140pfg.165.2019.07.11.02.55.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 02:55:57 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 19:52:59 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [v5 5/6] powerpc/mce: Handle UE event for memcpy_mcsafe
-To:     linux-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Santosh Sivaraj <santosh@fossix.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20190709121524.18762-1-santosh@fossix.org>
-        <20190709121524.18762-6-santosh@fossix.org>
-In-Reply-To: <20190709121524.18762-6-santosh@fossix.org>
+        Thu, 11 Jul 2019 05:57:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:44082 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728295AbfGKJ5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:57:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7565337;
+        Thu, 11 Jul 2019 02:57:47 -0700 (PDT)
+Received: from [10.162.42.96] (p8cg001049571a15.blr.arm.com [10.162.42.96])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64DD13F71F;
+        Thu, 11 Jul 2019 02:57:36 -0700 (PDT)
+Subject: Re: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback
+ definition
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org
+References: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <542893ae-ed64-55b2-11ee-1f19710a25e4@arm.com>
+Date:   Thu, 11 Jul 2019 15:28:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1562838616.xzrha67fy6.astroid@bobo.none>
+In-Reply-To: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Santosh Sivaraj's on July 9, 2019 10:15 pm:
-> If we take a UE on one of the instructions with a fixup entry, set nip
-> to continue execution at the fixup entry. Stop processing the event
-> further or print it.
 
-So... what happens if we take a machine check while we happen to be
-executing some other kernel operation with a fixup entry?
 
-Or the other way around, what happens if memcpy_mcsafe takes a page
-fault for some reason (e.g., kernel bug it tries to access unmapped
-memory).
+On 07/05/2019 11:00 AM, Anshuman Khandual wrote:
+> Architectures like parisc enable CONFIG_KROBES without having a definition
+> for kprobe_fault_handler() which results in a build failure. Arch needs to
+> provide kprobe_fault_handler() as it is platform specific and cannot have
+> a generic working alternative. But in the event when platform lacks such a
+> definition there needs to be a fallback.
+> 
+> This adds a stub kprobe_fault_handler() definition which not only prevents
+> a build failure but also makes sure that kprobe_page_fault() if called will
+> always return negative in absence of a sane platform specific alternative.
+> 
+> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+> just be dropped. Only on x86 it needs to be added back locally as it gets
+> used in a !CONFIG_KPROBES function do_general_protection().
+> 
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Enrico Weigelt <info@metux.net>
+> Cc: Richard Fontana <rfontana@redhat.com>
+> Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: x86@kernel.org
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-ia64@vger.kernel.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+> Cc: sparclinux@vger.kernel.org
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
-Thanks,
-Nick
+Any updates or suggestions on this patch ? Currently there is a build failure on
+parisc architecture due to the lack of a kprobe_fault_handler() definition when
+CONFIG_KPROBES is enabled and this build failure needs to be fixed.
 
-=
+This patch solves the build problem. But otherwise I am also happy to just define
+a stub definition for kprobe_fault_handler() on parisc arch when CONFIG_KPROBES
+is enabled, which will avoid the build failure. Please suggest.
