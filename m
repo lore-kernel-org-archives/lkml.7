@@ -6,80 +6,126 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC46C71142
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AAFC73C66
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4243920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 17:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DBE921019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 18:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfGKR7n (ORCPT
+        id S1728956AbfGKSAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 13:59:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3433 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfGKR7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 13:59:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 10:59:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,479,1557212400"; 
-   d="scan'208";a="364895556"
-Received: from jolivell-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.50.138])
-  by fmsmga005.fm.intel.com with ESMTP; 11 Jul 2019 10:59:39 -0700
-Date:   Thu, 11 Jul 2019 20:59:39 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, kai.svahn@intel.com, kai.huang@intel.com
-Subject: Re: [RFC PATCH v2 0/3] An alternative __vdso_sgx_enter_enclave() to
- allow enclave/host parameter passing using untrusted stack
-Message-ID: <20190711175939.abpj5hgcx5kjuh22@linux.intel.com>
-References: <cover.1555965327.git.cedric.xing@intel.com>
- <20190424062623.4345-1-cedric.xing@intel.com>
- <20190710111719.nnoedfo4wvbfghq7@linux.intel.com>
- <686e47d2-f45c-6828-39d1-48374925de6c@intel.com>
- <20190710224628.epjxwlpqqxdurmzo@linux.intel.com>
- <20190710231538.dkc7tyeyvns53737@linux.intel.com>
- <27cf0fc7-71c6-7dc1-f031-86bf887f1fe1@intel.com>
- <20190711093809.4ogxe25laeoyp4ve@linux.intel.com>
- <20190711155037.GB15067@linux.intel.com>
+        Thu, 11 Jul 2019 14:00:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728451AbfGKSAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 14:00:01 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BHwqXJ098687
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:00:00 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tp8cfbxdt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 14:00:00 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.vnet.ibm.com>;
+        Thu, 11 Jul 2019 18:59:59 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Jul 2019 18:59:57 +0100
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BHxtwO53543170
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 17:59:55 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EED3136051;
+        Thu, 11 Jul 2019 17:59:55 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4506913604F;
+        Thu, 11 Jul 2019 17:59:54 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.41.99.131])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jul 2019 17:59:54 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org,
+        George Wilson <gcwilson@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>
+References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
+ <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
+ <1562624644.11461.66.camel@linux.ibm.com>
+ <20190708224304.GA25838@infradead.org>
+ <20190709163827.2u6jeflrhg44q7dy@linux.intel.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Date:   Thu, 11 Jul 2019 13:59:53 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711155037.GB15067@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190709163827.2u6jeflrhg44q7dy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19071117-0016-0000-0000-000009CCE165
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011410; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01230730; UDB=6.00648275; IPR=6.01012006;
+ MB=3.00027681; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-11 17:59:59
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071117-0017-0000-0000-000043F9EA3D
+Message-Id: <0b705972-c483-a469-562c-f0d26aaa0471@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 08:50:37AM -0700, Sean Christopherson wrote:
-> On Thu, Jul 11, 2019 at 12:38:09PM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Jul 10, 2019 at 04:37:41PM -0700, Xing, Cedric wrote:
-> > > We are not judging which vessel is better (or the best) among all possible
-> > > vessels. We are trying to enable more vessels. Every vessel has its pros and
-> > > cons so there's *no* single best vessel.
-> > 
-> > I think reasonable metric is actually the coverage of the Intel SDK
-> > based enclaves. How widely are they in the wild? If the user base is
-> > large, it should be reasonable to support this just based on that.
-> 
-> Large enough that Andy agreed to take the vDSO code with the optional
-> callback, despite his personal opinion being that mucking with uR{B,S}P
-> from within the enclave is poor form.
+Hi Jarkko,
 
-OK, the cover letter empahasized things that did not make sense to me,
-which made me to do my initial conclusions. I don't recall even reading
-the word "coverage" from it.
 
-Anyways, I'm sure we can land this after v21 has been published now that
-the rationale is clear.
+On 07/09/2019 12:38 PM, Jarkko Sakkinen wrote:
+> On Mon, Jul 08, 2019 at 03:43:04PM -0700, Christoph Hellwig wrote:
+>> On Mon, Jul 08, 2019 at 06:24:04PM -0400, Mimi Zohar wrote:
+>>>> static int tpm_get_pcr_allocation(struct tpm_chip *chip)
+>>>> {
+>>>> 	int rc;
+>>>>
+>>>> 	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
+>>>>       	     tpm2_get_pcr_allocation(chip) :
+>>>>       	     tpm1_get_pcr_allocation(chip);
+>>>> 	return rc > 0 ? -ENODEV : rc;
+>>>> }
+>>>>
+>>>> This addresses the issue that Stefan also pointed out. You have to
+>>>> deal with the TPM error codes.
+>>> Hm, in the past I was told by Christoph not to use the ternary
+>>> operator.  Have things changed?  Other than removing the comment, the
+>>> only other difference is the return.
+>> In the end it is a matter of personal preference, but I find the
+>> quote version above using the ternary horribly obsfucated.
+> I fully agree that the return statement is an obsfucated mess and
+> not a good place at all for using ternary operator.
 
-/Jarkko
+I have posted the v3 version that includes the suggested corrections by 
+you and Stefan. Sorry for some delay.
+
+Michal and Sachin, I would appreciate if you can test the v3 version, 
+please ?
+
+Thanks & Regards,
+      - Nayna
+
