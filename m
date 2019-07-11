@@ -2,117 +2,113 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82517C74A4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B89C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEB02166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BD220872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AyRT3XEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfGKJAR (ORCPT
+        id S1728198AbfGKJBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:00:17 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:60700 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726088AbfGKJAR (ORCPT
+        Thu, 11 Jul 2019 05:01:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34557 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfGKJBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:00:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TWcBEPJ_1562835610;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWcBEPJ_1562835610)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 11 Jul 2019 17:00:11 +0800
-Subject: Re: [PATCH 0/4] per cgroup numa suite
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
-Message-ID: <6a050974-30f3-66b6-4c99-c7e376fb84d8@linux.alibaba.com>
-Date:   Thu, 11 Jul 2019 17:00:10 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 11 Jul 2019 05:01:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so5117487otk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 02:01:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oeDZmXjNJ9N7oIVRGzsPot+OviyxnkTNYoPrR8aP9d0=;
+        b=AyRT3XENh3voNDIU9ZRTMsgyN3Zo2yZCwY7qigQgaUK9FKGX+35qABr0yhnPDp6BAq
+         ZMS0QvIAvXjqXPAhsTcRiA0OJKJAV/5XmwZeWSQsdUXNyXZoessYbmII4RGEXPDrsM06
+         p2XUYh0KkwQAC4FEQBfYkTymHANoe85Nv1jTU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oeDZmXjNJ9N7oIVRGzsPot+OviyxnkTNYoPrR8aP9d0=;
+        b=V9eXZOSGGWPS+WIakDLlmZ2AuAEj6vtMXZoW+97Go22OxtWSbi6hi8agMN1bxdM7O9
+         AGxMEgBLbkgppW+oJMD6F72jgKY5bVnXqwUabhkyHA+IS+57f1hHDqnffylZNcmMv+Wl
+         sZmYLwoT0OjltY8TBdVq+6vE4P253ojj1mrO4XBvkrA+uT+LRNQueASmKucdTtuq8Gxs
+         fN9vJE6e+BquJzXcLhSMUDU9UrbcJsHlQuPmC+IbGZwV18XFk1K6KP1rUe191oS/k+ZL
+         YOr5Fi+7pDeR2XTAiKsSGRcqhnXs/xNpb2J/tVjPQeEL9W386Kle66PTpRqood7p+nTw
+         uFmg==
+X-Gm-Message-State: APjAAAWcCm8orvYKKguCycGgvfzS7fmOiyRQrhKWulpRxFeTb+9W9tUa
+        kmQ4PoOxSof47hB1puGV/NT3QVals4j/RJMOrNM=
+X-Google-Smtp-Source: APXvYqyCe/q3wxFRFcscYkRVe1u6hjZ8HXpR04sDpIEvQ3IpTztAbYS+YIrgCTNiGXnCwyPJ/360DKflCgH4LVh3/HQ=
+X-Received: by 2002:a9d:590d:: with SMTP id t13mr2620567oth.281.1562835667563;
+ Thu, 11 Jul 2019 02:01:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <20190711082105.GI15868@phenom.ffwll.local> <hG3hgN80Bt03njzCaW7h3xaog7ppTTBzmsShC0L5LdCbr5dFkHMJHHxizeYa_IYP7uCwMG-vPJOWMhueq2LirNKFhulkkni2KFf3XA24bb8=@emersion.fr>
+In-Reply-To: <hG3hgN80Bt03njzCaW7h3xaog7ppTTBzmsShC0L5LdCbr5dFkHMJHHxizeYa_IYP7uCwMG-vPJOWMhueq2LirNKFhulkkni2KFf3XA24bb8=@emersion.fr>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 11 Jul 2019 11:00:56 +0200
+Message-ID: <CAKMK7uHfnOHJS8sQ0fpysSTB-SiJ29ACH+rKQ45rhT+7rBH5pQ@mail.gmail.com>
+Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
+To:     Simon Ser <contact@emersion.fr>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On Thu, Jul 11, 2019 at 10:28 AM Simon Ser <contact@emersion.fr> wrote:
+>
+> On Thursday, July 11, 2019 11:21 AM, Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> > On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
+> >
+> > > The compute_crc() function is responsible for calculating the
+> > > framebuffer CRC value; due to the XRGB format, this function has to
+> > > ignore the alpha channel during the CRC computation. Therefore,
+> > > compute_crc() set zero to the alpha channel directly in the input
+> > > framebuffer, which is not a problem since this function receives a copy
+> > > of the original buffer. However, if we want to use this function in a
+> > > context without a buffer copy, it will change the initial value. This
+> > > patch makes compute_crc() calculate the CRC value without modifying the
+> > > input framebuffer.
+> >
+> > Uh why? For writeback we're writing the output too, so we can write
+> > whatever we want to into the alpha channel. For writeback we should never
+> > accept a pixel format where alpha actually matters, that doesn't make
+> > sense. You can't see through a real screen either, they are all opaque :-)
+>
+> I'm not sure about that. See e.g.
+> https://en.wikipedia.org/wiki/See-through_display
 
-How do you think about these patches?
+They have variable opaqueness, independent of the color value?
 
-During most of our tests the results show stable improvements, thus
-we consider this as a generic problem and proposed this solution,
-hope to help address the issue.
+> Many drivers already accept FBs with alpha channels for the primary
+> plane.
+> https://drmdb.emersion.fr/formats?plane=1
 
-Comments are sincerely welcome :-)
+If you have a background color (we assume it to be black) that makes
+sense. Still doesn't mean we render transparent output, we don't.
 
-Regards,
-Michael Wang
+> Just making sure we aren't painting ourselves into a corner. :P
 
-On 2019/7/3 上午11:26, 王贇 wrote:
-> During our torturing on numa stuff, we found problems like:
-> 
->   * missing per-cgroup information about the per-node execution status
->   * missing per-cgroup information about the numa locality
-> 
-> That is when we have a cpu cgroup running with bunch of tasks, no good
-> way to tell how it's tasks are dealing with numa.
-> 
-> The first two patches are trying to complete the missing pieces, but
-> more problems appeared after monitoring these status:
-> 
->   * tasks not always running on the preferred numa node
->   * tasks from same cgroup running on different nodes
-> 
-> The task numa group handler will always check if tasks are sharing pages
-> and try to pack them into a single numa group, so they will have chance to
-> settle down on the same node, but this failed in some cases:
-> 
->   * workloads share page caches rather than share mappings
->   * workloads got too many wakeup across nodes
-> 
-> Since page caches are not traced by numa balancing, there are no way to
-> realize such kind of relationship, and when there are too many wakeup,
-> task will be drag from the preferred node and then migrate back by numa
-> balancing, repeatedly.
-> 
-> Here the third patch try to address the first issue, we could now give hint
-> to kernel about the relationship of tasks, and pack them into single numa
-> group.
-> 
-> And the forth patch introduced numa cling, which try to address the wakup
-> issue, now we try to make task stay on the preferred node on wakeup in fast
-> path, in order to address the unbalancing risk, we monitoring the numa
-> migration failure ratio, and pause numa cling when it reach the specified
-> degree.
-> 
-> Michael Wang (4):
->   numa: introduce per-cgroup numa balancing locality statistic
->   numa: append per-node execution info in memory.numa_stat
->   numa: introduce numa group per task group
->   numa: introduce numa cling feature
-> 
->  include/linux/memcontrol.h   |  37 ++++
->  include/linux/sched.h        |   8 +-
->  include/linux/sched/sysctl.h |   3 +
->  kernel/sched/core.c          |  37 ++++
->  kernel/sched/debug.c         |   7 +
->  kernel/sched/fair.c          | 455 ++++++++++++++++++++++++++++++++++++++++++-
->  kernel/sched/sched.h         |  14 ++
->  kernel/sysctl.c              |   9 +
->  mm/memcontrol.c              |  66 +++++++
->  9 files changed, 628 insertions(+), 8 deletions(-)
-> 
+You can add ARGB to your writeback format support list, there is no
+corner here at all to get into (at least in the abstract sense).
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
