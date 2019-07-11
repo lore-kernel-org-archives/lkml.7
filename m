@@ -2,104 +2,116 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA6CC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6403EC74A44
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3869620872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HeCsIwr7"
+	by mail.kernel.org (Postfix) with ESMTP id 469DE21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfGKDCk (ORCPT
+        id S1727838AbfGKDHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:02:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55901 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfGKDCk (ORCPT
+        Wed, 10 Jul 2019 23:07:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43158 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727470AbfGKDHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:02:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a15so4118316wmj.5;
-        Wed, 10 Jul 2019 20:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QmmkRcrRHhvKDL3E6Ed88MV7KQW+R+f2hke0bRgH+sM=;
-        b=HeCsIwr79uKlTQ4IXQ2ZXeHGgfBduGZUp6NhDFkb7iSyJyT2kYg4d22BhIvU83sXFK
-         DrTL3ufbkBtaWFyhD4dQusuNLER1rle54jeMzwJytaQGyDkGkNuTwDktVDdeTVtG/INO
-         ojkygY+Sdcvd6UdFPVf5zmeF3CB68IzVZtXtS0Yl8dColS4YwXtHGC2rlNnbi2hxvEIe
-         UHzxXWg3gGkJaVVFa2ip1yfkb+Et7Q1pLQNIS3PuMSy/KHDAbAWvgsWzPByGLVrZKh0E
-         AEYuiT+ZLz8nVUfT1Ma/2QY2ZnlhZhUubvC0zutDMAJbXn3xxVPLEtvS66VCIlKYO4Uu
-         ZlXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QmmkRcrRHhvKDL3E6Ed88MV7KQW+R+f2hke0bRgH+sM=;
-        b=d3uXc2msP6CgbQzRFvmj8N5LoX2iAwAOmdEY4mhvoqlqkAqNPQ+FNYqUJ8lekWLj6J
-         lLhMzbLs+G0vxwB1x7Be9dkA/svX0KvyFTtFIR16BkMarJTTu4HwpqfAgRDS0xIxyOq8
-         sw7N2Dm4mqIqFnh+7phGiJuk2dJAqz6JnZEkSuQhFgpNNH4G/tIRj9pqK394L8Zglrqz
-         YV2narz/Z5FWAQ3VIf3fkOC8dTT4NvbD1oYRyiGdN9YkKnVXvCAUJaJiGaBGjRgsZfjN
-         X6ZO5CorNI58sdAgiREXbt8S/r1fv1kmYW1aRZtaykqCo2EDEUcC4Q+WZ10SRTZpA0e8
-         hIxg==
-X-Gm-Message-State: APjAAAUo+Bx1G7sWkChHyVlUVsplmFmy+85D1I1+QmIFKBABrP25+TSX
-        hIeYZELq4XG3msNHdUeL4kc=
-X-Google-Smtp-Source: APXvYqzoQoA1pDhCxOLwzbyiQ0J/ctBrxUXsA6CqoPWinuJIkt5Upu2sIpM+D7TuvrM+iFferPT7Sw==
-X-Received: by 2002:a1c:96c7:: with SMTP id y190mr868171wmd.87.1562814158394;
-        Wed, 10 Jul 2019 20:02:38 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id r11sm5213340wre.14.2019.07.10.20.02.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 20:02:37 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 20:02:35 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190711030235.GA12012@archlinux-threadripper>
-References: <20190710174800.34451-1-natechancellor@gmail.com>
- <20190710182624.GG4051@ziepe.ca>
- <CAKwvOd=yJQgzjQBKW7=en_YnF6OCAg0MXy5c6c9tBLSjGgorPA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=yJQgzjQBKW7=en_YnF6OCAg0MXy5c6c9tBLSjGgorPA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 10 Jul 2019 23:07:35 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6B37Sj4105977
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 23:07:34 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tnvb6gysa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 23:07:34 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 11 Jul 2019 04:07:31 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Jul 2019 04:07:28 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6B37F0p35652076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 03:07:15 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5429A405B;
+        Thu, 11 Jul 2019 03:07:27 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 735A7A4054;
+        Thu, 11 Jul 2019 03:07:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.74])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jul 2019 03:07:26 +0000 (GMT)
+Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>, keyrings@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>, linux-nfs@vger.kernel.org,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Jul 2019 23:07:15 -0400
+In-Reply-To: <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
+References: <28477.1562362239@warthog.procyon.org.uk>
+         <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
+         <20190710194620.GA83443@gmail.com> <20190710201552.GB83443@gmail.com>
+         <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071103-4275-0000-0000-0000034BBC6E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071103-4276-0000-0000-0000385BC1F1
+Message-Id: <1562814435.4014.11.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 04:53:50PM -0700, Nick Desaulniers wrote:
-> On Wed, Jul 10, 2019 at 11:26 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Wed, Jul 10, 2019 at 10:48:00AM -0700, Nathan Chancellor wrote:
-> > > clang warns several times:
-> > >
-> > > drivers/infiniband/sw/siw/siw_cq.c:31:4: warning: implicit conversion
-> > > from enumeration type 'enum siw_wc_status' to different enumeration type
-> > > 'enum siw_opcode' [-Wenum-conversion]
-> > Weird that gcc doesn't warn on this by default..
-> 
-> Based on the sheer number of -Wenum-conversion that Nathan has fixed,
-> I don't think gcc has -Wenum-conversion (or it's somehow disabled just
-> for gcc).
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+Hi Linus,
 
-Yes, as far as I am aware, GCC does not warn on implicit enum
-conversions (which I think defeats the purpose of enumerated types
-*shrugs*).
+On Wed, 2019-07-10 at 18:59 -0700, Linus Torvalds wrote:
+> Anyway, since it does seem like David is offline, I've just reverted
+> this from my tree, and will be continuing my normal merge window pull
+> requests (the other issues I have seen have fixes in their respective
+> trees).
 
-Cheers,
-Nathan
+Sorry for the delay.  An exception is needed for loading builtin keys
+"KEY_ALLOC_BUILT_IN" onto a keyring that is not writable by userspace.
+ The following works, but probably is not how David would handle the
+exception.
+
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 519211a996e7..a99332c1e014 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -896,7 +896,7 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+        /* if we're going to allocate a new key, we're going to have
+         * to modify the keyring */
+        ret = key_permission(keyring_ref, KEY_NEED_WRITE);
+-       if (ret < 0) {
++       if (ret < 0 && !(flags & KEY_ALLOC_BUILT_IN)) {
+                key_ref = ERR_PTR(ret);
+                goto error_link_end;
+        }
+
+Mimi
+
