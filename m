@@ -2,307 +2,177 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B59C74A36
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACAC74A3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5596720844
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8375B21530
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 01:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZ+aGuii"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgPpxHNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGKBRf (ORCPT
+        id S1727903AbfGKBR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 21:17:35 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41371 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727463AbfGKBRe (ORCPT
+        Wed, 10 Jul 2019 21:17:56 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35640 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727463AbfGKBRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 21:17:34 -0400
-Received: by mail-qk1-f194.google.com with SMTP id v22so3495499qkj.8;
-        Wed, 10 Jul 2019 18:17:32 -0700 (PDT)
+        Wed, 10 Jul 2019 21:17:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so4374568wrm.2;
+        Wed, 10 Jul 2019 18:17:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LKDlCucLV7xEgqUUBNafyvGAb9YZ9mMSdHY5cR1gldI=;
-        b=qZ+aGuiiEnrmrZoOVc4y2ZMSOcLlAw1pinPQTW2GJjvB0Ltip3YhYZQDsAF8SiQ1uB
-         VuKv9InO4KPhq6DdbYpkeC1zxfvzfe5bDOCdSVPgToK1OEQhAnWTUGo2hXYhDjbEvm7C
-         pfCZqIQuZRjXDTwr8OR/4FiQVLWaUY+hactRB2mgSBSe6nNHEK8sgCS8a9rEi7QlWlQK
-         NGpvRuK/ksXw7CiBZFXc8N0CkqnTJJ1aOdbnMzTVU800OnMRq2//Xg+3I6PcmYDTg2+H
-         GLDfBPhlXJ8F6JyjBvQ9rHqyO1I2rm20DaI8aIyJF+gLce47dp4FcQILjXzDrJG18emp
-         Zcvg==
+        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EFkC/Uucw0aZjkYFDU2AiSEc++d077HkZhSnsHwuQJA=;
+        b=LgPpxHNXNGjpkdVJSGF/lZR7UiSRyDpu9LdwPOPohD7wDA0OkqnrzC51ekJs+BKA+5
+         N0/s6+z21lkTCdn73Z/AkGV7tJD59VyjMg5AYl6J6Tz6zUvsAZYAyY2Bap/UVKAXOIku
+         YbovaWTII/e8T4iviNJ6LCWfvQrgiobBtLfCC+feKRrJKNpOjt1MnzqJXIA2oRX2LnQp
+         jJr4OCnavCx4l0tVWwtfSlUymHPScLQlrUho3aSByx1HPGnC6Xo1EudtE8uuRJUPmRUE
+         bdbDqlw1l3oqX3+6F/ngujHL3Q3DrIZu9qI4fsFLUTCEIpe0QcmH3Eci1qUzYM7Mh3k8
+         9/YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LKDlCucLV7xEgqUUBNafyvGAb9YZ9mMSdHY5cR1gldI=;
-        b=JPYlRTYt2lAt5We8t6lRRDTVNA+FZeTmeWIbKbhmBOdyNJ0UIKUtTjNv6kI50uDSz+
-         QdswmSunIlBiMjbF7k0iu9zV7bVXmbCeR2w6BFPkdHqXFhMZs4NB5cg2G8kni5lPTxrw
-         i9Pu/qvciVMxKRn87iU4llsfqX1WZuW4pcrrGyHFtfm/U1tbPYcoyye85xm09XigR4Qi
-         yjReJI1oN8RRJQkS+ntiRvPZy9lzkkM56tdK/xVUTen9fThtYvZNgQ+03QKwobTiJBbw
-         dV7swEO5OTLEiQwFZsqRKdWEyubQ4G2JbUPRstJfa3QKzSWPFbTJLSHYnhN6bOMmabKR
-         cYWg==
-X-Gm-Message-State: APjAAAW17xJaPczJRADMy+BfBvdlwEn8QK/v8a0TvMFCY0MVLK2UPizV
-        WMLgjpN3gh6KnRAWH8MD5ejoU5Wsbf8hxrH0E3Q=
-X-Google-Smtp-Source: APXvYqw6qCezp0TnaQMDe72AthAmqSkLdTzpRxGOnEixfkCIwGBDW7s3UNpUl9A2f8lPFNejUS7g2Ky2ueXT2zelvmE=
-X-Received: by 2002:a37:660d:: with SMTP id a13mr1016590qkc.36.1562807852247;
- Wed, 10 Jul 2019 18:17:32 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EFkC/Uucw0aZjkYFDU2AiSEc++d077HkZhSnsHwuQJA=;
+        b=KK8w+ZCxdVjxThYupe5tA3DqP08VDlRN2TxHEGunIaZoS24KNXWU2l5IfL9HCaucKA
+         YSLHYn1bErjgC4/hKuVdO2mQFSCGUyMdGMBArkUuI5r5k8r2sSbVvMK0xfO75zkUQz1u
+         LPoBDEKExualcIPAmhP5SBTx/qmAInagKJdfDbG5kktmgFSct4hGRIJg7gXtosjpp2VP
+         ma00p2QUuVN3XSwZCafppKnQ1bPQmbI5CCJ8TvVj1QQmVk/dZJlWaykyWqptzg2d3AtR
+         FzihyGF1Wu9GQMNuNKBLZrmCruWCr9xgj8Fy7sylrzH6Gkcw4OfcBadfbQA2n7UB13U5
+         pTKw==
+X-Gm-Message-State: APjAAAV50a+S9t+dtF3kTjqajKz47FjN36M0zJ0AaMYRxMAXS+fEiEtY
+        Celh8SGs1PpI7vW1JyTOuEA=
+X-Google-Smtp-Source: APXvYqzN/Q+dDgqoOO0srwJykdx28KV9Ue3b8amCBEmXaz4Q9uFOeMh1bbMNhkS1BQeCv7YwL63ikQ==
+X-Received: by 2002:adf:f851:: with SMTP id d17mr515509wrq.77.1562807872544;
+        Wed, 10 Jul 2019 18:17:52 -0700 (PDT)
+Received: from [192.168.43.145] ([109.126.142.165])
+        by smtp.gmail.com with ESMTPSA id s25sm3496915wmc.21.2019.07.10.18.17.51
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 18:17:51 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Fix misuse of blk_rq_stats in blk-iolatency
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dennis@kernel.org
+References: <cover.1560510935.git.asml.silence@gmail.com>
+ <20190614134037.ie7zs4rb4oyesifr@MacBook-Pro-91.local>
+ <054f3ab6-0a03-ff0e-ac46-5d0fba012cf0@gmail.com>
+ <226043f8-4dc6-1ad3-7c66-8d85312f4cae@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <ac0700a1-0984-417b-d5d8-35c4ba56f6f6@gmail.com>
+Date:   Thu, 11 Jul 2019 04:17:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-6-krzesimir@kinvolk.io>
-In-Reply-To: <20190708163121.18477-6-krzesimir@kinvolk.io>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 10 Jul 2019 18:17:20 -0700
-Message-ID: <CAEf4BzYYdrcwJKg271ZL7kPJNYyZEGdxQeuUNbfPk=EjewuHeQ@mail.gmail.com>
-Subject: Re: [bpf-next v3 05/12] selftests/bpf: Allow passing more information
- to BPF prog test run
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <226043f8-4dc6-1ad3-7c66-8d85312f4cae@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wrote:
->
-> The test case can now specify a custom length of the data member,
-> context data and its length, which will be passed to
-> bpf_prog_test_run_xattr. For backward compatilibity, if the data
-> length is 0 (which is what will happen when the field is left
-> unspecified in the designated initializer of a struct), then the
-> length passed to the bpf_prog_test_run_xattr is TEST_DATA_LEN.
->
-> Also for backward compatilibity, if context data length is 0, NULL is
-> passed as a context to bpf_prog_test_run_xattr. This is to avoid
-> breaking other tests, where context data being NULL and context data
-> length being 0 is handled differently from the case where context data
-> is not NULL and context data length is 0.
->
-> Custom lengths still can't be greater than hardcoded 64 bytes for data
-> and 192 for context data.
->
-> 192 for context data was picked to allow passing struct
-> bpf_perf_event_data as a context for perf event programs. The struct
-> is quite large, because it contains struct pt_regs.
->
-> Test runs for perf event programs will not allow the copying the data
-> back to data_out buffer, so they require data_out_size to be zero and
-> data_out to be NULL. Since test_verifier hardcodes it, make it
-> possible to override the size. Overriding the size to zero will cause
-> the buffer to be NULL.
->
-> Changes since v2:
-> - Allow overriding the data out size and buffer.
->
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> ---
->  tools/testing/selftests/bpf/test_verifier.c | 105 +++++++++++++++++---
->  1 file changed, 93 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-> index 1640ba9f12c1..6f124cc4ee34 100644
-> --- a/tools/testing/selftests/bpf/test_verifier.c
-> +++ b/tools/testing/selftests/bpf/test_verifier.c
-> @@ -54,6 +54,7 @@
->  #define MAX_TEST_RUNS  8
->  #define POINTER_VALUE  0xcafe4all
->  #define TEST_DATA_LEN  64
-> +#define TEST_CTX_LEN   192
->
->  #define F_NEEDS_EFFICIENT_UNALIGNED_ACCESS     (1 << 0)
->  #define F_LOAD_WITH_STRICT_ALIGNMENT           (1 << 1)
-> @@ -96,7 +97,12 @@ struct bpf_test {
->         enum bpf_prog_type prog_type;
->         uint8_t flags;
->         __u8 data[TEST_DATA_LEN];
-> +       __u32 data_len;
-> +       __u8 ctx[TEST_CTX_LEN];
-> +       __u32 ctx_len;
->         void (*fill_helper)(struct bpf_test *self);
-> +       bool override_data_out_len;
-> +       __u32 overridden_data_out_len;
->         uint8_t runs;
->         struct {
->                 uint32_t retval, retval_unpriv;
-> @@ -104,6 +110,9 @@ struct bpf_test {
->                         __u8 data[TEST_DATA_LEN];
->                         __u64 data64[TEST_DATA_LEN / 8];
->                 };
-> +               __u32 data_len;
-> +               __u8 ctx[TEST_CTX_LEN];
-> +               __u32 ctx_len;
->         } retvals[MAX_TEST_RUNS];
->  };
->
-> @@ -818,21 +827,35 @@ static int set_admin(bool admin)
->  }
->
->  static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
-> -                           void *data, size_t size_data)
-> +                           void *data, size_t size_data, void *ctx,
-> +                           size_t size_ctx, u32 *overridden_data_out_size)
->  {
-> -       __u8 tmp[TEST_DATA_LEN << 2];
-> -       __u32 size_tmp = sizeof(tmp);
-> -       int saved_errno;
-> -       int err;
->         struct bpf_prog_test_run_attr attr = {
->                 .prog_fd = fd_prog,
->                 .repeat = 1,
->                 .data_in = data,
->                 .data_size_in = size_data,
-> -               .data_out = tmp,
-> -               .data_size_out = size_tmp,
-> +               .ctx_in = ctx,
-> +               .ctx_size_in = size_ctx,
->         };
-> +       __u8 tmp[TEST_DATA_LEN << 2];
-> +       __u32 size_tmp = sizeof(tmp);
-> +       __u32 size_buf = size_tmp;
-> +       __u8 *buf = tmp;
-> +       int saved_errno;
-> +       int err;
->
-> +       if (overridden_data_out_size)
-> +               size_buf = *overridden_data_out_size;
-> +       if (size_buf > size_tmp) {
-> +               printf("FAIL: out data size (%d) greater than a buffer size (%d) ",
-> +                      size_buf, size_tmp);
-> +               return -EINVAL;
-> +       }
-> +       if (!size_buf)
-> +               buf = NULL;
-> +       attr.data_size_out = size_buf;
-> +       attr.data_out = buf;
->         if (unpriv)
->                 set_admin(true);
->         err = bpf_prog_test_run_xattr(&attr);
-> @@ -956,13 +979,45 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
->         if (!alignment_prevented_execution && fd_prog >= 0) {
->                 uint32_t expected_val;
->                 int i;
-> +               __u32 size_data;
-> +               __u32 size_ctx;
-> +               bool bad_size;
-> +               void *ctx;
-> +               __u32 *overridden_data_out_size;
->
->                 if (!test->runs) {
-> +                       if (test->data_len > 0)
-> +                               size_data = test->data_len;
-> +                       else
-> +                               size_data = sizeof(test->data);
-> +                       if (test->override_data_out_len)
-> +                               overridden_data_out_size = &test->overridden_data_out_len;
-> +                       else
-> +                               overridden_data_out_size = NULL;
-> +                       size_ctx = test->ctx_len;
-> +                       bad_size = false;
+Hi,
 
-I hated all this duplication of logic, which with this patch becomes
-even more expansive, so I removed it. Please see [0]. Can you please
-apply that patch and add all this new logic only once?
+Any thoughts? Is there something wrong with the patchset?
 
-  [0] https://patchwork.ozlabs.org/patch/1130601/
 
->                         expected_val = unpriv && test->retval_unpriv ?
->                                 test->retval_unpriv : test->retval;
->
-> -                       err = do_prog_test_run(fd_prog, unpriv, expected_val,
-> -                                              test->data, sizeof(test->data));
-> +                       if (size_data > sizeof(test->data)) {
-> +                               printf("FAIL: data size (%u) greater than TEST_DATA_LEN (%lu) ", size_data, sizeof(test->data));
-> +                               bad_size = true;
-> +                       }
-> +                       if (size_ctx > sizeof(test->ctx)) {
-> +                               printf("FAIL: ctx size (%u) greater than TEST_CTX_LEN (%lu) ", size_ctx, sizeof(test->ctx));
+On 29/06/2019 18:37, Pavel Begunkov wrote:
+> Ping?
+> 
+> On 20/06/2019 10:18, Pavel Begunkov wrote:
+>> Hi,
+>>
+>> Josef, thanks for taking a look.
+>>
+>>
+>> Although, there is nothing critical yet -- just a not working / disabled
+>> optimisation, but changes in stats could sublty break it. E.g. grouping
+>> @batch and @mean into a union will increase estimated average by several
+>> orders of magnitude.
+>>
+>> Jens, what do you think?
+>>
+>>
+>>
+>> On 14/06/2019 16:40, Josef Bacik wrote:
+>>> On Fri, Jun 14, 2019 at 02:44:11PM +0300, Pavel Begunkov (Silence) wrote:
+>>>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>>>
+>>>> There are implicit assumptions about struct blk_rq_stats, which make
+>>>> it's very easy to misuse. The first patch fixes consequences, and the
+>>>> second employs type-system to prevent recurrences.
+>>>>
+>>>>
+>>>> Pavel Begunkov (2):
+>>>>   blk-iolatency: Fix zero mean in previous stats
+>>>>   blk-stats: Introduce explicit stat staging buffers
+>>>>
+>>>
+>>> I don't have a problem with this, but it's up to Jens I suppose
+>>>
+>>> Acked-by: Josef Bacik <josef@toxicpanda.com>
+>>>
+>>> Thanks,
+>>>
+>>> Josef
+>>>
+>>
+> 
 
-These look like way too long lines, wrap them?
-
-> +                               bad_size = true;
-> +                       }
-> +                       if (size_ctx)
-> +                               ctx = test->ctx;
-> +                       else
-> +                               ctx = NULL;
-
-nit: single line:
-
-ctx = size_ctx ? test->ctx : NULL;
-
-> +                       if (bad_size)
-> +                               err = 1;
-> +                       else
-> +                               err = do_prog_test_run(fd_prog, unpriv, expected_val,
-> +                                                      test->data, size_data,
-> +                                                      ctx, size_ctx,
-> +                                                      overridden_data_out_size);
->                         if (err)
->                                 run_errs++;
->                         else
-> @@ -970,14 +1025,40 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
->                 }
->
->                 for (i = 0; i < test->runs; i++) {
-> +                       if (test->retvals[i].data_len > 0)
-> +                               size_data = test->retvals[i].data_len;
-> +                       else
-> +                               size_data = sizeof(test->retvals[i].data);
-> +                       if (test->override_data_out_len)
-> +                               overridden_data_out_size = &test->overridden_data_out_len;
-> +                       else
-> +                               overridden_data_out_size = NULL;
-> +                       size_ctx = test->retvals[i].ctx_len;
-> +                       bad_size = false;
->                         if (unpriv && test->retvals[i].retval_unpriv)
->                                 expected_val = test->retvals[i].retval_unpriv;
->                         else
->                                 expected_val = test->retvals[i].retval;
->
-> -                       err = do_prog_test_run(fd_prog, unpriv, expected_val,
-> -                                              test->retvals[i].data,
-> -                                              sizeof(test->retvals[i].data));
-> +                       if (size_data > sizeof(test->retvals[i].data)) {
-> +                               printf("FAIL: data size (%u) at run %i greater than TEST_DATA_LEN (%lu) ", size_data, i + 1, sizeof(test->retvals[i].data));
-> +                               bad_size = true;
-> +                       }
-> +                       if (size_ctx > sizeof(test->retvals[i].ctx)) {
-> +                               printf("FAIL: ctx size (%u) at run %i greater than TEST_CTX_LEN (%lu) ", size_ctx, i + 1, sizeof(test->retvals[i].ctx));
-> +                               bad_size = true;
-> +                       }
-> +                       if (size_ctx)
-> +                               ctx = test->retvals[i].ctx;
-> +                       else
-> +                               ctx = NULL;
-> +                       if (bad_size)
-> +                               err = 1;
-> +                       else
-> +                               err = do_prog_test_run(fd_prog, unpriv, expected_val,
-> +                                                      test->retvals[i].data, size_data,
-> +                                                      ctx, size_ctx,
-> +                                                      overridden_data_out_size);
->                         if (err) {
->                                 printf("(run %d/%d) ", i + 1, test->runs);
->                                 run_errs++;
-> --
-> 2.20.1
->
+-- 
+Yours sincerely,
+Pavel Begunkov
