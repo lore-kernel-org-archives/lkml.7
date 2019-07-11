@@ -2,93 +2,188 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09437C74A52
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C06C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE47820665
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9C921670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfGKMRC (ORCPT
+        id S1728606AbfGKMRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:17:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49771 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfGKMRC (ORCPT
+        Thu, 11 Jul 2019 08:17:47 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:35665 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGKMRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:17:02 -0400
-Received: from [5.158.153.55] (helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlY0M-00067N-Ax; Thu, 11 Jul 2019 14:16:54 +0200
-Date:   Thu, 11 Jul 2019 14:16:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Lianbo Jiang <lijiang@redhat.com>
-Subject: Re: [PATCH] dma-direct: Force unencrypted DMA under SME for certain
- DMA masks
-In-Reply-To: <10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com>
-Message-ID: <alpine.DEB.2.21.1907111416060.1889@nanos.tec.linutronix.de>
-References: <10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 11 Jul 2019 08:17:46 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 91C6120020;
+        Thu, 11 Jul 2019 12:15:23 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v6 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date:   Thu, 11 Jul 2019 14:15:07 +0200
+Message-Id: <cf0e40b0bca9219d2bb023a5b7f23bad8baba1e5.1562847292.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
+References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Lendacky, Thomas wrote:
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 91 +++++++++++++++++++++++++-
+ 1 file changed, 91 insertions(+)
 
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> If a device doesn't support DMA to a physical address that includes the
-> encryption bit (currently bit 47, so 48-bit DMA), then the DMA must
-> occur to unencrypted memory. SWIOTLB is used to satisfy that requirement
-> if an IOMMU is not active (enabled or configured in passthrough mode).
-> 
-> However, commit fafadcd16595 ("swiotlb: don't dip into swiotlb pool for
-> coherent allocations") modified the coherent allocation support in SWIOTLB
-> to use the DMA direct coherent allocation support. When an IOMMU is not
-> active, this resulted in dma_alloc_coherent() failing for devices that
-> didn't support DMA addresses that included the encryption bit.
-> 
-> Addressing this requires changes to the force_dma_unencrypted() function
-> in kernel/dma/direct.c. Since the function is now non-trivial and SME/SEV
-> specific, update the DMA direct support to add an arch override for the
-> force_dma_unencrypted() function. The arch override is selected when
-> CONFIG_AMD_MEM_ENCRYPT is set. The arch override function resides in the
-> arch/x86/mm/mem_encrypt.c file and forces unencrypted DMA when either SEV
-> is active or SME is active and the device does not support DMA to physical
-> addresses that include the encryption bit.
-> 
-> Fixes: fafadcd16595 ("swiotlb: don't dip into swiotlb pool for coherent allocations")
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
-> 
-> Based on tree git://git.infradead.org/users/hch/dma-mapping.git for-next
-> 
->  arch/x86/Kconfig          |  1 +
-
-For the x86 parts:
-
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 4df921632f7a..cecc4eb26082 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -54,6 +54,9 @@
+ 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+ 
+ 	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 		serial0 = &uart0;
+ 		serial1 = &uart3;
+ 		serial2 = &uart7;
+@@ -63,6 +66,41 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	reg_cam: cam {
++		compatible = "regulator-fixed";
++		regulator-name = "cam";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
++
++        reg_cam_avdd: cam-avdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-avdd";
++                regulator-min-microvolt = <2800000>;
++                regulator-max-microvolt = <2800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dovdd: cam-dovdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dovdd";
++                regulator-min-microvolt = <1800000>;
++                regulator-max-microvolt = <1800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dvdd: cam-dvdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dvdd";
++                regulator-min-microvolt = <1500000>;
++                regulator-max-microvolt = <1500000>;
++                vin-supply = <&reg_cam>;
++        };
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -116,6 +154,23 @@
+ 		>;
+ };
+ 
++&csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&csi0_pins_a>;
++	status = "okay";
++
++	port {
++		csi_from_ov5640: endpoint {
++                        remote-endpoint = <&ov5640_to_csi>;
++                        bus-width = <8>;
++                        hsync-active = <1>; /* Active high */
++                        vsync-active = <0>; /* Active low */
++                        data-active = <1>;  /* Active high */
++                        pclk-sample = <1>;  /* Rising */
++                };
++	};
++};
++
+ &de {
+ 	status = "okay";
+ };
+@@ -161,6 +216,36 @@
+ 	};
+ };
+ 
++&i2c1 {
++	status = "okay";
++
++	camera: camera@21 {
++		compatible = "ovti,ov5640";
++		reg = <0x21>;
++                clocks = <&ccu CLK_CSI0>;
++                clock-names = "xclk";
++		assigned-clocks = <&ccu CLK_CSI0>;
++		assigned-clock-rates = <24000000>;
++
++                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
++                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
++                AVDD-supply = <&reg_cam_avdd>;
++                DOVDD-supply = <&reg_cam_dovdd>;
++                DVDD-supply = <&reg_cam_dvdd>;
++
++                port {
++                        ov5640_to_csi: endpoint {
++                                remote-endpoint = <&csi_from_ov5640>;
++                                bus-width = <8>;
++                                hsync-active = <1>; /* Active high */
++                                vsync-active = <0>; /* Active low */
++                                data-active = <1>;  /* Active high */
++                                pclk-sample = <1>;  /* Rising */
++                        };
++                };
++	};
++};
++
+ &i2c2 {
+ 	status = "okay";
+ };
+@@ -246,6 +331,12 @@
+ 			"SPI-MISO", "SPI-CE1", "",
+ 		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
+ 		"", "", "", "", "", "", "", "";
++
++	csi0_pins_a: csi_pins_a@0 {
++		pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
++		       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11";
++		function = "csi0";
++	};
+ };
+ 
+ #include "axp209.dtsi"
+-- 
+git-series 0.9.1
