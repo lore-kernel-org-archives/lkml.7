@@ -2,131 +2,149 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5E7C31E41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5B0C74A5B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9450620863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:29:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QRHANFv3"
+	by mail.kernel.org (Postfix) with ESMTP id C0CB820863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 16:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfGKQ32 (ORCPT
+        id S1728775AbfGKQcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 12:29:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34035 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfGKQ32 (ORCPT
+        Thu, 11 Jul 2019 12:32:25 -0400
+Received: from gateway30.websitewelcome.com ([192.185.147.85]:11584 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726213AbfGKQcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 12:29:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b13so3010965pfo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 09:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/cvu3lP4uYGQ0nzTJkCmI3lypOqpPvgnq8xhQZDKGwQ=;
-        b=QRHANFv3oWTVZzIwwbHZJ+G2G4uGVCd81kkae1vUvDdfh0Z59tW9LCC3oPbUm1+6w1
-         s9yt+T2pO64KQYCgFLYrPuq5XcUyc3eh22Ks0tkceEyUTmLY0kzDkSHqpvOSQAKW5VVB
-         5paq3pRo21kz7QIpEDCeY0LyRoV/sxazA/tko=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/cvu3lP4uYGQ0nzTJkCmI3lypOqpPvgnq8xhQZDKGwQ=;
-        b=kyjH1gd8PtGWAHDsFxfHGT9GrJLwDZsRCKSPDItl03t2nugtyU73Mw+788seXmaGAs
-         XaVjrBezH2L6K1Ah8oZxNcm2rYTW1UOepNCLoaWaeH3LhJficmZA7KWY+oYCSb9REBsR
-         ykiBJrWPAF+RYEwy++RKOVLU9Y3Wgqw4dODLIVQ6no/mT0ki2K9FacIyO++Oc6mkHc3x
-         6lzCeh7hZJ5C1B3SMF4Ilr349Wp+Tl8X7wRGElPZGHZBWcKE2FHaLCDaRnZ7sHIOCIs8
-         q+Zto97zxOoFSpYm5hpn4smjGtHg0PqnBPUITKizibEWKr+LiaaC+fdybeNvztOw7D/f
-         H7AQ==
-X-Gm-Message-State: APjAAAWiAiCH60Qj61Y4ylvRDwZvAem4GKxqn+dCAnEQYB77NfEqcgJY
-        dvHbly0jwSOrUguYtMu36usxig==
-X-Google-Smtp-Source: APXvYqxas7q8ZzI8Hp7bOoO1Sdw4IufzVXuoHWliNFro0YM4+XyheGLisLQYJ2sSMb//6VjjushIpw==
-X-Received: by 2002:a17:90b:8e:: with SMTP id bb14mr5861467pjb.19.1562862567357;
-        Thu, 11 Jul 2019 09:29:27 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id b6sm5854073pgq.26.2019.07.11.09.29.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 09:29:26 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     stable@vger.kernel.org
-Cc:     groeck@chromium.org, gregkh@linuxfoundation.org,
-        sukhomlinov@google.com, jarkko.sakkinen@linux.intel.com,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>,
-        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org
-Subject: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
-Date:   Thu, 11 Jul 2019 09:29:19 -0700
-Message-Id: <20190711162919.23813-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Thu, 11 Jul 2019 12:32:25 -0400
+X-Greylist: delayed 1203 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Jul 2019 12:32:24 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 432E73CD3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 11:12:20 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id lbgChSOxd4FKplbgChfbxu; Thu, 11 Jul 2019 11:12:20 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:11787 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hlbgB-002TCu-9Q; Thu, 11 Jul 2019 11:12:19 -0500
+Date:   Thu, 11 Jul 2019 11:12:18 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] RDMA/siw: Mark expected switch fall-throughs
+Message-ID: <20190711161218.GA4989@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.213
+X-Source-L: No
+X-Exim-ID: 1hlbgB-002TCu-9Q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net (embeddedor) [187.160.61.213]:11787
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Sukhomlinov <sukhomlinov@google.com>
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
+This patch fixes the following warnings:
 
-TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-future TPM operations. TPM 1.2 behavior was different, future TPM
-operations weren't disabled, causing rare issues. This patch ensures
-that future TPM operations are disabled.
+drivers/infiniband/sw/siw/siw_qp_rx.c: In function ‘siw_rdmap_complete’:
+drivers/infiniband/sw/siw/siw_qp_rx.c:1214:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   wqe->rqe.flags |= SIW_WQE_SOLICITED;
+   ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+drivers/infiniband/sw/siw/siw_qp_rx.c:1215:2: note: here
+  case RDMAP_SEND:
+  ^~~~
 
-Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-[dianders: resolved merge conflicts with mainline]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+drivers/infiniband/sw/siw/siw_qp_tx.c: In function ‘siw_qp_sq_process’:
+drivers/infiniband/sw/siw/siw_qp_tx.c:1044:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    siw_wqe_put_mem(wqe, tx_type);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/infiniband/sw/siw/siw_qp_tx.c:1045:3: note: here
+   case SIW_OP_INVAL_STAG:
+   ^~~~
+drivers/infiniband/sw/siw/siw_qp_tx.c:1128:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    siw_wqe_put_mem(wqe, tx_type);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/infiniband/sw/siw/siw_qp_tx.c:1129:3: note: here
+   case SIW_OP_INVAL_STAG:
+   ^~~~
+
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
-This is the backport of the patch referenced above to 4.19 as was done
-in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
-presumably applies to some older kernels.  NOTE that the problem
-itself has existed for a long time, but continuing to backport this
-exact solution to super old kernels is out of scope for me.  For those
-truly interested feel free to reference the past discussion [1].
 
-Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
-chip power gating out of tpm_transmit()") and commit 719b7d81f204
-("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
-seem like a good idea to backport 17 patches to avoid the conflict.
+NOTE: -Wimplicit-fallthrough will be enabled globally in v5.3. So, I
+      suggest you to take this patch for 5.3-rc1.
 
-[1] https://lkml.kernel.org/r/CAD=FV=UoSV9LKOTMuXKRfgFir+7_qPkuhSLN6XJEKPiRPuJJwg@mail.gmail.com
+ drivers/infiniband/sw/siw/siw_qp_rx.c | 2 ++
+ drivers/infiniband/sw/siw/siw_qp_tx.c | 4 ++++
+ 2 files changed, 6 insertions(+)
 
- drivers/char/tpm/tpm-chip.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 46caadca916a..f784b6fd93b4 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -187,12 +187,11 @@ static int tpm_class_shutdown(struct device *dev)
- {
- 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
- 
--	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
--		down_write(&chip->ops_sem);
-+	down_write(&chip->ops_sem);
-+	if (chip->flags & TPM_CHIP_FLAG_TPM2)
- 		tpm2_shutdown(chip, TPM2_SU_CLEAR);
--		chip->ops = NULL;
--		up_write(&chip->ops_sem);
--	}
-+	chip->ops = NULL;
-+	up_write(&chip->ops_sem);
- 
- 	return 0;
- }
+diff --git a/drivers/infiniband/sw/siw/siw_qp_rx.c b/drivers/infiniband/sw/siw/siw_qp_rx.c
+index 682a290bc11e..f87657a11657 100644
+--- a/drivers/infiniband/sw/siw/siw_qp_rx.c
++++ b/drivers/infiniband/sw/siw/siw_qp_rx.c
+@@ -1212,6 +1212,8 @@ static int siw_rdmap_complete(struct siw_qp *qp, int error)
+ 	case RDMAP_SEND_SE:
+ 	case RDMAP_SEND_SE_INVAL:
+ 		wqe->rqe.flags |= SIW_WQE_SOLICITED;
++		/* Fall through */
++
+ 	case RDMAP_SEND:
+ 	case RDMAP_SEND_INVAL:
+ 		if (wqe->wr_status == SIW_WR_IDLE)
+diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
+index f0d949e2e318..43020d2040fc 100644
+--- a/drivers/infiniband/sw/siw/siw_qp_tx.c
++++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
+@@ -1042,6 +1042,8 @@ int siw_qp_sq_process(struct siw_qp *qp)
+ 		case SIW_OP_SEND_REMOTE_INV:
+ 		case SIW_OP_WRITE:
+ 			siw_wqe_put_mem(wqe, tx_type);
++			/* Fall through */
++
+ 		case SIW_OP_INVAL_STAG:
+ 		case SIW_OP_REG_MR:
+ 			if (tx_flags(wqe) & SIW_WQE_SIGNALLED)
+@@ -1126,6 +1128,8 @@ int siw_qp_sq_process(struct siw_qp *qp)
+ 		case SIW_OP_READ:
+ 		case SIW_OP_READ_LOCAL_INV:
+ 			siw_wqe_put_mem(wqe, tx_type);
++			/* Fall through */
++
+ 		case SIW_OP_INVAL_STAG:
+ 		case SIW_OP_REG_MR:
+ 			siw_sqe_complete(qp, &wqe->sqe, wqe->bytes,
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.21.0
 
