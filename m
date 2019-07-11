@@ -2,107 +2,170 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF313C742A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2EFC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBB521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF1F21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 22:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ro078IW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfGKWMm (ORCPT
+        id S1728897AbfGKWMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 18:12:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42207 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfGKWMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 18:12:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 15:12:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
-   d="scan'208";a="168760918"
-Received: from bxing-desk.ccr.corp.intel.com (HELO [134.134.148.187]) ([134.134.148.187])
-  by orsmga003.jf.intel.com with ESMTP; 11 Jul 2019 15:12:39 -0700
-Subject: Re: [PATCH v20 22/28] x86/traps: Attempt to fixup exceptions in vDSO
- before signaling
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-23-jarkko.sakkinen@linux.intel.com>
- <20190625154341.GA7046@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F6551B873@ORSMSX116.amr.corp.intel.com>
- <20190711155428.GC15067@linux.intel.com>
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-Message-ID: <8bb023a5-d5d9-96c2-2596-2628206d5bd7@intel.com>
-Date:   Thu, 11 Jul 2019 15:12:36 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 11 Jul 2019 18:12:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58080 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbfGKWMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 18:12:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BMB0Ng001209;
+        Thu, 11 Jul 2019 22:12:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2018-07-02; bh=bOgrwnSqTKvZ0m8xs//Fl1mVCaIRm5aAiMx4uhbuBow=;
+ b=ro078IW5pmlFRK7tDFAxnz0r3X2PAFMeYPrJO/2awwvy8fZufdTD8ZU33+NAZywBd6mG
+ 393dxEDmH2GU4uBw4DVh62KKNiHMKSD34Np0fPeph1KZl6UC4U+5jjueLWtZE0RYWyQD
+ XcI5AS2XjKGnf3jCfa1WOviES8KhJItzVpKQ2SHinjKUMdu4RCaieCy/wMs6EVkOe+22
+ bJsQxntl4b7r1gIt1FQTTkeyF2W90sRBneFYlswK+r9PAc4ETc6uKUMbnGcsQ0nUYlr8
+ t3T+XVdMhGdFHD7LTn/tw++swivApyTaS6vxD4KMpx8YDPmwCTcbxwQaldvKtL+8mEfG 0A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2tjm9r2hn6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 22:12:15 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BM7vmS099217;
+        Thu, 11 Jul 2019 22:12:14 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tmwgyctc4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 22:12:14 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6BMCBBX002058;
+        Thu, 11 Jul 2019 22:12:11 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 15:12:11 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     steffen.klassert@secunet.com
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned padata jobs
+Date:   Thu, 11 Jul 2019 18:12:05 -0400
+Message-Id: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190711155428.GC15067@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907110242
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907110242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/11/2019 8:54 AM, Sean Christopherson wrote:
-> On Thu, Jun 27, 2019 at 01:32:58PM -0700, Xing, Cedric wrote:
->> Just a reminder that #DB/#BP shall be treated differently because they are
->> used by debuggers. So instead of branching to the fixup address, the kernel
->> shall just signal the process.
-> 
-> More importantly, doing fixup on #DB and #BP simply doesn't work.
+Testing padata with the tcrypt module on a 5.2 kernel...
 
-What's really needed is a signal, as if the fixup entry didn't exist.
+    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
+    # modprobe tcrypt mode=211 sec=1
 
-You don't have to care whether a debugger is attached or not.
+...produces this splat:
 
-> On Tue, Apr 23, 2019 at 11:59:37AM -0700, Sean Christopherson wrote:
->> On Mon, Apr 22, 2019 at 06:29:06PM -0700, Andy Lutomirski wrote:
->>> What's not tested here is running this code with EFLAGS.TF set and
->>> making sure that it unwinds correctly.  Also, Jarkko, unless I missed
->>> something, the vDSO extable code likely has a bug.  If you run the
->>> instruction right before ENCLU with EFLAGS.TF set, then do_debug()
->>> will eat the SIGTRAP and skip to the exception handler.  Similarly, if
->>> you put an instruction breakpoint on ENCLU, it'll get skipped.  Or is
->>> the code actually correct and am I just remembering wrong?
->>
->> The code is indeed broken, and I don't see a sane way to make it not
->> broken other than to never do vDSO fixup on #DB or #BP.  But that's
->> probably the right thing to do anyways since an attached debugger is
->> likely the intended recipient the 99.9999999% of the time.
->>
->> The crux of the matter is that it's impossible to identify whether or
->> not a #DB/#BP originated from within an enclave, e.g. an INT3 in an
->> enclave will look identical to an INT3 at the AEP.  Even if hardware
->> provided a magic flag, #DB still has scenarios where the intended
->> recipient is ambiguous, e.g. data breakpoint encountered in the enclave
->> but on an address outside of the enclave, breakpoint encountered in the
->> enclave and a code breakpoint on the AEP, etc...
+    INFO: task modprobe:10075 blocked for more than 120 seconds.
+          Not tainted 5.2.0-base+ #16
+    modprobe        D    0 10075  10064 0x80004080
+    Call Trace:
+     ? __schedule+0x4dd/0x610
+     ? ring_buffer_unlock_commit+0x23/0x100
+     schedule+0x6c/0x90
+     schedule_timeout+0x3b/0x320
+     ? trace_buffer_unlock_commit_regs+0x4f/0x1f0
+     wait_for_common+0x160/0x1a0
+     ? wake_up_q+0x80/0x80
+     { crypto_wait_req }             # entries in braces added by hand
+     { do_one_aead_op }
+     { test_aead_jiffies }
+     test_aead_speed.constprop.17+0x681/0xf30 [tcrypt]
+     do_test+0x4053/0x6a2b [tcrypt]
+     ? 0xffffffffa00f4000
+     tcrypt_mod_init+0x50/0x1000 [tcrypt]
+     ...
+
+The second modprobe command never finishes because in padata_reorder,
+CPU0's load of reorder_objects is executed before the unlocking store in
+spin_unlock_bh(pd->lock), causing CPU0 to miss CPU1's increment:
+
+CPU0                                 CPU1
+
+padata_reorder                       padata_do_serial
+  LOAD reorder_objects  // 0
+                                       INC reorder_objects  // 1
+                                       padata_reorder
+                                         TRYLOCK pd->lock   // failed
+  UNLOCK pd->lock
+
+CPU0 deletes the timer before returning from padata_reorder and since no
+other job is submitted to padata, modprobe waits indefinitely.
+
+Add a full barrier to prevent this scenario.  The hang was happening
+about once every three runs, but now the test has finished successfully
+fifty times in a row.
+
+Fixes: 16295bec6398 ("padata: Generic parallelization/serialization interface")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+memory-barriers.txt says that a full barrier pairs with a release barrier, but
+I'd appreciate a look from someone more familiar with barriers.  Thanks.
+
+ kernel/padata.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 2d2fddbb7a4c..9cffd4c303cb 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -267,7 +267,12 @@ static void padata_reorder(struct parallel_data *pd)
+ 	 * The next object that needs serialization might have arrived to
+ 	 * the reorder queues in the meantime, we will be called again
+ 	 * from the timer function if no one else cares for it.
++	 *
++	 * Ensure reorder_objects is read after pd->lock is dropped so we see
++	 * an increment from another task in padata_do_serial.  Pairs with
++	 * spin_unlock(&pqueue->reorder.lock) in padata_do_serial.
+ 	 */
++	smp_mb();
+ 	if (atomic_read(&pd->reorder_objects)
+ 			&& !(pinst->flags & PADATA_RESET))
+ 		mod_timer(&pd->timer, jiffies + HZ);
+
+base-commit: 0ecfebd2b52404ae0c54a878c872bb93363ada36
+-- 
+2.22.0
+
