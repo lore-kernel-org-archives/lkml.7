@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A8CC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90673C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6537321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5548221670
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Goc71bNb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SmfOq+K7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfGKO2i (ORCPT
+        id S1729042AbfGKO2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:28:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40236 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbfGKO20 (ORCPT
+        Thu, 11 Jul 2019 10:28:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37906 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728969AbfGKO2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:28:26 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEOeBP100905;
-        Thu, 11 Jul 2019 14:27:06 GMT
+        Thu, 11 Jul 2019 10:28:25 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEOMPI001606;
+        Thu, 11 Jul 2019 14:26:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=fCmddW3R3yJKPuzx/XlLHeQxEVYNN8yCIHDije5QoA8=;
- b=Goc71bNby+SDwxhZAZJVL35O0KCgSN6SQ19s01XeIVYA0KpDzxqCOIh+DsMUdWnvypT6
- gGIgJRxy1708M9KVMhnYoB2ywb6qTtvwn4CXAcD7cmjlrvcJBS5+6PMDrIoeoEOtcDJK
- KW4X5dXci15RHrRtDaZcLfMFnXMXtBJVZEJjoExPc4mdpEdW63wB2JO1A+Dh4bIcTLp9
- 33On0i+8xG4PIxV+nRWqZqXbmizbh6ObtA00K1qWRZ6jEfJsKpM/X75UoB221Hphl68n
- Yka3rbKbML0ZOqcFcBNFej4+/AWOTKnp/kUU6rp69SbIMOLJvaM5ku0lYaGL5zwa2anP Lg== 
+ bh=y9IAz60J7qXRlFN2NRsHUzd+qvZ9ZunbWoLTMdcwAx8=;
+ b=SmfOq+K7kq1i3rKVZwlHKx3Hxs01appLJg4uPnU/ZriVoOVHCERIDHALooM0c4fIGSBJ
+ 6sJUwYFar/i1eRJ0bDwA5eXmBBC3pkJst2pWeRiO5XvbO/TYtBqcsljdxwFDY+ygijHk
+ H0MYZu44ra2JBIbub0jXMvwYLNtqfrcVe7JBvlbVaiEu0d5hM3uanYLNWIvfENEj46Wm
+ gz3Qt8PeZrmim/eo4JN+pfX8fKIq4/XNikWq8u1EuUds0UNZgKC6NbZKX2Q0LuHEumqL
+ b5/SpV0/Ww9/ELn0rWmcvfcCc+XgXWqEmOxEsU2TT2yDZ4Zr37YzZrqonMAsPGVng5cD rQ== 
 Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq0ceg-1
+        by userp2130.oracle.com with ESMTP id 2tjk2u0dx7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 14:27:06 +0000
+        Thu, 11 Jul 2019 14:26:12 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcuI021444;
-        Thu, 11 Jul 2019 14:27:03 GMT
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcu1021444;
+        Thu, 11 Jul 2019 14:26:09 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,16 +50,16 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
         rppt@linux.vnet.ibm.com, alexandre.chartre@oracle.com
-Subject: [RFC v2 25/26] KVM: x86/asi: Switch to KVM address space on entry to guest
-Date:   Thu, 11 Jul 2019 16:25:37 +0200
-Message-Id: <1562855138-19507-26-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC v2 08/26] mm/asi: Functions to populate an ASI page-table from a VA range
+Date:   Thu, 11 Jul 2019 16:25:20 +0200
+Message-Id: <1562855138-19507-9-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=753 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=917 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907110162
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,190 +67,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liran Alon <liran.alon@oracle.com>
+Provide functions to copy page-table entries from the kernel page-table
+to an ASI page-table for a specified VA range. These functions are based
+on the copy_pxx_range() functions defined in mm/memory.c. A difference
+is that a level parameter can be specified to indicate the page-table
+level (PGD, P4D, PUD PMD, PTE) at which the copy should be done. Also
+functions don't rely on mm or vma, and they don't alter the source
+page-table even if an entry is bad. Also the VA range start and size
+don't need to be page-aligned.
 
-Switch to KVM address space on entry to guest. Most of KVM #VMExit
-handlers will run in KVM isolated address space and switch back to
-host address space only before accessing sensitive data. Sensitive
-data is defined as either host data or other VM data.
-
-Currently, we switch back to the host address space on the following
-scenarios:
-1) When handling guest page-faults:
-   As this will access SPTs which contains host PFNs.
-2) On schedule-out of vCPU thread
-3) On write to guest virtual memory
-   (kvm_write_guest_virt_system() can pull in tons of pages)
-4) On return to userspace (e.g. QEMU)
-5) On interrupt or exception
-
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/mmu.c           |    2 +-
- arch/x86/kvm/vmx/isolation.c |    2 +-
- arch/x86/kvm/vmx/vmx.c       |    6 ++++++
- arch/x86/kvm/vmx/vmx.h       |   18 ++++++++++++++++++
- arch/x86/kvm/x86.c           |   34 +++++++++++++++++++++++++++++++++-
- arch/x86/kvm/x86.h           |    1 +
- 6 files changed, 60 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/asi.h  |    4 +
+ arch/x86/mm/asi_pagetable.c |  205 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 209 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 98f6e4f..298f602 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -4067,7 +4067,7 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- {
- 	int r = 1;
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index 3d965e6..19656aa 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -76,6 +76,10 @@ struct asi_session {
+ extern bool asi_fault(struct pt_regs *regs, unsigned long error_code,
+ 		      unsigned long address);
  
--	vcpu->arch.l1tf_flush_l1d = true;
-+	kvm_may_access_sensitive_data(vcpu);
- 	switch (vcpu->arch.apf.host_apf_reason) {
- 	default:
- 		trace_kvm_page_fault(fault_address, error_code);
-diff --git a/arch/x86/kvm/vmx/isolation.c b/arch/x86/kvm/vmx/isolation.c
-index d82f6b6..8f57f10 100644
---- a/arch/x86/kvm/vmx/isolation.c
-+++ b/arch/x86/kvm/vmx/isolation.c
-@@ -34,7 +34,7 @@
-  * This is set to false by default because it incurs a performance hit
-  * which some users will not want to take for security gain.
-  */
--static bool __read_mostly address_space_isolation;
-+bool __read_mostly address_space_isolation;
- module_param(address_space_isolation, bool, 0444);
- 
++extern int asi_map_range(struct asi *asi, void *ptr, size_t size,
++			 enum page_table_level level);
++extern int asi_map(struct asi *asi, void *ptr, unsigned long size);
++
  /*
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d47f093..b5867cc 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6458,8 +6458,14 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (vcpu->arch.cr2 != read_cr2())
- 		write_cr2(vcpu->arch.cr2);
+  * Function to exit the current isolation. This is used to abort isolation
+  * when a task using isolation is scheduled out.
+diff --git a/arch/x86/mm/asi_pagetable.c b/arch/x86/mm/asi_pagetable.c
+index e17af9e..0169395 100644
+--- a/arch/x86/mm/asi_pagetable.c
++++ b/arch/x86/mm/asi_pagetable.c
+@@ -394,3 +394,208 @@ static int asi_set_pgd(struct asi *asi, pgd_t *pgd, pgd_t pgd_value)
  
-+	/*
-+	 * Use an isolation barrier as VMExit will restore the isolation
-+	 * CR3 while interrupts can abort isolation.
-+	 */
-+	vmx_isolation_barrier_begin(vmx);
- 	vmx->fail = __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.regs,
- 				   vmx->loaded_vmcs->launched);
-+	vmx_isolation_barrier_end(vmx);
- 
- 	vcpu->arch.cr2 = read_cr2();
- 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index e8de23b..b65f059 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -531,4 +531,22 @@ static inline void decache_tsc_multiplier(struct vcpu_vmx *vmx)
- int vmx_isolation_init(struct vcpu_vmx *vmx);
- void vmx_isolation_uninit(struct vcpu_vmx *vmx);
- 
-+extern bool __read_mostly address_space_isolation;
+ 	return 0;
+ }
 +
-+static inline void vmx_isolation_barrier_begin(struct vcpu_vmx *vmx)
++static int asi_copy_pte_range(struct asi *asi, pmd_t *dst_pmd, pmd_t *src_pmd,
++			      unsigned long addr, unsigned long end)
 +{
-+	if (!address_space_isolation || !vmx->vcpu.asi)
-+		return;
++	pte_t *src_pte, *dst_pte;
 +
-+	asi_barrier_begin();
++	dst_pte = asi_pte_alloc(asi, dst_pmd, addr);
++	if (IS_ERR(dst_pte))
++		return PTR_ERR(dst_pte);
++
++	addr &= PAGE_MASK;
++	src_pte = pte_offset_map(src_pmd, addr);
++
++	do {
++		asi_set_pte(asi, dst_pte, *src_pte);
++
++	} while (dst_pte++, src_pte++, addr += PAGE_SIZE, addr < end);
++
++	return 0;
 +}
 +
-+static inline void vmx_isolation_barrier_end(struct vcpu_vmx *vmx)
++static int asi_copy_pmd_range(struct asi *asi, pud_t *dst_pud, pud_t *src_pud,
++			      unsigned long addr, unsigned long end,
++			      enum page_table_level level)
 +{
-+	if (!address_space_isolation || !vmx->vcpu.asi)
-+		return;
-+
-+	asi_barrier_end();
-+}
-+
- #endif /* __KVM_X86_VMX_H */
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 9857992..9458413 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3346,6 +3346,8 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- 	 * guest. do_debug expects dr6 to be cleared after it runs, do the same.
- 	 */
- 	set_debugreg(0, 6);
-+
-+	kvm_may_access_sensitive_data(vcpu);
- }
- 
- static int kvm_vcpu_ioctl_get_lapic(struct kvm_vcpu *vcpu,
-@@ -5259,7 +5261,7 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
- 				unsigned int bytes, struct x86_exception *exception)
- {
- 	/* kvm_write_guest_virt_system can pull in tons of pages. */
--	vcpu->arch.l1tf_flush_l1d = true;
-+	kvm_may_access_sensitive_data(vcpu);
- 
- 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
- 					   PFERR_WRITE_MASK, exception);
-@@ -7744,6 +7746,32 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
- }
- EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
- 
-+static void vcpu_isolation_enter(struct kvm_vcpu *vcpu)
-+{
++	pmd_t *src_pmd, *dst_pmd;
++	unsigned long next;
 +	int err;
 +
-+	if (!vcpu->asi)
-+		return;
++	dst_pmd = asi_pmd_alloc(asi, dst_pud, addr);
++	if (IS_ERR(dst_pmd))
++		return PTR_ERR(dst_pmd);
 +
-+	err = asi_enter(vcpu->asi);
-+	if (err)
-+		pr_debug("KVM isolation failed: error %d\n", err);
++	src_pmd = pmd_offset(src_pud, addr);
++
++	do {
++		next = pmd_addr_end(addr, end);
++		if (level == PGT_LEVEL_PMD || pmd_none(*src_pmd) ||
++		    pmd_trans_huge(*src_pmd) || pmd_devmap(*src_pmd)) {
++			err = asi_set_pmd(asi, dst_pmd, *src_pmd);
++			if (err)
++				return err;
++			continue;
++		}
++
++		if (!pmd_present(*src_pmd)) {
++			pr_warn("ASI %p: PMD not present for [%lx,%lx]\n",
++				asi, addr, next - 1);
++			pmd_clear(dst_pmd);
++			continue;
++		}
++
++		err = asi_copy_pte_range(asi, dst_pmd, src_pmd, addr, next);
++		if (err) {
++			pr_err("ASI %p: PMD error copying PTE addr=%lx next=%lx\n",
++			       asi, addr, next);
++			return err;
++		}
++
++	} while (dst_pmd++, src_pmd++, addr = next, addr < end);
++
++	return 0;
 +}
 +
-+static void vcpu_isolation_exit(struct kvm_vcpu *vcpu)
++static int asi_copy_pud_range(struct asi *asi, p4d_t *dst_p4d, p4d_t *src_p4d,
++			      unsigned long addr, unsigned long end,
++			      enum page_table_level level)
 +{
-+	if (!vcpu->asi)
-+		return;
++	pud_t *src_pud, *dst_pud;
++	unsigned long next;
++	int err;
 +
-+	asi_exit(vcpu->asi);
++	dst_pud = asi_pud_alloc(asi, dst_p4d, addr);
++	if (IS_ERR(dst_pud))
++		return PTR_ERR(dst_pud);
++
++	src_pud = pud_offset(src_p4d, addr);
++
++	do {
++		next = pud_addr_end(addr, end);
++		if (level == PGT_LEVEL_PUD || pud_none(*src_pud) ||
++		    pud_trans_huge(*src_pud) || pud_devmap(*src_pud)) {
++			err = asi_set_pud(asi, dst_pud, *src_pud);
++			if (err)
++				return err;
++			continue;
++		}
++
++		err = asi_copy_pmd_range(asi, dst_pud, src_pud, addr, next,
++					 level);
++		if (err) {
++			pr_err("ASI %p: PUD error copying PMD addr=%lx next=%lx\n",
++			       asi, addr, next);
++			return err;
++		}
++
++	} while (dst_pud++, src_pud++, addr = next, addr < end);
++
++	return 0;
 +}
 +
-+void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu)
++static int asi_copy_p4d_range(struct asi *asi, pgd_t *dst_pgd, pgd_t *src_pgd,
++			      unsigned long addr, unsigned long end,
++			      enum page_table_level level)
 +{
-+	vcpu->arch.l1tf_flush_l1d = true;
-+	vcpu_isolation_exit(vcpu);
++	p4d_t *src_p4d, *dst_p4d;
++	unsigned long next;
++	int err;
++
++	dst_p4d = asi_p4d_alloc(asi, dst_pgd, addr);
++	if (IS_ERR(dst_p4d))
++		return PTR_ERR(dst_p4d);
++
++	src_p4d = p4d_offset(src_pgd, addr);
++
++	do {
++		next = p4d_addr_end(addr, end);
++		if (level == PGT_LEVEL_P4D || p4d_none(*src_p4d)) {
++			err = asi_set_p4d(asi, dst_p4d, *src_p4d);
++			if (err)
++				return err;
++			continue;
++		}
++
++		err = asi_copy_pud_range(asi, dst_p4d, src_p4d, addr, next,
++					 level);
++		if (err) {
++			pr_err("ASI %p: P4D error copying PUD addr=%lx next=%lx\n",
++			       asi, addr, next);
++			return err;
++		}
++
++	} while (dst_p4d++, src_p4d++, addr = next, addr < end);
++
++	return 0;
 +}
 +
- /*
-  * Returns 1 to let vcpu_run() continue the guest execution loop without
-  * exiting to the userspace.  Otherwise, the value will be returned to the
-@@ -7944,6 +7972,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		goto cancel_injection;
- 	}
- 
-+	vcpu_isolation_enter(vcpu);
++static int asi_copy_pgd_range(struct asi *asi,
++			      pgd_t *dst_pagetable, pgd_t *src_pagetable,
++			      unsigned long addr, unsigned long end,
++			      enum page_table_level level)
++{
++	pgd_t *src_pgd, *dst_pgd;
++	unsigned long next;
++	int err;
 +
- 	if (req_immediate_exit) {
- 		kvm_make_request(KVM_REQ_EVENT, vcpu);
- 		kvm_x86_ops->request_immediate_exit(vcpu);
-@@ -8130,6 +8160,8 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
- 
-+	kvm_may_access_sensitive_data(vcpu);
++	dst_pgd = pgd_offset_pgd(dst_pagetable, addr);
++	src_pgd = pgd_offset_pgd(src_pagetable, addr);
 +
- 	return r;
- }
- 
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index a470ff0..69a7402 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -356,5 +356,6 @@ static inline bool kvm_pat_valid(u64 data)
- 
- void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
- void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
-+void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu);
- 
- #endif
++	do {
++		next = pgd_addr_end(addr, end);
++		if (level == PGT_LEVEL_PGD || pgd_none(*src_pgd)) {
++			err = asi_set_pgd(asi, dst_pgd, *src_pgd);
++			if (err)
++				return err;
++			continue;
++		}
++
++		err = asi_copy_p4d_range(asi, dst_pgd, src_pgd, addr, next,
++					 level);
++		if (err) {
++			pr_err("ASI %p: PGD error copying P4D addr=%lx next=%lx\n",
++			       asi, addr, next);
++			return err;
++		}
++
++	} while (dst_pgd++, src_pgd++, addr = next, addr < end);
++
++	return 0;
++}
++
++/*
++ * Copy page table entries from the current page table (i.e. from the
++ * kernel page table) to the specified ASI page-table. The level
++ * parameter specifies the page-table level (PGD, P4D, PUD PMD, PTE)
++ * at which the copy should be done.
++ */
++int asi_map_range(struct asi *asi, void *ptr, size_t size,
++		  enum page_table_level level)
++{
++	unsigned long addr = (unsigned long)ptr;
++	unsigned long end = addr + ((unsigned long)size);
++	unsigned long flags;
++	int err;
++
++	pr_debug("ASI %p: MAP %px/%lx/%d\n", asi, ptr, size, level);
++
++	spin_lock_irqsave(&asi->lock, flags);
++	err = asi_copy_pgd_range(asi, asi->pgd, current->mm->pgd,
++				 addr, end, level);
++	spin_unlock_irqrestore(&asi->lock, flags);
++
++	return err;
++}
++EXPORT_SYMBOL(asi_map_range);
++
++/*
++ * Copy page-table PTE entries from the current page-table to the
++ * specified ASI page-table.
++ */
++int asi_map(struct asi *asi, void *ptr, unsigned long size)
++{
++	return asi_map_range(asi, ptr, size, PGT_LEVEL_PTE);
++}
++EXPORT_SYMBOL(asi_map);
 -- 
 1.7.1
 
