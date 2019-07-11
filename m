@@ -2,158 +2,79 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E247C74A36
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBEEC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B39520844
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFssXHlc"
+	by mail.kernel.org (Postfix) with ESMTP id 42A4D20844
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfGKCkI (ORCPT
+        id S1727893AbfGKCkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 22:40:08 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46267 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfGKCkI (ORCPT
+        Wed, 10 Jul 2019 22:40:24 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:35373 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727783AbfGKCkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 22:40:08 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i8so2130740pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 19:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=C8E8H/QOJPMLUX+Dl+OKCeAuU0VWHZNPc5/1qNNCS3A=;
-        b=LFssXHlc4NksAYAhzFzgi8xTRTyRMliELywQFv9VUJVWjf2PiU9RiGZ3zV9OaXaJfz
-         91HAomEa81By0LAwwOEB9poOe8UtZyfG9My4IBU8GlmxOBGbsRXNWGH0/bts96LbnjnA
-         NGQkIli+cQ/8qTzQXXfwnhF7U17UASCTKYqTMo/zn/0sP6m9Z0jHm9AixzwV084y/nqx
-         8y2vGNX0GfKDQ+2gYrulCSBkZ9ssbkmBgG1bxloiWpKTGlMfoHhs298oR6oIMlTW4bk4
-         B98fphK+vEl3DSmUmjhZgVDft0yE5G+Vh5F41jeQl5ag1xxzkRi75cZkX6ek98V4UOHK
-         PCMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C8E8H/QOJPMLUX+Dl+OKCeAuU0VWHZNPc5/1qNNCS3A=;
-        b=pXJPm7YlXzEbB4J/m8hP5hNLpXYLjitwdsFsWOlsMSA+yLbS9Lkav4aoByo8EWt5zF
-         i7I1cQ6sMWJnG5t2jJRWerdwxs8fVrMz3IVK9CBrkv/K5ETY2x7kKuzOYP3KOL+8GZzr
-         i82r5TZpKOE8lOqgvFtwXkKtw3uVXJKOxMGBcKJZL7ER7L84s+mXmBqPxsJIjhvjET6l
-         pwr8iiju5s3g/J/3SPQSqg21QlzZBPCbaSpPW2C5s3RcocMGMAl8WCSXN66TAfUdf+3I
-         HV8F97RfNagiKy2mrtfhZvzLaLIXh6t0NSGQ4fMjbiVT4lCpDrgf1sHmhXAR3NtbThce
-         q+kg==
-X-Gm-Message-State: APjAAAU/KTNfRw7hJIDVdmMSOxOYZUfLT98muIS01JYUQTCVhAXM03N2
-        5f5dJkxLqXRCYAI9VAalFJ8=
-X-Google-Smtp-Source: APXvYqxPMPQEVTxxbc9UReUqfnmxUCvYxChCFWNedtCSJGKTOwJRfV39HBtupRw4ZTPjT4QYQz/DMQ==
-X-Received: by 2002:a63:7b4d:: with SMTP id k13mr1686080pgn.182.1562812807406;
-        Wed, 10 Jul 2019 19:40:07 -0700 (PDT)
-Received: from olv0.mtv.corp.google.com ([2620:15c:202:201:9649:82d6:f889:b307])
-        by smtp.gmail.com with ESMTPSA id bo20sm2877077pjb.23.2019.07.10.19.40.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 19:40:06 -0700 (PDT)
-From:   Chia-I Wu <olvaffe@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/virtio: kick vq outside of the vq lock
-Date:   Wed, 10 Jul 2019 19:39:59 -0700
-Message-Id: <20190711023959.170158-1-olvaffe@gmail.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190711022937.166015-1-olvaffe@gmail.com>
-References: <20190711022937.166015-1-olvaffe@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 10 Jul 2019 22:40:23 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09366905|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0744421-0.00954207-0.916016;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.Evp2QQa_1562812820;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.Evp2QQa_1562812820)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Thu, 11 Jul 2019 10:40:20 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
+        Mao Han <han_mao@c-sky.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Subject: [PATCH 1/1] riscv: Fix perf record without libelf support
+Date:   Thu, 11 Jul 2019 10:38:40 +0800
+Message-Id: <96b979a523210628de8a8a3d6e48492f6f1ff02d.1562812381.git.han_mao@c-sky.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace virtqueue_kick by virtqueue_kick_prepare, which requires
-serialization, and virtqueue_notify, which does not.  Repurpose the
-return values to indicate whether the vq should be notified.
+This patch fix following perf record error by linking vdso.so with
+build id.
 
-This fixes a bad spinlock contention when the host is qemu.  When
-the guest calls virtqueue_notify, the qemu vcpu thread exits the
-guest and waits for the qemu iothread to perform the MMIO.  If the
-qemu iothread is still processing the prior buffer, and if the prior
-buffer is cheap to GPU, the iothread will go ahead and generate an
-IRQ.  A worker thread in the guest might start running
-virtio_gpu_dequeue_ctrl_func.  If virtqueue_notify was called with
-the vq lock held, the worker thread would have to busy wait inside
-virtio_gpu_dequeue_ctrl_func.
+perf.data      perf.data.old
+[ perf record: Woken up 1 times to write data ]
+free(): double free detected in tcache 2
+Aborted
 
-v2: fix scrambled commit message
+perf record use filename__read_build_id(util/symbol-minimal.c) to get
+build id when libelf is not supported. When vdso.so is linked without
+build id, the section size of PT_NOTE will be zero, buf size will
+realloc to zero and cause memory corruption.
 
-Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
 ---
- drivers/gpu/drm/virtio/virtgpu_vq.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ arch/riscv/kernel/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 6c1a90717535..e96f88fe5c83 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -291,11 +291,9 @@ static int virtio_gpu_queue_ctrl_buffer_locked(struct virtio_gpu_device *vgdev,
- 		trace_virtio_gpu_cmd_queue(vq,
- 			(struct virtio_gpu_ctrl_hdr *)vbuf->buf);
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index f1d6ffe..49a5852 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -37,7 +37,7 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
+ # these symbols in the kernel code rather than hand-coded addresses.
  
--		virtqueue_kick(vq);
-+		ret = virtqueue_kick_prepare(vq);
- 	}
- 
--	if (!ret)
--		ret = vq->num_free;
- 	return ret;
- }
- 
-@@ -307,6 +305,10 @@ static int virtio_gpu_queue_ctrl_buffer(struct virtio_gpu_device *vgdev,
- 	spin_lock(&vgdev->ctrlq.qlock);
- 	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
- 	spin_unlock(&vgdev->ctrlq.qlock);
-+
-+	if (rc > 0)
-+		virtqueue_notify(vgdev->ctrlq.vq);
-+
- 	return rc;
- }
- 
-@@ -339,6 +341,10 @@ static int virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
- 		virtio_gpu_fence_emit(vgdev, hdr, fence);
- 	rc = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
- 	spin_unlock(&vgdev->ctrlq.qlock);
-+
-+	if (rc > 0)
-+		virtqueue_notify(vgdev->ctrlq.vq);
-+
- 	return rc;
- }
- 
-@@ -369,13 +375,14 @@ static int virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
- 		trace_virtio_gpu_cmd_queue(vq,
- 			(struct virtio_gpu_ctrl_hdr *)vbuf->buf);
- 
--		virtqueue_kick(vq);
-+		ret = virtqueue_kick_prepare(vq);
- 	}
- 
- 	spin_unlock(&vgdev->cursorq.qlock);
- 
--	if (!ret)
--		ret = vq->num_free;
-+	if (ret > 0)
-+		virtqueue_notify(vq);
-+
- 	return ret;
- }
+ SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+-	-Wl,--hash-style=both
++	-Wl,--build-id -Wl,--hash-style=both
+ $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
+ 	$(call if_changed,vdsold)
  
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.7.4
 
