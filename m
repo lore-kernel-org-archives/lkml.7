@@ -2,170 +2,129 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2423CC74A51
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC25C74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14D920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F70F20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 09:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6q59/d5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yIDvRQUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfGKJuR (ORCPT
+        id S1728349AbfGKJvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 05:50:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35244 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfGKJuR (ORCPT
+        Thu, 11 Jul 2019 05:51:20 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54278 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727960AbfGKJvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:50:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so2690014pgl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 02:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=E3/j+bc8Tk5SqOw85OYmjAw37lWq5WZ74e+W7GT4X4w=;
-        b=G6q59/d5IV5Dpa78hTtVT2+oyDoV4d/zMohU08nSePRszCnvypWDjP0JrggWheXN8U
-         aISGjOmYX5CvM3aOP3pH1grfQuleovRSREHAIeSbgnV/XnBoF7GHV5/ORTJcKdU1Mkjv
-         pKNMy9ASac8xfF5FmG2/Co+yus1cSx7ZLF6rvA6oY9WbAsJL/uHuX5Yh/658DNK/e+Ng
-         aHc8fIJFHWBtekr2slvxQcMilPs1bzbq6ecP3DZRKW4m5dNFxLQfXNS0dw2H22F4qU9o
-         Bq3h5PyjaWu0hGobiXd5YrTmLGxrTIDdCRqjU4u67yei70BOhpm2I5Uymun/3maDGDja
-         rE5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=E3/j+bc8Tk5SqOw85OYmjAw37lWq5WZ74e+W7GT4X4w=;
-        b=EH4JNnMi3dMzXVu5WkWc6IufoLRjrm4uOz2FrlNhf+6kQNzkhGiLset4D1/G+xJ+KO
-         oF1VTOInNeDMzxMTFMFfIULgIaHO72QnGpnb5rT1gb6n4BLfSJSU1xWijyFKmU7HTDOx
-         AMK9O5kLdoXhB2pfr0agi9UxRn0FNiJCYyBpM11hukeUPO5bGiC/7dN8nHDhGfhnZqd0
-         8GMAWZ+cfcQohP2yHFtJiSVfKdWf/zLHiR614Xx9zDL7SH1UOVnd2D3u2ubcwW6SRsaG
-         tNuPLu+Mbwh8zd/627zz5344bwBWA2edTms4ruTXHTB2klC2sDtG4QRt/ma7UXJ5Reed
-         GsUQ==
-X-Gm-Message-State: APjAAAV5ywSs/lPkuokomPzupBE3fiONVDQoLV4LNlvqGgqUT2CgOoVu
-        ad3ed3IXKTI9TsYJbqkoSz9LptcE
-X-Google-Smtp-Source: APXvYqyIHKIyoqJ/xLIkBODlh8Zzic0vQ95MU3Yfyu/5IW5dvWqfni8w8npQg6VH7u6CjGYc3NIc4g==
-X-Received: by 2002:a63:7a06:: with SMTP id v6mr3459347pgc.115.1562838616544;
-        Thu, 11 Jul 2019 02:50:16 -0700 (PDT)
-Received: from localhost (193-116-118-149.tpgi.com.au. [193.116.118.149])
-        by smtp.gmail.com with ESMTPSA id r13sm5851993pfr.25.2019.07.11.02.50.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 02:50:15 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 19:47:18 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [v5 4/6] extable: Add function to search only kernel exception
- table
-To:     linux-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Santosh Sivaraj <santosh@fossix.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190709121524.18762-1-santosh@fossix.org>
-        <20190709121524.18762-5-santosh@fossix.org>
-In-Reply-To: <20190709121524.18762-5-santosh@fossix.org>
+        Thu, 11 Jul 2019 05:51:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FJ+go1rWo5bup7lu7g/QrNgXQ3Vwzmjj/rkN/hAyR6E=; b=yIDvRQUUo6BD24ceByuSwi6A2
+        Rww/Ym6ehYSo7ILp67PD0kmgu5Up17yvsyzeRmT9bEzCeOsfMkkDnSea8zZQUckUSrk1879m8lser
+        uumLJudSXDSwA/2el/6kuoo28u0z7SpYZ0RaqG1E8wVOHeK+M9CTBgekZalc6hEHDRTeko/8soLPl
+        Mrqzp6+7xwvG++u9/5uChEwbPki+iVEWFwnOiyb8okckM1Od0DOpbBObJHVhBBb3amC+PQ2vFpMC/
+        JduHZ1uIG+mK7vQnZBBrUp2eyh+ohf0UMsRPPjGiXDWSTwyUpOACXX4y/wc4g3Y/AVjjT4QbAEpit
+        b1TE/EmJw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlVjF-0002rq-8I; Thu, 11 Jul 2019 09:51:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5443C20B2B4C4; Thu, 11 Jul 2019 11:51:02 +0200 (CEST)
+Date:   Thu, 11 Jul 2019 11:51:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     bsegall@google.com
+Cc:     Dave Chiluk <chiluk+linux@indeed.com>,
+        Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high
+ throttling by removing expiration of cpu-local slices
+Message-ID: <20190711095102.GX3402@hirez.programming.kicks-ass.net>
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+ <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
+ <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
+ <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1562837939.bik9erongk.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Santosh Sivaraj's on July 9, 2019 10:15 pm:
-> In real mode, the search_exception tables cannot be called because
-> it also searches the module exception tables if entry is not found
-> in the kernel exception tables.
 
-This is a patch for generic kernel code, it may not go through
-powerpc tree and someone doing git blame or something won't have
-any idea what this changelog means.
+FWIW, good to see progress, still waiting for you guys to agree :-)
 
-Can you re-word this and just say something like, "certain architecture
-$specific operating modes (e.g., in powerpc machine check handler that
-is unable to access vmalloc memory)."
+On Mon, Jul 01, 2019 at 01:15:44PM -0700, bsegall@google.com wrote:
 
->=20
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
-> ---
->  include/linux/extable.h |  2 ++
->  kernel/extable.c        | 16 +++++++++++++---
->  2 files changed, 15 insertions(+), 3 deletions(-)
->=20
-> diff --git a/include/linux/extable.h b/include/linux/extable.h
-> index 41c5b3a25f67..0c2819ba67f0 100644
-> --- a/include/linux/extable.h
-> +++ b/include/linux/extable.h
-> @@ -19,6 +19,8 @@ void trim_init_extable(struct module *m);
-> =20
->  /* Given an address, look for it in the exception tables */
->  const struct exception_table_entry *search_exception_tables(unsigned lon=
-g add);
-> +const struct
-> +exception_table_entry *search_kernel_exception_table(unsigned long addr)=
-;
-> =20
->  #ifdef CONFIG_MODULES
->  /* For extable.c to search modules' exception tables. */
-> diff --git a/kernel/extable.c b/kernel/extable.c
-> index e23cce6e6092..6d544cb79fff 100644
-> --- a/kernel/extable.c
-> +++ b/kernel/extable.c
-> @@ -40,13 +40,23 @@ void __init sort_main_extable(void)
->  	}
->  }
-> =20
-> -/* Given an address, look for it in the exception tables. */
-> +/* For the given address, look for it in the kernel exception table */
+> - Taking up-to-every rq->lock is bad and expensive and 5ms may be too
+>   short a delay for this. I haven't tried microbenchmarks on the cost of
+>   this vs min_cfs_rq_runtime = 0 vs baseline.
 
-Nitpick, no reason to vary the structure of the comment.
+Yes, that's tricky, SGI/HPE have definite ideas about that.
 
-Code wise it looks fine, so with the comments and changelog fixed,
-
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-
-> +const
-> +struct exception_table_entry *search_kernel_exception_table(unsigned lon=
-g addr)
-> +{
-> +	return search_extable(__start___ex_table,
-> +			      __stop___ex_table - __start___ex_table, addr);
-> +}
-> +
-> +/*
-> + * Given an address, look for it in the kernel and the module exception
-> + * tables.
-> + */
->  const struct exception_table_entry *search_exception_tables(unsigned lon=
-g addr)
+> @@ -4781,12 +4790,41 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>   */
+>  static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
 >  {
->  	const struct exception_table_entry *e;
-> =20
-> -	e =3D search_extable(__start___ex_table,
-> -			   __stop___ex_table - __start___ex_table, addr);
-> +	e =3D search_kernel_exception_table(addr);
->  	if (!e)
->  		e =3D search_module_extables(addr);
->  	return e;
-> --=20
-> 2.20.1
->=20
->=20
-=
+> -	u64 runtime = 0, slice = sched_cfs_bandwidth_slice();
+> +	u64 runtime = 0;
+>  	unsigned long flags;
+>  	u64 expires;
+> +	struct cfs_rq *cfs_rq, *temp;
+> +	LIST_HEAD(temp_head);
+> +
+> +	local_irq_save(flags);
+> +
+> +	raw_spin_lock(&cfs_b->lock);
+> +	cfs_b->slack_started = false;
+> +	list_splice_init(&cfs_b->slack_cfs_rq, &temp_head);
+> +	raw_spin_unlock(&cfs_b->lock);
+> +
+> +
+> +	/* Gather all left over runtime from all rqs */
+> +	list_for_each_entry_safe(cfs_rq, temp, &temp_head, slack_list) {
+> +		struct rq *rq = rq_of(cfs_rq);
+> +		struct rq_flags rf;
+> +
+> +		rq_lock(rq, &rf);
+> +
+> +		raw_spin_lock(&cfs_b->lock);
+> +		list_del_init(&cfs_rq->slack_list);
+> +		if (!cfs_rq->nr_running && cfs_rq->runtime_remaining > 0 &&
+> +		    cfs_rq->runtime_expires == cfs_b->runtime_expires) {
+> +			cfs_b->runtime += cfs_rq->runtime_remaining;
+> +			cfs_rq->runtime_remaining = 0;
+> +		}
+> +		raw_spin_unlock(&cfs_b->lock);
+> +
+> +		rq_unlock(rq, &rf);
+> +	}
+
+But worse still, you take possibly every rq->lock without ever
+re-enabling IRQs.
+
+>  
+>  	/* confirm we're still not at a refresh boundary */
+> -	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> +	raw_spin_lock(&cfs_b->lock);
+>  	cfs_b->slack_started = false;
+>  	if (cfs_b->distribute_running) {
+>  		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
