@@ -2,79 +2,104 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBEEC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1038EC74A41
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A4D20844
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFAD20844
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 02:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmKI/1OY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbfGKCkY (ORCPT
+        id S1727789AbfGKCpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 22:40:24 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:35373 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727783AbfGKCkX (ORCPT
+        Wed, 10 Jul 2019 22:45:18 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42501 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfGKCpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 22:40:23 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09366905|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0744421-0.00954207-0.916016;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.Evp2QQa_1562812820;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.Evp2QQa_1562812820)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Thu, 11 Jul 2019 10:40:20 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
-        Mao Han <han_mao@c-sky.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH 1/1] riscv: Fix perf record without libelf support
-Date:   Thu, 11 Jul 2019 10:38:40 +0800
-Message-Id: <96b979a523210628de8a8a3d6e48492f6f1ff02d.1562812381.git.han_mao@c-sky.com>
+        Wed, 10 Jul 2019 22:45:17 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so4311782otn.9;
+        Wed, 10 Jul 2019 19:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=Qbv2ajCJoybKSCHk6U34S4w3N5YXbwdABLrNyMIOFjU=;
+        b=OmKI/1OYqrb+UnpZfqjLqOfdc/u9TGckIXOgROvKJxlQGt2A1Kx6qHJtEphheqRMfY
+         76AEcQ9Q/eeMFGaVSM2n4B6b7pOrtVAZEZekEPdYWpVrsHilu9raJQMROtOniHxmcpVK
+         VolYLvRFmskpXHA5KGsOILvPBTWQvSTK7f5zzpjHW+IoKkGDhNIjkEUhO/R64Zpx0T07
+         kX41HG/EPmTpT6KTVeegZB1crm1C3TFq+TFprVuzsqB0buNcWVEFwIb0ugcWSnVQxcvQ
+         v1VohMm9Nkh4av+aWhd/Cjr4cAtIFgOdH+5S7FDZ7JQ0HAmOy2HK6OQsscNBo4GzR6zy
+         +Tpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=Qbv2ajCJoybKSCHk6U34S4w3N5YXbwdABLrNyMIOFjU=;
+        b=ik5cycMTRjT/kgb9XGlS5bL6jdF3RN6VYr5+mxrDuZcCNgqIE5ppjb69C0ZJ2YEiC/
+         Fo8KAN5ZYhAY2ZoVtpdz/3DZ4hsK2d4spLSqkmXCBVTDCy/5bYATvLi7eCu/HY1cQztF
+         EERnjvpMHYilHL+e+COzP6nUjFSoIKWdZC0EkAp9TCHaA7bTnNprSsBHfZv8jEMgO8GR
+         QaIKI3nHnrtyZdeK5qedrVK3yP5nIo0yaxaEEBWmO8bC5XQrkMUDzVNakjFJVwhkT1l9
+         D2TG+sIOkac3c0nyMFkmzhsHtYH+oHM4sYwvs1+ftha2NYq7/P2+c8Gq2pLmr00gU0oM
+         +zJQ==
+X-Gm-Message-State: APjAAAX5LOi99a6+pOC+3wDAwgiqyxKK/hLNMtEqwXKUAZDSRFZIzGdD
+        0VgGuvfXl9PN4PeTVwMRewI=
+X-Google-Smtp-Source: APXvYqwBpsX4X+cHsa9au4otSEaxauUfBFpVKnqpbq1k4/l6JomJbGSzjRjBR49Xc+4I1qYSteNcag==
+X-Received: by 2002:a9d:6659:: with SMTP id q25mr1354219otm.272.1562813116651;
+        Wed, 10 Jul 2019 19:45:16 -0700 (PDT)
+Received: from localhost ([76.224.107.173])
+        by smtp.gmail.com with ESMTPSA id j5sm1426216oih.52.2019.07.10.19.45.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 19:45:15 -0700 (PDT)
+From:   Lei YU <mine260309@gmail.com>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Eddie James <eajames@linux.ibm.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Lei YU <mine260309@gmail.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon (occ): Fix division by zero issue
+Date:   Thu, 11 Jul 2019 10:44:48 +0800
+Message-Id: <1562813088-23708-1-git-send-email-mine260309@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix following perf record error by linking vdso.so with
-build id.
+The code in occ_get_powr_avg() invokes div64_u64() without checking the
+divisor. In case the divisor is zero, kernel gets an "Division by zero
+in kernel" error.
 
-perf.data      perf.data.old
-[ perf record: Woken up 1 times to write data ]
-free(): double free detected in tcache 2
-Aborted
+Check the divisor and make it return 0 if the divisor is 0.
 
-perf record use filename__read_build_id(util/symbol-minimal.c) to get
-build id when libelf is not supported. When vdso.so is linked without
-build id, the section size of PT_NOTE will be zero, buf size will
-realloc to zero and cause memory corruption.
-
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
+Signed-off-by: Lei YU <mine260309@gmail.com>
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
 ---
- arch/riscv/kernel/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/occ/common.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-index f1d6ffe..49a5852 100644
---- a/arch/riscv/kernel/vdso/Makefile
-+++ b/arch/riscv/kernel/vdso/Makefile
-@@ -37,7 +37,7 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
- # these symbols in the kernel code rather than hand-coded addresses.
+diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+index 13a6290..f02aa40 100644
+--- a/drivers/hwmon/occ/common.c
++++ b/drivers/hwmon/occ/common.c
+@@ -402,8 +402,10 @@ static ssize_t occ_show_power_1(struct device *dev,
  
- SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
--	-Wl,--hash-style=both
-+	-Wl,--build-id -Wl,--hash-style=both
- $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
- 	$(call if_changed,vdsold)
+ static u64 occ_get_powr_avg(u64 *accum, u32 *samples)
+ {
+-	return div64_u64(get_unaligned_be64(accum) * 1000000ULL,
+-			 get_unaligned_be32(samples));
++	u64 divisor = get_unaligned_be32(samples);
++
++	return (divisor == 0) ? 0 :
++		div64_u64(get_unaligned_be64(accum) * 1000000ULL, divisor);
+ }
  
+ static ssize_t occ_show_power_2(struct device *dev,
 -- 
 2.7.4
 
