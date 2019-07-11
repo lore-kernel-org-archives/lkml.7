@@ -2,135 +2,111 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CF8C74A51
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2BCC74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC12621537
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9072064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 10:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfGKKi6 (ORCPT
+        id S1728360AbfGKKoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 06:38:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2203 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725962AbfGKKi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 06:38:58 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 31C3FEE1B2607C849EF1;
-        Thu, 11 Jul 2019 18:38:51 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 11 Jul 2019 18:38:40 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 2/2] f2fs: fix panic of IO alignment feature
-Date:   Thu, 11 Jul 2019 18:38:37 +0800
-Message-ID: <1562841517-77910-2-git-send-email-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562841517-77910-1-git-send-email-yuchao0@huawei.com>
-References: <1562841517-77910-1-git-send-email-yuchao0@huawei.com>
+        Thu, 11 Jul 2019 06:44:30 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:45791 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727865AbfGKKo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 06:44:28 -0400
+X-UUID: f1369d86e92741d4a99963416bfb7caf-20190711
+X-UUID: f1369d86e92741d4a99963416bfb7caf-20190711
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 366328366; Thu, 11 Jul 2019 18:44:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 11 Jul 2019 18:44:21 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 11 Jul 2019 18:44:21 +0800
+Message-ID: <1562841861.9534.2.camel@mtkswgap22>
+Subject: Re: [PATCH] kernel/dma: export dma_alloc_from_contiguous to modules
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
+        <wsd_upstream@mediatek.com>, <linux-mediatek@lists.infradead.org>
+Date:   Thu, 11 Jul 2019 18:44:21 +0800
+In-Reply-To: <7d14b94f-454f-d512-bc8f-589f71bc07ea@arm.com>
+References: <20190711053343.28873-1-miles.chen@mediatek.com>
+         <7d14b94f-454f-d512-bc8f-589f71bc07ea@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 07173c3ec276 ("block: enable multipage bvecs"), one bio vector
-can store multi pages, so that we can not calculate max IO size of
-bio as PAGE_SIZE * bio->bi_max_vecs. However IO alignment feature of
-f2fs always has that assumption, so finally, it may cause panic during
-IO submission as below stack.
+On Thu, 2019-07-11 at 09:50 +0100, Robin Murphy wrote:
+> On 11/07/2019 06:33, miles.chen@mediatek.com wrote:
+> > From: Miles Chen <miles.chen@mediatek.com>
+> > 
+> > This change exports dma_alloc_from_contiguous and
+> > dma_release_from_contiguous to modules.
+> > 
+> > Currently, we can add a reserve a memory node in dts files, make
+> > it a CMA memory by setting compatible = "shared-dma-pool",
+> > and setup the dev->cma_area by using of_reserved_mem_device_init_by_idx().
+> > 
+> > Export dma_alloc_from_contiguous and dma_release_from_contiguous, so we
+> > can allocate/free from/to dev->cma_area in kernel modules.
+> 
+> As far as I understand, this was never intended for drivers to call 
+> directly. If a device has its own private CMA area, then regular 
+> dma_alloc_attrs() should allocate from that automatically; if that's not 
+> happening already, then there's a bug somewhere.
+> 
+> Robin.
 
- kernel BUG at fs/f2fs/data.c:317!
- RIP: 0010:__submit_merged_bio+0x8b0/0x8c0
- Call Trace:
-  f2fs_submit_page_write+0x3cd/0xdd0
-  do_write_page+0x15d/0x360
-  f2fs_outplace_write_data+0xd7/0x210
-  f2fs_do_write_data_page+0x43b/0xf30
-  __write_data_page+0xcf6/0x1140
-  f2fs_write_cache_pages+0x3ba/0xb40
-  f2fs_write_data_pages+0x3dd/0x8b0
-  do_writepages+0xbb/0x1e0
-  __writeback_single_inode+0xb6/0x800
-  writeback_sb_inodes+0x441/0x910
-  wb_writeback+0x261/0x650
-  wb_workfn+0x1f9/0x7a0
-  process_one_work+0x503/0x970
-  worker_thread+0x7d/0x820
-  kthread+0x1ad/0x210
-  ret_from_fork+0x35/0x40
+Thanks for your comment. 
+After using dma_direct_ops, dma_alloc_attrs() works fine now.
 
-This patch adds one extra condition to check left space in bio while
-trying merging page to bio, to avoid panic.
+Miles
 
-This bug was reported in bugzilla:
+> 
+> > Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> > ---
+> >   kernel/dma/contiguous.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> > index b2a87905846d..d5920bdedc77 100644
+> > --- a/kernel/dma/contiguous.c
+> > +++ b/kernel/dma/contiguous.c
+> > @@ -197,6 +197,7 @@ struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
+> >   
+> >   	return cma_alloc(dev_get_cma_area(dev), count, align, no_warn);
+> >   }
+> > +EXPORT_SYMBOL_GPL(dma_alloc_from_contiguous);
+> >   
+> >   /**
+> >    * dma_release_from_contiguous() - release allocated pages
+> > @@ -213,6 +214,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+> >   {
+> >   	return cma_release(dev_get_cma_area(dev), pages, count);
+> >   }
+> > +EXPORT_SYMBOL_GPL(dma_release_from_contiguous);
+> >   
+> >   /*
+> >    * Support for reserved memory regions defined in device tree
+> > 
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204043
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/data.c          | 10 ++++++++++
- fs/f2fs/super.c         |  2 +-
- include/linux/f2fs_fs.h |  1 +
- 3 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index bdfd8fb..f106ada 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -508,6 +508,16 @@ static bool io_is_mergeable(struct f2fs_sb_info *sbi, struct bio *bio,
- {
- 	if (!page_is_mergeable(sbi, bio, last_blkaddr, cur_blkaddr))
- 		return false;
-+	if (F2FS_IO_ALIGNED(sbi)) {
-+		unsigned int filled_blocks =
-+				F2FS_BYTES_TO_BLK(bio->bi_iter.bi_size);
-+		unsigned int io_size = F2FS_IO_SIZE(sbi);
-+		unsigned int left_vecs = bio->bi_max_vecs - bio->bi_vcnt;
-+
-+		/* IOs in bio is aligned and left space of vectors is not enough */
-+		if (!(filled_blocks % io_size) && left_vecs < io_size)
-+			return false;
-+	}
- 	return io_type_is_mergeable(io, fio);
- }
- 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index d95a681..a98e3b9 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3204,7 +3204,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (err)
- 		goto free_bio_info;
- 
--	if (F2FS_IO_SIZE(sbi) > 1) {
-+	if (F2FS_IO_ALIGNED(sbi)) {
- 		sbi->write_io_dummy =
- 			mempool_create_page_pool(2 * (F2FS_IO_SIZE(sbi) - 1), 0);
- 		if (!sbi->write_io_dummy) {
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index 6555990..52af9ac 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -41,6 +41,7 @@
- #define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
- #define F2FS_IO_SIZE_BITS(sbi)	(F2FS_OPTION(sbi).write_io_size_bits) /* power of 2 */
- #define F2FS_IO_SIZE_MASK(sbi)	(F2FS_IO_SIZE(sbi) - 1)
-+#define F2FS_IO_ALIGNED(sbi)	(F2FS_IO_SIZE(sbi) > 1)
- 
- /* This flag is used by node and meta inodes, and by recovery */
- #define GFP_F2FS_ZERO		(GFP_NOFS | __GFP_ZERO)
--- 
-2.7.4
 
