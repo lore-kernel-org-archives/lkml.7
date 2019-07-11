@@ -2,107 +2,133 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E480EC74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0161BC74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E39208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13D7206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3IsQrcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfGKEoO (ORCPT
+        id S1727857AbfGKFC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 00:44:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64122 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726088AbfGKEoO (ORCPT
+        Thu, 11 Jul 2019 01:02:26 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:35887 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfGKFC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 00:44:14 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6B4gZZn128493
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 00:44:13 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tnvm9k5g4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 00:44:12 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 11 Jul 2019 05:44:10 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Jul 2019 05:44:05 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6B4i4J546268522
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 04:44:04 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A059D4C046;
-        Thu, 11 Jul 2019 04:44:04 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3D054C044;
-        Thu, 11 Jul 2019 04:44:02 +0000 (GMT)
-Received: from [9.124.31.192] (unknown [9.124.31.192])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Jul 2019 04:44:02 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH] Fix perf stat repeat segfault
-To:     Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com,
-        linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com
-References: <20190710204540.176495-1-nums@google.com>
-Date:   Thu, 11 Jul 2019 10:14:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 11 Jul 2019 01:02:26 -0400
+Received: by mail-yw1-f68.google.com with SMTP id x67so372532ywd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 22:02:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O7XDUYZ50C5Wivig3QmUbWDaMygc+9d5AOPjUhLcsBo=;
+        b=l3IsQrcBVy6PrW8UVKVBL2FYEIdjoxNATom3yi4BY+Ol4ai4JZeEdsgjhfDCa+CEvV
+         s1YYWCmvC8dn7ubda+c5nlfGCawIqNAxcLXewDUPpYBgD4uAg9ySqwVUS+9Dwaa999mw
+         rbL1mTPDR4ql0lvYK5biWBL9Eg1dALDgCpg1yfhe4EmRSjE49Ef7O59VTgLFlSBMdd/X
+         KbNqEYPiv9xLr1wiW0D2Ci7yYc4ZoXs54TYtV4J2SarwVIAT30jO48laMJ5+V42SBpZP
+         rHDPhhClysG9EOE9ngvlmIaYb1Ud1GKVURXNUCkPF1m3bAb9ZcUmP06Zmu3XHmbuomSM
+         d+LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O7XDUYZ50C5Wivig3QmUbWDaMygc+9d5AOPjUhLcsBo=;
+        b=nttr+Ct+FZNVj/gCgvZzcKhJ/HPTE+5RzXUN6ibbrMImO0mySNNp0eG0F2qlGjTclS
+         EYuYlFPrQG0inY2WCisRDsQzo0bm2TjH8kx7s8mIgppbLUXXFLIF+r12lsO9u6kkWIFP
+         qAhD1sF9rznth+AnLOZbVyveUqUbZlu9UuRZp1CRJFL9pJ1ZgTFwoZO81LrLZOtK9UAu
+         OB9zKLpO93QlrNS4d0EVR9kjYpDypZp89n7bk/pPlPqVreWTXaHmvjzNuJvt0tXzVOIA
+         J5qo5kCNNNrq3Lhp4J0m3nu2K1XrKu68Y3J03CXPvrT2+heFyQKxveWVAoQUgFe8Bcfo
+         R7yA==
+X-Gm-Message-State: APjAAAXOc3aGi5bsv6FSMJWujXE/nDtmvAbqbFJCj5UxebCKstxs6bn3
+        ERg0Z0SdnVLXKiaPmm1f8FDKwceM0TGPy/IHruI=
+X-Google-Smtp-Source: APXvYqxk4dEK5tecSWqR9MAZ1C+G8y6zyrlLugpIDnqBoeyNKN/MtYliO+GrRsuY2M8HD7LogDKzqtghj2LfzHw0mnY=
+X-Received: by 2002:ac8:359a:: with SMTP id k26mr1279205qtb.87.1562821345676;
+ Wed, 10 Jul 2019 22:02:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190710204540.176495-1-nums@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071104-0016-0000-0000-0000029161B7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071104-0017-0000-0000-000032EF1EB4
-Message-Id: <9e68ade9-ebf9-eb70-474d-3720bb49d9f9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907110053
+References: <20190628091528.17059-1-duyuyang@gmail.com> <20190628091528.17059-18-duyuyang@gmail.com>
+ <20190710051830.GB14490@tardis>
+In-Reply-To: <20190710051830.GB14490@tardis>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Thu, 11 Jul 2019 13:02:14 +0800
+Message-ID: <CAHttsrbedG9aJibhXBJZwKtt2ABX+TDU16dOWN+RP9yJ5OcbWA@mail.gmail.com>
+Subject: Re: [PATCH v3 17/30] locking/lockdep: Add read-write type for a lock dependency
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>, paulmck@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Numfor,
+Thanks for review.
 
-On 7/11/19 2:15 AM, Numfor Mbiziwo-Tiapo wrote:
-> -static bool perf_evsel__should_store_id(struct perf_evsel *counter)
-> +static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
->  {
-> -	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
-> +	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
-> +		&& run_idx < 1;
->  }
+On Wed, 10 Jul 2019 at 13:18, Boqun Feng <boqun.feng@gmail.com> wrote:
+>
+> On Fri, Jun 28, 2019 at 05:15:15PM +0800, Yuyang Du wrote:
+> > Direct dependencies need to keep track of their read-write lock types.
+> > Two bit fields, which share the distance field, are added to lock_list
+> > struct so the types are stored there.
+> >
+> > With a dependecy lock1 -> lock2, lock_type1 has the type for lock1 and
+> > lock_type2 has the type for lock2, where the values are one of the
+> > lock_type enums.
+> >
+> > Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+> > ---
+> >  include/linux/lockdep.h  | 15 ++++++++++++++-
+> >  kernel/locking/lockdep.c | 25 +++++++++++++++++++++++--
+> >  2 files changed, 37 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+> > index eb26e93..fd619ac 100644
+> > --- a/include/linux/lockdep.h
+> > +++ b/include/linux/lockdep.h
+> > @@ -185,6 +185,8 @@ static inline void lockdep_copy_map(struct lockdep_map *to,
+> >               to->class_cache[i] = NULL;
+> >  }
+> >
+> > +#define LOCK_TYPE_BITS       2
+> > +
+> >  /*
+> >   * Every lock has a list of other locks that were taken after or before
+> >   * it as lock dependencies. These dependencies constitute a graph, which
+> > @@ -207,7 +209,17 @@ struct lock_list {
+> >       struct list_head                chains;
+> >       struct lock_class               *class[2];
+> >       struct lock_trace               trace;
+> > -     int                             distance;
+> > +
+> > +     /*
+> > +      * The lock_type fields keep track of the lock type of this
+> > +      * dependency.
+> > +      *
+> > +      * With L1 -> L2, lock_type1 stores the lock type of L1, and
+> > +      * lock_type2 stores that of L2.
+> > +      */
+> > +     unsigned int                    lock_type1 : LOCK_TYPE_BITS,
+> > +                                     lock_type2 : LOCK_TYPE_BITS,
+>
+> Bad names ;-) Maybe fw_dep_type and bw_dep_type? Which seems to be
+> aligned with the naming schema other functions.
 
-Build fails for me:
+I think the types are for L1 -> L2 respectively, hence the names in
+question. Let me reconsider this anyway and maybe hear from others.
 
-builtin-stat.c: In function ‘perf_evsel__should_store_id’:
-builtin-stat.c:395:3: error: suggest parentheses around ‘&&’ within ‘||’ [-Werror=parentheses]
-  return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   && run_idx < 1;
-   ^~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-And probably,
-Fixes: 82bf311e15d2 ("perf stat: Use group read for event groups")
-
+Thanks,
+Yuyang
