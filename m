@@ -2,139 +2,85 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CA1C74A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80AC74A4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5633821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D757C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 07:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfGKHoa convert rfc822-to-8bit (ORCPT
+        id S1727974AbfGKH5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 03:44:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61530 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727972AbfGKHoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 03:44:30 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6B7iGvK018151
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 03:44:29 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.119])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tnwqpeumc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 03:44:29 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Thu, 11 Jul 2019 07:44:28 -0000
-Received: from us1b3-smtp01.a3dr.sjc01.isc4sb.com (10.122.7.174)
-        by smtp.notes.na.collabserv.com (10.122.182.123) with smtp.notes.na.collabserv.com ESMTP;
-        Thu, 11 Jul 2019 07:44:23 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp01.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2019071107442246-171529 ;
-          Thu, 11 Jul 2019 07:44:22 +0000 
-In-Reply-To: <20190710174800.34451-1-natechancellor@gmail.com>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Nathan Chancellor" <natechancellor@gmail.com>
-Cc:     "Doug Ledford" <dledford@redhat.com>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Date:   Thu, 11 Jul 2019 07:44:22 +0000
+        Thu, 11 Jul 2019 03:57:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33774 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726088AbfGKH5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 03:57:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 41042AC4C;
+        Thu, 11 Jul 2019 07:57:38 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D9EF31E43B9; Thu, 11 Jul 2019 09:48:59 +0200 (CEST)
+Date:   Thu, 11 Jul 2019 09:48:59 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Boaz Harrosh <openosd@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dax: Fix missed PMD wakeups
+Message-ID: <20190711074859.GA8727@quack2.suse.cz>
+References: <20190703195302.GJ1729@bombadil.infradead.org>
+ <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
+ <20190704032728.GK1729@bombadil.infradead.org>
+ <20190704165450.GH31037@quack2.suse.cz>
+ <20190704191407.GM1729@bombadil.infradead.org>
+ <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
+ <20190705191004.GC32320@bombadil.infradead.org>
+ <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
+ <20190710190204.GB14701@quack2.suse.cz>
+ <20190711030855.GO32320@bombadil.infradead.org>
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190710174800.34451-1-natechancellor@gmail.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-KeepSent: E93E0F86:E35CE856-00258434:002A83CE;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 22511
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19071107-6115-0000-0000-000006627147
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.378364; ST=0; TS=0; UL=0; ISC=; MB=0.000118
-X-IBM-SpamModules-Versions: BY=3.00011408; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01230525; UDB=6.00648152; IPR=6.01011801;
- BA=6.00006354; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027677; XFM=3.00000015;
- UTC=2019-07-11 07:44:27
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-11 02:51:54 - 6.00010150
-x-cbparentid: 19071107-6116-0000-0000-0000B1669CB6
-Message-Id: <OFE93E0F86.E35CE856-ON00258434.002A83CE-00258434.002A83DF@notes.na.collabserv.com>
-Subject: Re:  [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_01:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711030855.GO32320@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Nathan Chancellor" <natechancellor@gmail.com> wrote: -----
-
->To: "Bernard Metzler" <bmt@zurich.ibm.com>, "Doug Ledford"
-><dledford@redhat.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
->From: "Nathan Chancellor" <natechancellor@gmail.com>
->Date: 07/10/2019 07:48PM
->Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
->clang-built-linux@googlegroups.com, "Nathan Chancellor"
-><natechancellor@gmail.com>
->Subject: [EXTERNAL] [PATCH] rdma/siw: Use proper enumerated type in
->map_cqe_status
->
->clang warns several times:
->
->drivers/infiniband/sw/siw/siw_cq.c:31:4: warning: implicit conversion
->from enumeration type 'enum siw_wc_status' to different enumeration
->type
->'enum siw_opcode' [-Wenum-conversion]
->        { SIW_WC_SUCCESS, IB_WC_SUCCESS },
->        ~ ^~~~~~~~~~~~~~
->
->Fixes: b0fff7317bb4 ("rdma/siw: completion queue methods")
->Link:
->https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_Clang
->BuiltLinux_linux_issues_596&d=DwIDAg&c=jf_iaSHvJObTbx-siA1ZOg&r=2TaYX
->Q0T-r8ZO1PP1alNwU_QJcRRLfmYTAgd3QCvqSc&m=1dqKSwiEVgePsLNbxXRmdhXDxww4
->AEGxKq-g-MmQHBo&s=IFwaU5yLu598NLBtKkAxLXzRNmACfnhxCpg3QVeJpB0&e= 
->Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->---
-> drivers/infiniband/sw/siw/siw_cq.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/infiniband/sw/siw/siw_cq.c
->b/drivers/infiniband/sw/siw/siw_cq.c
->index e2a0ee40d5b5..e381ae9b7d62 100644
->--- a/drivers/infiniband/sw/siw/siw_cq.c
->+++ b/drivers/infiniband/sw/siw/siw_cq.c
->@@ -25,7 +25,7 @@ static int map_wc_opcode[SIW_NUM_OPCODES] = {
-> };
+On Wed 10-07-19 20:08:55, Matthew Wilcox wrote:
+> On Wed, Jul 10, 2019 at 09:02:04PM +0200, Jan Kara wrote:
+> > @@ -848,7 +853,7 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
+> >  	if (unlikely(dax_is_locked(entry))) {
+> >  		void *old_entry = entry;
+> >  
+> > -		entry = get_unlocked_entry(xas);
+> > +		entry = get_unlocked_entry(xas, 0);
+> >  
+> >  		/* Entry got punched out / reallocated? */
+> >  		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
 > 
-> static struct {
->-	enum siw_opcode siw;
->+	enum siw_wc_status siw;
-> 	enum ib_wc_status ib;
-> } map_cqe_status[SIW_NUM_WC_STATUS] = {
-> 	{ SIW_WC_SUCCESS, IB_WC_SUCCESS },
->-- 
->2.22.0
->
->
->
-Nathan, thanks very much. That's correct.
-I don't know how this could pass w/o warning.
+> I'm not sure about this one.  Are we sure there will never be a dirty
+> PMD entry?  Even if we can't create one today, it feels like a bit of
+> a landmine to leave for someone who creates one in the future.
 
-Many thanks,
-Bernard.
+I was thinking about this but dax_writeback_one() doesn't really care what
+entry it gets. Yes, in theory it could get a PMD when previously there was
+PTE or vice-versa but we check that PFN's match and if they really do
+match, there's no harm in doing the flushing whatever entry we got back...
+And the checks are simpler this way.
 
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
