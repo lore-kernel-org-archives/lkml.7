@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A76AC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375D7C74A35
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E71321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FF621019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 14:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lJAKdulh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xw8imofO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfGKO15 (ORCPT
+        id S1728854AbfGKO14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 10:27:57 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39610 "EHLO
+        Thu, 11 Jul 2019 10:27:56 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39580 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbfGKO1z (ORCPT
+        with ESMTP id S1728809AbfGKO1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 10:27:55 -0400
+        Thu, 11 Jul 2019 10:27:53 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEO7Xi100417;
-        Thu, 11 Jul 2019 14:26:11 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6BEO7gP100410;
+        Thu, 11 Jul 2019 14:26:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=lCtyGi9lNXZNoOqW5lwUfawQTHm8Gs8rgqwuOoYVSXg=;
- b=lJAKdulhKeHbnYjRsyD5nMQD+gRQsuPOeXQdtSSCbufwUKXgsEfUN2Rz5GYHTyi0V/o7
- /7wfZKsgL4wiSMWTnhXm2xWq6UxcJMo9Wcw35HV4xUxxM34clQuAg7xvJmhbR4yOZmCW
- HtxhTH15oHUeFU7K6yML/HzF46ooAQ0oDiETifZF8/K0Eb+1V8sYTyAXh2PY56Cglqe0
- 4to8Zt1JMHQxjc6IQGJB++dychz0/PvHCxVVbx1+c6+qGz1P2iNzE3+TWmWcb+jtnmaE
- 8hDeydy1NGeaojoYQskyTsqpWzZDVRocAyhp4SKVywbNL71DbkjE7rT5ZK2hAsuvr/wq nA== 
+ bh=tktXu8oSlvrRNi4oCpkMHKHtnQ30RjQ+vGHk9xchmuI=;
+ b=Xw8imofO8fKNfBvyII53RRKIWPHJ/UdjgH1ZSaBocnV0EADrjb1GTZYN4HsE7xrVPRc/
+ TEHR2f4ozNEvHmT4xkzmrRWShe8NJkdGTGU5UyvTwwVLuobGplkQYt22venKGQfjZsCi
+ BuPNZ1Zy1I5Lm3q4cyPwf0rvVmiPcVoh9A/tJ1V5PFUsSDajeMDtZazluCVycnUMAv6u
+ /YyGN39NkO9rtwovlVRiIRORlVYEoHIigSvvQZaOjXC7B6+jVAU9bBj+zUDnf/Rei8Mf
+ yGpCGEFGnOwzX/ATnI3MWljtUlcXz+wMpxZcI3AhvYUC5PX/005SgrPaW6hQhMYqVhz6 ew== 
 Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq0c74-1
+        by aserp2120.oracle.com with ESMTP id 2tjkkq0cat-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 14:26:11 +0000
+        Thu, 11 Jul 2019 14:26:39 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPctx021444;
-        Thu, 11 Jul 2019 14:26:02 GMT
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x6BEPcu8021444;
+        Thu, 11 Jul 2019 14:26:31 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,15 +50,15 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
         rppt@linux.vnet.ibm.com, alexandre.chartre@oracle.com
-Subject: [RFC v2 06/26] mm/asi: Add ASI page-table entry allocation functions
-Date:   Thu, 11 Jul 2019 16:25:18 +0200
-Message-Id: <1562855138-19507-7-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC v2 15/26] mm/asi: Initialize the ASI page-table with core mappings
+Date:   Thu, 11 Jul 2019 16:25:27 +0200
+Message-Id: <1562855138-19507-16-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907110162
@@ -67,140 +67,239 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add functions to allocate p4d/pud/pmd/pte pages for an ASI page-table
-and keep track of them.
+Core mappings are the minimal mappings we need to be able to
+enter isolation and handle an isolation abort or exit. This
+includes the kernel code, the GDT and the percpu ASI sessions.
+We also need a stack so we map the current stack when entering
+isolation and unmap it on exit/abort.
+
+Optionally, additional mappins can be added like the stack canary
+or the percpu offset to be able to use get_cpu_var()/this_cpu_ptr()
+when isolation is active.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/mm/asi_pagetable.c |  111 +++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 111 insertions(+), 0 deletions(-)
+ arch/x86/include/asm/asi.h  |    9 ++++-
+ arch/x86/mm/asi.c           |   75 +++++++++++++++++++++++++++++++++++++++---
+ arch/x86/mm/asi_pagetable.c |   30 ++++++++++++----
+ 3 files changed, 99 insertions(+), 15 deletions(-)
 
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index cf5d198..1ac8fd3 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -11,6 +11,13 @@
+ #include <asm/pgtable.h>
+ #include <linux/xarray.h>
+ 
++/*
++ * asi_create() map flags. Flags are used to map optional data
++ * when creating an ASI.
++ */
++#define ASI_MAP_STACK_CANARY	0x01	/* map stack canary */
++#define ASI_MAP_CPU_PTR		0x02	/* for get_cpu_var()/this_cpu_ptr() */
++
+ enum page_table_level {
+ 	PGT_LEVEL_PTE,
+ 	PGT_LEVEL_PMD,
+@@ -73,7 +80,7 @@ struct asi_session {
+ void asi_init_range_mapping(struct asi *asi);
+ void asi_fini_range_mapping(struct asi *asi);
+ 
+-extern struct asi *asi_create(void);
++extern struct asi *asi_create(int map_flags);
+ extern void asi_destroy(struct asi *asi);
+ extern int asi_enter(struct asi *asi);
+ extern void asi_exit(struct asi *asi);
+diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
+index 25633a6..f049438 100644
+--- a/arch/x86/mm/asi.c
++++ b/arch/x86/mm/asi.c
+@@ -19,6 +19,17 @@
+ /* ASI sessions, one per cpu */
+ DEFINE_PER_CPU_PAGE_ALIGNED(struct asi_session, cpu_asi_session);
+ 
++struct asi_map_option {
++	int	flag;
++	void	*ptr;
++	size_t	size;
++};
++
++struct asi_map_option asi_map_percpu_options[] = {
++	{ ASI_MAP_STACK_CANARY, &fixed_percpu_data, sizeof(fixed_percpu_data) },
++	{ ASI_MAP_CPU_PTR, &this_cpu_off, sizeof(this_cpu_off) },
++};
++
+ static void asi_log_fault(struct asi *asi, struct pt_regs *regs,
+ 			  unsigned long error_code, unsigned long address)
+ {
+@@ -85,16 +96,55 @@ bool asi_fault(struct pt_regs *regs, unsigned long error_code,
+ 	return true;
+ }
+ 
+-static int asi_init_mapping(struct asi *asi)
++static int asi_init_mapping(struct asi *asi, int flags)
+ {
++	struct asi_map_option *option;
++	int i, err;
++
++	/*
++	 * Map the kernel.
++	 *
++	 * XXX We should check if we can map only kernel text, i.e. map with
++	 * size = _etext - _text
++	 */
++	err = asi_map(asi, (void *)__START_KERNEL_map, KERNEL_IMAGE_SIZE);
++	if (err)
++		return err;
++
+ 	/*
+-	 * TODO: Populate the ASI page-table with minimal mappings so
+-	 * that we can at least enter isolation and abort.
++	 * Map the cpu_entry_area because we need the GDT to be mapped.
++	 * Not sure we need anything else from cpu_entry_area.
+ 	 */
++	err = asi_map_range(asi, (void *)CPU_ENTRY_AREA_PER_CPU, P4D_SIZE,
++			    PGT_LEVEL_P4D);
++	if (err)
++		return err;
++
++	/*
++	 * Map the percpu ASI sessions. This is used by interrupt handlers
++	 * to figure out if we have entered isolation and switch back to
++	 * the kernel address space.
++	 */
++	err = ASI_MAP_CPUVAR(asi, cpu_asi_session);
++	if (err)
++		return err;
++
++	/*
++	 * Optional percpu mappings.
++	 */
++	for (i = 0; i < ARRAY_SIZE(asi_map_percpu_options); i++) {
++		option = &asi_map_percpu_options[i];
++		if (flags & option->flag) {
++			err = asi_map_percpu(asi, option->ptr, option->size);
++			if (err)
++				return err;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+-struct asi *asi_create(void)
++struct asi *asi_create(int map_flags)
+ {
+ 	struct page *page;
+ 	struct asi *asi;
+@@ -115,7 +165,7 @@ struct asi *asi_create(void)
+ 	spin_lock_init(&asi->fault_lock);
+ 	asi_init_backend(asi);
+ 
+-	err = asi_init_mapping(asi);
++	err = asi_init_mapping(asi, map_flags);
+ 	if (err)
+ 		goto error;
+ 
+@@ -159,6 +209,7 @@ int asi_enter(struct asi *asi)
+ 	struct asi *current_asi;
+ 	struct asi_session *asi_session;
+ 	unsigned long original_cr3;
++	int err;
+ 
+ 	state = this_cpu_read(cpu_asi_session.state);
+ 	/*
+@@ -190,6 +241,13 @@ int asi_enter(struct asi *asi)
+ 	WARN_ON(asi_session->abort_depth > 0);
+ 
+ 	/*
++	 * We need a stack to run with isolation, so map the current stack.
++	 */
++	err = asi_map(asi, current->stack, PAGE_SIZE << THREAD_SIZE_ORDER);
++	if (err)
++		goto err_clear_asi;
++
++	/*
+ 	 * Instructions ordering is important here because we should be
+ 	 * able to deal with any interrupt/exception which will abort
+ 	 * the isolation and restore CR3 to its original value:
+@@ -211,7 +269,7 @@ int asi_enter(struct asi *asi)
+ 	if (!original_cr3) {
+ 		WARN_ON(1);
+ 		err = -EINVAL;
+-		goto err_clear_asi;
++		goto err_unmap_stack;
+ 	}
+ 	asi_session->original_cr3 = original_cr3;
+ 
+@@ -228,6 +286,8 @@ int asi_enter(struct asi *asi)
+ 
+ 	return 0;
+ 
++err_unmap_stack:
++	asi_unmap(asi, current->stack);
+ err_clear_asi:
+ 	asi_session->asi = NULL;
+ 	asi_session->task = NULL;
+@@ -284,6 +344,9 @@ void asi_exit(struct asi *asi)
+ 	 * exit isolation before abort_depth reaches 0.
+ 	 */
+ 	asi_session->abort_depth = 0;
++
++	/* unmap stack */
++	asi_unmap(asi, current->stack);
+ }
+ EXPORT_SYMBOL(asi_exit);
+ 
 diff --git a/arch/x86/mm/asi_pagetable.c b/arch/x86/mm/asi_pagetable.c
-index a89e02e..0fc6d59 100644
+index f1ee65b..bcc95f2 100644
 --- a/arch/x86/mm/asi_pagetable.c
 +++ b/arch/x86/mm/asi_pagetable.c
-@@ -4,6 +4,8 @@
-  *
-  */
+@@ -710,12 +710,20 @@ int asi_map_range(struct asi *asi, void *ptr, size_t size,
+ 	map_addr = round_down(addr, page_dir_size);
+ 	map_end = round_up(end, page_dir_size);
  
-+#include <linux/mm.h>
-+
- #include <asm/asi.h>
+-	pr_debug("ASI %p: MAP %px/%lx/%d -> %lx-%lx\n", asi, ptr, size, level,
+-		 map_addr, map_end);
+-	if (map_addr < addr)
+-		pr_debug("ASI %p: MAP LEAK %lx-%lx\n", asi, map_addr, addr);
+-	if (map_end > end)
+-		pr_debug("ASI %p: MAP LEAK %lx-%lx\n", asi, end, map_end);
++	/*
++	 * Don't log info the current stack because it is mapped/unmapped
++	 * everytime we enter/exit isolation.
++	 */
++	if (ptr != current->stack) {
++		pr_debug("ASI %p: MAP %px/%lx/%d -> %lx-%lx\n",
++			 asi, ptr, size, level, map_addr, map_end);
++		if (map_addr < addr)
++			pr_debug("ASI %p: MAP LEAK %lx-%lx\n",
++				 asi, map_addr, addr);
++		if (map_end > end)
++			pr_debug("ASI %p: MAP LEAK %lx-%lx\n",
++				 asi, end, map_end);
++	}
  
- /*
-@@ -159,3 +161,112 @@ static bool asi_valid_offset(struct asi *asi, void *offset)
+ 	spin_lock_irqsave(&asi->lock, flags);
  
- 	return p4d;
- }
-+
-+/*
-+ * asi_pXX_alloc() functions are equivalent to kernel pXX_alloc() functions
-+ * but, in addition, they keep track of new pages allocated for the specified
-+ * ASI.
-+ */
-+
-+static pte_t *asi_pte_alloc(struct asi *asi, pmd_t *pmd, unsigned long addr)
-+{
-+	struct page *page;
-+	pte_t *pte;
-+	int err;
-+
-+	if (pmd_none(*pmd)) {
-+		page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!page)
-+			return ERR_PTR(-ENOMEM);
-+		pte = (pte_t *)page_address(page);
-+		err = asi_add_backend_page(asi, pte, PGT_LEVEL_PTE);
-+		if (err) {
-+			free_page((unsigned long)pte);
-+			return ERR_PTR(err);
-+		}
-+		set_pmd_safe(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
-+		pte = pte_offset_map(pmd, addr);
-+	} else {
-+		pte = asi_pte_offset(asi, pmd,  addr);
+@@ -989,8 +997,14 @@ void asi_unmap(struct asi *asi, void *ptr)
+ 
+ 	addr = (unsigned long)range_mapping->ptr;
+ 	end = addr + range_mapping->size;
+-	pr_debug("ASI %p: UNMAP %px/%lx/%d\n", asi, ptr,
+-		 range_mapping->size, range_mapping->level);
++	/*
++	 * Don't log info the current stack because it is mapped/unmapped
++	 * everytime we enter/exit isolation.
++	 */
++	if (ptr != current->stack) {
++		pr_debug("ASI %p: UNMAP %px/%lx/%d\n", asi, ptr,
++			 range_mapping->size, range_mapping->level);
 +	}
-+
-+	return pte;
-+}
-+
-+static pmd_t *asi_pmd_alloc(struct asi *asi, pud_t *pud, unsigned long addr)
-+{
-+	struct page *page;
-+	pmd_t *pmd;
-+	int err;
-+
-+	if (pud_none(*pud)) {
-+		page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!page)
-+			return ERR_PTR(-ENOMEM);
-+		pmd = (pmd_t *)page_address(page);
-+		err = asi_add_backend_page(asi, pmd, PGT_LEVEL_PMD);
-+		if (err) {
-+			free_page((unsigned long)pmd);
-+			return ERR_PTR(err);
-+		}
-+		set_pud_safe(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
-+		pmd = pmd_offset(pud, addr);
-+	} else {
-+		pmd = asi_pmd_offset(asi, pud, addr);
-+	}
-+
-+	return pmd;
-+}
-+
-+static pud_t *asi_pud_alloc(struct asi *asi, p4d_t *p4d, unsigned long addr)
-+{
-+	struct page *page;
-+	pud_t *pud;
-+	int err;
-+
-+	if (p4d_none(*p4d)) {
-+		page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!page)
-+			return ERR_PTR(-ENOMEM);
-+		pud = (pud_t *)page_address(page);
-+		err = asi_add_backend_page(asi, pud, PGT_LEVEL_PUD);
-+		if (err) {
-+			free_page((unsigned long)pud);
-+			return ERR_PTR(err);
-+		}
-+		set_p4d_safe(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
-+		pud = pud_offset(p4d, addr);
-+	} else {
-+		pud = asi_pud_offset(asi, p4d, addr);
-+	}
-+
-+	return pud;
-+}
-+
-+static p4d_t *asi_p4d_alloc(struct asi *asi, pgd_t *pgd, unsigned long addr)
-+{
-+	struct page *page;
-+	p4d_t *p4d;
-+	int err;
-+
-+	if (!pgtable_l5_enabled())
-+		return (p4d_t *)pgd;
-+
-+	if (pgd_none(*pgd)) {
-+		page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!page)
-+			return ERR_PTR(-ENOMEM);
-+		p4d = (p4d_t *)page_address(page);
-+		err = asi_add_backend_page(asi, p4d, PGT_LEVEL_P4D);
-+		if (err) {
-+			free_page((unsigned long)p4d);
-+			return ERR_PTR(err);
-+		}
-+		set_pgd_safe(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
-+		p4d = p4d_offset(pgd, addr);
-+	} else {
-+		p4d = asi_p4d_offset(asi, pgd, addr);
-+	}
-+
-+	return p4d;
-+}
+ 	list_del(&range_mapping->list);
+ 	asi_unmap_overlap(asi, range_mapping);
+ 	kfree(range_mapping);
 -- 
 1.7.1
 
