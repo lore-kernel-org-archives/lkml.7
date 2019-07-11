@@ -2,104 +2,95 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052FEC74A45
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC181C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D329721019
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562823609;
-	bh=zvuDGhOQ3cg7jcGK8yft/tWYQtU9QCFMuievf8sS0Lo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=atMmYoTQ1FG2jm74cYSoTChaj64sgB1rPDZqNEGOBUcTbS0z7ULjqo4zITC6Gjq8X
-	 I3jiB+kNOXW60qYj2x4G/Sgs/hJ8QIt6Td7CAZCg1QjeTngS7IxlWelY5ZzswBeETZ
-	 wxh2AcqUGkTTfiNnvUwyniVgs7Bs+mZRea2ekJYM=
+	by mail.kernel.org (Postfix) with ESMTP id CA6A120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGKFkI (ORCPT
+        id S1727898AbfGKFo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57284 "EHLO mail.kernel.org"
+        Thu, 11 Jul 2019 01:44:27 -0400
+Received: from mga17.intel.com ([192.55.52.151]:64295 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbfGKFkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:40:08 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8093220838;
-        Thu, 11 Jul 2019 05:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562823607;
-        bh=zvuDGhOQ3cg7jcGK8yft/tWYQtU9QCFMuievf8sS0Lo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tTgtdkClydOYcqmy3q/DgbDsZr7eimMgrWjMOm+CFxe7TnzsWd99fP1aPHuXMBqgs
-         p8KGViDX4Ecr0jo1dNXOZupa4/Wsi8b0UbCW1zm60b+4ebLDSmW1tVha3oWMXn7v9t
-         28Yuxykh+iK5jn36PX7XT19Eo5baZq/71UIYg9C4=
-Date:   Thu, 11 Jul 2019 08:40:03 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190711054003.GA23598@mtr-leonro.mtl.com>
-References: <20190709135636.4d36e19f@canb.auug.org.au>
- <20190709064346.GF7034@mtr-leonro.mtl.com>
- <20190710175212.GM2887@mellanox.com>
- <20190711115054.7d7f468c@canb.auug.org.au>
- <20190711015854.GC22409@mellanox.com>
- <20190711131344.452fc064@canb.auug.org.au>
- <20190711131603.6b11b831@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711131603.6b11b831@canb.auug.org.au>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        id S1726088AbfGKFo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 01:44:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 22:44:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,476,1557212400"; 
+   d="scan'208";a="167929709"
+Received: from liujing-dell.bj.intel.com ([10.238.145.70])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Jul 2019 22:44:25 -0700
+From:   Jing Liu <jing2.liu@linux.intel.com>
+To:     kvm@vger.kernel.org
+Cc:     pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+        Jing Liu <jing2.liu@linux.intel.com>
+Subject: [PATCH v1] KVM: x86: expose AVX512_BF16 feature to guest
+Date:   Thu, 11 Jul 2019 13:49:57 +0800
+Message-Id: <1562824197-13658-1-git-send-email-jing2.liu@linux.intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 01:16:03PM +1000, Stephen Rothwell wrote:
-> Hi all,
->
-> On Thu, 11 Jul 2019 13:13:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > On Thu, 11 Jul 2019 02:26:27 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
-> > >
-> > > On Thu, Jul 11, 2019 at 11:50:54AM +1000, Stephen Rothwell wrote:
-> > >
-> > > > So today this failed to build after I merged the rdma tree (previously
-> > > > it didn;t until after the net-next tree was merged (I assume a
-> > > > dependency changed).  It failed because in_dev_for_each_ifa_rcu (and
-> > > > in_dev_for_each_ifa_rtnl) is only defined in a commit in the net-next
-> > > > tree :-(
-> > >
-> > > ? I'm confused..
-> > >
-> > > rdma.git builds fine stand alone (I hope!)
-> >
-> > I have "Fixup to build SIW issue" from Leon (which switches to using
-> > in_dev_for_each_ifa_rcu) included in the rmda tree merge commit because
-> > without that the rdma tree would not build for me.  Are you saying that
-> > I don't need that at all, now?
->
-> Actually , I get it now, "Fixup to build SIW issue" is really just a
-> fixup for the net-next and rdma trees merge ... OK, I will fix that up
-> tomorrow.  Sorry for my confusion.
+AVX512 BFLOAT16 instructions support 16-bit BFLOAT16 floating-point
+format (BF16) for deep learning optimization.
 
-Yes, it was for build only.
+Intel adds AVX512 BFLOAT16 feature in CooperLake, which is CPUID.7.1.EAX[5].
 
->
-> --
-> Cheers,
-> Stephen Rothwell
+Detailed information of the CPUID bit can be found here,
+https://software.intel.com/sites/default/files/managed/c5/15/\
+architecture-instruction-set-extensions-programming-reference.pdf.
 
+Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+---
+
+This patch depends on kernel patch https://lkml.org/lkml/2019/6/19/912
+and Paolo's patch set https://lkml.org/lkml/2019/7/4/468.
+
+ arch/x86/kvm/cpuid.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 8fc6039..0c125dd 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -358,9 +358,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+ 		F(MD_CLEAR);
+ 
++	/* cpuid 7.1.eax */
++	const u32 kvm_cpuid_7_1_eax_x86_features =
++		F(AVX512_BF16);
++
+ 	switch (index) {
+ 	case 0:
+-		entry->eax = 0;
++		entry->eax = min(entry->eax, 1);
+ 		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+ 		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
+ 		/* TSC_ADJUST is emulated */
+@@ -384,6 +388,12 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 		 */
+ 		entry->edx |= F(ARCH_CAPABILITIES);
+ 		break;
++	case 1:
++		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
++		entry->ebx = 0;
++		entry->ecx = 0;
++		entry->edx = 0;
++		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		entry->eax = 0;
+-- 
+1.8.3.1
 
