@@ -2,104 +2,144 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38BBC74A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5EFC74A54
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889A720665
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EfH6sWli"
+	by mail.kernel.org (Postfix) with ESMTP id 9FECB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 12:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfGKMMk (ORCPT
+        id S1728627AbfGKMOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 08:12:40 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:42953 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbfGKMMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:12:39 -0400
-Received: by mail-yw1-f65.google.com with SMTP id z63so3155419ywz.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 05:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JLpZTDyH6Q/WVfB7D3ohVeoj0U2p4Tl2uxiI/qIEuhc=;
-        b=EfH6sWliBwbfu8sqP4opjoREUcenXWr13a17h77Bpj68HtnncvSRktKCJdngvBVDGj
-         iQx8/rI+Ht34P/XquSJHbApJUdh/UZEkkZEz6DXXyvlFkxrKzcbRGI11PUWT4qaM5eeY
-         RplKIYBYyVnToeLtjPy3d7F1sWPNJA7VDNZTfUw9nlEj/xUpi1Mzv19F2vrUPMFbxpiZ
-         1v0pI61zsb31WW2gsjIrMIAhYnAM3rAFhzTNgZnEKm2OShiMCPC/5+n9YVP7gjT/fXCp
-         9XvWqs7A+pS5OONot6+lyJ8pIxT6uzZFhhl2voygxFNNN5eSCQm/I10uk6fgYHZtUFc2
-         mG5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JLpZTDyH6Q/WVfB7D3ohVeoj0U2p4Tl2uxiI/qIEuhc=;
-        b=tzOdG6ByzjrjPBo+xywPDgYoSPgZZsp1g0U1f7m/jYakwKr/tLBc8eUcugOmOguLxO
-         ZiYyHkSC/0qne4EFrABE4CFLxPzfhAQJu3LafDLmuXlordbgNQeB1mhXxG1Y3aMJgXNH
-         Gn4AR1GsN6ZOKSTThr9kYgFN3IEbVKaVJA8dfDr7iYfCstbqfi3CcrJmjUqFVRE0GG7K
-         +Uh9qamaPVRttMXGZ1Q/mJcz6UQUWNhXNXfOg9cVlZg2YQftJZUTn+HGPJeJjGdwzt0r
-         gMszu3EYzrk7Y0VEggt9zMctn90PCcUIGDU9qHQFHQg31ZjFxU2dgRokvf3NWHue380l
-         KXKA==
-X-Gm-Message-State: APjAAAUU+yC/egBn+JOAkIBLz+5wLJqU7QaBXPPxR7LRPtwnwMmrU16X
-        xtD1H6gG/hrNKG3+haeQHPxt2pvagPK4F1zOhsXMSQ==
-X-Google-Smtp-Source: APXvYqzGVBbdyzATQFuVMW3IFDJn0oZE3752K4RBlif7yTSyE6BtlJCKiTmlzKVDg38zAYQuNx/xDs549BoClqzTLhQ=
-X-Received: by 2002:aed:3f47:: with SMTP id q7mr1946820qtf.209.1562847159155;
- Thu, 11 Jul 2019 05:12:39 -0700 (PDT)
+        Thu, 11 Jul 2019 08:14:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:45358 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727974AbfGKMOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 08:14:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E72F92B;
+        Thu, 11 Jul 2019 05:14:42 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A80C3F59C;
+        Thu, 11 Jul 2019 05:14:40 -0700 (PDT)
+Subject: Re: [PATCH] vsyscall: use __iter_div_u64_rem()
+To:     Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20190710130206.1670830-1-arnd@arndb.de>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <33511b0e-6d7b-c156-c415-7a609b049567@arm.com>
+Date:   Thu, 11 Jul 2019 13:14:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190507091224.17781-1-benjamin.gaignard@st.com> <20190711115059.GA7778@icarus>
-In-Reply-To: <20190711115059.GA7778@icarus>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Thu, 11 Jul 2019 14:12:27 +0200
-Message-ID: <CA+M3ks42Whd=QVQ-4==n5bRJKEwYpQtRHs=gBGEZ_Hr=_8YU1g@mail.gmail.com>
-Subject: Re: [PATCH] IIO: stm32: Remove quadrature related functions from
- trigger driver
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190710130206.1670830-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeu. 11 juil. 2019 =C3=A0 13:51, William Breathitt Gray
-<vilhelm.gray@gmail.com> a =C3=A9crit :
->
-> On Tue, May 07, 2019 at 11:12:24AM +0200, Benjamin Gaignard wrote:
-> > Quadrature feature is now hosted on it own framework.
-> > Remove quadrature related code from stm32-trigger driver to avoid
-> > code duplication and simplify the ABI.
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->
-> What is the status of this patch? Are there any objections currently for
-> its inclusion?
+Hi Arnd,
 
-You were the only one asking for more details about it :-)
-If you agree I think that Jonathan can merge it.
+On 10/07/2019 14:01, Arnd Bergmann wrote:
+> On 32-bit x86 when building with clang-9, the loop gets turned back into
+> an inefficient division that causes a link error:
+> 
+> kernel/time/vsyscall.o: In function `update_vsyscall':
+> vsyscall.c:(.text+0xe3): undefined reference to `__udivdi3'
+> 
+> Use the provided __iter_div_u64_rem() function that is meant to address
+> the same case in other files.
+> 
+> Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  kernel/time/vsyscall.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+> index a80893180826..8cf3596a4ce6 100644
+> --- a/kernel/time/vsyscall.c
+> +++ b/kernel/time/vsyscall.c
+> @@ -104,11 +104,7 @@ void update_vsyscall(struct timekeeper *tk)
+>  	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+>  	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+>  	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+> -	while (nsec >= NSEC_PER_SEC) {
+> -		nsec = nsec - NSEC_PER_SEC;
+> -		vdso_ts->sec++;
+> -	}
+> -	vdso_ts->nsec	= nsec;
+> +	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
+>  
+>  	if (__arch_use_vsyscall(vdata))
+>  		update_vdso_data(vdata, tk);
+> 
 
-Benjamin
->
-> William Breathitt Gray
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+I am trying to test this patch using clang-9 tip:
+
+# clang -v
+clang version 9.0.0 (git@github.com:llvm-mirror/clang.git
+6ed0749151866894a67a3e7eefdc1f3a547daa0e) (git@github.com:llvm-mirror/llvm.git
+a10a70238ace1093cad3adeb94814b422bd1b5c1)
+
+but I get a lot of errors similar to the one below:
+
+In file included from ~/linux/arch/x86/events/amd/core.c:11:
+~/linux/arch/x86/events/amd/../perf_event.h:824:21: error: invalid output size
+for constraint '=q'
+        u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+                           ^
+~/linux/include/linux/percpu-defs.h:447:2: note: expanded from macro
+'__this_cpu_read'
+        raw_cpu_read(pcp);                                              \
+        ^
+~/linux/include/linux/percpu-defs.h:421:28: note: expanded from macro 'raw_cpu_read'
+#define raw_cpu_read(pcp)               __pcpu_size_call_return(raw_cpu_read_, pcp)
+                                        ^
+~/linux/include/linux/percpu-defs.h:322:23: note: expanded from macro
+'__pcpu_size_call_return'
+        case 1: pscr_ret__ = stem##1(variable); break;                  \
+                             ^
+<scratch space>:110:1: note: expanded from here
+raw_cpu_read_1
+^
+~/linux/arch/x86/include/asm/percpu.h:394:30: note: expanded from macro
+'raw_cpu_read_1'
+#define raw_cpu_read_1(pcp)             percpu_from_op(, "mov", pcp)
+                                        ^
+~/linux/arch/x86/include/asm/percpu.h:189:15: note: expanded from macro
+'percpu_from_op'
+                    : "=q" (pfo_ret__)                  \
+
+Could you please tell me which version of the compiler did you use?
+
+My building command is:
+
+# make mrproper && make CC=clang HOSTCC=clang i386_defconfig && make ARCH=i386
+CC=clang HOSTCC=clang -j56
+
+-- 
+Regards,
+Vincenzo
