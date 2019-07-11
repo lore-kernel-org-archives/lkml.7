@@ -2,105 +2,99 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFA9C74A42
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BA5C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D922206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5BA21530
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 04:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562818165;
-	bh=Ym3n8jRzdjRqnT2GCor1LFlaraDjpj9VTC8nLFjcZjU=;
+	s=default; t=1562818313;
+	bh=1d8dAC60LzDPiVvA1D6bKHzeotgyr3lMgRRyxoQwW+0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kn1Ofjy1QlLkFFeuXhpcsWzDBtSMvedPrX8tHMsYhKfF9dtSwYwOimopYsakvUEMB
-	 B9bQW0QAf66EDjQzKZNrqMqZ+Pcnqpu1eqpSFa0eYucWlEFWo9SzhRpNdw7W10G4Dd
-	 tnfmDRixl/Bca3ILN7RpVooVPW3OLkeQmcIoACrw=
+	b=LVIr7784kdXixeimCV6W7hiV6VHfPBqnuZWy6rLG9gpbsD+3r/SYHMTWD6utMMQq0
+	 VAv+Qn4YYHlUdRIufwVmCcm9ao2PtU0qKMAEcXXPYd1E0SVsf/ffWGzE+BlSy8NY5d
+	 sdJMvyoM6JQR8ylL/jSDHzQYjUAVpD3BhrnutN4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfGKEFl (ORCPT
+        id S1727622AbfGKEK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 00:05:41 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41528 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfGKEFl (ORCPT
+        Thu, 11 Jul 2019 00:10:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38820 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfGKEK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 00:05:41 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so4258557ljg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 21:05:40 -0700 (PDT)
+        Thu, 11 Jul 2019 00:10:29 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r9so4278688ljg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 21:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ivXca3Gb9/zTO7q/9/U54gRp2T9PacTOB52zjf3jsNU=;
-        b=QLvdrDmJy3ZnMYBqiUOQ3BhTTrN7ku0cSrkdkkyoW1TO4NyodhO+MOUpoEtGsMQFOw
-         oKgwUM3SU4gNU5tsUh74VCcm6nshUHvwe6/fzGRqKIxp01OGKbZAlDQ2dJYQHwhsGbgz
-         glw/52VxxTHQHAST+uSKatrkUycbT8iSDlovw=
+        bh=es3onYrqLbpa7Sg/jHlny3UgofAk0AnWsFMN4Hpiw40=;
+        b=cylJm6dVQKhOUgs7KIfMEf+l/0xCFn7M4HkOnMV5YehwokYf4o/DcNgerXxok/p0PA
+         f+Bsy7JLNvmc8jNeoObUhT7Npo7EhCVRNJoo+/Wd1axwaFiKpjPBQzcfKvpfOka2q786
+         MK+pdglCk6uEpoHUq3ooeJ3tXLxXaekEJyk+E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ivXca3Gb9/zTO7q/9/U54gRp2T9PacTOB52zjf3jsNU=;
-        b=oZIGffa1CuRJSx1Aj2fzy4gFuEFlGnTPPaBeM/+TSI0rBAQREqWmRJdUH2bTNRvwd6
-         xns58ZZ1PEoWvKg+2PrvpjTjNCphONLHYhhlS903BwEqLIFdOk7W+gHdtVYfoMKtxSQj
-         zqGfyCQXxdaHHUkkPmjDYxk9qtpmI2jpLsMMy2JyeiTMvY7Cu14//1rsg/MEjnh+fM5X
-         oVP1mTN/FtfFJbTHYkkhrZaLDMnot9Ara0pe2TyVGNu7O77n+rcePk/RUyYGyQDvQurn
-         ywIFIv/CK2dRcj5rKITlK2aalqGw6snw/G8n9/ncfmxSlNdSvy5MJO2PFPVc5mNwxWig
-         2STA==
-X-Gm-Message-State: APjAAAWP1PLdA/gjo6zxzBiUdJ5jGL6wubTtgbYcjOlY3CgjANjdQVfI
-        T5QQHl0zfLx7EZQYNYOcSZgmHL7g4fM=
-X-Google-Smtp-Source: APXvYqx4a6DbxJcRP0e96sO5i98bsAod+bvHIBydiTviYaMTvk7eWmMGkgCs0Nt5rrICoIv5b2AIDg==
-X-Received: by 2002:a05:651c:95:: with SMTP id 21mr1005776ljq.128.1562817939065;
-        Wed, 10 Jul 2019 21:05:39 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id v2sm583766lfi.3.2019.07.10.21.05.37
+        bh=es3onYrqLbpa7Sg/jHlny3UgofAk0AnWsFMN4Hpiw40=;
+        b=TvSC+PBzOkIQjgkP3MycjwE+lncNFjEcwv2mGw5ZvE0bCLfyjm4G2hewK8AOVGnpcc
+         ZvYtYObKdtSXv7uX2ay7x+4Vey/lEu/JYNJZeAMu5EG5y8y6kNA86F363bT79ZX6iNeF
+         QZjub9GpGljVx27oIKQ3Wo85VvDTE7zw40xJH5HhxtVmQdFlAGNlj0k88iSsuH9nIZLd
+         50vG34biHcF0uTckp2QgIXzqMCT2K8z8URQV9dJVIFvyvcaeb0f3zSiPRF+AbO/h9d2a
+         RV4rb48m58NnFZHQIHu1T8LsL7Z736rdMWIm5jkLnzBriFWktANGDno+BwtJ5fM30kZP
+         mbpw==
+X-Gm-Message-State: APjAAAULpg81wGnjRuxFGcx4DDdLNv15RPvyJAd3j8YRBd6oegos7tH1
+        aMqf0OFXzsGE621mO9ciXUZ6/xIQq74=
+X-Google-Smtp-Source: APXvYqzdeTTTQg19JDlfV7xRTP2ET3B7SV+3a+H5dQq41I5jf76YBfOsvgtNjav9OajwoLFmMI1YCg==
+X-Received: by 2002:a2e:800c:: with SMTP id j12mr571332ljg.22.1562818226835;
+        Wed, 10 Jul 2019 21:10:26 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id v17sm854674ljg.36.2019.07.10.21.10.25
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 21:05:38 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id r15so3027155lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 21:05:37 -0700 (PDT)
-X-Received: by 2002:ac2:59c9:: with SMTP id x9mr563513lfn.52.1562817937331;
- Wed, 10 Jul 2019 21:05:37 -0700 (PDT)
+        Wed, 10 Jul 2019 21:10:26 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id c19so3056793lfm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 21:10:25 -0700 (PDT)
+X-Received: by 2002:a19:641a:: with SMTP id y26mr563262lfb.29.1562818225520;
+ Wed, 10 Jul 2019 21:10:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190709165725.GA2190@redhat.com>
-In-Reply-To: <20190709165725.GA2190@redhat.com>
+References: <20190711023501.963-1-devel@etsukata.com>
+In-Reply-To: <20190711023501.963-1-devel@etsukata.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 10 Jul 2019 21:05:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj00gDz=tX-b5C-xwdogZSaKtRJEDh3SGB69D8W+Wsr2Q@mail.gmail.com>
-Message-ID: <CAHk-=wj00gDz=tX-b5C-xwdogZSaKtRJEDh3SGB69D8W+Wsr2Q@mail.gmail.com>
-Subject: Re: [GIT PULL] dlm updates for 5.3
-To:     David Teigland <teigland@redhat.com>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Jul 2019 21:10:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgd68CAFKXYKHojqEWu17Hrsk2UmMVcN3SQFuXnNMnc+w@mail.gmail.com>
+Message-ID: <CAHk-=wgd68CAFKXYKHojqEWu17Hrsk2UmMVcN3SQFuXnNMnc+w@mail.gmail.com>
+Subject: Re: [PATCH] x86/stacktrace: Fix infinite loop in arch_stack_walk_user()
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Anvin <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 9:57 AM David Teigland <teigland@redhat.com> wrote:
+On Wed, Jul 10, 2019 at 7:35 PM Eiichi Tsukata <devel@etsukata.com> wrote:
 >
-> Apart from a couple trivial fixes, the more notable fix makes the dlm
-> continuing waiting for a user space result if a signal interrupts the
-> wait event.
+> Once we find a lack of return address, there is no need to continue
+> loop, so let's break out.
 
-What? No.
+Looks good to me, feel free to add
 
-That's not sensible at all.
+  Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
 
-If wait_event_interruptible() returns -ERESTARTSYS, it means that we
-have a signal pending.
+and I'll assume this comes through the x86 -tip tree..
 
-And if we have a signal pending, then you can't go back and call
-wait_event_interruptible() in a loop, because the signal will
-*continue* to be pending, so now your "wait event" becomes a kernel
-busy loop.
-
-If you don't want to react to signals, then you shouldn't use the
-"interruptible()" version of wait-event.
-
-I'm not pulling this. Because the code looks completely and utterly wrong to me.
-
-Am I missing something? Feel free to educate me and re-submit.
-
-               Linus
+         Linus
