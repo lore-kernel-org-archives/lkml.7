@@ -2,137 +2,105 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D200C742A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF85AC742A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B06520863
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C3320863
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 19:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pCdP4mNR"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WfctH2ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbfGKTpY (ORCPT
+        id S1728946AbfGKTq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 15:45:24 -0400
-Received: from mail-eopbgr60084.outbound.protection.outlook.com ([40.107.6.84]:59186
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbfGKTpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 15:45:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hEBBaiydBLvKJzveZNII95/4yP9OBnL9VJmTbMWDGdA=;
- b=pCdP4mNRHy9lMMYo4snXYATq85uX0Qw6DTpcY1d3EUxcE/qG1uAd2EHiUvHgssAacZX6YOKw9WEIZaMZDYkwtcYlne8g9vUXV2ZsGkhy2T29jd8ZLWsOopUj3azPCE/ZNOMhmNyHQhhDK6nCju3Sl+Q5Iq2dSQwBaPL4MzWBL4I=
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com (20.177.33.210) by
- AM6PR04MB4805.eurprd04.prod.outlook.com (20.177.35.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 11 Jul 2019 19:45:19 +0000
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::b445:1241:947a:ab83]) by AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::b445:1241:947a:ab83%5]) with mapi id 15.20.2073.008; Thu, 11 Jul 2019
- 19:45:19 +0000
-From:   Han Xu <han.xu@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Ashish Kumar <ashish.kumar@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB
- memory for FSPI
-Thread-Topic: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB
- memory for FSPI
-Thread-Index: AQHVNsj1Ce/O2KTUu0Gwz2jtSdXX0abD91IAgAADTcCAAWOsgIAAdIuA
-Date:   Thu, 11 Jul 2019 19:45:19 +0000
-Message-ID: <AM6PR04MB49670C9EA59A507F9C78B42097F30@AM6PR04MB4967.eurprd04.prod.outlook.com>
-References: <20190710023128.13115-1-han.xu@nxp.com>
- <20190710023128.13115-2-han.xu@nxp.com> <20190710151628.GF14859@sirena.co.uk>
- <AM6PR04MB49672BE152440416ACCE275197F00@AM6PR04MB4967.eurprd04.prod.outlook.com>
- <20190711124117.GG14859@sirena.co.uk>
-In-Reply-To: <20190711124117.GG14859@sirena.co.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=han.xu@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 238ad76a-b72c-4fc2-51c2-08d706384e2d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR04MB4805;
-x-ms-traffictypediagnostic: AM6PR04MB4805:
-x-microsoft-antispam-prvs: <AM6PR04MB480563F2B2D68D3E6FB7938E97F30@AM6PR04MB4805.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 0095BCF226
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(366004)(376002)(396003)(199004)(189003)(13464003)(14454004)(476003)(7696005)(7736002)(6916009)(26005)(186003)(25786009)(2906002)(4326008)(5660300002)(486006)(8676002)(99286004)(102836004)(44832011)(81166006)(66066001)(6116002)(66476007)(9686003)(52536014)(55016002)(53546011)(6246003)(6436002)(446003)(478600001)(74316002)(66946007)(68736007)(76116006)(71200400001)(3846002)(11346002)(316002)(71190400001)(53936002)(81156014)(14444005)(256004)(33656002)(229853002)(66446008)(66556008)(6506007)(86362001)(76176011)(64756008)(305945005)(8936002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4805;H:AM6PR04MB4967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oqFhOYdIus4r2R2vN9HXUPgRgz4hKgTlhCifPsKv+N1wAcqAodIX1aeudVOPnOV9gfzSvf+yzIgYD90XyqM9SYmcfklmzgzJETQiQR0FTkhpMUNXahiJ3SCbGHxa9gvqMT+6aaBEEJfjhsDVus2ZL5p7VHpfX1qgoxkQQaJj70bbH/Eg2QIDh/okgyFgGeobXJQNBAWqxNV44QlNE1aSPSqKbrBOX/btAi5GNKBHqyQ8avLA4Nxc4Y3x3ZwQFw9Qrx823sc3cJANOF3lfvVqkzDvJ3dSmLveSdMtDWJ0/cSqRHR3eWSB4Bby09bMgSUZjioqBBMA78U2+jz5BEwPrb/Fc1qgwyj4sgaTLIXFOUOT36qPnpyX9TpSuPx4q+/GvoEXGc8N8dp5mUG7QqcZNu7clGdkQhGUY9bQAULjJCw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 15:46:28 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34673 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbfGKTq2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 15:46:28 -0400
+Received: by mail-qk1-f196.google.com with SMTP id t8so4641156qkt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 12:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0MV3Xo8JXCmgPVPj78lec025mCDr/1718DU+JOppzoA=;
+        b=WfctH2kez7F8xf8pjozxz28muLcSmecGPp9EI7So4GsVHGxF7SDpICIcvDHC1JXn8p
+         P86t62V30/1dmxJXPNqrtlEHW9cgm0f5FyJfwlBVcq3YasFS7ETZZQvmogrpLHaa7uOM
+         7NbiZbwZp2GA/SX6zrq3GxfYIDznH9v7yWLCC8dbvNc8PwHLxI7TvjV9gdthli9cOeOu
+         DHFLfK3nsnu4ttTWt8P33qOTOxTzEBa7Ne0dOy3SLh3E7xCeimipp+1WGjvmFEGN7fo7
+         JoRnyDfZNylUrQO052pWCoN/88mot5CdDfRBp7a4/Tyr7SlLexn9/scgIqreDrP5VOuN
+         rzkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0MV3Xo8JXCmgPVPj78lec025mCDr/1718DU+JOppzoA=;
+        b=s8ZDczLmp4y66WIvD7BuOM++VbkNz21ly+Znd96eeCMBdHWHfeW3UycCKjF0aecMVP
+         B5sM9CixJIG3D22q2ZeZtR56TA0F/ndOJ+K3TaUqWb8yWhhXHCczyz3bmKIgC5vfROyW
+         wl2whZUYTgyXzqZ0qnX35cjr874WV6wXotbVVGfMchh2Vk1vhMb1cCe+QkK8wxMfJ+t/
+         l9e9niExegp8fsrxeb+yAsVBjPxvxw/wwJLQVjQR+5IpQ1Yww/GFwxxst6NbuYH96eoX
+         wfIlBtRh5iCFQVukYQPG1eF0Y7ZQV33JhnOfut61m1VKA32InE7tholElF2H60G2ixyU
+         OfOw==
+X-Gm-Message-State: APjAAAU4ytqhHwESxBB+w/tihJPZsgCH6D/ST3G24mMDxkPtGtl3xQvx
+        km2r4GpAjjjQwSkRxJhH+blUdQ==
+X-Google-Smtp-Source: APXvYqzjwdP+mZ7dRkBy3VJYWZpIAzR3fAEad0kJ+VLPyzuhPdeZhdwijUigUy10iMlGPnMN0HUT3Q==
+X-Received: by 2002:a37:9a96:: with SMTP id c144mr37475qke.468.1562874387437;
+        Thu, 11 Jul 2019 12:46:27 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id a6sm2363257qkd.135.2019.07.11.12.46.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jul 2019 12:46:26 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlf1O-0002M5-5F; Thu, 11 Jul 2019 16:46:26 -0300
+Date:   Thu, 11 Jul 2019 16:46:26 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Douglas Anderson <dianders@chromium.org>, stable@vger.kernel.org,
+        groeck@chromium.org, gregkh@linuxfoundation.org,
+        sukhomlinov@google.com, Arnd Bergmann <arnd@arndb.de>,
+        Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
+ operations
+Message-ID: <20190711194626.GI25807@ziepe.ca>
+References: <20190711162919.23813-1-dianders@chromium.org>
+ <20190711163915.GD25807@ziepe.ca>
+ <20190711183533.lypj2gwffwheq3qu@linux.intel.com>
+ <20190711194313.3w6gkbayq7yifvgg@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 238ad76a-b72c-4fc2-51c2-08d706384e2d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 19:45:19.4813
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: han.xu@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4805
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711194313.3w6gkbayq7yifvgg@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 11, 2019 at 10:43:13PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Jul 11, 2019 at 09:35:33PM +0300, Jarkko Sakkinen wrote:
+> > > Careful with this, you can't backport this to any kernels that don't
+> > > have the sysfs ops locking changes or they will crash in sysfs code.
+> > 
+> > Oops, I was way too fast! Thanks Jason.
+> 
+> Hmm... hold on a second.
+> 
+> How would the crash realize? I mean this is at the point when user space
+> should not be active. 
 
+Not strictly, AFAIK
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Thursday, July 11, 2019 7:41 AM
-> To: Han Xu <han.xu@nxp.com>
-> Cc: Ashish Kumar <ashish.kumar@nxp.com>; linux-spi@vger.kernel.org; linux=
--
-> kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc A=
-HB memory
-> for FSPI
->=20
-> On Wed, Jul 10, 2019 at 03:35:46PM +0000, Han Xu wrote:
->=20
-> > > > dynamically alloc AHB memory for FSPI controller
->=20
-> > > Why?  This is currently done at probe which is what you'd expect to
-> > > happen here, there's no explanation as to why this change is being ma=
-de.
->=20
-> > Explained in cover letter, It failed to alloc the whole memory mapping
-> > area during probe on some platforms, since the AHB memory area could
-> > be pretty large. The error may look like:
->=20
-> > [    1.129404] fsl-quadspi 1550000.spi: ioremap failed for resource [me=
-m
-> 0x40000000-0x7fffffff]
->=20
-> The commit itself needs to have some explanation of what it's doing so it=
-'s in the
-> git log, particularly for something odd like this.  More generally this j=
-ust doesn't feel
-> like it's solving the problem - essentially we're just deferring the mapp=
-ing and then
-> keep on failing operations until the allocation succeeds for some reason.=
-  That's
-> going to be disruptive for users of the device and it doesn't seem like i=
-t's going to
-> be a robust solution.  Why does the allocation not work initially and why=
- is it more
-> likely to work later on?
+> Secondly, why the crash would not realize with
+> TPM2? The only thing the fix is doing is to do the same thing with TPM1
+> essentially.
 
-Yes, I will explain the reason in next version. To allocate the whole 256MB=
- memory at one time exceed the vmalloc limit, so we dynamically allocate sm=
-all amount of memory just as needed. There is no failing operation, just de=
-ferring and re-allocate if new access area beyond the previous allocate are=
-a.
+TPM2 doesn't use the unlocked sysfs path
+
+Jason
