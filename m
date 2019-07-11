@@ -2,85 +2,106 @@ Return-Path: <SRS0=G0tX=VI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5A3C74A41
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008F2C74A42
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B0B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C314C2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 03:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J6mQidU9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gEJ2OiHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfGKDI6 (ORCPT
+        id S1727874AbfGKDKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 23:08:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40430 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfGKDI6 (ORCPT
+        Wed, 10 Jul 2019 23:10:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38701 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfGKDKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 23:08:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kCf95klSl4II9ASRgUO/dZ/BhEcTH5foAFI3YRAMrm8=; b=J6mQidU9Nu9jXP6cFQwFeAnGJ
-        xO6UGwej3f3LcKNTSHthSc5l6QnV9t/41sADhbPOtxwGJhusuqcizgdLeP6A0kw3iBBfdHJRpSfmH
-        HrFk1NE5ZhA60nEQ0f9kRYvHq9qW4BMY+rJnC41EK3bl1XcDYqvjRceaeLT967PsfjjZyFP2zaJz6
-        JsAXd3+NxpWOEegHY72GEy27CsmwX4tUoVZUaBek+uXF7HqnCAJ/0iblm1DktLNdt2bQUMAAZXlWZ
-        wXzYdRlP5JKjh9XlOpX3EA+YNRBDQAp0jhOLmGIXk/bqCHYDMwnqNSrVanzspV5s9nVHue31DN4lb
-        MtQRKZtSA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlPS3-0000Cr-Jj; Thu, 11 Jul 2019 03:08:55 +0000
-Date:   Wed, 10 Jul 2019 20:08:55 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190711030855.GO32320@bombadil.infradead.org>
-References: <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
- <20190703195302.GJ1729@bombadil.infradead.org>
- <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org>
- <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
- <20190710190204.GB14701@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710190204.GB14701@quack2.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 10 Jul 2019 23:10:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z75so2185458pgz.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 20:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rIHV6cPDPKhX9jkZyhvnHZiEyAQlrV5sCTvAq/yF72U=;
+        b=gEJ2OiHD3xfsyfhhrIHY7acOsv6Qmhq6okCyaEE6s5QGewpmPiMaVqagAoR5/gZE6R
+         gGoOxfOGyeeT0QzUltFU3Z4VTps64FBwoPj7DswM5ZiwD9XcG5qcPLhM1URwPJLSibWp
+         Xx5mt9DSFkUnFcfXbXS//GfIi46AfHy/Bg5kHjHL2Wr+CDUpgpeFbGYKGLiP4Kt8xvLg
+         06zNoJiw+kAAm50bmLvuALPrWB0YCutV3YMeywHvZyQqaaXLlpdMVL897OxRjBoNJqEx
+         Rb9UriVejde7CpAhZ/6hPnRFchFtkO2c3j56UTY0GP6NAPi1I+dMR6JkIMLXMiQN7s4C
+         +z1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rIHV6cPDPKhX9jkZyhvnHZiEyAQlrV5sCTvAq/yF72U=;
+        b=kf+v7qoWB8qbnvj8eHxoVo6GJpbzzMslQecAN7zfbh3Bj/75jX5KdGMm4vBTeIgms2
+         Q31NIhVIuDWUNS2Cj19JUbq00OLuUcxqTSO8dttjrcQJ1awCCN1B/7xAbHm7wPFJcJEN
+         zcSRKtceROeoKl7sLPwzBBj1e9mBvclEe4zlpo0a0iovvMjchh9T0NBAmiKjtVLIlEHH
+         y4+D+IP+DqxgJ4qixcznGhFBTCnwcLvhffIFwFehJ9fdxqeH0m6cHUB0kdcZW0uofXSu
+         t+TacnmwgNoltA6TAWZOjeyXU7rZjpLEsSEULYaJAtmRgeFbfKz1w6lOFOJPGrozn0Sv
+         FZUA==
+X-Gm-Message-State: APjAAAXH+lGQzzVVRWi0V+Wb9uJNVwdCDESbSHDwAkPr5igaz9J1Fyt+
+        1J8vfXVFSMKPMMP2813OzyRhFeQr84s=
+X-Google-Smtp-Source: APXvYqxvo8BxIF61S1ZT84fFK4re4Ii9aN+zdDpPdZpPAiFOokGPgqqw0oTyzCS7WT7S/oCgl7+G2A==
+X-Received: by 2002:a17:90a:23a4:: with SMTP id g33mr2077739pje.115.1562814630577;
+        Wed, 10 Jul 2019 20:10:30 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id 65sm4043082pff.148.2019.07.10.20.10.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 20:10:29 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Junwei Zhang <Jerry.Zhang@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH 1/2] drm/ttm: use the same attributes when freeing d_page->vaddr
+Date:   Thu, 11 Jul 2019 11:10:21 +0800
+Message-Id: <20190711031021.23512-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 09:02:04PM +0200, Jan Kara wrote:
-> @@ -848,7 +853,7 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
->  	if (unlikely(dax_is_locked(entry))) {
->  		void *old_entry = entry;
->  
-> -		entry = get_unlocked_entry(xas);
-> +		entry = get_unlocked_entry(xas, 0);
->  
->  		/* Entry got punched out / reallocated? */
->  		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)))
+In function __ttm_dma_alloc_page(), d_page->addr is allocated
+by dma_alloc_attrs() but freed with use dma_free_coherent() in
+__ttm_dma_free_page().
+Use the correct dma_free_attrs() to free d_page->vaddr.
 
-I'm not sure about this one.  Are we sure there will never be a dirty
-PMD entry?  Even if we can't create one today, it feels like a bit of
-a landmine to leave for someone who creates one in the future.
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/gpu/drm/ttm/ttm_page_alloc_dma.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c b/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c
+index d594f7520b7b..7d78e6deac89 100644
+--- a/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c
++++ b/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c
+@@ -285,9 +285,13 @@ static int ttm_set_pages_caching(struct dma_pool *pool,
+ 
+ static void __ttm_dma_free_page(struct dma_pool *pool, struct dma_page *d_page)
+ {
++	unsigned long attrs = 0;
+ 	dma_addr_t dma = d_page->dma;
+ 	d_page->vaddr &= ~VADDR_FLAG_HUGE_POOL;
+-	dma_free_coherent(pool->dev, pool->size, (void *)d_page->vaddr, dma);
++	if (pool->type & IS_HUGE)
++		attrs = DMA_ATTR_NO_WARN;
++
++	dma_free_attrs(pool->dev, pool->size, (void *)d_page->vaddr, dma, attrs);
+ 
+ 	kfree(d_page);
+ 	d_page = NULL;
+-- 
+2.11.0
 
