@@ -7,128 +7,180 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A814DC74A45
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB195C74A45
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A2A20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F8D21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jul 2019 05:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rJ2e5TnR"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vhqt5ttH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfGKFEO (ORCPT
+        id S1727989AbfGKFE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 01:04:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45429 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfGKFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 01:04:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45kkVf4lVGz9sDB;
-        Thu, 11 Jul 2019 15:04:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562821451;
-        bh=7Nxg3ylgJpNFggaAHZGA41O1MIYbZXvBamiEMnBnJ8g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rJ2e5TnRCgaLWvHL0zKcuVrf2MSW9Yy1udGydqbpTbMaZVPmZZdpOAYjR3yteEQdC
-         oXWfWjEwPtSVXnTVLqvWsP9On6xd4sYKuVYJyTM0El8Q8Hr1koe5jaZQjxleXfWGP7
-         O6Ipi7zjcJzI3EW0ta3GRGTfBURom0jfQwfLGzRg9bF9gv9f5jH/LA9DtMFEqcTiJy
-         hBtbjqS7PdpdWswkrSuaCr3lhPTHSD6BSSDYVXTwzY8dXIhP8ptngbfIsxw+Ma7MCQ
-         uYqkntJQ5h2SPPnyxw9Zn+EgDmxCC0cSu909stGGsZ0vSiKaNfNXFKQmHlHQ5HI6QU
-         4XWn+EF14sv8g==
-Date:   Thu, 11 Jul 2019 15:04:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20190711150409.2455206a@canb.auug.org.au>
+        Thu, 11 Jul 2019 01:04:28 -0400
+Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:43843
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727874AbfGKFE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 01:04:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LSPuR28l3ofDQ3z0SOUE+WzxxlcZ6rRwP5jqd42xIWPHUf5KqeotlnUQm5CBcq+r4iutrDUfA1sPuVJNeNMXZ39Tff4OFwRS2q5IPBgXyIQIU6i1Ltzool+mD6KDTLdqyb5g9khrAT3bsZAIxkiUOiqopn4TXHupIAoeRFYZWHF0qtElX5O05GpQ6H9iLnEJFThMfw71Cte61V3h7+Lzl82uFcNn0yyUiziONYFLKv1gZfHRcWk2GVk4cA87tdLDGFeoqqtQoJSh/AuwYT4MzIZRkZrF7IPi6AFvYts2PCs+yK7MnJ3QHfrAyqhrO5tPL/s+eaTSxeeks/5WJ22RXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z83sYZqk2O9DenZ4DwcWHPJCV0wSkM683OltWOosMNw=;
+ b=gp0i0o6qUZF2hvrsA8zb8IE4sR7Np5b9u93TtSAalIYMfDVESb2D0H2kZfhIJVLYUJqCGwve7e7dcVgd27c4CcSC+zRXP9Oe8Kq0FnGW7v3qq5MXF/NkByzycGY4bLyxR+vSJoJlI+rW4+xf8WTaqduJFsa8NG3+vVDzbumGpaBVywYq7bznGjaYUEoz/sMoQGBNmeztcmXQookf3kc1pJA4mcplCOhm9F+t6dMCNocYEcSf163XBMZ7+x/q9CXrWE1cesXGHAwZKXB83r9U76Djz6QSslElPYwU1FbLdX6p8LB8Jd99KgUPnE3iRfikbci8YhKpHG/IJeFIlOfDRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z83sYZqk2O9DenZ4DwcWHPJCV0wSkM683OltWOosMNw=;
+ b=Vhqt5ttHTEf0Q+DjhGgST+3WfXljqdZYNGgeSjcK9JpOi7bIn83RY2UTDZYoEkp2LNB9ESySNuVY71M46s+QnnXm0ttUVn9FrGqKLbFA2CEc+X7EnAQr6BeKrA1AayHflV5e2NvQHRRtql2e1PQ/m8hWblDjOGcQG6rLawi8N+U=
+Received: from DB8PR04MB6826.eurprd04.prod.outlook.com (52.133.240.82) by
+ DB8PR04MB7035.eurprd04.prod.outlook.com (52.135.61.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.10; Thu, 11 Jul 2019 05:04:24 +0000
+Received: from DB8PR04MB6826.eurprd04.prod.outlook.com
+ ([fe80::a5a4:22ca:7b9b:2d92]) by DB8PR04MB6826.eurprd04.prod.outlook.com
+ ([fe80::a5a4:22ca:7b9b:2d92%2]) with mapi id 15.20.2073.008; Thu, 11 Jul 2019
+ 05:04:24 +0000
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC:     Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>
+Subject: RE: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle fail.
+Thread-Topic: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle
+ fail.
+Thread-Index: AQHVMUUufyAeHKyv8U6/zS4ZNHbUTabE4czg
+Date:   Thu, 11 Jul 2019 05:04:24 +0000
+Message-ID: <DB8PR04MB6826A4A8CE604F2570DC1EA7F1F30@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190703021514.17727-1-sashal@kernel.org>
+ <20190703021514.17727-8-sashal@kernel.org>
+In-Reply-To: <20190703021514.17727-8-sashal@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ran.wang_1@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e889ede0-7180-452b-a62e-08d705bd3df9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7035;
+x-ms-traffictypediagnostic: DB8PR04MB7035:
+x-microsoft-antispam-prvs: <DB8PR04MB7035A9EBDDB88F00515DBD48F1F30@DB8PR04MB7035.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:660;
+x-forefront-prvs: 0095BCF226
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(199004)(189003)(13464003)(3846002)(14454004)(64756008)(8676002)(6116002)(2501003)(33656002)(6436002)(4326008)(7696005)(229853002)(8936002)(26005)(5660300002)(2906002)(25786009)(256004)(6246003)(14444005)(53936002)(55016002)(66446008)(76176011)(76116006)(66946007)(66556008)(66476007)(81156014)(9686003)(52536014)(81166006)(186003)(66066001)(71190400001)(71200400001)(110136005)(478600001)(102836004)(486006)(316002)(2201001)(68736007)(305945005)(74316002)(7736002)(11346002)(446003)(86362001)(53546011)(6506007)(476003)(54906003)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7035;H:DB8PR04MB6826.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yF0BlUXJgMnAysfugLru/A66Z5W/NLYRwzUIKnogo4w2rnxt3xEIRvoD7jHJn/POQthHXEJLdYL02hzNSlMknAxpbQ7mK0VX4fJJEWdBnU/ugOA4ZnUBPNcpyd0BxeVG32YfukgiEelSXMRk+SAmTFI5ABtaoNyVyrl9g17pp1ho6R4jekHgDEnxTcbJl0UjOnzkiISGm+sbMQDqx0ymmmu1UyXdTJL/+JcngMzX1Z6GezS7iAesHTc4djg0si0TSiBTjTI055s/U8GDIh1MPJ9jMsgiHhvy1Px+uuUbLYRKnP4J4hrXZ+Pydmcx4soQkmDiYuEp2JQPeASRmwxXd4nrh+kAHQHWG/JqUDmR+MMcQ8OTuwctAA+XVg432cnfJKh0XeoVLHaK0ADH6BlSPGW+MDAVIXMIJbDyqkoa7X4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/B5NooziqED55ovJZ4cwZzQ."; protocol="application/pgp-signature"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e889ede0-7180-452b-a62e-08d705bd3df9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2019 05:04:24.1942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ran.wang_1@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/B5NooziqED55ovJZ4cwZzQ.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Sasha,=20
 
-Hi all,
+    Thanks for helping port this patch to stable.
+    May I know if I can submit other bug fixes which has been accepted by u=
+pstream to stable by myself?
+    If yes, where I can find related process for reference?
 
-After merging the block tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+Thanks & Regards,
+Ran
 
-fs/xfs/xfs_aops.c: In function 'xfs_add_to_ioend':
-fs/xfs/xfs_aops.c:799:2: error: implicit declaration of function 'wbc_accou=
-nt_io'; did you mean 'blk_account_rq'? [-Werror=3Dimplicit-function-declara=
-tion]
-  wbc_account_io(wbc, page, len);
-  ^~~~~~~~~~~~~~
-  blk_account_rq
+> -----Original Message-----
+> From: Sasha Levin <sashal@kernel.org>
+> Sent: Wednesday, July 03, 2019 10:15
+> To: linux-kernel@vger.kernel.org; stable@vger.kernel.org
+> Cc: Ran Wang <ran.wang_1@nxp.com>; Shawn Guo <shawnguo@kernel.org>;
+> Sasha Levin <sashal@kernel.org>; devicetree@vger.kernel.org
+> Subject: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle fail=
+.
+>=20
+> From: Ran Wang <ran.wang_1@nxp.com>
+>=20
+> [ Upstream commit 53f2ac9d3aa881ed419054076042898b77c27ee4 ]
+>=20
+> PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to indica=
+te
+> CPU State Type: 0 for standby, 1 for power down. In this case, we want to=
+ select
+> standby for CPU idle feature. But current setting wrongly select power do=
+wn and
+> cause CPU SUSPEND fail every time. Need this fix.
+>=20
+> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbcfa3bb..228872549f01 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -28,7 +28,7 @@
+>  			enable-method =3D "psci";
+>  			clocks =3D <&clockgen 1 0>;
+>  			next-level-cache =3D <&l2>;
+> -			cpu-idle-states =3D <&CPU_PH20>;
+> +			cpu-idle-states =3D <&CPU_PW20>;
+>  		};
+>=20
+>  		cpu1: cpu@1 {
+> @@ -38,7 +38,7 @@
+>  			enable-method =3D "psci";
+>  			clocks =3D <&clockgen 1 0>;
+>  			next-level-cache =3D <&l2>;
+> -			cpu-idle-states =3D <&CPU_PH20>;
+> +			cpu-idle-states =3D <&CPU_PW20>;
+>  		};
+>=20
+>  		l2: l2-cache {
+> @@ -53,13 +53,13 @@
+>  		 */
+>  		entry-method =3D "arm,psci";
+>=20
+> -		CPU_PH20: cpu-ph20 {
+> -			compatible =3D "arm,idle-state";
+> -			idle-state-name =3D "PH20";
+> -			arm,psci-suspend-param =3D <0x00010000>;
+> -			entry-latency-us =3D <1000>;
+> -			exit-latency-us =3D <1000>;
+> -			min-residency-us =3D <3000>;
+> +		CPU_PW20: cpu-pw20 {
+> +			  compatible =3D "arm,idle-state";
+> +			  idle-state-name =3D "PW20";
+> +			  arm,psci-suspend-param =3D <0x0>;
+> +			  entry-latency-us =3D <2000>;
+> +			  exit-latency-us =3D <2000>;
+> +			  min-residency-us =3D <6000>;
+>  		};
+>  	};
+>=20
+> --
+> 2.20.1
 
-Caused by commit
-
-  34e51a5e1a6e ("blkcg, writeback: Rename wbc_account_io() to wbc_account_c=
-group_owner()")
-
-interacting with commit
-
-  adfb5fb46af0 ("xfs: implement cgroup aware writeback")
-
-from the xfs tree.
-
-I have applied the following merge fix patch:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 11 Jul 2019 15:01:54 +1000
-Subject: [PATCH] xfs: fix up for wbc_account_io rename
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- fs/xfs/xfs_aops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 761248ee2778..f16d5f196c6b 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -796,7 +796,7 @@ xfs_add_to_ioend(
- 	}
-=20
- 	wpc->ioend->io_size +=3D len;
--	wbc_account_io(wbc, page, len);
-+	wbc_account_cgroup_owner(wbc, page, len);
- }
-=20
- STATIC void
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/B5NooziqED55ovJZ4cwZzQ.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0mw0kACgkQAVBC80lX
-0Gzj6ggAoP4l5jKOrhf+ZYoxXF2wQNPz4FfAT31AaniMR/4ElvqovcKvbGrTSRRs
-CY2k3XkFEjxjVLmL/tXSeJsxjn1L9E4DEOVP56vRZ7/9xKHFKio/5o7Qbi2vxcLH
-jLGqPV+dwQFXMf4uPp8+z9xUrdJUmiOamoM9jOTMDFw5yjUoaeikqjsWc0QzwBbh
-4D4xUv+qKCiTWJZCjCV6UsE0wJ+cP118k9ozuVpRThXw4IxjVzVB7HLEXIpzs0C1
-uyigm8Nr3zloqhq/TNT62tCnsbHZA1Z053YxJfJPICX/YVYfjDZFFXoh9nVYj4+z
-y+eWN4mmzSx20x3Y55wqmUKhViKNpA==
-=HzFB
------END PGP SIGNATURE-----
-
---Sig_/B5NooziqED55ovJZ4cwZzQ.--
