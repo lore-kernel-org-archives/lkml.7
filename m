@@ -2,101 +2,80 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B575FC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945DEC742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1D72084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V/iJunfl"
+	by mail.kernel.org (Postfix) with ESMTP id 6BB7E2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfGLH6X (ORCPT
+        id S1726300AbfGLIFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:58:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55250 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfGLH6X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:58:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LtqSlKZWetZ9uGFV2K19vEGagHhsXV8pg3vWp1m725Y=; b=V/iJunfl8ealcixJfAjaVt7Vrd
-        tQUwwlpOMrfElHa7L5+1G8ivCqLA+QLKj++7et5n8GxiXViFsXqzO+QKB50yOVHqQJqPj63zR7Mz/
-        oni9H7rrI0E/MaIPnNyX2MvDdFRFA0l6aIhPXeI0fJroCJs0BvecfAMR6kPmcfRvkfXcoZAJqZv39
-        WH7yKi2rPXVO0Ik5pkgDA4sGvIwc9mD+A2jkIDR21O9JacqiJHxs/qgg/VPYPQB10dOMf4lUH9bDx
-        wAmbgeQC11Xxo56c1HakyQocSdLZdhESnCzqS4A3/c4YMXSo8zEBk+A9qp7YhvUXI29jz1M9lnF0l
-        WR3RRI3g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlqRd-000690-Dz; Fri, 12 Jul 2019 07:58:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A84E320120CB1; Fri, 12 Jul 2019 09:58:15 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 09:58:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
- statistic
-Message-ID: <20190712075815.GN3402@hirez.programming.kicks-ass.net>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
- <20190711134754.GD3402@hirez.programming.kicks-ass.net>
- <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
+        Fri, 12 Jul 2019 04:05:04 -0400
+Received: from nautica.notk.org ([91.121.71.147]:40744 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfGLIFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:05:03 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id E4A83C009; Fri, 12 Jul 2019 10:05:01 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 10:04:46 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [GIT PULL] 9p updates for 5.3
+Message-ID: <20190712080446.GA19400@nautica>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:43:17AM +0800, 王贇 wrote:
-> 
-> 
-> On 2019/7/11 下午9:47, Peter Zijlstra wrote:
-> [snip]
-> >> +	rcu_read_lock();
-> >> +	memcg = mem_cgroup_from_task(p);
-> >> +	if (idx != -1)
-> >> +		this_cpu_inc(memcg->stat_numa->locality[idx]);
-> > 
-> > I thought cgroups were supposed to be hierarchical. That is, if we have:
-> > 
-> >           R
-> > 	 / \
-> > 	 A
-> > 	/\
-> > 	  B
-> > 	  \
-> > 	   t1
-> > 
-> > Then our task t1 should be accounted to B (as you do), but also to A and
-> > R.
-> 
-> I get the point but not quite sure about this...
-> 
-> Not like pages there are no hierarchical limitation on locality, also tasks
+Hi Linus,
 
-You can use cpusets to affect that.
+Here is a 9p update for 5.3, just a couple of fixes that have been
+sitting here for too long as I missed the 5.2 merge window.
 
-> running in a particular group have no influence to others, not to mention the
-> extra overhead, does it really meaningful to account the stuff hierarchically?
+I have two more patches that I didn't have time to test early enough for
+this but also are plain details fix, please let me know if you would
+prefer having me send a pull request for -rc2 after a week in -next or
+if I should just wait until the next window.
+There's little risk but I'm usually rather conservative on this.
 
-AFAIU it's a requirement of cgroups to be hierarchical. All our other
-cgroup accounting is like that.
+
+The following changes since commit 5908e6b738e3357af42c10e1183753c70a0117a9:
+
+  Linux 5.0-rc8 (2019-02-24 16:46:45 -0800)
+
+are available in the git repository at:
+
+  git://github.com/martinetd/linux tags/9p-for-5.3
+
+for you to fetch changes up to 80a316ff16276b36d0392a8f8b2f63259857ae98:
+
+  9p/xen: Add cleanup path in p9_trans_xen_init (2019-05-15 13:00:07
+  +0000)
+
+----------------------------------------------------------------
+9p pull request for inclusion in 5.13
+
+Two small fixes to properly cleanup the 9p transports list if virtio/xen
+module initialization fail.
+9p might otherwise try to access memory from a module that failed to
+register got freed.
+
+----------------------------------------------------------------
+YueHaibing (2):
+      9p/virtio: Add cleanup path in p9_virtio_init
+      9p/xen: Add cleanup path in p9_trans_xen_init
+
+ net/9p/trans_virtio.c |    8 +++++++-
+ net/9p/trans_xen.c    |    8 +++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
