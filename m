@@ -2,221 +2,100 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B0C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7C3C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E52217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:36:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lZCvyn5n"
+	by mail.kernel.org (Postfix) with ESMTP id E05BC2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562967492;
+	bh=LPcquNFArDwm4DxXmALh4qjSnT77WfW+v2QWO4Dp6mc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JuNqX9Sydl2pf+ZPlH3ur0aNrG9QECvxKsATqBy0NzyhwEytR++h2K7F31Jjr2nLk
+	 8ZflsEVhekPVGESLzabp0BAgdEjGTAvDYRcZLaWDEQP4akqeMLLZMU8QF4AQgzv/4v
+	 e9F+4MQ2+3pP0H6f0/Hjbj9JjFH6EFoYOfBV/1H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfGLVgE (ORCPT
+        id S1728098AbfGLViK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 17:36:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34050 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbfGLVgD (ORCPT
+        Fri, 12 Jul 2019 17:38:10 -0400
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:34508 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728037AbfGLViK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:36:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so4855624pfo.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:36:03 -0700 (PDT)
+        Fri, 12 Jul 2019 17:38:10 -0400
+Received: by mail-lj1-f180.google.com with SMTP id p17so10704214ljg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f1OhDpjzDD7S0+COFpFd965N8mxlYpQZP4b4JR0VTV8=;
-        b=lZCvyn5n8owKQ3JyeYzt9+z6iXWkLSpYG3eAl8ccauBAjpAsmohxfuQbcSnqrAuKVo
-         EhJuv2vWWbTPd0eO0fNUhuM6JbViOUOUf/4BwXkUGXtZsJcQX4/U66ACGCFiWUk//WdV
-         Q8H3IUlKRvwTyqp0yyd7gnCEfVZU4qo6+E1Lc=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Iges54z9f906v3uf56WrVXdsTxZk1k/p5wstrSlWhSY=;
+        b=HStbbQgKwJ8PIs2uRSFT6FkcEsY2ELzgFwmB768U+IJZZIFRRG1kKdnBHfLT6+Z8OH
+         pymcd7+1yH6IPng+WI5ltxwoX/fgziXsRTRa+yCzqVYrrGIZQh2D0MUXgqTwhIuI2r8/
+         OJRqvn3weItgeO9YFFvdX9jsIcpP4D+ZARYcM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f1OhDpjzDD7S0+COFpFd965N8mxlYpQZP4b4JR0VTV8=;
-        b=JDDBeLKs0RXLNhHCvsM72v7xx5JIRtrhuu7C1MQ5LYq8J2mabxXih8NPbHGFhmxuHB
-         ZuZ2LiE8FsknEiRm5hAhONp2xYe1y0Yk8qgYxWbSHrTSK41rgzZpd9E7jtwWIwc6a+iz
-         IrOtfvWz7Tax/JihEb8l3wzQD1I0+LtAyGm1mi6CSiHNfZe4cVLmuKbNK7QscN1oSbEN
-         PZCLwD5pWZOBXDvtl4/w/dTGiBlCLNEocztCkdpP8YH3+8O4vAo0Ir11hYkvgTSjqPK5
-         PMfzR/uEZCNNeUXeyVBtoOPs1fnWBWihuO4CY4ULio0wFffb9LTn/5CdflFI9GABEr+e
-         matQ==
-X-Gm-Message-State: APjAAAUbUMW3BBbxX0ekjIQ6DpRBoNCsMLd1ICeD4c2pO2OjJQTxOisF
-        q/G82JGgB5kQcmX5P52FXOWO62dW
-X-Google-Smtp-Source: APXvYqx3LWL3QaQQ5ksHJJX+2CaAAhVLBJ5JupxNkJ3WyB6ER0uWKW+WGxkHpK2VFCITfOz69qvV7g==
-X-Received: by 2002:a63:fb4b:: with SMTP id w11mr13352876pgj.415.1562967362076;
-        Fri, 12 Jul 2019 14:36:02 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o32sm9047532pje.9.2019.07.12.14.36.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 14:36:01 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 17:35:59 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190712213559.GA175138@google.com>
-References: <20190712170024.111093-1-joel@joelfernandes.org>
- <20190712170024.111093-4-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Iges54z9f906v3uf56WrVXdsTxZk1k/p5wstrSlWhSY=;
+        b=YEPC/8wTKxOcQBC30T9ITCnui4dQKiL0vJC3ICmfVxJkjqqPgFdHHGftTKuyicJI5R
+         VWSbMCEyMPI4rT7tLhHUhIz6ApqiyUv0nIDjTDYYSMJT+qafhI0PwdIbvTcCeNCRuRyF
+         sFJtzELpBPap7iY5dvq7BAlT2b81fEc8T9kUu7rZV4Oy7VAqbG8KTVfHicSBxJ0wZ3th
+         e4sHNkne1erejwNhS7XAoz4c/8x3Mcdz+RFfpuvHtxqs19tPDcp2Xwc7AisKTZvpl1RL
+         leAx4+UdhbHsvnnFkKoYGWzhh0qF678aRI7CfrwfcruETdjB3E1S7D2hjLoX/xldJTzE
+         y65Q==
+X-Gm-Message-State: APjAAAXizNh8F2lvGFjc7K7Fj0rvCum+JOV35c8ebNrCHC5FpF12YQ4E
+        Tn3J/i2Ths3buI7hJnLECTyco8XDnrU=
+X-Google-Smtp-Source: APXvYqxkLX0E4RtRFdSxR07AIQg+aRj6zPswNuwoZTo9ph1/W71yIl8NwnvS5jS5vZGEJ2/mC4CcEQ==
+X-Received: by 2002:a2e:8945:: with SMTP id b5mr7013202ljk.93.1562967487683;
+        Fri, 12 Jul 2019 14:38:07 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id i62sm1620985lji.14.2019.07.12.14.38.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 14:38:06 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 62so2496185lfa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:38:06 -0700 (PDT)
+X-Received: by 2002:ac2:44c5:: with SMTP id d5mr5948568lfm.134.1562967486231;
+ Fri, 12 Jul 2019 14:38:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712170024.111093-4-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190712073623.GA16253@kroah.com> <20190712074023.GD16253@kroah.com>
+ <20190712210922.GA102096@archlinux-threadripper>
+In-Reply-To: <20190712210922.GA102096@archlinux-threadripper>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 12 Jul 2019 14:37:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh0XHkcLYh+pMPJrf8WmD6zOgXfq7HuLi7gmzb8aPEOvQ@mail.gmail.com>
+Message-ID: <CAHk-=wh0XHkcLYh+pMPJrf8WmD6zOgXfq7HuLi7gmzb8aPEOvQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Driver core patches for 5.3-rc1
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
-> The rcu/sync code was doing its own check whether we are in a reader
-> section. With RCU consolidating flavors and the generic helper added in
-> this series, this is no longer need. We can just use the generic helper
-> and it results in a nice cleanup.
-> 
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Fri, Jul 12, 2019 at 2:09 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Doesn't look like this made it into the merge, as I currently see that
+> same error with arm64 allyesconfig.
 
-Hi Oleg,
-Slightly unrelated to the patch,
-I tried hard to understand this comment below in percpu_down_read() but no dice.
+Duh.
 
-I do understand how rcu sync and percpu rwsem works, however the comment
-below didn't make much sense to me. For one, there's no readers_fast anymore
-so I did not follow what readers_fast means. Could the comment be updated to
-reflect latest changes?
-Also could you help understand how is a writer not able to change
-sem->state and count the per-cpu read counters at the same time as the
-comment tries to say?
+Because I had fixed up the actual definition of that function during
+the merge, I thought I had handled it all correctly.
 
-	/*
-	 * We are in an RCU-sched read-side critical section, so the writer
-	 * cannot both change sem->state from readers_fast and start checking
-	 * counters while we are here. So if we see !sem->state, we know that
-	 * the writer won't be checking until we're past the preempt_enable()
-	 * and that once the synchronize_rcu() is done, the writer will see
-	 * anything we did within this RCU-sched read-size critical section.
-	 */
+... and entirely missed that the patch was for the declaration in the
+header file.
 
-Also,
-I guess we could get rid of all of the gp_ops struct stuff now that since all
-the callbacks are the same now. I will post that as a follow-up patch to this
-series.
+My bad. Will apply the fix properly.
 
-thanks!
-
- - Joel
-
-
-> ---
-> Please note: Only build and boot tested this particular patch so far.
-> 
->  include/linux/rcu_sync.h |  5 ++---
->  kernel/rcu/sync.c        | 22 ----------------------
->  2 files changed, 2 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> index 6fc53a1345b3..c954f1efc919 100644
-> --- a/include/linux/rcu_sync.h
-> +++ b/include/linux/rcu_sync.h
-> @@ -39,9 +39,8 @@ extern void rcu_sync_lockdep_assert(struct rcu_sync *);
->   */
->  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
->  {
-> -#ifdef CONFIG_PROVE_RCU
-> -	rcu_sync_lockdep_assert(rsp);
-> -#endif
-> +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
-> +			 "suspicious rcu_sync_is_idle() usage");
->  	return !rsp->gp_state; /* GP_IDLE */
->  }
->  
-> diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
-> index a8304d90573f..535e02601f56 100644
-> --- a/kernel/rcu/sync.c
-> +++ b/kernel/rcu/sync.c
-> @@ -10,37 +10,25 @@
->  #include <linux/rcu_sync.h>
->  #include <linux/sched.h>
->  
-> -#ifdef CONFIG_PROVE_RCU
-> -#define __INIT_HELD(func)	.held = func,
-> -#else
-> -#define __INIT_HELD(func)
-> -#endif
-> -
->  static const struct {
->  	void (*sync)(void);
->  	void (*call)(struct rcu_head *, void (*)(struct rcu_head *));
->  	void (*wait)(void);
-> -#ifdef CONFIG_PROVE_RCU
-> -	int  (*held)(void);
-> -#endif
->  } gp_ops[] = {
->  	[RCU_SYNC] = {
->  		.sync = synchronize_rcu,
->  		.call = call_rcu,
->  		.wait = rcu_barrier,
-> -		__INIT_HELD(rcu_read_lock_held)
->  	},
->  	[RCU_SCHED_SYNC] = {
->  		.sync = synchronize_rcu,
->  		.call = call_rcu,
->  		.wait = rcu_barrier,
-> -		__INIT_HELD(rcu_read_lock_sched_held)
->  	},
->  	[RCU_BH_SYNC] = {
->  		.sync = synchronize_rcu,
->  		.call = call_rcu,
->  		.wait = rcu_barrier,
-> -		__INIT_HELD(rcu_read_lock_bh_held)
->  	},
->  };
->  
-> @@ -49,16 +37,6 @@ enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
->  
->  #define	rss_lock	gp_wait.lock
->  
-> -#ifdef CONFIG_PROVE_RCU
-> -void rcu_sync_lockdep_assert(struct rcu_sync *rsp)
-> -{
-> -	RCU_LOCKDEP_WARN(!gp_ops[rsp->gp_type].held(),
-> -			 "suspicious rcu_sync_is_idle() usage");
-> -}
-> -
-> -EXPORT_SYMBOL_GPL(rcu_sync_lockdep_assert);
-> -#endif
-> -
->  /**
->   * rcu_sync_init() - Initialize an rcu_sync structure
->   * @rsp: Pointer to rcu_sync structure to be initialized
-> -- 
-> 2.22.0.510.g264f2c817a-goog
-> 
+            Linus
