@@ -2,140 +2,75 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CD0C742B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB2DC742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23864208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F089121019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfGLKsJ (ORCPT
+        id S1726573AbfGLKwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:48:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:43695 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfGLKsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:48:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 03:48:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
-   d="scan'208";a="177468984"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by orsmga002.jf.intel.com with ESMTP; 12 Jul 2019 03:48:06 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>, <jhladky@redhat.com>,
-        <lvenanci@redhat.com>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
-References: <20190624025604.30896-1-ying.huang@intel.com>
-        <20190624140950.GF2947@suse.de>
-        <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
-        <20190703091747.GA13484@suse.de> <87ef3663nd.fsf@yhuang-dev.intel.com>
-        <20190712082710.GH13484@suse.de>
-Date:   Fri, 12 Jul 2019 18:48:05 +0800
-In-Reply-To: <20190712082710.GH13484@suse.de> (Mel Gorman's message of "Fri,
-        12 Jul 2019 09:27:10 +0100")
-Message-ID: <87d0ifwmu2.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 12 Jul 2019 06:52:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:49909 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfGLKwR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:52:17 -0400
+Received: from [192.168.1.110] ([77.9.38.202]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MIMOy-1hiZFD2G04-00EP0N; Fri, 12 Jul 2019 12:52:15 +0200
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Coccinelle <cocci@systeme.lip6.fr>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: NULL pointer constraints vs. compiler checks
+Organization: metux IT consult
+Message-ID: <732996cf-5813-22a3-ee69-d8dc353845f4@metux.net>
+Date:   Fri, 12 Jul 2019 12:52:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:eDjw4wbraMlZJSs59JKpHBRDvOW73+W+qNBXn/MmPDlHhA1v+j9
+ tjILmbKLmWRiQdCzg80YeQlx+jxAFL1hkHjWMifC8LHnYpwMAf12pC2aGg3nzmkkZXo9nbz
+ zCsioxAngGrJJEGag1O6k1rDmb8I4c/qLgpYNI+sKOEoUrJ5OdlAMg8kju/KZ0m1oMvOUMG
+ hc8L3HHQudYfhwfn4DO2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aqrP9gfRmsA=:Nd3eMdLucqxjCRYoQgNrb2
+ xAjWjEOlqklDugngomYkF7ph5GynXF7uMN6Y5kbBu61tYRmsvXTbKkjFiQiINTyBmgmTAnfZJ
+ w/U6bsOpe69INm0VLsmM5e/PumXTiXw23mDXcZYjUJLBvkm6+YsLRFFjvmGEYrmr5+j8wWZ8b
+ C+C7ewBnNk4DloMdGtcwZbqI0+RzcIIo3FguHeQFUXkTn0jtbhXzE6wsxFcaY1qtMthvybaCM
+ sQWN1J94MMG3Dpyb6uLYWQ9N8RE486VBJLlcD/AbittVT2PJIMtehQDgef+D3wutImtjvc9bz
+ GpxQvaKnrFi1la9EqhC1m/Rzj2HRHAJhVBFOaAxJgbxREEml5q6SH6io58cGOUZ8Ixdk847gk
+ xjuT8bXMIJ11T1pQ8AFiPxa9L5W9dyqJirDrA6tz3eAKB8HhWlY5xWwr6wbp//nzZKF25fMUW
+ E6u9LCXxqsBp0Ccsc5vNDChzylgUEEiOdycJ/UbndAwQ7eDql5cYZEjfecyQ0FIiZGF9TnIST
+ +HuwEdjYNSW8Hc/G6UQDv/MfSIx1+Q5qBNK2f3VoS1WIrVXdd+dazB2xwzEIE9TDIBa7Gfv5D
+ 6inpRgYWDzwXhzQm5zJXiRRDUaE5QwjNxSCd0KPAmVW6u+aWUOMNLm5ByfjtEw6j7fC98omUj
+ 1IbcF/O7i0Gu+B8sJeUTNMdKXOjjLbMpicldfI+xUAImkrYKCCyYVhW8ofTs04+jkfOD2p11e
+ CvS4YAj+De0cYFAm5NtJ1RE9MQm9KHYPnDI0QmdF/24VeyIoVBxeHFckz+Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mel Gorman <mgorman@suse.de> writes:
+Hello folks,
 
-> On Thu, Jul 04, 2019 at 08:32:06AM +0800, Huang, Ying wrote:
->> Mel Gorman <mgorman@suse.de> writes:
->> 
->> > On Tue, Jun 25, 2019 at 09:23:22PM +0800, huang ying wrote:
->> >> On Mon, Jun 24, 2019 at 10:25 PM Mel Gorman <mgorman@suse.de> wrote:
->> >> >
->> >> > On Mon, Jun 24, 2019 at 10:56:04AM +0800, Huang Ying wrote:
->> >> > > The autonuma scan period should be increased (scanning is slowed down)
->> >> > > if the majority of the page accesses are shared with other processes.
->> >> > > But in current code, the scan period will be decreased (scanning is
->> >> > > speeded up) in that situation.
->> >> > >
->> >> > > This patch fixes the code.  And this has been tested via tracing the
->> >> > > scan period changing and /proc/vmstat numa_pte_updates counter when
->> >> > > running a multi-threaded memory accessing program (most memory
->> >> > > areas are accessed by multiple threads).
->> >> > >
->> >> >
->> >> > The patch somewhat flips the logic on whether shared or private is
->> >> > considered and it's not immediately obvious why that was required. That
->> >> > aside, other than the impact on numa_pte_updates, what actual
->> >> > performance difference was measured and on on what workloads?
->> >> 
->> >> The original scanning period updating logic doesn't match the original
->> >> patch description and comments.  I think the original patch
->> >> description and comments make more sense.  So I fix the code logic to
->> >> make it match the original patch description and comments.
->> >> 
->> >> If my understanding to the original code logic and the original patch
->> >> description and comments were correct, do you think the original patch
->> >> description and comments are wrong so we need to fix the comments
->> >> instead?  Or you think we should prove whether the original patch
->> >> description and comments are correct?
->> >> 
->> >
->> > I'm about to get knocked offline so cannot answer properly. The code may
->> > indeed be wrong and I have observed higher than expected NUMA scanning
->> > behaviour than expected although not enough to cause problems. A comment
->> > fix is fine but if you're changing the scanning behaviour, it should be
->> > backed up with data justifying that the change both reduces the observed
->> > scanning and that it has no adverse performance implications.
->> 
->> Got it!  Thanks for comments!  As for performance testing, do you have
->> some candidate workloads?
->> 
->
-> Ordinarily I would hope that the patch was motivated by observed
-> behaviour so you have a metric for goodness. However, for NUMA balancing
-> I would typically run basic workloads first -- dbench, tbench, netperf,
-> hackbench and pipetest. The objective would be to measure the degree
-> automatic NUMA balancing is interfering with a basic workload to see if
-> they patch reduces the number of minor faults incurred even though there
-> is no NUMA balancing to be worried about. This measures the general
-> overhead of a patch. If your reasoning is correct, you'd expect lower
-> overhead.
->
-> For balancing itself, I usually look at Andrea's original autonuma
-> benchmark, NAS Parallel Benchmark (D class usually although C class for
-> much older or smaller machines) and spec JBB 2005 and 2015. Of the JBB
-> benchmarks, 2005 is usually more reasonable for evaluating NUMA balancing
-> than 2015 is (which can be unstable for a variety of reasons). In this
-> case, I would be looking at whether the overhead is reduced, whether the
-> ratio of local hits is the same or improved and the primary metric of
-> each (time to completion for Andrea's and NAS, throughput for JBB).
->
-> Even if there is no change to locality and the primary metric but there
-> is less scanning and overhead overall, it would still be an improvement.
 
-Thanks a lot for your detailed guidance.
+we recently have lots of patches for either adding missing NULL checks,
+removing unneeded ones, etc. It seems that's an non-trivial terrain,
+so I'm thinking about potential compiler support.
 
-> If you have trouble doing such an evaluation, I'll queue tests if they
-> are based on a patch that addresses the specific point of concern (scan
-> period not updated) as it's still not obvious why flipping the logic of
-> whether shared or private is considered was necessary.
+Does anybody know whether gcc has some way for not-null constraints ?
 
-I can do the evaluation, but it will take quite some time for me to
-setup and run all these benchmarks.  So if these benchmarks have already
-been setup in your environment, so that your extra effort is minimal, it
-will be great if you can queue tests for the patch.  Feel free to reject
-me for any inconvenience.
 
-Best Regards,
-Huang, Ying
+thx
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
