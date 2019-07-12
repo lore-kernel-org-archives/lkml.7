@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E38C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9553BC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91E520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6200D20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935103;
-	bh=8p+HUDU4IayyF4sZp3D9bYRweU5I1ssvFal9s1OG5iw=;
+	s=default; t=1562935109;
+	bh=SLJo6E/igP1Ax35ABgU4VpRSPqCcVBeIe/N25frQ2eE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/Y3i4ood1VDsdL2gEz2mOw/xS+nh7wAXilL62DBVCLCNyYXmB3X1QAVNOAZvuF85
-	 MBiW06T3qCO0u8FyGTnomELgnPXsykbdQJFgNqHf+tLuq4ZNBN/6muQWZVgvbjrvr1
-	 P4E0AB6Q69CIrhG+gO8nhaaNntStJ3/EzGAMvlqo=
+	b=YlnqRrKk/oMqmxjVqHjNM8+wNCn5KvrlnX+DOd422+SP/CGE3yr9kcU+N7tWGppJ6
+	 W63snySW9Cr0yT25tsme5m+cixOOVZ01v/m/sISHViX+4rxAEyPpGkM7QqoHmYSvcK
+	 aqo/c5sAYDawt2lQ9Cjf/mqdI2t61+pHmgyV0A9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfGLM30 (ORCPT
+        id S1728944AbfGLM3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44114 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727442AbfGLM3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:19 -0400
+        id S1728934AbfGLM3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04BB9216B7;
-        Fri, 12 Jul 2019 12:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3536216B7;
+        Fri, 12 Jul 2019 12:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934558;
-        bh=8p+HUDU4IayyF4sZp3D9bYRweU5I1ssvFal9s1OG5iw=;
+        s=default; t=1562934546;
+        bh=SLJo6E/igP1Ax35ABgU4VpRSPqCcVBeIe/N25frQ2eE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLCyzVo/CnGBZFRDZj0H8oNxBgDht6DuV3y4quiPYVSmcqhS6MeNS14MeUURLR3Yj
-         OKhH+OeN8jla4OvArgX1KyuYKIbxepvkRYRzOeWXn/EcCAbH8fWgcnZc5Dl3epJOAl
-         RUzf8+RjLhgv3ITN2N6mkqsJ/QWpMXAv8gX05kf0=
+        b=ghqfomxlTvzvwX2HK6eiRQ2TO05zZYpsK1EsNS+dQwrJShTPdPvpjfNPKTliQYYji
+         H0hdtHqJlGNf2vyVjII7XDAg+us0IYASPJNhLtlpsn/7ID28O/lHugYlbkkRERr/s0
+         Idf+YedEO9fIpLUVuj5RPGxvMPsSRGFth/zjE8Rk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Valente <paolo.valente@unimore.it>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 095/138] block, bfq: NULL out the bic when its no longer valid
-Date:   Fri, 12 Jul 2019 14:19:19 +0200
-Message-Id: <20190712121632.409883135@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.1 092/138] ALSA: hda/realtek - Headphone Mic cant record after S3
+Date:   Fri, 12 Jul 2019 14:19:16 +0200
+Message-Id: <20190712121632.291970527@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,78 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Kailang Yang <kailang@realtek.com>
 
-commit dbc3117d4ca9e17819ac73501e914b8422686750 upstream.
+commit d07a9a4f66e944fcc900812cbc2f6817bde6a43d upstream.
 
-In reboot tests on several devices we were seeing a "use after free"
-when slub_debug or KASAN was enabled.  The kernel complained about:
+Dell headset mode platform with ALC236.
+It doesn't recording after system resume from S3.
+S3 mode was deep. s2idle was not has this issue.
+S3 deep will cut of codec power. So, the register will back to default
+after resume back.
+This patch will solve this issue.
 
-  Unable to handle kernel paging request at virtual address 6b6b6c2b
-
-...which is a classic sign of use after free under slub_debug.  The
-stack crawl in kgdb looked like:
-
- 0  test_bit (addr=<optimized out>, nr=<optimized out>)
- 1  bfq_bfqq_busy (bfqq=<optimized out>)
- 2  bfq_select_queue (bfqd=<optimized out>)
- 3  __bfq_dispatch_request (hctx=<optimized out>)
- 4  bfq_dispatch_request (hctx=<optimized out>)
- 5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
- 6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
- 7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
- 8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
- 9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
- 10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
-
-Digging in kgdb, it could be found that, though bfqq looked fine,
-bfqq->bic had been freed.
-
-Through further digging, I postulated that perhaps it is illegal to
-access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
-because the "bic" can be freed at some point in time after this call
-is made.  I confirmed that there certainly were cases where the exact
-crashing code path would access the "bic" after bfq_exit_icq() had
-been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
-saw that the bic was 0x7 at the time of the crash.
-
-To understand a bit more about why this crash was fairly uncommon (I
-saw it only once in a few hundred reboots), you can see that much of
-the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
-access the ->bic anymore.  The only case it doesn't is if
-bfq_put_queue() sees a reference still held.
-
-However, even in the case when bfqq isn't freed, the crash is still
-rare.  Why?  I tracked what happened to the "bic" after the exit
-routine.  It doesn't get freed right away.  Rather,
-put_io_context_active() eventually called put_io_context() which
-queued up freeing on a workqueue.  The freeing then actually happened
-later than that through call_rcu().  Despite all these delays, some
-extra debugging showed that all the hoops could be jumped through in
-time and the memory could be freed causing the original crash.  Phew!
-
-To make a long story short, assuming it truly is illegal to access an
-icq after the "exit_icq" callback is finished, this patch is needed.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Paolo Valente <paolo.valente@unimore.it>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bfq-iosched.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_realtek.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4265,6 +4265,7 @@ static void bfq_exit_icq_bfqq(struct bfq
- 		unsigned long flags;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3236,6 +3236,7 @@ static void alc256_init(struct hda_codec
+ 	alc_update_coefex_idx(codec, 0x57, 0x04, 0x0007, 0x4); /* Hight power */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 1 << 15); /* Clear bit */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 0 << 15);
++	alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
+ }
  
- 		spin_lock_irqsave(&bfqd->lock, flags);
-+		bfqq->bic = NULL;
- 		bfq_exit_bfqq(bfqd, bfqq);
- 		bic_set_bfqq(bic, NULL, is_sync);
- 		spin_unlock_irqrestore(&bfqd->lock, flags);
+ static void alc256_shutup(struct hda_codec *codec)
+@@ -7782,7 +7783,6 @@ static int patch_alc269(struct hda_codec
+ 		spec->shutup = alc256_shutup;
+ 		spec->init_hook = alc256_init;
+ 		spec->gen.mixer_nid = 0; /* ALC256 does not have any loopback mixer path */
+-		alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
+ 		break;
+ 	case 0x10ec0257:
+ 		spec->codec_variant = ALC269_TYPE_ALC257;
 
 
