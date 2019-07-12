@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D090C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA13C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D782084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466F521019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934412;
-	bh=JhCA7JRtuLF4B7Hrnny5B5vSLOV7fKNrcJG3yIhamGE=;
+	s=default; t=1562934415;
+	bh=5gkJJ5R8e4wrPwmocAUVJJYM+67wBshn7GOo+aQGpTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1d5Fxnh+tAU/YvNAtDK0qbaH/w32d+ky51X790CfVt8iZI6mGZ0dSUozeUWfw4VbO
-	 2p5jOmlXRUhBnERe8mCHag1WgBLu/6y715SEpazYwxkxCyIJ+CD+yWmEeiFi2cTDoD
-	 OBC6CnC4OXC47EvE4sLM960+v5bftwS8ysmvPZe4=
+	b=oPC1Yy/4b0Lb15DPwdp9PsuyHI0jsCzTVPODhRkoJBdH57FFvg+owl0sYTN+6IqlL
+	 iVdtUDvjvHknwn2Ew26jh8azyDk2pbrKUeuSaOspuxkHBfMtA5P8q8gfpzNno4dnPe
+	 aQPAA7IDO5tA4kWKId87xU97X4DYZ1A8LwWQiX/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfGLM0v (ORCPT
+        id S1728515AbfGLM0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727433AbfGLM0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:44 -0400
+        id S1728030AbfGLM0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5756E21019;
-        Fri, 12 Jul 2019 12:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 798E22166E;
+        Fri, 12 Jul 2019 12:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934403;
-        bh=JhCA7JRtuLF4B7Hrnny5B5vSLOV7fKNrcJG3yIhamGE=;
+        s=default; t=1562934410;
+        bh=5gkJJ5R8e4wrPwmocAUVJJYM+67wBshn7GOo+aQGpTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIU2nVU6sUw1nNC1Z3u2Ljr6jq6kvrs3pWGlSz5KaZN1LwFzBZfXHxVtrlfFW2Az1
-         fw0xSnzc7PqrTLK+G6sMtIVw+/OXajpEG8NnfhBdt2Vs9Rkt8VMXyRTMm8RLCRNuKZ
-         CWDhPv1FBLdaEB6EHc78hm0pchEqKyBD+fRQlDNg=
+        b=XiJGjxKjo1ZCcNr6cxS5xbTxv7cw0JZyiILyviv85rEXc4EbzW53x9lkXnWwVSyiM
+         sbGRYqvT3YTMWkRnxBT1DIQ5fmTvA4DUbsJUov+9iS6z9nVV51g53QhhfikEV70pWC
+         O3V9iWyS3vnZ3b7LFmcGUXg/p8Ic5/n3vUcC/bCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
+        Deepak Rawat <drawat@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 045/138] RISC-V: defconfig: enable clocks, serial console
-Date:   Fri, 12 Jul 2019 14:18:29 +0200
-Message-Id: <20190712121630.399201831@linuxfoundation.org>
+Subject: [PATCH 5.1 046/138] drm/vmwgfx: Honor the sg list segment size limitation
+Date:   Fri, 12 Jul 2019 14:18:30 +0200
+Message-Id: <20190712121630.435232349@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b025f2bc98973f181d926192b0ceb6ced0f86d2 ]
+[ Upstream commit bde15555ba61c7f664f40fd3c6fdbdb63f784c9b ]
 
-Enable PRCI clock driver and serial console by default, so the default
-upstream defconfig is bootable to a serial console.
+When building sg tables, honor the device sg list segment size limitation.
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 2fd3461e50ab..4f02967e55de 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -49,6 +49,8 @@ CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
-+CONFIG_SERIAL_SIFIVE=y
-+CONFIG_SERIAL_SIFIVE_CONSOLE=y
- CONFIG_HVC_RISCV_SBI=y
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=y
-@@ -64,6 +66,8 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_STORAGE=y
- CONFIG_USB_UAS=y
- CONFIG_VIRTIO_MMIO=y
-+CONFIG_CLK_SIFIVE=y
-+CONFIG_CLK_SIFIVE_FU540_PRCI=y
- CONFIG_SIFIVE_PLIC=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+index a3357ff7540d..97adee1f0575 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+@@ -454,11 +454,11 @@ static int vmw_ttm_map_dma(struct vmw_ttm_tt *vmw_tt)
+ 		if (unlikely(ret != 0))
+ 			return ret;
+ 
+-		ret = sg_alloc_table_from_pages(&vmw_tt->sgt, vsgt->pages,
+-						vsgt->num_pages, 0,
+-						(unsigned long)
+-						vsgt->num_pages << PAGE_SHIFT,
+-						GFP_KERNEL);
++		ret = __sg_alloc_table_from_pages
++			(&vmw_tt->sgt, vsgt->pages, vsgt->num_pages, 0,
++			 (unsigned long) vsgt->num_pages << PAGE_SHIFT,
++			 dma_get_max_seg_size(dev_priv->dev->dev),
++			 GFP_KERNEL);
+ 		if (unlikely(ret != 0))
+ 			goto out_sg_alloc_fail;
+ 
 -- 
 2.20.1
 
