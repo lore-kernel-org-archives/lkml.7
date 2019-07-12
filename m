@@ -2,100 +2,170 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C03C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AE2C742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CE72084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P1bSvRrt"
+	by mail.kernel.org (Postfix) with ESMTP id B06902084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfGLBiN (ORCPT
+        id S1728981AbfGLBkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:38:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42546 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfGLBiM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:38:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1YXGg120969;
-        Fri, 12 Jul 2019 01:37:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=UUQibFn516zSpiU9EIh8vT+iqeDCfU6g8uHMqSkxd4g=;
- b=P1bSvRrtVVekXjj+esEqo7c8osF1B3cyDE+dc3cTIwylBKgm+XTFNv2KeopA41FzNMJd
- OjiRyd3O3MkqrRZrs1p0rmQELM85yoh63eJI0HoLAhI8wuYlaX2i8EibLD+hPGGvP2m2
- d0c+M+t7lyrOhOcWuLBRYYDUqEjpNE2XXvmvkth0AlI9pw2qs+pqvSEcSghqCjk1AKId
- Qoh9zOWAy+9FUaCznnX9bZRDPlxTkPF8ODPQdXmUhh7B4jML0Ac/TeXy5hE0+7etfktu
- +38nuZWiUNGCSeII8SqI+1uDg3vVpp+HdsBkEdX0J8Ck0QrnQJVyUxoSz4RhF7DY+yKv Xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tjk2u32n0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 01:37:32 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1XUHL060147;
-        Fri, 12 Jul 2019 01:37:32 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tnc8tvhn6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 01:37:32 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C1bUhc003924;
-        Fri, 12 Jul 2019 01:37:31 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jul 2019 18:37:30 -0700
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        jejb@linux.ibm.com, linux-scsi@vger.kernel.org, stefanha@redhat.com
-Subject: Re: [PATCH 0/2] scsi: add support for request batching
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190530112811.3066-1-pbonzini@redhat.com>
-        <746ad64a-4047-1597-a0d4-f14f3529cc19@redhat.com>
-        <yq1lfxnk8ar.fsf@oracle.com>
-        <48c7d581-6ec8-260a-b4ba-217aef516305@redhat.com>
-        <80dd68bf-a544-25ec-568f-cee1cf0c8cfd@suse.de>
-        <6c2cf159-9ba2-da39-6e1c-95dea7e111ba@redhat.com>
-Date:   Thu, 11 Jul 2019 21:37:25 -0400
-In-Reply-To: <6c2cf159-9ba2-da39-6e1c-95dea7e111ba@redhat.com> (Paolo
-        Bonzini's message of "Fri, 5 Jul 2019 13:58:39 +0200")
-Message-ID: <yq11ryw6nje.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 11 Jul 2019 21:40:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10212 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbfGLBkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:40:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 18:40:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
+   d="scan'208";a="249982626"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.196.119]) ([10.239.196.119])
+  by orsmga001.jf.intel.com with ESMTP; 11 Jul 2019 18:40:44 -0700
+Subject: Re: [PATCH v2] tracing: Add verbose gfp_flag printing to synthetic
+ events
+To:     Tom Zanussi <zanussi@kernel.org>, rostedt@goodmis.org,
+        mingo@redhat.com, tom.zanussi@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org
+References: <20190711084642.28785-1-zhengjun.xing@linux.intel.com>
+ <1562859753.29283.10.camel@kernel.org>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <3062dff1-1d77-251e-253b-19c6d95d5bdc@linux.intel.com>
+Date:   Fri, 12 Jul 2019 09:40:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=854
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120018
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=910 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120018
+In-Reply-To: <1562859753.29283.10.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tom,
 
-Paolo,
+On 7/11/2019 11:42 PM, Tom Zanussi wrote:
+> Hi Zhengjun,
+> 
+> The patch itself looks fine to me, but could you please create a v3
+> with a couple changes to the commit message?  I noticed you dropped
+> your original commit message - please add it back and combine with part
+> of mine, as below.  Also, please keep your original Subject line
+> ('[PATCH] trace:add "gfp_t" support in synthetic_events') (but the
+> first word after trace:, 'add', should be capitalized.)
+> 
+Thanks. I will send v3 version patch soon.
 
-> Stefan answered, and the series now has three reviews!  It may be late
-> for 5.3 but I hope this can go in soon.
-
-I queued these up for 5.4. Thanks!
+> On Thu, 2019-07-11 at 16:46 +0800, Zhengjun Xing wrote:
+>> Add on top of 'trace:add "gfp_t" support in synthetic_events'.
+> 
+> Please remove this part but keep the part below.
+> 
+>>
+>> Prints the gfp flags as hex in addition to the human-readable flag
+>> string.  Example output:
+>>
+>>    whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
+>> (GFP_ATOMIC|__GFP_ZERO)
+>>      rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
+>>      rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+>>
+> 
+> So basically, something like this:
+> 
+> [PATCH] trace: Add "gfp_t" support in synthetic_events
+> 
+> Add "gfp_t" support in synthetic_events, then the "gfp_t" type
+> parameter in some functions can be traced.
+> 
+> Print the gfp flags as hex in addition to the human-readable flag
+> string.  Example output:
+> 
+>    whoopsie-630 [000] ...1 78.969452: testevent: bar=b20 (GFP_ATOMIC|__GFP_ZERO)
+>      rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
+>      rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+> 
+>> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> 
+> 
+> Thanks,
+> 
+> Tom
+> 
+>> ---
+>>   kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/kernel/trace/trace_events_hist.c
+>> b/kernel/trace/trace_events_hist.c
+>> index ca6b0dff60c5..938ef3f54c5c 100644
+>> --- a/kernel/trace/trace_events_hist.c
+>> +++ b/kernel/trace/trace_events_hist.c
+>> @@ -13,6 +13,10 @@
+>>   #include <linux/rculist.h>
+>>   #include <linux/tracefs.h>
+>>   
+>> +/* for gfp flag names */
+>> +#include <linux/trace_events.h>
+>> +#include <trace/events/mmflags.h>
+>> +
+>>   #include "tracing_map.h"
+>>   #include "trace.h"
+>>   #include "trace_dynevent.h"
+>> @@ -752,6 +756,8 @@ static int synth_field_size(char *type)
+>>   		size = sizeof(unsigned long);
+>>   	else if (strcmp(type, "pid_t") == 0)
+>>   		size = sizeof(pid_t);
+>> +	else if (strcmp(type, "gfp_t") == 0)
+>> +		size = sizeof(gfp_t);
+>>   	else if (synth_field_is_string(type))
+>>   		size = synth_field_string_size(type);
+>>   
+>> @@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
+>>   		fmt = "%lu";
+>>   	else if (strcmp(type, "pid_t") == 0)
+>>   		fmt = "%d";
+>> +	else if (strcmp(type, "gfp_t") == 0)
+>> +		fmt = "%x";
+>>   	else if (synth_field_is_string(type))
+>>   		fmt = "%s";
+>>   
+>> @@ -834,9 +838,20 @@ static enum print_line_t
+>> print_synth_event(struct trace_iterator *iter,
+>>   					 i == se->n_fields - 1 ? ""
+>> : " ");
+>>   			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+>>   		} else {
+>> +			struct trace_print_flags __flags[] = {
+>> +			    __def_gfpflag_names, {-1, NULL} };
+>> +
+>>   			trace_seq_printf(s, print_fmt, se-
+>>> fields[i]->name,
+>>   					 entry->fields[n_u64],
+>>   					 i == se->n_fields - 1 ? ""
+>> : " ");
+>> +
+>> +			if (strcmp(se->fields[i]->type, "gfp_t") ==
+>> 0) {
+>> +				trace_seq_puts(s, " (");
+>> +				trace_print_flags_seq(s, "|",
+>> +						      entry-
+>>> fields[n_u64],
+>> +						      __flags);
+>> +				trace_seq_putc(s, ')');
+>> +			}
+>>   			n_u64++;
+>>   		}
+>>   	}
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Zhengjun Xing
