@@ -2,137 +2,92 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F90DC742B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC750C742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBD32084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FEC2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="THypPdhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfGLLiZ convert rfc822-to-8bit (ORCPT
+        id S1726895AbfGLLpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:38:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726254AbfGLLiY (ORCPT
+        Fri, 12 Jul 2019 07:45:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55464 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfGLLpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:38:24 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CBcEbX009251
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:38:23 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.111])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tprra9t5j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:38:23 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 12 Jul 2019 11:38:19 -0000
-Received: from us1b3-smtp04.a3dr.sjc01.isc4sb.com (10.122.203.161)
-        by smtp.notes.na.collabserv.com (10.122.47.52) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 12 Jul 2019 11:38:14 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp04.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2019071211381356-350470 ;
-          Fri, 12 Jul 2019 11:38:13 +0000 
-In-Reply-To: <20190712085314.3974907-1-arnd@arndb.de>
-Subject: Re: [PATCH] rdma/siw: fix enum type mismatch warnings
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Arnd Bergmann" <arnd@arndb.de>
-Cc:     "Doug Ledford" <dledford@redhat.com>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>,
-        "Jason Gunthorpe" <jgg@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jul 2019 11:38:13 +0000
+        Fri, 12 Jul 2019 07:45:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7WheT2sFPbpAYUphDY20RcxiluEPP2yGBWlv6nqCcpo=; b=THypPdhej8/b1YWUg1gyexApx
+        27rbpPcSBzGOOshG/kAYscKus1Ew/eOU5gf9H9brrUNp/PL/1yAXw/FRqTM9KeGIFKW0sT6VvmMfK
+        dxA2HakjTPM7ZH5hjJb9dFsW475nPrHOSuB4zbm2t4DTMfP0ymwVL8uXw/pmmGlO/LSMZiZrYLz+E
+        Uhd/JjQBAgym+6ZFFGwIegs47sVyGzYM7riZt8FU2L+e5mHTfJxzE1sYtiCrqPj9r9w/Hg2Z6pbks
+        RYpGUb6epfiraNJqrQNpNOUonB1BaYJTo9nW9B3w6Bfs1yQ5z+bsLC0Td5ReYT0TnhNrB6jvGZx3z
+        OGOpmAd7Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hltz2-0005PZ-N5; Fri, 12 Jul 2019 11:45:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C66F4209772E7; Fri, 12 Jul 2019 13:44:58 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 13:44:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+Message-ID: <20190712114458.GU3402@hirez.programming.kicks-ass.net>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190712085314.3974907-1-arnd@arndb.de>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-KeepSent: 85440727:0E9065F0-00258435:003FECCD;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 49099
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19071211-3633-0000-0000-0000002A1888
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.000254
-X-IBM-SpamModules-Versions: BY=3.00011414; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231074; UDB=6.00648486; IPR=6.01012358;
- MB=3.00027690; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 11:38:18
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-12 09:31:32 - 6.00010155
-x-cbparentid: 19071211-3634-0000-0000-000000461981
-Message-Id: <OF85440727.0E9065F0-ON00258435.003FECCD-00258435.003FECD0@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Arnd Bergmann" <arnd@arndb.de> wrote: -----
-
->To: "Bernard Metzler" <bmt@zurich.ibm.com>, "Doug Ledford"
-><dledford@redhat.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
->From: "Arnd Bergmann" <arnd@arndb.de>
->Date: 07/12/2019 10:53AM
->Cc: "Arnd Bergmann" <arnd@arndb.de>, "Jason Gunthorpe"
-><jgg@mellanox.com>, linux-rdma@vger.kernel.org,
->linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] [PATCH] rdma/siw: fix enum type mismatch warnings
->
->The values in map_cqe_status[] don't match the type:
->
->drivers/infiniband/sw/siw/siw_cq.c:31:4: error: implicit conversion
->from enumeration type 'enum siw_wc_status' to different enumeration
->type 'enum siw_opcode' [-Werror,-Wenum-conversion]
->        { SIW_WC_SUCCESS, IB_WC_SUCCESS },
->        ~ ^~~~~~~~~~~~~~
->drivers/infiniband/sw/siw/siw_cq.c:32:4: error: implicit conversion
->from enumeration type 'enum siw_wc_status' to different enumeration
->type 'enum siw_opcode' [-Werror,-Wenum-conversion]
->        { SIW_WC_LOC_LEN_ERR, IB_WC_LOC_LEN_ERR },
->        ~ ^~~~~~~~~~~~~~~~~~
->
->Change the struct definition to make them match and stop the
->warning.
->
->Fixes: b0fff7317bb4 ("rdma/siw: completion queue methods")
->Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->---
-> drivers/infiniband/sw/siw/siw_cq.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/infiniband/sw/siw/siw_cq.c
->b/drivers/infiniband/sw/siw/siw_cq.c
->index e2a0ee40d5b5..e381ae9b7d62 100644
->--- a/drivers/infiniband/sw/siw/siw_cq.c
->+++ b/drivers/infiniband/sw/siw/siw_cq.c
->@@ -25,7 +25,7 @@ static int map_wc_opcode[SIW_NUM_OPCODES] = {
-> };
+On Thu, Jul 11, 2019 at 04:25:12PM +0200, Alexandre Chartre wrote:
+> Kernel Address Space Isolation aims to use address spaces to isolate some
+> parts of the kernel (for example KVM) to prevent leaking sensitive data
+> between hyper-threads under speculative execution attacks. You can refer
+> to the first version of this RFC for more context:
 > 
-> static struct {
->-	enum siw_opcode siw;
->+	enum siw_wc_status siw;
-> 	enum ib_wc_status ib;
-> } map_cqe_status[SIW_NUM_WC_STATUS] = {
-> 	{ SIW_WC_SUCCESS, IB_WC_SUCCESS },
->-- 
->2.20.0
->
->
+>    https://lkml.org/lkml/2019/5/13/515
 
-Hi Arnd, this got already fixed.
+No, no, no!
 
-Many thanks!
-Bernard.
+That is the crux of this entire series; you're not punting on explaining
+exactly why we want to go dig through 26 patches of gunk.
 
+You get to exactly explain what (your definition of) sensitive data is,
+and which speculative scenarios and how this approach mitigates them.
+
+And included in that is a high level overview of the whole thing.
+
+On the one hand you've made this implementation for KVM, while on the
+other hand you're saying it is generic but then fail to describe any
+!KVM user.
+
+AFAIK all speculative fails this is relevant to are now public, so
+excruciating horrible details are fine and required.
+
+AFAIK2 this is all because of MDS but it also helps with v1.
+
+AFAIK3 this wants/needs to be combined with core-scheduling to be
+useful, but not a single mention of that is anywhere.
