@@ -2,135 +2,257 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09D1C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8FDC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A311321530
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44EC20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rs/u0q0z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pO5GOjk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfGLCyu (ORCPT
+        id S1729181AbfGLC5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 22:54:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39572 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbfGLCys (ORCPT
+        Thu, 11 Jul 2019 22:57:25 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34826 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728485AbfGLC5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 22:54:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so3844659pgi.6;
-        Thu, 11 Jul 2019 19:54:48 -0700 (PDT)
+        Thu, 11 Jul 2019 22:57:24 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r21so5404386qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 19:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hlJ5SZ08CSnSSRFOp53QvEnZVvpxlaIqKCaeg2qBZWQ=;
-        b=rs/u0q0zlimgMudRG30frHH2GJkMqmSWVIoqVgt5q7BczEbHlSVxE+Yi1Zn6yJQllx
-         2yBc3L//ezoyamlGIZVw5GkVy1qMBxDJ1UBf2mw/5bV+80FWddBBxBx5DpxrF2vUWhrn
-         wz2EH3dz0knCpHKuNQBOUMkq/z0KdMQDl9rkSBvtM5FwO7kloj9XOMF/AYcU9OqbgU1M
-         d5frBbF0G3ObdVF1PNasNKuKRjcU/HjJHdSVhGkBXHFY7/QlcwvrXwI3BvJcRBtH4a4m
-         NCSo2GRD5WU1/JZ7+sV5RYs7kitKJ8QaFobRAqam3qN+Uh2EKNlijxEKBzqjEIW5jdMv
-         +XtQ==
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gH7Y7cFOueYPN5yFqZDzD04ZIFx+RhIlsetMf9Nx5+o=;
+        b=pO5GOjk07zU2XxvSfObP3pjHpabhX7+5aoX/iVrGHtS7u/yxLSXAKaycQvoBWCobfN
+         8dZnD88hDnkaeT6BHjXNFiCOEW+CssQaEhSIBdJ5MMpuJitDMzEs6XbDv9G3ilIr/Lnv
+         YU3CDKOKjVEqyC7uiDSk0CU0cxsocQfrwUaD2mDVNXxSOx4bcCei+dkjjhlzWMRwwNnz
+         197548TBGl7ogwYMaZ8NgjJt/3/o+KtUO2QKTDNQCpXN6fq/l832QKUHbqo9d4STlO1g
+         7x9bmgRPgKPVj9rXIjf2ez7ifaNiuzvmwjlcQDdczDIdfVDTrOBmY/awUbNk0SGyYOnK
+         1J2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hlJ5SZ08CSnSSRFOp53QvEnZVvpxlaIqKCaeg2qBZWQ=;
-        b=pcjhw/UL8WD6tIRflnI8zQUlE7koToDkxanmK46n+vGc1e/6Mod4ZGQliWD1YVH6aP
-         +rSTVuH7qBSFat9JlGqWWFpVFvaY/T4qm5gxCHzGDQWJl9bN8cdlKO5B5Nio+KOkyvP6
-         WumlmOe6tFaTcsgylZqSzU+J12dAQSyEjO29T7FQy90H0MvA3LQqgDckkrYwWkYHgyQf
-         9f+27CPmS5Ylja7Dn23TjXlfSNKu3HFGBpuntTZvfdlpW3wy9VOV/akhXKoJX19BOg2S
-         5YSs0botN3CT579Q54zwkGKx4u+/dKzFrfXFS4KlvDSdG6j0U5VVNefIHcReSBbKwokf
-         THPQ==
-X-Gm-Message-State: APjAAAUu+TwRziKoqoY4kvWAvK4OhRmeHJEgtWfplOEA4Ruw50Hapnnf
-        0Gz45jareArXN3uarzwrHgERAdTTyEA=
-X-Google-Smtp-Source: APXvYqyo6HA6DzVTwivRsf7q25xhytE4Nxc0FBSMKzXSSas3ujuYC1848eLpvDnP/dr2hScB7yX8mA==
-X-Received: by 2002:a63:d30f:: with SMTP id b15mr7882555pgg.341.1562900087624;
-        Thu, 11 Jul 2019 19:54:47 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id n26sm7786630pfa.83.2019.07.11.19.54.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 11 Jul 2019 19:54:47 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH 2/2] KVM: X86: Add pv tlb shootdown tracepoint
-Date:   Fri, 12 Jul 2019 10:54:40 +0800
-Message-Id: <1562900080-20798-2-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562900080-20798-1-git-send-email-wanpengli@tencent.com>
-References: <1562900080-20798-1-git-send-email-wanpengli@tencent.com>
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gH7Y7cFOueYPN5yFqZDzD04ZIFx+RhIlsetMf9Nx5+o=;
+        b=PqzQicRhLbyVJOY/L3aNozyJ08ziIDMgiHnyV9+3gofm4E5XUsXV6PXG4OR8GT7YiP
+         NwhKY/T9DNDQAPt824yFOrPcDDbvNL7l2rQPpubBZ+xQ6nvO8jNN6+PirzrYVXKp1rs5
+         WaVWvc2PDAC3Ve/JUoWIIAUlwU8hJ7q0NnkI8vGExQdtZDKTkacgewyBDtla9MB+rQDH
+         FoTjD5u85KZPpf1uEbMQIUaCT349uF0GndII+zkEbhyvFWjc4PxHwKlpRoVnLLpzL0Gf
+         GbxGv2ZSQzgo/VtZP9d9Y2XHES/z+tTmKzES7yvGtnX5MFoXXEvBqkpu46BnqFCt4LzH
+         Exfw==
+X-Gm-Message-State: APjAAAU+7C0GN66wM3MRh/0a/hMG4mycAcqo8Man5AplMzBnDpzLaTzi
+        T+zRMHV+ySa3vGAZRRkshh9ri9tzMgw=
+X-Google-Smtp-Source: APXvYqz/+y5OFrmlmUM9SCtY/18cDgPqvt7HcNp2++p29xMbLv4ZXLhsT3E4yCfyoTv+mQ4C+W9pjg==
+X-Received: by 2002:a37:62ca:: with SMTP id w193mr4054040qkb.363.1562900243132;
+        Thu, 11 Jul 2019 19:57:23 -0700 (PDT)
+Received: from smtp.gmail.com ([187.121.151.22])
+        by smtp.gmail.com with ESMTPSA id c192sm3088511qkg.33.2019.07.11.19.57.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 19:57:22 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 23:57:18 -0300
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Simon Ser <contact@emersion.fr>,
+        Oleg Vasilev <oleg.vasilev@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] drm/vkms: Add support for vkms work without vblank
+Message-ID: <20190712025718.wdlafaujpxhpupj7@smtp.gmail.com>
+References: <20190710015514.42anrmx3r2ijaomz@smtp.gmail.com>
+ <20190710164036.GZ15868@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mwulvtdqb5ysendt"
+Content-Disposition: inline
+In-Reply-To: <20190710164036.GZ15868@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
 
-Add pv tlb shootdown tracepoint.
+--mwulvtdqb5ysendt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/trace.h | 19 +++++++++++++++++++
- arch/x86/kvm/x86.c   |  2 ++
- 2 files changed, 21 insertions(+)
+On 07/10, Daniel Vetter wrote:
+> On Tue, Jul 09, 2019 at 10:55:14PM -0300, Rodrigo Siqueira wrote:
+> > Currently, vkms only work with enabled VBlank. This patch adds another
+> > operation model that allows vkms to work without VBlank support. In this
+> > scenario, vblank signaling is faked by calling drm_send_vblank_event()
+> > in vkms_crtc_atomic_flush(); this approach works due to the
+> > drm_vblank_get() =3D=3D 0 checking.
+> >=20
+> > Changes since V2:
+> >  - Rebase
+> >=20
+> > Changes since V1:
+> >   Daniel Vetter:
+> >   - Change module parameter name from disablevblank to virtual_hw
+> >   - Improve parameter description
+> >   - Improve commit message
+> >=20
+> > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > ---
+> >  drivers/gpu/drm/vkms/vkms_crtc.c | 10 ++++++++++
+> >  drivers/gpu/drm/vkms/vkms_drv.c  | 13 +++++++++++--
+> >  drivers/gpu/drm/vkms/vkms_drv.h  |  2 ++
+> >  3 files changed, 23 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vk=
+ms_crtc.c
+> > index 49a8ec2cb1c1..a0c75b8c4335 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > @@ -207,12 +207,22 @@ static int vkms_crtc_atomic_check(struct drm_crtc=
+ *crtc,
+> >  static void vkms_crtc_atomic_enable(struct drm_crtc *crtc,
+> >  				    struct drm_crtc_state *old_state)
+> >  {
+> > +	struct vkms_output *vkms_out =3D drm_crtc_to_vkms_output(crtc);
+> > +
+> > +	if (vkms_out->disable_vblank)
+> > +		return;
+> > +
+> >  	drm_crtc_vblank_on(crtc);
+> >  }
+> > =20
+> >  static void vkms_crtc_atomic_disable(struct drm_crtc *crtc,
+> >  				     struct drm_crtc_state *old_state)
+> >  {
+> > +	struct vkms_output *vkms_out =3D drm_crtc_to_vkms_output(crtc);
+> > +
+> > +	if (vkms_out->disable_vblank)
+> > +		return;
+> > +
+> >  	drm_crtc_vblank_off(crtc);
+> >  }
+> > =20
+> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkm=
+s_drv.c
+> > index 152d7de24a76..542a002ef9d5 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > @@ -34,6 +34,11 @@ bool enable_writeback;
+> >  module_param_named(enable_writeback, enable_writeback, bool, 0444);
+> >  MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector=
+");
+> > =20
+> > +bool virtual_hw;
+>=20
+> Can be static, you only use this in vkms_drv.c.
+>=20
+> > +module_param_named(virtual_hw, virtual_hw, bool, 0444);
+> > +MODULE_PARM_DESC(virtual_hw,
+> > +		 "Enable virtual hardware mode (disables vblanks and immediately com=
+pletes flips)");
+> > +
+> >  static const struct file_operations vkms_driver_fops =3D {
+> >  	.owner		=3D THIS_MODULE,
+> >  	.open		=3D drm_open,
+> > @@ -154,9 +159,13 @@ static int __init vkms_init(void)
+> >  	if (ret)
+> >  		goto out_unregister;
+> > =20
+> > -	vkms_device->drm.irq_enabled =3D true;
+> > +	vkms_device->output.disable_vblank =3D virtual_hw;
+> > +	vkms_device->drm.irq_enabled =3D !virtual_hw;
+> > +
+> > +	if (virtual_hw)
+> > +		DRM_INFO("Virtual hardware mode enabled");
+> > =20
+> > -	ret =3D drm_vblank_init(&vkms_device->drm, 1);
+> > +	ret =3D (virtual_hw) ? 0 : drm_vblank_init(&vkms_device->drm, 1);
+> >  	if (ret) {
+> >  		DRM_ERROR("Failed to vblank\n");
+> >  		goto out_fini;
+> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkm=
+s_drv.h
+> > index 9ff2cd4ebf81..256e5e65c947 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> > +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> > @@ -21,6 +21,7 @@
+> > =20
+> >  extern bool enable_cursor;
+> >  extern bool enable_writeback;
+> > +extern bool virtual_hw;
+> > =20
+> >  struct vkms_composer {
+> >  	struct drm_framebuffer fb;
+> > @@ -69,6 +70,7 @@ struct vkms_output {
+> >  	struct drm_connector connector;
+> >  	struct drm_writeback_connector wb_connector;
+> >  	struct hrtimer vblank_hrtimer;
+> > +	bool disable_vblank;
+> >  	ktime_t period_ns;
+> >  	struct drm_pending_vblank_event *event;
+> >  	/* ordered wq for composer_work */
+>=20
+> I'm kinda wondering how this works at all ... does writeback/crc still
+> work if you set virtual mode? Writeback since this seems based on the
+> writeback series ...
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index ce6ee34..84f32d3 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -1487,6 +1487,25 @@ TRACE_EVENT(kvm_pv_send_ipi,
- 	TP_printk("vector %d min 0x%x ipi_bitmap_low 0x%lx ipi_bitmap_high 0x%lx",
- 		  __entry->vector, __entry->min, __entry->ipi_bitmap_low, __entry->ipi_bitmap_high)
- );
-+
-+TRACE_EVENT(kvm_pv_tlb_flush,
-+	TP_PROTO(unsigned int vcpu_id, bool need_flush_tlb),
-+	TP_ARGS(vcpu_id, need_flush_tlb),
-+
-+	TP_STRUCT__entry(
-+		__field(	unsigned int,	vcpu_id		)
-+		__field(	bool,	need_flush_tlb		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vcpu_id	= vcpu_id;
-+		__entry->need_flush_tlb = need_flush_tlb;
-+	),
-+
-+	TP_printk("vcpu %u need_flush_tlb %s", __entry->vcpu_id,
-+		__entry->need_flush_tlb ? "true" : "false")
-+);
-+
- #endif /* _TRACE_KVM_H */
- 
- #undef TRACE_INCLUDE_PATH
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index bc1688e..a7a0514 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2458,6 +2458,8 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 	 * Doing a TLB flush here, on the guest's behalf, can avoid
- 	 * expensive IPIs.
- 	 */
-+	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
-+		vcpu->arch.st.steal.preempted & KVM_VCPU_FLUSH_TLB);
- 	if (xchg(&vcpu->arch.st.steal.preempted, 0) & KVM_VCPU_FLUSH_TLB)
- 		kvm_vcpu_flush_tlb(vcpu, false);
- 
--- 
-2.7.4
+Hi,
 
+I tested this patch with kms_flip with the "drm/drm_vblank: Change
+EINVAL by the correct errno" patch [1]. However, you=E2=80=99re right about=
+ the
+writeback/crc tests, they does not pass because this patch disables
+vblank which in turn does not invoke "vkms_vblank_simulate()".
+
+In this sense, I=E2=80=99m a little bit confused about how should I handle =
+this
+issue. If I correctly understood, without vblank support we have to
+trigger vkms_composer_worker() when the userspace invoke
+drmModePageFlip(), am I right?  If so, an approach could add page_flip()
+callback to vkms and invoke vkms_composer_worker(); however, the
+documentation says that page_flip is a legacy entry point. Do you have a
+suggestion?
+
+1. https://patchwork.freedesktop.org/patch/314399/?series=3D50697&rev=3D7
+
+Thanks
+=20
+> btw if you send out patches that need other patches, point at that other
+> series in the cover letter or patch. Gets confusing fast otherwise.
+> -Daniel
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
+
+--mwulvtdqb5ysendt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0n9w0ACgkQWJzP/com
+vP+zFw/+KnhGkI5jsmMuS9n46upkghxAEc26ucICUIZAApqkTP8E4HEKNAW/CbGq
+FOyKX0KDlT6gMUmDy5fCbre4kwgVB2XHJWZQB3ODQ2LBtvDXXJC0Gl7aqgswtPf6
+Ec4KQ4ki7Dy0ZpCu+YFn+thqJ+jmiYf2otv6tTmibpr/BkWPHoNQaIwerG+b6VT8
+FL0X5Nu0+Ph1skcRbYL8K7kJID2umWD5f0msM01f/s8uculPbfI0iYZJMFOtuYlI
+HBs3MBPC3xWkAcLg5ycFBobjGw2tcJMACh7QJU2RKdwX2bkaTIAbv425lSLr0B9b
+QTOTAMlMG8+WVtn6n86UcUiYTMASZNHs8OzORKNs8KKG7ev6i/wJXHFkh/nRVtTf
+REHpMczG2oCjBbMbk8bhyR9SvhQdGhJLzwmwfa0C1K/diukgZ4cpzgR1hKBGK1JH
+/rpBwP/wQtfkA/kdP5E2jFi6Tc7cIBw7Bebbortb54Xcyj1tp8bQZCHUU99sEQRi
+Qz3apmrfNPcjDheVRqnM/cVaGb0TGCMENLOQOauQgU1TQDAHdnt2WZyny6WGCq6s
+9jQpV8Z8pnzXbFtrRuuhvIAmym3Q0z+wrbanJ4Qn/MKTev1Wqh7Xvk35wsqlr5xt
+xJP4cOQfGzRFWniIzhAwAIMrn1lX5UBzsMD3wwSp6JMIqg4ucQE=
+=xm8F
+-----END PGP SIGNATURE-----
+
+--mwulvtdqb5ysendt--
