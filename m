@@ -2,130 +2,105 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C8DC742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DEBC742C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B34208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530702080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QYqkLEGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfGLNzx (ORCPT
+        id S1727933AbfGLN4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:55:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52065 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfGLNzx (ORCPT
+        Fri, 12 Jul 2019 09:56:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40265 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbfGLN4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:55:53 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hlw1b-0005Pp-Co; Fri, 12 Jul 2019 15:55:47 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hlw1V-0008Q6-Mn; Fri, 12 Jul 2019 15:55:41 +0200
-Date:   Fri, 12 Jul 2019 15:55:41 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        festevam@gmail.com, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH] arm: dts: imx6qdl: add gpio expander pca9535
-Message-ID: <20190712135541.55fgchvyp33cl3uv@pengutronix.de>
-References: <20190712124522.571-1-gilles.doffe@savoirfairelinux.com>
+        Fri, 12 Jul 2019 09:56:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so4582284pgj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 06:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WDiv0t+R3uRl5W7qmXtAoSiEHEHdxKx4ml5mjXWh+Pg=;
+        b=QYqkLEGFA1/hJ7msrSJEUejaFTfoP3QzQQ0XbAHmT9Csl4VlQGRIXmlO2ywQXQvND+
+         Hrz0eSA/du87KWMiWhvfsSxGBDZW8Y6Afvn5Q1TceLQvp9r9CvlEbDnZIeTmNrviry7U
+         wYHovwF3+TslYJyFDr+Shjrc4RZtnIq4XuqVI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WDiv0t+R3uRl5W7qmXtAoSiEHEHdxKx4ml5mjXWh+Pg=;
+        b=ddAJOv43xmglwGH39FM+KNnHPku68J6D5xh3O5JBv5pTcsF40+nBqXNSRKW7xRuzJD
+         67lJjz4uCn2zC4/WlA4KVo5B5TbNVgT5nLhCiF6LGGiQKz+nKna75qHFMmQYNy8NbaYT
+         zyieqvDb7jx7H3/Hj+x/szxKFpBMLbRudbhRFmb0MRYAEnVs/+XHlsLPwc7l0ZohfMAm
+         4nTytK7Yqre3QnbECeR7BI5yUpaQz5F8n5Hc99q8KqF7LVpptP6KXIOcgjC6vKHWT9Do
+         yXZqAuwDgHhiT0CQ4eVODRTQIfvqDPnmqZ7Zifz71ZL1CeSyr7I2/0Ogp3VVkkIkfZ3r
+         twlg==
+X-Gm-Message-State: APjAAAUMsCNBXL9EEEpYoTkaPdc+vd7Y/fdr5t9oI1CPJSHsZyT3c8CJ
+        feNZv8uKojahLuHe93NhkBc=
+X-Google-Smtp-Source: APXvYqzJEhVDBzSiRVeb97C/BOIrGCC92lhrBy1TO8FxsLTYA0YSdLtl7eAeD1UPch8SID4lyw/Qag==
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr11024618pgl.103.1562939792240;
+        Fri, 12 Jul 2019 06:56:32 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h16sm9673070pfo.34.2019.07.12.06.56.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 06:56:31 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 09:56:29 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712135629.GH92297@google.com>
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+ <20190712121200.GC21989@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712124522.571-1-gilles.doffe@savoirfairelinux.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 15:53:35 up 55 days, 20:11, 52 users,  load average: 0.12, 0.08,
- 0.10
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190712121200.GC21989@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19-07-12 14:45, Gilles DOFFE wrote:
-> The pca9535 gpio expander is present on the Rex baseboard, but missing
-> from the dtsi.
+On Fri, Jul 12, 2019 at 02:12:00PM +0200, Oleg Nesterov wrote:
+> On 07/11, Joel Fernandes (Google) wrote:
+> >
+> > +int rcu_read_lock_any_held(void)
 > 
-> Add the new gpio controller and the associated interrupt line
-> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
-> 
-> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
-> ---
->  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-> index 97f1659144ea..d5324c6761c1 100644
-> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-> @@ -136,6 +136,19 @@
->  		compatible = "atmel,24c02";
->  		reg = <0x57>;
->  	};
-> +
-> +	gpio8: pca9535@27 {
+> rcu_sync_is_idle() wants it. You have my ack in advance ;)
 
-Just a nitpick, I would change that to
+Cool, thanks ;)
 
-	pca9535: gpio8@27 {
-
-Regards,
-  Marco
-
-> +		compatible = "nxp,pca9535";
-> +		reg = <0x27>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pca9535>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
->  };
->  
->  &i2c3 {
-> @@ -237,6 +250,12 @@
->  			>;
->  		};
->  
-> +		pinctrl_pca9535: pca9535 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
-> +		   >;
-> +		};
-> +
->  		pinctrl_uart1: uart1grp {
->  			fsl,pins = <
->  				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-> -- 
-> 2.19.1
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+- Joel
