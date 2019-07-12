@@ -2,162 +2,98 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25A6C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4035EC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A8820863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFC920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cB0TVUt6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="v2iLtOXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfGLH0q (ORCPT
+        id S1726127AbfGLH2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:26:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35763 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfGLH0m (ORCPT
+        Fri, 12 Jul 2019 03:28:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60246 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfGLH2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:26:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s27so4152214pgl.2;
-        Fri, 12 Jul 2019 00:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nWwViFouQwIqf+g6UOw7AyeWqZT4DAg0WEkB/L7FLMM=;
-        b=cB0TVUt6dyKb/5lupeLcQvlW5q+/B9s2ocU5oy6XlYQw3nNCRrNPrWXgqDk+X828c5
-         tvMfwQ4ASQ7PSdCF2oEB1jZPCsDexgRfg3ElMjq4N6+bJhrXVb6CJGWNSjc+DrBjAIwK
-         GQLLiLqB5a+je2oG5C6VlDl1LRrs0t2fduLKZ6iPXO2q5nYaPjyRfWtxHsT9pc3fFQ5/
-         ozW4sBTnyrIn3CBUgs7a2Z5WAfy+hTQfb699pFetLBxxZlGkT8Z03LQLKTIFmUgyqUHh
-         +Fjz+2r7mvDnX6YzatFej80xBKk9TjMahbDSXKLi4flSgiuyUl/Hp72XSnQbk3NFetBV
-         ct+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nWwViFouQwIqf+g6UOw7AyeWqZT4DAg0WEkB/L7FLMM=;
-        b=LTdN8J7u/KB/tFm5YXAsy0ZEh1yRMmFMcVAO6BxKNCRr6nCxzm4Z2lepo3V0aK6HZ/
-         l94U/oQEjQHkmJXXutiFWOUsF3+LqjUgyLZnQbif3CsfY13wT3QsGuiQfnaHm1Kovmi+
-         SAVJC6jYiRzz+7Gxo2m4R9GsJLwuAVM2dkhn8PGOylsmT/tIxrXorPqq2lbbuX26NsKb
-         RnQFT4+Il9u6MVsUay5yZnBO6cflTai4JH2evB0cIfSu6vzV0iyY1bUB/SlyVAUCUTDZ
-         0+FV+xZlKOmyQDDkAu2Vmfw4DEaX+MciZwcEZJz4jlfzIxRTpB1ANOnNhfyT4WkP/mhy
-         WeYg==
-X-Gm-Message-State: APjAAAW94lJQecpJDL8LsqnZLN4XPDJh3PHRMAnqo9Ul0XX+EZ5RHkHv
-        0z0oSRbaD8/qAmV3XhU7z/vkQMt2QIs=
-X-Google-Smtp-Source: APXvYqz6HFxbeWNJWr/m54Pkxgp4cifA4bybur1EvREhe7MrAKgMwL+fneDTNbo/65f+WZ/+dyV1ew==
-X-Received: by 2002:a17:90a:32c7:: with SMTP id l65mr9950937pjb.1.1562916401807;
-        Fri, 12 Jul 2019 00:26:41 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id c8sm13795725pjq.2.2019.07.12.00.26.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 00:26:41 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] usb: dwc3: Use clk_bulk_prepare_enable()
-Date:   Fri, 12 Jul 2019 00:26:34 -0700
-Message-Id: <20190712072634.3107-2-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190712072634.3107-1-andrew.smirnov@gmail.com>
-References: <20190712072634.3107-1-andrew.smirnov@gmail.com>
+        Fri, 12 Jul 2019 03:28:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7lv5lUDbMxC5xZnoZXXX5d4XuUY9QilotWxJmSmC4aQ=; b=v2iLtOXlFyUJi7Eo8afZTFMrL
+        KqVcjkxXVdSX5HbQ2Wjw3aaFnwQSwrtD4cuemDVQ2ToScdIEEvfosbdi/nYErqzwIA2wPaT7UhcMw
+        MUJQZ/1FA4ti7Uc58f/ifQ4XtUdx6EPCk7JPTbz8cdejk7gEzLcDsW9D2xzz+yIlwxLsRtdpngMu2
+        sUrj0t78fzTz8te9ZFDOsbsHDBqVwB28A9dufvzv8DWK9LKfs8HxGZggZtI+/MVoftey5CsZZ82gw
+        /9WtT1B8MKIIj6PvbkgkgszWtY/6yaLtog6hKT6dQpSDImOe+nSQWrozQDEb7DWYzbiBm38d1S0V3
+        74NbRb/iQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlpyc-0002tC-O9; Fri, 12 Jul 2019 07:28:19 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D6AFD20AB373B; Fri, 12 Jul 2019 09:28:15 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 09:28:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] waitqueue: fix clang -Wuninitialized warnings
+Message-ID: <20190712072815.GL3402@hirez.programming.kicks-ass.net>
+References: <20190703081119.209976-1-arnd@arndb.de>
+ <20190703175845.GA68011@archlinux-epyc>
+ <CAK8P3a041S8KFTz4ZjmByDUTM9pDxsWi=hGPeamkFfn4B1dcxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a041S8KFTz4ZjmByDUTM9pDxsWi=hGPeamkFfn4B1dcxQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use clk_bulk_prepare_enable() and clk_bulk_disable_unprepare() to
-simplify code a bit. No functional change intended.
+On Tue, Jul 09, 2019 at 09:27:17PM +0200, Arnd Bergmann wrote:
+> On Wed, Jul 3, 2019 at 7:58 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> > On Wed, Jul 03, 2019 at 10:10:55AM +0200, Arnd Bergmann wrote:
+> > > When CONFIG_LOCKDEP is set, every use of DECLARE_WAIT_QUEUE_HEAD_ONSTACK()
+> > > produces an annoying warning from clang, which is particularly annoying
+> > > for allmodconfig builds:
+> > >
+> > > fs/namei.c:1646:34: error: variable 'wq' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+> > >         DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+> > >                                         ^~
+> > > include/linux/wait.h:74:63: note: expanded from macro 'DECLARE_WAIT_QUEUE_HEAD_ONSTACK'
+> > >         struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
+> > >                                ~~~~                                  ^~~~
+> > > include/linux/wait.h:72:33: note: expanded from macro '__WAIT_QUEUE_HEAD_INIT_ONSTACK'
+> > >         ({ init_waitqueue_head(&name); name; })
+> > >                                        ^~~~
+> > >
+> > > After playing with it for a while, I have found a way to rephrase the
+> > > macro in a way that should work well with both gcc and clang and not
+> > > produce this warning. The open-coded __WAIT_QUEUE_HEAD_INIT_ONSTACK
+> > > is a little more verbose than the original version by Peter Zijlstra,
+> > > but avoids the gcc-ism that suppresses warnings when assigning a
+> > > variable to itself.
+> > >
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> Who would be the right person to pick this patch up for mainline?
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/usb/dwc3/core.c | 23 +++++------------------
- 1 file changed, 5 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 768023a2553c..f0e0cbe9254a 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -686,8 +686,7 @@ static void dwc3_core_exit(struct dwc3 *dwc)
- 	usb_phy_set_suspend(dwc->usb3_phy, 1);
- 	phy_power_off(dwc->usb2_generic_phy);
- 	phy_power_off(dwc->usb3_generic_phy);
--	clk_bulk_disable(dwc->num_clks, dwc->clks);
--	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
-+	clk_bulk_disable_unprepare(dwc->num_clks, dwc->clks);
- 	reset_control_assert(dwc->reset);
- }
- 
-@@ -1451,14 +1450,10 @@ static int dwc3_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = clk_bulk_prepare(dwc->num_clks, dwc->clks);
-+	ret = clk_bulk_prepare_enable(dwc->num_clks, dwc->clks);
- 	if (ret)
- 		goto assert_reset;
- 
--	ret = clk_bulk_enable(dwc->num_clks, dwc->clks);
--	if (ret)
--		goto unprepare_clks;
--
- 	if (!dwc3_core_is_valid(dwc)) {
- 		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
- 		ret = -ENODEV;
-@@ -1531,9 +1526,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 
- disable_clks:
--	clk_bulk_disable(dwc->num_clks, dwc->clks);
--unprepare_clks:
--	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
-+	clk_bulk_disable_unprepare(dwc->num_clks, dwc->clks);
- assert_reset:
- 	reset_control_assert(dwc->reset);
- 
-@@ -1571,14 +1564,10 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
- 	if (ret)
- 		return ret;
- 
--	ret = clk_bulk_prepare(dwc->num_clks, dwc->clks);
-+	ret = clk_bulk_prepare_enable(dwc->num_clks, dwc->clks);
- 	if (ret)
- 		goto assert_reset;
- 
--	ret = clk_bulk_enable(dwc->num_clks, dwc->clks);
--	if (ret)
--		goto unprepare_clks;
--
- 	ret = dwc3_core_init(dwc);
- 	if (ret)
- 		goto disable_clks;
-@@ -1586,9 +1575,7 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
- 	return 0;
- 
- disable_clks:
--	clk_bulk_disable(dwc->num_clks, dwc->clks);
--unprepare_clks:
--	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
-+	clk_bulk_disable_unprepare(dwc->num_clks, dwc->clks);
- assert_reset:
- 	reset_control_assert(dwc->reset);
- 
--- 
-2.21.0
-
+That would be me; but like Andrew, I'm not a fan of this patch.
