@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA3DC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A3CC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB97321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646D121019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934105;
-	bh=Ewvu7yBZJuIvAVOWtuvGiUggubBsAHhQ5bcCtB13j7g=;
+	s=default; t=1562934108;
+	bh=kRN2inrFgQHTTGhs457CATNH+nhelTjE42VP17CFamw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vhgUiy16ZSMXePhcG3FYlqqMviY3ji6hThK7LR5Qr4V/h+nHgtuk9JMo5NidW83R7
-	 6WIPZ7gsizWgdItP7Y6L7OuAZ9E2g+/drNoeI/U8uuxufIFueg2dwjjOOJHxGPM8ka
-	 k4y/kiwt3d9tCEhZVETWOAL72Lcq6jALn3SmphKQ=
+	b=h2LTAUACi6eChsIMq9qZlLh2eQnKFeVeI1AYrUCErcAg4V1Dj0VC0W42qn1MSUP0V
+	 KdS8MfM+Tz3CBrZMNOcRsHIWXX2NdYhIfrwaBq9yzYvZCy0f9Yy+PuMdWqiXaa4SPu
+	 f4S+KSAXBoy3EI1iaLoD0opMweosLWBTi9dLv5Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfGLMVp (ORCPT
+        id S1727661AbfGLMVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfGLMVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:21:42 -0400
+        id S1727648AbfGLMVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:21:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B62E20863;
-        Fri, 12 Jul 2019 12:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F1C220863;
+        Fri, 12 Jul 2019 12:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934101;
-        bh=Ewvu7yBZJuIvAVOWtuvGiUggubBsAHhQ5bcCtB13j7g=;
+        s=default; t=1562934104;
+        bh=kRN2inrFgQHTTGhs457CATNH+nhelTjE42VP17CFamw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WR3Wqhwx13TGoL55FCxOXUOIk7+V5/IjBt6Vw0FwUAzcr/OH2ryksEgrX3WZKmCX7
-         orv9kSldezWE+R3sxGzqlLi4NN45PYs5EhqIFJMu3m4gpUrN4fQZ/shUhN53xrKg/w
-         eLZOBWtoRKBriMO073pB1ALjAzGqpa/iiCoM17mk=
+        b=zTW8Eqre3r0/VCdDz3KmDJ9UFd4l8ID6zqWPl/WV6I3coc6G9zhv6o5DhI2Fy660f
+         yvd0uKMtbGv1ZLleGjm5vxXGiV9Ad0/WNvPwoI/eZF2GkNRu6743Is8osxQcShJIP4
+         UC6fgXdVVysTGBdkFG2dmZ0rrf4jBjlRWUvUw40g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Chang-Hsien Tsai <luke.tw@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/91] Input: elantech - enable middle button support on 2 ThinkPads
-Date:   Fri, 12 Jul 2019 14:18:08 +0200
-Message-Id: <20190712121621.715248747@linuxfoundation.org>
+Subject: [PATCH 4.19 06/91] samples, bpf: fix to change the buffer size for read()
+Date:   Fri, 12 Jul 2019 14:18:09 +0200
+Message-Id: <20190712121621.767335632@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,30 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa440de3058a3ef530851f9ef373fbb5f694dbc3 ]
+[ Upstream commit f7c2d64bac1be2ff32f8e4f500c6e5429c1003e0 ]
 
-Adding 2 new touchpad PNPIDs to enable middle button support.
+If the trace for read is larger than 4096, the return
+value sz will be 4096. This results in off-by-one error
+on buf:
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    static char buf[4096];
+    ssize_t sz;
+
+    sz = read(trace_fd, buf, sizeof(buf));
+    if (sz > 0) {
+        buf[sz] = 0;
+        puts(buf);
+    }
+
+Signed-off-by: Chang-Hsien Tsai <luke.tw@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/elantech.c | 2 ++
- 1 file changed, 2 insertions(+)
+ samples/bpf/bpf_load.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index a7f8b1614559..530142b5a115 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1189,6 +1189,8 @@ static const char * const middle_button_pnp_ids[] = {
- 	"LEN2132", /* ThinkPad P52 */
- 	"LEN2133", /* ThinkPad P72 w/ NFC */
- 	"LEN2134", /* ThinkPad P72 */
-+	"LEN0407",
-+	"LEN0408",
- 	NULL
- };
+diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
+index cf40a8284a38..5061a2ec4564 100644
+--- a/samples/bpf/bpf_load.c
++++ b/samples/bpf/bpf_load.c
+@@ -677,7 +677,7 @@ void read_trace_pipe(void)
+ 		static char buf[4096];
+ 		ssize_t sz;
  
+-		sz = read(trace_fd, buf, sizeof(buf));
++		sz = read(trace_fd, buf, sizeof(buf) - 1);
+ 		if (sz > 0) {
+ 			buf[sz] = 0;
+ 			puts(buf);
 -- 
 2.20.1
 
