@@ -2,42 +2,47 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF59CC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C822C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3D72146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2188B205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfGLTnn (ORCPT
+        id S1727930AbfGLTo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 15:43:43 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.80]:19661 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727609AbfGLTnm (ORCPT
+        Fri, 12 Jul 2019 15:44:59 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:24893 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727499AbfGLTo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 15:43:42 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 6901C8529E
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:43:41 -0500 (CDT)
+        Fri, 12 Jul 2019 15:44:59 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 10069400C774F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:44:58 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id m1SHhHklrYTGMm1SHh8xyk; Fri, 12 Jul 2019 14:43:41 -0500
+        id m1TVhL6FkdnCem1TWhrbot; Fri, 12 Jul 2019 14:44:58 -0500
 X-Authority-Reason: nr=8
-Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:11129 helo=[192.168.0.11])
+Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:16775 helo=[192.168.0.11])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hm1SH-003I7M-3R; Fri, 12 Jul 2019 14:43:41 -0500
-Subject: Re: [PATCH] RDMA/siw: Mark expected switch fall-throughs
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190711161218.GA4989@embeddedor> <20190711180511.GA816@ziepe.ca>
+        id 1hm1TV-003Irw-CV; Fri, 12 Jul 2019 14:44:57 -0500
+Subject: Re: [PATCH][bpf-next] bpf: verifier: avoid fall-through warnings
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Lawrence Brakmo <brakmo@fb.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190711162233.GA6977@embeddedor>
+ <d3f4a4d3-e763-f146-8383-d5ef48d9d382@iogearbox.net>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
@@ -83,12 +88,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <3e6dd4e7-1480-652b-e48b-26b9737b0e6f@embeddedor.com>
-Date:   Fri, 12 Jul 2019 14:43:34 -0500
+Message-ID: <07c1d8b9-5f97-1b91-0459-1662f252c4bd@embeddedor.com>
+Date:   Fri, 12 Jul 2019 14:44:55 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190711180511.GA816@ziepe.ca>
+In-Reply-To: <d3f4a4d3-e763-f146-8383-d5ef48d9d382@iogearbox.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -100,13 +105,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.160.61.213
 X-Source-L: No
-X-Exim-ID: 1hm1SH-003I7M-3R
+X-Exim-ID: 1hm1TV-003Irw-CV
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net ([192.168.0.11]) [187.160.61.213]:11129
+X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net ([192.168.0.11]) [187.160.61.213]:16775
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
+X-Email-Count: 15
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -116,22 +121,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/11/19 1:05 PM, Jason Gunthorpe wrote:
+On 7/12/19 8:41 AM, Daniel Borkmann wrote:
 
+>>
 >> This patch is part of the ongoing efforts to enable
 >> -Wimplicit-fallthrough.
 >>
+>> Acked-by: Andrii Nakryiko <andriin@fb.com>
 >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>
->> NOTE: -Wimplicit-fallthrough will be enabled globally in v5.3. So, I
->>       suggest you to take this patch for 5.3-rc1.
 > 
-> Okay, I queued this for the current merge window then
+> Looks good, applied to bpf, thanks.
 > 
 
 Awesome. :)
 
-Thank you both, Bernard and Jason.
-
+Thanks, Daniel.
 --
 Gustavo
