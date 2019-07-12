@@ -2,184 +2,97 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F01C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F23C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F987208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F71E2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfGLNK6 (ORCPT
+        id S1727516AbfGLNMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:10:58 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:34769 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbfGLNK6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:10:58 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7B19720004;
-        Fri, 12 Jul 2019 13:10:28 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 15:10:28 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        adrian.hunter@intel.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ryanchen.aspeed@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document Aspeed SD controller
-Message-ID: <20190712131028.ba4d4jetg4btsx4u@flea>
-References: <20190712033214.24713-1-andrew@aj.id.au>
- <20190712033214.24713-2-andrew@aj.id.au>
+        Fri, 12 Jul 2019 09:12:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45888 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726449AbfGLNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:12:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2B877AD5D;
+        Fri, 12 Jul 2019 13:11:59 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 15:11:58 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Vincent Whitchurch <rabinv@axis.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
+Message-ID: <20190712131158.5wgy5wxjtqn6uqly@pathway.suse.cz>
+References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
+ <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
+ <20190712092253.GA7922@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xetdl6arw4bwno7q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712033214.24713-2-andrew@aj.id.au>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190712092253.GA7922@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 2019-07-12 18:22:53, Sergey Senozhatsky wrote:
+> On (07/12/19 11:12), Petr Mladek wrote:
+> > > For example, with the following two final prints:
+> > > 
+> > > [    6.427502] AAAAAAAAAAAAA
+> > > [    6.427769] BBBBBBBB12345
+> > > 
+> > > A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
+> > > patch:
+> > > 
+> > >  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
+> > >  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
+> > >  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > >  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > > 
+> > > After this patch:
+> > > 
+> > >  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
+> > >  00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
+> > >  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > >  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > > 
+> > > Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> > 
+> > I think that I need vacation. I have got lost in all the checks
+> > and got it wrongly in the morning.
+> > 
+> > This patch fixes the calculation of messages that might fit
+> > into the buffer. It makes sure that the function that writes
+> > the messages will really allow to write them.
+> > 
+> > It seems to be the correct fix.
+> > 
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> Looks correct to me as well.
+> 
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
---xetdl6arw4bwno7q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The patch has been committed into printk.git, branch for-5.3-fixes.
 
-Hi,
+I am still a bit undecided whether to send pull request the following
+week or wait for 5.4. On one hand, it is very old bug (since 3.5).
+On the other hand, I think that it was not reported/fixed earlier
+only because it was hard to notice. And loosing the very last message
+is quite pity.
 
-On Fri, Jul 12, 2019 at 01:02:13PM +0930, Andrew Jeffery wrote:
-> The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
-> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> data bus if only a single slot is enabled.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> In v2:
->
-> * Rename to aspeed,sdhci.yaml
-> * Rename sd-controller compatible
-> * Add `maxItems: 1` for reg properties
-> * Move sdhci subnode description to patternProperties
-> * Drop sdhci compatible requirement
-> * #address-cells and #size-cells are required
-> * Prevent additional properties
-> * Implement explicit ranges in example
-> * Remove slot property
->
->  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 90 +++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> new file mode 100644
-> index 000000000000..67a691c3348c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED SD/SDIO/eMMC Controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@aj.id.au>
-> +  - Ryan Chen <ryanchen.aspeed@gmail.com>
-> +
-> +description: |+
-> +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
-> +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
-> +  only a single slot is enabled.
-> +
-> +  The two slots are supported by a common configuration area. As the SDHCIs for
-> +  the slots are dependent on the common configuration area, they are described
-> +  as child nodes.
-> +
-> +properties:
-> +  compatible:
-> +    enum: [ aspeed,ast2400-sd-controller, aspeed,ast2500-sd-controller ]
-> +  reg:
-> +    maxItems: 1
-> +    description: Common configuration registers
-> +  ranges: true
-> +  clocks:
-> +    maxItems: 1
-> +    description: The SD/SDIO controller clock gate
+Anyway, I added stable tag.
 
-#address-cells and #size-cells have not been described here.
-
-> +patternProperties:
-> +  "^sdhci@[0-9a-f]+$":
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        enum: [ aspeed,ast2400-sdhci, aspeed,ast2500-sdhci ]
-> +      reg:
-> +        maxItems: 1
-> +        description: The SDHCI registers
-> +      clocks:
-> +        maxItems: 1
-> +        description: The SD bus clock
-> +      interrupts:
-> +        maxItems: 1
-> +        description: The SD interrupt shared between both slots
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - clocks
-> +      - interrupts
-> +
-> +additionalProperties: false
-
-But that means that it will generate a warning in your DT if you ever
-use them.
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +  - clocks
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/aspeed-clock.h>
-> +    sdc@1e740000 {
-> +            compatible = "aspeed,ast2500-sd-controller";
-> +            reg = <0x1e740000 0x100>;
-> +            #address-cells = <1>;
-> +            #size-cells = <1>;
-
-Starting with your example.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---xetdl6arw4bwno7q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSiGxAAKCRDj7w1vZxhR
-xYJkAP9CaDPo8tTwjEFQXKOSYF7mEF3hSHXS+zEA3JKnm1lUkQD/QH5s8Xmp4PhP
-j8rUjn+aBCifFCOWkGDfhtf/XHiT1w4=
-=J++y
------END PGP SIGNATURE-----
-
---xetdl6arw4bwno7q--
+Best Regards,
+Petr
