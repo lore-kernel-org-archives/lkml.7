@@ -3,68 +3,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DDAC742CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB55C742D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F01E20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E5F20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfGLPoy (ORCPT
+        id S1727275AbfGLPpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:44:54 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44387 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfGLPoy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:44:54 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so21206245iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:44:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Flz2lLRzUd8jYEWKtYpt6MQ7g5ki02yJxXMItOlTOZg=;
-        b=pbPlFejq7MTKPuDW0ogOnbBzGH2jXDG5LC6kb260dojCS+6rZGCVtGA2IH1kL6RznB
-         SJhzvuQG7loYFZAVmTdkdk1rejdBTozWt2pts8ngpES6w5L98c+Y/VQQQR1uvpzaGUYL
-         84j5tR/zzIFinJNYKrNFtBQoTLKU2r2KSXnzPDJcwEscR+qEtSta4Cw7XzMHiWpyHd3Z
-         MygntlFCZiZDeQmGvz9hirLEZ0q6RAbnv1McHly0lCVDjLsWlQWqi3q45RowsBDAjuwP
-         47Kvmg0xLi2Y7troXaiWupgkLT+Q45VB2Yp1A5D+NtQVaeZnAiZaVMr+WJHp/2NtBFdT
-         cyGg==
-X-Gm-Message-State: APjAAAWMuaJrWnxSURD3XvqAZeiFIYfl7FBK8lMj+tLBeQtOn4Hrsdwe
-        UScJOTl8N4tZWMsjEC7qiZmfkLDD5oi2fP58ojE=
-X-Google-Smtp-Source: APXvYqxN8RQNuZM9vdEm/CAl+zuh4AN5lTPTDyHWochsrNu0wOHqh5l7I2dOMKuVQTeQcmrFPVSCkwj2CtRyhmmnvW8=
-X-Received: by 2002:a6b:e60b:: with SMTP id g11mr11691332ioh.9.1562946293139;
- Fri, 12 Jul 2019 08:44:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
-In-Reply-To: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Fri, 12 Jul 2019 17:44:40 +0200
-Message-ID: <CANBLGcyO5wAHgSVjYFB+hcp+SzaKY9d0QJm-hxqnSYbZ4Yv97g@mail.gmail.com>
-Subject: Re: Asus C101P Chromeboot fails to boot with Linux 5.2
-To:     Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 12 Jul 2019 11:45:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33687 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbfGLPpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:45:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 08:45:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
+   d="scan'208";a="171588400"
+Received: from yanbeibe-mobl2.ger.corp.intel.com ([10.249.32.118])
+  by orsmga006.jf.intel.com with ESMTP; 12 Jul 2019 08:45:09 -0700
+Message-ID: <8da29805a867935916a89891772fde77fad09396.camel@linux.intel.com>
+Subject: Re: [PATCH v3] tpm: Document UEFI event log quirks
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     tweek@google.com, matthewgarrett@google.com,
+        jorhand@linux.microsoft.com, Jonathan Corbet <corbet@lwn.net>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Fri, 12 Jul 2019 18:45:07 +0300
+In-Reply-To: <6c974f53-6dca-33fd-5aca-056ab8b274ed@infradead.org>
+References: <20190712124912.23630-1-jarkko.sakkinen@linux.intel.com>
+         <6c974f53-6dca-33fd-5aca-056ab8b274ed@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Fri, 2019-07-12 at 07:55 -0700, Randy Dunlap wrote:
+> +Before calling ExitBootServices() Linux EFI stub copies the event log to
+> > +a custom configuration table defined by the stub itself. Unfortanely,
+> 
+> [again:]                                                    Unfortunately,
 
-On Fri, 12 Jul 2019 at 17:02, Alex Dewar <alex.dewar@gmx.co.uk> wrote:
-> When I try to boot the screen just gets flooded with messages like this:
-> http://users.sussex.ac.uk/~ad374/boot_fail.jpg
+Ugh, I'm sorry. Sent an update.
 
-Those seem to be only audit messages. You can try booting with audit=0
-on the kernel command line to get rid of those messages, so you have a
-better chance of catching the real issue. (Or conclude that audit is
-what is broken.)
+/Jarkko
 
-/Emil
