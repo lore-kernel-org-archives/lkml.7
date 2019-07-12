@@ -2,97 +2,155 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F23C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C0AC742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F71E2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BA62080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfGLNMA (ORCPT
+        id S1727710AbfGLNMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:12:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45888 "EHLO mx1.suse.de"
+        Fri, 12 Jul 2019 09:12:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54852 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726449AbfGLNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:12:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2B877AD5D;
-        Fri, 12 Jul 2019 13:11:59 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 15:11:58 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Vincent Whitchurch <rabinv@axis.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
-Message-ID: <20190712131158.5wgy5wxjtqn6uqly@pathway.suse.cz>
-References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
- <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
- <20190712092253.GA7922@jagdpanzerIV>
+        id S1726449AbfGLNMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:12:13 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CAD78CE0BF21130718B8;
+        Fri, 12 Jul 2019 21:12:06 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 12 Jul 2019
+ 21:11:57 +0800
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     Vasily Averin <vvs@virtuozzo.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+CC:     "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+ <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+ <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
+Date:   Fri, 12 Jul 2019 21:11:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712092253.GA7922@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-07-12 18:22:53, Sergey Senozhatsky wrote:
-> On (07/12/19 11:12), Petr Mladek wrote:
-> > > For example, with the following two final prints:
-> > > 
-> > > [    6.427502] AAAAAAAAAAAAA
-> > > [    6.427769] BBBBBBBB12345
-> > > 
-> > > A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-> > > patch:
-> > > 
-> > >  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
-> > >  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
-> > >  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > >  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > > 
-> > > After this patch:
-> > > 
-> > >  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
-> > >  00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
-> > >  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > >  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > > 
-> > > Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> > 
-> > I think that I need vacation. I have got lost in all the checks
-> > and got it wrongly in the morning.
-> > 
-> > This patch fixes the calculation of messages that might fit
-> > into the buffer. It makes sure that the function that writes
-> > the messages will really allow to write them.
-> > 
-> > It seems to be the correct fix.
-> > 
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+On 2019/7/11 21:57, Vasily Averin wrote:
+> On 7/11/19 4:55 AM, Nixiaoming wrote:
+>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
+>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+>>>> Registering the same notifier to a hook repeatedly can cause the hook
+>>>> list to form a ring or lose other members of the list.
+>>>
+>>> I think is not enough to _prevent_ 2nd register attempt,
+>>> it's enough to detect just attempt and generate warning to mark host in bad state.
+>>>
+>>
+>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
+>>
+>> Duplicate registration is checked and exited in notifier_chain_cond_register()
+>>
+>> Duplicate registration was checked in notifier_chain_register() but only 
+>> the alarm was triggered without exiting. added by commit 831246570d34692e 
+>> ("kernel/notifier.c: double register detection")
+>>
+>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
+>>  which triggers an alarm and exits when a duplicate registration is detected.
+>>
+>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+>>> and it can lead to host crash in any time: 
+>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
+>>> on the other hand you can never call 2nd unregister at all.
+>>
+>> Since the member was not added to the linked list at the time of the second registration, 
+>> no linked list ring was formed. 
+>> The member is released on the first unregistration and -ENOENT on the second unregistration.
+>> After patching, the fault has been alleviated
 > 
-> Looks correct to me as well.
+> You are wrong here.
+> 2nd notifier's registration is a pure bug, this should never happen.
+> If you know the way to reproduce this situation -- you need to fix it. 
 > 
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> 2nd registration can happen in 2 cases:
+> 1) missed rollback, when someone forget to call unregister after successfull registration, 
+> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
+> 2) some subsystem is registered twice, for example from  different namespaces.
+> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
+> in second namespace, it also can lead to unexpacted behaviour.
+> 
+So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
+But why does current notifier_chain_register() just trigger WARN() without exiting ?
+notifier_chain_cond_register() direct exit without triggering WARN() ?
 
-The patch has been committed into printk.git, branch for-5.3-fixes.
+Thanks
 
-I am still a bit undecided whether to send pull request the following
-week or wait for 5.4. On one hand, it is very old bug (since 3.5).
-On the other hand, I think that it was not reported/fixed earlier
-only because it was hard to notice. And loosing the very last message
-is quite pity.
+Xiaoming Ni
 
-Anyway, I added stable tag.
+>> It may be more helpful to return an error code when someone tries to register the same
+>> notification program a second time.
+> 
+> You are wrong again here, it is senseless.
+> If you have detected 2nd register -- your node is already in bad state.
+> 
+>> But I noticed that notifier_chain_cond_register() returns 0 when duplicate registration 
+>> is detected. At the same time, in all the existing export function comments of notify,
+>> "Currently always returns zero"
+>>
+>> I am a bit confused: which is better?
+>>
+>>>
+>>> Unfortunately I do not see any ways to handle such cases properly,
+>>> and it seems for me your patches does not resolve this problem.
+>>>
+>>> Am I missed something probably?
+>>>
+>>>> case1: An infinite loop in notifier_chain_register() can cause soft lockup
+>>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
+>>>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
+>>
+>> Thanks
+>>
+>> Xiaoming Ni
+>>
+> 
+> .
+> 
 
-Best Regards,
-Petr
