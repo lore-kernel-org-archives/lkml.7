@@ -2,72 +2,107 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9896DC742C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF6AC742C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7226A206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9319F206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:21:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LRpvbwuy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfGLPSq (ORCPT
+        id S1727089AbfGLPVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:18:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34054 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbfGLPSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:18:46 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 21D2459455;
-        Fri, 12 Jul 2019 15:18:46 +0000 (UTC)
-Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBF005DE6B;
-        Fri, 12 Jul 2019 15:18:45 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 10:18:44 -0500
-From:   David Teigland <teigland@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] dlm updates for 5.3 (second try)
-Message-ID: <20190712151844.GA24064@redhat.com>
+        Fri, 12 Jul 2019 11:21:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55840 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfGLPVJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:21:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uWWyW2YDtC0k6gJbqvGGDtXLIh/dygPNqHBQzuripY4=; b=LRpvbwuyvthu0RGBF/kNz9WT4
+        TvL6NJFgmKj1YTbH/Q1luwGXROnKib4MoSJRSv36BWnauvOLUIjs4IYaxouYot6WbBAdgj1hGzwzV
+        Zhk33bc+ETttOzwYzdkhEDyoYIZHYI8AxkXD+O0QV2M0khTOByI/JtZazzxSVMtWSt5jBFPpm0Gyo
+        fipS/Gh/19/eM9Uc5e6dEc11Tz1Mm+DDcAvtfQfB79lcdLherqODj9TUFRVqvOlyRCVMME2XWZ3ri
+        RWWywWgE7IGSsa6YH1reuguPfod0XMfoiHdTp37uiPUnwGvUeKrvoUgBqlk3rEotvKmI1X2JXR4FL
+        R/HLEg+Gw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlxLy-0002Dw-U3; Fri, 12 Jul 2019 15:20:55 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE70D209772EE; Fri, 12 Jul 2019 17:20:52 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 17:20:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+Message-ID: <20190712152052.GU3419@hirez.programming.kicks-ass.net>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
+ <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
+ <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+ <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+ <3626998c-509f-b434-1f66-9db2c09c47d4@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 12 Jul 2019 15:18:46 +0000 (UTC)
+In-Reply-To: <3626998c-509f-b434-1f66-9db2c09c47d4@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 12, 2019 at 06:54:22AM -0700, Dave Hansen wrote:
+> On 7/12/19 5:50 AM, Peter Zijlstra wrote:
+> > PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
+> > ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
+> > 
+> > See how very similar they are?
+> 
+> That's an interesting point.
+> 
+> I'd add that PTI maps a part of kernel space that partially overlaps
+> with what ASI wants.
 
-Please pull dlm updates from tag:
+Right, wherever we put the boundary, we need whatever is required to
+cross it.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/teigland/linux-dlm.git dlm-5.3
+> > But looking at it that way, it makes no sense to retain 3 address
+> > spaces, namely:
+> > 
+> >   user / kernel exposed / kernel private.
+> > 
+> > Specifically, it makes no sense to expose part of the kernel through MDS
+> > but not through Meltdown. Therefore we can merge the user and kernel
+> > exposed address spaces.
+> > 
+> > And then we've fully replaced PTI.
+> 
+> So, in one address space (PTI/user or ASI), we say, "screw it" and all
+> the data mapped is exposed to speculation attacks.  We have to be very
+> careful about what we map and expose here.
 
-This set removes some unnecessary debugfs error handling, and
-checks that lowcomms workqueues are not NULL before destroying.
+Yes, which is why, in an earlier email, I've asked for a clear
+definition of 'sensitive" :-)
 
-(Dropped the commits related to incorrect wait_event usage from the
-first pull request.)
+> So, maybe we're not replacing PTI as much as we're growing PTI so that
+> we can run more kernel code with the (now inappropriately named) user
+> page tables.
 
-Thanks,
-Dave
-
-David Windsor (1):
-      dlm: check if workqueues are NULL before flushing/destroying
-
-Greg Kroah-Hartman (1):
-      dlm: no need to check return value of debugfs_create functions
-
- fs/dlm/debug_fs.c     | 21 ++-------------------
- fs/dlm/dlm_internal.h |  8 ++++----
- fs/dlm/lowcomms.c     | 18 ++++++++++++------
- fs/dlm/main.c         |  5 +----
- 4 files changed, 19 insertions(+), 33 deletions(-)
-
+Right.
