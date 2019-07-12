@@ -2,85 +2,119 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DC9C742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7F6C742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FF721019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CC020863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562943441;
-	bh=MEM3wLZlDJ4ekEKM4/6J5Ww9M6DT1KF+sb6hCC/78lA=;
+	s=default; t=1562943613;
+	bh=3Vz3kv/6WjEWjL5F1iANnnb8G0FIDp6WOEIqcfvYXw8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NOTQdmis0ZzKzTiKjv2emee1Zjj9P+yCpZOTjRl7rih2MOstR/zne9snPnZJMGDlf
-	 /pJIVKdwq2weRIp92Q6NS6d9TpfG26GHWJNLkv9pBc6G5/7XW8JMbkFJ5Zu1rMq+I0
-	 dB74VzJg3bDtlSQODMBPUPTHBThS7EzGADb1jM7c=
+	b=gyEkH4dUc7UpAt7S54AbtXvegT4+SW0c2ZTvHmUMSam6z0E8PqhKe7YLYNEP5LGXw
+	 oDsXgvMDNfD5kolQLUutpjaYOzQE+taqyWqtFX9zUOp0jSq/1t4hlmOmJKckwt+ani
+	 TXLY0IN4Tm1/9pHryEcd6ufLewrzY8It68txjxEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfGLO5T (ORCPT
+        id S1727076AbfGLPAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbfGLO5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:57:19 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 854402084B;
-        Fri, 12 Jul 2019 14:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562943438;
-        bh=MEM3wLZlDJ4ekEKM4/6J5Ww9M6DT1KF+sb6hCC/78lA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvHVEWVjk8B3Pk1Ja75F/Em+VG7L/pR8IR53MZAgXjL21B3CV+Ol3dyYc0mtum7iG
-         GrmRiEOIRHzFuee4G63LOuvX8pUoorMctEVAgBnW0ElrDceThp9cm5cqqNAa+aJLjK
-         MaTs152R+W3BaCw3bxXUeTQKYkzZMBcVaQ6y5ARc=
-Date:   Fri, 12 Jul 2019 15:57:12 +0100
-From:   Will Deacon <will@kernel.org>
-To:     KarimAllah Ahmed <karahmed@amazon.de>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
+        Fri, 12 Jul 2019 11:00:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50336 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726466AbfGLPAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:00:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4457ABE9;
+        Fri, 12 Jul 2019 15:00:09 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 17:00:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
         Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Enrico Weigelt <info@metux.net>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] arm: Extend the check for RAM in /dev/mem
-Message-ID: <20190712145711.mxmnuyn6kpv2dr7u@willie-the-truck>
-References: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>, willy@infradead.org
+Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20190712150007.GU29483@dhcp22.suse.cz>
+References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20190712070247.GM29483@dhcp22.suse.cz>
+ <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
+ <20190712121223.GR29483@dhcp22.suse.cz>
+ <20190712143730.au3662g4ua2tjudu@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190712143730.au3662g4ua2tjudu@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 12:21:21AM +0200, KarimAllah Ahmed wrote:
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 3645f29..cdc3e8e 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -78,7 +78,7 @@ void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
->  pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
->  			      unsigned long size, pgprot_t vma_prot)
->  {
-> -	if (!pfn_valid(pfn))
-> +	if (!memblock_is_memory(__pfn_to_phys(pfn)))
+On Fri 12-07-19 15:37:30, Will Deacon wrote:
+> Hi all,
+> 
+> On Fri, Jul 12, 2019 at 02:12:23PM +0200, Michal Hocko wrote:
+> > On Fri 12-07-19 10:56:47, Hoan Tran OS wrote:
+> > [...]
+> > > It would be good if we can enable it by-default. Otherwise, let arch 
+> > > enables it by them-self. Do you have any suggestions?
+> > 
+> > I can hardly make any suggestions when it is not really clear _why_ you
+> > want to remove this config option in the first place. Please explain
+> > what motivated you to make this change.
+> 
+> Sorry, I think this confusion might actually be my fault and Hoan has just
+> been implementing my vague suggestion here:
+> 
+> https://lore.kernel.org/linux-arm-kernel/20190625101245.s4vxfosoop52gl4e@willie-the-truck/
+> 
+> If the preference of the mm folks is to leave CONFIG_NODES_SPAN_OTHER_NODES
+> as it is, then we can define it for arm64. I just find it a bit weird that
+> the majority of NUMA-capable architectures have to add a symbol in the arch
+> Kconfig file, for what appears to be a performance optimisation applicable
+> only to ia64, mips and sh.
+> 
+> At the very least we could make the thing selectable.
 
-This looks broken to me, since it will end up returning 'true' for nomap
-memory and we really don't want to map that using writeback attributes.
+Hmm, I thought this was selectable. But I am obviously wrong here.
+Looking more closely, it seems that this is indeed only about
+__early_pfn_to_nid and as such not something that should add a config
+symbol. This should have been called out in the changelog though.
 
-Will
+Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
+bucket? Do we have any NUMA architecture that doesn't enable it?
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
