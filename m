@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0BCC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8198EC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9660A20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5578820645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934971;
-	bh=xLLWYA5NAIUr7JRKRwe5NogndUShvfwkFmPHLncTvl4=;
+	s=default; t=1562934979;
+	bh=Z6VkdeKrpVIqK7Z0F2De/eKSsoc/56RftiXPYgzJr24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C8PC2SEPYf2ty++Ac2G4kY6Jwg2yTLtCcO+ctbrM2Z+yCnjNtmPaPleUfSsDxNY5u
-	 vZVx7K9HgzVSD5PeYuICi3lCkONMFJE/f7sVJTafdywzj8TT02VeqVlrL0hCjXlNZs
-	 r3TeBrJc9kHMweQxkyGfwsAR2riC+7jtimodGq2Y=
+	b=CKDeXwJjW/lz8Camccp6k5YGaPh1JhVNsD/6YLZDeLVTeNFUH2V9wIz6ti+qlglgN
+	 GnAiQ8qkcj9mkMFp+CwWUjVOrXq4g2oLReb0wghF3hV4dALc9q0vXEa4TGREyU8xEl
+	 XC1P13KNItkcrfZAPWxQ6S5PVIQncHdulnjPwOlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfGLMgK (ORCPT
+        id S1729528AbfGLMcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:36:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbfGLMdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:13 -0400
+        id S1727613AbfGLMcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:32:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2E9E21019;
-        Fri, 12 Jul 2019 12:33:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCB922166E;
+        Fri, 12 Jul 2019 12:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934792;
-        bh=xLLWYA5NAIUr7JRKRwe5NogndUShvfwkFmPHLncTvl4=;
+        s=default; t=1562934764;
+        bh=Z6VkdeKrpVIqK7Z0F2De/eKSsoc/56RftiXPYgzJr24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJV4oWyhVj0I99ecYqVG+n+88YUOp2ENLQsoK7k3wpfsv/PjvZMgyBpHDgJPHMNQk
-         kc/xWfiF+bPNdPly2nmdTUnavfKKg4YQTdZ/1AOLYVcgPmx4Q09f2d6p/Po+5uteRr
-         EFhY6CJ0lGyX0JzGEAR2HY+1kT2Xs7wMKsiA/ZcY=
+        b=SCdjoqnDdda3U+/PUMJFw1wL0+gZMUvE1Xv1miWaakI8AhhWrGVstN0pX6xOwzd91
+         XVbxF3fLqRnB2W2jiu2tvgEBwm8YygM3TXw5Kl0ENobbuLkhLlZKWHeiG0Zms21NHc
+         pk02HECKHZR7Z3Zvu/dqK0oGFDQZ/eZ1w3ir7Wec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.2 31/61] usb: renesas_usbhs: add a workaround for a race condition of workqueue
-Date:   Fri, 12 Jul 2019 14:19:44 +0200
-Message-Id: <20190712121622.275461655@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 23/61] mwifiex: Dont abort on small, spec-compliant vendor IEs
+Date:   Fri, 12 Jul 2019 14:19:36 +0200
+Message-Id: <20190712121621.887990699@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,129 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit b2357839c56ab7d06bcd4e866ebc2d0e2b7997f3 upstream.
+commit 63d7ef36103d26f20325a921ecc96a3288560146 upstream.
 
-The old commit 6e4b74e4690d ("usb: renesas: fix scheduling in atomic
-context bug") fixed an atomic issue by using workqueue for the shdmac
-dmaengine driver. However, this has a potential race condition issue
-between the work pending and usbhsg_ep_free_request() in gadget mode.
-When usbhsg_ep_free_request() is called while pending the queue,
-since the work_struct will be freed and then the work handler is
-called, kernel panic happens on process_one_work().
+Per the 802.11 specification, vendor IEs are (at minimum) only required
+to contain an OUI. A type field is also included in ieee80211.h (struct
+ieee80211_vendor_ie) but doesn't appear in the specification. The
+remaining fields (subtype, version) are a convention used in WMM
+headers.
 
-To fix the issue, if we could call cancel_work_sync() at somewhere
-before the free request, it could be easy. However,
-the usbhsg_ep_free_request() is called on atomic (e.g. f_ncm driver
-calls free request via gether_disconnect()).
+Thus, we should not reject vendor-specific IEs that have only the
+minimum length (3 bytes) -- we should skip over them (since we only want
+to match longer IEs, that match either WMM or WPA formats). We can
+reject elements that don't have the minimum-required 3 byte OUI.
 
-For now, almost all users are having "USB-DMAC" and the DMAengine
-driver can be used on atomic. So, this patch adds a workaround for
-a race condition to call the DMAengine APIs without the workqueue.
+While we're at it, move the non-standard subtype and version fields into
+the WMM structs, to avoid this confusion in the future about generic
+"vendor header" attributes.
 
-This means we still have TODO on shdmac environment (SH7724), but
-since it doesn't have SMP, the race condition might not happen.
-
-Fixes: ab330cf3888d ("usb: renesas_usbhs: add support for USB-DMAC")
-Cc: <stable@vger.kernel.org> # v4.1+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 685c9b7750bf ("mwifiex: Abort at too short BSS descriptor element")
+Cc: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/renesas_usbhs/fifo.c |   34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/fw.h        |   12 +++++++++---
+ drivers/net/wireless/marvell/mwifiex/scan.c      |   18 +++++++++++-------
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |    4 ++--
+ drivers/net/wireless/marvell/mwifiex/wmm.c       |    2 +-
+ 4 files changed, 23 insertions(+), 13 deletions(-)
 
---- a/drivers/usb/renesas_usbhs/fifo.c
-+++ b/drivers/usb/renesas_usbhs/fifo.c
-@@ -802,9 +802,8 @@ static int __usbhsf_dma_map_ctrl(struct
- }
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -1759,9 +1759,10 @@ struct mwifiex_ie_types_wmm_queue_status
+ struct ieee_types_vendor_header {
+ 	u8 element_id;
+ 	u8 len;
+-	u8 oui[4];	/* 0~2: oui, 3: oui_type */
+-	u8 oui_subtype;
+-	u8 version;
++	struct {
++		u8 oui[3];
++		u8 oui_type;
++	} __packed oui;
+ } __packed;
  
- static void usbhsf_dma_complete(void *arg);
--static void xfer_work(struct work_struct *work)
-+static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
- {
--	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
- 	struct usbhs_pipe *pipe = pkt->pipe;
- 	struct usbhs_fifo *fifo;
- 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
-@@ -812,12 +811,10 @@ static void xfer_work(struct work_struct
- 	struct dma_chan *chan;
- 	struct device *dev = usbhs_priv_to_dev(priv);
- 	enum dma_transfer_direction dir;
--	unsigned long flags;
- 
--	usbhs_lock(priv, flags);
- 	fifo = usbhs_pipe_to_fifo(pipe);
- 	if (!fifo)
--		goto xfer_work_end;
-+		return;
- 
- 	chan = usbhsf_dma_chan_get(fifo, pkt);
- 	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
-@@ -826,7 +823,7 @@ static void xfer_work(struct work_struct
- 					pkt->trans, dir,
- 					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc)
--		goto xfer_work_end;
-+		return;
- 
- 	desc->callback		= usbhsf_dma_complete;
- 	desc->callback_param	= pipe;
-@@ -834,7 +831,7 @@ static void xfer_work(struct work_struct
- 	pkt->cookie = dmaengine_submit(desc);
- 	if (pkt->cookie < 0) {
- 		dev_err(dev, "Failed to submit dma descriptor\n");
--		goto xfer_work_end;
-+		return;
- 	}
- 
- 	dev_dbg(dev, "  %s %d (%d/ %d)\n",
-@@ -845,8 +842,17 @@ static void xfer_work(struct work_struct
- 	dma_async_issue_pending(chan);
- 	usbhsf_dma_start(pipe, fifo);
- 	usbhs_pipe_enable(pipe);
-+}
+ struct ieee_types_wmm_parameter {
+@@ -1775,6 +1776,9 @@ struct ieee_types_wmm_parameter {
+ 	 *   Version     [1]
+ 	 */
+ 	struct ieee_types_vendor_header vend_hdr;
++	u8 oui_subtype;
++	u8 version;
 +
-+static void xfer_work(struct work_struct *work)
-+{
-+	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
-+	struct usbhs_pipe *pipe = pkt->pipe;
-+	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
-+	unsigned long flags;
+ 	u8 qos_info_bitmap;
+ 	u8 reserved;
+ 	struct ieee_types_wmm_ac_parameters ac_params[IEEE80211_NUM_ACS];
+@@ -1792,6 +1796,8 @@ struct ieee_types_wmm_info {
+ 	 *   Version     [1]
+ 	 */
+ 	struct ieee_types_vendor_header vend_hdr;
++	u8 oui_subtype;
++	u8 version;
  
--xfer_work_end:
-+	usbhs_lock(priv, flags);
-+	usbhsf_dma_xfer_preparing(pkt);
- 	usbhs_unlock(priv, flags);
- }
+ 	u8 qos_info_bitmap;
+ } __packed;
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1361,21 +1361,25 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
  
-@@ -899,8 +905,13 @@ static int usbhsf_dma_prepare_push(struc
- 	pkt->trans = len;
+ 		case WLAN_EID_VENDOR_SPECIFIC:
+-			if (element_len + 2 < sizeof(vendor_ie->vend_hdr))
+-				return -EINVAL;
+-
+ 			vendor_ie = (struct ieee_types_vendor_specific *)
+ 					current_ptr;
  
- 	usbhsf_tx_irq_ctrl(pipe, 0);
--	INIT_WORK(&pkt->work, xfer_work);
--	schedule_work(&pkt->work);
-+	/* FIXME: Workaound for usb dmac that driver can be used in atomic */
-+	if (usbhs_get_dparam(priv, has_usb_dmac)) {
-+		usbhsf_dma_xfer_preparing(pkt);
-+	} else {
-+		INIT_WORK(&pkt->work, xfer_work);
-+		schedule_work(&pkt->work);
-+	}
+-			if (!memcmp
+-			    (vendor_ie->vend_hdr.oui, wpa_oui,
+-			     sizeof(wpa_oui))) {
++			/* 802.11 requires at least 3-byte OUI. */
++			if (element_len < sizeof(vendor_ie->vend_hdr.oui.oui))
++				return -EINVAL;
++
++			/* Not long enough for a match? Skip it. */
++			if (element_len < sizeof(wpa_oui))
++				break;
++
++			if (!memcmp(&vendor_ie->vend_hdr.oui, wpa_oui,
++				    sizeof(wpa_oui))) {
+ 				bss_entry->bcn_wpa_ie =
+ 					(struct ieee_types_vendor_specific *)
+ 					current_ptr;
+ 				bss_entry->wpa_offset = (u16)
+ 					(current_ptr - bss_entry->beacon_buf);
+-			} else if (!memcmp(vendor_ie->vend_hdr.oui, wmm_oui,
++			} else if (!memcmp(&vendor_ie->vend_hdr.oui, wmm_oui,
+ 				    sizeof(wmm_oui))) {
+ 				if (total_ie_len ==
+ 				    sizeof(struct ieee_types_wmm_parameter) ||
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -1351,7 +1351,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex
+ 			/* Test to see if it is a WPA IE, if not, then
+ 			 * it is a gen IE
+ 			 */
+-			if (!memcmp(pvendor_ie->oui, wpa_oui,
++			if (!memcmp(&pvendor_ie->oui, wpa_oui,
+ 				    sizeof(wpa_oui))) {
+ 				/* IE is a WPA/WPA2 IE so call set_wpa function
+ 				 */
+@@ -1361,7 +1361,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex
+ 				goto next_ie;
+ 			}
  
- 	return 0;
- 
-@@ -1006,8 +1017,7 @@ static int usbhsf_dma_prepare_pop_with_u
- 
- 	pkt->trans = pkt->length;
- 
--	INIT_WORK(&pkt->work, xfer_work);
--	schedule_work(&pkt->work);
-+	usbhsf_dma_xfer_preparing(pkt);
- 
- 	return 0;
+-			if (!memcmp(pvendor_ie->oui, wps_oui,
++			if (!memcmp(&pvendor_ie->oui, wps_oui,
+ 				    sizeof(wps_oui))) {
+ 				/* Test to see if it is a WPS IE,
+ 				 * if so, enable wps session flag
+--- a/drivers/net/wireless/marvell/mwifiex/wmm.c
++++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
+@@ -240,7 +240,7 @@ mwifiex_wmm_setup_queue_priorities(struc
+ 	mwifiex_dbg(priv->adapter, INFO,
+ 		    "info: WMM Parameter IE: version=%d,\t"
+ 		    "qos_info Parameter Set Count=%d, Reserved=%#x\n",
+-		    wmm_ie->vend_hdr.version, wmm_ie->qos_info_bitmap &
++		    wmm_ie->version, wmm_ie->qos_info_bitmap &
+ 		    IEEE80211_WMM_IE_AP_QOSINFO_PARAM_SET_CNT_MASK,
+ 		    wmm_ie->reserved);
  
 
 
