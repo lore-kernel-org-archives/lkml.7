@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDB6C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4906C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7410A21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B18221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934430;
-	bh=brf5VmPedC1NgBTv6Aa4yQ1ph1WGBNQpZpbYVc0EDH0=;
+	s=default; t=1562934434;
+	bh=x5hDaKZW4eQWiwA2+MIcbn9cqaun7sC5GdiHc/tgZ5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zpKCDbmzx1ePAz3Nl7EVwh1f+KrtQcvuVlQ6kvFnUETsRhYuzOgq3sYWuyJp8j4Y
-	 G7eJIv4n6uPsGdKkQgrMbd0uEfOCKXMlugTK1lkk67AYglQduRCLT4pz3RTWVNW8v7
-	 E/A7mP/puzKKbthGJlZ3TiHVGlYPQ3a0q9rXxBZs=
+	b=Vg6qwc5yBjgDKoHKsRwl9m9F/vY55TAF6VXkS0fUWfwRQ2HOgCnm371O6eALX/AYo
+	 hOCzifeyuo3Nm5OEANTQrW8KXldWvnOUjyuued5nbBd6Zk5765QHmACQY+FnKM8BQX
+	 TBKNOj7ZqdVVmyr9etRz7CCP/7vV43s7Mu/vpg6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbfGLM1J (ORCPT
+        id S1727842AbfGLM1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbfGLM1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:27:03 -0400
+        id S1728531AbfGLM1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C87C821670;
-        Fri, 12 Jul 2019 12:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16493216B7;
+        Fri, 12 Jul 2019 12:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934422;
-        bh=brf5VmPedC1NgBTv6Aa4yQ1ph1WGBNQpZpbYVc0EDH0=;
+        s=default; t=1562934428;
+        bh=x5hDaKZW4eQWiwA2+MIcbn9cqaun7sC5GdiHc/tgZ5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JyT7TYvAfNiqu72CzqS3vNp1WfcURAUpptLHwXLU1wTXJMkBjqrJNVIimdBMWhvHt
-         ZfL3mPtBDqCjX1FHtNcIhxmw3+KBs5CiyBCm4mdD98z3SswAHpXYE/X3tOyxZQelNo
-         bgNpQ4yLnM1IYOhDNjO8Ji4KAzCb/yeO//yIxk40=
+        b=f3QsCR4wlAWAnT2PUC39PJNnlC4VNsrEvjsgudq7yLoXKP4/wUng1/lBf+XFulCy5
+         FENYgG1WPfH5lWl2kLe1cNKlDnVtLmXJQqZlIlUkSV8fVJkx5cir3VyJtQqBlfoGmO
+         BxcXETu8Q5806FTDqOn8Q4Cl8EdkSDyzX3hK7gjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Maximets <i.maximets@samsung.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 050/138] xdp: check device pointer before clearing
-Date:   Fri, 12 Jul 2019 14:18:34 +0200
-Message-Id: <20190712121630.584296399@linuxfoundation.org>
+Subject: [PATCH 5.1 052/138] mlxsw: spectrum: Disallow prio-tagged packets when PVID is removed
+Date:   Fri, 12 Jul 2019 14:18:36 +0200
+Message-Id: <20190712121630.661230494@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,48 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 01d76b5317003e019ace561a9b775f51aafdfdc4 ]
+[ Upstream commit 4b14cc313f076c37b646cee06a85f0db59cf216c ]
 
-We should not call 'ndo_bpf()' or 'dev_put()' with NULL argument.
+When PVID is removed from a bridge port, the Linux bridge drops both
+untagged and prio-tagged packets. Align mlxsw with this behavior.
 
-Fixes: c9b47cc1fabc ("xsk: fix bug when trying to use both copy and zero-copy on one queue id")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 148f472da5db ("mlxsw: reg: Add the Switch Port Acceptable Frame Types register")
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xdp_umem.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/reg.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 989e52386c35..2f7e2c33a812 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -143,6 +143,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
- 	struct netdev_bpf bpf;
- 	int err;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+index eb4c5e8964cd..5865597577d6 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+@@ -997,7 +997,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
+ 	MLXSW_REG_ZERO(spaft, payload);
+ 	mlxsw_reg_spaft_local_port_set(payload, local_port);
+ 	mlxsw_reg_spaft_allow_untagged_set(payload, allow_untagged);
+-	mlxsw_reg_spaft_allow_prio_tagged_set(payload, true);
++	mlxsw_reg_spaft_allow_prio_tagged_set(payload, allow_untagged);
+ 	mlxsw_reg_spaft_allow_tagged_set(payload, true);
+ }
  
-+	if (!umem->dev)
-+		return;
-+
- 	if (umem->zc) {
- 		bpf.command = XDP_SETUP_XSK_UMEM;
- 		bpf.xsk.umem = NULL;
-@@ -156,11 +159,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
- 			WARN(1, "failed to disable umem!\n");
- 	}
- 
--	if (umem->dev) {
--		rtnl_lock();
--		xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
--		rtnl_unlock();
--	}
-+	rtnl_lock();
-+	xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
-+	rtnl_unlock();
- 
- 	if (umem->zc) {
- 		dev_put(umem->dev);
 -- 
 2.20.1
 
