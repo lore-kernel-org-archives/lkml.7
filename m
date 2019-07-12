@@ -2,95 +2,174 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEDAC742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D1C742A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36C3214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB34A2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="x6iGf4L5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXGCVxnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbfGLAGB (ORCPT
+        id S1730495AbfGLAK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:06:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38044 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbfGLAGB (ORCPT
+        Thu, 11 Jul 2019 20:10:29 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45122 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfGLAK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:06:01 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so16571400ioa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 17:06:00 -0700 (PDT)
+        Thu, 11 Jul 2019 20:10:29 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x22so1456503qtp.12;
+        Thu, 11 Jul 2019 17:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=62nH5oWkGzOQ06SAu95rykYn8etGFCzWFiF4NkIvxBQ=;
-        b=x6iGf4L5yWS+TipgGMZaTstAJSFZHmt4jOCyVxJXA05tn4AvQqO7XQ9jA/D7ymwATG
-         PWuN9SzO9zG1m+PEuyKII10uOSL9gg/O57hI2huctP6Og913oIrwhV2UID0IFwMymSEZ
-         pSxo0Php2i+/JqZ9P5rh6HvaKN6HtjCSw/3qwxiVDhGnI3DArpoc4m0F9IctT6DD1Di1
-         wu4AMH5pCym6cMoCHPWOZAcSY3xU4Avs8wRgU0TwfTmIVmwdhlW+aos08799MA2ewuTT
-         YwY5vBW2TokBxQCwis69AwDoXaOek1HHnLZ9u/AICEFSungrKFs4ck9yFBleKW797VV8
-         NCMQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WzVqjz+ovYVJRN1UL9XOiaqyrDBmch5lCBZzUwHfOaY=;
+        b=uXGCVxnBJH+IrTUQWBZvqNDA8TsqpMaP2yszpAVamWVilZL18N18DcsOAbwo/fDSq8
+         668wNSevaj6G+5reko3+9dXNspY6ji0n4wgsyXk/tWCgzWSGH8u59bStJr2imP0XlgIk
+         Krcnp+3YHvYdG88eAdcEs0wxIwBCnC7rvUwVhKjYbvRXxqBYVYYbYeKWjrouvpO9DGb3
+         zXQiyAV07LL/OJMLs80rctj8ApHvW5XsodGmBl6vZlA1W5XmjXeRxS+BplegUHl7bzey
+         4vOTWQoIxYQvWJEbw4iEgA/6fdlt8rDdjTTB0FiqFH4E8hPfjEDubUGS0aV2FEWNArUH
+         0XrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=62nH5oWkGzOQ06SAu95rykYn8etGFCzWFiF4NkIvxBQ=;
-        b=F+tl+VKaZTX8EurR1Ygr6VnrBobu8xnhNzuWfaUad5/a1Wthyektsh7M0UWOXMpJlc
-         BOZIBbFk6PtgoBNkjsJ0+YMWwLS8Y24LjjtUn9D3cbEzDojX0c+qiElEqPFqEZyWfK/C
-         Te6nm3l9f7Cjfr6yzyTe5nhXSwIb1U79WqhYlOcXH48U5ds5LOmxiPrkOiRFAeBv6wc0
-         p4U2Kd2sCSlMYSNLhUB48/Xe4kFT/a12eIz5JB3aZCzLy88GWFC7VBWsAlFay+t9ANhm
-         QQFj1BTSWXi1b9sw6T5TsX//+bfL7rFXIL2+LZ4rRtV+KBiu1Q6Vmvorc1waeO2V3Mhg
-         BOSg==
-X-Gm-Message-State: APjAAAUl7tpafC+rV2G+XZkzEthFWVz9Sdqqx2sFs5pF0m4jw3zsuAPz
-        d8kF7CUM4RlyrFlrdQr7ZezUbw==
-X-Google-Smtp-Source: APXvYqyEv1kc809mAGLveMhoHxeqWbWWXmWJlBsCCsN3LPsii0kASeeYoYXmRIGy/00rllieyCi4zA==
-X-Received: by 2002:a02:5a89:: with SMTP id v131mr8057345jaa.130.1562889960481;
-        Thu, 11 Jul 2019 17:06:00 -0700 (PDT)
-Received: from ?IPv6:2601:281:200:3b79:24dc:faf7:acdc:387a? ([2601:281:200:3b79:24dc:faf7:acdc:387a])
-        by smtp.gmail.com with ESMTPSA id l5sm12084721ioq.83.2019.07.11.17.05.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 17:05:59 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC v2 02/26] mm/asi: Abort isolation on interrupt, exception and context switch
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <1562855138-19507-3-git-send-email-alexandre.chartre@oracle.com>
-Date:   Thu, 11 Jul 2019 18:05:58 -0600
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        jwadams@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WzVqjz+ovYVJRN1UL9XOiaqyrDBmch5lCBZzUwHfOaY=;
+        b=TpETizw8vMuX45v2nH1FpLjEAvq2Ou1kf7m2BsQEQLX1V+osM/Xmst9hgQpiMDjaJJ
+         XrhJHiHf+EJ4U4V1CGpu9SD+7wFgQlXLCTRhayRZgSSfl1/2JORIK0xkB/PJJeV2i04+
+         vIwsdyj2sxJi0zc26t3W7fwNqqeyoo9x0D3yIOfRnfc8iwHsaTaau3iAk2hvnDVOfZ8F
+         xGleSZKsy3gRdGmGVIfQ477YemngclIfqAEprUAHh3WQ1+lcQ/u02772/zP8CQGNEcNF
+         2nNQ7/NdArWRPpET09vt2evXeandcXcEtHNGoIz/Yc89DyUawCXTSt0y/RXgEqurreoB
+         4K7w==
+X-Gm-Message-State: APjAAAWDJYg8nOslMq02nJMF1R0wjPuDqjW7cB95ml1IdauO5AXI6VgE
+        rwc6Vyxke18A3miylgFowH7kZW9K+zeDRWeXvaE=
+X-Google-Smtp-Source: APXvYqzIg0sY6zjxpBd9of08XzWu259C1MQr+I7Q2VLBe3mYWznBjpvBpc3EEJAwziLsMwYtKdePvkRWzPSihHrP7y8=
+X-Received: by 2002:ac8:290c:: with SMTP id y12mr3876880qty.141.1562890227759;
+ Thu, 11 Jul 2019 17:10:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-2-krzesimir@kinvolk.io>
+ <CAEf4BzYDOyU52wdCinm9cxxvNijpTJgQbCg9UxcO1QKk6vWhNA@mail.gmail.com> <CAGGp+cEaGphDCuZL+sbo2aCVumk2jrq9_Lshifg-Ewphfm40Wg@mail.gmail.com>
+In-Reply-To: <CAGGp+cEaGphDCuZL+sbo2aCVumk2jrq9_Lshifg-Ewphfm40Wg@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 11 Jul 2019 17:10:16 -0700
+Message-ID: <CAEf4BzZBzreJOvEzm-OzVPNfwHOhuQ4nh4P04Nh5-u24sjFEcA@mail.gmail.com>
+Subject: Re: [bpf-next v3 01/12] selftests/bpf: Print a message when tester
+ could not run a program
+To:     Krzesimir Nowak <krzesimir@kinvolk.io>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B8AF6DF6-8D39-40F6-8624-6F67EDA4E390@amacapital.net>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <1562855138-19507-3-git-send-email-alexandre.chartre@oracle.com>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 11, 2019 at 4:36 AM Krzesimir Nowak <krzesimir@kinvolk.io> wrot=
+e:
+>
+> On Thu, Jul 11, 2019 at 1:45 AM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> w=
+rote:
+> > >
+> > > This prints a message when the error is about program type being not
+> > > supported by the test runner or because of permissions problem. This
+> > > is to see if the program we expected to run was actually executed.
+> > >
+> > > The messages are open-coded because strerror(ENOTSUPP) returns
+> > > "Unknown error 524".
+> > >
+> > > Changes since v2:
+> > > - Also print "FAIL" on an unexpected bpf_prog_test_run error, so ther=
+e
+> > >   is a corresponding "FAIL" message for each failed test.
+> > >
+> > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> > > ---
+> > >  tools/testing/selftests/bpf/test_verifier.c | 17 +++++++++++++----
+> > >  1 file changed, 13 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/test=
+ing/selftests/bpf/test_verifier.c
+> > > index c5514daf8865..b8d065623ead 100644
+> > > --- a/tools/testing/selftests/bpf/test_verifier.c
+> > > +++ b/tools/testing/selftests/bpf/test_verifier.c
+> > > @@ -831,11 +831,20 @@ static int do_prog_test_run(int fd_prog, bool u=
+npriv, uint32_t expected_val,
+> > >                                 tmp, &size_tmp, &retval, NULL);
+> > >         if (unpriv)
+> > >                 set_admin(false);
+> > > -       if (err && errno !=3D 524/*ENOTSUPP*/ && errno !=3D EPERM) {
+> > > -               printf("Unexpected bpf_prog_test_run error ");
+> > > -               return err;
+> > > +       if (err) {
+> > > +               switch (errno) {
+> > > +               case 524/*ENOTSUPP*/:
+> > > +                       printf("Did not run the program (not supporte=
+d) ");
+> > > +                       return 0;
+> > > +               case EPERM:
+> > > +                       printf("Did not run the program (no permissio=
+n) ");
+> >
+> > Let's add "SKIP: " prefix to these?
+>
+> Not sure about it. The important part of the test (the program being
+> verified by the kernel's verifier) was still executed, so the test is
+> not really skipped.
 
-> On Jul 11, 2019, at 8:25 AM, Alexandre Chartre <alexandre.chartre@oracle.c=
-om> wrote:
->=20
-> Address space isolation should be aborted if there is an interrupt,
-> an exception or a context switch. Interrupt/exception handlers and
-> context switch code need to run with the full kernel address space.
-> Address space isolation is aborted by restoring the original CR3
-> value used before entering address space isolation.
->=20
 
-NAK to the entry changes. That code you=E2=80=99re changing is already known=
- to be a bit buggy, and it=E2=80=99s spaghetti. PeterZ and I are gradually w=
-orking on fixing some bugs and C-ifying it. ASI can go on top.
+Ah, I see. So the program was loaded/verifierd, but wasn't test-run.
 
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>
+>
+> >
+> > > +                       return 0;
+> > > +               default:
+> > > +                       printf("FAIL: Unexpected bpf_prog_test_run er=
+ror (%s) ", strerror(saved_errno));
+> > > +                       return err;
+> > > +               }
+> > >         }
+> > > -       if (!err && retval !=3D expected_val &&
+> > > +       if (retval !=3D expected_val &&
+> > >             expected_val !=3D POINTER_VALUE) {
+> > >                 printf("FAIL retval %d !=3D %d ", retval, expected_va=
+l);
+> > >                 return 1;
+> > > --
+> > > 2.20.1
+> > >
+>
+>
+>
+> --
+> Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
+> Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago =
+L=C3=B3pez Galeiras
+> Registergericht/Court of registration: Amtsgericht Charlottenburg
+> Registernummer/Registration number: HRB 171414 B
+> Ust-ID-Nummer/VAT ID number: DE302207000
