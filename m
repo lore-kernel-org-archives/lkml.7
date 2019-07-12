@@ -2,101 +2,172 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A93C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9932C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C619D2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938132080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfGLNOO (ORCPT
+        id S1727586AbfGLNQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:14:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34427 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfGLNON (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:14:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 31so9977653wrm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 06:14:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VfT/FB70SYUZvSibHy6qxOxJHNCuzEaHFG9lYiqHVks=;
-        b=XDyCqClsFCX4P8N7DdrfueTc+QEck0hDVCBh4e82K8zR5CrgsgXhTCNQws235NPrN7
-         gh1tBwudsOFfBgRhUiKs2n4YBDARRkW0iwRlUd1Z9yU55oHPqtU04fH9KmZvJJ3FdDLX
-         ABl8yPZGgz3W5AdReW4HCIFTuWcr4SeXIaTQG8hscjkK5KFvIL5eU9//MktrCjadnMdv
-         l+iasLAr0HQtKq2E2JNIZnbBXUEa35CPPirIbwgSKTvPxzIgbns+7xZ3XnKq5Tw7smta
-         PVJLqZyERmk3wwUEruQwrSf/lZuRNXw5u7ThTzXoPT+of3NMbyW3pVdH6mIZaBv9gA5X
-         qzMQ==
-X-Gm-Message-State: APjAAAXN4lRtNZlUbcYQIhS+QLuc/suOcu/FEGNrTbaQxpZDpKemM9j9
-        Z9Qh7JrIYrQsiA4uITfaEwFubQ==
-X-Google-Smtp-Source: APXvYqxnCJN8ifBfaBldPbdVFdYWJmrV4AScCeUD8wYtYP4cKMb0VPikXLVesfil1bA6/91dAetwrw==
-X-Received: by 2002:a5d:564e:: with SMTP id j14mr11365756wrw.1.1562937251761;
-        Fri, 12 Jul 2019 06:14:11 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d066:6881:ec69:75ab? ([2001:b07:6468:f312:d066:6881:ec69:75ab])
-        by smtp.gmail.com with ESMTPSA id b2sm10615526wrp.72.2019.07.12.06.14.10
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 06:14:11 -0700 (PDT)
-Subject: Re: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
-To:     Arnd Bergmann <arnd@arndb.de>, Roman Kagan <rkagan@virtuozzo.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-References: <20190712091239.716978-1-arnd@arndb.de>
- <20190712120249.GA27820@rkaganb.sw.ru>
- <CAK8P3a3+QSRQkitXiDFLYvyYvOS+Q4sXb=xA_XPeX2O2zQ5kgw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b7da5e91-f23c-9f5d-2c61-07e7fc7af9b1@redhat.com>
-Date:   Fri, 12 Jul 2019 15:14:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 09:16:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56694 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727189AbfGLNQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:16:43 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EE4DE11277CF686DA60C;
+        Fri, 12 Jul 2019 21:16:40 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 12 Jul 2019
+ 21:16:31 +0800
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To:     <davem@davemloft.net>, <yisen.zhuang@huawei.com>,
+        <salil.mehta@huawei.com>, <xiaojiangfeng@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sergei.shtylyov@cogentembedded.com>, <leeyou.li@huawei.com>,
+        <nixiaoming@huawei.com>
+Subject: [PATCH] net: hisilicon: Use devm_platform_ioremap_resource
+Date:   Fri, 12 Jul 2019 21:16:24 +0800
+Message-ID: <1562937384-121710-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3+QSRQkitXiDFLYvyYvOS+Q4sXb=xA_XPeX2O2zQ5kgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.167]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/07/19 15:02, Arnd Bergmann wrote:
-> I think what happens here is that clang does not treat the return
-> code of track the return code of is_64_bit_mode() as a constant
-> expression, and therefore assumes that the if() condition
-> may or may not be true, for the purpose of determining whether
-> the variable is used without an inialization. This would hold even
-> if it later eliminates the code leading up to the if() in an optimization
-> stage. IS_ENABLED(CONFIG_X86_64) however is a constant
-> expression, so with the patch, it understands this.
-> 
-> In contrast, gcc seems to perform all the inlining first, and
-> then see if some variable is used uninitialized in the final code.
-> This gives additional information to the compiler, but makes the
-> outcome less predictable since it depends on optimization flags
-> and architecture specific behavior.
-> 
-> Both approaches have their own sets of false positive and false
-> negative warnings.
+Use devm_platform_ioremap_resource instead of
+devm_ioremap_resource. Make the code simpler.
 
-True, on the other hand constant returns are not really rocket science. :)
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hip04_eth.c    | 7 ++-----
+ drivers/net/ethernet/hisilicon/hisi_femac.c   | 7 ++-----
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 7 ++-----
+ drivers/net/ethernet/hisilicon/hns_mdio.c     | 4 +---
+ 4 files changed, 7 insertions(+), 18 deletions(-)
 
-Maybe change is_long_mode to a macro if !CONFIG_X86_64?  That would be
-better if clang likes it.
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 6256357..d604528 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -899,7 +899,6 @@ static int hip04_mac_probe(struct platform_device *pdev)
+ 	struct of_phandle_args arg;
+ 	struct net_device *ndev;
+ 	struct hip04_priv *priv;
+-	struct resource *res;
+ 	int irq;
+ 	int ret;
+ 
+@@ -912,16 +911,14 @@ static int hip04_mac_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, ndev);
+ 	SET_NETDEV_DEV(ndev, &pdev->dev);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(d, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+ 		ret = PTR_ERR(priv->base);
+ 		goto init_fail;
+ 	}
+ 
+ #if defined(CONFIG_HI13X1_GMAC)
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->sysctrl_base = devm_ioremap_resource(d, res);
++	priv->sysctrl_base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->sysctrl_base)) {
+ 		ret = PTR_ERR(priv->sysctrl_base);
+ 		goto init_fail;
+diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
+index d2e019d..689f18e 100644
+--- a/drivers/net/ethernet/hisilicon/hisi_femac.c
++++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
+@@ -781,7 +781,6 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *node = dev->of_node;
+-	struct resource *res;
+ 	struct net_device *ndev;
+ 	struct hisi_femac_priv *priv;
+ 	struct phy_device *phy;
+@@ -799,15 +798,13 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
+ 	priv->dev = dev;
+ 	priv->ndev = ndev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->port_base = devm_ioremap_resource(dev, res);
++	priv->port_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->port_base)) {
+ 		ret = PTR_ERR(priv->port_base);
+ 		goto out_free_netdev;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->glb_base = devm_ioremap_resource(dev, res);
++	priv->glb_base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->glb_base)) {
+ 		ret = PTR_ERR(priv->glb_base);
+ 		goto out_free_netdev;
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 89ef764..3499705 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -1097,7 +1097,6 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
+ 	const struct of_device_id *of_id = NULL;
+ 	struct net_device *ndev;
+ 	struct hix5hd2_priv *priv;
+-	struct resource *res;
+ 	struct mii_bus *bus;
+ 	const char *mac_addr;
+ 	int ret;
+@@ -1119,15 +1118,13 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
+ 	}
+ 	priv->hw_cap = (unsigned long)of_id->data;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(dev, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+ 		ret = PTR_ERR(priv->base);
+ 		goto out_free_netdev;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->ctrl_base = devm_ioremap_resource(dev, res);
++	priv->ctrl_base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->ctrl_base)) {
+ 		ret = PTR_ERR(priv->ctrl_base);
+ 		goto out_free_netdev;
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index 918cab1..3e863a7 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -417,7 +417,6 @@ static int hns_mdio_probe(struct platform_device *pdev)
+ {
+ 	struct hns_mdio_device *mdio_dev;
+ 	struct mii_bus *new_bus;
+-	struct resource *res;
+ 	int ret = -ENODEV;
+ 
+ 	if (!pdev) {
+@@ -442,8 +441,7 @@ static int hns_mdio_probe(struct platform_device *pdev)
+ 	new_bus->priv = mdio_dev;
+ 	new_bus->parent = &pdev->dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	mdio_dev->vbase = devm_ioremap_resource(&pdev->dev, res);
++	mdio_dev->vbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mdio_dev->vbase)) {
+ 		ret = PTR_ERR(mdio_dev->vbase);
+ 		return ret;
+-- 
+1.8.5.6
 
-Paolo
