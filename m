@@ -2,85 +2,221 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC54C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B0C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA1E6208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E52217D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lZCvyn5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfGLV0A (ORCPT
+        id S1728089AbfGLVgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 17:26:00 -0400
-Received: from kich.slackware.pl ([193.218.152.244]:45170 "EHLO
-        kich.slackware.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbfGLVZ7 (ORCPT
+        Fri, 12 Jul 2019 17:36:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34050 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbfGLVgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:25:59 -0400
-X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 17:25:58 EDT
-Received: from kich.toxcorp.com (kich.toxcorp.com [193.218.152.244])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: shasta@toxcorp.com)
-        by kich.slackware.pl (Postfix) with ESMTPSA id A8A09C1;
-        Fri, 12 Jul 2019 23:17:03 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 23:17:03 +0200 (CEST)
-From:   Jakub Jankowski <shasta@toxcorp.com>
-To:     Alexey Izbyshev <izbyshev@ispras.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        security@kernel.org
-Subject: Re: [PATCH] proc: Fix uninitialized byte read in get_mm_cmdline()
-In-Reply-To: <3de2d71b-37be-6238-7fd8-0a40c9b94a98@ispras.ru>
-Message-ID: <alpine.LNX.2.21.1907122312190.8869@kich.toxcorp.com>
-References: <20190712160913.17727-1-izbyshev@ispras.ru> <20190712163625.GF21989@redhat.com> <20190712174632.GA3175@avx2> <3de2d71b-37be-6238-7fd8-0a40c9b94a98@ispras.ru>
-User-Agent: Alpine 2.21 (LNX 202 2017-01-01)
+        Fri, 12 Jul 2019 17:36:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so4855624pfo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f1OhDpjzDD7S0+COFpFd965N8mxlYpQZP4b4JR0VTV8=;
+        b=lZCvyn5n8owKQ3JyeYzt9+z6iXWkLSpYG3eAl8ccauBAjpAsmohxfuQbcSnqrAuKVo
+         EhJuv2vWWbTPd0eO0fNUhuM6JbViOUOUf/4BwXkUGXtZsJcQX4/U66ACGCFiWUk//WdV
+         Q8H3IUlKRvwTyqp0yyd7gnCEfVZU4qo6+E1Lc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f1OhDpjzDD7S0+COFpFd965N8mxlYpQZP4b4JR0VTV8=;
+        b=JDDBeLKs0RXLNhHCvsM72v7xx5JIRtrhuu7C1MQ5LYq8J2mabxXih8NPbHGFhmxuHB
+         ZuZ2LiE8FsknEiRm5hAhONp2xYe1y0Yk8qgYxWbSHrTSK41rgzZpd9E7jtwWIwc6a+iz
+         IrOtfvWz7Tax/JihEb8l3wzQD1I0+LtAyGm1mi6CSiHNfZe4cVLmuKbNK7QscN1oSbEN
+         PZCLwD5pWZOBXDvtl4/w/dTGiBlCLNEocztCkdpP8YH3+8O4vAo0Ir11hYkvgTSjqPK5
+         PMfzR/uEZCNNeUXeyVBtoOPs1fnWBWihuO4CY4ULio0wFffb9LTn/5CdflFI9GABEr+e
+         matQ==
+X-Gm-Message-State: APjAAAUbUMW3BBbxX0ekjIQ6DpRBoNCsMLd1ICeD4c2pO2OjJQTxOisF
+        q/G82JGgB5kQcmX5P52FXOWO62dW
+X-Google-Smtp-Source: APXvYqx3LWL3QaQQ5ksHJJX+2CaAAhVLBJ5JupxNkJ3WyB6ER0uWKW+WGxkHpK2VFCITfOz69qvV7g==
+X-Received: by 2002:a63:fb4b:: with SMTP id w11mr13352876pgj.415.1562967362076;
+        Fri, 12 Jul 2019 14:36:02 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o32sm9047532pje.9.2019.07.12.14.36.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 14:36:01 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 17:35:59 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
+Message-ID: <20190712213559.GA175138@google.com>
+References: <20190712170024.111093-1-joel@joelfernandes.org>
+ <20190712170024.111093-4-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712170024.111093-4-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-12, Alexey Izbyshev wrote:
+On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
+> The rcu/sync code was doing its own check whether we are in a reader
+> section. With RCU consolidating flavors and the generic helper added in
+> this series, this is no longer need. We can just use the generic helper
+> and it results in a nice cleanup.
+> 
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-> On 7/12/19 8:46 PM, Alexey Dobriyan wrote:
->> The proper fix to all /proc/*/cmdline problems is to revert
->>
->> 	f5b65348fd77839b50e79bc0a5e536832ea52d8d
->> 	proc: fix missing final NUL in get_mm_cmdline() rewrite
->>
->> 	5ab8271899658042fabc5ae7e6a99066a210bc0e
->> 	fs/proc: simplify and clarify get_mm_cmdline() function
->>
-> Should this be interpreted as an actual suggestion to revert the patches,
-> fix the conflicts, test and submit them, or is this more like thinking out
-> loud? In the former case, will it be OK for long term branches?
->
-> get_mm_cmdline() does seem easier to read for me before 5ab8271899658042.
-> But it also has different semantics in corner cases, for example:
->
-> - If there is no NUL at arg_end-1, it reads only the first string in
-> the combined arg/env block, and doesn't terminate it with NUL.
->
-> - If there is any problem with access_remote_vm() or copy_to_user(),
-> it returns -EFAULT even if some data were copied to userspace.
->
-> On the other hand, 5ab8271899658042 was merged not too long ago (about a year),
-> so it's possible that the current semantics isn't heavily relied upon.
+Hi Oleg,
+Slightly unrelated to the patch,
+I tried hard to understand this comment below in percpu_down_read() but no dice.
 
-I posted this (corner?) case ~3 months ago, unfortunately it wasn't picked 
-up by anyone: https://lkml.org/lkml/2019/4/5/825
-You can treat it as another datapoint in this discussion.
+I do understand how rcu sync and percpu rwsem works, however the comment
+below didn't make much sense to me. For one, there's no readers_fast anymore
+so I did not follow what readers_fast means. Could the comment be updated to
+reflect latest changes?
+Also could you help understand how is a writer not able to change
+sem->state and count the per-cpu read counters at the same time as the
+comment tries to say?
+
+	/*
+	 * We are in an RCU-sched read-side critical section, so the writer
+	 * cannot both change sem->state from readers_fast and start checking
+	 * counters while we are here. So if we see !sem->state, we know that
+	 * the writer won't be checking until we're past the preempt_enable()
+	 * and that once the synchronize_rcu() is done, the writer will see
+	 * anything we did within this RCU-sched read-size critical section.
+	 */
+
+Also,
+I guess we could get rid of all of the gp_ops struct stuff now that since all
+the callbacks are the same now. I will post that as a follow-up patch to this
+series.
+
+thanks!
+
+ - Joel
 
 
-Regards,
-  Jakub
-
--- 
-Jakub Jankowski|shasta@toxcorp.com|https://toxcorp.com/
+> ---
+> Please note: Only build and boot tested this particular patch so far.
+> 
+>  include/linux/rcu_sync.h |  5 ++---
+>  kernel/rcu/sync.c        | 22 ----------------------
+>  2 files changed, 2 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> index 6fc53a1345b3..c954f1efc919 100644
+> --- a/include/linux/rcu_sync.h
+> +++ b/include/linux/rcu_sync.h
+> @@ -39,9 +39,8 @@ extern void rcu_sync_lockdep_assert(struct rcu_sync *);
+>   */
+>  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+>  {
+> -#ifdef CONFIG_PROVE_RCU
+> -	rcu_sync_lockdep_assert(rsp);
+> -#endif
+> +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+> +			 "suspicious rcu_sync_is_idle() usage");
+>  	return !rsp->gp_state; /* GP_IDLE */
+>  }
+>  
+> diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+> index a8304d90573f..535e02601f56 100644
+> --- a/kernel/rcu/sync.c
+> +++ b/kernel/rcu/sync.c
+> @@ -10,37 +10,25 @@
+>  #include <linux/rcu_sync.h>
+>  #include <linux/sched.h>
+>  
+> -#ifdef CONFIG_PROVE_RCU
+> -#define __INIT_HELD(func)	.held = func,
+> -#else
+> -#define __INIT_HELD(func)
+> -#endif
+> -
+>  static const struct {
+>  	void (*sync)(void);
+>  	void (*call)(struct rcu_head *, void (*)(struct rcu_head *));
+>  	void (*wait)(void);
+> -#ifdef CONFIG_PROVE_RCU
+> -	int  (*held)(void);
+> -#endif
+>  } gp_ops[] = {
+>  	[RCU_SYNC] = {
+>  		.sync = synchronize_rcu,
+>  		.call = call_rcu,
+>  		.wait = rcu_barrier,
+> -		__INIT_HELD(rcu_read_lock_held)
+>  	},
+>  	[RCU_SCHED_SYNC] = {
+>  		.sync = synchronize_rcu,
+>  		.call = call_rcu,
+>  		.wait = rcu_barrier,
+> -		__INIT_HELD(rcu_read_lock_sched_held)
+>  	},
+>  	[RCU_BH_SYNC] = {
+>  		.sync = synchronize_rcu,
+>  		.call = call_rcu,
+>  		.wait = rcu_barrier,
+> -		__INIT_HELD(rcu_read_lock_bh_held)
+>  	},
+>  };
+>  
+> @@ -49,16 +37,6 @@ enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
+>  
+>  #define	rss_lock	gp_wait.lock
+>  
+> -#ifdef CONFIG_PROVE_RCU
+> -void rcu_sync_lockdep_assert(struct rcu_sync *rsp)
+> -{
+> -	RCU_LOCKDEP_WARN(!gp_ops[rsp->gp_type].held(),
+> -			 "suspicious rcu_sync_is_idle() usage");
+> -}
+> -
+> -EXPORT_SYMBOL_GPL(rcu_sync_lockdep_assert);
+> -#endif
+> -
+>  /**
+>   * rcu_sync_init() - Initialize an rcu_sync structure
+>   * @rsp: Pointer to rcu_sync structure to be initialized
+> -- 
+> 2.22.0.510.g264f2c817a-goog
+> 
