@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091FFC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EA7C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7295208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18EE208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbfGLFlm (ORCPT
+        id S1726114AbfGLFlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 01:41:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64390 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbfGLFlm (ORCPT
+        Fri, 12 Jul 2019 01:41:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24442 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725791AbfGLFlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 01:41:42 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6C5alPh129542;
-        Fri, 12 Jul 2019 01:41:13 -0400
+        Fri, 12 Jul 2019 01:41:44 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6C5bSUp054419;
+        Fri, 12 Jul 2019 01:41:22 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpjd5ujb2-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpjb7um4m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 01:41:13 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6C5eu4U142040;
-        Fri, 12 Jul 2019 01:41:12 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpjd5ujaa-1
+        Fri, 12 Jul 2019 01:41:22 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6C5dFgD059786;
+        Fri, 12 Jul 2019 01:41:21 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpjb7um47-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 01:41:12 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6C5dpi9015276;
-        Fri, 12 Jul 2019 05:41:11 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 2tjk979fjq-1
+        Fri, 12 Jul 2019 01:41:21 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6C5dogC024556;
+        Fri, 12 Jul 2019 05:41:20 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tjk971ewv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 05:41:11 +0000
+        Fri, 12 Jul 2019 05:41:20 +0000
 Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6C5fAaM52232636
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6C5fJh148562568
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 05:41:10 GMT
+        Fri, 12 Jul 2019 05:41:19 GMT
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 562AF112061;
-        Fri, 12 Jul 2019 05:41:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8A821112069;
+        Fri, 12 Jul 2019 05:41:19 +0000 (GMT)
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8FC9112064;
-        Fri, 12 Jul 2019 05:41:05 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 60687112067;
+        Fri, 12 Jul 2019 05:41:15 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.149.188])
         by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 05:41:05 +0000 (GMT)
+        Fri, 12 Jul 2019 05:41:15 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     x86@kernel.org
 Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
         Mike Anderson <andmike@linux.ibm.com>,
         Ram Pai <linuxram@us.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH 1/3] x86/Kconfig: Move ARCH_HAS_MEM_ENCRYPT to arch/Kconfig
-Date:   Fri, 12 Jul 2019 02:36:29 -0300
-Message-Id: <20190712053631.9814-2-bauerman@linux.ibm.com>
+Subject: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86 arch code
+Date:   Fri, 12 Jul 2019 02:36:31 -0300
+Message-Id: <20190712053631.9814-4-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190712053631.9814-1-bauerman@linux.ibm.com>
 References: <20190712053631.9814-1-bauerman@linux.ibm.com>
@@ -81,7 +81,7 @@ X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=38 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1907120058
@@ -90,48 +90,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-powerpc and s390 are going to use this feature as well, so put it in a
-generic location.
+Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
+appear in generic kernel code because it forces non-x86 architectures to
+define the sev_active() function, which doesn't make a lot of sense.
+
+To solve this problem, add an x86 elfcorehdr_read() function to override
+the generic weak implementation. To do that, it's necessary to make
+read_from_oldmem() public so that it can be used outside of vmcore.c.
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- arch/Kconfig     | 3 +++
- arch/x86/Kconfig | 4 +---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/crash_dump_64.c |  5 +++++
+ fs/proc/vmcore.c                |  8 ++++----
+ include/linux/crash_dump.h      | 14 ++++++++++++++
+ include/linux/mem_encrypt.h     |  1 -
+ 4 files changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index c47b328eada0..4ef3499d4480 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -927,6 +927,9 @@ config LOCK_EVENT_COUNTS
- 	  the chance of application behavior change because of timing
- 	  differences. The counts are reported via debugfs.
- 
-+config ARCH_HAS_MEM_ENCRYPT
-+	bool
+diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
+index 22369dd5de3b..045e82e8945b 100644
+--- a/arch/x86/kernel/crash_dump_64.c
++++ b/arch/x86/kernel/crash_dump_64.c
+@@ -70,3 +70,8 @@ ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+ {
+ 	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
+ }
 +
- source "kernel/gcov/Kconfig"
++ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
++{
++	return read_from_oldmem(buf, count, ppos, 0, sev_active());
++}
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 57957c91c6df..ca1f20bedd8c 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -100,9 +100,9 @@ static int pfn_is_ram(unsigned long pfn)
+ }
  
- source "scripts/gcc-plugins/Kconfig"
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 12e02a8f9de7..7f4d28da8fe3 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -67,6 +67,7 @@ config X86
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_KCOV			if X86_64
-+	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_PMEM_API		if X86_64
- 	select ARCH_HAS_PTE_SPECIAL
-@@ -1500,9 +1501,6 @@ config X86_CPA_STATISTICS
- 	  helps to determine the effectiveness of preserving large and huge
- 	  page mappings when mapping protections are changed.
+ /* Reads a page from the oldmem device from given offset. */
+-static ssize_t read_from_oldmem(char *buf, size_t count,
+-				u64 *ppos, int userbuf,
+-				bool encrypted)
++ssize_t read_from_oldmem(char *buf, size_t count,
++			 u64 *ppos, int userbuf,
++			 bool encrypted)
+ {
+ 	unsigned long pfn, offset;
+ 	size_t nr_bytes;
+@@ -166,7 +166,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
+  */
+ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+ {
+-	return read_from_oldmem(buf, count, ppos, 0, sev_active());
++	return read_from_oldmem(buf, count, ppos, 0, false);
+ }
  
--config ARCH_HAS_MEM_ENCRYPT
--	def_bool y
--
- config AMD_MEM_ENCRYPT
- 	bool "AMD Secure Memory Encryption (SME) support"
- 	depends on X86_64 && CPU_SUP_AMD
+ /*
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index f774c5eb9e3c..4664fc1871de 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -115,4 +115,18 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 	return -EOPNOTSUPP;
+ }
+ #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
++
++#ifdef CONFIG_PROC_VMCORE
++ssize_t read_from_oldmem(char *buf, size_t count,
++			 u64 *ppos, int userbuf,
++			 bool encrypted);
++#else
++static inline ssize_t read_from_oldmem(char *buf, size_t count,
++				       u64 *ppos, int userbuf,
++				       bool encrypted)
++{
++	return -EOPNOTSUPP;
++}
++#endif /* CONFIG_PROC_VMCORE */
++
+ #endif /* LINUX_CRASHDUMP_H */
+diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
+index f2e399fb626b..a3747fcae466 100644
+--- a/include/linux/mem_encrypt.h
++++ b/include/linux/mem_encrypt.h
+@@ -21,7 +21,6 @@
+ 
+ #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
+ 
+-static inline bool sev_active(void) { return false; }
+ static inline bool mem_encrypt_active(void) { return false; }
+ 
+ #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
