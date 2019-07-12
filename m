@@ -2,157 +2,118 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3ADC742CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B017C742CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385D221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562945299;
-	bh=kvRwMmpPgKOBlahNaD54ocvg9pjHc1Q2YXUDFky0kr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ryfD5sIkOQVPQmHzm3w/cMYQhCwdgItR0517YOM5QAS0ticNBU2B28EmLnr9XFVKe
-	 8spMAjTRJAHqSscBSBNQbCZvPrBnEU0vEg97TIbRFbTMLx7E/QWpCSkgYGTBEDP4hk
-	 WecbllpGIHFe7LJN5tZjgcqadkG2xeNUEM56Bk+4=
+	by mail.kernel.org (Postfix) with ESMTP id 2181D208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:29:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pM5Hh4kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfGLP2S (ORCPT
+        id S1727161AbfGLP3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbfGLP2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:28:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B8FC208E4;
-        Fri, 12 Jul 2019 15:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562945296;
-        bh=kvRwMmpPgKOBlahNaD54ocvg9pjHc1Q2YXUDFky0kr4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JuPtoDzXrtSzfwjdLXCa6q4tqctFFJF+IOTDsZwpWFkNsxXGsrBvmLjCtgEyG6LLa
-         ZMXS3sNvcP8O1y4t7tmsxRxmv1Td+pv1T78xM6hkhWURRSFGe2Mdn0Y5DMLLrHxxBk
-         OddT+Jv3/rbiOjAYquBZXjJA/xE+m3U7/IjH2NnY=
-Date:   Fri, 12 Jul 2019 17:28:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Max Kellermann <mk@cm4all.com>
-Cc:     zhangliguang@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com,
+        Fri, 12 Jul 2019 11:29:12 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39157 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfGLP3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:29:11 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l9so8480754qtu.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qbIZ4fsnq/bMmsE1HOYvxUvp6AyyxU96K8pEGWgO1Z0=;
+        b=pM5Hh4kgLt9RcG5UX8PPdOxYKCfmlBqPdN72rNJ7x/0KIScXNBki/H+h3I0d4lcdV6
+         nypPvti7tSU9sfqkK3SgIDGMN7v9shbCMOEC0suFhhdUEr4Yg1gQH7MTXBqjUKV/KDMT
+         +QgErgNZufptZIvx1+9HN4PRkHrVLa7/VrPI0+z8WK85xfHKnkiUrbfPYFX/VN6h4vEb
+         gHRq43/vcLAk9RMy+9xFc2TA61O8y+CezknTfDHTxLpfGWUlduogiKcynU8k1MResXRa
+         61xOMf9Da5xu5DnGU54yqXS2+EI4b0Ow5zmGR1ylDr0zQWFFiWXDT2HXdDaOyW73GKSG
+         kXPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qbIZ4fsnq/bMmsE1HOYvxUvp6AyyxU96K8pEGWgO1Z0=;
+        b=kpf+1LlTQ8A1yVhfpECGERx9L1cPst8WkCkYAbXWNdhE2+PT9xT8JmpVP5PEPniSnK
+         B5g4Lw5NF1jrsLQco2pe/ZT5jEXPwO9ab0UOro2CnfJzezrsko53D4JOqU4yFcKm1LAP
+         /SEGPUYGBDCUnHvJAOFt/ZEPfsR0nQpAElqNje8yeXKNUG+Ntk7PJXh+MuQXg/+OWPND
+         TA81ClbyqSjBwg7LN2icXWI13PLLmc7QifNk8kCU153gPnR2eLYP/Yky8riPFPADizFA
+         MP9SeEMrE5lyDF5ZG11MeaYtG8xCadFzU3ooo/GStzGfxUaNv9ecczjtjX7/iZTQrfdn
+         DBEA==
+X-Gm-Message-State: APjAAAVAk6YuOlNBYIw+cXWFdZsBjbwxbOgVFIEwxWljEsHHBEF9uVh1
+        m0ejoGunKGsdqdN/BbmGt7DxyA==
+X-Google-Smtp-Source: APXvYqx4GHYUh9QqZYC3BhOAfwgBw85mw+jPseU8wXr2ewenlgxU8gpnm9A2+7IF1NynsfUGiA1QSQ==
+X-Received: by 2002:a0c:ea34:: with SMTP id t20mr7112177qvp.11.1562945350546;
+        Fri, 12 Jul 2019 08:29:10 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u4sm4091905qkb.16.2019.07.12.08.29.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 08:29:09 -0700 (PDT)
+Message-ID: <1562945348.8510.27.camel@lca.pw>
+Subject: Re: [PATCH] powerpc/powernv: fix a W=1 compilation warning
+From:   Qian Cai <cai@lca.pw>
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
+Cc:     aik@ozlabs.ru, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "NFS: readdirplus optimization by cache
- mechanism" (memleak)
-Message-ID: <20190712152813.GB13940@kroah.com>
-References: <20190712141806.3063-1-mk@cm4all.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712141806.3063-1-mk@cm4all.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Date:   Fri, 12 Jul 2019 11:29:08 -0400
+In-Reply-To: <1558541369-8263-1-git-send-email-cai@lca.pw>
+References: <1558541369-8263-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 04:18:06PM +0200, Max Kellermann wrote:
-> This reverts commit be4c2d4723a4a637f0d1b4f7c66447141a4b3564.
+Ping.
+
+On Wed, 2019-05-22 at 12:09 -0400, Qian Cai wrote:
+> The commit b575c731fe58 ("powerpc/powernv/npu: Add set/unset window
+> helpers") called pnv_npu_set_window() in a void function
+> pnv_npu_dma_set_32(), but the return code from pnv_npu_set_window() has
+> no use there as all the error logging happen in pnv_npu_set_window(),
+> so just remove the unused variable to avoid a compilation warning,
 > 
-> That commit caused a severe memory leak in nfs_readdir_make_qstr().
+> arch/powerpc/platforms/powernv/npu-dma.c: In function
+> 'pnv_npu_dma_set_32':
+> arch/powerpc/platforms/powernv/npu-dma.c:198:10: warning: variable ‘rc’
+> set but not used [-Wunused-but-set-variable]
 > 
-> When listing a directory with more than 100 files (this is how many
-> struct nfs_cache_array_entry elements fit in one 4kB page), all
-> allocated file name strings past those 100 leak.
-> 
-> The root of the leakage is that those string pointers are managed in
-> pages which are never linked into the page cache.
-> 
-> fs/nfs/dir.c puts pages into the page cache by calling
-> read_cache_page(); the callback function nfs_readdir_filler() will
-> then fill the given page struct which was passed to it, which is
-> already linked in the page cache (by do_read_cache_page() calling
-> add_to_page_cache_lru()).
-> 
-> Commit be4c2d4723a4 added another (local) array of allocated pages, to
-> be filled with more data, instead of discarding excess items received
-> from the NFS server.  Those additional pages can be used by the next
-> nfs_readdir_filler() call (from within the same nfs_readdir() call).
-> 
-> The leak happens when some of those additional pages are never used
-> (copied to the page cache using copy_highpage()).  The pages will be
-> freed by nfs_readdir_free_pages(), but their contents will not.  The
-> commit did not invoke nfs_readdir_clear_array() (and doing so would
-> have been dangerous, because it did not track which of those pages
-> were already copied to the page cache, risking double free bugs).
-> 
-> How to reproduce the leak:
-> 
-> - Use a kernel with CONFIG_SLUB_DEBUG_ON.
-> 
-> - Create a directory on a NFS mount with more than 100 files with
->   names long enough to use the "kmalloc-32" slab (so we can easily
->   look up the allocation counts):
-> 
->   for i in `seq 110`; do touch ${i}_0123456789abcdef; done
-> 
-> - Drop all caches:
-> 
->   echo 3 >/proc/sys/vm/drop_caches
-> 
-> - Check the allocation counter:
-> 
->   grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
->   30564391 nfs_readdir_add_to_array+0x73/0xd0 age=534558/4791307/6540952 pid=370-1048386 cpus=0-47 nodes=0-1
-> 
-> - Request a directory listing and check the allocation counters again:
-> 
->   ls
->   [...]
->   grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
->   30564511 nfs_readdir_add_to_array+0x73/0xd0 age=207/4792999/6542663 pid=370-1048386 cpus=0-47 nodes=0-1
-> 
-> There are now 120 new allocations.
-> 
-> - Drop all caches and check the counters again:
-> 
->   echo 3 >/proc/sys/vm/drop_caches
->   grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
->   30564401 nfs_readdir_add_to_array+0x73/0xd0 age=735/4793524/6543176 pid=370-1048386 cpus=0-47 nodes=0-1
-> 
-> 110 allocations are gone, but 10 have leaked and will never be freed.
-> 
-> Unhelpfully, those allocations are explicitly excluded from KMEMLEAK,
-> that's why my initial attempts with KMEMLEAK were not successful:
-> 
-> 	/*
-> 	 * Avoid a kmemleak false positive. The pointer to the name is stored
-> 	 * in a page cache page which kmemleak does not scan.
-> 	 */
-> 	kmemleak_not_leak(string->name);
-> 
-> It would be possible to solve this bug without reverting the whole
-> commit:
-> 
-> - keep track of which pages were not used, and call
->   nfs_readdir_clear_array() on them, or
-> - manually link those pages into the page cache
-> 
-> But for now I have decided to just revert the commit, because the real
-> fix would require complex considerations, risking more dangerous
-> (crash) bugs, which may seem unsuitable for the stable branches.
-> 
-> Signed-off-by: Max Kellermann <mk@cm4all.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 > ---
->  fs/nfs/dir.c      | 90 ++++-------------------------------------------
->  fs/nfs/internal.h |  3 +-
->  2 files changed, 7 insertions(+), 86 deletions(-)
-
-No cc: stable@vger on this patch to get it backported?
-
-thanks,
-
-greg k-h
+>  arch/powerpc/platforms/powernv/npu-dma.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/npu-dma.c
+> b/arch/powerpc/platforms/powernv/npu-dma.c
+> index 495550432f3d..035208ed591f 100644
+> --- a/arch/powerpc/platforms/powernv/npu-dma.c
+> +++ b/arch/powerpc/platforms/powernv/npu-dma.c
+> @@ -195,7 +195,6 @@ static void pnv_npu_dma_set_32(struct pnv_ioda_pe *npe)
+>  {
+>  	struct pci_dev *gpdev;
+>  	struct pnv_ioda_pe *gpe;
+> -	int64_t rc;
+>  
+>  	/*
+>  	 * Find the assoicated PCI devices and get the dma window
+> @@ -208,8 +207,8 @@ static void pnv_npu_dma_set_32(struct pnv_ioda_pe *npe)
+>  	if (!gpe)
+>  		return;
+>  
+> -	rc = pnv_npu_set_window(&npe->table_group, 0,
+> -			gpe->table_group.tables[0]);
+> +	pnv_npu_set_window(&npe->table_group, 0,
+> +			   gpe->table_group.tables[0]);
+>  
+>  	/*
+>  	 * NVLink devices use the same TCE table configuration as
