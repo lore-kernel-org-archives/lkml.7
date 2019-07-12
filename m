@@ -2,63 +2,111 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9CBC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00944C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6001E2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C917B20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IvWP7LKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfGLShe (ORCPT
+        id S1727467AbfGLSjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 14:37:34 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59952 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfGLShe (ORCPT
+        Fri, 12 Jul 2019 14:39:08 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36850 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfGLSjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 14:37:34 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 758F114DE6032;
-        Fri, 12 Jul 2019 11:37:33 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 11:37:32 -0700 (PDT)
-Message-Id: <20190712.113732.1943040089721373555.davem@davemloft.net>
-To:     natechancellor@gmail.com
-Cc:     saeedm@mellanox.com, leon@kernel.org, borisp@mellanox.com,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ndesaulniers@google.com
-Subject: Re: [PATCH net-next v3] net/mlx5e: Convert single case statement
- switch statements into if statements
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190710060614.6155-1-natechancellor@gmail.com>
-References: <20190710044748.3924-1-natechancellor@gmail.com>
-        <20190710060614.6155-1-natechancellor@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 12 Jul 2019 14:39:08 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CIcwZq015255;
+        Fri, 12 Jul 2019 13:38:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562956738;
+        bh=qoKT170R6U+xejiy045waJJnY7mObDoDXmCpVbDWlxU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IvWP7LKWUo/msn1Nf+yf/zMbneTgvg+6CLwE1sCOQdGFJtWl5L7kgspohdLbyA/RF
+         T2Ul1BJC3Z67GZax/DwW2PogmdN/9zAin0U5vFtfsnSypj4kHS9y6AVA6VdY8DMjlK
+         nUscF5Nw3fGj6IItwkAW85rmT6dzmCEzXMN6+6lk=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CIcwFb052967
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jul 2019 13:38:58 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
+ Jul 2019 13:38:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 12 Jul 2019 13:38:57 -0500
+Received: from [128.247.59.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CIcvj9030014;
+        Fri, 12 Jul 2019 13:38:57 -0500
+Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
+ property
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190708103547.23528-1-jjhiblot@ti.com>
+ <20190708103547.23528-3-jjhiblot@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <cd233d13-b4dd-1c4f-235e-d63cebab6f4f@ti.com>
+Date:   Fri, 12 Jul 2019 13:38:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190708103547.23528-3-jjhiblot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 12 Jul 2019 11:37:33 -0700 (PDT)
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
-Date: Tue,  9 Jul 2019 23:06:15 -0700
+JJ
 
-> During the review of commit 1ff2f0fa450e ("net/mlx5e: Return in default
-> case statement in tx_post_resync_params"), Leon and Nick pointed out
-> that the switch statements can be converted to single if statements
-> that return early so that the code is easier to follow.
-> 
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
+> Most of the LEDs are powered by a voltage/current regulator. describing in
+> the device-tree makes it possible for the LED core to enable/disable it
+> when needed.
 
-Applied, thanks for following up Nathan.
+This should be patch 1.
+
+
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> ---
+>   Documentation/devicetree/bindings/leds/common.txt | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 70876ac11367..e093a2b7eb90 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -61,6 +61,11 @@ Optional properties for child nodes:
+>   - panic-indicator : This property specifies that the LED should be used,
+>   		    if at all possible, as a panic indicator.
+>   
+> +- power-supply : A voltage/current regulator used to to power the LED. When a
+> +		 LED is turned off, the LED core disable its regulator. The
+> +		 same regulator can power many LED (or other) devices. It is
+> +		 turned off only when all of its users disabled it.
+> +
+>   - trigger-sources : List of devices which should be used as a source triggering
+>   		    this LED activity. Some LEDs can be related to a specific
+>   		    device and should somehow indicate its state. E.g. USB 2.0
+
+
+Do you have an example update?
+
+Dan
+
