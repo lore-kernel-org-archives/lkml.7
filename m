@@ -2,54 +2,52 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB7CC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538CFC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6372084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E0B208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934273;
-	bh=I6SLxy3JxmLRF8Y/fRbe5of/Af9MI5t5AuY12Ql3XQA=;
+	s=default; t=1562934278;
+	bh=jJIdsp0EhhdWqql7R9UjK47yBHa1g72/qTxDgzXP6Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crOrA8CkaihsUIbD4pUBOeezKY3fZKDsuiHmjKKyMqQGVRceEqyejuv+/b4YNdmKv
-	 qPHoIH0DGTw7UM5LvnU4lto4xXguwa3znT39S8yPPOjNMXPYdkaBUx8OzFqmoBT7/Y
-	 iZYCIlDI1Hth/i2h/XQCNWJXxETi2SdMF+Yerfns=
+	b=l9x2sOnGDdZ2l0K7MFpE5BA9JSnzqjNRYIpH6kdFkCFq+PvDn7jn9JCxIXPrPq0EK
+	 xRVvXAA1M94irS7aGkTa49GOCFZJF6WVj31QuL5+mSoRy3lETQ0EgsEk4UAI4xHeYG
+	 3iqpdXpSOgqCMl+R5OhO5yXbxu+DItmfXDuSWpO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfGLMYb (ORCPT
+        id S1728158AbfGLMYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbfGLMY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:24:28 -0400
+        id S1728144AbfGLMYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:24:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182622084B;
-        Fri, 12 Jul 2019 12:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 590122084B;
+        Fri, 12 Jul 2019 12:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934267;
-        bh=I6SLxy3JxmLRF8Y/fRbe5of/Af9MI5t5AuY12Ql3XQA=;
+        s=default; t=1562934273;
+        bh=jJIdsp0EhhdWqql7R9UjK47yBHa1g72/qTxDgzXP6Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcZ7fFruPFpR32tWGexbZa/qOMMaZAl8d/a3Xb8YpkcHh6v1eZ0V51QQL/4QV5ENY
-         Y/i7uI016xqIgEW0kP5DwEbHh32az7Svqyzu3n6IUSHqwQ5GgCVDjwiYaqNMSkRfAm
-         N6qi5T+DyqGVAoZ2Rq3R0S8v8NGTXD8JzYv42gsw=
+        b=Ynkro9EYy9LTk+cnDNAKKuNUwUE9iqbxg5s9P4O5Jrtr7clhX57RGDm8W36S8nxhG
+         pRjPGukFhx/TxMdK3KdjWwOXmX01i5rM5aoYL8JmDdr800X6bJgvB7sOdtFGy/TGtc
+         gWhlMCNcEgquZ/Mv09q4g2laD1dXr70N2PqhIpTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 89/91] staging: bcm2835-camera: Remove check of the number of buffers supplied
-Date:   Fri, 12 Jul 2019 14:19:32 +0200
-Message-Id: <20190712121626.482469113@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 49/91] ip6_tunnel: allow not to count pkts on tstats by passing dev as NULL
+Date:   Fri, 12 Jul 2019 14:18:52 +0200
+Message-Id: <20190712121624.257889987@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -62,47 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+[ Upstream commit 6f6a8622057c92408930c31698394fae1557b188 ]
 
-commit bb8e97006d701ae725a177f8f322e5a75fa761b7 upstream.
+A similar fix to Patch "ip_tunnel: allow not to count pkts on tstats by
+setting skb's dev to NULL" is also needed by ip6_tunnel.
 
-Before commit "staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping"
-there was a need to ensure that there were sufficient buffers supplied from
-the user to cover those being sent to the VPU (always 1).
-
-Now the buffers are linked 1:1 between MMAL and V4L2,
-therefore there is no need for that check, and indeed it is wrong
-as there is no need to submit all the buffers before starting streaming.
-
-Fixes: 938416707071 ("staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping")
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c |   10 ----------
- 1 file changed, 10 deletions(-)
+ include/net/ip6_tunnel.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-@@ -1329,16 +1329,6 @@ static int port_enable(struct vchiq_mmal
- 	if (port->enabled)
- 		return 0;
- 
--	/* ensure there are enough buffers queued to cover the buffer headers */
--	if (port->buffer_cb) {
--		hdr_count = 0;
--		list_for_each(buf_head, &port->buffers) {
--			hdr_count++;
--		}
--		if (hdr_count < port->current_buffer.num)
--			return -ENOSPC;
--	}
--
- 	ret = port_action_port(instance, port,
- 			       MMAL_MSG_PORT_ACTION_TYPE_ENABLE);
- 	if (ret)
+diff --git a/include/net/ip6_tunnel.h b/include/net/ip6_tunnel.h
+index 236e40ba06bf..f594eb71c274 100644
+--- a/include/net/ip6_tunnel.h
++++ b/include/net/ip6_tunnel.h
+@@ -156,9 +156,12 @@ static inline void ip6tunnel_xmit(struct sock *sk, struct sk_buff *skb,
+ 	memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
+ 	pkt_len = skb->len - skb_inner_network_offset(skb);
+ 	err = ip6_local_out(dev_net(skb_dst(skb)->dev), sk, skb);
+-	if (unlikely(net_xmit_eval(err)))
+-		pkt_len = -1;
+-	iptunnel_xmit_stats(dev, pkt_len);
++
++	if (dev) {
++		if (unlikely(net_xmit_eval(err)))
++			pkt_len = -1;
++		iptunnel_xmit_stats(dev, pkt_len);
++	}
+ }
+ #endif
+ #endif
+-- 
+2.20.1
+
 
 
