@@ -2,147 +2,205 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458DAC742BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D266CC742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E3C206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D768206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="UY3MBG5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfGLNfM convert rfc822-to-8bit (ORCPT
+        id S1727883AbfGLNfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:35:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23864 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727295AbfGLNfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:35:11 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CDW0Vr115907
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 09:35:10 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.91])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpu5v04b2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 09:35:09 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 12 Jul 2019 13:35:08 -0000
-Received: from us1a3-smtp02.a3.dal06.isc4sb.com (10.106.154.159)
-        by smtp.notes.na.collabserv.com (10.106.227.143) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 12 Jul 2019 13:35:00 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp02.a3.dal06.isc4sb.com
-          with ESMTP id 2019071213350016-511577 ;
-          Fri, 12 Jul 2019 13:35:00 +0000 
-In-Reply-To: <20190712131930.GT3419@hirez.programming.kicks-ass.net>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Peter Zijlstra" <peterz@infradead.org>
-Cc:     "Jason Gunthorpe" <jgg@ziepe.ca>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Doug Ledford" <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jul 2019 13:35:00 +0000
+        Fri, 12 Jul 2019 09:35:31 -0400
+Received: from mail-eopbgr790041.outbound.protection.outlook.com ([40.107.79.41]:13877
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727295AbfGLNfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:35:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mOs/onyuvwBe+d48Ynim9WFKw/OPCBnL7quQOO9kq+8=;
+ b=UY3MBG5yXQEPTSrxXrzTqgOcH79EK4oAZ3HhSiVCrUUsT8NvAn0xeMPxSrQshCr4gGomuEzzoLN2yFY1iyGSwKZwGXKxziDPRQrCswiKQlfTX5NGoXTN4JZ5a46mr/bXxlBh+YxzfrgfLPf/EWMiM3ab0rn8HV6VlYRevaZQSOM=
+Received: from CH2PR15MB3575.namprd15.prod.outlook.com (10.255.156.17) by
+ CH2PR15MB3656.namprd15.prod.outlook.com (52.132.229.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Fri, 12 Jul 2019 13:35:27 +0000
+Received: from CH2PR15MB3575.namprd15.prod.outlook.com
+ ([fe80::ecc4:bffd:8512:a8b6]) by CH2PR15MB3575.namprd15.prod.outlook.com
+ ([fe80::ecc4:bffd:8512:a8b6%2]) with mapi id 15.20.2073.008; Fri, 12 Jul 2019
+ 13:35:27 +0000
+From:   Jon Maloy <jon.maloy@ericsson.com>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>,
+        "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>
+Subject: RE: [PATCH v2] tipc: ensure head->lock is initialised
+Thread-Topic: [PATCH v2] tipc: ensure head->lock is initialised
+Thread-Index: AQHVODnNEHBSydfkNkiklxzCzKphuKbG9Kpw
+Date:   Fri, 12 Jul 2019 13:35:26 +0000
+Message-ID: <CH2PR15MB3575CECCB65404A0292B68759AF20@CH2PR15MB3575.namprd15.prod.outlook.com>
+References: <20190711224115.21499-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190711224115.21499-1-chris.packham@alliedtelesis.co.nz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jon.maloy@ericsson.com; 
+x-originating-ip: [198.24.6.220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78725d05-fcc3-4cb5-9e4e-08d706cdccf8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CH2PR15MB3656;
+x-ms-traffictypediagnostic: CH2PR15MB3656:
+x-microsoft-antispam-prvs: <CH2PR15MB36562282307A1AE20CE23D699AF20@CH2PR15MB3656.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 00963989E5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(13464003)(199004)(189003)(74316002)(476003)(52536014)(7696005)(76176011)(25786009)(53546011)(102836004)(110136005)(86362001)(54906003)(8936002)(256004)(5660300002)(81156014)(7736002)(8676002)(99286004)(68736007)(14444005)(6506007)(26005)(3846002)(305945005)(81166006)(6116002)(4326008)(14454004)(53936002)(66476007)(478600001)(446003)(71200400001)(2201001)(316002)(44832011)(2501003)(186003)(66446008)(64756008)(66946007)(76116006)(486006)(2906002)(66556008)(11346002)(66066001)(6246003)(55016002)(229853002)(6436002)(45080400002)(9686003)(33656002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR15MB3656;H:CH2PR15MB3575.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: ericsson.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: COba7c/03QhoU0IIgRYnXipC6w6PIPoQUmQePLZLPI5T8SoHPllujkbIxdvu5Air+eRq+a7uoqk5nHNGIKnRVj8iZX4nAvq2zBOeVpjSeDnLQgHHEIDwCOEgmXWJ5CFqlsoToY957CBznbutAjTWq3QOQr7hGES7QlczIrZXiynWuTGnYf8rVT35/pz9Ai7UP1daPi2GG719XfdIKDS/7LrkEjmazoM5cpVGsp0eROwJv3dnuoYRP4CwolxR9Xj9ZmWDpfkNLMa+IZy9jr7+63wQWylGcWR7h6Eqth/bi2NoLxUlOEdGgJB0te6xiCqAYpxQx/8fVJtl/zObeQJkBZg+lSCYNwWuLuFiOdQ3PudlS9G5beYiT7IMD6nzRjT6asymuHaPwhSAG1Zl6/PtKvPq4LfIuLQWlakS2VGjXvo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190712131930.GT3419@hirez.programming.kicks-ass.net>,<20190712120328.GB27512@ziepe.ca>
- <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-LLNOutbound: False
-X-Disclaimed: 51895
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19071213-9951-0000-0000-00000D416317
-X-IBM-SpamModules-Scores: BY=0.032547; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.011778
-X-IBM-SpamModules-Versions: BY=3.00011415; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231113; UDB=6.00648510; IPR=6.01012397;
- BA=6.00006355; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027691; XFM=3.00000015;
- UTC=2019-07-12 13:35:06
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-12 09:00:41 - 6.00010155
-x-cbparentid: 19071213-9952-0000-0000-00003D8869F8
-Message-Id: <OFFCB81001.A5C81FEB-ON00258435.0049DC1C-00258435.004A9DA0@notes.na.collabserv.com>
-Subject: Re:  Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+X-OriginatorOrg: ericsson.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78725d05-fcc3-4cb5-9e4e-08d706cdccf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2019 13:35:26.9954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Peter Zijlstra" <peterz@infradead.org> wrote: -----
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Peter Zijlstra" <peterz@infradead.org>
->Date: 07/12/2019 03:19PM
->Cc: "Jason Gunthorpe" <jgg@ziepe.ca>, "Arnd Bergmann"
-><arnd@arndb.de>, "Doug Ledford" <dledford@redhat.com>,
->linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on
->a u64
->
->On Fri, Jul 12, 2019 at 01:05:14PM +0000, Bernard Metzler wrote:
->> @@ -1131,6 +1131,10 @@ int siw_poll_cq(struct ib_cq *base_cq, int
->num_cqe, struct ib_wc *wc)
->>   *   number of not reaped CQE's regardless of its notification
->>   *   type and current or new CQ notification settings.
->>   *
->> + * This function gets called only by kernel consumers.
->> + * Notification state must immediately become visible to all
->> + * associated kernel producers (QP's).
->
->No amount of memory barriers can achieve that goal.
->
->
-Oh right, that is correct. And it is not needed. This statement
-is to bold. We simply want it asap. Actually, per API semantics, there is
-no ordering guarantee between creating a completion queue event and
-concurrently arming/disarming the completion queue. Since it is
-not possible.
-I use the barrier to minimize the likelihood a CQ event is missed
-since the CQ is not yet visible to be re-armed to all producers.
-But it can happen. This is what this optional
-IB_CQ_REPORT_MISSED_EVENTS right below the re-arming is for.
+Actually, this was not what I meant, but it solves our problem in a simple =
+and safe way, for now.
+Later, when net-next opens, I will revert this and do it the right way, whi=
+ch is to change from skb_queue_purge() to __skb_queue_purge as Eric correct=
+ly noted.
+That change has to be done at four locations, at least,  and is too intrusi=
+ve to post to 'net' now.
+I'll send a cleanup patch when net-next re-opens.
 
-Would be OK if we just adapt the comment from 'must immediately become visible'
-to 'shall become visible asap'. That would reflect the intention.
+BR
+///jon
+=20
 
-Thanks very much!
-Bernard.
-
-int siw_req_notify_cq(struct ib_cq *base_cq, enum ib_cq_notify_flags flags)
-{
-        struct siw_cq *cq = to_siw_cq(base_cq);
-
-        siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
-
-        if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
-                /*
-                 * Enable CQ event for next solicited completion.
-                 * and make it visible to all associated producers.
-                 */
-                smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
-        else
-                /*
-                 * Enable CQ event for any signalled completion.
-                 * and make it visible to all associated producers.
-                 */
-                smp_store_mb(cq->notify->flags, SIW_NOTIFY_ALL);
-
-        if (flags & IB_CQ_REPORT_MISSED_EVENTS)
-                return cq->cq_put - cq->cq_get;
-
-        return 0;
-}
+> -----Original Message-----
+> From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Sent: 11-Jul-19 18:41
+> To: Jon Maloy <jon.maloy@ericsson.com>; eric.dumazet@gmail.com;
+> ying.xue@windriver.com; davem@davemloft.net
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; tipc-
+> discussion@lists.sourceforge.net; Chris Packham
+> <chris.packham@alliedtelesis.co.nz>
+> Subject: [PATCH v2] tipc: ensure head->lock is initialised
+>=20
+> tipc_named_node_up() creates a skb list. It passes the list to
+> tipc_node_xmit() which has some code paths that can call
+> skb_queue_purge() which relies on the list->lock being initialised.
+>=20
+> The spin_lock is only needed if the messages end up on the receive path b=
+ut
+> when the list is created in tipc_named_node_up() we don't necessarily kno=
+w if
+> it is going to end up there.
+>=20
+> Once all the skb list users are updated in tipc it will then be possible =
+to update
+> them to use the unlocked variants of the skb list functions and initialis=
+e the
+> lock when we know the message will follow the receive path.
+>=20
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>=20
+> I'm updating our products to use the latest kernel. One change that we ha=
+ve
+> that doesn't appear to have been upstreamed is related to the following s=
+oft
+> lockup.
+>=20
+> NMI watchdog: BUG: soft lockup - CPU#3 stuck for 23s! [swapper/3:0]
+> Modules linked in: tipc jitterentropy_rng echainiv drbg platform_driver(O=
+)
+> ipifwd(PO)
+> CPU: 3 PID: 0 Comm: swapper/3 Tainted: P           O    4.4.6-at1 #1
+> task: a3054e00 ti: ac6b4000 task.ti: a307a000
+> NIP: 806891c4 LR: 804f5060 CTR: 804f50d0
+> REGS: ac6b59b0 TRAP: 0901   Tainted: P           O     (4.4.6-at1)
+> MSR: 00029002 <CE,EE,ME>  CR: 84002088  XER: 20000000
+>=20
+> GPR00: 804f50fc ac6b5a60 a3054e00 00029002 00000101 01001011
+> 00000000 00000001
+> GPR08: 00021002 c1502d1c ac6b5ae4 00000000 804f50d0 NIP [806891c4]
+> _raw_spin_lock_irqsave+0x44/0x80 LR [804f5060] skb_dequeue+0x20/0x90
+> Call Trace:
+> [ac6b5a80] [804f50fc] skb_queue_purge+0x2c/0x50 [ac6b5a90] [c1511058]
+> tipc_node_xmit+0x138/0x170 [tipc] [ac6b5ad0] [c1509e58]
+> tipc_named_node_up+0x88/0xa0 [tipc] [ac6b5b00] [c150fc1c]
+> tipc_netlink_compat_stop+0x9bc/0xf50 [tipc] [ac6b5b20] [c1511638]
+> tipc_rcv+0x418/0x9b0 [tipc] [ac6b5bc0] [c150218c]
+> tipc_bcast_stop+0xfc/0x7b0 [tipc] [ac6b5bd0] [80504e38]
+> __netif_receive_skb_core+0x468/0xa10
+> [ac6b5c70] [805082fc] netif_receive_skb_internal+0x3c/0xe0
+> [ac6b5ca0] [80642a48] br_handle_frame_finish+0x1d8/0x4d0
+> [ac6b5d10] [80642f30] br_handle_frame+0x1f0/0x330 [ac6b5d60]
+> [80504ec8] __netif_receive_skb_core+0x4f8/0xa10
+> [ac6b5e00] [805082fc] netif_receive_skb_internal+0x3c/0xe0
+> [ac6b5e30] [8044c868] _dpa_rx+0x148/0x5c0 [ac6b5ea0] [8044b0c8]
+> priv_rx_default_dqrr+0x98/0x170 [ac6b5ed0] [804d1338]
+> qman_p_poll_dqrr+0x1b8/0x240 [ac6b5f00] [8044b1c0]
+> dpaa_eth_poll+0x20/0x60 [ac6b5f20] [805087cc]
+> net_rx_action+0x15c/0x320 [ac6b5f80] [8002594c]
+> __do_softirq+0x13c/0x250 [ac6b5fe0] [80025c34] irq_exit+0xb4/0xf0
+> [ac6b5ff0] [8000d81c] call_do_irq+0x24/0x3c [a307be60] [80004acc]
+> do_IRQ+0x8c/0x120 [a307be80] [8000f450] ret_from_except+0x0/0x18
+> --- interrupt: 501 at arch_cpu_idle+0x24/0x70
+>=20
+> Eyeballing the code I think it can still happen since tipc_named_node_up
+> allocates struct sk_buff_head head on the stack so it could have arbitrar=
+y
+> content.
+>=20
+> Changes in v2:
+> - fixup commit subject
+> - add more information to commit message from mailing list discussion
+>=20
+>  net/tipc/name_distr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/net/tipc/name_distr.c b/net/tipc/name_distr.c index
+> 61219f0b9677..44abc8e9c990 100644
+> --- a/net/tipc/name_distr.c
+> +++ b/net/tipc/name_distr.c
+> @@ -190,7 +190,7 @@ void tipc_named_node_up(struct net *net, u32
+> dnode)
+>  	struct name_table *nt =3D tipc_name_table(net);
+>  	struct sk_buff_head head;
+>=20
+> -	__skb_queue_head_init(&head);
+> +	skb_queue_head_init(&head);
+>=20
+>  	read_lock_bh(&nt->cluster_scope_lock);
+>  	named_distribute(net, &head, dnode, &nt->cluster_scope);
+> --
+> 2.22.0
 
