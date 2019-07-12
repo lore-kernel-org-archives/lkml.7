@@ -2,151 +2,283 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73773C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2206BC742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E3220989
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA5120989
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PShQDYtf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dAaZQGHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfGLStS (ORCPT
+        id S1727460AbfGLSuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 14:49:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43451 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfGLStR (ORCPT
+        Fri, 12 Jul 2019 14:50:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44448 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfGLSuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 14:49:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so5156491plb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 11:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MRVC5IMZoa5o9Lk6/1pZnpghBb7QNpMZIqJdxQxjH40=;
-        b=PShQDYtfPEgQskYO6b88lcP+62BM211EGSGUonfZjCevTp6bMxwg8wiYIm73nchh4p
-         1NhRTLriTnIWs5iTgUQ/JCZZ3yElVWunsKFQwXqdfCbyzDhdyoPqtOINHwE9cMrnlBVR
-         vkrtq+g1VxQsdgQtI6/Ut/zOauwjdfhl1YOCQ270GqOWAjdnQdO+u4i0l4/Z6RNHWrKY
-         UaJaqAbKqijc8Y2jQ5lsrum4KA46TAxTqA0x+d2vrSRelEtEIeCusL4gU+rVHZukUNtQ
-         Qv7c/Mcy+lTG+97vgNxcGUzoPcHYfdPj3uSVzAilrB8ssmS+ylLiZAYzzMA8VMMBRMQV
-         r0Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MRVC5IMZoa5o9Lk6/1pZnpghBb7QNpMZIqJdxQxjH40=;
-        b=EVwyN7fnJT8tP1w5I6HYZ3dplZ5/lK4wavrOQVgp7g73kbDxETdUmRqgaTO4FTw3FF
-         4vwLj+GtDLyD1Rq5z4UGGHXWYtiH00rTXd15oJpsLEQBB1zUXOzoI1ymALAkh+uuGI7E
-         Ihdvoky2zuW91x6UhPepZ6u8c33DbCkQrowKtXuQd2341VruBPaeIt2TtlIffS7YmzBc
-         zcmsBz7W2teNq9k+i3K2xX14TCrgjTqjtbjvYvgQxQq/UL27BGDL/I24VCiGZc7oQdiM
-         mt5fW62zYD1/xdyYWZ9TPwmWiLH81q2iPKDYLRkQdlfD7cyxGKGNOgGPYyNHmyV+eJ/j
-         ffRw==
-X-Gm-Message-State: APjAAAWNQXKjpLCuLEntZiy2U19J59jboRyomb/kaIbOZHGnI8rle3RV
-        R0ADgS0q4l07u6YimA7JGTt/6x9ONzYSNzehBqxz/g==
-X-Google-Smtp-Source: APXvYqxBLbwppsbzxjlJ9R2+QpWY9Uc7vDpVh0ziWCRQc3SKPvW+WWR0k4LO6QLqnD1Ja2x1b0JF77dK64H4hN7TBAw=
-X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr13242312plq.223.1562957356404;
- Fri, 12 Jul 2019 11:49:16 -0700 (PDT)
+        Fri, 12 Jul 2019 14:50:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CIo9EC024168;
+        Fri, 12 Jul 2019 13:50:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562957409;
+        bh=zqQ58ER/KkKEyQXdg8uscL61M3xULXtOuGlfXPiC+0g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dAaZQGHV1DwZdJc3UcxYwVwxsHGEIz6yobfLwkVrdJ8xlzPcRiFLnt5YhDoVz/jYR
+         YZPUa6bJPksA7hRv5TVSbBcil3pf+rn+aSPgKKUNZEelUV6Jc2CmrBWF+ksF5YIdOL
+         pLPtf1Lq32spU5PxbfkO8McmuC/BT5NJ6PdhBbsI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CIo9B2120918
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jul 2019 13:50:09 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
+ Jul 2019 13:50:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 12 Jul 2019 13:50:09 -0500
+Received: from [128.247.59.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CIo9xY056447;
+        Fri, 12 Jul 2019 13:50:09 -0500
+Subject: Re: [PATCH 1/2] leds: Add control of the voltage/current regulator to
+ the LED core
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190708103547.23528-1-jjhiblot@ti.com>
+ <20190708103547.23528-2-jjhiblot@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <56d16260-ff82-3439-4c1f-2a3a1552bc7d@ti.com>
+Date:   Fri, 12 Jul 2019 13:49:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190712093720.1461418-1-arnd@arndb.de>
-In-Reply-To: <20190712093720.1461418-1-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 12 Jul 2019 11:49:05 -0700
-Message-ID: <CAKwvOd=Xdp_=G3UU9ubayeTvkKCJ9hak0a-7yK90-RPUBQKrpw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Support clang option for stack alignment
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Duke Du <Duke.Du@amd.com>, Charlene Liu <charlene.liu@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Matthias Kaehlcke <mka@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190708103547.23528-2-jjhiblot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 2:37 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> As previously fixed for dml in commit 4769278e5c7f ("amdgpu/dc/dml:
-> Support clang option for stack alignment") and calcs in commit
-> cc32ad8f559c ("amdgpu/dc/calcs: Support clang option for stack
-> alignment"), dcn20 uses an option that is not available with clang:
->
-> clang: error: unknown argument: '-mpreferred-stack-boundary=4'
-> scripts/Makefile.build:281: recipe for target 'drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.o' failed
->
-> Use the same trick that we have in the other two files.
+JJ
 
-Maybe time for a macro in Kbuild.include or some such, if we see this
-pattern being repeated?
+On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
+> A LED is usually powered by a voltage/current regulator. Let the LED core
+Let the LED core know
+> about it. This allows the LED core to turn on or off the power supply
+> as needed.
 
 >
-> Fixes: 7ed4e6352c16 ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 > ---
->  drivers/gpu/drm/amd/display/dc/dcn20/Makefile |  8 +++++++-
->  drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 16 ++++++++++++----
->  2 files changed, 19 insertions(+), 5 deletions(-)
+>   drivers/leds/led-class.c | 10 ++++++++
+>   drivers/leds/led-core.c  | 53 +++++++++++++++++++++++++++++++++++++---
+>   include/linux/leds.h     |  4 +++
+>   3 files changed, 64 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-> index 1b68de27ba74..e9721a906592 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-> @@ -10,7 +10,13 @@ ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
->  DCN20 += dcn20_dsc.o
->  endif
->
-> -CFLAGS_dcn20_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
-> +       cc_stack_align := -mpreferred-stack-boundary=4
-> +else ifneq ($(call cc-option, -mstack-alignment=16),)
-> +       cc_stack_align := -mstack-alignment=16
-> +endif
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 4793e77808e2..e01b2d982564 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -17,6 +17,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/timer.h>
+> +#include <linux/regulator/consumer.h>
+
+What if you move this to leds.h so core and class can both include it.
+
+
+>   #include <uapi/linux/uleds.h>
+>   #include "leds.h"
+>   
+> @@ -272,6 +273,15 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
+>   				led_cdev->name, dev_name(led_cdev->dev));
+>   
+> +	led_cdev->regulator = devm_regulator_get(led_cdev->dev, "power");
+
+Is the regulator always going to be called power?
+
+> +	if (IS_ERR(led_cdev->regulator)) {
+> +		dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
+> +			led_cdev->name);
+> +		device_unregister(led_cdev->dev);
+> +		mutex_unlock(&led_cdev->led_access);
+> +		return PTR_ERR(led_cdev->regulator);
+
+This is listed as optional in the DT doc.  This appears to be required.
+
+I prefer to keep it optional.  Many LED drivers are connected to fixed 
+non-managed supplies.
+
+> +	}
 > +
-> +CFLAGS_dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
->
->  AMD_DAL_DCN20 = $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dsc/Makefile b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-> index c5d5b94e2604..e019cd9447e8 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-> @@ -1,10 +1,18 @@
->  #
->  # Makefile for the 'dsc' sub-component of DAL.
->
-> -CFLAGS_rc_calc.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> -CFLAGS_rc_calc_dpi.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> -CFLAGS_codec_main_amd.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> -CFLAGS_dc_dsc.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
-> +       cc_stack_align := -mpreferred-stack-boundary=4
-> +else ifneq ($(call cc-option, -mstack-alignment=16),)
-> +       cc_stack_align := -mstack-alignment=16
-> +endif
+>   	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+>   		ret = led_add_brightness_hw_changed(led_cdev);
+>   		if (ret) {
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index 7107cd7e87cf..139de6b08cad 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/rwsem.h>
+>   #include <linux/slab.h>
+>   #include "leds.h"
+> +#include <linux/regulator/consumer.h>
+>   
+>   DECLARE_RWSEM(leds_list_lock);
+>   EXPORT_SYMBOL_GPL(leds_list_lock);
+> @@ -23,6 +24,31 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+>   LIST_HEAD(leds_list);
+>   EXPORT_SYMBOL_GPL(leds_list);
+>   
+> +static bool __led_need_regulator_update(struct led_classdev *led_cdev,
+> +					int brightness)
+> +{
+> +	bool new_regulator_state = (brightness != LED_OFF);
 > +
-> +dsc_ccflags := -mhard-float -msse $(cc_stack_align)
+> +	return led_cdev->regulator_state != new_regulator_state;
+> +}
 > +
-> +CFLAGS_rc_calc.o := $(dsc_ccflags)
-> +CFLAGS_rc_calc_dpi.o := $(dsc_ccflags)
-> +CFLAGS_codec_main_amd.o := $(dsc_ccflags)
-> +CFLAGS_dc_dsc.o := $(dsc_ccflags)
--- 
-Thanks,
-~Nick Desaulniers
+> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+> +				int brightness)
+> +{
+> +	if (__led_need_regulator_update(led_cdev, brightness)) {
+> +		int ret;
+
+Prefer to this to be moved up.
+
+> +
+> +		if (brightness != LED_OFF)
+> +			ret = regulator_enable(led_cdev->regulator);
+> +		else
+> +			ret = regulator_disable(led_cdev->regulator);
+> +		if (ret)
+> +			return ret;
+new line
+> +		led_cdev->regulator_state = (brightness != LED_OFF);
+> +	}
+> +	return 0;
+> +}
+> +
+>   static int __led_set_brightness(struct led_classdev *led_cdev,
+>   				enum led_brightness value)
+>   {
+> @@ -80,6 +106,7 @@ static void led_timer_function(struct timer_list *t)
+>   	}
+>   
+>   	led_set_brightness_nosleep(led_cdev, brightness);
+> +	__led_handle_regulator(led_cdev, brightness);
+
+Again this seems to indicate that the regulator is a required property 
+for the LEDs
+
+This needs to be made optional.  And the same comment through out for 
+every call.
+
+
+>   
+>   	/* Return in next iteration if led is in one-shot mode and we are in
+>   	 * the final blink state so that the led is toggled each delay_on +
+> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct work_struct *ws)
+>   	if (ret == -ENOTSUPP)
+>   		ret = __led_set_brightness_blocking(led_cdev,
+>   					led_cdev->delayed_set_value);
+> +	__led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
+> +
+>   	if (ret < 0 &&
+>   	    /* LED HW might have been unplugged, therefore don't warn */
+>   	    !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
+> @@ -141,6 +170,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
+>   	/* never on - just set to off */
+>   	if (!delay_on) {
+>   		led_set_brightness_nosleep(led_cdev, LED_OFF);
+> +		__led_handle_regulator(led_cdev, LED_OFF);
+>   		return;
+>   	}
+>   
+> @@ -148,6 +178,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
+>   	if (!delay_off) {
+>   		led_set_brightness_nosleep(led_cdev,
+>   					   led_cdev->blink_brightness);
+> +		__led_handle_regulator(led_cdev, led_cdev->blink_brightness);
+>   		return;
+>   	}
+>   
+> @@ -256,8 +287,14 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
+>   			      enum led_brightness value)
+>   {
+>   	/* Use brightness_set op if available, it is guaranteed not to sleep */
+> -	if (!__led_set_brightness(led_cdev, value))
+> -		return;
+> +	if (!__led_set_brightness(led_cdev, value)) {
+> +		/*
+> +		 * if regulator state doesn't need to be changed, that is all/
+> +		 * Otherwise delegate the change to a work queue
+> +		 */
+> +		if (!__led_need_regulator_update(led_cdev, value))
+> +			return;
+> +	}
+>   
+>   	/* If brightness setting can sleep, delegate it to a work queue task */
+>   	led_cdev->delayed_set_value = value;
+> @@ -280,6 +317,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
+>   int led_set_brightness_sync(struct led_classdev *led_cdev,
+>   			    enum led_brightness value)
+>   {
+> +	int ret;
+> +
+>   	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
+>   		return -EBUSY;
+>   
+> @@ -288,7 +327,15 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
+>   	if (led_cdev->flags & LED_SUSPENDED)
+>   		return 0;
+>   
+> -	return __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
+> +	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = __led_handle_regulator(led_cdev, led_cdev->brightness);
+
+Can't you just return here?
+
+Dan
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(led_set_brightness_sync);
+>   
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 9b2bf574a17a..bee8e3f8dddd 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -123,6 +123,10 @@ struct led_classdev {
+>   
+>   	/* Ensures consistent access to the LED Flash Class device */
+>   	struct mutex		led_access;
+> +
+> +	/* regulator */
+> +	struct regulator	*regulator;
+> +	bool			regulator_state;
+>   };
+>   
+>   extern int of_led_classdev_register(struct device *parent,
