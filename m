@@ -2,124 +2,89 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD869C742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA53BC742C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70FA2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NHRMTN2v"
+	by mail.kernel.org (Postfix) with ESMTP id BA9F92080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfGLN5e (ORCPT
+        id S1727948AbfGLN5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:57:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35202 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfGLN5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:57:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CDvNPg079591;
-        Fri, 12 Jul 2019 08:57:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562939843;
-        bh=h/FvatbSmYtmmSo8C36ybsR85uhbjITUgdMf4+sgcKs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NHRMTN2vON/H1UxbPmaa6bz1Xi1UB4UWrEtoK0M4wjamG75Qa1bev03jTLJPkbN4K
-         TwTc5h0Oxm/ZIkCNb30PXnvU1A4crailkYII29TaUJfsmB1AHaZ+It6i9iXfqclGUx
-         E1wCyYC0TRMjGe2isZtcEN9zqeNduFmKec6txm2U=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CDvNuF024641
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jul 2019 08:57:23 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Jul 2019 08:57:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Jul 2019 08:57:23 -0500
-Received: from [10.250.97.31] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CDvKE4004279;
-        Fri, 12 Jul 2019 08:57:21 -0500
-Subject: Re: [PATCH v3 3/4] dt-bindings: backlight: Add led-backlight binding
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
-        <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>
-References: <20190710123932.28244-1-jjhiblot@ti.com>
- <20190710123932.28244-4-jjhiblot@ti.com> <20190710191314.GC22995@amd>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <0d513ab5-eeb0-c22c-7ec8-f773e445e5f1@ti.com>
-Date:   Fri, 12 Jul 2019 15:57:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 09:57:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60098 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbfGLN5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:57:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 262B9AFBD;
+        Fri, 12 Jul 2019 13:57:45 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 15:57:44 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Krzysztof Halasa <khalasa@piap.pl>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/3] soc: ixp4xx: Hide auto-selected drivers
+Message-ID: <20190712155744.0771967c@endymion>
+In-Reply-To: <20190712153722.3d1498be@endymion>
+References: <20190712153722.3d1498be@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190710191314.GC22995@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel,
+The 2 IXP4xx SOC drivers qmgr and npe are selected automatically when
+needed so they do not need to be presented to the user.
 
-On 10/07/2019 21:13, Pavel Machek wrote:
-> On Wed 2019-07-10 14:39:31, Jean-Jacques Hiblot wrote:
->> Add DT binding for led-backlight.
->>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> ---
->>   .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
->>   1 file changed, 28 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->> new file mode 100644
->> index 000000000000..0444eec8efe1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
->> @@ -0,0 +1,28 @@
->> +led-backlight bindings
->> +
->> +This binding is used to describe a basic backlight device made of
->> LEDs.
-> Ok.
->
->> +It can also be used to describe a backlight device controlled by the output of
->> +a LED driver.
-> ? The LED driver should better be driving some LEDs...
+Furthermore these helper drivers are specific to the IXP4xx arch so
+hide them completely on other architectures so as to not clutter the
+config file.
 
-Well. we are dependent of the board design. If a board designer decided 
-to control a backlight with a LED-controller, then we have to deal with it.
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: Krzysztof Halasa <khalasa@piap.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+---
+Note: Ultimately all I want is that non-ixp4xx users are not asked
+about IXP4XX_QMGR and IXP4XX_NPE. If there is another preferred option
+to achieve the same, that would work with me too, just let me know.
 
-In practice there are a lot of LED drivers that actually drive the LEDs 
-using PWMs and can be used for this purpose.
+ drivers/soc/ixp4xx/Kconfig |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-JJ
+--- linux-5.2.orig/drivers/soc/ixp4xx/Kconfig	2019-07-08 00:41:56.000000000 +0200
++++ linux-5.2/drivers/soc/ixp4xx/Kconfig	2019-07-12 15:21:44.769229835 +0200
+@@ -1,17 +1,19 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++if ARCH_IXP4XX
+ menu "IXP4xx SoC drivers"
+ 
+ config IXP4XX_QMGR
+-	tristate "IXP4xx Queue Manager support"
++	tristate
+ 	help
+ 	  This driver supports IXP4xx built-in hardware queue manager
+ 	  and is automatically selected by Ethernet and HSS drivers.
+ 
+ config IXP4XX_NPE
+-	tristate "IXP4xx Network Processor Engine support"
++	tristate
+ 	select FW_LOADER
+ 	help
+ 	  This driver supports IXP4xx built-in network coprocessors
+ 	  and is automatically selected by Ethernet and HSS drivers.
+ 
+ endmenu
++endif
 
->
->> +Required properties:
->> +  - compatible: "led-backlight"
->> +  - leds: a list of LEDs
->> +
->> +Optional properties:
->> +  - brightness-levels: Array of distinct brightness levels. The levels must be
->> +                       in the range accepted by the underlying LED devices.
->> +                       This is used to translate a backlight brightness level
->> +                       into a LED brightness level. if not provided, the
->> +                       identity mapping is used.
-> "If it is not"
-> 									Pavel
+-- 
+Jean Delvare
+SUSE L3 Support
