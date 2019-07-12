@@ -2,123 +2,115 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D356CC742CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206DBC742CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD69E20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E967A206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f7LRWmeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfGLPwD (ORCPT
+        id S1727190AbfGLPxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:52:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50651 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbfGLPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:52:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 08:52:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
-   d="scan'208";a="177539011"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by orsmga002.jf.intel.com with ESMTP; 12 Jul 2019 08:52:02 -0700
-Date:   Fri, 12 Jul 2019 08:52:02 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-Subject: Re: [PATCH v7 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-Message-ID: <20190712155202.GC29659@linux.intel.com>
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-3-tao3.xu@intel.com>
+        Fri, 12 Jul 2019 11:53:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41098 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfGLPxZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:53:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d+uVjR6QAVfdzOeq4qPz73+f8euI+Vxn5E0RMe6El4U=; b=f7LRWmeBgzWzIyXt2V1TmUszb
+        jZzS6KjedilIylSKZofEVmkhUy2HJCJKR0KKd5Or7ZFrTLK1iQC0MmuzC0jicHxthkV/v23+SS8np
+        vob2GpLxoMzye4k7nnljioLZchBAaPgc5DgfeyUbR3V7dttJMiFd8QTaD3tn9kRQFciNa40o9wOE1
+        8kipLKDeZyKFkD5D75cT4fm5xSGCdHfEz3sCVqwar8/VakZwgL1N3kC7B7m1yGUrepZAT8LOYc1p7
+        dP7BjQGq+D8WDw6U3l7zrvc9LUcp30xNFB85w4wDDmqTU3HLIPJIvQqI3xwY3B9DzmEAMSfnO2YaD
+        OYU4GS/RQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlxrN-0005vz-N6; Fri, 12 Jul 2019 15:53:21 +0000
+To:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dexuan Cui <decui@microsoft.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+Message-ID: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
+Date:   Fri, 12 Jul 2019 08:53:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712082907.29137-3-tao3.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 04:29:06PM +0800, Tao Xu wrote:
-> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-> index 6a204e7336c1..631152a67c6e 100644
-> --- a/arch/x86/kernel/cpu/umwait.c
-> +++ b/arch/x86/kernel/cpu/umwait.c
-> @@ -15,7 +15,8 @@
->   * Cache IA32_UMWAIT_CONTROL MSR. This is a systemwide control. By default,
->   * umwait max time is 100000 in TSC-quanta and C0.2 is enabled
->   */
-> -static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
-> +u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
-> +EXPORT_SYMBOL_GPL(umwait_control_cached);
+From: Randy Dunlap <rdunlap@infradead.org>
 
-It'd probably be better to add an accessor to expose umwait_control_cached
-given that umwait.c is using {READ,WRITE}_ONCE() and there shouldn't be a
-need to write it outside of umwait.c.
+Fix build errors when building almost-allmodconfig but with SYSFS
+not set (not enabled).  Fixes these build errors:
 
->  /*
->   * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR in
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index f411c9ae5589..0787f140d155 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1676,6 +1676,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  #endif
->  	case MSR_EFER:
->  		return kvm_get_msr_common(vcpu, msr_info);
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
-> +			return 1;
-> +
-> +		msr_info->data = vmx->msr_ia32_umwait_control;
-> +		break;
->  	case MSR_IA32_SPEC_CTRL:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -1838,6 +1844,16 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  			return 1;
->  		vmcs_write64(GUEST_BNDCFGS, data);
->  		break;
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
-> +			return 1;
-> +
-> +		/* The reserved bit IA32_UMWAIT_CONTROL[1] should be zero */
-> +		if (data & BIT_ULL(1))
-> +			return 1;
-> +
-> +		vmx->msr_ia32_umwait_control = data;
+ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
 
-The SDM only defines bits 31:0, and the kernel uses a u32 to cache its
-value.  I assume bits 63:32 are reserved?  I'm guessing we also need an
-SDM update...
+drivers/pci/slot.o is only built when SYSFS is enabled, so
+pci-hyperv.o has an implicit dependency on SYSFS.
+Make that explicit.
 
-> +		break;
->  	case MSR_IA32_SPEC_CTRL:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -4139,6 +4155,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  	vmx->rmode.vm86_active = 0;
->  	vmx->spec_ctrl = 0;
->  
-> +	vmx->msr_ia32_umwait_control = 0;
-> +
->  	vcpu->arch.microcode_version = 0x100000000ULL;
->  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->  	kvm_set_cr8(vcpu, 0);
-> @@ -6352,6 +6370,19 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->  					msrs[i].host, false);
->  }
->  
+Also, depending on X86 && X86_64 is not needed, so just change that
+to depend on X86_64.
+
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
+information")
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jake Oshins <jakeo@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: Dexuan Cui <decui@microsoft.com>
+---
+v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
+    This is the Microsoft-preferred version of the patch.
+
+ drivers/pci/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- lnx-52.orig/drivers/pci/Kconfig
++++ lnx-52/drivers/pci/Kconfig
+@@ -181,7 +181,7 @@ config PCI_LABEL
+ 
+ config PCI_HYPERV
+         tristate "Hyper-V PCI Frontend"
+-        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
++        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+         help
+           The PCI device frontend driver allows the kernel to import arbitrary
+           PCI devices from a PCI backend to support PCI driver domains.
+
+
