@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D04DC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E38C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A19521670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91E520645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935101;
-	bh=D2VTrJzb/FdnbhX7hxtC5ANEV/bOOI1BLQ+Fkr1aGJY=;
+	s=default; t=1562935103;
+	bh=8p+HUDU4IayyF4sZp3D9bYRweU5I1ssvFal9s1OG5iw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nKwXmC3VzGmnRO8pCPJvBwUQZqvXdSRpuPoBQf2hWf6x0QIAAvdRG5k6EgDkjZx/x
-	 KFprHSz+xq/Vmgb5V0I4LJgjj2eFFhUTJ1hRKH0ZDj6riooXDErNOFD0DZc7MHWGF8
-	 HKg6WmKgkemb1wubaNrJ2pLK8Kab2QVRvB414Ncg=
+	b=E/Y3i4ood1VDsdL2gEz2mOw/xS+nh7wAXilL62DBVCLCNyYXmB3X1QAVNOAZvuF85
+	 MBiW06T3qCO0u8FyGTnomELgnPXsykbdQJFgNqHf+tLuq4ZNBN/6muQWZVgvbjrvr1
+	 P4E0AB6Q69CIrhG+gO8nhaaNntStJ3/EzGAMvlqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfGLM32 (ORCPT
+        id S1728981AbfGLM30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44226 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfGLM3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:23 -0400
+        id S1727442AbfGLM3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93122084B;
-        Fri, 12 Jul 2019 12:29:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04BB9216B7;
+        Fri, 12 Jul 2019 12:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934562;
-        bh=D2VTrJzb/FdnbhX7hxtC5ANEV/bOOI1BLQ+Fkr1aGJY=;
+        s=default; t=1562934558;
+        bh=8p+HUDU4IayyF4sZp3D9bYRweU5I1ssvFal9s1OG5iw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IasJ+ymDf6+ZTtbAO1eVgJ/g5bzyK098U0JaMQi7lIi66Dk01jaw/dm+htRYU4gs9
-         2nimu5G1SdEvapBqjq0NofksqQr/V65RJ0GLNFBluT4mTGS77hjmTELNHuL9dyu1/S
-         UXj2LCbTp34Ngt7BIKOZkQuyt6EL6rQLAn6u9Br8=
+        b=JLCyzVo/CnGBZFRDZj0H8oNxBgDht6DuV3y4quiPYVSmcqhS6MeNS14MeUURLR3Yj
+         OKhH+OeN8jla4OvArgX1KyuYKIbxepvkRYRzOeWXn/EcCAbH8fWgcnZc5Dl3epJOAl
+         RUzf8+RjLhgv3ITN2N6mkqsJ/QWpMXAv8gX05kf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 5.1 096/138] perf intel-pt: Fix itrace defaults for perf script
-Date:   Fri, 12 Jul 2019 14:19:20 +0200
-Message-Id: <20190712121632.448053537@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@unimore.it>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 095/138] block, bfq: NULL out the bic when its no longer valid
+Date:   Fri, 12 Jul 2019 14:19:19 +0200
+Message-Id: <20190712121632.409883135@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,59 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 26f19c2eb7e54015564ff133b91983a74e84541b upstream.
+commit dbc3117d4ca9e17819ac73501e914b8422686750 upstream.
 
-Commit 4eb068157121 ("perf script: Make itrace script default to all
-calls") does not work because 'use_browser' is being used to determine
-whether to default to periodic sampling (i.e. better for perf report).
-The result is that nothing but CBR events display for perf script when
-no --itrace option is specified.
+In reboot tests on several devices we were seeing a "use after free"
+when slub_debug or KASAN was enabled.  The kernel complained about:
 
-Fix by using 'default_no_sample' and 'inject' instead.
+  Unable to handle kernel paging request at virtual address 6b6b6c2b
 
-Example:
+...which is a classic sign of use after free under slub_debug.  The
+stack crawl in kgdb looked like:
 
- Before:
+ 0  test_bit (addr=<optimized out>, nr=<optimized out>)
+ 1  bfq_bfqq_busy (bfqq=<optimized out>)
+ 2  bfq_select_queue (bfqd=<optimized out>)
+ 3  __bfq_dispatch_request (hctx=<optimized out>)
+ 4  bfq_dispatch_request (hctx=<optimized out>)
+ 5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
+ 6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
+ 7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
+ 8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
+ 9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
+ 10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
 
-  $ perf record -e intel_pt/cyc/u ls
-  $ perf script > cmp1.txt
-  $ perf script --itrace=cepwx > cmp2.txt
-  $ diff -sq cmp1.txt cmp2.txt
-  Files cmp1.txt and cmp2.txt differ
+Digging in kgdb, it could be found that, though bfqq looked fine,
+bfqq->bic had been freed.
 
- After:
+Through further digging, I postulated that perhaps it is illegal to
+access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
+because the "bic" can be freed at some point in time after this call
+is made.  I confirmed that there certainly were cases where the exact
+crashing code path would access the "bic" after bfq_exit_icq() had
+been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
+saw that the bic was 0x7 at the time of the crash.
 
-  $ perf script > cmp1.txt
-  $ perf script --itrace=cepwx > cmp2.txt
-  $ diff -sq cmp1.txt cmp2.txt
-  Files cmp1.txt and cmp2.txt are identical
+To understand a bit more about why this crash was fairly uncommon (I
+saw it only once in a few hundred reboots), you can see that much of
+the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
+access the ->bic anymore.  The only case it doesn't is if
+bfq_put_queue() sees a reference still held.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org # v4.20+
-Fixes: 90e457f7be08 ("perf tools: Add Intel PT support")
-Link: http://lkml.kernel.org/r/20190520113728.14389-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+However, even in the case when bfqq isn't freed, the crash is still
+rare.  Why?  I tracked what happened to the "bic" after the exit
+routine.  It doesn't get freed right away.  Rather,
+put_io_context_active() eventually called put_io_context() which
+queued up freeing on a workqueue.  The freeing then actually happened
+later than that through call_rcu().  Despite all these delays, some
+extra debugging showed that all the hoops could be jumped through in
+time and the memory could be freed causing the original crash.  Phew!
+
+To make a long story short, assuming it truly is illegal to access an
+icq after the "exit_icq" callback is finished, this patch is needed.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Paolo Valente <paolo.valente@unimore.it>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ block/bfq-iosched.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -2588,7 +2588,8 @@ int intel_pt_process_auxtrace_info(union
- 	} else {
- 		itrace_synth_opts__set_default(&pt->synth_opts,
- 				session->itrace_synth_opts->default_no_sample);
--		if (use_browser != -1) {
-+		if (!session->itrace_synth_opts->default_no_sample &&
-+		    !session->itrace_synth_opts->inject) {
- 			pt->synth_opts.branches = false;
- 			pt->synth_opts.callchain = true;
- 		}
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -4265,6 +4265,7 @@ static void bfq_exit_icq_bfqq(struct bfq
+ 		unsigned long flags;
+ 
+ 		spin_lock_irqsave(&bfqd->lock, flags);
++		bfqq->bic = NULL;
+ 		bfq_exit_bfqq(bfqd, bfqq);
+ 		bic_set_bfqq(bic, NULL, is_sync);
+ 		spin_unlock_irqrestore(&bfqd->lock, flags);
 
 
