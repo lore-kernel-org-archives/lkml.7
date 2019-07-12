@@ -2,106 +2,190 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D1FC742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E48C742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1738321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562945873;
-	bh=PH6b4FwrGMrv9z9RDpSOpBcty9ihP8OMeR1bpqd6mEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kA8eGGcLQEV5S4otK4y9hh0C623wSc3bWlpcDQYaMPsEQVWYD9LHh5NypOaCuWkih
-	 re8qzGuSTRhUlPFkEqgKy7huVepQh1VaEFHweo7Nfyqj9uPoGCQ40Q5t/0aG2RV7wd
-	 fjcph4/XKIA4QRKu0dqYG1U6XhloxG8MTAb6M6co=
+	by mail.kernel.org (Postfix) with ESMTP id DF21220863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfGLPhv (ORCPT
+        id S1727122AbfGLPjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbfGLPhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:37:51 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 12 Jul 2019 11:39:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50848 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGLPjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:39:32 -0400
+Received: from [IPv6:2804:431:c7f5:673a:d711:794d:1c68:5ed3] (unknown [IPv6:2804:431:c7f5:673a:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E4FE20863;
-        Fri, 12 Jul 2019 15:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562945871;
-        bh=PH6b4FwrGMrv9z9RDpSOpBcty9ihP8OMeR1bpqd6mEQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EfVv4bKTgQPalAa/KFu4nQKKiH4mCnoSoMFyKsNqliy3LLQDTJPIj40hBDqZeGt79
-         Hg2rWJ6NfHY/NlcQFCm24ZJxIIPnN3W9JMZb7fhb5/V5r/Q83HQGp00w7bsTT6SjUq
-         fZjcvHBaq+IBbFJbKdu0JABrC1NjuLD9si4ga00Q=
-Date:   Fri, 12 Jul 2019 16:37:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Naohiro Aota <naohiro.aota@wdc.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Collingbourne <pcc@google.com>
-Subject: Re: [PATCH v2 2/2] arm64/vdso: fix flip/flop vdso build bug
-Message-ID: <20190712153746.5dwwptgrle3z25m7@willie-the-truck>
-References: <20190712101556.17833-1-naohiro.aota@wdc.com>
- <20190712101556.17833-2-naohiro.aota@wdc.com>
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 35C0828B06B;
+        Fri, 12 Jul 2019 16:39:27 +0100 (BST)
+Subject: Re: [PATCH 0/7] media: vimc: Add a V4L2 output device
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, kernel@collabora.com,
+        linux-kernel@vger.kernel.org
+References: <20190702154752.14939-1-andrealmeid@collabora.com>
+ <00fb0dc3-0dd3-8d4c-9add-dba617f34d19@collabora.com>
+ <7189e204-ba37-930b-1738-d192f45b0af5@xs4all.nl>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <333e5df6-0e24-ff76-7e7f-bf338652f9ac@collabora.com>
+Date:   Fri, 12 Jul 2019 12:38:42 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712101556.17833-2-naohiro.aota@wdc.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <7189e204-ba37-930b-1738-d192f45b0af5@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 07:15:56PM +0900, Naohiro Aota wrote:
-> Running "make" on an already compiled kernel tree will rebuild the kernel
-> even without any modifications:
-> 
-> $ make ARCH=arm64 CROSS_COMPILE=/usr/bin/aarch64-unknown-linux-gnu-
-> arch/arm64/Makefile:58: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   VDSOCHK arch/arm64/kernel/vdso/vdso.so.dbg
->   VDSOSYM include/generated/vdso-offsets.h
->   CHK     include/generated/compile.h
->   CC      arch/arm64/kernel/signal.o
->   CC      arch/arm64/kernel/vdso.o
->   CC      arch/arm64/kernel/signal32.o
->   LD      arch/arm64/kernel/vdso/vdso.so.dbg
->   OBJCOPY arch/arm64/kernel/vdso/vdso.so
->   AS      arch/arm64/kernel/vdso/vdso.o
->   AR      arch/arm64/kernel/vdso/built-in.a
->   AR      arch/arm64/kernel/built-in.a
->   GEN     .version
->   CHK     include/generated/compile.h
->   UPD     include/generated/compile.h
->   CC      init/version.o
->   AR      init/built-in.a
->   LD      vmlinux.o
-> 
-> This is the same bug fixed in commit 92a4728608a8 ("x86/boot: Fix
-> if_changed build flip/flop bug"). We cannot use two "if_changed" in one
-> target. Fix this build bug by merging two commands into one function.
-> 
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Fixes: 28b1a824a4f4 ("arm64: vdso: Substitute gettimeofday() with C implementation")
-> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-> ---
->  arch/arm64/kernel/vdso/Makefile | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+Hello,
 
-Thanks. I've merged in Vincenzo's compat change too, so I'll send this at
--rc1 for arm64.
+On 7/10/19 4:33 AM, Hans Verkuil wrote:
+> On 7/10/19 12:19 AM, Helen Koike wrote:
+>> Hi André,
+>>
+>> Thanks for the patches.
+>>
+>> On 7/2/19 12:47 PM, André Almeida wrote:
+>>> Hello,
+>>>
+>>> This patch adds a V4L2 output device on vimc, that comply with V4L2 API
+>>> for video output. If there is an output device and a capture device at the
+>>> same pipeline, one can get a video loopback pipeline feeding frames at
+>>> the output and then seeing them at the capture. It's possible to insert
+>>> vimc submodules at the pipeline to modify the image (e.g. a scaler).
+>>>
+>>> If one starts a streaming at the capture, with the output off, the
+>>> capture will display a noisy frame. If one starts a streaming at the
+>>> output with the capture off, the output will just consume the buffers,
+>>> without sending them to the pipeline. If both output and capture are
+>>> streaming, the loopback will happen.
+>> I understand why it is done like this in vivid, but I was wondering, if we
+>> have a pipeline like:
+>> output -> capture
+>> Shouldn't streaming from the capture just stalls if there is no frame
+>> available in the output (i.e. streaming in the output is off) ? But then I'm
+>> not sure what the framerate in the capture would mean.
+>>
+>> Hans, what do you think?
+> If you set up the pipeline like this:
+>
+> Video Output -> Scaler -> Video Capture
 
-Will
+If the capture will stall if there's no frame from the video output, how
+can I add support for this kind of pipeline at test-media? It would be
+required to send frames to the output device while running
+`v4l2-compliance` at the capture device to make testing possible.
+
+Thanks,
+    André
+
+> Then this is a mem2mem device (except with two separate video devices) and
+> framerate doesn't apply anymore. And video capture will just stall if there
+> is no video output frame provided.
+>
+> It's how e.g. omap3isp works.
+>
+> Regards,
+>
+> 	Hans
+>
+>> Thanks,
+>> Helen
+>>
+>>> The patches 1 and 2 provide some ground to create the output
+>>> device. The patch 3 creates the device and modify how the vimc-streamer
+>>> was dealing with the s_stream callback on other vimc modules, to make
+>>> simpler implementing this callback at vimc-output. Patch 4 change the
+>>> behavior of the pipeline in order to be closer to a real life hardware.
+>>> Patches 5-7 updates the default pipeline and the documentation to
+>>> include the new output device.
+>>>
+>>> This is the result of v4l2-compliance after this patch series:
+>>> $ v4l2-compliance -m0 -s50
+>>> Grand Total for vimc device /dev/media0: 476, Succeeded: 476, Failed: 0,
+>>> Warnings: 0
+>>>
+>>> A git tree up to date with media-master and with this changes can be found
+>>> at: https://gitlab.collabora.com/tonyk/linux/tree/vimc/output
+>>>
+>>> In order to test it, one can follow these instructions:
+>>>
+>>> 1 - Configure the pipeline (requires v4l-utils):
+>>>
+>>> $ media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+>>> $ media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+>>> $ media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+>>> $ media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+>>> $ v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+>>> $ v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+>>> $ v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+>>> $ v4l2-ctl -z platform:vimc -e "RGB/YUV Input" -v width=640,height=480
+>>>
+>>> 2 - Use a userspace application:
+>>> 2.a gst-launch (requires gstreamer and gst-plugins-good):
+>>>
+>>> Feed frames into the output and grab from the capture (rescaled for
+>>> convenience):
+>>>
+>>> $ gst-launch-1.0 videotestsrc pattern=ball ! \
+>>> 	video/x-raw,width=640,height=480,format=RGB \
+>>> 	! v4l2sink device=/dev/video2 v4l2src device=/dev/video3 ! \
+>>> 	video/x-raw,width=1920,height=1440,format=RGB ! videoscale ! \
+>>> 	video/x-raw,width=640,height=480 ! videoconvert ! ximagesink
+>>>
+>>> 2.b qv4l2 (requires v4l-utils):
+>>>
+>>> Open the output device:
+>>>
+>>> $ qv4l2 -d2
+>>>
+>>> Open the capture device:
+>>>
+>>> $ qv4l2 -d3
+>>>
+>>> Start the streaming at both, at any order. You can change the frame
+>>> content at "Test Pattern Generator" -> "Test Pattern" on the output.
+>>>
+>>> Thanks,
+>>> 	André
+>>>
+>>> André Almeida (7):
+>>>   media: vimc: Create video module
+>>>   media: vimc: video: Add write file operation
+>>>   media: vimc: Create a V4L2 output device
+>>>   media: vimc: Send null buffer through the pipeline
+>>>   media: vimc: core: Add output device on the pipeline
+>>>   media: vimc.dot: Update default topology diagram
+>>>   media: vimc.rst: Add output device
+>>>
+>>>  Documentation/media/v4l-drivers/vimc.dot    |   4 +-
+>>>  Documentation/media/v4l-drivers/vimc.rst    |  12 +-
+>>>  drivers/media/platform/vimc/Makefile        |   4 +-
+>>>  drivers/media/platform/vimc/vimc-capture.c  | 356 +++----------------
+>>>  drivers/media/platform/vimc/vimc-common.h   |   5 +-
+>>>  drivers/media/platform/vimc/vimc-core.c     |   7 +-
+>>>  drivers/media/platform/vimc/vimc-debayer.c  |  14 +-
+>>>  drivers/media/platform/vimc/vimc-output.c   | 362 ++++++++++++++++++++
+>>>  drivers/media/platform/vimc/vimc-scaler.c   |  13 +-
+>>>  drivers/media/platform/vimc/vimc-sensor.c   |  10 +-
+>>>  drivers/media/platform/vimc/vimc-streamer.c |  24 +-
+>>>  drivers/media/platform/vimc/vimc-video.c    | 273 +++++++++++++++
+>>>  drivers/media/platform/vimc/vimc-video.h    | 130 +++++++
+>>>  13 files changed, 849 insertions(+), 365 deletions(-)
+>>>  create mode 100644 drivers/media/platform/vimc/vimc-output.c
+>>>  create mode 100644 drivers/media/platform/vimc/vimc-video.c
+>>>  create mode 100644 drivers/media/platform/vimc/vimc-video.h
+>>>
