@@ -2,103 +2,144 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F80C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CF2C742D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3EB204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ntIle1vF"
+	by mail.kernel.org (Postfix) with ESMTP id 92071204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562953551;
+	bh=ptvZzz9Y8qeDEiq4iSOajbwvzPS2/l6/e4bHwoN/kWY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KL1f0dikmdWf+wtrUaEjyDXbA1rMDhqzTVWGiO9dlrBT3UedJ9q14NcGahVSkQp+Z
+	 eAUFA4lPd4EgHHLrrjlrXOpapk1/ExL+e8F+W2ujvgFdAgYemuRWOxbaW545FEXASN
+	 WweNsq2exCw01eDFGPlC0O0Ke2rPaUS1m2ReeL+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfGLRp1 (ORCPT
+        id S1727498AbfGLRpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:45:27 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43353 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfGLRp1 (ORCPT
+        Fri, 12 Jul 2019 13:45:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42924 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfGLRpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:45:27 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m14so6987594qka.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0z5HbMzk+TNHcYVHCO/5rmn/u7ficHQ0wbbFTmo5UzU=;
-        b=ntIle1vFd4ZRdhL76VdsyNncHbXMdq6YNaWmDXrUKzA+t8Vh0t4u+t7axMcNHs0iuw
-         +6BMZPBIubJ/OADehqKIjDhkvwuy+nA1yXtaPdRNNCEGjETMn+QSWuolgrprj/tTsHV/
-         wOa7AY/RdD5MwyK+uag+ltgfrIaM5XwVSVgBV2+w1C/cqFSKXbZIq9M6wdgGWt5IQ9ni
-         BoHdbjyXjLcddyWoUDcw5j4m9hccSbEs9/iKYjJcUOOd3Y+roGowiR2ewSqn4OcsFLyS
-         QqvMoOtBCOasiWF7sy+bSugWWJjPhsk0QBAdFofi25fIGvfj/bo3SBiCeWHAzhEV4Yts
-         momw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0z5HbMzk+TNHcYVHCO/5rmn/u7ficHQ0wbbFTmo5UzU=;
-        b=oIp21OYUy7m/RZGxm6WwoOkPzrslHYV1GHkRI9L5Ztq0zEVBOdzmWhXTnw4r2I9Hq9
-         C7aQNAEA+miMfbPM02Wd0Mj9k9NNjqIzbq2Rm7wTvsR5X9R4xQMO3qQzAMxNEolVv7KD
-         0HJYsqSmXKuqYiANdWJveuT9j977BC3Nmwn2ftPpGKYYyf42RzkzWu0eo+DeGG3q4vH0
-         6ejaF6i6GbJ3tnwCoDCnGil870FSb4p4W25BMBRgepzrS6XIodVjrqzpar1hDVCRCT80
-         DJB0oxPrDN1NB0+X7U2QASBw9to3/ERCQLSboFXrbJtqGVkJ0xdcYxvC8750hzCQWGwN
-         pLQw==
-X-Gm-Message-State: APjAAAXdeo1eCkUKJ5U+waZwaLAf13/E/5gSkOfoGFKTT/gKAKnGqt1L
-        US7ua/UUbTHpf1+5h5g9u4YiTA==
-X-Google-Smtp-Source: APXvYqxO7Pu7cyayLc2eUuHye7UyvHfBFgn42OETbQ3/0lzN915uNwmMT3yv7kbtcWLsGn4LaKpKig==
-X-Received: by 2002:a37:6290:: with SMTP id w138mr6884162qkb.139.1562953526125;
-        Fri, 12 Jul 2019 10:45:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id w24sm3091129qtb.35.2019.07.12.10.45.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jul 2019 10:45:25 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlzbp-0003rz-7O; Fri, 12 Jul 2019 14:45:25 -0300
-Date:   Fri, 12 Jul 2019 14:45:25 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Doug Ledford <dledford@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-Message-ID: <20190712174525.GM27512@ziepe.ca>
-References: <20190712153243.GI27512@ziepe.ca>
- <20190712144257.GE27512@ziepe.ca>
- <20190712135339.GC27512@ziepe.ca>
- <20190712120328.GB27512@ziepe.ca>
- <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
- <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
- <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
- <OFAB0712BA.E95178B5-ON00258435.00611CBE-00258435.00611CC4@notes.na.collabserv.com>
+        Fri, 12 Jul 2019 13:45:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NxeFOSM4MwQ991fBRbEDEiqzzEYscNx/lH42noQqaEA=; b=iiOsW3Vw8rpy77HSY+BGojEg3
+        r1DgZZuXVeaAX4pU32jCzEMbZcE4HtuLLezPLqvzJT0Tbt0N3T085kmHs53uch75CG27pJliMnDq/
+        /Yb90FjffjE6mabThCuHYTbXItDblO8gBVgcMq2JAjeN8yK56sjN172naX00teqIbfYq4mtWssMYz
+        o/V/KPzcVb8qs/8iJTx+iqmSqmkgOPprMGp/YeoYVJtCZXDI9OLxcZOMroQluNZzk055ejii7IN7e
+        Xat7kvGXGALkxQXnexd0HUOmM9Ad936A2+82kIK9u/NqCMC1G1c3qBhSX08mgsBqND4u1Ih6t370d
+        bXzgvZE3A==;
+Received: from [186.213.242.57] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlzc6-0006HD-MB; Fri, 12 Jul 2019 17:45:42 +0000
+Date:   Fri, 12 Jul 2019 14:45:37 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Brad Love <brad@nextdimension.cc>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Antti Palosaari <crope@iki.fi>,
+        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
+Message-ID: <20190712144537.2bad2482@coco.lan>
+In-Reply-To: <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
+References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
+        <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OFAB0712BA.E95178B5-ON00258435.00611CBE-00258435.00611CC4@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 05:40:43PM +0000, Bernard Metzler wrote:
- 
-> It is because there are two levels a CQ can be armed:
-> 
->        #include <infiniband/verbs.h>
-> 
->        int ibv_req_notify_cq(struct ibv_cq *cq, int solicited_only);
-> 
-> If we kick the CQ handler, we have to clear the whole
-> thing. The user later again decides how he wants to get it
-> re-armed...SOLICITED completions only, or ALL signaled.
+Em Fri, 12 Jul 2019 10:47:17 -0500
+Brad Love <brad@nextdimension.cc> escreveu:
 
-Arrange it so only one of the two bits is ever set and do two
-test-and-set bits when a SOLICITED CQE comes in?
+> Hi Marc,
+>=20
+> Replying inline.
+>=20
+>=20
+> On 04/07/2019 05.33, Marc Gonzalez wrote:
+> > Refactor the command setup code, and let the compiler determine
+> > the size of each command.
+> >
+> > Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > ---
+> > Changes from v1:
+> > - Use a real function to populate struct si2168_cmd *cmd, and a trivial
+> > macro wrapping it (macro because sizeof).
+> > Changes from v2:
+> > - Fix header mess
+> > - Add Jonathan's tag
+> > ---
+> >  drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------
+> >  1 file changed, 45 insertions(+), 101 deletions(-)
+> >
+> > diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-f=
+rontends/si2168.c
+> > index c64b360ce6b5..5e81e076369c 100644
+> > --- a/drivers/media/dvb-frontends/si2168.c
+> > +++ b/drivers/media/dvb-frontends/si2168.c
+> > @@ -12,6 +12,16 @@
+> > =20
+> >  static const struct dvb_frontend_ops si2168_ops;
+> > =20
+> > +static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, in=
+t rlen)
+> > +{
+> > +	memcpy(cmd->args, args, wlen);
+> > +	cmd->wlen =3D wlen;
+> > +	cmd->rlen =3D rlen;
+> > +}
+> > + =20
+>=20
+>=20
+> struct si2168_cmd.args is u8, not char. I also think const should apply
+> to the pointer.
+>=20
+>=20
+> > +#define CMD_SETUP(cmd, args, rlen) \
+> > +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
+> > + =20
+>=20
+>=20
+> This is only a valid helper if args is a null terminated string. It just
+> so happens that every instance in this driver is, but that could be a
+> silent pitfall if someone used a u8 array with this macro.
 
-Jason
+Actually, it is uglier than that. Of one writes something like:
+
+	char buf[20];
+
+	buf[0] =3D 0x20;
+	buf[1] =3D 0x03;
+
+	CMD_SETUP(cmd, buf, 0);
+
+	// some other init, up to 5 values, then another CMD_SETUP()
+
+
+sizeof() will evaluate to 20, and not to 2, with would be the
+expected buffer size, and it will pass 18 random values.
+
+IMHO, using sizeof() here is a very bad idea.
+
+Regards,
+Mauro
