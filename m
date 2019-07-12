@@ -2,54 +2,52 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9846EC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F4DC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE52216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E94216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934664;
-	bh=d+yzvsCVqmFVjfTp/ocSLjqvx7jbhZKhRraSyB6ZyMU=;
+	s=default; t=1562934668;
+	bh=QaG2Xvm2G6eZQNV9BGAb4s4cN88lVMswx2BQRGp8/4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0RgjHc4oJbd45XF0D6gehDUnbob9WnUvtZ4Tynn7VIWfYjdyCPv0hhuSazcPK2SKy
-	 dSiNf/0esiCyh0g7x1n+NdpBU7WNhO07hNQxFnGbjp9QNz/srBWdjkDei9tWSgoePm
-	 SrLk4SfsPnnAuUfEWU7A7PtHBM986M/uW3OXpq/E=
+	b=sOSoJxiQcT1YXPgbb2RsEfjrOoOVSsYfkgrNHMUAuE0GxYlZQjNeZ0bdetQToviJI
+	 UpMynef/iksGYDZJpXABy3q4BVBSoFsrcyL+REnv/EwW2iKoQtNmhHX+Xv5KyBwgTY
+	 M8V5pF7dvBmE5TFgSFKJuVVC5vcNTItwsmWMBUAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfGLMbC (ORCPT
+        id S1729306AbfGLMbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbfGLMa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:56 -0400
+        id S1728925AbfGLMbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:31:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC33521019;
-        Fri, 12 Jul 2019 12:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D462166E;
+        Fri, 12 Jul 2019 12:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934655;
-        bh=d+yzvsCVqmFVjfTp/ocSLjqvx7jbhZKhRraSyB6ZyMU=;
+        s=default; t=1562934664;
+        bh=QaG2Xvm2G6eZQNV9BGAb4s4cN88lVMswx2BQRGp8/4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02byuqRttgv2XNtQrzOt90LRCaAam9Tj+u+xQ+jk4J07OopJF4uMfpiKkrOLDmWEX
-         sXz+aAYygm6jwhdmasD7S/fJVhuz/2U7IqOPwcxilr/gqPyPMI5pYYS70JutqAtTDl
-         j4nFdLTd0zitKYGYy8EX75rPlOkTwfD0AmKaWFWk=
+        b=cg8l/ihB4uvyMjnjbcAS5YR0YxljtvnSucUglvC2Ert+23r9LjYAum9bQg2S3Ud33
+         lfuYZstRUcK4gWw036kIWQGpZB2rhHqykLxhS0LPbyb/BBNYHlKiQS6VEFKfpeub2C
+         Khs7A707tvvSIarlghL5PcS4jhv5G+5FG32wNYiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 073/138] IB/hfi1: Use aborts to trigger RC throttling
-Date:   Fri, 12 Jul 2019 14:18:57 +0200
-Message-Id: <20190712121631.489173630@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 5.1 130/138] staging: vchiq_2835_arm: revert "quit using custom down_interruptible()"
+Date:   Fri, 12 Jul 2019 14:19:54 +0200
+Message-Id: <20190712121633.711116469@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,116 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4bb02e9572af1383038d83ad196d7166c515f2ee ]
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-SDMA and pio flushes will cause a lot of packets to be transmitted
-after a link has gone down, using a lot of CPU to retransmit
-packets.
+commit 061ca1401f96c254e7f179bf97a1fc5c7f47e1e1 upstream.
 
-Fix for RC QPs by recognizing the flush status and:
-- Forcing a timer start
-- Putting the QP into a "send one" mode
+The killable version of down() is meant to be used on situations where
+it should not fail at all costs, but still have the convenience of being
+able to kill it if really necessary. VCHIQ doesn't fit this criteria, as
+it's mainly used as an interface to V4L2 and ALSA devices.
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ff5979ad8636 ("staging: vchiq_2835_arm: quit using custom down_interruptible()")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/hfi1/rc.c    | 30 ++++++++++++++++++++++++++++++
- drivers/infiniband/hw/hfi1/verbs.c | 10 ++++++----
- drivers/infiniband/hw/hfi1/verbs.h |  1 +
- 3 files changed, 37 insertions(+), 4 deletions(-)
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
-index 82f101878e33..24cbac277bf0 100644
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -1703,6 +1703,36 @@ static void reset_sending_psn(struct rvt_qp *qp, u32 psn)
- 	}
- }
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -553,7 +553,7 @@ create_pagelist(char __user *buf, size_t
+ 		(g_cache_line_size - 1)))) {
+ 		char *fragments;
  
-+/**
-+ * hfi1_rc_verbs_aborted - handle abort status
-+ * @qp: the QP
-+ * @opah: the opa header
-+ *
-+ * This code modifies both ACK bit in BTH[2]
-+ * and the s_flags to go into send one mode.
-+ *
-+ * This serves to throttle the send engine to only
-+ * send a single packet in the likely case the
-+ * a link has gone down.
-+ */
-+void hfi1_rc_verbs_aborted(struct rvt_qp *qp, struct hfi1_opa_header *opah)
-+{
-+	struct ib_other_headers *ohdr = hfi1_get_rc_ohdr(opah);
-+	u8 opcode = ib_bth_get_opcode(ohdr);
-+	u32 psn;
-+
-+	/* ignore responses */
-+	if ((opcode >= OP(RDMA_READ_RESPONSE_FIRST) &&
-+	     opcode <= OP(ATOMIC_ACKNOWLEDGE)) ||
-+	    opcode == TID_OP(READ_RESP) ||
-+	    opcode == TID_OP(WRITE_RESP))
-+		return;
-+
-+	psn = ib_bth_get_psn(ohdr) | IB_BTH_REQ_ACK;
-+	ohdr->bth[2] = cpu_to_be32(psn);
-+	qp->s_flags |= RVT_S_SEND_ONE;
-+}
-+
- /*
-  * This should be called with the QP s_lock held and interrupts disabled.
-  */
-diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
-index ea68eeba3f22..63d62ac7434a 100644
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -638,6 +638,8 @@ static void verbs_sdma_complete(
- 		struct hfi1_opa_header *hdr;
- 
- 		hdr = &tx->phdr.hdr;
-+		if (unlikely(status == SDMA_TXREQ_S_ABORTED))
-+			hfi1_rc_verbs_aborted(qp, hdr);
- 		hfi1_rc_send_complete(qp, hdr);
- 	}
- 	spin_unlock(&qp->s_lock);
-@@ -1095,15 +1097,15 @@ int hfi1_verbs_send_pio(struct rvt_qp *qp, struct hfi1_pkt_state *ps,
- 			       &ps->s_txreq->phdr.hdr, ib_is_sc5(sc5));
- 
- pio_bail:
-+	spin_lock_irqsave(&qp->s_lock, flags);
- 	if (qp->s_wqe) {
--		spin_lock_irqsave(&qp->s_lock, flags);
- 		rvt_send_complete(qp, qp->s_wqe, wc_status);
--		spin_unlock_irqrestore(&qp->s_lock, flags);
- 	} else if (qp->ibqp.qp_type == IB_QPT_RC) {
--		spin_lock_irqsave(&qp->s_lock, flags);
-+		if (unlikely(wc_status == IB_WC_GENERAL_ERR))
-+			hfi1_rc_verbs_aborted(qp, &ps->s_txreq->phdr.hdr);
- 		hfi1_rc_send_complete(qp, &ps->s_txreq->phdr.hdr);
--		spin_unlock_irqrestore(&qp->s_lock, flags);
- 	}
-+	spin_unlock_irqrestore(&qp->s_lock, flags);
- 
- 	ret = 0;
- 
-diff --git a/drivers/infiniband/hw/hfi1/verbs.h b/drivers/infiniband/hw/hfi1/verbs.h
-index 62ace0b2d17a..1714c0f6475d 100644
---- a/drivers/infiniband/hw/hfi1/verbs.h
-+++ b/drivers/infiniband/hw/hfi1/verbs.h
-@@ -415,6 +415,7 @@ void hfi1_rc_hdrerr(
- 
- u8 ah_to_sc(struct ib_device *ibdev, struct rdma_ah_attr *ah_attr);
- 
-+void hfi1_rc_verbs_aborted(struct rvt_qp *qp, struct hfi1_opa_header *opah);
- void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah);
- 
- void hfi1_ud_rcv(struct hfi1_packet *packet);
--- 
-2.20.1
-
+-		if (down_killable(&g_free_fragments_sema)) {
++		if (down_interruptible(&g_free_fragments_sema) != 0) {
+ 			cleanup_pagelistinfo(pagelistinfo);
+ 			return NULL;
+ 		}
 
 
