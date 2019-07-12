@@ -2,105 +2,124 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3437BC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDF3C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0544B2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8940D20989
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nkfZJQ9h"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fDcMVGES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfGLTRA (ORCPT
+        id S1727415AbfGLTXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 15:17:00 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34870 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfGLTRA (ORCPT
+        Fri, 12 Jul 2019 15:23:51 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36491 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbfGLTXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 15:17:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s27so4959914pgl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 12:17:00 -0700 (PDT)
+        Fri, 12 Jul 2019 15:23:51 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g18so7272042qkl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 12:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TGOVEHDU6QMUFnbiD3BIRdKN9VyfrJPwBpHe3FSGpAg=;
-        b=nkfZJQ9hgpCFW9iLzk8dwSkTH64i+H8vplqfGtPUXVaPwkuTMXUePKH3TZhzsr16GZ
-         iK/X2lGuNteW8E8zt7aFgTv7ZFzXEowyDNMR3Zog3auXdALc+1iFvL+n92N73zf5bKmX
-         94w5wBa0MVPIT9oZiQNGEAMvFEihECIB3xXXcSMQn2+aCqc/Vw5jyk2H3SKMGLZrLkoE
-         ZcpGmxI0DhyWJ8BhMmYQl5+P97OCjSRK4jFpYCnXyOdCCKykftQFNs6LlCnaETQZ6vve
-         +h2s08OhbxURKhZGLRmXAyUKgdn26GpPoV6PuOGJI7F39yWyAIKijSFQtvTCzwN2jKhX
-         gjUA==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=nTx5Q1t5rZtAKWvNKqv4EB9nf5UeJFN+8yFT1L6eySw=;
+        b=fDcMVGES6+Tam4qkQH1rbV5vSngkrm4Gfv6CSMXyXvOZbujsJS6uf/LdoRmtRqCuKO
+         VkAmPvLFIpcjeN89SqK/8+8wZrls3RovYxZbRn2iCT/V+ZdCoQLoA8ySXtWQMxW+ndR0
+         6Gblv8mS3osSLqglsrrm5QPPbm80CkqphcATpprJaZbO9aQ95sOGkhB6Wq4RbXcUVwtA
+         EuJUgk63IQN8+V67/ceHDhPxQuUR1uZ9NP8pKSXZ8BD3cn3CM1BP4Pk7b8iWsBoKXtaJ
+         uaFKEtJnxDUTtHk8ebCIOl7uGx/Rd5FJiLCr3BeECuoL+PBAAS/IA4LxRlqgF/J0LEq4
+         VNvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TGOVEHDU6QMUFnbiD3BIRdKN9VyfrJPwBpHe3FSGpAg=;
-        b=WnOoF8jvRgQqCWqN3dfJ+KlP43IZqDfJJd7yBogW+6zu6flMMdB3EtWIPoIKcm3Tre
-         HIQB089aEfMErTm6LWni8F7n9zaAJxgMFv5gItvjsn+x3/PR3YGQzEEu8ou6yyCZBgX3
-         +Deeiq4i7fuSxofgURZ+VnDYzkxVBkarKrRrK3ekR1oz0+Z3IA+/cU1XYwS74zXACtr9
-         qeiJa/qsaA92TAI9c9XyJBroC7fkshMWhTGjXKnkEX+OniJunnYlsrY3saFDLoZdY9Sp
-         HYAJbUiQEHM+aIlfvUmkFzBqLBM0TkKzXskyCdfK92FejajBTA/mfVCQe/6L2fTcXXj9
-         719w==
-X-Gm-Message-State: APjAAAX/sH6P+A57vAaE/j5BN1lxXDKECYEleXwP9z21f7ZqHYzzeyzy
-        FtL4EOqP5WVTOuTNf2NIyTXKBB1EJwVF2D8g5UMndQ==
-X-Google-Smtp-Source: APXvYqz8DDKKFfyMeq2XmFAEGFvXUc8cj/j6Ydq12GQbSzvXJXTqXhAodhBP4TFp0ZC2Q6obcPiqC40y7BHQPC/izYE=
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr14074581pjs.73.1562959019386;
- Fri, 12 Jul 2019 12:16:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190712091357.744515-1-arnd@arndb.de> <20190712173912.GA127917@archlinux-threadripper>
-In-Reply-To: <20190712173912.GA127917@archlinux-threadripper>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 12 Jul 2019 12:16:48 -0700
-Message-ID: <CAKwvOd=-OE=uHCurw7VsHPUVHz9XWW7U_8vJEerGaYPii+f8RQ@mail.gmail.com>
-Subject: Re: [PATCH] dma: ste_dma40: fix unneeded variable warning
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nTx5Q1t5rZtAKWvNKqv4EB9nf5UeJFN+8yFT1L6eySw=;
+        b=RWOfO+atM2JcStWdgve0+kp7D7U/9ykJ0ouT4Ir/YRSTWrXpgkur4zrXY7lu16gTVp
+         7LRwnHct1SyebAV7q2Dbxm9MzK77hSkpkQ514QGeAQ2fm9m7leQdJ20e7klGbQshPhju
+         SO55v5fRPi0OCG0VtW7V85B0jn9fIzChbAiIIqqPL0g90QoqJjwqSL63R7UiRmgwJuP2
+         10ZSukZxWMMgQJm8AjMc47uoani3/b64Ts7yuMxslQBoMEKm4HD2OKqx6JogU1iNBK4K
+         zl956UPvzXSFk9JhGDiIJ/dPICflyh0sTCc1sgKp9hLBIgutRWVuTf4yx1bwWMd7kkIz
+         UeTg==
+X-Gm-Message-State: APjAAAXL7RN3Z2pXDEC6Yk6TI7W9ezpSWdad1842YZLNBqHxbVl9e3Ja
+        80tVcJnjNqXVUD9ieYGc1SQO6g==
+X-Google-Smtp-Source: APXvYqxEArSBk4tR0zWDSzipAUCLfBRT1wLTWFgthk8YozROg1saOVewdsZdhpftywRfgMu/S7X0tA==
+X-Received: by 2002:ae9:e217:: with SMTP id c23mr7455726qkc.227.1562959430223;
+        Fri, 12 Jul 2019 12:23:50 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id b4sm3589339qtp.77.2019.07.12.12.23.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 12:23:49 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     davem@davemloft.net
+Cc:     sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        arnd@arndb.de, dhowells@redhat.com, hpa@zytor.com,
+        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] be2net: fix adapter->big_page_size miscaculation
+Date:   Fri, 12 Jul 2019 15:23:21 -0400
+Message-Id: <1562959401-19815-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:39 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Fri, Jul 12, 2019 at 11:13:30AM +0200, Arnd Bergmann wrote:
-> > clang-9 points out that there are two variables that depending on the
-> > configuration may only be used in an ARRAY_SIZE() expression but not
-> > referenced:
-> >
-> > drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-> > static u32 d40_backup_regs[] = {
-> >            ^
-> > drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-> > static u32 d40_backup_regs_chan[] = {
-> >
-> > Mark these __maybe_unused to shut up the warning.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+problem for the be2net driver as "rx_frag_size" could be a module
+parameter that can be changed while loading the module. That commit
+checks __builtin_constant_p() first in get_order() which cause
+"adapter->big_page_size" to be assigned a value based on the
+the default "rx_frag_size" value at the compilation time. It also
+generate a compilation warning,
 
-Thanks for the patch!
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function
+'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
 
->
-> Might be worth mentioning that this warning will only appear when
-> CONFIG_PM is unset (they are both used in d40_save_restore_registers).
+Fix it by using __get_order() instead which will calculate in runtime.
 
-So would moving the definition into a
-#ifdef CONFIG_PM
-#endif
-block be better than __maybe_unused?
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/net/ethernet/emulex/benet/be_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
+index 82015c8a5ed7..db13e714df7c 100644
+--- a/drivers/net/ethernet/emulex/benet/be_main.c
++++ b/drivers/net/ethernet/emulex/benet/be_main.c
+@@ -3135,7 +3135,7 @@ static int be_rx_cqs_create(struct be_adapter *adapter)
+ 	if (adapter->num_rx_qs == 0)
+ 		adapter->num_rx_qs = 1;
+ 
+-	adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
++	adapter->big_page_size = (1 << __get_order(rx_frag_size)) * PAGE_SIZE;
+ 	for_all_rx_queues(adapter, rxo, i) {
+ 		rxo->adapter = adapter;
+ 		cq = &rxo->cq;
 -- 
-Thanks,
-~Nick Desaulniers
+1.8.3.1
+
