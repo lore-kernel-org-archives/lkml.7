@@ -2,145 +2,64 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546D4C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62F4C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EF32084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:15:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFej0D2S"
+	by mail.kernel.org (Postfix) with ESMTP id A7F382084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfGLHPg (ORCPT
+        id S1726212AbfGLHPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:15:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38831 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfGLHPf (ORCPT
+        Fri, 12 Jul 2019 03:15:53 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:59381 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfGLHPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:15:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z75so4124779pgz.5;
-        Fri, 12 Jul 2019 00:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=plx8G9KjIRkO9jPdKCCYg4fdY7Z/wFDK5+GicbywqU8=;
-        b=VFej0D2SY2b0aJzuxn4i5qL4rCyfbMzLnd4yft2sxUqn7/W2P89+AJGX+FnPJnvsT0
-         irWkaWdDMW44DbJLfgBR5O9nXuorUvZ6Ww6B1FPbwW9+iTf++esQLhqzCcfx/wtKT+9U
-         zR7ZitX0lkbLSuxkeDbruoHLg7luCGcjO2ZcxWHCSCjsb0nHYZ1fp6507EjC4sknX/Xr
-         HtF8HpTBgGvApSGSVe8JopMZx7aVXAT6+EbPjo0cQYnnYL63O9jWXvCHiCW7Do5SRHno
-         iu6Syf+q87bnUAFEh4iL0PSZwYEGjFP416k/Cvr5uhN6X5hMhFh5VHRjiKFESfK8nPi8
-         ozlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=plx8G9KjIRkO9jPdKCCYg4fdY7Z/wFDK5+GicbywqU8=;
-        b=epqhc3WF3YRUD/dwrJBsUBJALbfuE8xfp6JgvfNZeEh5K+WR++ODFcWyIxGgSjSZWm
-         mp6eJUTMmV4m5vdi2UFacRbXVbMGdEDFt55IDGPSZjDjrxJePa17s4Wg8hhXfil+Ivyi
-         uFYOXryNQCpIZvUqLeWR3d5gEAK49YgZ9lwcigoXtbper+EI1zqXnL/M46xYUxGV+XZV
-         qfTJNnpCbUSw8QSA7GxCODKQYOFNlX4NOVKwft0hgxTO9ekjjxPkV2C9WuTEKWtEyA+a
-         NkjXxzcmxvbEOUl9oQpL/JHIr6iQuVMB9qQdXbwWTT7nlTWVMjAzITgS5t1VJFwubiTN
-         UloA==
-X-Gm-Message-State: APjAAAX8apj7vPOJPG8rpvcgZzs+jPm7FlsFOaZ2XXpIp172cg8KH84Y
-        XMPK3D5i5QcBTJSSrJuraVAo2n/sHz8=
-X-Google-Smtp-Source: APXvYqzFAKB2xsc1Z5Am6M03j3zFHDBf7PUfG1clved6rBmUAlipS3m6vkYlbCwEd15othE1pQ+XCQ==
-X-Received: by 2002:a63:61c6:: with SMTP id v189mr3550132pgb.36.1562915734841;
-        Fri, 12 Jul 2019 00:15:34 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id 135sm7412600pfb.137.2019.07.12.00.15.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 12 Jul 2019 00:15:34 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
-Date:   Fri, 12 Jul 2019 15:15:30 +0800
-Message-Id: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 12 Jul 2019 03:15:52 -0400
+Received: from [192.168.21.103] (unknown [157.25.100.178])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 5ABE1CF2C4;
+        Fri, 12 Jul 2019 09:24:23 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Send VS pre shutdown command.
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1562908180-7468-1-git-send-email-c-hbandi@codeaurora.org>
+Date:   Fri, 12 Jul 2019 09:15:49 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <4D1C3F9F-6E0D-4B94-8372-DA7EB624282F@holtmann.org>
+References: <1562908180-7468-1-git-send-email-c-hbandi@codeaurora.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Hi Harish,
 
-Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during vcpu wakeup 
-and interrupt delivery), except the lock holder, we want to also boost vCPUs 
-that are delivering interrupts. Actually most smp_call_function_many calls are 
-synchronous ipi calls, the ipi target vCPUs are also good yield candidates. 
-This patch sets preempted flag during wakeup and interrupt delivery time.
+> WCN399x chips are coex chips, it needs a VS pre shutdown
+> command while turning off the BT. So that chip can inform
+> BT is OFF to other active clients.
+> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> drivers/bluetooth/btqca.c   | 21 +++++++++++++++++++++
+> drivers/bluetooth/btqca.h   |  7 +++++++
+> drivers/bluetooth/hci_qca.c |  3 +++
+> 3 files changed, 31 insertions(+)
 
-Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
-ebizzy -M
+patch has been applied to bluetooth-next tree.
 
-            vanilla     boosting    improved
-1VM          23000       21232        -9%                      
-2VM           2800        8000       180%
-3VM           1800        3100        72%
+Regards
 
-Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs, 
-one running ebizzy -M, the other running 'stress --cpu 2':
-
-w/ boosting + w/o pv sched yield(vanilla)   
-
-            vanilla     boosting   improved 
-              1570         4000       55%
-
-w/ boosting + w/ pv sched yield(vanilla)
-
-            vanilla     boosting   improved 
-              1844         5157       79%   
-
-w/o boosting, perf top in VM:
-
- 72.33%  [kernel]       [k] smp_call_function_many
-  4.22%  [kernel]       [k] call_function_i
-  3.71%  [kernel]       [k] async_page_fault
-
-w/ boosting, perf top in VM:
-
- 38.43%  [kernel]       [k] smp_call_function_many
-  6.31%  [kernel]       [k] async_page_fault
-  6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
-  4.88%  [kernel]       [k] call_function_interrupt
-
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- virt/kvm/kvm_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index b4ab59d..2c46705 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
- 	int me;
- 	int cpu = vcpu->cpu;
- 
--	if (kvm_vcpu_wake_up(vcpu))
-+	if (kvm_vcpu_wake_up(vcpu)) {
-+		vcpu->preempted = true;
- 		return;
-+	}
- 
- 	me = get_cpu();
- 	if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
--- 
-2.7.4
+Marcel
 
