@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7B2C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC3C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9A52080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B588208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935371;
-	bh=mdVvnt0NyxZLQyR9PhJ/fUSa2WrIrj/Buq46zg1LSgM=;
+	s=default; t=1562935374;
+	bh=KDTG7xZKVJcTtm5E/Es0e9jl8s29jm+e702fFtM9XwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d5megdgfeeGcAfV9SLieS0nYKVjbTI36c5btp/RZ32Y1gU/A7EAd6gWNVmHlbFmM0
-	 Ji/LJxL1DPqzjcWdMZL58lHXcC4/GTrf4GWH5YeDXpC184D/ALwd6AjIVYHNG4GaIA
-	 eWuMYjv2WzLyI4llzgFYm9CAgMQwltQw1MznFic4=
+	b=P9KIXfhowccxmsvet2SS1ddjz79ISGBU/6HYTiPwqR4cMt8/j8CSaWZz9LQgkuzO8
+	 FP94xcbKeWrywGeUgYGsuGg9t9MBPwfkdORW5u5BPL+XHAzwsNuqJpE0onNUbn3nTp
+	 B3LzPTJpEeERn6+X6PYF0tQmW7Ds+pwXGcohBY6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfGLMUA (ORCPT
+        id S1727126AbfGLMT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbfGLMT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:19:57 -0400
+        id S1726266AbfGLMTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:19:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F53D208E4;
-        Fri, 12 Jul 2019 12:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE083208E4;
+        Fri, 12 Jul 2019 12:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562933996;
-        bh=mdVvnt0NyxZLQyR9PhJ/fUSa2WrIrj/Buq46zg1LSgM=;
+        s=default; t=1562933991;
+        bh=KDTG7xZKVJcTtm5E/Es0e9jl8s29jm+e702fFtM9XwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLR9PpXEg4FU2WI+At+VC58QrKGLnCbmJoqFmO37QuCan1WOE8ZKRwsU9TTnCP7jL
-         ccWkdMJ+97rYR0+5p8qNTYcYTSd27Le5fhjcwlc1B60do+6dS8it64m8aQFgSxfg+I
-         W9bEF/8yRy791D6fFnA6RDzJvZgUMEZWfKg8dJGg=
+        b=NORqzYcD+d4l1p1AdXJ0kx58ZUUDrCoxEa5pqr6dyAPsl6leSFpREPdnLd3VVUn+6
+         za4Azgkpky3Se3uwTv7M1hivps97L/cOpygI9MBrD73XwCr1458Pug4w0ohyLHLbal
+         39/V/I36jIxURyu9/4+yqq0L0q/yU/0MPM6Iug4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Melissa Wen <melissa.srw@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 13/91] mac80211: free peer keys before vif down in mesh
-Date:   Fri, 12 Jul 2019 14:18:16 +0200
-Message-Id: <20190712121622.115217809@linuxfoundation.org>
+Subject: [PATCH 4.19 11/91] staging:iio:ad7150: fix threshold mode config bit
+Date:   Fri, 12 Jul 2019 14:18:14 +0200
+Message-Id: <20190712121622.013346601@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,30 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0112fa557c3bb3a002bc85760dc3761d737264d3 ]
+[ Upstream commit df4d737ee4d7205aaa6275158aeebff87fd14488 ]
 
-freeing peer keys after vif down is resulting in peer key uninstall
-to fail due to interface lookup failure. so fix that.
+According to the AD7150 configuration register description, bit 7 assumes
+value 1 when the threshold mode is fixed and 0 when it is adaptive,
+however, the operation that identifies this mode was considering the
+opposite values.
 
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This patch renames the boolean variable to describe it correctly and
+properly replaces it in the places where it is used.
+
+Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index 0f9446ab7e4f..3162f955f3ae 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -923,6 +923,7 @@ void ieee80211_stop_mesh(struct ieee80211_sub_if_data *sdata)
+diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+index d16084d7068c..a354ce6b2b7b 100644
+--- a/drivers/staging/iio/cdc/ad7150.c
++++ b/drivers/staging/iio/cdc/ad7150.c
+@@ -6,6 +6,7 @@
+  * Licensed under the GPL-2 or later.
+  */
  
- 	/* flush STAs and mpaths on this iface */
- 	sta_info_flush(sdata);
-+	ieee80211_free_keys(sdata, true);
- 	mesh_path_flush_by_iface(sdata);
++#include <linux/bitfield.h>
+ #include <linux/interrupt.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+@@ -130,7 +131,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+ {
+ 	int ret;
+ 	u8 threshtype;
+-	bool adaptive;
++	bool thrfixed;
+ 	struct ad7150_chip_info *chip = iio_priv(indio_dev);
  
- 	/* stop the beacon */
+ 	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
+@@ -138,21 +139,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+ 		return ret;
+ 
+ 	threshtype = (ret >> 5) & 0x03;
+-	adaptive = !!(ret & 0x80);
++
++	/*check if threshold mode is fixed or adaptive*/
++	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
+ 
+ 	switch (type) {
+ 	case IIO_EV_TYPE_MAG_ADAPTIVE:
+ 		if (dir == IIO_EV_DIR_RISING)
+-			return adaptive && (threshtype == 0x1);
+-		return adaptive && (threshtype == 0x0);
++			return !thrfixed && (threshtype == 0x1);
++		return !thrfixed && (threshtype == 0x0);
+ 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
+ 		if (dir == IIO_EV_DIR_RISING)
+-			return adaptive && (threshtype == 0x3);
+-		return adaptive && (threshtype == 0x2);
++			return !thrfixed && (threshtype == 0x3);
++		return !thrfixed && (threshtype == 0x2);
+ 	case IIO_EV_TYPE_THRESH:
+ 		if (dir == IIO_EV_DIR_RISING)
+-			return !adaptive && (threshtype == 0x1);
+-		return !adaptive && (threshtype == 0x0);
++			return thrfixed && (threshtype == 0x1);
++		return thrfixed && (threshtype == 0x0);
+ 	default:
+ 		break;
+ 	}
 -- 
 2.20.1
 
