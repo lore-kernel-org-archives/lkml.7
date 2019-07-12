@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A9C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9138FC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF02921670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ED921019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934006;
-	bh=DAy3AS84oplkc2aTGVWtMiCaPAZTnNDDmFazPsBklFM=;
+	s=default; t=1562934009;
+	bh=BLNnb4yLAEjDZeHBc8DuW2fjRJSdPR8MudAIhIG9eJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDOx3/e31CRIDZ9pvYzK828X/1SrPyttsYAq7I+DWzqvxcn4isBPtCoAd8x4T6P9t
-	 e963ZWhgagNCpNZrkkdRZPOJD7iqzFU5XBtcrbsdPLj00GZaaVeYgoPNryIZmk7rEx
-	 M8b6FxtQI9AsgF7se3g+zUlVqkgqeoD9y89gfLH8=
+	b=nXqSxziuqVRlpGUNLn5lPMQJHjQ/7UdckRluYULSeRPLutMDUrzCEvnqYOqNrfluh
+	 4fQ3GFqpjTTiDXGxsdWffRmubex2VYJAEtxWqWwvXrP/TpMwMpLtBVhMt8wQOgxnkz
+	 +isSuiu0hoKtOe6fkMLuwCeSUDewXoxU7Av9d3ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfGLMUF (ORCPT
+        id S1727230AbfGLMUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbfGLMUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:20:02 -0400
+        id S1727192AbfGLMUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:20:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0F121019;
-        Fri, 12 Jul 2019 12:20:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF96221019;
+        Fri, 12 Jul 2019 12:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934002;
-        bh=DAy3AS84oplkc2aTGVWtMiCaPAZTnNDDmFazPsBklFM=;
+        s=default; t=1562934005;
+        bh=BLNnb4yLAEjDZeHBc8DuW2fjRJSdPR8MudAIhIG9eJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UBI7yrETH3z9Nh8qBP8wx0/af+gPU9KxVQ4gJy7hx27BGKja2u3w/XVeC7ArHm6zu
-         27ivoIOCx4XjuyaJduWw4tYGLVUZPkTaXl0GFq9zRsvJdob72McvVzMcmKPD3xm06W
-         Iib9byIzXK/iHK+Ik1/3Mjj5fxz02AoULsiWzgzY=
+        b=14yqT4uO6zdO5K+1JOmt2E3gbcDoXM+liFSIJw1fyASNAkJ5G9lM6gvjaC6dVQw/z
+         P+zcsprehSaYk9MkuVEXvTueupWkvHklObvvPYOoUN0GQmUaxZUlCNiLwwiOpnJUKr
+         4g1sNxvdZWLKp6XFQ2vmJuzhq14y8ecgWQBBzPAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, huangwen <huangwen@venustech.com.cn>,
+        Takashi Iwai <tiwai@suse.de>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/91] iwlwifi: Fix double-free problems in iwl_req_fw_callback()
-Date:   Fri, 12 Jul 2019 14:18:18 +0200
-Message-Id: <20190712121622.219875809@linuxfoundation.org>
+Subject: [PATCH 4.19 16/91] mwifiex: Fix heap overflow in mwifiex_uap_parse_tail_ies()
+Date:   Fri, 12 Jul 2019 14:18:19 +0200
+Message-Id: <20190712121622.268339196@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,37 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8627176b0de7ba3f4524f641ddff4abf23ae4e4 ]
+[ Upstream commit 69ae4f6aac1578575126319d3f55550e7e440449 ]
 
-In the error handling code of iwl_req_fw_callback(), iwl_dealloc_ucode()
-is called to free data. In iwl_drv_stop(), iwl_dealloc_ucode() is called
-again, which can cause double-free problems.
+A few places in mwifiex_uap_parse_tail_ies() perform memcpy()
+unconditionally, which may lead to either buffer overflow or read over
+boundary.
 
-To fix this bug, the call to iwl_dealloc_ucode() in
-iwl_req_fw_callback() is deleted.
+This patch addresses the issues by checking the read size and the
+destination size at each place more properly.  Along with the fixes,
+the patch cleans up the code slightly by introducing a temporary
+variable for the token size, and unifies the error path with the
+standard goto statement.
 
-This bug is found by a runtime fuzzing tool named FIZZER written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Reported-by: huangwen <huangwen@venustech.com.cn>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/ie.c | 47 +++++++++++++++--------
+ 1 file changed, 31 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-index c0631255aee7..db6628d390a2 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1547,7 +1547,6 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
- 	goto free;
+diff --git a/drivers/net/wireless/marvell/mwifiex/ie.c b/drivers/net/wireless/marvell/mwifiex/ie.c
+index 75cbd609d606..801a2d7b020a 100644
+--- a/drivers/net/wireless/marvell/mwifiex/ie.c
++++ b/drivers/net/wireless/marvell/mwifiex/ie.c
+@@ -329,6 +329,8 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+ 	struct ieee80211_vendor_ie *vendorhdr;
+ 	u16 gen_idx = MWIFIEX_AUTO_IDX_MASK, ie_len = 0;
+ 	int left_len, parsed_len = 0;
++	unsigned int token_len;
++	int err = 0;
  
-  out_free_fw:
--	iwl_dealloc_ucode(drv);
- 	release_firmware(ucode_raw);
-  out_unbind:
- 	complete(&drv->request_firmware_complete);
+ 	if (!info->tail || !info->tail_len)
+ 		return 0;
+@@ -344,6 +346,12 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+ 	 */
+ 	while (left_len > sizeof(struct ieee_types_header)) {
+ 		hdr = (void *)(info->tail + parsed_len);
++		token_len = hdr->len + sizeof(struct ieee_types_header);
++		if (token_len > left_len) {
++			err = -EINVAL;
++			goto out;
++		}
++
+ 		switch (hdr->element_id) {
+ 		case WLAN_EID_SSID:
+ 		case WLAN_EID_SUPP_RATES:
+@@ -361,16 +369,19 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+ 			if (cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
+ 						    WLAN_OUI_TYPE_MICROSOFT_WMM,
+ 						    (const u8 *)hdr,
+-						    hdr->len + sizeof(struct ieee_types_header)))
++						    token_len))
+ 				break;
+ 		default:
+-			memcpy(gen_ie->ie_buffer + ie_len, hdr,
+-			       hdr->len + sizeof(struct ieee_types_header));
+-			ie_len += hdr->len + sizeof(struct ieee_types_header);
++			if (ie_len + token_len > IEEE_MAX_IE_SIZE) {
++				err = -EINVAL;
++				goto out;
++			}
++			memcpy(gen_ie->ie_buffer + ie_len, hdr, token_len);
++			ie_len += token_len;
+ 			break;
+ 		}
+-		left_len -= hdr->len + sizeof(struct ieee_types_header);
+-		parsed_len += hdr->len + sizeof(struct ieee_types_header);
++		left_len -= token_len;
++		parsed_len += token_len;
+ 	}
+ 
+ 	/* parse only WPA vendor IE from tail, WMM IE is configured by
+@@ -380,15 +391,17 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+ 						    WLAN_OUI_TYPE_MICROSOFT_WPA,
+ 						    info->tail, info->tail_len);
+ 	if (vendorhdr) {
+-		memcpy(gen_ie->ie_buffer + ie_len, vendorhdr,
+-		       vendorhdr->len + sizeof(struct ieee_types_header));
+-		ie_len += vendorhdr->len + sizeof(struct ieee_types_header);
++		token_len = vendorhdr->len + sizeof(struct ieee_types_header);
++		if (ie_len + token_len > IEEE_MAX_IE_SIZE) {
++			err = -EINVAL;
++			goto out;
++		}
++		memcpy(gen_ie->ie_buffer + ie_len, vendorhdr, token_len);
++		ie_len += token_len;
+ 	}
+ 
+-	if (!ie_len) {
+-		kfree(gen_ie);
+-		return 0;
+-	}
++	if (!ie_len)
++		goto out;
+ 
+ 	gen_ie->ie_index = cpu_to_le16(gen_idx);
+ 	gen_ie->mgmt_subtype_mask = cpu_to_le16(MGMT_MASK_BEACON |
+@@ -398,13 +411,15 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+ 
+ 	if (mwifiex_update_uap_custom_ie(priv, gen_ie, &gen_idx, NULL, NULL,
+ 					 NULL, NULL)) {
+-		kfree(gen_ie);
+-		return -1;
++		err = -EINVAL;
++		goto out;
+ 	}
+ 
+ 	priv->gen_idx = gen_idx;
++
++ out:
+ 	kfree(gen_ie);
+-	return 0;
++	return err;
+ }
+ 
+ /* This function parses different IEs-head & tail IEs, beacon IEs,
 -- 
 2.20.1
 
