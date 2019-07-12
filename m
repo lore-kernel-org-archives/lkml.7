@@ -2,174 +2,102 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D1C742A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A219DC742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB34A2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686F42084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXGCVxnB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y9ZB+DwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbfGLAK3 (ORCPT
+        id S1730500AbfGLAOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:10:29 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45122 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfGLAK3 (ORCPT
+        Thu, 11 Jul 2019 20:14:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33936 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728574AbfGLAOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:10:29 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x22so1456503qtp.12;
-        Thu, 11 Jul 2019 17:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WzVqjz+ovYVJRN1UL9XOiaqyrDBmch5lCBZzUwHfOaY=;
-        b=uXGCVxnBJH+IrTUQWBZvqNDA8TsqpMaP2yszpAVamWVilZL18N18DcsOAbwo/fDSq8
-         668wNSevaj6G+5reko3+9dXNspY6ji0n4wgsyXk/tWCgzWSGH8u59bStJr2imP0XlgIk
-         Krcnp+3YHvYdG88eAdcEs0wxIwBCnC7rvUwVhKjYbvRXxqBYVYYbYeKWjrouvpO9DGb3
-         zXQiyAV07LL/OJMLs80rctj8ApHvW5XsodGmBl6vZlA1W5XmjXeRxS+BplegUHl7bzey
-         4vOTWQoIxYQvWJEbw4iEgA/6fdlt8rDdjTTB0FiqFH4E8hPfjEDubUGS0aV2FEWNArUH
-         0XrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WzVqjz+ovYVJRN1UL9XOiaqyrDBmch5lCBZzUwHfOaY=;
-        b=TpETizw8vMuX45v2nH1FpLjEAvq2Ou1kf7m2BsQEQLX1V+osM/Xmst9hgQpiMDjaJJ
-         XrhJHiHf+EJ4U4V1CGpu9SD+7wFgQlXLCTRhayRZgSSfl1/2JORIK0xkB/PJJeV2i04+
-         vIwsdyj2sxJi0zc26t3W7fwNqqeyoo9x0D3yIOfRnfc8iwHsaTaau3iAk2hvnDVOfZ8F
-         xGleSZKsy3gRdGmGVIfQ477YemngclIfqAEprUAHh3WQ1+lcQ/u02772/zP8CQGNEcNF
-         2nNQ7/NdArWRPpET09vt2evXeandcXcEtHNGoIz/Yc89DyUawCXTSt0y/RXgEqurreoB
-         4K7w==
-X-Gm-Message-State: APjAAAWDJYg8nOslMq02nJMF1R0wjPuDqjW7cB95ml1IdauO5AXI6VgE
-        rwc6Vyxke18A3miylgFowH7kZW9K+zeDRWeXvaE=
-X-Google-Smtp-Source: APXvYqzIg0sY6zjxpBd9of08XzWu259C1MQr+I7Q2VLBe3mYWznBjpvBpc3EEJAwziLsMwYtKdePvkRWzPSihHrP7y8=
-X-Received: by 2002:ac8:290c:: with SMTP id y12mr3876880qty.141.1562890227759;
- Thu, 11 Jul 2019 17:10:27 -0700 (PDT)
+        Thu, 11 Jul 2019 20:14:54 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0EiMg167808;
+        Fri, 12 Jul 2019 00:14:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=DzEpnMM0XIAZkQhNkXNTuL7KgSoHSwCJotnMkirnVEQ=;
+ b=Y9ZB+DwWn1FBl8gge1tLuPESrvTj1OuQh8MQnbYMyXNAhcffXJwwyDCSLiy8p9B9yLLd
+ mrdB6qHBOh+cXEnmNU0G3cQU81KI5/nqgeDA2/132TLNNMMYrM67lWMIrMXZDJhw0Gr/
+ RDxp1sKvi1JcsWElMwL+vb2xhwOuDGQcyhC/+tgz9z1xzTbuR2ZYCNEh/VJUHWVBp2J4
+ qdg2628rRnyPgCHBqf4Ntar3KPmfwyEQHYvPYLPVhFVKqHLC0BKm/JESImTWXAV1094l
+ 9FAFrXUrlVQ63BgutRXznAyP0YGR2eWWBKADm/K8Kt6DCkEZc4qdkcnfPzMRYwhGH9Wx vQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2tjkkq2tgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 00:14:44 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0Cg1u150839;
+        Fri, 12 Jul 2019 00:14:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tn1j1u2p6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 00:14:43 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C0EYYc026045;
+        Fri, 12 Jul 2019 00:14:34 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 17:14:34 -0700
+To:     Avri Altman <avri.altman@wdc.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Alex Lemberg <alex.lemberg@wdc.com>
+Subject: Re: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1560346477-13944-1-git-send-email-avri.altman@wdc.com>
+Date:   Thu, 11 Jul 2019 20:14:31 -0400
+In-Reply-To: <1560346477-13944-1-git-send-email-avri.altman@wdc.com> (Avri
+        Altman's message of "Wed, 12 Jun 2019 16:34:37 +0300")
+Message-ID: <yq1ef2w9kig.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-2-krzesimir@kinvolk.io>
- <CAEf4BzYDOyU52wdCinm9cxxvNijpTJgQbCg9UxcO1QKk6vWhNA@mail.gmail.com> <CAGGp+cEaGphDCuZL+sbo2aCVumk2jrq9_Lshifg-Ewphfm40Wg@mail.gmail.com>
-In-Reply-To: <CAGGp+cEaGphDCuZL+sbo2aCVumk2jrq9_Lshifg-Ewphfm40Wg@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 11 Jul 2019 17:10:16 -0700
-Message-ID: <CAEf4BzZBzreJOvEzm-OzVPNfwHOhuQ4nh4P04Nh5-u24sjFEcA@mail.gmail.com>
-Subject: Re: [bpf-next v3 01/12] selftests/bpf: Print a message when tester
- could not run a program
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=978
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 4:36 AM Krzesimir Nowak <krzesimir@kinvolk.io> wrot=
-e:
->
-> On Thu, Jul 11, 2019 at 1:45 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> w=
-rote:
-> > >
-> > > This prints a message when the error is about program type being not
-> > > supported by the test runner or because of permissions problem. This
-> > > is to see if the program we expected to run was actually executed.
-> > >
-> > > The messages are open-coded because strerror(ENOTSUPP) returns
-> > > "Unknown error 524".
-> > >
-> > > Changes since v2:
-> > > - Also print "FAIL" on an unexpected bpf_prog_test_run error, so ther=
-e
-> > >   is a corresponding "FAIL" message for each failed test.
-> > >
-> > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> > > ---
-> > >  tools/testing/selftests/bpf/test_verifier.c | 17 +++++++++++++----
-> > >  1 file changed, 13 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/test=
-ing/selftests/bpf/test_verifier.c
-> > > index c5514daf8865..b8d065623ead 100644
-> > > --- a/tools/testing/selftests/bpf/test_verifier.c
-> > > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > > @@ -831,11 +831,20 @@ static int do_prog_test_run(int fd_prog, bool u=
-npriv, uint32_t expected_val,
-> > >                                 tmp, &size_tmp, &retval, NULL);
-> > >         if (unpriv)
-> > >                 set_admin(false);
-> > > -       if (err && errno !=3D 524/*ENOTSUPP*/ && errno !=3D EPERM) {
-> > > -               printf("Unexpected bpf_prog_test_run error ");
-> > > -               return err;
-> > > +       if (err) {
-> > > +               switch (errno) {
-> > > +               case 524/*ENOTSUPP*/:
-> > > +                       printf("Did not run the program (not supporte=
-d) ");
-> > > +                       return 0;
-> > > +               case EPERM:
-> > > +                       printf("Did not run the program (no permissio=
-n) ");
-> >
-> > Let's add "SKIP: " prefix to these?
->
-> Not sure about it. The important part of the test (the program being
-> verified by the kernel's verifier) was still executed, so the test is
-> not really skipped.
 
+Avri,
 
-Ah, I see. So the program was loaded/verifierd, but wasn't test-run.
+> added 'WITH Linux-syscall-note' exception, which is the officially
+> assigned exception identifier for the kernel syscall exception.
+> This exception makes it possible to include GPL headers into non GPL
+> code, without confusing license compliance tools.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+I'd like Arnd to ack the license change since he has made changes
+(however mechanical) to the file.
 
->
->
-> >
-> > > +                       return 0;
-> > > +               default:
-> > > +                       printf("FAIL: Unexpected bpf_prog_test_run er=
-ror (%s) ", strerror(saved_errno));
-> > > +                       return err;
-> > > +               }
-> > >         }
-> > > -       if (!err && retval !=3D expected_val &&
-> > > +       if (retval !=3D expected_val &&
-> > >             expected_val !=3D POINTER_VALUE) {
-> > >                 printf("FAIL retval %d !=3D %d ", retval, expected_va=
-l);
-> > >                 return 1;
-> > > --
-> > > 2.20.1
-> > >
->
->
->
-> --
-> Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
-> Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago =
-L=C3=B3pez Galeiras
-> Registergericht/Court of registration: Amtsgericht Charlottenburg
-> Registernummer/Registration number: HRB 171414 B
-> Ust-ID-Nummer/VAT ID number: DE302207000
+-- 
+Martin K. Petersen	Oracle Linux Engineering
