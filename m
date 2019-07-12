@@ -2,112 +2,105 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7A6C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3437BC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09292064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0544B2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr7am8Sx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nkfZJQ9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfGLTPo (ORCPT
+        id S1727495AbfGLTRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 15:15:44 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40825 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfGLTPo (ORCPT
+        Fri, 12 Jul 2019 15:17:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34870 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbfGLTRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 15:15:44 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so4706310pfp.7;
-        Fri, 12 Jul 2019 12:15:44 -0700 (PDT)
+        Fri, 12 Jul 2019 15:17:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so4959914pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 12:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=oXYsDtz7/0DubJTDGGvFVnh+Lg24n8uWzauVA7FWOTQ=;
-        b=Nr7am8SxXXYpG5t0e+1t+Av/Yh6G80yJqo/ksdWDOvMe3qqHa6cJoGyVzD5kTgSzFK
-         EbacLSDUPdziFExsgVl7789UjRU3jmdIMp+rfJnmcfDPWBrubbVcGbpcumtJYSa3L5gh
-         HkOt41cRAFHWciYXEPDgg5QiW17ByJrq2OFQjWfMNwNz6M75CMQ4nm4u1cKp8DRvDgbf
-         MI7dFcmeLuE3pOARp57eWs93iYXlX+KupflRTesY6DS+yrPMWwMByAVm5sMftSxl89Fv
-         d6z1LVc+EZHjNr9+FHaIt36QV65OzSF298ZySScn3iDUN4bVvaCfH60TeeRzjun8vFMB
-         eJIQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TGOVEHDU6QMUFnbiD3BIRdKN9VyfrJPwBpHe3FSGpAg=;
+        b=nkfZJQ9hgpCFW9iLzk8dwSkTH64i+H8vplqfGtPUXVaPwkuTMXUePKH3TZhzsr16GZ
+         iK/X2lGuNteW8E8zt7aFgTv7ZFzXEowyDNMR3Zog3auXdALc+1iFvL+n92N73zf5bKmX
+         94w5wBa0MVPIT9oZiQNGEAMvFEihECIB3xXXcSMQn2+aCqc/Vw5jyk2H3SKMGLZrLkoE
+         ZcpGmxI0DhyWJ8BhMmYQl5+P97OCjSRK4jFpYCnXyOdCCKykftQFNs6LlCnaETQZ6vve
+         +h2s08OhbxURKhZGLRmXAyUKgdn26GpPoV6PuOGJI7F39yWyAIKijSFQtvTCzwN2jKhX
+         gjUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=oXYsDtz7/0DubJTDGGvFVnh+Lg24n8uWzauVA7FWOTQ=;
-        b=t6VMgTZPBpYEuceAgG02Ag1H2Ks6hrQEeJa/vmz3aM428CUSlDx4xVN3wgHtHGSeee
-         vGPeJNFBr0uaeWjZVtyUrIp41alkh8wEALaEdKmAvNEZIz3CY/wArR+rjBuu6H+8ImAv
-         k7N5T5ufG5C37oR9WFPa5PK0UQ0WkY8itArmBoC6zK+NBNSm+6GVXGNV66L6bvojGtNv
-         LIGmRhgMw54ZNaeOYkVkotf7zfKDuFf4e8CmoV09y5/YHN3YyFbPNNfaP2KQonRxL3+f
-         JQ9VrgyEX5QpugVs96iPHgUlLs92siqbaVR59EmzS4jt0+0NnhXyxsnHWYGZg74yovyM
-         3cjA==
-X-Gm-Message-State: APjAAAU6dGts91Uv07BsyuNrxw0/NipDP64STsAxWGkmbSXafpJOuyiQ
-        oJc1a4OR0hRb4OXV9gCStGg=
-X-Google-Smtp-Source: APXvYqxj66wwvzMcXiXJCH8ccqM4G3d2MZ/6yh7ZJDckx9t13ZbV/TUTv0MDFeKCE1Yk71acBv5l2Q==
-X-Received: by 2002:a17:90a:23a4:: with SMTP id g33mr14339109pje.115.1562958943763;
-        Fri, 12 Jul 2019 12:15:43 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id l44sm8835523pje.29.2019.07.12.12.15.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 12:15:42 -0700 (PDT)
-Date:   Sat, 13 Jul 2019 00:45:35 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rtlwifi: btcoex: fix issue possible condition with no effect
- (if == else)
-Message-ID: <20190712191535.GA4215@hari-Inspiron-1545>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TGOVEHDU6QMUFnbiD3BIRdKN9VyfrJPwBpHe3FSGpAg=;
+        b=WnOoF8jvRgQqCWqN3dfJ+KlP43IZqDfJJd7yBogW+6zu6flMMdB3EtWIPoIKcm3Tre
+         HIQB089aEfMErTm6LWni8F7n9zaAJxgMFv5gItvjsn+x3/PR3YGQzEEu8ou6yyCZBgX3
+         +Deeiq4i7fuSxofgURZ+VnDYzkxVBkarKrRrK3ekR1oz0+Z3IA+/cU1XYwS74zXACtr9
+         qeiJa/qsaA92TAI9c9XyJBroC7fkshMWhTGjXKnkEX+OniJunnYlsrY3saFDLoZdY9Sp
+         HYAJbUiQEHM+aIlfvUmkFzBqLBM0TkKzXskyCdfK92FejajBTA/mfVCQe/6L2fTcXXj9
+         719w==
+X-Gm-Message-State: APjAAAX/sH6P+A57vAaE/j5BN1lxXDKECYEleXwP9z21f7ZqHYzzeyzy
+        FtL4EOqP5WVTOuTNf2NIyTXKBB1EJwVF2D8g5UMndQ==
+X-Google-Smtp-Source: APXvYqz8DDKKFfyMeq2XmFAEGFvXUc8cj/j6Ydq12GQbSzvXJXTqXhAodhBP4TFp0ZC2Q6obcPiqC40y7BHQPC/izYE=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr14074581pjs.73.1562959019386;
+ Fri, 12 Jul 2019 12:16:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190712091357.744515-1-arnd@arndb.de> <20190712173912.GA127917@archlinux-threadripper>
+In-Reply-To: <20190712173912.GA127917@archlinux-threadripper>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 12 Jul 2019 12:16:48 -0700
+Message-ID: <CAKwvOd=-OE=uHCurw7VsHPUVHz9XWW7U_8vJEerGaYPii+f8RQ@mail.gmail.com>
+Subject: Re: [PATCH] dma: ste_dma40: fix unneeded variable warning
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below issue reported by coccicheck
-drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c:514:1-3:
-WARNING: possible condition with no effect (if == else)
+On Fri, Jul 12, 2019 at 10:39 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Fri, Jul 12, 2019 at 11:13:30AM +0200, Arnd Bergmann wrote:
+> > clang-9 points out that there are two variables that depending on the
+> > configuration may only be used in an ARRAY_SIZE() expression but not
+> > referenced:
+> >
+> > drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+> > static u32 d40_backup_regs[] = {
+> >            ^
+> > drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+> > static u32 d40_backup_regs_chan[] = {
+> >
+> > Mark these __maybe_unused to shut up the warning.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+Thanks for the patch!
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
-index 152242a..191dafd0 100644
---- a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
-@@ -509,13 +509,7 @@ static u32 halbtc_get_wifi_link_status(struct btc_coexist *btcoexist)
- 
- static s32 halbtc_get_wifi_rssi(struct rtl_priv *rtlpriv)
- {
--	int undec_sm_pwdb = 0;
--
--	if (rtlpriv->mac80211.link_state >= MAC80211_LINKED)
--		undec_sm_pwdb = rtlpriv->dm.undec_sm_pwdb;
--	else /* associated entry pwdb */
--		undec_sm_pwdb = rtlpriv->dm.undec_sm_pwdb;
--	return undec_sm_pwdb;
-+	return rtlpriv->dm.undec_sm_pwdb;
- }
- 
- static bool halbtc_get(void *void_btcoexist, u8 get_type, void *out_buf)
+>
+> Might be worth mentioning that this warning will only appear when
+> CONFIG_PM is unset (they are both used in d40_save_restore_registers).
+
+So would moving the definition into a
+#ifdef CONFIG_PM
+#endif
+block be better than __maybe_unused?
+
 -- 
-2.7.4
-
+Thanks,
+~Nick Desaulniers
