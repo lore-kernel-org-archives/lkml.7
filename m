@@ -4,101 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF8AC742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3A4C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E370208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4AB208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4MLyLJF1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTaFWFa9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfGLBWv (ORCPT
+        id S1729188AbfGLBXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:22:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57082 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfGLBWv (ORCPT
+        Thu, 11 Jul 2019 21:23:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46805 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfGLBXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:22:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1IWkE122640;
-        Fri, 12 Jul 2019 01:22:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=xQU+hIivwsk9Rgrtj3FTlVDAx40vNslWzQ7vly9iFMo=;
- b=4MLyLJF1v7L46qE3bvdDCqhPczhMgzy6mj0EV2QiD37GqOkHkaCjNi7akQx4ELqVlyfG
- MYq8cL6iJEygj2PMQdCYDWOWIsjx52AbrI9JU0E88bCCYwo/q63llIUusRCO4QMKddS3
- 1RdRC5uDszASR/VpDYBzoKj0o1R8511F7FNv6iq/oe/6POYOt5tkq+C1HdxpJFZsovqX
- XZ4oU0D2n8wORtsO5I+IGg0zScJ7cAPbbhLWwR6kzwyAvber22sl5EUEtQNwWYDhTcZz
- cGduXHyNlIOXTBMlT8KeJ5W+neHs9f3Pmli0lSJKdyWmrYEz/eLZz4z/NgsQPfa8GNOu Vw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tjm9r2xy0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 01:22:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1MaY8159282;
-        Fri, 12 Jul 2019 01:22:41 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2tn1j1vbpm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 01:22:41 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C1MVF7007771;
-        Fri, 12 Jul 2019 01:22:31 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jul 2019 18:22:31 -0700
-To:     James Bottomley <jejb@linux.vnet.ibm.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Avri Altman <avri.altman@wdc.com>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Alex Lemberg <alex.lemberg@wdc.com>
-Subject: Re: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1560346477-13944-1-git-send-email-avri.altman@wdc.com>
-        <yq1ef2w9kig.fsf@oracle.com>
-        <1562890815.2915.13.camel@linux.vnet.ibm.com>
-Date:   Thu, 11 Jul 2019 21:22:28 -0400
-In-Reply-To: <1562890815.2915.13.camel@linux.vnet.ibm.com> (James Bottomley's
-        message of "Thu, 11 Jul 2019 17:20:15 -0700")
-Message-ID: <yq1d0ig6o8b.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 11 Jul 2019 21:23:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so7668385ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9NuXct5FW62NllFLkWHXtF54PXpuTDXCY6/8Ws75hAk=;
+        b=PTaFWFa9tsIcZKGH46sqa/kg0BqnZ09unrqjmMlbQrVI4BYj8E+xBy4K4ZDP4027CV
+         GOPy9CKjNtES2ZAgyq964LkeWqrrxHFUISbSTAXkwMQ5J92Kxk5amAw1WuicOlDER9y/
+         4exC+/nG5OMJbTivCpXXf2y8w/kgK+BV9Nv40=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9NuXct5FW62NllFLkWHXtF54PXpuTDXCY6/8Ws75hAk=;
+        b=rhX9NxEtJj7e4LvvG4qZ5d5n4hNiDk9z0jd4IzjCBe1ZQnilDNoxd0JJbMnl9u/9Uf
+         x5McHBUbVAj2hG72V+iRX/OA28ZE0lx8lanvv4uf5WgWABEziWiHXb2kredOkC1TAfvI
+         kSP5RFYsFjBb/Q21NGJAElQqgGOUmwGRLhlFjV9wYd6w3lO8s3IOl8XZSY0JYmM9Fiuk
+         FmOf5AmRIqUzdadrUyIyb1B6vQKs1R4+oSd/Y7+wBh5cOpM/9uaFzfDjAnRvkT2+RxU2
+         LBjp6vTnJpdbu/yr6rHWO5iSYyv8LtAObblu/ozP5d8yd634GKq4GC9x2YgqjAdxMlcc
+         hIjQ==
+X-Gm-Message-State: APjAAAXhaU6SgkdsPTHzGcMfK17oxgIay9XNyL+Qd9ptmdFvPfqTt0Ua
+        hThkyY+S7jSubdEznVj1qef8MACkKls=
+X-Google-Smtp-Source: APXvYqz1FoL29kfvwRV8qo4l3hYmb/5MdIush6dwqY6tdrUGfCUgaoD9wgM4uR+b2iSqlIfVFYFqRg==
+X-Received: by 2002:a2e:898b:: with SMTP id c11mr4349911lji.241.1562894611553;
+        Thu, 11 Jul 2019 18:23:31 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id y4sm911531lfc.56.2019.07.11.18.23.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 18:23:30 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id p197so5324949lfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:23:30 -0700 (PDT)
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr3285742lfu.141.1562894610575;
+ Thu, 11 Jul 2019 18:23:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=852
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120016
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=899 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120015
+References: <20190712010556.248319-1-briannorris@chromium.org> <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
+In-Reply-To: <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Thu, 11 Jul 2019 18:23:19 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com>
+Message-ID: <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com>
+Subject: Re: [RFC PATCH] bug: always show source-tree-relative paths in WARN()/BUG()
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 11, 2019 at 6:14 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> BTW, did you see this?
+>
+> commit a73619a845d5625079cc1b3b820f44c899618388
+> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Date:   Fri Mar 30 13:15:26 2018 +0900
+>
+>     kbuild: use -fmacro-prefix-map to make __FILE__ a relative path
 
-James,
+Oh, wow, no I did not. If my reading is correct, that's GCC only? I've
+been using various combinations of newer (5.2) and older (4.14.y --
+didn't have that patch) kernels, older GCC (doesn't have that feature
+AFAICT), and newer Clang (doesn't appear to have that feature). So I'm
+not totally sure if I ever actually tried a combo that *could* make
+use of that. But I may give it another shot.
 
-> Just to note: this isn't technically a licence change at all.  The
-> entire kernel is covered by the system call exception and this file is
-> thus also covered.  It's really a simple tag change to allow tools
-> which parse uapi header files to recognise from the SPDX tags that this
-> is a kernel header to which the Linux-syscall-note applies.
+In the event that this is GCC-specific...I don't suppose I could
+convince anybody to expend any effort (e.g., taking a patch like mine)
+to solve it for the non-GCC world?
 
-OK.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks for the tip,
+Brian
