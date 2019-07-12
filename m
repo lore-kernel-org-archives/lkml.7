@@ -2,119 +2,97 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23A9C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CCFC742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81C2214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178E4214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seQ+5x66"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yHAKyxQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbfGLAd6 (ORCPT
+        id S1730637AbfGLAe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:33:58 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55832 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfGLAd6 (ORCPT
+        Thu, 11 Jul 2019 20:34:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48786 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfGLAe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:33:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a15so7249278wmj.5;
-        Thu, 11 Jul 2019 17:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZIHtnUgbJAyk2Yt1SLus4FpvUvi7MmMfRwmrG6+39M8=;
-        b=seQ+5x66XzW00Nii89UijNC7Z9v06mETi3In1Gs/azkO/cFi/A1CzoHdr2kjDGfPVv
-         aJlHM+yNvSjw5TJjfOOjR7evoxrdJCSDjoQJQdQYJcQX3anKGkvoD4/sOoa8nTzOWy8D
-         1A7LFikVyd4Ay01meCwi9cXe/KfsDcwTCTbZVI4CZ9MJ7njAYVzfe4Y9fzZVVw0mA/9J
-         9WT3KPgngZ8LmbqEjQdspnGpeunujI5LLoR9HXTJP2/TumISn0MVPjYSchynH7MRHGCW
-         H1N2JxQy26esHj7XHDPlGVgwkX/rcwUka5x7DbkLriaV2UPsqcrKiinzkPckv66lx8TQ
-         Epug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZIHtnUgbJAyk2Yt1SLus4FpvUvi7MmMfRwmrG6+39M8=;
-        b=hgGDRmWekzujBc+xUrqNYE2udUsS98P2pEgmqSoKqaWOpS3i9LtWNIZZzTG9PyTj+V
-         d0JRVZ2wW0/F7uM/90bKIzfd0esV9JsUnYF1fEuNXSMjn5OvSGnjKxyABbASVyhFO6v8
-         joE+H6xRNxjL9zP5JeX8ABWTRsUQJdoy++GiGQic9N0gKA+gteU6EKqI0akCSQA8TFOD
-         ejDSK/4FtAzqIhW+Id4XnduH6p6lTOk2+M63mBaWwRplfFLNnRNfiQNtEUHwdYwpSXYI
-         1hrSa5QBluMPtgW/h0m7C5zdr5+29fRYn8SfPHHvepl/EO8qvHxlim7A3daaKhvtJMes
-         krcw==
-X-Gm-Message-State: APjAAAWcYjnuDVfao+RgO2xwo3DGT3dWtzEUjdO/vuXkhBeOMBZcch7e
-        zbZ2AevFk74Csw+xkc5cwmVSgk8k9CI/yp+wEPg=
-X-Google-Smtp-Source: APXvYqyaiGP9Do3Q1rjeo5x031nejhl4minL8MqBQLzYhAI2+hdialZRcypuUt8ZXf9soz2tQX++PZiX2Pw5AGx/y3M=
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr5797761wme.173.1562891635861;
- Thu, 11 Jul 2019 17:33:55 -0700 (PDT)
+        Thu, 11 Jul 2019 20:34:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0YMD3093743;
+        Fri, 12 Jul 2019 00:34:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=/lQHEmys1qaQnVNW3UTZmc01E9PfoBxYGBIwnpGj+/I=;
+ b=yHAKyxQKOlP5Sy4CAxzDqv3ad+tfs1YwJot7br+9fLkPn5TA7armxs0lZROZVQH+7GbI
+ HXwmDGH8OaHPwOFlTt8P6f+kCSGo7D31/ZyNubRZ0sE+aPsMiKFNxHEKPcNtJSqYi89v
+ 4nK+OqplKWOLkPY7TYPc+l8HHCs/jtVfDuGL+8MSZ1LQHEIOM8EezlvDU5w5N0+qURJc
+ C3TZIsG17wQzfpo59OrLCgJrdYY1tYmNjrHdnRz1v7xqvm9xTtdhFQzDc72GEh+7sRNP
+ 0F6lbOaVLR2aGEXGwu0j+DNe0NuQyDe1M8iX74jqWVBYpmFcend/V6aQa11ypszKfYaU eA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2tjm9r2u93-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 00:34:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0XSEk013674;
+        Fri, 12 Jul 2019 00:34:22 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2tn1j1ue14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 00:34:22 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C0YKrY017875;
+        Fri, 12 Jul 2019 00:34:21 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 17:34:20 -0700
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: libsas: remove the exporting of sas_wait_eh
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190708164339.14465-1-efremov@linux.com>
+Date:   Thu, 11 Jul 2019 20:34:18 -0400
+In-Reply-To: <20190708164339.14465-1-efremov@linux.com> (Denis Efremov's
+        message of "Mon, 8 Jul 2019 19:43:39 +0300")
+Message-ID: <yq1ftnc8511.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <1562872923-2463-1-git-send-email-wang6495@umn.edu>
-In-Reply-To: <1562872923-2463-1-git-send-email-wang6495@umn.edu>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Fri, 12 Jul 2019 08:33:43 +0800
-Message-ID: <CACVXFVNkdgxddQiJn1SMQSuOL8E_PCLRhkv8XPLUg=5tdmpiLA@mail.gmail.com>
-Subject: Re: [PATCH v2] block/bio-integrity: fix a memory leak bug
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120005
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 3:29 AM Wenwen Wang <wang6495@umn.edu> wrote:
->
-> From: Wenwen Wang <wenwen@cs.uga.edu>
->
-> In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-> hold integrity metadata. Later on, the buffer will be attached to the bio
-> structure through bio_integrity_add_page(), which returns the number of
-> bytes of integrity metadata attached. Due to unexpected situations,
-> bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-> needs to be terminated with 'false' returned to indicate this error.
-> However, the allocated kernel buffer is not freed on this execution path,
-> leading to a memory leak.
->
-> To fix this issue, free the allocated buffer before returning from
-> bio_integrity_prep().
->
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> ---
->  block/bio-integrity.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-> index 4db6208..fb95dbb 100644
-> --- a/block/bio-integrity.c
-> +++ b/block/bio-integrity.c
-> @@ -276,8 +276,12 @@ bool bio_integrity_prep(struct bio *bio)
->                 ret = bio_integrity_add_page(bio, virt_to_page(buf),
->                                              bytes, offset);
->
-> -               if (ret == 0)
-> -                       return false;
-> +               if (ret == 0) {
-> +                       printk(KERN_ERR "could not attach integrity payload\n");
-> +                       kfree(buf);
-> +                       status = BLK_STS_RESOURCE;
-> +                       goto err_end_io;
-> +               }
->
->                 if (ret < bytes)
->                         break;
 
-Looks fine:
+Denis,
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> The function sas_wait_eh is declared static and marked
+> EXPORT_SYMBOL, which is at best an odd combination. Because the
+> function is not used outside of the drivers/scsi/libsas/sas_scsi_host.c
+> file it is defined in, this commit removes the EXPORT_SYMBOL() marking.
 
+Applied to 5.3/scsi-fixes, thanks!
 
-Thanks,
-Ming Lei
+-- 
+Martin K. Petersen	Oracle Linux Engineering
