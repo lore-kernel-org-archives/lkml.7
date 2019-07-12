@@ -2,94 +2,278 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB704C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CA3C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B631206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E3D21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562933991;
+	bh=MoIftHUPF+HZWK0KO/4mwfCO3/48IjJMAgytu+e433E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S/xJfkWIYryaV5SluNndgeQ75Awrhf/LwoJdKR7Lm/5nTMsA6Xrbld6Dv4ZKCEwV3
+	 zTtKHTKChd7n+QwTPIt2eMP4ZaJJWnttFGsZoZypRd02JQfkrK3qKbOPcF8InsqHCj
+	 td3kKhnPY3HOfA5mqsG2J0rB6LuA8EmBY5B5/mMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfGLMSD (ORCPT
+        id S1727054AbfGLMTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:18:03 -0400
-Received: from gaia.bitwizard.nl ([149.210.166.240]:40760 "EHLO
-        gaia.bitwizard.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbfGLMSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:18:03 -0400
-X-Greylist: delayed 480 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 08:18:01 EDT
-Received: from abra2.bitwizard.nl (unknown [10.8.0.6])
-        by gaia.bitwizard.nl (Postfix) with ESMTP id 87FAA5A0065;
-        Fri, 12 Jul 2019 14:10:00 +0200 (CEST)
-Received: by abra2.bitwizard.nl (Postfix, from userid 1000)
-        id 6CD7E13F753; Fri, 12 Jul 2019 14:10:00 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 14:10:00 +0200
-From:   Rogier Wolff <R.E.Wolff@BitWizard.nl>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Phil Elwell <phil@raspberrypi.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tty: amba-pl011: Make TX optimisation conditional
-Message-ID: <20190712121000.GK11350@BitWizard.nl>
-References: <1562852732-123411-1-git-send-email-phil@raspberrypi.org>
- <20190712112105.GH2790@e103592.cambridge.arm.com>
+        Fri, 12 Jul 2019 08:19:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbfGLMTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:19:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3FC20863;
+        Fri, 12 Jul 2019 12:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562933985;
+        bh=MoIftHUPF+HZWK0KO/4mwfCO3/48IjJMAgytu+e433E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R2xH+2ofg0t/jWLQvXIJNtDtu2h6KBhq3H55ZXQMz67LwSOAg7vNEyxVRkq8ljqrZ
+         kx3q9n9px+EHO2q1ysObDaILLWxHVnNcCwzCE1WJCY9zniAxOMFKXPh7ac9C9kGjRg
+         5pk7YCMJqzpv8nqTo+MZb05yWvFGzm5L8gBD+sCE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 01/91] crypto: talitos - fix hash on SEC1.
+Date:   Fri, 12 Jul 2019 14:18:04 +0200
+Message-Id: <20190712121621.502587239@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
+References: <20190712121621.422224300@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712112105.GH2790@e103592.cambridge.arm.com>
-Organization: BitWizard B.V.
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 12:21:05PM +0100, Dave Martin wrote:
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 89ade21..1902071 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -1307,6 +1307,13 @@ static bool pl011_tx_chars(struct uart_amba_port *uap, bool from_irq);
->  /* Start TX with programmed I/O only (no DMA) */
->  static void pl011_start_tx_pio(struct uart_amba_port *uap)
->  {
-> +	/*
-> +	 * Avoid FIFO overfills if the TX IRQ is active:
-> +	 * pl011_int() will comsume chars waiting in the xmit queue anyway.
-> +	 */
-> +	if (uap->im & UART011_TXIM)
-> +		return;
-> +
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-I'm no expert on PL011, have no knowledge of the current bug, but have
-programmed serial drivers in the past.
+commit 58cdbc6d2263beb36954408522762bbe73169306 upstream.
 
-This looks "dangerous" to me.
+On SEC1, hash provides wrong result when performing hashing in several
+steps with input data SG list has more than one element. This was
+detected with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
 
-The normal situation is that you push the first few characters into
-the FIFO with PIO and then the interrupt will trigger once the FIFO
-empties and then you can refil the FIFO until the buffer empties.
+[   44.185947] alg: hash: md5-talitos test failed (wrong result) on test vector 6, cfg="random: may_sleep use_finup src_divs=[<reimport>25.88%@+8063, <flush>24.19%@+9588, 28.63%@+16333, <reimport>4.60%@+6756, 16.70%@+16281] dst_divs=[71.61%@alignmask+16361, 14.36%@+7756, 14.3%@+"
+[   44.325122] alg: hash: sha1-talitos test failed (wrong result) on test vector 3, cfg="random: inplace use_final src_divs=[<flush,nosimd>16.56%@+16378, <reimport>52.0%@+16329, 21.42%@alignmask+16380, 10.2%@alignmask+16380] iv_offset=39"
+[   44.493500] alg: hash: sha224-talitos test failed (wrong result) on test vector 4, cfg="random: use_final nosimd src_divs=[<reimport>52.27%@+7401, <reimport>17.34%@+16285, <flush>17.71%@+26, 12.68%@+10644] iv_offset=43"
+[   44.673262] alg: hash: sha256-talitos test failed (wrong result) on test vector 4, cfg="random: may_sleep use_finup src_divs=[<reimport>60.6%@+12790, 17.86%@+1329, <reimport>12.64%@alignmask+16300, 8.29%@+15, 0.40%@+13506, <reimport>0.51%@+16322, <reimport>0.24%@+16339] dst_divs"
 
-The danger in THIS fix is that you might have a race that causes those
-first few PIO-ed characters not to be put in the hardware resulting in
-the interrupt never triggering.... If you can software-trigger the
-interrupt just before the "return" here that'd be a way to fix things.
+This is due to two issues:
+- We have an overlap between the buffer used for copying the input
+data (SEC1 doesn't do scatter/gather) and the chained descriptor.
+- Data copy is wrong when the previous hash left less than one
+blocksize of data to hash, implying a complement of the previous
+block with a few bytes from the new request.
 
-I'm ok with a reaction like "I've thought about this, it's not a
-problem, now shut up".
+Fix it by:
+- Moving the second descriptor after the buffer, as moving the buffer
+after the descriptor would make it more complex for other cipher
+operations (AEAD, ABLKCIPHER)
+- Skip the bytes taken from the new request to complete the previous
+one by moving the SG list forward.
 
-	Roger. 
+Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash on SEC1")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- 
-** R.E.Wolff@BitWizard.nl ** https://www.BitWizard.nl/ ** +31-15-2049110 **
-**    Delftechpark 11 2628 XJ  Delft, The Netherlands.  KVK: 27239233    **
-The plan was simple, like my brother-in-law Phil. But unlike
-Phil, this plan just might work.
+---
+ drivers/crypto/talitos.c |   69 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 41 insertions(+), 28 deletions(-)
+
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -334,6 +334,21 @@ int talitos_submit(struct device *dev, i
+ }
+ EXPORT_SYMBOL(talitos_submit);
+ 
++static __be32 get_request_hdr(struct talitos_request *request, bool is_sec1)
++{
++	struct talitos_edesc *edesc;
++
++	if (!is_sec1)
++		return request->desc->hdr;
++
++	if (!request->desc->next_desc)
++		return request->desc->hdr1;
++
++	edesc = container_of(request->desc, struct talitos_edesc, desc);
++
++	return ((struct talitos_desc *)(edesc->buf + edesc->dma_len))->hdr1;
++}
++
+ /*
+  * process what was done, notify callback of error if not
+  */
+@@ -355,12 +370,7 @@ static void flush_channel(struct device
+ 
+ 		/* descriptors with their done bits set don't get the error */
+ 		rmb();
+-		if (!is_sec1)
+-			hdr = request->desc->hdr;
+-		else if (request->desc->next_desc)
+-			hdr = (request->desc + 1)->hdr1;
+-		else
+-			hdr = request->desc->hdr1;
++		hdr = get_request_hdr(request, is_sec1);
+ 
+ 		if ((hdr & DESC_HDR_DONE) == DESC_HDR_DONE)
+ 			status = 0;
+@@ -490,8 +500,14 @@ static u32 current_desc_hdr(struct devic
+ 		}
+ 	}
+ 
+-	if (priv->chan[ch].fifo[iter].desc->next_desc == cur_desc)
+-		return (priv->chan[ch].fifo[iter].desc + 1)->hdr;
++	if (priv->chan[ch].fifo[iter].desc->next_desc == cur_desc) {
++		struct talitos_edesc *edesc;
++
++		edesc = container_of(priv->chan[ch].fifo[iter].desc,
++				     struct talitos_edesc, desc);
++		return ((struct talitos_desc *)
++			(edesc->buf + edesc->dma_len))->hdr;
++	}
+ 
+ 	return priv->chan[ch].fifo[iter].desc->hdr;
+ }
+@@ -1431,15 +1447,11 @@ static struct talitos_edesc *talitos_ede
+ 	edesc->dst_nents = dst_nents;
+ 	edesc->iv_dma = iv_dma;
+ 	edesc->dma_len = dma_len;
+-	if (dma_len) {
+-		void *addr = &edesc->link_tbl[0];
+-
+-		if (is_sec1 && !dst)
+-			addr += sizeof(struct talitos_desc);
+-		edesc->dma_link_tbl = dma_map_single(dev, addr,
++	if (dma_len)
++		edesc->dma_link_tbl = dma_map_single(dev, &edesc->link_tbl[0],
+ 						     edesc->dma_len,
+ 						     DMA_BIDIRECTIONAL);
+-	}
++
+ 	return edesc;
+ }
+ 
+@@ -1706,14 +1718,16 @@ static void common_nonsnoop_hash_unmap(s
+ 	struct talitos_private *priv = dev_get_drvdata(dev);
+ 	bool is_sec1 = has_ftr_sec1(priv);
+ 	struct talitos_desc *desc = &edesc->desc;
+-	struct talitos_desc *desc2 = desc + 1;
++	struct talitos_desc *desc2 = (struct talitos_desc *)
++				     (edesc->buf + edesc->dma_len);
+ 
+ 	unmap_single_talitos_ptr(dev, &edesc->desc.ptr[5], DMA_FROM_DEVICE);
+ 	if (desc->next_desc &&
+ 	    desc->ptr[5].ptr != desc2->ptr[5].ptr)
+ 		unmap_single_talitos_ptr(dev, &desc2->ptr[5], DMA_FROM_DEVICE);
+ 
+-	talitos_sg_unmap(dev, edesc, req_ctx->psrc, NULL, 0, 0);
++	if (req_ctx->psrc)
++		talitos_sg_unmap(dev, edesc, req_ctx->psrc, NULL, 0, 0);
+ 
+ 	/* When using hashctx-in, must unmap it. */
+ 	if (from_talitos_ptr_len(&edesc->desc.ptr[1], is_sec1))
+@@ -1780,7 +1794,6 @@ static void talitos_handle_buggy_hash(st
+ 
+ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
+ 				struct ahash_request *areq, unsigned int length,
+-				unsigned int offset,
+ 				void (*callback) (struct device *dev,
+ 						  struct talitos_desc *desc,
+ 						  void *context, int error))
+@@ -1819,9 +1832,7 @@ static int common_nonsnoop_hash(struct t
+ 
+ 	sg_count = edesc->src_nents ?: 1;
+ 	if (is_sec1 && sg_count > 1)
+-		sg_pcopy_to_buffer(req_ctx->psrc, sg_count,
+-				   edesc->buf + sizeof(struct talitos_desc),
+-				   length, req_ctx->nbuf);
++		sg_copy_to_buffer(req_ctx->psrc, sg_count, edesc->buf, length);
+ 	else if (length)
+ 		sg_count = dma_map_sg(dev, req_ctx->psrc, sg_count,
+ 				      DMA_TO_DEVICE);
+@@ -1834,7 +1845,7 @@ static int common_nonsnoop_hash(struct t
+ 				       DMA_TO_DEVICE);
+ 	} else {
+ 		sg_count = talitos_sg_map(dev, req_ctx->psrc, length, edesc,
+-					  &desc->ptr[3], sg_count, offset, 0);
++					  &desc->ptr[3], sg_count, 0, 0);
+ 		if (sg_count > 1)
+ 			sync_needed = true;
+ 	}
+@@ -1858,7 +1869,8 @@ static int common_nonsnoop_hash(struct t
+ 		talitos_handle_buggy_hash(ctx, edesc, &desc->ptr[3]);
+ 
+ 	if (is_sec1 && req_ctx->nbuf && length) {
+-		struct talitos_desc *desc2 = desc + 1;
++		struct talitos_desc *desc2 = (struct talitos_desc *)
++					     (edesc->buf + edesc->dma_len);
+ 		dma_addr_t next_desc;
+ 
+ 		memset(desc2, 0, sizeof(*desc2));
+@@ -1879,7 +1891,7 @@ static int common_nonsnoop_hash(struct t
+ 						      DMA_TO_DEVICE);
+ 		copy_talitos_ptr(&desc2->ptr[2], &desc->ptr[2], is_sec1);
+ 		sg_count = talitos_sg_map(dev, req_ctx->psrc, length, edesc,
+-					  &desc2->ptr[3], sg_count, offset, 0);
++					  &desc2->ptr[3], sg_count, 0, 0);
+ 		if (sg_count > 1)
+ 			sync_needed = true;
+ 		copy_talitos_ptr(&desc2->ptr[5], &desc->ptr[5], is_sec1);
+@@ -1990,7 +2002,6 @@ static int ahash_process_req(struct ahas
+ 	struct device *dev = ctx->dev;
+ 	struct talitos_private *priv = dev_get_drvdata(dev);
+ 	bool is_sec1 = has_ftr_sec1(priv);
+-	int offset = 0;
+ 	u8 *ctx_buf = req_ctx->buf[req_ctx->buf_idx];
+ 
+ 	if (!req_ctx->last && (nbytes + req_ctx->nbuf <= blocksize)) {
+@@ -2030,6 +2041,8 @@ static int ahash_process_req(struct ahas
+ 			sg_chain(req_ctx->bufsl, 2, areq->src);
+ 		req_ctx->psrc = req_ctx->bufsl;
+ 	} else if (is_sec1 && req_ctx->nbuf && req_ctx->nbuf < blocksize) {
++		int offset;
++
+ 		if (nbytes_to_hash > blocksize)
+ 			offset = blocksize - req_ctx->nbuf;
+ 		else
+@@ -2042,7 +2055,8 @@ static int ahash_process_req(struct ahas
+ 		sg_copy_to_buffer(areq->src, nents,
+ 				  ctx_buf + req_ctx->nbuf, offset);
+ 		req_ctx->nbuf += offset;
+-		req_ctx->psrc = areq->src;
++		req_ctx->psrc = scatterwalk_ffwd(req_ctx->bufsl, areq->src,
++						 offset);
+ 	} else
+ 		req_ctx->psrc = areq->src;
+ 
+@@ -2082,8 +2096,7 @@ static int ahash_process_req(struct ahas
+ 	if (ctx->keylen && (req_ctx->first || req_ctx->last))
+ 		edesc->desc.hdr |= DESC_HDR_MODE0_MDEU_HMAC;
+ 
+-	return common_nonsnoop_hash(edesc, areq, nbytes_to_hash, offset,
+-				    ahash_done);
++	return common_nonsnoop_hash(edesc, areq, nbytes_to_hash, ahash_done);
+ }
+ 
+ static int ahash_update(struct ahash_request *areq)
+
+
