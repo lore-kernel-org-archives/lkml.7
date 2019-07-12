@@ -2,105 +2,89 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F270DC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38230C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8005216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0038921019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7jnMH0i"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="A+b4O8Qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfGLIa3 (ORCPT
+        id S1726491AbfGLIbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:30:29 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46382 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLIa2 (ORCPT
+        Fri, 12 Jul 2019 04:31:36 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:43113 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLIbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:30:28 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so4406454plz.13;
-        Fri, 12 Jul 2019 01:30:28 -0700 (PDT)
+        Fri, 12 Jul 2019 04:31:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
-        b=M7jnMH0iq8DIlf3ir9bUBr+Gj4b9C5Xj+a403n7ozIuuZ2YLNS3x41r+BsGQFn5Qiz
-         AjEXAVK2HBrYR7xead9VFlc7h/Y4pxRQzEoxthv1vxYfljsH8Maya30ITkuNu03fGUjB
-         neyVbH7VV2HVtSqGmeITYA2vFWgDcYdnyHo53gqzMC1aXu+kGunl7y9qmRfjbETOrdPJ
-         7r+U2YZbj1KiA0y8QUxUOa1cWXQDdrbWZ/MTJeFm+mzTGFgsY34GmmomkiD8HMxrrbaQ
-         wotuRprTq8XJ5v8EdLUIIKnks8zl82vfqhmqtngn7Ma/eN4+oY5iBwvBucff5UyImo2Y
-         sFTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
-        b=f0rJwLTlizLDYckpOO8PMw6cWgI3xH3xfAFkZkOJA6LTUCnERXklhKT8dpAZ5OzVuT
-         4rBmQYSaAK6E5J99YT6LeNQocoje6Rhxif6V55CT0NNshPLNvCiRFileKfNXn9rQEb8M
-         yyoSlO1LjmyElzfJdBf6mwWNv2NacB/AFxTxDKPv0YG2tYoLiwSWhKQemts8ZYhwDcvz
-         HnBoNaiFngerqSOp7b70Za7m/NR8qd7VJLykWC06bxnfUmn6xPBTg0Q3nCLtmHE7EXkz
-         Hihg5ZekUJKkbPaXAnLLo/t/WjHIdNv0iADuQlgN2KkYy6iXXnX1XlELK/sX8G18BkGE
-         BfQw==
-X-Gm-Message-State: APjAAAUKCi3N0rY78yxfQeE0LWCGKET3jW+OgG9dDEuT1TcMr0FyNDtF
-        83LKsbAJwqYcp4KG1YJLMq7iK1HrGIJ1CA==
-X-Google-Smtp-Source: APXvYqzEBkl/k9B0z+4k5z2fn64BG9zSVycFVEu4SIePEwbqH4gluu59cr3wuMSGoHa2itevd6aLPw==
-X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr9922593pls.307.1562920227968;
-        Fri, 12 Jul 2019 01:30:27 -0700 (PDT)
-Received: from maya190711 ([52.250.118.122])
-        by smtp.gmail.com with ESMTPSA id i9sm6538419pjj.2.2019.07.12.01.30.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 01:30:27 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 08:30:27 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/5] Input: hv: Remove dependencies on PAGE_SIZE for ring
- buffer
-Message-ID: <5af419d636506d9d87ab7d2650fa800ead91a29a.1562916939.git.m.maya.nakamura@gmail.com>
-References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1562916939.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1562920295; x=1594456295;
+  h=from:to:cc:subject:date:message-id;
+  bh=7RsXD6HULg7KmuR9jfshSZipD+W/ZyOPI6VaKM9JmnQ=;
+  b=A+b4O8QnNtiOwJmk+KeadD8NlbZMJ8q3LLfjwXanea+KTBM/gV+iaMZE
+   XM73yqONfRHp+hyTKOVhD7WKL139h+UzoNlJLXx4JGansJ+NyEvsBj348
+   5f9u7OVrpGYGacZQK0ZuYBrF1/56Es+V6i7f/yB6TKvUtNQniT+0KpSHL
+   0=;
+X-IronPort-AV: E=Sophos;i="5.62,481,1554768000"; 
+   d="scan'208";a="810816106"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Jul 2019 08:31:32 +0000
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id EA0F5A22CC;
+        Fri, 12 Jul 2019 08:31:30 +0000 (UTC)
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x6C8VRgS018720;
+        Fri, 12 Jul 2019 10:31:27 +0200
+Received: (from karahmed@localhost)
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id x6C8VQCV018713;
+        Fri, 12 Jul 2019 10:31:26 +0200
+From:   KarimAllah Ahmed <karahmed@amazon.de>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [PATCH] fdt: Properly handle "no-map" field in the memory region
+Date:   Fri, 12 Jul 2019 10:31:24 +0200
+Message-Id: <1562920284-18638-1-git-send-email-karahmed@amazon.de>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the ring buffer size as a constant expression because it should
-not depend on the guest page size.
+Mark the memory region with NOMAP flag instead of completely removing it
+from the memory blocks. That makes the FDT handling consistent with the EFI
+memory map handling.
 
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
 ---
- drivers/input/serio/hyperv-keyboard.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-index 8e457e50f837..88ae7c2ac3c8 100644
---- a/drivers/input/serio/hyperv-keyboard.c
-+++ b/drivers/input/serio/hyperv-keyboard.c
-@@ -75,8 +75,8 @@ struct synth_kbd_keystroke {
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index de893c9..77982ae 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1175,7 +1175,7 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 					phys_addr_t size, bool nomap)
+ {
+ 	if (nomap)
+-		return memblock_remove(base, size);
++		return memblock_mark_nomap(base, size);
+ 	return memblock_reserve(base, size);
+ }
  
- #define HK_MAXIMUM_MESSAGE_SIZE 256
- 
--#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
--#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
-+#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
-+#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
- 
- #define XTKBD_EMUL0     0xe0
- #define XTKBD_EMUL1     0xe1
 -- 
-2.17.1
+2.7.4
 
