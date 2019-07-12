@@ -2,72 +2,87 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D727AC742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA5AC742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADF321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549FD2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfGLKGy (ORCPT
+        id S1726284AbfGLKJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:06:54 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:43770 "EHLO deadmen.hmeau.com"
+        Fri, 12 Jul 2019 06:09:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15575 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfGLKGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:06:53 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hlsRw-0005RC-6Z; Fri, 12 Jul 2019 18:06:44 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hlsRo-0007zt-RH; Fri, 12 Jul 2019 18:06:36 +0800
-Date:   Fri, 12 Jul 2019 18:06:36 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
- padata jobs
-Message-ID: <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+        id S1726002AbfGLKJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:09:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 03:09:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
+   d="scan'208";a="160352559"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.48])
+  by orsmga008.jf.intel.com with ESMTP; 12 Jul 2019 03:09:26 -0700
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc] mei: me: add mule creek canyon (EHL) device ids
+Date:   Fri, 12 Jul 2019 12:58:14 +0300
+Message-Id: <20190712095814.20746-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
-Organization: Core
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
->
-> CPU0                                 CPU1
-> 
-> padata_reorder                       padata_do_serial
->  LOAD reorder_objects  // 0
->                                       INC reorder_objects  // 1
->                                       padata_reorder
->                                         TRYLOCK pd->lock   // failed
->  UNLOCK pd->lock
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-I think this can't happen because CPU1 won't call padata_reorder
-at all as it's the wrong CPU so it gets pushed back onto a work
-queue which will go back to CPU0.
+Add Mule Creek Canyon (PCH) MEI device ids for Elkhart Lake (EHL) Platform.
 
-Steffen, could you please take a look at this as there clearly
-is a problem here?
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+ drivers/misc/mei/hw-me-regs.h | 3 +++
+ drivers/misc/mei/pci-me.c     | 3 +++
+ 2 files changed, 6 insertions(+)
 
-Thanks,
+diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
+index d74b182e19f3..6c0173772162 100644
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -81,6 +81,9 @@
+ 
+ #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
+ 
++#define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
++#define MEI_DEV_ID_MCC_4      0x4B75  /* Mule Creek Canyon 4 (EHL) */
++
+ /*
+  * MEI HW Section
+  */
+diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+index 7a2b3545a7f9..57cb68f5cc64 100644
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -98,6 +98,9 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
+ 
++	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH12_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
++
+ 	/* required last entry */
+ 	{0, }
+ };
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.20.1
+
