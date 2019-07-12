@@ -2,104 +2,91 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387D8C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE0C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C30A20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EF921537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:55:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pAshXTbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfGLIy4 (ORCPT
+        id S1726106AbfGLIzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:54:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:39351 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfGLIyz (ORCPT
+        Fri, 12 Jul 2019 04:55:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60688 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfGLIzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:54:55 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MC0HF-1hcGYX1ygP-00CUbG; Fri, 12 Jul 2019 10:54:40 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: pcengines-apu2 needs gpiolib
-Date:   Fri, 12 Jul 2019 10:54:16 +0200
-Message-Id: <20190712085437.4007720-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 12 Jul 2019 04:55:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x8WbIHFyv0ABBFcrHAzlMJIMfoT3LVqQH9+jbFhqNOk=; b=pAshXTbk8185R9diOLyIbCIL9
+        JbNJ9pCeEAgagt55CojO1I8wE+7O9I6TanWMhj4EFNHc2jKM4eDy1W8LUxF4Dmiz4ddGYycbQPTPL
+        RK4c5ge932bvIH+gvxt3NKbodqAv12cCai89jnXSZunX5oilhHFcESRKq+U79IvM1ELtchT6jLiFj
+        mH3EAONPGzd4ePD5Fl378KNIdbb9aFAhofWHhaYk1f6BBt6CF/vKd5Uo1Em+JLCsWIe5g8xga3Som
+        qBkDPQacDtIhtiG11UrHgxrM/RLtrgUNMjcjUJ6VCEZnK+W3VX8UCRtwSNdNcepB/z8ISQm3tejnp
+        GDv6AIdqg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlrL9-0003mf-9v; Fri, 12 Jul 2019 08:55:39 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5CBD920120CB1; Fri, 12 Jul 2019 10:55:36 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 10:55:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+Message-ID: <20190712085536.GP3402@hirez.programming.kicks-ass.net>
+References: <20190710172123.GC801@sol.localdomain>
+ <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
+ <20190710180242.GA193819@gmail.com>
+ <a19779d0-0192-8dc0-d51b-e6938a455f31@acm.org>
+ <47a9287d-1f02-95d5-a5cf-55f0c0d38378@gmail.com>
+ <cdfeb3f8-8dc5-aa60-2782-7b3c5110edf5@acm.org>
+ <ee3bac8d-d061-7d07-5990-59871e7e2a4b@gmail.com>
+ <9219c421-0868-f97f-2d84-df48aed9f8a8@acm.org>
+ <20190710220943.GM3419@hirez.programming.kicks-ass.net>
+ <e10e95c7-b832-5560-e3ca-3ce584bc0ca3@acm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:q5tPZJu9QNhMvB+Wjc3nD4+lt6P94lxXdaRle25TJJYOM/GHoiD
- /Ck9YlzlpO5LarKonCtXtY6s32D3RHStZ/uUlKcxN5hl6/5Q8d/8zFb2B4tCpX3rh/3EC7F
- prAVYFM+3zsSaFDP4Yf0HX1G1fSaPq787L7KWXquFwxEpl0DIvcpTwdL62bd+OPqmI3BF3W
- V5C2Cui+oFBnuSwh3lXeg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UryBGBMeQx4=:kSGxr+DizaqVDm43tZ3n4N
- 1/ubNIVL20pMkt/p5VJw0mi1kSmHkbWNqF1KNp/+CdZ7CtN9NyLpnwAkyl/ZqodCHm4de/IpB
- r1uA5TZZazzo0Pr4dqco8Mn7EJW/C7joDbzjB/RklUZpiIWmSt4GutOOagb028hift7Js602J
- WZZ6G694HH44qLQQ6ba5fb7ofpQ3bY6u/sWC35PoSCDLM/fmrhFaVBpyd8wRpeef1TZkdVPtH
- E+MBT+ergUp39Q+6HEhf6V4XWfcJifcVk+yWyW8sc2oK8kBf2aIV68i+jxERDjDwKSb9BYNpe
- m7z+XmVRrzbDDj7NSqvqIoUqfv1Hzykf5/kNuYE0o/04VkPZBxPILkc1TZm1gAK5AXduhxddb
- j+D5R5hNmharF2JSQrAEi9jmgDSHY6haYX5ghczeXbOsQCi+6dgX2qa9+o3c3acqQ+6ToWO+E
- 8njWP05diZlWuu2RNw83lTew3NQBysGjkG7n+UqTiXuKQmcFJ9Wvdavfu5F/DdyzGmH9uWcJK
- JnRBLrUm/2Gpu1SGTZgGmp611f5rNQjtp+f3TF1ipq8QCbC6vUrGQiKv0Rz9GUaL3E+FkPnfq
- i9ONNp8WCM7kelzX/rIB6z8t1KnK7kqXaHULkK6CHgxUNQOG2O5Y6f8GMScvupRh44c9dVgBW
- wiWTHD4luwvayUctO4hxX3SjbTupBAeGozktuTdq11NQTCD91ixWsd+GG5Xi9P06pV7smJJee
- 3PnvsgeYyL3rORargUuokfIjbkCnQp/hOtDA3w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e10e95c7-b832-5560-e3ca-3ce584bc0ca3@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I ran into another build issue in randconfig testing for this driver,
-when CONFIG_GPIOLIB is not set:
+On Thu, Jul 11, 2019 at 11:53:12AM -0700, Bart Van Assche wrote:
+> On 7/10/19 3:09 PM, Peter Zijlstra wrote:
+> > One thing I mentioned when Thomas did the unwinder API changes was
+> > trying to move lockdep over to something like stackdepot.
+> > 
+> > We can't directly use stackdepot as is, because it uses locks and memory
+> > allocation, but we could maybe add a lower level API to it and use that
+> > under the graph_lock() on static storage or something.
+> > 
+> > Otherwise we'll have to (re)implement something like it.
+> > 
+> > I've not looked at it in detail.
+> 
+> Hi Peter,
+> 
+> Is something like the untested patch below perhaps what you had in mind?
 
-WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
-  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+Most excellent, yes! Now I suppose the $64000 question is if it actually
+reduces the amount of storage we use for stack traces..
 
-WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
-  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
-  Selected by [y]:
-  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-
-Make the 'select' statements conditional on that so we don't have to
-introduce another 'select'.
-
-Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
-Fixes: a422bf11bdb4 ("platform/x86: fix PCENGINES_APU2 Kconfig warning")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/platform/x86/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e869a5c760b6..cf48b9068843 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1324,8 +1324,8 @@ config PCENGINES_APU2
- 	tristate "PC Engines APUv2/3 front button and LEDs driver"
- 	depends on INPUT && INPUT_KEYBOARD
- 	depends on LEDS_CLASS
--	select GPIO_AMD_FCH
--	select KEYBOARD_GPIO_POLLED
-+	select GPIO_AMD_FCH if GPIOLIB
-+	select KEYBOARD_GPIO_POLLED if GPIOLIB
- 	select LEDS_GPIO
- 	help
- 	  This driver provides support for the front button and LEDs on
--- 
-2.20.0
-
+Seems to boot just fine.. :-)
