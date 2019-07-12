@@ -7,59 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010D6C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12784C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE73121019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA5C216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934742;
-	bh=dqGDFDIi2rDPmFMdQfVLnotYxhySOqw8XaoV8MfvQW0=;
+	s=default; t=1562934745;
+	bh=lkindddp7am+EJxQW8maw9xn2dB1EDCqkcHxRx8pMvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mfKO7sl74dLK85sw8vUaYAyPtyGwBzKqeqCjIQWr+o/uqNBtzWCp4UDfUp98iF89H
-	 GX4u3InS/pgt0f/CnqGjb+GZaz6Qo6LZixIQsTgwJSfZa0k4MFsVoZnzsGcKXmkchG
-	 Ru7qu1z0udCZnri7ethaneyF8UM9QPcp6yIUjT98=
+	b=knlNlU3eF4SczH1OLputiiiwtK2H0HHK3ZvzyU55DzpOz9teMLZartel6KK3L4CBj
+	 mu6KbFSUhJEI4n1gONkXZ7QihTLzMrnZ+bi5fi45YFg5Eoc+g3HVEuX8fNg9zr8WM4
+	 T4vDwnKT/TPGtnoliR8+7l3ycrYe68GesYEwNZdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfGLMcV (ORCPT
+        id S1729462AbfGLMcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50100 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbfGLMcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:32:19 -0400
+        id S1727685AbfGLMcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:32:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D42D21721;
-        Fri, 12 Jul 2019 12:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1FE2216C8;
+        Fri, 12 Jul 2019 12:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934738;
-        bh=dqGDFDIi2rDPmFMdQfVLnotYxhySOqw8XaoV8MfvQW0=;
+        s=default; t=1562934736;
+        bh=lkindddp7am+EJxQW8maw9xn2dB1EDCqkcHxRx8pMvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ioiq6VlD+LyXA18llH1tE1Gj8kIF4zwwWbMTKxxdNLs+ZNW5ccZMsvoskwjAn8oVN
-         yyeSwyQ3cIBOuOhBzFLmPMgbHTqYv+ZtZznQfe2mdyUFMePLGFx0oRKvRO4aGc34g3
-         M/qcabHlZB3DW1NyVj1TfiOkuSyBrImlX69cniyU=
+        b=AdYZkVqjrbtzrQQXYYsBljGDeJZ0UbifAGCwNveVHKKjoWUKoxvwDbc5CX1J6leCt
+         EBWC2XIEmkzteh6H4A2RVQpRXDit/iqb1jAKO9AFYJ/To0KwOoVDJPVN48r94NfBWd
+         IJFXVPMOs4gwAurCr14zZU/kAKTXzsp9+PtgD5yY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.2 16/61] perf pmu: Fix uncore PMU alias list for ARM64
-Date:   Fri, 12 Jul 2019 14:19:29 +0200
-Message-Id: <20190712121621.508627544@linuxfoundation.org>
+Subject: [PATCH 5.2 15/61] perf intel-pt: Fix itrace defaults for perf script intel-pt documentation
+Date:   Fri, 12 Jul 2019 14:19:28 +0200
+Message-Id: <20190712121621.455643067@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -72,94 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 599ee18f0740d7661b8711249096db94c09bc508 upstream.
+commit a2d8a1585e35444789c1c8cf7e2e51fb15589880 upstream.
 
-In commit 292c34c10249 ("perf pmu: Fix core PMU alias list for X86
-platform"), we fixed the issue of CPU events being aliased to uncore
-events.
+Fix intel-pt documentation to reflect the change of itrace defaults for
+perf script.
 
-Fix this same issue for ARM64, since the said commit left the (broken)
-behaviour untouched for ARM64.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxarm@huawei.com
 Cc: stable@vger.kernel.org
-Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
-Link: http://lkml.kernel.org/r/1560521283-73314-2-git-send-email-john.garry@huawei.com
+Fixes: 4eb068157121 ("perf script: Make itrace script default to all calls")
+Link: http://lkml.kernel.org/r/20190520113728.14389-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/pmu.c |   28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ tools/perf/Documentation/intel-pt.txt |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -709,9 +709,7 @@ static void pmu_add_cpu_aliases(struct l
- {
- 	int i;
- 	struct pmu_events_map *map;
--	struct pmu_event *pe;
- 	const char *name = pmu->name;
--	const char *pname;
+--- a/tools/perf/Documentation/intel-pt.txt
++++ b/tools/perf/Documentation/intel-pt.txt
+@@ -88,16 +88,16 @@ smaller.
  
- 	map = perf_pmu__find_map(pmu);
- 	if (!map)
-@@ -722,28 +720,26 @@ static void pmu_add_cpu_aliases(struct l
- 	 */
- 	i = 0;
- 	while (1) {
-+		const char *cpu_name = is_arm_pmu_core(name) ? name : "cpu";
-+		struct pmu_event *pe = &map->table[i++];
-+		const char *pname = pe->pmu ? pe->pmu : cpu_name;
+ To represent software control flow, "branches" samples are produced.  By default
+ a branch sample is synthesized for every single branch.  To get an idea what
+-data is available you can use the 'perf script' tool with no parameters, which
+-will list all the samples.
++data is available you can use the 'perf script' tool with all itrace sampling
++options, which will list all the samples.
  
--		pe = &map->table[i++];
- 		if (!pe->name) {
- 			if (pe->metric_group || pe->metric_name)
- 				continue;
- 			break;
- 		}
+ 	perf record -e intel_pt//u ls
+-	perf script
++	perf script --itrace=ibxwpe
  
--		if (!is_arm_pmu_core(name)) {
--			pname = pe->pmu ? pe->pmu : "cpu";
-+		/*
-+		 * uncore alias may be from different PMU
-+		 * with common prefix
-+		 */
-+		if (pmu_is_uncore(name) &&
-+		    !strncmp(pname, name, strlen(pname)))
-+			goto new_alias;
+ An interesting field that is not printed by default is 'flags' which can be
+ displayed as follows:
  
--			/*
--			 * uncore alias may be from different PMU
--			 * with common prefix
--			 */
--			if (pmu_is_uncore(name) &&
--			    !strncmp(pname, name, strlen(pname)))
--				goto new_alias;
--
--			if (strcmp(pname, name))
--				continue;
--		}
-+		if (strcmp(pname, name))
-+			continue;
+-	perf script -Fcomm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,flags
++	perf script --itrace=ibxwpe -F+flags
  
- new_alias:
- 		/* need type casts to override 'const' */
+ The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
+ system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
+@@ -713,7 +713,7 @@ Having no option is the same as
+ 
+ which, in turn, is the same as
+ 
+-	--itrace=ibxwpe
++	--itrace=cepwx
+ 
+ The letters are:
+ 
 
 
