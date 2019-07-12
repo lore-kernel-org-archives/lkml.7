@@ -2,117 +2,88 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F55CC742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2B3C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31DAB2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:23:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqHfbu8C"
+	by mail.kernel.org (Postfix) with ESMTP id 56CED2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfGLJW6 (ORCPT
+        id S1726541AbfGLJX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:22:58 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33718 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfGLJW6 (ORCPT
+        Fri, 12 Jul 2019 05:23:27 -0400
+Received: from hera.aquilenet.fr ([185.233.100.1]:46694 "EHLO
+        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfGLJX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:22:58 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m4so4285285pgk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 02:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AZZrwf4czTogrdqW6lDH+L8NIxtCdpEI/ZTpyTZPAl8=;
-        b=jqHfbu8C6u4dFuNovGi+alcC3DMpZH24fLYxcjuhKVP6D1Fcj9W4dbcymMB3mHofmJ
-         kCwjcOsRjkh8wwB7dlWvmjJS7z1KvIXJpMKT1oM/jZNMqvaPx8wmpE2+KuhK+MmUPcgj
-         dlqg+gY/tz62KRfNxinm5v7C7qmlEdSbdLjUMBgnbII/NYdOnNYUCASi80M67FhictSu
-         8jIzIHxjVNiiL6Y0/+1CRYRjZIrDybMTE/zkVYJK6eaA1OqJ/2t2L+q6pWcIHSHuyxu2
-         rw0XZX06fnWob0Vw4ahoRkI2M/5Kgd6LtYRfzf0T+mTNR3UnAmRcSlHFbpLlVco20jS0
-         qd/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AZZrwf4czTogrdqW6lDH+L8NIxtCdpEI/ZTpyTZPAl8=;
-        b=Q80MR/x2LD3SK//hVSLPS59a79FFB0IedQYCxjAFayKeQeYHyw5yoOrnztk+rUjW4Y
-         nBZtRv3nGfW8texL5MJLF/r8ls3SFEcf6V66fxRRFmil6cLaQivZbCwBfZ0R2s/Jh8g/
-         qjFYH+hJANxUAk9XKIxrmZQ8UeFryTB/9EyrcQkBkaoimRD3kWfvSLqpHFFwVKhGTZi0
-         0Intw1nSh/L/wVQu71QFU6GpkJSwu4JfFo7zDu+feEz8WDSyrscCEOyR4QlEpXpDonM2
-         KUTY0af4axYwnUbswMl5lR25zu3rjBkVrY0/WCXZ9xHzR6nxrifDO0i80/fqt3Jo1RxL
-         /S1A==
-X-Gm-Message-State: APjAAAXgGjmPjWQVz/DNfu7XTHLc/KyRakS/bsCV9I2TCcU2JJlyt/2/
-        asWfhPlietayE786FZtS3c5+qcWu
-X-Google-Smtp-Source: APXvYqwfnCEetk/X2bvBjMvhqM89ZSPWQEvisISF4Pnw5g0nmH+fux/FUGkVGTBfiliP7kVOQaVh4Q==
-X-Received: by 2002:a63:6f8f:: with SMTP id k137mr9609727pgc.90.1562923377902;
-        Fri, 12 Jul 2019 02:22:57 -0700 (PDT)
-Received: from localhost ([110.70.51.104])
-        by smtp.gmail.com with ESMTPSA id b26sm10938548pfo.129.2019.07.12.02.22.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 02:22:56 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 18:22:53 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        Vincent Whitchurch <rabinv@axis.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
-Message-ID: <20190712092253.GA7922@jagdpanzerIV>
-References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
- <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
+        Fri, 12 Jul 2019 05:23:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 80491918D;
+        Fri, 12 Jul 2019 11:23:25 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RzIOWer-JWEV; Fri, 12 Jul 2019 11:23:24 +0200 (CEST)
+Received: from function (212.99.1.109.rev.sfr.net [109.1.99.212])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id B71A7918A;
+        Fri, 12 Jul 2019 11:23:24 +0200 (CEST)
+Received: from samy by function with local (Exim 4.92)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1hlrlv-0007Ty-DQ; Fri, 12 Jul 2019 11:23:19 +0200
+Date:   Fri, 12 Jul 2019 11:23:19 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     speakup@linux-speakup.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Okash Khawaja <okash.khawaja@gmail.com>,
+        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
+        Simon Dickson <simonhdickson@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Christopher Brannon <chris@the-brannons.com>
+Subject: [HELP REQUESTED from the community] Was: Staging status of speakup
+Message-ID: <20190712092319.wmke4i7zqzr26tly@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        speakup@linux-speakup.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Okash Khawaja <okash.khawaja@gmail.com>, devel@driverdev.osuosl.org,
+        Kirk Reiser <kirk@reisers.ca>,
+        Simon Dickson <simonhdickson@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Christopher Brannon <chris@the-brannons.com>
+References: <20190315130035.6a8f16e9@narunkot>
+ <20190316031831.GA2499@kroah.com>
+ <20190706200857.22918345@narunkot>
+ <20190707065710.GA5560@kroah.com>
+ <20190712083819.GA8862@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190712083819.GA8862@kroah.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (07/12/19 11:12), Petr Mladek wrote:
-> > For example, with the following two final prints:
-> > 
-> > [    6.427502] AAAAAAAAAAAAA
-> > [    6.427769] BBBBBBBB12345
-> > 
-> > A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-> > patch:
-> > 
-> >  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
-> >  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
-> >  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > 
-> > After this patch:
-> > 
-> >  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
-> >  00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
-> >  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > 
-> > Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> 
-> I think that I need vacation. I have got lost in all the checks
-> and got it wrongly in the morning.
-> 
-> This patch fixes the calculation of messages that might fit
-> into the buffer. It makes sure that the function that writes
-> the messages will really allow to write them.
-> 
-> It seems to be the correct fix.
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+Hello,
 
-Looks correct to me as well.
+To readers of the linux-speakup: could you help on this so we can get
+Speakup in mainline?  Neither Okash or I completely know what user
+consequences the files in /sys/accessibility/speakup/ have, so could
+people give brief explanations for each file (something like 3-6 lines
+of explanation)?
 
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+The i18n/ files have been already documented in section 14.1 of the
+spkguide.txt, so we do not need help for them.
 
-	-ss
+Thanks!
+Samuel
+
+Greg KH, le ven. 12 juil. 2019 10:38:19 +0200, a ecrit:
+> Can you make up a patch to create a
+> drivers/staging/speakup/sysfs-speakup file with the needed information?
+> That way it will be much easier to determine exactly what these sysfs
+> files do and my review can be easier, and perhaps not needed at all :)
