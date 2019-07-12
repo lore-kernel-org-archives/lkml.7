@@ -2,131 +2,139 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6199DC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD10C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4110C214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D49D20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:54:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHe1Evh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfGLCqx (ORCPT
+        id S1729213AbfGLCyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 22:46:53 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:39436 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbfGLCqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 22:46:52 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 02851B7E4E108A4CE88C;
-        Fri, 12 Jul 2019 10:46:50 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x6C2kBEq014401;
-        Fri, 12 Jul 2019 10:46:11 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019071210464634-2302204 ;
-          Fri, 12 Jul 2019 10:46:46 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     rjw@rjwysocki.net
-Cc:     viresh.kumar@linaro.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v6] cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_init()
-Date:   Fri, 12 Jul 2019 10:44:21 +0800
-Message-Id: <1562899461-24045-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-12 10:46:46,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-12 10:46:17,
-        Serialize complete at 2019-07-12 10:46:17
-X-MAIL: mse-fl1.zte.com.cn x6C2kBEq014401
+        Thu, 11 Jul 2019 22:54:47 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37510 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729051AbfGLCyq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 22:54:46 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so4035821plr.4;
+        Thu, 11 Jul 2019 19:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=64j1duN8Q6Xd7kRV0ySvGXg0eZ22bwDTxpKrN9mAXSY=;
+        b=AHe1Evh3+uUAWpOBVIXpYTAk/unMWsGn2D3MEAxP2tnBXX6PS4AqyxdsOm1CxGackm
+         WsYGT4J7LyN+CgbltLSBBsW6rfAVbVlxjUt3xVay86baYmxOwtQ105Bs4I8hlyVn9t+g
+         TIlPy9ajseDKUaNuAhdFg9zZ753Vz2K2/8BgzRCQcG0YfFNe6NjWMIbvh3SP1/yAyxVD
+         dtQIlV6lleTl9NWXT2GryG/2bPhXPEKx+i4xCrB0NrXdM5w6Cn71i9bhmu6SII91upEz
+         /YNvQ2aGc8yA+RooKxBhZtzNzzSAoGzzAwArDTJbRNkG3V6eTp6+/xdV2PEDMp7/A/Wi
+         gQEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=64j1duN8Q6Xd7kRV0ySvGXg0eZ22bwDTxpKrN9mAXSY=;
+        b=AucxCgqlGhMOCt3iaFdChUDmi073Vw3DrGGuuv1qvrk4y0Vop8y4nFF09QqPsRaQaZ
+         p81D/naSu3FOF6wSOVgEyYl11riFPD/ZUl0BXQM49V1gvsE+a5+iSQ8cvuIbMeqEtqU7
+         q8c3duHK+ocFtfsvGrNscsbwLcwPMxFOt2jRchWYRrmfzKy64r1BTLkbqAIwt6zY28QC
+         tSLlT1yfTEyXILwIKoZYmhERA4JmbSK0cJQcEGI4P58z4BLR0m3Vq7/6wDuOy0Lie3Qy
+         qBC6AvXthiJrnxu0uVY8d0Vr6OCelS5Sl/QnJZfud6QRFeoGCxMhtY21iOJBeBaY1Asu
+         SVKg==
+X-Gm-Message-State: APjAAAURNOl2qUCH42aGerzJGnxgp+4auTpWtFCTe9VJZvKEViPdoaDD
+        oFCObuDDkYAKKc3Cg/Ookos6COKGrw8=
+X-Google-Smtp-Source: APXvYqxi8dhpdclONkq7oo/LRkDbRkz37L73HpER/lr6g5PmDj65DBKzvhdvjrat/RYt6oo+85/N7A==
+X-Received: by 2002:a17:902:b608:: with SMTP id b8mr8579220pls.303.1562900085859;
+        Thu, 11 Jul 2019 19:54:45 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id n26sm7786630pfa.83.2019.07.11.19.54.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 11 Jul 2019 19:54:45 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 1/2] KVM: LAPIC: Add pv ipi tracepoint
+Date:   Fri, 12 Jul 2019 10:54:39 +0800
+Message-Id: <1562900080-20798-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpu variable is still being used in the of_get_property() call
-after the of_node_put() call, which may result in use-after-free.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Add pv ipi tracepoint.
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
-v6: keep the blank line and fix warning: label 'out_unmap_sdcpwr' defined but not used.
-v5: put together the code to get, use, and release cpu device_node.
-v4: restore the blank line.
-v3: fix a leaked reference.
-v2: clean up the code according to the advice of viresh.
+ arch/x86/kvm/lapic.c |  2 ++
+ arch/x86/kvm/trace.h | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
- drivers/cpufreq/pasemi-cpufreq.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 6b1e4ab..7d557f9 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -131,10 +131,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	int err = -ENODEV;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 3201d91..72c2a1e 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -568,6 +568,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
+ 	int cluster_size = op_64_bit ? 64 : 32;
+ 	int count = 0;
  
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
-+	if (!cpu)
-+		goto out;
- 
-+	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
- 	of_node_put(cpu);
--	if (!cpu)
-+	if (!max_freqp) {
-+		err = -EINVAL;
- 		goto out;
-+	}
++	trace_kvm_pv_send_ipi(irq.vector, min, ipi_bitmap_low, ipi_bitmap_high);
 +
-+	/* we need the freq in kHz */
-+	max_freq = *max_freqp / 1000;
- 
- 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
- 	if (!dn)
-@@ -171,16 +179,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	}
- 
- 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
--
--	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
--	if (!max_freqp) {
--		err = -EINVAL;
--		goto out_unmap_sdcpwr;
--	}
--
--	/* we need the freq in kHz */
--	max_freq = *max_freqp / 1000;
--
- 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
- 	pr_debug("initializing frequency table\n");
- 
-@@ -196,7 +194,11 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	policy->cur = pas_freqs[cur_astate].frequency;
- 	ppc_proc_freq = policy->cur * 1000ul;
- 
--	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
-+	err = cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
-+	if (err)
-+		goto out_unmap_sdcpwr;
+ 	irq.vector = icr & APIC_VECTOR_MASK;
+ 	irq.delivery_mode = icr & APIC_MODE_MASK;
+ 	irq.level = (icr & APIC_INT_ASSERT) != 0;
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index b5c831e..ce6ee34 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1462,6 +1462,31 @@ TRACE_EVENT(kvm_hv_send_ipi_ex,
+ 		  __entry->vector, __entry->format,
+ 		  __entry->valid_bank_mask)
+ );
 +
-+	return 0;
++/*
++ * Tracepoints for kvm_pv_send_ipi.
++ */
++TRACE_EVENT(kvm_pv_send_ipi,
++	TP_PROTO(u32 vector, u32 min, unsigned long ipi_bitmap_low, unsigned long ipi_bitmap_high),
++	TP_ARGS(vector, min, ipi_bitmap_low, ipi_bitmap_high),
++
++	TP_STRUCT__entry(
++		__field(u32, vector)
++		__field(u32, min)
++		__field(unsigned long, ipi_bitmap_low)
++		__field(unsigned long, ipi_bitmap_high)
++	),
++
++	TP_fast_assign(
++		__entry->vector = vector;
++		__entry->min = min;
++		__entry->ipi_bitmap_low = ipi_bitmap_low;
++		__entry->ipi_bitmap_high = ipi_bitmap_high;
++	),
++
++	TP_printk("vector %d min 0x%x ipi_bitmap_low 0x%lx ipi_bitmap_high 0x%lx",
++		  __entry->vector, __entry->min, __entry->ipi_bitmap_low, __entry->ipi_bitmap_high)
++);
+ #endif /* _TRACE_KVM_H */
  
- out_unmap_sdcpwr:
- 	iounmap(sdcpwr_mapbase);
+ #undef TRACE_INCLUDE_PATH
 -- 
-2.9.5
+2.7.4
 
