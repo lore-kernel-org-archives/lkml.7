@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2DBC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782FBC742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A6E2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BF82171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934729;
-	bh=Ehpl1vJOgxVSnX4bYZNqCygosiLCPAzhduos+K0Cvcs=;
+	s=default; t=1562934730;
+	bh=ETWyk8gxgCMJRP97idqhRkoOc9kGssNuCg0Y1fLZSAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVPfK6m3qosYs1k06Wa8vqqZZEHiyECh9pMjIxlj8f6MYEquaWy6nOyQBDz5GqYCT
-	 Zh6ooPUViNQ9gOiSYAimbT7vbx20tQiAVqlJSVw3DY4MO4V+aMjTzIs83RmAEdkt7j
-	 CHREUmIO8xW9OrcPeWAooTywW33aaR3ijJzDZ6UM=
+	b=MxnRjCUvyGNH4tYvuJztq5xNDKVDRQ+U2N3dzG/0nwihVOjBJNUynJjuPsSXYLtmb
+	 yhA3aS0yZIAQrgK/YkyhA4zW4tazFnx7iIUljWtU5bzusY3p1HW+qwBlYc8PNgnvAK
+	 y9CleqOaS2cU00KnkW5kDvqm5+x63tqknoBQ8x2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfGLMcH (ORCPT
+        id S1729446AbfGLMcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:32:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49504 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbfGLMcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:32:05 -0400
+        id S1729432AbfGLMcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:32:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2E22166E;
-        Fri, 12 Jul 2019 12:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8133C216FD;
+        Fri, 12 Jul 2019 12:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934724;
-        bh=Ehpl1vJOgxVSnX4bYZNqCygosiLCPAzhduos+K0Cvcs=;
+        s=default; t=1562934727;
+        bh=ETWyk8gxgCMJRP97idqhRkoOc9kGssNuCg0Y1fLZSAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXrz1fTnt1KaEQMh+Q8Hn0NmD0OiJj+r/sOdGvV92qMZ1BMMj7G4zUuYvhtvnqr+3
-         kS8VqdwUiqJ2XmdhvCC2o2w3vc4rj1AvQntNLW/jCyKnHvToIHNf6e/9x+8tJvqFW4
-         6Td1m8OCjn2PT7kZgKXXKEFuaH38ZYF7ysjmE3Jg=
+        b=ebAru49LHM0TI8wWtKWpYXZG0bIlKpdiKe7brzXQjXxl6863hsU0ACgroBw5fQW8q
+         aPK1dW+HazAUX2iqjjKrl/Khk0Edl8w+wtPZZxQKPgeGnn3Nt3hNu7XtXwxvNqIW3b
+         BduHsM5WmfFx5jVoq4Ynhx34AP6MCPNFFSUbfa2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@unimore.it>,
+        Douglas Anderson <dianders@chromium.org>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 11/61] block: fix .bi_size overflow
-Date:   Fri, 12 Jul 2019 14:19:24 +0200
-Message-Id: <20190712121621.228131224@linuxfoundation.org>
+Subject: [PATCH 5.2 12/61] block, bfq: NULL out the bic when its no longer valid
+Date:   Fri, 12 Jul 2019 14:19:25 +0200
+Message-Id: <20190712121621.281677748@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -63,140 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 79d08f89bb1b5c2c1ff90d9bb95497ab9e8aa7e0 upstream.
+commit dbc3117d4ca9e17819ac73501e914b8422686750 upstream.
 
-'bio->bi_iter.bi_size' is 'unsigned int', which at most hold 4G - 1
-bytes.
+In reboot tests on several devices we were seeing a "use after free"
+when slub_debug or KASAN was enabled.  The kernel complained about:
 
-Before 07173c3ec276 ("block: enable multipage bvecs"), one bio can
-include very limited pages, and usually at most 256, so the fs bio
-size won't be bigger than 1M bytes most of times.
+  Unable to handle kernel paging request at virtual address 6b6b6c2b
 
-Since we support multi-page bvec, in theory one fs bio really can
-be added > 1M pages, especially in case of hugepage, or big writeback
-with too many dirty pages. Then there is chance in which .bi_size
-is overflowed.
+...which is a classic sign of use after free under slub_debug.  The
+stack crawl in kgdb looked like:
 
-Fixes this issue by using bio_full() to check if the added segment may
-overflow .bi_size.
+ 0  test_bit (addr=<optimized out>, nr=<optimized out>)
+ 1  bfq_bfqq_busy (bfqq=<optimized out>)
+ 2  bfq_select_queue (bfqd=<optimized out>)
+ 3  __bfq_dispatch_request (hctx=<optimized out>)
+ 4  bfq_dispatch_request (hctx=<optimized out>)
+ 5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
+ 6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
+ 7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
+ 8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
+ 9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
+ 10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
 
-Cc: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
-Cc: kernel test robot <rong.a.chen@intel.com>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: linux-xfs@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
+Digging in kgdb, it could be found that, though bfqq looked fine,
+bfqq->bic had been freed.
+
+Through further digging, I postulated that perhaps it is illegal to
+access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
+because the "bic" can be freed at some point in time after this call
+is made.  I confirmed that there certainly were cases where the exact
+crashing code path would access the "bic" after bfq_exit_icq() had
+been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
+saw that the bic was 0x7 at the time of the crash.
+
+To understand a bit more about why this crash was fairly uncommon (I
+saw it only once in a few hundred reboots), you can see that much of
+the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
+access the ->bic anymore.  The only case it doesn't is if
+bfq_put_queue() sees a reference still held.
+
+However, even in the case when bfqq isn't freed, the crash is still
+rare.  Why?  I tracked what happened to the "bic" after the exit
+routine.  It doesn't get freed right away.  Rather,
+put_io_context_active() eventually called put_io_context() which
+queued up freeing on a workqueue.  The freeing then actually happened
+later than that through call_rcu().  Despite all these delays, some
+extra debugging showed that all the hoops could be jumped through in
+time and the memory could be freed causing the original crash.  Phew!
+
+To make a long story short, assuming it truly is illegal to access an
+icq after the "exit_icq" callback is finished, this patch is needed.
+
 Cc: stable@vger.kernel.org
-Fixes: 07173c3ec276 ("block: enable multipage bvecs")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Paolo Valente <paolo.valente@unimore.it>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bio.c         |   10 +++++-----
- fs/iomap.c          |    2 +-
- fs/xfs/xfs_aops.c   |    2 +-
- include/linux/bio.h |   18 ++++++++++++++++--
- 4 files changed, 23 insertions(+), 9 deletions(-)
+ block/bfq-iosched.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -731,7 +731,7 @@ static int __bio_add_pc_page(struct requ
- 		}
- 	}
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -4584,6 +4584,7 @@ static void bfq_exit_icq_bfqq(struct bfq
+ 		unsigned long flags;
  
--	if (bio_full(bio))
-+	if (bio_full(bio, len))
- 		return 0;
- 
- 	if (bio->bi_phys_segments >= queue_max_segments(q))
-@@ -807,7 +807,7 @@ void __bio_add_page(struct bio *bio, str
- 	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt];
- 
- 	WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED));
--	WARN_ON_ONCE(bio_full(bio));
-+	WARN_ON_ONCE(bio_full(bio, len));
- 
- 	bv->bv_page = page;
- 	bv->bv_offset = off;
-@@ -834,7 +834,7 @@ int bio_add_page(struct bio *bio, struct
- 	bool same_page = false;
- 
- 	if (!__bio_try_merge_page(bio, page, len, offset, &same_page)) {
--		if (bio_full(bio))
-+		if (bio_full(bio, len))
- 			return 0;
- 		__bio_add_page(bio, page, len, offset);
- 	}
-@@ -922,7 +922,7 @@ static int __bio_iov_iter_get_pages(stru
- 			if (same_page)
- 				put_page(page);
- 		} else {
--			if (WARN_ON_ONCE(bio_full(bio)))
-+			if (WARN_ON_ONCE(bio_full(bio, len)))
-                                 return -EINVAL;
- 			__bio_add_page(bio, page, len, offset);
- 		}
-@@ -966,7 +966,7 @@ int bio_iov_iter_get_pages(struct bio *b
- 			ret = __bio_iov_bvec_add_pages(bio, iter);
- 		else
- 			ret = __bio_iov_iter_get_pages(bio, iter);
--	} while (!ret && iov_iter_count(iter) && !bio_full(bio));
-+	} while (!ret && iov_iter_count(iter) && !bio_full(bio, 0));
- 
- 	if (iov_iter_bvec_no_ref(iter))
- 		bio_set_flag(bio, BIO_NO_PAGE_REF);
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -333,7 +333,7 @@ iomap_readpage_actor(struct inode *inode
- 	if (iop)
- 		atomic_inc(&iop->read_count);
- 
--	if (!ctx->bio || !is_contig || bio_full(ctx->bio)) {
-+	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
- 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
- 		int nr_vecs = (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -782,7 +782,7 @@ xfs_add_to_ioend(
- 		atomic_inc(&iop->write_count);
- 
- 	if (!merged) {
--		if (bio_full(wpc->ioend->io_bio))
-+		if (bio_full(wpc->ioend->io_bio, len))
- 			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
- 		bio_add_page(wpc->ioend->io_bio, page, len, poff);
- 	}
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -102,9 +102,23 @@ static inline void *bio_data(struct bio
- 	return NULL;
- }
- 
--static inline bool bio_full(struct bio *bio)
-+/**
-+ * bio_full - check if the bio is full
-+ * @bio:	bio to check
-+ * @len:	length of one segment to be added
-+ *
-+ * Return true if @bio is full and one segment with @len bytes can't be
-+ * added to the bio, otherwise return false
-+ */
-+static inline bool bio_full(struct bio *bio, unsigned len)
- {
--	return bio->bi_vcnt >= bio->bi_max_vecs;
-+	if (bio->bi_vcnt >= bio->bi_max_vecs)
-+		return true;
-+
-+	if (bio->bi_iter.bi_size > UINT_MAX - len)
-+		return true;
-+
-+	return false;
- }
- 
- static inline bool bio_next_segment(const struct bio *bio,
+ 		spin_lock_irqsave(&bfqd->lock, flags);
++		bfqq->bic = NULL;
+ 		bfq_exit_bfqq(bfqd, bfqq);
+ 		bic_set_bfqq(bic, NULL, is_sync);
+ 		spin_unlock_irqrestore(&bfqd->lock, flags);
 
 
