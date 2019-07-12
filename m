@@ -2,121 +2,113 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B3C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92585C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34BF2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656452084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="D+QCDTRF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0VkkckC2"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ct/FA1yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfGLA4Z (ORCPT
+        id S1729021AbfGLA5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:56:25 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:47649 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728102AbfGLA4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:56:24 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id E4909450;
-        Thu, 11 Jul 2019 20:56:20 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 11 Jul 2019 20:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=n5XgGSR9S3ycrfXAbbJwSWuvFtXox+Z
-        XDAlvGeNuQ/E=; b=D+QCDTRFT6VhyD9yXJX+mJoIcIOBkqobcOFP75bo0G7biFH
-        sr+C7fQM0mbSSguhjV47U7g2HCEErQxTriZGuvwM88keKehbJdsBLceKu48J2sfY
-        Q0XMikgRdtzMuo5qL+xAE/myWyRC4nxWrqM6KGc6HWS7PtHHLK2iPR7pn+Ywkxlm
-        9jPqcBjC7bOT95J54SM90ki4sl542N1QMfcCURrkX54xe6dWtBd2DPLBExw0UoJf
-        Q3IQxt8qTLWfz4xcvnfk8+CieO+MbrHKM0Vyk5GHDFLJEVjB7bIfj+sPNvpjQoYV
-        UuRUHACCSSL4wrT7Ty2m/ITxlHSxFyExmxTTEgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=n5XgGS
-        R9S3ycrfXAbbJwSWuvFtXox+ZXDAlvGeNuQ/E=; b=0VkkckC23DIWDoIbCWksLd
-        PAdXXctdxiNsnIlfNnItkIWnqdfK41EPp2IWEa6mVdQdedfIP4S3aTuH/OY8QmkI
-        CHhF2GCYIUaIlymNZfM+StYINhYfh92Rm31F4j3df8OINp0rXuq1o12MYJM7LdJM
-        FkE6jMM5rXQgbkmqmjUDKOZdtPttx+63nqVEpQWQSO3kr6Kle4ndy8CmvODnMz6f
-        IkXkLS8K6FUoNlnL09j6IabuZBJBL2EoD+ogbBkpgbcFD7XIFngUvSlqjOH3zy2q
-        76OFjAVlwb/GCooEyV21l2OQNwnX3C9fJ4Kt/6m3CXfuy6h+ZIpGBD8nkmqCY69A
-        ==
-X-ME-Sender: <xms:s9onXXqNoGvQnLC9z5kvUYwQZzLZS1pj2UFMBpZpwXCGdxDFQzMNmA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeelgdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:s9onXYNdBaN1A61qtAwiMjBIcmvWTUl5K2psGOZn2NaCntsnricA6Q>
-    <xmx:s9onXRoMLbG3o8vJUKM-1LkluxpSQzEjXBd0AllxsNQRdGy0fIEE5Q>
-    <xmx:s9onXbFmKdAWEdI9JXBuTZHpHH57je1z5nSoHnRSegHwO0M4jNX8iQ>
-    <xmx:tNonXcK5xcTSQja0JucwCL81a3aFNCfqo3nNUCj4_gZCjZFr5ZkXLg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 61999E0128; Thu, 11 Jul 2019 20:56:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <8ed970e9-7062-4905-9d8e-d5f28a0a4919@www.fastmail.com>
-In-Reply-To: <20190711142457.37028-1-yuehaibing@huawei.com>
-References: <20190711142457.37028-1-yuehaibing@huawei.com>
-Date:   Fri, 12 Jul 2019 10:26:26 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     YueHaibing <yuehaibing@huawei.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] pinctrl: aspeed: Make aspeed_pinmux_ips static
-Content-Type: text/plain
+        Thu, 11 Jul 2019 20:57:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:52719 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728102AbfGLA5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 20:57:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45lDyx4LqNz9sN4;
+        Fri, 12 Jul 2019 10:56:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562893018;
+        bh=R0WvOwdCeRAjTSEmmcT3H8ltBOmtPfkxqbiDyjI65vs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ct/FA1yqEk4bjjkqEpFGdNbmx/91Nq1gOZziVYRTtKjYZ5hll5L+rU0aSp05npZqm
+         rY2Lp5v3SLkaqR7hq4fwHHqpgQI8KLoImYhcHyFwwhPhGSToj+EXoutNwYPCqPnj4E
+         veD3Rkd6djjFisH8vUgk9T9wlD7pqelN7g+wNs0Hw2jH83XzngObQXSNKd4rXoyI3v
+         wcnGbi1IuwtVIlHB15VEafzgmlYj77lIHI6cOuUI/WVmz0PbDK8jvAGSa6z6sB7mNx
+         rAF3IDGdRm5vaf99DSFJQ15GqSTYtjwXR4fAApSKvHNlv1DYtx46UdE1K9WU7ENRY+
+         gF+lFCh8q9rWA==
+Date:   Fri, 12 Jul 2019 10:56:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Price <anprice@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: Re: linux-next: manual merge of the gfs2 tree with the vfs tree
+Message-ID: <20190712105656.04e8ed23@canb.auug.org.au>
+In-Reply-To: <20190708134842.1e947318@canb.auug.org.au>
+References: <20190708134842.1e947318@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/V0LdOv6ZAuGfS1Z=/9qTNQQ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/V0LdOv6ZAuGfS1Z=/9qTNQQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On Thu, 11 Jul 2019, at 23:55, YueHaibing wrote:
-> Fix sparse warning:
-> 
-> drivers/pinctrl/aspeed/pinmux-aspeed.c:8:12: warning:
->  symbol 'aspeed_pinmux_ips' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-> ---
->  drivers/pinctrl/aspeed/pinmux-aspeed.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.c 
-> b/drivers/pinctrl/aspeed/pinmux-aspeed.c
-> index 5b0fe17..839c01b 100644
-> --- a/drivers/pinctrl/aspeed/pinmux-aspeed.c
-> +++ b/drivers/pinctrl/aspeed/pinmux-aspeed.c
-> @@ -5,7 +5,7 @@
->  
->  #include "pinmux-aspeed.h"
->  
-> -const char *const aspeed_pinmux_ips[] = {
-> +static const char *const aspeed_pinmux_ips[] = {
->  	[ASPEED_IP_SCU] = "SCU",
->  	[ASPEED_IP_GFX] = "GFX",
->  	[ASPEED_IP_LPC] = "LPC",
-> -- 
-> 2.7.4
-> 
-> 
+On Mon, 8 Jul 2019 13:48:42 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
 >
+> Today's linux-next merge of the gfs2 tree got a conflict in:
+>=20
+>   fs/gfs2/super.c
+>=20
+> between commit:
+>=20
+>   000c8e591016 ("gfs2: Convert gfs2 to fs_context")
+>=20
+> from the vfs tree and commit:
+>=20
+>   5b3a9f348bc5 ("gfs2: kthread and remount improvements")
+>=20
+> from the gfs2 tree.
+>=20
+> I fixed it up (I just used the vfs tree version since it removed some of
+> the code modified by the latter) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+
+This is now a conflict between the vfs tree and Linus' tree.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/V0LdOv6ZAuGfS1Z=/9qTNQQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0n2tgACgkQAVBC80lX
+0GyUAQgAo4MANi5ZfGplRz1n0TQtSxDFroBlpVUFa5+SSoRFFaTeOy9aUEII+fXw
+SkkQ6Ux6pPL+CD7Yo+9kW2qt2D0ZjQlEXJ/CEhTKeb4e9ihbuoutphyyDF8W3ARD
+qvpyw7MAvAhnyo6E0DkI7LP7W2C/Q4teYZe0xrzFMzWm2M1cVd71IjbOOwpn+ZVf
+Wonjvrx3+OEKyHwK6fsH6+2viQBtRFgvhowrcPxCI7jjiZGtTolA6pcIE4tdaVO3
+QPnRoa4EqtMfs3p+j9eU2hx1aMmU2LqU4afrsPFc/MYbWb7VCNWf/TjWXQiDayjD
+JDL+JngwHeJGgcMv4mEPJeEctv2j7w==
+=Txrm
+-----END PGP SIGNATURE-----
+
+--Sig_/V0LdOv6ZAuGfS1Z=/9qTNQQ--
