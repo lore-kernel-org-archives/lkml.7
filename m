@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7773C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01060C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14252084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6932208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934810;
-	bh=t5280lZFvII97lEhHEy/0FVCtgfXs0UW8Pa4O96y/hI=;
+	s=default; t=1562934815;
+	bh=UUpzPaozM63OqOusbQvhU+g8n3GVKU1w9rUL1iNlurA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zL/1ePTSJ9gXkIW/W/M59o5uk/io9NuLmH+exCwtXO1NMwGx8lGZMOIcl6OIbTamt
-	 pAuXEEkDdY4oCmIMAUAaV+gvu1qCrXrH/O5AqIxaQ5RsWpLxDm5NsJb7DMRaOMptEg
-	 aUSIlIAFL57eTv7XAztTgDprHT80LsxKeOwbvE4o=
+	b=DYJyVXBYF+M3bx1Dk1smMCMk47loS+6xxRLlrCGKeAEr6nf8v9naJxqNqFfmnox+O
+	 Hd2rEEA4ZTq6a9liH533Qu0ycBeTapRrCvZGN0ZsyEk+VyqVspuXMeyV4+P86GFvbo
+	 2g5tyP22+ZZFz8wf0/GjNrMzwbHYhpuoEKCEg5CQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfGLMd3 (ORCPT
+        id S1729623AbfGLMde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:33:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729208AbfGLMdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:25 -0400
+        id S1727294AbfGLMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:33:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 458DF216C4;
-        Fri, 12 Jul 2019 12:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC9C6208E4;
+        Fri, 12 Jul 2019 12:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934804;
-        bh=t5280lZFvII97lEhHEy/0FVCtgfXs0UW8Pa4O96y/hI=;
+        s=default; t=1562934811;
+        bh=UUpzPaozM63OqOusbQvhU+g8n3GVKU1w9rUL1iNlurA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/XjRu3BhRa+eGL0FBQaUUekgzX61sWlJVHhLGKoANuamW78mL9jpkbZwp7K6ZjpA
-         fqTWDV/9ejFDKZofR9CpGxcAOHcH6yJoX0e2eQW8vmRFuTjTVRomglsYSO/Jq6mhT/
-         EE5mXEwHdIh2YUjQlak0TyRHBqHXjGJ9l6JbZLC8=
+        b=f5+aBPJyb+pnIn8pbr2voQyEnpVuWGCH+BgV2hsCt5FUC6c/1lMGqYG6wjEE524BO
+         MG6l3zMOHWQpPcaPMR04S3fB1quVFGg+BY0UpXrJDWpNYWgSilFCTj+ExMbcQdx0yR
+         2GTqSUFEuOgqdNK7BL8OP1QIFwGN7V8yFFJ7juLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.2 35/61] staging: comedi: dt282x: fix a null pointer deref on interrupt
-Date:   Fri, 12 Jul 2019 14:19:48 +0200
-Message-Id: <20190712121622.493069211@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.2 37/61] staging: bcm2835-camera: Restore return behavior of ctrl_set_bitrate()
+Date:   Fri, 12 Jul 2019 14:19:50 +0200
+Message-Id: <20190712121622.621605772@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -58,50 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
+commit f816db1dc17b99b059325f41ed5a78f85d15368c upstream.
 
-The interrupt handler `dt282x_interrupt()` causes a null pointer
-dereference for those supported boards that have no analog output
-support.  For these boards, `dev->write_subdev` will be `NULL` and
-therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
-case, the following call near the end of the interrupt handler results
-in a null pointer dereference:
+The commit 52c4dfcead49 ("Staging: vc04_services: Cleanup in
+ctrl_set_bitrate()") changed the return behavior of ctrl_set_bitrate().
+We cannot do this because of a bug in the firmware, which breaks probing
+of bcm2835-camera:
 
-	comedi_handle_events(dev, s_ao);
+    bcm2835-v4l2: mmal_init: failed to set all camera controls: -3
+    Cleanup: Destroy video encoder
+    Cleanup: Destroy image encoder
+    Cleanup: Destroy video render
+    Cleanup: Destroy camera
+    bcm2835-v4l2: bcm2835_mmal_probe: mmal init failed: -3
+    bcm2835-camera: probe of bcm2835-camera failed with error -3
 
-Fix it by only calling the above function if `s_ao` is valid.
+So restore the old behavior, add an explaining comment and a debug message
+to verify that the bug has been fixed in firmware.
 
-(There are other uses of `s_ao` by the interrupt handler that may or may
-not be reached depending on values of hardware registers.  Trust that
-they are reliable for now.)
-
-Note:
-commit 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
-propagates an earlier error from
-commit f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()").
-
-Fixes: 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
-Cc: <stable@vger.kernel.org> # v3.19+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 52c4dfcead49 ("Staging: vc04_services: Cleanup in ctrl_set_bitrate()")
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt282x.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/vc04_services/bcm2835-camera/controls.c |   19 +++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt282x.c
-+++ b/drivers/staging/comedi/drivers/dt282x.c
-@@ -557,7 +557,8 @@ static irqreturn_t dt282x_interrupt(int
- 	}
- #endif
- 	comedi_handle_events(dev, s);
--	comedi_handle_events(dev, s_ao);
-+	if (s_ao)
-+		comedi_handle_events(dev, s_ao);
+--- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+@@ -603,15 +603,28 @@ static int ctrl_set_bitrate(struct bm283
+ 			    struct v4l2_ctrl *ctrl,
+ 			    const struct bm2835_mmal_v4l2_ctrl *mmal_ctrl)
+ {
++	int ret;
+ 	struct vchiq_mmal_port *encoder_out;
  
- 	return IRQ_RETVAL(handled);
+ 	dev->capture.encode_bitrate = ctrl->val;
+ 
+ 	encoder_out = &dev->component[MMAL_COMPONENT_VIDEO_ENCODE]->output[0];
+ 
+-	return vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
+-					     mmal_ctrl->mmal_id, &ctrl->val,
+-					     sizeof(ctrl->val));
++	ret = vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
++					    mmal_ctrl->mmal_id, &ctrl->val,
++					    sizeof(ctrl->val));
++
++	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
++		 "%s: After: mmal_ctrl:%p ctrl id:0x%x ctrl val:%d ret %d(%d)\n",
++		 __func__, mmal_ctrl, ctrl->id, ctrl->val, ret,
++		 (ret == 0 ? 0 : -EINVAL));
++
++	/*
++	 * Older firmware versions (pre July 2019) have a bug in handling
++	 * MMAL_PARAMETER_VIDEO_BIT_RATE that result in the call
++	 * returning -MMAL_MSG_STATUS_EINVAL. So ignore errors from this call.
++	 */
++	return 0;
  }
+ 
+ static int ctrl_set_bitrate_mode(struct bm2835_mmal_dev *dev,
 
 
