@@ -2,100 +2,144 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56CDC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92240C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9A420665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB6E20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M2dP09VM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LRehi/Cw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfGLMvK (ORCPT
+        id S1727326AbfGLMvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:51:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54928 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfGLMvK (ORCPT
+        Fri, 12 Jul 2019 08:51:19 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38532 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfGLMvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:51:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rwpolTjZGqbTjwkLH0mAAIVI9rPZBe7E59f4u4dvndk=; b=M2dP09VMp056HkHzjt4KD8h0P
-        pj6x6MKN2KDyASTibms8pAubzJ1mr3Q41T5d9AbtwAdaZ7h5k8x3fIJL+eT7wXHVf4JC6fk9HXPkd
-        Dl+vY4CxPI7HGeG5FRxCOoZOf+vS0SugPI9EnN3u5EEH+KgIrWyeM9oITXrkmbUl2JrcbiL8X0hip
-        zWBcCskL2lMgRkYMZhT0e0cE6dgndhjznxtrzxudGf5lkhjjHKJGRS2R9TnhQ7woa9LpARKBL13k+
-        6O5AuHeVjb4+jADAERfPyUCDygpN1T1I9gL6OaxZnhW7VPjq1virgpae/SjTED2hovlyYB1GQPs3X
-        GHeANTbMQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlv0v-0000Mt-GX; Fri, 12 Jul 2019 12:51:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BC3D4209772EE; Fri, 12 Jul 2019 14:50:59 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 14:50:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-Message-ID: <20190712125059.GP3419@hirez.programming.kicks-ass.net>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
- <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
- <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+        Fri, 12 Jul 2019 08:51:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so4743546plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 05:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gFlgmydi1nQgjqczBTKm5/22cWDPzABXL1VL2o7TqMg=;
+        b=LRehi/CwV/zFgLZZ8FeGbYXGhXHPixhNEI1CAvU22L3YZZXmUrordq0fvMqsmXfo9g
+         c0XV+B8kmaCfjh2sXDbqolNl8tfdSU/gzAUKhKQU3SBGTUyufYai6LVx3tvVKTJfpNHm
+         Lmn35zGInAot53Sx/qvFWwMnvO7Opk9WC5mi8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gFlgmydi1nQgjqczBTKm5/22cWDPzABXL1VL2o7TqMg=;
+        b=dpbU0UCrmNc9EqC8X9HR/izQ+jOoz52Bdh714zhqfxXGwQ4waha+w8a39mIvNnAWn2
+         1aLXbEXaOmnfruph5sbLEAfurkQQu0DOsFZT3zPcjppJDfRW16SIth4PNXUELo8uxXbE
+         0PPpsGncs8s87iBMzfhfm/pB5h7OARx79yLL6uGBAiUu78mf3pUEQqsA1r2HTjTHT9mc
+         9gMxvVDxHO6+VR8Oe0HUNgsDtFclxsP6Vhd7fyn6ObXw2sfWPzsMpG46FiJm4ud/Nfd7
+         Tma0m4+APNiA37l9f61hxIgvrLJ3Ulhlnr6Lqry0GZK0m1nKJ+/VOWT0M67Ypsr0Z7tw
+         Sp8w==
+X-Gm-Message-State: APjAAAU3cK4GVKbMkIhlhMmtCT/bTIitqGgkmecWdz5CE7PgAr0Ol+pr
+        D1rVl+W/jv72ZHSje5KWqME=
+X-Google-Smtp-Source: APXvYqzz+LhsCnsDqeZHjTnmsAPR8biwBS4oCVNY2mhAus6k4miEE048HuYeqWQC3XXhO3VAnEBlZw==
+X-Received: by 2002:a17:902:7c05:: with SMTP id x5mr11376163pll.321.1562935878250;
+        Fri, 12 Jul 2019 05:51:18 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id t10sm8084829pjr.13.2019.07.12.05.51.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 05:51:17 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:51:16 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Byungchul Park <byungchul.park@lge.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190712125116.GB92297@google.com>
+References: <20190708130359.GA42888@google.com>
+ <20190709055815.GA19459@X58A-UD3R>
+ <20190709124102.GR26519@linux.ibm.com>
+ <20190710012025.GA20711@X58A-UD3R>
+ <20190711123052.GI26519@linux.ibm.com>
+ <20190711130849.GA212044@google.com>
+ <20190711150215.GK26519@linux.ibm.com>
+ <20190711164818.GA260447@google.com>
+ <20190711195839.GA163275@google.com>
+ <20190712063240.GD7702@X58A-UD3R>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+In-Reply-To: <20190712063240.GD7702@X58A-UD3R>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
+On Fri, Jul 12, 2019 at 03:32:40PM +0900, Byungchul Park wrote:
+> On Thu, Jul 11, 2019 at 03:58:39PM -0400, Joel Fernandes wrote:
+> > Hmm, speaking of grace period durations, it seems to me the maximum grace
+> > period ever is recorded in rcu_state.gp_max. However it is not read from
+> > anywhere.
+> > 
+> > Any idea why it was added but not used?
+> > 
+> > I am interested in dumping this value just for fun, and seeing what I get.
+> > 
+> > I wonder also it is useful to dump it in rcutorture/rcuperf to find any
+> > issues, or even expose it in sys/proc fs to see what worst case grace periods
+> > look like.
+> 
+> Hi,
+> 
+> 	commit ae91aa0adb14dc33114d566feca2f7cb7a96b8b7
+> 	rcu: Remove debugfs tracing
+> 
+> removed all debugfs tracing, gp_max also included.
+> 
+> And you sounds great. And even looks not that hard to add it like,
+> 
+> :)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index ad9dc86..86095ff 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -1658,8 +1658,10 @@ static void rcu_gp_cleanup(void)
+>  	raw_spin_lock_irq_rcu_node(rnp);
+>  	rcu_state.gp_end = jiffies;
+>  	gp_duration = rcu_state.gp_end - rcu_state.gp_start;
+> -	if (gp_duration > rcu_state.gp_max)
+> +	if (gp_duration > rcu_state.gp_max) {
+>  		rcu_state.gp_max = gp_duration;
+> +		trace_rcu_grace_period(something something);
+> +	}
 
-> I think that's precisely what makes ASI and PTI different and independent.
-> PTI is just about switching between userland and kernel page-tables, while
-> ASI is about switching page-table inside the kernel. You can have ASI without
-> having PTI. You can also use ASI for kernel threads so for code that won't
-> be triggered from userland and so which won't involve PTI.
+Yes, that makes sense. But I think it is much better off as a readable value
+from a virtual fs. The drawback of tracing for this sort of thing are:
+ - Tracing will only catch it if tracing is on
+ - Tracing data can be lost if too many events, then no one has a clue what
+   the max gp time is.
+ - The data is already available in rcu_state::gp_max so copying it into the
+   trace buffer seems a bit pointless IMHO
+ - It is a lot easier on ones eyes to process a single counter than process
+   heaps of traces.
 
-PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
-ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
+I think a minimal set of RCU counters exposed to /proc or /sys should not
+hurt and could do more good than not. The scheduler already does this for
+scheduler statistics. I have seen Peter complain a lot about new tracepoints
+but not much (or never) about new statistics.
 
-See how very similar they are?
+Tracing has its strengths but may not apply well here IMO. I think a counter
+like this could be useful for tuning of things like the jiffies_*_sched_qs,
+the stall timeouts and also any other RCU knobs. What do you think?
 
-Furthermore, to recover SMT for userspace (under MDS) we not only need
-core-scheduling but core-scheduling per address space. And ASI was
-specifically designed to help mitigate the trainwreck just described.
+- Joel
 
-By explicitly exposing (hopefully harmless) part of the kernel to MDS,
-we reduce the part that needs core-scheduling and thus reduce the rate
-the SMT siblngs need to sync up/schedule.
 
-But looking at it that way, it makes no sense to retain 3 address
-spaces, namely:
-
-  user / kernel exposed / kernel private.
-
-Specifically, it makes no sense to expose part of the kernel through MDS
-but not through Meltdow. Therefore we can merge the user and kernel
-exposed address spaces.
-
-And then we've fully replaced PTI.
-
-So no, they're not orthogonal.
