@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F274BC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0BCC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC24520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9660A20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934966;
-	bh=v1zlSdtSYkTVOHfwqqXwCinbA7/ajH/Qsb0rE7aKEtI=;
+	s=default; t=1562934971;
+	bh=xLLWYA5NAIUr7JRKRwe5NogndUShvfwkFmPHLncTvl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1zUaETumYhFziQWH6O7mcVpTd/7IcDj8CHvr3UkmCGOT64NG3PectV11OgClpdTV
-	 cif5G56khRzODvbsPOw8mSxP3bM9jndrxjiVigakiaZIGWZHKQSl8IDu4/TkUG7+nn
-	 YorxJeSNEVoiz2iLf4V3j7gjC6Y9ozLCVfAKtldw=
+	b=C8PC2SEPYf2ty++Ac2G4kY6Jwg2yTLtCcO+ctbrM2Z+yCnjNtmPaPleUfSsDxNY5u
+	 vZVx7K9HgzVSD5PeYuICi3lCkONMFJE/f7sVJTafdywzj8TT02VeqVlrL0hCjXlNZs
+	 r3TeBrJc9kHMweQxkyGfwsAR2riC+7jtimodGq2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfGLMgF (ORCPT
+        id S1727018AbfGLMgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:36:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52466 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:36:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbfGLMdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:22 -0400
+        id S1727722AbfGLMdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:33:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F632084B;
-        Fri, 12 Jul 2019 12:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E9E21019;
+        Fri, 12 Jul 2019 12:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934801;
-        bh=v1zlSdtSYkTVOHfwqqXwCinbA7/ajH/Qsb0rE7aKEtI=;
+        s=default; t=1562934792;
+        bh=xLLWYA5NAIUr7JRKRwe5NogndUShvfwkFmPHLncTvl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/6pw0vOZ7ztc/JBX6BRO15Af5CsLKPrBii0/6FvbK5soNrPgcbN/39kQlumf/cCt
-         bPzlwvAKWMd3/sM01+X61lyJV+fQIitK2IwJ1tP83INQSjHVDoYO2sWeaBwwlIt67V
-         9aTisL/AQFbYPhaPkxwwAxGoctaE46KYqs9gj7nU=
+        b=BJV4oWyhVj0I99ecYqVG+n+88YUOp2ENLQsoK7k3wpfsv/PjvZMgyBpHDgJPHMNQk
+         kc/xWfiF+bPNdPly2nmdTUnavfKKg4YQTdZ/1AOLYVcgPmx4Q09f2d6p/Po+5uteRr
+         EFhY6CJ0lGyX0JzGEAR2HY+1kT2Xs7wMKsiA/ZcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.2 34/61] p54: fix crash during initialization
-Date:   Fri, 12 Jul 2019 14:19:47 +0200
-Message-Id: <20190712121622.438830740@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 5.2 31/61] usb: renesas_usbhs: add a workaround for a race condition of workqueue
+Date:   Fri, 12 Jul 2019 14:19:44 +0200
+Message-Id: <20190712121622.275461655@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -59,71 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 1645ab931998b39aed5761f095956f0b10a6362f upstream.
+commit b2357839c56ab7d06bcd4e866ebc2d0e2b7997f3 upstream.
 
-This patch fixes a crash that got introduced when the
-mentioned patch replaced  the direct list_head access
-with skb_peek_tail(). When the device is starting up,
-there are  no entries in  the queue, so previously to
-"Use skb_peek_tail() instead..." the target_skb would
-end up as the  tail and head pointer which then could
-be used by __skb_queue_after to fill the empty queue.
+The old commit 6e4b74e4690d ("usb: renesas: fix scheduling in atomic
+context bug") fixed an atomic issue by using workqueue for the shdmac
+dmaengine driver. However, this has a potential race condition issue
+between the work pending and usbhsg_ep_free_request() in gadget mode.
+When usbhsg_ep_free_request() is called while pending the queue,
+since the work_struct will be freed and then the work handler is
+called, kernel panic happens on process_one_work().
 
-With skb_peek_tail() in its place will instead just
-return NULL which then causes a crash in the
-__skb_queue_after().
+To fix the issue, if we could call cancel_work_sync() at somewhere
+before the free request, it could be easy. However,
+the usbhsg_ep_free_request() is called on atomic (e.g. f_ncm driver
+calls free request via gether_disconnect()).
 
-| BUG: unable to handle kernel NULL pointer dereference at 000000
-| #PF error: [normal kernel read fault]
-| PGD 0 P4D 0
-| Oops: 0000 [#1] SMP PTI
-| CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: GO   5.1.0-rc7-wt+ #218
-| Hardware name: MSI MS-7816/Z87-G43 (MS-7816), BIOS V1.11 05/09/2015
-| Workqueue: events request_firmware_work_func
-| RIP: 0010:p54_tx_pending+0x10f/0x1b0 [p54common]
-| Code: 78 06 80 78 28 00 74 6d <48> 8b 07 49 89 7c 24 08 49 89 04 24 4
-| RSP: 0018:ffffa81c81927d90 EFLAGS: 00010086
-| RAX: ffff9bbaaf131048 RBX: 0000000000020670 RCX: 0000000000020264
-| RDX: ffff9bbaa976d660 RSI: 0000000000000202 RDI: 0000000000000000
-| RBP: ffff9bbaa976d620 R08: 00000000000006c0 R09: ffff9bbaa976d660
-| R10: 0000000000000000 R11: ffffe8480dbc5900 R12: ffff9bbb45e87700
-| R13: ffff9bbaa976d648 R14: ffff9bbaa976d674 R15: ffff9bbaaf131048
-| FS:  0000000000000000(0000) GS:ffff9bbb5ec00000(0000) knlGS:00000
-| CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-| CR2: 0000000000000000 CR3: 00000003695fc003 CR4: 00000000001606f0
-| Call Trace:
-|  p54_download_eeprom+0xbe/0x120 [p54common]
-|  p54_read_eeprom+0x7f/0xc0 [p54common]
-|  p54u_load_firmware_cb+0xe0/0x160 [p54usb]
-|  request_firmware_work_func+0x42/0x80
-|  process_one_work+0x1f5/0x3f0
-|  worker_thread+0x28/0x3c0
+For now, almost all users are having "USB-DMAC" and the DMAengine
+driver can be used on atomic. So, this patch adds a workaround for
+a race condition to call the DMAengine APIs without the workqueue.
 
-Cc: stable@vger.kernel.org
-Fixes: e3554197fc8f ("p54: Use skb_peek_tail() instead of direct head pointer accesses.")
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This means we still have TODO on shdmac environment (SH7724), but
+since it doesn't have SMP, the race condition might not happen.
+
+Fixes: ab330cf3888d ("usb: renesas_usbhs: add support for USB-DMAC")
+Cc: <stable@vger.kernel.org> # v4.1+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intersil/p54/txrx.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/renesas_usbhs/fifo.c |   34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
---- a/drivers/net/wireless/intersil/p54/txrx.c
-+++ b/drivers/net/wireless/intersil/p54/txrx.c
-@@ -139,7 +139,10 @@ static int p54_assign_address(struct p54
- 	    unlikely(GET_HW_QUEUE(skb) == P54_QUEUE_BEACON))
- 		priv->beacon_req_id = data->req_id;
- 
--	__skb_queue_after(&priv->tx_queue, target_skb, skb);
-+	if (target_skb)
-+		__skb_queue_after(&priv->tx_queue, target_skb, skb);
-+	else
-+		__skb_queue_head(&priv->tx_queue, skb);
- 	spin_unlock_irqrestore(&priv->tx_queue.lock, flags);
- 	return 0;
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -802,9 +802,8 @@ static int __usbhsf_dma_map_ctrl(struct
  }
+ 
+ static void usbhsf_dma_complete(void *arg);
+-static void xfer_work(struct work_struct *work)
++static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ {
+-	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+ 	struct usbhs_fifo *fifo;
+ 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
+@@ -812,12 +811,10 @@ static void xfer_work(struct work_struct
+ 	struct dma_chan *chan;
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	enum dma_transfer_direction dir;
+-	unsigned long flags;
+ 
+-	usbhs_lock(priv, flags);
+ 	fifo = usbhs_pipe_to_fifo(pipe);
+ 	if (!fifo)
+-		goto xfer_work_end;
++		return;
+ 
+ 	chan = usbhsf_dma_chan_get(fifo, pkt);
+ 	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+@@ -826,7 +823,7 @@ static void xfer_work(struct work_struct
+ 					pkt->trans, dir,
+ 					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc)
+-		goto xfer_work_end;
++		return;
+ 
+ 	desc->callback		= usbhsf_dma_complete;
+ 	desc->callback_param	= pipe;
+@@ -834,7 +831,7 @@ static void xfer_work(struct work_struct
+ 	pkt->cookie = dmaengine_submit(desc);
+ 	if (pkt->cookie < 0) {
+ 		dev_err(dev, "Failed to submit dma descriptor\n");
+-		goto xfer_work_end;
++		return;
+ 	}
+ 
+ 	dev_dbg(dev, "  %s %d (%d/ %d)\n",
+@@ -845,8 +842,17 @@ static void xfer_work(struct work_struct
+ 	dma_async_issue_pending(chan);
+ 	usbhsf_dma_start(pipe, fifo);
+ 	usbhs_pipe_enable(pipe);
++}
++
++static void xfer_work(struct work_struct *work)
++{
++	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
++	struct usbhs_pipe *pipe = pkt->pipe;
++	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
++	unsigned long flags;
+ 
+-xfer_work_end:
++	usbhs_lock(priv, flags);
++	usbhsf_dma_xfer_preparing(pkt);
+ 	usbhs_unlock(priv, flags);
+ }
+ 
+@@ -899,8 +905,13 @@ static int usbhsf_dma_prepare_push(struc
+ 	pkt->trans = len;
+ 
+ 	usbhsf_tx_irq_ctrl(pipe, 0);
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	/* FIXME: Workaound for usb dmac that driver can be used in atomic */
++	if (usbhs_get_dparam(priv, has_usb_dmac)) {
++		usbhsf_dma_xfer_preparing(pkt);
++	} else {
++		INIT_WORK(&pkt->work, xfer_work);
++		schedule_work(&pkt->work);
++	}
+ 
+ 	return 0;
+ 
+@@ -1006,8 +1017,7 @@ static int usbhsf_dma_prepare_pop_with_u
+ 
+ 	pkt->trans = pkt->length;
+ 
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	usbhsf_dma_xfer_preparing(pkt);
+ 
+ 	return 0;
+ 
 
 
