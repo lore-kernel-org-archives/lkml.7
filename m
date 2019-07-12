@@ -2,211 +2,108 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812E2C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A41C742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D17421019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C58F21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562894417;
+	bh=+sq2cZXnBxcRqUWRVVIP9zpWg9uQ8vXX5lA2Ew1UBSs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pMn7XfupOkR+67No7UZY4bs5iqzvDPND1s07Y1OLtpR7x4FTTjc5ChMTd/7PwmPTD
+	 cSfcFONzyPCqbO4hWrBneQj3VjTjUWy5Lr7kjaFz4M0B59obtvvBu4eizGZhFtSP37
+	 xESmrefpFgfPHu6K8BAGJ+axSgT3IDaakIHRJFtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfGLBTW (ORCPT
+        id S1729158AbfGLBUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:19:22 -0400
-Received: from smtpq5.tb.mail.iss.as9143.net ([212.54.42.168]:53982 "EHLO
-        smtpq5.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729061AbfGLBTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:19:22 -0400
-Received: from [212.54.42.117] (helo=lsmtp3.tb.mail.iss.as9143.net)
-        by smtpq5.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <carlo@alinoe.com>)
-        id 1hlkDW-000327-Lw; Fri, 12 Jul 2019 03:19:18 +0200
-Received: from 92-109-146-195.cable.dynamic.v4.ziggo.nl ([92.109.146.195] helo=mail9.alinoe.com)
-        by lsmtp3.tb.mail.iss.as9143.net with esmtp (Exim 4.90_1)
-        (envelope-from <carlo@alinoe.com>)
-        id 1hlkDW-00069n-Hq; Fri, 12 Jul 2019 03:19:18 +0200
-Received: from carlo by mail9.alinoe.com with local (Exim 4.86_2)
-        (envelope-from <carlo@alinoe.com>)
-        id 1hlkDV-0003FT-Ky; Fri, 12 Jul 2019 03:19:17 +0200
-Date:   Fri, 12 Jul 2019 03:19:17 +0200
-From:   Carlo Wood <carlo@alinoe.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     wangyun@linux.vnet.ibm.com, palewis@adobe.com,
+        Thu, 11 Jul 2019 21:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728973AbfGLBUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:20:08 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C84F21019;
+        Fri, 12 Jul 2019 01:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562894403;
+        bh=+sq2cZXnBxcRqUWRVVIP9zpWg9uQ8vXX5lA2Ew1UBSs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R4h7JwRVFMQ3Yv1uTjLPBWes1X2fsmN8WCOke8y+u57VyP4kCE/HgaVIv8HyASiyC
+         NEm8IhZwTbYwcfKq8NBs6uOyhPBQN+vGW+xi3G3IwAr+qEsU5oQq2Yp63+7Eh6L3+O
+         x4z1p7S+jBwRLuLyE7TMbYjf2HEZ7NkbtkJMY/UU=
+Date:   Thu, 11 Jul 2019 18:20:02 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "chenjianhong (A)" <chenjianhong2@huawei.com>
+Cc:     Michel Lespinasse <walken@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>, jbaron@redhat.com,
-        pholland@adobe.com, Davide Libenzi <davidel@xmailserver.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Neal Cardwell <ncardwell@google.com>, carlo@alinoe.com
-Subject: Re: Is a new EPOLLCLOSED a solution to the problem that
- EPOLL_CTL_DISABLE tried to solve?
-Message-ID: <20190712031917.4eabf240@hikaru>
-In-Reply-To: <CALCETrWkmaB5K4AR0R6CYcdq8mJwKtbWbmYEq6oxeaoqdA3ZWA@mail.gmail.com>
-References: <20190712014223.66326995@hikaru>
-        <CALCETrWkmaB5K4AR0R6CYcdq8mJwKtbWbmYEq6oxeaoqdA3ZWA@mail.gmail.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        linux-mm <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>
+Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
+Message-Id: <20190711182002.9bb943006da6b61ab66b95fd@linux-foundation.org>
+In-Reply-To: <df001b6fbe2a4bdc86999c78933dab7f@huawei.com>
+References: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
+        <CANN689G6mGLSOkyj31ympGgnqxnJosPVc4EakW5gYGtA_45L7g@mail.gmail.com>
+        <df001b6fbe2a4bdc86999c78933dab7f@huawei.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: carlo@alinoe.com
-X-SA-Exim-Scanned: No (on mail9.alinoe.com); SAEximRunCond expanded to false
-X-SourceIP: 92.109.146.195
-X-Ziggo-spambar: /
-X-Ziggo-spamscore: 0.0
-X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=JMuPTPCb c=1 sm=1 tr=0 a=at3gEZHPcpTZPMkiLtqVSg==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10 a=VwQbUJbxAAAA:8 a=BjFOTwK7AAAA:8 a=hNgpY4UhNZx4Anvnp_cA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=N3Up1mgHhB-0MyeZKEz1:22
-X-Ziggo-Spam-Status: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Sat, 18 May 2019 07:05:07 +0000 "chenjianhong (A)" <chenjianhong2@huawei.com> wrote:
 
-thank you for you quick reply.
-
-On Thu, 11 Jul 2019 17:32:21 -0700
-Andy Lutomirski <luto@kernel.org> wrote:
-
-> > I propose to add a new EPOLL event EPOLLCLOSED that will cause
-> > epoll_wait to return (for that event) whenever a file descriptor is
-> > closed.  
+> I explain my test code and the problem in detail. This problem is found in 
+> 32-bit user process, because its virtual is limited, 3G or 4G. 
 > 
-> This totally falls apart if you ever want to add a feature to your
-> library to detach the handler for a given fd without closing the fd.
-
-Another way to cause epoll_wait() to wake up for that specific fd is
-okay too, of course.
-
-For example, since the new event basically will mean "resources
-can now be deleted", the event could be called EPOLLDELETE.
-It is just needed to have some easy way to trigger this event.
-
-Nevertheless, in the more exceptional case that one wants to destroy
-the object/rss that data.ptr points to without closing the fd it is
-probably possible to first dup the fd and then close the old one.
-
-> > The Worker Thread then does not remove an object from the
-> > interest list, but either adds (if it was removed before) or
-> > modifies the event (using EPOLL_CTL_MOD) to watch that fd
-> > for closing, and then closes it.
-> >
-> > Aka,
-> >
-> >   Working Thread:
-> >
-> >   epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event);
-> >   close(fd);
-> >
-> > where event contains the new EPOLLCLOSED (compare EPOLLOUT, EPOLLIN
-> > etc).
-> >
-> > This must then guarantee the event EPOLLCLOSED to be reported
-> > by exactly one epoll_wait(), the caller thread of which can then
-> > proceed with deleting the resources.
-> >
-> > Note that close(fd) must cause the removal from the interest list
-> > of any epoll struct before causing the event - and that the
-> > EPOLLCLOSED event may only be reported after all other events
-> > for that fd have already been reported (although it would be
-> > ok to report them at the same time: simply handle the other
-> > events first).  
+> First, I explain the bug I found. Function unmapped_area and 
+> unmapped_area_topdowns adjust search length to account for worst 
+> case alignment overhead, the code is ' length = info->length + info->align_mask; '.
+> The variable info->length is the length we allocate and the variable 
+> info->align_mask accounts for the alignment, because the gap_start  or gap_end 
+> value also should be an alignment address, but we can't know the alignment offset.
+> So in the current algorithm, it uses the max alignment offset, this value maybe zero
+> or other(0x1ff000 for shmat function). 
+> Is it reasonable way? The required value is longer than what I allocate.
+> What's more,  why for the first time I can allocate the memory successfully
+> Via shmat, but after releasing the memory via shmdt and I want to attach
+> again, it fails. This is not acceptable for many people.
 > 
-> This is a bunch of subtle semantics in the kernel to support your
-> particular use case.
+> Second, I explain my test code. The code I have sent an email. The following is
+> the step. I don't think it's something unusual or unreasonable, because the virtual
+> memory space is enough, but the process can allocate from it. And we can't pass
+> explicit addresses to function mmap or shmat, the address is getting from the left
+> vma gap.
+>  1, we allocat large virtual memory;
+>  2, we allocate hugepage memory via shmat, and release one
+>  of the hugepage memory block;
+>  3, we allocate hugepage memory by shmat again, this will fail.
 
-My particular use case? How so? The problem I'm trying to address
-is the fact that "It is not currently possible to reliably delete epoll
-items when using the same epoll set from multiple threads", end quote
-of Paton Lewis' email from 2012.
+How significant is this problem in real-world use cases?  How much
+trouble is it causing?
 
-If there is a simple, generally accepted solution for this in user-space
-then of course there is no reason to change the kernel; but despite
-all my efforts to research the net for a solution for this, all can
-find are people with the same question and no good answers.
+> Third, I want to introduce my change in the current algorithm. I don't change the
+> current algorithm. Also, I think there maybe a better way to fix this error. Nowadays,
+> I can just adjust the gap_start value.
 
-If there was a way to pass a special event to the thread waiting in
-epoll_wait() that it now is safe to free the memory that data.ptr is
-pointing to, then problem would evaporate to something trivally simple.
+Have you looked further into this?  Michel is concerned about the
+performance cost of the current solution.
 
-Lets say we would not be using close(2), but instead some
-epoll_destruct(epoll_fd, fd). Then the worker thread, instead of,
-
-  if (last reference to object has gone)
-  {
-    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, object->fd, NULL);
-    delete object;  // Unsafe
-  }
-
-could do,
-
-  if (last reference to object has gone)
-    epoll_destuct(epoll_fd, object->fd);
-        // Or [optionally dup() and] close(object->fd);
-
-Whereas the thread that waits for epoll_fd would take care
-of the deletion:
-
-  for (;;)
-  {
-    int ready = epoll_wait(epoll_fd, s_events, maxevents, -1);
-    while (ready > 0)
-    {
-      epoll_event& event(s_events[--ready]);
-      if ((event.events & EPOLLDELETE)) // Or EPOLLCLOSED, or
-                                        // whatever the name is.
-      {
-        delete event.data.ptr;
-        break;
-      }
-      // Handle other events.
-    }
-  }
-
-In this case, if epoll_wait() had returned just prior to
-the call to epoll_destruct()/close(), the object will not be deleted;
-The returned events would be handled, epoll_wait() reentered,
-and only once EPOLLDELETE is returned the object would be deleted.
-
-The bunch of subtle requirements as you call it is just about how
-to implement this in a way that it will do what it is supposed to do,
-and in no way specific for my particular use case.
-
-The requirements are, namely:
-
-1. Only one epoll_fd may have added an epoll_event structure with
-   a pointer to the resource (if more than one need to point to it,
-   you could add a pointer to a smart pointer to the object to
-   the epoll_event structure instead). I'd be surprised if this
-   is not ALREADY a required for normal implementations.
-
-2. The call to epoll_destruct() (as introduced as example above)
-   must remove the fd from the epoll's interest list. Of course
-   it doesn't HAVE to - but then the user MUST call epoll_ctl(epoll_fd,
-   EPOLL_CTL_DEL, ...) right before it, so why not? The reason
-   I opted close(2) is because that ALREADY has this behavior,
-   hence it seems a good candidate for epoll_destruct.
-
-3. After an EPOLLDELETE (formly EPOLLCLOSED) has been returned by
-   an epoll_wait() no other events may be returned for that fd.
-   This is obvious, and should be easy to implement. I just added it for
-   completeness ;).
- 
-> But this case is fairly straightforward with the user mode approach --
-> for example, add it to the list for all threads calling epoll_wait.
-> Or otherwise defer the deletion until all epoll_wait threads have
-> woken.
-
-That really seems a hell of lot more complex (involving mutexes and
-updating a queue that might grow till unknown sizes, hence requiring
-possibly calls to malloc) then my proposed solution, for something that
-basically every application that uses epoll needs.
-
--- 
-Carlo Wood <carlo@alinoe.com>
