@@ -2,142 +2,236 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C521C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D010C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F032080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:49:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KOp/FTLl"
+	by mail.kernel.org (Postfix) with ESMTP id D2CD52080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfGLOt2 (ORCPT
+        id S1727183AbfGLOvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:49:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46752 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfGLOt1 (ORCPT
+        Fri, 12 Jul 2019 10:51:01 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37994 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfGLOvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:49:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i8so4627638pgm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jBnw+bj5T3Oj46YKg63m75/M9E4pXCF4gtk0jQxRSXU=;
-        b=KOp/FTLlbPVrmtrESx26ciK+CMNvbkeSL4QP0Lj6JLKzSMGH7LcPtUDIBGFMz4xNBR
-         HjyGCYh4oX95P+F+GW4vHbwJmHhtIANe/76JHUmqTCLEJnEQqDVcsDR2QKmjjip7dp/y
-         Fs5wmHPUnwEv4E5Xcjpll4PYPsaq5Jw19jQ5s=
+        Fri, 12 Jul 2019 10:51:01 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n11so8339869qtl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:51:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jBnw+bj5T3Oj46YKg63m75/M9E4pXCF4gtk0jQxRSXU=;
-        b=IJLKfBRtXDBMJLJo76yUryZPNNyxaAiWjt8iZzwluYS0Q2beVeklMJxfjA9408erTY
-         3LJy2RfefscxCDxEATSrTwYJNeT/OzMm17c3up68XXY+9udGNeYq2obCuixbthZRV3Wr
-         ghZLabBq3IXRgyyS72YpdJI3wJjZa5qHTze/uTOtmoRfxCyWgveiwbKPnkDJnSMVCFAW
-         yL7SzQojHQu/otclA+efvCn3fSCsGNJK3uaYiRj7UvxhoR/fMzsd6CEJRnYZSdsF9LYz
-         c2wwYO0JaQFoXxNLEpzPEYcM1a4vnJ5l9Cmw6iZKVqs822DqbpSvk3hfIezitW4oGbsB
-         l/+Q==
-X-Gm-Message-State: APjAAAWeibrjp8EuHarcba3tmYKNV5vnVR4/i94GDcDH3k7RZwZ0pwLp
-        z7LwLy4kKMT8hh5TrVegM95cfylA
-X-Google-Smtp-Source: APXvYqy6jBLSnDZta2GtS/zN+m3PUtaVacX1IRd1BaAhWjyV06geRNBslZ66J2GoeWCO1s2L6yvsyA==
-X-Received: by 2002:a17:90a:1904:: with SMTP id 4mr12585583pjg.116.1562942966736;
-        Fri, 12 Jul 2019 07:49:26 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id r1sm7928157pgv.70.2019.07.12.07.49.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 07:49:25 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 10:49:24 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712144924.GA235410@google.com>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712110142.GS3402@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oH1fo+W6QvW3TDYAOS3VNfR52O9ab9tANtdOaHmm3OY=;
+        b=hLPghAEGrcDsJ3KMnX2cb2Ly55SJ/ZNy3fhIUsc6t3ACkFdAuvRfkAe8SUxbZXZU8c
+         fCX48D9tDM1Hbkr7fdjshyWKWSx3xYaqv53wPE8lE8bB5/hPrjjmwqajcEjnWnng1l0W
+         1f+RIBgZDN78L1AtVAMMSBxUkJ29Tj6ceXjhw5E92J+cwhRoAmYAuuvO4/X00KSvdDP7
+         MK4mis4H47VgHCZAm4FHZ1o5Vq+FxWrBmReTY9rqPyBT1VPFbr3M6KnTxcpQP6WrLmk4
+         tB0lL2AvCm0f+5AZgr8UiL3oIU8jgNkAMej647nCfL3gP16M6/CBkEgyEPD7QI6srA3T
+         Yf2Q==
+X-Gm-Message-State: APjAAAVo7S6e8ywiKhGnEkq7kDYWrpcjZR+IZWVMg5mnP/jnILM8Qkm3
+        +u6Mo3bPEaVUUfteCiQZK9Vi1J/BfkkLrFRN9a0=
+X-Google-Smtp-Source: APXvYqyN3byscQG9xRVYhfc4ZggmHx+5pAzvEKE4tdJsPcnHN2RUVnZ2N8qUfEa7fU4E4sSEIYj+FU/R1Cs2D+UXyWE=
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr6508885qtn.304.1562943059631;
+ Fri, 12 Jul 2019 07:50:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712110142.GS3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190703081119.209976-1-arnd@arndb.de> <20190711174949.dc74310efd1fd3c8bd4ea276@linux-foundation.org>
+ <CAK8P3a2ZRw9B=X76yL-bRzC+01z6VaHDzPAhQQw7V9MXtkp+Jg@mail.gmail.com> <20190712075438.GA88904@archlinux-threadripper>
+In-Reply-To: <20190712075438.GA88904@archlinux-threadripper>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 12 Jul 2019 16:50:42 +0200
+Message-ID: <CAK8P3a09LpFYKcfJB0izCwQVAm0Bkvx_MUi8qvTORshUUp=5+w@mail.gmail.com>
+Subject: Re: [PATCH] waitqueue: fix clang -Wuninitialized warnings
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:01:42PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> > This patch adds support for checking RCU reader sections in list
-> > traversal macros. Optionally, if the list macro is called under SRCU or
-> > other lock/mutex protection, then appropriate lockdep expressions can be
-> > passed to make the checks pass.
-> > 
-> > Existing list_for_each_entry_rcu() invocations don't need to pass the
-> > optional fourth argument (cond) unless they are under some non-RCU
-> > protection and needs to make lockdep check pass.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
-> >  include/linux/rcupdate.h |  7 +++++++
-> >  kernel/rcu/Kconfig.debug | 11 +++++++++++
-> >  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
-> >  4 files changed, 68 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > index e91ec9ddcd30..78c15ec6b2c9 100644
-> > --- a/include/linux/rculist.h
-> > +++ b/include/linux/rculist.h
-> > @@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-> >   */
-> >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
-> >  
-> > +/*
-> > + * Check during list traversal that we are within an RCU reader
-> > + */
-> > +
-> > +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-> > +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
-> 
-> You don't seem to actually use it in this patch; also linux/kernel.h has
-> COUNT_ARGS().
+On Fri, Jul 12, 2019 at 9:54 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Fri, Jul 12, 2019 at 09:45:06AM +0200, Arnd Bergmann wrote:
+> > On Fri, Jul 12, 2019 at 2:49 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > On Wed,  3 Jul 2019 10:10:55 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > > <scratches head>
+> > >
+> > > Surely clang is being extraordinarily dumb here?
+> > >
+> > > DECLARE_WAIT_QUEUE_HEAD_ONSTACK() is effectively doing
+> > >
+> > >         struct wait_queue_head name = ({ __init_waitqueue_head(&name) ; name; })
+> > >
+> > > which is perfectly legitimate!  clang has no business assuming that
+> > > __init_waitqueue_head() will do any reads from the pointer which it was
+> > > passed, nor can clang assume that __init_waitqueue_head() leaves any of
+> > > *name uninitialized.
+> > >
+> > > Does it also warn if code does this?
+> > >
+> > >         struct wait_queue_head name;
+> > >         __init_waitqueue_head(&name);
+> > >         name = name;
+> > >
+> > > which is equivalent, isn't it?
+> >
+> > No, it does not warn for this.
+> >
+> > I've tried a few more variants here: https://godbolt.org/z/ykSX0r
+> >
+> > What I think is going on here is a result of clang and gcc fundamentally
+> > treating -Wuninitialized warnings differently. gcc tries to make the warnings
+> > as helpful as possible, but given the NP-complete nature of this problem
+> > it won't always get it right, and it traditionally allowed this syntax as a
+> > workaround.
+> >
+> > int f(void)
+> > {
+> >     int i = i; // tell gcc not to warn
+> >     return i;
+> > }
+> >
+> > clang apparently implements the warnings in a way that is as
+> > completely predictable (and won't warn in cases that it
+> > doesn't completely understand), but decided as a result that the
+> > gcc 'int i = i' syntax is bogus and it always warns about a variable
+> > used in its own declaration that is later referenced, without looking
+> > at whether the declaration does initialize it or not.
+> >
+> > > The proposed solution is, effectively, to open-code
+> > > __init_waitqueue_head() at each DECLARE_WAIT_QUEUE_HEAD_ONSTACK()
+> > > callsite.  That's pretty unpleasant and calls for an explanatory
+> > > comment at the __WAIT_QUEUE_HEAD_INIT_ONSTACK() definition site as well
+> > > as a cautionary comment at the __init_waitqueue_head() definition so we
+> > > can keep the two versions in sync as code evolves.
+> >
+> > Yes, makes sense.
+> >
+> > > Hopefully clang will soon be hit with the cluebat (yes?) and this
+> > > change becomes obsolete in the quite short term.  Surely 6-12 months
+> > > from now nobody will be using the uncluebatted version of clang on
+> > > contemporary kernel sources so we get to remove this nastiness again.
+> > > Which makes me wonder whether we should merge it at all.
+> >
+> > Would it make you feel better to keep the current code but have an alternative
+> > version guarded with e.g. "#if defined(__clang__ && (__clang_major__ <= 9)"?
+> >
+> > While it is probably a good idea to fix clang here, this is one of the last
+> > issues that causes a significant difference between gcc and clang in build
+> > testing with kernelci:
+> > https://kernelci.org/build/next/branch/master/kernel/next-20190709/
+> > I'm trying to get all the warnings fixed there so we can spot build-time
+> > regressions more easily.
+> >
+> >       Arnd
+>
+> I'm just spitballing here since I am about to go to sleep but could we
+> do something like you did for bee20031772a ("disable -Wattribute-alias
+> warning for SYSCALL_DEFINEx()") and disable the warning in
+> DECLARE_WAIT_QUEUE_HEAD_ONSTACK only since we know it is not going to
+> be a problem? That way, if/when Clang is fixed, we can just have the
+> warning be disabled for older versions?
 
-Yes, I replied after sending patches that I fixed this. I will remove them.
+I managed to get that to work, but there are two problems:
 
+- the __diag_ignore() infrastructure was never added for clang, so
+  I ended up copying a lot from gcc. There is probably a nicer way
+  to do this, but that would require a larger rework
+- adding __diag_pop() between two variable declarations is seen as
+  a statement that causes a warning with both gcc and clang,
+  so I had to turn that warning off as well for all compilers, and at that
+  point it gets rather ugly in the macro.
 
-thanks,
+       Arnd
 
- - Joel
+diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+index 333a6695a918..0d30c0489ad7 100644
+--- a/include/linux/compiler-clang.h
++++ b/include/linux/compiler-clang.h
+@@ -42,3 +42,31 @@
+  * compilers, like ICC.
+  */
+ #define barrier() __asm__ __volatile__("" : : : "memory")
++
++/*
++ * Turn individual warnings and errors on and off locally, depending
++ * on version.
++ */
++#define __diag_clang(version, severity, s) \
++       __diag_clang_ ## version(__diag_clang_ ## severity s)
++
++/* Severity used in pragma directives */
++#define __diag_clang_ignore    ignored
++#define __diag_clang_warn      warning
++#define __diag_clang_error     error
++
++#define __diag_str1(s)         #s
++#define __diag_str(s)          __diag_str1(s)
++#define __diag(s)              _Pragma(__diag_str(clang diagnostic s))
++
++#if __clang_major__ >= 8
++#define __diag_clang_8(s)              __diag(s)
++#else
++#define __diag_clang_8(s)
++#endif
++
++#if __clang_major__ >= 9
++#define __diag_clang_9(s)              __diag(s)
++#else
++#define __diag_clang_9(s)
++#endif
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index e8579412ad21..c5f8d9ae0530 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -165,8 +165,16 @@
+ #define __diag_str(s)          __diag_str1(s)
+ #define __diag(s)              _Pragma(__diag_str(GCC diagnostic s))
 
-
-
++#if GCC_VERSION >= 40006
++#define __diag_GCC_4_6(s)      __diag(s)
++#else
++#define __diag_GCC_4_6(s)
++#endif
++
+ #if GCC_VERSION >= 80000
+ #define __diag_GCC_8(s)                __diag(s)
+ #else
+ #define __diag_GCC_8(s)
+ #endif
++
++#define __diag_clang(s...)
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index ddb959641709..0e33fe589f49 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -71,7 +71,12 @@ extern void __init_waitqueue_head(struct
+wait_queue_head *wq_head, const char *n
+ # define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
+        ({ init_waitqueue_head(&name); name; })
+ # define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
+-       struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
++       __diag_push();                  \
++       __diag_ignore(clang, 8, "-Wuninitialized",
+"https://godbolt.org/z/ykSX0r");     \
++       __diag_ignore(clang, 8, "-Wdeclaration-after-statement", "for
+__diag_pop");     \
++       __diag_ignore(GCC, 4_6, "-Wdeclaration-after-statement", "for
+__diag_pop");     \
++       struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name); \
++       __diag_pop()
+ #else
+ # define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) DECLARE_WAIT_QUEUE_HEAD(name)
+ #endif
