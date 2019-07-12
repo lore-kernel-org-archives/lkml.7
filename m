@@ -2,94 +2,195 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7C8C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E9AC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D66B2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5995621019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="njop8InN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbfGLGHt (ORCPT
+        id S1725995AbfGLGIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 02:07:49 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:34504 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfGLGHs (ORCPT
+        Fri, 12 Jul 2019 02:08:43 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:42652 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfGLGIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 02:07:48 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id C2829803AE;
-        Fri, 12 Jul 2019 08:07:43 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 08:07:37 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        mka@chromium.org, Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v6 0/3] drm/panel: simple: Add mode support to devicetree
-Message-ID: <20190712060737.GA9569@ravnborg.org>
-References: <20190711203455.125667-1-dianders@chromium.org>
+        Fri, 12 Jul 2019 02:08:42 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x6C67CGj006351;
+        Fri, 12 Jul 2019 15:07:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6C67CGj006351
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562911633;
+        bh=DNuQzHn+OIKUIOau4E/Lk/DJbbhem5IcUbtMTebzYys=;
+        h=From:To:Cc:Subject:Date:From;
+        b=njop8InNKgrhUWeNEiLlitdYGHFbavRnEoEQcMaiP5MNjiH4JD48I/rK7M5zch6KE
+         eRE+Rp58omN412mkPEZZI1uQrwpnlatT0uh7k14YdhFfOhSBV5U/tjMF4eElfPGH5d
+         j0Dy+A9ze1wmEXnEecZS8Wastnd/xM7dQIdoftowzq5K8fpZAjzOanoY2rfpd6za6s
+         0qtA+rEkodL9x/VoAVwc1gZbCFPEIyvUHQfJencJjasSM0cpMFxhYYfwmDSBoNXodA
+         odqfqq/LfffTsAcSS0tR/1bGWcxOL65AzRbjwbXl7hRbl8rVThMoXOwurJrKwflb0Z
+         tLxH0s0hCZO4g==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     =?UTF-8?q?Joonas=20Kylm=8F=AB=A3l=8F=AB=A3?= 
+        <joonas.kylmala@iki.fi>, Ulf Magnusson <ulfalizer@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-stable <stable@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kconfig: fix missing choice values in auto.conf
+Date:   Fri, 12 Jul 2019 15:07:09 +0900
+Message-Id: <20190712060709.20609-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711203455.125667-1-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
-        a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=O475EGwODiYbJdBmdVwA:9
-        a=CjuIK1q_8ugA:10 a=PO69wPE_V6wA:10 a=Vxmtnl_E_bksehYqCbjh:22
-        a=AjGcO6oz07-iQ99wixmX:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug.
+Since commit 00c864f8903d ("kconfig: allow all config targets to write
+auto.conf if missing"), Kconfig creates include/config/auto.conf in the
+defconfig stage when it is missing.
 
-On Thu, Jul 11, 2019 at 01:34:52PM -0700, Douglas Anderson wrote:
-> I'm reviving Sean Paul's old patchset to get mode support in device
-> tree.  The cover letter for his v3 is at:
-> https://lists.freedesktop.org/archives/dri-devel/2018-February/165162.html
-> 
-> v6 of this patch is just a repost of the 3 DRM patches in v5 rebased
-> atop drm-misc.  A few notes:
-> - I've dropped the bindings patch.  Commit 821a1f7171ae ("dt-bindings:
->   display: Convert common panel bindings to DT schema") has landed and
->   Rob H said [1] that when that landed the bindings were implicitly
->   supported.
-> - Since the bindings patch was dropped I am assuming that Heiko
->   can just pick up the .dts patches from the v5 series.  I
->   double-checked with him and he confirmed this is fine.  Thus I
->   have left the device tree patches out of this version.
-> 
-> There were some coding style discussions on v5 of the path but it's
-> been agreed that we can land this series as-is and after it lands we
-> can address the minor style issues.
-> 
-> [1] https://lkml.kernel.org/r/CAL_JsqJGtUTpJL+SDEKi09aDT4yDzY4x9KwYmz08NaZcn=nHfA@mail.gmail.com
-> 
-> Changes in v6:
-> - Rebased to drm-misc next
-> - Added tags
-...
+Joonas Kylmälä reported incorrect auto.conf generation under some
+circumstances.
 
-Thanks for your patience with this.
-Applied to drm-misc-next and pushed out.
+Apply the following diff:
 
-	Sam
+| --- a/arch/arm/configs/imx_v6_v7_defconfig
+| +++ b/arch/arm/configs/imx_v6_v7_defconfig
+| @@ -345,14 +345,7 @@ CONFIG_USB_CONFIGFS_F_MIDI=y
+|  CONFIG_USB_CONFIGFS_F_HID=y
+|  CONFIG_USB_CONFIGFS_F_UVC=y
+|  CONFIG_USB_CONFIGFS_F_PRINTER=y
+| -CONFIG_USB_ZERO=m
+| -CONFIG_USB_AUDIO=m
+| -CONFIG_USB_ETH=m
+| -CONFIG_USB_G_NCM=m
+| -CONFIG_USB_GADGETFS=m
+| -CONFIG_USB_FUNCTIONFS=m
+| -CONFIG_USB_MASS_STORAGE=m
+| -CONFIG_USB_G_SERIAL=m
+| +CONFIG_USB_FUNCTIONFS=y
+|  CONFIG_MMC=y
+|  CONFIG_MMC_SDHCI=y
+|  CONFIG_MMC_SDHCI_PLTFM=y
+
+And then, run:
+
+$ make ARCH=arm mrproper imx_v6_v7_defconfig
+
+CONFIG_USB_FUNCTIONFS=y is correctly contained in the .config, but not
+in the auto.conf.
+
+Please note drivers/usb/gadget/legacy/Kconfig is included from a choice
+block in drivers/usb/gadget/Kconfig. So USB_FUNCTIONFS is a choice value.
+
+This is probably a similar situation described in commit beaaddb62540
+("kconfig: tests: test defconfig when two choices interact").
+
+When sym_calc_choice() is called, the choice symbol forgets the
+SYMBOL_DEF_USER unless all of its choice values are explicitly set by
+the user.
+
+The choice symbol is given just one chance to recall it because
+set_all_choice_values() is called if SYMBOL_NEED_SET_CHOICE_VALUES
+is set.
+
+When sym_calc_choice() is called again, the choice symbol forgets it
+forever, since SYMBOL_NEED_SET_CHOICE_VALUES is a one-time aid.
+Hence, we cannot call sym_clear_all_valid() again and again.
+
+It is crazy to set and clear internal flags. However, we cannot simply
+get rid of "sym->flags &= flags | ~SYMBOL_DEF_USER;" Doing so would
+re-introduce the problem solved by commit 5d09598d488f ("kconfig: fix
+new choices being skipped upon config update").
+
+To work around the issue, conf_write_autoconf() stopped calling
+sym_clear_all_valid().
+
+conf_write() must be changed accordingly. Currently, it clears
+SYMBOL_WRITE after the symbol is written into the .config file. This
+is needed to prevent it from writing the same symbol multiple times in
+case the symbol is declared in two or more locations. I added the new
+flag SYMBOL_WRITTEN, to track the symbols that have been written.
+
+Anyway, this is a cheesy workaround in order to suppress the issue
+as far as defconfig is concerned.
+
+Handling of choices is totally broken. sym_clear_all_valid() is called
+every time a user touches a symbol from the GUI interface. To reproduce
+it, just add a new symbol drivers/usb/gadget/legacy/Kconfig, then touch
+around unrelated symbols from menuconfig. USB_FUNCTIONFS will disappear
+from the .config file.
+
+I added the Fixes tag since it is more fatal than before. But, this
+has been broken since long long time before, and still it is.
+We should take a closer look to fix this correctly somehow.
+
+Fixes: 00c864f8903d ("kconfig: allow all config targets to write auto.conf if missing")
+Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+Reported-by: Joonas Kylmälä <joonas.kylmala@iki.fi>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/kconfig/confdata.c | 7 +++----
+ scripts/kconfig/expr.h     | 1 +
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index cbb6efa4a5a6..e0972b255aac 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -895,7 +895,8 @@ int conf_write(const char *name)
+ 				     "# %s\n"
+ 				     "#\n", str);
+ 			need_newline = false;
+-		} else if (!(sym->flags & SYMBOL_CHOICE)) {
++		} else if (!(sym->flags & SYMBOL_CHOICE) &&
++			   !(sym->flags & SYMBOL_WRITTEN)) {
+ 			sym_calc_value(sym);
+ 			if (!(sym->flags & SYMBOL_WRITE))
+ 				goto next;
+@@ -903,7 +904,7 @@ int conf_write(const char *name)
+ 				fprintf(out, "\n");
+ 				need_newline = false;
+ 			}
+-			sym->flags &= ~SYMBOL_WRITE;
++			sym->flags |= SYMBOL_WRITTEN;
+ 			conf_write_symbol(out, sym, &kconfig_printer_cb, NULL);
+ 		}
+ 
+@@ -1063,8 +1064,6 @@ int conf_write_autoconf(int overwrite)
+ 	if (!overwrite && is_present(autoconf_name))
+ 		return 0;
+ 
+-	sym_clear_all_valid();
+-
+ 	conf_write_dep("include/config/auto.conf.cmd");
+ 
+ 	if (conf_touch_deps())
+diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
+index 8dde65bc3165..017843c9a4f4 100644
+--- a/scripts/kconfig/expr.h
++++ b/scripts/kconfig/expr.h
+@@ -141,6 +141,7 @@ struct symbol {
+ #define SYMBOL_OPTIONAL   0x0100  /* choice is optional - values can be 'n' */
+ #define SYMBOL_WRITE      0x0200  /* write symbol to file (KCONFIG_CONFIG) */
+ #define SYMBOL_CHANGED    0x0400  /* ? */
++#define SYMBOL_WRITTEN    0x0800  /* track info to avoid double-write to .config */
+ #define SYMBOL_NO_WRITE   0x1000  /* Symbol for internal use only; it will not be written */
+ #define SYMBOL_CHECKED    0x2000  /* used during dependency checking */
+ #define SYMBOL_WARNED     0x8000  /* warning has been issued */
+-- 
+2.17.1
+
