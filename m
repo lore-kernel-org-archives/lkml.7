@@ -2,100 +2,70 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ED6C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2EDC742DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C9A2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9DF20989
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfGLWLb (ORCPT
+        id S1728068AbfGLWUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 18:11:31 -0400
-Received: from smtp4-g21.free.fr ([212.27.42.4]:8534 "EHLO smtp4-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbfGLWLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 18:11:31 -0400
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 542C419F574;
-        Sat, 13 Jul 2019 00:11:12 +0200 (CEST)
-Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Brad Love <brad@nextdimension.cc>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
- <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
- <20190712144537.2bad2482@coco.lan>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <10f064c5-1634-c9f9-fcc9-6ab51b7f8f0b@free.fr>
-Date:   Sat, 13 Jul 2019 00:11:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190712144537.2bad2482@coco.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 12 Jul 2019 18:20:01 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34138 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727245AbfGLWUA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 18:20:00 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE2EC14E01AA6;
+        Fri, 12 Jul 2019 15:19:59 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 15:19:59 -0700 (PDT)
+Message-Id: <20190712.151959.494337984512463318.davem@davemloft.net>
+To:     arnd@arndb.de
+Cc:     ivan.khoronzhuk@linaro.org, grygorii.strashko@ti.com,
+        andrew@lunn.ch, ilias.apalodimas@linaro.org,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [net-next] davinci_cpdma: don't cast dma_addr_t to
+ pointer
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190710080106.24237-1-arnd@arndb.de>
+References: <20190710080106.24237-1-arnd@arndb.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 12 Jul 2019 15:20:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/07/2019 19:45, Mauro Carvalho Chehab wrote:
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 10 Jul 2019 10:00:33 +0200
 
-> Brad Love <brad@nextdimension.cc> escreveu:
+> dma_addr_t may be 64-bit wide on 32-bit architectures, so it is not
+> valid to cast between it and a pointer:
 > 
->> On 04/07/2019 05.33, Marc Gonzalez wrote:
->>
->>> +#define CMD_SETUP(cmd, args, rlen) \
->>> +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
->>> +  
->>
->> This is only a valid helper if args is a null terminated string. It just
->> so happens that every instance in this driver is, but that could be a
->> silent pitfall if someone used a u8 array with this macro.
+> drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_submit_si':
+> drivers/net/ethernet/ti/davinci_cpdma.c:1047:12: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+> drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_idle_submit_mapped':
+> drivers/net/ethernet/ti/davinci_cpdma.c:1114:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+> drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_submit_mapped':
+> drivers/net/ethernet/ti/davinci_cpdma.c:1164:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
 > 
-> Actually, it is uglier than that. If one writes something like:
+> Solve this by using two separate members in 'struct submit_info'.
+> Since this avoids the use of the 'flag' member, the structure does
+> not even grow in typical configurations.
 > 
-> 	char buf[20];
-> 
-> 	buf[0] = 0x20;
-> 	buf[1] = 0x03;
-> 
-> 	CMD_SETUP(cmd, buf, 0);
-> 
-> 	// some other init, up to 5 values, then another CMD_SETUP()
+> Fixes: 6670acacd59e ("net: ethernet: ti: davinci_cpdma: add dma mapped submit")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I'm not sure what you mean in the // comment.
-What kind of init? Why up to 5 values? Why another CMD_SETUP?
-
-> sizeof() will evaluate to 20, and not to 2, with would be the
-> expected buffer size, and it will pass 18 random values.
-> 
-> IMHO, using sizeof() here is a very bad idea.
-
-You may have a point...
-(Though I'm not proposing a kernel API function, merely code
-refactoring for a single file that's unlikely to change going
-forward.)
-
-It's also bad form to repeat the cmd size (twice) when the compiler
-can figure it out automatically for string literals (which is 95%
-of the use-cases).
-
-I can drop the macro, and just use the helper...
-
-Or maybe there's a GCC extension to test that an argument is a
-string literal...
-
-Regards.
+Applied.
