@@ -2,117 +2,114 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E500BC742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787B8C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC15B2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:49:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oHQbmGmH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Z26V7meM"
+	by mail.kernel.org (Postfix) with ESMTP id 5007320850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562950311;
+	bh=6yuUR9ixnrg75oWUzUm0JyD4FWHsLSIkKBmq6h7wuxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kYXNogfzUHExQ9D07ZC433tzjhfXH5tUgCvlGZKClkHFKNcprS1ic5vbWox55MeXH
+	 Dtu9ozQSZBWKGPk6q6cQkURODhInkz9soOu/ABPkr0ePGCJGiuRuP2jb+jw1K3G8Fi
+	 9lQ1VIeH7Iq8RfgVzE2o/dvR89EirgXpabv2H5W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfGLQtf (ORCPT
+        id S1727114AbfGLQvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:49:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50146 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfGLQte (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:49:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2763B60A4E; Fri, 12 Jul 2019 16:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562950174;
-        bh=b1svF/gTguro1nK1BVoRt1d04OC7/a9WZZ0GYcXlh8Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oHQbmGmHLU25x9yoH6gar5agOqbHYYwLbTBTI7AnUFQ539bfMmqzyvxMQ9X5JSY1f
-         XcEudci5ZxW5guTKNvJo0dX9Yy2LtzCIOMpqpmacIxekLYt6l2qHCeAGTLZGtszkek
-         90vAhuwQbyUgp6TlnpCO3rblvYOYYTXSCUSDPNag=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 33FC960213;
-        Fri, 12 Jul 2019 16:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562950173;
-        bh=b1svF/gTguro1nK1BVoRt1d04OC7/a9WZZ0GYcXlh8Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Z26V7meMV9wSWGr9zlpTxsWeTq+y5Z9D7WaIEAdBJkpsc7uQntNv+ZZNhYirWM+lS
-         5ya4cgcn3AFDmiWO2TBF2ZIl58c0kAHecFjXowk2W7RJT7fm4lmJqQNP9c7M7IALtg
-         ws8Dk7oOQzCd68ZquBweSEHPNux2Hzq67xFtFk/E=
+        Fri, 12 Jul 2019 12:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbfGLQvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 12:51:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 819AD2080A;
+        Fri, 12 Jul 2019 16:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562950309;
+        bh=6yuUR9ixnrg75oWUzUm0JyD4FWHsLSIkKBmq6h7wuxA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XOLjnEbjUHuSHtZQPx2Gnur8YfSR9z/mgQSKn2O4lXAL5c3bzbVuT7gxV00bam9x8
+         JR4heiQ92j17+mIXAVFR7ywMDMtMwktVgDYUSrigypdOg3Dz63OlGIa8eZ3iS+u/b0
+         X7+jeI/J/SS6hMUrwllHbdyC2votX8DOOGCX1Oi8=
+Date:   Fri, 12 Jul 2019 18:51:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
+Message-ID: <20190712165146.GA32146@kroah.com>
+References: <20190712121620.632595223@linuxfoundation.org>
+ <a1ae16a7-e8f7-b6fc-df4e-46079bebf9b3@nvidia.com>
+ <20190712153108.GD13940@kroah.com>
+ <a0d871e7-a68c-5c77-1389-5b9a86f93ac9@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 12 Jul 2019 22:19:33 +0530
-From:   saiprakash.ranjan@codeaurora.org
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     gregkh@linuxfoundation.org, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
-        mike.leach@linaro.org, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        david.brown@linaro.org, mark.rutland@arm.com,
-        rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
-        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        marc.w.gonzalez@free.fr, devicetree-owner@vger.kernel.org
-Subject: Re: [PATCHv8 1/5] arm64: dts: qcom: sdm845: Add Coresight support
-In-Reply-To: <06c1a087-53f7-4841-1ae3-07ccbed22a72@arm.com>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <06c1a087-53f7-4841-1ae3-07ccbed22a72@arm.com>
-Message-ID: <8b82793e7b693dbb922ef4fdbffdb76f@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0d871e7-a68c-5c77-1389-5b9a86f93ac9@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Fri, Jul 12, 2019 at 05:10:30PM +0100, Jon Hunter wrote:
+> 
+> On 12/07/2019 16:31, Greg Kroah-Hartman wrote:
+> > On Fri, Jul 12, 2019 at 02:36:29PM +0100, Jon Hunter wrote:
+> >>
+> >> On 12/07/2019 13:19, Greg Kroah-Hartman wrote:
+> >>> This is the start of the stable review cycle for the 5.2.1 release.
+> >>> There are 61 patches in this series, all will be posted as a response
+> >>> to this one.  If anyone has any issues with these being applied, please
+> >>> let me know.
+> >>>
+> >>> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> >>> Anything received after that time might be too late.
+> >>>
+> >>> The whole patch series can be found in one patch at:
+> >>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
+> >>> or in the git tree and branch at:
+> >>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> >>> and the diffstat can be found below.
+> >>>
+> >>> thanks,
+> >>>
+> >>> greg k-h
+> >>
+> >> All tests are passing for Tegra ...
+> >>
+> >> Test results for stable-v5.2:
+> >>     12 builds:	12 pass, 0 fail
+> >>     22 boots:	22 pass, 0 fail
+> >>     38 tests:	38 pass, 0 fail
+> >>
+> >> Linux version:	5.2.1-rc1-g61731e8fe278
+> >> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+> >>                 tegra194-p2972-0000, tegra20-ventana,
+> >>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> > 
+> > That was fast, thanks for testing all of these.
+> 
+> Friday afternoon for me and so I am even more motivated :-)
+> 
+> BTW, has anyone ever requested pushing out a deadline failing on the
+> weekend to the following Monday? There is a chance I could miss this if
+> I happen to leave early on a Friday.
 
-On 2019-07-12 22:14, Suzuki K Poulose wrote:
-> Hi Sai,
-> 
-> On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
->> Add coresight components found on Qualcomm SDM845 SoC.
-> 
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 
->> +++++++++++++++++++++++++++
->>   1 file changed, 451 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 4babff5f19b5..5d7e3f8e0f91 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -1815,6 +1815,457 @@
->>   			clock-names = "xo";
->>   		};
->>   +		stm@6002000 {
->> +			compatible = "arm,coresight-stm", "arm,primecell";
->> +			reg = <0 0x06002000 0 0x1000>,
->> +			      <0 0x16280000 0 0x180000>;
->> +			reg-names = "stm-base", "stm-stimulus-base";
->> +
->> +			clocks = <&aoss_qmp>;
->> +			clock-names = "apb_pclk";
-> 
-> 
-> Which tree is this based on ? I can't see aoss_qmp anywhere under 
-> dts/qcom
-> on 5.2-rc7.
-> 
+Sure, if things break and I notice them, I've delayed releases until
+they get fixed in the past.
 
-It's based on linux-next.
+thanks,
 
-Thanks,
-Sai
+greg k-h
