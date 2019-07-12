@@ -2,54 +2,52 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB827C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA88C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96130216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2DB216E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934230;
-	bh=KtfOMNDaztyScdx2qCq38qKTgBN/3xPrtu+fGdpSiNk=;
+	s=default; t=1562934233;
+	bh=xLLWYA5NAIUr7JRKRwe5NogndUShvfwkFmPHLncTvl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+ophClKiGWKP4vKw3QAwgREnSpgyC7XuBEbFYY5rYZ+CCHfLHVRdAA+g3k9n+Gdo
-	 BBEIfsmQ3gedrZEcHqyXbpZPjKVGQh6CwFltXx7TpdTTBBrljMrNG4OROiV3FMS+q/
-	 FJm2p1JXV86XL8ENuYXGgsHi1Zga0A/2E3AUt1x4=
+	b=TT6+dlXNQqOataKhagfeneF4FRfwJ6A0UVczyGwU0tpGewcC9SEIFK8PvLkIVoX2A
+	 k/9a55x1d7yBR/f0+hR+I8PYWtqr9V3faRp8fbIvcPHl0rb/DP/+upmQElD5XjCGt8
+	 zEp/7LIWuW0H92RKf44hCR3cj+3CQRAzEwMx2vDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfGLMXt (ORCPT
+        id S1727998AbfGLMXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59500 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfGLMXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:23:38 -0400
+        id S1727980AbfGLMXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 280D4216B7;
-        Fri, 12 Jul 2019 12:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6811D2166E;
+        Fri, 12 Jul 2019 12:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934217;
-        bh=KtfOMNDaztyScdx2qCq38qKTgBN/3xPrtu+fGdpSiNk=;
+        s=default; t=1562934222;
+        bh=xLLWYA5NAIUr7JRKRwe5NogndUShvfwkFmPHLncTvl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UogXBr0H7J9yW6QlfZrFHnd2EUo/bn8z4ROU6ddX6RoMjLmUXy7/o8a+Oyxn1JWbJ
-         MCUYnpqlptryjW2GwFKN8st2tcqx+ZFC0wHo0xDhzQmcEsFhfwvVpdQjCOouedyAYw
-         UXncOOPF7ZuvQZHtmzND4XLt+anTrywG5Vawm/CI=
+        b=UOH/R31Dcl7DmIWnyP4u9gNl2Aa+A4cj1Vhm5DwmQIyXOSQowLbwhPB4JGDwgxBUJ
+         JEnFn5NPeSp9Ctg1yJ1UnnewLWiaxzKG7Hio1s+xiC4FLlrT2Y6TaZRWbB0vOyPjzC
+         4LJFJVmytoSkAdFMrKon8jZSNAwrwoeWUO+1ReDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/91] bnx2x: Check if transceiver implements DDM before access
-Date:   Fri, 12 Jul 2019 14:18:50 +0200
-Message-Id: <20190712121624.133925772@linuxfoundation.org>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.19 75/91] usb: renesas_usbhs: add a workaround for a race condition of workqueue
+Date:   Fri, 12 Jul 2019 14:19:18 +0200
+Message-Id: <20190712121625.840745833@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -62,63 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf18cecca911c0db96b868072665347efe6df46f ]
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Some transceivers may comply with SFF-8472 even though they do not
-implement the Digital Diagnostic Monitoring (DDM) interface described in
-the spec. The existence of such area is specified by the 6th bit of byte
-92, set to 1 if implemented.
+commit b2357839c56ab7d06bcd4e866ebc2d0e2b7997f3 upstream.
 
-Currently, without checking this bit, bnx2x fails trying to read sfp
-module's EEPROM with the follow message:
+The old commit 6e4b74e4690d ("usb: renesas: fix scheduling in atomic
+context bug") fixed an atomic issue by using workqueue for the shdmac
+dmaengine driver. However, this has a potential race condition issue
+between the work pending and usbhsg_ep_free_request() in gadget mode.
+When usbhsg_ep_free_request() is called while pending the queue,
+since the work_struct will be freed and then the work handler is
+called, kernel panic happens on process_one_work().
 
-ethtool -m enP5p1s0f1
-Cannot get Module EEPROM data: Input/output error
+To fix the issue, if we could call cancel_work_sync() at somewhere
+before the free request, it could be easy. However,
+the usbhsg_ep_free_request() is called on atomic (e.g. f_ncm driver
+calls free request via gether_disconnect()).
 
-Because it fails to read the additional 256 bytes in which it is assumed
-to exist the DDM data.
+For now, almost all users are having "USB-DMAC" and the DMAengine
+driver can be used on atomic. So, this patch adds a workaround for
+a race condition to call the DMAengine APIs without the workqueue.
 
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The EEPROM
-data was confirmed by Mellanox as correct and similar to other Passive
-DACs from other manufacturers.
+This means we still have TODO on shdmac environment (SH7724), but
+since it doesn't have SMP, the race condition might not happen.
 
-Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
-Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ab330cf3888d ("usb: renesas_usbhs: add support for USB-DMAC")
+Cc: <stable@vger.kernel.org> # v4.1+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c | 3 ++-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h    | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/renesas_usbhs/fifo.c |   34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-index a4a90b6cdb46..c428b0655c26 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -1581,7 +1581,8 @@ static int bnx2x_get_module_info(struct net_device *dev,
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -802,9 +802,8 @@ static int __usbhsf_dma_map_ctrl(struct
+ }
+ 
+ static void usbhsf_dma_complete(void *arg);
+-static void xfer_work(struct work_struct *work)
++static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ {
+-	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+ 	struct usbhs_fifo *fifo;
+ 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
+@@ -812,12 +811,10 @@ static void xfer_work(struct work_struct
+ 	struct dma_chan *chan;
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	enum dma_transfer_direction dir;
+-	unsigned long flags;
+ 
+-	usbhs_lock(priv, flags);
+ 	fifo = usbhs_pipe_to_fifo(pipe);
+ 	if (!fifo)
+-		goto xfer_work_end;
++		return;
+ 
+ 	chan = usbhsf_dma_chan_get(fifo, pkt);
+ 	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+@@ -826,7 +823,7 @@ static void xfer_work(struct work_struct
+ 					pkt->trans, dir,
+ 					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc)
+-		goto xfer_work_end;
++		return;
+ 
+ 	desc->callback		= usbhsf_dma_complete;
+ 	desc->callback_param	= pipe;
+@@ -834,7 +831,7 @@ static void xfer_work(struct work_struct
+ 	pkt->cookie = dmaengine_submit(desc);
+ 	if (pkt->cookie < 0) {
+ 		dev_err(dev, "Failed to submit dma descriptor\n");
+-		goto xfer_work_end;
++		return;
  	}
  
- 	if (!sff8472_comp ||
--	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ)) {
-+	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ) ||
-+	    !(diag_type & SFP_EEPROM_DDM_IMPLEMENTED)) {
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
- 	} else {
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-index b7d251108c19..7115f5025664 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-@@ -62,6 +62,7 @@
- #define SFP_EEPROM_DIAG_TYPE_ADDR		0x5c
- #define SFP_EEPROM_DIAG_TYPE_SIZE		1
- #define SFP_EEPROM_DIAG_ADDR_CHANGE_REQ		(1<<2)
-+#define SFP_EEPROM_DDM_IMPLEMENTED		(1<<6)
- #define SFP_EEPROM_SFF_8472_COMP_ADDR		0x5e
- #define SFP_EEPROM_SFF_8472_COMP_SIZE		1
+ 	dev_dbg(dev, "  %s %d (%d/ %d)\n",
+@@ -845,8 +842,17 @@ static void xfer_work(struct work_struct
+ 	dma_async_issue_pending(chan);
+ 	usbhsf_dma_start(pipe, fifo);
+ 	usbhs_pipe_enable(pipe);
++}
++
++static void xfer_work(struct work_struct *work)
++{
++	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
++	struct usbhs_pipe *pipe = pkt->pipe;
++	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
++	unsigned long flags;
  
--- 
-2.20.1
-
+-xfer_work_end:
++	usbhs_lock(priv, flags);
++	usbhsf_dma_xfer_preparing(pkt);
+ 	usbhs_unlock(priv, flags);
+ }
+ 
+@@ -899,8 +905,13 @@ static int usbhsf_dma_prepare_push(struc
+ 	pkt->trans = len;
+ 
+ 	usbhsf_tx_irq_ctrl(pipe, 0);
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	/* FIXME: Workaound for usb dmac that driver can be used in atomic */
++	if (usbhs_get_dparam(priv, has_usb_dmac)) {
++		usbhsf_dma_xfer_preparing(pkt);
++	} else {
++		INIT_WORK(&pkt->work, xfer_work);
++		schedule_work(&pkt->work);
++	}
+ 
+ 	return 0;
+ 
+@@ -1006,8 +1017,7 @@ static int usbhsf_dma_prepare_pop_with_u
+ 
+ 	pkt->trans = pkt->length;
+ 
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	usbhsf_dma_xfer_preparing(pkt);
+ 
+ 	return 0;
+ 
 
 
