@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B86C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3952C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F3520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEBF20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935087;
-	bh=xxRtUTDCKhzXdeTgs0S5YKCWNASaZOqK2PANmHf8px8=;
+	s=default; t=1562935094;
+	bh=5ZHpPRWBDX9u12GlOa2BjDgEunLgvqdm/xR4MRxZYWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sj1I6xHcTjRvjUmJj39s7/k1GEGXT2dTtteFePDqzvpV7qgtAT63wCH9uMtXjtYhq
-	 IeHXimOWXRxq9hgGzeH4VQc52NirCBWMGTNBE9JiEvMb7IRaJKlvkP9ATc6F7NIo4I
-	 JlElekYePopkSNJ1FTT0gh7+THB5BPVHjHv7neB8=
+	b=yUqheBEZRA0UYFD37McD8t9QFLb2yl0AlwJ2oiZlNkJWqAEOPUW/9uBH+PK5sAVk5
+	 1Sv+ZA833a1RiA0WQ2wLKQdGXr8xfVKUy8l5eH+oyWhBbppPzRB50I5EmO7t6wRAxJ
+	 7dLoZAkL+fV2kl5aFt0XUbaWa31D8+UbzWyKT+4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfGLMiF (ORCPT
+        id S1728950AbfGLMiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45118 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:38:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbfGLM3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:54 -0400
+        id S1728648AbfGLM3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C57208E4;
-        Fri, 12 Jul 2019 12:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31140208E4;
+        Fri, 12 Jul 2019 12:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934593;
-        bh=xxRtUTDCKhzXdeTgs0S5YKCWNASaZOqK2PANmHf8px8=;
+        s=default; t=1562934574;
+        bh=5ZHpPRWBDX9u12GlOa2BjDgEunLgvqdm/xR4MRxZYWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSODTSO+wG8kk636QnZzDojug75nlV/NTVjRMMyRJbFNp6Vty4AVuAS/6dpIIpj9T
-         D0g1fhwYLrxBHw+2BKF0frlNgDOr5oc69THZGwLn1udyZsLeHIhgwb0d3H/E3FncHN
-         QW6KooajjVYmPTbkwE2UZYliqNM86pJOogpB++LM=
+        b=UfPMOOCNZgtfy5/JIxHgpNUcwAMYzxfGSpqbCvyyZXgIRTzQV94jNIGed6Xppm/VS
+         z2gMlOxFaoEDjXZl8wrygsUI0h7YjvfZPC+bRUjTvqc+WNsFYwkkQfO3mWVRG3Jpln
+         3ifOHcyHqP3NkW/fIN69bGVXNCHY2r38lF5fHcOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 5.1 105/138] Documentation/admin: Remove the vsyscall=native documentation
-Date:   Fri, 12 Jul 2019 14:19:29 +0200
-Message-Id: <20190712121632.793176749@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: [PATCH 5.1 100/138] perf thread-stack: Fix thread stack return from kernel for kernel-only case
+Date:   Fri, 12 Jul 2019 14:19:24 +0200
+Message-Id: <20190712121632.603212841@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -64,43 +60,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit d974ffcfb7447db5f29a4b662a3eaf99a4e1109e upstream.
+commit 97860b483c5597663a174ff7405be957b4838391 upstream.
 
-The vsyscall=native feature is gone -- remove the docs.
+Commit f08046cb3082 ("perf thread-stack: Represent jmps to the start of a
+different symbol") had the side-effect of introducing more stack entries
+before return from kernel space.
 
-Fixes: 076ca272a14c ("x86/vsyscall/64: Drop "native" vsyscalls")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
+When user space is also traced, those entries are popped before entry to
+user space, but when user space is not traced, they get stuck at the
+bottom of the stack, making the stack grow progressively larger.
+
+Fix by detecting a return-from-kernel branch type, and popping kernel
+addresses from the stack then.
+
+Note, the problem and fix affect the exported Call Graph / Tree but not
+the callindent option used by "perf script --call-trace".
+
+Example:
+
+  perf-with-kcore record example -e intel_pt//k -- ls
+  perf-with-kcore script example --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py example.db branches calls
+  ~/libexec/perf-core/scripts/python/exported-sql-viewer.py example.db
+
+  Menu option: Reports -> Context-Sensitive Call Graph
+
+  Before: (showing Call Path column only)
+
+    Call Path
+    ▶ perf
+    ▼ ls
+      ▼ 12111:12111
+        ▶ setup_new_exec
+        ▶ __task_pid_nr_ns
+        ▶ perf_event_pid_type
+        ▶ perf_event_comm_output
+        ▶ perf_iterate_ctx
+        ▶ perf_iterate_sb
+        ▶ perf_event_comm
+        ▶ __set_task_comm
+        ▶ load_elf_binary
+        ▶ search_binary_handler
+        ▶ __do_execve_file.isra.41
+        ▶ __x64_sys_execve
+        ▶ do_syscall_64
+        ▼ entry_SYSCALL_64_after_hwframe
+          ▼ swapgs_restore_regs_and_return_to_usermode
+            ▼ native_iret
+              ▶ error_entry
+              ▶ do_page_fault
+              ▼ error_exit
+                ▼ retint_user
+                  ▶ prepare_exit_to_usermode
+                  ▼ native_iret
+                    ▶ error_entry
+                    ▶ do_page_fault
+                    ▼ error_exit
+                      ▼ retint_user
+                        ▶ prepare_exit_to_usermode
+                        ▼ native_iret
+                          ▶ error_entry
+                          ▶ do_page_fault
+                          ▼ error_exit
+                            ▼ retint_user
+                              ▶ prepare_exit_to_usermode
+                              ▶ native_iret
+
+  After: (showing Call Path column only)
+
+    Call Path
+    ▶ perf
+    ▼ ls
+      ▼ 12111:12111
+        ▶ setup_new_exec
+        ▶ __task_pid_nr_ns
+        ▶ perf_event_pid_type
+        ▶ perf_event_comm_output
+        ▶ perf_iterate_ctx
+        ▶ perf_iterate_sb
+        ▶ perf_event_comm
+        ▶ __set_task_comm
+        ▶ load_elf_binary
+        ▶ search_binary_handler
+        ▶ __do_execve_file.isra.41
+        ▶ __x64_sys_execve
+        ▶ do_syscall_64
+        ▶ entry_SYSCALL_64_after_hwframe
+        ▶ page_fault
+        ▼ entry_SYSCALL_64
+          ▼ do_syscall_64
+            ▶ __x64_sys_brk
+            ▶ __x64_sys_access
+            ▶ __x64_sys_openat
+            ▶ __x64_sys_newfstat
+            ▶ __x64_sys_mmap
+            ▶ __x64_sys_close
+            ▶ __x64_sys_read
+            ▶ __x64_sys_mprotect
+            ▶ __x64_sys_arch_prctl
+            ▶ __x64_sys_munmap
+            ▶ exit_to_usermode_loop
+            ▶ __x64_sys_set_tid_address
+            ▶ __x64_sys_set_robust_list
+            ▶ __x64_sys_rt_sigaction
+            ▶ __x64_sys_rt_sigprocmask
+            ▶ __x64_sys_prlimit64
+            ▶ __x64_sys_statfs
+            ▶ __x64_sys_ioctl
+            ▶ __x64_sys_getdents64
+            ▶ __x64_sys_write
+            ▶ __x64_sys_exit_group
+
+Committer notes:
+
+The first arg to the perf-with-kcore needs to be the same for the
+'record' and 'script' lines, otherwise we'll record the perf.data file
+and kcore_dir/ files in one directory ('example') to then try to use it
+from the 'bep' directory, fix the instructions above it so that both use
+'example'.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/d77c7105eb4c57c1a95a95b6a5b8ba194a18e764.1561610354.git.luto@kernel.org
+Fixes: f08046cb3082 ("perf thread-stack: Represent jmps to the start of a different symbol")
+Link: http://lkml.kernel.org/r/20190619064429.14940-2-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/kernel-parameters.txt |    6 ------
- 1 file changed, 6 deletions(-)
+ tools/perf/util/thread-stack.c |   30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5074,12 +5074,6 @@
- 			emulate     [default] Vsyscalls turn into traps and are
- 			            emulated reasonably safely.
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -625,6 +625,23 @@ static int thread_stack__bottom(struct t
+ 				     true, false);
+ }
  
--			native      Vsyscalls are native syscall instructions.
--			            This is a little bit faster than trapping
--			            and makes a few dynamic recompilers work
--			            better than they would in emulation mode.
--			            It also makes exploits much easier to write.
--
- 			none        Vsyscalls don't work at all.  This makes
- 			            them quite hard to use for exploits but
- 			            might break your system.
++static int thread_stack__pop_ks(struct thread *thread, struct thread_stack *ts,
++				struct perf_sample *sample, u64 ref)
++{
++	u64 tm = sample->time;
++	int err;
++
++	/* Return to userspace, so pop all kernel addresses */
++	while (thread_stack__in_kernel(ts)) {
++		err = thread_stack__call_return(thread, ts, --ts->cnt,
++						tm, ref, true);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
+ static int thread_stack__no_call_return(struct thread *thread,
+ 					struct thread_stack *ts,
+ 					struct perf_sample *sample,
+@@ -905,7 +922,18 @@ int thread_stack__process(struct thread
+ 			ts->rstate = X86_RETPOLINE_DETECTED;
+ 
+ 	} else if (sample->flags & PERF_IP_FLAG_RETURN) {
+-		if (!sample->ip || !sample->addr)
++		if (!sample->addr) {
++			u32 return_from_kernel = PERF_IP_FLAG_SYSCALLRET |
++						 PERF_IP_FLAG_INTERRUPT;
++
++			if (!(sample->flags & return_from_kernel))
++				return 0;
++
++			/* Pop kernel stack */
++			return thread_stack__pop_ks(thread, ts, sample, ref);
++		}
++
++		if (!sample->ip)
+ 			return 0;
+ 
+ 		/* x86 retpoline 'return' doesn't match the stack */
 
 
