@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA13C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9804DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466F521019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C93F2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934415;
-	bh=5gkJJ5R8e4wrPwmocAUVJJYM+67wBshn7GOo+aQGpTs=;
+	s=default; t=1562934418;
+	bh=DoG72Nfc0RQcz3NtXIh9AoIZZhvXmqT8MCtawtZqwm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPC1Yy/4b0Lb15DPwdp9PsuyHI0jsCzTVPODhRkoJBdH57FFvg+owl0sYTN+6IqlL
-	 iVdtUDvjvHknwn2Ew26jh8azyDk2pbrKUeuSaOspuxkHBfMtA5P8q8gfpzNno4dnPe
-	 aQPAA7IDO5tA4kWKId87xU97X4DYZ1A8LwWQiX/M=
+	b=nrysU78uTyG+16OxT5c/xSWSj4pu8INq48DWgrulZePlsQx4BXKd/eoTTYIzw/p0n
+	 2o0e9w2BGhJZJpRrJGgqHtASGVe4S72e0XMPXAz/zPFRF4hNJjgh5Ko+PwTekPXxZW
+	 jeAxRBEBCIMvaY859UxmtVtTmJXLlYhn2Ey9LzVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfGLM0y (ORCPT
+        id S1727251AbfGLM05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38518 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfGLM0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:50 -0400
+        id S1728511AbfGLM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798E22166E;
-        Fri, 12 Jul 2019 12:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC5F42084B;
+        Fri, 12 Jul 2019 12:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934410;
-        bh=5gkJJ5R8e4wrPwmocAUVJJYM+67wBshn7GOo+aQGpTs=;
+        s=default; t=1562934413;
+        bh=DoG72Nfc0RQcz3NtXIh9AoIZZhvXmqT8MCtawtZqwm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XiJGjxKjo1ZCcNr6cxS5xbTxv7cw0JZyiILyviv85rEXc4EbzW53x9lkXnWwVSyiM
-         sbGRYqvT3YTMWkRnxBT1DIQ5fmTvA4DUbsJUov+9iS6z9nVV51g53QhhfikEV70pWC
-         O3V9iWyS3vnZ3b7LFmcGUXg/p8Ic5/n3vUcC/bCM=
+        b=FA7uho6w/LygISJeZx95adokDWrQjyDKN/2as89QcJ1CjEai/Dggqn9n2UQS7m6cW
+         IR3RTvR/weWuBb3xm1xy0O/fo3o2CRorBGvOQJMtfWU633AlQxZOPAAPy6Kqqw2xC6
+         Lk5mekeebEi3/ZdZkpLw4fTSMXDvcH4D0JEOP+7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
-        Deepak Rawat <drawat@vmware.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 046/138] drm/vmwgfx: Honor the sg list segment size limitation
-Date:   Fri, 12 Jul 2019 14:18:30 +0200
-Message-Id: <20190712121630.435232349@linuxfoundation.org>
+Subject: [PATCH 5.1 047/138] drm/vmwgfx: fix a warning due to missing dma_parms
+Date:   Fri, 12 Jul 2019 14:18:31 +0200
+Message-Id: <20190712121630.470885017@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,38 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bde15555ba61c7f664f40fd3c6fdbdb63f784c9b ]
+[ Upstream commit 39916897cd815a0ee07ba1f6820cf88a63e459fc ]
 
-When building sg tables, honor the device sg list segment size limitation.
+Booting up with DMA_API_DEBUG_SG=y generates a warning due to the driver
+forgot to set dma_parms appropriately. Set it just after vmw_dma_masks()
+in vmw_driver_load().
 
+DMA-API: vmwgfx 0000:00:0f.0: mapping sg segment longer than device
+claims to support [len=2097152] [max=65536]
+WARNING: CPU: 2 PID: 261 at kernel/dma/debug.c:1232
+debug_dma_map_sg+0x360/0x480
+Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop
+Reference Platform, BIOS 6.00 04/13/2018
+RIP: 0010:debug_dma_map_sg+0x360/0x480
+Call Trace:
+ vmw_ttm_map_dma+0x3b1/0x5b0 [vmwgfx]
+ vmw_bo_map_dma+0x25/0x30 [vmwgfx]
+ vmw_otables_setup+0x2a8/0x750 [vmwgfx]
+ vmw_request_device_late+0x78/0xc0 [vmwgfx]
+ vmw_request_device+0xee/0x4e0 [vmwgfx]
+ vmw_driver_load.cold+0x757/0xd84 [vmwgfx]
+ drm_dev_register+0x1ff/0x340 [drm]
+ drm_get_pci_dev+0x110/0x290 [drm]
+ vmw_probe+0x15/0x20 [vmwgfx]
+ local_pci_probe+0x7a/0xc0
+ pci_device_probe+0x1b9/0x290
+ really_probe+0x1b5/0x630
+ driver_probe_device+0xa3/0x1a0
+ device_driver_attach+0x94/0xa0
+ __driver_attach+0xdd/0x1c0
+ bus_for_each_dev+0xfe/0x150
+ driver_attach+0x2d/0x40
+ bus_add_driver+0x290/0x350
+ driver_register+0xdc/0x1d0
+ __pci_register_driver+0xda/0xf0
+ vmwgfx_init+0x34/0x1000 [vmwgfx]
+ do_one_initcall+0xe5/0x40a
+ do_init_module+0x10f/0x3a0
+ load_module+0x16a5/0x1a40
+ __se_sys_finit_module+0x183/0x1c0
+ __x64_sys_finit_module+0x43/0x50
+ do_syscall_64+0xc8/0x606
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: fb1d9738ca05 ("drm/vmwgfx: Add DRM driver for VMware Virtual GPU")
+Co-developed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-index a3357ff7540d..97adee1f0575 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-@@ -454,11 +454,11 @@ static int vmw_ttm_map_dma(struct vmw_ttm_tt *vmw_tt)
- 		if (unlikely(ret != 0))
- 			return ret;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+index 9d2e1ce5c0a6..b77374ea3825 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -747,6 +747,9 @@ static int vmw_driver_load(struct drm_device *dev, unsigned long chipset)
+ 	if (unlikely(ret != 0))
+ 		goto out_err0;
  
--		ret = sg_alloc_table_from_pages(&vmw_tt->sgt, vsgt->pages,
--						vsgt->num_pages, 0,
--						(unsigned long)
--						vsgt->num_pages << PAGE_SHIFT,
--						GFP_KERNEL);
-+		ret = __sg_alloc_table_from_pages
-+			(&vmw_tt->sgt, vsgt->pages, vsgt->num_pages, 0,
-+			 (unsigned long) vsgt->num_pages << PAGE_SHIFT,
-+			 dma_get_max_seg_size(dev_priv->dev->dev),
-+			 GFP_KERNEL);
- 		if (unlikely(ret != 0))
- 			goto out_sg_alloc_fail;
- 
++	dma_set_max_seg_size(dev->dev, min_t(unsigned int, U32_MAX & PAGE_MASK,
++					     SCATTERLIST_MAX_SEGMENT));
++
+ 	if (dev_priv->capabilities & SVGA_CAP_GMR2) {
+ 		DRM_INFO("Max GMR ids is %u\n",
+ 			 (unsigned)dev_priv->max_gmr_ids);
 -- 
 2.20.1
 
