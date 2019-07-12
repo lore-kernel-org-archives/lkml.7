@@ -2,176 +2,122 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9F1C742CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6C4C742CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684B321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FA2208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3/Xd2s3w"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AG1KSqHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfGLQK0 (ORCPT
+        id S1727279AbfGLQKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:10:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56766 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfGLQK0 (ORCPT
+        Fri, 12 Jul 2019 12:10:37 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16721 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfGLQKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:10:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CFx4CS015324;
-        Fri, 12 Jul 2019 16:09:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Wb5JusxFe8jjYmZhTUkvAEwxtlKfAgSqfJIMrgMwL4s=;
- b=3/Xd2s3w4xR6nzadGwYoukLdbcgJV8Gl4rxc+fL63xAIBmYqbbqrrvNYp6+2gVtmKAUL
- P1rt2Ya3gd6EPzEIESMMc5KtSZZq5WOHXVeVk04QmpuZBvQyRPiw6KjL7HKZUxgKtYi+
- dm8Yz1F4N8WxkN4rQZkWmhYu3mmX1uEz+Qic6Rd3tFOb1UsINlOdJmVcgtwvCFURvmOW
- envClJYB+BrHTLinM4QDfmlErQdFTq9usicw4Tx6eKEswfvLitNdVakjMiNpxSf5d1Bc
- xZ/5J8KVQG1FojSbQUtxGuuUVUou1Mc2mLUCo7KKWuG2kk43uips6Am7ipAOmGwoObAA dg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2tjm9r6ha1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 16:09:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CG2YOw116123;
-        Fri, 12 Jul 2019 16:07:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tnc8u7st5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 16:07:50 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6CG7lhZ015324;
-        Fri, 12 Jul 2019 16:07:47 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 09:07:46 -0700
-Date:   Fri, 12 Jul 2019 12:07:37 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
- padata jobs
-Message-ID: <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
+        Fri, 12 Jul 2019 12:10:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d28b1010000>; Fri, 12 Jul 2019 09:10:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 12 Jul 2019 09:10:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 12 Jul 2019 09:10:35 -0700
+Received: from [10.26.11.231] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jul
+ 2019 16:10:32 +0000
+Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
+        <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190712121620.632595223@linuxfoundation.org>
+ <a1ae16a7-e8f7-b6fc-df4e-46079bebf9b3@nvidia.com>
+ <20190712153108.GD13940@kroah.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a0d871e7-a68c-5c77-1389-5b9a86f93ac9@nvidia.com>
+Date:   Fri, 12 Jul 2019 17:10:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712101012.GW14601@gauss3.secunet.de>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120169
+In-Reply-To: <20190712153108.GD13940@kroah.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562947841; bh=bYr87e5kr2ZaII8bFB9CgHx1dtUYpJJfkgUrOuzXxa8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AG1KSqHlPEW4mGoNA/PwDzdmkxHDB+DqPJZsj311xHcTDmYy+fQMCfyQwUCMYDF6z
+         /z17+yquZIlG2k457vQbAo1/9To19BKHEuvIL+A53SS6O6fajJ9HEaa5MIvMGgb3aD
+         aSLfKVXmpETBbmuTVzfxN89Tal6JEY7Jg+gxbajLughoB45K9GDpWS/+BgFnFKya2J
+         02i/uza2EACqvBA0nr0wPj3XJZtXrpIO6AMJf6+WstJcWqyOAH7FnE0T29OvxMVpUr
+         WrHmd3lkL2Ygl3pt4x12iQULtAPlrGGR/wRGer6mE5+qP/wmksilP6hC8TLaAswZYd
+         rWAmufaPSEexg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 12:10:12PM +0200, Steffen Klassert wrote:
-> On Fri, Jul 12, 2019 at 06:06:36PM +0800, Herbert Xu wrote:
-> > Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
-> > >
-> > > CPU0                                 CPU1
-> > >
-> > > padata_reorder                       padata_do_serial
-> > >  LOAD reorder_objects  // 0
-> > >                                       INC reorder_objects  // 1
-> > >                                       padata_reorder
-> > >                                         TRYLOCK pd->lock   // failed
-> > >  UNLOCK pd->lock
-> >
-> > I think this can't happen because CPU1 won't call padata_reorder
-> > at all as it's the wrong CPU so it gets pushed back onto a work
-> > queue which will go back to CPU0.
 
-Thanks for looking at this.
+On 12/07/2019 16:31, Greg Kroah-Hartman wrote:
+> On Fri, Jul 12, 2019 at 02:36:29PM +0100, Jon Hunter wrote:
+>>
+>> On 12/07/2019 13:19, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 5.2.1 release.
+>>> There are 61 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
+>>> or in the git tree and branch at:
+>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+>>> and the diffstat can be found below.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> All tests are passing for Tegra ...
+>>
+>> Test results for stable-v5.2:
+>>     12 builds:	12 pass, 0 fail
+>>     22 boots:	22 pass, 0 fail
+>>     38 tests:	38 pass, 0 fail
+>>
+>> Linux version:	5.2.1-rc1-g61731e8fe278
+>> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>>                 tegra194-p2972-0000, tegra20-ventana,
+>>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
+> That was fast, thanks for testing all of these.
 
-When you say the wrong CPU, I think you're referring to the reorder_via_wq
-logic in padata_do_serial.  If so, I think my explanation was unclear, because
-there were two padata jobs in flight and my tracepoints showed neither of them
-punted padata_reorder to a workqueue.  Let me expand on this, hopefully it
-helps.
+Friday afternoon for me and so I am even more motivated :-)
 
-pcrypt used CPU 5 for its callback CPU.  The first job in question, with
-sequence number 16581, hashed to CPU 21 on my system.  This is a more complete
-version of what led to the hanging modprobe command.
+BTW, has anyone ever requested pushing out a deadline failing on the
+weekend to the following Monday? There is a chance I could miss this if
+I happen to leave early on a Friday.
 
-modprobe (CPU2)               kworker/21:1-293 (CPU21)                              kworker/5:2-276 (CPU5)
---------------------------    ------------------------                              ----------------------
-<submit job, seq_nr=16581>
-...
-  padata_do_parallel
-    queue_work_on(21, ...)
-<sleeps>
-                              padata_parallel_worker
-                                pcrypt_aead_dec
-                                  padata_do_serial
-                                    padata_reorder
-                                    | padata_get_next  // returns job, seq_nr=16581
-                                    | // serialize seq_nr=16581
-                                    | queue_work_on(5, ...)
-                                    | padata_get_next  // returns -EINPROGRESS
-                                    // padata_reorder doesn't return yet!
-                                    | |                                             padata_serial_worker
-                                    | |                                               pcrypt_aead_serial
-                                    | |                                                 <wake up modprobe>
-                                    | |                                             <worker finishes>
-<submit job, seq_nr=16582>          | |
-...                                 | |
-  padata_do_parallel                | |
-    queue_work_on(22, ...)          | | (LOAD reorder_objects as 0 somewhere
-<sleeps>                            | |    in here, before the INC)
-                                    | |                                             kworker/22:1-291 (CPU22)
-                                    | |                                             ------------------------
-                                    | |                                             padata_parallel_worker
-                                    | |                                               pcrypt_aead_dec
-                                    | |                                                 padata_do_serial
-                                    | |                                                   // INC reorder_objects to 1
-                                    | |                                                   padata_reorder
-                                    | |                                                     // trylock fail, CPU21 _should_
-                                    | |                                                     //   serialize 16582 but doesn't
-                                    | |                                             <worker finishes>
-                                    | // deletes pd->timer
-                                    // padata_reorder returns
-                              <worker finishes>
-<keeps on sleeping lazily>
+Cheers!
+Jon
 
-My tracepoints showed CPU22 increased reorder_objects to 1 but CPU21 read it as
-0.
-
-I think adding the full barrier guarantees the following ordering, and the
-memory model people can correct me if I'm wrong:
-
-CPU21                      CPU22
-------------------------   --------------------------
-UNLOCK pd->lock
-smp_mb()
-LOAD reorder_objects
-                           INC reorder_objects
-                           spin_unlock(&pqueue->reorder.lock) // release barrier
-                           TRYLOCK pd->lock
-
-So if CPU22 has incremented reorder_objects but CPU21 reads 0 for it, CPU21
-should also have unlocked pd->lock so CPU22 can get it and serialize any
-remaining jobs.
+-- 
+nvpublic
