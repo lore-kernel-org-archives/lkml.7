@@ -2,112 +2,85 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42420C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BBDC742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178CF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69411208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aiWoPWk3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bLD4vkk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfGLA2O (ORCPT
+        id S1730594AbfGLAcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:28:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39744 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfGLA2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:28:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so8083018wrt.6;
-        Thu, 11 Jul 2019 17:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e/jWg+zjIBv5+p5y9f7E+7Bbbd4STuPUddNzmbi3FZE=;
-        b=aiWoPWk3zorUBWgYbgtltG1czQEyfkv8HWSMRcf6ri6fcEVtnQtAehmEKAlFDf7V/z
-         KF8lGw0M1NXYI0ddmTnIKDLAvx7P+joj7s7RgOoMNDDVKDNkMoF0kip7Lzt6+t3QCnL1
-         J05fCSg6Ysw/6jNQns0eJMxK1tI7NxiPvyGhGlqmZe1wwFdUcyHShdR8VjMzcG2nep8G
-         Q5hl55K0KYBteAYzMpspuiW1CbzY7oJ7p9GBIiWfsh4rhxBW6H+8jfJ1pm4OUF+in69S
-         RXBezz86juqtGdWqGuO8eSdn8edDIOOSoMyXvA8+sCxfWnPtwNk4qyLoewJCEsqwHaPJ
-         6fZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e/jWg+zjIBv5+p5y9f7E+7Bbbd4STuPUddNzmbi3FZE=;
-        b=e7y1dCe2vfnztiEFY8Uk2LA7rXMKBksRMtV/wyHMQSE9TE9/jAAcnm3gVYTTKPg5iK
-         LuJMhXR0k0qyYJj4dBeoFtZ0PDJStyBw4fZekMULU9MRfcm7eyHOpmBEPyvUc0H+Pm04
-         +YuVFVpWD+cTSEmwL8CIRrzDozvknJkbPKla8KL5Vu/EnR6OYkde9n13UWA7E5Ouj2O+
-         xy33xgpfrOUEKwVQo7RgYLtDI/CU9/WEGxUGG3Lxspv79Z3gavbtNsTe33JAGkSL1wfE
-         13owm0WU1KByAiNjoDaproTranteAr4iVb/cZ6NAFnlURQ29j6UO93CpY6p7t3lpLKtO
-         jeKg==
-X-Gm-Message-State: APjAAAUwFtLIZdUJPMV2hDsX68H8H9GGTtj0NFLeizpxsGlK/C2yWayu
-        MHgitb7ngavGKTlMVzP/OiY=
-X-Google-Smtp-Source: APXvYqx+1vdp5t+0cDVLEH9+0K1fqF2L+h3jTSf0fNGdkufZmGyetM35geKNjyQFjjL7ZqH/aQD6Lw==
-X-Received: by 2002:adf:dbcb:: with SMTP id e11mr7194355wrj.272.1562891292358;
-        Thu, 11 Jul 2019 17:28:12 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id 15sm4659228wmk.34.2019.07.11.17.28.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 17:28:11 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 17:28:09 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     kvalo@codeaurora.org, Arnd Bergmann <arnd@arndb.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH -next] iwlwifi: dbg: work around clang bug by marking
- debug strings static
-Message-ID: <20190712002809.GA7746@archlinux-threadripper>
-References: <20190712001708.170259-1-ndesaulniers@google.com>
+        Thu, 11 Jul 2019 20:32:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36413 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbfGLAcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 20:32:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45lDP34S5Kz9sBt;
+        Fri, 12 Jul 2019 10:31:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562891512;
+        bh=tAyTsSMqJI7TR8669ycCC1PyQtmKW7Zr5Lc2ObC0jcw=;
+        h=Date:From:To:Subject:From;
+        b=bLD4vkk+FX278l4wZ1lznOZI6U1hLeJIrNmylr8wRsCrZxwcrS6e8FwiwJSZ410Zn
+         RBcWX/Q2ltEng8UVRTXNCfL5nnOFSYFueUDchnPC8VE04lgSE/kbQEVXYdZuO1QtyE
+         6TSIC9yxH31sTseaBwSh19p+u8c6f+6m79J58BdZYqHXX6eZgJC84f65HlA1PbTUH7
+         jYwkBU9csiBUM0C29PVLyxezNVfP5XKpNGdkFw40Am0M1v4DcS7uTVUfNFcF9JHp98
+         C+Ir9Nyu2cylnaHjwUpwlnb1d6JK00gXVwNm4zHeJT/jGJNN4mmw6PtYmGFMDJVQn8
+         o2fikL2thDGVg==
+Date:   Fri, 12 Jul 2019 10:30:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: we are in the merge window
+Message-ID: <20190712102601.6d23c330@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712001708.170259-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/J=0z2gxGWvbPHCe95IAmoOA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 05:17:06PM -0700, Nick Desaulniers wrote:
-> Commit r353569 in prerelease Clang-9 is producing a linkage failure:
-> 
-> ld: drivers/net/wireless/intel/iwlwifi/fw/dbg.o:
-> in function `_iwl_fw_dbg_apply_point':
-> dbg.c:(.text+0x827a): undefined reference to `__compiletime_assert_2387'
-> 
-> when the following configs are enabled:
-> - CONFIG_IWLWIFI
-> - CONFIG_IWLMVM
-> - CONFIG_KASAN
-> 
-> Work around the issue for now by marking the debug strings as `static`,
-> which they probably should be any ways.
-> 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=42580
-> Link: https://github.com/ClangBuiltLinux/linux/issues/580
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+--Sig_/J=0z2gxGWvbPHCe95IAmoOA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied on next-20190711 and I can confirm that this fixes the issue we
-observed. Thanks to you for wrapping up the patch and sending it and to
-Eli for giving the suggestion.
+Hi all,
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+[This has been Bcc'd to all the contacts I have for tree in linux-next]
+
+Please do not add v5.4 material to your linux-next included branches
+until after v5.3-rc1 has been released.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/J=0z2gxGWvbPHCe95IAmoOA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0n1LUACgkQAVBC80lX
+0GyLiggAhMqBKs8tiEWFZ3gkpZcCYh/SFFNWL6TZ9Q8Q8dk9It4OjdZqLendVOqI
+niObkrawbEmuAi7ST5HmPyl3Apt3MxILNzqe9UrpV+aO0byOz25ase5n9Zehf3Dd
+I/D5HSo5tkpjmMc/EgX0N9kzZr8hN5stv8MDj/iYBaUYeNI0gbZ9vBqEjIj5nv06
+Xkdcj+EfTGi+uVnFf6LO0hXH5JOgwImNqcqAzRzmkSGwli3xvk7eVbodkyWsCX/T
+8wwBm1VQ4b2to3QerJ+COKOBMO0rhKybKkji1m4hAR5VlaIzcwL8+BvmmzrZvLta
+/mO4Os/KoXRP+gPIm/cCLxILFw/kiA==
+=tjPW
+-----END PGP SIGNATURE-----
+
+--Sig_/J=0z2gxGWvbPHCe95IAmoOA--
