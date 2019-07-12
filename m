@@ -2,127 +2,321 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A979C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFEC742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0894820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A8920838
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:37:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="at082DvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfGLRft (ORCPT
+        id S1727377AbfGLRh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:35:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47506 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfGLRft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:35:49 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BFE06C055674;
-        Fri, 12 Jul 2019 17:35:48 +0000 (UTC)
-Received: from dhcp-17-89.bos.redhat.com (dhcp-17-89.bos.redhat.com [10.18.17.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 178AF608AB;
-        Fri, 12 Jul 2019 17:35:48 +0000 (UTC)
-Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        airlied@linux.ie, dkwon@redhat.com
-References: <20190523110905.22445-1-tcamuso@redhat.com>
- <87v9y0mept.fsf@intel.com> <5111581c-9d73-530d-d3ff-4f6950bf3f8c@redhat.com>
- <20190710135617.GE5942@intel.com>
- <374b7e4e-40a2-f3c0-ae14-c533bd42243f@redhat.com>
- <20190712170657.GL5942@intel.com>
-From:   Tony Camuso <tcamuso@redhat.com>
-Message-ID: <816a78f2-34f9-130f-3de8-c9adad17e8b9@redhat.com>
-Date:   Fri, 12 Jul 2019 13:35:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 13:37:27 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43875 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfGLRh0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 13:37:26 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so7003699lfm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kinvolk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ECOowTnmo6hEt1xt/TfDln7M7jHsu79iCyx4EjgLRmk=;
+        b=at082DvKhiTPqjz4ap9YPlMHYMCJY9h7UyXg+zOJb5BkByXK7uzj2jv8q0G+JOyCkv
+         20HT/VP9yGNlE9ubQAloFeetKGUZValrHYc8baWhk+iTSr4ypaYqEz2qvEJBscBTsqv4
+         K2VuuRLoKqTkY8lw+ZQpVGS9xLW8TleV/CWyA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ECOowTnmo6hEt1xt/TfDln7M7jHsu79iCyx4EjgLRmk=;
+        b=WQSxxdCB+Gbnn9QJXVlTpmfTkMXXdxe/i9dRMOqVpTqBmcR59PWTjYFtV6dnB4cHnf
+         C+qqXuH0d1mlWMuJTg0lCrHVXVGehBN/LUwyVa0ZAOFHoLVjfM5JS8uqmW4Hg3F4ChYR
+         UMYbH0x6aQ5+2ZeDXjE/inmuAr/cvKBCkem1EtAVcPUMq+qtVJwE3g4pvMxs1a3wvgZW
+         UuoR6sdwi/W9V/GZvOSyMqGEaKyb3+gL3sYaw8IMz1Xh1VE+bNpPlcKfgyML/fEcUXBQ
+         tJB1cY8PgOnaQ0wplZwN8CgoVf+cU0n0IWkA8WhhT+Hk7tpprt3D+TbrgWB+n4ZbS9nM
+         n+6Q==
+X-Gm-Message-State: APjAAAU0keyxxbUItdCA9uOR3vKx3tYUxMaCg1/HTvSAgzj0zFeQZf5O
+        IfRP+1sI3sQkFU7T1C/GuRRDujzY8njvsn3hav5WyA==
+X-Google-Smtp-Source: APXvYqymZ5tU5ICyyl2E4yb29agkpzLxbmyMXXXFwD4q20dLg1l9JnYJZRsA53BNTLg3CsWxybf3cdv/WXIyQu/7iB4=
+X-Received: by 2002:a19:8c08:: with SMTP id o8mr5348268lfd.57.1562953043592;
+ Fri, 12 Jul 2019 10:37:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190712170657.GL5942@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 12 Jul 2019 17:35:48 +0000 (UTC)
+References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-12-krzesimir@kinvolk.io>
+ <CAEf4BzYaV=AxYZna225qKzyWPteU4YFPiBRE4cO30tYmyN_pJQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzYaV=AxYZna225qKzyWPteU4YFPiBRE4cO30tYmyN_pJQ@mail.gmail.com>
+From:   Krzesimir Nowak <krzesimir@kinvolk.io>
+Date:   Fri, 12 Jul 2019 19:37:12 +0200
+Message-ID: <CAGGp+cGMnumMx+GnKbD_ty1C+UWib70s0oBzqdS-=mA-L0jyHA@mail.gmail.com>
+Subject: Re: [bpf-next v3 11/12] selftests/bpf: Add tests for
+ bpf_prog_test_run for perf events progs
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/19 1:06 PM, Ville Syrjälä wrote:
-> On Fri, Jul 12, 2019 at 12:07:46PM -0400, Tony Camuso wrote:
->> On 7/10/19 9:56 AM, Ville Syrjälä wrote:
->>> On Wed, Jul 10, 2019 at 09:47:11AM -0400, Tony Camuso wrote:
->>>> On 5/24/19 4:36 AM, Jani Nikula wrote:
->>>>> On Thu, 23 May 2019, tcamuso <tcamuso@redhat.com> wrote:
->>>>>>    From Daniel Kwon <dkwon@redhat.com>
->>>>>>
->>>>>> The system was crashed due to invalid memory access while trying to access
->>>>>> auxiliary device.
->>>>>>
->>>>>> crash> bt
->>>>>> PID: 9863   TASK: ffff89d1bdf11040  CPU: 1   COMMAND: "ipmitool"
->>>>>>     #0 [ffff89cedd7f3868] machine_kexec at ffffffffb0663674
->>>>>>     #1 [ffff89cedd7f38c8] __crash_kexec at ffffffffb071cf62
->>>>>>     #2 [ffff89cedd7f3998] crash_kexec at ffffffffb071d050
->>>>>>     #3 [ffff89cedd7f39b0] oops_end at ffffffffb0d6d758
->>>>>>     #4 [ffff89cedd7f39d8] no_context at ffffffffb0d5bcde
->>>>>>     #5 [ffff89cedd7f3a28] __bad_area_nosemaphore at ffffffffb0d5bd75
->>>>>>     #6 [ffff89cedd7f3a78] bad_area at ffffffffb0d5c085
->>>>>>     #7 [ffff89cedd7f3aa0] __do_page_fault at ffffffffb0d7080c
->>>>>>     #8 [ffff89cedd7f3b10] do_page_fault at ffffffffb0d70905
->>>>>>     #9 [ffff89cedd7f3b40] page_fault at ffffffffb0d6c758
->>>>>>        [exception RIP: drm_dp_aux_dev_get_by_minor+0x3d]
->>>>>>        RIP: ffffffffc0a589bd  RSP: ffff89cedd7f3bf0  RFLAGS: 00010246
->>>>>>        RAX: 0000000000000000  RBX: 0000000000000000  RCX: ffff89cedd7f3fd8
->>>>>>        RDX: 0000000000000000  RSI: 0000000000000000  RDI: ffffffffc0a613e0
->>>>>>        RBP: ffff89cedd7f3bf8   R8: ffff89f1bcbabbd0   R9: 0000000000000000
->>>>>>        R10: ffff89f1be7a1cc0  R11: 0000000000000000  R12: 0000000000000000
->>>>>>        R13: ffff89f1b32a2830  R14: ffff89d18fadfa00  R15: 0000000000000000
->>>>>>        ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
->>>>>>        RIP: 00002b45f0d80d30  RSP: 00007ffc416066a0  RFLAGS: 00010246
->>>>>>        RAX: 0000000000000002  RBX: 000056062e212d80  RCX: 00007ffc41606810
->>>>>>        RDX: 0000000000000000  RSI: 0000000000000002  RDI: 00007ffc41606ec0
->>>>>>        RBP: 0000000000000000   R8: 000056062dfed229   R9: 00002b45f0cdf14d
->>>>>>        R10: 0000000000000002  R11: 0000000000000246  R12: 00007ffc41606ec0
->>>>>>        R13: 00007ffc41606ed0  R14: 00007ffc41606ee0  R15: 0000000000000000
->>>>>>        ORIG_RAX: 0000000000000002  CS: 0033  SS: 002b
->>>>>>
->>>>>> ----------------------------------------------------------------------------
->>>>>>
->>>>>> It was trying to open '/dev/ipmi0', but as no entry in aux_dir, it returned
->>>>>> NULL from 'idr_find()'. This drm_dp_aux_dev_get_by_minor() should have done a
->>>>>> check on this, but had failed to do it.
->>>>>
->>>>> I think the better question is, *why* does the idr_find() return NULL? I
->>>>> don't think it should, under any circumstances. I fear adding the check
->>>>> here papers over some other problem, taking us further away from the
->>>>> root cause.
->>>>>
->>>>> Also, can you reproduce this on a recent upstream kernel? The aux device
->>>>> nodes were introduced in kernel v4.6. Whatever you reproduced on v3.10
->>>>> is pretty much irrelevant for upstream.
->>>>>
->>>>>
->>>>> BR,
->>>>> Jani.
->>>>
->>>> I have not been able to reproduce this problem.
->>>
->>> mknod /dev/foo c <drm_dp_aux major> 255
->>> cat /dev/foo
->>>
->>> should do it.
->>
->> How do I determine <drm_dp_aux major>?
-> 
-> ls,file,stat. Take your pick.
-> 
+On Fri, Jul 12, 2019 at 2:38 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wro=
+te:
+> >
+> > The tests check if ctx and data are correctly prepared from ctx_in and
+> > data_in, so accessing the ctx and using the bpf_perf_prog_read_value
+> > work as expected.
+> >
+>
+> These are x86_64-specific tests, aren't they? Should probably guard
+> them behind #ifdef's.
 
-Doh. Thanks!!
+Yeah, they are x86_64 specific, because pt_regs are arch specific. I
+was wondering what to do here in the cover letter. Ifdef? Ifdef and
+cover also other arches (please no)? Do some weird tricks with
+overriding the definition of pt_regs? Else?
 
+>
+> > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> > ---
+> >  tools/testing/selftests/bpf/test_verifier.c   | 48 ++++++++++
+> >  .../selftests/bpf/verifier/perf_event_run.c   | 96 +++++++++++++++++++
+> >  2 files changed, 144 insertions(+)
+> >  create mode 100644 tools/testing/selftests/bpf/verifier/perf_event_run=
+.c
+> >
+> > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testin=
+g/selftests/bpf/test_verifier.c
+> > index 6f124cc4ee34..484ea8842b06 100644
+> > --- a/tools/testing/selftests/bpf/test_verifier.c
+> > +++ b/tools/testing/selftests/bpf/test_verifier.c
+> > @@ -295,6 +295,54 @@ static void bpf_fill_scale(struct bpf_test *self)
+> >         }
+> >  }
+> >
+> > +static void bpf_fill_perf_event_test_run_check(struct bpf_test *self)
+> > +{
+> > +       compiletime_assert(
+> > +               sizeof(struct bpf_perf_event_data) <=3D TEST_CTX_LEN,
+> > +               "buffer for ctx is too short to fit struct bpf_perf_eve=
+nt_data");
+> > +       compiletime_assert(
+> > +               sizeof(struct bpf_perf_event_value) <=3D TEST_DATA_LEN,
+> > +               "buffer for data is too short to fit struct bpf_perf_ev=
+ent_value");
+> > +
+> > +       struct bpf_perf_event_data ctx =3D {
+> > +               .regs =3D (bpf_user_pt_regs_t) {
+> > +                       .r15 =3D 1,
+> > +                       .r14 =3D 2,
+> > +                       .r13 =3D 3,
+> > +                       .r12 =3D 4,
+> > +                       .rbp =3D 5,
+> > +                       .rbx =3D 6,
+> > +                       .r11 =3D 7,
+> > +                       .r10 =3D 8,
+> > +                       .r9 =3D 9,
+> > +                       .r8 =3D 10,
+> > +                       .rax =3D 11,
+> > +                       .rcx =3D 12,
+> > +                       .rdx =3D 13,
+> > +                       .rsi =3D 14,
+> > +                       .rdi =3D 15,
+> > +                       .orig_rax =3D 16,
+> > +                       .rip =3D 17,
+> > +                       .cs =3D 18,
+> > +                       .eflags =3D 19,
+> > +                       .rsp =3D 20,
+> > +                       .ss =3D 21,
+> > +               },
+> > +               .sample_period =3D 1,
+> > +               .addr =3D 2,
+> > +       };
+> > +       struct bpf_perf_event_value data =3D {
+> > +               .counter =3D 1,
+> > +               .enabled =3D 2,
+> > +               .running =3D 3,
+> > +       };
+> > +
+> > +       memcpy(self->ctx, &ctx, sizeof(ctx));
+> > +       memcpy(self->data, &data, sizeof(data));
+>
+> Just curious, just assignment didn't work?
+>
+> > +       free(self->fill_insns);
+> > +       self->fill_insns =3D NULL;
+> > +}
+> > +
+> >  /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up maps =
+*/
+> >  #define BPF_SK_LOOKUP(func)                                           =
+ \
+> >         /* struct bpf_sock_tuple tuple =3D {} */                       =
+   \
+> > diff --git a/tools/testing/selftests/bpf/verifier/perf_event_run.c b/to=
+ols/testing/selftests/bpf/verifier/perf_event_run.c
+> > new file mode 100644
+> > index 000000000000..3f877458a7f8
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/bpf/verifier/perf_event_run.c
+> > @@ -0,0 +1,96 @@
+> > +#define PER_LOAD_AND_CHECK_PTREG(PT_REG_FIELD, VALUE)                 =
+ \
+> > +       PER_LOAD_AND_CHECK_CTX(offsetof(bpf_user_pt_regs_t, PT_REG_FIEL=
+D), VALUE)
+> > +#define PER_LOAD_AND_CHECK_EVENT(PED_FIELD, VALUE)                    =
+ \
+> > +       PER_LOAD_AND_CHECK_CTX(offsetof(struct bpf_perf_event_data, PED=
+_FIELD), VALUE)
+> > +#define PER_LOAD_AND_CHECK_CTX(OFFSET, VALUE)                         =
+ \
+> > +       PER_LOAD_AND_CHECK_64(BPF_REG_4, BPF_REG_1, OFFSET, VALUE)
+> > +#define PER_LOAD_AND_CHECK_VALUE(PEV_FIELD, VALUE)                    =
+ \
+> > +       PER_LOAD_AND_CHECK_64(BPF_REG_7, BPF_REG_6, offsetof(struct bpf=
+_perf_event_value, PEV_FIELD), VALUE)
+>
+> Wrap long lines? Try also running scripts/checkpatch.pl again these
+> files you are modifying.
+
+Will wrap. Checkpatch was also complaining about complex macro not
+being inside parens, but I can't see how to wrap it in parens and keep
+it working at the same time.
+
+>
+> > +#define PER_LOAD_AND_CHECK_64(DST, SRC, OFFSET, VALUE)                =
+ \
+> > +       BPF_LDX_MEM(BPF_DW, DST, SRC, OFFSET),                         =
+ \
+> > +       BPF_JMP_IMM(BPF_JEQ, DST, VALUE, 2),                           =
+ \
+> > +       BPF_MOV64_IMM(BPF_REG_0, VALUE),                               =
+ \
+> > +       BPF_EXIT_INSN()
+> > +
+> > +{
+> > +       "check if regs contain expected values",
+> > +       .insns =3D {
+> > +       PER_LOAD_AND_CHECK_PTREG(r15, 1),
+> > +       PER_LOAD_AND_CHECK_PTREG(r14, 2),
+> > +       PER_LOAD_AND_CHECK_PTREG(r13, 3),
+> > +       PER_LOAD_AND_CHECK_PTREG(r12, 4),
+> > +       PER_LOAD_AND_CHECK_PTREG(rbp, 5),
+> > +       PER_LOAD_AND_CHECK_PTREG(rbx, 6),
+> > +       PER_LOAD_AND_CHECK_PTREG(r11, 7),
+> > +       PER_LOAD_AND_CHECK_PTREG(r10, 8),
+> > +       PER_LOAD_AND_CHECK_PTREG(r9, 9),
+> > +       PER_LOAD_AND_CHECK_PTREG(r8, 10),
+> > +       PER_LOAD_AND_CHECK_PTREG(rax, 11),
+> > +       PER_LOAD_AND_CHECK_PTREG(rcx, 12),
+> > +       PER_LOAD_AND_CHECK_PTREG(rdx, 13),
+> > +       PER_LOAD_AND_CHECK_PTREG(rsi, 14),
+> > +       PER_LOAD_AND_CHECK_PTREG(rdi, 15),
+> > +       PER_LOAD_AND_CHECK_PTREG(orig_rax, 16),
+> > +       PER_LOAD_AND_CHECK_PTREG(rip, 17),
+> > +       PER_LOAD_AND_CHECK_PTREG(cs, 18),
+> > +       PER_LOAD_AND_CHECK_PTREG(eflags, 19),
+> > +       PER_LOAD_AND_CHECK_PTREG(rsp, 20),
+> > +       PER_LOAD_AND_CHECK_PTREG(ss, 21),
+> > +       BPF_MOV64_IMM(BPF_REG_0, 0),
+> > +       BPF_EXIT_INSN(),
+> > +       },
+> > +       .result =3D ACCEPT,
+> > +       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > +       .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > +       .data_len =3D sizeof(struct bpf_perf_event_value),
+> > +       .fill_helper =3D bpf_fill_perf_event_test_run_check,
+> > +       .override_data_out_len =3D true,
+> > +},
+> > +{
+> > +       "check if sample period and addr contain expected values",
+> > +       .insns =3D {
+> > +       PER_LOAD_AND_CHECK_EVENT(sample_period, 1),
+> > +       PER_LOAD_AND_CHECK_EVENT(addr, 2),
+> > +       BPF_MOV64_IMM(BPF_REG_0, 0),
+> > +       BPF_EXIT_INSN(),
+> > +       },
+> > +       .result =3D ACCEPT,
+> > +       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > +       .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > +       .data_len =3D sizeof(struct bpf_perf_event_value),
+> > +       .fill_helper =3D bpf_fill_perf_event_test_run_check,
+> > +       .override_data_out_len =3D true,
+> > +},
+> > +{
+> > +       "check if bpf_perf_prog_read_value returns expected data",
+> > +       .insns =3D {
+> > +       // allocate space for a struct bpf_perf_event_value
+> > +       BPF_MOV64_REG(BPF_REG_6, BPF_REG_10),
+> > +       BPF_ALU64_IMM(BPF_ADD, BPF_REG_6, -(int)sizeof(struct bpf_perf_=
+event_value)),
+> > +       // prepare parameters for bpf_perf_prog_read_value(ctx, struct =
+bpf_perf_event_value*, u32)
+> > +       // BPF_REG_1 already contains the context
+> > +       BPF_MOV64_REG(BPF_REG_2, BPF_REG_6),
+> > +       BPF_MOV64_IMM(BPF_REG_3, sizeof(struct bpf_perf_event_value)),
+> > +       BPF_EMIT_CALL(BPF_FUNC_perf_prog_read_value),
+> > +       // check the return value
+> > +       BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 1),
+> > +       BPF_EXIT_INSN(),
+> > +       // check if the fields match the expected values
+>
+> Use /* */ comments.
+
+Oops. Will fix.
+
+>
+> > +       PER_LOAD_AND_CHECK_VALUE(counter, 1),
+> > +       PER_LOAD_AND_CHECK_VALUE(enabled, 2),
+> > +       PER_LOAD_AND_CHECK_VALUE(running, 3),
+> > +       BPF_MOV64_IMM(BPF_REG_0, 0),
+> > +       BPF_EXIT_INSN(),
+> > +       },
+> > +       .result =3D ACCEPT,
+> > +       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > +       .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > +       .data_len =3D sizeof(struct bpf_perf_event_value),
+> > +       .fill_helper =3D bpf_fill_perf_event_test_run_check,
+> > +       .override_data_out_len =3D true,
+> > +},
+> > +#undef PER_LOAD_AND_CHECK_64
+> > +#undef PER_LOAD_AND_CHECK_VALUE
+> > +#undef PER_LOAD_AND_CHECK_CTX
+> > +#undef PER_LOAD_AND_CHECK_EVENT
+> > +#undef PER_LOAD_AND_CHECK_PTREG
+> > --
+> > 2.20.1
+> >
+
+
+
+--
+Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
+Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago L=
+=C3=B3pez Galeiras
+Registergericht/Court of registration: Amtsgericht Charlottenburg
+Registernummer/Registration number: HRB 171414 B
+Ust-ID-Nummer/VAT ID number: DE302207000
