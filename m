@@ -6,120 +6,118 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826E2C742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1815C742B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3DA20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE0420863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfGLJHT (ORCPT
+        id S1726492AbfGLJHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:07:19 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:56347 "EHLO
+        Fri, 12 Jul 2019 05:07:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:41329 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfGLJHS (ORCPT
+        with ESMTP id S1726401AbfGLJHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:07:18 -0400
+        Fri, 12 Jul 2019 05:07:43 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MeC5x-1iN7Ph3SwZ-00bI7H; Fri, 12 Jul 2019 11:07:06 +0200
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MWR6x-1hxf5K14xf-00XsqW; Fri, 12 Jul 2019 11:07:41 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Arjun Vynipadath <arjun@chelsio.com>,
-        Surendra Mobiya <surendra@chelsio.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] [net-next] cxgb4: reduce kernel stack usage in cudbg_collect_mem_region()
-Date:   Fri, 12 Jul 2019 11:06:33 +0200
-Message-Id: <20190712090700.317887-1-arnd@arndb.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] lib/mpi: fix building with 32-bit x86
+Date:   Fri, 12 Jul 2019 11:07:34 +0200
+Message-Id: <20190712090740.340186-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rxFNf2Aki8qaWD5BAHF9dJ6RZq9YGgkpHy8CO9HIEVlm7go4NVx
- kHFABxf69KKsV1nhzdGT3E9nhL8b1dNpvlMeZZl2UMJi8iAayuR+sj7oa0MEnBelfmAdzn5
- GmHu8AwVCwbo0qLCZAdAoclelQrmU9yj0DnBAzqUoCo/zn600t8P2zAcHHKnKHoneepLFiT
- ZS5YgzKSe3u0GNUA3I0FA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:O+AX6q867+c=:MXtjbU0XZTwkG7PWMjzQ0V
- v5o84QhB/JLoRjYCRSyrVPpQt+fH7M0kpZkVaBCVVUDGAjEiOpR7zF32Qu8hpWd9fjVvUf+3U
- KM3P5kDvJKPYVl3RNOaGzcaB+KUav3WF3hQGBcRQ5oavMoyr1ROzkS4UD91aZIX2VOC3hywPN
- LYXBXODKbJrhtm+gVfyHZhr/oM6QSpKV/T5aq/hwkkYKNdUKbAZJjTKKOFSMqbZU3W5wl4l5K
- ZJxws379F6lkAaRSSwgkC5q6yPaDxukpzkb9aX+7ySDAfmcwkFaSsdzP1N5SybF+TievuvcO/
- xAc46xFlboH0LUsMWBjvT+8Tz1tvqK6rWkdCl5ZyP2V1wbYA449wJ76Y3yBQ0oGcl8oHUNR0D
- Kop6dogBbjIbIZi5nMcsuNvvy7tMBy+Netj1OMEEVl6wb4nBNmFVdgApLQJTZvL46Zz8H0xof
- qE1VEvSdhbZrWfi05TsMs99NoV7+Qy+L6/1lNyUu76iUnhD5uIwFA7A+n+Xhek2p5XjU0BGkI
- tF4JPjQp/fIRI8zPkQVqPvfyzoJEDDwO9YAjwz3be7/QnXITG8dOE0e4oVwWEoMqAT8kgruzR
- MSEhW1VvhgmwaDaQTK+1rSNFglRTIvh2/oPX9zMp5nrcR5Cy0QuxN6c5EYSv314nMM002t7JP
- 6gxHomwy6vEHdQnQ/6HHOVawvNPEXHrEQQhC7lP46W6BLahCkwhrAMjYv+Qknyg2uvGCER0Qw
- vIforeros4ovfVwG0LyxQ5Y7toEmy3zMX/nf4g==
+X-Provags-ID: V03:K1:oshOUE/i3SB/+6j50OZzcgZaoU8IfG0hYfG87EvVrAoYQhBFCPj
+ TYXcsD3c36xAYC+HbHBgw4TgevC2UdWi6oHQX7AL6pnoh6y+hvIRMl3Q0Mf9Aul4Mm7W4Fu
+ j9PumrWVK4JrtKZDt8ChnFkB4vkMlznKcVJXeFtICQ9YCj0ckdi2R0xUkVnzLB7TBzZSwvq
+ tvSKL//VB4vGstTl1rdJw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:E7yiX+Q7/mY=:byTXnfUAj5/OJR3X6n4+7O
+ JpZrOENWt75JJxW99jNUg8wMyY2aQzrHrnDhUg+LIzQcAsJlfSsqfK15iIgYD4Y4cWVIZdYaK
+ Xhn0RyaspVrksHOZIV6mDJbVyGQ7lN4wdpH+f5Y+aR4NcnO9cLX/r+PSED3vGcqYSo4asqnmn
+ 1M5rro6KQqttjjDXcidfu3jsK5WswGYeHpZ9fI+wZ1vWu68sk4Q+kKxtQdUzVDb9sXixnaLaf
+ ZD5ib0U5KAjiZ7BMmwNFm1knxWEjxl3aisoDAn8dwxLIx3yBarUpBDsLnJGwE+qcWabQusJlI
+ DjeFXYgJQmHiKWw5bIMBTA+jpzcOi9x8e7mm1P8v6g42NExrbfOhddLorlld0CzcNPBMkQ4R5
+ uBNF/SixDQLbP9hw91nohqeShQp41NT9QmZ7Ub797INqBQoKIUX9IFw4ipOSlcI2wTRYGHUQ8
+ fPotyEK+sNhrnNYLsvFXma8sM9MDDqFUPaNBOO5ghswuiQCvRytkYTVF5OILaTRzXPSqBeyfx
+ 5pU37sQS6a6lupJX+J6TrAQTDKiA1NmgVwuDNJfHhkBGjX5cnLsPwAlLyZV4YINpd3MubwC6r
+ BrfOVS2AMzLvmPsxD1qv+DE+6rhR/5lPJ3JL8plT+MV/Cvf+rDAmyszBwFbUqZpGEBQmhB8Y0
+ N+Q1y0UnvDjFOk+o2uM65LKaWsWvmiqf7HcjBOpzN8bX3eeA264xK5bX0JKIjXFSYMvwT6zSy
+ Obt4URscfAdBKyzZSgVzRZQVIoilAKe7Uliv8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cudbg_collect_mem_region() and cudbg_read_fw_mem() both use several
-hundred kilobytes of kernel stack space. One gets inlined into the other,
-which causes the stack usage to be combined beyond the warning limit
-when building with clang:
+The mpi library contains some rather old inline assembly statements
+that produce a lot of warnings for 32-bit x86, such as:
 
-drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c:1057:12: error: stack frame size of 1244 bytes in function 'cudbg_collect_mem_region' [-Werror,-Wframe-larger-than=]
+lib/mpi/mpih-div.c:76:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
+                                udiv_qrnnd(qp[i], n1, n1, np[i], d);
+                                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+lib/mpi/longlong.h:423:20: note: expanded from macro 'udiv_qrnnd'
+        : "=a" ((USItype)(q)), \
+                ~~~~~~~~~~^~
 
-Restructuring cudbg_collect_mem_region() lets clang do the same
-optimization that gcc does and reuse the stack slots as it can
-see that the large variables are never used together.
+There is no point in doing a type cast for the output of an inline assembler
+statement, so just remove the cast here, as we have done for other architectures
+in the past.
 
-A better fix might be to avoid using cudbg_meminfo on the stack
-altogether, but that requires a larger rewrite.
-
-Fixes: a1c69520f785 ("cxgb4: collect MC memory dump")
+See-also: dea632cadd12 ("lib/mpi: fix build with clang")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../net/ethernet/chelsio/cxgb4/cudbg_lib.c    | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ lib/mpi/longlong.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-index a76529a7662d..c2e92786608b 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-@@ -1054,14 +1054,12 @@ static void cudbg_t4_fwcache(struct cudbg_init *pdbg_init,
- 	}
- }
- 
--static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
--				    struct cudbg_buffer *dbg_buff,
--				    struct cudbg_error *cudbg_err,
--				    u8 mem_type)
-+static unsigned long cudbg_mem_region_size(struct cudbg_init *pdbg_init,
-+					   struct cudbg_error *cudbg_err,
-+					   u8 mem_type)
- {
- 	struct adapter *padap = pdbg_init->adap;
- 	struct cudbg_meminfo mem_info;
--	unsigned long size;
- 	u8 mc_idx;
- 	int rc;
- 
-@@ -1075,7 +1073,16 @@ static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
- 	if (rc)
- 		return rc;
- 
--	size = mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
-+	return mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
-+}
-+
-+static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
-+				    struct cudbg_buffer *dbg_buff,
-+				    struct cudbg_error *cudbg_err,
-+				    u8 mem_type)
-+{
-+	unsigned long size = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type);
-+
- 	return cudbg_read_fw_mem(pdbg_init, dbg_buff, mem_type, size,
- 				 cudbg_err);
- }
+diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+index 08c60d10747f..3bb6260d8f42 100644
+--- a/lib/mpi/longlong.h
++++ b/lib/mpi/longlong.h
+@@ -397,8 +397,8 @@ do { \
+ #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
+ 	__asm__ ("addl %5,%1\n" \
+ 	   "adcl %3,%0" \
+-	: "=r" ((USItype)(sh)), \
+-	     "=&r" ((USItype)(sl)) \
++	: "=r" (sh), \
++	     "=&r" (sl) \
+ 	: "%0" ((USItype)(ah)), \
+ 	     "g" ((USItype)(bh)), \
+ 	     "%1" ((USItype)(al)), \
+@@ -406,22 +406,22 @@ do { \
+ #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
+ 	__asm__ ("subl %5,%1\n" \
+ 	   "sbbl %3,%0" \
+-	: "=r" ((USItype)(sh)), \
+-	     "=&r" ((USItype)(sl)) \
++	: "=r" (sh), \
++	     "=&r" (sl) \
+ 	: "0" ((USItype)(ah)), \
+ 	     "g" ((USItype)(bh)), \
+ 	     "1" ((USItype)(al)), \
+ 	     "g" ((USItype)(bl)))
+ #define umul_ppmm(w1, w0, u, v) \
+ 	__asm__ ("mull %3" \
+-	: "=a" ((USItype)(w0)), \
+-	     "=d" ((USItype)(w1)) \
++	: "=a" (w0), \
++	     "=d" (w1) \
+ 	: "%0" ((USItype)(u)), \
+ 	     "rm" ((USItype)(v)))
+ #define udiv_qrnnd(q, r, n1, n0, d) \
+ 	__asm__ ("divl %4" \
+-	: "=a" ((USItype)(q)), \
+-	     "=d" ((USItype)(r)) \
++	: "=a" (q), \
++	     "=d" (r) \
+ 	: "0" ((USItype)(n0)), \
+ 	     "1" ((USItype)(n1)), \
+ 	     "rm" ((USItype)(d)))
 -- 
 2.20.0
 
