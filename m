@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93956C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E7DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F7221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63987208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934709;
-	bh=2UB7NHElc5e3ubkFiiIstTcEaan7t9U1hELRnX40JlE=;
+	s=default; t=1562934715;
+	bh=z2PB0owPThVnK2H60EQBS4IbVg/99sL+l3sZvBSv2fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZ4AeHhQVB7zJHg1Wi81XEZOB+HRNOLm+8uzXZJ7t/zye3DMBqN/TwliU5qOI+xqU
-	 io7/E0p7XNDFaOcceHAr8MOHuh4pO9ighFtPxypiOEvd2NK4Lrw/2m1p31x46x6kxN
-	 DJoQn5AOUxXCqLlEyu/4Ca2IUxsNEB4OS4lIffUM=
+	b=aTz5fwiZFi79/6W68wHrZMfO/hGzVPuk09KWbSMdMKvB3MZYbmnvKYyQMJxzuILkt
+	 mv8jJbKbkrnIm9j9fE43cFr1HxLSbX14PyjlPFLC1NxQ2Otcyorj6p7A9klPdC5QLQ
+	 SVZvLbr9ZLPjiPlWcNqvnbkq+OWXPLm6TzFHGf9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfGLMbs (ORCPT
+        id S1729380AbfGLMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48764 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727603AbfGLMbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:31:46 -0400
+        id S1727603AbfGLMbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:31:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 889E121019;
-        Fri, 12 Jul 2019 12:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7CE2166E;
+        Fri, 12 Jul 2019 12:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934705;
-        bh=2UB7NHElc5e3ubkFiiIstTcEaan7t9U1hELRnX40JlE=;
+        s=default; t=1562934710;
+        bh=z2PB0owPThVnK2H60EQBS4IbVg/99sL+l3sZvBSv2fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=knSdtgxzX3aKbBqrj50xtSNVr88g7BljCPn/5k3uPPexpMJwPxx5NU+nGIPXb6wjB
-         krQvPD8B/jnqjalmeIu+2reYeWErDsvlvP5/8KdNtLdQY0YJYw64702R/UHXZwbU9k
-         pp9/ayzWeQcWnNrDUoCSX/2vcfWcEUZC3rIyuo4U=
+        b=udvJGnO+RJOh39kXqAsOkGHtyE7mM9g3+NMPpHen31CTmtaWBbAEENuUiqJaD08gE
+         zHM0IuxpCNw7s/hdHGqKBswxS15S/BVHwLLeoGpLrVksfZth2JSh6gOrRyq4uOzfjt
+         jxlnTrmqehjxPcngqhPghep6hJ/GOfPfBYnoRFhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com,
-        Todd Kjos <tkjos@google.com>
-Subject: [PATCH 5.1 125/138] binder: fix memory leak in error path
-Date:   Fri, 12 Jul 2019 14:19:49 +0200
-Message-Id: <20190712121633.533436037@linuxfoundation.org>
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.1 127/138] iio: adc: stm32-adc: add missing vdda-supply
+Date:   Fri, 12 Jul 2019 14:19:51 +0200
+Message-Id: <20190712121633.605114520@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,43 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit 1909a671dbc3606685b1daf8b22a16f65ea7edda upstream.
+commit 7685010fca2ba0284f31fd1380df3cffc96d847e upstream.
 
-syzkallar found a 32-byte memory leak in a rarely executed error
-case. The transaction complete work item was not freed if put_user()
-failed when writing the BR_TRANSACTION_COMPLETE to the user command
-buffer. Fixed by freeing it before put_user() is called.
+Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
+an independent supply, it needs to be properly turned on or off to supply
+the ADC.
 
-Reported-by: syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Fixes: 1add69880240 ("iio: adc: Add support for STM32 ADC core").
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/adc/stm32-adc-core.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -4267,6 +4267,8 @@ retry:
- 		case BINDER_WORK_TRANSACTION_COMPLETE: {
- 			binder_inner_proc_unlock(proc);
- 			cmd = BR_TRANSACTION_COMPLETE;
-+			kfree(w);
-+			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
- 			if (put_user(cmd, (uint32_t __user *)ptr))
- 				return -EFAULT;
- 			ptr += sizeof(uint32_t);
-@@ -4275,8 +4277,6 @@ retry:
- 			binder_debug(BINDER_DEBUG_TRANSACTION_COMPLETE,
- 				     "%d:%d BR_TRANSACTION_COMPLETE\n",
- 				     proc->pid, thread->pid);
--			kfree(w);
--			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
- 		} break;
- 		case BINDER_WORK_NODE: {
- 			struct binder_node *node = container_of(w, struct binder_node, work);
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -87,6 +87,7 @@ struct stm32_adc_priv_cfg {
+  * @domain:		irq domain reference
+  * @aclk:		clock reference for the analog circuitry
+  * @bclk:		bus clock common for all ADCs, depends on part used
++ * @vdda:		vdda analog supply reference
+  * @vref:		regulator reference
+  * @cfg:		compatible configuration data
+  * @common:		common data for all ADC instances
+@@ -97,6 +98,7 @@ struct stm32_adc_priv {
+ 	struct irq_domain		*domain;
+ 	struct clk			*aclk;
+ 	struct clk			*bclk;
++	struct regulator		*vdda;
+ 	struct regulator		*vref;
+ 	const struct stm32_adc_priv_cfg	*cfg;
+ 	struct stm32_adc_common		common;
+@@ -394,10 +396,16 @@ static int stm32_adc_core_hw_start(struc
+ 	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
+ 	int ret;
+ 
++	ret = regulator_enable(priv->vdda);
++	if (ret < 0) {
++		dev_err(dev, "vdda enable failed %d\n", ret);
++		return ret;
++	}
++
+ 	ret = regulator_enable(priv->vref);
+ 	if (ret < 0) {
+ 		dev_err(dev, "vref enable failed\n");
+-		return ret;
++		goto err_vdda_disable;
+ 	}
+ 
+ 	if (priv->bclk) {
+@@ -425,6 +433,8 @@ err_bclk_disable:
+ 		clk_disable_unprepare(priv->bclk);
+ err_regulator_disable:
+ 	regulator_disable(priv->vref);
++err_vdda_disable:
++	regulator_disable(priv->vdda);
+ 
+ 	return ret;
+ }
+@@ -441,6 +451,7 @@ static void stm32_adc_core_hw_stop(struc
+ 	if (priv->bclk)
+ 		clk_disable_unprepare(priv->bclk);
+ 	regulator_disable(priv->vref);
++	regulator_disable(priv->vdda);
+ }
+ 
+ static int stm32_adc_probe(struct platform_device *pdev)
+@@ -468,6 +479,14 @@ static int stm32_adc_probe(struct platfo
+ 		return PTR_ERR(priv->common.base);
+ 	priv->common.phys_base = res->start;
+ 
++	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
++	if (IS_ERR(priv->vdda)) {
++		ret = PTR_ERR(priv->vdda);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
++		return ret;
++	}
++
+ 	priv->vref = devm_regulator_get(&pdev->dev, "vref");
+ 	if (IS_ERR(priv->vref)) {
+ 		ret = PTR_ERR(priv->vref);
 
 
