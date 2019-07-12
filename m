@@ -2,89 +2,107 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38230C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B8EC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0038921019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="A+b4O8Qn"
+	by mail.kernel.org (Postfix) with ESMTP id F0C3221537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfGLIbg (ORCPT
+        id S1726636AbfGLIb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:31:36 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:43113 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLIbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:31:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1562920295; x=1594456295;
-  h=from:to:cc:subject:date:message-id;
-  bh=7RsXD6HULg7KmuR9jfshSZipD+W/ZyOPI6VaKM9JmnQ=;
-  b=A+b4O8QnNtiOwJmk+KeadD8NlbZMJ8q3LLfjwXanea+KTBM/gV+iaMZE
-   XM73yqONfRHp+hyTKOVhD7WKL139h+UzoNlJLXx4JGansJ+NyEvsBj348
-   5f9u7OVrpGYGacZQK0ZuYBrF1/56Es+V6i7f/yB6TKvUtNQniT+0KpSHL
-   0=;
-X-IronPort-AV: E=Sophos;i="5.62,481,1554768000"; 
-   d="scan'208";a="810816106"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Jul 2019 08:31:32 +0000
-Received: from u54e1ad5160425a4b64ea.ant.amazon.com (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id EA0F5A22CC;
-        Fri, 12 Jul 2019 08:31:30 +0000 (UTC)
-Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
-        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x6C8VRgS018720;
-        Fri, 12 Jul 2019 10:31:27 +0200
-Received: (from karahmed@localhost)
-        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id x6C8VQCV018713;
-        Fri, 12 Jul 2019 10:31:26 +0200
-From:   KarimAllah Ahmed <karahmed@amazon.de>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH] fdt: Properly handle "no-map" field in the memory region
-Date:   Fri, 12 Jul 2019 10:31:24 +0200
-Message-Id: <1562920284-18638-1-git-send-email-karahmed@amazon.de>
-X-Mailer: git-send-email 2.7.4
+        Fri, 12 Jul 2019 04:31:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:9319 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbfGLIb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:31:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 01:31:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
+   d="scan'208";a="317928791"
+Received: from tao-optiplex-7060.sh.intel.com ([10.239.13.104])
+  by orsmga004.jf.intel.com with ESMTP; 12 Jul 2019 01:31:52 -0700
+From:   Tao Xu <tao3.xu@intel.com>
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
+        jingqi.liu@intel.com, tao3.xu@intel.com
+Subject: [PATCH v7 0/3] KVM: x86: Enable user wait instructions
+Date:   Fri, 12 Jul 2019 16:29:04 +0800
+Message-Id: <20190712082907.29137-1-tao3.xu@intel.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark the memory region with NOMAP flag instead of completely removing it
-from the memory blocks. That makes the FDT handling consistent with the EFI
-memory map handling.
+UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+UMONITOR arms address monitoring hardware using an address. A store
+to an address within the specified address range triggers the
+monitoring hardware to wake up the processor waiting in umwait.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9..77982ae 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1175,7 +1175,7 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
- 					phys_addr_t size, bool nomap)
- {
- 	if (nomap)
--		return memblock_remove(base, size);
-+		return memblock_mark_nomap(base, size);
- 	return memblock_reserve(base, size);
- }
- 
+UMWAIT instructs the processor to enter an implementation-dependent
+optimized state while monitoring a range of addresses. The optimized
+state may be either a light-weight power/performance optimized state
+(c0.1 state) or an improved power/performance optimized state
+(c0.2 state).
+
+TPAUSE instructs the processor to enter an implementation-dependent
+optimized state c0.1 or c0.2 state and wake up when time-stamp counter
+reaches specified timeout.
+
+Availability of the user wait instructions is indicated by the presence
+of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
+
+The patches enable the umonitor, umwait and tpause features in KVM.
+Because umwait and tpause can put a (psysical) CPU into a power saving
+state, by default we dont't expose it to kvm and enable it only when
+guest CPUID has it. If the instruction causes a delay, the amount
+of time delayed is called here the physical delay. The physical delay is
+first computed by determining the virtual delay (the time to delay
+relative to the VM’s timestamp counter). 
+
+The release document ref below link:
+Intel 64 and IA-32 Architectures Software Developer's Manual,
+https://software.intel.com/sites/default/files/\
+managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Changelog:
+v7:
+	Add nested support for user wait instructions (Paolo)
+	Use the test on vmx->secondary_exec_control to replace
+	guest_cpuid_has (Paolo)
+v6:
+	add check msr_info->host_initiated in get/set msr(Xiaoyao)
+	restore the atomic_switch_umwait_control_msr()(Xiaoyao)
+
+Tao Xu (3):
+  KVM: x86: add support for user wait instructions
+  KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+  KVM: vmx: handle vm-exit for UMWAIT and TPAUSE
+
+ arch/x86/include/asm/vmx.h      |  1 +
+ arch/x86/include/uapi/asm/vmx.h |  6 ++-
+ arch/x86/kernel/cpu/umwait.c    |  3 +-
+ arch/x86/kvm/cpuid.c            |  2 +-
+ arch/x86/kvm/vmx/nested.c       |  4 ++
+ arch/x86/kvm/vmx/vmx.c          | 69 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.h          |  9 +++++
+ arch/x86/kvm/x86.c              |  1 +
+ 8 files changed, 92 insertions(+), 3 deletions(-)
+
 -- 
-2.7.4
+2.20.1
 
