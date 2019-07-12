@@ -2,105 +2,124 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DEBC742C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD869C742C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530702080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70FA2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QYqkLEGF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NHRMTN2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfGLN4d (ORCPT
+        id S1727876AbfGLN5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:56:33 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40265 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbfGLN4d (ORCPT
+        Fri, 12 Jul 2019 09:57:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35202 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbfGLN5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:56:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so4582284pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 06:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WDiv0t+R3uRl5W7qmXtAoSiEHEHdxKx4ml5mjXWh+Pg=;
-        b=QYqkLEGFA1/hJ7msrSJEUejaFTfoP3QzQQ0XbAHmT9Csl4VlQGRIXmlO2ywQXQvND+
-         Hrz0eSA/du87KWMiWhvfsSxGBDZW8Y6Afvn5Q1TceLQvp9r9CvlEbDnZIeTmNrviry7U
-         wYHovwF3+TslYJyFDr+Shjrc4RZtnIq4XuqVI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WDiv0t+R3uRl5W7qmXtAoSiEHEHdxKx4ml5mjXWh+Pg=;
-        b=ddAJOv43xmglwGH39FM+KNnHPku68J6D5xh3O5JBv5pTcsF40+nBqXNSRKW7xRuzJD
-         67lJjz4uCn2zC4/WlA4KVo5B5TbNVgT5nLhCiF6LGGiQKz+nKna75qHFMmQYNy8NbaYT
-         zyieqvDb7jx7H3/Hj+x/szxKFpBMLbRudbhRFmb0MRYAEnVs/+XHlsLPwc7l0ZohfMAm
-         4nTytK7Yqre3QnbECeR7BI5yUpaQz5F8n5Hc99q8KqF7LVpptP6KXIOcgjC6vKHWT9Do
-         yXZqAuwDgHhiT0CQ4eVODRTQIfvqDPnmqZ7Zifz71ZL1CeSyr7I2/0Ogp3VVkkIkfZ3r
-         twlg==
-X-Gm-Message-State: APjAAAUMsCNBXL9EEEpYoTkaPdc+vd7Y/fdr5t9oI1CPJSHsZyT3c8CJ
-        feNZv8uKojahLuHe93NhkBc=
-X-Google-Smtp-Source: APXvYqzJEhVDBzSiRVeb97C/BOIrGCC92lhrBy1TO8FxsLTYA0YSdLtl7eAeD1UPch8SID4lyw/Qag==
-X-Received: by 2002:a63:b1d:: with SMTP id 29mr11024618pgl.103.1562939792240;
-        Fri, 12 Jul 2019 06:56:32 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h16sm9673070pfo.34.2019.07.12.06.56.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 06:56:31 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 09:56:29 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712135629.GH92297@google.com>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712121200.GC21989@redhat.com>
+        Fri, 12 Jul 2019 09:57:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CDvNPg079591;
+        Fri, 12 Jul 2019 08:57:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562939843;
+        bh=h/FvatbSmYtmmSo8C36ybsR85uhbjITUgdMf4+sgcKs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NHRMTN2vON/H1UxbPmaa6bz1Xi1UB4UWrEtoK0M4wjamG75Qa1bev03jTLJPkbN4K
+         TwTc5h0Oxm/ZIkCNb30PXnvU1A4crailkYII29TaUJfsmB1AHaZ+It6i9iXfqclGUx
+         E1wCyYC0TRMjGe2isZtcEN9zqeNduFmKec6txm2U=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CDvNuF024641
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jul 2019 08:57:23 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
+ Jul 2019 08:57:23 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 12 Jul 2019 08:57:23 -0500
+Received: from [10.250.97.31] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CDvKE4004279;
+        Fri, 12 Jul 2019 08:57:21 -0500
+Subject: Re: [PATCH v3 3/4] dt-bindings: backlight: Add led-backlight binding
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
+        <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>
+References: <20190710123932.28244-1-jjhiblot@ti.com>
+ <20190710123932.28244-4-jjhiblot@ti.com> <20190710191314.GC22995@amd>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <0d513ab5-eeb0-c22c-7ec8-f773e445e5f1@ti.com>
+Date:   Fri, 12 Jul 2019 15:57:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712121200.GC21989@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190710191314.GC22995@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:12:00PM +0200, Oleg Nesterov wrote:
-> On 07/11, Joel Fernandes (Google) wrote:
-> >
-> > +int rcu_read_lock_any_held(void)
-> 
-> rcu_sync_is_idle() wants it. You have my ack in advance ;)
+Pavel,
 
-Cool, thanks ;)
+On 10/07/2019 21:13, Pavel Machek wrote:
+> On Wed 2019-07-10 14:39:31, Jean-Jacques Hiblot wrote:
+>> Add DT binding for led-backlight.
+>>
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> ---
+>>   .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>> new file mode 100644
+>> index 000000000000..0444eec8efe1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>> @@ -0,0 +1,28 @@
+>> +led-backlight bindings
+>> +
+>> +This binding is used to describe a basic backlight device made of
+>> LEDs.
+> Ok.
+>
+>> +It can also be used to describe a backlight device controlled by the output of
+>> +a LED driver.
+> ? The LED driver should better be driving some LEDs...
 
-- Joel
+Well. we are dependent of the board design. If a board designer decided 
+to control a backlight with a LED-controller, then we have to deal with it.
+
+In practice there are a lot of LED drivers that actually drive the LEDs 
+using PWMs and can be used for this purpose.
+
+JJ
+
+>
+>> +Required properties:
+>> +  - compatible: "led-backlight"
+>> +  - leds: a list of LEDs
+>> +
+>> +Optional properties:
+>> +  - brightness-levels: Array of distinct brightness levels. The levels must be
+>> +                       in the range accepted by the underlying LED devices.
+>> +                       This is used to translate a backlight brightness level
+>> +                       into a LED brightness level. if not provided, the
+>> +                       identity mapping is used.
+> "If it is not"
+> 									Pavel
