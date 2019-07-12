@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783C5C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F274BC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518FD2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC24520645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934960;
-	bh=BVaPzCcCRxog7PRN36yt9WFA3YWErUvntYn/2BoLlTk=;
+	s=default; t=1562934966;
+	bh=v1zlSdtSYkTVOHfwqqXwCinbA7/ajH/Qsb0rE7aKEtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9jfBJBzckPA/Ul5a42M24fikhpvwkRwmksXk7yyt4yUqcec4RxdyuJkRFQcbpoos
-	 1h67C8BF3XJSsSLYXVL8LOhCrwoYihWAWGJmtlPyWtI/xyukRu0/c3RrGjP1EhhzWs
-	 bV6yaC/GkdjpMSa1jvJyTzS5Yu2+60YtS15uH4dY=
+	b=X1zUaETumYhFziQWH6O7mcVpTd/7IcDj8CHvr3UkmCGOT64NG3PectV11OgClpdTV
+	 cif5G56khRzODvbsPOw8mSxP3bM9jndrxjiVigakiaZIGWZHKQSl8IDu4/TkUG7+nn
+	 YorxJeSNEVoiz2iLf4V3j7gjC6Y9ozLCVfAKtldw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbfGLMdh (ORCPT
+        id S1729208AbfGLMgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729614AbfGLMd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:28 -0400
+        id S1729597AbfGLMdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:33:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E09EE208E4;
-        Fri, 12 Jul 2019 12:33:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4F632084B;
+        Fri, 12 Jul 2019 12:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934807;
-        bh=BVaPzCcCRxog7PRN36yt9WFA3YWErUvntYn/2BoLlTk=;
+        s=default; t=1562934801;
+        bh=v1zlSdtSYkTVOHfwqqXwCinbA7/ajH/Qsb0rE7aKEtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3ct9BjszYQUmjrUSl8Z6yqH6Fpa5YEXRvWIqDQF3GH2scNkvA3gfXTfhoxdBfFOe
-         9LJE5BOUU7Kt0dx5iUnUa76qntvLvngceu7nL39w6zzlsvJblyiBsrT4UDnULilQ5V
-         iFUsIeNlpwQLD1j8rjGu+neOQhodgKYaag8/A4ps=
+        b=k/6pw0vOZ7ztc/JBX6BRO15Af5CsLKPrBii0/6FvbK5soNrPgcbN/39kQlumf/cCt
+         bPzlwvAKWMd3/sM01+X61lyJV+fQIitK2IwJ1tP83INQSjHVDoYO2sWeaBwwlIt67V
+         9aTisL/AQFbYPhaPkxwwAxGoctaE46KYqs9gj7nU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ajay Singh <ajay.kathat@microchip.com>
-Subject: [PATCH 5.2 36/61] staging: wilc1000: fix error path cleanup in wilc_wlan_initialize()
-Date:   Fri, 12 Jul 2019 14:19:49 +0200
-Message-Id: <20190712121622.540802831@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 34/61] p54: fix crash during initialization
+Date:   Fri, 12 Jul 2019 14:19:47 +0200
+Message-Id: <20190712121622.438830740@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -58,56 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 6419f818ababebc1116fb2d0e220bd4fe835d0e3 upstream.
+commit 1645ab931998b39aed5761f095956f0b10a6362f upstream.
 
-For the error path in wilc_wlan_initialize(), the resources are not
-cleanup in the correct order. Reverted the previous changes and use the
-correct order to free during error condition.
+This patch fixes a crash that got introduced when the
+mentioned patch replaced  the direct list_head access
+with skb_peek_tail(). When the device is starting up,
+there are  no entries in  the queue, so previously to
+"Use skb_peek_tail() instead..." the target_skb would
+end up as the  tail and head pointer which then could
+be used by __skb_queue_after to fill the empty queue.
 
-Fixes: b46d68825c2d ("staging: wilc1000: remove COMPLEMENT_BOOT")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
+With skb_peek_tail() in its place will instead just
+return NULL which then causes a crash in the
+__skb_queue_after().
+
+| BUG: unable to handle kernel NULL pointer dereference at 000000
+| #PF error: [normal kernel read fault]
+| PGD 0 P4D 0
+| Oops: 0000 [#1] SMP PTI
+| CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: GO   5.1.0-rc7-wt+ #218
+| Hardware name: MSI MS-7816/Z87-G43 (MS-7816), BIOS V1.11 05/09/2015
+| Workqueue: events request_firmware_work_func
+| RIP: 0010:p54_tx_pending+0x10f/0x1b0 [p54common]
+| Code: 78 06 80 78 28 00 74 6d <48> 8b 07 49 89 7c 24 08 49 89 04 24 4
+| RSP: 0018:ffffa81c81927d90 EFLAGS: 00010086
+| RAX: ffff9bbaaf131048 RBX: 0000000000020670 RCX: 0000000000020264
+| RDX: ffff9bbaa976d660 RSI: 0000000000000202 RDI: 0000000000000000
+| RBP: ffff9bbaa976d620 R08: 00000000000006c0 R09: ffff9bbaa976d660
+| R10: 0000000000000000 R11: ffffe8480dbc5900 R12: ffff9bbb45e87700
+| R13: ffff9bbaa976d648 R14: ffff9bbaa976d674 R15: ffff9bbaaf131048
+| FS:  0000000000000000(0000) GS:ffff9bbb5ec00000(0000) knlGS:00000
+| CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+| CR2: 0000000000000000 CR3: 00000003695fc003 CR4: 00000000001606f0
+| Call Trace:
+|  p54_download_eeprom+0xbe/0x120 [p54common]
+|  p54_read_eeprom+0x7f/0xc0 [p54common]
+|  p54u_load_firmware_cb+0xe0/0x160 [p54usb]
+|  request_firmware_work_func+0x42/0x80
+|  process_one_work+0x1f5/0x3f0
+|  worker_thread+0x28/0x3c0
+
+Cc: stable@vger.kernel.org
+Fixes: e3554197fc8f ("p54: Use skb_peek_tail() instead of direct head pointer accesses.")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wilc1000/wilc_netdev.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/intersil/p54/txrx.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/wilc1000/wilc_netdev.c
-+++ b/drivers/staging/wilc1000/wilc_netdev.c
-@@ -530,17 +530,17 @@ static int wilc_wlan_initialize(struct n
- 			goto fail_locks;
- 		}
+--- a/drivers/net/wireless/intersil/p54/txrx.c
++++ b/drivers/net/wireless/intersil/p54/txrx.c
+@@ -139,7 +139,10 @@ static int p54_assign_address(struct p54
+ 	    unlikely(GET_HW_QUEUE(skb) == P54_QUEUE_BEACON))
+ 		priv->beacon_req_id = data->req_id;
  
--		if (wl->gpio_irq && init_irq(dev)) {
--			ret = -EIO;
--			goto fail_locks;
--		}
--
- 		ret = wlan_initialize_threads(dev);
- 		if (ret < 0) {
- 			ret = -EIO;
- 			goto fail_wilc_wlan;
- 		}
- 
-+		if (wl->gpio_irq && init_irq(dev)) {
-+			ret = -EIO;
-+			goto fail_threads;
-+		}
-+
- 		if (!wl->dev_irq_num &&
- 		    wl->hif_func->enable_interrupt &&
- 		    wl->hif_func->enable_interrupt(wl)) {
-@@ -596,7 +596,7 @@ fail_irq_enable:
- fail_irq_init:
- 		if (wl->dev_irq_num)
- 			deinit_irq(dev);
--
-+fail_threads:
- 		wlan_deinitialize_threads(dev);
- fail_wilc_wlan:
- 		wilc_wlan_cleanup(dev);
+-	__skb_queue_after(&priv->tx_queue, target_skb, skb);
++	if (target_skb)
++		__skb_queue_after(&priv->tx_queue, target_skb, skb);
++	else
++		__skb_queue_head(&priv->tx_queue, skb);
+ 	spin_unlock_irqrestore(&priv->tx_queue.lock, flags);
+ 	return 0;
+ }
 
 
