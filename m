@@ -2,90 +2,173 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C107C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8927CC742BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEA820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDC820665
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfGLNWw (ORCPT
+        id S1727620AbfGLN0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:22:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46785 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbfGLNWw (ORCPT
+        Fri, 12 Jul 2019 09:26:20 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38536 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfGLN0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:22:52 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so7972450qtn.13;
-        Fri, 12 Jul 2019 06:22:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bE2d2cXyqgLyrO8VmhXW/kKIw4VfQcn7GpyB/RWoC8w=;
-        b=NGDHTHEmJRMboR2QtK5kYUsDef2jh4okd3TfEaf5av5rxTE2SHr5mcsAjL/dEg1HY8
-         FzatakkgNFs8XOad7xYOy8Xl6CNV1f4fniAkVVzeNXSd/9M8Zd3N7lpx2WbtE/fWLucB
-         MV4r3G9N5tZncxeN7kBr87ffT1wrN1iUbyTQ29EpkHe83HsDiJJwBFSlNz5f1QD4oKfW
-         GalNzEX1Gsr0wDbyn+dcYYh7+yQhQrpdvdZ3mHh17moRVG0nYPDJlgBqZJNQ5/4WEsLh
-         kkK89p8h6nWHmftPtxrtGTgUInFrt55OumzcqMjAPKnkGHxkack2VOalBh7m++YTTYS+
-         XsCw==
-X-Gm-Message-State: APjAAAU8WKBW28ehdW/2OTqEZVSuNc6vEkoEUwnVrZ9Mxw3EAHvc24KT
-        WOTw6y19XmEZG1qXJizigzWHrAZgVOc78pJIDKY=
-X-Google-Smtp-Source: APXvYqyzTHki3UBu9mLY67hzCMpVjSvF8Z9ye3UK/cdcvDq3NdMyliDIylHyQBvW4LN/O15Ve6eLBlrIpPXP1Z1fezw=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr6408317qtf.204.1562937771266;
- Fri, 12 Jul 2019 06:22:51 -0700 (PDT)
+        Fri, 12 Jul 2019 09:26:19 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlvYf-0008I4-Sv; Fri, 12 Jul 2019 13:25:53 +0000
+Date:   Fri, 12 Jul 2019 14:25:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190712132553.GN17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
+ <20190712125552.GL17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20190712085212.3901785-1-arnd@arndb.de> <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <20190712120328.GB27512@ziepe.ca> <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
-In-Reply-To: <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 12 Jul 2019 15:22:35 +0200
-Message-ID: <CAK8P3a3ZqY_qLSN1gw12EvzLS49RAnmG4nT9=N+Qj9XngQd0CA@mail.gmail.com>
-Subject: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Doug Ledford <dledford@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712125552.GL17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 3:05 PM Bernard Metzler <BMT@zurich.ibm.com> wrote:
+On Fri, Jul 12, 2019 at 01:55:52PM +0100, Al Viro wrote:
+> On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
+> > On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
+> > 
+> > > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+> > > > >  			s = ERR_PTR(error);
+> > > > >  		return s;
+> > > > >  	}
+> > > > > -	error = dirfd_path_init(nd);
+> > > > > -	if (unlikely(error))
+> > > > > -		return ERR_PTR(error);
+> > > > > +	if (likely(!nd->path.mnt)) {
+> > > > 
+> > > > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
+> > > 
+> > > Yes. I did it to be more consistent with the other "have we got the
+> > > root" checks elsewhere. Is there another way you'd prefer I do it?
+> > 
+> > "Have we got the root" checks are inevitable evil; here you are making the
+> > control flow in a single function hard to follow.
+> > 
+> > I *think* what you are doing is
+> > 	absolute pathname, no LOOKUP_BENEATH:
+> > 		set_root
+> > 		error = nd_jump_root(nd)
+> > 	else
+> > 		error = dirfd_path_init(nd)
+> > 	return unlikely(error) ? ERR_PTR(error) : s;
+> > which should be a lot easier to follow (not to mention shorter), but I might
+> > be missing something in all of that.
+> 
+> PS: if that's what's going on, I would be tempted to turn the entire
+> path_init() part into this:
+> 	if (flags & LOOKUP_BENEATH)
+> 		while (*s == '/')
+> 			s++;
+> in the very beginning (plus the handling of nd_jump_root() prototype
+> change, but that belongs with nd_jump_root() change itself, obviously).
+> Again, I might be missing something here...
 
->
-> We share CQ (completion queue) notification flags between application
-> (which may be user land) and producer (kernel QP's (queue pairs)).
-> Those flags can be written by both application and QP's. The application
-> writes those flags to let the driver know if it shall inform about new
-> work completions. It can write those flags at any time.
-> Only a kernel producer reads those flags to decide if
-> the CQ notification handler shall be kicked, if a new CQ element gets
-> added to the CQ. When kicking the completion handler, the driver resets the
-> notification flag, which must get re-armed by the application.
->
-> We use READ_ONCE() and WRITE_ONCE(), since the flags are potentially
-> shared (mmap'd) between user and kernel land.
->
-> siw_req_notify_cq() is being called only by kernel consumers to change
-> (write) the CQ notification state. We use smp_store_mb() to make sure
-> the new value becomes visible to all kernel producers (QP's) asap.
->
->
-> From cfb861a09dcfb24a98ba0f1e26bdaa1529d1b006 Mon Sep 17 00:00:00 2001
-> From: Bernard Metzler <bmt@zurich.ibm.com>
-> Date: Fri, 12 Jul 2019 13:19:27 +0200
-> Subject: [PATCH] Make shared CQ notification flags 32bit to respect 32bit
->  architectures
->
-> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+Argh... I am, at that - you have setting path->root (and grabbing it)
+in LOOKUP_BENEATH cases and you do it after dirfd_path_init().  So
+how about
+	if (flags & LOOKUP_BENEATH)
+		while (*s == '/')
+			s++;
+before the whole thing and
+        if (*s == '/') { /* can happen only without LOOKUP_BENEATH */
+                set_root(nd);
+		error = nd_jump_root(nd);
+		if (unlikely(error))
+			return ERR_PTR(error);
+        } else if (nd->dfd == AT_FDCWD) {
+                if (flags & LOOKUP_RCU) {
+                        struct fs_struct *fs = current->fs;
+                        unsigned seq;
 
-This fixes the build for me, thanks!
+                        do {
+                                seq = read_seqcount_begin(&fs->seq);
+                                nd->path = fs->pwd;
+                                nd->inode = nd->path.dentry->d_inode;
+                                nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
+                        } while (read_seqcount_retry(&fs->seq, seq));
+                } else {
+                        get_fs_pwd(current->fs, &nd->path);
+                        nd->inode = nd->path.dentry->d_inode;
+                }  
+        } else {
+                /* Caller must check execute permissions on the starting path component */
+                struct fd f = fdget_raw(nd->dfd);
+                struct dentry *dentry;
 
-Tested-by: Arnd Bergmann <arnd@arndb.de>
+                if (!f.file)
+                        return ERR_PTR(-EBADF);
+
+                dentry = f.file->f_path.dentry;
+
+                if (*s && unlikely(!d_can_lookup(dentry))) {
+                        fdput(f);
+                        return ERR_PTR(-ENOTDIR);
+                }
+
+                nd->path = f.file->f_path;
+                if (flags & LOOKUP_RCU) {
+                        nd->inode = nd->path.dentry->d_inode;
+                        nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
+                } else {
+                        path_get(&nd->path);
+                        nd->inode = nd->path.dentry->d_inode;
+                }
+                fdput(f);
+        }
+	if (flags & LOOKUP_BENEATH) {
+		nd->root = nd->path;
+		if (!(flags & LOOKUP_RCU))
+			path_get(&nd->root);
+		else
+			nd->root_seq = nd->seq;
+	}
+	return s;
+replacing the part in the end?  Makes for much smaller change; it might
+very well still make sense to add dirfd_path_init() as a separate
+cleanup (perhaps with the *s == '/' case included), though.
