@@ -2,211 +2,172 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517C4C742CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9AFC742CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35FEC21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F5B206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HsJAwp6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfGLP7V (ORCPT
+        id S1727294AbfGLQAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:59:21 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51016 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfGLP7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:59:21 -0400
-Received: from linux.home (2a01cb0c80061e007f541addd69f0d47.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:8006:1e00:7f54:1add:d69f:d47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 30D5228BBDA;
-        Fri, 12 Jul 2019 16:59:19 +0100 (BST)
-Date:   Fri, 12 Jul 2019 17:59:15 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        bbrezillon@kernel.org, Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v4 1/3] regmap: add i3c bus support
-Message-ID: <20190712175915.4c4260a9@linux.home>
-In-Reply-To: <7deb1300474b68ebb6fc3ecb02577e4f657250a5.1562931742.git.vitor.soares@synopsys.com>
-References: <cover.1562931742.git.vitor.soares@synopsys.com>
-        <7deb1300474b68ebb6fc3ecb02577e4f657250a5.1562931742.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Jul 2019 12:00:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48427 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726992AbfGLQAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 12:00:02 -0400
+Received: from [IPv6:2601:646:8600:3281:4501:6781:c7ce:2878] ([IPv6:2601:646:8600:3281:4501:6781:c7ce:2878])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x6CFxoFC3480993
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 12 Jul 2019 08:59:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x6CFxoFC3480993
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562947191;
+        bh=9IwI1hiGYC+jvzVrA/mLfDxJCPPSOKGjVttUTcT08X8=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=HsJAwp6xqQfDnDihPer8Yps4RKOyZiFo1h7NwKbECjBF/fDvIP6zew++znCsgG0XY
+         Dcedf4+od5bGv1nQlJkOXsI6kjfYOKLJbT1WpF83rCH2j1hdJXE7visEryhqxAK2Nd
+         9GTg3jjQUV6noaR/l9wv0HNaCp0ZJvdeOpGioaT0DLGmrp2uw//zX9MEXHe8gleea2
+         uXwJtp7GgtDrBUznALgYZJEmp86EVGYn8BcUplMH69FPH6auBnq40YfuiVxdW6BeUf
+         2gDbdH7gpzosIjea1KfQ2+G66VsdJJergLbSGh7AD6i1c6yZTyoaO3LORdOMC9yE8K
+         fadkFvJIMVw7Q==
+Date:   Fri, 12 Jul 2019 08:59:43 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190704163612.14311-4-daniel.kiper@oracle.com>
+References: <20190704163612.14311-1-daniel.kiper@oracle.com> <20190704163612.14311-4-daniel.kiper@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/3] x86/boot: Introduce the kernel_info.setup_type_max
+To:     Daniel Kiper <daniel.kiper@oracle.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+CC:     bp@alien8.de, corbet@lwn.net, dpsmith@apertussolutions.com,
+        eric.snowberg@oracle.com, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, mingo@redhat.com,
+        ross.philipson@oracle.com, tglx@linutronix.de
+From:   hpa@zytor.com
+Message-ID: <B5CAF3FB-1E8D-498A-81F6-171A37EC1AC2@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 13:53:28 +0200
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+On July 4, 2019 9:36:12 AM PDT, Daniel Kiper <daniel=2Ekiper@oracle=2Ecom> =
+wrote:
+>This field contains maximal allowed type for setup_data and
+>setup_indirect structs=2E
+>
+>And finally bump setup_header version in arch/x86/boot/header=2ES=2E
+>
+>Suggested-by: H=2E Peter Anvin <hpa@zytor=2Ecom>
+>Signed-off-by: Daniel Kiper <daniel=2Ekiper@oracle=2Ecom>
+>Reviewed-by: Ross Philipson <ross=2Ephilipson@oracle=2Ecom>
+>Reviewed-by: Eric Snowberg <eric=2Esnowberg@oracle=2Ecom>
+>---
+> Documentation/x86/boot=2Erst             | 10 +++++++++-
+> arch/x86/boot/compressed/kernel_info=2ES |  4 ++++
+> arch/x86/boot/header=2ES                 |  2 +-
+> arch/x86/include/uapi/asm/bootparam=2Eh  |  3 +++
+> 4 files changed, 17 insertions(+), 2 deletions(-)
+>
+>diff --git a/Documentation/x86/boot=2Erst b/Documentation/x86/boot=2Erst
+>index 23d3726d54fc=2E=2E63609fd0517f 100644
+>--- a/Documentation/x86/boot=2Erst
+>+++ b/Documentation/x86/boot=2Erst
+>@@ -73,7 +73,8 @@ Protocol 2=2E14:	BURNT BY INCORRECT COMMIT
+>ae7e1238e68f2a472a125673ab506d49158c188
+> 		(x86/boot: Add ACPI RSDP address to setup_header)
+> 		DO NOT USE!!! ASSUME SAME AS 2=2E13=2E
+>=20
+>-Protocol 2=2E15:	(Kernel 5=2E3) Added the kernel_info and setup_indirect=
+=2E
+>+Protocol 2=2E15:	(Kernel 5=2E3) Added the kernel_info,
+>kernel_info=2Esetup_type_max
+>+		and setup_indirect=2E
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> =2E=2E note::
+>@@ -980,6 +981,13 @@ Offset/size:	0x0004/4
+>This field contains the size of the kernel_info including
+>kernel_info=2Eheader=2E
+>It should be used by the boot loader to detect supported fields in the
+>kernel_info=2E
+>=20
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>+Field name:	setup_type_max
+>+Offset/size:	0x0008/4
+>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>+
+>+  This field contains maximal allowed type for setup_data and
+>setup_indirect structs=2E
+>+
+>=20
+> The Image Checksum
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>diff --git a/arch/x86/boot/compressed/kernel_info=2ES
+>b/arch/x86/boot/compressed/kernel_info=2ES
+>index 3f1cb301b9ff=2E=2E2f28aabf6558 100644
+>--- a/arch/x86/boot/compressed/kernel_info=2ES
+>+++ b/arch/x86/boot/compressed/kernel_info=2ES
+>@@ -1,5 +1,7 @@
+> /* SPDX-License-Identifier: GPL-2=2E0 */
+>=20
+>+#include <asm/bootparam=2Eh>
+>+
+> 	=2Esection "=2Erodata=2Ekernel_info", "a"
+>=20
+> 	=2Eglobal kernel_info
+>@@ -9,4 +11,6 @@ kernel_info:
+> 	=2Eascii	"InfO"
+>         /* Size=2E */
+> 	=2Elong	kernel_info_end - kernel_info
+>+        /* Maximal allowed type for setup_data and setup_indirect
+>structs=2E */
+>+	=2Elong	SETUP_TYPE_MAX
+> kernel_info_end:
+>diff --git a/arch/x86/boot/header=2ES b/arch/x86/boot/header=2ES
+>index ec6a25a43148=2E=2E893a456663ab 100644
+>--- a/arch/x86/boot/header=2ES
+>+++ b/arch/x86/boot/header=2ES
+>@@ -300,7 +300,7 @@ _start:
+> 	# Part 2 of the header, from the old setup=2ES
+>=20
+> 		=2Eascii	"HdrS"		# header signature
+>-		=2Eword	0x020d		# header version number (>=3D 0x0105)
+>+		=2Eword	0x020f		# header version number (>=3D 0x0105)
+> 					# or else old loadlin-1=2E5 will fail)
+> 		=2Eglobl realmode_swtch
+> realmode_swtch:	=2Eword	0, 0		# default_switch, SETUPSEG
+>diff --git a/arch/x86/include/uapi/asm/bootparam=2Eh
+>b/arch/x86/include/uapi/asm/bootparam=2Eh
+>index aaaa17fa6ad6=2E=2E2ba870dae6f3 100644
+>--- a/arch/x86/include/uapi/asm/bootparam=2Eh
+>+++ b/arch/x86/include/uapi/asm/bootparam=2Eh
+>@@ -12,6 +12,9 @@
+> #define SETUP_JAILHOUSE			6
+> #define SETUP_INDIRECT			7
+>=20
+>+/* max(SETUP_*) */
+>+#define SETUP_TYPE_MAX			SETUP_INDIRECT
+>+
+> /* ram_size flags */
+> #define RAMDISK_IMAGE_START_MASK	0x07FF
+> #define RAMDISK_PROMPT_FLAG		0x8000
 
-> Add basic support for i3c bus.
-> This is a simple implementation that only give support
-> for SDR Read and Write commands.
-> 
+Bump the version number and add setup_max before adding the indirect stuff=
+=2E That will nicely double as at the very least a first-order validity che=
+ck=2E
 
-This patch has been applied by Mark already. Please make sure to drop
-already applied patches when submitting a new version.
-
-> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> ---
->  drivers/base/regmap/Kconfig      |  6 +++-
->  drivers/base/regmap/Makefile     |  1 +
->  drivers/base/regmap/regmap-i3c.c | 60 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/regmap.h           | 20 ++++++++++++++
->  4 files changed, 86 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/base/regmap/regmap-i3c.c
-> 
-> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-> index 6ad5ef4..c8bbf53 100644
-> --- a/drivers/base/regmap/Kconfig
-> +++ b/drivers/base/regmap/Kconfig
-> @@ -4,7 +4,7 @@
->  # subsystems should select the appropriate symbols.
->  
->  config REGMAP
-> -	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ)
-> +	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
->  	select IRQ_DOMAIN if REGMAP_IRQ
->  	bool
->  
-> @@ -49,3 +49,7 @@ config REGMAP_SOUNDWIRE
->  config REGMAP_SCCB
->  	tristate
->  	depends on I2C
-> +
-> +config REGMAP_I3C
-> +	tristate
-> +	depends on I3C
-> diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
-> index f5b4e88..ff6c7d8 100644
-> --- a/drivers/base/regmap/Makefile
-> +++ b/drivers/base/regmap/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_REGMAP_IRQ) += regmap-irq.o
->  obj-$(CONFIG_REGMAP_W1) += regmap-w1.o
->  obj-$(CONFIG_REGMAP_SOUNDWIRE) += regmap-sdw.o
->  obj-$(CONFIG_REGMAP_SCCB) += regmap-sccb.o
-> +obj-$(CONFIG_REGMAP_I3C) += regmap-i3c.o
-> diff --git a/drivers/base/regmap/regmap-i3c.c b/drivers/base/regmap/regmap-i3c.c
-> new file mode 100644
-> index 0000000..1578fb5
-> --- /dev/null
-> +++ b/drivers/base/regmap/regmap-i3c.c
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> +
-> +#include <linux/regmap.h>
-> +#include <linux/i3c/device.h>
-> +#include <linux/i3c/master.h>
-> +#include <linux/module.h>
-> +
-> +static int regmap_i3c_write(void *context, const void *data, size_t count)
-> +{
-> +	struct device *dev = context;
-> +	struct i3c_device *i3c = dev_to_i3cdev(dev);
-> +	struct i3c_priv_xfer xfers[] = {
-> +		{
-> +			.rnw = false,
-> +			.len = count,
-> +			.data.out = data,
-> +		},
-> +	};
-> +
-> +	return i3c_device_do_priv_xfers(i3c, xfers, 1);
-> +}
-> +
-> +static int regmap_i3c_read(void *context,
-> +			   const void *reg, size_t reg_size,
-> +			   void *val, size_t val_size)
-> +{
-> +	struct device *dev = context;
-> +	struct i3c_device *i3c = dev_to_i3cdev(dev);
-> +	struct i3c_priv_xfer xfers[2];
-> +
-> +	xfers[0].rnw = false;
-> +	xfers[0].len = reg_size;
-> +	xfers[0].data.out = reg;
-> +
-> +	xfers[1].rnw = true;
-> +	xfers[1].len = val_size;
-> +	xfers[1].data.in = val;
-> +
-> +	return i3c_device_do_priv_xfers(i3c, xfers, 2);
-> +}
-> +
-> +static struct regmap_bus regmap_i3c = {
-> +	.write = regmap_i3c_write,
-> +	.read = regmap_i3c_read,
-> +};
-> +
-> +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
-> +				      const struct regmap_config *config,
-> +				      struct lock_class_key *lock_key,
-> +				      const char *lock_name)
-> +{
-> +	return __devm_regmap_init(&i3c->dev, &regmap_i3c, &i3c->dev, config,
-> +				  lock_key, lock_name);
-> +}
-> +EXPORT_SYMBOL_GPL(__devm_regmap_init_i3c);
-> +
-> +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
-> +MODULE_DESCRIPTION("Regmap I3C Module");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-> index daeec7d..f65984d 100644
-> --- a/include/linux/regmap.h
-> +++ b/include/linux/regmap.h
-> @@ -25,6 +25,7 @@ struct module;
->  struct clk;
->  struct device;
->  struct i2c_client;
-> +struct i3c_device;
->  struct irq_domain;
->  struct slim_device;
->  struct spi_device;
-> @@ -624,6 +625,10 @@ struct regmap *__devm_regmap_init_slimbus(struct slim_device *slimbus,
->  				 const struct regmap_config *config,
->  				 struct lock_class_key *lock_key,
->  				 const char *lock_name);
-> +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
-> +				 const struct regmap_config *config,
-> +				 struct lock_class_key *lock_key,
-> +				 const char *lock_name);
->  /*
->   * Wrapper for regmap_init macros to include a unique lockdep key and name
->   * for each call. No-op if CONFIG_LOCKDEP is not set.
-> @@ -982,6 +987,21 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
->  #define devm_regmap_init_slimbus(slimbus, config)			\
->  	__regmap_lockdep_wrapper(__devm_regmap_init_slimbus, #config,	\
->  				slimbus, config)
-> +
-> +/**
-> + * devm_regmap_init_i3c() - Initialise managed register map
-> + *
-> + * @i3c: Device that will be interacted with
-> + * @config: Configuration for register map
-> + *
-> + * The return value will be an ERR_PTR() on error or a valid pointer
-> + * to a struct regmap.  The regmap will be automatically freed by the
-> + * device management code.
-> + */
-> +#define devm_regmap_init_i3c(i3c, config)				\
-> +	__regmap_lockdep_wrapper(__devm_regmap_init_i3c, #config,	\
-> +				i3c, config)
-> +
->  int regmap_mmio_attach_clk(struct regmap *map, struct clk *clk);
->  void regmap_mmio_detach_clk(struct regmap *map);
->  void regmap_exit(struct regmap *map);
-
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
