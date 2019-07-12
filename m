@@ -2,311 +2,194 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A00C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91B3C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35FE121019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9p0q7xz"
+	by mail.kernel.org (Postfix) with ESMTP id A3D2520645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbfGLGli (ORCPT
+        id S1726055AbfGLGnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 02:41:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38599 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfGLGli (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 02:41:38 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z75so4083306pgz.5;
-        Thu, 11 Jul 2019 23:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TqbudKcqmPicYhxMzfjPIN213dkGC+QyBM4A1+588nU=;
-        b=Q9p0q7xzXoI1Lc+XxxctCyFIgjf4+86NBaQUMF224i9/j8kfmB9DZKcKcP6cR2lnF9
-         gQtH2u1zNRbKiZWbIKpYBeb/333+TMiOphvnflJzIxPHC+6CMNU7xXJh3fPQMwpDH3CC
-         Yyd2O6eRukRBbBTSiwOE+ZWe9IHD3ULR8x2OTZzYrRy/qq+89JKtmuizw6gETS+Xp7WU
-         TxAyMKbTYke/IZdmOREa8WcaYcCsV0lboWYFd3DPoZJ9JqoZhZcHtMcMQIf02Rlkp8Zd
-         PNsBBttM0rd29w9lBBOKIzAucMDwwCawni36Hb8MfzmEMN358ZqEuIyYK/HYFxSn6oyq
-         8sdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TqbudKcqmPicYhxMzfjPIN213dkGC+QyBM4A1+588nU=;
-        b=YrkmnBdXpQYaa8Rl8eByUyycvgw0z1Kz/aGVyNFooxdzTo3YBHpFqKaYzdDlZPHFA3
-         EY1+m4JPSVQY5Wdk3W63PmXXEfCaJa/h4KMoig9YwchTt+XAD6bocEAMPc3JpsoLLhMT
-         ZkFxt5mIIcWG4JSdBeV1a+Z/+AUCiu5KufL2WF4Sc3wdi/ruxxPVkcXbNYRNUz4oRFXb
-         UuDa/O2qdiG3MbPDzfx61Slsm9VVdInY5owuszsrqEgByIQJ19GD79TRVaZAu9ORDQ13
-         n41qy3INkq0p+EuK8Xsa94M5ZFq3kTLry2uKDTtebZ5KfBULuGb+2zFmewwxQD8RJyKU
-         t32Q==
-X-Gm-Message-State: APjAAAWnu9/Zic+fCBU9EvoPVsuK3dkOHVR/R/OH2G8Y8JjR0F0A+U9s
-        ah11apA1UoG6AxyKw/9urPg=
-X-Google-Smtp-Source: APXvYqyTs5YjruaHtyFSkYfl0nakyiomy/5PFAXK7KXA5jMZTEKx0EjnTVVztr7SMcaRtXaoX/BifQ==
-X-Received: by 2002:a17:90a:37ac:: with SMTP id v41mr9339113pjb.6.1562913697140;
-        Thu, 11 Jul 2019 23:41:37 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 33sm13789713pgy.22.2019.07.11.23.41.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 23:41:36 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 23:41:34 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Atif Niyaz <atifniyaz@google.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>
-Cc:     Atif Niyaz <atifniyaz11@gmail.com>,
-        Siarhei Vishniakou <svv@google.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] input: API for Setting a Timestamp from a Driver
-Message-ID: <20190712064134.GA150689@dtor-ws>
-References: <20190710230410.9386-1-atifniyaz@google.com>
+        Fri, 12 Jul 2019 02:43:02 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63150 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbfGLGnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 02:43:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 23:43:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
+   d="scan'208";a="250036486"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.196.119]) ([10.239.196.119])
+  by orsmga001.jf.intel.com with ESMTP; 11 Jul 2019 23:43:00 -0700
+Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "lkp@01.org" <lkp@01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190520055434.GZ31424@shao2-debian>
+ <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
+ <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
+ <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
+ <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
+ <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
+ <81fb0e7d-1879-9267-83da-4671fec50920@linux.intel.com>
+ <DM5PR13MB1851813BBEA446E25C5001C2B8F60@DM5PR13MB1851.namprd13.prod.outlook.com>
+ <e29f82e0-6847-b264-300b-130bb31399d1@linux.intel.com>
+Message-ID: <b4e5ab18-6329-f22e-3962-230c965b0b5d@linux.intel.com>
+Date:   Fri, 12 Jul 2019 14:42:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710230410.9386-1-atifniyaz@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e29f82e0-6847-b264-300b-130bb31399d1@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Atif,
+Hi Trond,
 
-On Wed, Jul 10, 2019 at 04:04:10PM -0700, Atif Niyaz wrote:
-> Currently, evdev stamps time with timestamps acquired in
-> evdev_events. However, this timestamping may not be accurate in terms of
-> measuring when the actual event happened. This API allows any 3rd party
-> driver to be able to call input_set_timestamp, and provide a timestamp
-> that can be utilized in order to provide a more accurate sense of time
-> for the event
+     I attached perf-profile part big changes, hope it is useful for 
+analyzing the issue.
+
+
+In testcase: fsmark
+on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz 
+with 384G memory
+with following parameters:
+
+         iterations: 20x
+         nr_threads: 64t
+         disk: 1BRD_48G
+         fs: xfs
+         fs2: nfsv4
+         filesize: 4M
+         test_size: 80G
+         sync_method: fsyncBeforeClose
+         cpufreq_governor: performance
+
+test-description: The fsmark is a file system benchmark to test 
+synchronous write workloads, for example, mail servers workload.
+test-url: https://sourceforge.net/projects/fsmark/
+
+commit:
+   e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
+   0472e47660 ("SUNRPC: Convert socket page send code to use iov_iter()")
+
+e791f8e9380d945e 0472e476604998c127f3c80d291
+---------------- ---------------------------
+          %stddev     %change         %stddev
+              \          |                \
+     527.29           -22.6%     407.96        fsmark.files_per_sec
+       1.97 ± 11%      +0.9        2.88 ±  4% 
+perf-profile.calltrace.cycles-pp.smp_apic_timer_interrupt.apic_timer_interrupt.cpuidle_enter_state.do_idle.cpu_startup_entry
+       0.00            +0.9        0.93 ±  4% 
+perf-profile.calltrace.cycles-pp.tcp_write_xmit.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages
+       2.11 ± 10%      +0.9        3.05 ±  4% 
+perf-profile.calltrace.cycles-pp.apic_timer_interrupt.cpuidle_enter_state.do_idle.cpu_startup_entry.start_secondary
+       5.29 ±  2%      +1.2        6.46 ±  7% 
+perf-profile.calltrace.cycles-pp.svc_recv.nfsd.kthread.ret_from_fork
+       9.61 ±  5%      +3.1       12.70 ±  2% 
+perf-profile.calltrace.cycles-pp.worker_thread.kthread.ret_from_fork
+       9.27 ±  5%      +3.1       12.40 ±  2% 
+perf-profile.calltrace.cycles-pp.process_one_work.worker_thread.kthread.ret_from_fork
+      34.52 ±  4%      +3.3       37.78 ±  2% 
+perf-profile.calltrace.cycles-pp.ret_from_fork
+      34.52 ±  4%      +3.3       37.78 ±  2% 
+perf-profile.calltrace.cycles-pp.kthread.ret_from_fork
+       0.00            +3.4        3.41 ±  4% 
+perf-profile.calltrace.cycles-pp.memcpy_erms.memcpy_from_page._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg
+       0.00            +3.4        3.44 ±  4% 
+perf-profile.calltrace.cycles-pp.memcpy_from_page._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg
+       0.00            +3.5        3.54 ±  4% 
+perf-profile.calltrace.cycles-pp._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages
+       2.30 ±  5%      +3.7        6.02 ±  3% 
+perf-profile.calltrace.cycles-pp.__rpc_execute.rpc_async_schedule.process_one_work.worker_thread.kthread
+       2.30 ±  5%      +3.7        6.02 ±  3% 
+perf-profile.calltrace.cycles-pp.rpc_async_schedule.process_one_work.worker_thread.kthread.ret_from_fork
+       1.81 ±  4%      +3.8        5.59 ±  4% 
+perf-profile.calltrace.cycles-pp.call_transmit.__rpc_execute.rpc_async_schedule.process_one_work.worker_thread
+       1.80 ±  3%      +3.8        5.59 ±  3% 
+perf-profile.calltrace.cycles-pp.xprt_transmit.call_transmit.__rpc_execute.rpc_async_schedule.process_one_work
+       1.73 ±  4%      +3.8        5.54 ±  4% 
+perf-profile.calltrace.cycles-pp.xs_tcp_send_request.xprt_transmit.call_transmit.__rpc_execute.rpc_async_schedule
+       1.72 ±  4%      +3.8        5.54 ±  4% 
+perf-profile.calltrace.cycles-pp.xs_sendpages.xs_tcp_send_request.xprt_transmit.call_transmit.__rpc_execute
+       0.00            +5.4        5.42 ±  4% 
+perf-profile.calltrace.cycles-pp.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages.xs_tcp_send_request
+       0.00            +5.5        5.52 ±  4% 
+perf-profile.calltrace.cycles-pp.tcp_sendmsg.sock_sendmsg.xs_sendpages.xs_tcp_send_request.xprt_transmit
+       0.00            +5.5        5.53 ±  4% 
+perf-profile.calltrace.cycles-pp.sock_sendmsg.xs_sendpages.xs_tcp_send_request.xprt_transmit.call_transmit
+       9.61 ±  5%      +3.1       12.70 ±  2% 
+perf-profile.children.cycles-pp.worker_thread
+       9.27 ±  5%      +3.1       12.40 ±  2% 
+perf-profile.children.cycles-pp.process_one_work
+       6.19            +3.2        9.40 ±  4% 
+perf-profile.children.cycles-pp.memcpy_erms
+      34.53 ±  4%      +3.3       37.78 ±  2% 
+perf-profile.children.cycles-pp.ret_from_fork
+      34.52 ±  4%      +3.3       37.78 ±  2% 
+perf-profile.children.cycles-pp.kthread
+       0.00            +3.5        3.46 ±  4% 
+perf-profile.children.cycles-pp.memcpy_from_page
+       0.00            +3.6        3.56 ±  4% 
+perf-profile.children.cycles-pp._copy_from_iter_full
+       2.47 ±  4%      +3.7        6.18 ±  3% 
+perf-profile.children.cycles-pp.__rpc_execute
+       2.30 ±  5%      +3.7        6.02 ±  3% 
+perf-profile.children.cycles-pp.rpc_async_schedule
+       1.90 ±  4%      +3.8        5.67 ±  3% 
+perf-profile.children.cycles-pp.call_transmit
+       1.89 ±  3%      +3.8        5.66 ±  3% 
+perf-profile.children.cycles-pp.xprt_transmit
+       1.82 ±  4%      +3.8        5.62 ±  3% 
+perf-profile.children.cycles-pp.xs_tcp_send_request
+       1.81 ±  4%      +3.8        5.62 ±  3% 
+perf-profile.children.cycles-pp.xs_sendpages
+       0.21 ± 17%      +5.3        5.48 ±  4% 
+perf-profile.children.cycles-pp.tcp_sendmsg_locked
+       0.25 ± 18%      +5.3        5.59 ±  3% 
+perf-profile.children.cycles-pp.tcp_sendmsg
+       0.26 ± 16%      +5.3        5.60 ±  3% 
+perf-profile.children.cycles-pp.sock_sendmsg
+       1.19 ±  5%      +0.5        1.68 ±  3% 
+perf-profile.self.cycles-pp.get_page_from_freelist
+       6.10            +3.2        9.27 ±  4% 
+perf-profile.self.cycles-pp.memcpy_erms
+
+
+On 7/9/2019 10:39 AM, Xing Zhengjun wrote:
+> Hi Trond,
 > 
-> Signed-off-by: Atif Niyaz <atifniyaz@google.com>
-
-This looks OK to me. Benjamin, Peter, any concerns here?
-
-
-> ---
->  drivers/input/evdev.c | 42 ++++++++++++++++--------------------------
->  drivers/input/input.c | 17 +++++++++++++++++
->  include/linux/input.h | 38 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 71 insertions(+), 26 deletions(-)
+> On 7/8/2019 7:44 PM, Trond Myklebust wrote:
+>> I've asked several times now about how to interpret your results. As 
+>> far as I can tell from your numbers, the overhead appears to be 
+>> entirely contained in the NUMA section of your results.
+>> IOW: it would appear to be a scheduling overhead due to NUMA. I've 
+>> been asking whether or not that is a correct interpretation of the 
+>> numbers you published.
+> Thanks for your feedback. I used the same hardware and the same test 
+> parameters to test the two commits:
+>     e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
+>     0472e47660 ("SUNRPC: Convert socket page send code to use iov_iter()")
 > 
-> diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-> index 867c2cfd0038..a331efa0a3f6 100644
-> --- a/drivers/input/evdev.c
-> +++ b/drivers/input/evdev.c
-> @@ -25,13 +25,6 @@
->  #include <linux/cdev.h>
->  #include "input-compat.h"
->  
-> -enum evdev_clock_type {
-> -	EV_CLK_REAL = 0,
-> -	EV_CLK_MONO,
-> -	EV_CLK_BOOT,
-> -	EV_CLK_MAX
-> -};
-> -
->  struct evdev {
->  	int open;
->  	struct input_handle handle;
-> @@ -53,7 +46,7 @@ struct evdev_client {
->  	struct fasync_struct *fasync;
->  	struct evdev *evdev;
->  	struct list_head node;
-> -	unsigned int clk_type;
-> +	input_clk_t clk_type;
->  	bool revoked;
->  	unsigned long *evmasks[EV_CNT];
->  	unsigned int bufsize;
-> @@ -150,16 +143,18 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
->  static void __evdev_queue_syn_dropped(struct evdev_client *client)
->  {
->  	struct input_event ev;
-> -	ktime_t time;
->  	struct timespec64 ts;
-> +	ktime_t *time = input_get_timestamp(client->evdev->handle.dev);
->  
-> -	time = client->clk_type == EV_CLK_REAL ?
-> -			ktime_get_real() :
-> -			client->clk_type == EV_CLK_MONO ?
-> -				ktime_get() :
-> -				ktime_get_boottime();
-> +	switch (client->clk_type) {
-> +	case INPUT_CLK_REAL:
-> +	case INPUT_CLK_MONO:
-> +		ts = ktime_to_timespec64(time[client->clk_type]);
-> +		break;
-> +	default:
-> +		ts = ktime_to_timespec64(time[INPUT_CLK_BOOT]);
-
-Add "break" here please.
-
-> +	}
->  
-> -	ts = ktime_to_timespec64(time);
->  	ev.input_event_sec = ts.tv_sec;
->  	ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
->  	ev.type = EV_SYN;
-> @@ -185,21 +180,21 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
->  	spin_unlock_irqrestore(&client->buffer_lock, flags);
->  }
->  
-> -static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
-> +static int evdev_set_clk_type(struct evdev_client *client, clockid_t clkid)
->  {
->  	unsigned long flags;
-> -	unsigned int clk_type;
-> +	input_clk_t clk_type;
->  
->  	switch (clkid) {
->  
->  	case CLOCK_REALTIME:
-> -		clk_type = EV_CLK_REAL;
-> +		clk_type = INPUT_CLK_REAL;
->  		break;
->  	case CLOCK_MONOTONIC:
-> -		clk_type = EV_CLK_MONO;
-> +		clk_type = INPUT_CLK_MONO;
->  		break;
->  	case CLOCK_BOOTTIME:
-> -		clk_type = EV_CLK_BOOT;
-> +		clk_type = INPUT_CLK_BOOT;
->  		break;
->  	default:
->  		return -EINVAL;
-> @@ -307,12 +302,7 @@ static void evdev_events(struct input_handle *handle,
->  {
->  	struct evdev *evdev = handle->private;
->  	struct evdev_client *client;
-> -	ktime_t ev_time[EV_CLK_MAX];
-> -
-> -	ev_time[EV_CLK_MONO] = ktime_get();
-> -	ev_time[EV_CLK_REAL] = ktime_mono_to_real(ev_time[EV_CLK_MONO]);
-> -	ev_time[EV_CLK_BOOT] = ktime_mono_to_any(ev_time[EV_CLK_MONO],
-> -						 TK_OFFS_BOOT);
-> +	ktime_t *ev_time = input_get_timestamp(handle->dev);
->  
->  	rcu_read_lock();
->  
-> diff --git a/drivers/input/input.c b/drivers/input/input.c
-> index 7f3c5fcb9ed6..ae8b0ee58120 100644
-> --- a/drivers/input/input.c
-> +++ b/drivers/input/input.c
-> @@ -1894,6 +1894,23 @@ void input_free_device(struct input_dev *dev)
->  }
->  EXPORT_SYMBOL(input_free_device);
->  
-> +/**
-> + * input_get_timestamp - get timestamp for input events
-> + * @dev: input device to get timestamp from
-> + *
-> + * A valid timestamp is a timestamp of non-zero value.
-> + */
-> +ktime_t *input_get_timestamp(struct input_dev *dev)
-> +{
-> +	const ktime_t invalid_timestamp = ktime_set(0, 0);
-> +
-> +	if (!ktime_compare(dev->timestamp[INPUT_CLK_MONO], ktime_zero)) {
-
-You need to replace ktime_zero with invalid_timestamp here.
-
-> +		input_set_timestamp(dev, ktime_get());
-> +	}
-
-No need for curly braces for 1-line body.
-
-> +	return dev->timestamp;
-> +}
-> +EXPORT_SYMBOL(input_get_timestamp);
-> +
->  /**
->   * input_set_capability - mark device as capable of a certain event
->   * @dev: device that is capable of emitting or accepting event
-> diff --git a/include/linux/input.h b/include/linux/input.h
-> index 510e78558c10..3929b62ccbe5 100644
-> --- a/include/linux/input.h
-> +++ b/include/linux/input.h
-> @@ -33,6 +33,14 @@ struct input_value {
->  	__s32 value;
->  };
->  
-> +enum input_clock_type {
-> +	INPUT_CLK_REAL = 0,
-> +	INPUT_CLK_MONO,
-> +	INPUT_CLK_BOOT,
-> +	INPUT_CLK_MAX
-> +};
-> +typedef enum input_clock_type input_clk_t;
-
-We typically avoid typedefs unless we really want to hide kind of data
-we are dealing with. Let's just use "enum input_clock_type" everywhere.
-
-> +
->  /**
->   * struct input_dev - represents an input device
->   * @name: name of the device
-> @@ -114,6 +122,8 @@ struct input_value {
->   * @vals: array of values queued in the current frame
->   * @devres_managed: indicates that devices is managed with devres framework
->   *	and needs not be explicitly unregistered or freed.
-> + * @timestamp: storage for a timestamp set by input_set_timestamp called
-> + *  by a driver
->   */
->  struct input_dev {
->  	const char *name;
-> @@ -184,6 +194,8 @@ struct input_dev {
->  	struct input_value *vals;
->  
->  	bool devres_managed;
-> +
-> +	ktime_t timestamp[INPUT_CLK_MAX];
->  };
->  #define to_input_dev(d) container_of(d, struct input_dev, dev)
->  
-> @@ -382,6 +394,32 @@ void input_close_device(struct input_handle *);
->  
->  int input_flush_device(struct input_handle *handle, struct file *file);
->  
-> +/**
-> + * input_set_timestamp - set timestamp for input events
-> + * @dev: input device to set timestamp for
-> + * @timestamp: the time at which the event has occurred
-> + *   in CLOCK_MONOTONIC
-> + *
-> + * This function is intended to provide to the input system a more
-> + * accurate time of when an event actually occurred. The driver should
-> + * call this function as soon as a timestamp is acquired ensuring
-> + * clock conversions in input_set_timestamp are done correctly.
-> + *
-> + * The system entering a suspend between timestamp acquisition and
-> + * calling input_set_timestamp can result in inaccurate conversions.
-> + *
-> + */
-> +static inline void input_set_timestamp(struct input_dev *dev,
-> +	ktime_t timestamp)
-> +{
-> +	dev->timestamp[INPUT_CLK_MONO] = timestamp;
-> +	dev->timestamp[INPUT_CLK_REAL] = ktime_mono_to_real(timestamp);
-> +	dev->timestamp[INPUT_CLK_BOOT] = ktime_mono_to_any(
-> +		timestamp, TK_OFFS_BOOT);
-> +}
-> +
-> +ktime_t *input_get_timestamp(struct input_dev *dev);
-> +
->  void input_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
->  void input_inject_event(struct input_handle *handle, unsigned int type, unsigned int code, int value);
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
+> If it is caused by NUMA, why only commit 0472e47660 throughput is 
+> decreased? The filesystem we test is NFS, commit 0472e47660 is related 
+> with the network, could you help to check if have any other clues for 
+> the regression. Thanks.
 > 
 
 -- 
-Dmitry
+Zhengjun Xing
