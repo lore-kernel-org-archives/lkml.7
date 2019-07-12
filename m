@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E06C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D644CC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F27221670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4282208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934583;
-	bh=qDtEx3JBcoiN7jc5fyaWwXQltue7M5cegdGziK7DBV8=;
+	s=default; t=1562934588;
+	bh=im/5EH16z/2KM02dgV1PXQid8Mz1fZ2RuFwbckq6wCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rMohBuMHtJNJknhHFLhppJjx40fyZG52bMNgPH9LWEAqr7xvtdLWs3jgbKPqKyog+
-	 nEAL9sIEBLFktCpcXPeJHTW3hWbw7gEM8iesdPSfwcYyDtxjtRh8UggeqXZVNbVzCB
-	 g+SGnSKv+hUy4RMIDkCeoie6iT2TwK1xXMXHKx2k=
+	b=x6e5gLlfMnzKE1kCnk7dNpS1siyKCGktfNtdD8jLaqzjcynQ0bvw9A/uXRlF+qzjK
+	 8YiWb2v0gM1mj+e3ljPjclNahylbr6gbugcyI+SDInC/uNTKB5S9YILw0L/kkYEVSo
+	 46dkDLnXmVk/CsSeLq93m7+m/64gkk8FRWVYUiPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbfGLM3l (ORCPT
+        id S1729036AbfGLM3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44630 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbfGLM3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:38 -0400
+        id S1729022AbfGLM3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2AB921019;
-        Fri, 12 Jul 2019 12:29:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31D82208E4;
+        Fri, 12 Jul 2019 12:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934577;
-        bh=qDtEx3JBcoiN7jc5fyaWwXQltue7M5cegdGziK7DBV8=;
+        s=default; t=1562934580;
+        bh=im/5EH16z/2KM02dgV1PXQid8Mz1fZ2RuFwbckq6wCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rSbSgNuFPs2L6pMu59YoFvWcqrjDNummywq1soA/cmm3SEzR77OeRZjI37i9C6y9g
-         Nr1sJ9L7z8VpvcO1H5NVlSiXXOZH0AAw8ShPNh3DUypjBMzm9yOY7eukqYZJ5FCS0p
-         D5UBekKy5yU2weFo5tKcieQCkPndjuSHzD0neQ7E=
+        b=ai/anIo3fF168WMRQK/um+b05w4MSCl6TDv+1CwvAmAS7jq7oUJ89r46WajgbdeMU
+         Z12A6065u0s2RbDOdcpiATKeJXG2KEtI0eN3R59Q798ztRUZCFyCuqoN4hm+1ICOTZ
+         oABzWngn+3IH7e4+WOYnMrnwaMY7rHWSxBW30nlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Carrillo Cisneros <davidca@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, kernel-team@fb.com
-Subject: [PATCH 5.1 101/138] perf header: Assign proper ff->ph in perf_event__synthesize_features()
-Date:   Fri, 12 Jul 2019 14:19:25 +0200
-Message-Id: <20190712121632.639643452@linuxfoundation.org>
+        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com
+Subject: [PATCH 5.1 102/138] x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
+Date:   Fri, 12 Jul 2019 14:19:26 +0200
+Message-Id: <20190712121632.679106042@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,69 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Dianzhang Chen <dianzhangchen0@gmail.com>
 
-commit c952b35f4b15dd1b83e952718dec3307256383ef upstream.
+commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
 
-bpf/btf write_* functions need ff->ph->env.
+The index to access the threads ptrace_bps is controlled by userspace via
+syscall: sys_ptrace(), hence leading to a potential exploitation of the
+Spectre variant 1 vulnerability.
 
-With this missing, pipe-mode (perf record -o -)  would crash like:
+The index can be controlled from:
+    ptrace -> arch_ptrace -> ptrace_get_debugreg.
 
-Program terminated with signal SIGSEGV, Segmentation fault.
+Fix this by sanitizing the user supplied index before using it access
+thread->ptrace_bps.
 
-This patch assign proper ph value to ff.
-
-Committer testing:
-
-  (gdb) run record -o -
-  Starting program: /root/bin/perf record -o -
-  PERFILE2
-  <SNIP start of perf.data headers>
-  Thread 1 "perf" received signal SIGSEGV, Segmentation fault.
-  __do_write_buf (size=4, buf=0x160, ff=0x7fffffff8f80) at util/header.c:126
-  126		memcpy(ff->buf + ff->offset, buf, size);
-  (gdb) bt
-  #0  __do_write_buf (size=4, buf=0x160, ff=0x7fffffff8f80) at util/header.c:126
-  #1  do_write (ff=ff@entry=0x7fffffff8f80, buf=buf@entry=0x160, size=4) at util/header.c:137
-  #2  0x00000000004eddba in write_bpf_prog_info (ff=0x7fffffff8f80, evlist=<optimized out>) at util/header.c:912
-  #3  0x00000000004f69d7 in perf_event__synthesize_features (tool=tool@entry=0x97cc00 <record>, session=session@entry=0x7fffe9c6d010,
-      evlist=0x7fffe9cae010, process=process@entry=0x4435d0 <process_synthesized_event>) at util/header.c:3695
-  #4  0x0000000000443c79 in record__synthesize (tail=tail@entry=false, rec=0x97cc00 <record>) at builtin-record.c:1214
-  #5  0x0000000000444ec9 in __cmd_record (rec=0x97cc00 <record>, argv=<optimized out>, argc=0) at builtin-record.c:1435
-  #6  cmd_record (argc=0, argv=<optimized out>) at builtin-record.c:2450
-  #7  0x00000000004ae3e9 in run_builtin (p=p@entry=0x98e058 <commands+216>, argc=argc@entry=3, argv=0x7fffffffd670) at perf.c:304
-  #8  0x000000000042eded in handle_internal_command (argv=<optimized out>, argc=<optimized out>) at perf.c:356
-  #9  run_argv (argcp=<optimized out>, argv=<optimized out>) at perf.c:400
-  #10 main (argc=3, argv=<optimized out>) at perf.c:522
-  (gdb)
-
-After the patch the SEGSEGV is gone.
-
-Reported-by: David Carrillo Cisneros <davidca@fb.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: kernel-team@fb.com
-Cc: stable@vger.kernel.org # v5.1+
-Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
-Link: http://lkml.kernel.org/r/20190620010453.4118689-1-songliubraving@fb.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/header.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/ptrace.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3549,6 +3549,7 @@ int perf_event__synthesize_features(stru
- 		return -ENOMEM;
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -24,6 +24,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/export.h>
+ #include <linux/context_tracking.h>
++#include <linux/nospec.h>
  
- 	ff.size = sz - sz_hdr;
-+	ff.ph = &session->header;
+ #include <linux/uaccess.h>
+ #include <asm/pgtable.h>
+@@ -642,9 +643,11 @@ static unsigned long ptrace_get_debugreg
+ {
+ 	struct thread_struct *thread = &tsk->thread;
+ 	unsigned long val = 0;
++	int index = n;
  
- 	for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
- 		if (!feat_ops[feat].synthesize) {
+ 	if (n < HBP_NUM) {
+-		struct perf_event *bp = thread->ptrace_bps[n];
++		index = array_index_nospec(index, HBP_NUM);
++		struct perf_event *bp = thread->ptrace_bps[index];
+ 
+ 		if (bp)
+ 			val = bp->hw.info.address;
 
 
