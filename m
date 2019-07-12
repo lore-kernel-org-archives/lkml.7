@@ -2,136 +2,165 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC3C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A80C742BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B588208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935374;
-	bh=KDTG7xZKVJcTtm5E/Es0e9jl8s29jm+e702fFtM9XwI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9KIXfhowccxmsvet2SS1ddjz79ISGBU/6HYTiPwqR4cMt8/j8CSaWZz9LQgkuzO8
-	 FP94xcbKeWrywGeUgYGsuGg9t9MBPwfkdORW5u5BPL+XHAzwsNuqJpE0onNUbn3nTp
-	 B3LzPTJpEeERn6+X6PYF0tQmW7Ds+pwXGcohBY6o=
+	by mail.kernel.org (Postfix) with ESMTP id E83762080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfGLMT6 (ORCPT
+        id S1727546AbfGLMnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfGLMTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:19:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE083208E4;
-        Fri, 12 Jul 2019 12:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562933991;
-        bh=KDTG7xZKVJcTtm5E/Es0e9jl8s29jm+e702fFtM9XwI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NORqzYcD+d4l1p1AdXJ0kx58ZUUDrCoxEa5pqr6dyAPsl6leSFpREPdnLd3VVUn+6
-         za4Azgkpky3Se3uwTv7M1hivps97L/cOpygI9MBrD73XwCr1458Pug4w0ohyLHLbal
-         39/V/I36jIxURyu9/4+yqq0L0q/yU/0MPM6Iug4Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Melissa Wen <melissa.srw@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/91] staging:iio:ad7150: fix threshold mode config bit
-Date:   Fri, 12 Jul 2019 14:18:14 +0200
-Message-Id: <20190712121622.013346601@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
-References: <20190712121621.422224300@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 12 Jul 2019 08:43:10 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:49108 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfGLMnJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:43:09 -0400
+Received: from [167.98.27.226] (helo=[10.35.6.255])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hlut4-0005pT-Ur; Fri, 12 Jul 2019 13:42:55 +0100
+Subject: Re: [PATCH v1 01/11] dt-bindings: display/bridge: Add bindings for
+ ti948
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@lists.codethink.co.uk,
+        Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
+References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
+ <20190611140412.32151-2-michael.drake@codethink.co.uk>
+ <20190611180316.GS5016@pendragon.ideasonboard.com>
+From:   Michael Drake <michael.drake@codethink.co.uk>
+Message-ID: <4f8c1aa9-0c0b-0337-b273-2ffd76d83ee1@codethink.co.uk>
+Date:   Fri, 12 Jul 2019 13:42:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611180316.GS5016@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df4d737ee4d7205aaa6275158aeebff87fd14488 ]
+Hi Laurent,
 
-According to the AD7150 configuration register description, bit 7 assumes
-value 1 when the threshold mode is fixed and 0 when it is adaptive,
-however, the operation that identifies this mode was considering the
-opposite values.
+On 11/06/2019 19:03, Laurent Pinchart wrote:
+> Hi Michael,
+> 
+> Thank you for the patch.
 
-This patch renames the boolean variable to describe it correctly and
-properly replaces it in the places where it is used.
+My pleasure, and thank you for the feedback!  I'm sorry it's
+taken me a while to respond to it.
 
-Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+> On Tue, Jun 11, 2019 at 03:04:02PM +0100, Michael Drake wrote:
+>> Adds device tree bindings for:
+>>
+>>   TI DS90UB948-Q1 2K FPD-Link III to OpenLDI Deserializer
+>>
+>> The device has the compatible string "ti,ds90ub948", and
+>> and allows an arrray of strings to be provided as regulator
+> 
+> s/arrray/array/
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index d16084d7068c..a354ce6b2b7b 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -6,6 +6,7 @@
-  * Licensed under the GPL-2 or later.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -130,7 +131,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- {
- 	int ret;
- 	u8 threshtype;
--	bool adaptive;
-+	bool thrfixed;
- 	struct ad7150_chip_info *chip = iio_priv(indio_dev);
- 
- 	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
-@@ -138,21 +139,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	threshtype = (ret >> 5) & 0x03;
--	adaptive = !!(ret & 0x80);
-+
-+	/*check if threshold mode is fixed or adaptive*/
-+	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
- 
- 	switch (type) {
- 	case IIO_EV_TYPE_MAG_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x1);
--		return adaptive && (threshtype == 0x0);
-+			return !thrfixed && (threshtype == 0x1);
-+		return !thrfixed && (threshtype == 0x0);
- 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x3);
--		return adaptive && (threshtype == 0x2);
-+			return !thrfixed && (threshtype == 0x3);
-+		return !thrfixed && (threshtype == 0x2);
- 	case IIO_EV_TYPE_THRESH:
- 		if (dir == IIO_EV_DIR_RISING)
--			return !adaptive && (threshtype == 0x1);
--		return !adaptive && (threshtype == 0x0);
-+			return thrfixed && (threshtype == 0x1);
-+		return thrfixed && (threshtype == 0x0);
- 	default:
- 		break;
- 	}
+Thanks.  Fixed for the next version.
+
+>> names to enable for operation of the device.
+>>
+>> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
+>> Cc: Patrick Glaser <pglaser@tesla.com>
+>> Cc: Nate Case <ncase@tesla.com>
+>> ---
+>>  .../bindings/display/bridge/ti,ds90ub948.txt  | 24 +++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+>> new file mode 100644
+>> index 000000000000..f9e86cb22900
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+>> @@ -0,0 +1,24 @@
+>> +TI DS90UB948-Q1 2K FPD-Link III to OpenLDI Deserializer
+>> +=======================================================
+>> +
+>> +This is the binding for Texas Instruments DS90UB948-Q1 bridge deserializer.
+>> +
+>> +This device supports I2C only.
+> 
+> Then the DT node should be a child of its I2C controller, and have a reg
+> property.
+
+OK, thank you.  I'm not actually using DT, I'm using ACPI tables.
+
+For DT, would this cause the device to get bound to the driver on
+startup?
+
+I tried adding a reg property with the value set to the device's
+I2C address with device tree compatible properties, coupled with
+the DT "compatible" string property, but that was insufficient to
+bind the device to the driver.  At the moment, I'm using the ACPI
+mechanism for achieving this.
+
+So all I've done for this is add the "reg" property to the device
+tree ti,ds90ub948.txt documentation file, in the Example section.
+
+Is this what you were expecting?
+
+For the other point, that the DT node should be a child of its I2C
+controller, I've made the devices descendants of the I2C controller
+in ACPI, but one of them is not a direct child.
+
+The ti949 is a child of its I2C controller node, but the ti948
+is a child of the ti949 node in the ACPI table.  I did this to
+ensure that linux was aware of the dependency of the devices, so
+that they would be brought up in the correct order and suspended
+and resumed in the correct order.
+
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: "ti,ds90ub948"
+>> +
+>> +Optional properties:
+>> +
+>> +- regulators: List of regulator name strings to enable for operation of device.
+> 
+> There's a standard binding for regulators, using *-supply properties.
+> Please use them.
+
+Thank you!  I've switched to using that, and it is less code.  :)
+
+> You should also use the OF graph DT bindings to model the data
+> connections.
+
+I'm not clear on the implications of this from the driver code.
+Does it need any code changes to the driver to support these
+endpoints?  How are they used?
+
+If it's just a documentation thing, I can easily do it, but
+otherwise, I can't test Device Tree because we're using ACPI.
+
+>> +
+>> +Example
+>> +-------
+>> +
+>> +ti948: ds90ub948@0 {
+>> +	compatible = "ti,ds90ub948";
+>> +
+>> +	regulators: "vcc",
+>> +	            "vcc_disp";
+>> +};
+> 
+
 -- 
-2.20.1
-
-
-
+Michael Drake                 https://www.codethink.co.uk/
