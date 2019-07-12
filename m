@@ -2,473 +2,84 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF17C742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7721BC742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9FD21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkqJbBpj"
+	by mail.kernel.org (Postfix) with ESMTP id 4B68A21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfGLJKt (ORCPT
+        id S1726461AbfGLJLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:10:49 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33066 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfGLJKt (ORCPT
+        Fri, 12 Jul 2019 05:11:31 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:58282 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725989AbfGLJLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:10:49 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x3so6023376lfc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 02:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yZQ8gbno19WFGgJUmmRFpg3PfdS64YfZm85BQb1O8nE=;
-        b=gkqJbBpj/GAFCBr7M4p4/dwXgZvgpAbG68yB2uqLpupgRSG8aBVtQU0B1JxlqNAa2v
-         PSlj2dTSwRCLCyZNVMbRnvFjgjGPr1L4I9JWKcUWd5LwsVxpULlWZk0lFiTmfWDOgTem
-         1TChpZQ+cm2C6xKbZw0v0QPLwbgtEskLr8mdKittL6IlLKf8KydhWnB7RL2y9o/20xgo
-         suhB3HXLKxrJlMhZJYi4Zb4zCVHkFsbrMYCqa2cQmtC/IUfIYNLHW7I1EUZRAJ/0PDYl
-         1Ia8FPUbyZM023rCXpN8aDir38RDiYdM05jYHYe7XABBtdbMn54roN/ydoEaothx1Tgz
-         QajA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yZQ8gbno19WFGgJUmmRFpg3PfdS64YfZm85BQb1O8nE=;
-        b=ik2UNd/eVWpftMeFZyjLlrwYUhwNje84Rj7KROSg46nGagTWlrduZwnes9H2YLV7xh
-         W6E0bOhc5jHitvHz7+jABIwK4TNps1r+Ao2KqNIz8OB1eXWwk1w3l74WieMub8wuTkrr
-         LwXk3qgMZeQe4I/vdoCFzF/mwYmAmXCmSv/omkf3ZYQdpvEiQrfUJgnIcl8kpiXqTrQK
-         hu5IebXNvfqMqg7LZIvhFLuU1stSiFpYY6WTw+SN0R7SvlNvAihOHNvLUbOExhw4vedp
-         GsY2Ae8oNdJilk9gqEwF2i+ceenxhYoH88hYMi8y0IJGPqzyIgG8SG5ePEB2waI4EPSL
-         wQbw==
-X-Gm-Message-State: APjAAAUXz7dPZxniibgFaTR9QS1xYYI1PN2SQNbpYyRO/3uKmUbMxtHM
-        DU2Uj9GWvA1S1rxmsf0O70XvUZ5RyBq653kv8SEXGw==
-X-Google-Smtp-Source: APXvYqyUV+jcEs2cbMs6JYt2hsq3RDdxB5cyn3B1r+vreUsaiihJALZz8dVs2yMzq/1FtDXZ2XOisTVRWERwcRK2Vps=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr4345364lfc.60.1562922645621;
- Fri, 12 Jul 2019 02:10:45 -0700 (PDT)
+        Fri, 12 Jul 2019 05:11:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWh00oy_1562922685;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWh00oy_1562922685)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 12 Jul 2019 17:11:25 +0800
+Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
+ statistic
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        Mel Gorman <mgorman@suse.de>, riel@surriel.com
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
+ <20190711134754.GD3402@hirez.programming.kicks-ass.net>
+ <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
+ <20190712075815.GN3402@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <37474414-1a54-8e3a-60df-eb7e5e1cc1ed@linux.alibaba.com>
+Date:   Fri, 12 Jul 2019 17:11:25 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 12 Jul 2019 11:10:34 +0200
-Message-ID: <CACRpkdaaO14KOdsPBqjyx+78ohdGJ9Z0YrF+GcG7-geO1w1R8A@mail.gmail.com>
-Subject: [GIT PULL] Pin control bulk changes for v5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190712075815.GN3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-here is the bulk of pin control changes for the v5.3 kernel cycle.
 
-This is pretty linear development in pin control, nothing really
-stand out. We had a bit of SPDX fuzz with tglx fixing up tags
-with scripts at the same time as maintainers were fixing up the
-same tags, but I regard that as a one-off and not a good time
-for an exercise in "what can be done differently". Let's resolve
-the conflicts and move on (I don't know if there will be any,
-don't think so.)
+On 2019/7/12 下午3:58, Peter Zijlstra wrote:
+[snip]
+>>>
+>>> Then our task t1 should be accounted to B (as you do), but also to A and
+>>> R.
+>>
+>> I get the point but not quite sure about this...
+>>
+>> Not like pages there are no hierarchical limitation on locality, also tasks
+> 
+> You can use cpusets to affect that.
 
-Please pull it in! Technical details in the signed tag.
+Could you please give more detail on this?
 
-Yours,
-Linus Walleij
+> 
+>> running in a particular group have no influence to others, not to mention the
+>> extra overhead, does it really meaningful to account the stuff hierarchically?
+> 
+> AFAIU it's a requirement of cgroups to be hierarchical. All our other
+> cgroup accounting is like that.
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+Ok, should respect the convention :-)
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+Regards,
+Michael Wang
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.3-1
-
-for you to fetch changes up to 4c105769bf6de29856bf80a4045e6725301c58ce:
-
-  pinctrl: aspeed: Strip moved macros and structs from private header
-(2019-07-10 11:19:20 +0200)
-
-----------------------------------------------------------------
-This is the bulk of pin control changes for the v5.3 kernel
-cycle:
-
-Core changes:
-
-- Device links can optionally be added between a pin control
-  producer and its consumers. This will affect how the system
-  power management is handled: a pin controller will not suspend
-  before all of its consumers have been suspended. This was
-  necessary for the ST Microelectronics STMFX expander and
-  need to be tested on other systems as well: it makes sense
-  to make this default in the long run. Right now it is
-  opt-in per driver.
-
-- Drive strength can be specified in microamps. With decreases
-  in silicon technology, milliamps isn't granular enough, let's
-  make it possible to select drive strengths in microamps. Right
-  now the Meson (AMlogic) driver needs this.
-
-New drivers:
-
-- New subdriver for the Tegra 194 SoC.
-
-- New subdriver for the Qualcomm SDM845.
-
-- New subdriver for the Qualcomm SM8150.
-
-- New subdriver for the Freescale i.MX8MN (Freescale is now a
-  product line of NXP).
-
-- New subdriver for Marvell MV98DX1135.
-
-Driver improvements:
-
-- The Bitmain BM1880 driver now supports pin config in
-  addition to muxing.
-
-- The Qualcomm drivers can now reserve some GPIOs as taken
-  aside and not usable for users. This is used in ACPI systems
-  to take out some GPIO lines used by the BIOS so that
-  noone else (neither kernel nor userspace) will play with them
-  by mistake and crash the machine.
-
-- A slew of refurbishing around the Aspeed drivers (board
-  management controllers for servers) in preparation for the
-  new Aspeed AST2600 SoC.
-
-- A slew of improvements over the SH PFC drivers as usual.
-
-- Misc cleanups and fixes.
-
-----------------------------------------------------------------
-Alexandre Torgue (4):
-      pinctrl: stm32: add suspend/resume management
-      pinctrl: stm32: Enable suspend/resume for stm32mp157c SoC
-      pinctrl: stm32: add lock mechanism for irqmux selection
-      dt-bindings: pinctrl: Convert stm32 pinctrl bindings to json-schema
-
-Andrew Jeffery (9):
-      dt-bindings: pinctrl: aspeed: Split bindings document in two
-      dt-bindings: pinctrl: aspeed: Convert AST2400 bindings to json-schema
-      dt-bindings: pinctrl: aspeed: Convert AST2500 bindings to json-schema
-      MAINTAINERS: Add entry for ASPEED pinctrl drivers
-      pinctrl: aspeed: Correct comment that is no longer true
-      pinctrl: aspeed: Clarify comment about strapping W1C
-      pinctrl: aspeed: Split out pinmux from general pinctrl
-      pinctrl: aspeed: Add implementation-related documentation
-      pinctrl: aspeed: Strip moved macros and structs from private header
-
-Andy Shevchenko (3):
-      pinctrl: baytrail: Use defined macro instead of magic in
-byt_get_gpio_mux()
-      pinctrl: baytrail: Re-use data structures from pinctrl-intel.h
-      pinctrl: baytrail: Use GENMASK() consistently
-
-Anson Huang (3):
-      dt-bindings: imx: Correct pinfunc head file path for i.MX8MM
-      dt-bindings: imx: Add pinctrl binding doc for i.MX8MN
-      pinctrl: freescale: Add i.MX8MN pinctrl driver support
-
-Benjamin Gaignard (2):
-      pinctrl: Enable device link creation for pin control
-      pinctrl: stmfx: enable links creations
-
-Bjorn Andersson (1):
-      pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-
-Charles Keepax (1):
-      pinctrl: madera: Fixup SPDX headers
-
-Chris Packham (2):
-      dt-bindings: pinctrl: mvebu: Document bindings for 98DX1135
-      pinctrl: mvebu: Add support for MV98DX1135
-
-Colin Ian King (1):
-      dt-bindings: pinctrl: fix spelling mistakes in pinctl documentation
-
-Doug Berger (1):
-      pinctrl: bcm: Allow PINCTRL_BCM2835 for ARCH_BRCMSTB
-
-Enrico Weigelt (1):
-      gpio: Fix build warnings on undefined struct pinctrl_dev
-
-Florian Fainelli (1):
-      dt-bindings: pinctrl: bcm2835-gpio: Document BCM7211 compatible
-
-Geert Uytterhoeven (26):
-      pinctrl: sh-pfc: Correct printk level of group reference warning
-      pinctrl: sh-pfc: Mark run-time debug code __init
-      pinctrl: sh-pfc: Add check for empty pinmux groups/functions
-      pinctrl: sh-pfc: Validate pin tables at runtime
-      pinctrl: sh-pfc: Rename 2-parameter CPU_ALL_PORT() variant
-      pinctrl: sh-pfc: Add SH_PFC_PIN_CFG_PULL_UP_DOWN shorthand
-      pinctrl: sh-pfc: Move PIN_NONE to shared header file
-      pinctrl: sh-pfc: r8a77970: Remove MMC_{CD,WP}
-      pinctrl: sh-pfc: r8a7795-es1: Add TPU pins, groups and functions
-      pinctrl: sh-pfc: r8a7795: Add TPU pins, groups and functions
-      pinctrl: sh-pfc: r8a7796: Add TPU pins, groups and functions
-      pinctrl: sh-pfc: r8a77965: Add TPU pins, groups and functions
-      pinctrl: sh-pfc: Add PORT_GP_27 helper macro
-      pinctrl: sh-pfc: r8a7778: Use common PORT_GP_CFG_27() macro
-      pinctrl: sh-pfc: Add new non-GPIO helper macros
-      pinctrl: sh-pfc: emev2: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a7778: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a7790: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a7795-es1: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a7795: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a7796: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a77965: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: r8a77990: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: sh73a0: Use new macros for non-GPIO pins
-      pinctrl: sh-pfc: Remove obsolete SH_PFC_PIN_NAMED*() macros
-      dt-bindings: pinctrl: pic32: Spelling s/configuraion/configuration/
-
-Guillaume La Roque (6):
-      dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-      pinctrl: generic: add new 'drive-strength-microamp' property support
-      dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-      pinctrl: meson: Rework enable/disable bias part
-      pinctrl: meson: add support of drive-strength-microamp
-      pinctrl: meson: g12a: add DS bank value
-
-Gustavo A. R. Silva (1):
-      pinctrl: tb10x: Use flexible-array member and struct_size() helper
-
-Hongwei Zhang (1):
-      pinctrl: aspeed: Add SGPM pinmux
-
-Icenowy Zheng (2):
-      dt-bindings: pinctrl: add missing compatible string for V3s
-      dt-bindings: pinctrl: add compatible string for Allwinner V3 pinctrl
-
-Jerome Brunet (2):
-      dt-bindings: pinctrl: meson: add output support in pinconf
-      pinctrl: meson: add output support in pinconf
-
-Krishna Yarlagadda (3):
-      pinctrl: Add Tegra194 pinctrl DT bindings
-      pinctrl: tegra: Support 32 bit register access
-      pinctrl: tegra: Add Tegra194 pinmux driver
-
-Lee Jones (2):
-      pinctrl: msm: Add ability for drivers to supply a reserved GPIO list
-      pinctrl: qcom: sdm845: Provide ACPI support
-
-Linus Walleij (8):
-      pinctrl: core: Do not add device links for hogs
-      pinctrl: stm32: Add links to consumers
-      pinctrl: u300: Fix SPDX tags
-      pinctrl: nomadik: Fix SPDX tags
-      Merge tag 'sh-pfc-for-v5.3-tag1' of
-git://git.kernel.org/.../geert/renesas-drivers into devel
-      Merge branch 'ib-qcom-acpi' into devel
-      pinctrl: Minimize SPDX hamming distance
-      pinctrl: aspeed: Fix missed include
-
-Manivannan Sadhasivam (6):
-      dt-bindings: pinctrl: Modify pinctrl memory map
-      pinctrl: Rework the pinmux handling for BM1880 SoC
-      dt-bindings: pinctrl: Document pinconf bindings for BM1880 SoC
-      pinctrl: Add pinconf support for BM1880 SoC
-      dt-bindings: pinctrl: Document drive strength settings for BM1880 SoC
-      pinctrl: Add drive strength support for BM1880 SoC
-
-Masahiro Yamada (5):
-      pinctrl: add include guard to pinctrl-state.h
-      pinctrl: remove unneeded initializer for list_for_each_entry() iterator
-      pinctrl: remove unused pin_is_valid()
-      pinctrl: make pinconf.h self-contained
-      pinctrl: remove unneeded #ifdef around declarations
-
-Nathan Chancellor (1):
-      pinctrl: qcom: sdm845: Fix CONFIG preprocessor guard
-
-Neil Armstrong (5):
-      pinctrl: meson: update with SPDX Licence identifier
-      dt-bindings: gpio: meson-gxbb-gpio: update with SPDX Licence identifier
-      dt-bindings: gpio: meson-gxl-gpio: update with SPDX Licence identifier
-      dt-bindings: gpio: meson8-gpio: update with SPDX Licence identifier
-      dt-bindings: gpio: meson8b-gpio: update with SPDX Licence identifier
-
-Nicolas Boichat (2):
-      pinctrl: mediatek: Add pm_ops to pinctrl-paris
-      pinctrl: mediatek: mt8183: Add pm_ops
-
-Prasad Sodagudi (2):
-      dt-bindings: pinctrl: qcom: Add SM8150 pinctrl binding
-      pinctrl: qcom: Add SM8150 pinctrl driver
-
-Srinivas Ramana (1):
-      pinctrl: qcom: Add irq_enable callback for msm gpio
-
-Thierry Reding (2):
-      pinctrl: tegra: Set specific GPIO compatible string
-      pinctrl: tegra: Add bitmask support for parked bits
-
-Vinod Koul (1):
-      dt-bindings: pinctrl: qcom: Document missing gpio nodes
-
-Wen Yang (1):
-      pinctrl: rockchip: fix leaked of_node references
-
-Young Xiao (1):
-      pinctrl: ns2: Fix potential NULL dereference
-
-YueHaibing (1):
-      pinctrl: bcm2835: Fix build error without CONFIG_OF
-
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |    2 +
- .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml   |   81 +
- .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml   |  134 ++
- .../bindings/pinctrl/bitmain,bm1880-pinctrl.txt    |   34 +-
- .../bindings/pinctrl/brcm,bcm2835-gpio.txt         |    3 +
- .../bindings/pinctrl/fsl,imx8mm-pinctrl.txt        |    2 +-
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.txt        |   39 +
- .../bindings/pinctrl/marvell,kirkwood-pinctrl.txt  |   44 +-
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   16 +-
- .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |    2 +-
- .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    |  107 ++
- .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |  172 ---
- .../bindings/pinctrl/pinctrl-bindings.txt          |    3 +
- .../bindings/pinctrl/qcom,apq8084-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,msm8916-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,msm8960-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,msm8994-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,msm8996-pinctrl.txt      |    6 +-
- .../bindings/pinctrl/qcom,msm8998-pinctrl.txt      |   16 +-
- .../bindings/pinctrl/qcom,qcs404-pinctrl.txt       |    6 +-
- .../bindings/pinctrl/qcom,sdm660-pinctrl.txt       |    6 +-
- .../bindings/pinctrl/qcom,sdm845-pinctrl.txt       |    8 +-
- .../bindings/pinctrl/qcom,sm8150-pinctrl.txt       |  190 +++
- .../bindings/pinctrl/st,stm32-pinctrl.txt          |  208 ---
- .../bindings/pinctrl/st,stm32-pinctrl.yaml         |  264 ++++
- MAINTAINERS                                        |    9 +
- arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h     |  646 ++++++++
- drivers/pinctrl/aspeed/Makefile                    |    2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         |   94 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         |  127 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  246 +---
- drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  542 +------
- drivers/pinctrl/aspeed/pinmux-aspeed.c             |   96 ++
- drivers/pinctrl/aspeed/pinmux-aspeed.h             |  735 ++++++++++
- drivers/pinctrl/bcm/Kconfig                        |    6 +-
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |    2 +
- drivers/pinctrl/cirrus/pinctrl-cs47l35.c           |    6 +-
- drivers/pinctrl/cirrus/pinctrl-cs47l85.c           |    6 +-
- drivers/pinctrl/cirrus/pinctrl-cs47l90.c           |    6 +-
- drivers/pinctrl/cirrus/pinctrl-madera-core.c       |    6 +-
- drivers/pinctrl/cirrus/pinctrl-madera.h            |    6 +-
- drivers/pinctrl/core.c                             |   44 +-
- drivers/pinctrl/freescale/Kconfig                  |    7 +
- drivers/pinctrl/freescale/Makefile                 |    1 +
- drivers/pinctrl/freescale/pinctrl-imx8mn.c         |  348 +++++
- drivers/pinctrl/intel/pinctrl-baytrail.c           |  322 +---
- drivers/pinctrl/mediatek/pinctrl-mt8183.c          |    1 +
- drivers/pinctrl/mediatek/pinctrl-paris.c           |   19 +
- drivers/pinctrl/mediatek/pinctrl-paris.h           |    2 +
- drivers/pinctrl/meson/pinctrl-meson-g12a.c         |   36 +-
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |    8 +-
- drivers/pinctrl/meson/pinctrl-meson-gxl.c          |    8 +-
- drivers/pinctrl/meson/pinctrl-meson.c              |  358 +++--
- drivers/pinctrl/meson/pinctrl-meson.h              |   26 +-
- drivers/pinctrl/meson/pinctrl-meson8-pmx.c         |    8 +-
- drivers/pinctrl/meson/pinctrl-meson8-pmx.h         |    8 +-
- drivers/pinctrl/meson/pinctrl-meson8.c             |    8 +-
- drivers/pinctrl/meson/pinctrl-meson8b.c            |    8 +-
- drivers/pinctrl/mvebu/pinctrl-kirkwood.c           |  576 ++++----
- drivers/pinctrl/nomadik/Kconfig                    |    1 +
- drivers/pinctrl/nomadik/pinctrl-ab8500.c           |    5 +-
- drivers/pinctrl/nomadik/pinctrl-ab8505.c           |    5 +-
- drivers/pinctrl/nomadik/pinctrl-abx500.c           |    6 +-
- drivers/pinctrl/nomadik/pinctrl-nomadik.c          |    5 +-
- drivers/pinctrl/pinconf-generic.c                  |    2 +
- drivers/pinctrl/pinctrl-bm1880.c                   |  733 ++++++---
- drivers/pinctrl/pinctrl-coh901.c                   |    2 +-
- drivers/pinctrl/pinctrl-rockchip.c                 |    1 +
- drivers/pinctrl/pinctrl-stmfx.c                    |    1 +
- drivers/pinctrl/pinctrl-tb10x.c                    |   12 +-
- drivers/pinctrl/pinctrl-u300.c                     |    1 +
- drivers/pinctrl/qcom/Kconfig                       |   11 +-
- drivers/pinctrl/qcom/Makefile                      |    1 +
- drivers/pinctrl/qcom/pinctrl-msm.c                 |   43 +-
- drivers/pinctrl/qcom/pinctrl-msm.h                 |    1 +
- drivers/pinctrl/qcom/pinctrl-sdm845.c              |   46 +-
- drivers/pinctrl/qcom/pinctrl-sm8150.c              | 1548 ++++++++++++++++++++
- drivers/pinctrl/sh-pfc/core.c                      |   60 +-
- drivers/pinctrl/sh-pfc/pfc-emev2.c                 |   70 +-
- drivers/pinctrl/sh-pfc/pfc-r8a73a4.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7740.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77470.c              |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |  125 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7779.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |   36 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7792.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7794.c               |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c           |  434 +++---
- drivers/pinctrl/sh-pfc/pfc-r8a7795.c               |  414 +++---
- drivers/pinctrl/sh-pfc/pfc-r8a7796.c               |  414 +++---
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |  410 +++---
- drivers/pinctrl/sh-pfc/pfc-r8a77970.c              |   26 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77980.c              |    2 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c              |  181 ++-
- drivers/pinctrl/sh-pfc/pfc-r8a77995.c              |    2 +-
- drivers/pinctrl/sh-pfc/pfc-sh73a0.c                |   21 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c                |    2 +-
- drivers/pinctrl/sh-pfc/pinctrl.c                   |    3 +-
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |   90 +-
- drivers/pinctrl/stm32/pinctrl-stm32.c              |  184 ++-
- drivers/pinctrl/stm32/pinctrl-stm32.h              |    2 +
- drivers/pinctrl/stm32/pinctrl-stm32mp157.c         |    5 +
- drivers/pinctrl/tegra/Kconfig                      |    4 +
- drivers/pinctrl/tegra/Makefile                     |    1 +
- drivers/pinctrl/tegra/pinctrl-tegra.c              |   26 +-
- drivers/pinctrl/tegra/pinctrl-tegra.h              |   12 +-
- drivers/pinctrl/tegra/pinctrl-tegra114.c           |    6 +-
- drivers/pinctrl/tegra/pinctrl-tegra124.c           |    6 +-
- drivers/pinctrl/tegra/pinctrl-tegra194.c           |  170 +++
- drivers/pinctrl/tegra/pinctrl-tegra20.c            |    6 +-
- drivers/pinctrl/tegra/pinctrl-tegra210.c           |   62 +-
- drivers/pinctrl/tegra/pinctrl-tegra30.c            |    4 +-
- include/dt-bindings/gpio/meson-gxbb-gpio.h         |    8 +-
- include/dt-bindings/gpio/meson-gxl-gpio.h          |    8 +-
- include/dt-bindings/gpio/meson8-gpio.h             |    8 +-
- include/dt-bindings/gpio/meson8b-gpio.h            |    8 +-
- include/linux/gpio.h                               |    1 +
- include/linux/gpio/driver.h                        |    2 +
- include/linux/pinctrl/pinconf-generic.h            |   23 +-
- include/linux/pinctrl/pinconf.h                    |    4 +-
- include/linux/pinctrl/pinctrl-state.h              |    5 +
- include/linux/pinctrl/pinctrl.h                    |   19 +-
- include/linux/pinctrl/pinmux.h                     |    4 -
- 126 files changed, 7708 insertions(+), 3300 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt
- delete mode 100644
-Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h
- create mode 100644 drivers/pinctrl/aspeed/pinmux-aspeed.c
- create mode 100644 drivers/pinctrl/aspeed/pinmux-aspeed.h
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mn.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8150.c
- create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra194.c
+> 
