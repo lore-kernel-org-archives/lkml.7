@@ -2,284 +2,140 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901BFC742B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CD0C742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFD021019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="J8rE92gE"
+	by mail.kernel.org (Postfix) with ESMTP id 23864208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfGLKsC (ORCPT
+        id S1726934AbfGLKsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:48:02 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50710 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfGLKsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:48:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Lzot1skSOlOTbBm7xK1JQoexdHkMmrM79kAyAnNcQlQ=; b=J8rE92gEEPn2uOL+Y361gE38j
-        XzQeuEPCUGPwfHPnj7BdO/2csE6YOKoiSxLzgOk94VzCZoInY4/pEYAjH1oPKqbTbH1hvjc8WXLNw
-        uRdQtTyheg4+8TzRu2Q4j31X33BH6Evsa3YIcuT3EuoKIJEO/b4l972IxqBLEr2onteG/9/qrROZ8
-        qaVCHpNbjvCmUxbaTVJhMaimRNgY2MXVGnoE/XmA0fIZnZmVPezfivjgQTDwV4/4C5AoEM7nSx58q
-        1nYZ1wJJhUIvfvCOzFPRn1P3HdAVP3jVCMq1T4XAkRUftAQjqaNXCv1WKJoEn6amGrWKK5hrHqSVD
-        BVfnA58sw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59374)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hlt5o-0001JS-RD; Fri, 12 Jul 2019 11:47:57 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hlt5g-0005bu-Aq; Fri, 12 Jul 2019 11:47:48 +0100
-Date:   Fri, 12 Jul 2019 11:47:48 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, tzungbi@chromium.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>, dgreid@chromium.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/5] drm: bridge: dw-hdmi: Report connector status
- using callback
-Message-ID: <20190712104748.zlgxgdjbtj2gw4yz@shell.armlinux.org.uk>
-References: <20190712100443.221322-1-cychiang@chromium.org>
- <20190712100443.221322-3-cychiang@chromium.org>
+        Fri, 12 Jul 2019 06:48:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:43695 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726096AbfGLKsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:48:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 03:48:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
+   d="scan'208";a="177468984"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga002.jf.intel.com with ESMTP; 12 Jul 2019 03:48:06 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     huang ying <huang.ying.caritas@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>, <jhladky@redhat.com>,
+        <lvenanci@redhat.com>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
+References: <20190624025604.30896-1-ying.huang@intel.com>
+        <20190624140950.GF2947@suse.de>
+        <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
+        <20190703091747.GA13484@suse.de> <87ef3663nd.fsf@yhuang-dev.intel.com>
+        <20190712082710.GH13484@suse.de>
+Date:   Fri, 12 Jul 2019 18:48:05 +0800
+In-Reply-To: <20190712082710.GH13484@suse.de> (Mel Gorman's message of "Fri,
+        12 Jul 2019 09:27:10 +0100")
+Message-ID: <87d0ifwmu2.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712100443.221322-3-cychiang@chromium.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 06:04:40PM +0800, Cheng-Yi Chiang wrote:
-> Allow codec driver register callback function for plug event.
-> 
-> The callback registration flow:
-> dw-hdmi <--- hw-hdmi-i2s-audio <--- hdmi-codec
-> 
-> dw-hdmi-i2s-audio implements hook_plugged_cb op
-> so codec driver can register the callback.
-> 
-> dw-hdmi implements set_plugged_cb op so platform device can register the
-> callback.
-> 
-> When connector plug/unplug event happens, report this event using the
-> callback.
-> 
-> Make sure that audio and drm are using the single source of truth for
-> connector status.
-> 
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
->  .../gpu/drm/bridge/synopsys/dw-hdmi-audio.h   |  3 +
->  .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 10 ++++
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 55 ++++++++++++++++++-
->  3 files changed, 67 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
-> index 63b5756f463b..f523c590984e 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
-> @@ -2,6 +2,8 @@
->  #ifndef DW_HDMI_AUDIO_H
->  #define DW_HDMI_AUDIO_H
->  
-> +#include <sound/hdmi-codec.h>
-> +
->  struct dw_hdmi;
->  
->  struct dw_hdmi_audio_data {
-> @@ -17,6 +19,7 @@ struct dw_hdmi_i2s_audio_data {
->  
->  	void (*write)(struct dw_hdmi *hdmi, u8 val, int offset);
->  	u8 (*read)(struct dw_hdmi *hdmi, int offset);
-> +	int (*set_plugged_cb)(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn);
->  };
->  
->  #endif
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> index 5cbb71a866d5..7b93cf05c985 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-> @@ -104,10 +104,20 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
->  	return -EINVAL;
->  }
->  
-> +static int dw_hdmi_i2s_hook_plugged_cb(struct device *dev, void *data,
-> +				       hdmi_codec_plugged_cb fn)
-> +{
-> +	struct dw_hdmi_i2s_audio_data *audio = data;
-> +	struct dw_hdmi *hdmi = audio->hdmi;
-> +
-> +	return audio->set_plugged_cb(hdmi, fn);
-> +}
-> +
->  static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
->  	.hw_params	= dw_hdmi_i2s_hw_params,
->  	.audio_shutdown	= dw_hdmi_i2s_audio_shutdown,
->  	.get_dai_id	= dw_hdmi_i2s_get_dai_id,
-> +	.hook_plugged_cb = dw_hdmi_i2s_hook_plugged_cb,
->  };
->  
->  static int snd_dw_hdmi_probe(struct platform_device *pdev)
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 045b1b13fd0e..ce6646067472 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -26,6 +26,8 @@
->  #include <drm/drm_probe_helper.h>
->  #include <drm/bridge/dw_hdmi.h>
->  
-> +#include <sound/hdmi-codec.h>
-> +
->  #include <uapi/linux/media-bus-format.h>
->  #include <uapi/linux/videodev2.h>
->  
-> @@ -185,6 +187,9 @@ struct dw_hdmi {
->  	void (*disable_audio)(struct dw_hdmi *hdmi);
->  
->  	struct cec_notifier *cec_notifier;
-> +
-> +	hdmi_codec_plugged_cb plugged_cb;
-> +	enum drm_connector_status last_connector_result;
->  };
->  
->  #define HDMI_IH_PHY_STAT0_RX_SENSE \
-> @@ -209,6 +214,40 @@ static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
->  	return val;
->  }
->  
-> +static void handle_plugged_change(struct dw_hdmi *hdmi, bool plugged)
-> +{
-> +	struct platform_device *codec_pdev;
-> +
-> +	if (!hdmi->audio || IS_ERR(hdmi->audio))
-> +		return;
-> +	codec_pdev = platform_get_drvdata(hdmi->audio);
-> +	if (!codec_pdev || IS_ERR(codec_pdev))
-> +		return;
+Mel Gorman <mgorman@suse.de> writes:
 
-This looks fragile to me, poking about in another device's driver data
-from another driver is really not a good design decision.  I think this
-can be simplified if the registration function took the function
-pointer and the struct device pointer, and then you only need one test
-below:
+> On Thu, Jul 04, 2019 at 08:32:06AM +0800, Huang, Ying wrote:
+>> Mel Gorman <mgorman@suse.de> writes:
+>> 
+>> > On Tue, Jun 25, 2019 at 09:23:22PM +0800, huang ying wrote:
+>> >> On Mon, Jun 24, 2019 at 10:25 PM Mel Gorman <mgorman@suse.de> wrote:
+>> >> >
+>> >> > On Mon, Jun 24, 2019 at 10:56:04AM +0800, Huang Ying wrote:
+>> >> > > The autonuma scan period should be increased (scanning is slowed down)
+>> >> > > if the majority of the page accesses are shared with other processes.
+>> >> > > But in current code, the scan period will be decreased (scanning is
+>> >> > > speeded up) in that situation.
+>> >> > >
+>> >> > > This patch fixes the code.  And this has been tested via tracing the
+>> >> > > scan period changing and /proc/vmstat numa_pte_updates counter when
+>> >> > > running a multi-threaded memory accessing program (most memory
+>> >> > > areas are accessed by multiple threads).
+>> >> > >
+>> >> >
+>> >> > The patch somewhat flips the logic on whether shared or private is
+>> >> > considered and it's not immediately obvious why that was required. That
+>> >> > aside, other than the impact on numa_pte_updates, what actual
+>> >> > performance difference was measured and on on what workloads?
+>> >> 
+>> >> The original scanning period updating logic doesn't match the original
+>> >> patch description and comments.  I think the original patch
+>> >> description and comments make more sense.  So I fix the code logic to
+>> >> make it match the original patch description and comments.
+>> >> 
+>> >> If my understanding to the original code logic and the original patch
+>> >> description and comments were correct, do you think the original patch
+>> >> description and comments are wrong so we need to fix the comments
+>> >> instead?  Or you think we should prove whether the original patch
+>> >> description and comments are correct?
+>> >> 
+>> >
+>> > I'm about to get knocked offline so cannot answer properly. The code may
+>> > indeed be wrong and I have observed higher than expected NUMA scanning
+>> > behaviour than expected although not enough to cause problems. A comment
+>> > fix is fine but if you're changing the scanning behaviour, it should be
+>> > backed up with data justifying that the change both reduces the observed
+>> > scanning and that it has no adverse performance implications.
+>> 
+>> Got it!  Thanks for comments!  As for performance testing, do you have
+>> some candidate workloads?
+>> 
+>
+> Ordinarily I would hope that the patch was motivated by observed
+> behaviour so you have a metric for goodness. However, for NUMA balancing
+> I would typically run basic workloads first -- dbench, tbench, netperf,
+> hackbench and pipetest. The objective would be to measure the degree
+> automatic NUMA balancing is interfering with a basic workload to see if
+> they patch reduces the number of minor faults incurred even though there
+> is no NUMA balancing to be worried about. This measures the general
+> overhead of a patch. If your reasoning is correct, you'd expect lower
+> overhead.
+>
+> For balancing itself, I usually look at Andrea's original autonuma
+> benchmark, NAS Parallel Benchmark (D class usually although C class for
+> much older or smaller machines) and spec JBB 2005 and 2015. Of the JBB
+> benchmarks, 2005 is usually more reasonable for evaluating NUMA balancing
+> than 2015 is (which can be unstable for a variety of reasons). In this
+> case, I would be looking at whether the overhead is reduced, whether the
+> ratio of local hits is the same or improved and the primary metric of
+> each (time to completion for Andrea's and NAS, throughput for JBB).
+>
+> Even if there is no change to locality and the primary metric but there
+> is less scanning and overhead overall, it would still be an improvement.
 
-> +	if (!hdmi->plugged_cb)
-> +		return;
-> +
-> +	hdmi->plugged_cb(&codec_pdev->dev, plugged);
-> +}
-> +
-> +static int hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn)
-> +{
-> +	bool plugged;
-> +	struct platform_device *codec_pdev;
-> +
-> +	if (!hdmi->audio || IS_ERR(hdmi->audio))
-> +		return -EINVAL;
+Thanks a lot for your detailed guidance.
 
-Given the current code structure, how can this ever be true when the
-function is called?
+> If you have trouble doing such an evaluation, I'll queue tests if they
+> are based on a patch that addresses the specific point of concern (scan
+> period not updated) as it's still not obvious why flipping the logic of
+> whether shared or private is considered was necessary.
 
-> +	codec_pdev = platform_get_drvdata(hdmi->audio);
-> +	if (!codec_pdev || IS_ERR(codec_pdev))
-> +		return -EINVAL;
+I can do the evaluation, but it will take quite some time for me to
+setup and run all these benchmarks.  So if these benchmarks have already
+been setup in your environment, so that your extra effort is minimal, it
+will be great if you can queue tests for the patch.  Feel free to reject
+me for any inconvenience.
 
-This doesn't seem like a good idea as I've pointed out above.
-
-> +
-> +	mutex_lock(&hdmi->mutex);
-> +	hdmi->plugged_cb = fn;
-> +	plugged = hdmi->last_connector_result == connector_status_connected;
-> +	handle_plugged_change(hdmi, plugged);
-> +	mutex_unlock(&hdmi->mutex);
-
-Should be a blank line here for readability.
-
-> +	return 0;
-> +}
-> +
->  static void hdmi_modb(struct dw_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
->  {
->  	regmap_update_bits(hdmi->regm, reg << hdmi->reg_shift, mask, data);
-> @@ -2044,6 +2083,7 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
->  {
->  	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
->  					     connector);
-> +	enum drm_connector_status result;
->  
->  	mutex_lock(&hdmi->mutex);
->  	hdmi->force = DRM_FORCE_UNSPECIFIED;
-> @@ -2051,7 +2091,18 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
->  	dw_hdmi_update_phy_mask(hdmi);
->  	mutex_unlock(&hdmi->mutex);
->  
-> -	return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
-> +	result = hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
-> +
-> +	mutex_lock(&hdmi->mutex);
-> +	if (result != hdmi->last_connector_result) {
-> +		dev_dbg(hdmi->dev, "read_hpd result: %d", result);
-> +		handle_plugged_change(hdmi,
-> +				      result == connector_status_connected);
-> +		hdmi->last_connector_result = result;
-> +	}
-> +	mutex_unlock(&hdmi->mutex);
-> +
-> +	return result;
->  }
->  
->  static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
-> @@ -2460,6 +2511,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
->  	hdmi->rxsense = true;
->  	hdmi->phy_mask = (u8)~(HDMI_PHY_HPD | HDMI_PHY_RX_SENSE);
->  	hdmi->mc_clkdis = 0x7f;
-> +	hdmi->last_connector_result = connector_status_disconnected;
->  
->  	mutex_init(&hdmi->mutex);
->  	mutex_init(&hdmi->audio_mutex);
-> @@ -2653,6 +2705,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
->  		audio.hdmi	= hdmi;
->  		audio.write	= hdmi_writeb;
->  		audio.read	= hdmi_readb;
-> +		audio.set_plugged_cb = hdmi_set_plugged_cb;
-
-Why is this necessary?
-
-The I2S audio driver already depends on the dw-hdmi module through its
-use of functions already exported.  Indirecting this through the
-platform data makes no sense.
-
-Just rename hdmi_set_plugged_cb to dw_hdmi_set_plugged_cb() and export
-it for dw-hdmi-i2s-audio.c to use.
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Best Regards,
+Huang, Ying
