@@ -2,105 +2,88 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B52C742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F22C742C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7D2206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562941525;
-	bh=KHBFDEs+JHnARvtmiz9ckWX3F6f72NHKMB8nmzo2BHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q6lujIBazr3tmtYQ/6puGJE6Ulli8NfpZTvCGuKNCJRNkv8ENSblkAYgL/fV3HjZU
-	 cLWsmABrvIR60QmL3cEoM4VmFabDyWhljAvu3bAhRkruxzdrFl2gwCECW2eIWFl05Z
-	 lv6XLgEVDdo9fZxAfU/2tVdimRUBTQ3gw+fKTpcw=
+	by mail.kernel.org (Postfix) with ESMTP id 1D115208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfGLOZY (ORCPT
+        id S1727456AbfGLO0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:25:24 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45583 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfGLOZY (ORCPT
+        Fri, 12 Jul 2019 10:26:19 -0400
+Received: from www62.your-server.de ([213.133.104.62]:36994 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfGLO0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:25:24 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so4848888plr.12;
-        Fri, 12 Jul 2019 07:25:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9L3733if1HuRLL5zZv5eZHlWQiU13iqExsAt1AQHDmY=;
-        b=VSgPlNfdufMwqcv8BXKRQn84MCxQSn/4zstrvTf+cNggal8AgvbiU+yvfRo6INmcRC
-         0bCXNaw4N6SMdHF45IWdRLf2OIkJrk8RNNtk+wLEZMb8rhQmo4nuJF7bbI5cwO0aaBjS
-         L5F5cY0jXiBtmkuyQrZh9eOx53RNk8G4xdjpUHA+LzOmuFQbxd2zvRZ7VkicqO8ACvhF
-         S4F4YqPkbSb1EPWdmUCJn8dczDJf7yNw/VTAQKPtOp1LUXx4pv+4yDXQJX46WJ0CLGgg
-         iX81GXvv0/fMQDBuonE9xsfz2wNDYPx0P3Ao7I4qaFWrN6EQXMafnl6G+B0l0BSF2iOU
-         GN8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9L3733if1HuRLL5zZv5eZHlWQiU13iqExsAt1AQHDmY=;
-        b=NBVMq82lc8zE3b4MLUHOyNwggDXERFRhmDmgwpRgEteetSc2LHpXiniOazTpn1Ne/J
-         /MG2sQ4LdZpyIpdxuRZ7D2a2x9P37h9aVlKa1LnOxUcozBif3/UeZ9mksbe2cxklRSMI
-         ZaID5TDm7zyhq9DXrgaetgxkeedEjBp1o7JiVQfahcRrTA2h2OwDUmW+EOjW7e6sdMtl
-         0ul97fPzlHZhifv6J5Q1Gp9LGIveRzM9UIEDrlxe39PKFownyySubOiQ2LwAx1T41RKu
-         IwzSyJD9myeE5QWzDry1rwN1t3pyGYWqiKG7iJ70uisDwsCCpOHlK7Aou2dm60Wxj5Qa
-         osPA==
-X-Gm-Message-State: APjAAAUpu9cjyO7akQyeDyOqCCitD0QoPrI+FSz4H7b9l7iBggzkQKZm
-        dIYk3ceD0Z/cSb/xH/r/z5w=
-X-Google-Smtp-Source: APXvYqxRUDnMu2b0NEFVFzmVA6ow3YGK/wulCBM5exjcCxQDsgflC+FNsSu/x1MkE39PUa49BC+vNA==
-X-Received: by 2002:a17:902:8207:: with SMTP id x7mr11835394pln.63.1562941523495;
-        Fri, 12 Jul 2019 07:25:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::47b6])
-        by smtp.gmail.com with ESMTPSA id p7sm9100177pfp.131.2019.07.12.07.25.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 07:25:22 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 07:25:19 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add entry for block io cgroup
-Message-ID: <20190712142502.GA680549@devbig004.ftw2.facebook.com>
-References: <156284038698.3851.6531328622774377848.stgit@buzz>
+        Fri, 12 Jul 2019 10:26:18 -0400
+Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hlwV6-0004XN-5C; Fri, 12 Jul 2019 16:26:16 +0200
+Received: from [2a02:1205:5069:fce0:c5f9:cd68:79d4:446d] (helo=linux.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hlwV5-00074v-Rb; Fri, 12 Jul 2019 16:26:15 +0200
+Subject: Linux Plumbers BPF micro-conference CFP (reminder)
+References: <2e9f33c9-b772-396e-1e70-2e2d5027cac5@iogearbox.net>
+To:     bpf@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, iovisor-dev@lists.iovisor.org,
+        lpc-bpf@vger.kernel.org, alexei.starovoitov@gmail.com
+From:   Daniel Borkmann <daniel@iogearbox.net>
+X-Forwarded-Message-Id: <2e9f33c9-b772-396e-1e70-2e2d5027cac5@iogearbox.net>
+Message-ID: <5f1e881b-7094-a6d9-5d7c-f391d128780d@iogearbox.net>
+Date:   Fri, 12 Jul 2019 16:26:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156284038698.3851.6531328622774377848.stgit@buzz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <2e9f33c9-b772-396e-1e70-2e2d5027cac5@iogearbox.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25508/Fri Jul 12 10:10:04 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Konstantin.
+This is a call for proposals for the BPF micro-conference at this
+years' Linux Plumbers Conference (LPC) 2019 which will be held in
+Lisbon, Portugal for September 9-11.
 
-On Thu, Jul 11, 2019 at 01:19:47PM +0300, Konstantin Khlebnikov wrote:
-> +CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)
-> +L:	cgroups@vger.kernel.org
-> +F:	Documentation/cgroup-v1/blkio-controller.rst
-> +F:	block/blk-cgroup.c
-> +F:	include/linux/blk-cgroup.h
-> +F:	block/blk-throttle.c
-> +F:	block/blk-iolatency.c
-> +F:	block/bfq-cgroup.c
+The goal of the BPF micro-conference is to bring BPF developers
+together to discuss topics around Linux kernel work related to
+the BPF core infrastructure as well as its many subsystems under
+tracing, networking, security, and BPF user space tooling (LLVM,
+libbpf, bpftool and many others).
 
-Given that blkcg changes are often entangled with generic block
-changes and best routed through block tree, I think it'd be useful to
-add the followings.
+The format of the micro-conference has a main focus on discussion,
+therefore each accepted topic will provide a short 1-2 slide
+introduction with subsequent discussion for the rest of the given
+time slot.
 
-M:      Tejun Heo <tj@kernel.org>
-M:      Jens Axboe <axboe@kernel.dk>
-L:      linux-block@vger.kernel.org
-T:      git git://git.kernel.dk/linux-block
+The BPF micro-conference is a community-driven event and open to
+all LPC attendees, there is no additional registration required.
 
-Thanks.
+Please submit your discussion proposals to the LPC BPF micro-conference
+organizers at:
 
--- 
-tejun
+        lpc-bpf@vger.kernel.org
+
+Proposals must be submitted until August 2nd, and submitters will
+be notified of acceptance at latest by August 9. (Please note that
+proposals must not be sent as html mail as they are otherwise dropped
+by vger.)
+
+The format of the submission and many other details can be found at:
+
+        http://vger.kernel.org/lpc-bpf.html
+
+Looking forward to seeing you all in Lisbon in September!
