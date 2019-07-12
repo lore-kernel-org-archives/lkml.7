@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F36AC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA3DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B0C21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB97321019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934102;
-	bh=VsZms4Ebu41p9h8mUbbIv4O/kyaymEWAYms16wI9iH4=;
+	s=default; t=1562934105;
+	bh=Ewvu7yBZJuIvAVOWtuvGiUggubBsAHhQ5bcCtB13j7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STkAGJwrxI29+7HabRR/NdYKjut5Zi8UpPCyS8mkdEByO1EIYEZe12TsNFI5X954D
-	 JO5Ek2Z/sBvdetBY5XnLGbseIX9jNnmGK580nQcQtRWMzR4KlVL1Kiwzh53h8h/K+V
-	 gachCS/IWL7HRRVxuiqEQy+pKmgsR+RtUGKtN9Ns=
+	b=vhgUiy16ZSMXePhcG3FYlqqMviY3ji6hThK7LR5Qr4V/h+nHgtuk9JMo5NidW83R7
+	 6WIPZ7gsizWgdItP7Y6L7OuAZ9E2g+/drNoeI/U8uuxufIFueg2dwjjOOJHxGPM8ka
+	 k4y/kiwt3d9tCEhZVETWOAL72Lcq6jALn3SmphKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfGLMVk (ORCPT
+        id S1727652AbfGLMVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55920 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbfGLMVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:21:38 -0400
+        id S1727641AbfGLMVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:21:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5DF20863;
-        Fri, 12 Jul 2019 12:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B62E20863;
+        Fri, 12 Jul 2019 12:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934098;
-        bh=VsZms4Ebu41p9h8mUbbIv4O/kyaymEWAYms16wI9iH4=;
+        s=default; t=1562934101;
+        bh=Ewvu7yBZJuIvAVOWtuvGiUggubBsAHhQ5bcCtB13j7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+VT5OGJUmPX7DvTXe9alYqGFSpl6/btBkEj4rCM2kIwOuL2MZgwuK7orDi3C/yLH
-         btIcEzZ50W2+AzmOEXJFCzWTDOlCgWqx5vBpf+E2b9WbnUJ8jgEhtOuk0NARt7VAvW
-         lSqjQSjgZxNN1CMQ1RKT/06ZnHFGriGDpffOQfWY=
+        b=WR3Wqhwx13TGoL55FCxOXUOIk7+V5/IjBt6Vw0FwUAzcr/OH2ryksEgrX3WZKmCX7
+         orv9kSldezWE+R3sxGzqlLi4NN45PYs5EhqIFJMu3m4gpUrN4fQZ/shUhN53xrKg/w
+         eLZOBWtoRKBriMO073pB1ALjAzGqpa/iiCoM17mk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Reinhard Speyerer <rspmn@arcor.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/91] qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
-Date:   Fri, 12 Jul 2019 14:18:46 +0200
-Message-Id: <20190712121623.814315766@linuxfoundation.org>
+Subject: [PATCH 4.19 05/91] Input: elantech - enable middle button support on 2 ThinkPads
+Date:   Fri, 12 Jul 2019 14:18:08 +0200
+Message-Id: <20190712121621.715248747@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,71 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8fdde1cb830e560208af42b6c10750137f53eb3 ]
+[ Upstream commit aa440de3058a3ef530851f9ef373fbb5f694dbc3 ]
 
-Switch qmimux_unregister_device() and qmi_wwan_disconnect() to
-use unregister_netdevice_queue() and unregister_netdevice_many()
-instead of unregister_netdevice(). This avoids RCU stalls which
-have been observed on device disconnect in certain setups otherwise.
+Adding 2 new touchpad PNPIDs to enable middle button support.
 
-Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
-Cc: Daniele Palmas <dnlplm@gmail.com>
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/input/mouse/elantech.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 090227118d3d..44ada5c38756 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -247,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
- 	return err;
- }
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index a7f8b1614559..530142b5a115 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1189,6 +1189,8 @@ static const char * const middle_button_pnp_ids[] = {
+ 	"LEN2132", /* ThinkPad P52 */
+ 	"LEN2133", /* ThinkPad P72 w/ NFC */
+ 	"LEN2134", /* ThinkPad P72 */
++	"LEN0407",
++	"LEN0408",
+ 	NULL
+ };
  
--static void qmimux_unregister_device(struct net_device *dev)
-+static void qmimux_unregister_device(struct net_device *dev,
-+				     struct list_head *head)
- {
- 	struct qmimux_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev = priv->real_dev;
- 
- 	netdev_upper_dev_unlink(real_dev, dev);
--	unregister_netdevice(dev);
-+	unregister_netdevice_queue(dev, head);
- 
- 	/* Get rid of the reference to real_dev */
- 	dev_put(real_dev);
-@@ -424,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
- 		ret = -EINVAL;
- 		goto err;
- 	}
--	qmimux_unregister_device(del_dev);
-+	qmimux_unregister_device(del_dev, NULL);
- 
- 	if (!qmimux_has_slaves(dev))
- 		info->flags &= ~QMI_WWAN_FLAG_MUX;
-@@ -1434,6 +1435,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
- 	struct qmi_wwan_state *info;
- 	struct list_head *iter;
- 	struct net_device *ldev;
-+	LIST_HEAD(list);
- 
- 	/* called twice if separate control and data intf */
- 	if (!dev)
-@@ -1446,8 +1448,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
- 		}
- 		rcu_read_lock();
- 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
--			qmimux_unregister_device(ldev);
-+			qmimux_unregister_device(ldev, &list);
- 		rcu_read_unlock();
-+		unregister_netdevice_many(&list);
- 		rtnl_unlock();
- 		info->flags &= ~QMI_WWAN_FLAG_MUX;
- 	}
 -- 
 2.20.1
 
