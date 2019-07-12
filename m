@@ -2,178 +2,211 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98ACC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27899C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9894E21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E312921019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:14:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5i89Yz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfGLDOj (ORCPT
+        id S1729277AbfGLDO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:14:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2264 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728497AbfGLDOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:14:39 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 603536B08CDE0BF53948;
-        Fri, 12 Jul 2019 11:14:36 +0800 (CST)
-Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 12 Jul 2019 11:14:29 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-fbdev@vger.kernel.org>
-CC:     <daniel.vetter@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
-        <sam@ravnborg.org>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, <zhang.zhanghailiang@huawei.com>,
-        <yezengruan@huawei.com>, Feng Tiantian <fengtiantian@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [RFC PATCH] fbcon: fix ypos over boundary issue
-Date:   Fri, 12 Jul 2019 03:13:36 +0000
-Message-ID: <1562901216-9916-1-git-send-email-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
+        Thu, 11 Jul 2019 23:14:56 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44403 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbfGLDO4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:14:56 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so5371946qke.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 20:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fqowWkQWDIteBtwEKrdiEv26Xf58Ktw1YcMr9HD38hc=;
+        b=E5i89Yz/S7p8RYcIgbxKAuw0Lu/eHuwtmFAG/skNG8Hrf9AUsrWMxu9EDOzraY6Rtr
+         ZEQWnDYOaSLZNeTAOCBtK2Zp5XMJcZU/UsPJFWsCZ5/jzyIzthR2z6ZH3uLT208LnpD4
+         pH9ESenYlnzb42m4/XJpuXv9sUfviULqhHZQ46EeJewJ7+EqXF8c13kR3WR579fYaEQm
+         DsCYVQXEbqTtN4LY0OTOyPEQiBx5hwozxM6R51F//Y5p9xbWckgHWYq4Zi3/OV0TyiIk
+         81tmr7XBvRHq1Xq87uE+oX4wYvWl9ml4j30nMsgJh5+AY9ygWQgeP1HIhadbfN/mhSRV
+         5y8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fqowWkQWDIteBtwEKrdiEv26Xf58Ktw1YcMr9HD38hc=;
+        b=ZQdT7qd4F3jY4Jccx7iMwYUhfb3HzfZrg4EX+INmrZS3Xa0ci8PlLk5vTNiV6heYIB
+         w6Q2rHmmbhE42tDNbrtuetUzUFn+phekC6aMN+QLIPf+sG61bihnONYoIaDkjYLQJzMn
+         1CCfp3sxIUqXrG8R2bCAI+t8q9vUYnQzWPM3fPacPR9qqnraZ1G0CC+wcFKs6Cn7njET
+         JwV9BSXRq1ZBVQDowkjfCawQNRboJjPGFfpcf52gdl/Hb/h547YCDybQYdNe3fRJy/yL
+         giE0uBC0KX7Q7jBnuL0h+F5s4DcbkOkUwPx2eMOWbKf05JOGOlULcNxIJcv73piL1L7l
+         fk1w==
+X-Gm-Message-State: APjAAAXh1iyFrahW7eRKEinlplPSRCwAce81Do5y4EzzW8+dB7WDsTMd
+        uHPWr/Xr2qEKfmb+LuQgZ1qCQUaZ+x8=
+X-Google-Smtp-Source: APXvYqxMHYF82JKIlXbB93A96rz547nb8nWEiIbN14p+Pz9F+KDlBu2aOcXwexavUW+Xt9VWIqfoNA==
+X-Received: by 2002:a37:9185:: with SMTP id t127mr4497870qkd.482.1562901294628;
+        Thu, 11 Jul 2019 20:14:54 -0700 (PDT)
+Received: from smtp.gmail.com ([187.121.151.22])
+        by smtp.gmail.com with ESMTPSA id t2sm3964071qth.33.2019.07.11.20.14.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 20:14:53 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 00:14:49 -0300
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
+Message-ID: <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <20190711082105.GI15868@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6wp7bxmzbrpx433z"
+Content-Disposition: inline
+In-Reply-To: <20190711082105.GI15868@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Tiantian <fengtiantian@huawei.com>
 
-While using "top" on a CentOS guest's VNC-client, then continuously press
-"Shift+PgUp", the guest kernel will get panic! Backtrace is attached below.
-We tested it on 5.2.0, and the issue remains.
+--6wp7bxmzbrpx433z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[   66.946362] Unable to handle kernel paging request at virtual address ffff00000e240840
-[   66.946363] Mem abort info:
-[   66.946364]   Exception class = DABT (current EL), IL = 32 bits
-[   66.946365]   SET = 0, FnV = 0
-[   66.946366]   EA = 0, S1PTW = 0
-[   66.946367] Data abort info:
-[   66.946368]   ISV = 0, ISS = 0x00000047
-[   66.946368]   CM = 0, WnR = 1
-[   66.946370] swapper pgtable: 64k pages, 48-bit VAs, pgd = ffff000009660000
-[   66.946372] [ffff00000e240840] *pgd=000000023ffe0003, *pud=000000023ffe0003, *pmd=000000023ffd0003, *pte=0000000000000000
-[   66.946378] Internal error: Oops: 96000047 [#1] SMP
-[   66.946379] Modules linked in: vfat fat crc32_ce ghash_ce sg sha2_ce sha256_arm64 virtio_balloon virtio_net sha1_ce ip_tables ext4 mbcache jbd2 virtio_gpu drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm drm i2c_core virtio_scsi virtio_pci virtio_mmio virtio_ring virtio
-[   66.946403] CPU: 0 PID: 1035 Comm: top Not tainted 4.14.0-49.el7a.aarch64 #1
-[   66.946404] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-[   66.946405] task: ffff8001c18fdc00 task.stack: ffff00000d4e0000
-[   66.946409] PC is at sys_imageblit+0x40c/0x10000 [sysimgblt]
-[   66.946431] LR is at drm_fb_helper_sys_imageblit+0x28/0x4c [drm_kms_helper]
-[   66.946433] pc : [<ffff0000020a040c>] lr : [<ffff000002202e74>] pstate: 00000005
-[   66.946433] sp : ffff00000d4ef7f0
-[   66.946434] x29: ffff00000d4ef7f0 x28: 00000000000001ff
-[   66.946436] x27: ffff8001c1c88100 x26: 0000000000000001
-[   66.946438] x25: 00000000000001f0 x24: 0000000000000018
-[   66.946440] x23: 0000000000000000 x22: ffff00000d4ef978
-[   66.946442] x21: ffff00000e240840 x20: 0000000000000000
-[   66.946444] x19: ffff8001c98c9000 x18: 0000fffff9d56670
-[   66.946445] x17: 0000000000000000 x16: 0000000000000000
-[   66.946447] x15: 0000000000000008 x14: 1b20202020202020
-[   66.946449] x13: 00000000000001f0 x12: 000000000000003e
-[   66.946450] x11: 000000000000000f x10: ffff8001c8400000
-[   66.946452] x9 : 0000000000aaaaaa x8 : 0000000000000001
-[   66.946454] x7 : ffff0000020b0090 x6 : 0000000000000001
-[   66.946456] x5 : 0000000000000000 x4 : 0000000000000000
-[   66.946457] x3 : ffff8001c8400000 x2 : ffff00000e240840
-[   66.946459] x1 : 00000000000001ef x0 : 0000000000000007
-[   66.946461] Process top (pid: 1035, stack limit = 0xffff00000d4e0000)
-[   66.946462] Call trace:
-[   66.946464] Exception stack(0xffff00000d4ef6b0 to 0xffff00000d4ef7f0)
-[   66.946465] f6a0:                                   0000000000000007 00000000000001ef
-[   66.946467] f6c0: ffff00000e240840 ffff8001c8400000 0000000000000000 0000000000000000
-[   66.946468] f6e0: 0000000000000001 ffff0000020b0090 0000000000000001 0000000000aaaaaa
-[   66.946470] f700: ffff8001c8400000 000000000000000f 000000000000003e 00000000000001f0
-[   66.946471] f720: 1b20202020202020 0000000000000008 0000000000000000 0000000000000000
-[   66.946472] f740: 0000fffff9d56670 ffff8001c98c9000 0000000000000000 ffff00000e240840
-[   66.946474] f760: ffff00000d4ef978 0000000000000000 0000000000000018 00000000000001f0
-[   66.946475] f780: 0000000000000001 ffff8001c1c88100 00000000000001ff ffff00000d4ef7f0
-[   66.946476] f7a0: ffff000002202e74 ffff00000d4ef7f0 ffff0000020a040c 0000000000000005
-[   66.946478] f7c0: ffff00000d4ef7e0 ffff0000080ea614 0001000000000000 ffff000008152f08
-[   66.946479] f7e0: ffff00000d4ef7f0 ffff0000020a040c
-[   66.946481] [<ffff0000020a040c>] sys_imageblit+0x40c/0x10000 [sysimgblt]
-[   66.946501] [<ffff000002202e74>] drm_fb_helper_sys_imageblit+0x28/0x4c [drm_kms_helper]
-[   66.946510] [<ffff0000022a12dc>] virtio_gpu_3d_imageblit+0x2c/0x78 [virtio_gpu]
-[   66.946515] [<ffff00000847f458>] bit_putcs+0x288/0x49c
-[   66.946517] [<ffff00000847ad24>] fbcon_putcs+0x114/0x148
-[   66.946519] [<ffff0000084fe92c>] do_update_region+0x118/0x19c
-[   66.946521] [<ffff00000850413c>] do_con_trol+0x114c/0x1314
-[   66.946523] [<ffff0000085044dc>] do_con_write.part.22+0x1d8/0x890
-[   66.946525] [<ffff000008504c88>] con_write+0x84/0x8c
-[   66.946527] [<ffff0000084ec7f0>] n_tty_write+0x19c/0x408
-[   66.946529] [<ffff0000084e9120>] tty_write+0x150/0x270
-[   66.946532] [<ffff00000829d558>] __vfs_write+0x58/0x180
-[   66.946534] [<ffff00000829d880>] vfs_write+0xa8/0x1a0
-[   66.946536] [<ffff00000829db40>] SyS_write+0x60/0xc0
-[   66.946537] Exception stack(0xffff00000d4efec0 to 0xffff00000d4f0000)
-[   66.946539] fec0: 0000000000000001 0000000000457958 0000000000000800 0000000000000000
-[   66.946540] fee0: 00000000fbad2885 0000000000000bd0 0000ffff8556add4 0000000000000000
-[   66.946541] ff00: 0000000000000040 0000000000000000 0000000000434a88 0000000000000012
-[   66.946543] ff20: 0000000100000000 0000fffff9d564f0 0000fffff9d564a0 0000000000000008
-[   66.946544] ff40: 0000000000000000 0000ffff85593b1c 0000fffff9d56670 0000000000000800
-[   66.946546] ff60: 0000000000457958 0000ffff856a1158 0000000000000800 0000ffff85720000
-[   66.946547] ff80: 0000000000000000 0000ffff856f604c 0000000000000000 0000000000436000
-[   66.946548] ffa0: 000000001c90a160 0000fffff9d56f20 0000ffff855965f4 0000fffff9d56f20
-[   66.946549] ffc0: 0000ffff855f12c8 0000000020000000 0000000000000001 0000000000000040
-[   66.946551] ffe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-[   66.946554] [<ffff00000808359c>] __sys_trace_return+0x0/0x4
-[   66.946556] Code: 0a080084 b86478e4 0a040124 4a050084 (b9000044)
-[   66.946561] ---[ end trace 32d49c68b19c4796 ]---
-[   66.946562] Kernel panic - not syncing: Fatal exception
-[   66.946564] SMP: stopping secondary CPUs
-[   66.946596] Kernel Offset: disabled
-[   66.946598] CPU features: 0x1802008
-[   66.946598] Memory Limit: none
-[   67.092353] ---[ end Kernel panic - not syncing: Fatal exception
+On 07/11, Daniel Vetter wrote:
+> On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
+> > The compute_crc() function is responsible for calculating the
+> > framebuffer CRC value; due to the XRGB format, this function has to
+> > ignore the alpha channel during the CRC computation. Therefore,
+> > compute_crc() set zero to the alpha channel directly in the input
+> > framebuffer, which is not a problem since this function receives a copy
+> > of the original buffer. However, if we want to use this function in a
+> > context without a buffer copy, it will change the initial value. This
+> > patch makes compute_crc() calculate the CRC value without modifying the
+> > input framebuffer.
+>=20
+> Uh why? For writeback we're writing the output too, so we can write
+> whatever we want to into the alpha channel. For writeback we should never
+> accept a pixel format where alpha actually matters, that doesn't make
+> sense. You can't see through a real screen either, they are all opaque :-)
+> -Daniel
 
-From our non-expert analysis, fbcon ypos will sometimes over boundary and
-then fbcon_putcs() access invalid VGA framebuffer address. We modify the
-real_y() to make sure fbcon ypos is always less than rows.
+Hmmm,
 
-Reported-by: Zengruan Ye <yezengruan@huawei.com>
-Signed-off-by: Feng Tiantian <fengtiantian@huawei.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
+I see your point and I agree, but even though we can write whatever we
+want in the output, don=E2=80=99t you think that is weird to change the
+framebuffer value in the compute_crc() function?
 
-Hi Bartlomiej,
+Thanks
+=20
+> >=20
+> > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > ---
+> >  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-----------
+> >  1 file changed, 19 insertions(+), 12 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkm=
+s/vkms_composer.c
+> > index 51a270514219..8126aa0f968f 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > @@ -6,33 +6,40 @@
+> >  #include <drm/drm_atomic_helper.h>
+> >  #include <drm/drm_gem_framebuffer_helper.h>
+> > =20
+> > +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
+> > +				 const struct vkms_composer *composer)
+> > +{
+> > +	int src_offset =3D composer->offset + (y * composer->pitch)
+> > +					  + (x * composer->cpp);
+> > +
+> > +	return *(u32 *)&buffer[src_offset];
+> > +}
+> > +
+> >  /**
+> >   * compute_crc - Compute CRC value on output frame
+> >   *
+> > - * @vaddr_out: address to final framebuffer
+> > + * @vaddr: address to final framebuffer
+> >   * @composer: framebuffer's metadata
+> >   *
+> >   * returns CRC value computed using crc32 on the visible portion of
+> >   * the final framebuffer at vaddr_out
+> >   */
+> > -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *com=
+poser)
+> > +static uint32_t compute_crc(const u8 *vaddr,
+> > +			    const struct vkms_composer *composer)
+> >  {
+> > -	int i, j, src_offset;
+> > +	int x, y;
+> >  	int x_src =3D composer->src.x1 >> 16;
+> >  	int y_src =3D composer->src.y1 >> 16;
+> >  	int h_src =3D drm_rect_height(&composer->src) >> 16;
+> >  	int w_src =3D drm_rect_width(&composer->src) >> 16;
+> > -	u32 crc =3D 0;
+> > +	u32 crc =3D 0, pixel =3D 0;
+> > =20
+> > -	for (i =3D y_src; i < y_src + h_src; ++i) {
+> > -		for (j =3D x_src; j < x_src + w_src; ++j) {
+> > -			src_offset =3D composer->offset
+> > -				     + (i * composer->pitch)
+> > -				     + (j * composer->cpp);
+> > +	for (y =3D y_src; y < y_src + h_src; ++y) {
+> > +		for (x =3D x_src; x < x_src + w_src; ++x) {
+> >  			/* XRGB format ignores Alpha channel */
+> > -			memset(vaddr_out + src_offset + 24, 0,  8);
+> > -			crc =3D crc32_le(crc, vaddr_out + src_offset,
+> > -				       sizeof(u32));
+> > +			pixel =3D get_pixel_from_buffer(x, y, vaddr, composer);
+> > +			bitmap_clear((void *)&pixel, 0, 8);
+> > +			crc =3D crc32_le(crc, (void *)&pixel, sizeof(u32));
+> >  		}
+> >  	}
+> > =20
+> > --=20
+> > 2.21.0
+>=20
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-Zengruan had reported this issue [1] but received no reply. Does it make
-sense to fix this issue? Could you please take a look into this patch?
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
 
-Thanks,
-zenghui
+--6wp7bxmzbrpx433z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1] https://lkml.org/lkml/2018/11/27/639
+-----BEGIN PGP SIGNATURE-----
 
- drivers/video/fbdev/core/fbcon.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0n+ykACgkQWJzP/com
+vP8jdA//Tv7ShkinLXNtiF8dK7UlkjVi2KNRKIbfk81SrvbLs/gCraJiW3MhGK54
+V7Gcx6r33ahPA35p7K3sbm7q+jAGfVUSapQsT7GMG8D6anM0qhhp4h/k5/vsLtT4
+7FTZVu0rL1E76XoyseoZXsnSHHfp0h2enSBKYt7aHMSYY2zhDQRtfWtBbCpN3MML
+cfOOyoA7OlIyiz9n2vOKnI23rXPULDMN77Rp+f8s6UzwaOjDKnEPyxBFKfgU9kBy
+VV8vbXiX26ENQ5j0Xz+QWWNL3S7gAqKQnPlMYBk1PXn8YdI7yoUrOhV6lZUSx5QV
+xuLpewuIs+R3LR4YQvsKIL/I2WTiuTvz4I+6MK/QLJ5JxSEFhw1sllVvhZXXGoad
+qSVV5gocR3g2Lz60rPzMWZ3PBy/BwZWfutxuSAV4hxozKWx0UR2R21hmuqbgoVS3
+f6B5lExMqhA8CxTK+Zk1+mekztr5VxYBmnciuvshhGrfx4f2XS7Tt1awm0JrQwFv
+chRARfSDVhqxkJvW72kDb+tG3Cy5mtJYmmUA4MPGEUefoIaNx4dypPRpJ8yjZRtq
+A8JJ2j1zt2Fv0IVCxOSESAfniLN+U0EAkpBFxH1OmIFbU2WUuItRNTkVSSQ7zQ0Q
+upcoD7Uc3QdC31ORWgnyoovloumbRCJRbA94HI1UoQbQg9KyiMw=
+=Rdzr
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/video/fbdev/core/fbcon.h b/drivers/video/fbdev/core/fbcon.h
-index 20dea85..b1aa00e 100644
---- a/drivers/video/fbdev/core/fbcon.h
-+++ b/drivers/video/fbdev/core/fbcon.h
-@@ -230,7 +230,10 @@ static inline int real_y(struct fbcon_display *p, int ypos)
- 	int rows = p->vrows;
- 
- 	ypos += p->yscroll;
--	return ypos < rows ? ypos : ypos - rows;
-+	if (rows == 0)
-+		return ypos;
-+	else
-+		return ypos < rows ? ypos : ypos % rows;
- }
- 
- 
--- 
-1.8.3.1
-
-
+--6wp7bxmzbrpx433z--
