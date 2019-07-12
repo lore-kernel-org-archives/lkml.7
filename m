@@ -2,108 +2,103 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A41C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF8AC742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C58F21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562894417;
-	bh=+sq2cZXnBxcRqUWRVVIP9zpWg9uQ8vXX5lA2Ew1UBSs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pMn7XfupOkR+67No7UZY4bs5iqzvDPND1s07Y1OLtpR7x4FTTjc5ChMTd/7PwmPTD
-	 cSfcFONzyPCqbO4hWrBneQj3VjTjUWy5Lr7kjaFz4M0B59obtvvBu4eizGZhFtSP37
-	 xESmrefpFgfPHu6K8BAGJ+axSgT3IDaakIHRJFtY=
+	by mail.kernel.org (Postfix) with ESMTP id 3E370208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4MLyLJF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbfGLBUI (ORCPT
+        id S1729181AbfGLBWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbfGLBUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:20:08 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C84F21019;
-        Fri, 12 Jul 2019 01:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562894403;
-        bh=+sq2cZXnBxcRqUWRVVIP9zpWg9uQ8vXX5lA2Ew1UBSs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=R4h7JwRVFMQ3Yv1uTjLPBWes1X2fsmN8WCOke8y+u57VyP4kCE/HgaVIv8HyASiyC
-         NEm8IhZwTbYwcfKq8NBs6uOyhPBQN+vGW+xi3G3IwAr+qEsU5oQq2Yp63+7Eh6L3+O
-         x4z1p7S+jBwRLuLyE7TMbYjf2HEZ7NkbtkJMY/UU=
-Date:   Thu, 11 Jul 2019 18:20:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "chenjianhong (A)" <chenjianhong2@huawei.com>
-Cc:     Michel Lespinasse <walken@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
-Message-Id: <20190711182002.9bb943006da6b61ab66b95fd@linux-foundation.org>
-In-Reply-To: <df001b6fbe2a4bdc86999c78933dab7f@huawei.com>
-References: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
-        <CANN689G6mGLSOkyj31ympGgnqxnJosPVc4EakW5gYGtA_45L7g@mail.gmail.com>
-        <df001b6fbe2a4bdc86999c78933dab7f@huawei.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 11 Jul 2019 21:22:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57082 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfGLBWv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:22:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1IWkE122640;
+        Fri, 12 Jul 2019 01:22:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=xQU+hIivwsk9Rgrtj3FTlVDAx40vNslWzQ7vly9iFMo=;
+ b=4MLyLJF1v7L46qE3bvdDCqhPczhMgzy6mj0EV2QiD37GqOkHkaCjNi7akQx4ELqVlyfG
+ MYq8cL6iJEygj2PMQdCYDWOWIsjx52AbrI9JU0E88bCCYwo/q63llIUusRCO4QMKddS3
+ 1RdRC5uDszASR/VpDYBzoKj0o1R8511F7FNv6iq/oe/6POYOt5tkq+C1HdxpJFZsovqX
+ XZ4oU0D2n8wORtsO5I+IGg0zScJ7cAPbbhLWwR6kzwyAvber22sl5EUEtQNwWYDhTcZz
+ cGduXHyNlIOXTBMlT8KeJ5W+neHs9f3Pmli0lSJKdyWmrYEz/eLZz4z/NgsQPfa8GNOu Vw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2tjm9r2xy0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 01:22:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1MaY8159282;
+        Fri, 12 Jul 2019 01:22:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2tn1j1vbpm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 01:22:41 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C1MVF7007771;
+        Fri, 12 Jul 2019 01:22:31 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 18:22:31 -0700
+To:     James Bottomley <jejb@linux.vnet.ibm.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Alex Lemberg <alex.lemberg@wdc.com>
+Subject: Re: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1560346477-13944-1-git-send-email-avri.altman@wdc.com>
+        <yq1ef2w9kig.fsf@oracle.com>
+        <1562890815.2915.13.camel@linux.vnet.ibm.com>
+Date:   Thu, 11 Jul 2019 21:22:28 -0400
+In-Reply-To: <1562890815.2915.13.camel@linux.vnet.ibm.com> (James Bottomley's
+        message of "Thu, 11 Jul 2019 17:20:15 -0700")
+Message-ID: <yq1d0ig6o8b.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=852
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=899 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 07:05:07 +0000 "chenjianhong (A)" <chenjianhong2@huawei.com> wrote:
 
-> I explain my test code and the problem in detail. This problem is found in 
-> 32-bit user process, because its virtual is limited, 3G or 4G. 
-> 
-> First, I explain the bug I found. Function unmapped_area and 
-> unmapped_area_topdowns adjust search length to account for worst 
-> case alignment overhead, the code is ' length = info->length + info->align_mask; '.
-> The variable info->length is the length we allocate and the variable 
-> info->align_mask accounts for the alignment, because the gap_start  or gap_end 
-> value also should be an alignment address, but we can't know the alignment offset.
-> So in the current algorithm, it uses the max alignment offset, this value maybe zero
-> or other(0x1ff000 for shmat function). 
-> Is it reasonable way? The required value is longer than what I allocate.
-> What's more,  why for the first time I can allocate the memory successfully
-> Via shmat, but after releasing the memory via shmdt and I want to attach
-> again, it fails. This is not acceptable for many people.
-> 
-> Second, I explain my test code. The code I have sent an email. The following is
-> the step. I don't think it's something unusual or unreasonable, because the virtual
-> memory space is enough, but the process can allocate from it. And we can't pass
-> explicit addresses to function mmap or shmat, the address is getting from the left
-> vma gap.
->  1, we allocat large virtual memory;
->  2, we allocate hugepage memory via shmat, and release one
->  of the hugepage memory block;
->  3, we allocate hugepage memory by shmat again, this will fail.
+James,
 
-How significant is this problem in real-world use cases?  How much
-trouble is it causing?
+> Just to note: this isn't technically a licence change at all.  The
+> entire kernel is covered by the system call exception and this file is
+> thus also covered.  It's really a simple tag change to allow tools
+> which parse uapi header files to recognise from the SPDX tags that this
+> is a kernel header to which the Linux-syscall-note applies.
 
-> Third, I want to introduce my change in the current algorithm. I don't change the
-> current algorithm. Also, I think there maybe a better way to fix this error. Nowadays,
-> I can just adjust the gap_start value.
+OK.
 
-Have you looked further into this?  Michel is concerned about the
-performance cost of the current solution.
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
