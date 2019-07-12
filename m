@@ -2,133 +2,139 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96446C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6890AC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665E521019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562917135;
-	bh=2qIqkpyUwKy5ZEg6KI4VLnowH1Qpn3q5tnQKn5M+iiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D94px7XXIod9iaKqtYy9a0Eb9QwIMEhIjMIycciWcYuvXN8r3A2LSE/pnUmGD5TJH
-	 oAcTGLj+mO00fKqKW9KuHvJF7awKX6pcZFIQTG4ZFIUQJboWdTPpFtD1hMNxsq/+rP
-	 x9lM/JxvUFHKKKPPZ7nT4QhvbTkCEXxIk0cf7EuI=
+	by mail.kernel.org (Postfix) with ESMTP id 3E654208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnRWe55Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbfGLHiy (ORCPT
+        id S1726253AbfGLHjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfGLHix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:38:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E619208E4;
-        Fri, 12 Jul 2019 07:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562917132;
-        bh=2qIqkpyUwKy5ZEg6KI4VLnowH1Qpn3q5tnQKn5M+iiQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SocOGJdYS12ewRV0pv3s74pJMdr91qiXFF8Ku/1UEgVOlKku22bL54eFvoS0DY7gD
-         gjVF3y0n/P3SGwJ4sjM5zMGFUduUW0XIP+7rECgbvG6Hyvf0Zbst3WUb48CwAeFC2m
-         J5jztwHBRjPBoey3UYkN2UZg1RZqSyiSzHAvpCFk=
-Date:   Fri, 12 Jul 2019 09:38:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [GIT PULL] Driver core patches for 5.3-rc1
-Message-ID: <20190712073850.GC16253@kroah.com>
-References: <20190712073623.GA16253@kroah.com>
+        Fri, 12 Jul 2019 03:39:05 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39724 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfGLHjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 03:39:05 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so3936533pfe.6;
+        Fri, 12 Jul 2019 00:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=teO2U84Y0voCyxdSkIrBITdgvhHGO6vzIDrKZreXFsk=;
+        b=GnRWe55YvavMDKXf0njvqlg2i7FUvCAaKARYduAp+6M9/fXNfqcQ/ntAOFjC94tDUg
+         tf3onm4gz92vB2FRidojYb52sob3cxRCowMc145Hgf2wiL10/OzPtym+qJ5fZk/0/4Hz
+         bvCfAps7wobm7tyihtK8eStjrxlTE+qZEOhTXw0hQS30XvNElqfHsnkLkaKAT+CBMXBu
+         25aP9oMnyxx7/PXaRnikKe6Gz5VAcxXaXW51Zz/jUKp5W1jrtUPJdHN3NLt/s1x6L4OE
+         QNkO2nZZqhZqkMuIrJfEMXXQMO89mOTHOD6PPdu1puZLLjO7GA+UQ1XfjfGGYCQY1vit
+         nBjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=teO2U84Y0voCyxdSkIrBITdgvhHGO6vzIDrKZreXFsk=;
+        b=ryGPEvR9wAQivhUWyypbMAh79jJTncmxHy91E223txVgWY8i7sUr2Zp1Vu0WXsbN9X
+         u79DImZ8StqjEQUe/oj1KZp1rruOIbxyearFStKDF+CEz7LBEur9c1zLcQglmJus0+xI
+         7NVCsGZyI39HEU6AjHIDUUokghbmY7w6IIL6hmAfINdaqIlmxkiwjJn21OLKOzcZ8+aH
+         W04cV5MPku6UKUzL2aoFIN8tBs6M69J93QjgbC+J0hFaQ0UUHxwf8p84LhW7d9voj1QC
+         te35cvGSU1oYAW9HQah+LYmol1MxmNj2eSZpZK8JRtCVoS6OcNE1kZKxMb+eSePnP4An
+         FGUw==
+X-Gm-Message-State: APjAAAXPf+8cM4i9YIlhy4GoFZXHSO6dBs0aNjgn4KcDEBPLhJbaFKt8
+        eCJcwTCmw6g8tAJFZpX/Oh6hvst2rh8=
+X-Google-Smtp-Source: APXvYqyIN+0wVm42hCnwcxZvMrYJ+KRxYw3EaPyzGkI9GEM1Ksjx+nD/c9pcL02iU1BhidkzYmjJCA==
+X-Received: by 2002:a63:6c02:: with SMTP id h2mr5406998pgc.61.1562917144560;
+        Fri, 12 Jul 2019 00:39:04 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id d6sm6661309pgf.55.2019.07.12.00.39.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 12 Jul 2019 00:39:04 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH RESEND 1/2] KVM: LAPIC: Add pv ipi tracepoint
+Date:   Fri, 12 Jul 2019 15:38:59 +0800
+Message-Id: <1562917140-12035-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="SLDf9lqlvOQaIe6s"
-Content-Disposition: inline
-In-Reply-To: <20190712073623.GA16253@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wanpeng Li <wanpengli@tencent.com>
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add pv ipi tracepoint.
 
-On Fri, Jul 12, 2019 at 09:36:23AM +0200, Greg KH wrote:
-> The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
-> 
->   Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-5.3-rc1
-> 
-> for you to fetch changes up to c33d442328f556460b79aba6058adb37bb555389:
-> 
->   debugfs: make error message a bit more verbose (2019-07-08 10:44:57 +0200)
-> 
-> ----------------------------------------------------------------
-> Driver Core and debugfs changes for 5.3-rc1
-> 
-> Here is the "big" driver core and debugfs changes for 5.3-rc1
-> 
-> It's a lot of different patches, all across the tree due to some api
-> changes and lots of debugfs cleanups.  Because of this, there is going
-> to be some merge issues with your tree at the moment, I'll follow up
-> with the expected resolutions to make it easier for you.
-> 
-> Other than the debugfs cleanups, in this set of changes we have:
-> 	- bus iteration function cleanups (will cause build warnings
-> 	  with s390 and coresight drivers in your tree)
-
-Here's the s390 patch that was sent previously to resolve this issue.
-
-
-
-
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="s390-fixup.patch"
-
-From: Christian Borntraeger <borntraeger@de.ibm.com>
-
-commit 92ce7e83b4e5 ("driver_find_device: Unify the match function with
-class_find_device()") changed the prototype of driver_find_device to
-use a const void pointer.
-
-Change match_apqn accordingly.
-
-Fixes: ec89b55e3bce ("s390: ap: implement PAPQ AQIC interception in kernel")
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/lapic.c |  2 ++
+ arch/x86/kvm/trace.h | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 2c9fb1423a39..7e85ba7c6ef0 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -26,7 +26,7 @@
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 42da7eb..403ae3f 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -562,6 +562,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
+ 	irq.level = (icr & APIC_INT_ASSERT) != 0;
+ 	irq.trig_mode = icr & APIC_INT_LEVELTRIG;
  
- static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
++	trace_kvm_pv_send_ipi(irq.vector, min, ipi_bitmap_low, ipi_bitmap_high);
++
+ 	if (icr & APIC_DEST_MASK)
+ 		return -KVM_EINVAL;
+ 	if (icr & APIC_SHORT_MASK)
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index b5c831e..ce6ee34 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1462,6 +1462,31 @@ TRACE_EVENT(kvm_hv_send_ipi_ex,
+ 		  __entry->vector, __entry->format,
+ 		  __entry->valid_bank_mask)
+ );
++
++/*
++ * Tracepoints for kvm_pv_send_ipi.
++ */
++TRACE_EVENT(kvm_pv_send_ipi,
++	TP_PROTO(u32 vector, u32 min, unsigned long ipi_bitmap_low, unsigned long ipi_bitmap_high),
++	TP_ARGS(vector, min, ipi_bitmap_low, ipi_bitmap_high),
++
++	TP_STRUCT__entry(
++		__field(u32, vector)
++		__field(u32, min)
++		__field(unsigned long, ipi_bitmap_low)
++		__field(unsigned long, ipi_bitmap_high)
++	),
++
++	TP_fast_assign(
++		__entry->vector = vector;
++		__entry->min = min;
++		__entry->ipi_bitmap_low = ipi_bitmap_low;
++		__entry->ipi_bitmap_high = ipi_bitmap_high;
++	),
++
++	TP_printk("vector %d min 0x%x ipi_bitmap_low 0x%lx ipi_bitmap_high 0x%lx",
++		  __entry->vector, __entry->min, __entry->ipi_bitmap_low, __entry->ipi_bitmap_high)
++);
+ #endif /* _TRACE_KVM_H */
  
--static int match_apqn(struct device *dev, void *data)
-+static int match_apqn(struct device *dev, const void *data)
- {
- 	struct vfio_ap_queue *q = dev_get_drvdata(dev);
- 
+ #undef TRACE_INCLUDE_PATH
 -- 
-2.21.0
+2.7.4
 
-
---SLDf9lqlvOQaIe6s--
