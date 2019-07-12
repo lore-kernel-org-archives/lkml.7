@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1470C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BA4C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F69920645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8A920645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935356;
-	bh=lUM4YCGKvNWFCOk/arLaupJ/88bRs1Q8JoFExYmsvu8=;
+	s=default; t=1562935368;
+	bh=hPiOEE3aP3BAFin4qgmFvb5KHgzvJNUIaMCkGB9eM5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeKH1FnD7ePPwIjIUKAIcTYSLaWmbN6gbPoL664nWzY4D/+rSz+w4uOL1xECIN0AK
-	 rxNjpWCF5P2TilW4yza4y+IR4/qH4LhWONi6c1vETmC0m4vpYNC1dQBWEJg2RjNZpj
-	 Fy3ARHb0TlPURnm3xZIiEkO50l2vcwdRhfKV+CR4=
+	b=vCso9j86YKXBfGactTRunTcrH6jyE8OUwlKV6G7T0d+xrwtpU8Gl5RcQNaY2nP6Aj
+	 9Z9SpSkJw/zPlkuWgWmnxzTt2XuIoTAVxjlTACrHE4dsZLJooYpgKZbq1xpqKeCWp1
+	 Lg9n+tJBxYN38XD402LlGL/NJsgzgqVi1VOunGFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfGLMU1 (ORCPT
+        id S1727174AbfGLMUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53634 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbfGLMUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:20:24 -0400
+        id S1726861AbfGLMTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:19:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 562FD21670;
-        Fri, 12 Jul 2019 12:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607A021019;
+        Fri, 12 Jul 2019 12:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934023;
-        bh=lUM4YCGKvNWFCOk/arLaupJ/88bRs1Q8JoFExYmsvu8=;
+        s=default; t=1562933993;
+        bh=hPiOEE3aP3BAFin4qgmFvb5KHgzvJNUIaMCkGB9eM5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BKs+Krvox0Rz9tHvYllgBXVwF+zE3K8GV28/Hv37+m6SxFFvokbvoNgNx3iWC7rgw
-         gtGH/TkswOHmIlhnIP/FWbci8/OKx9gZp94bzyhYrxLChj6TCl8H6tGgrA1LxHcj+D
-         Ds+iemXdGarnCPNgGeMuhWHJdPdYXpzH3TB/BotI=
+        b=I1isATAp046eaF2AVyQG5LLCY6m74LJe7YsyIUh3/MzvcxNUeL/xJmjmQaD48AOwM
+         MphoGPcaxF2Gi0o6MD67ZXE2QEeB4W9NcqfO6moos/wvg14U8r88lmzyBXFrN+koc0
+         y3zBWn1NpiiDt3bj6svQ4XhBxDF+g3gMQ4yA3rao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Thomas Pedersen <thomas@eero.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 21/91] can: af_can: Fix error path of can_init()
-Date:   Fri, 12 Jul 2019 14:18:24 +0200
-Message-Id: <20190712121622.536668372@linuxfoundation.org>
+Subject: [PATCH 4.19 12/91] mac80211: mesh: fix RCU warning
+Date:   Fri, 12 Jul 2019 14:18:15 +0200
+Message-Id: <20190712121622.064743921@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,68 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5a3aed1cd3152429348ee1fe5cdcca65fe901ce ]
+[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
 
-This patch add error path for can_init() to avoid possible crash if some
-error occurs.
+ifmsh->csa is an RCU-protected pointer. The writer context
+in ieee80211_mesh_finish_csa() is already mutually
+exclusive with wdev->sdata.mtx, but the RCU checker did
+not know this. Use rcu_dereference_protected() to avoid a
+warning.
 
-Fixes: 0d66548a10cb ("[CAN]: Add PF_CAN core module")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+fixes the following warning:
+
+[   12.519089] =============================
+[   12.520042] WARNING: suspicious RCU usage
+[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
+[   12.521409] -----------------------------
+[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
+[   12.522928] other info that might help us debug this:
+[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
+[   12.524855] 5 locks held by kworker/u8:2/152:
+[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
+[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
+[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
+
+Signed-off-by: Thomas Pedersen <thomas@eero.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/af_can.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ net/mac80211/mesh.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/can/af_can.c b/net/can/af_can.c
-index e386d654116d..04132b0b5d36 100644
---- a/net/can/af_can.c
-+++ b/net/can/af_can.c
-@@ -959,6 +959,8 @@ static struct pernet_operations can_pernet_ops __read_mostly = {
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index d51da26e9c18..0f9446ab7e4f 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1212,7 +1212,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
+ 	ifmsh->chsw_ttl = 0;
  
- static __init int can_init(void)
- {
-+	int err;
+ 	/* Remove the CSA and MCSP elements from the beacon */
+-	tmp_csa_settings = rcu_dereference(ifmsh->csa);
++	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
++					    lockdep_is_held(&sdata->wdev.mtx));
+ 	RCU_INIT_POINTER(ifmsh->csa, NULL);
+ 	if (tmp_csa_settings)
+ 		kfree_rcu(tmp_csa_settings, rcu_head);
+@@ -1234,6 +1235,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
+ 	struct mesh_csa_settings *tmp_csa_settings;
+ 	int ret = 0;
+ 
++	lockdep_assert_held(&sdata->wdev.mtx);
 +
- 	/* check for correct padding to be able to use the structs similarly */
- 	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
- 		     offsetof(struct canfd_frame, len) ||
-@@ -972,15 +974,31 @@ static __init int can_init(void)
- 	if (!rcv_cache)
- 		return -ENOMEM;
- 
--	register_pernet_subsys(&can_pernet_ops);
-+	err = register_pernet_subsys(&can_pernet_ops);
-+	if (err)
-+		goto out_pernet;
- 
- 	/* protocol register */
--	sock_register(&can_family_ops);
--	register_netdevice_notifier(&can_netdev_notifier);
-+	err = sock_register(&can_family_ops);
-+	if (err)
-+		goto out_sock;
-+	err = register_netdevice_notifier(&can_netdev_notifier);
-+	if (err)
-+		goto out_notifier;
-+
- 	dev_add_pack(&can_packet);
- 	dev_add_pack(&canfd_packet);
- 
- 	return 0;
-+
-+out_notifier:
-+	sock_unregister(PF_CAN);
-+out_sock:
-+	unregister_pernet_subsys(&can_pernet_ops);
-+out_pernet:
-+	kmem_cache_destroy(rcv_cache);
-+
-+	return err;
- }
- 
- static __exit void can_exit(void)
+ 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
+ 				   GFP_ATOMIC);
+ 	if (!tmp_csa_settings)
 -- 
 2.20.1
 
