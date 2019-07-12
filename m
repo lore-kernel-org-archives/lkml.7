@@ -2,150 +2,127 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6AFC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C605C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADC920863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459D121537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DvsaEaFN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni8XL8v2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfGLILR (ORCPT
+        id S1726338AbfGLILU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:11:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42150 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLILR (ORCPT
+        Fri, 12 Jul 2019 04:11:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39800 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLILS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:11:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C896rx002321;
-        Fri, 12 Jul 2019 08:09:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=2tqEcmeLMeBgU3gGieUNuwSnxjbrQ/jmkTtByRX3RIE=;
- b=DvsaEaFNL7mXZf4t8TbD1WICbedvS6gXnuNWRU6+EhUI9XdmryDQbk9oboMU6PwhEa/d
- 28l5JpbAOTVmdiUJOo0kUEkSZwQzVV5A/3elCDczMiD1LMVgxz2Cl70jq+95JaCFwmiY
- 88y+spRDwcQsEhg4fXreM4bRNOTFII/2UECL515bHyVQ3scJP53TAix2Uv+9ajtzU2K3
- 6ScCbuMVR79YPhRS6tYss1/BMcLK9e6XvckJpnixvGoXnD57Nx/yYHQkBFsaE2wxsNK6
- UEU7tyMVp2A3mqIqhf+iNdFA2/297k2DBHX65Vvl76VGG0Wdz45MCDDoPXqJby5YEEDh KA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tjk2u47nv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 08:09:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C87a4X087501;
-        Fri, 12 Jul 2019 08:09:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2tmwgyn6kp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 08:09:58 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C89tfH027689;
-        Fri, 12 Jul 2019 08:09:56 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 01:09:55 -0700
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-To:     Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <2791712a-9f7b-18bc-e686-653181461428@oracle.com>
-Date:   Fri, 12 Jul 2019 10:09:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 12 Jul 2019 04:11:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so4404078pls.6;
+        Fri, 12 Jul 2019 01:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=M4aojHkTRgr5KR1nVQ76cFFCD98YRnC1NfZVjSYBlNk=;
+        b=Ni8XL8v212tRdbisi8LSUtOWTiNTMLlyiFa83bbMOuJLAfScdz6uoEshtt9ucTSXaV
+         QVG8DTLD6aSOIkrpeguq0w4ULqxvNyqIPV30grG9AuXzVM8yOAK3uFQGyPsp/M3lQS7P
+         2AB8pwR8CodK83TeA0sVFmoU10cKemmfVXlVJ3xyl8Q8gzXJFr9+ZRLSIBRwisyhp7lp
+         muZ5HVwQK6cHAjFbW4QvXVaxWrF2ATrD5en08vlbPaMfu9eEF++RGA/a5sLSYi68YAka
+         dUIYf/bvKT73ccwp5vLE51SOnJhsEoKN3vAzpc0I/ZG/W/oukZlhZ55QYYWgcBSY2k/X
+         fb2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=M4aojHkTRgr5KR1nVQ76cFFCD98YRnC1NfZVjSYBlNk=;
+        b=JNsubdqipXD4Tktvd07zCaJeMBdoz9sZZhAfi/fdYMxz19O9A6XGpApMwyZRMkJdr1
+         TK50KQcMAtp3bzku9ErkN9ZXX/czVPE8/zE3E29pmKj4uvZv1NpUU3OaXbfGDJI2vgCB
+         P7aK1BgBgx0Aj4+srPov9uHM3a/G2mfbab20f5E2Ozf4nZSZxCrbLT4L78VAMWEAmz1S
+         kyfeaygMXpsDpB+YxHyG5bAoRDT1F490cfPxKWqjcPA6MQ0iPiPYgPmd5wJTqHUGijA3
+         5Ei0JAIPAMK41U1yDFiAZOPLbmyJ2gypUkSGC7IscHNK/Y2PWXaPVCsp7MP7F+fu//hQ
+         mzag==
+X-Gm-Message-State: APjAAAUxXFyDikkeNsE2Zp/jgT/DMA1sw2QQ1DY/IRq7F24oV71MbtpT
+        q7g1T+1fzW0shCKctJSTQRRuzZMo3cZpEA==
+X-Google-Smtp-Source: APXvYqyAS5YP5nGv7DRKpFwhIeSDumf77QEARmpZNer0pmdleI0B9QtricOEDvDCvBGyEtTM9luRkA==
+X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr9842898plb.240.1562919077770;
+        Fri, 12 Jul 2019 01:11:17 -0700 (PDT)
+Received: from maya190711 ([52.250.118.122])
+        by smtp.gmail.com with ESMTPSA id t2sm7207474pgo.61.2019.07.12.01.11.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 01:11:17 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:11:16 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] hv: Remove dependencies on guest page size
+Message-ID: <cover.1562916939.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120085
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Linux guest page size and hypervisor page size concepts are
+different, even though they happen to be the same value on x86. Hyper-V
+code mixes up the two, so this patchset begins to address that by
+creating and using a set of Hyper-V specific page definitions.
 
-On 7/12/19 12:38 AM, Dave Hansen wrote:
-> On 7/11/19 7:25 AM, Alexandre Chartre wrote:
->> - Kernel code mapped to the ASI page-table has been reduced to:
->>    . the entire kernel (I still need to test with only the kernel text)
->>    . the cpu entry area (because we need the GDT to be mapped)
->>    . the cpu ASI session (for managing ASI)
->>    . the current stack
->>
->> - Optionally, an ASI can request the following kernel mapping to be added:
->>    . the stack canary
->>    . the cpu offsets (this_cpu_off)
->>    . the current task
->>    . RCU data (rcu_data)
->>    . CPU HW events (cpu_hw_events).
-> 
-> I don't see the per-cpu areas in here.  But, the ASI macros in
-> entry_64.S (and asi_start_abort()) use per-cpu data.
+A major benefit of those new definitions is that they support non-x86
+architectures, such as ARM64, that use different page sizes. On ARM64,
+the guest page size may not be 4096, and Hyper-V always runs with a page
+size of 4096.
 
-We don't map all per-cpu areas, but only the per-cpu variables we need. ASI
-code uses the per-cpu cpu_asi_session variable which is mapped when an ASI
-is created (see patch 15/26):
+In this patchset, the first two patches lay the foundation for the
+others, creating definitions and preparing for allocation of memory with
+the size and alignment that Hyper-V expects as a page. Patch 3 applies
+the page size definition where the guest VM and Hyper-V communicate, and
+where the code intends to use the Hyper-V page size. The last two
+patches set the ring buffer size to a fixed value, removing the
+dependency on the guest page size.
 
-+	/*
-+	 * Map the percpu ASI sessions. This is used by interrupt handlers
-+	 * to figure out if we have entered isolation and switch back to
-+	 * the kernel address space.
-+	 */
-+	err = ASI_MAP_CPUVAR(asi, cpu_asi_session);
-+	if (err)
-+		return err;
+This is the initial set of changes to the Hyper-V code, and future
+patches will make additional changes using the same foundation, for
+example, replace __vmalloc() and related functions when Hyper-V pages
+are intended.
 
+Changes in v4 (all apply to patch 2 only):
+- Remove file name from the subject.
+- Include prototypes of two new functions.
+- Add another Link tag.
 
-> Also, this stuff seems to do naughty stuff (calling C code, touching
-> per-cpu data) before the PTI CR3 writes have been done.  But, I don't
-> see anything excluding PTI and this code from coexisting.
+Changes in v3:
+- Simplify expression for BUILD_BUG_ON() in patch 2.
+- Add Link and Reviewed-by tags.
 
-My understanding is that PTI CR3 writes only happens when switching to/from
-userland. While ASI enter/exit/abort happens while we are already in the kernel,
-so asi_start_abort() is not called when coming from userland and so not
-interacting with PTI.
+Change in v2:
+- Replace patch 2 with a new one.
 
-For example, if ASI in used during a syscall (e.g. with KVM), we have:
+Maya Nakamura (5):
+  x86: hv: hyperv-tlfs.h: Create and use Hyper-V page definitions
+  x86: hv: Add functions to allocate/deallocate page for Hyper-V
+  hv: vmbus: Replace page definition with Hyper-V specific one
+  HID: hv: Remove dependencies on PAGE_SIZE for ring buffer
+  Input: hv: Remove dependencies on PAGE_SIZE for ring buffer
 
-  -> syscall
-     - PTI CR3 write (kernel CR3)
-     - syscall handler:
-       ...
-       asi_enter()-> write ASI CR3
-       .. code run with ASI ..
-       asi_exit() or asi abort -> restore original CR3
-       ...
-     - PTI CR3 write (userland CR3)
-  <- syscall
+ arch/x86/hyperv/hv_init.c             | 14 ++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h    | 12 +++++++++++-
+ arch/x86/include/asm/mshyperv.h       |  5 ++++-
+ drivers/hid/hid-hyperv.c              |  4 ++--
+ drivers/hv/hyperv_vmbus.h             |  8 ++++----
+ drivers/input/serio/hyperv-keyboard.c |  4 ++--
+ 6 files changed, 37 insertions(+), 10 deletions(-)
 
+-- 
+2.17.1
 
-Thanks,
-
-alex.
