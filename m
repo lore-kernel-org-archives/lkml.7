@@ -2,144 +2,153 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CF2C742D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E162C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92071204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562953551;
-	bh=ptvZzz9Y8qeDEiq4iSOajbwvzPS2/l6/e4bHwoN/kWY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KL1f0dikmdWf+wtrUaEjyDXbA1rMDhqzTVWGiO9dlrBT3UedJ9q14NcGahVSkQp+Z
-	 eAUFA4lPd4EgHHLrrjlrXOpapk1/ExL+e8F+W2ujvgFdAgYemuRWOxbaW545FEXASN
-	 WweNsq2exCw01eDFGPlC0O0Ke2rPaUS1m2ReeL+4=
+	by mail.kernel.org (Postfix) with ESMTP id 2D0772054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfGLRpu (ORCPT
+        id S1727528AbfGLRqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:45:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42924 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfGLRpu (ORCPT
+        Fri, 12 Jul 2019 13:46:00 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41453 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfGLRp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:45:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NxeFOSM4MwQ991fBRbEDEiqzzEYscNx/lH42noQqaEA=; b=iiOsW3Vw8rpy77HSY+BGojEg3
-        r1DgZZuXVeaAX4pU32jCzEMbZcE4HtuLLezPLqvzJT0Tbt0N3T085kmHs53uch75CG27pJliMnDq/
-        /Yb90FjffjE6mabThCuHYTbXItDblO8gBVgcMq2JAjeN8yK56sjN172naX00teqIbfYq4mtWssMYz
-        o/V/KPzcVb8qs/8iJTx+iqmSqmkgOPprMGp/YeoYVJtCZXDI9OLxcZOMroQluNZzk055ejii7IN7e
-        Xat7kvGXGALkxQXnexd0HUOmM9Ad936A2+82kIK9u/NqCMC1G1c3qBhSX08mgsBqND4u1Ih6t370d
-        bXzgvZE3A==;
-Received: from [186.213.242.57] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlzc6-0006HD-MB; Fri, 12 Jul 2019 17:45:42 +0000
-Date:   Fri, 12 Jul 2019 14:45:37 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Brad Love <brad@nextdimension.cc>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Antti Palosaari <crope@iki.fi>,
-        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
-Message-ID: <20190712144537.2bad2482@coco.lan>
-In-Reply-To: <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
-References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
-        <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Jul 2019 13:45:59 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so7601824wrm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:45:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5AAY/XLB5sNM5xu1cxB6MBuk0Q+am8e86PPXt5EsGZI=;
+        b=OqdzqvfgtzdY5aRYpq5sHxRgrNyWuLZqUU/yuLxmGtoKH3cdTO+fHh4fFeaXQKgMLi
+         URTye7w3sz3M56Ioc+Z3RUGJf/BpOqffzWoXvIsmQPtibnZorWocJ7jn/DMMJKAGVc6y
+         z8NRP7cc1qP02NV6CFf5idilz3vDKjeUNvHfXgxEbcAK3yhYXGK2eregL1hlJhHa+L+f
+         eePhSL2a2mcrZLaq4wIhhs5wiKGo3bOQK8JSPhBYu+uq8VcupDgrl5vIdb8a6QKbLnV8
+         UUtPtmhnZywQNuQYDLSuVSFORcQl3JQPYbppgvSKfXJ3IJ2BcrtE6YI0x1A5b7o1bfMF
+         GO1Q==
+X-Gm-Message-State: APjAAAWbWsbwH9nkoeaYvFcjpuYGjwgsvqQaGc/XYe3znFgL8ysLIDF5
+        XeibS6+n/EqUwrg6NOTHuSRTIw==
+X-Google-Smtp-Source: APXvYqztfm0GMtUN0DWOYu24qfN1n1ZjFz8nEz/A1BvDT3bf6OdkVwRupsDeRYQC+wLyk5PLJd+Npg==
+X-Received: by 2002:adf:a299:: with SMTP id s25mr5567669wra.74.1562953557279;
+        Fri, 12 Jul 2019 10:45:57 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d066:6881:ec69:75ab? ([2001:b07:6468:f312:d066:6881:ec69:75ab])
+        by smtp.gmail.com with ESMTPSA id y1sm7470474wma.32.2019.07.12.10.45.56
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 10:45:56 -0700 (PDT)
+Subject: Re: [PATCH] [v3] x86: kvm: avoid -Wsometimes-uninitized warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20190712141322.1073650-1-arnd@arndb.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <e85f877e-7c1c-7c9d-40c0-b41ac0fc68d6@redhat.com>
+Date:   Fri, 12 Jul 2019 19:45:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190712141322.1073650-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 12 Jul 2019 10:47:17 -0500
-Brad Love <brad@nextdimension.cc> escreveu:
+On 12/07/19 16:13, Arnd Bergmann wrote:
+> Clang notices a code path in which some variables are never
+> initialized, but fails to figure out that this can never happen
+> on i386 because is_64_bit_mode() always returns false.
+> 
+> arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+>         if (!longmode) {
+>             ^~~~~~~~~
+> arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
+>         trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
+>                                                              ^~~~~
+> arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
+>         if (!longmode) {
+>         ^~~~~~~~~~~~~~~
+> arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
+>         u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
+>                         ^
+>                          = 0
+> arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+> arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+> 
+> Flip the condition around to avoid the conditional execution on i386.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v3: reword commit log, simplify patch again
+> v2: make the change inside of is_64_bit_mode().
+> ---
+>  arch/x86/kvm/hyperv.c | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index a39e38f13029..c10a8b10b203 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1594,7 +1594,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+>  {
+>  	u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
+>  	uint16_t code, rep_idx, rep_cnt;
+> -	bool fast, longmode, rep;
+> +	bool fast, rep;
+>  
+>  	/*
+>  	 * hypercall generates UD from non zero cpl and real mode
+> @@ -1605,9 +1605,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+>  		return 1;
+>  	}
+>  
+> -	longmode = is_64_bit_mode(vcpu);
+> -
+> -	if (!longmode) {
+> +#ifdef CONFIG_X86_64
+> +	if (is_64_bit_mode(vcpu)) {
+> +		param = kvm_rcx_read(vcpu);
+> +		ingpa = kvm_rdx_read(vcpu);
+> +		outgpa = kvm_r8_read(vcpu);
+> +	} else
+> +#endif
+> +	{
+>  		param = ((u64)kvm_rdx_read(vcpu) << 32) |
+>  			(kvm_rax_read(vcpu) & 0xffffffff);
+>  		ingpa = ((u64)kvm_rbx_read(vcpu) << 32) |
+> @@ -1615,13 +1620,6 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+>  		outgpa = ((u64)kvm_rdi_read(vcpu) << 32) |
+>  			(kvm_rsi_read(vcpu) & 0xffffffff);
+>  	}
+> -#ifdef CONFIG_X86_64
+> -	else {
+> -		param = kvm_rcx_read(vcpu);
+> -		ingpa = kvm_rdx_read(vcpu);
+> -		outgpa = kvm_r8_read(vcpu);
+> -	}
+> -#endif
+>  
+>  	code = param & 0xffff;
+>  	fast = !!(param & HV_HYPERCALL_FAST_BIT);
+> 
 
-> Hi Marc,
->=20
-> Replying inline.
->=20
->=20
-> On 04/07/2019 05.33, Marc Gonzalez wrote:
-> > Refactor the command setup code, and let the compiler determine
-> > the size of each command.
-> >
-> > Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > ---
-> > Changes from v1:
-> > - Use a real function to populate struct si2168_cmd *cmd, and a trivial
-> > macro wrapping it (macro because sizeof).
-> > Changes from v2:
-> > - Fix header mess
-> > - Add Jonathan's tag
-> > ---
-> >  drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------
-> >  1 file changed, 45 insertions(+), 101 deletions(-)
-> >
-> > diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-f=
-rontends/si2168.c
-> > index c64b360ce6b5..5e81e076369c 100644
-> > --- a/drivers/media/dvb-frontends/si2168.c
-> > +++ b/drivers/media/dvb-frontends/si2168.c
-> > @@ -12,6 +12,16 @@
-> > =20
-> >  static const struct dvb_frontend_ops si2168_ops;
-> > =20
-> > +static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, in=
-t rlen)
-> > +{
-> > +	memcpy(cmd->args, args, wlen);
-> > +	cmd->wlen =3D wlen;
-> > +	cmd->rlen =3D rlen;
-> > +}
-> > + =20
->=20
->=20
-> struct si2168_cmd.args is u8, not char. I also think const should apply
-> to the pointer.
->=20
->=20
-> > +#define CMD_SETUP(cmd, args, rlen) \
-> > +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
-> > + =20
->=20
->=20
-> This is only a valid helper if args is a null terminated string. It just
-> so happens that every instance in this driver is, but that could be a
-> silent pitfall if someone used a u8 array with this macro.
+Queued, thanks.
 
-Actually, it is uglier than that. Of one writes something like:
-
-	char buf[20];
-
-	buf[0] =3D 0x20;
-	buf[1] =3D 0x03;
-
-	CMD_SETUP(cmd, buf, 0);
-
-	// some other init, up to 5 values, then another CMD_SETUP()
-
-
-sizeof() will evaluate to 20, and not to 2, with would be the
-expected buffer size, and it will pass 18 random values.
-
-IMHO, using sizeof() here is a very bad idea.
-
-Regards,
-Mauro
+Paolo
