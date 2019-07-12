@@ -7,118 +7,96 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29FCC742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62788C742A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66BC21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB6521019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfGLCWV (ORCPT
+        id S1729037AbfGLCXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 22:22:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2263 "EHLO huawei.com"
+        Thu, 11 Jul 2019 22:23:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35646 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728815AbfGLCWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 22:22:19 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7CC8D66BCFCD34EAECC9;
-        Fri, 12 Jul 2019 10:22:15 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 12 Jul 2019 10:22:04 +0800
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Xiaofei Tan <tanxiaofei@huawei.com>, <linux-acpi@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
-        <ying.huang@intel.com>, <ross.lagerwall@citrix.com>,
-        <ard.biesheuvel@linaro.org>, <lance.ortiz@hp.com>
-Subject: [PATCH 1/1] efi: cper: print AER info of PCIe fatal error
-Date:   Fri, 12 Jul 2019 10:20:17 +0800
-Message-ID: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        id S1728485AbfGLCXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 22:23:07 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B564030897464F660B2C;
+        Fri, 12 Jul 2019 10:23:02 +0800 (CST)
+Received: from RH5885H-V3.huawei.com (10.90.53.225) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 12 Jul 2019 10:22:54 +0800
+From:   SunKe <sunke32@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sunke32@huawei.com>
+Subject: [PATCH] fs/sync.c: Fix UBSAN Undefined behaviour in sync_file_range
+Date:   Fri, 12 Jul 2019 10:28:37 +0800
+Message-ID: <1562898517-143943-1-git-send-email-sunke32@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
+X-Originating-IP: [10.90.53.225]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AER info of PCIe fatal error is not printed in the current driver.
-Because APEI driver will panic directly for fatal error, and can't
-run to the place of printing AER info.
+There is a UBSAN report:
+UBSAN: Undefined behaviour in ../fs/sync.c:298:10
+signed integer overflow:
+-8 + -9223372036854775807 cannot be represented in type 'long long int'
+CPU: 0 PID: 15876 Comm: syz-executor.3 Not tainted
+Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+Call trace:
+[<ffffff90080ac450>] dump_backtrace+0x0/0x698 arch/arm64/kernel/traps.c:96
+[<ffffff90080acb20>] show_stack+0x38/0x60 arch/arm64/kernel/traps.c:234
+[<ffffff9008ca4500>] __dump_stack lib/dump_stack.c:15 [inline]
+[<ffffff9008ca4500>] dump_stack+0x1a8/0x230 lib/dump_stack.c:51
+[<ffffff9008d7e078>] ubsan_epilogue+0x34/0x9c lib/ubsan.c:164
+[<ffffff9008d7ebb4>] handle_overflow+0x228/0x280 lib/ubsan.c:195
+[<ffffff9008d7ed28>] __ubsan_handle_add_overflow+0x4c/0x68 lib/ubsan.c:203
+[<ffffff900874c2b8>] SYSC_sync_file_range fs/sync.c:298 [inline]
+[<ffffff900874c2b8>] SyS_sync_file_range+0x350/0x3e8 fs/sync.c:285
+[<ffffff9008094480>] el0_svc_naked+0x30/0x34
 
-An example log is as following:
-[ 3157.655028] {763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
-[ 3157.663610] {763}[Hardware Error]: event severity: fatal
-[ 3157.663612] {763}[Hardware Error]:  Error 0, type: fatal
-[ 3157.663614] {763}[Hardware Error]:   section_type: PCIe error
-[ 3157.680328] {763}[Hardware Error]:   port_type: 0, PCIe end point
-[ 3157.680329] {763}[Hardware Error]:   version: 4.0
-[ 3157.680332] {763}[Hardware Error]:   command: 0x0000, status: 0x0010
-[ 3157.698757] {763}[Hardware Error]:   device_id: 0000:82:00.0
-[ 3157.698758] {763}[Hardware Error]:   slot: 0
-[ 3157.698759] {763}[Hardware Error]:   secondary_bus: 0x00
-[ 3157.698760] {763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
-[ 3157.698761] {763}[Hardware Error]:   class_code: 000002
-[ 3157.698825] Kernel panic - not syncing: Fatal hardware error!
+When calculate the endbyte, there maybe an overflow, even if no effect
+the kernel, but I also want to avoid overflowing and avoid UBSAN reporting.
+The original compare is to ensure the offset >= 0 && nbytes >= 0 && no
+overflow happened.
 
-This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
-cper_print_aer() call out of interrupt context")'. To fix this issue,
-this patch adds print of AER info in cper_print_pcie() for fatal error.
+I do the calculate after compare. ensure the offset >= 0 && nbytes >= 0 &&
+no overflow may happen first.
 
-Here is the example log after this patch applied:
-[ 7032.893566] {24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
-[ 7032.901965] {24}[Hardware Error]: event severity: fatal
-[ 7032.907166] {24}[Hardware Error]:  Error 0, type: fatal
-[ 7032.912366] {24}[Hardware Error]:   section_type: PCIe error
-[ 7032.917998] {24}[Hardware Error]:   port_type: 0, PCIe end point
-[ 7032.923974] {24}[Hardware Error]:   version: 4.0
-[ 7032.928569] {24}[Hardware Error]:   command: 0x0546, status: 0x4010
-[ 7032.934806] {24}[Hardware Error]:   device_id: 0000:01:00.0
-[ 7032.940352] {24}[Hardware Error]:   slot: 0
-[ 7032.944514] {24}[Hardware Error]:   secondary_bus: 0x00
-[ 7032.949714] {24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
-[ 7032.956381] {24}[Hardware Error]:   class_code: 000002
-[ 7032.961495] {24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
-[ 7032.969891] {24}[Hardware Error]:   aer_uncor_severity: 0x00062010
-[ 7032.976042] {24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
-[ 7032.983663] Kernel panic - not syncing: Fatal hardware error!
-
-Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of
-interrupt context")
-
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: SunKe <sunke32@huawei.com>
 ---
- drivers/firmware/efi/cper.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/sync.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index 8fa977c..bf8600d 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -390,6 +390,19 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk(
- 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
- 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
-+	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
-+	    gdata->error_severity & CPER_SEV_FATAL) {
-+		struct aer_capability_regs *aer;
-+
-+		aer = (struct aer_capability_regs *)pcie->aer_info;
-+		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
-+		       pfx, aer->uncor_status, aer->uncor_mask);
-+		printk("%saer_uncor_severity: 0x%08x\n",
-+		       pfx, aer->uncor_severity);
-+		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
-+		       aer->header_log.dw0, aer->header_log.dw1,
-+		       aer->header_log.dw2, aer->header_log.dw3);
-+	}
- }
+diff --git a/fs/sync.c b/fs/sync.c
+index 4d1ff01..5827471 100644
+--- a/fs/sync.c
++++ b/fs/sync.c
+@@ -246,15 +246,15 @@ int sync_file_range(struct file *file, loff_t offset, loff_t nbytes,
+ 	if (flags & ~VALID_FLAGS)
+ 		goto out;
  
- static void cper_print_tstamp(const char *pfx,
+-	endbyte = offset + nbytes;
+-
+ 	if ((s64)offset < 0)
+ 		goto out;
+-	if ((s64)endbyte < 0)
++	if ((s64)nbytes < 0)
+ 		goto out;
+-	if (endbyte < offset)
++	if (S64_MAX - offset < nbytes)
+ 		goto out;
+ 
++	endbyte = offset + nbytes;
++
+ 	if (sizeof(pgoff_t) == 4) {
+ 		if (offset >= (0x100000000ULL << PAGE_SHIFT)) {
+ 			/*
 -- 
-2.8.1
+2.7.4
 
