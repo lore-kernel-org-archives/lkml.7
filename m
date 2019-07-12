@@ -2,87 +2,117 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D0CC742B2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E24C742B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1292084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812912084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LdoVKmUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfGLLAD (ORCPT
+        id S1726917AbfGLLDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:00:03 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35383 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLLAC (ORCPT
+        Fri, 12 Jul 2019 07:03:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53308 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfGLLDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:00:02 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so7614931qto.2;
-        Fri, 12 Jul 2019 04:00:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pal+pi/d4Dk93PuDYZ//Pw+9a15iKT4iShxvJ3znLK4=;
-        b=sUuHJ1y/Q2iHbFVF1NiijGbCwORzEO1Zs/ZqeHwp98oPVrOqsXUvcT5HFGZ8VzT1Il
-         k8IyQfIRZSTFlmPBXsIR51t9CiFySX8aiCu3c3lJcUZtP3TMALKqbOKLyYwAkpcLX/Ix
-         dsDcZZZ1vIXKovPLntqBCR7sIZNV/SD5ub3STvv5tu02SfsrZKnlNla0GNXgOtWSq27J
-         jMT2Z8q9c8Df4bXE3eKsy88BR4JSN2ecvznwJlDandFtN+XkEAtUb3VoBe+KTnZq1GKK
-         x+n0+D5klB/+rSGzMnmMxZ8S48+o1i8oxBcp9O/Lmx/1SWxj7w5u6wo7vKfijOq9T7x+
-         KIYw==
-X-Gm-Message-State: APjAAAUQZZDmjkes8+e5ebVsIKmcErfvTgXLyvg2u4ehimhjlsfrCfEH
-        UPNI3o0WaA4E4xu0RgU0BBLbMGmhbDtfdysKVNh8LHv4gLk=
-X-Google-Smtp-Source: APXvYqxCZome0dJAMTWtGsenbmYtkd8gnE0cPWNBLmFkrCEENjBEhDXjXabVqz9NG5LZenPSw3uVfa5Y6HOAvISZvTc=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr5825888qtf.204.1562929201614;
- Fri, 12 Jul 2019 04:00:01 -0700 (PDT)
+        Fri, 12 Jul 2019 07:03:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PD94wZRNXHIjHblu3nIrY4xxlHZYXkLegGZyayPXJPA=; b=LdoVKmUIYMMAH0RwU1/sb66Wt
+        PDIews2/h6sozwC0zDIT4qd9SogFPE8J/64yxNOntCL5i28uDH3ABs3F9LZSk85qfeMr/Kt5nyaA0
+        Cquj6eo1chq4GUCT+inbwuTEOZh4AnYQaFsOhi8FkO0DtOhKIzr0rtXPOKgkX6CORU7N63f/cN0uw
+        RjxLEuZUDL5JKAbluFeI8rfg2CtCfW/UhC0HK1DmeRDhd5H/GtQxVwWuSOT7jSZQcaa0WwNsGbKui
+        Rv7WZunOPBMTk/6IuVd+sc9fV0N25106/kjObkCTCppnjgcs0hF8Cp2YAaEfufGieuJllqDsFPGMV
+        wcgMqYSaA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hltJA-0000LI-PF; Fri, 12 Jul 2019 11:01:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1B88C2080B963; Fri, 12 Jul 2019 13:01:42 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 13:01:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712110142.GS3402@hirez.programming.kicks-ass.net>
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
 MIME-Version: 1.0
-References: <20190709211559.6ffd2f4e@canb.auug.org.au> <20190709134233.b50814f5a789244b9bdb573e@linux-foundation.org>
- <20190710070509.GB29695@dhcp22.suse.cz> <20190710173434.8081fa5410ccf0ccd72719b9@linux-foundation.org>
-In-Reply-To: <20190710173434.8081fa5410ccf0ccd72719b9@linux-foundation.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 12 Jul 2019 12:59:45 +0200
-Message-ID: <CAK8P3a3Eb1+imK+daiK=ctN6DhwSuTfnAnUUG9xK5rQo=pZ_uQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yang Shi <shy828301@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711234401.220336-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 2:41 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
->
-> From: Yang Shi <yang.shi@linux.alibaba.com>
-> Subject: mm: shrinker: make shrinker not depend on memcg kmem
->
-> Currently shrinker is just allocated and can work when memcg kmem is
-> enabled.  But, THP deferred split shrinker is not slab shrinker, it
-> doesn't make too much sense to have such shrinker depend on memcg kmem.
-> It should be able to reclaim THP even though memcg kmem is disabled.
->
-> Introduce a new shrinker flag, SHRINKER_NONSLAB, for non-slab shrinker.
-> When memcg kmem is disabled, just such shrinkers can be called in
-> shrinking memcg slab.
->
+On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
+> This patch adds support for checking RCU reader sections in list
+> traversal macros. Optionally, if the list macro is called under SRCU or
+> other lock/mutex protection, then appropriate lockdep expressions can be
+> passed to make the checks pass.
+> 
+> Existing list_for_each_entry_rcu() invocations don't need to pass the
+> optional fourth argument (cond) unless they are under some non-RCU
+> protection and needs to make lockdep check pass.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
+>  include/linux/rcupdate.h |  7 +++++++
+>  kernel/rcu/Kconfig.debug | 11 +++++++++++
+>  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
+>  4 files changed, 68 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> index e91ec9ddcd30..78c15ec6b2c9 100644
+> --- a/include/linux/rculist.h
+> +++ b/include/linux/rculist.h
+> @@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+>   */
+>  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+>  
+> +/*
+> + * Check during list traversal that we are within an RCU reader
+> + */
+> +
+> +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
+> +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
 
-Today's linux-next again fails without CONFIG_MEMCG_KMEM:
-
-mm/vmscan.c:220:7: error: implicit declaration of function
-'memcg_expand_shrinker_maps' [-Werror,-Wimplicit-function-declaration]
-                if (memcg_expand_shrinker_maps(id)) {
-                    ^
-mm/vmscan.c:608:56: error: no member named 'shrinker_map' in 'struct
-mem_cgroup_per_node'
-        map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-                                        ~~~~~~~~~~~~~~~~~~~~  ^
-
-     Arnd
+You don't seem to actually use it in this patch; also linux/kernel.h has
+COUNT_ARGS().
