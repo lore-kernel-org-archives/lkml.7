@@ -2,98 +2,119 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F6BC742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23A9C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCCA214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81C2214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1MTmR1kc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seQ+5x66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfGLAd1 (ORCPT
+        id S1730627AbfGLAd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:33:27 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46920 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfGLAd0 (ORCPT
+        Thu, 11 Jul 2019 20:33:58 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55832 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbfGLAd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:33:26 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0TI9Y176520;
-        Fri, 12 Jul 2019 00:32:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=CR4OYKqc+GwvLMLKdlXjil5mKkyZnLad/bNsIqBvDGQ=;
- b=1MTmR1kc6xeljryNij/zrF+P2P/YhulhS8bIW3yR1W+CEG3k8tnt8ljF30eZlFQOj0xA
- 43Vz0DG8JcW2nheAPr+LQpvxv1FSJ9gtDTv5mvWf0tRHd0UcG2srR8i8hf7Vn7bx8WGk
- V8Kp/38TOgnxtCn2U984EEHlQjHZhddVhlyiZo4Qv6k6fz6YYFRqZoVmppHHropPdkby
- kgRkOUlnWvmgX/YFkQciY2e9WYU7reUYEiY9KR4d/vQYGBuX9WrwhLzu2vsGWOWDoDLy
- XIgBtOytXDJlbQ7F8jhspxxawuAu0ryxe5wIYAEuxOJC6v57wPXIBI/THemuUv9fg1++ Ig== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq2ueu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 00:32:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0RWmw190436;
-        Fri, 12 Jul 2019 00:32:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2tn1j1uctm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 00:32:23 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C0WMVU017028;
-        Fri, 12 Jul 2019 00:32:22 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jul 2019 17:32:22 -0700
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <megaraidlinux.pdl@broadcom.com>
-Subject: Re: [PATCH -next] scsi: megaraid_sas: Make some symbols static
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190702130114.29356-1-yuehaibing@huawei.com>
-Date:   Thu, 11 Jul 2019 20:32:18 -0400
-In-Reply-To: <20190702130114.29356-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Tue, 2 Jul 2019 21:01:14 +0800")
-Message-ID: <yq1k1co854d.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 11 Jul 2019 20:33:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so7249278wmj.5;
+        Thu, 11 Jul 2019 17:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZIHtnUgbJAyk2Yt1SLus4FpvUvi7MmMfRwmrG6+39M8=;
+        b=seQ+5x66XzW00Nii89UijNC7Z9v06mETi3In1Gs/azkO/cFi/A1CzoHdr2kjDGfPVv
+         aJlHM+yNvSjw5TJjfOOjR7evoxrdJCSDjoQJQdQYJcQX3anKGkvoD4/sOoa8nTzOWy8D
+         1A7LFikVyd4Ay01meCwi9cXe/KfsDcwTCTbZVI4CZ9MJ7njAYVzfe4Y9fzZVVw0mA/9J
+         9WT3KPgngZ8LmbqEjQdspnGpeunujI5LLoR9HXTJP2/TumISn0MVPjYSchynH7MRHGCW
+         H1N2JxQy26esHj7XHDPlGVgwkX/rcwUka5x7DbkLriaV2UPsqcrKiinzkPckv66lx8TQ
+         Epug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZIHtnUgbJAyk2Yt1SLus4FpvUvi7MmMfRwmrG6+39M8=;
+        b=hgGDRmWekzujBc+xUrqNYE2udUsS98P2pEgmqSoKqaWOpS3i9LtWNIZZzTG9PyTj+V
+         d0JRVZ2wW0/F7uM/90bKIzfd0esV9JsUnYF1fEuNXSMjn5OvSGnjKxyABbASVyhFO6v8
+         joE+H6xRNxjL9zP5JeX8ABWTRsUQJdoy++GiGQic9N0gKA+gteU6EKqI0akCSQA8TFOD
+         ejDSK/4FtAzqIhW+Id4XnduH6p6lTOk2+M63mBaWwRplfFLNnRNfiQNtEUHwdYwpSXYI
+         1hrSa5QBluMPtgW/h0m7C5zdr5+29fRYn8SfPHHvepl/EO8qvHxlim7A3daaKhvtJMes
+         krcw==
+X-Gm-Message-State: APjAAAWcYjnuDVfao+RgO2xwo3DGT3dWtzEUjdO/vuXkhBeOMBZcch7e
+        zbZ2AevFk74Csw+xkc5cwmVSgk8k9CI/yp+wEPg=
+X-Google-Smtp-Source: APXvYqyaiGP9Do3Q1rjeo5x031nejhl4minL8MqBQLzYhAI2+hdialZRcypuUt8ZXf9soz2tQX++PZiX2Pw5AGx/y3M=
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr5797761wme.173.1562891635861;
+ Thu, 11 Jul 2019 17:33:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=851
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=907 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120004
+References: <1562872923-2463-1-git-send-email-wang6495@umn.edu>
+In-Reply-To: <1562872923-2463-1-git-send-email-wang6495@umn.edu>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 12 Jul 2019 08:33:43 +0800
+Message-ID: <CACVXFVNkdgxddQiJn1SMQSuOL8E_PCLRhkv8XPLUg=5tdmpiLA@mail.gmail.com>
+Subject: Re: [PATCH v2] block/bio-integrity: fix a memory leak bug
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-YueHaibing,
-
-> Fix sparse warnings:
+On Fri, Jul 12, 2019 at 3:29 AM Wenwen Wang <wang6495@umn.edu> wrote:
 >
-> drivers/scsi/megaraid/megaraid_sas_base.c:271:1: warning: symbol 'megasas_issue_dcmd' was not declared. Should it be static?
-> drivers/scsi/megaraid/megaraid_sas_base.c:2227:6: warning: symbol 'megasas_do_ocr' was not declared. Should it be static?
-> drivers/scsi/megaraid/megaraid_sas_base.c:3194:25: warning: symbol 'megaraid_host_attrs' was not declared. Should it be static?
+> From: Wenwen Wang <wenwen@cs.uga.edu>
+>
+> In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
+> hold integrity metadata. Later on, the buffer will be attached to the bio
+> structure through bio_integrity_add_page(), which returns the number of
+> bytes of integrity metadata attached. Due to unexpected situations,
+> bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
+> needs to be terminated with 'false' returned to indicate this error.
+> However, the allocated kernel buffer is not freed on this execution path,
+> leading to a memory leak.
+>
+> To fix this issue, free the allocated buffer before returning from
+> bio_integrity_prep().
+>
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  block/bio-integrity.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+> index 4db6208..fb95dbb 100644
+> --- a/block/bio-integrity.c
+> +++ b/block/bio-integrity.c
+> @@ -276,8 +276,12 @@ bool bio_integrity_prep(struct bio *bio)
+>                 ret = bio_integrity_add_page(bio, virt_to_page(buf),
+>                                              bytes, offset);
+>
+> -               if (ret == 0)
+> -                       return false;
+> +               if (ret == 0) {
+> +                       printk(KERN_ERR "could not attach integrity payload\n");
+> +                       kfree(buf);
+> +                       status = BLK_STS_RESOURCE;
+> +                       goto err_end_io;
+> +               }
+>
+>                 if (ret < bytes)
+>                         break;
 
-Applied to 5.3/scsi-fixes, thanks!
+Looks fine:
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+
+Thanks,
+Ming Lei
