@@ -2,117 +2,164 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E24C742B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BDEC742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812912084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD8C2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LdoVKmUI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i2Eyeg9N";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZGZsHKsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfGLLDK (ORCPT
+        id S1726768AbfGLLGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:03:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53308 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfGLLDJ (ORCPT
+        Fri, 12 Jul 2019 07:06:51 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56824 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfGLLGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:03:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PD94wZRNXHIjHblu3nIrY4xxlHZYXkLegGZyayPXJPA=; b=LdoVKmUIYMMAH0RwU1/sb66Wt
-        PDIews2/h6sozwC0zDIT4qd9SogFPE8J/64yxNOntCL5i28uDH3ABs3F9LZSk85qfeMr/Kt5nyaA0
-        Cquj6eo1chq4GUCT+inbwuTEOZh4AnYQaFsOhi8FkO0DtOhKIzr0rtXPOKgkX6CORU7N63f/cN0uw
-        RjxLEuZUDL5JKAbluFeI8rfg2CtCfW/UhC0HK1DmeRDhd5H/GtQxVwWuSOT7jSZQcaa0WwNsGbKui
-        Rv7WZunOPBMTk/6IuVd+sc9fV0N25106/kjObkCTCppnjgcs0hF8Cp2YAaEfufGieuJllqDsFPGMV
-        wcgMqYSaA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hltJA-0000LI-PF; Fri, 12 Jul 2019 11:01:44 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1B88C2080B963; Fri, 12 Jul 2019 13:01:42 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 13:01:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712110142.GS3402@hirez.programming.kicks-ass.net>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
+        Fri, 12 Jul 2019 07:06:50 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 775C960DB3; Fri, 12 Jul 2019 11:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562929609;
+        bh=S4zkmrBpLqtuRgINSb+a9jUCuBn2h2LPZL0xctcj5AM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=i2Eyeg9NdS60UfmZUzdTmiu/YZS4TryOSzeTmA3rpeJ/W75l2FlWb8ZAGKbcumbs0
+         ChEy2ZtnuHAwiA2nZmxs8UCuh356LHxHip97XAzk/Zeo7ainvp57D8KWaf9ySRpjiu
+         BVbSbZCFlkuej87wqlg2AdU0apQsnM9wtHNItXpI=
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3ED0A60E5A;
+        Fri, 12 Jul 2019 11:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562929608;
+        bh=S4zkmrBpLqtuRgINSb+a9jUCuBn2h2LPZL0xctcj5AM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZGZsHKsqRz7qV8g1WuzoZdgGkCbsfekpv8/qI25FlbK7eaHpyD1UeKrGgRrrRhwmb
+         k5SI7+q6l01fsAqNTTx8TOq8foruaNVT5z1dTrKB8T/Jkmonm6NOwr9k62NcK526Gz
+         hgaj50tlYnQDVV1eNLEKwXhHVklyqE2mblvDZvkc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3ED0A60E5A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f43.google.com with SMTP id p15so8833155eds.8;
+        Fri, 12 Jul 2019 04:06:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWYxTy8uJGHjxg+wYloKWz1IYLgDnT1zuXj11CqY5rBEXI/q2NY
+        Q4KXX0j+Sy6usI+V5vwtVVUJf+diiYzjj0S3XJQ=
+X-Google-Smtp-Source: APXvYqx1fX4ty2VHwMHUACUBDGxE6ZzPktMXFevDrLghjjiQtfrnhIUO8kThQTTcYEUkCDon2Jm9Vbp5bza5mGYPfE0=
+X-Received: by 2002:a50:eb0b:: with SMTP id y11mr8610424edp.224.1562929607000;
+ Fri, 12 Jul 2019 04:06:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711234401.220336-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190711110340.16672-1-vivek.gautam@codeaurora.org> <20190711153816.GQ7234@tuxbook-pro>
+In-Reply-To: <20190711153816.GQ7234@tuxbook-pro>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Fri, 12 Jul 2019 16:36:35 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iHrJ74BMMcpiKG=wMZvBDe=LcAAPjTsZ9Co+HrqMFsPTQ@mail.gmail.com>
+Message-ID: <CAFp+6iHrJ74BMMcpiKG=wMZvBDe=LcAAPjTsZ9Co+HrqMFsPTQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] soc: qcom: llcc: Rename llcc-sdm845 to llcc-plat
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        rishabhb@codeaurora.org, vnkgutta@codeaurora.org,
+        Evan Green <evgreen@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> This patch adds support for checking RCU reader sections in list
-> traversal macros. Optionally, if the list macro is called under SRCU or
-> other lock/mutex protection, then appropriate lockdep expressions can be
-> passed to make the checks pass.
-> 
-> Existing list_for_each_entry_rcu() invocations don't need to pass the
-> optional fourth argument (cond) unless they are under some non-RCU
-> protection and needs to make lockdep check pass.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
->  include/linux/rcupdate.h |  7 +++++++
->  kernel/rcu/Kconfig.debug | 11 +++++++++++
->  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
->  4 files changed, 68 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index e91ec9ddcd30..78c15ec6b2c9 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
->   */
->  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
->  
-> +/*
-> + * Check during list traversal that we are within an RCU reader
-> + */
-> +
-> +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-> +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
+On Thu, Jul 11, 2019 at 9:19 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 11 Jul 04:03 PDT 2019, Vivek Gautam wrote:
+>
+> > To avoid adding files for each future supported SoCs rename
+> > the file to a generic name - llcc-plat, so that llcc configuration
+> > tables for other SoCs can be added in the same driver.
+> >
+>
+> We've had a generic LLCC Kconfig option and then a specific SDM845 one,
+> with this change we have two different generic options and both would
+> either always be enabled or disabled.
+>
+> So I think you should drop QCOM_SDM845_LLCC and build both llcc-slice
+> and llcc-plat into the same qcom_llcc.ko instead.
 
-You don't seem to actually use it in this patch; also linux/kernel.h has
-COUNT_ARGS().
+Yea. I can chuck off the llcc-slice module. But for readability would
+it still be
+better to maintain separate files. I will drop the SDM845 config, and keep only
+QCOM_LLC.
+
+Best regards
+Vivek
+
+>
+> Regards,
+> Bjorn
+>
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > ---
+> >  drivers/soc/qcom/Kconfig                        | 10 +++++-----
+> >  drivers/soc/qcom/Makefile                       |  2 +-
+> >  drivers/soc/qcom/{llcc-sdm845.c => llcc-plat.c} |  0
+> >  3 files changed, 6 insertions(+), 6 deletions(-)
+> >  rename drivers/soc/qcom/{llcc-sdm845.c => llcc-plat.c} (100%)
+> >
+> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> > index a6d1bfb17279..8110d415b18e 100644
+> > --- a/drivers/soc/qcom/Kconfig
+> > +++ b/drivers/soc/qcom/Kconfig
+> > @@ -62,13 +62,13 @@ config QCOM_LLCC
+> >         to clients that use the LLCC. Say yes here to enable LLCC slice
+> >         driver.
+> >
+> > -config QCOM_SDM845_LLCC
+> > -     tristate "Qualcomm Technologies, Inc. SDM845 LLCC driver"
+> > +config QCOM_PLAT_LLCC
+> > +     tristate "Qualcomm Technologies, Inc. platform LLCC driver"
+> >       depends on QCOM_LLCC
+> >       help
+> > -       Say yes here to enable the LLCC driver for SDM845. This provides
+> > -       data required to configure LLCC so that clients can start using the
+> > -       LLCC slices.
+> > +       Say yes here to enable the LLCC driver for Qcom platforms, such as
+> > +       SDM845. This provides data required to configure LLCC so that
+> > +       clients can start using the LLCC slices.
+> >
+> >  config QCOM_MDT_LOADER
+> >       tristate
+> > diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> > index eeb088beb15f..3bf26667d7ee 100644
+> > --- a/drivers/soc/qcom/Makefile
+> > +++ b/drivers/soc/qcom/Makefile
+> > @@ -21,6 +21,6 @@ obj-$(CONFIG_QCOM_SMSM)     += smsm.o
+> >  obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
+> >  obj-$(CONFIG_QCOM_APR) += apr.o
+> >  obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
+> > -obj-$(CONFIG_QCOM_SDM845_LLCC) += llcc-sdm845.o
+> > +obj-$(CONFIG_QCOM_PLAT_LLCC) += llcc-plat.o
+> >  obj-$(CONFIG_QCOM_RPMHPD) += rpmhpd.o
+> >  obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
+> > diff --git a/drivers/soc/qcom/llcc-sdm845.c b/drivers/soc/qcom/llcc-plat.c
+> > similarity index 100%
+> > rename from drivers/soc/qcom/llcc-sdm845.c
+> > rename to drivers/soc/qcom/llcc-plat.c
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+> >
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
