@@ -2,110 +2,106 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021F4C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9467FC742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D7920863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CED120863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="B1TBh6lQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfGLHXr (ORCPT
+        id S1726216AbfGLH0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:23:47 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:56797 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726033AbfGLHXq (ORCPT
+        Fri, 12 Jul 2019 03:26:05 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33018 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLH0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:23:46 -0400
-X-UUID: bdd7fe42907544eebcbbb88dcb5f0f9e-20190712
-X-UUID: bdd7fe42907544eebcbbb88dcb5f0f9e-20190712
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <houlong.wei@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1226092318; Fri, 12 Jul 2019 15:23:40 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n1.mediatek.inc
- (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 12 Jul
- 2019 15:23:38 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 12 Jul 2019 15:23:38 +0800
-Message-ID: <1562916217.29653.4.camel@mhfsdcap03>
-Subject: Re: [PATCH] [media] media: mtk-mdp: fix reference count on old
- device tree
-From:   houlong wei <houlong.wei@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Minghsiu Tsai =?UTF-8?Q?=28=E8=94=A1=E6=98=8E=E4=BF=AE=29?= 
-        <Minghsiu.Tsai@mediatek.com>,
-        Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= 
-        <Andrew-CT.Chen@mediatek.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "djkurtz@chromium.org" <djkurtz@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Fri, 12 Jul 2019 15:23:37 +0800
-In-Reply-To: <e4d178ae-f43e-21d0-b0ab-78cc2ac71e7e@gmail.com>
-References: <20190621113250.4946-1-matthias.bgg@gmail.com>
-         <e4d178ae-f43e-21d0-b0ab-78cc2ac71e7e@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 12 Jul 2019 03:26:04 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so5737190qkc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 00:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tX+z3FWO8ez0pwI+shF6DuNfmbSDPIMsw6ukNdtKjIY=;
+        b=B1TBh6lQ8lJkZoPDu7qlKlHP93dzT2+gh7hAgAhd/UsfQKX68NCmLaYELZwamg6c2H
+         I42nMWiepK94uoiPqaR1V1aHcqsTFF9SFuuzpCOxJQlCdCJCSGBUUq1QBGH1z1ofVQYE
+         crao2BfDzcji5MitcsjQLOm9FGcbgnspowLDHM69zH2zUt/ElaR4EDvK2Ls4qhX3XxHY
+         V5MhQeJ7ziDoekLRTZzdhE3xSBWR8EIJbYgn0+bJLRIr8lvOWtRo6oKZK0zbKg4VfC/O
+         IHqUPhxghsZtxDQVq+EJ0Csb7hhQA7EpRSpU11lg9b0WBIXrG/za6qg3pJyfNRonu5SE
+         X64w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tX+z3FWO8ez0pwI+shF6DuNfmbSDPIMsw6ukNdtKjIY=;
+        b=FXsq1VdEQYWRhG7qoYJRCxUxeJXhnbvckDgyKDwtG/uxejrKSTKUT6ETaZYS0eMAbo
+         fecXauEiqlv5bZQ+YPCbr5l+jwosEeEnvx1BF9JZkDUkELJmyq+lIT/hCZNRgLPMeBMV
+         yHPe3YLZ2LTCkdwhorVc9865gMdmbv3xyhKaYRXHJwMY//HRRDDXhVyWmEU/JKzC0oKL
+         Olwo2771qHOBPloz9GiR2M4uulB+fhTbBJ0Z/vOx41LlSyK1P61nMDVxjObwDQ6SrA+l
+         317/VZbB9sRU3JXLbl0f8o6uWYuRyV9WyF0a5NjAyRWA++Zv6ghPNkAOaEy6WGPX4MZU
+         69Ng==
+X-Gm-Message-State: APjAAAW8r7JHF4I6Dhxqd8RBpCAvj1H2a+dUTzIFjYxr/Dv3ixoE1BRd
+        6koUyxGwCt71xMH9wmNgHJnYNiame/pyPGhIcxI/Pg==
+X-Google-Smtp-Source: APXvYqwfZlT5gIR7C9KlVHynWkh81mOHdBr1VYyfvqhJ5xBafZ5mhfzv2ZrdNBgKteu9MNrfrGL9m4WEbOvxuI/NVvY=
+X-Received: by 2002:ae9:e306:: with SMTP id v6mr5008989qkf.145.1562916364014;
+ Fri, 12 Jul 2019 00:26:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <20190704105528.74028-1-chiu@endlessm.com> <8f1454ca-4610-03d0-82c4-06174083d463@gmail.com>
+ <CAB4CAwc8jJQ2f8vpoB0Y6sc0fJmmrq+5rRuJ+TqGMMgCczRi+A@mail.gmail.com>
+In-Reply-To: <CAB4CAwc8jJQ2f8vpoB0Y6sc0fJmmrq+5rRuJ+TqGMMgCczRi+A@mail.gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Fri, 12 Jul 2019 15:25:52 +0800
+Message-ID: <CAD8Lp45Qe-GKrtCR=d4GCx+PPAtmMQfHK2VpmA_yHMNFJ3ijww@mail.gmail.com>
+Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 5, 2019 at 10:27 AM Chris Chiu <chiu@endlessm.com> wrote:
+> Per the code before REG_S0S1_PATH_SWITCH setting, the driver has told
+> the co-processor the antenna is inverse.
+>         memset(&h2c, 0, sizeof(struct h2c_cmd));
+>         h2c.ant_sel_rsv.cmd = H2C_8723B_ANT_SEL_RSV;
+>         h2c.ant_sel_rsv.ant_inverse = 1;
+>         h2c.ant_sel_rsv.int_switch_type = 0;
+>         rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+>
+> At least the current modification is consistent with the antenna
+> inverse setting.
+> I'll verify on vendor driver about when/how the inverse be determined.
 
+I checked this out. The codepath hit hardcodes it to the AUX port,
+i.e. "inverted" setup:
 
-On Mon, 2019-07-08 at 17:06 +0800, Matthias Brugger wrote:
-> 
-> On 21/06/2019 13:32, Matthias Brugger wrote:
-> > of_get_next_child() increments the reference count of the returning
-> > device_node. Decrement it in the check if we are using the old or the
-> > new DTB.
-> > 
-> > Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
-> > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> 
-> Any comments on that?
-> 
+EXhalbtc8723b1ant_PowerOnSetting():
+    if(pBtCoexist->chipInterface == BTC_INTF_USB)
+    {
+        // fixed at S0 for USB interface
+        pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x948, 0x0);
 
-Hi Matthias,
-Thanks for fixing the bug. Sorry to reply late~
+        u1Tmp |= 0x1;    // antenna inverse
+        pBtCoexist->fBtcWriteLocalReg1Byte(pBtCoexist, 0xfe08, u1Tmp);
 
-Acked-by: Houlong Wei <houlong.wei@mediatek.com>
+        pBoardInfo->btdmAntPos = BTC_ANTENNA_AT_AUX_PORT;
+  }
 
+So I'm further convinced that these performance-enhancing changes are
+increasing consistency with the vendor driver.
 
-> > ---
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> > index bbb24fb95b95..bafe53c5d54a 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> > @@ -118,7 +118,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
-> >  	mutex_init(&mdp->vpulock);
-> >  
-> >  	/* Old dts had the components as child nodes */
-> > -	if (of_get_next_child(dev->of_node, NULL)) {
-> > +	parent = of_get_next_child(dev->of_node, NULL);
-> > +	if (parent) {
-> > +		of_node_put(parent);
-> >  		parent = dev->of_node;
-> >  		dev_warn(dev, "device tree is out of date\n");
-> >  	} else {
-> > 
-
-
+Daniel
