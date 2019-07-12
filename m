@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC57C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB437C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB0221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B419D208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934638;
-	bh=IgWL7JR/zNeYKbzq/yT6N7TKzUk4cfGySnj9gWoIP/I=;
+	s=default; t=1562934641;
+	bh=mEHwNLg4gK3ziQCCf0esvVZ619U3KOGInEuHUxF4okQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPZUDMlwxobTuUvDhL9B3onxwppA4MBCqk/iMwo2mT/mVw1q9cNHHArNsYtpyQN2f
-	 qPIVvaC45aZ9JoOlm/gzJADz7dDtKxNXXJUdQjaoJwVFnwv2LfvzaZckZN0hFfWma6
-	 xltywUImqJC0n+z0+mnxgRQnccoE0zbh+bK6YCtw=
+	b=arXurwF5sOXDUR2XyoxzLTmac8N02SIff8VeIRUTWtv/qG4JIyBq3ICJdAAEnG8yz
+	 D+gYQ69j84TT237Rh+od6LhEDFse4IB1pdpaBEaT5VOWbM7sE8bNg+8iPFXuWqC4PH
+	 BJQRVDitknlkH0TPSVn8d4+cD5xEtqyxNS7VkS48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfGLMah (ORCPT
+        id S1729222AbfGLMak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46464 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728246AbfGLMad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:33 -0400
+        id S1729167AbfGLMah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD69208E4;
-        Fri, 12 Jul 2019 12:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D61A1208E4;
+        Fri, 12 Jul 2019 12:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934632;
-        bh=IgWL7JR/zNeYKbzq/yT6N7TKzUk4cfGySnj9gWoIP/I=;
+        s=default; t=1562934636;
+        bh=mEHwNLg4gK3ziQCCf0esvVZ619U3KOGInEuHUxF4okQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrCsrw4cXw1uhqFDG8yxVuKOJlU+egyrVxvt1C9v+tsPYVLt7xiVdJyD+72XnpjZK
-         Dfh8632yWsJfTHTmwzBUXS6llZNBdHi6JIJxDmqd5NeVkmmmJElteB0+R+ACJaQqnd
-         p7ms73fHZsQXeQ4xnuJdoHg2PdqfHAgc9jXBHPlQ=
+        b=p8m4xNyxOeJEI6C0W+QxT+ipRrDFVh64bl/VChfk4i+ItvVlVPzZA4Z48TBDmLhca
+         3P87qVfjkVBF5bL3qRjvlo1JLx4BDiLg5o4ql55zkko3pkYg/QGPCwEW0P+GZbFlpd
+         658VWVXn/REqIwSov9tJ9k8b0KSTL77s+L1xX9HE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 5.1 117/138] drivers/usb/typec/tps6598x.c: fix 4CC cmd write
-Date:   Fri, 12 Jul 2019 14:19:41 +0200
-Message-Id: <20190712121633.238154218@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.1 118/138] p54: fix crash during initialization
+Date:   Fri, 12 Jul 2019 14:19:42 +0200
+Message-Id: <20190712121633.274431577@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,45 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 2681795b5e7a5bf336537661010072f4c22cea31 upstream.
+commit 1645ab931998b39aed5761f095956f0b10a6362f upstream.
 
-Writing 4CC commands with tps6598x_write_4cc() already has
-a pointer arg, don't reference it when using as arg to
-tps6598x_block_write(). Correcting this enforces the constness
-of the pointer to propagate to tps6598x_block_write(), so add
-the const qualifier there to avoid the warning.
+This patch fixes a crash that got introduced when the
+mentioned patch replaced  the direct list_head access
+with skb_peek_tail(). When the device is starting up,
+there are  no entries in  the queue, so previously to
+"Use skb_peek_tail() instead..." the target_skb would
+end up as the  tail and head pointer which then could
+be used by __skb_queue_after to fill the empty queue.
 
-Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
+With skb_peek_tail() in its place will instead just
+return NULL which then causes a crash in the
+__skb_queue_after().
+
+| BUG: unable to handle kernel NULL pointer dereference at 000000
+| #PF error: [normal kernel read fault]
+| PGD 0 P4D 0
+| Oops: 0000 [#1] SMP PTI
+| CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: GO   5.1.0-rc7-wt+ #218
+| Hardware name: MSI MS-7816/Z87-G43 (MS-7816), BIOS V1.11 05/09/2015
+| Workqueue: events request_firmware_work_func
+| RIP: 0010:p54_tx_pending+0x10f/0x1b0 [p54common]
+| Code: 78 06 80 78 28 00 74 6d <48> 8b 07 49 89 7c 24 08 49 89 04 24 4
+| RSP: 0018:ffffa81c81927d90 EFLAGS: 00010086
+| RAX: ffff9bbaaf131048 RBX: 0000000000020670 RCX: 0000000000020264
+| RDX: ffff9bbaa976d660 RSI: 0000000000000202 RDI: 0000000000000000
+| RBP: ffff9bbaa976d620 R08: 00000000000006c0 R09: ffff9bbaa976d660
+| R10: 0000000000000000 R11: ffffe8480dbc5900 R12: ffff9bbb45e87700
+| R13: ffff9bbaa976d648 R14: ffff9bbaa976d674 R15: ffff9bbaaf131048
+| FS:  0000000000000000(0000) GS:ffff9bbb5ec00000(0000) knlGS:00000
+| CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+| CR2: 0000000000000000 CR3: 00000003695fc003 CR4: 00000000001606f0
+| Call Trace:
+|  p54_download_eeprom+0xbe/0x120 [p54common]
+|  p54_read_eeprom+0x7f/0xc0 [p54common]
+|  p54u_load_firmware_cb+0xe0/0x160 [p54usb]
+|  request_firmware_work_func+0x42/0x80
+|  process_one_work+0x1f5/0x3f0
+|  worker_thread+0x28/0x3c0
+
+Cc: stable@vger.kernel.org
+Fixes: e3554197fc8f ("p54: Use skb_peek_tail() instead of direct head pointer accesses.")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tps6598x.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intersil/p54/txrx.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -127,7 +127,7 @@ tps6598x_block_read(struct tps6598x *tps
+--- a/drivers/net/wireless/intersil/p54/txrx.c
++++ b/drivers/net/wireless/intersil/p54/txrx.c
+@@ -142,7 +142,10 @@ static int p54_assign_address(struct p54
+ 	    unlikely(GET_HW_QUEUE(skb) == P54_QUEUE_BEACON))
+ 		priv->beacon_req_id = data->req_id;
+ 
+-	__skb_queue_after(&priv->tx_queue, target_skb, skb);
++	if (target_skb)
++		__skb_queue_after(&priv->tx_queue, target_skb, skb);
++	else
++		__skb_queue_head(&priv->tx_queue, skb);
+ 	spin_unlock_irqrestore(&priv->tx_queue.lock, flags);
+ 	return 0;
  }
- 
- static int tps6598x_block_write(struct tps6598x *tps, u8 reg,
--				void *val, size_t len)
-+				const void *val, size_t len)
- {
- 	u8 data[TPS_MAX_LEN + 1];
- 
-@@ -173,7 +173,7 @@ static inline int tps6598x_write64(struc
- static inline int
- tps6598x_write_4cc(struct tps6598x *tps, u8 reg, const char *val)
- {
--	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
-+	return tps6598x_block_write(tps, reg, val, 4);
- }
- 
- static int tps6598x_read_partner_identity(struct tps6598x *tps)
 
 
