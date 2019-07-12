@@ -2,99 +2,118 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420F5C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28E6C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A57F21530
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C492221670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Sp9AHedy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tId65nli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbfGLDtR (ORCPT
+        id S1729634AbfGLDws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:49:17 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38307 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbfGLDtQ (ORCPT
+        Thu, 11 Jul 2019 23:52:48 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39507 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbfGLDws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:49:16 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C04FB891AF;
-        Fri, 12 Jul 2019 15:49:14 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562903354;
-        bh=ShjLEsSOa7bT84GECNNvZx6dj9lSEuESZh2K8B+Vl40=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Sp9AHedy/8UVM1IZGhKUET1JRx4IzYAqZ1I3YjKpta9+YU8gZuGhk9XFzCSIK6pTz
-         h+IC2trCGrA2uFKXetwowRsIVQcrdjRi9NEAVUww2I7KpRqtZ8b2BNdk9v/2dLfM1t
-         TJ85NgjlBlxWDR7WigCCbfbMQVFk9xMt6c1E9P3H2x/4uG7nLN3WSJhVrF9DDftnIR
-         p34ID1W3ZpPOaDW8VbbE0v+BnjCrOJjNPw0ZcPjJwX2/D72OSxWCJpeZGXsFmB8jT9
-         JLmmZbmzOQCDqRgE2JLaDtZvlzaZ6icISV51bS9CqBui4zDXkYH6YtFwmsHlA1HgEV
-         d2RcfISyXacng==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d28033a0003>; Fri, 12 Jul 2019 15:49:14 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 110DA13EECF;
-        Fri, 12 Jul 2019 15:49:16 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 488211E1D7A; Fri, 12 Jul 2019 15:49:14 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux@armlinux.org.uk, patches@armlinux.org.uk, mchehab@kernel.org,
-        james.morse@arm.com, jlu@pengutronix.de
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v9 3/8] ARM: l2x0: support parity-enable/disable on aurora
-Date:   Fri, 12 Jul 2019 15:48:59 +1200
-Message-Id: <20190712034904.5747-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 11 Jul 2019 23:52:48 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m10so7912598edv.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 20:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P3Q6cX33JeEZeR4z0+wnkhuDYyByu9jPKIafQF/Bv80=;
+        b=tId65nli6ZbZrOSSIurWH63eDKaybL2rMPGTvVrKcH5FO/Pb7tnabHWtdkmJ0UQ5t/
+         Ah81xW4NiL530KsJOQQb/gUCzHQdtoseJi4K96kWRABaJrlDRX55Va79dc311qfiVX2w
+         YqJ84pkdatHN7TarR6ZZwYLQrBr8yMrVhKchOciIxyq89gX8iMKpgeoM/IM/Gxk40F1v
+         EQ9OhkPLcQcoD33yrGbp20dfOXpOX2DP1X4ZoWoqdIi4lfduRAKR9l7SU3x+iL5VTf66
+         cI0UgCHTaMYEDrrXuDVhL3ESiubl9jPPc3+9yeyczKmuGnMGzyk8+/9fS8FOexqfFRX/
+         UTWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P3Q6cX33JeEZeR4z0+wnkhuDYyByu9jPKIafQF/Bv80=;
+        b=g1PyEuD6G1D9i3ovVVCu/YFfqzlEJjfAZIVy1mZH1s2PNLkj7qH6g/2UzpH0NGN33v
+         CPVzz+E6TXZW+3Pz1P8Yk8lek/jyTP8ff1kEHKZgulRcLJAqlBTl89ThT4QQ/L8wfujw
+         ALqAKjzlaDuxONuH0R0n5tHSPpCog3kC0QvVDmXTZS9KmQYb65VdM63CvMqsfWL2ME73
+         3mqYUdNxAW5hW78lv6DZhGZWiARrkrLUFx39NhDFAQI/wT9vPEpd2xAIfquTdGxDvgCB
+         vCAK+cPgfu+545SgH8l6sWE2HFq8ohn2PTPwDwFs/4KL8yU2I5CpI/5rY/ulAmtoy4mQ
+         KqkA==
+X-Gm-Message-State: APjAAAWnrgClCpCLbmO3IGDICDxFe/PNufJz5NMg0w7bBf1eG2rtorMt
+        lDsIdfhL5gSQ+qihGM4rlbw=
+X-Google-Smtp-Source: APXvYqzEjKEpqTBdWuCG3TIWxHn33vt0SO56sxvUtIo1lLnAof3zAVpB874ZMsIU3Ox+rWUU4SWaFQ==
+X-Received: by 2002:a17:906:a481:: with SMTP id m1mr6078797ejz.87.1562903566598;
+        Thu, 11 Jul 2019 20:52:46 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id gz5sm1532335ejb.21.2019.07.11.20.52.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 20:52:45 -0700 (PDT)
+Date:   Thu, 11 Jul 2019 20:52:44 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Wen Yang <wen.yang99@zte.com.cn>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] ASoC: audio-graph-card: Constify reg in
+ graph_get_dai_id
+Message-ID: <20190712035244.GA67442@archlinux-epyc>
+References: <20190712014357.84245-1-natechancellor@gmail.com>
+ <20190712014554.62465-1-natechancellor@gmail.com>
+ <87muhk53j1.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87muhk53j1.wl-kuninori.morimoto.gx@renesas.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The aurora cache on the Marvell Armada-XP SoC supports the same tag
-parity features as the other l2x0 cache implementations.
+On Fri, Jul 12, 2019 at 12:37:51PM +0900, Kuninori Morimoto wrote:
+> 
+> Hi Nathan
+> 
+> > clang errors:
+> > 
+> > sound/soc/generic/audio-graph-card.c:87:7: error: assigning to 'u32 *'
+> > (aka 'unsigned int *') from 'const void *' discards qualifiers
+> > [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+> >                 reg = of_get_property(node, "reg", NULL);
+> >                     ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > 1 error generated.
+> > 
+> > Move the declaration up a bit to keep the reverse christmas tree look.
+> > 
+> > Fixes: c152f8491a8d ("ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/600
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> 
+> Maybe
+> 
+> ec3042ad39d4e2ddbc3a3344f90bb10d8feb53bc
+> ("ASoC: audio-graph-card: add missing const at graph_get_dai_id()")
+> 
+> Thank you for your help !!
+> Best regards
+> ---
+> Kuninori Morimoto
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-[jlu@pengutronix.de: use aurora specific define AURORA_ACR_PARITY_EN]
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
----
- arch/arm/mm/cache-l2x0.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Ugh, I even checked Mark's tree before sending this, just completely
+glossed over that patch. Sorry for the noise :(
 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 83b733a1f1e6..46a616ec6b0c 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -1493,6 +1493,13 @@ static void __init aurora_of_parse(const struct de=
-vice_node *np,
- 		mask |=3D AURORA_ACR_FORCE_WRITE_POLICY_MASK;
- 	}
-=20
-+	if (of_property_read_bool(np, "arm,parity-enable")) {
-+		mask |=3D AURORA_ACR_PARITY_EN;
-+		val |=3D AURORA_ACR_PARITY_EN;
-+	} else if (of_property_read_bool(np, "arm,parity-disable")) {
-+		mask |=3D AURORA_ACR_PARITY_EN;
-+	}
-+
- 	*aux_val &=3D ~mask;
- 	*aux_val |=3D val;
- 	*aux_mask &=3D ~mask;
---=20
-2.22.0
-
+Cheers,
+Nathan
