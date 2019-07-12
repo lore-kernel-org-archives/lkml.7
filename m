@@ -2,53 +2,50 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79B6C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B0DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E502084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343A7216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934294;
-	bh=kD7Fglm7ijDxctsdE46ohXgEikesjUR13C+dfx4w0IA=;
+	s=default; t=1562934298;
+	bh=jsEf85U9RQPk6zjAwVpuSjiPjd7dfdaqi7vkN8W13ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tk2H8vMvkZ7vyaygzgpvcHwjlHpESi0lmU37ObDKG7VcYJiht1v2fG0bNIswX2Pls
-	 ODrnWeQ4Hdb99k7wXHpTmrLziUPCwBKzu1/tjI7zJt8rg/QqTG2EjMD27ipT0CPBCB
-	 XA/trc5rmDKm96b2yWHB/shesjdvkEld2urEqw1c=
+	b=sNF/Xo841WfIUHjQ3IR5Fyhr8rr2ha5izOKM4a74AEZT7NZT2R57ksO1Gj6H1XRAG
+	 dOZGJNwfc+igjdjr3vhNjsILdX0xfVuUO+5egvSKPVkzK9JRw2+/wEsgCkDhiwz+1O
+	 vs67+38YGCn/1Ify/le1DUKGu2+l6Rj/52041BVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfGLMYx (ORCPT
+        id S1728200AbfGLMY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33988 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbfGLMYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:24:50 -0400
+        id S1728186AbfGLMYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:24:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5229D2084B;
-        Fri, 12 Jul 2019 12:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF3B21019;
+        Fri, 12 Jul 2019 12:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934289;
-        bh=kD7Fglm7ijDxctsdE46ohXgEikesjUR13C+dfx4w0IA=;
+        s=default; t=1562934292;
+        bh=jsEf85U9RQPk6zjAwVpuSjiPjd7dfdaqi7vkN8W13ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0RiIgUz6+66Mos+BiN22OEhVIPEyIY5MHAc6E307ujmo8kXiruqLFLmLiNkvNqOTI
-         wEqcceS9FE19Gx4IlW3TNOIbY8eG077nbGDEgfbbrk8aLgeJg1F5dZ7d5S3vAROxzm
-         dsvoIWtfxujwidoivgs0kw0x/00NezOYnIj9TVpI=
+        b=EbiLRYpNo8C21VntfURrl+P5Cuf984BhXx1zfR8JonhH45GiB4NinFtCmi0ZZEg5c
+         kCVtKIHB2870QJGh1l0whQ1pvrzo1lnXf0bMRS/cG4ROo+HnVEsfBucq04kO1o9a1o
+         E2GoGHyYA5e7pFK+YfeFXsknWZ9zq73pJQnUnFPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Reinhard Speyerer <rspmn@arcor.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 44/91] qmi_wwan: extend permitted QMAP mux_id value range
-Date:   Fri, 12 Jul 2019 14:18:47 +0200
-Message-Id: <20190712121623.887647543@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.19 91/91] staging: rtl8712: reduce stack usage, again
+Date:   Fri, 12 Jul 2019 14:19:34 +0200
+Message-Id: <20190712121626.572431972@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,58 +58,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 36815b416fa48766ac5a98e4b2dc3ebc5887222e ]
+From: Arnd Bergmann <arnd@arndb.de>
 
-Permit mux_id values up to 254 to be used in qmimux_register_device()
-for compatibility with ip(8) and the rmnet driver.
+commit fbd6b25009ac76b2034168cd21d5e01f8c2d83d1 upstream.
 
-Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
-Cc: Daniele Palmas <dnlplm@gmail.com>
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+An earlier patch I sent reduced the stack usage enough to get
+below the warning limit, and I could show this was safe, but with
+GCC_PLUGIN_STRUCTLEAK_BYREF_ALL, it gets worse again because large stack
+variables in the same function no longer overlap:
+
+drivers/staging/rtl8712/rtl871x_ioctl_linux.c: In function 'translate_scan.isra.2':
+drivers/staging/rtl8712/rtl871x_ioctl_linux.c:322:1: error: the frame size of 1200 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+
+Split out the largest two blocks in the affected function into two
+separate functions and mark those noinline_for_stack.
+
+Fixes: 8c5af16f7953 ("staging: rtl8712: reduce stack usage")
+Fixes: 81a56f6dcd20 ("gcc-plugins: structleak: Generalize to all variable types")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- Documentation/ABI/testing/sysfs-class-net-qmi | 4 ++--
- drivers/net/usb/qmi_wwan.c                    | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8712/rtl871x_ioctl_linux.c |  159 ++++++++++++++------------
+ 1 file changed, 89 insertions(+), 70 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-net-qmi b/Documentation/ABI/testing/sysfs-class-net-qmi
-index 7122d6264c49..c310db4ccbc2 100644
---- a/Documentation/ABI/testing/sysfs-class-net-qmi
-+++ b/Documentation/ABI/testing/sysfs-class-net-qmi
-@@ -29,7 +29,7 @@ Contact:	Bjørn Mork <bjorn@mork.no>
- Description:
- 		Unsigned integer.
+--- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
++++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+@@ -141,10 +141,91 @@ static inline void handle_group_key(stru
+ 	}
+ }
  
--		Write a number ranging from 1 to 127 to add a qmap mux
-+		Write a number ranging from 1 to 254 to add a qmap mux
- 		based network device, supported by recent Qualcomm based
- 		modems.
+-static noinline_for_stack char *translate_scan(struct _adapter *padapter,
+-				   struct iw_request_info *info,
+-				   struct wlan_network *pnetwork,
+-				   char *start, char *stop)
++static noinline_for_stack char *translate_scan_wpa(struct iw_request_info *info,
++						   struct wlan_network *pnetwork,
++						   struct iw_event *iwe,
++						   char *start, char *stop)
++{
++	/* parsing WPA/WPA2 IE */
++	u8 buf[MAX_WPA_IE_LEN];
++	u8 wpa_ie[255], rsn_ie[255];
++	u16 wpa_len = 0, rsn_len = 0;
++	int n, i;
++
++	r8712_get_sec_ie(pnetwork->network.IEs,
++			 pnetwork->network.IELength, rsn_ie, &rsn_len,
++			 wpa_ie, &wpa_len);
++	if (wpa_len > 0) {
++		memset(buf, 0, MAX_WPA_IE_LEN);
++		n = sprintf(buf, "wpa_ie=");
++		for (i = 0; i < wpa_len; i++) {
++			n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
++						"%02x", wpa_ie[i]);
++			if (n >= MAX_WPA_IE_LEN)
++				break;
++		}
++		memset(iwe, 0, sizeof(*iwe));
++		iwe->cmd = IWEVCUSTOM;
++		iwe->u.data.length = (u16)strlen(buf);
++		start = iwe_stream_add_point(info, start, stop,
++			iwe, buf);
++		memset(iwe, 0, sizeof(*iwe));
++		iwe->cmd = IWEVGENIE;
++		iwe->u.data.length = (u16)wpa_len;
++		start = iwe_stream_add_point(info, start, stop,
++			iwe, wpa_ie);
++	}
++	if (rsn_len > 0) {
++		memset(buf, 0, MAX_WPA_IE_LEN);
++		n = sprintf(buf, "rsn_ie=");
++		for (i = 0; i < rsn_len; i++) {
++			n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
++						"%02x", rsn_ie[i]);
++			if (n >= MAX_WPA_IE_LEN)
++				break;
++		}
++		memset(iwe, 0, sizeof(*iwe));
++		iwe->cmd = IWEVCUSTOM;
++		iwe->u.data.length = strlen(buf);
++		start = iwe_stream_add_point(info, start, stop,
++			iwe, buf);
++		memset(iwe, 0, sizeof(*iwe));
++		iwe->cmd = IWEVGENIE;
++		iwe->u.data.length = rsn_len;
++		start = iwe_stream_add_point(info, start, stop, iwe,
++			rsn_ie);
++	}
++
++	return start;
++}
++
++static noinline_for_stack char *translate_scan_wps(struct iw_request_info *info,
++						   struct wlan_network *pnetwork,
++						   struct iw_event *iwe,
++						   char *start, char *stop)
++{
++	/* parsing WPS IE */
++	u8 wps_ie[512];
++	uint wps_ielen;
++
++	if (r8712_get_wps_ie(pnetwork->network.IEs,
++	    pnetwork->network.IELength,
++	    wps_ie, &wps_ielen)) {
++		if (wps_ielen > 2) {
++			iwe->cmd = IWEVGENIE;
++			iwe->u.data.length = (u16)wps_ielen;
++			start = iwe_stream_add_point(info, start, stop,
++				iwe, wps_ie);
++		}
++	}
++
++	return start;
++}
++
++static char *translate_scan(struct _adapter *padapter,
++			    struct iw_request_info *info,
++			    struct wlan_network *pnetwork,
++			    char *start, char *stop)
+ {
+ 	struct iw_event iwe;
+ 	struct ieee80211_ht_cap *pht_capie;
+@@ -257,73 +338,11 @@ static noinline_for_stack char *translat
+ 	/* Check if we added any event */
+ 	if ((current_val - start) > iwe_stream_lcp_len(info))
+ 		start = current_val;
+-	/* parsing WPA/WPA2 IE */
+-	{
+-		u8 buf[MAX_WPA_IE_LEN];
+-		u8 wpa_ie[255], rsn_ie[255];
+-		u16 wpa_len = 0, rsn_len = 0;
+-		int n;
+-
+-		r8712_get_sec_ie(pnetwork->network.IEs,
+-				 pnetwork->network.IELength, rsn_ie, &rsn_len,
+-				 wpa_ie, &wpa_len);
+-		if (wpa_len > 0) {
+-			memset(buf, 0, MAX_WPA_IE_LEN);
+-			n = sprintf(buf, "wpa_ie=");
+-			for (i = 0; i < wpa_len; i++) {
+-				n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
+-							"%02x", wpa_ie[i]);
+-				if (n >= MAX_WPA_IE_LEN)
+-					break;
+-			}
+-			memset(&iwe, 0, sizeof(iwe));
+-			iwe.cmd = IWEVCUSTOM;
+-			iwe.u.data.length = (u16)strlen(buf);
+-			start = iwe_stream_add_point(info, start, stop,
+-				&iwe, buf);
+-			memset(&iwe, 0, sizeof(iwe));
+-			iwe.cmd = IWEVGENIE;
+-			iwe.u.data.length = (u16)wpa_len;
+-			start = iwe_stream_add_point(info, start, stop,
+-				&iwe, wpa_ie);
+-		}
+-		if (rsn_len > 0) {
+-			memset(buf, 0, MAX_WPA_IE_LEN);
+-			n = sprintf(buf, "rsn_ie=");
+-			for (i = 0; i < rsn_len; i++) {
+-				n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
+-							"%02x", rsn_ie[i]);
+-				if (n >= MAX_WPA_IE_LEN)
+-					break;
+-			}
+-			memset(&iwe, 0, sizeof(iwe));
+-			iwe.cmd = IWEVCUSTOM;
+-			iwe.u.data.length = strlen(buf);
+-			start = iwe_stream_add_point(info, start, stop,
+-				&iwe, buf);
+-			memset(&iwe, 0, sizeof(iwe));
+-			iwe.cmd = IWEVGENIE;
+-			iwe.u.data.length = rsn_len;
+-			start = iwe_stream_add_point(info, start, stop, &iwe,
+-				rsn_ie);
+-		}
+-	}
  
-@@ -46,5 +46,5 @@ Contact:	Bjørn Mork <bjorn@mork.no>
- Description:
- 		Unsigned integer.
- 
--		Write a number ranging from 1 to 127 to delete a previously
-+		Write a number ranging from 1 to 254 to delete a previously
- 		created qmap mux based network device.
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 44ada5c38756..128c8a327d8e 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -363,8 +363,8 @@ static ssize_t add_mux_store(struct device *d,  struct device_attribute *attr, c
- 	if (kstrtou8(buf, 0, &mux_id))
- 		return -EINVAL;
- 
--	/* mux_id [1 - 0x7f] range empirically found */
--	if (mux_id < 1 || mux_id > 0x7f)
-+	/* mux_id [1 - 254] for compatibility with ip(8) and the rmnet driver */
-+	if (mux_id < 1 || mux_id > 254)
- 		return -EINVAL;
- 
- 	if (!rtnl_trylock())
--- 
-2.20.1
-
+-	{ /* parsing WPS IE */
+-		u8 wps_ie[512];
+-		uint wps_ielen;
+-
+-		if (r8712_get_wps_ie(pnetwork->network.IEs,
+-		    pnetwork->network.IELength,
+-		    wps_ie, &wps_ielen)) {
+-			if (wps_ielen > 2) {
+-				iwe.cmd = IWEVGENIE;
+-				iwe.u.data.length = (u16)wps_ielen;
+-				start = iwe_stream_add_point(info, start, stop,
+-					&iwe, wps_ie);
+-			}
+-		}
+-	}
++	start = translate_scan_wpa(info, pnetwork, &iwe, start, stop);
++
++	start = translate_scan_wps(info, pnetwork, &iwe, start, stop);
++
+ 	/* Add quality statistics */
+ 	iwe.cmd = IWEVQUAL;
+ 	rssi = r8712_signal_scale_mapping(pnetwork->network.Rssi);
 
 
