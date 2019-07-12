@@ -2,139 +2,101 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68736C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B008C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A5F20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A6F20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfGLMtn (ORCPT
+        id S1727241AbfGLMuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:49:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:24366 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727045AbfGLMtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:49:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 05:49:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
-   d="scan'208";a="166672790"
-Received: from jroll-mobl.ger.corp.intel.com (HELO localhost) ([10.249.35.79])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Jul 2019 05:49:39 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        jorhand@linux.microsoft.com, rdunlap@infradead.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v3] tpm: Document UEFI event log quirks
-Date:   Fri, 12 Jul 2019 15:49:03 +0300
-Message-Id: <20190712124912.23630-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 12 Jul 2019 08:50:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727027AbfGLMuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:50:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 80A04AC3F;
+        Fri, 12 Jul 2019 12:50:50 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 13:50:47 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     huang ying <huang.ying.caritas@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, jhladky@redhat.com,
+        lvenanci@redhat.com, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
+Message-ID: <20190712125047.GL13484@suse.de>
+References: <20190624025604.30896-1-ying.huang@intel.com>
+ <20190624140950.GF2947@suse.de>
+ <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
+ <20190703091747.GA13484@suse.de>
+ <87ef3663nd.fsf@yhuang-dev.intel.com>
+ <20190712082710.GH13484@suse.de>
+ <87d0ifwmu2.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <87d0ifwmu2.fsf@yhuang-dev.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some weird quirks when it comes to UEFI event log. Provide a
-brief introduction to TPM event log mechanism and describe the quirks
-and how they can be sorted out.
+On Fri, Jul 12, 2019 at 06:48:05PM +0800, Huang, Ying wrote:
+> > Ordinarily I would hope that the patch was motivated by observed
+> > behaviour so you have a metric for goodness. However, for NUMA balancing
+> > I would typically run basic workloads first -- dbench, tbench, netperf,
+> > hackbench and pipetest. The objective would be to measure the degree
+> > automatic NUMA balancing is interfering with a basic workload to see if
+> > they patch reduces the number of minor faults incurred even though there
+> > is no NUMA balancing to be worried about. This measures the general
+> > overhead of a patch. If your reasoning is correct, you'd expect lower
+> > overhead.
+> >
+> > For balancing itself, I usually look at Andrea's original autonuma
+> > benchmark, NAS Parallel Benchmark (D class usually although C class for
+> > much older or smaller machines) and spec JBB 2005 and 2015. Of the JBB
+> > benchmarks, 2005 is usually more reasonable for evaluating NUMA balancing
+> > than 2015 is (which can be unstable for a variety of reasons). In this
+> > case, I would be looking at whether the overhead is reduced, whether the
+> > ratio of local hits is the same or improved and the primary metric of
+> > each (time to completion for Andrea's and NAS, throughput for JBB).
+> >
+> > Even if there is no change to locality and the primary metric but there
+> > is less scanning and overhead overall, it would still be an improvement.
+> 
+> Thanks a lot for your detailed guidance.
+> 
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
-v3: Add a section and use bullet list for references. Remove (invalid)
-    author info.
-v2: Fixed one type, adjusted the last paragraph and added the file
-    to index.rst
- Documentation/security/tpm/index.rst         |  1 +
- Documentation/security/tpm/tpm_event_log.rst | 55 ++++++++++++++++++++
- 2 files changed, 56 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm_event_log.rst
+No problem.
 
-diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-index 15783668644f..9e0815cb1e7f 100644
---- a/Documentation/security/tpm/index.rst
-+++ b/Documentation/security/tpm/index.rst
-@@ -4,5 +4,6 @@ Trusted Platform Module documentation
- 
- .. toctree::
- 
-+   tpm_event_log
-    tpm_ftpm_tee
-    tpm_vtpm_proxy
-diff --git a/Documentation/security/tpm/tpm_event_log.rst b/Documentation/security/tpm/tpm_event_log.rst
-new file mode 100644
-index 000000000000..068eeb659bb9
---- /dev/null
-+++ b/Documentation/security/tpm/tpm_event_log.rst
-@@ -0,0 +1,55 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============
-+TPM Event Log
-+=============
-+
-+This document briefly describes what TPM log is and how it is handed
-+over from the preboot firmware to the operating system.
-+
-+Introduction
-+============
-+
-+The preboot firmware maintains an event log that gets new entries every
-+time something gets hashed by it to any of the PCR registers. The events
-+are segregated by their type and contain the value of the hashed PCR
-+register. Typically, the preboot firmware will hash the components to
-+who execution is to be handed over or actions relevant to the boot
-+process.
-+
-+The main application for this is remote attestation and the reason why
-+it is useful is nicely put in the very first section of [1]:
-+
-+"Attestation is used to provide information about the platform’s state
-+to a challenger. However, PCR contents are difficult to interpret;
-+therefore, attestation is typically more useful when the PCR contents
-+are accompanied by a measurement log. While not trusted on their own,
-+the measurement log contains a richer set of information than do the PCR
-+contents. The PCR contents are used to provide the validation of the
-+measurement log."
-+
-+UEFI event log
-+==============
-+
-+UEFI provided event log has a few somewhat weird quirks.
-+
-+Before calling ExitBootServices() Linux EFI stub copies the event log to
-+a custom configuration table defined by the stub itself. Unfortanely,
-+the events generated by ExitBootServices() don't end up in the table.
-+
-+The firmware provides so called final events configuration table to sort
-+out this issue. Events gets mirrored to this table after the first time
-+EFI_TCG2_PROTOCOL.GetEventLog() gets called.
-+
-+This introduces another problem: nothing guarantees that it is not called
-+before the Linux EFI stub gets to run. Thus, it needs to calculate and save the
-+final events table size while the stub is still running to the custom
-+configuration table so that the TPM driver can later on skip these events when
-+concatenating two halves of the event log from the custom configuration table
-+and the final events table.
-+
-+References
-+==========
-+
-+- [1] https://trustedcomputinggroup.org/resource/pc-client-specific-platform-firmware-profile-specification/
-+- [2] The final concatenation is done in drivers/char/tpm/eventlog/efi.c
+> > If you have trouble doing such an evaluation, I'll queue tests if they
+> > are based on a patch that addresses the specific point of concern (scan
+> > period not updated) as it's still not obvious why flipping the logic of
+> > whether shared or private is considered was necessary.
+> 
+> I can do the evaluation, but it will take quite some time for me to
+> setup and run all these benchmarks.  So if these benchmarks have already
+> been setup in your environment, so that your extra effort is minimal, it
+> will be great if you can queue tests for the patch.  Feel free to reject
+> me for any inconvenience.
+> 
+
+They're not setup as such, but my testing infrastructure is heavily
+automated so it's easy to do and I think it's worth looking at. If you
+update your patch to target just the scan period aspects, I'll queue it
+up and get back to you. It usually takes a few days for the automation
+to finish whatever it's doing and pick up a patch for evaluation.
+
 -- 
-2.20.1
-
+Mel Gorman
+SUSE Labs
