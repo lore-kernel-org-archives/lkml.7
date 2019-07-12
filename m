@@ -2,103 +2,80 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE05C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60D7C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6053F2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHEVvDNm"
+	by mail.kernel.org (Postfix) with ESMTP id 8657F2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfGLNHo (ORCPT
+        id S1727695AbfGLNH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:07:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45743 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfGLNHm (ORCPT
+        Fri, 12 Jul 2019 09:07:56 -0400
+Received: from www62.your-server.de ([213.133.104.62]:50806 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727414AbfGLNHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:07:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so4751439plr.12;
-        Fri, 12 Jul 2019 06:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=M8wX1u1AyY8aIZh85CrgBQrNgkI4YoDiE4Y/ARBtWTI=;
-        b=rHEVvDNmjPN89MNTOPTSN3d/nJEc78QJ8AYNecX5Bs+ZA/Q004H178HvUmWoI/vgA0
-         GBEfWvjsCj4aGjGBm8uyQ7jsVLTdZcXbZUvRU5P8sruoji9Sb4qg/Z7NiJICtnpclT7W
-         T8YAR54AWq1g+hvk0GeXSi/hhtl+XsJbZaWhS1tCw0dW2OKqEbmpGIVCIpW5FNs/7KJY
-         WdsDRHhxgOJmLtwUYPAM1HBtYXaB8l66Nvsn7Eghe8itAoGMM65i37/Kc1bLc2bsCK5h
-         9+DvE7ZXQJV0sV5bDMAG2Su6TPAKs7tXjIWm8F0dvrWMsL4kudNNmddXsFWMrxcI/ajg
-         NKOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M8wX1u1AyY8aIZh85CrgBQrNgkI4YoDiE4Y/ARBtWTI=;
-        b=c7Cn1jEgYzcUgXnPa9J8zL6SW9hyvni4jktfMG7cZEsWQmrG7Fk+UBPeK+Q6fEsDO9
-         xeh0PBvbO+COi2uuu3zHDQ5YGE2RHG1ErPXFMGrZvcL+8EzcvsrPajUnwN9h4pXYic0j
-         LEOfNVhx/8I9rJ0/CmVzh3dUt0tSYOODx6VK638cVBt9z15Chd1DVW9VJAZu7xUblgu/
-         qnfkP6bmnceNz7wCqE9RUIZOqdhPrJEGxg/+MLEYeY38KamxMUys9EcVfWPPkcsNmk2x
-         G67nwXAi4A+W+uiEDpEt7JTNwh2d//8XyDLmUZ0P8x4SjuTVBzp8FMQN9Xe5B1EWcBkY
-         cAzg==
-X-Gm-Message-State: APjAAAWQlW9KspLvJvJYd3eXzwapLGKpb8Fli+2U9e8DzXBNk4Bi1wDc
-        Y9mnfDvBETE+L/RXIwmuwMXN20yEK71VRQ==
-X-Google-Smtp-Source: APXvYqwI08yHxLj+rqHZ2SOoSwsAdYzhFDnXgc+bU4NS5ufbC623hYguS3v9WWJuXnXHwyrM1JlkFg==
-X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr11585166pll.238.1562936862121;
-        Fri, 12 Jul 2019 06:07:42 -0700 (PDT)
-Received: from localhost.localdomain ([116.66.213.65])
-        by smtp.gmail.com with ESMTPSA id z4sm15853303pfg.166.2019.07.12.06.07.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 12 Jul 2019 06:07:41 -0700 (PDT)
-From:   yangxingwu <xingwu.yang@gmail.com>
-To:     wensong@linux-vs.org
-Cc:     horms@verge.net.au, ja@ssi.bg, pablo@netfilter.org,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, joe@perches.com,
-        yangxingwu <xingwu.yang@gmail.com>
-Subject: [PATCH] ipvs: remove unnecessary space
-Date:   Fri, 12 Jul 2019 21:07:21 +0800
-Message-Id: <20190712130721.7168-1-xingwu.yang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <80a4e132f3be48899904eccdc023f5c53229840b.camel@perches.com>
-References: <80a4e132f3be48899904eccdc023f5c53229840b.camel@perches.com>
+        Fri, 12 Jul 2019 09:07:54 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hlvHE-0005gq-0r; Fri, 12 Jul 2019 15:07:52 +0200
+Received: from [2a02:1205:5069:fce0:c5f9:cd68:79d4:446d] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hlvHD-000AsF-Om; Fri, 12 Jul 2019 15:07:51 +0200
+Subject: Re: [PATCH bpf] xdp: fix potential deadlock on socket mutex
+To:     Ilya Maximets <i.maximets@samsung.com>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <CGME20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1@eucas1p1.samsung.com>
+ <20190708110344.23278-1-i.maximets@samsung.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <93462d9f-dc37-fa5a-ae28-d5cad5aa2060@iogearbox.net>
+Date:   Fri, 12 Jul 2019 15:07:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190708110344.23278-1-i.maximets@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25508/Fri Jul 12 10:10:04 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch removes the extra space and use bitmap_zalloc instead
+On 07/08/2019 01:03 PM, Ilya Maximets wrote:
+> There are 2 call chains:
+> 
+>   a) xsk_bind --> xdp_umem_assign_dev
+>   b) unregister_netdevice_queue --> xsk_notifier
+> 
+> with the following locking order:
+> 
+>   a) xs->mutex --> rtnl_lock
+>   b) rtnl_lock --> xdp.lock --> xs->mutex
+> 
+> Different order of taking 'xs->mutex' and 'rtnl_lock' could produce a
+> deadlock here. Fix that by moving the 'rtnl_lock' before 'xs->lock' in
+> the bind call chain (a).
+> 
+> Reported-by: syzbot+bf64ec93de836d7f4c2c@syzkaller.appspotmail.com
+> Fixes: 455302d1c9ae ("xdp: fix hang while unregistering device bound to xdp socket")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
 
-Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
----
- net/netfilter/ipvs/ip_vs_mh.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs_mh.c
-index 94d9d34..3229867 100644
---- a/net/netfilter/ipvs/ip_vs_mh.c
-+++ b/net/netfilter/ipvs/ip_vs_mh.c
-@@ -174,8 +174,7 @@ static int ip_vs_mh_populate(struct ip_vs_mh_state *s,
- 		return 0;
- 	}
- 
--	table =  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
--			 sizeof(unsigned long), GFP_KERNEL);
-+	table = bitmap_zalloc(IP_VS_MH_TAB_SIZE, GFP_KERNEL);
- 	if (!table)
- 		return -ENOMEM;
- 
--- 
-1.8.3.1
-
+Applied, thanks!
