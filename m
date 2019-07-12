@@ -2,193 +2,182 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6C2C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39042C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F5F2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E12A2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbfGLHDk (ORCPT
+        id S1726154AbfGLHFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:03:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55902 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfGLHDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:03:40 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E93A485543;
-        Fri, 12 Jul 2019 07:03:39 +0000 (UTC)
-Received: from [10.36.116.46] (ovpn-116-46.ams2.redhat.com [10.36.116.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4939E5DDDC;
-        Fri, 12 Jul 2019 07:03:35 +0000 (UTC)
-From:   Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH] vfio: platform: reset: add support for XHCI reset hook
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>
-References: <20190711143159.21961-1-gregory.clement@bootlin.com>
-Message-ID: <c152f211-0757-521e-64ea-543f6c89d9b2@redhat.com>
-Date:   Fri, 12 Jul 2019 09:03:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190711143159.21961-1-gregory.clement@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 12 Jul 2019 07:03:40 +0000 (UTC)
+        Fri, 12 Jul 2019 03:05:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57730 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725840AbfGLHFd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 03:05:33 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6C6x9FA101465
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 03:05:32 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpj35q5x0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 03:05:31 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Fri, 12 Jul 2019 08:05:25 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 12 Jul 2019 08:05:22 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6C75Lax48693436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 07:05:21 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 255AA52052;
+        Fri, 12 Jul 2019 07:05:21 +0000 (GMT)
+Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A2FEC52054;
+        Fri, 12 Jul 2019 07:05:19 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org
+Cc:     npiggin@gmail.com, rjw@rjwysocki.net, daniel.lezcano@linaro.org,
+        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, dja@axtens.net,
+        Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [PATCH v4 0/3]  Forced-wakeup for stop states on Powernv
+Date:   Fri, 12 Jul 2019 02:04:54 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19071207-4275-0000-0000-0000034C64FA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071207-4276-0000-0000-0000385C6E06
+Message-Id: <20190712070457.55242-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gregory,
+Currently, the cpuidle governors determine what idle state a idling CPU
+should enter into based on heuristics that depend on the idle history on
+that CPU. Given that no predictive heuristic is perfect, there are cases
+where the governor predicts a shallow idle state, hoping that the CPU will
+be busy soon. However, if no new workload is scheduled on that CPU in the
+near future, the CPU will end up in the shallow state.
 
-On 7/11/19 4:31 PM, Gregory CLEMENT wrote:
-> The VFIO reset hook is called every time a platform device is passed
-> to a guest or removed from a guest.
-> 
-> When the XHCI device is unbound from the host, the host driver
-> disables the XHCI clocks/phys/regulators so when the device is passed
-> to the guest it becomes dis-functional.
-> 
-> This initial implementation uses the VFIO reset hook to enable the
-> XHCI clocks/phys on behalf of the guest.
+Motivation
+----------
+In case of POWER, this is problematic, when the predicted state in the
+aforementioned scenario is a shallow stop state on a tickless system. As
+we might get stuck into shallow states even for hours, in absence of ticks
+or interrupts.
 
-the platform reset module must also make sure there are no more DMA
-requests and interrupts that can be sent by the device anymore.
-> 
-> Ported from Marvell LSP code originally written by Yehuda Yitschak
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  drivers/vfio/platform/reset/Kconfig           |  8 +++
->  drivers/vfio/platform/reset/Makefile          |  2 +
->  .../vfio/platform/reset/vfio_platform_xhci.c  | 60 +++++++++++++++++++
->  3 files changed, 70 insertions(+)
->  create mode 100644 drivers/vfio/platform/reset/vfio_platform_xhci.c
-> 
-> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
-> index 392e3c09def0..14f620fd250d 100644
-> --- a/drivers/vfio/platform/reset/Kconfig
-> +++ b/drivers/vfio/platform/reset/Kconfig
-> @@ -22,3 +22,11 @@ config VFIO_PLATFORM_BCMFLEXRM_RESET
->  	  Enables the VFIO platform driver to handle reset for Broadcom FlexRM
->  
->  	  If you don't know what to do here, say N.
-> +
-> +config VFIO_PLATFORM_XHCI_RESET
-> +	tristate "VFIO support for USB XHCI reset"
-> +	depends on VFIO_PLATFORM
-> +	help
-> +	  Enables the VFIO platform driver to handle reset for USB XHCI
-> +
-> +	  If you don't know what to do here, say N.
-> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
-> index 7294c5ea122e..d84c4d3dc041 100644
-> --- a/drivers/vfio/platform/reset/Makefile
-> +++ b/drivers/vfio/platform/reset/Makefile
-> @@ -1,7 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
->  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
-> +vfio-platform-xhci-y := vfio_platform_xhci.o
->  
->  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
->  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
->  obj-$(CONFIG_VFIO_PLATFORM_BCMFLEXRM_RESET) += vfio_platform_bcmflexrm.o
-> +obj-$(CONFIG_VFIO_PLATFORM_XHCI_RESET) += vfio-platform-xhci.o
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_xhci.c b/drivers/vfio/platform/reset/vfio_platform_xhci.c
-> new file mode 100644
-> index 000000000000..7b75a04402ee
-> --- /dev/null
-> +++ b/drivers/vfio/platform/reset/vfio_platform_xhci.c
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * VFIO platform driver specialized for XHCI reset
-> + *
-> + * Copyright 2016 Marvell Semiconductors, Inc.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-io, init, kernel should be removable (noticed init and kernel.h also are
-in other reset modules though)
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/usb/phy.h>
-> +
-> +#include "../vfio_platform_private.h"
-> +
-> +#define MAX_XHCI_CLOCKS		4
-Where does this number come from?
+To address this, We forcefully wakeup the cpu by setting the decrementer.
+The decrementer is set to a value that corresponds with the residency of
+the next available state. Thus firing up a timer that will forcefully
+wakeup the cpu. Few such iterations will essentially train the governor to
+select a deeper state for that cpu, as the timer here corresponds to the
+next available cpuidle state residency. Thus, cpu will eventually end up
+in the deepest possible state and we won't get stuck in a shallow state
+for long duration.
 
-From Documentation/devicetree/bindings/usb/usb-xhci.txt I understand
-there are max 2 clocks, "core" and "reg" (I don't have any specific
-knowledge on the device though).
+Experiment
+----------
+For earlier versions when this feature was meat to be only for shallow lite
+states, I performed experiments for three scenarios to collect some data.
 
-> +#define MAX_XHCI_PHYS		2
-not used
-> +
-> +int vfio_platform_xhci_reset(struct vfio_platform_device *vdev)
-> +{
-> +	struct device *dev = vdev->device;
-> +	struct device_node *np = dev->of_node;
-> +	struct usb_phy *usb_phy;
-> +	struct clk *clk;
-> +	int ret, i;
-> +
-> +	/*
-> +	 * Compared to the native driver, no need to handle the
-> +	 * deferred case, because the resources are already
-> +	 * there
-> +	 */
-> +	for (i = 0; i < MAX_XHCI_CLOCKS; i++) {
-> +		clk = of_clk_get(np, i);
-> +		if (!IS_ERR(clk)) {
-> +			ret = clk_prepare_enable(clk);
-> +			if (ret)
-> +				return -ENODEV;
-return ret?
-> +		}
-> +	}
-> +
-> +	usb_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
-> +	if (!IS_ERR(usb_phy)) {
-> +		ret = usb_phy_init(usb_phy);
-> +		if (ret)
-> +			return -ENODEV;
-return ret?
-> +	}
+case 1 :
+Without this patch and without tick retained, i.e. in a upstream kernel,
+It would spend more than even a second to get out of stop0_lite.
 
-> +
-> +	return 0;
-> +}
-> +
-> +module_vfio_reset_handler("generic-xhci", vfio_platform_xhci_reset);
-> +
-> +MODULE_AUTHOR("Yehuda Yitschak");
-> +MODULE_DESCRIPTION("Reset support for XHCI vfio platform device");
-> +MODULE_LICENSE("GPL");
-> 
-Thanks
+case 2 : With tick retained in a upstream kernel -
 
-Eric
+Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+it to take 8 sched tick to get out of stop0_lite. Experimentally,
+observation was
+
+=========================================================
+sample          min            max           99percentile
+20              4ms            12ms          4ms
+=========================================================
+
+It would take atleast one sched tick to get out of stop0_lite.
+
+case 2 :  With this patch (not stopping tick, but explicitly queuing a
+          timer)
+
+============================================================
+sample          min             max             99percentile
+============================================================
+20              144us           192us           144us
+============================================================
+
+
+Description of current implementation
+-------------------------------------
+
+We calculate timeout for the current idle state as the residency value
+of the next available idle state. If the decrementer is set to be
+greater than this timeout, we update the decrementer value with the
+residency of next available idle state. Thus, essentially training the
+governor to select the next available deeper state until we reach the
+deepest state. Hence, we won't get stuck unnecessarily in shallow states
+for longer duration.
+
+--------------------------------
+v1 of auto-promotion : https://lkml.org/lkml/2019/3/22/58 This patch was
+implemented only for shallow lite state in generic cpuidle driver.
+
+v2 : Removed timeout_needed and rebased to current
+upstream kernel
+
+Then,
+v1 of forced-wakeup : Moved the code to cpuidle powernv driver and started
+as forced wakeup instead of auto-promotion
+
+v2 : Extended the forced wakeup logic for all states.
+Setting the decrementer instead of queuing up a hrtimer to implement the
+logic.
+
+v3 : 1) Cleanly handle setting the decrementer after exiting out of stop
+       states.
+     2) Added a disable_callback feature to compute timeout whenever a
+        state is enbaled or disabled instead of computing everytime in fast
+        idle path.
+     3) Use disable callback to recompute timeout whenever state usage
+        is changed for a state. Also, cleaned up the get_snooze_timeout
+        function.
+
+v4 :	Changed the type and name of set/reset decrementer function.
+	Handled irq work pending in try_set_dec_before_idle.
+	No change in patch 2 and 3.
+
+Abhishek Goel (3):
+  cpuidle-powernv : forced wakeup for stop states
+  cpuidle : Add callback whenever a state usage is enabled/disabled
+  cpuidle-powernv : Recompute the idle-state timeouts when state usage
+    is enabled/disabled
+
+ arch/powerpc/include/asm/time.h   |  2 ++
+ arch/powerpc/kernel/time.c        | 43 ++++++++++++++++++++++++
+ drivers/cpuidle/cpuidle-powernv.c | 55 +++++++++++++++++++++++--------
+ drivers/cpuidle/sysfs.c           | 15 ++++++++-
+ include/linux/cpuidle.h           |  5 +++
+ 5 files changed, 106 insertions(+), 14 deletions(-)
+
+-- 
+2.17.1
+
