@@ -2,149 +2,87 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF04C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771B6C742DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E073920989
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAC12146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562969112;
+	bh=BOiJTE9I+P91dU3tRa+BkyaaPjyUTwPZTfgUB8WDHk0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=BXi7oPEqfMDLjF+SJ40OzwgvcMWhRJYorfktjIFyQ/YVw6KNJZf/ujT+A0b1+b3yh
+	 gNtYspZamM8Go3SfQ17mOn8FofXtfYBPyFkRM6Zi7O8r1ZwW7zJXPXwcWgNWU9iGvn
+	 MkrDWXg63J0c/cET/HINQnG3XwfD99X334QNjnW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfGLV4F (ORCPT
+        id S1727804AbfGLWFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 17:56:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14396 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727421AbfGLV4F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:56:05 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CLqJTi070208
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 17:56:04 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpyhuwsd4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 17:56:04 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Fri, 12 Jul 2019 22:56:02 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 22:55:57 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CLtupx10814168
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 21:55:56 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95FB3AE062;
-        Fri, 12 Jul 2019 21:55:56 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0522EAE05F;
-        Fri, 12 Jul 2019 21:55:51 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.135.203])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 12 Jul 2019 21:55:51 +0000 (GMT)
-References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        "Lendacky\, Thomas" <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86 arch code
-In-reply-to: <20190712150912.3097215e.pasic@linux.ibm.com>
-Date:   Fri, 12 Jul 2019 18:55:47 -0300
+        Fri, 12 Jul 2019 18:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727245AbfGLWFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 18:05:10 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BDDC20989;
+        Fri, 12 Jul 2019 22:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562969109;
+        bh=BOiJTE9I+P91dU3tRa+BkyaaPjyUTwPZTfgUB8WDHk0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QfWTqTZmbK4u9pWdOSgKd2Lyg6xvgi+Vm8cVmsokzM5eGZX4c5ya3ORXyf1m+qYUH
+         rn5ioK6KuzttrgPJxsxcD81XRsEonWNGXioYfRj5ikoj/WliaWuVTlR1ptNGhyFllw
+         23w6AojtRBBkoUFo5Xt+fH7p4MHi9nOm7QQcLlEw=
+Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190712121628.731888964@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <3f27e550-34b1-f3b1-6d93-62d360b4f2a2@kernel.org>
+Date:   Fri, 12 Jul 2019 16:05:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071221-2213-0000-0000-000003ADCDAE
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011417; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231280; UDB=6.00648610; IPR=6.01012564;
- MB=3.00027695; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 21:56:01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071221-2214-0000-0000-00005F35B676
-Message-Id: <87tvbqgboc.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120224
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/12/19 6:17 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.18 release.
+> There are 138 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.18-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-[ Cc'ing Tom Lendacky which I forgot to do earlier. Sorry about that. ]
+Compiled and booted on my test system. No dmesg regressions.
 
-Hello Halil,
-
-Thanks for the quick review.
-
-Halil Pasic <pasic@linux.ibm.com> writes:
-
-> On Fri, 12 Jul 2019 02:36:31 -0300
-> Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
->
->> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
->> appear in generic kernel code because it forces non-x86 architectures to
->> define the sev_active() function, which doesn't make a lot of sense.
->
-> sev_active() might be just bad (too specific) name for a general
-> concept. s390 code defines it drives the right behavior in
-> kernel/dma/direct.c (which uses it).
-
-I thought about that but couldn't put my finger on a general concept.
-Is it "guest with memory inaccessible to the host"?
-
-Since your proposed definiton for force_dma_unencrypted() is simply to
-make it equivalent to sev_active(), I thought it was more
-straightforward to make each arch define force_dma_unencrypted()
-directly.
-
-Also, does sev_active() drive the right behavior for s390 in
-elfcorehdr_read() as well?
-
->> To solve this problem, add an x86 elfcorehdr_read() function to override
->> the generic weak implementation. To do that, it's necessary to make
->> read_from_oldmem() public so that it can be used outside of vmcore.c.
->>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> ---
->>  arch/x86/kernel/crash_dump_64.c |  5 +++++
->>  fs/proc/vmcore.c                |  8 ++++----
->>  include/linux/crash_dump.h      | 14 ++++++++++++++
->>  include/linux/mem_encrypt.h     |  1 -
->>  4 files changed, 23 insertions(+), 5 deletions(-)
->
-> Does not seem to apply to today's or yesterdays master.
-
-It assumes the presence of the two patches I mentioned in the cover
-letter. Only one of them is in master.
-
-I hadn't realized the s390 virtio patches were on their way to upstream.
-I was keeping an eye on the email thread but didn't see they were picked
-up in the s390 pull request. I'll add a new patch to this series making
-the corresponding changes to s390's <asm/mem_encrypt.h> as well.
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+thanks,
+-- Shuah
