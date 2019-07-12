@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519CDC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8567C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FEF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1EC21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934402;
-	bh=KY1pTVSVOlB8zydh/WnqEu8LohWlLxvY35Ylhs8yDY4=;
+	s=default; t=1562934407;
+	bh=ohvH335AArOEC79sETN6ABZrs+hK4BnqYdeYO6lCMj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Ff4VI965jbfmA9Jmp/Qc3DAmBHR6C1ftT7OOd8pZkR5UXFkbI+Ll1YxSbT04Ch2G
-	 edODzvY+bIL0tMuCc7x3mBfiR6abhlgRXGxcDAEzYUF56VCDIBUR5vTmkhMf9I0Dq2
-	 FYnabaiN9Cce75n1Tcca2LiRmSEGNGKMw/Im3ZKM=
+	b=aWgWBhB4W8gPvSWnnQZrKbAJD2nEWbEysKj1FGaEj+Ln9cQ5V9rSvcLWepbyCyGjo
+	 hq1rgi2z46DLIs+MH/et/kre1Lli+75IHXVyHZUdGejl7aT9SFsKxjiXeYWfAjP64D
+	 Uh6g/WsWrqhgwZo8jQ6sQFglabjXeFZ4YRRR9zk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfGLM0l (ORCPT
+        id S1728174AbfGLM0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728474AbfGLM0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:38 -0400
+        id S1727334AbfGLM0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269022084B;
-        Fri, 12 Jul 2019 12:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8BE2084B;
+        Fri, 12 Jul 2019 12:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934397;
-        bh=KY1pTVSVOlB8zydh/WnqEu8LohWlLxvY35Ylhs8yDY4=;
+        s=default; t=1562934401;
+        bh=ohvH335AArOEC79sETN6ABZrs+hK4BnqYdeYO6lCMj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=In9PHu11HiI8qx8THuStQoG2mFuosFm1Int720E/y5Q7uPuM+VOaNIQ1p2GeXZvpk
-         2v7w9cnpOBCn1EV5tCgfChJTFAESZ6hNODPLTCfFgXvpnxRuxgUXeXCLpNQMbKz3r5
-         4fNUl8u4jUx/S9hy5ePy664KhQvh6xFM1mFKrTVA=
+        b=n+20V3qHZ5sctwP8N44T7vLnuJNLKCQrryFinQ23ySSI7TJ3bDcaa5vY6PtWPtL4W
+         AktM6cei6bzg5j12/q8lGLSHPZU+BC2ayI1P2fmDsUkwbXD9OGwqBvRqnh0OMSLgiu
+         jrnu+GnPBP8fqx7b6oo7eFon/h1pYJ1I2zhEPhk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Teresa Remmet <t.remmet@phytec.de>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 043/138] ARM: dts: am335x phytec boards: Fix cd-gpios active level
-Date:   Fri, 12 Jul 2019 14:18:27 +0200
-Message-Id: <20190712121630.320937562@linuxfoundation.org>
+Subject: [PATCH 5.1 044/138] s390/boot: disable address-of-packed-member warning
+Date:   Fri, 12 Jul 2019 14:18:28 +0200
+Message-Id: <20190712121630.363021045@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,45 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a0098c05a272c9a68f6885e09755755b612459c ]
+[ Upstream commit f9364df30420987e77599c4789ec0065c609a507 ]
 
-Active level of the mmc1 cd gpio needs to be low instead of high.
-Fix PCM-953 and phyBOARD-WEGA.
+Get rid of gcc9 warnings like this:
 
-Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+arch/s390/boot/ipl_report.c: In function 'find_bootdata_space':
+arch/s390/boot/ipl_report.c:42:26: warning: taking address of packed member of 'struct ipl_rb_components' may result in an unaligned pointer value [-Waddress-of-packed-member]
+   42 |  for_each_rb_entry(comp, comps)
+      |                          ^~~~~
+
+This is effectively the s390 variant of commit 20c6c1890455
+("x86/boot: Disable the address-of-packed-member compiler warning").
+
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-pcm-953.dtsi | 2 +-
- arch/arm/boot/dts/am335x-wega.dtsi    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/am335x-pcm-953.dtsi b/arch/arm/boot/dts/am335x-pcm-953.dtsi
-index 1ec8e0d80191..572fbd254690 100644
---- a/arch/arm/boot/dts/am335x-pcm-953.dtsi
-+++ b/arch/arm/boot/dts/am335x-pcm-953.dtsi
-@@ -197,7 +197,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
-index 8ce541739b24..83e4fe595e37 100644
---- a/arch/arm/boot/dts/am335x-wega.dtsi
-+++ b/arch/arm/boot/dts/am335x-wega.dtsi
-@@ -157,7 +157,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index e21053e5e0da..bbd2dab6730e 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -24,6 +24,7 @@ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
+ KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
++KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
+ UTS_MACHINE	:= s390x
 -- 
 2.20.1
 
