@@ -2,82 +2,96 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58550C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF84C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2396A2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XWiPp5T3"
+	by mail.kernel.org (Postfix) with ESMTP id 1DD0C2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562935045;
+	bh=nkZ6Tz3khAsmsQ82x8OX7tgmPnhebC4vG3Vhlk1ApSY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Li8h0G2zlX45vPSv8e9xhZAtGFJhajCehyL+RFGz4YaneLQhY9yzf/ygXx2Ysy+F+
+	 bbnl7W2h/cJwpTaK2G/108zha5zYc5N+CJSgDEk9yOo5EBj5Qt+0CLFd2/N0TRDAQm
+	 N5ta8E58XSSzLfeJZUdTvro+3FxvRYRxGOhgzLsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbfGLMhS (ORCPT
+        id S1728738AbfGLMbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:37:18 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34172 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbfGLMhQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:37:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PRvJtsiHkVhvqvxWg5gOuLt8FA07mI2n7b2F9lWVt6s=; b=XWiPp5T3wZ07wSFz7SP2NGQsi
-        SARqMlSa4wSWOALaD9zIg48cd8FkwtQzlyIqn2H/VG3zk8ew8txJuiyK0bOkKModvW1URTSAtHINQ
-        BZfWo+f5pIdJEIj7pAAvGEgTpPGjztlFq+c1d86X1AriCw0HX9pAgtl/T5P5ViqzB3YbIpgpshlHU
-        P1J4uQYE12VLgjTpHpbC3L2N8BZKengJ4RvrWQRLvD4ZCTcLEujoFj57iE9i92rblgnnWe2dtnErg
-        JISh4LW8iD+LzsB0jFgfRy48PCLVuwRGtiiYaxws8B1vrL+LnY4BgsRnlKs2MI4YxasxwKR7M1GTy
-        hU+YmR/Kw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlunH-0005Rb-23; Fri, 12 Jul 2019 12:36:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 65784209772E6; Fri, 12 Jul 2019 14:36:53 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 14:36:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-Message-ID: <20190712123653.GO3419@hirez.programming.kicks-ass.net>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <20190712114458.GU3402@hirez.programming.kicks-ass.net>
- <1f97f1d9-d209-f2ab-406d-fac765006f91@oracle.com>
+        Fri, 12 Jul 2019 08:31:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729119AbfGLMaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4538208E4;
+        Fri, 12 Jul 2019 12:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562934608;
+        bh=nkZ6Tz3khAsmsQ82x8OX7tgmPnhebC4vG3Vhlk1ApSY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bXGuPqGonQg3DEFhh+7fDppnA1UTKy6xvdDVyLjC+kTBEtlHOgpwPZXsWkM7DLo9Z
+         dOUDhWC12upUN3oYIlpqKGaLyKDtsPDZCR1pvvGP8iIFPUzJp+pNMR0zrarh+tLUrU
+         I/pK/UW/pTHRepEM7PAKKTLly/OTyHoQsTgVMOnM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver Barta <o.barta89@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.1 110/138] Revert "serial: 8250: Dont service RX FIFO if interrupts are disabled"
+Date:   Fri, 12 Jul 2019 14:19:34 +0200
+Message-Id: <20190712121632.977789469@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+References: <20190712121628.731888964@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f97f1d9-d209-f2ab-406d-fac765006f91@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:17:20PM +0200, Alexandre Chartre wrote:
-> On 7/12/19 1:44 PM, Peter Zijlstra wrote:
+From: Oliver Barta <o.barta89@gmail.com>
 
-> > AFAIK3 this wants/needs to be combined with core-scheduling to be
-> > useful, but not a single mention of that is anywhere.
-> 
-> No. This is actually an alternative to core-scheduling. Eventually, ASI
-> will kick all sibling hyperthreads when exiting isolation and it needs to
-> run with the full kernel page-table (note that's currently not in these
-> patches).
-> 
-> So ASI can be seen as an optimization to disabling hyperthreading: instead
-> of just disabling hyperthreading you run with ASI, and when ASI can't preserve
-> isolation you will basically run with a single thread.
+commit 3f2640ed7be838c3f05c0d2b0f7c7508e7431e48 upstream.
 
-You can't do that without much of the scheduler changes present in the
-core-scheduling patches.
+This reverts commit 2e9fe539108320820016f78ca7704a7342788380.
+
+Reading LSR unconditionally but processing the error flags only if
+UART_IIR_RDI bit was set before in IIR may lead to a loss of transmission
+error information on UARTs where the transmission error flags are cleared
+by a read of LSR. Information are lost in case an error is detected right
+before the read of LSR while processing e.g. an UART_IIR_THRI interrupt.
+
+Signed-off-by: Oliver Barta <o.barta89@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 2e9fe5391083 ("serial: 8250: Don't service RX FIFO if interrupts are disabled")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/8250/8250_port.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1869,8 +1869,7 @@ int serial8250_handle_irq(struct uart_po
+ 
+ 	status = serial_port_in(port, UART_LSR);
+ 
+-	if (status & (UART_LSR_DR | UART_LSR_BI) &&
+-	    iir & UART_IIR_RDI) {
++	if (status & (UART_LSR_DR | UART_LSR_BI)) {
+ 		if (!up->dma || handle_rx_dma(up, iir))
+ 			status = serial8250_rx_chars(up, status);
+ 	}
+
+
