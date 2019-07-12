@@ -2,546 +2,228 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65E6C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EADC742CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8CB206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A8721019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nextdimension.cc header.i=@nextdimension.cc header.b="gn6BV/jX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XzmdUZ1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfGLPzc (ORCPT
+        id S1727194AbfGLP5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:55:32 -0400
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:30034
-        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726984AbfGLPzc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:55:32 -0400
-X-Greylist: delayed 481 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 11:55:25 EDT
-X-Sender-Id: dreamhost|x-authsender|brad@b-rad.cc
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id AAD128C1FD1;
-        Fri, 12 Jul 2019 15:47:23 +0000 (UTC)
-Received: from pdx1-sub0-mail-a100.g.dreamhost.com (100-96-35-167.trex.outbound.svc.cluster.local [100.96.35.167])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id BBC9E8C226E;
-        Fri, 12 Jul 2019 15:47:22 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|brad@b-rad.cc
-Received: from pdx1-sub0-mail-a100.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.17.3);
-        Fri, 12 Jul 2019 15:47:23 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|brad@b-rad.cc
-X-MailChannels-Auth-Id: dreamhost
-X-Versed-Reign: 656cb67b3ba26923_1562946443543_1898236359
-X-MC-Loop-Signature: 1562946443543:3914881135
-X-MC-Ingress-Time: 1562946443543
-Received: from pdx1-sub0-mail-a100.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a100.g.dreamhost.com (Postfix) with ESMTP id 1DE487FFA7;
-        Fri, 12 Jul 2019 08:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=nextdimension.cc; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=
-        nextdimension.cc; bh=v7P8C2Z6W2Q3ZSKML8oGh1W17Tc=; b=gn6BV/jX7Pj
-        ZrwrkEe5tBjbmAYC4nJ4abLpxuT4R8DUMnf3QooINbFKPKGOlb26AmX5Sz94z8jb
-        i0SbHPJ8fsghWk7ab1+ZtYU074ZiA/BBDm80KPbw9eexY/HN6Lrso/TQgCVohBvt
-        q4VeyJiPiFRTbyelWEAlo0PNRYKyzMZc=
-Received: from [192.168.0.21] (67-198-57-188.static.grandenetworks.net [67.198.57.188])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: brad@b-rad.cc)
-        by pdx1-sub0-mail-a100.g.dreamhost.com (Postfix) with ESMTPSA id 336D07FFAD;
-        Fri, 12 Jul 2019 08:47:17 -0700 (PDT)
-Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Brad Love <brad@nextdimension.cc>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
-X-DH-BACKEND: pdx1-sub0-mail-a100
-From:   Brad Love <brad@nextdimension.cc>
-Openpgp: preference=signencrypt
-Autocrypt: addr=brad@nextdimension.cc; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
-Date:   Fri, 12 Jul 2019 10:47:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 11:57:13 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43325 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726907AbfGLP5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:57:12 -0400
+Received: from [IPv6:2601:646:8600:3281:4501:6781:c7ce:2878] ([IPv6:2601:646:8600:3281:4501:6781:c7ce:2878])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x6CFupr53480184
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 12 Jul 2019 08:56:54 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x6CFupr53480184
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562947015;
+        bh=0Ve+yG3uaVMCO27iKj29VEVpxeHgGM2Sv8NdJ11gjDE=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=XzmdUZ1QaJrOXoC1U8mVajBB03oao8GSugWbzSWg7SvA+iBte2MpUZG7+G9UDpPIV
+         jNNRyJdekkavhwyvRAE4El72IsDVuhDhUf1KUpyLLQbzXF2UvzWBX4vUK0xblRWHVU
+         2UIIzOuh55TcKL/c7f/50vYz/7PwPlAd0tBuMNdVDFK00k4VUUGxn00BfpHdzDlwVD
+         pEUdMyo6AK+Y/tZPr00Hw4FBCD+u8y3iNOCjHxFTCqW4TGLws7Cj9NJ4yq0PPPBkbD
+         aZgA2nXtx1qCLzkid5OwCaPI6nxWx3arQhdSSki8LT+FqPhMqlSly170G7z6Hxr+6g
+         8XOkPuLOo4Aiw==
+Date:   Fri, 12 Jul 2019 08:56:44 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190704163612.14311-3-daniel.kiper@oracle.com>
+References: <20190704163612.14311-1-daniel.kiper@oracle.com> <20190704163612.14311-3-daniel.kiper@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: -90
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrhedtgdelvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfghrlhcuvffnffculddutddmnecujfgurhepuffvfhfhkffffgggjggtgfesthhqredttdefjeenucfhrhhomhepuehrrgguucfnohhvvgcuoegsrhgrugesnhgvgihtughimhgvnhhsihhonhdrtggtqeenucfkphepieejrdduleekrdehjedrudekkeenucfrrghrrghmpehmohguvgepshhmthhppdhhvghloheplgduledvrdduieekrddtrddvudgnpdhinhgvthepieejrdduleekrdehjedrudekkedprhgvthhurhhnqdhprghthhepuehrrgguucfnohhvvgcuoegsrhgrugesnhgvgihtughimhgvnhhsihhonhdrtggtqedpmhgrihhlfhhrohhmpegsrhgrugesnhgvgihtughimhgvnhhsihhonhdrtggtpdhnrhgtphhtthhopehmrghrtgdrfidrghhonhiirghlvgiisehfrhgvvgdrfhhrnecuvehluhhsthgvrhfuihiivgeptd
+Subject: Re: [PATCH v2 2/3] x86/boot: Introduce the setup_indirect
+To:     Daniel Kiper <daniel.kiper@oracle.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+CC:     bp@alien8.de, corbet@lwn.net, dpsmith@apertussolutions.com,
+        eric.snowberg@oracle.com, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, mingo@redhat.com,
+        ross.philipson@oracle.com, tglx@linutronix.de
+From:   hpa@zytor.com
+Message-ID: <143DFBDE-E604-48E0-8072-6DB68E3E83C1@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-Replying inline.
-
-
-On 04/07/2019 05.33, Marc Gonzalez wrote:
-> Refactor the command setup code, and let the compiler determine
-> the size of each command.
+On July 4, 2019 9:36:11 AM PDT, Daniel Kiper <daniel=2Ekiper@oracle=2Ecom> =
+wrote:
+>The setup_data is a bit awkward to use for extremely large data
+>objects,
+>both because the setup_data header has to be adjacent to the data
+>object
+>and because it has a 32-bit length field=2E However, it is important that
+>intermediate stages of the boot process have a way to identify which
+>chunks of memory are occupied by kernel data=2E
 >
-> Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> Changes from v1:
-> - Use a real function to populate struct si2168_cmd *cmd, and a trivial=
-
-> macro wrapping it (macro because sizeof).
-> Changes from v2:
-> - Fix header mess
-> - Add Jonathan's tag
-> ---
->  drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------=
-
->  1 file changed, 45 insertions(+), 101 deletions(-)
+>Thus we introduce a uniform way to specify such indirect data as
+>setup_indirect struct and SETUP_INDIRECT type=2E
 >
-> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-f=
-rontends/si2168.c
-> index c64b360ce6b5..5e81e076369c 100644
-> --- a/drivers/media/dvb-frontends/si2168.c
-> +++ b/drivers/media/dvb-frontends/si2168.c
-> @@ -12,6 +12,16 @@
-> =20
->  static const struct dvb_frontend_ops si2168_ops;
-> =20
-> +static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, in=
-t rlen)
-> +{
-> +	memcpy(cmd->args, args, wlen);
-> +	cmd->wlen =3D wlen;
-> +	cmd->rlen =3D rlen;
-> +}
-> +
+>This patch does not bump setup_header version in arch/x86/boot/header=2ES
+>because it will be followed by additional changes coming into the
+>Linux/x86 boot protocol=2E
+>
+>Suggested-by: H=2E Peter Anvin <hpa@zytor=2Ecom>
+>Signed-off-by: Daniel Kiper <daniel=2Ekiper@oracle=2Ecom>
+>Reviewed-by: Eric Snowberg <eric=2Esnowberg@oracle=2Ecom>
+>Reviewed-by: Ross Philipson <ross=2Ephilipson@oracle=2Ecom>
+>---
+>v2 - suggestions/fixes:
+>   - add setup_indirect usage example
+>     (suggested by Eric Snowberg and Ross Philipson)=2E
+>---
+>Documentation/x86/boot=2Erst            | 38
+>++++++++++++++++++++++++++++++++++-
+> arch/x86/include/uapi/asm/bootparam=2Eh | 11 +++++++++-
+> 2 files changed, 47 insertions(+), 2 deletions(-)
+>
+>diff --git a/Documentation/x86/boot=2Erst b/Documentation/x86/boot=2Erst
+>index a934a56f0516=2E=2E23d3726d54fc 100644
+>--- a/Documentation/x86/boot=2Erst
+>+++ b/Documentation/x86/boot=2Erst
+>@@ -73,7 +73,7 @@ Protocol 2=2E14:	BURNT BY INCORRECT COMMIT
+>ae7e1238e68f2a472a125673ab506d49158c188
+> 		(x86/boot: Add ACPI RSDP address to setup_header)
+> 		DO NOT USE!!! ASSUME SAME AS 2=2E13=2E
+>=20
+>-Protocol 2=2E15:	(Kernel 5=2E3) Added the kernel_info=2E
+>+Protocol 2=2E15:	(Kernel 5=2E3) Added the kernel_info and setup_indirect=
+=2E
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> =2E=2E note::
+>@@ -827,6 +827,42 @@ Protocol:	2=2E09+
+>   sure to consider the case where the linked list already contains
+>   entries=2E
+>=20
+>+  The setup_data is a bit awkward to use for extremely large data
+>objects,
+>+  both because the setup_data header has to be adjacent to the data
+>object
+>+  and because it has a 32-bit length field=2E However, it is important
+>that
+>+  intermediate stages of the boot process have a way to identify which
+>+  chunks of memory are occupied by kernel data=2E
+>+
+>+  Thus setup_indirect struct and SETUP_INDIRECT type were introduced
+>in
+>+  protocol 2=2E15=2E
+>+ =20
+>+  struct setup_indirect {
+>+    __u32 type;
+>+    __u32 reserved;  /* Reserved, must be set to zero=2E */
+>+    __u64 len;
+>+    __u64 addr;
+>+  };
+>+
+>+  The type member is itself simply a SETUP_* type=2E However, it cannot
+>be
+>+  SETUP_INDIRECT since making the setup_indirect a tree structure
+>could
+>+  require a lot of stack space in something that needs to parse it and
+>+  stack space can be limited in boot contexts=2E
+>+
+>+  Let's give an example how to point to SETUP_E820_EXT data using
+>setup_indirect=2E
+>+  In this case setup_data and setup_indirect will look like this:
+>+
+>+  struct setup_data {
+>+    __u64 next =3D 0 or <addr_of_next_setup_data_struct>;
+>+    __u32 type =3D SETUP_INDIRECT;
+>+    __u32 len =3D sizeof(setup_data);
+>+    __u8 data[sizeof(setup_indirect)] =3D struct setup_indirect {
+>+      __u32 type =3D SETUP_E820_EXT;
+>+      __u32 reserved =3D 0;
+>+      __u64 len =3D <len_of_SETUP_E820_EXT_data>;
+>+      __u64 addr =3D <addr_of_SETUP_E820_EXT_data>;
+>+    }
+>+  }
+>+
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> Field name:	pref_address
+> Type:		read (reloc)
+>diff --git a/arch/x86/include/uapi/asm/bootparam=2Eh
+>b/arch/x86/include/uapi/asm/bootparam=2Eh
+>index b05318112452=2E=2Eaaaa17fa6ad6 100644
+>--- a/arch/x86/include/uapi/asm/bootparam=2Eh
+>+++ b/arch/x86/include/uapi/asm/bootparam=2Eh
+>@@ -2,7 +2,7 @@
+> #ifndef _ASM_X86_BOOTPARAM_H
+> #define _ASM_X86_BOOTPARAM_H
+>=20
+>-/* setup_data types */
+>+/* setup_data/setup_indirect types */
+> #define SETUP_NONE			0
+> #define SETUP_E820_EXT			1
+> #define SETUP_DTB			2
+>@@ -10,6 +10,7 @@
+> #define SETUP_EFI			4
+> #define SETUP_APPLE_PROPERTIES		5
+> #define SETUP_JAILHOUSE			6
+>+#define SETUP_INDIRECT			7
+>=20
+> /* ram_size flags */
+> #define RAMDISK_IMAGE_START_MASK	0x07FF
+>@@ -47,6 +48,14 @@ struct setup_data {
+> 	__u8 data[0];
+> };
+>=20
+>+/* extensible setup indirect data node */
+>+struct setup_indirect {
+>+	__u32 type;
+>+	__u32 reserved;  /* Reserved, must be set to zero=2E */
+>+	__u64 len;
+>+	__u64 addr;
+>+};
+>+
+> struct setup_header {
+> 	__u8	setup_sects;
+> 	__u16	root_flags;
 
+This needs actual implementation; we can't advertise it until the kernel k=
+nows how to consume the data! It probably should be moved to after the 3/3 =
+patch=2E
 
-struct si2168_cmd.args is u8, not char. I also think const should apply
-to the pointer.
+Implementing this has two parts:
 
+1=2E The kernel needs to be augmented so it can find current objects via i=
+ndirection=2E
 
-> +#define CMD_SETUP(cmd, args, rlen) \
-> +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
-> +
+2=2E And this is the main reason for this in the first place: the early co=
+de needs to walk the list and map out the memory areas which are occupied s=
+o it doesn't clobber anything; this allows this code to be generic as oppos=
+ed to having to know what is a pointer and what size it might point to=2E
 
+(The decompressor didn't need this until kaslr entered the picture, but no=
+w it does, sadly=2E)
 
-This is only a valid helper if args is a null terminated string. It just
-so happens that every instance in this driver is, but that could be a
-silent pitfall if someone used a u8 array with this macro.
+Optional/future enhancements that might be nice:
 
-Otherwise I'm ok with the refactoring.
+3=2E Add some kind of description (e=2Eg=2E foo=3Du64 ; bar=3Dstr ; baz=3D=
+blob) to make it possible to write a bootloader that can load these kinds o=
+f objects without specific enabling=2E
 
-Regards,
+4=2E Add support for mapping initramfs fragments  this way=2E
 
-Brad
+5=2E Add support for passingload-on-boot kernel modules=2E
 
+6=2E =2E=2E=2E ?
 
-
-
->  /* execute firmware command */
->  static int si2168_cmd_execute(struct i2c_client *client, struct si2168=
-_cmd *cmd)
->  {
-> @@ -84,15 +94,13 @@ static int si2168_ts_bus_ctrl(struct dvb_frontend *=
-fe, int acquire)
->  	dev_dbg(&client->dev, "%s acquire: %d\n", __func__, acquire);
-> =20
->  	/* set TS_MODE property */
-> -	memcpy(cmd.args, "\x14\x00\x01\x10\x10\x00", 6);
-> +	CMD_SETUP(&cmd, "\x14\x00\x01\x10\x10\x00", 4);
->  	if (acquire)
->  		cmd.args[4] |=3D dev->ts_mode;
->  	else
->  		cmd.args[4] |=3D SI2168_TS_TRISTATE;
->  	if (dev->ts_clock_gapped)
->  		cmd.args[4] |=3D 0x40;
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
->  	ret =3D si2168_cmd_execute(client, &cmd);
-> =20
->  	return ret;
-> @@ -116,19 +124,13 @@ static int si2168_read_status(struct dvb_frontend=
- *fe, enum fe_status *status)
-> =20
->  	switch (c->delivery_system) {
->  	case SYS_DVBT:
-> -		memcpy(cmd.args, "\xa0\x01", 2);
-> -		cmd.wlen =3D 2;
-> -		cmd.rlen =3D 13;
-> +		CMD_SETUP(&cmd, "\xa0\x01", 13);
->  		break;
->  	case SYS_DVBC_ANNEX_A:
-> -		memcpy(cmd.args, "\x90\x01", 2);
-> -		cmd.wlen =3D 2;
-> -		cmd.rlen =3D 9;
-> +		CMD_SETUP(&cmd, "\x90\x01", 9);
->  		break;
->  	case SYS_DVBT2:
-> -		memcpy(cmd.args, "\x50\x01", 2);
-> -		cmd.wlen =3D 2;
-> -		cmd.rlen =3D 14;
-> +		CMD_SETUP(&cmd, "\x50\x01", 14);
->  		break;
->  	default:
->  		ret =3D -EINVAL;
-> @@ -165,9 +167,7 @@ static int si2168_read_status(struct dvb_frontend *=
-fe, enum fe_status *status)
-> =20
->  	/* BER */
->  	if (*status & FE_HAS_VITERBI) {
-> -		memcpy(cmd.args, "\x82\x00", 2);
-> -		cmd.wlen =3D 2;
-> -		cmd.rlen =3D 3;
-> +		CMD_SETUP(&cmd, "\x82\x00", 3);
->  		ret =3D si2168_cmd_execute(client, &cmd);
->  		if (ret)
->  			goto err;
-> @@ -198,9 +198,7 @@ static int si2168_read_status(struct dvb_frontend *=
-fe, enum fe_status *status)
-> =20
->  	/* UCB */
->  	if (*status & FE_HAS_SYNC) {
-> -		memcpy(cmd.args, "\x84\x01", 2);
-> -		cmd.wlen =3D 2;
-> -		cmd.rlen =3D 3;
-> +		CMD_SETUP(&cmd, "\x84\x01", 3);
->  		ret =3D si2168_cmd_execute(client, &cmd);
->  		if (ret)
->  			goto err;
-> @@ -286,22 +284,18 @@ static int si2168_set_frontend(struct dvb_fronten=
-d *fe)
->  			goto err;
->  	}
-> =20
-> -	memcpy(cmd.args, "\x88\x02\x02\x02\x02", 5);
-> -	cmd.wlen =3D 5;
-> -	cmd.rlen =3D 5;
-> +	CMD_SETUP(&cmd, "\x88\x02\x02\x02\x02", 5);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
->  	/* that has no big effect */
->  	if (c->delivery_system =3D=3D SYS_DVBT)
-> -		memcpy(cmd.args, "\x89\x21\x06\x11\xff\x98", 6);
-> +		CMD_SETUP(&cmd, "\x89\x21\x06\x11\xff\x98", 3);
->  	else if (c->delivery_system =3D=3D SYS_DVBC_ANNEX_A)
-> -		memcpy(cmd.args, "\x89\x21\x06\x11\x89\xf0", 6);
-> +		CMD_SETUP(&cmd, "\x89\x21\x06\x11\x89\xf0", 3);
->  	else if (c->delivery_system =3D=3D SYS_DVBT2)
-> -		memcpy(cmd.args, "\x89\x21\x06\x11\x89\x20", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 3;
-> +		CMD_SETUP(&cmd, "\x89\x21\x06\x11\x89\x20", 3);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -318,103 +312,77 @@ static int si2168_set_frontend(struct dvb_fronte=
-nd *fe)
->  			goto err;
->  	}
-> =20
-> -	memcpy(cmd.args, "\x51\x03", 2);
-> -	cmd.wlen =3D 2;
-> -	cmd.rlen =3D 12;
-> +	CMD_SETUP(&cmd, "\x51\x03", 12);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x12\x08\x04", 3);
-> -	cmd.wlen =3D 3;
-> -	cmd.rlen =3D 3;
-> +	CMD_SETUP(&cmd, "\x12\x08\x04", 3);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x0c\x10\x12\x00", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
-> +	CMD_SETUP(&cmd, "\x14\x00\x0c\x10\x12\x00", 4);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x06\x10\x24\x00", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
-> +	CMD_SETUP(&cmd, "\x14\x00\x06\x10\x24\x00", 4);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x07\x10\x00\x24", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
-> +	CMD_SETUP(&cmd, "\x14\x00\x07\x10\x00\x24", 4);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x0a\x10\x00\x00", 6);
-> +	CMD_SETUP(&cmd, "\x14\x00\x0a\x10\x00\x00", 4);
->  	cmd.args[4] =3D delivery_system | bandwidth;
->  	if (dev->spectral_inversion)
->  		cmd.args[5] |=3D 1;
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
->  	/* set DVB-C symbol rate */
->  	if (c->delivery_system =3D=3D SYS_DVBC_ANNEX_A) {
-> -		memcpy(cmd.args, "\x14\x00\x02\x11", 4);
-> +		CMD_SETUP(&cmd, "\x14\x00\x02\x11\x00\x00", 4);
->  		cmd.args[4] =3D ((c->symbol_rate / 1000) >> 0) & 0xff;
->  		cmd.args[5] =3D ((c->symbol_rate / 1000) >> 8) & 0xff;
-> -		cmd.wlen =3D 6;
-> -		cmd.rlen =3D 4;
->  		ret =3D si2168_cmd_execute(client, &cmd);
->  		if (ret)
->  			goto err;
->  	}
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x0f\x10\x10\x00", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
-> +	CMD_SETUP(&cmd, "\x14\x00\x0f\x10\x10\x00", 4);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x09\x10\xe3\x08", 6);
-> +	CMD_SETUP(&cmd, "\x14\x00\x09\x10\xe3\x08", 4);
->  	cmd.args[5] |=3D dev->ts_clock_inv ? 0x00 : 0x10;
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x08\x10\xd7\x05", 6);
-> +	CMD_SETUP(&cmd, "\x14\x00\x08\x10\xd7\x05", 4);
->  	cmd.args[5] |=3D dev->ts_clock_inv ? 0x00 : 0x10;
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x01\x12\x00\x00", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
-> +	CMD_SETUP(&cmd, "\x14\x00\x01\x12\x00\x00", 4);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x14\x00\x01\x03\x0c\x00", 6);
-> -	cmd.wlen =3D 6;
-> -	cmd.rlen =3D 4;
-> +	CMD_SETUP(&cmd, "\x14\x00\x01\x03\x0c\x00", 4);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
-> -	memcpy(cmd.args, "\x85", 1);
-> -	cmd.wlen =3D 1;
-> -	cmd.rlen =3D 1;
-> +	CMD_SETUP(&cmd, "\x85", 1);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -444,26 +412,20 @@ static int si2168_init(struct dvb_frontend *fe)
->  	dev_dbg(&client->dev, "\n");
-> =20
->  	/* initialize */
-> -	memcpy(cmd.args, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x0=
-0", 13);
-> -	cmd.wlen =3D 13;
-> -	cmd.rlen =3D 0;
-> +	CMD_SETUP(&cmd, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00=
-", 0);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
->  	if (dev->warm) {
->  		/* resume */
-> -		memcpy(cmd.args, "\xc0\x06\x08\x0f\x00\x20\x21\x01", 8);
-> -		cmd.wlen =3D 8;
-> -		cmd.rlen =3D 1;
-> +		CMD_SETUP(&cmd, "\xc0\x06\x08\x0f\x00\x20\x21\x01", 1);
->  		ret =3D si2168_cmd_execute(client, &cmd);
->  		if (ret)
->  			goto err;
-> =20
->  		udelay(100);
-> -		memcpy(cmd.args, "\x85", 1);
-> -		cmd.wlen =3D 1;
-> -		cmd.rlen =3D 1;
-> +		CMD_SETUP(&cmd, "\x85", 1);
->  		ret =3D si2168_cmd_execute(client, &cmd);
->  		if (ret)
->  			goto err;
-> @@ -472,9 +434,7 @@ static int si2168_init(struct dvb_frontend *fe)
->  	}
-> =20
->  	/* power up */
-> -	memcpy(cmd.args, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8);
-> -	cmd.wlen =3D 8;
-> -	cmd.rlen =3D 1;
-> +	CMD_SETUP(&cmd, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 1);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -542,17 +502,13 @@ static int si2168_init(struct dvb_frontend *fe)
-> =20
->  	release_firmware(fw);
-> =20
-> -	memcpy(cmd.args, "\x01\x01", 2);
-> -	cmd.wlen =3D 2;
-> -	cmd.rlen =3D 1;
-> +	CMD_SETUP(&cmd, "\x01\x01", 1);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> =20
->  	/* query firmware version */
-> -	memcpy(cmd.args, "\x11", 1);
-> -	cmd.wlen =3D 1;
-> -	cmd.rlen =3D 10;
-> +	CMD_SETUP(&cmd, "\x11", 10);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -610,9 +566,7 @@ static int si2168_sleep(struct dvb_frontend *fe)
->  	if (dev->version > ('B' << 24 | 4 << 16 | 0 << 8 | 11 << 0))
->  		dev->warm =3D false;
-> =20
-> -	memcpy(cmd.args, "\x13", 1);
-> -	cmd.wlen =3D 1;
-> -	cmd.rlen =3D 0;
-> +	CMD_SETUP(&cmd, "\x13", 0);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -638,9 +592,7 @@ static int si2168_select(struct i2c_mux_core *muxc,=
- u32 chan)
->  	struct si2168_cmd cmd;
-> =20
->  	/* open I2C gate */
-> -	memcpy(cmd.args, "\xc0\x0d\x01", 3);
-> -	cmd.wlen =3D 3;
-> -	cmd.rlen =3D 0;
-> +	CMD_SETUP(&cmd, "\xc0\x0d\x01", 0);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -658,9 +610,7 @@ static int si2168_deselect(struct i2c_mux_core *mux=
-c, u32 chan)
->  	struct si2168_cmd cmd;
-> =20
->  	/* close I2C gate */
-> -	memcpy(cmd.args, "\xc0\x0d\x00", 3);
-> -	cmd.wlen =3D 3;
-> -	cmd.rlen =3D 0;
-> +	CMD_SETUP(&cmd, "\xc0\x0d\x00", 0);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err;
-> @@ -753,25 +703,19 @@ static int si2168_probe(struct i2c_client *client=
-,
->  	mutex_init(&dev->i2c_mutex);
-> =20
->  	/* Initialize */
-> -	memcpy(cmd.args, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x0=
-0", 13);
-> -	cmd.wlen =3D 13;
-> -	cmd.rlen =3D 0;
-> +	CMD_SETUP(&cmd, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00=
-", 0);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err_kfree;
-> =20
->  	/* Power up */
-> -	memcpy(cmd.args, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8);
-> -	cmd.wlen =3D 8;
-> -	cmd.rlen =3D 1;
-> +	CMD_SETUP(&cmd, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 1);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err_kfree;
-> =20
->  	/* Query chip revision */
-> -	memcpy(cmd.args, "\x02", 1);
-> -	cmd.wlen =3D 1;
-> -	cmd.rlen =3D 13;
-> +	CMD_SETUP(&cmd, "\x02", 13);
->  	ret =3D si2168_cmd_execute(client, &cmd);
->  	if (ret)
->  		goto err_kfree;
-
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
