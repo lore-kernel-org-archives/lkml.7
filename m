@@ -2,78 +2,123 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A13BC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29FCC742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F71A20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66BC21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfGLCWK (ORCPT
+        id S1729527AbfGLCWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 22:22:10 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45861 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728931AbfGLCUi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 22:20:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TWfK5gO_1562898032;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TWfK5gO_1562898032)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jul 2019 10:20:33 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-sh@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 07/12] Documentation/parisc: repointer docs to Documentation/arch/
-Date:   Fri, 12 Jul 2019 10:20:13 +0800
-Message-Id: <20190712022018.27989-7-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.856.g8858448bb
-In-Reply-To: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
-References: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
+        Thu, 11 Jul 2019 22:22:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2263 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728815AbfGLCWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 22:22:19 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7CC8D66BCFCD34EAECC9;
+        Fri, 12 Jul 2019 10:22:15 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 12 Jul 2019 10:22:04 +0800
+From:   Xiaofei Tan <tanxiaofei@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Xiaofei Tan <tanxiaofei@huawei.com>, <linux-acpi@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+        <ying.huang@intel.com>, <ross.lagerwall@citrix.com>,
+        <ard.biesheuvel@linaro.org>, <lance.ortiz@hp.com>
+Subject: [PATCH 1/1] efi: cper: print AER info of PCIe fatal error
+Date:   Fri, 12 Jul 2019 10:20:17 +0800
+Message-ID: <1562898017-27166-1-git-send-email-tanxiaofei@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we move Documentation/parisc docs to Documentation/arch/parisc
-dir, redirect the doc pointer to them.
+AER info of PCIe fatal error is not printed in the current driver.
+Because APEI driver will panic directly for fatal error, and can't
+run to the place of printing AER info.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: linux-kernel@vger.kernel.org
+An example log is as following:
+[ 3157.655028] {763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+[ 3157.663610] {763}[Hardware Error]: event severity: fatal
+[ 3157.663612] {763}[Hardware Error]:  Error 0, type: fatal
+[ 3157.663614] {763}[Hardware Error]:   section_type: PCIe error
+[ 3157.680328] {763}[Hardware Error]:   port_type: 0, PCIe end point
+[ 3157.680329] {763}[Hardware Error]:   version: 4.0
+[ 3157.680332] {763}[Hardware Error]:   command: 0x0000, status: 0x0010
+[ 3157.698757] {763}[Hardware Error]:   device_id: 0000:82:00.0
+[ 3157.698758] {763}[Hardware Error]:   slot: 0
+[ 3157.698759] {763}[Hardware Error]:   secondary_bus: 0x00
+[ 3157.698760] {763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+[ 3157.698761] {763}[Hardware Error]:   class_code: 000002
+[ 3157.698825] Kernel panic - not syncing: Fatal hardware error!
+
+This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+cper_print_aer() call out of interrupt context")'. To fix this issue,
+this patch adds print of AER info in cper_print_pcie() for fatal error.
+
+Here is the example log after this patch applied:
+[ 7032.893566] {24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+[ 7032.901965] {24}[Hardware Error]: event severity: fatal
+[ 7032.907166] {24}[Hardware Error]:  Error 0, type: fatal
+[ 7032.912366] {24}[Hardware Error]:   section_type: PCIe error
+[ 7032.917998] {24}[Hardware Error]:   port_type: 0, PCIe end point
+[ 7032.923974] {24}[Hardware Error]:   version: 4.0
+[ 7032.928569] {24}[Hardware Error]:   command: 0x0546, status: 0x4010
+[ 7032.934806] {24}[Hardware Error]:   device_id: 0000:01:00.0
+[ 7032.940352] {24}[Hardware Error]:   slot: 0
+[ 7032.944514] {24}[Hardware Error]:   secondary_bus: 0x00
+[ 7032.949714] {24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+[ 7032.956381] {24}[Hardware Error]:   class_code: 000002
+[ 7032.961495] {24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+[ 7032.969891] {24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+[ 7032.976042] {24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+[ 7032.983663] Kernel panic - not syncing: Fatal hardware error!
+
+Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of
+interrupt context")
+
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/cper.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 03a8c687f87f..e1aad1b8224c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12000,7 +12000,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jejb/parisc-2.6.git
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
- S:	Maintained
- F:	arch/parisc/
--F:	Documentation/parisc/
-+F:	Documentation/arch/parisc/
- F:	drivers/parisc/
- F:	drivers/char/agp/parisc-agp.c
- F:	drivers/input/serio/gscps2.c
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 8fa977c..bf8600d 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -390,6 +390,19 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk(
+ 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+ 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
++	if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO &&
++	    gdata->error_severity & CPER_SEV_FATAL) {
++		struct aer_capability_regs *aer;
++
++		aer = (struct aer_capability_regs *)pcie->aer_info;
++		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
++		       pfx, aer->uncor_status, aer->uncor_mask);
++		printk("%saer_uncor_severity: 0x%08x\n",
++		       pfx, aer->uncor_severity);
++		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
++		       aer->header_log.dw0, aer->header_log.dw1,
++		       aer->header_log.dw2, aer->header_log.dw3);
++	}
+ }
+ 
+ static void cper_print_tstamp(const char *pfx,
 -- 
-2.19.1.856.g8858448bb
+2.8.1
 
