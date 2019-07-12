@@ -2,220 +2,108 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F32C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A94C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6B4208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F8E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oH/ozLYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfGLB13 (ORCPT
+        id S1728951AbfGLBcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:27:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49940 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726587AbfGLB13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:27:29 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3632CB191B82375CC4EC;
-        Fri, 12 Jul 2019 09:27:26 +0800 (CST)
-Received: from dessert.huawei.com (10.69.192.158) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 12 Jul 2019 09:27:18 +0800
-From:   Zeng Tao <prime.zeng@hisilicon.com>
-To:     <kishon@ti.com>
-CC:     <prime.zeng@hisilicon.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] phy: Change the configuration interface param to void* to make it more general
-Date:   Fri, 12 Jul 2019 17:26:04 +0800
-Message-ID: <1562923580-47746-1-git-send-email-prime.zeng@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 11 Jul 2019 21:32:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34782 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfGLBcU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:32:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1U4Oo020371;
+        Fri, 12 Jul 2019 01:32:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=NXDuTQP1XB+Wm9eBFSp+S1/dpd+7DqWERF846TeJNqQ=;
+ b=oH/ozLYEK3K87Zw+IRtEF03KmFdD46y3p1s1bMdlpD3S10aGH0Qn3lT0cYyNPbfSgWZ5
+ CUKaWW4f12/92SaVpixXXZN5y3SX5dByNk3Nc1Ux8bP2YEdUvkhxx0EeklF4E0PDIcd3
+ pZQ7MrN/VVTDc4DgzS9zdH4rrSMPGYoc7qQGpM5mo9W25C+E4iN1VE84mHgZCyJ84KSj
+ FBfl0u2MqAMAvdsE9IktIAxbLNlWK8Xt8kBihukSHn8+r0Uw5o3GT6zgQOL7M07Tc1hB
+ WK7P52jo8lczkp5uQYGepweSLlEabgjs7u3hpqve4NjhKejae5f/WauO1TTDnex/iA2t NQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2tjkkq2yy1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 01:32:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1RlNH103457;
+        Fri, 12 Jul 2019 01:30:14 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tmwgygked-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 01:30:13 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C1U9An022240;
+        Fri, 12 Jul 2019 01:30:10 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 18:30:09 -0700
+To:     Konstantin Khorenko <khorenko@virtuozzo.com>
+Cc:     Prasad B Munirathnam <prasad.munirathnam@microsemi.com>,
+        Raghava Aditya Renukunta 
+        <RaghavaAditya.Renukunta@microsemi.com>,
+        David Carroll <david.carroll@microsemi.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Andrey Jr . Melnikov" <temnota.am@gmail.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Subject: Re: [PATCH v2 2/2] scsi: aacraid: Remove references to Series-9 (only)
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <2a6f5cc2-40cb-647c-003d-aae594d05062@virtuozzo.com>
+        <20190710093113.27936-1-khorenko@virtuozzo.com>
+        <20190710093113.27936-3-khorenko@virtuozzo.com>
+Date:   Thu, 11 Jul 2019 21:30:07 -0400
+In-Reply-To: <20190710093113.27936-3-khorenko@virtuozzo.com> (Konstantin
+        Khorenko's message of "Wed, 10 Jul 2019 12:31:13 +0300")
+Message-ID: <yq15zo86nvk.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.69.192.158]
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=806
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120017
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=862 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy framework now allows runtime configurations, but only limited
-to mipi now, and it's not reasonable to introduce user specified
-configurations into the union phy_configure_opts structure. An simple
-way is to replace with a void *.
 
-We have already got some phy drivers which introduce private phy API
-for runtime configurations, and with this patch, they can switch to
-the phy_configure as a replace.
+Hi Konstantin,
 
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
----
- drivers/phy/allwinner/phy-sun6i-mipi-dphy.c |  4 ++--
- drivers/phy/cadence/cdns-dphy.c             |  8 ++++----
- drivers/phy/phy-core.c                      |  4 ++--
- include/linux/phy/phy.h                     | 24 ++++++------------------
- 4 files changed, 14 insertions(+), 26 deletions(-)
+> The patch removes references to Series 9 adapters following
+> 395e5df79a95 ("scsi: aacraid: Remove reference to Series-9"),
+> but doesn't touch Series 6 adapters logic.
 
-diff --git a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-index 79c8af5..6a60473 100644
---- a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-+++ b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-@@ -105,12 +105,12 @@ static int sun6i_dphy_init(struct phy *phy)
- 	return 0;
- }
- 
--static int sun6i_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-+static int sun6i_dphy_configure(struct phy *phy, void *opts)
- {
- 	struct sun6i_dphy *dphy = phy_get_drvdata(phy);
- 	int ret;
- 
--	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
-+	ret = phy_mipi_dphy_config_validate(opts);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
-index 90c4e9b..0ec5013 100644
---- a/drivers/phy/cadence/cdns-dphy.c
-+++ b/drivers/phy/cadence/cdns-dphy.c
-@@ -233,23 +233,23 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
- }
- 
- static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
--			      union phy_configure_opts *opts)
-+			      void *opts)
- {
- 	struct cdns_dphy_cfg cfg = { 0 };
- 
- 	if (mode != PHY_MODE_MIPI_DPHY)
- 		return -EINVAL;
- 
--	return cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-+	return cdns_dphy_config_from_opts(phy, opts, &cfg);
- }
- 
--static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-+static int cdns_dphy_configure(struct phy *phy, void *opts)
- {
- 	struct cdns_dphy *dphy = phy_get_drvdata(phy);
- 	struct cdns_dphy_cfg cfg = { 0 };
- 	int ret;
- 
--	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-+	ret = cdns_dphy_config_from_opts(phy, opts, &cfg);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index e3880c4a1..048d4d6 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -420,7 +420,7 @@ EXPORT_SYMBOL_GPL(phy_calibrate);
-  *
-  * Returns: 0 if successful, an negative error code otherwise
-  */
--int phy_configure(struct phy *phy, union phy_configure_opts *opts)
-+int phy_configure(struct phy *phy, void *opts)
- {
- 	int ret;
- 
-@@ -455,7 +455,7 @@ EXPORT_SYMBOL_GPL(phy_configure);
-  * Returns: 0 if successful, an negative error code otherwise
-  */
- int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
--		 union phy_configure_opts *opts)
-+		 void *opts)
- {
- 	int ret;
- 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 15032f14..8948f94 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -16,8 +16,6 @@
- #include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
- 
--#include <linux/phy/phy-mipi-dphy.h>
--
- struct phy;
- 
- enum phy_mode {
-@@ -41,15 +39,6 @@ enum phy_mode {
- 	PHY_MODE_SATA
- };
- 
--/**
-- * union phy_configure_opts - Opaque generic phy configuration
-- *
-- * @mipi_dphy:	Configuration set applicable for phys supporting
-- *		the MIPI_DPHY phy mode.
-- */
--union phy_configure_opts {
--	struct phy_configure_opts_mipi_dphy	mipi_dphy;
--};
- 
- /**
-  * struct phy_ops - set of function pointers for performing phy operations
-@@ -80,7 +69,7 @@ struct phy_ops {
- 	 *
- 	 * Returns: 0 if successful, an negative error code otherwise
- 	 */
--	int	(*configure)(struct phy *phy, union phy_configure_opts *opts);
-+	int	(*configure)(struct phy *phy, void *opts);
- 
- 	/**
- 	 * @validate:
-@@ -99,7 +88,7 @@ struct phy_ops {
- 	 * error code otherwise
- 	 */
- 	int	(*validate)(struct phy *phy, enum phy_mode mode, int submode,
--			    union phy_configure_opts *opts);
-+			    void *opts);
- 	int	(*reset)(struct phy *phy);
- 	int	(*calibrate)(struct phy *phy);
- 	void	(*release)(struct phy *phy);
-@@ -207,9 +196,9 @@ int phy_power_off(struct phy *phy);
- int phy_set_mode_ext(struct phy *phy, enum phy_mode mode, int submode);
- #define phy_set_mode(phy, mode) \
- 	phy_set_mode_ext(phy, mode, 0)
--int phy_configure(struct phy *phy, union phy_configure_opts *opts);
-+int phy_configure(struct phy *phy, void *opts);
- int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
--		 union phy_configure_opts *opts);
-+		 void *opts);
- 
- static inline enum phy_mode phy_get_mode(struct phy *phy)
- {
-@@ -354,8 +343,7 @@ static inline int phy_calibrate(struct phy *phy)
- 	return -ENOSYS;
- }
- 
--static inline int phy_configure(struct phy *phy,
--				union phy_configure_opts *opts)
-+static inline int phy_configure(struct phy *phy, void *opts)
- {
- 	if (!phy)
- 		return 0;
-@@ -364,7 +352,7 @@ static inline int phy_configure(struct phy *phy,
- }
- 
- static inline int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
--			       union phy_configure_opts *opts)
-+			       void *opts)
- {
- 	if (!phy)
- 		return 0;
+We'll need some guidance from the Microsemi folks on this issue.
+
+> https://bugzilla.redhat.com/show_bug.cgi?id=1724077
+> https://jira.sw.ru/browse/PSBM-95736
+
+These two links don't appear to be publicly accessible and therefore do
+not belong in the patch.
+
 -- 
-2.7.4
-
+Martin K. Petersen	Oracle Linux Engineering
