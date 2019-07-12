@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CE1C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDB6C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E26216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7410A21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934427;
-	bh=Rq1qE4Q+NB15mQzhFLDDE6hKkM47OvHr+VRz5Ui1n4U=;
+	s=default; t=1562934430;
+	bh=brf5VmPedC1NgBTv6Aa4yQ1ph1WGBNQpZpbYVc0EDH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lPicD19MfanwczYKQ5ncSkwA7f0qh3jZW+mWH0v+t4WovjL2pH2odNFxyi2IBQnj1
-	 dEYPkhKCQPO6RfrOq+PpQYXdqwHROcDjQEd6Dh5IPzRVQRJ3d0A270iK6vXQmBjsws
-	 jFtKHffTCQ98/CvcoVsl1eespl/vH8bDQxrcWOGc=
+	b=1zpKCDbmzx1ePAz3Nl7EVwh1f+KrtQcvuVlQ6kvFnUETsRhYuzOgq3sYWuyJp8j4Y
+	 G7eJIv4n6uPsGdKkQgrMbd0uEfOCKXMlugTK1lkk67AYglQduRCLT4pz3RTWVNW8v7
+	 E/A7mP/puzKKbthGJlZ3TiHVGlYPQ3a0q9rXxBZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfGLM1F (ORCPT
+        id S1728555AbfGLM1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbfGLM1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:27:00 -0400
+        id S1728542AbfGLM1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C19621019;
-        Fri, 12 Jul 2019 12:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87C821670;
+        Fri, 12 Jul 2019 12:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934419;
-        bh=Rq1qE4Q+NB15mQzhFLDDE6hKkM47OvHr+VRz5Ui1n4U=;
+        s=default; t=1562934422;
+        bh=brf5VmPedC1NgBTv6Aa4yQ1ph1WGBNQpZpbYVc0EDH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHOKmxoqntiKzBWzqQJrp642TfS/pKrHtdFK+oatXRsXXpkoFHSX0NaW6JOio993f
-         CkDweI0fryafF/m/WhuwY/HJxabf2iVGWnnjDE7sDgz1orTXLXpHE5M5ELF+L0E99V
-         zih9jZyvAFaLBVcKuUm+yzR1OJ/F9IpqvkSuNNis=
+        b=JyT7TYvAfNiqu72CzqS3vNp1WfcURAUpptLHwXLU1wTXJMkBjqrJNVIimdBMWhvHt
+         ZfL3mPtBDqCjX1FHtNcIhxmw3+KBs5CiyBCm4mdD98z3SswAHpXYE/X3tOyxZQelNo
+         bgNpQ4yLnM1IYOhDNjO8Ji4KAzCb/yeO//yIxk40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Ilya Maximets <i.maximets@samsung.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 049/138] Input: imx_keypad - make sure keyboard can always wake up system
-Date:   Fri, 12 Jul 2019 14:18:33 +0200
-Message-Id: <20190712121630.544937655@linuxfoundation.org>
+Subject: [PATCH 5.1 050/138] xdp: check device pointer before clearing
+Date:   Fri, 12 Jul 2019 14:18:34 +0200
+Message-Id: <20190712121630.584296399@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,84 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce9a53eb3dbca89e7ad86673d94ab886e9bea704 ]
+[ Upstream commit 01d76b5317003e019ace561a9b775f51aafdfdc4 ]
 
-There are several scenarios that keyboard can NOT wake up system
-from suspend, e.g., if a keyboard is depressed between system
-device suspend phase and device noirq suspend phase, the keyboard
-ISR will be called and both keyboard depress and release interrupts
-will be disabled, then keyboard will no longer be able to wake up
-system. Another scenario would be, if a keyboard is kept depressed,
-and then system goes into suspend, the expected behavior would be
-when keyboard is released, system will be waked up, but current
-implementation can NOT achieve that, because both depress and release
-interrupts are disabled in ISR, and the event check is still in
-progress.
+We should not call 'ndo_bpf()' or 'dev_put()' with NULL argument.
 
-To fix these issues, need to make sure keyboard's depress or release
-interrupt is enabled after noirq device suspend phase, this patch
-moves the suspend/resume callback to noirq suspend/resume phase, and
-enable the corresponding interrupt according to current keyboard status.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: c9b47cc1fabc ("xsk: fix bug when trying to use both copy and zero-copy on one queue id")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ net/xdp/xdp_umem.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
-index 539cb670de41..ae9c51cc85f9 100644
---- a/drivers/input/keyboard/imx_keypad.c
-+++ b/drivers/input/keyboard/imx_keypad.c
-@@ -526,11 +526,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 989e52386c35..2f7e2c33a812 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -143,6 +143,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 	struct netdev_bpf bpf;
+ 	int err;
  
--static int __maybe_unused imx_kbd_suspend(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
- 	struct input_dev *input_dev = kbd->input_dev;
-+	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
- 
- 	/* imx kbd can wake up system even clock is disabled */
- 	mutex_lock(&input_dev->mutex);
-@@ -540,13 +541,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
- 
- 	mutex_unlock(&input_dev->mutex);
- 
--	if (device_may_wakeup(&pdev->dev))
-+	if (device_may_wakeup(&pdev->dev)) {
-+		if (reg_val & KBD_STAT_KPKD)
-+			reg_val |= KBD_STAT_KRIE;
-+		if (reg_val & KBD_STAT_KPKR)
-+			reg_val |= KBD_STAT_KDIE;
-+		writew(reg_val, kbd->mmio_base + KPSR);
++	if (!umem->dev)
++		return;
 +
- 		enable_irq_wake(kbd->irq);
-+	}
+ 	if (umem->zc) {
+ 		bpf.command = XDP_SETUP_XSK_UMEM;
+ 		bpf.xsk.umem = NULL;
+@@ -156,11 +159,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 			WARN(1, "failed to disable umem!\n");
+ 	}
  
- 	return 0;
- }
+-	if (umem->dev) {
+-		rtnl_lock();
+-		xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
+-		rtnl_unlock();
+-	}
++	rtnl_lock();
++	xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
++	rtnl_unlock();
  
--static int __maybe_unused imx_kbd_resume(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
-@@ -570,7 +578,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
- 	return ret;
- }
- 
--static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
-+static const struct dev_pm_ops imx_kbd_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
-+};
- 
- static struct platform_driver imx_keypad_driver = {
- 	.driver		= {
+ 	if (umem->zc) {
+ 		dev_put(umem->dev);
 -- 
 2.20.1
 
