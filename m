@@ -2,52 +2,54 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54814C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7482C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298B821670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B5421670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934260;
-	bh=yoCpDKEXgc/jPOEZGenf4VgfdDgWReN7+VHm3FbOkeQ=;
+	s=default; t=1562934264;
+	bh=/Mz1oNXA8X6erDLO019vWFgA0YET6BevJNaheOkykF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMjGlyrXFy75RdXDpcdgD5EnrTyr0zrr3aflHxQkWI7ZXNJWnTMXlMCk5bI01bgQh
-	 nVrYkWg77/TF6PRL5GxFP/yqM8X/jAOEBFy1kIR238EyxFOFK/uZoe68o7ikENzkO+
-	 20ovDcvui2RDwZu8qP0fzqfmiCGtR8UJDVN9TUjo=
+	b=sipem02ibr8KVoSz3WEiwyw49P/d9w9v2FZixgE9rFHhNwzC+fCMVrLQocU1lOksG
+	 QixFrnGRycMNR2Bog7E6LxqkJyywzcepS8Iz2tXxbQIYSMGc4tNPXF+atbMbVNsCqw
+	 yyuXlNj7t8/eNNdjRIgBlPLpxC1ln81hdhDxK4KQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfGLMYS (ORCPT
+        id S1728096AbfGLMYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60504 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfGLMYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:24:07 -0400
+        id S1727572AbfGLMYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:24:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7152216C8;
-        Fri, 12 Jul 2019 12:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3821208E4;
+        Fri, 12 Jul 2019 12:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934246;
-        bh=yoCpDKEXgc/jPOEZGenf4VgfdDgWReN7+VHm3FbOkeQ=;
+        s=default; t=1562934255;
+        bh=/Mz1oNXA8X6erDLO019vWFgA0YET6BevJNaheOkykF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wuldkr+kidNEYC5lYHND0scGBghE21GGa49phyxA9njuZBMZ6JXSpzUKj4ka4deYq
-         Ayx6te3dig+CsGjALmnLI6G9J0JDIN1EXrTfjBsIfUj1Nr7mK/Cy3IzGgerpnodx1u
-         HfH5AIkVEkvHVr21V7q47MzOSm2CIQDLMT5lWrcU=
+        b=xXUvIIsDTykc3FuhAgLvVqSgs3sm6Jb+KHpxLcHGxMhVuP4US87ScCAe94Fi7HALz
+         gnbZs+iaeGLk1HM8xbgNNAmMpm+lXOSSIbLg49psCytVANUaY3Wcn87PPnCBVqjGgd
+         frmYQXoeMq064Ly+giIfPX3LuOdCm4lUA072xwqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 83/91] carl9170: fix misuse of device driver API
-Date:   Fri, 12 Jul 2019 14:19:26 +0200
-Message-Id: <20190712121626.215988016@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [PATCH 4.19 85/91] MIPS: Remove superfluous check for __linux__
+Date:   Fri, 12 Jul 2019 14:19:28 +0200
+Message-Id: <20190712121626.299919825@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,148 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Sean Young <sean@mess.org>
 
-commit feb09b2933275a70917a869989ea2823e7356be8 upstream.
+commit 1287533d3d95d5ad8b02773733044500b1be06bc upstream.
 
-This patch follows Alan Stern's recent patch:
-"p54: Fix race between disconnect and firmware loading"
+When building BPF code using "clang -target bpf -c", clang does not
+define __linux__.
 
-that overhauled carl9170 buggy firmware loading and driver
-unbinding procedures.
+To build BPF IR decoders the include linux/lirc.h is needed which
+includes linux/types.h. Currently this workaround is needed:
 
-Since the carl9170 code was adapted from p54 it uses the
-same functions and is likely to have the same problem, but
-it's just that the syzbot hasn't reproduce them (yet).
+https://git.linuxtv.org/v4l-utils.git/commit/?id=dd3ff81f58c4e1e6f33765dc61ad33c48ae6bb07
 
-a summary from the changes (copied from the p54 patch):
- * Call usb_driver_release_interface() rather than
-   device_release_driver().
+This check might otherwise be useful to stop users from using a non-linux
+compiler, but if you're doing that you are going to have a lot more
+trouble anyway.
 
- * Lock udev (the interface's parent) before unbinding the
-   driver instead of locking udev->parent.
-
- * During the firmware loading process, take a reference
-   to the USB interface instead of the USB device.
-
- * Don't take an unnecessary reference to the device during
-   probe (and then don't drop it during disconnect).
-
-and
-
- * Make sure to prevent use-after-free bugs by explicitly
-   setting the driver context to NULL after signaling the
-   completion.
-
-Cc: <stable@vger.kernel.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/21149/
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/carl9170/usb.c |   39 +++++++++++++-------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+ arch/mips/include/uapi/asm/sgidefs.h |    8 --------
+ 1 file changed, 8 deletions(-)
 
---- a/drivers/net/wireless/ath/carl9170/usb.c
-+++ b/drivers/net/wireless/ath/carl9170/usb.c
-@@ -128,6 +128,8 @@ static const struct usb_device_id carl91
- };
- MODULE_DEVICE_TABLE(usb, carl9170_usb_ids);
+--- a/arch/mips/include/uapi/asm/sgidefs.h
++++ b/arch/mips/include/uapi/asm/sgidefs.h
+@@ -12,14 +12,6 @@
+ #define __ASM_SGIDEFS_H
  
-+static struct usb_driver carl9170_driver;
-+
- static void carl9170_usb_submit_data_urb(struct ar9170 *ar)
- {
- 	struct urb *urb;
-@@ -966,32 +968,28 @@ err_out:
- 
- static void carl9170_usb_firmware_failed(struct ar9170 *ar)
- {
--	struct device *parent = ar->udev->dev.parent;
--	struct usb_device *udev;
+ /*
+- * Using a Linux compiler for building Linux seems logic but not to
+- * everybody.
+- */
+-#ifndef __linux__
+-#error Use a Linux compiler or give up.
+-#endif
 -
--	/*
--	 * Store a copy of the usb_device pointer locally.
--	 * This is because device_release_driver initiates
--	 * carl9170_usb_disconnect, which in turn frees our
--	 * driver context (ar).
-+	/* Store a copies of the usb_interface and usb_device pointer locally.
-+	 * This is because release_driver initiates carl9170_usb_disconnect,
-+	 * which in turn frees our driver context (ar).
- 	 */
--	udev = ar->udev;
-+	struct usb_interface *intf = ar->intf;
-+	struct usb_device *udev = ar->udev;
- 
- 	complete(&ar->fw_load_wait);
-+	/* at this point 'ar' could be already freed. Don't use it anymore */
-+	ar = NULL;
- 
- 	/* unbind anything failed */
--	if (parent)
--		device_lock(parent);
--
--	device_release_driver(&udev->dev);
--	if (parent)
--		device_unlock(parent);
-+	usb_lock_device(udev);
-+	usb_driver_release_interface(&carl9170_driver, intf);
-+	usb_unlock_device(udev);
- 
--	usb_put_dev(udev);
-+	usb_put_intf(intf);
- }
- 
- static void carl9170_usb_firmware_finish(struct ar9170 *ar)
- {
-+	struct usb_interface *intf = ar->intf;
- 	int err;
- 
- 	err = carl9170_parse_firmware(ar);
-@@ -1009,7 +1007,7 @@ static void carl9170_usb_firmware_finish
- 		goto err_unrx;
- 
- 	complete(&ar->fw_load_wait);
--	usb_put_dev(ar->udev);
-+	usb_put_intf(intf);
- 	return;
- 
- err_unrx:
-@@ -1052,7 +1050,6 @@ static int carl9170_usb_probe(struct usb
- 		return PTR_ERR(ar);
- 
- 	udev = interface_to_usbdev(intf);
--	usb_get_dev(udev);
- 	ar->udev = udev;
- 	ar->intf = intf;
- 	ar->features = id->driver_info;
-@@ -1094,15 +1091,14 @@ static int carl9170_usb_probe(struct usb
- 	atomic_set(&ar->rx_anch_urbs, 0);
- 	atomic_set(&ar->rx_pool_urbs, 0);
- 
--	usb_get_dev(ar->udev);
-+	usb_get_intf(intf);
- 
- 	carl9170_set_state(ar, CARL9170_STOPPED);
- 
- 	err = request_firmware_nowait(THIS_MODULE, 1, CARL9170FW_NAME,
- 		&ar->udev->dev, GFP_KERNEL, ar, carl9170_usb_firmware_step2);
- 	if (err) {
--		usb_put_dev(udev);
--		usb_put_dev(udev);
-+		usb_put_intf(intf);
- 		carl9170_free(ar);
- 	}
- 	return err;
-@@ -1131,7 +1127,6 @@ static void carl9170_usb_disconnect(stru
- 
- 	carl9170_release_firmware(ar);
- 	carl9170_free(ar);
--	usb_put_dev(udev);
- }
- 
- #ifdef CONFIG_PM
+-/*
+  * Definitions for the ISA levels
+  *
+  * With the introduction of MIPS32 / MIPS64 instruction sets definitions
 
 
