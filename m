@@ -2,132 +2,103 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC10C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF95C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F15B2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE442166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="UR3LEgR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfGLIta (ORCPT
+        id S1726411AbfGLIvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:49:30 -0400
-Received: from antares.kleine-koenig.org ([94.130.110.236]:42758 "EHLO
-        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfGLIta (ORCPT
+        Fri, 12 Jul 2019 04:51:46 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46518 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfGLIvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:49:30 -0400
-X-Greylist: delayed 337 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 04:49:29 EDT
-Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id 999A471D4A0; Fri, 12 Jul 2019 10:43:51 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 10:43:46 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Brad Love <brad@nextdimension.cc>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
-Message-ID: <20190712084343.GA28962@taurus.defre.kleine-koenig.org>
-References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
-Content-Disposition: inline
-In-Reply-To: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 12 Jul 2019 04:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1562921504; x=1594457504;
+  h=from:to:cc:subject:date:message-id;
+  bh=gIX56E206Ygtmlz0jOLcOvzHgmUrVjC3hqqjQDtHYu4=;
+  b=UR3LEgR9qvTWGJK4w2V/1+WTqanObJxl+AXKqhv/UTFNBj9dwl2aEtUQ
+   mYmYFjEZYW6UlVa2xfR3uuFuviZy/w0dnTDJckC4JI5D/VU/5XBJmYCKC
+   ncXqewPnym8CtD9FIqFJDBQLgNqK6Gd4OCbvD7ZT4axMplzkBfkPjsahe
+   A=;
+X-IronPort-AV: E=Sophos;i="5.62,481,1554768000"; 
+   d="scan'208";a="685113937"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 12 Jul 2019 08:51:43 +0000
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
+        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 0FFBE222159;
+        Fri, 12 Jul 2019 08:51:41 +0000 (UTC)
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x6C8pb32024010;
+        Fri, 12 Jul 2019 10:51:38 +0200
+Received: (from karahmed@localhost)
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id x6C8pZ4Q024001;
+        Fri, 12 Jul 2019 10:51:35 +0200
+From:   KarimAllah Ahmed <karahmed@amazon.de>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: [PATCH] mm: sparse: Skip no-map regions in memblocks_present
+Date:   Fri, 12 Jul 2019 10:51:31 +0200
+Message-Id: <1562921491-23899-1-git-send-email-karahmed@amazon.de>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Do not mark regions that are marked with nomap to be present, otherwise
+these memblock cause unnecessarily allocation of metadata.
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
+---
+ mm/sparse.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Hello,
+diff --git a/mm/sparse.c b/mm/sparse.c
+index fd13166..33810b6 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -256,6 +256,10 @@ void __init memblocks_present(void)
+ 	struct memblock_region *reg;
+ 
+ 	for_each_memblock(memory, reg) {
++
++		if (memblock_is_nomap(reg))
++			continue;
++
+ 		memory_present(memblock_get_region_node(reg),
+ 			       memblock_region_memory_base_pfn(reg),
+ 			       memblock_region_memory_end_pfn(reg));
+-- 
+2.7.4
 
-On Thu, Jul 04, 2019 at 12:33:22PM +0200, Marc Gonzalez wrote:
-> Refactor the command setup code, and let the compiler determine
-> the size of each command.
->=20
-> Reviewed-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> Changes from v1:
-> - Use a real function to populate struct si2168_cmd *cmd, and a trivial
-> macro wrapping it (macro because sizeof).
-> Changes from v2:
-> - Fix header mess
-> - Add Jonathan's tag
-> ---
->  drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------
->  1 file changed, 45 insertions(+), 101 deletions(-)
->=20
-> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-fro=
-ntends/si2168.c
-> index c64b360ce6b5..5e81e076369c 100644
-> --- a/drivers/media/dvb-frontends/si2168.c
-> +++ b/drivers/media/dvb-frontends/si2168.c
-> @@ -12,6 +12,16 @@
-> =20
->  static const struct dvb_frontend_ops si2168_ops;
-> =20
-> +static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, int =
-rlen)
-
-I'd add an "inline" here. And you could add a const for *args.
-
-> +{
-> +	memcpy(cmd->args, args, wlen);
-> +	cmd->wlen =3D wlen;
-> +	cmd->rlen =3D rlen;
-> +}
-> +
-> +#define CMD_SETUP(cmd, args, rlen) \
-> +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
-
-Here is the chance to add some static checking. Also it is a good habit
-to put parens around macro arguments.
-
-Something like:
-
-#define CMD_SETUP(cmd, args, rlen) ({ \
-	BUILD_BUG_ON(sizeof((args)) - 1 > SI2168_ARGLEN);
-	cmd_setup((cmd), (args), __must_be_array((args)) + sizeof((args)) - 1, (rl=
-en));
-
-Maybe let this macro live in drivers/media/dvb-frontends/si2168_priv.h
-where struct si2168_cmd is defined?
-
-I looked over the transformations in the rest of the patch and this
-looks good.
-
-Best regards
-Uwe
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl0oSDwACgkQwfwUeK3K
-7AkeBAf+I6QEDR298PCHto1ijeLdlLRFE7Ietsd+QeVUPOfW8FqfEowGHGd9gmPd
-kzR3NzgupP4MFxxw00BVwxf9iOeBMo94Q6ggPzBDI4X5BE71jFhwo3+QkJM7XuyX
-TAHq3pZ5aMInl27Kw54PxqCYRHPozZ4JxnsVys6kJvh/JkaiRMQApxm69ry10J23
-u/gBDTnC80FsAjJ0QRSGBzjPytcx0UeAf/RXPodE5mtz0PAiyVefyK6+NRXrxEcW
-mZqfi8T4azYGcijVK4qU+bSAkRjwwk8Xdthkby1C7IhjR0yOSh2g0ZyH0hG3w4Xi
-M+2jYIacxtSrd3sDzOvT3k6eB7DS9w==
-=yXyE
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
