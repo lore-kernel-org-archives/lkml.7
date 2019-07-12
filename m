@@ -2,304 +2,110 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC29C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021F4C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE60D20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D7920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbfGLHXe (ORCPT
+        id S1726215AbfGLHXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:23:34 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40810 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfGLHXd (ORCPT
+        Fri, 12 Jul 2019 03:23:47 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56797 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726033AbfGLHXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:23:33 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so7115527qtn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 00:23:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZN5x6Ys58BLlrYAsJgOSevY7V/yhMtrVcdtnejK+Hg=;
-        b=ZtgE4yUbkMPlAZAXS13brJHfqgT9pkrzBC8PEguYudg8zMpXX+FHAr4je7ECzp+RGp
-         BDqifo9NXK/9oEitREZiAFiCGLHu697pE10kyp2rVA/7O33ChUTj/wylyisFiAo4t3le
-         Np42KZpYOQaZrRX2Pgw1EMI2CIc7VSfdGjcjADLa9ApEMlRWJUox5EvbHwXYKSV+8gIA
-         5WeW6hUEIk2al/ZfkBCD3SZ78tSycBfnsOqlBEIaeibQKBY4MaZrJJhEkdCHShWTER3v
-         U8XJvhLf25rxaxVb6CuntY3qXcmUizo1+a2HtHGtPzQTk1f/eeOSkb7rLwilv/RZRKRb
-         S4ow==
-X-Gm-Message-State: APjAAAWAGSl2R4KpSFwLxwwV4wUoHR1D0vHogsXVOYQ46kGNR4Uv7WSk
-        Ut3qVLzb9s+HmsD17+pXJv1sM+Z4JZq5XQ3Bky1sHg==
-X-Google-Smtp-Source: APXvYqwV3Hjfdt6v18zMFmkS67+5p5Zd40nf+pcaUCmEGumWxDpBUOzadiADlSsmIQ7Yr4lOasrqfw7oAs278LCDhFw=
-X-Received: by 2002:aed:3ac1:: with SMTP id o59mr5149174qte.260.1562916212139;
- Fri, 12 Jul 2019 00:23:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190710230410.9386-1-atifniyaz@google.com> <20190712064134.GA150689@dtor-ws>
-In-Reply-To: <20190712064134.GA150689@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 12 Jul 2019 09:23:20 +0200
-Message-ID: <CAO-hwJK-VAGpjN03XDTmmT4fYxb1V_izfvT9Z3tKDmLJ3henGw@mail.gmail.com>
-Subject: Re: [PATCH] input: API for Setting a Timestamp from a Driver
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Atif Niyaz <atifniyaz@google.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        Atif Niyaz <atifniyaz11@gmail.com>,
-        Siarhei Vishniakou <svv@google.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Fri, 12 Jul 2019 03:23:46 -0400
+X-UUID: bdd7fe42907544eebcbbb88dcb5f0f9e-20190712
+X-UUID: bdd7fe42907544eebcbbb88dcb5f0f9e-20190712
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <houlong.wei@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1226092318; Fri, 12 Jul 2019 15:23:40 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n1.mediatek.inc
+ (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 12 Jul
+ 2019 15:23:38 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 12 Jul 2019 15:23:38 +0800
+Message-ID: <1562916217.29653.4.camel@mhfsdcap03>
+Subject: Re: [PATCH] [media] media: mtk-mdp: fix reference count on old
+ device tree
+From:   houlong wei <houlong.wei@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Minghsiu Tsai =?UTF-8?Q?=28=E8=94=A1=E6=98=8E=E4=BF=AE=29?= 
+        <Minghsiu.Tsai@mediatek.com>,
+        Andrew-CT Chen =?UTF-8?Q?=28=E9=99=B3=E6=99=BA=E8=BF=AA=29?= 
+        <Andrew-CT.Chen@mediatek.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "djkurtz@chromium.org" <djkurtz@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Fri, 12 Jul 2019 15:23:37 +0800
+In-Reply-To: <e4d178ae-f43e-21d0-b0ab-78cc2ac71e7e@gmail.com>
+References: <20190621113250.4946-1-matthias.bgg@gmail.com>
+         <e4d178ae-f43e-21d0-b0ab-78cc2ac71e7e@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 8:41 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Atif,
->
-> On Wed, Jul 10, 2019 at 04:04:10PM -0700, Atif Niyaz wrote:
-> > Currently, evdev stamps time with timestamps acquired in
-> > evdev_events. However, this timestamping may not be accurate in terms of
-> > measuring when the actual event happened. This API allows any 3rd party
-> > driver to be able to call input_set_timestamp, and provide a timestamp
-> > that can be utilized in order to provide a more accurate sense of time
-> > for the event
-> >
-> > Signed-off-by: Atif Niyaz <atifniyaz@google.com>
->
-> This looks OK to me. Benjamin, Peter, any concerns here?
->
 
-No red flags from me (though Peter is the one using all of this).
 
-Just curious, which drivers do you think will be using this new API?
-I can see that we might want to use hid-multitouch for it, with the
-Scan Time forwarded by the device, but what do you have in mind?
+On Mon, 2019-07-08 at 17:06 +0800, Matthias Brugger wrote:
+> 
+> On 21/06/2019 13:32, Matthias Brugger wrote:
+> > of_get_next_child() increments the reference count of the returning
+> > device_node. Decrement it in the check if we are using the old or the
+> > new DTB.
+> > 
+> > Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
+> > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> 
+> Any comments on that?
+> 
 
-Cheers,
-Benjamin
+Hi Matthias,
+Thanks for fixing the bug. Sorry to reply late~
 
->
+Acked-by: Houlong Wei <houlong.wei@mediatek.com>
+
+
 > > ---
-> >  drivers/input/evdev.c | 42 ++++++++++++++++--------------------------
-> >  drivers/input/input.c | 17 +++++++++++++++++
-> >  include/linux/input.h | 38 ++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 71 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-> > index 867c2cfd0038..a331efa0a3f6 100644
-> > --- a/drivers/input/evdev.c
-> > +++ b/drivers/input/evdev.c
-> > @@ -25,13 +25,6 @@
-> >  #include <linux/cdev.h>
-> >  #include "input-compat.h"
-> >
-> > -enum evdev_clock_type {
-> > -     EV_CLK_REAL = 0,
-> > -     EV_CLK_MONO,
-> > -     EV_CLK_BOOT,
-> > -     EV_CLK_MAX
-> > -};
-> > -
-> >  struct evdev {
-> >       int open;
-> >       struct input_handle handle;
-> > @@ -53,7 +46,7 @@ struct evdev_client {
-> >       struct fasync_struct *fasync;
-> >       struct evdev *evdev;
-> >       struct list_head node;
-> > -     unsigned int clk_type;
-> > +     input_clk_t clk_type;
-> >       bool revoked;
-> >       unsigned long *evmasks[EV_CNT];
-> >       unsigned int bufsize;
-> > @@ -150,16 +143,18 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
-> >  static void __evdev_queue_syn_dropped(struct evdev_client *client)
-> >  {
-> >       struct input_event ev;
-> > -     ktime_t time;
-> >       struct timespec64 ts;
-> > +     ktime_t *time = input_get_timestamp(client->evdev->handle.dev);
-> >
-> > -     time = client->clk_type == EV_CLK_REAL ?
-> > -                     ktime_get_real() :
-> > -                     client->clk_type == EV_CLK_MONO ?
-> > -                             ktime_get() :
-> > -                             ktime_get_boottime();
-> > +     switch (client->clk_type) {
-> > +     case INPUT_CLK_REAL:
-> > +     case INPUT_CLK_MONO:
-> > +             ts = ktime_to_timespec64(time[client->clk_type]);
-> > +             break;
-> > +     default:
-> > +             ts = ktime_to_timespec64(time[INPUT_CLK_BOOT]);
->
-> Add "break" here please.
->
-> > +     }
-> >
-> > -     ts = ktime_to_timespec64(time);
-> >       ev.input_event_sec = ts.tv_sec;
-> >       ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
-> >       ev.type = EV_SYN;
-> > @@ -185,21 +180,21 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
-> >       spin_unlock_irqrestore(&client->buffer_lock, flags);
-> >  }
-> >
-> > -static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
-> > +static int evdev_set_clk_type(struct evdev_client *client, clockid_t clkid)
-> >  {
-> >       unsigned long flags;
-> > -     unsigned int clk_type;
-> > +     input_clk_t clk_type;
-> >
-> >       switch (clkid) {
-> >
-> >       case CLOCK_REALTIME:
-> > -             clk_type = EV_CLK_REAL;
-> > +             clk_type = INPUT_CLK_REAL;
-> >               break;
-> >       case CLOCK_MONOTONIC:
-> > -             clk_type = EV_CLK_MONO;
-> > +             clk_type = INPUT_CLK_MONO;
-> >               break;
-> >       case CLOCK_BOOTTIME:
-> > -             clk_type = EV_CLK_BOOT;
-> > +             clk_type = INPUT_CLK_BOOT;
-> >               break;
-> >       default:
-> >               return -EINVAL;
-> > @@ -307,12 +302,7 @@ static void evdev_events(struct input_handle *handle,
-> >  {
-> >       struct evdev *evdev = handle->private;
-> >       struct evdev_client *client;
-> > -     ktime_t ev_time[EV_CLK_MAX];
-> > -
-> > -     ev_time[EV_CLK_MONO] = ktime_get();
-> > -     ev_time[EV_CLK_REAL] = ktime_mono_to_real(ev_time[EV_CLK_MONO]);
-> > -     ev_time[EV_CLK_BOOT] = ktime_mono_to_any(ev_time[EV_CLK_MONO],
-> > -                                              TK_OFFS_BOOT);
-> > +     ktime_t *ev_time = input_get_timestamp(handle->dev);
-> >
-> >       rcu_read_lock();
-> >
-> > diff --git a/drivers/input/input.c b/drivers/input/input.c
-> > index 7f3c5fcb9ed6..ae8b0ee58120 100644
-> > --- a/drivers/input/input.c
-> > +++ b/drivers/input/input.c
-> > @@ -1894,6 +1894,23 @@ void input_free_device(struct input_dev *dev)
-> >  }
-> >  EXPORT_SYMBOL(input_free_device);
-> >
-> > +/**
-> > + * input_get_timestamp - get timestamp for input events
-> > + * @dev: input device to get timestamp from
-> > + *
-> > + * A valid timestamp is a timestamp of non-zero value.
-> > + */
-> > +ktime_t *input_get_timestamp(struct input_dev *dev)
-> > +{
-> > +     const ktime_t invalid_timestamp = ktime_set(0, 0);
-> > +
-> > +     if (!ktime_compare(dev->timestamp[INPUT_CLK_MONO], ktime_zero)) {
->
-> You need to replace ktime_zero with invalid_timestamp here.
->
-> > +             input_set_timestamp(dev, ktime_get());
-> > +     }
->
-> No need for curly braces for 1-line body.
->
-> > +     return dev->timestamp;
-> > +}
-> > +EXPORT_SYMBOL(input_get_timestamp);
-> > +
-> >  /**
-> >   * input_set_capability - mark device as capable of a certain event
-> >   * @dev: device that is capable of emitting or accepting event
-> > diff --git a/include/linux/input.h b/include/linux/input.h
-> > index 510e78558c10..3929b62ccbe5 100644
-> > --- a/include/linux/input.h
-> > +++ b/include/linux/input.h
-> > @@ -33,6 +33,14 @@ struct input_value {
-> >       __s32 value;
-> >  };
-> >
-> > +enum input_clock_type {
-> > +     INPUT_CLK_REAL = 0,
-> > +     INPUT_CLK_MONO,
-> > +     INPUT_CLK_BOOT,
-> > +     INPUT_CLK_MAX
-> > +};
-> > +typedef enum input_clock_type input_clk_t;
->
-> We typically avoid typedefs unless we really want to hide kind of data
-> we are dealing with. Let's just use "enum input_clock_type" everywhere.
->
-> > +
-> >  /**
-> >   * struct input_dev - represents an input device
-> >   * @name: name of the device
-> > @@ -114,6 +122,8 @@ struct input_value {
-> >   * @vals: array of values queued in the current frame
-> >   * @devres_managed: indicates that devices is managed with devres framework
-> >   *   and needs not be explicitly unregistered or freed.
-> > + * @timestamp: storage for a timestamp set by input_set_timestamp called
-> > + *  by a driver
-> >   */
-> >  struct input_dev {
-> >       const char *name;
-> > @@ -184,6 +194,8 @@ struct input_dev {
-> >       struct input_value *vals;
-> >
-> >       bool devres_managed;
-> > +
-> > +     ktime_t timestamp[INPUT_CLK_MAX];
-> >  };
-> >  #define to_input_dev(d) container_of(d, struct input_dev, dev)
-> >
-> > @@ -382,6 +394,32 @@ void input_close_device(struct input_handle *);
-> >
-> >  int input_flush_device(struct input_handle *handle, struct file *file);
-> >
-> > +/**
-> > + * input_set_timestamp - set timestamp for input events
-> > + * @dev: input device to set timestamp for
-> > + * @timestamp: the time at which the event has occurred
-> > + *   in CLOCK_MONOTONIC
-> > + *
-> > + * This function is intended to provide to the input system a more
-> > + * accurate time of when an event actually occurred. The driver should
-> > + * call this function as soon as a timestamp is acquired ensuring
-> > + * clock conversions in input_set_timestamp are done correctly.
-> > + *
-> > + * The system entering a suspend between timestamp acquisition and
-> > + * calling input_set_timestamp can result in inaccurate conversions.
-> > + *
-> > + */
-> > +static inline void input_set_timestamp(struct input_dev *dev,
-> > +     ktime_t timestamp)
-> > +{
-> > +     dev->timestamp[INPUT_CLK_MONO] = timestamp;
-> > +     dev->timestamp[INPUT_CLK_REAL] = ktime_mono_to_real(timestamp);
-> > +     dev->timestamp[INPUT_CLK_BOOT] = ktime_mono_to_any(
-> > +             timestamp, TK_OFFS_BOOT);
-> > +}
-> > +
-> > +ktime_t *input_get_timestamp(struct input_dev *dev);
-> > +
-> >  void input_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
-> >  void input_inject_event(struct input_handle *handle, unsigned int type, unsigned int code, int value);
-> >
-> > --
-> > 2.22.0.410.gd8fdbe21b5-goog
-> >
->
-> --
-> Dmitry
+> >  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> > index bbb24fb95b95..bafe53c5d54a 100644
+> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> > @@ -118,7 +118,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
+> >  	mutex_init(&mdp->vpulock);
+> >  
+> >  	/* Old dts had the components as child nodes */
+> > -	if (of_get_next_child(dev->of_node, NULL)) {
+> > +	parent = of_get_next_child(dev->of_node, NULL);
+> > +	if (parent) {
+> > +		of_node_put(parent);
+> >  		parent = dev->of_node;
+> >  		dev_warn(dev, "device tree is out of date\n");
+> >  	} else {
+> > 
+
+
