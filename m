@@ -2,231 +2,136 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9273C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF59CC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC2621019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bmxPnZXF"
+	by mail.kernel.org (Postfix) with ESMTP id 7F3D72146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 19:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfGLTkp (ORCPT
+        id S1727653AbfGLTnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 15:40:45 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41292 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbfGLTko (ORCPT
+        Fri, 12 Jul 2019 15:43:43 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.80]:19661 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727609AbfGLTnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 15:40:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so4729287pff.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 12:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nAJsR7QXwSJc647spM+sQunAoBzpCrSmQsX27huBu+o=;
-        b=bmxPnZXFh5gOCfuOus2gHM6f6oGNgMKP/ji63JlI+bwUXl3Gpe3vjP96TTAKXaJCZC
-         zj7Y8eFA2XvcXUe8SUv1NKdUvs12xq4vmo946+SPEoJfJYl3KKJWKjnEQtWp8b/06x77
-         32gH3YSvwVXKePdbdirKmPWfh8K3q8ksM+3uI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nAJsR7QXwSJc647spM+sQunAoBzpCrSmQsX27huBu+o=;
-        b=X9Wdyd1dhk1AKfNaYwwYfHL+cbZR5BasKucUe2TJlZT5gELwVCPviUk/doiEwWQKI9
-         XZCItkAqxlovrXD/oqpqey/3a7kwWNznvEgcnsPx7gOmrIvrjxVwiF4/KL3ASf3C365S
-         toqu8PdxXiHDz8bir1vbeilmByuNjPGGclGG7FBaihh5JEtBY+IDNKkMheEDn1jPTFOZ
-         zTalZhjtFNTWknxKrOXb7LJYktYoyFq7uw5NAjw8DXqdf5W/5FYl0vLYWD/dw89pHXuY
-         bH8fIuCXTXC+jDzeyjSTChILn3tedZDVCioMiPCKpSx2M3+ppftunJLyOa1W8LuVTso2
-         GsPA==
-X-Gm-Message-State: APjAAAUcT6bkiiqvzjsLGYRTsouGoT1VLZEaWIAaEyxUQU9Q+vvD5rN/
-        tr2Mel4uZbJC3VGfURpwb2Y=
-X-Google-Smtp-Source: APXvYqxvgkL0vpDAZ6Hy5r4mm056ssuxGSXpd+iPIILPiTDSys89aOnq2iGFem/k4lcJZbyW+r6SIQ==
-X-Received: by 2002:a63:2246:: with SMTP id t6mr12863936pgm.209.1562960443485;
-        Fri, 12 Jul 2019 12:40:43 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id bo20sm7308552pjb.23.2019.07.12.12.40.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 12:40:42 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 15:40:40 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712194040.GA150253@google.com>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712111125.GT3402@hirez.programming.kicks-ass.net>
- <20190712151051.GB235410@google.com>
- <20190712164531.GW26519@linux.ibm.com>
- <20190712170631.GA111598@google.com>
- <20190712174630.GX26519@linux.ibm.com>
+        Fri, 12 Jul 2019 15:43:42 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 6901C8529E
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:43:41 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id m1SHhHklrYTGMm1SHh8xyk; Fri, 12 Jul 2019 14:43:41 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:11129 helo=[192.168.0.11])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hm1SH-003I7M-3R; Fri, 12 Jul 2019 14:43:41 -0500
+Subject: Re: [PATCH] RDMA/siw: Mark expected switch fall-throughs
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190711161218.GA4989@embeddedor> <20190711180511.GA816@ziepe.ca>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <3e6dd4e7-1480-652b-e48b-26b9737b0e6f@embeddedor.com>
+Date:   Fri, 12 Jul 2019 14:43:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712174630.GX26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190711180511.GA816@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.213
+X-Source-L: No
+X-Exim-ID: 1hm1SH-003I7M-3R
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net ([192.168.0.11]) [187.160.61.213]:11129
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:46:30AM -0700, Paul E. McKenney wrote:
-> On Fri, Jul 12, 2019 at 01:06:31PM -0400, Joel Fernandes wrote:
-> > On Fri, Jul 12, 2019 at 09:45:31AM -0700, Paul E. McKenney wrote:
-> > > On Fri, Jul 12, 2019 at 11:10:51AM -0400, Joel Fernandes wrote:
-> > > > On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
-> > > > > On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> > > > > > +int rcu_read_lock_any_held(void)
-> > > > > > +{
-> > > > > > +	int lockdep_opinion = 0;
-> > > > > > +
-> > > > > > +	if (!debug_lockdep_rcu_enabled())
-> > > > > > +		return 1;
-> > > > > > +	if (!rcu_is_watching())
-> > > > > > +		return 0;
-> > > > > > +	if (!rcu_lockdep_current_cpu_online())
-> > > > > > +		return 0;
-> > > > > > +
-> > > > > > +	/* Preemptible RCU flavor */
-> > > > > > +	if (lock_is_held(&rcu_lock_map))
-> > > > > 
-> > > > > you forgot debug_locks here.
-> > > > 
-> > > > Actually, it turns out debug_locks checking is not even needed. If
-> > > > debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
-> > > > get to this point.
-> > > > 
-> > > > > > +		return 1;
-> > > > > > +
-> > > > > > +	/* BH flavor */
-> > > > > > +	if (in_softirq() || irqs_disabled())
-> > > > > 
-> > > > > I'm not sure I'd put irqs_disabled() under BH, also this entire
-> > > > > condition is superfluous, see below.
-> > > > > 
-> > > > > > +		return 1;
-> > > > > > +
-> > > > > > +	/* Sched flavor */
-> > > > > > +	if (debug_locks)
-> > > > > > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > > > > > +	return lockdep_opinion || !preemptible();
-> > > > > 
-> > > > > that !preemptible() turns into:
-> > > > > 
-> > > > >   !(preempt_count()==0 && !irqs_disabled())
-> > > > > 
-> > > > > which is:
-> > > > > 
-> > > > >   preempt_count() != 0 || irqs_disabled()
-> > > > > 
-> > > > > and already includes irqs_disabled() and in_softirq().
-> > > > > 
-> > > > > > +}
-> > > > > 
-> > > > > So maybe something lke:
-> > > > > 
-> > > > > 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
-> > > > > 			    lock_is_held(&rcu_sched_lock_map)))
-> > > > > 		return true;
-> > > > 
-> > > > Agreed, I will do it this way (without the debug_locks) like:
-> > > > 
-> > > > ---8<-----------------------
-> > > > 
-> > > > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> > > > index ba861d1716d3..339aebc330db 100644
-> > > > --- a/kernel/rcu/update.c
-> > > > +++ b/kernel/rcu/update.c
-> > > > @@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
-> > > >  
-> > > >  int rcu_read_lock_any_held(void)
-> > > >  {
-> > > > -	int lockdep_opinion = 0;
-> > > > -
-> > > >  	if (!debug_lockdep_rcu_enabled())
-> > > >  		return 1;
-> > > >  	if (!rcu_is_watching())
-> > > >  		return 0;
-> > > >  	if (!rcu_lockdep_current_cpu_online())
-> > > >  		return 0;
-> > > > -
-> > > > -	/* Preemptible RCU flavor */
-> > > > -	if (lock_is_held(&rcu_lock_map))
-> > > > -		return 1;
-> > > > -
-> > > > -	/* BH flavor */
-> > > > -	if (in_softirq() || irqs_disabled())
-> > > > -		return 1;
-> > > > -
-> > > > -	/* Sched flavor */
-> > > > -	if (debug_locks)
-> > > > -		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > > > -	return lockdep_opinion || !preemptible();
-> > > > +	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
-> > > 
-> > > OK, I will bite...  Why not also lock_is_held(&rcu_bh_lock_map)?
-> > 
-> > Hmm, I was borrowing the strategy from rcu_read_lock_bh_held() which does not
-> > check for a lock held in this map.
-> > 
-> > Honestly, even  lock_is_held(&rcu_sched_lock_map) seems unnecessary per-se
-> > since !preemptible() will catch that? rcu_read_lock_sched() disables
-> > preemption already, so lockdep's opinion of the matter seems redundant there.
+
+
+On 7/11/19 1:05 PM, Jason Gunthorpe wrote:
+
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>
+>> NOTE: -Wimplicit-fallthrough will be enabled globally in v5.3. So, I
+>>       suggest you to take this patch for 5.3-rc1.
 > 
-> Good point!  At least as long as the lockdep splats list RCU-bh among
-> the locks held, which they did last I checked.
+> Okay, I queued this for the current merge window then
 > 
-> Of course, you could make the same argument for getting rid of
-> rcu_sched_lock_map.  Does it make sense to have the one without
-> the other?
 
-It probably makes it inconsistent in the least. I will add the check for
-the rcu_bh_lock_map in a separate patch, if that's Ok with you - since I also
-want to update the rcu_read_lock_bh_held() logic in the same patch.
+Awesome. :)
 
-That rcu_read_lock_bh_held() could also just return !preemptible as Peter
-suggested for the bh case.
+Thank you both, Bernard and Jason.
 
-> > Sorry I already sent out patches again before seeing your comment but I can
-> > rework and resend them based on any other suggestions.
-> 
-> Not a problem!
-
-Thanks. Depending on whether there is any other feedback, I will work on the
-bh_ stuff as a separate patch on top of this series, or work it into the next
-series revision if I'm reposting. Hopefully that sounds Ok to you.
-
-thanks,
-
- - Joel
-
-
+--
+Gustavo
