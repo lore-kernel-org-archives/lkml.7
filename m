@@ -2,97 +2,170 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD24C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4EAC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CB4204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDMKme+u"
+	by mail.kernel.org (Postfix) with ESMTP id D2C2E204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfGLRjR (ORCPT
+        id S1727356AbfGLRk5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:39:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54760 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfGLRjQ (ORCPT
+        Fri, 12 Jul 2019 13:40:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726976AbfGLRk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:39:16 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so9630970wme.4;
-        Fri, 12 Jul 2019 10:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HVK6msgsGJnoGkWkZSEGcmqkYH7ZezIUmPb0VYKKhC8=;
-        b=YDMKme+uIxGp66/wwY/EplhFxPQr/t4DYX0MgTS1iwGFTUYTuH9IPIIscAa4Y49DFn
-         xs0xsYa9MiPtOazvV5Vm55mtSLN1n1uXfZHOm251IXGXvrFDVmjrrF703hHkppChUuCb
-         ut47oyWLOt2h14yHSXbvy8TzgciLeMaX/Bnk/LbXupP4A1wNo9Gc77v3R8ezvmBGCyNA
-         QRs2Ga7xhLQAMb0e5YdR51V5U1HoRMh8sI1cFbBCCrPq/lWBVZOWLNaqBaXme1cycf6j
-         9hlY0J6oNMqbZGRrV647Did2RmJ6mfaWNK5eag+9rq5OkBQN6EHm/2fA0ZiOnmCv9o2X
-         BjdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HVK6msgsGJnoGkWkZSEGcmqkYH7ZezIUmPb0VYKKhC8=;
-        b=cTQlAR0YPHmzO+uTjQ8xfZiv1YJRTgCd3m+gpLckYtjumh8g5SHrgmXXGbnGNXYh9I
-         n2386aXAp2NdRBK5eQDeF4JVYsqA0N5secXqUnhy1yJCwLsx5m5H03i3G+Of8trdewu9
-         l8kYHTWtgfYMaqXvG0pJQ7HeKVUxLZq+yFq/l19so64ZU3E48o1WuOAd1Oou8a+XNb2D
-         e1LKNp7IdVrhUbKRp/LOLvbYPxYtYmsp4T8/8wvaw6oN+2aVBS5QCUdF7Uxweiwplu+f
-         EGYJpLuq/mMR7t9FWItlR+QFbf2wyFz+8rOz8/p8W7HJghkYQc7Dy3oURAQhis5tpwOS
-         H5DA==
-X-Gm-Message-State: APjAAAXGAI5NZsIFZe7EpDjFqKxrjd/Kyyp33cqlJrDw7LfAhfmWVB2R
-        2JwZgMgtg9IFnIiZGiyFciw=
-X-Google-Smtp-Source: APXvYqyI3efZEXBVC3rLAHfRJtLgBtlDWsCsQ2i98qK4Rh68IgPXHBx/4Z1VX0O6Ypffde530ZrROw==
-X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr11253843wmc.154.1562953154626;
-        Fri, 12 Jul 2019 10:39:14 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c3sm9887021wrx.19.2019.07.12.10.39.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:39:13 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 10:39:12 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] dma: ste_dma40: fix unneeded variable warning
-Message-ID: <20190712173912.GA127917@archlinux-threadripper>
-References: <20190712091357.744515-1-arnd@arndb.de>
+        Fri, 12 Jul 2019 13:40:56 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CHbbFM095256
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:40:55 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.81])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpxjj8m50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:40:55 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Fri, 12 Jul 2019 17:40:54 -0000
+Received: from us1a3-smtp08.a3.dal06.isc4sb.com (10.146.103.57)
+        by smtp.notes.na.collabserv.com (10.106.227.88) with smtp.notes.na.collabserv.com ESMTP;
+        Fri, 12 Jul 2019 17:40:44 -0000
+Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
+          by us1a3-smtp08.a3.dal06.isc4sb.com
+          with ESMTP id 2019071217404319-687984 ;
+          Fri, 12 Jul 2019 17:40:43 +0000 
+In-Reply-To: <20190712153243.GI27512@ziepe.ca>
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc:     "Arnd Bergmann" <arnd@arndb.de>,
+        "Doug Ledford" <dledford@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Jul 2019 17:40:43 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712091357.744515-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20190712153243.GI27512@ziepe.ca>,<20190712144257.GE27512@ziepe.ca>
+ <20190712135339.GC27512@ziepe.ca> <20190712120328.GB27512@ziepe.ca>
+ <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+ <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
+X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
+ SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
+X-LLNOutbound: False
+X-Disclaimed: 21983
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 19071217-3067-0000-0000-000000050945
+X-IBM-SpamModules-Scores: BY=0.033397; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.035923
+X-IBM-SpamModules-Versions: BY=3.00011416; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01231195; UDB=6.00648559; IPR=6.01012479;
+ MB=3.00027693; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 17:40:51
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2019-07-12 15:44:48 - 6.00010156
+x-cbparentid: 19071217-3068-0000-0000-000000082D7E
+Message-Id: <OFAB0712BA.E95178B5-ON00258435.00611CBE-00258435.00611CC4@notes.na.collabserv.com>
+Subject: Re:  Re: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:13:30AM +0200, Arnd Bergmann wrote:
-> clang-9 points out that there are two variables that depending on the
-> configuration may only be used in an ARRAY_SIZE() expression but not
-> referenced:
-> 
-> drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-> static u32 d40_backup_regs[] = {
->            ^
-> drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-> static u32 d40_backup_regs_chan[] = {
-> 
-> Mark these __maybe_unused to shut up the warning.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+-----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
 
-Might be worth mentioning that this warning will only appear when
-CONFIG_PM is unset (they are both used in d40_save_restore_registers).
+>To: "Bernard Metzler" <BMT@zurich.ibm.com>
+>From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>Date: 07/12/2019 05:33PM
+>Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
+><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+>linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+>Subject: [EXTERNAL] Re: Re: Re: Re: [PATCH] rdma/siw: avoid
+>smp_store_mb() on a u64
+>
+>On Fri, Jul 12, 2019 at 03:24:09PM +0000, Bernard Metzler wrote:
+>> 
+>> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+>> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>> >Date: 07/12/2019 04:43PM
+>> >Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
+>> ><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+>> >linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+>> >Subject: [EXTERNAL] Re: Re: Re: [PATCH] rdma/siw: avoid
+>> >smp_store_mb() on a u64
+>> >
+>> >On Fri, Jul 12, 2019 at 02:35:50PM +0000, Bernard Metzler wrote:
+>> >
+>> >> >This looks wrong to me.. a userspace notification re-arm cannot
+>be
+>> >> >lost, so have a split READ/TEST/WRITE sequence can't possibly
+>> >work?
+>> >> >
+>> >> >I'd expect an atomic test and clear here?
+>> >> 
+>> >> We cannot avoid the case that the application re-arms the
+>> >> CQ only after a CQE got placed. That is why folks are polling
+>the
+>> >> CQ once after re-arming it - to make sure they do not miss the
+>> >> very last and single CQE which would have produced a CQ event.
+>> >
+>> >That is different, that is re-arm happing after a CQE placement
+>and
+>> >this can't be fixed.
+>> >
+>> >What I said is that a re-arm from userspace cannot be lost. So you
+>> >can't blindly clear the arm flag with the WRITE_ONCE. It might be
+>OK
+>> >beacuse of the if, but...
+>> >
+>> >It is just goofy to write it without a 'test and clear' atomic. If
+>> >the
+>> >writer side consumes the notify it should always be done
+>atomically.
+>> >
+>> Hmmm, I don't yet get why we should test and clear atomically, if
+>we
+>> clear anyway - is it because we want to avoid clearing a re-arm
+>which
+>> happens just after testing and before clearing?
+>
+>It is just clearer as to the intent.. 
+>
+>Are you trying to optimize away an atomic or something? That might
+>work better as a dual counter scheme.
+>
+>> Another complication -- test_and_set_bit() operates on a single
+>> bit, but we have to test two bits, and reset both, if one is
+>> set.
+>
+>Why are two bits needed to represent armed and !armed?
+>
+>Jason
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+It is because there are two levels a CQ can be armed:
+
+       #include <infiniband/verbs.h>
+
+       int ibv_req_notify_cq(struct ibv_cq *cq, int solicited_only);
+
+If we kick the CQ handler, we have to clear the whole
+thing. The user later again decides how he wants to get it
+re-armed...SOLICITED completions only, or ALL signaled.
+
+Best,
+Bernard.
+
+>
+>
+
