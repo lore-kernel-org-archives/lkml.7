@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C384BC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61040C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBE1216E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ECAB208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934868;
-	bh=vUf3XpGa+WekQ5lIiG92xQn8VR8/MuKJgGBSwBLnhYw=;
+	s=default; t=1562934877;
+	bh=y8I/VZdab5WdTkRjCn3lOhQks0XTwHHV4UXif+RnngE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKjm8NT4TjhvFxj1lOQ8iu0kAvV+SjXjPRD3msn/Z5xOQAbfI5fpvMYijIXEq0ATD
-	 yv0dtp05w0jHkwiuuJrgXHWsn+uqKFS1Ylx1keKzTdSqSy4t3IqubtQPc4NPKx6ZMd
-	 LANathm5VYYsA2EA8li1z63OxZqgNIHP9vhn6Yuc=
+	b=ztnX9dy8GkFaFz19e0fXw5d/F/gLjaAxWnPTAKLyytMpq856IwUkkPNae7UIgqJkh
+	 Gc3Nf+Who6FBU1wZZc+tzu3cpGaaQxl7g3icGwwDm0w6z+R2DNY096wo+r5TMZhkgv
+	 ryPuQ6zAukZR9Np+v/0fR4dMMBohvKnawXibgv+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbfGLMe1 (ORCPT
+        id S1729765AbfGLMef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbfGLMeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:34:24 -0400
+        id S1729011AbfGLMeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:34:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 385A120645;
-        Fri, 12 Jul 2019 12:34:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83BFA216B7;
+        Fri, 12 Jul 2019 12:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934863;
-        bh=vUf3XpGa+WekQ5lIiG92xQn8VR8/MuKJgGBSwBLnhYw=;
+        s=default; t=1562934870;
+        bh=y8I/VZdab5WdTkRjCn3lOhQks0XTwHHV4UXif+RnngE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJ//bFaD6OKUYkxdmOx25xCnm7OY6R0Rd0HXzkgDjegutAvefnFK/xfjxgR34oqXs
-         84jTmlmlpqDv8QTtGktwxUsTwPyvSB/9JolkKaf/akDDgWNGywmx/L+5cxa9K/tlCT
-         +/CyeTeBh+jKyf3fYo+guPmCO4O+fEqPtLXmi4js=
+        b=MxatkRmze0QOLNDP1l2jWFomTvr/vd0zwDlhtpPoCmEj5HtmUdx90Urifdya7qrm7
+         GdPsfXLLOxLduEVOnhzB+q6QLHKvyyYXUX7O0Y3ZMFziKvLD1sD+Av9JkLTIheI3+T
+         vhABSjmW3lT1skmF8Hggstdq60/FqeHqEC8LM+9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
-Subject: [PATCH 5.2 56/61] staging: fsl-dpaa2/ethsw: fix memory leak of switchdev_work
-Date:   Fri, 12 Jul 2019 14:20:09 +0200
-Message-Id: <20190712121623.783638764@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.2 58/61] staging: bcm2835-camera: Ensure all buffers are returned on disable
+Date:   Fri, 12 Jul 2019 14:20:11 +0200
+Message-Id: <20190712121623.922886882@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -58,32 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-commit 5555ebbbac822b4fa28db2be15aaf98b3c21af26 upstream.
+commit 70ec64ccdaac5d8f634338e33b016c1c99831499 upstream.
 
-In the default event case switchdev_work is being leaked because
-nothing is queued for work. Fix this by kfree'ing switchdev_work
-before returning NOTIFY_DONE.
+With the recent change to match MMAL and V4L2 buffers there
+is a need to wait for all MMAL buffers to be returned during
+stop_streaming.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: 44baaa43d7cc ("staging: fsl-dpaa2/ethsw: Add Freescale DPAA2 Ethernet Switch driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Fixes: 938416707071 ("staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping")
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c |   22 +++++++---
+ drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c     |    4 +
+ drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.h     |    3 +
+ 3 files changed, 23 insertions(+), 6 deletions(-)
 
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -1086,6 +1086,7 @@ static int port_switchdev_event(struct n
- 		dev_hold(dev);
- 		break;
- 	default:
-+		kfree(switchdev_work);
- 		return NOTIFY_DONE;
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -576,6 +576,7 @@ static void stop_streaming(struct vb2_qu
+ 	int ret;
+ 	unsigned long timeout;
+ 	struct bm2835_mmal_dev *dev = vb2_get_drv_priv(vq);
++	struct vchiq_mmal_port *port = dev->capture.port;
+ 
+ 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev, "%s: dev:%p\n",
+ 		 __func__, dev);
+@@ -599,12 +600,6 @@ static void stop_streaming(struct vb2_qu
+ 				      &dev->capture.frame_count,
+ 				      sizeof(dev->capture.frame_count));
+ 
+-	/* wait for last frame to complete */
+-	timeout = wait_for_completion_timeout(&dev->capture.frame_cmplt, HZ);
+-	if (timeout == 0)
+-		v4l2_err(&dev->v4l2_dev,
+-			 "timed out waiting for frame completion\n");
+-
+ 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
+ 		 "disabling connection\n");
+ 
+@@ -619,6 +614,21 @@ static void stop_streaming(struct vb2_qu
+ 			 ret);
  	}
  
++	/* wait for all buffers to be returned */
++	while (atomic_read(&port->buffers_with_vpu)) {
++		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
++			 "%s: Waiting for buffers to be returned - %d outstanding\n",
++			 __func__, atomic_read(&port->buffers_with_vpu));
++		timeout = wait_for_completion_timeout(&dev->capture.frame_cmplt,
++						      HZ);
++		if (timeout == 0) {
++			v4l2_err(&dev->v4l2_dev, "%s: Timeout waiting for buffers to be returned - %d outstanding\n",
++				 __func__,
++				 atomic_read(&port->buffers_with_vpu));
++			break;
++		}
++	}
++
+ 	if (disable_camera(dev) < 0)
+ 		v4l2_err(&dev->v4l2_dev, "Failed to disable camera\n");
+ }
+--- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
+@@ -240,6 +240,8 @@ static void buffer_work_cb(struct work_s
+ 	struct mmal_msg_context *msg_context =
+ 		container_of(work, struct mmal_msg_context, u.bulk.work);
+ 
++	atomic_dec(&msg_context->u.bulk.port->buffers_with_vpu);
++
+ 	msg_context->u.bulk.port->buffer_cb(msg_context->u.bulk.instance,
+ 					    msg_context->u.bulk.port,
+ 					    msg_context->u.bulk.status,
+@@ -380,6 +382,8 @@ buffer_from_host(struct vchiq_mmal_insta
+ 	/* initialise work structure ready to schedule callback */
+ 	INIT_WORK(&msg_context->u.bulk.work, buffer_work_cb);
+ 
++	atomic_inc(&port->buffers_with_vpu);
++
+ 	/* prep the buffer from host message */
+ 	memset(&m, 0xbc, sizeof(m));	/* just to make debug clearer */
+ 
+--- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.h
++++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.h
+@@ -71,6 +71,9 @@ struct vchiq_mmal_port {
+ 	struct list_head buffers;
+ 	/* lock to serialise adding and removing buffers from list */
+ 	spinlock_t slock;
++
++	/* Count of buffers the VPU has yet to return */
++	atomic_t buffers_with_vpu;
+ 	/* callback on buffer completion */
+ 	vchiq_mmal_buffer_cb buffer_cb;
+ 	/* callback context */
 
 
