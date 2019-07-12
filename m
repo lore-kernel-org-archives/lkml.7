@@ -2,165 +2,131 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB9BC742D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EC9C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD4F20989
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227D620989
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJWrROiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfGLUSm convert rfc822-to-8bit (ORCPT
+        id S1727593AbfGLUVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 16:18:42 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:50845 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfGLUSl (ORCPT
+        Fri, 12 Jul 2019 16:21:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40268 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727536AbfGLUVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 16:18:41 -0400
-X-AuditID: ac10606f-d27ff70000003324-2c-5d28eb20fe7f
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 2A.D9.13092.02BE82D5; Fri, 12 Jul 2019 16:18:40 -0400 (EDT)
-Received: from ATLMS2.us.megatrends.com ([fe80::29dc:a91e:ea0c:cdeb]) by
- atlms1.us.megatrends.com ([fe80::8c55:daf0:ef05:5605%12]) with mapi id
- 14.03.0415.000; Fri, 12 Jul 2019 16:18:40 -0400
-From:   Hongwei Zhang <Hongweiz@ami.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-Thread-Topic: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-Thread-Index: AQHVMdoYoxHDUhbFgEKYqLGYV+TuK6bDajmAgAQPB2A=
-Date:   Fri, 12 Jul 2019 20:18:39 +0000
-Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF82AA8F46AD@atlms2.us.megatrends.com>
-References: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
- <9c998f5f-42ef-43bd-b024-839ee00126de@www.fastmail.com>
-In-Reply-To: <9c998f5f-42ef-43bd-b024-839ee00126de@www.fastmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.100.241]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 12 Jul 2019 16:21:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so5009668pgj.7;
+        Fri, 12 Jul 2019 13:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=j1jW21CvKe9S7cEN+GY/9O3VCnC3tL6TnPcLPQ8iG+M=;
+        b=tJWrROiPZqd2Dd0RxjzGbJ+4f7+/I2dUEH9vmXLUKt1CpRQV9p8eITtJQPski2qob+
+         +cErGMYjKDw7kolfHyMb0+7VGHAnMkeYGIR15/bU14Vw0gV1g7zvSfx3jVPiF8GgcFfR
+         4nxNA2VUQ02PBPJ34+8rXWGgr8hT1xgR2OYZmkiPxLoct71ntEkUyNkSTzF0r/4FhuKN
+         WWu0W/e2F1vR3dHezpOBzROWyz9pWsZv7vFoi+YrRlSDSLigkvl5rEKVrSVjNG2vM8l2
+         gZRKhwxkJHXuDrSwXI4OMkhLt5eGcYM98W7fcXxnP96mp70nC94mBR60f7v0NtbNoS1O
+         EglA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=j1jW21CvKe9S7cEN+GY/9O3VCnC3tL6TnPcLPQ8iG+M=;
+        b=bf58kANoW85Cqknc9WCtDkxM6RML7/j869cIkH1HhPYqbPZqG5CzjWdixCM4Tske9D
+         kfL2m6Syj4T/myA3nec7E9KJlPzfdjMCkGBezy9czpZaDzwfTcUFMBVzpMc0xwVVrn8A
+         UelHtRGc9Gd+N8CuiBamloR1ZzV3wnIw3BokgL9pSdjKlKaZmeITIAMnn60v11KbKnP/
+         GZDpB1X3A8qmN2FQ+1WQXSkpLqr77V+y5JtBnb9RKmTpOwT/QSl4+2F387MwybPBhtaR
+         Yrj8LrF8h0Zc4vtNbEEPtHSEGW5SBJ0Tz8xzmxxxJvZR9fb+7PUGhRFVfEHgO1l+TJfM
+         Z8YQ==
+X-Gm-Message-State: APjAAAUAp/1DajGVrl8Yup19EZmnf2AcpPdrzRpo+cYTRzIjbyWAKRGv
+        UMGSFwq8tBdEOQpgJmJzW+M=
+X-Google-Smtp-Source: APXvYqxTesmbzMMr9AhbqLbrNKnXxmn8z7a9tWSCH56DHtlY9ZsM64py+amJDMnV0fYGXN+hWMNvcQ==
+X-Received: by 2002:a65:454c:: with SMTP id x12mr13135623pgr.354.1562962903938;
+        Fri, 12 Jul 2019 13:21:43 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q1sm17278711pfn.178.2019.07.12.13.21.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 13:21:42 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 13:21:41 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>,
+        j-keerthy@ti.com
+Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
+Message-ID: <20190712202141.GA18698@roeck-us.net>
+References: <20190712121628.731888964@linuxfoundation.org>
+ <4dae64c8-046e-3647-52d6-43362e986d21@nvidia.com>
+ <20190712153035.GC13940@kroah.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWyRiBhgq7Ca41Yg2ddlha7LnNYzD9yjtXi
-        9/m/zBZT/ixnsmhefY7Z4vKuOWwWS69fZLJo3XuE3YHD42r7LnaPNfPWMHpc/HiM2WPTqk42
-        jzvX9rB5nJ+xkNHj8ya5APYoLpuU1JzMstQifbsEroyJXbeZCnZLV8y/+4utgXGeWBcjJ4eE
-        gInE77YNLCC2kMAuJonpTZVdjFxA9mFGiRsHJrOCJNgE1CSe/mlgB0mICKxhlLh59igjiMMs
-        cJZRYs2lL8wgVcICPhInfi4HGyUi4CvRfaaFEcK2kthwpRksziKgKvHg8H8mEJtXwF/iat8M
-        dojVVRIrdveAbeMUcJFYMm0LG4jNKCAm8f3UGrB6ZgFxiVtP5jNBnC0gsWTPeWYIW1Ti5eN/
-        rBC2kkTDin9Q9ToSC3Z/YoOwtSWWLXzNDLFXUOLkzCcsExhFZyEZOwtJyywkLbOQtCxgZFnF
-        KJRYkpObmJmTXm6kl5ibqZecn7uJERKP+TsYP340P8TIxMF4iFGCg1lJhHfVf/VYId6UxMqq
-        1KL8+KLSnNTiQ4zSHCxK4ryr1nyLERJITyxJzU5NLUgtgskycXBKNTDOuNgu7FYhZ62Vr6Pq
-        paWRFbEkjbs2XfKugNzi21e3xUjVbLjafTqRc3HIdtGHGWXSfLwpk/dmy91riZzT2Lfkg/vV
-        fxaJzdebb7861LTeOGKN49vGJ3Vbvn9TvLlxxb4XpQaHNl1TS34WsVFsVZl5hPgsbbfv5V8c
-        GR9tV9GYu2/Z4d9hn/mVWIozEg21mIuKEwGO1G0stQIAAA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190712153035.GC13940@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your review, Andrew,
-
-Just submitted an updated binding document, with new proper subject line:
-
-[PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
-
-Regards,
---Hongwei
-
------Original Message-----
-From: Andrew Jeffery <andrew@aj.id.au> 
-Sent: Tuesday, July 9, 2019 10:16 PM
-To: Hongwei Zhang <Hongweiz@ami.com>; devicetree@vger.kernel.org; Joel Stanley <joel@jms.id.au>; Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; linux-aspeed@lists.ozlabs.org; linux-kernel@vger.kernel.org
-Subject: Re: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-
-
-
-On Thu, 4 Jul 2019, at 05:31, Hongwei Zhang wrote:
-> Add bindings to support SGPIO on AST2400 or AST2500.
+On Fri, Jul 12, 2019 at 05:30:35PM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Jul 12, 2019 at 02:26:57PM +0100, Jon Hunter wrote:
+> > Hi Greg,
+> > 
+> > On 12/07/2019 13:17, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.1.18 release.
+> > > There are 138 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> > > Anything received after that time might be too late.
+> > > 
+> > > The whole patch series can be found in one patch at:
+> > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.18-rc1.gz
+> > > or in the git tree and branch at:
+> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > > and the diffstat can be found below.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > > 
+> > > -------------
+> > > Pseudo-Shortlog of commits:
+> > 
+> Both are now dropped, thanks.  I'll push out a -rc2 with that changed.
 > 
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 
-> Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> new file mode 100644
-> index 0000000..f5fc6ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> @@ -0,0 +1,36 @@
-> +Aspeed SGPIO controller Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> +
-> +- #gpio-cells 		: Should be two
-> +			  - First cell is the GPIO line number
-> +			  - Second cell is used to specify optional
-> +			    parameters (unused)
-> +
-> +- reg			: Address and length of the register set for the device
-> +- gpio-controller	: Marks the device node as a GPIO controller.
-> +- interrupts		: Interrupt specifier (see interrupt bindings for
-> +			  details)
-> +- interrupt-controller	: Mark the GPIO controller as an 
-> interrupt-controller
 
-As this is a serial GPIO controller, a critical piece of configuration information is how many GPIOs we wish to serialise. This is done in multiples of 8, up to 80 pins.
+Can you push that update into the git repository ?
+v5.1.17-137-gde182b90f76d still has the problem.
 
-The bindings need to describe the "ngpios" property from the generic GPIO bindings and how this affects the behaviour of the controller.
+Also:
 
-We also need to add the "bus-frequency" property here to control the rate of SGPMCK.
+Building powerpc:ppc6xx_defconfig ... failed
 
-> +
-> +Optional properties:
-> +
-> +- clocks                : A phandle to the clock to use for debounce 
-> timings
+drivers/crypto/talitos.c: In function ‘get_request_hdr’:
+include/linux/kernel.h:979:51: error:
+	dereferencing pointer to incomplete type ‘struct talitos_edesc’
 
-We need this, but not for the reason specified, and it should be a required property. We need PCLK (the APB clock) to derive the SGPIO bus frequency. Despite what the datasheet blurb says, there's no debounce control for the SGPIO master (this is a copy/paste mistake from the description of the parallel GPIO master).
+Seen with both v4.19.58-92-gd66f8e7 and v5.1.17-137-gde182b90f76d.
 
-> +
-> +The sgpio and interrupt properties are further described in their
-> respective
-> +bindings documentation:
-> +
-> +- Documentation/devicetree/bindings/sgpio/gpio.txt
-> +- 
-> +Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +
-> +  Example:
-> +	sgpio@1e780200 {
-> +		#gpio-cells = <2>;
-> +		compatible = "aspeed,ast2500-sgpio";
-> +		gpio-controller;
-> +		interrupts = <40>;
-> +		reg = <0x1e780200 0x0100>;
-> +		interrupt-controller;
-> +	};
+This problem is caused by "crypto: talitos - fix hash on SEC1.", which will
+need a proper backport - struct talitos_edesc is declared later in the
+source file.
 
-You'll need to fix up the example after making the changes mentioned above.
-
-Andrew
-
-> --
-> 2.7.4
-> 
->
+Guenter
