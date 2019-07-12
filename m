@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFACC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90E9C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9553621670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81533208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562933994;
-	bh=Y43JDGXhtIcmWmFTT0C/gmZWEA5mOx/0fHPejTn+M4o=;
+	s=default; t=1562934003;
+	bh=aTgW7UQYMBIXvwxYkq0UvLaH0b2HY8X9ODd0ju4GUFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fsXjoXm7affrPHnWU/9/dHizd0iJaXrzFPQpNhRK3TpSTr0kJDX6cYWMuL2YA95i0
-	 B6FBz8QMwAJZ+yhd+wEKZleNvbHcU7hO6fM1QYrCyUFPAKrBgNbYaYNTSPh8eYsQBG
-	 XMFj177ug4tP99ufu484jyf3MOXZOc0wxyJj2YyU=
+	b=DUV5jXkHauj2iLlct/61CcWVZw+FYki0YgPeto7HAnHvmAQ458heFWDKv0SkDxf10
+	 b5J24tM3JeFb3fZ0wEAgfZhKJdd43N6RYvtiGZNif6PpJDhUJv9/e/CtqGlDQgG8Fs
+	 YISqiL8QmbjDN3rsveq+4j1jaupO4fZjUBDpU+vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfGLMTx (ORCPT
+        id S1727193AbfGLMUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:19:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52638 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727017AbfGLMTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:19:49 -0400
+        id S1727145AbfGLMUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:20:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2761208E4;
-        Fri, 12 Jul 2019 12:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF88E208E4;
+        Fri, 12 Jul 2019 12:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562933988;
-        bh=Y43JDGXhtIcmWmFTT0C/gmZWEA5mOx/0fHPejTn+M4o=;
+        s=default; t=1562933999;
+        bh=aTgW7UQYMBIXvwxYkq0UvLaH0b2HY8X9ODd0ju4GUFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1iCB6ncBylm/PUWI9218CQHbwRl2RX4s6GxtrQlreRiykLltqOJsLQbDgW1Zw6+S
-         Gy9DnUhfuY8VoJhVjfIaXdvsO38H24jfUDV7iKHJhWXqeWI5E7mlCwEq3PNdYB0PJB
-         xe6Yl7y4P4U0uMpuSt9B7I3TPYg7Tz/wYiuEOq40=
+        b=dtsHoYpYMVK/lfjzhaIQE8kCoCThHSxj0EIM2tIrRnAokLoU+zRH7uZU0wsQUC3VW
+         GBmpDNBIPUpnaRrFXF08k7liDWU1XcrBwYUfZRUCYQ0X6yDwRuJ9M/hDC4FSZyIBUy
+         4JGr66LY8nO5GS1ryYww8hR6ikhi8QSNIMW2FG/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/91] soundwire: stream: fix out of boundary access on port properties
-Date:   Fri, 12 Jul 2019 14:18:13 +0200
-Message-Id: <20190712121621.966578722@linuxfoundation.org>
+        stable@vger.kernel.org, huangwen <huangwen@venustech.com.cn>,
+        Takashi Iwai <tiwai@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 14/91] mwifiex: Fix possible buffer overflows at parsing bss descriptor
+Date:   Fri, 12 Jul 2019 14:18:17 +0200
+Message-Id: <20190712121622.166165144@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,36 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 03ecad90d3798be11b033248bbd4bbff4425a1c7 ]
+[ Upstream commit 13ec7f10b87f5fc04c4ccbd491c94c7980236a74 ]
 
-Assigning local iterator to array element and using it again for
-indexing would cross the array boundary.
-Fix this by directly referring array element without using the local
-variable.
+mwifiex_update_bss_desc_with_ie() calls memcpy() unconditionally in
+a couple places without checking the destination size.  Since the
+source is given from user-space, this may trigger a heap buffer
+overflow.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fix it by putting the length check before performing memcpy().
+
+This fix addresses CVE-2019-3846.
+
+Reported-by: huangwen <huangwen@venustech.com.cn>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/stream.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index e5c7e1ef6318..907a548645b7 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1236,9 +1236,7 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
- 	}
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 8e483b0bc3b1..ddf985fb93ab 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1247,6 +1247,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 		}
+ 		switch (element_id) {
+ 		case WLAN_EID_SSID:
++			if (element_len > IEEE80211_MAX_SSID_LEN)
++				return -EINVAL;
+ 			bss_entry->ssid.ssid_len = element_len;
+ 			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
+ 			       element_len);
+@@ -1256,6 +1258,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
  
- 	for (i = 0; i < num_ports; i++) {
--		dpn_prop = &dpn_prop[i];
--
--		if (dpn_prop->num == port_num)
-+		if (dpn_prop[i].num == port_num)
- 			return &dpn_prop[i];
- 	}
- 
+ 		case WLAN_EID_SUPP_RATES:
++			if (element_len > MWIFIEX_SUPPORTED_RATES)
++				return -EINVAL;
+ 			memcpy(bss_entry->data_rates, current_ptr + 2,
+ 			       element_len);
+ 			memcpy(bss_entry->supported_rates, current_ptr + 2,
 -- 
 2.20.1
 
