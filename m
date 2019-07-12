@@ -2,164 +2,139 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23CCC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52869C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CD82084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E322166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfGLCPs (ORCPT
+        id S1729230AbfGLCUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 22:15:48 -0400
-Received: from smtprelay0216.hostedemail.com ([216.40.44.216]:41189 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726505AbfGLCPs (ORCPT
+        Thu, 11 Jul 2019 22:20:39 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60437 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728737AbfGLCUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 22:15:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8CD04181D33FB;
-        Fri, 12 Jul 2019 02:15:46 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: list61_6c0723a6be725
-X-Filterd-Recvd-Size: 5469
-Received: from XPS-9350 (unknown [172.58.27.57])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 12 Jul 2019 02:15:42 +0000 (UTC)
-Message-ID: <b219cf41933b2f965572af515cf9d3119293bfba.camel@perches.com>
-Subject: Re: [PATCH -next] iwlwifi: dbg: work around clang bug by marking
- debug strings static
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>, kvalo@codeaurora.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-In-Reply-To: <20190712001708.170259-1-ndesaulniers@google.com>
-References: <20190712001708.170259-1-ndesaulniers@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
+        Thu, 11 Jul 2019 22:20:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TWfJjL-_1562898031;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TWfJjL-_1562898031)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 12 Jul 2019 10:20:31 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-sh@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH 03/12] Documentation/ia64: repointer docs to Documentation/arch/ia64
+Date:   Fri, 12 Jul 2019 10:20:09 +0800
+Message-Id: <20190712022018.27989-3-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
+In-Reply-To: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
+References: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Date:   Thu, 11 Jul 2019 19:01:14 -0700
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-11 at 17:17 -0700, Nick Desaulniers wrote:
-> Commit r353569 in prerelease Clang-9 is producing a linkage failure:
-> 
-> ld: drivers/net/wireless/intel/iwlwifi/fw/dbg.o:
-> in function `_iwl_fw_dbg_apply_point':
-> dbg.c:(.text+0x827a): undefined reference to `__compiletime_assert_2387'
-> 
-> when the following configs are enabled:
-> - CONFIG_IWLWIFI
-> - CONFIG_IWLMVM
-> - CONFIG_KASAN
-> 
-> Work around the issue for now by marking the debug strings as `static`,
-> which they probably should be any ways.
-> 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=42580
-> Link: https://github.com/ClangBuiltLinux/linux/issues/580
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-> index e411ac98290d..f8c90ea4e9b4 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-> @@ -2438,7 +2438,7 @@ static void iwl_fw_dbg_info_apply(struct iwl_fw_runtime *fwrt,
->  {
->  	u32 img_name_len = le32_to_cpu(dbg_info->img_name_len);
->  	u32 dbg_cfg_name_len = le32_to_cpu(dbg_info->dbg_cfg_name_len);
-> -	const char err_str[] =
-> +	static const char err_str[] =
->  		"WRT: ext=%d. Invalid %s name length %d, expected %d\n";
+Since we move 'ia64' docs to Documentation/arch/ia64 dir,
+redirect the doc pointer to them.
 
-Better still would be to use the format string directly
-in both locations instead of trying to deduplicate it
-via storing it into a separate pointer.
-
-Let the compiler/linker consolidate the format.
-It's smaller object code, allows format/argument verification,
-and is simpler for humans to understand.
-
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org
 ---
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index e411ac98290d..25e6712932b8 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -2438,17 +2438,17 @@ static void iwl_fw_dbg_info_apply(struct iwl_fw_runtime *fwrt,
- {
- 	u32 img_name_len = le32_to_cpu(dbg_info->img_name_len);
- 	u32 dbg_cfg_name_len = le32_to_cpu(dbg_info->dbg_cfg_name_len);
--	const char err_str[] =
--		"WRT: ext=%d. Invalid %s name length %d, expected %d\n";
- 
- 	if (img_name_len != IWL_FW_INI_MAX_IMG_NAME_LEN) {
--		IWL_WARN(fwrt, err_str, ext, "image", img_name_len,
-+		IWL_WARN(fwrt, "WRT: ext=%d. Invalid %s name length %d, expected %d\n",
-+			 ext, "image", img_name_len,
- 			 IWL_FW_INI_MAX_IMG_NAME_LEN);
- 		return;
- 	}
- 
- 	if (dbg_cfg_name_len != IWL_FW_INI_MAX_DBG_CFG_NAME_LEN) {
--		IWL_WARN(fwrt, err_str, ext, "debug cfg", dbg_cfg_name_len,
-+		IWL_WARN(fwrt, "WRT: ext=%d. Invalid %s name length %d, expected %d\n",
-+			 ext, "debug cfg", dbg_cfg_name_len,
- 			 IWL_FW_INI_MAX_DBG_CFG_NAME_LEN);
- 		return;
- 	}
-@@ -2775,8 +2775,6 @@ static void _iwl_fw_dbg_apply_point(struct iwl_fw_runtime *fwrt,
- 		struct iwl_ucode_tlv *tlv = iter;
- 		void *ini_tlv = (void *)tlv->data;
- 		u32 type = le32_to_cpu(tlv->type);
--		const char invalid_ap_str[] =
--			"WRT: ext=%d. Invalid apply point %d for %s\n";
- 
- 		switch (type) {
- 		case IWL_UCODE_TLV_TYPE_DEBUG_INFO:
-@@ -2786,8 +2784,8 @@ static void _iwl_fw_dbg_apply_point(struct iwl_fw_runtime *fwrt,
- 			struct iwl_fw_ini_allocation_data *buf_alloc = ini_tlv;
- 
- 			if (pnt != IWL_FW_INI_APPLY_EARLY) {
--				IWL_ERR(fwrt, invalid_ap_str, ext, pnt,
--					"buffer allocation");
-+				IWL_ERR(fwrt, "WRT: ext=%d. Invalid apply point %d for %s\n",
-+					ext, pnt, "buffer allocation");
- 				goto next;
- 			}
- 
-@@ -2797,8 +2795,8 @@ static void _iwl_fw_dbg_apply_point(struct iwl_fw_runtime *fwrt,
- 		}
- 		case IWL_UCODE_TLV_TYPE_HCMD:
- 			if (pnt < IWL_FW_INI_APPLY_AFTER_ALIVE) {
--				IWL_ERR(fwrt, invalid_ap_str, ext, pnt,
--					"host command");
-+				IWL_ERR(fwrt, "WRT: ext=%d. Invalid apply point %d for %s\n",
-+					ext, pnt, "host command");
- 				goto next;
- 			}
- 			iwl_fw_dbg_send_hcmd(fwrt, tlv, ext);
+ MAINTAINERS             | 2 +-
+ arch/ia64/kernel/efi.c  | 2 +-
+ arch/ia64/kernel/fsys.S | 2 +-
+ arch/ia64/mm/ioremap.c  | 2 +-
+ arch/ia64/pci/pci.c     | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c21d5464c86f..583c35cba7bc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14286,7 +14286,7 @@ SGI SN-IA64 (Altix) SERIAL CONSOLE DRIVER
+ M:	Pat Gefre <pfg@sgi.com>
+ L:	linux-ia64@vger.kernel.org
+ S:	Supported
+-F:	Documentation/ia64/serial.txt
++F:	Documentation/arch/ia64/serial.txt
+ F:	drivers/tty/serial/ioc?_serial.c
+ F:	include/linux/ioc?.h
+ 
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 8f106638913c..02cdc38d15e8 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -852,7 +852,7 @@ valid_phys_addr_range (phys_addr_t phys_addr, unsigned long size)
+ 	 * /dev/mem reads and writes use copy_to_user(), which implicitly
+ 	 * uses a granule-sized kernel identity mapping.  It's really
+ 	 * only safe to do this for regions in kern_memmap.  For more
+-	 * details, see Documentation/ia64/aliasing.txt.
++	 * details, see Documentation/arch/ia64/aliasing.txt.
+ 	 */
+ 	attr = kern_mem_attribute(phys_addr, size);
+ 	if (attr & EFI_MEMORY_WB || attr & EFI_MEMORY_UC)
+diff --git a/arch/ia64/kernel/fsys.S b/arch/ia64/kernel/fsys.S
+index d80c99a5f55d..b493ca74890a 100644
+--- a/arch/ia64/kernel/fsys.S
++++ b/arch/ia64/kernel/fsys.S
+@@ -28,7 +28,7 @@
+ #include <asm/native/inst.h>
+ 
+ /*
+- * See Documentation/ia64/fsys.txt for details on fsyscalls.
++ * See Documentation/arch/ia64/fsys.txt for details on fsyscalls.
+  *
+  * On entry to an fsyscall handler:
+  *   r10	= 0 (i.e., defaults to "successful syscall return")
+diff --git a/arch/ia64/mm/ioremap.c b/arch/ia64/mm/ioremap.c
+index 5e3e7b1fdac5..989cc4df9087 100644
+--- a/arch/ia64/mm/ioremap.c
++++ b/arch/ia64/mm/ioremap.c
+@@ -42,7 +42,7 @@ ioremap (unsigned long phys_addr, unsigned long size)
+ 	/*
+ 	 * For things in kern_memmap, we must use the same attribute
+ 	 * as the rest of the kernel.  For more details, see
+-	 * Documentation/ia64/aliasing.txt.
++	 * Documentation/arch/ia64/aliasing.txt.
+ 	 */
+ 	attr = kern_mem_attribute(phys_addr, size);
+ 	if (attr & EFI_MEMORY_WB)
+diff --git a/arch/ia64/pci/pci.c b/arch/ia64/pci/pci.c
+index e308196c2229..6ba87b70e30c 100644
+--- a/arch/ia64/pci/pci.c
++++ b/arch/ia64/pci/pci.c
+@@ -450,7 +450,7 @@ pci_mmap_legacy_page_range(struct pci_bus *bus, struct vm_area_struct *vma,
+ 		return -ENOSYS;
+ 
+ 	/*
+-	 * Avoid attribute aliasing.  See Documentation/ia64/aliasing.txt
++	 * Avoid attribute aliasing.  See Documentation/arch/ia64/aliasing.txt
+ 	 * for more details.
+ 	 */
+ 	if (!valid_mmap_phys_addr_range(vma->vm_pgoff, size))
+-- 
+2.19.1.856.g8858448bb
 
