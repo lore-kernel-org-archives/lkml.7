@@ -4,62 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C30AC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CFBC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7245B216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29512166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934182;
-	bh=+YH3dYAhwbEtcBYAH0X9EUm6oml7V9ajXNjfFfs9FWY=;
+	s=default; t=1562934187;
+	bh=jIGF3tGsUd16gUWn6GBhxSJaxsz9nGgZeR+K3j5UKXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOEgMi2s+HQgvGBovbr1Q/fnISaOM2BmplayybCbjcCcURSHFQtuJJq2tUVVwz0c1
-	 chpfX+G5JQ0SZQMl5mPoOup6WP8G2gACSSmV4B89/U41qhEMOVqx2COr4hOGJgi3FG
-	 73llCp4GIstnpRDTA3emfWq/WYPRkfWjbOFifY4g=
+	b=Kw/Z0Fx+hnLmq140O4BJqxN9NAFG4S8JtDhy/mvL6jWv81Rr6lOZqC9dlR9Q9gTzy
+	 MjeJI80nHwM4M/2du2+4fJSucB7i8FR6wVoWfdRsWkrM9GvaWmCFspWCJA65aATWqs
+	 IkXb1vdZGQMycoVxVzVFbmo8AuCIFoZm4ZSbovps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfGLMXB (ORCPT
+        id S1727846AbfGLMXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58126 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfGLMW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:22:59 -0400
+        id S1727839AbfGLMXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:23:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 106472084B;
-        Fri, 12 Jul 2019 12:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B616E21670;
+        Fri, 12 Jul 2019 12:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934178;
-        bh=+YH3dYAhwbEtcBYAH0X9EUm6oml7V9ajXNjfFfs9FWY=;
+        s=default; t=1562934181;
+        bh=jIGF3tGsUd16gUWn6GBhxSJaxsz9nGgZeR+K3j5UKXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzfnWAO85h+KaeozbWmsV3lefwX0potl7TmQK/Br5ZQqY9f/FK5O5PwCidMoke0aB
-         8h1qBQVv/IMmlhjswIdjMEdV6JZuWay6DfmucUSMdrn9k5xJrOauPkhNQ7DQmBlNvw
-         gA7eEhZRCf5g6WQxSStpo4x9LVttN2DWQYSkj7Aw=
+        b=jTqI2qMiYmi1LdotQD+nfmCq5vobwtwI+FKxWDJJIsAN7VhGUh/mcLisMBltB8gmn
+         0ymuUuATPBCXvkqTzPO759RoegR0csv7ADvKrvWDG9r26Mdsfila7NK8zBF3qk2Px7
+         Xux5wnRaLLeJLqBsNJ4dj+VslLVDvzwTGdKbHAGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 62/91] perf pmu: Fix uncore PMU alias list for ARM64
-Date:   Fri, 12 Jul 2019 14:19:05 +0200
-Message-Id: <20190712121625.161181001@linuxfoundation.org>
+        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com
+Subject: [PATCH 4.19 63/91] x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
+Date:   Fri, 12 Jul 2019 14:19:06 +0200
+Message-Id: <20190712121625.214928205@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -72,94 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Dianzhang Chen <dianzhangchen0@gmail.com>
 
-commit 599ee18f0740d7661b8711249096db94c09bc508 upstream.
+commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
 
-In commit 292c34c10249 ("perf pmu: Fix core PMU alias list for X86
-platform"), we fixed the issue of CPU events being aliased to uncore
-events.
+The index to access the threads ptrace_bps is controlled by userspace via
+syscall: sys_ptrace(), hence leading to a potential exploitation of the
+Spectre variant 1 vulnerability.
 
-Fix this same issue for ARM64, since the said commit left the (broken)
-behaviour untouched for ARM64.
+The index can be controlled from:
+    ptrace -> arch_ptrace -> ptrace_get_debugreg.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxarm@huawei.com
+Fix this by sanitizing the user supplied index before using it access
+thread->ptrace_bps.
+
+Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
 Cc: stable@vger.kernel.org
-Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
-Link: http://lkml.kernel.org/r/1560521283-73314-2-git-send-email-john.garry@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/pmu.c |   28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ arch/x86/kernel/ptrace.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -750,9 +750,7 @@ static void pmu_add_cpu_aliases(struct l
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -24,6 +24,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/export.h>
+ #include <linux/context_tracking.h>
++#include <linux/nospec.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/pgtable.h>
+@@ -651,9 +652,11 @@ static unsigned long ptrace_get_debugreg
  {
- 	int i;
- 	struct pmu_events_map *map;
--	struct pmu_event *pe;
- 	const char *name = pmu->name;
--	const char *pname;
+ 	struct thread_struct *thread = &tsk->thread;
+ 	unsigned long val = 0;
++	int index = n;
  
- 	map = perf_pmu__find_map(pmu);
- 	if (!map)
-@@ -763,28 +761,26 @@ static void pmu_add_cpu_aliases(struct l
- 	 */
- 	i = 0;
- 	while (1) {
-+		const char *cpu_name = is_arm_pmu_core(name) ? name : "cpu";
-+		struct pmu_event *pe = &map->table[i++];
-+		const char *pname = pe->pmu ? pe->pmu : cpu_name;
+ 	if (n < HBP_NUM) {
+-		struct perf_event *bp = thread->ptrace_bps[n];
++		index = array_index_nospec(index, HBP_NUM);
++		struct perf_event *bp = thread->ptrace_bps[index];
  
--		pe = &map->table[i++];
- 		if (!pe->name) {
- 			if (pe->metric_group || pe->metric_name)
- 				continue;
- 			break;
- 		}
- 
--		if (!is_arm_pmu_core(name)) {
--			pname = pe->pmu ? pe->pmu : "cpu";
-+		/*
-+		 * uncore alias may be from different PMU
-+		 * with common prefix
-+		 */
-+		if (pmu_is_uncore(name) &&
-+		    !strncmp(pname, name, strlen(pname)))
-+			goto new_alias;
- 
--			/*
--			 * uncore alias may be from different PMU
--			 * with common prefix
--			 */
--			if (pmu_is_uncore(name) &&
--			    !strncmp(pname, name, strlen(pname)))
--				goto new_alias;
--
--			if (strcmp(pname, name))
--				continue;
--		}
-+		if (strcmp(pname, name))
-+			continue;
- 
- new_alias:
- 		/* need type casts to override 'const' */
+ 		if (bp)
+ 			val = bp->hw.info.address;
 
 
