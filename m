@@ -2,172 +2,93 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9932C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2344DC742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938132080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA7C2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/F3QXrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfGLNQo (ORCPT
+        id S1727674AbfGLNRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:16:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56694 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727189AbfGLNQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:16:43 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EE4DE11277CF686DA60C;
-        Fri, 12 Jul 2019 21:16:40 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 12 Jul 2019
- 21:16:31 +0800
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To:     <davem@davemloft.net>, <yisen.zhuang@huawei.com>,
-        <salil.mehta@huawei.com>, <xiaojiangfeng@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sergei.shtylyov@cogentembedded.com>, <leeyou.li@huawei.com>,
-        <nixiaoming@huawei.com>
-Subject: [PATCH] net: hisilicon: Use devm_platform_ioremap_resource
-Date:   Fri, 12 Jul 2019 21:16:24 +0800
-Message-ID: <1562937384-121710-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Fri, 12 Jul 2019 09:17:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34590 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbfGLNRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:17:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VlGeJVpmyd9R7H/dBIzxTJuL54bqAskZGG2yOvnoI18=; b=F/F3QXrq28isRNxJASCYcmGzu
+        NuUvd4dtT0vopyrMJtnfFiIi7h7y2LHeT1cYeQvbRqxpL/OOK42wQbpjMDbKmxDCc0T5fU8ZfxeEi
+        5vROS/kWz1zyU9co2DGx96jc3Hh4YeNg2Qf/RfpFW9yePM/nE5diReCRFmaFdHADlHizdP7CqItap
+        VlCTDeCE8XQNuvPHLwAyWKbk/4i8yxSpuU78w22RYrANZjhOtSrcAV4XZ4Ab2x/QwFc1+MrGlgIKa
+        w5Y1EcYOKPyBQTIAlXn37B7oxw+lJ+vEKRI1pUfsOSZMhthFIiiyIuXF4PvxtQRH3mtpT5APRJXiI
+        J1d84UJZg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlvQH-0005lN-4R; Fri, 12 Jul 2019 13:17:13 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1267D209772E7; Fri, 12 Jul 2019 15:17:10 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 15:17:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        x86@kernel.org, srinivas.eeda@oracle.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] xen/pv: Fix a boot up hang revealed by int3 self test
+Message-ID: <20190712131710.GS3419@hirez.programming.kicks-ass.net>
+References: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
+ <20190712120626.GW3402@hirez.programming.kicks-ass.net>
+ <a5f5ea4c-f30d-122e-0161-be7b1cb4877c@oracle.com>
+ <20190712130916.GR3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.167]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712130916.GR3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource instead of
-devm_ioremap_resource. Make the code simpler.
+On Fri, Jul 12, 2019 at 03:09:16PM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 12, 2019 at 09:04:22PM +0800, Zhenzhong Duan wrote:
+> > 
+> > On 2019/7/12 20:06, Peter Zijlstra wrote:
+> > > On Thu, Jul 11, 2019 at 04:15:21PM +0800, Zhenzhong Duan wrote:
+> > > > diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+> > > > index 4722ba2..2138d69 100644
+> > > > --- a/arch/x86/xen/enlighten_pv.c
+> > > > +++ b/arch/x86/xen/enlighten_pv.c
+> > > > @@ -596,7 +596,7 @@ struct trap_array_entry {
+> > > >   static struct trap_array_entry trap_array[] = {
+> > > >   	{ debug,                       xen_xendebug,                    true },
+> > > > -	{ int3,                        xen_xenint3,                     true },
+> > > > +	{ int3,                        xen_int3,                        true },
+> > > >   	{ double_fault,                xen_double_fault,                true },
+> > > >   #ifdef CONFIG_X86_MCE
+> > > >   	{ machine_check,               xen_machine_check,               true },
+> > > I'm confused on the purpose of trap_array[], could you elucidate me?
+> > 
+> > Used to replace trap handler addresses by Xen specific ones and sanity check
+> > 
+> > if there's an unexpected IST-using fault handler.
+> 
+> git grep xen_int3, failed me. Where does that symbol come from?
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c    | 7 ++-----
- drivers/net/ethernet/hisilicon/hisi_femac.c   | 7 ++-----
- drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 7 ++-----
- drivers/net/ethernet/hisilicon/hns_mdio.c     | 4 +---
- 4 files changed, 7 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 6256357..d604528 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -899,7 +899,6 @@ static int hip04_mac_probe(struct platform_device *pdev)
- 	struct of_phandle_args arg;
- 	struct net_device *ndev;
- 	struct hip04_priv *priv;
--	struct resource *res;
- 	int irq;
- 	int ret;
- 
-@@ -912,16 +911,14 @@ static int hip04_mac_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, ndev);
- 	SET_NETDEV_DEV(ndev, &pdev->dev);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(d, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		ret = PTR_ERR(priv->base);
- 		goto init_fail;
- 	}
- 
- #if defined(CONFIG_HI13X1_GMAC)
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	priv->sysctrl_base = devm_ioremap_resource(d, res);
-+	priv->sysctrl_base = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(priv->sysctrl_base)) {
- 		ret = PTR_ERR(priv->sysctrl_base);
- 		goto init_fail;
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index d2e019d..689f18e 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -781,7 +781,6 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
--	struct resource *res;
- 	struct net_device *ndev;
- 	struct hisi_femac_priv *priv;
- 	struct phy_device *phy;
-@@ -799,15 +798,13 @@ static int hisi_femac_drv_probe(struct platform_device *pdev)
- 	priv->dev = dev;
- 	priv->ndev = ndev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->port_base = devm_ioremap_resource(dev, res);
-+	priv->port_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->port_base)) {
- 		ret = PTR_ERR(priv->port_base);
- 		goto out_free_netdev;
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	priv->glb_base = devm_ioremap_resource(dev, res);
-+	priv->glb_base = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(priv->glb_base)) {
- 		ret = PTR_ERR(priv->glb_base);
- 		goto out_free_netdev;
-diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-index 89ef764..3499705 100644
---- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-+++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-@@ -1097,7 +1097,6 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id = NULL;
- 	struct net_device *ndev;
- 	struct hix5hd2_priv *priv;
--	struct resource *res;
- 	struct mii_bus *bus;
- 	const char *mac_addr;
- 	int ret;
-@@ -1119,15 +1118,13 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 	}
- 	priv->hw_cap = (unsigned long)of_id->data;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		ret = PTR_ERR(priv->base);
- 		goto out_free_netdev;
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	priv->ctrl_base = devm_ioremap_resource(dev, res);
-+	priv->ctrl_base = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(priv->ctrl_base)) {
- 		ret = PTR_ERR(priv->ctrl_base);
- 		goto out_free_netdev;
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index 918cab1..3e863a7 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -417,7 +417,6 @@ static int hns_mdio_probe(struct platform_device *pdev)
- {
- 	struct hns_mdio_device *mdio_dev;
- 	struct mii_bus *new_bus;
--	struct resource *res;
- 	int ret = -ENODEV;
- 
- 	if (!pdev) {
-@@ -442,8 +441,7 @@ static int hns_mdio_probe(struct platform_device *pdev)
- 	new_bus->priv = mdio_dev;
- 	new_bus->parent = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mdio_dev->vbase = devm_ioremap_resource(&pdev->dev, res);
-+	mdio_dev->vbase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mdio_dev->vbase)) {
- 		ret = PTR_ERR(mdio_dev->vbase);
- 		return ret;
--- 
-1.8.5.6
-
+N/m I found it... must be blind today.
