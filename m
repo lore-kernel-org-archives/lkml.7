@@ -2,99 +2,113 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECE0C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C840C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728152084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7177C2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tN59z30f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfGLAWD (ORCPT
+        id S1730605AbfGLAWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:22:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728102AbfGLAWC (ORCPT
+        Thu, 11 Jul 2019 20:22:09 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35061 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbfGLAWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:22:02 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6C0GWh0103550;
-        Thu, 11 Jul 2019 20:21:52 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpdcyc18s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jul 2019 20:21:52 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6C0K0Iw005128;
-        Fri, 12 Jul 2019 00:21:51 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03dal.us.ibm.com with ESMTP id 2tjk977qjq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 00:21:51 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6C0LoYA49217900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 00:21:50 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AC0828072;
-        Fri, 12 Jul 2019 00:21:50 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D25F28091;
-        Fri, 12 Jul 2019 00:21:49 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.176.217])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 00:21:49 +0000 (GMT)
-Message-ID: <1562890815.2915.13.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
-From:   James Bottomley <jejb@linux.vnet.ibm.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Avri Altman <avri.altman@wdc.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Alex Lemberg <alex.lemberg@wdc.com>
-Date:   Thu, 11 Jul 2019 17:20:15 -0700
-In-Reply-To: <yq1ef2w9kig.fsf@oracle.com>
-References: <1560346477-13944-1-git-send-email-avri.altman@wdc.com>
-         <yq1ef2w9kig.fsf@oracle.com>
+        Thu, 11 Jul 2019 20:22:08 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d23so6407979qto.2;
+        Thu, 11 Jul 2019 17:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/4+k8OBkWPl2wP9Mpj886E0SFBIDse14POqVOVVgzkg=;
+        b=tN59z30f+lg/v89y4PZ/8rnECfXHofqbiSuoJxqTCXj4tF1s4jMkyscCyYzegIEa4/
+         r1+0RZnxuXiif2blTLuplY2vy/82FJbOS80Foee/TlcOaPffxDRVUuOsmHxZpc1fblGd
+         DuyeN/aXH8NAjJSF1vVNjKxyZHvj9LHrhuOrVTChmvTcrOFZ80uT5p5x8SB7tk/V5ePN
+         Vp/RpFYIS4me8u4WUNWijXORxDKZLEkDorasmEg+KoFbAcNEtNT4P8327oYUitpOsqps
+         7yy7VBTIyfI8GLNNaD5qXdwtn5jE1NV3XlgL6fWrw1T0Pe5DrGZ6HtcOZTIhA/W8ZdyD
+         u/Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/4+k8OBkWPl2wP9Mpj886E0SFBIDse14POqVOVVgzkg=;
+        b=Xc8/PZHG++N8NqZGjhOcu903Ce3YpbEkQ3u6ZXU1tSG5W3/go2ZEZTGEOtz9f3M3ib
+         9p5B0KGoA06vJPEqtkHjFK1mdyzv6/YsPMcgicB/Y5lF4v5U++b4c7boIpVW7ZwrRqLc
+         1SllfAiL38uhRvaPk4seYSbG5EAn6P6TnoT+i/yr2xqAqg9SQ10DCYrjSRurU90Fp0VO
+         amhghvnziWII2VrSfUnZSl12/g3aw1A1tAeWxhkPrxXOh5fF/N/eKArOQJ7DfClS5Rd9
+         QnwWMnMdjJTRSCcsN3qgcMtCdgRKCUuRs47ArLqtKHD7Rk+AKtWIERhi9T8PP2dj77jo
+         5KEw==
+X-Gm-Message-State: APjAAAUMx63EHnFIaR45hFTMFBKrRU9njf5jaNMZf2dIpn9fMJ8MsX8b
+        wbGndyupqePFNva704yhV+eQZ9Uhabapl7vEvxI=
+X-Google-Smtp-Source: APXvYqxRcNPW7o70Lv/0ta0iz/AgsAPC23tElXsi8v0Rjw3QFg66LYJNUS+dkJrYikGIOp6Tbd9q6mZyOtzcmRnLt9k=
+X-Received: by 2002:a05:6214:1306:: with SMTP id a6mr4329977qvv.38.1562890927633;
+ Thu, 11 Jul 2019 17:22:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-9-krzesimir@kinvolk.io>
+In-Reply-To: <20190708163121.18477-9-krzesimir@kinvolk.io>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 11 Jul 2019 17:21:56 -0700
+Message-ID: <CAEf4BzZ23_m-L6vob6BKn24yphRQUBMceAHqkSU+8C8EovmVFA@mail.gmail.com>
+Subject: Re: [bpf-next v3 08/12] tools headers: Sync struct bpf_perf_event_data
+To:     Krzesimir Nowak <krzesimir@kinvolk.io>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-11 at 20:14 -0400, Martin K. Petersen wrote:
-> Avri,
-> 
-> > added 'WITH Linux-syscall-note' exception, which is the officially
-> > assigned exception identifier for the kernel syscall exception.
-> > This exception makes it possible to include GPL headers into non
-> > GPL code, without confusing license compliance tools.
-> 
-> I'd like Arnd to ack the license change since he has made changes
-> (however mechanical) to the file.
+On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wrote:
+>
+> struct bpf_perf_event_data in kernel headers has the addr field, which
+> is missing in the tools version of the struct. This will be important
+> for the bpf prog test run implementation for perf events as it will
+> expect data to be an instance of struct bpf_perf_event_data, so the
+> size of the data needs to match sizeof(bpf_perf_event_data).
+>
+> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> ---
 
-Just to note: this isn't technically a licence change at all.  The
-entire kernel is covered by the system call exception and this file is
-thus also covered.  It's really a simple tag change to allow tools
-which parse uapi header files to recognise from the SPDX tags that this
-is a kernel header to which the Linux-syscall-note applies.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-James
-
+>  tools/include/uapi/linux/bpf_perf_event.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/include/uapi/linux/bpf_perf_event.h b/tools/include/uapi/linux/bpf_perf_event.h
+> index 8f95303f9d80..eb1b9d21250c 100644
+> --- a/tools/include/uapi/linux/bpf_perf_event.h
+> +++ b/tools/include/uapi/linux/bpf_perf_event.h
+> @@ -13,6 +13,7 @@
+>  struct bpf_perf_event_data {
+>         bpf_user_pt_regs_t regs;
+>         __u64 sample_period;
+> +       __u64 addr;
+>  };
+>
+>  #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
+> --
+> 2.20.1
+>
