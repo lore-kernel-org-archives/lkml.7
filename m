@@ -2,140 +2,96 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A926C742B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E755CC742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FEB216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p8V9Fe27"
+	by mail.kernel.org (Postfix) with ESMTP id BF9632064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfGLJjw (ORCPT
+        id S1726692AbfGLJkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:39:52 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5678 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfGLJjw (ORCPT
+        Fri, 12 Jul 2019 05:40:19 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:49161 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfGLJkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:39:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2855610000>; Fri, 12 Jul 2019 02:39:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 12 Jul 2019 02:39:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 12 Jul 2019 02:39:50 -0700
-Received: from [10.26.11.231] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jul
- 2019 09:39:48 +0000
-Subject: Re: [PATCH v2 1/6] ARM: tegra: Remove cpuidle drivers
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190711031312.10038-1-digetx@gmail.com>
- <20190711031312.10038-2-digetx@gmail.com>
- <c087a5cb-2ffa-1cf6-f0bf-631234759a22@nvidia.com>
- <a6e4b43e-369c-c501-6d2e-69d5b940ff9c@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <73781434-d25a-b17b-aacb-95ace5ac5f95@nvidia.com>
-Date:   Fri, 12 Jul 2019 10:39:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 05:40:19 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MwQCb-1ie6cI24qj-00sKbe; Fri, 12 Jul 2019 11:40:11 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Nikola Cornij <nikola.cornij@amd.com>,
+        Charlene Liu <charlene.liu@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] drm/amd/display: return 'NULL' instead of 'false' from dcn20_acquire_idle_pipe_for_layer
+Date:   Fri, 12 Jul 2019 11:39:52 +0200
+Message-Id: <20190712094009.1535662-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <a6e4b43e-369c-c501-6d2e-69d5b940ff9c@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562924385; bh=BjEEnlO9O+zgudZW6w3hxaxX8/FGppOMM/Qa3Jlnws0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=p8V9Fe27cbTQDdxy6BaYPu1UaWNdHPFxaBAXSh3B1eFXjKn9t1rFMWge+n48VM1jx
-         sAyEzqcX2d+5dRWWMaoUjfTegYfTtOZexWga1qzERUVFWsPtCvYgRq5Tkw84niUv9r
-         L7jvU+fM/uKU70UxnhEgLMMDymy/j4Ikxivsyo/+iH39a1/lGeAIpTY/IrpUz4jTeA
-         rFy1ZDxrbIkjVX3HMwQMtHmYi/S9cTseqW33SZQK5E/WDPMFSekeO5UGYyxHgCzA5U
-         F8WhlXjZtrjk6007ZMoVZCSOT+OxHa7KUsp9MLsjpUQaZlKmTEnUzjl4bw3q5N0uvd
-         ffDfg49DVV1Ow==
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:3cpkDgxIhIsadjRAYBvtn1DUyn+BUx4TJsnFE7RqYAa5qmUsTy6
+ ZFEWWtos2jSr8XJqGbISEDbpNjknjjyG9gOydIRFynjICGXMb1KjAkon8PG4aAb1JAjEzma
+ AHDoJXR1FwIQHXXfZ6oorG8LKXZJrnCGniYroO08K5/hrWuUrJyWyfGGD6IbPMMiazMUfKK
+ ewxOssRMv/wrh7Cmz9ZMQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oRQbMjjvoFQ=:No9erCSCNWW+VJd/nxNhyr
+ 6OIu1qjtUork6mvRXgF9CoyGhOzQGkOATDOd+8MhfahUOLpWn+L8svIDug83SSQ/7iAxMuSmx
+ UrNw0VrqwduicMcLa+nRC8oH5lpP8V9RuBpXbsDJNeUIXyD8lhYApZQr7TCs4q5dn6C76CpC5
+ Gwyg4aMd/cRD2vQ40hhDjZicgD8qQZN++JKALp1vl0SDa2GqIOfJuyoLM/AxVaB9BsLdRxNaK
+ CJdKCFxr2akRoHyPTMTqFffdefAE/NxJOwyLUjcplYD3jclo9o9pNZPorygWG8DnAfIwWcDXG
+ J9R9bPanREK3s4gsxF4LYCrS6CLqyCF71J+3mG11TKA8oRJQXt/cFkUYW9KmDZap0y/dwgy9t
+ T4NQSvQI9ZIYH8HAim4kYVHrDxeQVQrR0Bh64IWpOJLDJclJ5+nQAiAQPRiHr/lbxtuHAH2lh
+ s5xpzuWjhVdhXQRzveJoMYS171SlizoNBgxs01FJSzvR5UWcaASBlmgkPYmTYRPmx1wUYamzE
+ cKu++M6LrFPoQOxxLNx/bTbgdQB1WnxFM1IyEfqcYrloSdTtoIhNTCGaIZcsspJBuLclBNJvI
+ m4DF+ruvt1dNq/hJa1h2QHFX3ww0+kI2F6mWmMR0YP+UHoUMbXCK37CLEFgwuNCmuU+1wZBbB
+ ZuJhpWGiZ20xa0VH1MXAJ2eIfALilxi2CpFAYKbYq9HeYwWNoPg5VCDsJI9Ayyb3HX/+JaWuq
+ skFB7ZWyVD61qKRx4CE6mJxDQGNEBrS8y3JB/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+clang complains that 'false' is a not a pointer:
 
-On 11/07/2019 18:03, Dmitry Osipenko wrote:
-> 11.07.2019 12:26, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 11/07/2019 04:13, Dmitry Osipenko wrote:
->>> Remove the old drivers to replace them cleanly with a new one later on.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  arch/arm/mach-tegra/Makefile           |  13 --
->>>  arch/arm/mach-tegra/cpuidle-tegra114.c |  89 -----------
->>>  arch/arm/mach-tegra/cpuidle-tegra20.c  | 212 -------------------------
->>>  arch/arm/mach-tegra/cpuidle-tegra30.c  | 132 ---------------
->>>  arch/arm/mach-tegra/cpuidle.c          |  50 ------
->>>  arch/arm/mach-tegra/cpuidle.h          |  21 ---
->>>  arch/arm/mach-tegra/irq.c              |  18 ---
->>>  arch/arm/mach-tegra/irq.h              |  11 --
->>>  arch/arm/mach-tegra/pm.c               |   7 -
->>>  arch/arm/mach-tegra/pm.h               |   1 -
->>>  arch/arm/mach-tegra/reset-handler.S    |  11 --
->>>  arch/arm/mach-tegra/reset.h            |   9 +-
->>>  arch/arm/mach-tegra/sleep-tegra20.S    | 190 +---------------------
->>>  arch/arm/mach-tegra/sleep.h            |  12 --
->>>  arch/arm/mach-tegra/tegra.c            |   3 -
->>>  drivers/soc/tegra/Kconfig              |   1 -
->>>  include/soc/tegra/cpuidle.h            |   4 -
->>>  17 files changed, 5 insertions(+), 779 deletions(-)
->>>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
->>>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
->>>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
->>>  delete mode 100644 arch/arm/mach-tegra/cpuidle.c
->>>  delete mode 100644 arch/arm/mach-tegra/cpuidle.h
->>>  delete mode 100644 arch/arm/mach-tegra/irq.h
->>
->> By removing all the above, it is really hard to review the diff. Is
->> there any way you could first consolidate the cpuidle drivers into say
->> the existing arch/arm/mach-tegra/cpuidle-tegra20.c and then move to
->> drivers/cpuidle?
->=20
-> I'm afraid that it will make reviewing even more difficult because
-> everything that is removed here is not returned in the further patches.
-> The new driver is based on the older ones, but I wrote it from scratch
-> and it's not only looks different, but also works a bit different as you
-> may see.
->=20
-> Could you please clarify what exactly makes it hard to review? The diff
-> looks pretty clean to me, while squashing everything into existing
-> driver should be quite a mess.
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.c:2428:10: error: expression which evaluates to zero treated as a null pointer constant of type 'struct pipe_ctx *' [-Werror,-Wnon-literal-null-conversion]
+                return false;
 
-Ideally a patch should standalone and can be reviewed by itself.
-However, to review this, we need to review patches 1, 2 and 3 at the
-same time. So IMO it is not that convenient from a reviewers
-perspective. Furthermore, patches 1 and 3 are large and so easy to miss
-something.
+Changing it to 'NULL' looks like the right thing that will shut up
+the warning and make it easier to read, while not changing behavior.
 
-Is there really no way to have a patch to combined the existing drivers,
-then a patch to convert them into the newer rewritten version you have
-implemented, then move the driver?
+Fixes: 7ed4e6352c16 ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jon
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+index 70ac8a95d2db..66aa414ad38f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -2425,7 +2425,7 @@ struct pipe_ctx *dcn20_acquire_idle_pipe_for_layer(
+ 		ASSERT(0);
+ 
+ 	if (!idle_pipe)
+-		return false;
++		return NULL;
+ 
+ 	idle_pipe->stream = head_pipe->stream;
+ 	idle_pipe->stream_res.tg = head_pipe->stream_res.tg;
+-- 
+2.20.0
 
---=20
-nvpublic
