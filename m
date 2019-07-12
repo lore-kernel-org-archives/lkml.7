@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B37C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2FDC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C879121670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17F421019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934096;
-	bh=OvbvFkyE34k4KA5hu18PaS7ONOKp/sWbrgnjM8pDRxY=;
+	s=default; t=1562934099;
+	bh=JEl2xMhTXjcFazKlCKNupjlOtV5Zgb3boqeMf0NtShA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqNU8jG6BQ+p6C4pLWDseA4iRG2ur/xovzhfmsSVXZY3mkxvdVE2tZs3ikd+9FoCS
-	 3sBeHxSjQeSzKOGip+T6dBo94yGKOsaOYOmoLPoZ/ISdLtpY4eIqfvrbiZOnVXYo7p
-	 P02LoMmeezvTFgraZXWWvxpqS8sMepFRp9+UPhWA=
+	b=sV+1qsePi9tzJ1SgZE0ZyoDTeVmqAgEgUMIrc0A/22E8X7k68ReW50LVKx/3pomE9
+	 KoPtYYu0Am4NpXQT+DSBIAROCEy033wPAlDjRPlPlNWomhkGT4adiKz9JZ1STzEzey
+	 wn4ifo2dbiaPBmmkxlM1fUsegbydxok3/d7iUQSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfGLMVf (ORCPT
+        id S1727629AbfGLMVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727603AbfGLMVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:21:33 -0400
+        id S1727615AbfGLMVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:21:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA382166E;
-        Fri, 12 Jul 2019 12:21:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 870C22166E;
+        Fri, 12 Jul 2019 12:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934092;
-        bh=OvbvFkyE34k4KA5hu18PaS7ONOKp/sWbrgnjM8pDRxY=;
+        s=default; t=1562934095;
+        bh=JEl2xMhTXjcFazKlCKNupjlOtV5Zgb3boqeMf0NtShA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qY5YwFey3QRy7giFFeNuaGL8b6yx6T1WZ6r2KpzWC94+YfiJlKqhcdTOW8P6yTXpU
-         lXnF5ZOLoRvynPPldQFQhRA+gZqb1gdcvjIc8KdbIUYty0qcJPoYQV53lTK1hpp0QY
-         c6gwD0nI1X441kikGoG0IcJvk7cqeCxTcxwvtVXk=
+        b=BNHIoPfh1sRJovV9Wh/7n3zwfep09WvgRov2S5VqO+UgYG2Mu0aMwGQqYhZ8pqtwm
+         Fgq2yOf9MNMN0ZocFUlPCC1TGjKVDn2rY9zoDq5r7zeWt2jfoN6kdHxGM44GfaFPga
+         NjLq1kWk/b+1qzPaNCIloLuZW9jSfQz7ljpzBprc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Reinhard Speyerer <rspmn@arcor.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/91] bpf, x64: fix stack layout of JITed bpf code
-Date:   Fri, 12 Jul 2019 14:18:44 +0200
-Message-Id: <20190712121623.675904684@linuxfoundation.org>
+Subject: [PATCH 4.19 42/91] qmi_wwan: add support for QMAP padding in the RX path
+Date:   Fri, 12 Jul 2019 14:18:45 +0200
+Message-Id: <20190712121623.738179149@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -59,135 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe8d9571dc50232b569242fac7ea6332a654f186 ]
+[ Upstream commit 61356088ace1866a847a727d4d40da7bf00b67fc ]
 
-Since commit 177366bf7ceb the %rbp stopped pointing to %rbp of the
-previous stack frame. That broke frame pointer based stack unwinding.
-This commit is a partial revert of it.
-Note that the location of tail_call_cnt is fixed, since the verifier
-enforces MAX_BPF_STACK stack size for programs with tail calls.
+The QMAP code in the qmi_wwan driver is based on the CodeAurora GobiNet
+driver which does not process QMAP padding in the RX path correctly.
+Add support for QMAP padding to qmimux_rx_fixup() according to the
+description of the rmnet driver.
 
-Fixes: 177366bf7ceb ("bpf: change x86 JITed program stack layout")
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
+Cc: Daniele Palmas <dnlplm@gmail.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/net/bpf_jit_comp.c | 74 +++++++++++--------------------------
- 1 file changed, 21 insertions(+), 53 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 2580cd2e98b1..a32fc3d99407 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -190,9 +190,7 @@ struct jit_context {
- #define BPF_MAX_INSN_SIZE	128
- #define BPF_INSN_SAFETY		64
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index e657d8947125..090227118d3d 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -153,7 +153,7 @@ static bool qmimux_has_slaves(struct usbnet *dev)
  
--#define AUX_STACK_SPACE		40 /* Space for RBX, R13, R14, R15, tailcnt */
--
--#define PROLOGUE_SIZE		37
-+#define PROLOGUE_SIZE		20
+ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ {
+-	unsigned int len, offset = 0;
++	unsigned int len, offset = 0, pad_len, pkt_len;
+ 	struct qmimux_hdr *hdr;
+ 	struct net_device *net;
+ 	struct sk_buff *skbn;
+@@ -171,10 +171,16 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		if (hdr->pad & 0x80)
+ 			goto skip;
  
- /*
-  * Emit x86-64 prologue code for BPF program and check its size.
-@@ -203,44 +201,19 @@ static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf)
- 	u8 *prog = *pprog;
- 	int cnt = 0;
++		/* extract padding length and check for valid length info */
++		pad_len = hdr->pad & 0x3f;
++		if (len == 0 || pad_len >= len)
++			goto skip;
++		pkt_len = len - pad_len;
++
+ 		net = qmimux_find_dev(dev, hdr->mux_id);
+ 		if (!net)
+ 			goto skip;
+-		skbn = netdev_alloc_skb(net, len);
++		skbn = netdev_alloc_skb(net, pkt_len);
+ 		if (!skbn)
+ 			return 0;
+ 		skbn->dev = net;
+@@ -191,7 +197,7 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 			goto skip;
+ 		}
  
--	/* push rbp */
--	EMIT1(0x55);
--
--	/* mov rbp,rsp */
--	EMIT3(0x48, 0x89, 0xE5);
--
--	/* sub rsp, rounded_stack_depth + AUX_STACK_SPACE */
--	EMIT3_off32(0x48, 0x81, 0xEC,
--		    round_up(stack_depth, 8) + AUX_STACK_SPACE);
--
--	/* sub rbp, AUX_STACK_SPACE */
--	EMIT4(0x48, 0x83, 0xED, AUX_STACK_SPACE);
--
--	/* mov qword ptr [rbp+0],rbx */
--	EMIT4(0x48, 0x89, 0x5D, 0);
--	/* mov qword ptr [rbp+8],r13 */
--	EMIT4(0x4C, 0x89, 0x6D, 8);
--	/* mov qword ptr [rbp+16],r14 */
--	EMIT4(0x4C, 0x89, 0x75, 16);
--	/* mov qword ptr [rbp+24],r15 */
--	EMIT4(0x4C, 0x89, 0x7D, 24);
--
-+	EMIT1(0x55);             /* push rbp */
-+	EMIT3(0x48, 0x89, 0xE5); /* mov rbp, rsp */
-+	/* sub rsp, rounded_stack_depth */
-+	EMIT3_off32(0x48, 0x81, 0xEC, round_up(stack_depth, 8));
-+	EMIT1(0x53);             /* push rbx */
-+	EMIT2(0x41, 0x55);       /* push r13 */
-+	EMIT2(0x41, 0x56);       /* push r14 */
-+	EMIT2(0x41, 0x57);       /* push r15 */
- 	if (!ebpf_from_cbpf) {
--		/*
--		 * Clear the tail call counter (tail_call_cnt): for eBPF tail
--		 * calls we need to reset the counter to 0. It's done in two
--		 * instructions, resetting RAX register to 0, and moving it
--		 * to the counter location.
--		 */
--
--		/* xor eax, eax */
--		EMIT2(0x31, 0xc0);
--		/* mov qword ptr [rbp+32], rax */
--		EMIT4(0x48, 0x89, 0x45, 32);
--
-+		/* zero init tail_call_cnt */
-+		EMIT2(0x6a, 0x00);
- 		BUILD_BUG_ON(cnt != PROLOGUE_SIZE);
- 	}
--
- 	*pprog = prog;
- }
+-		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, len);
++		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, pkt_len);
+ 		if (netif_rx(skbn) != NET_RX_SUCCESS)
+ 			return 0;
  
-@@ -285,13 +258,13 @@ static void emit_bpf_tail_call(u8 **pprog)
- 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
- 	 *	goto out;
- 	 */
--	EMIT2_off32(0x8B, 0x85, 36);              /* mov eax, dword ptr [rbp + 36] */
-+	EMIT2_off32(0x8B, 0x85, -36 - MAX_BPF_STACK); /* mov eax, dword ptr [rbp - 548] */
- 	EMIT3(0x83, 0xF8, MAX_TAIL_CALL_CNT);     /* cmp eax, MAX_TAIL_CALL_CNT */
- #define OFFSET2 (30 + RETPOLINE_RAX_BPF_JIT_SIZE)
- 	EMIT2(X86_JA, OFFSET2);                   /* ja out */
- 	label2 = cnt;
- 	EMIT3(0x83, 0xC0, 0x01);                  /* add eax, 1 */
--	EMIT2_off32(0x89, 0x85, 36);              /* mov dword ptr [rbp + 36], eax */
-+	EMIT2_off32(0x89, 0x85, -36 - MAX_BPF_STACK); /* mov dword ptr [rbp -548], eax */
- 
- 	/* prog = array->ptrs[index]; */
- 	EMIT4_off32(0x48, 0x8B, 0x84, 0xD6,       /* mov rax, [rsi + rdx * 8 + offsetof(...)] */
-@@ -1006,19 +979,14 @@ xadd:			if (is_imm8(insn->off))
- 			seen_exit = true;
- 			/* Update cleanup_addr */
- 			ctx->cleanup_addr = proglen;
--			/* mov rbx, qword ptr [rbp+0] */
--			EMIT4(0x48, 0x8B, 0x5D, 0);
--			/* mov r13, qword ptr [rbp+8] */
--			EMIT4(0x4C, 0x8B, 0x6D, 8);
--			/* mov r14, qword ptr [rbp+16] */
--			EMIT4(0x4C, 0x8B, 0x75, 16);
--			/* mov r15, qword ptr [rbp+24] */
--			EMIT4(0x4C, 0x8B, 0x7D, 24);
--
--			/* add rbp, AUX_STACK_SPACE */
--			EMIT4(0x48, 0x83, 0xC5, AUX_STACK_SPACE);
--			EMIT1(0xC9); /* leave */
--			EMIT1(0xC3); /* ret */
-+			if (!bpf_prog_was_classic(bpf_prog))
-+				EMIT1(0x5B); /* get rid of tail_call_cnt */
-+			EMIT2(0x41, 0x5F);   /* pop r15 */
-+			EMIT2(0x41, 0x5E);   /* pop r14 */
-+			EMIT2(0x41, 0x5D);   /* pop r13 */
-+			EMIT1(0x5B);         /* pop rbx */
-+			EMIT1(0xC9);         /* leave */
-+			EMIT1(0xC3);         /* ret */
- 			break;
- 
- 		default:
 -- 
 2.20.1
 
