@@ -2,52 +2,53 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D80CC742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C139C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF8120645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F2320645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935070;
-	bh=mOI4f+8M6MD8y67Qh6fR5ZdRMmZi5fzudA5PS0kp1Ik=;
+	s=default; t=1562935074;
+	bh=5meU9hHpgYxCdNPIwICjkp/CtbL+UAFXdcXK6MeI6IY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4dgqyEr+NU7FX0p3neK8rYylftgXa9evsUWiNhtq0jQxDQ6j4V5/RqwfWTYdDcOF
-	 +bjHmljsZMvKZ4uZYieayFed3Pyas9R6b+Bt0tvQdG+tBBK73D7rf1x+m325xNw2/1
-	 EmzdGeGZKCFc69BALkkcw3FZ7UQo2dHAsOyNWNtU=
+	b=nKuynrUqoqWhyggPJGw8p6YOPV853QO1vNGI5lfxEJF1G9oZUmc5XcaGs17gM3hhS
+	 xHZa7xSdBN2CQzNdPnf+Qd2LaZLaBkk5JVr1Agyjr0TT2Qpjgtdh/12Rg93pHeWbrH
+	 bnt8lx5Puun+Shb8VihAXdiSsQ5vsZuTdsIyRqzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbfGLMaa (ORCPT
+        id S1728576AbfGLMaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728686AbfGLMaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:24 -0400
+        id S1729195AbfGLMaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3BEC216C4;
-        Fri, 12 Jul 2019 12:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43CAA208E4;
+        Fri, 12 Jul 2019 12:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934624;
-        bh=mOI4f+8M6MD8y67Qh6fR5ZdRMmZi5fzudA5PS0kp1Ik=;
+        s=default; t=1562934617;
+        bh=5meU9hHpgYxCdNPIwICjkp/CtbL+UAFXdcXK6MeI6IY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFkh71nvoc+f4yJs0TDfUxIz01mgSDSoDYQMjgY4WVrKVPaS/qaukYCtkFkF8tEfS
-         2RgDum19A+eAzlCUcL6ETGBBc9u0b3tpopLbnNvPUqbHI8R03jrp6s/r3YWNYj0EdU
-         FAb+KqQQh+J49SoNFgPYuVFbMfb4ISgCRswx7/tY=
+        b=rQohUkZv1ofnSZyLSPCfIonAIAFisXslZEroDQJkNKg/iLfdwYFAjmiyKSdZZK/Xq
+         s/xfJjGjq+IgVr3LHxg7eJekd59aIZGrx5LpIbF5nxA4mjsfDE4stlhcFhYtUvyGRO
+         ULhVeaTJ/k7q0PJdXY+nV1IbaHfrRrkVjqFOfHEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.1 114/138] usb: dwc2: use a longer AHB idle timeout in dwc2_core_reset()
-Date:   Fri, 12 Jul 2019 14:19:38 +0200
-Message-Id: <20190712121633.125684870@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 077/138] md: fix for divide error in status_resync
+Date:   Fri, 12 Jul 2019 14:19:01 +0200
+Message-Id: <20190712121631.665080137@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,43 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+[ Upstream commit 9642fa73d073527b0cbc337cc17a47d545d82cd2 ]
 
-commit dfc4fdebc5d62ac4e2fe5428e59b273675515fb2 upstream.
+Stopping external metadata arrays during resync/recovery causes
+retries, loop of interrupting and starting reconstruction, until it
+hit at good moment to stop completely. While these retries
+curr_mark_cnt can be small- especially on HDD drives, so subtraction
+result can be smaller than 0. However it is casted to uint without
+checking. As a result of it the status bar in /proc/mdstat while stopping
+is strange (it jumps between 0% and 99%).
 
-Use a 10000us AHB idle timeout in dwc2_core_reset() and make it
-consistent with the other "wait for AHB master IDLE state" ocurrences.
+The real problem occurs here after commit 72deb455b5ec ("block: remove
+CONFIG_LBDAF"). Sector_div() macro has been changed, now the
+divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
 
-This fixes a problem for me where dwc2 would not want to initialize when
-updating to 4.19 on a MIPS Lantiq VRX200 SoC. dwc2 worked fine with
-4.14.
-Testing on my board shows that it takes 180us until AHB master IDLE
-state is signalled. The very old vendor driver for this SoC (ifxhcd)
-used a 1 second timeout.
-Use the same timeout that is used everywhere when polling for
-GRSTCTL_AHBIDLE instead of using a timeout that "works for one board"
-(180us in my case) to have consistent behavior across the dwc2 driver.
+Check if db value can be really counted and replace these macro by
+div64_u64() inline.
 
-Cc: linux-stable <stable@vger.kernel.org> # 4.19+
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/md.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
---- a/drivers/usb/dwc2/core.c
-+++ b/drivers/usb/dwc2/core.c
-@@ -531,7 +531,7 @@ int dwc2_core_reset(struct dwc2_hsotg *h
- 	}
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 295ff09cff4c..84aec3647994 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7617,9 +7617,9 @@ static void status_unused(struct seq_file *seq)
+ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ {
+ 	sector_t max_sectors, resync, res;
+-	unsigned long dt, db;
+-	sector_t rt;
+-	int scale;
++	unsigned long dt, db = 0;
++	sector_t rt, curr_mark_cnt, resync_mark_cnt;
++	int scale, recovery_active;
+ 	unsigned int per_milli;
  
- 	/* Wait for AHB master IDLE state */
--	if (dwc2_hsotg_wait_bit_set(hsotg, GRSTCTL, GRSTCTL_AHBIDLE, 50)) {
-+	if (dwc2_hsotg_wait_bit_set(hsotg, GRSTCTL, GRSTCTL_AHBIDLE, 10000)) {
- 		dev_warn(hsotg->dev, "%s: HANG! AHB Idle timeout GRSTCTL GRSTCTL_AHBIDLE\n",
- 			 __func__);
- 		return -EBUSY;
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
+@@ -7708,22 +7708,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 	 * db: blocks written from mark until now
+ 	 * rt: remaining time
+ 	 *
+-	 * rt is a sector_t, so could be 32bit or 64bit.
+-	 * So we divide before multiply in case it is 32bit and close
+-	 * to the limit.
+-	 * We scale the divisor (db) by 32 to avoid losing precision
+-	 * near the end of resync when the number of remaining sectors
+-	 * is close to 'db'.
+-	 * We then divide rt by 32 after multiplying by db to compensate.
+-	 * The '+1' avoids division by zero if db is very small.
++	 * rt is a sector_t, which is always 64bit now. We are keeping
++	 * the original algorithm, but it is not really necessary.
++	 *
++	 * Original algorithm:
++	 *   So we divide before multiply in case it is 32bit and close
++	 *   to the limit.
++	 *   We scale the divisor (db) by 32 to avoid losing precision
++	 *   near the end of resync when the number of remaining sectors
++	 *   is close to 'db'.
++	 *   We then divide rt by 32 after multiplying by db to compensate.
++	 *   The '+1' avoids division by zero if db is very small.
+ 	 */
+ 	dt = ((jiffies - mddev->resync_mark) / HZ);
+ 	if (!dt) dt++;
+-	db = (mddev->curr_mark_cnt - atomic_read(&mddev->recovery_active))
+-		- mddev->resync_mark_cnt;
++
++	curr_mark_cnt = mddev->curr_mark_cnt;
++	recovery_active = atomic_read(&mddev->recovery_active);
++	resync_mark_cnt = mddev->resync_mark_cnt;
++
++	if (curr_mark_cnt >= (recovery_active + resync_mark_cnt))
++		db = curr_mark_cnt - (recovery_active + resync_mark_cnt);
+ 
+ 	rt = max_sectors - resync;    /* number of remaining sectors */
+-	sector_div(rt, db/32+1);
++	rt = div64_u64(rt, db/32+1);
+ 	rt *= dt;
+ 	rt >>= 5;
+ 
+-- 
+2.20.1
+
 
 
