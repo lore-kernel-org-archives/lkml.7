@@ -6,66 +6,53 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFA1C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBFBC742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0CB2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52ED820651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfGLWge (ORCPT
+        id S1728154AbfGLWhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 18:36:34 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:34334 "EHLO
+        Fri, 12 Jul 2019 18:37:32 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34362 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbfGLWge (ORCPT
+        with ESMTP id S1727994AbfGLWhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 18:36:34 -0400
+        Fri, 12 Jul 2019 18:37:31 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9137F14E0384F;
-        Fri, 12 Jul 2019 15:36:33 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 15:36:32 -0700 (PDT)
-Message-Id: <20190712.153632.1007215196498198399.davem@davemloft.net>
-To:     arnd@arndb.de
-Cc:     vishal@chelsio.com, rahul.lakkireddy@chelsio.com,
-        ganeshgr@chelsio.com, alexios.zavras@intel.com, arjun@chelsio.com,
-        surendra@chelsio.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] [net-next] cxgb4: reduce kernel stack usage in
- cudbg_collect_mem_region()
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF21F14E01C15;
+        Fri, 12 Jul 2019 15:37:30 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 15:37:30 -0700 (PDT)
+Message-Id: <20190712.153730.2158185171235731158.davem@davemloft.net>
+To:     xiaojiangfeng@huawei.com
+Cc:     yisen.zhuang@huawei.com, salil.mehta@huawei.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sergei.shtylyov@cogentembedded.com, leeyou.li@huawei.com,
+        nixiaoming@huawei.com
+Subject: Re: [PATCH] net: hisilicon: Use devm_platform_ioremap_resource
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190712090700.317887-1-arnd@arndb.de>
-References: <20190712090700.317887-1-arnd@arndb.de>
+In-Reply-To: <1562937384-121710-1-git-send-email-xiaojiangfeng@huawei.com>
+References: <1562937384-121710-1-git-send-email-xiaojiangfeng@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 12 Jul 2019 15:36:34 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 12 Jul 2019 15:37:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Fri, 12 Jul 2019 11:06:33 +0200
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Date: Fri, 12 Jul 2019 21:16:24 +0800
 
-> The cudbg_collect_mem_region() and cudbg_read_fw_mem() both use several
-> hundred kilobytes of kernel stack space. One gets inlined into the other,
-> which causes the stack usage to be combined beyond the warning limit
-> when building with clang:
+> Use devm_platform_ioremap_resource instead of
+> devm_ioremap_resource. Make the code simpler.
 > 
-> drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c:1057:12: error: stack frame size of 1244 bytes in function 'cudbg_collect_mem_region' [-Werror,-Wframe-larger-than=]
-> 
-> Restructuring cudbg_collect_mem_region() lets clang do the same
-> optimization that gcc does and reuse the stack slots as it can
-> see that the large variables are never used together.
-> 
-> A better fix might be to avoid using cudbg_meminfo on the stack
-> altogether, but that requires a larger rewrite.
-> 
-> Fixes: a1c69520f785 ("cxgb4: collect MC memory dump")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
 Applied.
