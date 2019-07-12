@@ -2,149 +2,122 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C48C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D268C742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9912084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE072084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WgShdzxO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uk1BXR95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfGLBqD (ORCPT
+        id S1729078AbfGLBrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:46:03 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59161 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbfGLBqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:46:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45lG3V60j1z9sMQ;
-        Fri, 12 Jul 2019 11:45:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562895960;
-        bh=0W6npV2Kiu65/8q7sGtd68JHyVYyZcWbnkUBWyhmDYc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WgShdzxOGy68a+Sd5OYoYK9XIP/UJqNVvkTNyYsa4rXN5RgjYJ2Ca8MngqgjbdMD3
-         B6CsRfum5jqJhhIjjqGmpQChcrSSjqOiLyIllb3dmWXUJhxxoinRrregBrw0DuNZgU
-         Phps/E2cAgW0sXaHM3PakgpuiGDt2Qucn7cUthohTP8YzLDIKwSd+rLHYFMXba7Vnv
-         DKPx6Sp3l51lbHJ4xpgQHjNsYd9PNDonLb4Wc7ob3pzkdgrQ1mTD9+afCiw4G/RMOh
-         uvTt9FqEaVQKMkUwbpyui15vUFsOVc9gPY8zPTymnLmNzH+HT4oIYEIBAITRNE4GJc
-         ne7AzAI+Q3UTw==
-Date:   Fri, 12 Jul 2019 11:45:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bernard Metzler <BMT@zurich.ibm.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190712114557.2b094876@canb.auug.org.au>
-In-Reply-To: <20190711143302.GH25821@mellanox.com>
-References: <20190711115235.GA25821@mellanox.com>
- <20190710175212.GM2887@mellanox.com>
- <20190709135636.4d36e19f@canb.auug.org.au>
- <20190709064346.GF7034@mtr-leonro.mtl.com>
- <OF360C0EBE.4A489B94-ON00258434.002B10B7-00258434.002C0536@notes.na.collabserv.com>
- <OF9A485648.9C7A28A3-ON00258434.00449B07-00258434.00449B14@notes.na.collabserv.com>
- <20190711143302.GH25821@mellanox.com>
+        Thu, 11 Jul 2019 21:47:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33367 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfGLBrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:47:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so8256942wru.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TSFGt+Q1og6AA+SdNnXRjxSfv/MJFeGddK8TCtYrMOg=;
+        b=uk1BXR95kMsdF9sHBlyG55rS2E1xeWRMYuIBC5lVMxQgjAcvzJIMynUBe3wm/zfSQD
+         OC66fX/RzQlpJ44bj9120Ft2Tap9PgBHxgB/NX0Fjq0IvZe7WVXJzc4YskygtPm8UctJ
+         QfmADfQxwVc1xW/vqRuRDxe0QO/w9RGgZBVyjvkTiBspm9mRMrBtPxuu5oTWyoVhIBnF
+         TQauhcIgrgyVBirznKq2EzRvhq+2+0wZn+Bmu7JKfx2fhfT2m3CaVQwquawx60O3Iwk7
+         IFye7kfK9w42vtwfGEwwfOo+oPGAGMPLrlxD8Ur60/Kwisr53dIEpOJnQ8OZlKpr1yPK
+         Dt7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TSFGt+Q1og6AA+SdNnXRjxSfv/MJFeGddK8TCtYrMOg=;
+        b=jXlfGIOTvHnIsuf5Z/LlIYZeQNYoyMx36CpW8z3TR5366WQvormRRNtD+9jfgcgmwO
+         YT2DW8YzOFN0pwqMb70Kz9sau5XNwXeoRQyWq+wpK1i52GHSWaI0sO1EjCcrjKEJ7T6P
+         0YG325ephB5SUkJvaRRXT4OPjb2oEhxCzdQwo7agM3Xt+qo43iAwKxPkY6+VeY5y32Kv
+         JCLWRQqOe7U7Vt0K6pM/pGHjtb6aSGLBEJW/b1ZAclroriIBd/gKbjuOtpW28j+G5T06
+         PeBWd3tZ/kelq/o7JJ5GRLo4A5nwdoPkcdoYUSY1FgMfq5K88XTsJWpTBGNas7O6aEcQ
+         ycUQ==
+X-Gm-Message-State: APjAAAXt6LhcqOsG9Jal0nMiNYQH0fn6MTi8Oa2oMd6cYPKm9+POZ/8f
+        10R0rbpJhNwSn+dXb3HAU3s=
+X-Google-Smtp-Source: APXvYqws0ImOdE7ZSUr6OyBuf5RgiTHk1I5zYJ43oxLwLXzH9OoHbxuh7mnT0trEjl87OLL0XXHcPA==
+X-Received: by 2002:a5d:6284:: with SMTP id k4mr7958812wru.179.1562896028018;
+        Thu, 11 Jul 2019 18:47:08 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id v15sm5904425wru.61.2019.07.11.18.47.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 18:47:07 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Wen Yang <wen.yang99@zte.com.cn>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH v2] ASoC: audio-graph-card: Constify reg in graph_get_dai_id
+Date:   Thu, 11 Jul 2019 18:45:55 -0700
+Message-Id: <20190712014554.62465-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190712014357.84245-1-natechancellor@gmail.com>
+References: <20190712014357.84245-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/IUmAit71Bk+sk6PU6OW4=UR"; protocol="application/pgp-signature"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IUmAit71Bk+sk6PU6OW4=UR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+clang errors:
 
-Hi Jason,
+sound/soc/generic/audio-graph-card.c:87:7: error: assigning to 'u32 *'
+(aka 'unsigned int *') from 'const void *' discards qualifiers
+[-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+                reg = of_get_property(node, "reg", NULL);
+                    ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
 
-On Thu, 11 Jul 2019 14:33:07 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> I've added this patch to the rdma tree to fix the missing locking.
->=20
-> The merge resolution will be simply swapping
-> for_ifa to in_dev_for_each_ifa_rtnl.
+Move the declaration up a bit to keep the reverse christmas tree look.
 
-OK, I added the below merge resolution patch to the merge of the rdma
-tree today (since Linus' has merged the net-next tree now).
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 12 Jul 2019 11:28:30 +1000
-Subject: [PATCH] RDMA: fix for removal of for_ifa()
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: c152f8491a8d ("ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()")
+Link: https://github.com/ClangBuiltLinux/linux/issues/600
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw=
-/siw_cm.c
-index 43f7f12e5f7f..cbea46ff6dd1 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1951,6 +1951,7 @@ static void siw_drop_listeners(struct iw_cm_id *id)
- int siw_create_listen(struct iw_cm_id *id, int backlog)
- {
- 	struct net_device *dev =3D to_siw_dev(id->device)->netdev;
-+	const struct in_ifaddr *ifa;
- 	int rv =3D 0, listeners =3D 0;
-=20
- 	siw_dbg(id->device, "id 0x%p: backlog %d\n", id, backlog);
-@@ -1973,8 +1974,7 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
-g)
- 			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
-=20
- 		rtnl_lock();
--		for_ifa(in_dev)
--		{
-+		in_dev_for_each_ifa_rtnl(ifa, in_dev) {
- 			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
- 			    s_laddr.sin_addr.s_addr =3D=3D ifa->ifa_address) {
- 				s_laddr.sin_addr.s_addr =3D ifa->ifa_address;
-@@ -1986,7 +1986,6 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
-g)
- 					listeners++;
- 			}
- 		}
--		endfor_ifa(in_dev);
- 		rtnl_unlock();
- 		in_dev_put(in_dev);
- 	} else if (id->local_addr.ss_family =3D=3D AF_INET6) {
---=20
-2.20.1
+v1 -> v2:
 
---=20
-Cheers,
-Stephen Rothwell
+* Update link in commit message (sorry, I create the commit message and
+  send the patch first then create the issue and I forgot to check the
+  closed ones for the correct number)
 
---Sig_/IUmAit71Bk+sk6PU6OW4=UR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ sound/soc/generic/audio-graph-card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
+index c8abb86afefa..c0d262a2ce2c 100644
+--- a/sound/soc/generic/audio-graph-card.c
++++ b/sound/soc/generic/audio-graph-card.c
+@@ -62,8 +62,8 @@ static int graph_get_dai_id(struct device_node *ep)
+ 	struct device_node *node;
+ 	struct device_node *endpoint;
+ 	struct of_endpoint info;
++	const u32 *reg;
+ 	int i, id;
+-	u32 *reg;
+ 	int ret;
+ 
+ 	/* use driver specified DAI ID if exist */
+-- 
+2.22.0
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0n5lUACgkQAVBC80lX
-0GzltQf/bL3tGcP1XbyYwX3AxXlwt2ZXDwgJZYBwSuZXTdaUOqA2zCcdiBUAurlt
-sW+IecoiTghsCXQEidmQ0UbdgpW3vTOJ79tVHMGqgKKvullNW1IbcDIfDwnrOe1b
-Tz5euSKYy+KchcCvZl7XpQfksI9seKhqon1PC0qXT6WmpaTRXQKNcPUuPTnyxfvh
-9IO6CJyXWcscwc41KNYbbXrQYQbsaaJ88INcw2L9EZ77sFhHcqWJID8y0XFcIqVm
-sfRWuWfJ7Jfuh5mFFtc3PPtQxoKhaTg9YrORNgLv06O+a6sQ+w4FDsYaZEFbINyu
-4qsIzrZRU/ud4AI+bj/0UcK/7UoMZA==
-=aAIK
------END PGP SIGNATURE-----
-
---Sig_/IUmAit71Bk+sk6PU6OW4=UR--
