@@ -2,54 +2,54 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7482C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2020C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B5421670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77367208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934264;
-	bh=/Mz1oNXA8X6erDLO019vWFgA0YET6BevJNaheOkykF4=;
+	s=default; t=1562934269;
+	bh=LOu9gpXwDt0xriCWK3knQMKIaK3cMl0hEygW7ULkYuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sipem02ibr8KVoSz3WEiwyw49P/d9w9v2FZixgE9rFHhNwzC+fCMVrLQocU1lOksG
-	 QixFrnGRycMNR2Bog7E6LxqkJyywzcepS8Iz2tXxbQIYSMGc4tNPXF+atbMbVNsCqw
-	 yyuXlNj7t8/eNNdjRIgBlPLpxC1ln81hdhDxK4KQ=
+	b=huhSWkQJ2QPj2SsuG2R8PRMUW8gjZFOp/z9JRtqlFNorhxmQypNm0dtF2moCy01zq
+	 Z5HbIXb8l1ZO/fWdb1Uj1U9QyP6Z0mf+kHBd8O0hXsH26k4f49xSPPmLPUp0sVyk+b
+	 EiP6mUYF0mlSmlD1PdKYIdu/L50FwGys7HO4/TEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfGLMYX (ORCPT
+        id S1728122AbfGLMY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbfGLMYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:24:16 -0400
+        id S1728108AbfGLMY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:24:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3821208E4;
-        Fri, 12 Jul 2019 12:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DC8B208E4;
+        Fri, 12 Jul 2019 12:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934255;
-        bh=/Mz1oNXA8X6erDLO019vWFgA0YET6BevJNaheOkykF4=;
+        s=default; t=1562934264;
+        bh=LOu9gpXwDt0xriCWK3knQMKIaK3cMl0hEygW7ULkYuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xXUvIIsDTykc3FuhAgLvVqSgs3sm6Jb+KHpxLcHGxMhVuP4US87ScCAe94Fi7HALz
-         gnbZs+iaeGLk1HM8xbgNNAmMpm+lXOSSIbLg49psCytVANUaY3Wcn87PPnCBVqjGgd
-         frmYQXoeMq064Ly+giIfPX3LuOdCm4lUA072xwqg=
+        b=v7YcYilzlt64fZj0R4kXHwUwwtaYwP+6zj4oEXFJGie5J1Ji9Bwo3n9rzMTnw7vML
+         PDbOyY+iYpSw77GwCXopu4Xor5IygcmB3r5CNH1VGaDV2BC6tsMYoUU7BCyo/hEK/y
+         k5+EqEed2dBZNVS6YKuXo4Gue4as9Z9zyEluxuzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
-        Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH 4.19 85/91] MIPS: Remove superfluous check for __linux__
-Date:   Fri, 12 Jul 2019 14:19:28 +0200
-Message-Id: <20190712121626.299919825@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 88/91] staging: bcm2835-camera: Ensure all buffers are returned on disable
+Date:   Fri, 12 Jul 2019 14:19:31 +0200
+Message-Id: <20190712121626.436694777@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -62,52 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-commit 1287533d3d95d5ad8b02773733044500b1be06bc upstream.
+commit 70ec64ccdaac5d8f634338e33b016c1c99831499 upstream.
 
-When building BPF code using "clang -target bpf -c", clang does not
-define __linux__.
+With the recent change to match MMAL and V4L2 buffers there
+is a need to wait for all MMAL buffers to be returned during
+stop_streaming.
 
-To build BPF IR decoders the include linux/lirc.h is needed which
-includes linux/types.h. Currently this workaround is needed:
-
-https://git.linuxtv.org/v4l-utils.git/commit/?id=dd3ff81f58c4e1e6f33765dc61ad33c48ae6bb07
-
-This check might otherwise be useful to stop users from using a non-linux
-compiler, but if you're doing that you are going to have a lot more
-trouble anyway.
-
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/21149/
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Hauke Mehrtens <hauke@hauke-m.de>
+Fixes: 938416707071 ("staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping")
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/uapi/asm/sgidefs.h |    8 --------
- 1 file changed, 8 deletions(-)
+ drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c |   22 +++++++---
+ drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c     |    4 +
+ drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.h     |    3 +
+ 3 files changed, 23 insertions(+), 6 deletions(-)
 
---- a/arch/mips/include/uapi/asm/sgidefs.h
-+++ b/arch/mips/include/uapi/asm/sgidefs.h
-@@ -12,14 +12,6 @@
- #define __ASM_SGIDEFS_H
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -582,6 +582,7 @@ static void stop_streaming(struct vb2_qu
+ 	int ret;
+ 	unsigned long timeout;
+ 	struct bm2835_mmal_dev *dev = vb2_get_drv_priv(vq);
++	struct vchiq_mmal_port *port = dev->capture.port;
  
- /*
-- * Using a Linux compiler for building Linux seems logic but not to
-- * everybody.
-- */
--#ifndef __linux__
--#error Use a Linux compiler or give up.
--#endif
+ 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev, "%s: dev:%p\n",
+ 		 __func__, dev);
+@@ -605,12 +606,6 @@ static void stop_streaming(struct vb2_qu
+ 				      &dev->capture.frame_count,
+ 				      sizeof(dev->capture.frame_count));
+ 
+-	/* wait for last frame to complete */
+-	timeout = wait_for_completion_timeout(&dev->capture.frame_cmplt, HZ);
+-	if (timeout == 0)
+-		v4l2_err(&dev->v4l2_dev,
+-			 "timed out waiting for frame completion\n");
 -
--/*
-  * Definitions for the ISA levels
-  *
-  * With the introduction of MIPS32 / MIPS64 instruction sets definitions
+ 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
+ 		 "disabling connection\n");
+ 
+@@ -625,6 +620,21 @@ static void stop_streaming(struct vb2_qu
+ 			 ret);
+ 	}
+ 
++	/* wait for all buffers to be returned */
++	while (atomic_read(&port->buffers_with_vpu)) {
++		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
++			 "%s: Waiting for buffers to be returned - %d outstanding\n",
++			 __func__, atomic_read(&port->buffers_with_vpu));
++		timeout = wait_for_completion_timeout(&dev->capture.frame_cmplt,
++						      HZ);
++		if (timeout == 0) {
++			v4l2_err(&dev->v4l2_dev, "%s: Timeout waiting for buffers to be returned - %d outstanding\n",
++				 __func__,
++				 atomic_read(&port->buffers_with_vpu));
++			break;
++		}
++	}
++
+ 	if (disable_camera(dev) < 0)
+ 		v4l2_err(&dev->v4l2_dev, "Failed to disable camera\n");
+ }
+--- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
+@@ -241,6 +241,8 @@ static void buffer_work_cb(struct work_s
+ 	struct mmal_msg_context *msg_context =
+ 		container_of(work, struct mmal_msg_context, u.bulk.work);
+ 
++	atomic_dec(&msg_context->u.bulk.port->buffers_with_vpu);
++
+ 	msg_context->u.bulk.port->buffer_cb(msg_context->u.bulk.instance,
+ 					    msg_context->u.bulk.port,
+ 					    msg_context->u.bulk.status,
+@@ -381,6 +383,8 @@ buffer_from_host(struct vchiq_mmal_insta
+ 	/* initialise work structure ready to schedule callback */
+ 	INIT_WORK(&msg_context->u.bulk.work, buffer_work_cb);
+ 
++	atomic_inc(&port->buffers_with_vpu);
++
+ 	/* prep the buffer from host message */
+ 	memset(&m, 0xbc, sizeof(m));	/* just to make debug clearer */
+ 
+--- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.h
++++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.h
+@@ -71,6 +71,9 @@ struct vchiq_mmal_port {
+ 	struct list_head buffers;
+ 	/* lock to serialise adding and removing buffers from list */
+ 	spinlock_t slock;
++
++	/* Count of buffers the VPU has yet to return */
++	atomic_t buffers_with_vpu;
+ 	/* callback on buffer completion */
+ 	vchiq_mmal_buffer_cb buffer_cb;
+ 	/* callback context */
 
 
