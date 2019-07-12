@@ -2,127 +2,144 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C605C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE4C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459D121537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni8XL8v2"
+	by mail.kernel.org (Postfix) with ESMTP id 8E3D120863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfGLILU (ORCPT
+        id S1726380AbfGLIMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:11:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39800 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLILS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:11:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so4404078pls.6;
-        Fri, 12 Jul 2019 01:11:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=M4aojHkTRgr5KR1nVQ76cFFCD98YRnC1NfZVjSYBlNk=;
-        b=Ni8XL8v212tRdbisi8LSUtOWTiNTMLlyiFa83bbMOuJLAfScdz6uoEshtt9ucTSXaV
-         QVG8DTLD6aSOIkrpeguq0w4ULqxvNyqIPV30grG9AuXzVM8yOAK3uFQGyPsp/M3lQS7P
-         2AB8pwR8CodK83TeA0sVFmoU10cKemmfVXlVJ3xyl8Q8gzXJFr9+ZRLSIBRwisyhp7lp
-         muZ5HVwQK6cHAjFbW4QvXVaxWrF2ATrD5en08vlbPaMfu9eEF++RGA/a5sLSYi68YAka
-         dUIYf/bvKT73ccwp5vLE51SOnJhsEoKN3vAzpc0I/ZG/W/oukZlhZ55QYYWgcBSY2k/X
-         fb2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=M4aojHkTRgr5KR1nVQ76cFFCD98YRnC1NfZVjSYBlNk=;
-        b=JNsubdqipXD4Tktvd07zCaJeMBdoz9sZZhAfi/fdYMxz19O9A6XGpApMwyZRMkJdr1
-         TK50KQcMAtp3bzku9ErkN9ZXX/czVPE8/zE3E29pmKj4uvZv1NpUU3OaXbfGDJI2vgCB
-         P7aK1BgBgx0Aj4+srPov9uHM3a/G2mfbab20f5E2Ozf4nZSZxCrbLT4L78VAMWEAmz1S
-         kyfeaygMXpsDpB+YxHyG5bAoRDT1F490cfPxKWqjcPA6MQ0iPiPYgPmd5wJTqHUGijA3
-         5Ei0JAIPAMK41U1yDFiAZOPLbmyJ2gypUkSGC7IscHNK/Y2PWXaPVCsp7MP7F+fu//hQ
-         mzag==
-X-Gm-Message-State: APjAAAUxXFyDikkeNsE2Zp/jgT/DMA1sw2QQ1DY/IRq7F24oV71MbtpT
-        q7g1T+1fzW0shCKctJSTQRRuzZMo3cZpEA==
-X-Google-Smtp-Source: APXvYqyAS5YP5nGv7DRKpFwhIeSDumf77QEARmpZNer0pmdleI0B9QtricOEDvDCvBGyEtTM9luRkA==
-X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr9842898plb.240.1562919077770;
-        Fri, 12 Jul 2019 01:11:17 -0700 (PDT)
-Received: from maya190711 ([52.250.118.122])
-        by smtp.gmail.com with ESMTPSA id t2sm7207474pgo.61.2019.07.12.01.11.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 01:11:17 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 08:11:16 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/5] hv: Remove dependencies on guest page size
-Message-ID: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+        Fri, 12 Jul 2019 04:12:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2225 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726112AbfGLIMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:12:15 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 51D31B171A7986E02C84;
+        Fri, 12 Jul 2019 16:12:12 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 12 Jul 2019
+ 16:12:10 +0800
+Subject: Re: [PATCH v2 0/5] Add NUMA-awareness to qspinlock
+To:     Jan Glauber <jglauber@marvell.com>,
+        Alex Kogan <alex.kogan@oracle.com>
+CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "steven.sistare@oracle.com" <steven.sistare@oracle.com>,
+        "daniel.m.jordan@oracle.com" <daniel.m.jordan@oracle.com>,
+        "dave.dice@oracle.com" <dave.dice@oracle.com>,
+        "rahul.x.yadav@oracle.com" <rahul.x.yadav@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <CAEiAFz238Ywgn6iDAz9gM_3PgPhs-YuAVDptehUBv7MRRPx8Cw@mail.gmail.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <95683b80-f694-cf34-73fc-e6ec05462ee0@huawei.com>
+Date:   Fri, 12 Jul 2019 16:12:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAEiAFz238Ywgn6iDAz9gM_3PgPhs-YuAVDptehUBv7MRRPx8Cw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Linux guest page size and hypervisor page size concepts are
-different, even though they happen to be the same value on x86. Hyper-V
-code mixes up the two, so this patchset begins to address that by
-creating and using a set of Hyper-V specific page definitions.
+On 2019/7/3 19:58, Jan Glauber wrote:
+> Hi Alex,
+> I've tried this series on arm64 (ThunderX2 with up to SMT=4  and 224 CPUs)
+> with the borderline testcase of accessing a single file from all
+> threads. With that
+> testcase the qspinlock slowpath is the top spot in the kernel.
+> 
+> The results look really promising:
+> 
+> CPUs    normal    numa-qspinlocks
+> ---------------------------------------------
+> 56        149.41          73.90
+> 224      576.95          290.31
+> 
+> Also frontend-stalls are reduced to 50% and interconnect traffic is
+> greatly reduced.
+> Tested-by: Jan Glauber <jglauber@marvell.com>
 
-A major benefit of those new definitions is that they support non-x86
-architectures, such as ARM64, that use different page sizes. On ARM64,
-the guest page size may not be 4096, and Hyper-V always runs with a page
-size of 4096.
+Tested this patchset on Kunpeng920 ARM64 server (96 cores,
+4 NUMA nodes), and with the same test case from Jan, I can
+see 150%+ boost! (Need to add a patch below [1].)
 
-In this patchset, the first two patches lay the foundation for the
-others, creating definitions and preparing for allocation of memory with
-the size and alignment that Hyper-V expects as a page. Patch 3 applies
-the page size definition where the guest VM and Hyper-V communicate, and
-where the code intends to use the Hyper-V page size. The last two
-patches set the ring buffer size to a fixed value, removing the
-dependency on the guest page size.
+For the real workload such as Nginx I can see about 10%
+performance improvement as well.
 
-This is the initial set of changes to the Hyper-V code, and future
-patches will make additional changes using the same foundation, for
-example, replace __vmalloc() and related functions when Hyper-V pages
-are intended.
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
 
-Changes in v4 (all apply to patch 2 only):
-- Remove file name from the subject.
-- Include prototypes of two new functions.
-- Add another Link tag.
+Please cc me for new versions and I'm willing to test it.
 
-Changes in v3:
-- Simplify expression for BUILD_BUG_ON() in patch 2.
-- Add Link and Reviewed-by tags.
+Thanks
+Hanjun
 
-Change in v2:
-- Replace patch 2 with a new one.
+[1]
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 657bbc5..72c1346 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -792,6 +792,20 @@ config NODES_SHIFT
+          Specify the maximum number of NUMA Nodes available on the target
+          system.  Increases memory reserved to accommodate various tables.
 
-Maya Nakamura (5):
-  x86: hv: hyperv-tlfs.h: Create and use Hyper-V page definitions
-  x86: hv: Add functions to allocate/deallocate page for Hyper-V
-  hv: vmbus: Replace page definition with Hyper-V specific one
-  HID: hv: Remove dependencies on PAGE_SIZE for ring buffer
-  Input: hv: Remove dependencies on PAGE_SIZE for ring buffer
++config NUMA_AWARE_SPINLOCKS
++ bool "Numa-aware spinlocks"
++ depends on NUMA
++ default y
++ help
++   Introduce NUMA (Non Uniform Memory Access) awareness into
++   the slow path of spinlocks.
++
++   The kernel will try to keep the lock on the same node,
++   thus reducing the number of remote cache misses, while
++   trading some of the short term fairness for better performance.
++
++   Say N if you want absolute first come first serve fairness.
++
+ config USE_PERCPU_NUMA_NODE_ID
+        def_bool y
+        depends on NUMA
+diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
+index 2994167..be5dd44 100644
+--- a/kernel/locking/qspinlock_cna.h
++++ b/kernel/locking/qspinlock_cna.h
+@@ -4,7 +4,7 @@
+ #endif
 
- arch/x86/hyperv/hv_init.c             | 14 ++++++++++++++
- arch/x86/include/asm/hyperv-tlfs.h    | 12 +++++++++++-
- arch/x86/include/asm/mshyperv.h       |  5 ++++-
- drivers/hid/hid-hyperv.c              |  4 ++--
- drivers/hv/hyperv_vmbus.h             |  8 ++++----
- drivers/input/serio/hyperv-keyboard.c |  4 ++--
- 6 files changed, 37 insertions(+), 10 deletions(-)
-
--- 
-2.17.1
+ #include <linux/random.h>
+-
++#include <linux/topology.h>
+ /*
+  * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
+  *
+@@ -170,7 +170,7 @@ static __always_inline void cna_init_node(struct mcs_spinlock *node, int cpuid,
+                                          u32 tail)
+ {
+        if (decode_numa_node(node->node_and_count) == -1)
+-           store_numa_node(node, numa_cpu_node(cpuid));
++         store_numa_node(node, cpu_to_node(cpuid));
+        node->encoded_tail = tail;
+ }
 
