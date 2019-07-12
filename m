@@ -2,81 +2,223 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B083C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A5C742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460C620651
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E4320651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ntqoYFzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfGLRAT (ORCPT
+        id S1727315AbfGLRAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:00:19 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59375 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbfGLRAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:00:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 10:00:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
-   d="scan'208";a="365210846"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Jul 2019 10:00:17 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 8518C301004; Fri, 12 Jul 2019 10:00:17 -0700 (PDT)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     unlisted-recipients:; (no To-header on input)
-        Jason Gunthorpe <jgg@ziepe.ca>, Ming Lei <ming.lei@redhat.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)Jason Gunthorpe <jgg@ziepe.ca>
-                                                                     ^-missing end of address
-Subject: Re: [PATCH] scatterlist: Allocate a contiguous array instead of chaining
-References: <20190712063657.17088-1-sultan@kerneltoast.com>
-Date:   Fri, 12 Jul 2019 10:00:17 -0700
-In-Reply-To: <20190712063657.17088-1-sultan@kerneltoast.com> (Sultan Alsawaf's
-        message of "Thu, 11 Jul 2019 23:36:56 -0700")
-Message-ID: <87lfx39oim.fsf@firstfloor.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 12 Jul 2019 13:00:22 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:39749 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfGLRAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 13:00:21 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u3so7132639vsh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Xa/JIc+XiGXpm5Gi1iHsvZxDgn8MNFaOrmXkkSzsQhU=;
+        b=ntqoYFzy45x5nH1dbIIy2cdYjWHGlisy72XlIy7vKgmOHMuEOp7rDYlRHlZK5KslUH
+         cSTpclAr5jlrXouH5YXj/oC00K9V2ghHhHw5d2MyX/IbEwftEaNyQEvwu+2TrCmJttMg
+         xijN++2pDIXgAsaQHll/UjzHAU3PaAauqgv+/kdMpO7jC1H7ZyUwIPBWmFNz+HsyGizf
+         MrMMIAbe0d4SZhTIaQ9W4WsvET4ZWBQevj8ib5gZJbA4OZV6O5oHSL7Gb+KNGINVtHcY
+         OQDqXrSB1xBkuCMCkTj4BW87ZeLpazRD/6qFbuYcuSIzLvdke2rMmvWZJ1YaNQ4tP6YS
+         LU5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Xa/JIc+XiGXpm5Gi1iHsvZxDgn8MNFaOrmXkkSzsQhU=;
+        b=fm39nAUd8EsslA8ccrtKDNn7niT15WI/RC3p6rGXnhPoMYtfftp0fsszO39joPLIvO
+         zjTpM2pvXGe2lIBOwQuuC9v3MsPM3iVmgJ8W0SiQuQQSS3f0z2SWV+DuAWWQOBicGrdf
+         fA8aGCxWKQ55bchz4A6RXtB2WfxUacmzjmXlw3ZIEaHYbcNzYIWsX12/1pBOV7/z3X47
+         nWE2qCEtEWobvKtoDqLVHyTorwLhfytW9L3ZNRLUJEzuqw8jFMeiRFZu0mOppdJCRFqx
+         Wpsz9Om0WPgU0tPoHuEFDPBlKuTUlRNx5qUiifB+WoQKBFzHqtLLEOwbCMBxJXXoYtdV
+         UJAQ==
+X-Gm-Message-State: APjAAAUKXDP3oIsy5zxsPoeXzwO5gU1iTwhFl9AO21r03BSPiZPEp0o+
+        S3l3MHSvXDimPk7dla6hPINmfEeUpbfRKRkmJZ8Dcw==
+X-Google-Smtp-Source: APXvYqwLnT96Jqh0/cv6O2LK00nrN85AzB6P4BY5Khs4jQZ53nF/9r7GJrdQ7XU76VyyHVvvZl0qdlQfCDUjrdBy0fc=
+X-Received: by 2002:a67:ba12:: with SMTP id l18mr9474162vsn.29.1562950819093;
+ Fri, 12 Jul 2019 10:00:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
+ <CANN689G6mGLSOkyj31ympGgnqxnJosPVc4EakW5gYGtA_45L7g@mail.gmail.com>
+ <df001b6fbe2a4bdc86999c78933dab7f@huawei.com> <20190711182002.9bb943006da6b61ab66b95fd@linux-foundation.org>
+ <71c4329e246344eeb38c8ac25c63c09d@huawei.com>
+In-Reply-To: <71c4329e246344eeb38c8ac25c63c09d@huawei.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Fri, 12 Jul 2019 10:00:06 -0700
+Message-ID: <CANN689H1wtbKOqhpTSuxvTDcsU00y1xXd8wRVFvbG_2p3WvoqQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
+To:     "chenjianhong (A)" <chenjianhong2@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "wangle (H)" <wangle6@huawei.com>,
+        "Chengang (L)" <cg.chen@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sultan Alsawaf <sultan@kerneltoast.com> writes:
+On Fri, Jul 12, 2019 at 3:53 AM chenjianhong (A)
+<chenjianhong2@huawei.com> wrote:
+> Thank you for your reply!
+> > How significant is this problem in real-world use cases?  How much trou=
+ble is it causing?
+>    In my opinion, this problem is very rare in real-world use cases. In a=
+rm64
+>    or x86 environment, the virtual memory is enough. In arm32 environment=
+,
+>    each process has only 3G or 4G or less, but we seldom use out all of t=
+he virtual memory,
+>    it only happens in some special environment. They almost use out all t=
+he virtual memory, and
+>    in some moment, they will change their working mode so they will relea=
+se and allocate
+>    memory again. This current length limitation will cause this problem. =
+I explain it's the memory
+>    length limitation. But they can't accept the reason, it is unreasonabl=
+e that we fail to allocate
+>    memory even though the memory gap is enough.
+
+Right. So to summarize, you have a customer accidentally hitting this
+and asking you about it ? and I assume their workload is not public ?
+
+> > Have you looked further into this?  Michel is concerned about the perfo=
+rmance cost of the current solution.
+>    The current algorithm(change before) is wonderful, and it has been use=
+d for a long time, I don't
+>    think it is worthy to change the whole algorithm in order to fix this =
+problem. Therefore, I just
+>    adjust the gap_start and gap_end value in place of the length. My chan=
+ge really affects the
+>    performance because I calculate the gap_start and gap_end value again =
+and again. Does it affect
+>    too much performance?  I have no complex environment, so I can't test =
+it, but I don't think it will cause
+>    too much performance loss. First, I don't change the whole algorithm. =
+Second, unmapped_area and
+>    unmapped_area_topdown function aren't used frequently. Maybe there are=
+ some big performance problems
+>    I'm not concerned about. But I think if that's not a problem, there sh=
+ould be a limitation description.
+
+The case I am worried about is if there are a lot of gaps that are
+large enough for an unaligned allocation, but too small for an aligned
+one.
+
+You could create the bad case as follows:
+- Allocate a huge memory block (no need to populate it, so it can
+really be as large as virtual memory will allow)
+- Free a bunch of 2M holes in that block, but none of them are aligned
+- Try to force allocation of a 2M aligned block
+
+With the current code, the allocation will quickly skip over the
+unaligned 2M holes. It will either find a 4M gap and allocate a 2M
+aligned block from it, or it will fail, but it will be quick in either
+case. With the suggested change, the allocation would try each of the
+unaligned 2M holes, which could take a long time, before eventually
+either finding a large enough aligned gap, or failing.
+
+I can see two ways around this:
+- the code could search for a 4M gap at first, like it currently does,
+and that fails it could look at all 2M gaps and see if one of them is
+aligned. So, there would still be the slow case, but only if the
+initial (fast) check failed. Maybe there should be a sysfs setting to
+enable the second pass, which would be disabled by default at least on
+64-bit systems.
+- If the issue only happens when allocating huge pages, and we know
+the possible huge page sizes for a process from the start, we could
+maintain more information about the gaps so that we could quickly
+search for a suitable aligned gaps. that is, for each subtree we would
+store both the highest 4K aligned size that can be allocated, and the
+highest 2M aligned size as well. That makes a more complete solution
+but probably overkill as we are not hitting this frequently enough to
+justify the complications.
+
 >
-> Abusing repeated kmallocs to produce a large allocation puts strain on
-> the slab allocator, when kvmalloc can be used instead. The single
-> kvmalloc allocation for all sg lists reduces the burden on the slab and
-> page allocators, since for large sg list allocations, this commit
-> replaces numerous kmalloc calls with one kvmalloc call.
+> -----Original Message-----
+> From: Andrew Morton [mailto:akpm@linux-foundation.org]
+> Sent: Friday, July 12, 2019 9:20 AM
+> To: chenjianhong (A) <chenjianhong2@huawei.com>
+> Cc: Michel Lespinasse <walken@google.com>; Greg Kroah-Hartman <gregkh@lin=
+uxfoundation.org>; mhocko@suse.com; Vlastimil Babka <vbabka@suse.cz>; Kiril=
+l A. Shutemov <kirill.shutemov@linux.intel.com>; Yang Shi <yang.shi@linux.a=
+libaba.com>; jannh@google.com; steve.capper@arm.com; tiny.windzz@gmail.com;=
+ LKML <linux-kernel@vger.kernel.org>; linux-mm <linux-mm@kvack.org>; stable=
+@vger.kernel.org; willy@infradead.org
+> Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
+>
+> On Sat, 18 May 2019 07:05:07 +0000 "chenjianhong (A)" <chenjianhong2@huaw=
+ei.com> wrote:
+>
+> > I explain my test code and the problem in detail. This problem is
+> > found in 32-bit user process, because its virtual is limited, 3G or 4G.
+> >
+> > First, I explain the bug I found. Function unmapped_area and
+> > unmapped_area_topdowns adjust search length to account for worst case
+> > alignment overhead, the code is ' length =3D info->length + info->align=
+_mask; '.
+> > The variable info->length is the length we allocate and the variable
+> > info->align_mask accounts for the alignment, because the gap_start  or
+> > info->gap_end
+> > value also should be an alignment address, but we can't know the alignm=
+ent offset.
+> > So in the current algorithm, it uses the max alignment offset, this
+> > value maybe zero or other(0x1ff000 for shmat function).
+> > Is it reasonable way? The required value is longer than what I allocate=
+.
+> > What's more,  why for the first time I can allocate the memory
+> > successfully Via shmat, but after releasing the memory via shmdt and I
+> > want to attach again, it fails. This is not acceptable for many people.
+> >
+> > Second, I explain my test code. The code I have sent an email. The
+> > following is the step. I don't think it's something unusual or
+> > unreasonable, because the virtual memory space is enough, but the
+> > process can allocate from it. And we can't pass explicit addresses to
+> > function mmap or shmat, the address is getting from the left vma gap.
+> >  1, we allocat large virtual memory;
+> >  2, we allocate hugepage memory via shmat, and release one  of the
+> > hugepage memory block;  3, we allocate hugepage memory by shmat again,
+> > this will fail.
+>
+> How significant is this problem in real-world use cases?  How much troubl=
+e is it causing?
+>
+> > Third, I want to introduce my change in the current algorithm. I don't
+> > change the current algorithm. Also, I think there maybe a better way
+> > to fix this error. Nowadays, I can just adjust the gap_start value.
+>
+> Have you looked further into this?  Michel is concerned about the perform=
+ance cost of the current solution.
+>
 
-Note that vmalloc will eventually cause global TLB flushes, which
-are very expensive on larger systems. THere are also global locks
-in vmalloc, which can also cause scaling problems. slab is a lot
-more optimized.
 
-I don't see any performance numbers in your proposal.
-
-Did you test these corner cases?
-
-I suspect you're better of with larger kmallocs up to a reasonable
-size. How big would a sg list need to be to need more than a couple
-pages?
-
--Andi
+--=20
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
