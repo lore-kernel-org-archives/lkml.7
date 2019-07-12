@@ -2,51 +2,51 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4027C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2ABC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A61020645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7EE20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935017;
-	bh=C2kVbOxnYchY6oyzR+KFZl/MXbCAOU6/w+nsh/3S6nk=;
+	s=default; t=1562935021;
+	bh=XM4AwhK2dtQj/AFv85BsUsMC9DuD87c4q9CcfU+CFOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPm/5KxqEuPdCi9P2lIQBfQ4XZrJ677MdSNuyU8+49/08wkG78RcAGLAMndAWgV1s
-	 S+yibyK+tAwoZcQGK6YcrsJIk85ZgcB3UkfOydMsBWRKzGE+6FKb/YIpSwyaw0JfcA
-	 FboOFqsow9BvNLDLgpq1ukoNkxcpuHWEDvY0ktLM=
+	b=rYJsRc94gas7X63RgB51atEdaJ0FPNNoLPbywtBcV65OZgDxA8m+lO6pEexKhC+lb
+	 Ajh/L3lf0GiekzDzLb9G0qcg4uuP1VjvUClxyimZ1li29n3kwAWUlfWGgvmuNc7rq8
+	 Ob7vzgNGKrAsLU0coHtzeR56HAJOmXeRM3bR4IAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbfGLMbk (ORCPT
+        id S1729350AbfGLMg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48484 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbfGLMbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:31:36 -0400
+        id S1729021AbfGLMbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:31:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141D8208E4;
-        Fri, 12 Jul 2019 12:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 730D7208E4;
+        Fri, 12 Jul 2019 12:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934695;
-        bh=C2kVbOxnYchY6oyzR+KFZl/MXbCAOU6/w+nsh/3S6nk=;
+        s=default; t=1562934698;
+        bh=XM4AwhK2dtQj/AFv85BsUsMC9DuD87c4q9CcfU+CFOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=os8q6EYYPyD+lMkZGWjTUJkqnSOOvzser9E+9KqjyPCnnYv8Ei1REbWvIooZVz86n
-         MQNHiMbw1OHqcqVjDA5/WymL5ndCMrhl7NT11ux8w5sBws3g4quOe4FjAIaUcp0xPy
-         9t/7iDzDH7qIyCBk038Q68G0VWU9oOvG+GIiAHH0=
+        b=WwArzJb/8nd4TDLBY1+5jkQmVg9yvsFnztJC+QZbhGT3GtrKcetzkpLiRZTFdHMwX
+         KosExjt2u9L3SLVTO5eWDXvsxY8s5KMb8J998/wUsiWTZtxiaUNQuVmUzLcgUo5Lgu
+         BVSHKhmq+rfPGe1zwAIYw4PAESkVS3cV/6bu+TLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: [PATCH 5.1 122/138] staging: mt7621-pci: fix PCIE_FTS_NUM_LO macro
-Date:   Fri, 12 Jul 2019 14:19:46 +0200
-Message-Id: <20190712121633.424283813@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.1 123/138] HID: Add another Primax PIXART OEM mouse quirk
+Date:   Fri, 12 Jul 2019 14:19:47 +0200
+Message-Id: <20190712121633.460623662@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -59,32 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Sebastian Parschauer <s.parschauer@gmx.de>
 
-commit 0ae0cf509d28d8539b88b5f7f24558f5bfe57cdf upstream.
+commit 4c12954965fdf33d8ae3883c1931fc29ca023cfb upstream.
 
-Add missing parenthesis to PCIE_FTS_NUM_LO macro to do the
-same it was being done in original code.
+The PixArt OEM mice are known for disconnecting every minute in
+runlevel 1 or 3 if they are not always polled. So add quirk
+ALWAYS_POLL for this Alienware branded Primax mouse as well.
 
-Fixes: a4b2eb912bb1 ("staging: mt7621-pci: rewrite RC FTS configuration")
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: stable <stable@vger.kernel.org>
+Daniel Schepler (@dschepler) reported and tested the quirk.
+Reference: https://github.com/sriemer/fix-linux-mouse/issues/15
+
+Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
+CC: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/mt7621-pci/pci-mt7621.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    |    1 +
+ drivers/hid/hid-quirks.c |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/staging/mt7621-pci/pci-mt7621.c
-+++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-@@ -40,7 +40,7 @@
- /* MediaTek specific configuration registers */
- #define PCIE_FTS_NUM			0x70c
- #define PCIE_FTS_NUM_MASK		GENMASK(15, 8)
--#define PCIE_FTS_NUM_L0(x)		((x) & 0xff << 8)
-+#define PCIE_FTS_NUM_L0(x)		(((x) & 0xff) << 8)
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1235,6 +1235,7 @@
+ #define USB_DEVICE_ID_PRIMAX_KEYBOARD	0x4e05
+ #define USB_DEVICE_ID_PRIMAX_REZEL	0x4e72
+ #define USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4D0F	0x4d0f
++#define USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4D65	0x4d65
+ #define USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4E22	0x4e22
  
- /* rt_sysc_membase relative registers */
- #define RALINK_PCIE_CLK_GEN		0x7c
+ 
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -132,6 +132,7 @@ static const struct hid_device_id hid_qu
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PIXART, USB_DEVICE_ID_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_MOUSE_4D22), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4D0F), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4D65), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4E22), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PRODIGE, USB_DEVICE_ID_PRODIGE_CORDLESS), HID_QUIRK_NOGET },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_QUANTA, USB_DEVICE_ID_QUANTA_OPTICAL_TOUCH_3001), HID_QUIRK_NOGET },
 
 
