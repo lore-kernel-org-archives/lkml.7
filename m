@@ -2,173 +2,125 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8927CC742BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC86C742BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDC820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F5620665
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WD1DO2vC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfGLN0U (ORCPT
+        id S1727700AbfGLN1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:26:20 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38536 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfGLN0T (ORCPT
+        Fri, 12 Jul 2019 09:27:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9719 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfGLN1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:26:19 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlvYf-0008I4-Sv; Fri, 12 Jul 2019 13:25:53 +0000
-Date:   Fri, 12 Jul 2019 14:25:53 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190712132553.GN17978@ZenIV.linux.org.uk>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
- <20190712125552.GL17978@ZenIV.linux.org.uk>
+        Fri, 12 Jul 2019 09:27:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d288aac0002>; Fri, 12 Jul 2019 06:27:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 12 Jul 2019 06:27:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 12 Jul 2019 06:27:05 -0700
+Received: from [10.26.11.231] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jul
+ 2019 13:27:00 +0000
+Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>, <j-keerthy@ti.com>
+References: <20190712121628.731888964@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4dae64c8-046e-3647-52d6-43362e986d21@nvidia.com>
+Date:   Fri, 12 Jul 2019 14:26:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712125552.GL17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562938030; bh=Q2Y5HNhu6cRQzurLvAkU7Yps/temzPw4REY6pADXcGM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WD1DO2vCZ3Ma+umQF1ECtY45Q6y+3121pMBxGSss+VdPeC+W1MTaGwckblX3CG35G
+         soEs6MgHX2CjBO2wONAekRsXo/Ue0MDpk+BDQm+2HgvnbGuB0HUgy34M3+2pE+TrB+
+         K1HpAXeQItji+so6783+saemJcF7ZBmhV+scRb8iDwp9eYlxUJ1jRuZJc3zLUiEmN5
+         xXR2VvqKXNo03NQyNnu36Rx+R/uYbgeQe1MlkhzCidRlH0N5udEMQKnf94FaipY8Ye
+         b9ow2uwjGRAnikK3m8A9HOhs2mwM50NQ/S/lJB5EEu+WkGm2HxDN7SEvDi8TVbWFas
+         b1Zzs/Vx6PFGA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:55:52PM +0100, Al Viro wrote:
-> On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
-> > On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
-> > 
-> > > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
-> > > > >  			s = ERR_PTR(error);
-> > > > >  		return s;
-> > > > >  	}
-> > > > > -	error = dirfd_path_init(nd);
-> > > > > -	if (unlikely(error))
-> > > > > -		return ERR_PTR(error);
-> > > > > +	if (likely(!nd->path.mnt)) {
-> > > > 
-> > > > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
-> > > 
-> > > Yes. I did it to be more consistent with the other "have we got the
-> > > root" checks elsewhere. Is there another way you'd prefer I do it?
-> > 
-> > "Have we got the root" checks are inevitable evil; here you are making the
-> > control flow in a single function hard to follow.
-> > 
-> > I *think* what you are doing is
-> > 	absolute pathname, no LOOKUP_BENEATH:
-> > 		set_root
-> > 		error = nd_jump_root(nd)
-> > 	else
-> > 		error = dirfd_path_init(nd)
-> > 	return unlikely(error) ? ERR_PTR(error) : s;
-> > which should be a lot easier to follow (not to mention shorter), but I might
-> > be missing something in all of that.
+Hi Greg,
+
+On 12/07/2019 13:17, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.18 release.
+> There are 138 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> PS: if that's what's going on, I would be tempted to turn the entire
-> path_init() part into this:
-> 	if (flags & LOOKUP_BENEATH)
-> 		while (*s == '/')
-> 			s++;
-> in the very beginning (plus the handling of nd_jump_root() prototype
-> change, but that belongs with nd_jump_root() change itself, obviously).
-> Again, I might be missing something here...
+> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.18-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
 
-Argh... I am, at that - you have setting path->root (and grabbing it)
-in LOOKUP_BENEATH cases and you do it after dirfd_path_init().  So
-how about
-	if (flags & LOOKUP_BENEATH)
-		while (*s == '/')
-			s++;
-before the whole thing and
-        if (*s == '/') { /* can happen only without LOOKUP_BENEATH */
-                set_root(nd);
-		error = nd_jump_root(nd);
-		if (unlikely(error))
-			return ERR_PTR(error);
-        } else if (nd->dfd == AT_FDCWD) {
-                if (flags & LOOKUP_RCU) {
-                        struct fs_struct *fs = current->fs;
-                        unsigned seq;
+...
 
-                        do {
-                                seq = read_seqcount_begin(&fs->seq);
-                                nd->path = fs->pwd;
-                                nd->inode = nd->path.dentry->d_inode;
-                                nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
-                        } while (read_seqcount_retry(&fs->seq, seq));
-                } else {
-                        get_fs_pwd(current->fs, &nd->path);
-                        nd->inode = nd->path.dentry->d_inode;
-                }  
-        } else {
-                /* Caller must check execute permissions on the starting path component */
-                struct fd f = fdget_raw(nd->dfd);
-                struct dentry *dentry;
+> Keerthy <j-keerthy@ti.com>
+>     ARM: dts: dra71x: Disable usb4_tm target module
 
-                if (!f.file)
-                        return ERR_PTR(-EBADF);
+...
 
-                dentry = f.file->f_path.dentry;
+> Keerthy <j-keerthy@ti.com>
+>     ARM: dts: dra76x: Disable usb4_tm target module
 
-                if (*s && unlikely(!d_can_lookup(dentry))) {
-                        fdput(f);
-                        return ERR_PTR(-ENOTDIR);
-                }
+The above commits are generating the following compilation errors for
+ARM ...
 
-                nd->path = f.file->f_path;
-                if (flags & LOOKUP_RCU) {
-                        nd->inode = nd->path.dentry->d_inode;
-                        nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
-                } else {
-                        path_get(&nd->path);
-                        nd->inode = nd->path.dentry->d_inode;
-                }
-                fdput(f);
-        }
-	if (flags & LOOKUP_BENEATH) {
-		nd->root = nd->path;
-		if (!(flags & LOOKUP_RCU))
-			path_get(&nd->root);
-		else
-			nd->root_seq = nd->seq;
-	}
-	return s;
-replacing the part in the end?  Makes for much smaller change; it might
-very well still make sense to add dirfd_path_init() as a separate
-cleanup (perhaps with the *s == '/' case included), though.
+Error:
+/dvs/git/dirty/git-master_l4t-upstream/kernel/arch/arm/boot/dts/dra71x.dtsi:15.1-9
+Label or path usb4_tm not found
+
+Error:
+/dvs/git/dirty/git-master_l4t-upstream/kernel/arch/arm/boot/dts/dra76x.dtsi:89.1-9
+Label or path usb4_tm not found
+
+After reverting these two, I no longer see these errors.
+
+Cheers,
+Jon
+
+-- 
+nvpublic
