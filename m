@@ -2,174 +2,123 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4550C742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7807DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9316D2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FomguHRT"
+	by mail.kernel.org (Postfix) with ESMTP id 5BD7D2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfGLLrV (ORCPT
+        id S1727010AbfGLLrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:47:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55510 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfGLLrU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:47:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=09b07o5vnG2lxWsLi8/Igd/MSdi8rFkcLyCH46v0de0=; b=FomguHRTFjIm6ueie4WhaWAYT
-        gpspeiYWEJ7x62J6XowEWQfsziVlMRKp5WromlGZmsl6TZ6AJCvuOrpVrxC3F20pb6XCnUXEysx46
-        zxM4oW/r+OF5ZMbYdu7k3EPNpIdy1VZOf7pxz7rCfKjVEU7whff9SvpbXxnTiAYH63q1rdSQZAvIn
-        g1GXbJh4damYXenB6Q10yUdvFOA8YzdAVwze0T3E+3Pam6oDlfVLvZw0lZNKefgL+gjAXfAI7I5pi
-        bEnC8eWRXC7sqeyB9hvWSuydpACRGPdvS+lt7lmMttjknoae686Cu/Xgfduf58JzpowKpJUElTX0l
-        vPahW2Bxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlu1F-0006th-3H; Fri, 12 Jul 2019 11:47:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 81CB3209772E6; Fri, 12 Jul 2019 13:47:15 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 13:47:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Gunthorpe <jgg@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-Message-ID: <20190712114715.GV3402@hirez.programming.kicks-ass.net>
-References: <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+        Fri, 12 Jul 2019 07:47:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20311 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfGLLrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 07:47:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 04:47:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
+   d="scan'208";a="157116847"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga007.jf.intel.com with ESMTP; 12 Jul 2019 04:47:42 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hlu1c-0006I1-3T; Fri, 12 Jul 2019 14:47:40 +0300
+Date:   Fri, 12 Jul 2019 14:47:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] acpi: fix false-positive -Wuninitialized warning
+Message-ID: <20190712114740.GX9224@smile.fi.intel.com>
+References: <20190712090148.36582-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+In-Reply-To: <20190712090148.36582-1-arnd@arndb.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:33:46AM +0000, Bernard Metzler wrote:
-> Many thanks for pointing that out! Indeed, this CQ notification
-> mechanism does not take 32 bit architectures into account.
-> Since we have only three flags to hold here, it's probably better
-> to make it a 32bit value. That would remove the issue w/o
-> introducing extra smp_wmb(). I'd prefer smp_store_mb(),
-> since on some architectures it shall be more efficient.
-> That would also make it sufficient to use READ_ONCE. 
+On Fri, Jul 12, 2019 at 11:01:21AM +0200, Arnd Bergmann wrote:
+> clang gets confused by an uninitialized variable in what looks
+> to it like a never executed code path:
 > 
-
-The below fails review due to a distinct lack of comments describing the
-memory ordering.
-
-Describe which variables (at least two) are ordered how and what
-guarantees that provides and how that helps.
-
-> From c7c3e2dbc3555581be52cb5d76c15726dced0331 Mon Sep 17 00:00:00 2001
-> From: Bernard Metzler <bmt@zurich.ibm.com>
-> Date: Fri, 12 Jul 2019 13:19:27 +0200
-> Subject: [PATCH] Make shared CQ notification flags 32bit to respect 32bit
->  architectures
+> arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
+>         polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
+>                    ^~~~~~~~
+> arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
+>         int rc, irq, trigger, polarity;
+>                                       ^
+>                                        = 0
+> arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
+>         trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
+>                   ^~~~~~~
+> arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
+>         int rc, irq, trigger, polarity;
+>                             ^
+>                              = 0
 > 
-> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+> This is unfortunately a design decision in clang and won't be fixed.
+> 
+> Changing the acpi_get_override_irq() macro to an inline function
+> reliably avoids the issue.
+
+In this particular case it looks fine (perhaps in the future -1 shall be
+replaced with proper error code).
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+But in general it looks like clang obscures use of pretty well working macros.
+
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/infiniband/sw/siw/siw.h       | 2 +-
->  drivers/infiniband/sw/siw/siw_qp.c    | 6 +++---
->  drivers/infiniband/sw/siw/siw_verbs.c | 6 +++---
->  include/uapi/rdma/siw-abi.h           | 3 ++-
->  4 files changed, 9 insertions(+), 8 deletions(-)
+>  include/linux/acpi.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/infiniband/sw/siw/siw.h b/drivers/infiniband/sw/siw/siw.h
-> index 409e2987cd45..d59d81f4d86b 100644
-> --- a/drivers/infiniband/sw/siw/siw.h
-> +++ b/drivers/infiniband/sw/siw/siw.h
-> @@ -216,7 +216,7 @@ struct siw_wqe {
->  struct siw_cq {
->  	struct ib_cq base_cq;
->  	spinlock_t lock;
-> -	u64 *notify;
-> +	struct siw_cq_ctrl *notify;
->  	struct siw_cqe *queue;
->  	u32 cq_put;
->  	u32 cq_get;
-> diff --git a/drivers/infiniband/sw/siw/siw_qp.c b/drivers/infiniband/sw/siw/siw_qp.c
-> index 83e50fe8e48b..0fcc5002d2da 100644
-> --- a/drivers/infiniband/sw/siw/siw_qp.c
-> +++ b/drivers/infiniband/sw/siw/siw_qp.c
-> @@ -1011,18 +1011,18 @@ int siw_activate_tx(struct siw_qp *qp)
->   */
->  static bool siw_cq_notify_now(struct siw_cq *cq, u32 flags)
->  {
-> -	u64 cq_notify;
-> +	u32 cq_notify;
->  
->  	if (!cq->base_cq.comp_handler)
->  		return false;
->  
-> -	cq_notify = READ_ONCE(*cq->notify);
-> +	cq_notify = READ_ONCE(cq->notify->flags);
->  
->  	if ((cq_notify & SIW_NOTIFY_NEXT_COMPLETION) ||
->  	    ((cq_notify & SIW_NOTIFY_SOLICITED) &&
->  	     (flags & SIW_WQE_SOLICITED))) {
->  		/* dis-arm CQ */
-> -		smp_store_mb(*cq->notify, SIW_NOTIFY_NOT);
-> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_NOT);
->  
->  		return true;
->  	}
-> diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
-> index d4fb78780765..bc6892229af0 100644
-> --- a/drivers/infiniband/sw/siw/siw_verbs.c
-> +++ b/drivers/infiniband/sw/siw/siw_verbs.c
-> @@ -1049,7 +1049,7 @@ int siw_create_cq(struct ib_cq *base_cq, const struct ib_cq_init_attr *attr,
->  
->  	spin_lock_init(&cq->lock);
->  
-> -	cq->notify = &((struct siw_cq_ctrl *)&cq->queue[size])->notify;
-> +	cq->notify = (struct siw_cq_ctrl *)&cq->queue[size];
->  
->  	if (udata) {
->  		struct siw_uresp_create_cq uresp = {};
-> @@ -1142,10 +1142,10 @@ int siw_req_notify_cq(struct ib_cq *base_cq, enum ib_cq_notify_flags flags)
->  
->  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
->  		/* CQ event for next solicited completion */
-> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
-> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
->  	else
->  		/* CQ event for any signalled completion */
-> -		smp_store_mb(*cq->notify, SIW_NOTIFY_ALL);
-> +	smp_store_mb(cq->notify->flags, SIW_NOTIFY_ALL);
->  
->  	if (flags & IB_CQ_REPORT_MISSED_EVENTS)
->  		return cq->cq_put - cq->cq_get;
-> diff --git a/include/uapi/rdma/siw-abi.h b/include/uapi/rdma/siw-abi.h
-> index ba4d5315cb76..93298980d3a7 100644
-> --- a/include/uapi/rdma/siw-abi.h
-> +++ b/include/uapi/rdma/siw-abi.h
-> @@ -178,6 +178,7 @@ struct siw_cqe {
->   * to control CQ arming.
->   */
->  struct siw_cq_ctrl {
-> -	__aligned_u64 notify;
-> +	__u32 flags;
-> +	__u32 pad;
->  };
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index a95cce5e82e7..9426b9aaed86 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -324,7 +324,10 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+>  #ifdef CONFIG_X86_IO_APIC
+>  extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
+>  #else
+> -#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
+> +static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
+> +{
+> +	return -1;
+> +}
 >  #endif
+>  /*
+>   * This function undoes the effect of one call to acpi_register_gsi().
 > -- 
-> 2.17.2
+> 2.20.0
 > 
-> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
