@@ -2,164 +2,154 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A25BC742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B3AC742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCFD7206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="l45/aiqY"
+	by mail.kernel.org (Postfix) with ESMTP id CA098206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfGLPOZ (ORCPT
+        id S1727227AbfGLPPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:14:25 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41701 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfGLPOZ (ORCPT
+        Fri, 12 Jul 2019 11:15:12 -0400
+Received: from www62.your-server.de ([213.133.104.62]:45880 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfGLPPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:14:25 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d17so8394819qtj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1NndeDHC4SKCtD2njC25wcF/fpw0ZFMG+wxyiwc8W7Y=;
-        b=l45/aiqYWpvyQ1RtFqL4X2dgQ4zP4rHvDqXZDf+brdvNfOSxkqU5NzKU7E56br/H+e
-         zoJ7wBWrL//znBKcRoro1c9RrDoLsxUlUGt0b3WHUvQ1gaOavfbEMrsCEBBw0Zj0iuxp
-         41/CfFkA8o6kRCiaXTE1ZeevDGmvF41ji1PiODQU8nizvAgIpiAJdoSlHvLbKodPZb4L
-         gXoFZpa+1EKQHdqp9CrqPvV49ZfSKr4i/QcQdaGpudb1mnXU6gXicDgbomjMdopnFJPH
-         PXqnAt74gvGMDuT5DzQeeHxli7baf1lzNYDqPHzPlzYkhpOAjqk+jqXegqzk1GCB+A1q
-         sECQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1NndeDHC4SKCtD2njC25wcF/fpw0ZFMG+wxyiwc8W7Y=;
-        b=PTI/ZU4kn2OeA9AGQhs93gffbFc6rrpCsSGKHguJdXJYk4yW6UmL83NVe4CcbIyXGX
-         eXOunYr4lETigFSnFsn+nq6AmfnJ5bG1FNEW4TRv7pKAjBHt21qJ1dQluGLzqA30nRh2
-         i07DjbkEhDzXvvB0Tr1NKSK0pvdXdofNYPip5lSs7u+h36D1v8NhzY4V+BGsmQconNJu
-         7SXd0RRScLdcudrmIUUlGFfh7bnD8J9vT461c4seThBhRV0ym0D5Mt83QlrHSzBhRJz8
-         /fCM+oKDaywQMaVnknz6k9VjIpLNA3mgiGsnOWXhI078JAkROTdbFOUNwilCb4HY+AKv
-         oZow==
-X-Gm-Message-State: APjAAAWGSzZRhjOx1bRcyPfv5p06i7Vopw3Yy+/v5lu++4r23gNOZcyc
-        82+VKTQZxZiQBZVKpVNfrnmEeQ==
-X-Google-Smtp-Source: APXvYqzVsPvT5muHqZYRh1ti9OhEbH2ZE+gb0xXnUhlfTc2I3i5b2FRluj/KK3RazAZvETosrH8YnA==
-X-Received: by 2002:a05:6214:1447:: with SMTP id b7mr7231470qvy.89.1562944464279;
-        Fri, 12 Jul 2019 08:14:24 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id d25sm3518972qko.96.2019.07.12.08.14.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jul 2019 08:14:23 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlxFf-0002BK-4s; Fri, 12 Jul 2019 12:14:23 -0300
-Date:   Fri, 12 Jul 2019 12:14:23 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bernard Metzler <BMT@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-Message-ID: <20190712151423.GG27512@ziepe.ca>
-References: <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <20190712120328.GB27512@ziepe.ca>
- <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
- <CAK8P3a3ZqY_qLSN1gw12EvzLS49RAnmG4nT9=N+Qj9XngQd0CA@mail.gmail.com>
+        Fri, 12 Jul 2019 11:15:12 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hlxGJ-0007bi-K7; Fri, 12 Jul 2019 17:15:03 +0200
+Received: from [2a02:1205:5069:fce0:c5f9:cd68:79d4:446d] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hlxGJ-000X25-CS; Fri, 12 Jul 2019 17:15:03 +0200
+Subject: Re: [PATCH 0/2] Fold checksum at the end of bpf_csum_diff and fix
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Paolo Pisati <p.pisati@gmail.com>
+Cc:     20190710231439.GD32439@tassilo.jf.intel.com,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
+ <CAEf4BzbGLmuZ48vFUCrDW6VC7_YrkW_0NpgpgXNQEzF_dEqgnA@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <8bd99845-4d59-f0a4-3b50-ab6d539b36bc@iogearbox.net>
+Date:   Fri, 12 Jul 2019 17:15:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3ZqY_qLSN1gw12EvzLS49RAnmG4nT9=N+Qj9XngQd0CA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAEf4BzbGLmuZ48vFUCrDW6VC7_YrkW_0NpgpgXNQEzF_dEqgnA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25508/Fri Jul 12 10:10:04 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 03:22:35PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 12, 2019 at 3:05 PM Bernard Metzler <BMT@zurich.ibm.com> wrote:
+On 07/12/2019 01:50 AM, Andrii Nakryiko wrote:
+> On Thu, Jul 11, 2019 at 2:32 AM Paolo Pisati <p.pisati@gmail.com> wrote:
+>> From: Paolo Pisati <paolo.pisati@canonical.com>
+>>
+>> After applying patch 0001, all checksum implementations i could test (x86-64, arm64 and
+>> arm), now agree on the return value.
+>>
+>> Patch 0002 fix the expected return value for test #13: i did the calculation manually,
+>> and it correspond.
+>>
+>> Unfortunately, after applying patch 0001, other test cases now fail in
+>> test_verifier:
+
+Thanks for catching, sigh. :/
+
+>> $ sudo ./tools/testing/selftests/bpf/test_verifier
+>> ...
+>> #417/p helper access to variable memory: size = 0 allowed on NULL (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
+>> #419/p helper access to variable memory: size = 0 allowed on != NULL stack pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
+>> #423/p helper access to variable memory: size possible = 0 allowed on != NULL packet pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
 > 
-> >
-> > We share CQ (completion queue) notification flags between application
-> > (which may be user land) and producer (kernel QP's (queue pairs)).
-> > Those flags can be written by both application and QP's. The application
-> > writes those flags to let the driver know if it shall inform about new
-> > work completions. It can write those flags at any time.
-> > Only a kernel producer reads those flags to decide if
-> > the CQ notification handler shall be kicked, if a new CQ element gets
-> > added to the CQ. When kicking the completion handler, the driver resets the
-> > notification flag, which must get re-armed by the application.
-> >
-> > We use READ_ONCE() and WRITE_ONCE(), since the flags are potentially
-> > shared (mmap'd) between user and kernel land.
-> >
-> > siw_req_notify_cq() is being called only by kernel consumers to change
-> > (write) the CQ notification state. We use smp_store_mb() to make sure
-> > the new value becomes visible to all kernel producers (QP's) asap.
-> >
-> >
-> > From cfb861a09dcfb24a98ba0f1e26bdaa1529d1b006 Mon Sep 17 00:00:00 2001
-> > From: Bernard Metzler <bmt@zurich.ibm.com>
-> > Date: Fri, 12 Jul 2019 13:19:27 +0200
-> > Subject: [PATCH] Make shared CQ notification flags 32bit to respect 32bit
-> >  architectures
-> >
-> > Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+> I'm not entirely sure this fix is correct, given these failures, to be honest.
 > 
-> This fixes the build for me, thanks!
+> Let's wait for someone who understands intended semantics for
+> bpf_csum_diff, before changing returned value so drastically.
 > 
-> Tested-by: Arnd Bergmann <arnd@arndb.de>
+> But in any case, fixes for these test failures should be in your patch
+> series as well.
 
-Since this is coming up so late in the merge window, I'm inclined to
-take the simple path while Bernard makes a complete solution
-here. What do you think Arnd?
+Your change would actually break applications. The bpf_csum_diff() helper is
+heavily used with cascading so one result can be fed into another bpf_csum_diff()
+call as seed. Quick test on x86-64:
 
-From 0b043644c0ca601cb19943a81aa1f1455dbe9461 Mon Sep 17 00:00:00 2001
-From: Jason Gunthorpe <jgg@mellanox.com>
-Date: Fri, 12 Jul 2019 12:12:06 -0300
-Subject: [PATCH] RMDA/siw: Require a 64 bit arch
+static int __init foo(void)
+{
+        u8 data[32 * sizeof(u32)];
+        u32 res1, res2, res3;
+        int i;
 
-The new siw driver fails to build on i386 with
+        prandom_bytes(data, sizeof(data));
+        res1 = csum_fold(csum_partial(data, sizeof(data), 0));
+        for (i = sizeof(u32); i < sizeof(data); i += sizeof(u32)) {
+                res2 = csum_fold(csum_partial(data, i, 0));
+                res2 = csum_fold(csum_partial(data+i, sizeof(data)-i, res2));
+                res3 = csum_partial(data, i, 0);
+                res3 = csum_fold(csum_partial(data+i, sizeof(data)-i, res3));
+                printk("%8d: [%4x (reference), %4x (unfolded), %4x (folded)]\n", i, res1, res3, res2);
+        }
+        return -1;
+}
 
-drivers/infiniband/sw/siw/siw_qp.c:1025:3: error: invalid output size for constraint '+q'
-                smp_store_mb(*cq->notify, SIW_NOTIFY_NOT);
+Gives for all three:
 
-As it is using 64 bit values with the smp_store_mb.
+[19113.233942]        4: [6b70 (reference), 6b70 (unfolded), 223d (folded)]
+[19113.233943]        8: [6b70 (reference), 6b70 (unfolded), a812 (folded)]
+[19113.233943]       12: [6b70 (reference), 6b70 (unfolded), 1c26 (folded)]
+[19113.233944]       16: [6b70 (reference), 6b70 (unfolded), 4f76 (folded)]
+[19113.233944]       20: [6b70 (reference), 6b70 (unfolded), 2801 (folded)]
+[19113.233945]       24: [6b70 (reference), 6b70 (unfolded),  b63 (folded)]
+[19113.233945]       28: [6b70 (reference), 6b70 (unfolded), 2fe0 (folded)]
+[19113.233946]       32: [6b70 (reference), 6b70 (unfolded), 18a2 (folded)]
+[19113.233946]       36: [6b70 (reference), 6b70 (unfolded), 2597 (folded)]
+[19113.233947]       40: [6b70 (reference), 6b70 (unfolded), 2f8e (folded)]
+[19113.233947]       44: [6b70 (reference), 6b70 (unfolded), b8af (folded)]
+[19113.233948]       48: [6b70 (reference), 6b70 (unfolded), fb8b (folded)]
+[19113.233948]       52: [6b70 (reference), 6b70 (unfolded), e9c0 (folded)]
+[19113.233949]       56: [6b70 (reference), 6b70 (unfolded), 6af1 (folded)]
+[19113.233949]       60: [6b70 (reference), 6b70 (unfolded), d7f4 (folded)]
+[19113.233949]       64: [6b70 (reference), 6b70 (unfolded), 8bc6 (folded)]
+[19113.233950]       68: [6b70 (reference), 6b70 (unfolded), 8718 (folded)]
+[19113.233950]       72: [6b70 (reference), 6b70 (unfolded), 27d8 (folded)]
+[19113.233951]       76: [6b70 (reference), 6b70 (unfolded), a2db (folded)]
+[19113.233952]       80: [6b70 (reference), 6b70 (unfolded),  3fd (folded)]
+[19113.233952]       84: [6b70 (reference), 6b70 (unfolded), 4be5 (folded)]
+[19113.233952]       88: [6b70 (reference), 6b70 (unfolded), 41ad (folded)]
+[19113.233953]       92: [6b70 (reference), 6b70 (unfolded), ca9b (folded)]
+[19113.233953]       96: [6b70 (reference), 6b70 (unfolded), f8ec (folded)]
+[19113.233954]      100: [6b70 (reference), 6b70 (unfolded), 5451 (folded)]
+[19113.233954]      104: [6b70 (reference), 6b70 (unfolded),  763 (folded)]
+[19113.233955]      108: [6b70 (reference), 6b70 (unfolded), e37c (folded)]
+[19113.233955]      112: [6b70 (reference), 6b70 (unfolded), 4ee6 (folded)]
+[19113.233956]      116: [6b70 (reference), 6b70 (unfolded), 4f73 (folded)]
+[19113.233956]      120: [6b70 (reference), 6b70 (unfolded), 1cfd (folded)]
+[19113.233957]      124: [6b70 (reference), 6b70 (unfolded), 7d1a (folded)]
 
-Since the entire scheme here seems questionable, and we are in the merge
-window, fix the compile failures by disabling 32 bit support on this
-driver.
+I'll take a look next week wrt fixing this uniformly for all archs.
 
-A proper fix will be reviewed post merge window.
-
-Fixes: c0cf5bdde46c ("rdma/siw: addition to kernel build environment")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/infiniband/sw/siw/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/sw/siw/Kconfig b/drivers/infiniband/sw/siw/Kconfig
-index b622fc62f2cd6d..dace276aea1413 100644
---- a/drivers/infiniband/sw/siw/Kconfig
-+++ b/drivers/infiniband/sw/siw/Kconfig
-@@ -1,6 +1,6 @@
- config RDMA_SIW
- 	tristate "Software RDMA over TCP/IP (iWARP) driver"
--	depends on INET && INFINIBAND && LIBCRC32C
-+	depends on INET && INFINIBAND && LIBCRC32C && 64BIT
- 	select DMA_VIRT_OPS
- 	help
- 	This driver implements the iWARP RDMA transport over
--- 
-2.21.0
-
-
+Thanks,
+Daniel
