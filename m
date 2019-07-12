@@ -2,51 +2,52 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB437C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10B2C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B419D208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978A321019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934641;
-	bh=mEHwNLg4gK3ziQCCf0esvVZ619U3KOGInEuHUxF4okQ=;
+	s=default; t=1562934649;
+	bh=SU4PiBYQHblcoQfdfXgyW6tkP0XAavHdR37x6kfL5Vk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=arXurwF5sOXDUR2XyoxzLTmac8N02SIff8VeIRUTWtv/qG4JIyBq3ICJdAAEnG8yz
-	 D+gYQ69j84TT237Rh+od6LhEDFse4IB1pdpaBEaT5VOWbM7sE8bNg+8iPFXuWqC4PH
-	 BJQRVDitknlkH0TPSVn8d4+cD5xEtqyxNS7VkS48=
+	b=Nu58YblYqkrtgJQXXx1dfZcZXA6AeY/LSF0mNpbj0bKCpI1ahEy2z5KzMM7O270fb
+	 1BnJfNI1M3aJzsXkfzwGKVtRIgbVKjsaP3tpO6FYFfGzpa5G62DuBbnhHqBcRhOuhG
+	 mb4ITBnPrVLx5xOtVJe48DN6+FsW/+yN451O0eNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfGLMak (ORCPT
+        id S1727619AbfGLMas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbfGLMah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:37 -0400
+        id S1729225AbfGLMan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D61A1208E4;
-        Fri, 12 Jul 2019 12:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30B7B21019;
+        Fri, 12 Jul 2019 12:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934636;
-        bh=mEHwNLg4gK3ziQCCf0esvVZ619U3KOGInEuHUxF4okQ=;
+        s=default; t=1562934642;
+        bh=SU4PiBYQHblcoQfdfXgyW6tkP0XAavHdR37x6kfL5Vk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8m4xNyxOeJEI6C0W+QxT+ipRrDFVh64bl/VChfk4i+ItvVlVPzZA4Z48TBDmLhca
-         3P87qVfjkVBF5bL3qRjvlo1JLx4BDiLg5o4ql55zkko3pkYg/QGPCwEW0P+GZbFlpd
-         658VWVXn/REqIwSov9tJ9k8b0KSTL77s+L1xX9HE=
+        b=Auc6L5vTPDAxQFp8nZXhSIUQSSXkqw0Y9CZMrQJ6crTjmMSExeI3Q33wbBdCIS29+
+         Rkt0G7GWct5sjoJok20iLakORTg57nuwphn8iXJsDDMG02r8P3DavUPuS4q+TT17d7
+         7m5FcxbrDAmxyAq0GCwXCroLVDOaeNFqrNJXI+PU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.1 118/138] p54: fix crash during initialization
-Date:   Fri, 12 Jul 2019 14:19:42 +0200
-Message-Id: <20190712121633.274431577@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 079/138] drm: return -EFAULT if copy_to_user() fails
+Date:   Fri, 12 Jul 2019 14:19:03 +0200
+Message-Id: <20190712121631.751652291@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -59,71 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+[ Upstream commit 74b67efa8d7b4f90137f0ab9a80dd319da050350 ]
 
-commit 1645ab931998b39aed5761f095956f0b10a6362f upstream.
+The copy_from_user() function returns the number of bytes remaining
+to be copied but we want to return a negative error code.  Otherwise
+the callers treat it as a successful copy.
 
-This patch fixes a crash that got introduced when the
-mentioned patch replaced  the direct list_head access
-with skb_peek_tail(). When the device is starting up,
-there are  no entries in  the queue, so previously to
-"Use skb_peek_tail() instead..." the target_skb would
-end up as the  tail and head pointer which then could
-be used by __skb_queue_after to fill the empty queue.
-
-With skb_peek_tail() in its place will instead just
-return NULL which then causes a crash in the
-__skb_queue_after().
-
-| BUG: unable to handle kernel NULL pointer dereference at 000000
-| #PF error: [normal kernel read fault]
-| PGD 0 P4D 0
-| Oops: 0000 [#1] SMP PTI
-| CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: GO   5.1.0-rc7-wt+ #218
-| Hardware name: MSI MS-7816/Z87-G43 (MS-7816), BIOS V1.11 05/09/2015
-| Workqueue: events request_firmware_work_func
-| RIP: 0010:p54_tx_pending+0x10f/0x1b0 [p54common]
-| Code: 78 06 80 78 28 00 74 6d <48> 8b 07 49 89 7c 24 08 49 89 04 24 4
-| RSP: 0018:ffffa81c81927d90 EFLAGS: 00010086
-| RAX: ffff9bbaaf131048 RBX: 0000000000020670 RCX: 0000000000020264
-| RDX: ffff9bbaa976d660 RSI: 0000000000000202 RDI: 0000000000000000
-| RBP: ffff9bbaa976d620 R08: 00000000000006c0 R09: ffff9bbaa976d660
-| R10: 0000000000000000 R11: ffffe8480dbc5900 R12: ffff9bbb45e87700
-| R13: ffff9bbaa976d648 R14: ffff9bbaa976d674 R15: ffff9bbaaf131048
-| FS:  0000000000000000(0000) GS:ffff9bbb5ec00000(0000) knlGS:00000
-| CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-| CR2: 0000000000000000 CR3: 00000003695fc003 CR4: 00000000001606f0
-| Call Trace:
-|  p54_download_eeprom+0xbe/0x120 [p54common]
-|  p54_read_eeprom+0x7f/0xc0 [p54common]
-|  p54u_load_firmware_cb+0xe0/0x160 [p54usb]
-|  request_firmware_work_func+0x42/0x80
-|  process_one_work+0x1f5/0x3f0
-|  worker_thread+0x28/0x3c0
-
-Cc: stable@vger.kernel.org
-Fixes: e3554197fc8f ("p54: Use skb_peek_tail() instead of direct head pointer accesses.")
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618131843.GA29463@mwanda
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intersil/p54/txrx.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_bufs.c  | 5 ++++-
+ drivers/gpu/drm/drm_ioc32.c | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/intersil/p54/txrx.c
-+++ b/drivers/net/wireless/intersil/p54/txrx.c
-@@ -142,7 +142,10 @@ static int p54_assign_address(struct p54
- 	    unlikely(GET_HW_QUEUE(skb) == P54_QUEUE_BEACON))
- 		priv->beacon_req_id = data->req_id;
- 
--	__skb_queue_after(&priv->tx_queue, target_skb, skb);
-+	if (target_skb)
-+		__skb_queue_after(&priv->tx_queue, target_skb, skb);
-+	else
-+		__skb_queue_head(&priv->tx_queue, skb);
- 	spin_unlock_irqrestore(&priv->tx_queue.lock, flags);
- 	return 0;
+diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
+index e407adb033e7..4fbc34425570 100644
+--- a/drivers/gpu/drm/drm_bufs.c
++++ b/drivers/gpu/drm/drm_bufs.c
+@@ -1332,7 +1332,10 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
+ 				 .size = from->buf_size,
+ 				 .low_mark = from->low_mark,
+ 				 .high_mark = from->high_mark};
+-	return copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags));
++
++	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
++		return -EFAULT;
++	return 0;
  }
+ 
+ int drm_legacy_infobufs(struct drm_device *dev, void *data,
+diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
+index 0e3043e08c69..f8672238d444 100644
+--- a/drivers/gpu/drm/drm_ioc32.c
++++ b/drivers/gpu/drm/drm_ioc32.c
+@@ -372,7 +372,10 @@ static int copy_one_buf32(void *data, int count, struct drm_buf_entry *from)
+ 			      .size = from->buf_size,
+ 			      .low_mark = from->low_mark,
+ 			      .high_mark = from->high_mark};
+-	return copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags));
++
++	if (copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags)))
++		return -EFAULT;
++	return 0;
+ }
+ 
+ static int drm_legacy_infobufs32(struct drm_device *dev, void *data,
+-- 
+2.20.1
+
 
 
