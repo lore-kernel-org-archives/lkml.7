@@ -2,209 +2,245 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E52C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1038C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1472C20651
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:26:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAME1B1w"
+	by mail.kernel.org (Postfix) with ESMTP id 9EC1120863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfGLX0l (ORCPT
+        id S1728503AbfGLX3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 19:26:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32988 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbfGLX0l (ORCPT
+        Fri, 12 Jul 2019 19:29:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727708AbfGLX3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 19:26:41 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g2so4968580pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 16:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9K2PnM68Sr4HXzBx9riApkCnBAv8CDZaCLWyJR0LblM=;
-        b=hAME1B1wqG+JPV935fJ3Sza5FibSiYSE57wkmttsMh5iv7JuHYpHviZRhIEd3n4Kja
-         zWwZnYauDGonPpni6Y/fft/+OWAwp05H4Sd0gNt66jCC0Ykw04SForIMyl4J3zv4i/Nt
-         0ovUOzbw6fkx7Og8jL/h19UsGhS5nZF2+Y9Nt1weh4hZbEmioVhUeCU0Y+gaIrh6oR+i
-         DdcL0NeKZ80UrdvU0eXFVP05A7ZT0daFQ3Hy5ws7G+aeuArqjTu1tjhSCL4AqbXQxcji
-         0JsJkYI6H4xCPw3s5mh+GyCPBCixCKPy/355KLfTEcxPcqdZW2v1Ll2Bd1hhF0e6O6wu
-         MfaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=9K2PnM68Sr4HXzBx9riApkCnBAv8CDZaCLWyJR0LblM=;
-        b=Gnz/yjams1+2fCf/DUOSPI3RATjpqO5M96wCuH+MkxgelcCn6dp1ps5C+pk9znJgRW
-         Rwi2SlVd9pzfLqQgIc0fmVKWkVEXL21vsxMDkkLsX/OJ8TJZrrcDSnWzMXC+/J1DAbUZ
-         gtZD1kqoWMrtBE9OYcVkG3p7UyGbNpyyVEBH1i9waIlUVe7tdv+/LUcwefE2+p1V7AH3
-         7XwXLeZHVy9/OHN/tUL/VSZ9pZ0DSRifSNs1nlEJK3/3oe44Q+KzuZGbw16bjwWYfkQy
-         Y4yhakXCPu/Ti3Fh8bJ6zIS+SVzVqlYwQFSTvFvfQ9nhSW+OjWNw6ID/yytjnPUg7Lmt
-         FSdw==
-X-Gm-Message-State: APjAAAWePY8toVcNuvcUcCrLTCqQNjlCuF6YJncibZcfMqQNc44Ai45g
-        9sxhiWNxjE6ul6CoWrmEI6I=
-X-Google-Smtp-Source: APXvYqzkTrHpK0hEBJbpW9NCr+rMOzw107si4tU6jH0VOrjMYMAZ2jSCvko/B00ps6fGveiakVHgFQ==
-X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr15251729pjb.20.1562974000429;
-        Fri, 12 Jul 2019 16:26:40 -0700 (PDT)
-Received: from sultan-box.hsd1.ca.comcast.net ([2601:200:c001:5f40:3dac:1a9b:f47c:b78e])
-        by smtp.gmail.com with ESMTPSA id f12sm9020575pgo.85.2019.07.12.16.26.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 16:26:39 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scatterlist: Don't allocate sg lists using __get_free_page
-Date:   Fri, 12 Jul 2019 16:26:31 -0700
-Message-Id: <20190712232632.6306-1-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 12 Jul 2019 19:29:38 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CNQTvq126655;
+        Fri, 12 Jul 2019 19:27:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq1edmrsk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 19:27:51 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6CNRp20129119;
+        Fri, 12 Jul 2019 19:27:51 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq1edmrs7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 19:27:51 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6CNOt68016432;
+        Fri, 12 Jul 2019 23:27:50 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tjk9770y9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 23:27:50 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CNRoPJ46596522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 23:27:50 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7DEFB205F;
+        Fri, 12 Jul 2019 23:27:49 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91A01B2065;
+        Fri, 12 Jul 2019 23:27:49 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.195.235])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Jul 2019 23:27:49 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 01C5C16C39C0; Fri, 12 Jul 2019 16:27:49 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 16:27:49 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712232749.GY26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+ <20190712111125.GT3402@hirez.programming.kicks-ass.net>
+ <20190712151051.GB235410@google.com>
+ <20190712164531.GW26519@linux.ibm.com>
+ <20190712170631.GA111598@google.com>
+ <20190712174630.GX26519@linux.ibm.com>
+ <20190712194040.GA150253@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712194040.GA150253@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120241
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+On Fri, Jul 12, 2019 at 03:40:40PM -0400, Joel Fernandes wrote:
+> On Fri, Jul 12, 2019 at 10:46:30AM -0700, Paul E. McKenney wrote:
+> > On Fri, Jul 12, 2019 at 01:06:31PM -0400, Joel Fernandes wrote:
+> > > On Fri, Jul 12, 2019 at 09:45:31AM -0700, Paul E. McKenney wrote:
+> > > > On Fri, Jul 12, 2019 at 11:10:51AM -0400, Joel Fernandes wrote:
+> > > > > On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
+> > > > > > On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
+> > > > > > > +int rcu_read_lock_any_held(void)
+> > > > > > > +{
+> > > > > > > +	int lockdep_opinion = 0;
+> > > > > > > +
+> > > > > > > +	if (!debug_lockdep_rcu_enabled())
+> > > > > > > +		return 1;
+> > > > > > > +	if (!rcu_is_watching())
+> > > > > > > +		return 0;
+> > > > > > > +	if (!rcu_lockdep_current_cpu_online())
+> > > > > > > +		return 0;
+> > > > > > > +
+> > > > > > > +	/* Preemptible RCU flavor */
+> > > > > > > +	if (lock_is_held(&rcu_lock_map))
+> > > > > > 
+> > > > > > you forgot debug_locks here.
+> > > > > 
+> > > > > Actually, it turns out debug_locks checking is not even needed. If
+> > > > > debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
+> > > > > get to this point.
+> > > > > 
+> > > > > > > +		return 1;
+> > > > > > > +
+> > > > > > > +	/* BH flavor */
+> > > > > > > +	if (in_softirq() || irqs_disabled())
+> > > > > > 
+> > > > > > I'm not sure I'd put irqs_disabled() under BH, also this entire
+> > > > > > condition is superfluous, see below.
+> > > > > > 
+> > > > > > > +		return 1;
+> > > > > > > +
+> > > > > > > +	/* Sched flavor */
+> > > > > > > +	if (debug_locks)
+> > > > > > > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+> > > > > > > +	return lockdep_opinion || !preemptible();
+> > > > > > 
+> > > > > > that !preemptible() turns into:
+> > > > > > 
+> > > > > >   !(preempt_count()==0 && !irqs_disabled())
+> > > > > > 
+> > > > > > which is:
+> > > > > > 
+> > > > > >   preempt_count() != 0 || irqs_disabled()
+> > > > > > 
+> > > > > > and already includes irqs_disabled() and in_softirq().
+> > > > > > 
+> > > > > > > +}
+> > > > > > 
+> > > > > > So maybe something lke:
+> > > > > > 
+> > > > > > 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
+> > > > > > 			    lock_is_held(&rcu_sched_lock_map)))
+> > > > > > 		return true;
+> > > > > 
+> > > > > Agreed, I will do it this way (without the debug_locks) like:
+> > > > > 
+> > > > > ---8<-----------------------
+> > > > > 
+> > > > > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> > > > > index ba861d1716d3..339aebc330db 100644
+> > > > > --- a/kernel/rcu/update.c
+> > > > > +++ b/kernel/rcu/update.c
+> > > > > @@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
+> > > > >  
+> > > > >  int rcu_read_lock_any_held(void)
+> > > > >  {
+> > > > > -	int lockdep_opinion = 0;
+> > > > > -
+> > > > >  	if (!debug_lockdep_rcu_enabled())
+> > > > >  		return 1;
+> > > > >  	if (!rcu_is_watching())
+> > > > >  		return 0;
+> > > > >  	if (!rcu_lockdep_current_cpu_online())
+> > > > >  		return 0;
+> > > > > -
+> > > > > -	/* Preemptible RCU flavor */
+> > > > > -	if (lock_is_held(&rcu_lock_map))
+> > > > > -		return 1;
+> > > > > -
+> > > > > -	/* BH flavor */
+> > > > > -	if (in_softirq() || irqs_disabled())
+> > > > > -		return 1;
+> > > > > -
+> > > > > -	/* Sched flavor */
+> > > > > -	if (debug_locks)
+> > > > > -		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+> > > > > -	return lockdep_opinion || !preemptible();
+> > > > > +	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
+> > > > 
+> > > > OK, I will bite...  Why not also lock_is_held(&rcu_bh_lock_map)?
+> > > 
+> > > Hmm, I was borrowing the strategy from rcu_read_lock_bh_held() which does not
+> > > check for a lock held in this map.
+> > > 
+> > > Honestly, even  lock_is_held(&rcu_sched_lock_map) seems unnecessary per-se
+> > > since !preemptible() will catch that? rcu_read_lock_sched() disables
+> > > preemption already, so lockdep's opinion of the matter seems redundant there.
+> > 
+> > Good point!  At least as long as the lockdep splats list RCU-bh among
+> > the locks held, which they did last I checked.
+> > 
+> > Of course, you could make the same argument for getting rid of
+> > rcu_sched_lock_map.  Does it make sense to have the one without
+> > the other?
+> 
+> It probably makes it inconsistent in the least. I will add the check for
+> the rcu_bh_lock_map in a separate patch, if that's Ok with you - since I also
+> want to update the rcu_read_lock_bh_held() logic in the same patch.
+> 
+> That rcu_read_lock_bh_held() could also just return !preemptible as Peter
+> suggested for the bh case.
 
-Allocating pages with __get_free_page is slower than going through the
-slab allocator to grab free pages out from a pool.
+Although that seems reasonable, please check the call sites.
 
-These are the results from running the code at the bottom of this
-message:
-[    1.278602] speedtest: __get_free_page: 9 us
-[    1.278606] speedtest: kmalloc: 4 us
-[    1.278609] speedtest: kmem_cache_alloc: 4 us
-[    1.278611] speedtest: vmalloc: 13 us
+> > > Sorry I already sent out patches again before seeing your comment but I can
+> > > rework and resend them based on any other suggestions.
+> > 
+> > Not a problem!
+> 
+> Thanks. Depending on whether there is any other feedback, I will work on the
+> bh_ stuff as a separate patch on top of this series, or work it into the next
+> series revision if I'm reposting. Hopefully that sounds Ok to you.
 
-kmalloc and kmem_cache_alloc (which is what kmalloc uses for common
-sizes behind the scenes) are the fastest choices. Use kmalloc to speed
-up sg list allocation.
+Agreed -- let's separate concerns.  And promote bisectability.
 
-This is the code used to produce the above measurements:
-#include <linux/kthread.h>
-#include <linux/slab.h>
-#include <linux/vmalloc.h>
-
-static int speedtest(void *data)
-{
-	static const struct sched_param sched_max_rt_prio = {
-		.sched_priority = MAX_RT_PRIO - 1
-	};
-	volatile s64 ctotal = 0, gtotal = 0, ktotal = 0, vtotal = 0;
-	struct kmem_cache *page_pool;
-	int i, j, trials = 1000;
-	volatile ktime_t start;
-	void *ptr[100];
-
-	sched_setscheduler_nocheck(current, SCHED_FIFO, &sched_max_rt_prio);
-
-	page_pool = kmem_cache_create("pages", PAGE_SIZE, PAGE_SIZE, SLAB_PANIC,
-				      NULL);
-	for (i = 0; i < trials; i++) {
-		start = ktime_get();
-		for (j = 0; j < ARRAY_SIZE(ptr); j++)
-			while (!(ptr[j] = kmem_cache_alloc(page_pool, GFP_KERNEL)));
-		ctotal += ktime_us_delta(ktime_get(), start);
-		for (j = 0; j < ARRAY_SIZE(ptr); j++)
-			kmem_cache_free(page_pool, ptr[j]);
-
-		start = ktime_get();
-		for (j = 0; j < ARRAY_SIZE(ptr); j++)
-			while (!(ptr[j] = (void *)__get_free_page(GFP_KERNEL)));
-		gtotal += ktime_us_delta(ktime_get(), start);
-		for (j = 0; j < ARRAY_SIZE(ptr); j++)
-			free_page((unsigned long)ptr[j]);
-
-		start = ktime_get();
-		for (j = 0; j < ARRAY_SIZE(ptr); j++)
-			while (!(ptr[j] = kmalloc(PAGE_SIZE, GFP_KERNEL)));
-		ktotal += ktime_us_delta(ktime_get(), start);
-		for (j = 0; j < ARRAY_SIZE(ptr); j++)
-			kfree(ptr[j]);
-
-		start = ktime_get();
-		*ptr = vmalloc(ARRAY_SIZE(ptr) * PAGE_SIZE);
-		vtotal += ktime_us_delta(ktime_get(), start);
-		vfree(*ptr);
-	}
-	kmem_cache_destroy(page_pool);
-
-	printk("%s: __get_free_page: %lld us\n", __func__, gtotal / trials);
-	printk("%s: kmalloc: %lld us\n", __func__, ktotal / trials);
-	printk("%s: kmem_cache_alloc: %lld us\n", __func__, ctotal / trials);
-	printk("%s: vmalloc: %lld us\n", __func__, vtotal / trials);
-	complete(data);
-	return 0;
-}
-
-static int __init start_test(void)
-{
-	DECLARE_COMPLETION_ONSTACK(done);
-
-	BUG_ON(IS_ERR(kthread_run(speedtest, &done, "malloc_test")));
-	wait_for_completion(&done);
-	return 0;
-}
-late_initcall(start_test);
-
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- lib/scatterlist.c | 23 ++---------------------
- 1 file changed, 2 insertions(+), 21 deletions(-)
-
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index c2cf2c311b7d..d3093e8f8978 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -148,31 +148,12 @@ EXPORT_SYMBOL(sg_init_one);
-  */
- static struct scatterlist *sg_kmalloc(unsigned int nents, gfp_t gfp_mask)
- {
--	if (nents == SG_MAX_SINGLE_ALLOC) {
--		/*
--		 * Kmemleak doesn't track page allocations as they are not
--		 * commonly used (in a raw form) for kernel data structures.
--		 * As we chain together a list of pages and then a normal
--		 * kmalloc (tracked by kmemleak), in order to for that last
--		 * allocation not to become decoupled (and thus a
--		 * false-positive) we need to inform kmemleak of all the
--		 * intermediate allocations.
--		 */
--		void *ptr = (void *) __get_free_page(gfp_mask);
--		kmemleak_alloc(ptr, PAGE_SIZE, 1, gfp_mask);
--		return ptr;
--	} else
--		return kmalloc_array(nents, sizeof(struct scatterlist),
--				     gfp_mask);
-+	return kmalloc_array(nents, sizeof(struct scatterlist), gfp_mask);
- }
- 
- static void sg_kfree(struct scatterlist *sg, unsigned int nents)
- {
--	if (nents == SG_MAX_SINGLE_ALLOC) {
--		kmemleak_free(sg);
--		free_page((unsigned long) sg);
--	} else
--		kfree(sg);
-+	kfree(sg);
- }
- 
- /**
--- 
-2.22.0
-
+							Thanx, Paul
