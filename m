@@ -2,91 +2,136 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE0C742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B389C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EF921537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pAshXTbk"
+	by mail.kernel.org (Postfix) with ESMTP id 65CC920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfGLIzx (ORCPT
+        id S1726221AbfGLI4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:55:53 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60688 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfGLIzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:55:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=x8WbIHFyv0ABBFcrHAzlMJIMfoT3LVqQH9+jbFhqNOk=; b=pAshXTbk8185R9diOLyIbCIL9
-        JbNJ9pCeEAgagt55CojO1I8wE+7O9I6TanWMhj4EFNHc2jKM4eDy1W8LUxF4Dmiz4ddGYycbQPTPL
-        RK4c5ge932bvIH+gvxt3NKbodqAv12cCai89jnXSZunX5oilhHFcESRKq+U79IvM1ELtchT6jLiFj
-        mH3EAONPGzd4ePD5Fl378KNIdbb9aFAhofWHhaYk1f6BBt6CF/vKd5Uo1Em+JLCsWIe5g8xga3Som
-        qBkDPQacDtIhtiG11UrHgxrM/RLtrgUNMjcjUJ6VCEZnK+W3VX8UCRtwSNdNcepB/z8ISQm3tejnp
-        GDv6AIdqg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlrL9-0003mf-9v; Fri, 12 Jul 2019 08:55:39 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5CBD920120CB1; Fri, 12 Jul 2019 10:55:36 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 10:55:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-Message-ID: <20190712085536.GP3402@hirez.programming.kicks-ass.net>
-References: <20190710172123.GC801@sol.localdomain>
- <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
- <20190710180242.GA193819@gmail.com>
- <a19779d0-0192-8dc0-d51b-e6938a455f31@acm.org>
- <47a9287d-1f02-95d5-a5cf-55f0c0d38378@gmail.com>
- <cdfeb3f8-8dc5-aa60-2782-7b3c5110edf5@acm.org>
- <ee3bac8d-d061-7d07-5990-59871e7e2a4b@gmail.com>
- <9219c421-0868-f97f-2d84-df48aed9f8a8@acm.org>
- <20190710220943.GM3419@hirez.programming.kicks-ass.net>
- <e10e95c7-b832-5560-e3ca-3ce584bc0ca3@acm.org>
+        Fri, 12 Jul 2019 04:56:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2267 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726136AbfGLI4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:56:11 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 252D2A13B4022EAF004E;
+        Fri, 12 Jul 2019 16:56:09 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 12 Jul 2019 16:56:00 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/2] f2fs: fix panic of IO alignment feature
+Date:   Fri, 12 Jul 2019 16:55:42 +0800
+Message-ID: <20190712085542.4068-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190712085542.4068-1-yuchao0@huawei.com>
+References: <20190712085542.4068-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e10e95c7-b832-5560-e3ca-3ce584bc0ca3@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 11:53:12AM -0700, Bart Van Assche wrote:
-> On 7/10/19 3:09 PM, Peter Zijlstra wrote:
-> > One thing I mentioned when Thomas did the unwinder API changes was
-> > trying to move lockdep over to something like stackdepot.
-> > 
-> > We can't directly use stackdepot as is, because it uses locks and memory
-> > allocation, but we could maybe add a lower level API to it and use that
-> > under the graph_lock() on static storage or something.
-> > 
-> > Otherwise we'll have to (re)implement something like it.
-> > 
-> > I've not looked at it in detail.
-> 
-> Hi Peter,
-> 
-> Is something like the untested patch below perhaps what you had in mind?
+Since 07173c3ec276 ("block: enable multipage bvecs"), one bio vector
+can store multi pages, so that we can not calculate max IO size of
+bio as PAGE_SIZE * bio->bi_max_vecs. However IO alignment feature of
+f2fs always has that assumption, so finally, it may cause panic during
+IO submission as below stack.
 
-Most excellent, yes! Now I suppose the $64000 question is if it actually
-reduces the amount of storage we use for stack traces..
+ kernel BUG at fs/f2fs/data.c:317!
+ RIP: 0010:__submit_merged_bio+0x8b0/0x8c0
+ Call Trace:
+  f2fs_submit_page_write+0x3cd/0xdd0
+  do_write_page+0x15d/0x360
+  f2fs_outplace_write_data+0xd7/0x210
+  f2fs_do_write_data_page+0x43b/0xf30
+  __write_data_page+0xcf6/0x1140
+  f2fs_write_cache_pages+0x3ba/0xb40
+  f2fs_write_data_pages+0x3dd/0x8b0
+  do_writepages+0xbb/0x1e0
+  __writeback_single_inode+0xb6/0x800
+  writeback_sb_inodes+0x441/0x910
+  wb_writeback+0x261/0x650
+  wb_workfn+0x1f9/0x7a0
+  process_one_work+0x503/0x970
+  worker_thread+0x7d/0x820
+  kthread+0x1ad/0x210
+  ret_from_fork+0x35/0x40
 
-Seems to boot just fine.. :-)
+This patch adds one extra condition to check left space in bio while
+trying merging page to bio, to avoid panic.
+
+This bug was reported in bugzilla:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=204043
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v2: add IO type check.
+ fs/f2fs/data.c          | 10 ++++++++++
+ fs/f2fs/super.c         |  2 +-
+ include/linux/f2fs_fs.h |  1 +
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index f1e401f9fc13..1971e59cdedb 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -504,6 +504,16 @@ static bool io_is_mergeable(struct f2fs_sb_info *sbi, struct bio *bio,
+ 					block_t last_blkaddr,
+ 					block_t cur_blkaddr)
+ {
++	if (F2FS_IO_ALIGNED(sbi) && (fio->type == DATA || fio->type == NODE)) {
++		unsigned int filled_blocks =
++				F2FS_BYTES_TO_BLK(bio->bi_iter.bi_size);
++		unsigned int io_size = F2FS_IO_SIZE(sbi);
++		unsigned int left_vecs = bio->bi_max_vecs - bio->bi_vcnt;
++
++		/* IOs in bio is aligned and left space of vectors is not enough */
++		if (!(filled_blocks % io_size) && left_vecs < io_size)
++			return false;
++	}
+ 	if (!page_is_mergeable(sbi, bio, last_blkaddr, cur_blkaddr))
+ 		return false;
+ 	return io_type_is_mergeable(io, fio);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index d95a681ef7c9..a98e3b93395d 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3204,7 +3204,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (err)
+ 		goto free_bio_info;
+ 
+-	if (F2FS_IO_SIZE(sbi) > 1) {
++	if (F2FS_IO_ALIGNED(sbi)) {
+ 		sbi->write_io_dummy =
+ 			mempool_create_page_pool(2 * (F2FS_IO_SIZE(sbi) - 1), 0);
+ 		if (!sbi->write_io_dummy) {
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index 65559900d4d7..52af9ac164b4 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -41,6 +41,7 @@
+ #define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
+ #define F2FS_IO_SIZE_BITS(sbi)	(F2FS_OPTION(sbi).write_io_size_bits) /* power of 2 */
+ #define F2FS_IO_SIZE_MASK(sbi)	(F2FS_IO_SIZE(sbi) - 1)
++#define F2FS_IO_ALIGNED(sbi)	(F2FS_IO_SIZE(sbi) > 1)
+ 
+ /* This flag is used by node and meta inodes, and by recovery */
+ #define GFP_F2FS_ZERO		(GFP_NOFS | __GFP_ZERO)
+-- 
+2.18.0.rc1
+
