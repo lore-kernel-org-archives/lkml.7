@@ -2,172 +2,187 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697B0C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61274C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2727B208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33951208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VR8Wm8/0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5DX7PGyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfGLHmY (ORCPT
+        id S1726243AbfGLHpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:42:24 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34828 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfGLHmY (ORCPT
+        Fri, 12 Jul 2019 03:45:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47032 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfGLHpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:42:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C7cwS0075741;
-        Fri, 12 Jul 2019 07:41:31 GMT
+        Fri, 12 Jul 2019 03:45:05 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C7i7f6178923;
+        Fri, 12 Jul 2019 07:44:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=Hqtemgq0/vKq7WKvzyTPGJ5M4ed+ytO/KDHOyeR5Kag=;
- b=VR8Wm8/0R14XVpIrQWlP302kEwRZZNDGHxUJeqJ32skhKnHoy8wtRjXWiRDe55dTwcOK
- 4C3poH0LdwIf8mbbqchF6vboU0PYNQ5q7unlVMiToZoeDtEcm8z6BUjmyRs6ZXnjc5L1
- VkS7bVSdF0se7R9Bcds9ttf+0a2+aIONUo81jB2TwI6fGEQ/0Nd7j9ehAPPmx0MImekD
- 1Tl9b41yuDg4PzX0MPktQM+/8QC6mI1XzsSZZpyXxkZVM05p0MKyNPrb8NgU8aBpoS8g
- pAPNx5nAiYcBKepZV5U3q40+TUbyPoAyBquU5nCspPFitCvGba5POLE4Hvbyeg+J0v0/ uA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq40tx-1
+ bh=8T/t61hH+mxP53WzfTtGAJxdQjq9tmKdl9zDJcQJWT0=;
+ b=5DX7PGyyiqAuHqdElQqOA4nGLmMdtiOKrdKtqVkBCGeRmC1rNLNWcBzr/XdK+h1EBtOE
+ hQ+Q6neY2rtBbsU8vFeLSaXP+vl6vLk9dU25fu42tJrcGwfGOkPPySvBVMJSIQcoN8Ok
+ xqMS2nf2qUM4tEKg1uD5x3Mk2k3EJ8DiF78j7sC1lIF9lBTUOrzSDX8B0kHKmnvxe5DJ
+ PO1MVtehBbtIbtqHCPfUkI39iBsWtpMIDc5BuK5Nkt9DqRuyGdf3pBcbGmaK3w2zxAOd
+ tPMNV8l2yuBlHrT0j3BPgSSzV2ri/NhdC80csgqE87Vlp1/u4WUCNR7Vf912WOzePgIJ Pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tjk2u445s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 07:41:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C7bi5C079515;
-        Fri, 12 Jul 2019 07:41:31 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tn1j20jnw-1
+        Fri, 12 Jul 2019 07:44:07 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C7hXBw019439;
+        Fri, 12 Jul 2019 07:44:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2tmwgympn6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 07:41:30 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C7fLMh020987;
-        Fri, 12 Jul 2019 07:41:25 GMT
-Received: from [10.191.17.234] (/10.191.17.234)
+        Fri, 12 Jul 2019 07:44:06 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C7i3Sq030229;
+        Fri, 12 Jul 2019 07:44:04 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 00:41:21 -0700
-Subject: Re: [PATCH] xen/pv: Fix a boot up hang triggered by int3 self test
-To:     linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        srinivas.eeda@oracle.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-References: <1562820438-30328-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+        with ESMTP ; Fri, 12 Jul 2019 00:44:03 -0700
+Subject: Re: [RFC v2 01/26] mm/x86: Introduce kernel address space isolation
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <1562855138-19507-2-git-send-email-alexandre.chartre@oracle.com>
+ <alpine.DEB.2.21.1907112321570.1782@nanos.tec.linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 Organization: Oracle Corporation
-Message-ID: <fa73ab45-235d-b338-ddd1-1628ed70d801@oracle.com>
-Date:   Fri, 12 Jul 2019 15:41:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Message-ID: <42eac268-9b3a-b444-8288-76d57faf0826@oracle.com>
+Date:   Fri, 12 Jul 2019 09:43:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <1562820438-30328-1-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <alpine.DEB.2.21.1907112321570.1782@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120079
+ engine=8.0.1-1810050000 definitions=main-1907120080
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120079
+ definitions=main-1907120080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the noise, it looks description is wrong.
 
-This is not a double pop, but xen pv taking the path
+On 7/11/19 11:33 PM, Thomas Gleixner wrote:
+> On Thu, 11 Jul 2019, Alexandre Chartre wrote:
+>> +/*
+>> + * When isolation is active, the address space doesn't necessarily map
+>> + * the percpu offset value (this_cpu_off) which is used to get pointers
+>> + * to percpu variables. So functions which can be invoked while isolation
+>> + * is active shouldn't be getting pointers to percpu variables (i.e. with
+>> + * get_cpu_var() or this_cpu_ptr()). Instead percpu variable should be
+>> + * directly read or written to (i.e. with this_cpu_read() or
+>> + * this_cpu_write()).
+>> + */
+>> +
+>> +int asi_enter(struct asi *asi)
+>> +{
+>> +	enum asi_session_state state;
+>> +	struct asi *current_asi;
+>> +	struct asi_session *asi_session;
+>> +
+>> +	state = this_cpu_read(cpu_asi_session.state);
+>> +	/*
+>> +	 * We can re-enter isolation, but only with the same ASI (we don't
+>> +	 * support nesting isolation). Also, if isolation is still active,
+>> +	 * then we should be re-entering with the same task.
+>> +	 */
+>> +	if (state == ASI_SESSION_STATE_ACTIVE) {
+>> +		current_asi = this_cpu_read(cpu_asi_session.asi);
+>> +		if (current_asi != asi) {
+>> +			WARN_ON(1);
+>> +			return -EBUSY;
+>> +		}
+>> +		WARN_ON(this_cpu_read(cpu_asi_session.task) != current);
+>> +		return 0;
+>> +	}
+>> +
+>> +	/* isolation is not active so we can safely access the percpu pointer */
+>> +	asi_session = &get_cpu_var(cpu_asi_session);
+> 
+> get_cpu_var()?? Where is the matching put_cpu_var() ? get_cpu_var()
+> contains a preempt_disable ...
+> 
+> What's wrong with a simple this_cpu_ptr() here?
+> 
 
-with create_gap=0, I'll send a v2.
+Oups, my mistake, I should be using this_cpu_ptr(). I will replace all get_cpu_var()
+with this_cpu_ptr().
 
-Zhenzhong
 
-On 2019/7/11 12:47, Zhenzhong Duan wrote:
-> Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-> selftest") reveals a bug in XEN PV int3 assemble code. There is
-> a double pop of register R11 and RCX currupting the exception
-> frame, one in xen_int3 and the other in xen_xenint3.
->
-> We see below hang at bootup:
->
-> general protection fault: 0000 [#1] SMP NOPTI
-> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #6
-> RIP: e030:int3_magic+0x0/0x7
-> Call Trace:
->   alternative_instructions+0x3d/0x12e
->   check_bugs+0x7c9/0x887
->   ?__get_locked_pte+0x178/0x1f0
->   start_kernel+0x4ff/0x535
->   ?set_init_arg+0x55/0x55
->   xen_start_kernel+0x571/0x57a
->
-> Fix it by removing xen_xenint3.
->
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> ---
->   arch/x86/include/asm/traps.h | 2 +-
->   arch/x86/xen/enlighten_pv.c  | 2 +-
->   arch/x86/xen/xen-asm_64.S    | 1 -
->   3 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-> index 7d6f3f3..f2bd284 100644
-> --- a/arch/x86/include/asm/traps.h
-> +++ b/arch/x86/include/asm/traps.h
-> @@ -40,7 +40,7 @@
->   asmlinkage void xen_divide_error(void);
->   asmlinkage void xen_xennmi(void);
->   asmlinkage void xen_xendebug(void);
-> -asmlinkage void xen_xenint3(void);
-> +asmlinkage void xen_int3(void);
->   asmlinkage void xen_overflow(void);
->   asmlinkage void xen_bounds(void);
->   asmlinkage void xen_invalid_op(void);
-> diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-> index 4722ba2..2138d69 100644
-> --- a/arch/x86/xen/enlighten_pv.c
-> +++ b/arch/x86/xen/enlighten_pv.c
-> @@ -596,7 +596,7 @@ struct trap_array_entry {
->   
->   static struct trap_array_entry trap_array[] = {
->   	{ debug,                       xen_xendebug,                    true },
-> -	{ int3,                        xen_xenint3,                     true },
-> +	{ int3,                        xen_int3,                        true },
->   	{ double_fault,                xen_double_fault,                true },
->   #ifdef CONFIG_X86_MCE
->   	{ machine_check,               xen_machine_check,               true },
-> diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-> index 1e9ef0b..ebf610b 100644
-> --- a/arch/x86/xen/xen-asm_64.S
-> +++ b/arch/x86/xen/xen-asm_64.S
-> @@ -32,7 +32,6 @@ xen_pv_trap divide_error
->   xen_pv_trap debug
->   xen_pv_trap xendebug
->   xen_pv_trap int3
-> -xen_pv_trap xenint3
->   xen_pv_trap xennmi
->   xen_pv_trap overflow
->   xen_pv_trap bounds
+>> +void asi_exit(struct asi *asi)
+>> +{
+>> +	struct asi_session *asi_session;
+>> +	enum asi_session_state asi_state;
+>> +	unsigned long original_cr3;
+>> +
+>> +	asi_state = this_cpu_read(cpu_asi_session.state);
+>> +	if (asi_state == ASI_SESSION_STATE_INACTIVE)
+>> +		return;
+>> +
+>> +	/* TODO: Kick sibling hyperthread before switching to kernel cr3 */
+>> +	original_cr3 = this_cpu_read(cpu_asi_session.original_cr3);
+>> +	if (original_cr3)
+> 
+> Why would this be 0 if the session is active?
+> 
+
+Correct, original_cr3 won't be 0. I think this is a remain from a previous version
+where original_cr3 was handled differently.
+
+
+>> +		write_cr3(original_cr3);
+>> +
+>> +	/* page-table was switched, we can now access the percpu pointer */
+>> +	asi_session = &get_cpu_var(cpu_asi_session);
+> 
+> See above.
+> 
+
+Will fix that.
+
+
+Thanks,
+
+alex.
+
+>> +	WARN_ON(asi_session->task != current);
+>> +	asi_session->state = ASI_SESSION_STATE_INACTIVE;
+>> +	asi_session->asi = NULL;
+>> +	asi_session->task = NULL;
+>> +	asi_session->original_cr3 = 0;
+>> +}
+> 
+> Thanks,
+> 
+> 	tglx
+> 
