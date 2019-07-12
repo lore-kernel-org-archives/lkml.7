@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACD7C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7773C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D502084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14252084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934807;
-	bh=IgWL7JR/zNeYKbzq/yT6N7TKzUk4cfGySnj9gWoIP/I=;
+	s=default; t=1562934810;
+	bh=t5280lZFvII97lEhHEy/0FVCtgfXs0UW8Pa4O96y/hI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9god+4EKlfGvw7h3lLEJC7dcbE2oNbRIujyU4GdE+BuH8tfN6y5bw6EV92rgx7GR
-	 nf662NRel7IkptwXiKxbfqQ2DWyEEE9s2j153QI68vMxX3EYfkzj0/yfUum6PzIHU1
-	 rSUVhlPAdtvyEEBsZDmsgroUfnmb+V5mwWFi6GhI=
+	b=zL/1ePTSJ9gXkIW/W/M59o5uk/io9NuLmH+exCwtXO1NMwGx8lGZMOIcl6OIbTamt
+	 pAuXEEkDdY4oCmIMAUAaV+gvu1qCrXrH/O5AqIxaQ5RsWpLxDm5NsJb7DMRaOMptEg
+	 aUSIlIAFL57eTv7XAztTgDprHT80LsxKeOwbvE4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbfGLMdY (ORCPT
+        id S1729616AbfGLMd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbfGLMdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:19 -0400
+        id S1729208AbfGLMdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:33:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B48208E4;
-        Fri, 12 Jul 2019 12:33:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 458DF216C4;
+        Fri, 12 Jul 2019 12:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934798;
-        bh=IgWL7JR/zNeYKbzq/yT6N7TKzUk4cfGySnj9gWoIP/I=;
+        s=default; t=1562934804;
+        bh=t5280lZFvII97lEhHEy/0FVCtgfXs0UW8Pa4O96y/hI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gn9RegqyFefh2I8lkQeE1hGO/yrBt1N83rDk0DlvFLMNA37JRYVZC0QcetWf6aDku
-         eP/KhGWuBxYdJxc09UxfYYKVZ00FmcdvA/FNRnPDGwqMHpCzif+kmVw6lF0kybz7qQ
-         twEUo8On9e4m2AGaJb+ExBUBajc9zLk72eUWUeWs=
+        b=U/XjRu3BhRa+eGL0FBQaUUekgzX61sWlJVHhLGKoANuamW78mL9jpkbZwp7K6ZjpA
+         fqTWDV/9ejFDKZofR9CpGxcAOHcH6yJoX0e2eQW8vmRFuTjTVRomglsYSO/Jq6mhT/
+         EE5mXEwHdIh2YUjQlak0TyRHBqHXjGJ9l6JbZLC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 5.2 33/61] drivers/usb/typec/tps6598x.c: fix 4CC cmd write
-Date:   Fri, 12 Jul 2019 14:19:46 +0200
-Message-Id: <20190712121622.374762019@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.2 35/61] staging: comedi: dt282x: fix a null pointer deref on interrupt
+Date:   Fri, 12 Jul 2019 14:19:48 +0200
+Message-Id: <20190712121622.493069211@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,45 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 2681795b5e7a5bf336537661010072f4c22cea31 upstream.
+commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
 
-Writing 4CC commands with tps6598x_write_4cc() already has
-a pointer arg, don't reference it when using as arg to
-tps6598x_block_write(). Correcting this enforces the constness
-of the pointer to propagate to tps6598x_block_write(), so add
-the const qualifier there to avoid the warning.
+The interrupt handler `dt282x_interrupt()` causes a null pointer
+dereference for those supported boards that have no analog output
+support.  For these boards, `dev->write_subdev` will be `NULL` and
+therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
+case, the following call near the end of the interrupt handler results
+in a null pointer dereference:
 
-Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
+	comedi_handle_events(dev, s_ao);
+
+Fix it by only calling the above function if `s_ao` is valid.
+
+(There are other uses of `s_ao` by the interrupt handler that may or may
+not be reached depending on values of hardware registers.  Trust that
+they are reliable for now.)
+
+Note:
+commit 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+propagates an earlier error from
+commit f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()").
+
+Fixes: 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tps6598x.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/comedi/drivers/dt282x.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -127,7 +127,7 @@ tps6598x_block_read(struct tps6598x *tps
+--- a/drivers/staging/comedi/drivers/dt282x.c
++++ b/drivers/staging/comedi/drivers/dt282x.c
+@@ -557,7 +557,8 @@ static irqreturn_t dt282x_interrupt(int
+ 	}
+ #endif
+ 	comedi_handle_events(dev, s);
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
+ 
+ 	return IRQ_RETVAL(handled);
  }
- 
- static int tps6598x_block_write(struct tps6598x *tps, u8 reg,
--				void *val, size_t len)
-+				const void *val, size_t len)
- {
- 	u8 data[TPS_MAX_LEN + 1];
- 
-@@ -173,7 +173,7 @@ static inline int tps6598x_write64(struc
- static inline int
- tps6598x_write_4cc(struct tps6598x *tps, u8 reg, const char *val)
- {
--	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
-+	return tps6598x_block_write(tps, reg, val, 4);
- }
- 
- static int tps6598x_read_partner_identity(struct tps6598x *tps)
 
 
