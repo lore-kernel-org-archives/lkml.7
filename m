@@ -2,210 +2,97 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3FDC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAF1C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFF42080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FFC208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qtSyw2tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfGLNJY (ORCPT
+        id S1727625AbfGLNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:09:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10404 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727157AbfGLNJY (ORCPT
+        Fri, 12 Jul 2019 09:09:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36732 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfGLNJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:09:24 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CD78vA028972
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 09:09:23 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tps3ccg7c-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 09:09:22 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 12 Jul 2019 14:09:20 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 14:09:15 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CD9Ewu50593952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 13:09:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2CD22A4051;
-        Fri, 12 Jul 2019 13:09:14 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E5F0A405B;
-        Fri, 12 Jul 2019 13:09:13 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.222])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 13:09:13 +0000 (GMT)
-Date:   Fri, 12 Jul 2019 15:09:12 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fri, 12 Jul 2019 09:09:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RoZ9NwrBVujcpsAvtIUW8qVulCLJLVw22pbbzzk1gqI=; b=qtSyw2tgioP0MTUAKB5BWB0bt
+        HZPhunYUqGQQ9wiLBRzPovUQQ/niRKOLhDBBcSKReSIE1w6VCx6OqDxBE/z3UMiHoNt2aLsb9L2aS
+        jmgQPE/TMEvmYmPDTzWQP/1osZ/srt9yeZ3y9OOsC0iKx9YW5nY3wXiI6UR7+2Nkld74EwAHFhYMn
+        EYftcLFpid0YlUG7gwKti7QE6USxah1Qe6GlepNAVH7oNGskDH3o12IEaXVgYAn8Sji8M4DTCCLD1
+        LIuCdR8VbRYlDDmBoQSVWD0MTVtWQ6f3HXB1TY/8tIoRcxsLohVivLT+DX6GeG/Y3zef1X/jefIBT
+        WVeTxAYLg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlvIc-00078I-FO; Fri, 12 Jul 2019 13:09:18 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DBACE2097730C; Fri, 12 Jul 2019 15:09:16 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 15:09:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        x86@kernel.org, srinivas.eeda@oracle.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-In-Reply-To: <20190712053631.9814-4-bauerman@linux.ibm.com>
-References: <20190712053631.9814-1-bauerman@linux.ibm.com>
-        <20190712053631.9814-4-bauerman@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] xen/pv: Fix a boot up hang revealed by int3 self test
+Message-ID: <20190712130916.GR3419@hirez.programming.kicks-ass.net>
+References: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
+ <20190712120626.GW3402@hirez.programming.kicks-ass.net>
+ <a5f5ea4c-f30d-122e-0161-be7b1cb4877c@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071213-0012-0000-0000-000003321AC7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071213-0013-0000-0000-0000216B8B35
-Message-Id: <20190712150912.3097215e.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120143
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5f5ea4c-f30d-122e-0161-be7b1cb4877c@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 02:36:31 -0300
-Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
-
-> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
-> appear in generic kernel code because it forces non-x86 architectures to
-> define the sev_active() function, which doesn't make a lot of sense.
-
-sev_active() might be just bad (too specific) name for a general
-concept. s390 code defines it drives the right behavior in
-kernel/dma/direct.c (which uses it).
-
+On Fri, Jul 12, 2019 at 09:04:22PM +0800, Zhenzhong Duan wrote:
 > 
-> To solve this problem, add an x86 elfcorehdr_read() function to override
-> the generic weak implementation. To do that, it's necessary to make
-> read_from_oldmem() public so that it can be used outside of vmcore.c.
+> On 2019/7/12 20:06, Peter Zijlstra wrote:
+> > On Thu, Jul 11, 2019 at 04:15:21PM +0800, Zhenzhong Duan wrote:
+> > > diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+> > > index 4722ba2..2138d69 100644
+> > > --- a/arch/x86/xen/enlighten_pv.c
+> > > +++ b/arch/x86/xen/enlighten_pv.c
+> > > @@ -596,7 +596,7 @@ struct trap_array_entry {
+> > >   static struct trap_array_entry trap_array[] = {
+> > >   	{ debug,                       xen_xendebug,                    true },
+> > > -	{ int3,                        xen_xenint3,                     true },
+> > > +	{ int3,                        xen_int3,                        true },
+> > >   	{ double_fault,                xen_double_fault,                true },
+> > >   #ifdef CONFIG_X86_MCE
+> > >   	{ machine_check,               xen_machine_check,               true },
+> > I'm confused on the purpose of trap_array[], could you elucidate me?
 > 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> ---
->  arch/x86/kernel/crash_dump_64.c |  5 +++++
->  fs/proc/vmcore.c                |  8 ++++----
->  include/linux/crash_dump.h      | 14 ++++++++++++++
->  include/linux/mem_encrypt.h     |  1 -
->  4 files changed, 23 insertions(+), 5 deletions(-)
-
-Does not seem to apply to today's or yesterdays master.
-
+> Used to replace trap handler addresses by Xen specific ones and sanity check
 > 
-> diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-> index 22369dd5de3b..045e82e8945b 100644
-> --- a/arch/x86/kernel/crash_dump_64.c
-> +++ b/arch/x86/kernel/crash_dump_64.c
-> @@ -70,3 +70,8 @@ ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
->  {
->  	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
->  }
-> +
-> +ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-> +{
-> +	return read_from_oldmem(buf, count, ppos, 0, sev_active());
-> +}
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 57957c91c6df..ca1f20bedd8c 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -100,9 +100,9 @@ static int pfn_is_ram(unsigned long pfn)
->  }
->  
->  /* Reads a page from the oldmem device from given offset. */
-> -static ssize_t read_from_oldmem(char *buf, size_t count,
-> -				u64 *ppos, int userbuf,
-> -				bool encrypted)
-> +ssize_t read_from_oldmem(char *buf, size_t count,
-> +			 u64 *ppos, int userbuf,
-> +			 bool encrypted)
->  {
->  	unsigned long pfn, offset;
->  	size_t nr_bytes;
-> @@ -166,7 +166,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
->   */
->  ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->  {
-> -	return read_from_oldmem(buf, count, ppos, 0, sev_active());
-> +	return read_from_oldmem(buf, count, ppos, 0, false);
->  }
->  
->  /*
-> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index f774c5eb9e3c..4664fc1871de 100644
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -115,4 +115,18 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
->  	return -EOPNOTSUPP;
->  }
->  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-> +
-> +#ifdef CONFIG_PROC_VMCORE
-> +ssize_t read_from_oldmem(char *buf, size_t count,
-> +			 u64 *ppos, int userbuf,
-> +			 bool encrypted);
-> +#else
-> +static inline ssize_t read_from_oldmem(char *buf, size_t count,
-> +				       u64 *ppos, int userbuf,
-> +				       bool encrypted)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif /* CONFIG_PROC_VMCORE */
-> +
->  #endif /* LINUX_CRASHDUMP_H */
-> diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
-> index f2e399fb626b..a3747fcae466 100644
-> --- a/include/linux/mem_encrypt.h
-> +++ b/include/linux/mem_encrypt.h
-> @@ -21,7 +21,6 @@
->  
->  #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
->  
-> -static inline bool sev_active(void) { return false; }
+> if there's an unexpected IST-using fault handler.
 
-This is the implementation for the guys that don't
-have ARCH_HAS_MEM_ENCRYPT.
+git grep xen_int3, failed me. Where does that symbol come from?
 
-Means sev_active() may not be used in such code after this
-patch. What about 
+> > The sole user seems to be get_trap_addr() and that talks about ISTs, but
+> > #BP isn't an IST anymore, so why does it have ist_okay=true?
+> 
+> Oh, yes, I missed that boolean, thanks. I'll try ist_okey=false for int3 and
+> test it tomorrow.
 
-static inline bool force_dma_unencrypted(void)
-{
-        return sev_active();
-}
-
-in kernel/dma/direct.c?
-
-Regards,
-Halil
-
->  static inline bool mem_encrypt_active(void) { return false; }
->  
->  #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
-
+Thanks!
