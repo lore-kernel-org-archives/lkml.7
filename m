@@ -2,123 +2,149 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D6DC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF04C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D0F20989
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7yvs9oi"
+	by mail.kernel.org (Postfix) with ESMTP id E073920989
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfGLVyl (ORCPT
+        id S1727792AbfGLV4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 17:54:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45966 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727245AbfGLVyl (ORCPT
+        Fri, 12 Jul 2019 17:56:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14396 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727421AbfGLV4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:54:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so11278503wre.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:54:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ezp/81M7BENZPKnx1WnKUk8Kc7XjQxmW1Vz+hS9hBlE=;
-        b=F7yvs9oixj5hjp+eiYH1qU6SjFYkhjw1IgWZ9aV9FAWKtP24t50TNH6Yw2OMljAvMe
-         lvMW757gJjSPxz46QZmWKzUNzppvtSbOZLFFHHcbguFxJct/eFeaU4bS+tMFgdRNBl5y
-         zJWM6qgOyiAayFFES4VqF9nRmO7lhAa8yhapem7E8R46LdOr/dwHj7TGeIMhonBMB3QR
-         omWT3uJimoFtlANRpHj4TFgmLp9RQYQQR0NeOG38IXKsd+nv0pr98yMCmcAzOtDzxSr9
-         XrTIMJxUWsHA8MaarZ0USitUPkbFYsRDGXykK2KO3KFBImSIatA+hwPIewHX3rGWmVYL
-         HCCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ezp/81M7BENZPKnx1WnKUk8Kc7XjQxmW1Vz+hS9hBlE=;
-        b=L/CveZBy0cw3Y9Wg3UCUPVbdryPOtZDs4DTwXzyaaO8D1aH+5RGJ8gE2nvL9SmhYQ7
-         isfCpsKHUSCSBaB/w7F7NveyRGml7NkGThq2kAn9L9YAQjq8q64riC/K1O45usLuKcSv
-         0HiQbx2FkCgrEjDkdGx97SZCM82XEjrjyKQ02+FIYVeQk6Olu/NGO+/GohsG7n89/Xgj
-         XO2nGPaF20fn/PUlsaLBL6bQJaBAzLJv6KyecZiUwCMbCL7Jr0hBBoh5MjWCRJAwLkGA
-         e3s8nYy9iKihNnMHlKcLvP4NmJpgPmPMgNEAMDmQ3EFnNEzVrZtArZ/Ux0EfGNnJKaQ5
-         4zqA==
-X-Gm-Message-State: APjAAAWLnJIKXV01jPKvZUc/pjSnLVraB5OcZFY7zMyRn6QOEcJsYQc2
-        QQ20lkoT0afjrj/uswKuxxFjhV8CPm6DEmr6wEuFhZzR
-X-Google-Smtp-Source: APXvYqxQeEczSKIZ7O8yTeAs+UoffMtTZQCaI4aZsUiXrcx4Aq6lM4Lvjh+nPFm7F1X3KdvocvBcg3UAN80c3hr/Erk=
-X-Received: by 2002:a5d:498a:: with SMTP id r10mr13585194wrq.28.1562968479204;
- Fri, 12 Jul 2019 14:54:39 -0700 (PDT)
+        Fri, 12 Jul 2019 17:56:05 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CLqJTi070208
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 17:56:04 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpyhuwsd4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 17:56:04 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Fri, 12 Jul 2019 22:56:02 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 12 Jul 2019 22:55:57 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CLtupx10814168
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 21:55:56 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95FB3AE062;
+        Fri, 12 Jul 2019 21:55:56 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0522EAE05F;
+        Fri, 12 Jul 2019 21:55:51 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.135.203])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 12 Jul 2019 21:55:51 +0000 (GMT)
+References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        "Lendacky\, Thomas" <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86 arch code
+In-reply-to: <20190712150912.3097215e.pasic@linux.ibm.com>
+Date:   Fri, 12 Jul 2019 18:55:47 -0300
 MIME-Version: 1.0
-References: <1561723581-70340-1-git-send-email-chengzhihao1@huawei.com>
-In-Reply-To: <1561723581-70340-1-git-send-email-chengzhihao1@huawei.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Fri, 12 Jul 2019 23:54:27 +0200
-Message-ID: <CAFLxGvwHO9nSLiMEpqtEr1Y-5TSjs_M4+_pbwUG6_Fojk+CUvA@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] mtd: ubi: Add fastmap sysfs attribute
-To:     Zhihao Cheng <chengzhihao1@huawei.com>
-Cc:     David Oberhollenzer <david.oberhollenzer@sigma-star.at>,
-        Richard Weinberger <richard@nod.at>,
-        David Gstir <david@sigma-star.at>,
-        Boris Brezillon <boris.brezillon@free-electrons.com>,
-        yi.zhang@huawei.com, linux-mtd@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19071221-2213-0000-0000-000003ADCDAE
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011417; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01231280; UDB=6.00648610; IPR=6.01012564;
+ MB=3.00027695; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 21:56:01
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071221-2214-0000-0000-00005F35B676
+Message-Id: <87tvbqgboc.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120224
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 2:01 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+
+[ Cc'ing Tom Lendacky which I forgot to do earlier. Sorry about that. ]
+
+Hello Halil,
+
+Thanks for the quick review.
+
+Halil Pasic <pasic@linux.ibm.com> writes:
+
+> On Fri, 12 Jul 2019 02:36:31 -0300
+> Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
 >
-> The UBI device can be attached to a MTD device via fastmap by setting
-> CONFIG_MTD_UBI_FASTMAP to 'y' (If there already exists a fastmap on the
-> UBI device). To support some debugging scenarios, attaching process by
-> fastmap can be confirmed in dmesg. If the UBI device is attached by
-> fastmap, logs like following will appear in dmesg:
+>> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
+>> appear in generic kernel code because it forces non-x86 architectures to
+>> define the sev_active() function, which doesn't make a lot of sense.
 >
->   ubi0: attached by fastmap
+> sev_active() might be just bad (too specific) name for a general
+> concept. s390 code defines it drives the right behavior in
+> kernel/dma/direct.c (which uses it).
+
+I thought about that but couldn't put my finger on a general concept.
+Is it "guest with memory inaccessible to the host"?
+
+Since your proposed definiton for force_dma_unencrypted() is simply to
+make it equivalent to sev_active(), I thought it was more
+straightforward to make each arch define force_dma_unencrypted()
+directly.
+
+Also, does sev_active() drive the right behavior for s390 in
+elfcorehdr_read() as well?
+
+>> To solve this problem, add an x86 elfcorehdr_read() function to override
+>> the generic weak implementation. To do that, it's necessary to make
+>> read_from_oldmem() public so that it can be used outside of vmcore.c.
+>>
+>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>> ---
+>>  arch/x86/kernel/crash_dump_64.c |  5 +++++
+>>  fs/proc/vmcore.c                |  8 ++++----
+>>  include/linux/crash_dump.h      | 14 ++++++++++++++
+>>  include/linux/mem_encrypt.h     |  1 -
+>>  4 files changed, 23 insertions(+), 5 deletions(-)
 >
-> If multiple UBI devices are attached to multiple MTD devices at the same
-> time, how to distinguish which UBI devices are successfully attached by
-> fastmap? Extracting attaching information for each UBI device one by one
-> from dmesg is a way. A better method is to record fastmap existence in
-> sysfs, so it can be obtained by userspace tools.
->
-> This patch exposes fastmap on sysfs. Suppose you attach an UBI device to a
-> MTD device by fastmap: if fastmap equals to '1', that is, the fastmap
-> generated before last detaching operation is confirmed valid. Else, there
-> may be some problems with old fastmap. Besides, userspace tool can also
-> check whether the fastmap updating triggered by other operations (such as
-> resize volume) is successful by reading this sysfs attribute.
->
-> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> Does not seem to apply to today's or yesterdays master.
 
-Sorry for the delay.
+It assumes the presence of the two patches I mentioned in the cover
+letter. Only one of them is in master.
 
-[...]
+I hadn't realized the s390 virtio patches were on their way to upstream.
+I was keeping an eye on the email thread but didn't see they were picked
+up in the s390 pull request. I'll add a new patch to this series making
+the corresponding changes to s390's <asm/mem_encrypt.h> as well.
 
-No locks in sysfs, please. :-)
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-> +               ret = sprintf(buf, "%d\n", ubi->fm ? 1 : 0);
-> +               up_write(&ubi->fm_protect);
-> +       } else
-
-So, I like the idea to expose that information and I gave it
-a second thought.
-
-Basically you want to export two distinct infos.
-1. Did we attach using fastmap?
-2. Is *currently* a fastmap on the flash?
-
-For 1, just expose ubi->fast_attach via sysfs.
-To expose 2, you need to create a shadow variable of ubi->fm.
-The problem is ubi->fm is internal and can be NULL while an
-update happens.
-
--- 
-Thanks,
-//richard
