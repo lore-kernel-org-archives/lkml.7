@@ -2,135 +2,88 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C81C742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD892C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7066C2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BCA2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfGLJhq (ORCPT
+        id S1726817AbfGLJiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:37:46 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:56974 "EHLO ns.iliad.fr"
+        Fri, 12 Jul 2019 05:38:18 -0400
+Received: from ozlabs.ru ([107.173.13.209]:58432 "EHLO ozlabs.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfGLJhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:37:45 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 37E9020598;
-        Fri, 12 Jul 2019 11:37:43 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 18F091FF13;
-        Fri, 12 Jul 2019 11:37:43 +0200 (CEST)
-Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
-        Antti Palosaari <crope@iki.fi>,
-        Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
- <20190712084343.GA28962@taurus.defre.kleine-koenig.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <b84104ca-6e4e-24ee-91e0-56aebd036a48@free.fr>
-Date:   Fri, 12 Jul 2019 11:37:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190712084343.GA28962@taurus.defre.kleine-koenig.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Jul 12 11:37:43 2019 +0200 (CEST)
+        id S1726613AbfGLJiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 05:38:16 -0400
+Received: from fstn1-p1.ozlabs.ibm.com (localhost [IPv6:::1])
+        by ozlabs.ru (Postfix) with ESMTP id 29E88AE807DE;
+        Fri, 12 Jul 2019 05:30:01 -0400 (EDT)
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Alistair Popple <alistair@popple.id.au>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: [PATCH kernel v4 2/4] powerpc/iommu: Allow bypass-only for DMA
+Date:   Fri, 12 Jul 2019 19:29:53 +1000
+Message-Id: <20190712092955.56218-3-aik@ozlabs.ru>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190712092955.56218-1-aik@ozlabs.ru>
+References: <20190712092955.56218-1-aik@ozlabs.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Sean
+POWER8 and newer support a bypass mode which maps all host memory to
+PCI buses so an IOMMU table is not always required. However if we fail to
+create such a table, the DMA setup fails and the kernel does not boot.
 
-On 12/07/2019 10:43, Uwe Kleine-König wrote:
+This skips the 32bit DMA setup check if the bypass is can be selected.
 
-> On Thu, Jul 04, 2019 at 12:33:22PM +0200, Marc Gonzalez wrote:
->
->> Refactor the command setup code, and let the compiler determine
->> the size of each command.
->>
->> Reviewed-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> ---
->> Changes from v1:
->> - Use a real function to populate struct si2168_cmd *cmd, and a trivial
->> macro wrapping it (macro because sizeof).
->> Changes from v2:
->> - Fix header mess
->> - Add Jonathan's tag
->> ---
->>  drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------
->>  1 file changed, 45 insertions(+), 101 deletions(-)
->>
->> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
->> index c64b360ce6b5..5e81e076369c 100644
->> --- a/drivers/media/dvb-frontends/si2168.c
->> +++ b/drivers/media/dvb-frontends/si2168.c
->> @@ -12,6 +12,16 @@
->>  
->>  static const struct dvb_frontend_ops si2168_ops;
->>  
->> +static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, int rlen)
-> 
-> I'd add an "inline" here. And you could add a const for *args.
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+---
 
-I was under the (vague) impression that it's better to let the compiler
-decide when to inline, except for trivial alternatives in headers.
-David Miller wrote: "Please do not use the inline directive in foo.c
-files, let the compiler decide."
+This minor thing helped me debugging next 2 patches so it can help
+somebody else too.
+---
+ arch/powerpc/kernel/dma-iommu.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-Antti, Sean, what do you think?
+diff --git a/arch/powerpc/kernel/dma-iommu.c b/arch/powerpc/kernel/dma-iommu.c
+index a0879674a9c8..c963d704fa31 100644
+--- a/arch/powerpc/kernel/dma-iommu.c
++++ b/arch/powerpc/kernel/dma-iommu.c
+@@ -122,18 +122,17 @@ int dma_iommu_dma_supported(struct device *dev, u64 mask)
+ {
+ 	struct iommu_table *tbl = get_iommu_table_base(dev);
+ 
+-	if (!tbl) {
+-		dev_info(dev, "Warning: IOMMU dma not supported: mask 0x%08llx"
+-			", table unavailable\n", mask);
+-		return 0;
+-	}
+-
+ 	if (dev_is_pci(dev) && dma_iommu_bypass_supported(dev, mask)) {
+ 		dev->archdata.iommu_bypass = true;
+ 		dev_dbg(dev, "iommu: 64-bit OK, using fixed ops\n");
+ 		return 1;
+ 	}
+ 
++	if (!tbl) {
++		dev_err(dev, "Warning: IOMMU dma not supported: mask 0x%08llx, table unavailable\n", mask);
++		return 0;
++	}
++
+ 	if (tbl->it_offset > (mask >> tbl->it_page_shift)) {
+ 		dev_info(dev, "Warning: IOMMU offset too big for device mask\n");
+ 		dev_info(dev, "mask: 0x%08llx, table offset: 0x%08lx\n",
+-- 
+2.17.1
 
-For my notes: https://gcc.gnu.org/onlinedocs/gcc/Inline.html
-
-
->> +{
->> +	memcpy(cmd->args, args, wlen);
->> +	cmd->wlen = wlen;
->> +	cmd->rlen = rlen;
->> +}
->> +
->> +#define CMD_SETUP(cmd, args, rlen) \
->> +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
-> 
-> Here is the chance to add some static checking. Also it is a good habit
-> to put parens around macro arguments.
-
-Wrt parens around arguments, I figured they are not required here, since they
-are used as function arguments. Though you may have a valid point.
-
-Antti, Sean?
-
-
-> Something like:
-> 
-> #define CMD_SETUP(cmd, args, rlen) ({ \
-> 	BUILD_BUG_ON(sizeof((args)) - 1 > SI2168_ARGLEN);
-> 	cmd_setup((cmd), (args), __must_be_array((args)) + sizeof((args)) - 1, (rlen));
-> 
-> Maybe let this macro live in drivers/media/dvb-frontends/si2168_priv.h
-> where struct si2168_cmd is defined?
-
-Antti, Sean?
-
-
-> I looked over the transformations in the rest of the patch and this
-> looks good.
-
-Thanks for taking a look!
-
-Regards.
