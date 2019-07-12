@@ -2,153 +2,97 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E162C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD28C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0772054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A21E3204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgR/1MOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfGLRqA (ORCPT
+        id S1727530AbfGLRqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:46:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41453 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfGLRp7 (ORCPT
+        Fri, 12 Jul 2019 13:46:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43181 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfGLRqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:45:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so7601824wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:45:57 -0700 (PDT)
+        Fri, 12 Jul 2019 13:46:37 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so10772354wru.10;
+        Fri, 12 Jul 2019 10:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VnGi7SmrRgQ+WlkfWjtNW9trIO/foZCB9eqZJyvYBXY=;
+        b=bgR/1MOCBglV8ju8A0TSc632QFLLjYW8p0VnNd9PAek5sXuIdXM5V2hh8TBrkfgdOy
+         Dw8/WWEh/XAGtToU23dd6m3uiGQd+2q+5ldaWJVeVVVIY+XcSpCcSb1MeYCRnrEiA6Jq
+         ZiEhpp0T9Cu2pgT07L4XJTYo+VLqeclH+FOwnq9GMOu9YDpLwzRJy3zQzpsxhAwvHRAA
+         WgAED6zF107ZM7qm0wRE3uGFdq7ntKqaavbU+4Dwqw+TA0q3P+n0RZ15rvVtEwhsFmxi
+         OiliIC9mpmGn/DQthcPU0rsjUOMIy3kkYgEyOh5XBOJafCtORoodjoHlki3450FY8F8d
+         NKfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5AAY/XLB5sNM5xu1cxB6MBuk0Q+am8e86PPXt5EsGZI=;
-        b=OqdzqvfgtzdY5aRYpq5sHxRgrNyWuLZqUU/yuLxmGtoKH3cdTO+fHh4fFeaXQKgMLi
-         URTye7w3sz3M56Ioc+Z3RUGJf/BpOqffzWoXvIsmQPtibnZorWocJ7jn/DMMJKAGVc6y
-         z8NRP7cc1qP02NV6CFf5idilz3vDKjeUNvHfXgxEbcAK3yhYXGK2eregL1hlJhHa+L+f
-         eePhSL2a2mcrZLaq4wIhhs5wiKGo3bOQK8JSPhBYu+uq8VcupDgrl5vIdb8a6QKbLnV8
-         UUtPtmhnZywQNuQYDLSuVSFORcQl3JQPYbppgvSKfXJ3IJ2BcrtE6YI0x1A5b7o1bfMF
-         GO1Q==
-X-Gm-Message-State: APjAAAWbWsbwH9nkoeaYvFcjpuYGjwgsvqQaGc/XYe3znFgL8ysLIDF5
-        XeibS6+n/EqUwrg6NOTHuSRTIw==
-X-Google-Smtp-Source: APXvYqztfm0GMtUN0DWOYu24qfN1n1ZjFz8nEz/A1BvDT3bf6OdkVwRupsDeRYQC+wLyk5PLJd+Npg==
-X-Received: by 2002:adf:a299:: with SMTP id s25mr5567669wra.74.1562953557279;
-        Fri, 12 Jul 2019 10:45:57 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d066:6881:ec69:75ab? ([2001:b07:6468:f312:d066:6881:ec69:75ab])
-        by smtp.gmail.com with ESMTPSA id y1sm7470474wma.32.2019.07.12.10.45.56
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 10:45:56 -0700 (PDT)
-Subject: Re: [PATCH] [v3] x86: kvm: avoid -Wsometimes-uninitized warning
-To:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20190712141322.1073650-1-arnd@arndb.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <e85f877e-7c1c-7c9d-40c0-b41ac0fc68d6@redhat.com>
-Date:   Fri, 12 Jul 2019 19:45:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VnGi7SmrRgQ+WlkfWjtNW9trIO/foZCB9eqZJyvYBXY=;
+        b=rFWuO8P5bbpPFmQnZpnYE6S1yYG6ylaoYZUYawew9Edf4UQ3yVopO+M25xoFo3/C9v
+         7vcrwvtg2zjemBtXgz00CnikOAerzcoI9Ao3gRl/yj7O8UCouwHgIMgsW31/JhTdu65U
+         BBJCkp8umeEuQbrHYfKgp/uESvnemaz+gX8UwhFAAc7TEq9ZibaeOnD7T6rYbvrnfmHx
+         ZPsKPSC3CTX4sj1Ad/3dbe7mF2nLTHpuwxOK5FrohNDP3IGaxnSbyWgcl4gaEw/RtZv/
+         XPUfTPxPSrf/XsYbaLK5dDXr739xhKIPHBpDGkiLQF/A7IH7+XCrl3CMNYwf9nh8X3yU
+         tDVQ==
+X-Gm-Message-State: APjAAAXaab0J4cwPTb3OEsLk62wBaiMT0GMRmIyG0lDYEyXw1eA2aFub
+        ucYbe3zOl8ibQyXuT87T5YhNIPs=
+X-Google-Smtp-Source: APXvYqxacP3UsohCyxIK08EPGqyglIVucjQZw1CIretgNowBeRnYnnjnIbnm3UjWptmSDd49LC0vlA==
+X-Received: by 2002:adf:ebcd:: with SMTP id v13mr12621145wrn.263.1562953595046;
+        Fri, 12 Jul 2019 10:46:35 -0700 (PDT)
+Received: from avx2 ([46.53.248.114])
+        by smtp.gmail.com with ESMTPSA id c12sm14210038wrd.21.2019.07.12.10.46.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 10:46:34 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 20:46:32 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Alexey Izbyshev <izbyshev@ispras.ru>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, security@kernel.org
+Subject: Re: [PATCH] proc: Fix uninitialized byte read in get_mm_cmdline()
+Message-ID: <20190712174632.GA3175@avx2>
+References: <20190712160913.17727-1-izbyshev@ispras.ru>
+ <20190712163625.GF21989@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190712141322.1073650-1-arnd@arndb.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190712163625.GF21989@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/07/19 16:13, Arnd Bergmann wrote:
-> Clang notices a code path in which some variables are never
-> initialized, but fails to figure out that this can never happen
-> on i386 because is_64_bit_mode() always returns false.
+On Fri, Jul 12, 2019 at 06:36:26PM +0200, Oleg Nesterov wrote:
+> On 07/12, Alexey Izbyshev wrote:
+> >
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -275,6 +275,8 @@ static ssize_t get_mm_cmdline(struct mm_struct *mm, char __user *buf,
+> >  		if (got <= offset)
+> >  			break;
+> >  		got -= offset;
+> > +		if (got < size)
+> > +			size = got;
 > 
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         if (!longmode) {
->             ^~~~~~~~~
-> arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
->         trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
->                                                              ^~~~~
-> arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
->         if (!longmode) {
->         ^~~~~~~~~~~~~~~
-> arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
->         u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
->                         ^
->                          = 0
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> 
-> Flip the condition around to avoid the conditional execution on i386.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v3: reword commit log, simplify patch again
-> v2: make the change inside of is_64_bit_mode().
-> ---
->  arch/x86/kvm/hyperv.c | 20 +++++++++-----------
->  1 file changed, 9 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index a39e38f13029..c10a8b10b203 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1594,7 +1594,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  {
->  	u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
->  	uint16_t code, rep_idx, rep_cnt;
-> -	bool fast, longmode, rep;
-> +	bool fast, rep;
->  
->  	/*
->  	 * hypercall generates UD from non zero cpl and real mode
-> @@ -1605,9 +1605,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  		return 1;
->  	}
->  
-> -	longmode = is_64_bit_mode(vcpu);
-> -
-> -	if (!longmode) {
-> +#ifdef CONFIG_X86_64
-> +	if (is_64_bit_mode(vcpu)) {
-> +		param = kvm_rcx_read(vcpu);
-> +		ingpa = kvm_rdx_read(vcpu);
-> +		outgpa = kvm_r8_read(vcpu);
-> +	} else
-> +#endif
-> +	{
->  		param = ((u64)kvm_rdx_read(vcpu) << 32) |
->  			(kvm_rax_read(vcpu) & 0xffffffff);
->  		ingpa = ((u64)kvm_rbx_read(vcpu) << 32) |
-> @@ -1615,13 +1620,6 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  		outgpa = ((u64)kvm_rdi_read(vcpu) << 32) |
->  			(kvm_rsi_read(vcpu) & 0xffffffff);
->  	}
-> -#ifdef CONFIG_X86_64
-> -	else {
-> -		param = kvm_rcx_read(vcpu);
-> -		ingpa = kvm_rdx_read(vcpu);
-> -		outgpa = kvm_r8_read(vcpu);
-> -	}
-> -#endif
->  
->  	code = param & 0xffff;
->  	fast = !!(param & HV_HYPERCALL_FAST_BIT);
-> 
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-Queued, thanks.
+The proper fix to all /proc/*/cmdline problems is to revert
 
-Paolo
+	f5b65348fd77839b50e79bc0a5e536832ea52d8d
+	proc: fix missing final NUL in get_mm_cmdline() rewrite
+
+	5ab8271899658042fabc5ae7e6a99066a210bc0e
+	fs/proc: simplify and clarify get_mm_cmdline() function
