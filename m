@@ -4,81 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F04C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534BFC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FBB20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCE220863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfGLI4b (ORCPT
+        id S1726299AbfGLI5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:56:31 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:43047 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfGLI4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:56:30 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MCsDe-1hd5uB1CKW-008uVX; Fri, 12 Jul 2019 10:56:07 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Wen Yang <wen.yang99@zte.com.cn>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: audio-graph-card: fix type mismatch warning
-Date:   Fri, 12 Jul 2019 10:55:53 +0200
-Message-Id: <20190712085605.4062896-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 12 Jul 2019 04:57:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40294 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725929AbfGLI5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:57:24 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48D8F5B8F6391BDF6638;
+        Fri, 12 Jul 2019 16:57:15 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 12 Jul 2019 16:57:04 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: disallow switching io_bits option during remount
+Date:   Fri, 12 Jul 2019 16:57:00 +0800
+Message-ID: <20190712085700.4239-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Hsib/dpx4KDn7gfpU/f1Eq1bfZtFdE4qTB4i+zaN8zo+qEctdR3
- RKhbz0fWRM/pmG+ONdUgpTK6N83UxgmjuGxUxS7I+VEOkD9WOzCJOk4ZXdWmO7duzQNCSei
- A5NbDsnu3Sc6uMaOzDDc1fb0aJb5+RDDmrBVPEgI2QA6jlwg3/3937dYE5w8TcKd4KK1pOZ
- deGBhKhCt9y0/q8rpEaKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H9OQC5DGb9s=:T6H67ZX8mqNhVjA447wWxh
- 0xlDBQb6lbn9z8MwFJsVML6VitaX0n5WZCMegYpH2Jy0StVWv8lATqy/cHcn1tV+fKPAmiRhZ
- oHt/SGJfCX5s0+doh3Nf+k7pjQ9PH4qbuyia0jUmUCgqbQDSy9gl8EFegYzMvdeIffdUZlg+s
- 6Sp7mKoJ1Ib3ka35DJzEpUrBWTPTN0n/SsrjYVsfHUXSeZSv7PF0hVM1/TH1bfXHA8xus7U2b
- isWiB7dFfUrW2bmfT/wRvgUKzPh/LkI/pcx00uSfTZc8yXEZbf6VY6fIz1xZ3Y7A5kSHvBBsi
- RuNMBXRhXQ1tf9uQUbTFGKJZmqXfCAkJzridws1PtHvOf8guQ0mhwkPADX/CjxraTT6Fx/cxk
- AswHICK7T/BCJii8NKWbmbGkUoiHDEYx3kTNC7Rb9+dD3jC2N82iRhxp2upDjBuBuf02MooPu
- QhIyEwkywdDOj6PxT7gTQxEO4MPvXcuw8yp45I8IiTtFFqt+SV5YNbn9Z3DTdS32BFr3T2UXC
- +1xGHKziI8ziqs+LGMsO/tozcLt2dza/qDnNx4j8MkzgxFB15O2oZA3IZWgZ+poZrEdmoYLY4
- sHvztlc6Q8LopIyPGAGE1X2vxh+wginAcrEuHK3wh+q7fsGJmPew8aodII75QTI6Rfp5o0FYW
- 69ehGjuQkxZS5E1Ordsxhvy4mIfmW0dw6ebuxgojymabC/wA87Rc8aAPZiC8pccQuKHK35sx6
- DDbKua9LRG55+5mjhlfjSZ7drvWb4qT2eFa8tA==
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new temporary variable is lacks a 'const' annotation:
+If IO alignment feature is turned on after remount, we didn't
+initialize mempool of it, it turns out we will encounter panic
+during IO submission due to access NULL mempool pointer.
 
-sound/soc/generic/audio-graph-card.c:87:7: error: assigning to 'u32 *' (aka 'unsigned int *') from 'const void *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+This feature should be set only at mount time, so simply deny
+configuring during remount.
 
-Fixes: c152f8491a8d ("ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This fixes bug reported in bugzilla:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=204135
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- sound/soc/generic/audio-graph-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/super.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index c8abb86afefa..288df245b2f0 100644
---- a/sound/soc/generic/audio-graph-card.c
-+++ b/sound/soc/generic/audio-graph-card.c
-@@ -63,7 +63,7 @@ static int graph_get_dai_id(struct device_node *ep)
- 	struct device_node *endpoint;
- 	struct of_endpoint info;
- 	int i, id;
--	u32 *reg;
-+	const u32 *reg;
- 	int ret;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 84e5a9bf4571..602a0791246d 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1567,6 +1567,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+ 	bool need_stop_gc = false;
+ 	bool no_extent_cache = !test_opt(sbi, EXTENT_CACHE);
+ 	bool disable_checkpoint = test_opt(sbi, DISABLE_CHECKPOINT);
++	bool no_io_align = !F2FS_IO_ALIGNED(sbi);
+ 	bool checkpoint_changed;
+ #ifdef CONFIG_QUOTA
+ 	int i, j;
+@@ -1646,6 +1647,12 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+ 		goto restore_opts;
+ 	}
  
- 	/* use driver specified DAI ID if exist */
++	if (no_io_align == !!F2FS_IO_ALIGNED(sbi)) {
++		err = -EINVAL;
++		f2fs_warn(sbi, "switch io_bits option is not allowed");
++		goto restore_opts;
++	}
++
+ 	if ((*flags & SB_RDONLY) && test_opt(sbi, DISABLE_CHECKPOINT)) {
+ 		err = -EINVAL;
+ 		f2fs_warn(sbi, "disabling checkpoint not compatible with read-only");
 -- 
-2.20.0
+2.18.0.rc1
 
