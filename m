@@ -2,105 +2,220 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3A4C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F32C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4AB208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:23:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTaFWFa9"
+	by mail.kernel.org (Postfix) with ESMTP id 5D6B4208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfGLBXe (ORCPT
+        id S1728916AbfGLB13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:23:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46805 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfGLBXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:23:33 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so7668385ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9NuXct5FW62NllFLkWHXtF54PXpuTDXCY6/8Ws75hAk=;
-        b=PTaFWFa9tsIcZKGH46sqa/kg0BqnZ09unrqjmMlbQrVI4BYj8E+xBy4K4ZDP4027CV
-         GOPy9CKjNtES2ZAgyq964LkeWqrrxHFUISbSTAXkwMQ5J92Kxk5amAw1WuicOlDER9y/
-         4exC+/nG5OMJbTivCpXXf2y8w/kgK+BV9Nv40=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9NuXct5FW62NllFLkWHXtF54PXpuTDXCY6/8Ws75hAk=;
-        b=rhX9NxEtJj7e4LvvG4qZ5d5n4hNiDk9z0jd4IzjCBe1ZQnilDNoxd0JJbMnl9u/9Uf
-         x5McHBUbVAj2hG72V+iRX/OA28ZE0lx8lanvv4uf5WgWABEziWiHXb2kredOkC1TAfvI
-         kSP5RFYsFjBb/Q21NGJAElQqgGOUmwGRLhlFjV9wYd6w3lO8s3IOl8XZSY0JYmM9Fiuk
-         FmOf5AmRIqUzdadrUyIyb1B6vQKs1R4+oSd/Y7+wBh5cOpM/9uaFzfDjAnRvkT2+RxU2
-         LBjp6vTnJpdbu/yr6rHWO5iSYyv8LtAObblu/ozP5d8yd634GKq4GC9x2YgqjAdxMlcc
-         hIjQ==
-X-Gm-Message-State: APjAAAXhaU6SgkdsPTHzGcMfK17oxgIay9XNyL+Qd9ptmdFvPfqTt0Ua
-        hThkyY+S7jSubdEznVj1qef8MACkKls=
-X-Google-Smtp-Source: APXvYqz1FoL29kfvwRV8qo4l3hYmb/5MdIush6dwqY6tdrUGfCUgaoD9wgM4uR+b2iSqlIfVFYFqRg==
-X-Received: by 2002:a2e:898b:: with SMTP id c11mr4349911lji.241.1562894611553;
-        Thu, 11 Jul 2019 18:23:31 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id y4sm911531lfc.56.2019.07.11.18.23.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 18:23:30 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id p197so5324949lfa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:23:30 -0700 (PDT)
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr3285742lfu.141.1562894610575;
- Thu, 11 Jul 2019 18:23:30 -0700 (PDT)
+        Thu, 11 Jul 2019 21:27:29 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49940 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726587AbfGLB13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:27:29 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3632CB191B82375CC4EC;
+        Fri, 12 Jul 2019 09:27:26 +0800 (CST)
+Received: from dessert.huawei.com (10.69.192.158) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 12 Jul 2019 09:27:18 +0800
+From:   Zeng Tao <prime.zeng@hisilicon.com>
+To:     <kishon@ti.com>
+CC:     <prime.zeng@hisilicon.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] phy: Change the configuration interface param to void* to make it more general
+Date:   Fri, 12 Jul 2019 17:26:04 +0800
+Message-ID: <1562923580-47746-1-git-send-email-prime.zeng@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190712010556.248319-1-briannorris@chromium.org> <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
-In-Reply-To: <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Thu, 11 Jul 2019 18:23:19 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com>
-Message-ID: <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com>
-Subject: Re: [RFC PATCH] bug: always show source-tree-relative paths in WARN()/BUG()
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 6:14 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> BTW, did you see this?
->
-> commit a73619a845d5625079cc1b3b820f44c899618388
-> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Date:   Fri Mar 30 13:15:26 2018 +0900
->
->     kbuild: use -fmacro-prefix-map to make __FILE__ a relative path
+The phy framework now allows runtime configurations, but only limited
+to mipi now, and it's not reasonable to introduce user specified
+configurations into the union phy_configure_opts structure. An simple
+way is to replace with a void *.
 
-Oh, wow, no I did not. If my reading is correct, that's GCC only? I've
-been using various combinations of newer (5.2) and older (4.14.y --
-didn't have that patch) kernels, older GCC (doesn't have that feature
-AFAICT), and newer Clang (doesn't appear to have that feature). So I'm
-not totally sure if I ever actually tried a combo that *could* make
-use of that. But I may give it another shot.
+We have already got some phy drivers which introduce private phy API
+for runtime configurations, and with this patch, they can switch to
+the phy_configure as a replace.
 
-In the event that this is GCC-specific...I don't suppose I could
-convince anybody to expend any effort (e.g., taking a patch like mine)
-to solve it for the non-GCC world?
+Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+---
+ drivers/phy/allwinner/phy-sun6i-mipi-dphy.c |  4 ++--
+ drivers/phy/cadence/cdns-dphy.c             |  8 ++++----
+ drivers/phy/phy-core.c                      |  4 ++--
+ include/linux/phy/phy.h                     | 24 ++++++------------------
+ 4 files changed, 14 insertions(+), 26 deletions(-)
 
-Thanks for the tip,
-Brian
+diff --git a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+index 79c8af5..6a60473 100644
+--- a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
++++ b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+@@ -105,12 +105,12 @@ static int sun6i_dphy_init(struct phy *phy)
+ 	return 0;
+ }
+ 
+-static int sun6i_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
++static int sun6i_dphy_configure(struct phy *phy, void *opts)
+ {
+ 	struct sun6i_dphy *dphy = phy_get_drvdata(phy);
+ 	int ret;
+ 
+-	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
++	ret = phy_mipi_dphy_config_validate(opts);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
+index 90c4e9b..0ec5013 100644
+--- a/drivers/phy/cadence/cdns-dphy.c
++++ b/drivers/phy/cadence/cdns-dphy.c
+@@ -233,23 +233,23 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
+ }
+ 
+ static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
+-			      union phy_configure_opts *opts)
++			      void *opts)
+ {
+ 	struct cdns_dphy_cfg cfg = { 0 };
+ 
+ 	if (mode != PHY_MODE_MIPI_DPHY)
+ 		return -EINVAL;
+ 
+-	return cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
++	return cdns_dphy_config_from_opts(phy, opts, &cfg);
+ }
+ 
+-static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
++static int cdns_dphy_configure(struct phy *phy, void *opts)
+ {
+ 	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+ 	struct cdns_dphy_cfg cfg = { 0 };
+ 	int ret;
+ 
+-	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
++	ret = cdns_dphy_config_from_opts(phy, opts, &cfg);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index e3880c4a1..048d4d6 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -420,7 +420,7 @@ EXPORT_SYMBOL_GPL(phy_calibrate);
+  *
+  * Returns: 0 if successful, an negative error code otherwise
+  */
+-int phy_configure(struct phy *phy, union phy_configure_opts *opts)
++int phy_configure(struct phy *phy, void *opts)
+ {
+ 	int ret;
+ 
+@@ -455,7 +455,7 @@ EXPORT_SYMBOL_GPL(phy_configure);
+  * Returns: 0 if successful, an negative error code otherwise
+  */
+ int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
+-		 union phy_configure_opts *opts)
++		 void *opts)
+ {
+ 	int ret;
+ 
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 15032f14..8948f94 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -16,8 +16,6 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ 
+-#include <linux/phy/phy-mipi-dphy.h>
+-
+ struct phy;
+ 
+ enum phy_mode {
+@@ -41,15 +39,6 @@ enum phy_mode {
+ 	PHY_MODE_SATA
+ };
+ 
+-/**
+- * union phy_configure_opts - Opaque generic phy configuration
+- *
+- * @mipi_dphy:	Configuration set applicable for phys supporting
+- *		the MIPI_DPHY phy mode.
+- */
+-union phy_configure_opts {
+-	struct phy_configure_opts_mipi_dphy	mipi_dphy;
+-};
+ 
+ /**
+  * struct phy_ops - set of function pointers for performing phy operations
+@@ -80,7 +69,7 @@ struct phy_ops {
+ 	 *
+ 	 * Returns: 0 if successful, an negative error code otherwise
+ 	 */
+-	int	(*configure)(struct phy *phy, union phy_configure_opts *opts);
++	int	(*configure)(struct phy *phy, void *opts);
+ 
+ 	/**
+ 	 * @validate:
+@@ -99,7 +88,7 @@ struct phy_ops {
+ 	 * error code otherwise
+ 	 */
+ 	int	(*validate)(struct phy *phy, enum phy_mode mode, int submode,
+-			    union phy_configure_opts *opts);
++			    void *opts);
+ 	int	(*reset)(struct phy *phy);
+ 	int	(*calibrate)(struct phy *phy);
+ 	void	(*release)(struct phy *phy);
+@@ -207,9 +196,9 @@ int phy_power_off(struct phy *phy);
+ int phy_set_mode_ext(struct phy *phy, enum phy_mode mode, int submode);
+ #define phy_set_mode(phy, mode) \
+ 	phy_set_mode_ext(phy, mode, 0)
+-int phy_configure(struct phy *phy, union phy_configure_opts *opts);
++int phy_configure(struct phy *phy, void *opts);
+ int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
+-		 union phy_configure_opts *opts);
++		 void *opts);
+ 
+ static inline enum phy_mode phy_get_mode(struct phy *phy)
+ {
+@@ -354,8 +343,7 @@ static inline int phy_calibrate(struct phy *phy)
+ 	return -ENOSYS;
+ }
+ 
+-static inline int phy_configure(struct phy *phy,
+-				union phy_configure_opts *opts)
++static inline int phy_configure(struct phy *phy, void *opts)
+ {
+ 	if (!phy)
+ 		return 0;
+@@ -364,7 +352,7 @@ static inline int phy_configure(struct phy *phy,
+ }
+ 
+ static inline int phy_validate(struct phy *phy, enum phy_mode mode, int submode,
+-			       union phy_configure_opts *opts)
++			       void *opts)
+ {
+ 	if (!phy)
+ 		return 0;
+-- 
+2.7.4
+
