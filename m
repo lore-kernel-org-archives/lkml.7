@@ -4,99 +4,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67083C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826E2C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D922064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3DA20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfGLJFS (ORCPT
+        id S1726351AbfGLJHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:05:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:45061 "EHLO
+        Fri, 12 Jul 2019 05:07:19 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:56347 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfGLJFR (ORCPT
+        with ESMTP id S1726169AbfGLJHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:05:17 -0400
+        Fri, 12 Jul 2019 05:07:18 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MV6G6-1hwH5Z2EoY-00SB3h; Fri, 12 Jul 2019 11:04:59 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MeC5x-1iN7Ph3SwZ-00bI7H; Fri, 12 Jul 2019 11:07:06 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
+To:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>, linux-mm@kvack.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        Ganesh Goudar <ganeshgr@chelsio.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Arjun Vynipadath <arjun@chelsio.com>,
+        Surendra Mobiya <surendra@chelsio.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] slab: work around clang bug #42570
-Date:   Fri, 12 Jul 2019 11:04:39 +0200
-Message-Id: <20190712090455.266021-1-arnd@arndb.de>
+Subject: [PATCH] [net-next] cxgb4: reduce kernel stack usage in cudbg_collect_mem_region()
+Date:   Fri, 12 Jul 2019 11:06:33 +0200
+Message-Id: <20190712090700.317887-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Ny01W1sDzoQkytMwytJIIrYFKJMAp43dk5NNDspRvnOllp9EkZr
- VuzyTUNjSse8EsEyCqr7kc40Ba4ziU5ZJeO+1M9SBaOgjKuIZikTFUdKqTjhsp1dC0hMyAb
- pzT0cscZoUzBS9aQuvnFE7VnM1CNm1uE1TfgnnqFyCIqm3ZduBeyRgSaa+3GiB+97zyK7Fg
- Vq+dXYbjGqocQuWH5gCnQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FRhumaWfoBg=:uF2ZId5iyFd22A6N4mOrDZ
- DtmIL69RcbPhxVSvodv4SUhsYV3+yTK/vCQrNs/qghahhIl06Oaaj1oGMBTiXb1ZEJ0kvWka/
- sKHJbkSki3UoNonkKIXFm6kJbKDjygapYoW0EpCAJQ7ysWmxe2LOwY5SeEOr18TmoogwlUW7w
- RWOiJpzdMDSPkR9+1kD5+ouGToWbg07Sh+iVwcqcvBLDRIFuY0Lr6K3WfrDh9+igLUXmNr9Dq
- +uoq6gYSfqg6ZQr1Ta+90TtUt9blY4SiRiiHiBz4uU6cw4VFzSa35XjGdq6LdAHaoA6zNigPQ
- ehN3T8Bwk+7/ZwQFIx8X6EJXFRMVpz36YVZwn208Q+krl8PTa17VZDTpRmxz4I6XyaHEcd7tw
- XNjGA21LQmrxeNMfuOTYT59cD6THL8xnGL4zEuVG5mn0+zotPWlKWihBZWGGp/zCQQDeMuqmg
- mH6GfOwLdOsSOQHM/7q1NYMkDcCLJvbKCqICmPvX12LY5VeJXgbjSbUlkr4D+aCIARFWGN4bu
- 2/uYYtvJ8MkKxNyV0wjTIg0X5VtdPvj34xCu404qgrfovh86PGxQeY5y6lSi3G4kic5Rgz3tv
- 4OlnfYOM+WO34ViWN+LZnpgELAknvuzOgatnlXyoQaf1ho4dY8cyqujhqcHuJeoiio9WKRjEU
- ZsSHw0gqQmRAi5jhR7aDBJr2ye0/ArzAZ+LEuIW1OOWycpVPns/zzcQh5FBLSnsM9+WagkJsQ
- RO479U51Z4FBGauyIZAB2MKq45G9BqYlZQN9eQ==
+X-Provags-ID: V03:K1:rxFNf2Aki8qaWD5BAHF9dJ6RZq9YGgkpHy8CO9HIEVlm7go4NVx
+ kHFABxf69KKsV1nhzdGT3E9nhL8b1dNpvlMeZZl2UMJi8iAayuR+sj7oa0MEnBelfmAdzn5
+ GmHu8AwVCwbo0qLCZAdAoclelQrmU9yj0DnBAzqUoCo/zn600t8P2zAcHHKnKHoneepLFiT
+ ZS5YgzKSe3u0GNUA3I0FA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:O+AX6q867+c=:MXtjbU0XZTwkG7PWMjzQ0V
+ v5o84QhB/JLoRjYCRSyrVPpQt+fH7M0kpZkVaBCVVUDGAjEiOpR7zF32Qu8hpWd9fjVvUf+3U
+ KM3P5kDvJKPYVl3RNOaGzcaB+KUav3WF3hQGBcRQ5oavMoyr1ROzkS4UD91aZIX2VOC3hywPN
+ LYXBXODKbJrhtm+gVfyHZhr/oM6QSpKV/T5aq/hwkkYKNdUKbAZJjTKKOFSMqbZU3W5wl4l5K
+ ZJxws379F6lkAaRSSwgkC5q6yPaDxukpzkb9aX+7ySDAfmcwkFaSsdzP1N5SybF+TievuvcO/
+ xAc46xFlboH0LUsMWBjvT+8Tz1tvqK6rWkdCl5ZyP2V1wbYA449wJ76Y3yBQ0oGcl8oHUNR0D
+ Kop6dogBbjIbIZi5nMcsuNvvy7tMBy+Netj1OMEEVl6wb4nBNmFVdgApLQJTZvL46Zz8H0xof
+ qE1VEvSdhbZrWfi05TsMs99NoV7+Qy+L6/1lNyUu76iUnhD5uIwFA7A+n+Xhek2p5XjU0BGkI
+ tF4JPjQp/fIRI8zPkQVqPvfyzoJEDDwO9YAjwz3be7/QnXITG8dOE0e4oVwWEoMqAT8kgruzR
+ MSEhW1VvhgmwaDaQTK+1rSNFglRTIvh2/oPX9zMp5nrcR5Cy0QuxN6c5EYSv314nMM002t7JP
+ 6gxHomwy6vEHdQnQ/6HHOVawvNPEXHrEQQhC7lP46W6BLahCkwhrAMjYv+Qknyg2uvGCER0Qw
+ vIforeros4ovfVwG0LyxQ5Y7toEmy3zMX/nf4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang gets rather confused about two variables in the same special
-section when one of them is not initialized, leading to an assembler
-warning later:
+The cudbg_collect_mem_region() and cudbg_read_fw_mem() both use several
+hundred kilobytes of kernel stack space. One gets inlined into the other,
+which causes the stack usage to be combined beyond the warning limit
+when building with clang:
 
-/tmp/slab_common-18f869.s: Assembler messages:
-/tmp/slab_common-18f869.s:7526: Warning: ignoring changed section attributes for .data..ro_after_init
+drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c:1057:12: error: stack frame size of 1244 bytes in function 'cudbg_collect_mem_region' [-Werror,-Wframe-larger-than=]
 
-Adding an initialization to kmalloc_caches is rather silly here
-but does avoid the issue.
+Restructuring cudbg_collect_mem_region() lets clang do the same
+optimization that gcc does and reuse the stack slots as it can
+see that the large variables are never used together.
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=42570
+A better fix might be to avoid using cudbg_meminfo on the stack
+altogether, but that requires a larger rewrite.
+
+Fixes: a1c69520f785 ("cxgb4: collect MC memory dump")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-We might decide to wait until this is fixed in clang, but
-so far all versions targetting x86 seem to be affected.
----
- mm/slab_common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/ethernet/chelsio/cxgb4/cudbg_lib.c    | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 6c49dbb3769e..807490fe217a 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1028,7 +1028,8 @@ struct kmem_cache *__init create_kmalloc_cache(const char *name,
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
+index a76529a7662d..c2e92786608b 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
+@@ -1054,14 +1054,12 @@ static void cudbg_t4_fwcache(struct cudbg_init *pdbg_init,
+ 	}
  }
  
- struct kmem_cache *
--kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init;
-+kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
-+{ /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
- EXPORT_SYMBOL(kmalloc_caches);
+-static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
+-				    struct cudbg_buffer *dbg_buff,
+-				    struct cudbg_error *cudbg_err,
+-				    u8 mem_type)
++static unsigned long cudbg_mem_region_size(struct cudbg_init *pdbg_init,
++					   struct cudbg_error *cudbg_err,
++					   u8 mem_type)
+ {
+ 	struct adapter *padap = pdbg_init->adap;
+ 	struct cudbg_meminfo mem_info;
+-	unsigned long size;
+ 	u8 mc_idx;
+ 	int rc;
  
- /*
+@@ -1075,7 +1073,16 @@ static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
+ 	if (rc)
+ 		return rc;
+ 
+-	size = mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
++	return mem_info.avail[mc_idx].limit - mem_info.avail[mc_idx].base;
++}
++
++static int cudbg_collect_mem_region(struct cudbg_init *pdbg_init,
++				    struct cudbg_buffer *dbg_buff,
++				    struct cudbg_error *cudbg_err,
++				    u8 mem_type)
++{
++	unsigned long size = cudbg_mem_region_size(pdbg_init, cudbg_err, mem_type);
++
+ 	return cudbg_read_fw_mem(pdbg_init, dbg_buff, mem_type, size,
+ 				 cudbg_err);
+ }
 -- 
 2.20.0
 
