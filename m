@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DB7C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BFCC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04432166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EAF208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934610;
-	bh=T/Oa2dK6GoM4tKHT07w1iRVwjd7s80b2skmvamRAhPY=;
+	s=default; t=1562934616;
+	bh=s77BrHJDsy+KnVUeQoS4PPzQPNBJKEn+JM1Jp9LqINs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XCNDQdlw3dqoKELP+keT90NvqNBbWqut8MuE6XtcY275/pMgKNvviUzEfbiGhJT7p
-	 cXf2yyNxgNk9hR7BuuUKrNTp/w+CqKdMAcaOj4KTABBE6hQtPvApn2FnWYFtjYJj4Q
-	 OQJ1m60S3Fz8FxjGsa2fVE3VQhhk2lGs3ri0U/Is=
+	b=ccBR74jQ9+tpnoxLZbACjQq3KuuBNmqrrvDXttjB7QSwlZI4Upyr8evS9qe7SzpCX
+	 /dTB7GD09WeDNGmDRseOV3P6U1cpCDhBEZ0BStpMR9nWPkfmmjNlnO+gbn1iCNqq8G
+	 7i/0nhNCEdu6M/2E+3/ixITjkU9H66LjzuRA2g4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfGLMaG (ORCPT
+        id S1729190AbfGLMaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbfGLMaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:02 -0400
+        id S1729080AbfGLMaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 551592166E;
-        Fri, 12 Jul 2019 12:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA29F21670;
+        Fri, 12 Jul 2019 12:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934601;
-        bh=T/Oa2dK6GoM4tKHT07w1iRVwjd7s80b2skmvamRAhPY=;
+        s=default; t=1562934605;
+        bh=s77BrHJDsy+KnVUeQoS4PPzQPNBJKEn+JM1Jp9LqINs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpyrH+f/u7gLSFYTyPqhZzArJGu35UIHdJKAUsITv226X/70oQp/6LKi5S68DngcO
-         h4To0vjRquMbpTZrWMoLgde/iyDTsHloqagqJYUhHk6GKDZ2lkfWmmXHuq+WNjA98P
-         LVYMz2hiXu/w7pd2zOU7Wxr9AI/qRySQ77kK6nj4=
+        b=FBN4H+Y9J+BN+fpfz6GuM5JD+jSKUqXT0PxWuFqjR5FfbjEUF+e1c7rghdSz4eCgG
+         fopUglDcWWfpBxjuhM05eV1NnX9SaSv5JA67ktBgtKSUanI8gzlCK0lG+R9bCzAAuC
+         HtpYvSQDKIMfhJ9jq6532VgJnnn8GJnpXlvNfOVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andreas Fritiofson <andreas.fritiofson@unjo.com>,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.1 108/138] USB: serial: ftdi_sio: add ID for isodebug v1
-Date:   Fri, 12 Jul 2019 14:19:32 +0200
-Message-Id: <20190712121632.904395964@linuxfoundation.org>
+Subject: [PATCH 5.1 109/138] USB: serial: option: add support for GosunCn ME3630 RNDIS mode
+Date:   Fri, 12 Jul 2019 14:19:33 +0200
+Message-Id: <20190712121632.941823049@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
-commit f8377eff548170e8ea8022c067a1fbdf9e1c46a8 upstream.
+commit aed2a26283528fb69c38e414f649411aa48fb391 upstream.
 
-This adds the vid:pid of the isodebug v1 isolated JTAG/SWD+UART. Only the
-second channel is available for use as a serial port.
+Added USB IDs for GosunCn ME3630 cellular module in RNDIS mode.
 
-Signed-off-by: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+T:  Bus=03 Lev=01 Prnt=01 Port=01 Cnt=03 Dev#= 18 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=19d2 ProdID=0601 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=b950269c
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ftdi_sio.c     |    1 +
- drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
- 2 files changed, 7 insertions(+)
+ drivers/usb/serial/option.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1029,6 +1029,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
- 	/* EZPrototypes devices */
- 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
-+	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
- 	{ }					/* Terminating entry */
- };
- 
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1543,3 +1543,9 @@
- #define CHETCO_SEASMART_DISPLAY_PID	0xA5AD /* SeaSmart NMEA2000 Display */
- #define CHETCO_SEASMART_LITE_PID	0xA5AE /* SeaSmart Lite USB Adapter */
- #define CHETCO_SEASMART_ANALOG_PID	0xA5AF /* SeaSmart Analog Adapter */
-+
-+/*
-+ * Unjo AB
-+ */
-+#define UNJO_VID			0x22B7
-+#define UNJO_ISODEBUG_V1_PID		0x150D
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1343,6 +1343,7 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0414, 0xff, 0xff, 0xff) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0417, 0xff, 0xff, 0xff) },
++	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0601, 0xff) },	/* GosunCn ZTE WeLink ME3630 (RNDIS mode) */
+ 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0602, 0xff) },	/* GosunCn ZTE WeLink ME3630 (MBIM mode) */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1008, 0xff, 0xff, 0xff),
+ 	  .driver_info = RSVD(4) },
 
 
