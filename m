@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5964BC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A559C742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A6421670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A37F2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934620;
-	bh=WHvY5Cz+pgA9vaRQy2Ye+g0t67s/zZ5GMTSqSjvljgQ=;
+	s=default; t=1562934623;
+	bh=bOSHJRD+yncBX5fw/6Yk1AQF+h2Hxgw71ox8mXIVFeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHPNfQ+oA+j29MuuRJxoiyOPkUAX2d9o/My4gjGZ3CfAYLSFCzhotZkl1BYWytF2E
-	 VzpqAMwadxNBGTYMOY/QTCPnAcyTtVKfO/PkCjgC44nXob5SVTEGtfftE54MaQgaqU
-	 ZqTs4wGJQR4N2NqndlXpRiVf59p0iWMFH6i1lKuY=
+	b=kg6b27Qn1i3fTslIbKUBYPRbUlcmz55/FcToBRTR0bHg77F+RjLriViOilu58jOx5
+	 LJ08tZg092SPs1kbNoFd6CAT5KR+i/wMBzMS8JmnXYER1WsrrE+AdR+PWV/2J9a7PV
+	 VLqB4I+Edtvx3PAfai3EqwixhIr+m4Zwa2Cq0fTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbfGLMaT (ORCPT
+        id S1728523AbfGLMaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbfGLMaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:12 -0400
+        id S1729188AbfGLMaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F3C21670;
-        Fri, 12 Jul 2019 12:30:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EB42166E;
+        Fri, 12 Jul 2019 12:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934611;
-        bh=WHvY5Cz+pgA9vaRQy2Ye+g0t67s/zZ5GMTSqSjvljgQ=;
+        s=default; t=1562934614;
+        bh=bOSHJRD+yncBX5fw/6Yk1AQF+h2Hxgw71ox8mXIVFeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdADg2ihrXFL9ho8qWpRBsESr0uYDMzOC4elQlv+y8rFRK/Rk4BziNErpE5eCcm2L
-         kWqjboaSEqQ3RIugpwd0Wm+sbrXqq0ohYtLf5wZkxJow4AtZkNQRvIdhZqJQ9fVpj5
-         6Hrn/rkkOlmxF32wMENEmyh7l55w5f1QUaUF8NKM=
+        b=nBHMCnQPq1Sd5QqeUyAYOT0UfJ3eIcwoAoTjlk2EkhL/SVnjO9ld6o0tE34JKcUlJ
+         83OzLc6TO+Sw9u2H5Y7fCqwCauAJpABWWO0Vo9r5tfBDwY9DqbIX9uKfPE3Sr7xuW6
+         2MhjZifMX1NLtXNP0rbqrYVsP51r/OIVOL9pSP7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
-Subject: [PATCH 5.1 111/138] p54usb: Fix race between disconnect and firmware loading
-Date:   Fri, 12 Jul 2019 14:19:35 +0200
-Message-Id: <20190712121633.017796203@linuxfoundation.org>
+        stable@vger.kernel.org, Fei Yang <fei.yang@intel.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 5.1 112/138] usb: gadget: f_fs: data_len used before properly set
+Date:   Fri, 12 Jul 2019 14:19:36 +0200
+Message-Id: <20190712121633.054072432@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,174 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Fei Yang <fei.yang@intel.com>
 
-commit 6e41e2257f1094acc37618bf6c856115374c6922 upstream.
+commit 4833a94eb383f5b22775077ff92ddaae90440921 upstream.
 
-The syzbot fuzzer found a bug in the p54 USB wireless driver.  The
-issue involves a race between disconnect and the firmware-loader
-callback routine, and it has several aspects.
+The following line of code in function ffs_epfile_io is trying to set
+flag io_data->use_sg in case buffer required is larger than one page.
 
-One big problem is that when the firmware can't be loaded, the
-callback routine tries to unbind the driver from the USB _device_ (by
-calling device_release_driver) instead of from the USB _interface_ to
-which it is actually bound (by calling usb_driver_release_interface).
+    io_data->use_sg = gadget->sg_supported && data_len > PAGE_SIZE;
 
-The race involves access to the private data structure.  The driver's
-disconnect handler waits for a completion that is signalled by the
-firmware-loader callback routine.  As soon as the completion is
-signalled, you have to assume that the private data structure may have
-been deallocated by the disconnect handler -- even if the firmware was
-loaded without errors.  However, the callback routine does access the
-private data several times after that point.
+However at this point of time the variable data_len has not been set
+to the proper buffer size yet. The consequence is that io_data->use_sg
+is always set regardless what buffer size really is, because the condition
+(data_len > PAGE_SIZE) is effectively an unsigned comparison between
+-EINVAL and PAGE_SIZE which would always result in TRUE.
 
-Another problem is that, in order to ensure that the USB device
-structure hasn't been freed when the callback routine runs, the driver
-takes a reference to it.  This isn't good enough any more, because now
-that the callback routine calls usb_driver_release_interface, it has
-to ensure that the interface structure hasn't been freed.
-
-Finally, the driver takes an unnecessary reference to the USB device
-structure in the probe function and drops the reference in the
-disconnect handler.  This extra reference doesn't accomplish anything,
-because the USB core already guarantees that a device structure won't
-be deallocated while a driver is still bound to any of its interfaces.
-
-To fix these problems, this patch makes the following changes:
-
-	Call usb_driver_release_interface() rather than
-	device_release_driver().
-
-	Don't signal the completion until after the important
-	information has been copied out of the private data structure,
-	and don't refer to the private data at all thereafter.
-
-	Lock udev (the interface's parent) before unbinding the driver
-	instead of locking udev->parent.
-
-	During the firmware loading process, take a reference to the
-	USB interface instead of the USB device.
-
-	Don't take an unnecessary reference to the device during probe
-	(and then don't drop it during disconnect).
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+Signed-off-by: Fei Yang <fei.yang@intel.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intersil/p54/p54usb.c |   43 ++++++++++++-----------------
- 1 file changed, 18 insertions(+), 25 deletions(-)
+ drivers/usb/gadget/function/f_fs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intersil/p54/p54usb.c
-+++ b/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
- MODULE_FIRMWARE("isl3886usb");
- MODULE_FIRMWARE("isl3887usb");
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -997,7 +997,6 @@ static ssize_t ffs_epfile_io(struct file
+ 		 * earlier
+ 		 */
+ 		gadget = epfile->ffs->gadget;
+-		io_data->use_sg = gadget->sg_supported && data_len > PAGE_SIZE;
  
-+static struct usb_driver p54u_driver;
+ 		spin_lock_irq(&epfile->ffs->eps_lock);
+ 		/* In the meantime, endpoint got disabled or changed. */
+@@ -1012,6 +1011,8 @@ static ssize_t ffs_epfile_io(struct file
+ 		 */
+ 		if (io_data->read)
+ 			data_len = usb_ep_align_maybe(gadget, ep->ep, data_len);
 +
- /*
-  * Note:
-  *
-@@ -921,9 +923,9 @@ static void p54u_load_firmware_cb(const
- {
- 	struct p54u_priv *priv = context;
- 	struct usb_device *udev = priv->udev;
-+	struct usb_interface *intf = priv->intf;
- 	int err;
++		io_data->use_sg = gadget->sg_supported && data_len > PAGE_SIZE;
+ 		spin_unlock_irq(&epfile->ffs->eps_lock);
  
--	complete(&priv->fw_wait_load);
- 	if (firmware) {
- 		priv->fw = firmware;
- 		err = p54u_start_ops(priv);
-@@ -932,26 +934,22 @@ static void p54u_load_firmware_cb(const
- 		dev_err(&udev->dev, "Firmware not found.\n");
- 	}
- 
--	if (err) {
--		struct device *parent = priv->udev->dev.parent;
--
--		dev_err(&udev->dev, "failed to initialize device (%d)\n", err);
--
--		if (parent)
--			device_lock(parent);
-+	complete(&priv->fw_wait_load);
-+	/*
-+	 * At this point p54u_disconnect may have already freed
-+	 * the "priv" context. Do not use it anymore!
-+	 */
-+	priv = NULL;
- 
--		device_release_driver(&udev->dev);
--		/*
--		 * At this point p54u_disconnect has already freed
--		 * the "priv" context. Do not use it anymore!
--		 */
--		priv = NULL;
-+	if (err) {
-+		dev_err(&intf->dev, "failed to initialize device (%d)\n", err);
- 
--		if (parent)
--			device_unlock(parent);
-+		usb_lock_device(udev);
-+		usb_driver_release_interface(&p54u_driver, intf);
-+		usb_unlock_device(udev);
- 	}
- 
--	usb_put_dev(udev);
-+	usb_put_intf(intf);
- }
- 
- static int p54u_load_firmware(struct ieee80211_hw *dev,
-@@ -972,14 +970,14 @@ static int p54u_load_firmware(struct iee
- 	dev_info(&priv->udev->dev, "Loading firmware file %s\n",
- 	       p54u_fwlist[i].fw);
- 
--	usb_get_dev(udev);
-+	usb_get_intf(intf);
- 	err = request_firmware_nowait(THIS_MODULE, 1, p54u_fwlist[i].fw,
- 				      device, GFP_KERNEL, priv,
- 				      p54u_load_firmware_cb);
- 	if (err) {
- 		dev_err(&priv->udev->dev, "(p54usb) cannot load firmware %s "
- 					  "(%d)!\n", p54u_fwlist[i].fw, err);
--		usb_put_dev(udev);
-+		usb_put_intf(intf);
- 	}
- 
- 	return err;
-@@ -1011,8 +1009,6 @@ static int p54u_probe(struct usb_interfa
- 	skb_queue_head_init(&priv->rx_queue);
- 	init_usb_anchor(&priv->submitted);
- 
--	usb_get_dev(udev);
--
- 	/* really lazy and simple way of figuring out if we're a 3887 */
- 	/* TODO: should just stick the identification in the device table */
- 	i = intf->altsetting->desc.bNumEndpoints;
-@@ -1053,10 +1049,8 @@ static int p54u_probe(struct usb_interfa
- 		priv->upload_fw = p54u_upload_firmware_net2280;
- 	}
- 	err = p54u_load_firmware(dev, intf);
--	if (err) {
--		usb_put_dev(udev);
-+	if (err)
- 		p54_free_common(dev);
--	}
- 	return err;
- }
- 
-@@ -1072,7 +1066,6 @@ static void p54u_disconnect(struct usb_i
- 	wait_for_completion(&priv->fw_wait_load);
- 	p54_unregister_common(dev);
- 
--	usb_put_dev(interface_to_usbdev(intf));
- 	release_firmware(priv->fw);
- 	p54_free_common(dev);
- }
+ 		data = ffs_alloc_buffer(io_data, data_len);
 
 
