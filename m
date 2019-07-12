@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F8EC742BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD34C742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E1720645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C002080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935187;
-	bh=jnfapKDAJb2wo6tU6rPlft0yXV1aRdTj1hfyQPk7CqE=;
+	s=default; t=1562935192;
+	bh=KeNf6QfzbHhC0UdjC81omhs6P0360g1qsMqo+/TFbD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFQJA1/7ucILkigJBoAOF3mHk7Xn3rANPZs9aAZV5OPswbsXpoOgA1TOuyA46BLBV
-	 +DvObfEJFUhaSoJmX5ntIYmORKRL7KV+AnIPKhQVCb5raDZjoX/NWw80rVFtYLiDth
-	 gWGoYtMVkDpW3dPx5vnDua0kYrx5ZeLqU+Fk9EaQ=
+	b=hALgaqNWTMxyNo/cUmHr22A425XzXOPTG1bPRGJ5btLXAa9uS+EIOGWCgpYnSbTce
+	 Xn88V4PzWYiPYR+azRc9YzNq4dV2sFLVrBgpjo73MlGobMMQPG+hjD+DD9ytgFLR52
+	 9VqSWhVqkA4VSjd/Ck+nj87Y7BC3VxrJHVhGkyiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfGLM0c (ORCPT
+        id S1729054AbfGLMjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfGLM03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:29 -0400
+        id S1727546AbfGLM0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E1BD2084B;
-        Fri, 12 Jul 2019 12:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E8A62084B;
+        Fri, 12 Jul 2019 12:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934388;
-        bh=jnfapKDAJb2wo6tU6rPlft0yXV1aRdTj1hfyQPk7CqE=;
+        s=default; t=1562934385;
+        bh=KeNf6QfzbHhC0UdjC81omhs6P0360g1qsMqo+/TFbD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nq5BPMrbWw/pTsbGFhXg43jktsWGbgbMduSQRkpefTWraGJHSThhwSDbPf7wAOBsD
-         cFdy0USIR7UUPatNG5MGbJzZTioaDCm4sFfXpa1IhAdFjMABicv/Hz3Onl03r/pfQG
-         InkhWv11DyCp2yYwSD7g78PW+MjR2n8x3nDCQFYU=
+        b=Wt6CqTcnHkNmV6FfG+kkMs7NpGcC0622dV/AN47HIP244oqhHUbhdVt+HL+ysDnJ3
+         LD0AJ4iZ6QEUZ6qqPQDuO2HLcors4sI0akSXuLuvdd2nthpKlAkUF2R7vAnN1//3Oj
+         fHkvTyO0QVodDP90vToPMmEuN17ZXR8ZSuywV81o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 040/138] ibmvnic: Do not close unopened driver during reset
-Date:   Fri, 12 Jul 2019 14:18:24 +0200
-Message-Id: <20190712121630.214132491@linuxfoundation.org>
+Subject: [PATCH 5.1 039/138] net: phy: rename Asix Electronics PHY driver
+Date:   Fri, 12 Jul 2019 14:18:23 +0200
+Message-Id: <20190712121630.179102388@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,33 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1f94608b0ce141be5286dde31270590bdf35b86a ]
+[ Upstream commit a9520543b123bbd7275a0ab8d0375a5412683b41 ]
 
-Check driver state before halting it during a reset. If the driver is
-not running, do nothing. Otherwise, a request to deactivate a down link
-can cause an error and the reset will fail.
+[Resent to net instead of net-next - may clash with Anders Roxell's patch
+series addressing duplicate module names]
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Commit 31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
+introduced a new PHY driver drivers/net/phy/asix.c that causes a module
+name conflict with a pre-existiting driver (drivers/net/usb/asix.c).
+
+The PHY driver is used by the X-Surf 100 ethernet card driver, and loaded
+by that driver via its PHY ID. A rename of the driver looks unproblematic.
+
+Rename PHY driver to ax88796b.c in order to resolve name conflict.
+
+Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Fixes: 31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/8390/Kconfig      | 2 +-
+ drivers/net/phy/Kconfig                | 2 +-
+ drivers/net/phy/Makefile               | 2 +-
+ drivers/net/phy/{asix.c => ax88796b.c} | 0
+ 4 files changed, 3 insertions(+), 3 deletions(-)
+ rename drivers/net/phy/{asix.c => ax88796b.c} (100%)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3dfb2d131eb7..71bf895409a1 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1751,7 +1751,8 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+diff --git a/drivers/net/ethernet/8390/Kconfig b/drivers/net/ethernet/8390/Kconfig
+index f2f0264c58ba..443b34e2725f 100644
+--- a/drivers/net/ethernet/8390/Kconfig
++++ b/drivers/net/ethernet/8390/Kconfig
+@@ -49,7 +49,7 @@ config XSURF100
+ 	tristate "Amiga XSurf 100 AX88796/NE2000 clone support"
+ 	depends on ZORRO
+ 	select AX88796
+-	select ASIX_PHY
++	select AX88796B_PHY
+ 	help
+ 	  This driver is for the Individual Computers X-Surf 100 Ethernet
+ 	  card (based on the Asix AX88796 chip). If you have such a card,
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 520657945b82..b0c13f8c2b62 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -242,7 +242,7 @@ config AQUANTIA_PHY
+ 	---help---
+ 	  Currently supports the Aquantia AQ1202, AQ2104, AQR105, AQR405
  
- 	ibmvnic_cleanup(netdev);
- 
--	if (adapter->reset_reason != VNIC_RESET_MOBILITY &&
-+	if (reset_state == VNIC_OPEN &&
-+	    adapter->reset_reason != VNIC_RESET_MOBILITY &&
- 	    adapter->reset_reason != VNIC_RESET_FAILOVER) {
- 		rc = __ibmvnic_close(netdev);
- 		if (rc)
+-config ASIX_PHY
++config AX88796B_PHY
+ 	tristate "Asix PHYs"
+ 	help
+ 	  Currently supports the Asix Electronics PHY found in the X-Surf 100
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index ece5dae67174..6d44ab91fbf6 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -51,7 +51,7 @@ ifdef CONFIG_HWMON
+ aquantia-objs			+= aquantia_hwmon.o
+ endif
+ obj-$(CONFIG_AQUANTIA_PHY)	+= aquantia.o
+-obj-$(CONFIG_ASIX_PHY)		+= asix.o
++obj-$(CONFIG_AX88796B_PHY)	+= ax88796b.o
+ obj-$(CONFIG_AT803X_PHY)	+= at803x.o
+ obj-$(CONFIG_BCM63XX_PHY)	+= bcm63xx.o
+ obj-$(CONFIG_BCM7XXX_PHY)	+= bcm7xxx.o
+diff --git a/drivers/net/phy/asix.c b/drivers/net/phy/ax88796b.c
+similarity index 100%
+rename from drivers/net/phy/asix.c
+rename to drivers/net/phy/ax88796b.c
 -- 
 2.20.1
 
