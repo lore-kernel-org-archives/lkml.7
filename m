@@ -2,112 +2,164 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFC7C742AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2679C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CBC2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A0D2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fyl9TSOd"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BAFql+Ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfGLIZU (ORCPT
+        id S1726518AbfGLI0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:25:20 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46204 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfGLIZT (ORCPT
+        Fri, 12 Jul 2019 04:26:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45211 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLIZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:25:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c73so3974274pfb.13;
-        Fri, 12 Jul 2019 01:25:19 -0700 (PDT)
+        Fri, 12 Jul 2019 04:25:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r1so3971080pfq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 01:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
-        b=Fyl9TSOdi1j2XjtjDLhiWaqB0DR7tBZfgMMw50+vW0/xhDGFPXEnBIm5n0r/NH1kCW
-         2ZHdnbb+zwOvkoRgSuOcLVwFZOtTo5Z0qripJEWoYTVf0C/gY/3lgjFmDA2ICnAxPa33
-         QufU1HLF9B4rOLYz5QeL/SoM504liKmkClv5IHra9ZntnJ592tRlOEU6gMGLG9paHjhr
-         mgdLkRN1hKYdFsoqPN9QodWAvWbjK35mKeygwo39PmDNDBmWOLS44OuQhm4lJn9TyYOa
-         1rco+h38lsbWpXwQXI6nb0noKdxK+3dWK9DndsOA+Ng+6A5K5ySQlHMy43LMI/Iug9w3
-         ssWw==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/RTxoumVNtB1PBld0antS4Z7J0pCK7ZhiGq0s+u+T8Q=;
+        b=BAFql+HaVxohUfVl9mYP/S5YzuA9cwdMGK2nCDIC66akftcSMq/vzOqHPsPfc6/6QO
+         3jbIxFLWL9RGB511maoma3UoAL51vux8VnJePTL/VCgMZPr6RxN5Bw1+YMc/2Gt+m8we
+         3O5VAqNXBto7Ij4ZOE6HDlreMkSzh4Wj+AQqk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
-        b=VN4UDX1w7pNMD95UfvZALG7s6eDx6uss+9aMxHJOMNNoUpLvclDMnXkMp3QVb1oAp9
-         //9Zx7xb6510dRdzty3WoP39mh4qH1GMTmb4acpjMeQ22fy910Pw3a/MZ0i+s4KhienR
-         RcAzWRDWXCHiEtTFC+lNaSt63Dj4TwSNFpEz9sxhdXMyziUcMGx+u9LHqYSIXRm5HZEk
-         4oMsIPDIaMYm8V3HT9z75uWFk1BfeOqWhWOWnKF0q/NydSKvndPIjGkEIjq1GRRkOghx
-         irIEZzsZ9q6xTqdKY81zcwoKKNQ000MW1pySt6qljQWHRiAAqpmO4/87qprDC5bdm26i
-         sleQ==
-X-Gm-Message-State: APjAAAUONp3grNvWB2IUm+gONnLFqE8gtp0bkG1vczn1alXq20J1NRYG
-        RslZa/d0cv7Np8ZT9T6QP9F8G8p8X1XM5Q==
-X-Google-Smtp-Source: APXvYqyZqz2vlQC4nbOA8cCJaC3xgKjcnepceJpYKLsSmt+PKJ7es87hhkONCLHvij6MF5XeRwPE0Q==
-X-Received: by 2002:a65:6448:: with SMTP id s8mr9376254pgv.223.1562919918915;
-        Fri, 12 Jul 2019 01:25:18 -0700 (PDT)
-Received: from maya190711 ([52.250.118.122])
-        by smtp.gmail.com with ESMTPSA id m13sm6175192pgv.89.2019.07.12.01.25.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 01:25:18 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 08:25:18 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/5] hv: vmbus: Replace page definition with Hyper-V
- specific one
-Message-ID: <0d9e80ecabcc950dc279fdd2e39bea4060123ba4.1562916939.git.m.maya.nakamura@gmail.com>
-References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/RTxoumVNtB1PBld0antS4Z7J0pCK7ZhiGq0s+u+T8Q=;
+        b=J/qIqkykcc4PpXOHoLz2C5HxOvAmC+RRnCl392a2LbOKFmFqN3MD21DDmFV9WdDx2j
+         SIDZwOYLmklqQwyyp5TqQgRHHf4wItJbeCSudx/MfwJSU1R1aAM/a1gOrl2Qhf1uLRsd
+         evbXXZlBGBI/Yijy0OHfzoI4v0YuXOWmmS/h2H1tDyUPM7WSwWCcZKOGF7YLEEL+D+9r
+         AD5BhglrwgnXRrsbnRAODJk0IJVCPwUe/6eThQSj0bG1mIDrPEZrBZ+XY6zkeY/Eazuu
+         dBBqcmf7UNPFZvDPbpLSbsOMtXL169TVbGedgluJrAnfbUH8Nfc5vTmTHNFdYsE09eYk
+         CYeQ==
+X-Gm-Message-State: APjAAAV7O7eGuBEY8NUZherfzf07CHnxj9/pYiSF+FYUfuIemgUnJjt7
+        8o5tf9EiJrwdsnSomtlAs7oTKLjdk50kVChong1yIA==
+X-Google-Smtp-Source: APXvYqwAnknqjQvGUnrEC5ubqLeQGMCESFeladMIiOfwXF9UrCGRG+5+L2hqDm0nBHA51jOduboUlYnwqXtHNbzKgbU=
+X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr10306970pjq.114.1562919958370;
+ Fri, 12 Jul 2019 01:25:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1562916939.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CGME20190621063708epcms2p309f4173afabe5de28942ba15d13987f7@epcms2p3>
+ <20190621063708epcms2p309f4173afabe5de28942ba15d13987f7@epcms2p3>
+In-Reply-To: <20190621063708epcms2p309f4173afabe5de28942ba15d13987f7@epcms2p3>
+From:   Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Date:   Fri, 12 Jul 2019 13:55:47 +0530
+Message-ID: <CAK=zhgr_T8vA=BCdFCT37RxGCgS3xr8Wp9MEMK_9nZ=oYHy=7Q@mail.gmail.com>
+Subject: Re: [RESEND RFC PATCH] mpt3sas: support target smid for [abort|query] task
+To:     minwoo.im@samsung.com
+Cc:     "sathya.prakash@broadcom.com" <sathya.prakash@broadcom.com>,
+        "suganath-prabu.subramani@broadcom.com" 
+        <suganath-prabu.subramani@broadcom.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "MPT-FusionLinux.pdl@broadcom.com" <MPT-FusionLinux.pdl@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Euihyeok Kwon <eh81.kwon@samsung.com>,
+        Sarah Cho <sohyeon.jo@samsung.com>,
+        Sanggwan Lee <sanggwan.lee@samsung.com>,
+        Gyeongmin Nam <gm.nam@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
-not be 4096 on all architectures and Hyper-V always runs with a page
-size of 4096.
+On Fri, Jun 21, 2019 at 12:07 PM Minwoo Im <minwoo.im@samsung.com> wrote:
+>
+> We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MGMT)
+> to /dev/mpt3ctl.  If the given task_type is either abort task or query
+> task, it may need a field named "Initiator Port Transfer Tag to Manage"
+> in the IU.
+>
+> Current code does not support to check target IPTT tag from the
+> tm_request.  This patch introduces to check TaskMID given from the
+> userspace as a target tag.  We have a rule of relationship between
+> (struct request *req->tag) and smid in mpt3sas_base.c:
+>
+> 3318 u16
+> 3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_idx,
+> 3320         struct scsi_cmnd *scmd)
+> 3321 {
+> 3322         struct scsiio_tracker *request = scsi_cmd_priv(scmd);
+> 3323         unsigned int tag = scmd->request->tag;
+> 3324         u16 smid;
+> 3325
+> 3326         smid = tag + 1;
+>
+> So if we want to abort a request tagged #X, then we can pass (X + 1) to
+> this IOCTL handler.
+>
+> Cc: Sathya Prakash <sathya.prakash@broadcom.com>
+> Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: MPT-FusionLinux.pdl@broadcom.com
+> Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
+> ---
+>  drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> index b2bb47c14d35..5c7539dae713 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> @@ -596,15 +596,17 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
+>                 if (priv_data->sas_target->handle != handle)
+>                         continue;
+>                 st = scsi_cmd_priv(scmd);
+> -               tm_request->TaskMID = cpu_to_le16(st->smid);
+> -               found = 1;
+> +               if (tm_request->TaskMID == st->smid) {
 
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- drivers/hv/hyperv_vmbus.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I think it will difficult for the user to find the smid that he want
+to abort. For this user has to enable the scsi logging level and get
+the tag and pass the ioctl with tag +1 value in TaskMID field. And
+hence currently driver will loop over all the smid's and if it fines
+any outstanding smid then it will issue task abort or task query TM
+for this outstanding smid to the HBA firmware.
 
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 362e70e9d145..019469c3cbca 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -192,11 +192,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
- 		       u64 *requestid, bool raw);
- 
- /*
-- * Maximum channels is determined by the size of the interrupt page
-- * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
-- * and the other is receive endpoint interrupt
-+ * Maximum channels, 16348, is determined by the size of the interrupt page,
-+ * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
-+ * interrupt, and the other is to receive endpoint interrupt.
-  */
--#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
-+#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
- 
- /* The value here must be in multiple of 32 */
- /* TODO: Need to make this configurable */
--- 
-2.17.1
+May be we can do like below,
+* First check whether user provided "TaskMID" is non zero or not. if
+user provided TaskMID is non-zero and if this TaskMID is outstanding
+then driver will issue TaskAbort/QueryTask TM with this TaskMID value
+else driver will loop over all the smid's and if finds any smid is
+outstanding then it will issue TaskAbort/QueryTask TM with TaskMID
+value set to outstanding smid.
 
+With the above logic still legacy application will be supported
+without breaking anything where they provide TaskMID filed as zero.
+And it also allows the user to abort the IO which he wants.
+
+Thanks,
+Sreekanth
+
+> +                       tm_request->TaskMID = cpu_to_le16(st->smid);
+> +                       found = 1;
+> +               }
+>         }
+>
+>         if (!found) {
+>                 dctlprintk(ioc,
+> -                          ioc_info(ioc, "%s: handle(0x%04x), lun(%d), no active mid!!\n",
+> +                          ioc_info(ioc, "%s: handle(0x%04x), lun(%d), no matched mid(%d)!!\n",
+>                                     desc, le16_to_cpu(tm_request->DevHandle),
+> -                                   lun));
+> +                                   lun, tm_request->TaskMID));
+>                 tm_reply = ioc->ctl_cmds.reply;
+>                 tm_reply->DevHandle = tm_request->DevHandle;
+>                 tm_reply->Function = MPI2_FUNCTION_SCSI_TASK_MGMT;
+> --
+> 2.16.1
