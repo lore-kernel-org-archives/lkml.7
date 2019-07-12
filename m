@@ -2,52 +2,53 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CFBC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE55C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29512166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8DD2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934187;
-	bh=jIGF3tGsUd16gUWn6GBhxSJaxsz9nGgZeR+K3j5UKXQ=;
+	s=default; t=1562934189;
+	bh=y3yWtVsCHlxMsBst28BjeDBwjii2Q7nE/4JZNMMLwLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kw/Z0Fx+hnLmq140O4BJqxN9NAFG4S8JtDhy/mvL6jWv81Rr6lOZqC9dlR9Q9gTzy
-	 MjeJI80nHwM4M/2du2+4fJSucB7i8FR6wVoWfdRsWkrM9GvaWmCFspWCJA65aATWqs
-	 IkXb1vdZGQMycoVxVzVFbmo8AuCIFoZm4ZSbovps=
+	b=ZPlulGw4NafHq9d9JADQClge1Ln480Uv0QuEiWK0L/3EqqQpLZ4QUjw2uT5Z2vq10
+	 XBbRUq5FC33wtV8jCwFQ2lfptuTFGqI57wZ9E46WmF4dFpvlGa3GTs0QiGXgCVWxkK
+	 vxhaqK/IARXc9MDv7wAGCcgV3eFZ14jo4Ke8fis4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfGLMXE (ORCPT
+        id S1727472AbfGLMXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbfGLMXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:23:02 -0400
+        id S1727392AbfGLMXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:23:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B616E21670;
-        Fri, 12 Jul 2019 12:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1664D2166E;
+        Fri, 12 Jul 2019 12:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934181;
-        bh=jIGF3tGsUd16gUWn6GBhxSJaxsz9nGgZeR+K3j5UKXQ=;
+        s=default; t=1562934184;
+        bh=y3yWtVsCHlxMsBst28BjeDBwjii2Q7nE/4JZNMMLwLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTqI2qMiYmi1LdotQD+nfmCq5vobwtwI+FKxWDJJIsAN7VhGUh/mcLisMBltB8gmn
-         0ymuUuATPBCXvkqTzPO759RoegR0csv7ADvKrvWDG9r26Mdsfila7NK8zBF3qk2Px7
-         Xux5wnRaLLeJLqBsNJ4dj+VslLVDvzwTGdKbHAGw=
+        b=xQ1eizGjZQ5m8q6rwZV1F7bXB+zu6pbyH/iZYMfNw54+CYIVRhhfA60V7Vz6l6DKA
+         TKiqG99A4vyUbaDfpQaR/SmC07QG/TDIlST4A85ChSRb3VUkWvnoMKDniVriRQvIZ+
+         sbsstxHupi8oFUmtnvt+CL6XglMThQM1UK2RjAGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.19 63/91] x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
-Date:   Fri, 12 Jul 2019 14:19:06 +0200
-Message-Id: <20190712121625.214928205@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 46/91] md: fix for divide error in status_resync
+Date:   Fri, 12 Jul 2019 14:18:49 +0200
+Message-Id: <20190712121624.038339340@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,54 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+[ Upstream commit 9642fa73d073527b0cbc337cc17a47d545d82cd2 ]
 
-commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
+Stopping external metadata arrays during resync/recovery causes
+retries, loop of interrupting and starting reconstruction, until it
+hit at good moment to stop completely. While these retries
+curr_mark_cnt can be small- especially on HDD drives, so subtraction
+result can be smaller than 0. However it is casted to uint without
+checking. As a result of it the status bar in /proc/mdstat while stopping
+is strange (it jumps between 0% and 99%).
 
-The index to access the threads ptrace_bps is controlled by userspace via
-syscall: sys_ptrace(), hence leading to a potential exploitation of the
-Spectre variant 1 vulnerability.
+The real problem occurs here after commit 72deb455b5ec ("block: remove
+CONFIG_LBDAF"). Sector_div() macro has been changed, now the
+divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
 
-The index can be controlled from:
-    ptrace -> arch_ptrace -> ptrace_get_debugreg.
+Check if db value can be really counted and replace these macro by
+div64_u64() inline.
 
-Fix this by sanitizing the user supplied index before using it access
-thread->ptrace_bps.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/md/md.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -24,6 +24,7 @@
- #include <linux/rcupdate.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-+#include <linux/nospec.h>
- 
- #include <linux/uaccess.h>
- #include <asm/pgtable.h>
-@@ -651,9 +652,11 @@ static unsigned long ptrace_get_debugreg
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index b924f62e2cd5..fb5d702e43b5 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7625,9 +7625,9 @@ static void status_unused(struct seq_file *seq)
+ static int status_resync(struct seq_file *seq, struct mddev *mddev)
  {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
-+	int index = n;
+ 	sector_t max_sectors, resync, res;
+-	unsigned long dt, db;
+-	sector_t rt;
+-	int scale;
++	unsigned long dt, db = 0;
++	sector_t rt, curr_mark_cnt, resync_mark_cnt;
++	int scale, recovery_active;
+ 	unsigned int per_milli;
  
- 	if (n < HBP_NUM) {
--		struct perf_event *bp = thread->ptrace_bps[n];
-+		index = array_index_nospec(index, HBP_NUM);
-+		struct perf_event *bp = thread->ptrace_bps[index];
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
+@@ -7716,22 +7716,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 	 * db: blocks written from mark until now
+ 	 * rt: remaining time
+ 	 *
+-	 * rt is a sector_t, so could be 32bit or 64bit.
+-	 * So we divide before multiply in case it is 32bit and close
+-	 * to the limit.
+-	 * We scale the divisor (db) by 32 to avoid losing precision
+-	 * near the end of resync when the number of remaining sectors
+-	 * is close to 'db'.
+-	 * We then divide rt by 32 after multiplying by db to compensate.
+-	 * The '+1' avoids division by zero if db is very small.
++	 * rt is a sector_t, which is always 64bit now. We are keeping
++	 * the original algorithm, but it is not really necessary.
++	 *
++	 * Original algorithm:
++	 *   So we divide before multiply in case it is 32bit and close
++	 *   to the limit.
++	 *   We scale the divisor (db) by 32 to avoid losing precision
++	 *   near the end of resync when the number of remaining sectors
++	 *   is close to 'db'.
++	 *   We then divide rt by 32 after multiplying by db to compensate.
++	 *   The '+1' avoids division by zero if db is very small.
+ 	 */
+ 	dt = ((jiffies - mddev->resync_mark) / HZ);
+ 	if (!dt) dt++;
+-	db = (mddev->curr_mark_cnt - atomic_read(&mddev->recovery_active))
+-		- mddev->resync_mark_cnt;
++
++	curr_mark_cnt = mddev->curr_mark_cnt;
++	recovery_active = atomic_read(&mddev->recovery_active);
++	resync_mark_cnt = mddev->resync_mark_cnt;
++
++	if (curr_mark_cnt >= (recovery_active + resync_mark_cnt))
++		db = curr_mark_cnt - (recovery_active + resync_mark_cnt);
  
- 		if (bp)
- 			val = bp->hw.info.address;
+ 	rt = max_sectors - resync;    /* number of remaining sectors */
+-	sector_div(rt, db/32+1);
++	rt = div64_u64(rt, db/32+1);
+ 	rt *= dt;
+ 	rt >>= 5;
+ 
+-- 
+2.20.1
+
 
 
