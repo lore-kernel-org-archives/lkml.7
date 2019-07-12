@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A0FC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92612C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BFF216E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4132166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934238;
-	bh=43W3IJXwTnhwsItxfOvtq/5NvvS0V1W8cRubBxab6o0=;
+	s=default; t=1562934245;
+	bh=t5280lZFvII97lEhHEy/0FVCtgfXs0UW8Pa4O96y/hI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5U++YZne9aYRbiEA3wez1jikwu97enTH8fPUmyR7Q9IMoSaVFFo+SdLM5FY98yVo
-	 mvYQjs3GzVUqL1F61dyAP94kwXv2xHPA0YLLXMNB6wgOq1WykAa01BG6J45tAMnnFp
-	 40QwTg3hh+uZlsP8tPP2tLtBYAQhMFlV9teyzfFA=
+	b=qpzjOBpeRGuOhgsgYQCKllPBvIP48KCUCB9JrkjKIKPjOqEiDFMiOW7rbNU/DQASP
+	 3NQ4ShSkZqAoszYZ2ZrgC9OyMS0Csv/NDomymTiHDPj+6x7x0CNjbRl8lm+QHYV2LL
+	 4tOEv3nN1ebsALiRxbvdasEjQirR6BMzx1hRtGqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfGLMX4 (ORCPT
+        id S1728023AbfGLMYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59778 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfGLMXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:23:46 -0400
+        id S1727991AbfGLMXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:23:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EBD321670;
-        Fri, 12 Jul 2019 12:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81D2A216E3;
+        Fri, 12 Jul 2019 12:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934225;
-        bh=43W3IJXwTnhwsItxfOvtq/5NvvS0V1W8cRubBxab6o0=;
+        s=default; t=1562934231;
+        bh=t5280lZFvII97lEhHEy/0FVCtgfXs0UW8Pa4O96y/hI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJG+/7bKyfeJkFlsy21Cb36Wy4fA5sD+4uBoIpad1rba4g3ZXV5A9L0i7FsxVYuAl
-         boo6tzZSmcPiKAj//kh9y0OztVAxB/4RMrPgw4spqtd8wuU5PMkUXwvNAAaJzvAdlt
-         a1u03wuJV39djdUkIPeo9NEJV4q/fJX/NUWjBzbs=
+        b=R83u+4c+KrbQk0CCS3rCU18V3LAD3UVTtQb6I6nEnPYpcArFIVqAF4jwV8OmfpqD5
+         iikatL381LlJaPz3cwTIrVJ7UaXrx7/i2r9WPyCYgCAf+rdAKl4AqJDZOQbWpNK1rZ
+         7gDsPn4MddU5uypHQFJUyOqZp1PdN4ixQogDO3Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 4.19 76/91] drivers/usb/typec/tps6598x.c: fix portinfo width
-Date:   Fri, 12 Jul 2019 14:19:19 +0200
-Message-Id: <20190712121625.890370354@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 78/91] staging: comedi: dt282x: fix a null pointer deref on interrupt
+Date:   Fri, 12 Jul 2019 14:19:21 +0200
+Message-Id: <20190712121625.991361986@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,33 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 05da75fc651138e51ff74ace97174349910463f5 upstream.
+commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
 
-Portinfo bit field is 3 bits wide, not 2 bits. This led to
-a wrong driver configuration for some tps6598x configurations.
+The interrupt handler `dt282x_interrupt()` causes a null pointer
+dereference for those supported boards that have no analog output
+support.  For these boards, `dev->write_subdev` will be `NULL` and
+therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
+case, the following call near the end of the interrupt handler results
+in a null pointer dereference:
 
-Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
-Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
+	comedi_handle_events(dev, s_ao);
+
+Fix it by only calling the above function if `s_ao` is valid.
+
+(There are other uses of `s_ao` by the interrupt handler that may or may
+not be reached depending on values of hardware registers.  Trust that
+they are reliable for now.)
+
+Note:
+commit 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+propagates an earlier error from
+commit f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()").
+
+Fixes: 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tps6598x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/dt282x.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -39,7 +39,7 @@
- #define TPS_STATUS_VCONN(s)		(!!((s) & BIT(7)))
+--- a/drivers/staging/comedi/drivers/dt282x.c
++++ b/drivers/staging/comedi/drivers/dt282x.c
+@@ -557,7 +557,8 @@ static irqreturn_t dt282x_interrupt(int
+ 	}
+ #endif
+ 	comedi_handle_events(dev, s);
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
  
- /* TPS_REG_SYSTEM_CONF bits */
--#define TPS_SYSCONF_PORTINFO(c)		((c) & 3)
-+#define TPS_SYSCONF_PORTINFO(c)		((c) & 7)
- 
- enum {
- 	TPS_PORTINFO_SINK,
+ 	return IRQ_RETVAL(handled);
+ }
 
 
