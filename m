@@ -2,99 +2,179 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909B4C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890D7C742A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5C221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6219721019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbfGLDRh (ORCPT
+        id S1729363AbfGLDTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:17:37 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:60155 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728899AbfGLDRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:17:36 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWfas.h_1562901451;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWfas.h_1562901451)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jul 2019 11:17:32 +0800
-Subject: Re: [PATCH 2/4] numa: append per-node execution info in
- memory.numa_stat
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <825ebaf0-9f71-bbe1-f054-7fa585d61af1@linux.alibaba.com>
- <20190711134527.GC3402@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <e0c38e99-7a01-7a84-2030-6cb963452e81@linux.alibaba.com>
-Date:   Fri, 12 Jul 2019 11:17:31 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 11 Jul 2019 23:19:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45926 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728899AbfGLDTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:19:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:19:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
+   d="scan'208";a="341578693"
+Received: from gonegri-mobl.ger.corp.intel.com (HELO localhost) ([10.252.48.192])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jul 2019 20:19:27 -0700
+Date:   Fri, 12 Jul 2019 06:19:25 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Cedric Xing <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        kai.svahn@intel.com, kai.huang@intel.com
+Subject: Re: [RFC PATCH v2 1/3] selftests/x86: Fixed Makefile for SGX selftest
+Message-ID: <20190712031925.32dqi3v3jetojaju@linux.intel.com>
+References: <cover.1555965327.git.cedric.xing@intel.com>
+ <20190424062623.4345-2-cedric.xing@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190711134527.GC3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424062623.4345-2-cedric.xing@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/11 下午9:45, Peter Zijlstra wrote:
-> On Wed, Jul 03, 2019 at 11:29:15AM +0800, 王贇 wrote:
+On Tue, Apr 23, 2019 at 11:26:21PM -0700, Cedric Xing wrote:
+> The original x86/sgx/Makefile doesn't work when 'x86/sgx' is specified as the
+> test target. This patch fixes that problem, along with minor changes to the
+> dependencies between 'x86' and 'x86/sgx' in selftests/x86/Makefile.
 > 
->> +++ b/include/linux/memcontrol.h
->> @@ -190,6 +190,7 @@ enum memcg_numa_locality_interval {
->>
->>  struct memcg_stat_numa {
->>  	u64 locality[NR_NL_INTERVAL];
->> +	u64 exectime;
+> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+> ---
+>  tools/testing/selftests/x86/Makefile     | 12 +++----
+>  tools/testing/selftests/x86/sgx/Makefile | 45 +++++++++---------------
+>  2 files changed, 22 insertions(+), 35 deletions(-)
 > 
-> Maybe call the field jiffies, because that's what it counts.
+> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
+> index 4fc9a42f56ea..1294c5f5b6ca 100644
+> --- a/tools/testing/selftests/x86/Makefile
+> +++ b/tools/testing/selftests/x86/Makefile
+> @@ -70,11 +70,11 @@ all_32: $(BINARIES_32)
+>  
+>  all_64: $(BINARIES_64)
+>  
+> -all_64: $(SUBDIRS_64)
+> -	@for DIR in $(SUBDIRS_64); do			\
+> -		BUILD_TARGET=$(OUTPUT)/$$DIR;		\
+> -		mkdir $$BUILD_TARGET  -p;		\
+> -		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
+> +all_64: | $(SUBDIRS_64)
+> +	@for DIR in $|; do					\
+> +		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
+> +		mkdir $$BUILD_TARGET  -p;			\
+> +		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
 
-Sure, will be in next version.
+This is not fix for anything. It is change in semantics. This diff
+should be isolated to its own commit as you are changing something
+outside of SGX scope.
 
-Regards,
-Michael Wang
+>  	done
+>  
+>  EXTRA_CLEAN := $(BINARIES_32) $(BINARIES_64)
+> @@ -90,7 +90,7 @@ ifeq ($(CAN_BUILD_I386)$(CAN_BUILD_X86_64),01)
+>  all: warn_32bit_failure
+>  
+>  warn_32bit_failure:
+> -	@echo "Warning: you seem to have a broken 32-bit build" 2>&1; 	\
+> +	@echo "Warning: you seem to have a broken 32-bit build" 2>&1;	\
 
+Please clean this up.
+
+>  	echo "environment.  This will reduce test coverage of 64-bit" 2>&1; \
+>  	echo "kernels.  If you are using a Debian-like distribution," 2>&1; \
+>  	echo "try:"; 2>&1; \
+> diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
+> index 1fd6f2708e81..3af15d7c8644 100644
+> --- a/tools/testing/selftests/x86/sgx/Makefile
+> +++ b/tools/testing/selftests/x86/sgx/Makefile
+> @@ -2,47 +2,34 @@ top_srcdir = ../../../../..
+>  
+>  include ../../lib.mk
+>  
+> -HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC
+> -ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
+> +ifeq ($(shell $(CC) -dumpmachine | cut --delimiter=- -f1),x86_64)
+> +all: all_64
+> +endif
+> +
+> +HOST_CFLAGS := -Wall -Werror -g $(INCLUDES)
+> +ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIE \
+>  	       -fno-stack-protector -mrdrnd $(INCLUDES)
+>  
+>  TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx
+>  all_64: $(TEST_CUSTOM_PROGS)
+>  
+> -$(TEST_CUSTOM_PROGS): $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o \
+> -		      $(OUTPUT)/encl_piggy.o
+> +$(TEST_CUSTOM_PROGS): main.c sgx_call.S $(OUTPUT)/encl_piggy.o
+>  	$(CC) $(HOST_CFLAGS) -o $@ $^
+>  
+> -$(OUTPUT)/main.o: main.c
+> -	$(CC) $(HOST_CFLAGS) -c $< -o $@
+> -
+> -$(OUTPUT)/sgx_call.o: sgx_call.S
+> -	$(CC) $(HOST_CFLAGS) -c $< -o $@
+> -
+> -$(OUTPUT)/encl_piggy.o: $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> -	$(CC) $(HOST_CFLAGS) -c encl_piggy.S -o $@
+> +$(OUTPUT)/encl_piggy.o: encl_piggy.S $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> +	$(CC) $(HOST_CFLAGS) -I$(OUTPUT) -c $< -o $@
+>  
+> -$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
+> +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf
+>  	objcopy --remove-section=.got.plt -O binary $< $@
+>  
+> -$(OUTPUT)/encl.elf: $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o
+> -	$(CC) $(ENCL_CFLAGS) -T encl.lds -o $@ $^
+> +$(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
+> +	$(CC) $(ENCL_CFLAGS) -T $^ -o $@
+>  
+> -$(OUTPUT)/encl.o: encl.c
+> -	$(CC) $(ENCL_CFLAGS) -c $< -o $@
+> -
+> -$(OUTPUT)/encl_bootstrap.o: encl_bootstrap.S
+> -	$(CC) $(ENCL_CFLAGS) -c $< -o $@
+> -
+> -$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin  $(OUTPUT)/sgxsign
+> -	$(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> +$(OUTPUT)/encl.ss: $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin
+> +	$^ $@
+>  
+>  $(OUTPUT)/sgxsign: sgxsign.c
+>  	$(CC) -o $@ $< -lcrypto
+>  
+> -EXTRA_CLEAN := $(OUTPUT)/sgx-selftest $(OUTPUT)/sgx-selftest.o \
+> -	       $(OUTPUT)/sgx_call.o $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss \
+> -	       $(OUTPUT)/encl.elf $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o \
+> -	       $(OUTPUT)/sgxsign
+> -
+> -.PHONY: clean
+> +EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(addprefix $(OUTPUT)/,	\
+> +		encl.elf encl.bin encl.ss encl_piggy.o sgxsign)
+> -- 
+> 2.17.1
 > 
->>  };
->>
->>  #endif
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index 2edf3f5ac4b9..d5f48365770f 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -3575,6 +3575,18 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
->>  		seq_printf(m, " %u", jiffies_to_msecs(sum));
->>  	}
->>  	seq_putc(m, '\n');
->> +
->> +	seq_puts(m, "exectime");
->> +	for_each_online_node(nr) {
->> +		int cpu;
->> +		u64 sum = 0;
->> +
->> +		for_each_cpu(cpu, cpumask_of_node(nr))
->> +			sum += per_cpu(memcg->stat_numa->exectime, cpu);
->> +
->> +		seq_printf(m, " %llu", jiffies_to_msecs(sum));
->> +	}
->> +	seq_putc(m, '\n');
->>  #endif
->>
->>  	return 0;
+
+What are all these changes to the makefile? I don't see mention of them
+in the commit message.
+
+/Jarkko
