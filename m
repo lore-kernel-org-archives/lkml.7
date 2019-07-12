@@ -2,89 +2,135 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CD5C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FE9C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7738021019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE6221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LpcXRpiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfGLDKP (ORCPT
+        id S1729359AbfGLDKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:10:15 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45891 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729239AbfGLDKO (ORCPT
+        Thu, 11 Jul 2019 23:10:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38455 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729326AbfGLDKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:10:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWfcINf_1562901008;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWfcINf_1562901008)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jul 2019 11:10:09 +0800
-Subject: Re: [PATCH 4/4] numa: introduce numa cling feature
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <9a440936-1e5d-d3bb-c795-ef6f9839a021@linux.alibaba.com>
- <20190711142728.GF3402@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <82f42063-ce51-dd34-ba95-5b32ee733de7@linux.alibaba.com>
-Date:   Fri, 12 Jul 2019 11:10:08 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 11 Jul 2019 23:10:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id az7so4050200plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 20:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UI3xZ6ZoClWPqrBnQqWKV86XGyEZlmgwirsJ/BmtMso=;
+        b=LpcXRpiPevr9Wv6RrLEcBX6CiXmYw2fRd48ZYFmnyeyHgFcNRN8W0soUWSuzOmBuCW
+         bh4NqBj8KrlEbp2S3Ft8i5AvzMPqvJ42sytaIGfXvIfzGKLUNWsQ0XauwNgTMSiMTMq3
+         QaMwi2LINDyyQOBEu8disVlM8br/qWQ5JHY91xF0Bj703jwfp2wAAbhAaZUH2zT+U5SA
+         TE4sid9/je2Nod9Upi3wqcyCOX1K9FAJ8/7KJHjQ+LEmPRQt/e4Aqh0d/B+QUe44/4us
+         +S4ps/NAAZPTIGIT/JCbL/jU2vRKsbbvHN1khSARsx8n4jW5l4AZm5mtHnBbKEdgje3H
+         hjLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UI3xZ6ZoClWPqrBnQqWKV86XGyEZlmgwirsJ/BmtMso=;
+        b=AfpvPmDRCttBIzQyM6rWrZe4t91LrJQySHXjtrg/fAVr7K5iEL57oW+5Fras9QUJzT
+         0SXhmTB6ahSjJLpRAL1wZUMDfpFtbqu7KWzvrUbFrSq0Zg8oKPWM6h+1UPwpD8tBf+Xe
+         g5NchvLT+scTuKY72nNk/IriOauZHTTBADr6x8BB4Qav4XKWsnyxmpY+scAh/9CGqhIX
+         z8JhRZ5Ya7ifwxnBCGogqV4kCusWYBE2QHEefReh2tsnyLriypdkFvSuLH8iWZv8SIth
+         VpEl+Bs5CHERVH42rKnUXQjc2xuT3kMQvs2QmYb3mj9WyYkqgv2NiuGpLQsHTHQSFMwj
+         oXlQ==
+X-Gm-Message-State: APjAAAUccM27KzJnNAUql2LW5/VpS8xnQaI1Lf5i3oZFjkaMB4Zi1EON
+        CgVeoMBPkkJVnovT4xQdB7yVhg==
+X-Google-Smtp-Source: APXvYqwBNG8IOxa583ljmPGfqrbou2cc4yby+KcGM/8n7SMWa4UmgE3hfrCGUNKuGq/xGrCe2jOkQw==
+X-Received: by 2002:a17:902:7686:: with SMTP id m6mr8514635pll.239.1562901029202;
+        Thu, 11 Jul 2019 20:10:29 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id m13sm5455233pgv.89.2019.07.11.20.10.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 20:10:28 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:40:25 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Janakarajan Natarajan <jnataraj@amd.com>
+Cc:     "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Subject: Re: [PATCHv3 6/6] drivers/cpufreq: Add a CPUFreq driver for AMD
+ processors (Fam17h and later)
+Message-ID: <20190712031025.mylhtzehv3vs6db3@vireshk-i7>
+References: <cover.1562781484.git.Janakarajan.Natarajan@amd.com>
+ <e48c6b836f996a16472c777612f1e3343c542077.1562781484.git.Janakarajan.Natarajan@amd.com>
+ <20190711061208.yqxt4ps67vmsy7sp@vireshk-i7>
+ <eb208b15-d6b5-192d-b600-1f791c91eb4c@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20190711142728.GF3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb208b15-d6b5-192d-b600-1f791c91eb4c@amd.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/11 下午10:27, Peter Zijlstra wrote:
-[snip]
->> Thus we introduce the numa cling, which try to prevent tasks leaving
->> the preferred node on wakeup fast path.
+On 11-07-19, 16:58, Janakarajan Natarajan wrote:
+> On 7/11/2019 1:12 AM, Viresh Kumar wrote:
+> > On 10-07-19, 18:37, Natarajan, Janakarajan wrote:
+> >> +static int amd_cpufreq_cpu_init(struct cpufreq_policy *policy)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int amd_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int amd_cpufreq_cpu_verify(struct cpufreq_policy *policy)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int amd_cpufreq_cpu_target_index(struct cpufreq_policy *policy,
+> >> +					unsigned int index)
+> >> +{
+> >> +	return 0;
+> >> +}
+> > All empty helpers ? There is nothing you need to do ?
 > 
 > 
->> @@ -6195,6 +6447,13 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->>  	if ((unsigned)i < nr_cpumask_bits)
->>  		return i;
->>
->> +	/*
->> +	 * Failed to find an idle cpu, wake affine may want to pull but
->> +	 * try stay on prev-cpu when the task cling to it.
->> +	 */
->> +	if (task_numa_cling(p, cpu_to_node(prev), cpu_to_node(target)))
->> +		return prev;
->> +
->>  	return target;
->>  }
+> When we posted v2 of this patchset, Rafael let us know that he was 
+> uncomfortable
 > 
-> Select idle sibling should never cross node boundaries and is thus the
-> entirely wrong place to fix anything.
-
-Hmm.. in our early testing the printk show both select_task_rq_fair() and
-task_numa_find_cpu() will call select_idle_sibling with prev and target on
-different node, thus we pick this point to save few lines.
-
-But if the semantics of select_idle_sibling() is to return cpu on the same
-node of target, what about move the logical after select_idle_sibling() for
-the two callers?
-
-Regards,
-Michael Wang
-
+> going behind the (acpi-cpufreq) drivers back by letting the user 
+> communicate directly
 > 
+> with the platform. That's the reason we have an empty driver whose 
+> primary purpose
+> 
+> is to expose sysfs entries for the user.
+
+I read his comments now and what he suggested is:
+
+"What about handling this like the others do, through a proper cpufreq
+driver?"
+
+I am not sure if he meant something like that you have here. Only one
+cpufreq driver can be registered at any point of time with the kernel,
+and so if this one is there then acpi-cpufreq or intel-pstate can't be
+there. Who will do DVFS ?
+
+-- 
+viresh
