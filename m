@@ -2,131 +2,94 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B8CC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB704C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6838C208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B631206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfGLMNB (ORCPT
+        id S1726928AbfGLMSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:13:01 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:49784 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726601AbfGLMNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:13:00 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id F1641A117C;
-        Fri, 12 Jul 2019 14:12:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id P6ek3O6D-xUo; Fri, 12 Jul 2019 14:12:48 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 22:12:01 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 04/10] namei: split out nd->dfd handling to
- dirfd_path_init
-Message-ID: <20190712121201.ouhwqgeszfq44t33@yavin>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-5-cyphar@cyphar.com>
- <20190712042050.GH17978@ZenIV.linux.org.uk>
- <20190712120743.mka3vl5t4zndc5wj@yavin>
+        Fri, 12 Jul 2019 08:18:03 -0400
+Received: from gaia.bitwizard.nl ([149.210.166.240]:40760 "EHLO
+        gaia.bitwizard.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfGLMSD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:18:03 -0400
+X-Greylist: delayed 480 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 08:18:01 EDT
+Received: from abra2.bitwizard.nl (unknown [10.8.0.6])
+        by gaia.bitwizard.nl (Postfix) with ESMTP id 87FAA5A0065;
+        Fri, 12 Jul 2019 14:10:00 +0200 (CEST)
+Received: by abra2.bitwizard.nl (Postfix, from userid 1000)
+        id 6CD7E13F753; Fri, 12 Jul 2019 14:10:00 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 14:10:00 +0200
+From:   Rogier Wolff <R.E.Wolff@BitWizard.nl>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Phil Elwell <phil@raspberrypi.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tty: amba-pl011: Make TX optimisation conditional
+Message-ID: <20190712121000.GK11350@BitWizard.nl>
+References: <1562852732-123411-1-git-send-email-phil@raspberrypi.org>
+ <20190712112105.GH2790@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="37fzaqczvbcmjfqh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712120743.mka3vl5t4zndc5wj@yavin>
+In-Reply-To: <20190712112105.GH2790@e103592.cambridge.arm.com>
+Organization: BitWizard B.V.
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 12:21:05PM +0100, Dave Martin wrote:
+> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+> index 89ade21..1902071 100644
+> --- a/drivers/tty/serial/amba-pl011.c
+> +++ b/drivers/tty/serial/amba-pl011.c
+> @@ -1307,6 +1307,13 @@ static bool pl011_tx_chars(struct uart_amba_port *uap, bool from_irq);
+>  /* Start TX with programmed I/O only (no DMA) */
+>  static void pl011_start_tx_pio(struct uart_amba_port *uap)
+>  {
+> +	/*
+> +	 * Avoid FIFO overfills if the TX IRQ is active:
+> +	 * pl011_int() will comsume chars waiting in the xmit queue anyway.
+> +	 */
+> +	if (uap->im & UART011_TXIM)
+> +		return;
+> +
 
---37fzaqczvbcmjfqh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm no expert on PL011, have no knowledge of the current bug, but have
+programmed serial drivers in the past.
 
-On 2019-07-12, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Sun, Jul 07, 2019 at 12:57:31AM +1000, Aleksa Sarai wrote:
-> > > Previously, path_init's handling of *at(dfd, ...) was only done once,
-> > > but with LOOKUP_BENEATH (and LOOKUP_IN_ROOT) we have to parse the
-> > > initial nd->path at different times (before or after absolute path
-> > > handling) depending on whether we have been asked to scope resolution
-> > > within a root.
-> >=20
-> > >  	if (*s =3D=3D '/') {
-> > > -		set_root(nd);
-> > > -		if (likely(!nd_jump_root(nd)))
-> > > -			return s;
-> > > -		return ERR_PTR(-ECHILD);
-> >=20
-> > > +		if (likely(!nd->root.mnt))
-> > > +			set_root(nd);
-> >=20
-> > How can we get there with non-NULL nd->root.mnt, when LOOKUP_ROOT case
-> > has been already handled by that point?
->=20
-> Yup, you're completely right. I will remove the
->   if (!nd->root.mnt)
-> in the next version.
+This looks "dangerous" to me.
 
-Ah sorry, there is a reason for it -- later in the series the
-LOOKUP_BENEATH case means that you might end up with a non-NULL
-nd->root.mnt. If you want, I can move the addition of the conditional to
-later in the series (it was easier to split the patch by-hunk back when
-you originally asked me to split out dirfd_path_init()).
+The normal situation is that you push the first few characters into
+the FIFO with PIO and then the interrupt will trigger once the FIFO
+empties and then you can refil the FIFO until the buffer empties.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+The danger in THIS fix is that you might have a race that causes those
+first few PIO-ed characters not to be put in the hardware resulting in
+the interrupt never triggering.... If you can software-trigger the
+interrupt just before the "return" here that'd be a way to fix things.
 
---37fzaqczvbcmjfqh
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm ok with a reaction like "I've thought about this, it's not a
+problem, now shut up".
 
------BEGIN PGP SIGNATURE-----
+	Roger. 
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSh5DgAKCRCdlLljIbnQ
-EktsAQC+xy1gwgzkK07JhvJgn8Q1pT79AOQ14p3p2Zp9thYafQD9FEgBMo7bE+TU
-IjLN9tnpuJF+ybsPFaA/VNK4FHH0igw=
-=ZC2p
------END PGP SIGNATURE-----
-
---37fzaqczvbcmjfqh--
+-- 
+** R.E.Wolff@BitWizard.nl ** https://www.BitWizard.nl/ ** +31-15-2049110 **
+**    Delftechpark 11 2628 XJ  Delft, The Netherlands.  KVK: 27239233    **
+The plan was simple, like my brother-in-law Phil. But unlike
+Phil, this plan just might work.
