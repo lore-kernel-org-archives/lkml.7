@@ -2,101 +2,100 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B008C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56CDC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A6F20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9A420665
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M2dP09VM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfGLMuw (ORCPT
+        id S1727303AbfGLMvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:50:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40692 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727027AbfGLMuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:50:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 80A04AC3F;
-        Fri, 12 Jul 2019 12:50:50 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 13:50:47 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, jhladky@redhat.com,
-        lvenanci@redhat.com, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
-Message-ID: <20190712125047.GL13484@suse.de>
-References: <20190624025604.30896-1-ying.huang@intel.com>
- <20190624140950.GF2947@suse.de>
- <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
- <20190703091747.GA13484@suse.de>
- <87ef3663nd.fsf@yhuang-dev.intel.com>
- <20190712082710.GH13484@suse.de>
- <87d0ifwmu2.fsf@yhuang-dev.intel.com>
+        Fri, 12 Jul 2019 08:51:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54928 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfGLMvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:51:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rwpolTjZGqbTjwkLH0mAAIVI9rPZBe7E59f4u4dvndk=; b=M2dP09VMp056HkHzjt4KD8h0P
+        pj6x6MKN2KDyASTibms8pAubzJ1mr3Q41T5d9AbtwAdaZ7h5k8x3fIJL+eT7wXHVf4JC6fk9HXPkd
+        Dl+vY4CxPI7HGeG5FRxCOoZOf+vS0SugPI9EnN3u5EEH+KgIrWyeM9oITXrkmbUl2JrcbiL8X0hip
+        zWBcCskL2lMgRkYMZhT0e0cE6dgndhjznxtrzxudGf5lkhjjHKJGRS2R9TnhQ7woa9LpARKBL13k+
+        6O5AuHeVjb4+jADAERfPyUCDygpN1T1I9gL6OaxZnhW7VPjq1virgpae/SjTED2hovlyYB1GQPs3X
+        GHeANTbMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlv0v-0000Mt-GX; Fri, 12 Jul 2019 12:51:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BC3D4209772EE; Fri, 12 Jul 2019 14:50:59 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 14:50:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+Message-ID: <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
+ <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
+ <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d0ifwmu2.fsf@yhuang-dev.intel.com>
+In-Reply-To: <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 06:48:05PM +0800, Huang, Ying wrote:
-> > Ordinarily I would hope that the patch was motivated by observed
-> > behaviour so you have a metric for goodness. However, for NUMA balancing
-> > I would typically run basic workloads first -- dbench, tbench, netperf,
-> > hackbench and pipetest. The objective would be to measure the degree
-> > automatic NUMA balancing is interfering with a basic workload to see if
-> > they patch reduces the number of minor faults incurred even though there
-> > is no NUMA balancing to be worried about. This measures the general
-> > overhead of a patch. If your reasoning is correct, you'd expect lower
-> > overhead.
-> >
-> > For balancing itself, I usually look at Andrea's original autonuma
-> > benchmark, NAS Parallel Benchmark (D class usually although C class for
-> > much older or smaller machines) and spec JBB 2005 and 2015. Of the JBB
-> > benchmarks, 2005 is usually more reasonable for evaluating NUMA balancing
-> > than 2015 is (which can be unstable for a variety of reasons). In this
-> > case, I would be looking at whether the overhead is reduced, whether the
-> > ratio of local hits is the same or improved and the primary metric of
-> > each (time to completion for Andrea's and NAS, throughput for JBB).
-> >
-> > Even if there is no change to locality and the primary metric but there
-> > is less scanning and overhead overall, it would still be an improvement.
-> 
-> Thanks a lot for your detailed guidance.
-> 
+On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
 
-No problem.
+> I think that's precisely what makes ASI and PTI different and independent.
+> PTI is just about switching between userland and kernel page-tables, while
+> ASI is about switching page-table inside the kernel. You can have ASI without
+> having PTI. You can also use ASI for kernel threads so for code that won't
+> be triggered from userland and so which won't involve PTI.
 
-> > If you have trouble doing such an evaluation, I'll queue tests if they
-> > are based on a patch that addresses the specific point of concern (scan
-> > period not updated) as it's still not obvious why flipping the logic of
-> > whether shared or private is considered was necessary.
-> 
-> I can do the evaluation, but it will take quite some time for me to
-> setup and run all these benchmarks.  So if these benchmarks have already
-> been setup in your environment, so that your extra effort is minimal, it
-> will be great if you can queue tests for the patch.  Feel free to reject
-> me for any inconvenience.
-> 
+PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
+ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
 
-They're not setup as such, but my testing infrastructure is heavily
-automated so it's easy to do and I think it's worth looking at. If you
-update your patch to target just the scan period aspects, I'll queue it
-up and get back to you. It usually takes a few days for the automation
-to finish whatever it's doing and pick up a patch for evaluation.
+See how very similar they are?
 
--- 
-Mel Gorman
-SUSE Labs
+Furthermore, to recover SMT for userspace (under MDS) we not only need
+core-scheduling but core-scheduling per address space. And ASI was
+specifically designed to help mitigate the trainwreck just described.
+
+By explicitly exposing (hopefully harmless) part of the kernel to MDS,
+we reduce the part that needs core-scheduling and thus reduce the rate
+the SMT siblngs need to sync up/schedule.
+
+But looking at it that way, it makes no sense to retain 3 address
+spaces, namely:
+
+  user / kernel exposed / kernel private.
+
+Specifically, it makes no sense to expose part of the kernel through MDS
+but not through Meltdow. Therefore we can merge the user and kernel
+exposed address spaces.
+
+And then we've fully replaced PTI.
+
+So no, they're not orthogonal.
