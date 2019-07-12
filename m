@@ -2,54 +2,53 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175ACC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F684C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2924216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35495216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934281;
-	bh=spKQvzBkCz2p7uUyWcQ59xxgGjgybE/oLIuwZnEgBBg=;
+	s=default; t=1562934288;
+	bh=Fir5gD7HoVSspzZZj/q0JYDTXCfrEIHVt0flZ8zV70A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMFPHQHtfAZjHshZrtvpuaxNFbcZn40Jj3nWRwglaPTLEU+KzPqcV1CXAMLc6AaGj
-	 0k8XtJoAiavPxA3jeGBvRV8HNr3bc4Pf7Pof99UJj/9vufbIsOk9d21NyRb/yc7n3l
-	 EbntUVfEImRKgq/tzbm7fynNXjmEaNUz2dFzmEYE=
+	b=C1huCQbNUuaahL5/hkSGS9W6J9Z3fhpx/jHL/jrUpY4FwsofXkdtv1SutDUAWizTG
+	 +fXoEvFvwG8rPb4BQJz05U3/8bYue88ey2e6UeojuL3W8EwzpGLhUWPerNQcuffRsR
+	 xzGkcNED989nS+17/WBfrKsQ797tzAyt4st9F9FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfGLMYf (ORCPT
+        id S1728170AbfGLMYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfGLMYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:24:31 -0400
+        id S1727395AbfGLMYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3CA7208E4;
-        Fri, 12 Jul 2019 12:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEBF621019;
+        Fri, 12 Jul 2019 12:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934271;
-        bh=spKQvzBkCz2p7uUyWcQ59xxgGjgybE/oLIuwZnEgBBg=;
+        s=default; t=1562934280;
+        bh=Fir5gD7HoVSspzZZj/q0JYDTXCfrEIHVt0flZ8zV70A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vBOrYqNO7r8hqpT1ObMqn54NS7Qx9rVtgdP5lOtkL5toWNIfQavMjRUcY9093Suyj
-         ufM5NoiVclKbCUlQQ+3vw5P8Evo4cK8OT3ZEt2rwRDbWTSVLfP3xkwYfvN1CjBQckL
-         LTjExfmTh8BCdiDF0P8cB3Wocjvukxiq7DX/jKNQ=
+        b=u6AzJRL49O+rxvhBxli/9wURGyxtmM9oubUogdYCziNDUpIR2PcTtNn6pBug982lb
+         CjEEPnkvxLeK4iCBK3ylceE8IXuZTM+UpBwEzlJWAh6BbkIOmwLMPGdHEfVuqCjmRh
+         db4VOvq5TNVZIQN1vM8uC+31hNjMIxDhUM5dq/ks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 90/91] staging: bcm2835-camera: Handle empty EOS buffers whilst streaming
-Date:   Fri, 12 Jul 2019 14:19:33 +0200
-Message-Id: <20190712121626.527633294@linuxfoundation.org>
+        stable@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 51/91] scsi: qedi: Check targetname while finding boot target information
+Date:   Fri, 12 Jul 2019 14:18:54 +0200
+Message-Id: <20190712121624.401088432@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -62,91 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+[ Upstream commit 1ac3549ed58cdfdaf43bbf31ac260e2381cc0dae ]
 
-commit a26be06d6d96c10a9ab005e99d93fbb5d3babd98 upstream.
+The kernel panic was observed during iSCSI discovery via offload with below
+call trace,
 
-The change to mapping V4L2 to MMAL buffers 1:1 didn't handle
-the condition we get with raw pixel buffers (eg YUV and RGB)
-direct from the camera's stills port. That sends the pixel buffer
-and then an empty buffer with the EOS flag set. The EOS buffer
-wasn't handled and returned an error up the stack.
+[ 2115.646901] BUG: unable to handle kernel NULL pointer dereference at (null)
+[ 2115.646909] IP: [<ffffffffacf7f0cc>] strncmp+0xc/0x60
+[ 2115.646927] PGD 0
+[ 2115.646932] Oops: 0000 [#1] SMP
+[ 2115.647107] CPU: 24 PID: 264 Comm: kworker/24:1 Kdump: loaded Tainted: G
+               OE  ------------   3.10.0-957.el7.x86_64 #1
+[ 2115.647133] Workqueue: slowpath-13:00. qed_slowpath_task [qed]
+[ 2115.647135] task: ffff8d66af80b0c0 ti: ffff8d66afb80000 task.ti: ffff8d66afb80000
+[ 2115.647136] RIP: 0010:[<ffffffffacf7f0cc>]  [<ffffffffacf7f0cc>] strncmp+0xc/0x60
+[ 2115.647141] RSP: 0018:ffff8d66afb83c68  EFLAGS: 00010206
+[ 2115.647143] RAX: 0000000000000001 RBX: 0000000000000007 RCX: 000000000000000a
+[ 2115.647144] RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8d632b3ba040
+[ 2115.647145] RBP: ffff8d66afb83c68 R08: 0000000000000000 R09: 000000000000ffff
+[ 2115.647147] R10: 0000000000000007 R11: 0000000000000800 R12: ffff8d66a30007a0
+[ 2115.647148] R13: ffff8d66747a3c10 R14: ffff8d632b3ba000 R15: ffff8d66747a32f8
+[ 2115.647149] FS:  0000000000000000(0000) GS:ffff8d66aff00000(0000) knlGS:0000000000000000
+[ 2115.647151] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2115.647152] CR2: 0000000000000000 CR3: 0000000509610000 CR4: 00000000007607e0
+[ 2115.647153] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 2115.647154] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 2115.647155] PKRU: 00000000
+[ 2115.647157] Call Trace:
+[ 2115.647165]  [<ffffffffc0634cc5>] qedi_get_protocol_tlv_data+0x2c5/0x510 [qedi]
+[ 2115.647184]  [<ffffffffc05968f5>] ? qed_mfw_process_tlv_req+0x245/0xbe0 [qed]
+[ 2115.647195]  [<ffffffffc05496cb>] qed_mfw_fill_tlv_data+0x4b/0xb0 [qed]
+[ 2115.647206]  [<ffffffffc0596911>] qed_mfw_process_tlv_req+0x261/0xbe0 [qed]
+[ 2115.647215]  [<ffffffffacce0e8e>] ? dequeue_task_fair+0x41e/0x660
+[ 2115.647221]  [<ffffffffacc2a59e>] ? __switch_to+0xce/0x580
+[ 2115.647230]  [<ffffffffc0546013>] qed_slowpath_task+0xa3/0x160 [qed]
+[ 2115.647278] RIP  [<ffffffffacf7f0cc>] strncmp+0xc/0x60
 
-Handle the condition correctly by returning it to the component
-if streaming, or returning with an error if stopping streaming.
+Fix kernel panic by validating the session targetname before providing TLV
+data and confirming the presence of boot targets.
 
-Fixes: 938416707071 ("staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping")
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c |   21 +++++-----
- drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c     |    5 +-
- 2 files changed, 15 insertions(+), 11 deletions(-)
+ drivers/scsi/qedi/qedi_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-@@ -342,16 +342,13 @@ static void buffer_cb(struct vchiq_mmal_
- 		return;
- 	} else if (length == 0) {
- 		/* stream ended */
--		if (buf) {
--			/* this should only ever happen if the port is
--			 * disabled and there are buffers still queued
-+		if (dev->capture.frame_count) {
-+			/* empty buffer whilst capturing - expected to be an
-+			 * EOS, so grab another frame
- 			 */
--			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
--			pr_debug("Empty buffer");
--		} else if (dev->capture.frame_count) {
--			/* grab another frame */
- 			if (is_capturing(dev)) {
--				pr_debug("Grab another frame");
-+				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
-+					 "Grab another frame");
- 				vchiq_mmal_port_parameter_set(
- 					instance,
- 					dev->capture.camera_port,
-@@ -359,8 +356,14 @@ static void buffer_cb(struct vchiq_mmal_
- 					&dev->capture.frame_count,
- 					sizeof(dev->capture.frame_count));
- 			}
-+			if (vchiq_mmal_submit_buffer(instance, port, buf))
-+				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
-+					 "Failed to return EOS buffer");
- 		} else {
--			/* signal frame completion */
-+			/* stopping streaming.
-+			 * return buffer, and signal frame completion
-+			 */
-+			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
- 			complete(&dev->capture.frame_cmplt);
- 		}
- 	} else {
---- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-@@ -291,8 +291,6 @@ static int bulk_receive(struct vchiq_mma
+diff --git a/drivers/scsi/qedi/qedi_main.c b/drivers/scsi/qedi/qedi_main.c
+index 4de740da547b..763c7628356b 100644
+--- a/drivers/scsi/qedi/qedi_main.c
++++ b/drivers/scsi/qedi/qedi_main.c
+@@ -955,6 +955,9 @@ static int qedi_find_boot_info(struct qedi_ctx *qedi,
+ 		if (!iscsi_is_session_online(cls_sess))
+ 			continue;
  
- 	/* store length */
- 	msg_context->u.bulk.buffer_used = rd_len;
--	msg_context->u.bulk.mmal_flags =
--	    msg->u.buffer_from_host.buffer_header.flags;
- 	msg_context->u.bulk.dts = msg->u.buffer_from_host.buffer_header.dts;
- 	msg_context->u.bulk.pts = msg->u.buffer_from_host.buffer_header.pts;
- 
-@@ -453,6 +451,9 @@ static void buffer_to_host_cb(struct vch
- 		return;
- 	}
- 
-+	msg_context->u.bulk.mmal_flags =
-+				msg->u.buffer_from_host.buffer_header.flags;
++		if (!sess->targetname)
++			continue;
 +
- 	if (msg->h.status != MMAL_MSG_STATUS_SUCCESS) {
- 		/* message reception had an error */
- 		pr_warn("error %d in reply\n", msg->h.status);
+ 		if (pri_ctrl_flags) {
+ 			if (!strcmp(pri_tgt->iscsi_name, sess->targetname) &&
+ 			    !strcmp(pri_tgt->ip_addr, ep_ip_addr)) {
+-- 
+2.20.1
+
 
 
