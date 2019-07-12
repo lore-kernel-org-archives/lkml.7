@@ -2,122 +2,98 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D268C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598D4C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE072084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE5021530
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uk1BXR95"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k4aHKCd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfGLBrK (ORCPT
+        id S1729124AbfGLBrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:47:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33367 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfGLBrK (ORCPT
+        Thu, 11 Jul 2019 21:47:52 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46372 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfGLBrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:47:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so8256942wru.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TSFGt+Q1og6AA+SdNnXRjxSfv/MJFeGddK8TCtYrMOg=;
-        b=uk1BXR95kMsdF9sHBlyG55rS2E1xeWRMYuIBC5lVMxQgjAcvzJIMynUBe3wm/zfSQD
-         OC66fX/RzQlpJ44bj9120Ft2Tap9PgBHxgB/NX0Fjq0IvZe7WVXJzc4YskygtPm8UctJ
-         QfmADfQxwVc1xW/vqRuRDxe0QO/w9RGgZBVyjvkTiBspm9mRMrBtPxuu5oTWyoVhIBnF
-         TQauhcIgrgyVBirznKq2EzRvhq+2+0wZn+Bmu7JKfx2fhfT2m3CaVQwquawx60O3Iwk7
-         IFye7kfK9w42vtwfGEwwfOo+oPGAGMPLrlxD8Ur60/Kwisr53dIEpOJnQ8OZlKpr1yPK
-         Dt7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TSFGt+Q1og6AA+SdNnXRjxSfv/MJFeGddK8TCtYrMOg=;
-        b=jXlfGIOTvHnIsuf5Z/LlIYZeQNYoyMx36CpW8z3TR5366WQvormRRNtD+9jfgcgmwO
-         YT2DW8YzOFN0pwqMb70Kz9sau5XNwXeoRQyWq+wpK1i52GHSWaI0sO1EjCcrjKEJ7T6P
-         0YG325ephB5SUkJvaRRXT4OPjb2oEhxCzdQwo7agM3Xt+qo43iAwKxPkY6+VeY5y32Kv
-         JCLWRQqOe7U7Vt0K6pM/pGHjtb6aSGLBEJW/b1ZAclroriIBd/gKbjuOtpW28j+G5T06
-         PeBWd3tZ/kelq/o7JJ5GRLo4A5nwdoPkcdoYUSY1FgMfq5K88XTsJWpTBGNas7O6aEcQ
-         ycUQ==
-X-Gm-Message-State: APjAAAXt6LhcqOsG9Jal0nMiNYQH0fn6MTi8Oa2oMd6cYPKm9+POZ/8f
-        10R0rbpJhNwSn+dXb3HAU3s=
-X-Google-Smtp-Source: APXvYqws0ImOdE7ZSUr6OyBuf5RgiTHk1I5zYJ43oxLwLXzH9OoHbxuh7mnT0trEjl87OLL0XXHcPA==
-X-Received: by 2002:a5d:6284:: with SMTP id k4mr7958812wru.179.1562896028018;
-        Thu, 11 Jul 2019 18:47:08 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id v15sm5904425wru.61.2019.07.11.18.47.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 18:47:07 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Wen Yang <wen.yang99@zte.com.cn>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v2] ASoC: audio-graph-card: Constify reg in graph_get_dai_id
-Date:   Thu, 11 Jul 2019 18:45:55 -0700
-Message-Id: <20190712014554.62465-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712014357.84245-1-natechancellor@gmail.com>
-References: <20190712014357.84245-1-natechancellor@gmail.com>
+        Thu, 11 Jul 2019 21:47:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1ivXa138640;
+        Fri, 12 Jul 2019 01:47:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=bOeKf0HYORGyeDkLlZkGcOq9SCXba9RpDa+uFpu0rk8=;
+ b=k4aHKCd4dVUvEZD1eTuCzxtGbYythkLDYur8hiLgYTzZ+odaFkbGF+g3lKPLg+1+mDR8
+ r5irxzpvl8YVSWmCOUB4eAqehIEg+Ve7C7AC261GYyYXGfYYanM6xu/858TEDEGQUJqz
+ Si1PQYjlMvlACo8mdHQ7jcf+HKm3q+2gxErvsnDknlrKo2o5wGA9JoXBxOlN/e9jre26
+ dV24L7zMydHRljo6LWGhPAAQmBCIEzudbhkrBjvftX9v33ZxGhUVP0Bx2D29qhENbm/a
+ QlkZ+IgcH+cMIMydPuChAydfjd5cIxSreVDoPw/Lj8MQCa9X4XfSfQCxlK1kKXPddMej dg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2tjm9r30bf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 01:47:45 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1hVnu148329;
+        Fri, 12 Jul 2019 01:47:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tmwgygv1b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 01:47:44 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C1lgQk030476;
+        Fri, 12 Jul 2019 01:47:42 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 18:47:42 -0700
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: libfc: fix null pointer dereference on a null lport
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190702091835.13629-1-colin.king@canonical.com>
+Date:   Thu, 11 Jul 2019 21:47:40 -0400
+In-Reply-To: <20190702091835.13629-1-colin.king@canonical.com> (Colin King's
+        message of "Tue, 2 Jul 2019 10:18:35 +0100")
+Message-ID: <yq1h87s58hv.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=863
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120020
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang errors:
 
-sound/soc/generic/audio-graph-card.c:87:7: error: assigning to 'u32 *'
-(aka 'unsigned int *') from 'const void *' discards qualifiers
-[-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-                reg = of_get_property(node, "reg", NULL);
-                    ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-1 error generated.
+Hannes,
 
-Move the declaration up a bit to keep the reverse christmas tree look.
+Please review!
 
-Fixes: c152f8491a8d ("ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()")
-Link: https://github.com/ClangBuiltLinux/linux/issues/600
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+> Currently if lport is null then the null lport pointer is dereference
+> when printing out debug via the FC_LPORT_DB macro. Fix this by using
+> the more generic FC_LIBFC_DBG debug macro instead that does not use
+> lport.
 
-v1 -> v2:
-
-* Update link in commit message (sorry, I create the commit message and
-  send the patch first then create the issue and I forgot to check the
-  closed ones for the correct number)
-
- sound/soc/generic/audio-graph-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
-index c8abb86afefa..c0d262a2ce2c 100644
---- a/sound/soc/generic/audio-graph-card.c
-+++ b/sound/soc/generic/audio-graph-card.c
-@@ -62,8 +62,8 @@ static int graph_get_dai_id(struct device_node *ep)
- 	struct device_node *node;
- 	struct device_node *endpoint;
- 	struct of_endpoint info;
-+	const u32 *reg;
- 	int i, id;
--	u32 *reg;
- 	int ret;
- 
- 	/* use driver specified DAI ID if exist */
 -- 
-2.22.0
-
+Martin K. Petersen	Oracle Linux Engineering
