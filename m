@@ -2,154 +2,107 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B3AC742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482E1C742C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA098206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2172421537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BMS+LBZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfGLPPM (ORCPT
+        id S1727260AbfGLPPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:15:12 -0400
-Received: from www62.your-server.de ([213.133.104.62]:45880 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfGLPPM (ORCPT
+        Fri, 12 Jul 2019 11:15:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44485 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfGLPPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:15:12 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hlxGJ-0007bi-K7; Fri, 12 Jul 2019 17:15:03 +0200
-Received: from [2a02:1205:5069:fce0:c5f9:cd68:79d4:446d] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hlxGJ-000X25-CS; Fri, 12 Jul 2019 17:15:03 +0200
-Subject: Re: [PATCH 0/2] Fold checksum at the end of bpf_csum_diff and fix
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Paolo Pisati <p.pisati@gmail.com>
-Cc:     20190710231439.GD32439@tassilo.jf.intel.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1562837513-745-1-git-send-email-p.pisati@gmail.com>
- <CAEf4BzbGLmuZ48vFUCrDW6VC7_YrkW_0NpgpgXNQEzF_dEqgnA@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <8bd99845-4d59-f0a4-3b50-ab6d539b36bc@iogearbox.net>
-Date:   Fri, 12 Jul 2019 17:15:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Fri, 12 Jul 2019 11:15:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so20997610iob.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2opEnBuVBF2b4E5QanZT3B1PxQTl1jpFqVeaeD4Jvac=;
+        b=BMS+LBZ1HOJ+oPmT+jj9cCB2CMuhLD9hOgL1EGxhXgjcCFU+uRhdlTEHJctcvcAfAC
+         93xCyhVww0XoYzbRJRJbpZBsYO3Bm1q/MlPGVvrNSmWS6qfkXQz8BXXUjRJsSG2wkg1B
+         oUhykgoEyU+U5WMY8pngtLd8pQv2pIfwtfSV3MVO+kJRkbbD+jxi3cwlmNKFU6maqscI
+         iIz0r5umTAoC5x9daY2n1PVhdWCYjSYP5JjtzczVfPEaIuMScEe303uYSFPRxEjPxbTY
+         wo2uvzLdn+ynMMpp8KKHkC8MInm7bHAk0Gz2dmFjF6xGUKzzWIe57apPN0x9lMRWIqqQ
+         wFDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2opEnBuVBF2b4E5QanZT3B1PxQTl1jpFqVeaeD4Jvac=;
+        b=QueSMYtIT7wCOI7Bqb9SlDPjQi8pkSz0Z4zNjV6nOnNSga+f1Rlmi7uY9gSXGS0nY4
+         CySGexSpFdgOy6G/jleSx/1GIf5liLPwI/hktYPyDp1oOa9YlmP6Ny2Gc/LejMIT4++1
+         e3FyXx75GhbtL3SPu6OqM3kc9XVcOMJmaakuZOuDsd8axoIuskvSKGfeLAufN/9//6BI
+         2LCgG3wvh++wKz+Qvocden2dm7d9P+8jTZdmhdlFVarQUMlH6gDDUrcY+rwfXTphsBsR
+         bkf70PE1eHPje4cDFDutxciO4afFHVjNm4up9UAzUHHrVVVL/jb9UTkzQnAzqjV410V7
+         Jj4w==
+X-Gm-Message-State: APjAAAWbsviybZr2YKfIAnZ6wnad1wUnvh6ohOHQgh3kIMdQ9UR9QOit
+        EvzD1VCCHIWTfiSYgZeTaN70uGs0u/o=
+X-Google-Smtp-Source: APXvYqxNzK45erpGagcbIG8GrfCOqm46U/1e0qdgZFVftYMWqnRGnTZfkMPl7UYDH4Wj4yMq6IdAPw==
+X-Received: by 2002:a02:b812:: with SMTP id o18mr1716469jam.64.1562944530468;
+        Fri, 12 Jul 2019 08:15:30 -0700 (PDT)
+Received: from [192.168.1.158] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e22sm6692139iob.66.2019.07.12.08.15.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 08:15:29 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: add entry for block io cgroup
+To:     Tejun Heo <tj@kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org
+References: <156284038698.3851.6531328622774377848.stgit@buzz>
+ <20190712142502.GA680549@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <82bc7337-c48f-7559-bd9b-6a21ccbfceb0@kernel.dk>
+Date:   Fri, 12 Jul 2019 09:15:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzbGLmuZ48vFUCrDW6VC7_YrkW_0NpgpgXNQEzF_dEqgnA@mail.gmail.com>
+In-Reply-To: <20190712142502.GA680549@devbig004.ftw2.facebook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25508/Fri Jul 12 10:10:04 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/12/2019 01:50 AM, Andrii Nakryiko wrote:
-> On Thu, Jul 11, 2019 at 2:32 AM Paolo Pisati <p.pisati@gmail.com> wrote:
->> From: Paolo Pisati <paolo.pisati@canonical.com>
->>
->> After applying patch 0001, all checksum implementations i could test (x86-64, arm64 and
->> arm), now agree on the return value.
->>
->> Patch 0002 fix the expected return value for test #13: i did the calculation manually,
->> and it correspond.
->>
->> Unfortunately, after applying patch 0001, other test cases now fail in
->> test_verifier:
-
-Thanks for catching, sigh. :/
-
->> $ sudo ./tools/testing/selftests/bpf/test_verifier
->> ...
->> #417/p helper access to variable memory: size = 0 allowed on NULL (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
->> #419/p helper access to variable memory: size = 0 allowed on != NULL stack pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
->> #423/p helper access to variable memory: size possible = 0 allowed on != NULL packet pointer (ARG_PTR_TO_MEM_OR_NULL) FAIL retval 65535 != 0
+On 7/12/19 8:25 AM, Tejun Heo wrote:
+> Hello, Konstantin.
 > 
-> I'm not entirely sure this fix is correct, given these failures, to be honest.
+> On Thu, Jul 11, 2019 at 01:19:47PM +0300, Konstantin Khlebnikov wrote:
+>> +CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)
+>> +L:	cgroups@vger.kernel.org
+>> +F:	Documentation/cgroup-v1/blkio-controller.rst
+>> +F:	block/blk-cgroup.c
+>> +F:	include/linux/blk-cgroup.h
+>> +F:	block/blk-throttle.c
+>> +F:	block/blk-iolatency.c
+>> +F:	block/bfq-cgroup.c
 > 
-> Let's wait for someone who understands intended semantics for
-> bpf_csum_diff, before changing returned value so drastically.
+> Given that blkcg changes are often entangled with generic block
+> changes and best routed through block tree, I think it'd be useful to
+> add the followings.
 > 
-> But in any case, fixes for these test failures should be in your patch
-> series as well.
+> M:      Tejun Heo <tj@kernel.org>
+> M:      Jens Axboe <axboe@kernel.dk>
+> L:      linux-block@vger.kernel.org
+> T:      git git://git.kernel.dk/linux-block
 
-Your change would actually break applications. The bpf_csum_diff() helper is
-heavily used with cascading so one result can be fed into another bpf_csum_diff()
-call as seed. Quick test on x86-64:
+I applied the patch with these additions.
 
-static int __init foo(void)
-{
-        u8 data[32 * sizeof(u32)];
-        u32 res1, res2, res3;
-        int i;
+-- 
+Jens Axboe
 
-        prandom_bytes(data, sizeof(data));
-        res1 = csum_fold(csum_partial(data, sizeof(data), 0));
-        for (i = sizeof(u32); i < sizeof(data); i += sizeof(u32)) {
-                res2 = csum_fold(csum_partial(data, i, 0));
-                res2 = csum_fold(csum_partial(data+i, sizeof(data)-i, res2));
-                res3 = csum_partial(data, i, 0);
-                res3 = csum_fold(csum_partial(data+i, sizeof(data)-i, res3));
-                printk("%8d: [%4x (reference), %4x (unfolded), %4x (folded)]\n", i, res1, res3, res2);
-        }
-        return -1;
-}
-
-Gives for all three:
-
-[19113.233942]        4: [6b70 (reference), 6b70 (unfolded), 223d (folded)]
-[19113.233943]        8: [6b70 (reference), 6b70 (unfolded), a812 (folded)]
-[19113.233943]       12: [6b70 (reference), 6b70 (unfolded), 1c26 (folded)]
-[19113.233944]       16: [6b70 (reference), 6b70 (unfolded), 4f76 (folded)]
-[19113.233944]       20: [6b70 (reference), 6b70 (unfolded), 2801 (folded)]
-[19113.233945]       24: [6b70 (reference), 6b70 (unfolded),  b63 (folded)]
-[19113.233945]       28: [6b70 (reference), 6b70 (unfolded), 2fe0 (folded)]
-[19113.233946]       32: [6b70 (reference), 6b70 (unfolded), 18a2 (folded)]
-[19113.233946]       36: [6b70 (reference), 6b70 (unfolded), 2597 (folded)]
-[19113.233947]       40: [6b70 (reference), 6b70 (unfolded), 2f8e (folded)]
-[19113.233947]       44: [6b70 (reference), 6b70 (unfolded), b8af (folded)]
-[19113.233948]       48: [6b70 (reference), 6b70 (unfolded), fb8b (folded)]
-[19113.233948]       52: [6b70 (reference), 6b70 (unfolded), e9c0 (folded)]
-[19113.233949]       56: [6b70 (reference), 6b70 (unfolded), 6af1 (folded)]
-[19113.233949]       60: [6b70 (reference), 6b70 (unfolded), d7f4 (folded)]
-[19113.233949]       64: [6b70 (reference), 6b70 (unfolded), 8bc6 (folded)]
-[19113.233950]       68: [6b70 (reference), 6b70 (unfolded), 8718 (folded)]
-[19113.233950]       72: [6b70 (reference), 6b70 (unfolded), 27d8 (folded)]
-[19113.233951]       76: [6b70 (reference), 6b70 (unfolded), a2db (folded)]
-[19113.233952]       80: [6b70 (reference), 6b70 (unfolded),  3fd (folded)]
-[19113.233952]       84: [6b70 (reference), 6b70 (unfolded), 4be5 (folded)]
-[19113.233952]       88: [6b70 (reference), 6b70 (unfolded), 41ad (folded)]
-[19113.233953]       92: [6b70 (reference), 6b70 (unfolded), ca9b (folded)]
-[19113.233953]       96: [6b70 (reference), 6b70 (unfolded), f8ec (folded)]
-[19113.233954]      100: [6b70 (reference), 6b70 (unfolded), 5451 (folded)]
-[19113.233954]      104: [6b70 (reference), 6b70 (unfolded),  763 (folded)]
-[19113.233955]      108: [6b70 (reference), 6b70 (unfolded), e37c (folded)]
-[19113.233955]      112: [6b70 (reference), 6b70 (unfolded), 4ee6 (folded)]
-[19113.233956]      116: [6b70 (reference), 6b70 (unfolded), 4f73 (folded)]
-[19113.233956]      120: [6b70 (reference), 6b70 (unfolded), 1cfd (folded)]
-[19113.233957]      124: [6b70 (reference), 6b70 (unfolded), 7d1a (folded)]
-
-I'll take a look next week wrt fixing this uniformly for all archs.
-
-Thanks,
-Daniel
