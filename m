@@ -2,178 +2,124 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F97C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85B6C742AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A408320863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EB921019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vt08rtIQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPCnHNic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfGLIMf (ORCPT
+        id S1726230AbfGLIOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:12:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33000 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfGLIMe (ORCPT
+        Fri, 12 Jul 2019 04:14:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46384 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfGLIOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:12:34 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C89Jha099333;
-        Fri, 12 Jul 2019 08:11:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=pqd0p1GXeUPggPPvXgNNFelVAfyPsXqmmeemTWLVezY=;
- b=Vt08rtIQ4pSnPnJ+H7ONebQ6+AySlLrp604xldWUxpRaxasHRQbCzRsfKgQZGQQ24eIi
- s5+T67nk3RwOCHU7PoEsPVe1psrZbhvaYpka8P1OvmnoDUbA1cDgijo8OB9RABcbOrdM
- AccTxS806NpbyBRBR8IcP8Ar2Icvb5BsodR6asWMYL9H7YgPdeN2wSKGkNRu8QCp2THj
- QH44FLnXFlRT9gv850J5eHYM7287AtPBpk4+c0DsaBSRq3l4w972e6KovlfOYh8S8/Sx
- SmdW6RdpTh6ioVifS7K9RrxzrUOJpIq7abJBHJRzBACwjX6m+5J0G6805hKDGgxxAg8l eA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2tjkkq44y2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 08:11:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C87aZX087491;
-        Fri, 12 Jul 2019 08:11:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2tmwgyn7hr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 08:11:34 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C8BXno016345;
-        Fri, 12 Jul 2019 08:11:34 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 01:11:33 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v2] xen/pv: Fix a boot up hang revealed by int3 self test
-Date:   Thu, 11 Jul 2019 16:15:21 +0800
-Message-Id: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120085
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120086
+        Fri, 12 Jul 2019 04:14:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i8so4176228pgm.13;
+        Fri, 12 Jul 2019 01:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Clmkg1JPx1ezaTOs0dmOCyHheHWNM2GCNT/4o6eeDVA=;
+        b=iPCnHNicT1zvtKwp+ySM1G7H+Sr20rnFvGgoQQxCJNutapxHyQLP/jspNhr0lv28Em
+         ebTVVcgfuQRAt2SZtnrWMJ8AAqhKtw9cbqYGhYz5ngJjFxbA1IksBTJPtJx43Tv9KEPG
+         KiqYBaF8nsDz+0HjmPOuZ2ZXrT0qcW30Q4rrwQvRYYvKCMdT6Ij6zc2so91+m53rYMWe
+         Q7aUygF3ykxOxAtocOGDv3loILlT/G8ZROs4yBObAIF+IXiLwbYngBcyh6COUQ7F4Y/y
+         btph2+T7C1ZiCVObo9fSjKR26cq3qpuUR7Oxt1zsNXfnzEbhYX3ihXRHaG7jMgheOzAY
+         oj0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Clmkg1JPx1ezaTOs0dmOCyHheHWNM2GCNT/4o6eeDVA=;
+        b=tsSxcFZv0tXBZBrsLCuzfW0KtYwzpAaNwf1dfCx7ytzen7JFBRzMJxe05NSZc7/dpH
+         ea6l9W47k6J5CpYVH3Yeadm11Va2WoqNzWD5QekaKXG/IRPot8ZjO8u2/guW4jrM2deR
+         ht8rtDKcAqG+9TBgu7bQe+PN7wiWsrf/5rke+7mTRXeBl/n0gdIHiC20uxNKYGdcHepP
+         tR1vrNjG/V4qyVcpcdZFQI0zXHixWGL1ZDdVcLNZfpwm9swP/uKssP969tFRb2liOpBH
+         htQWEyOzU3f5qc1UPh8P93YhUNeYXIMG+ACTRqDaDO4j75XxiOln4rsVYjZujpjniG7j
+         E+VA==
+X-Gm-Message-State: APjAAAVdGql2EfKVIkFYvOHIBI40hxIpsSlrxqMRLkCke9taPPnpxbni
+        QuA837DxszGYHDAQPKA8k0ql1lqB/tpS/g==
+X-Google-Smtp-Source: APXvYqz1oy271vQvAzwgaFZDg63g3q/1hTl6QD2Pf/WhzyXu6MoJv+dExcVrtQWw39hRVZEmB4z/Pg==
+X-Received: by 2002:a63:c70d:: with SMTP id n13mr9181046pgg.171.1562919288295;
+        Fri, 12 Jul 2019 01:14:48 -0700 (PDT)
+Received: from maya190711 ([52.250.118.122])
+        by smtp.gmail.com with ESMTPSA id u6sm7020841pjx.23.2019.07.12.01.14.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 01:14:48 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:14:47 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/5] x86: hv: hyperv-tlfs.h: Create and use Hyper-V page
+ definitions
+Message-ID: <e95111629abf65d016e983f72494cbf110ce605f.1562916939.git.m.maya.nakamura@gmail.com>
+References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-selftest") is used to ensure there is a gap setup in exception stack
-which could be used for inserting call return address.
+Define HV_HYP_PAGE_SHIFT, HV_HYP_PAGE_SIZE, and HV_HYP_PAGE_MASK because
+the Linux guest page size and hypervisor page size concepts are
+different, even though they happen to be the same value on x86.
 
-This gap is missed in XEN PV int3 exception entry path, then below panic
-triggered:
+Also, replace PAGE_SIZE with HV_HYP_PAGE_SIZE.
 
-[    0.772876] general protection fault: 0000 [#1] SMP NOPTI
-[    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
-[    0.772893] RIP: e030:int3_magic+0x0/0x7
-[    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
-[    0.773334] Call Trace:
-[    0.773334]  alternative_instructions+0x3d/0x12e
-[    0.773334]  check_bugs+0x7c9/0x887
-[    0.773334]  ? __get_locked_pte+0x178/0x1f0
-[    0.773334]  start_kernel+0x4ff/0x535
-[    0.773334]  ? set_init_arg+0x55/0x55
-[    0.773334]  xen_start_kernel+0x571/0x57a
-
-As xenint3 and int3 entry code are same except xenint3 doesn't generate
-a gap, we can fix it by using int3 and drop useless xenint3.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- v2: fix up description.
----
- arch/x86/entry/entry_64.S    | 1 -
- arch/x86/include/asm/traps.h | 2 +-
- arch/x86/xen/enlighten_pv.c  | 2 +-
- arch/x86/xen/xen-asm_64.S    | 1 -
- 4 files changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/hyperv-tlfs.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 0ea4831..35a66fc 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1176,7 +1176,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
- #ifdef CONFIG_XEN_PV
- idtentry xennmi			do_nmi			has_error_code=0
- idtentry xendebug		do_debug		has_error_code=0
--idtentry xenint3		do_int3			has_error_code=0
- #endif
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index af78cd72b8f3..7a2705694f5b 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -12,6 +12,16 @@
+ #include <linux/types.h>
+ #include <asm/page.h>
  
- idtentry general_protection	do_general_protection	has_error_code=1
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index 7d6f3f3..f2bd284 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -40,7 +40,7 @@
- asmlinkage void xen_divide_error(void);
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
--asmlinkage void xen_xenint3(void);
-+asmlinkage void xen_int3(void);
- asmlinkage void xen_overflow(void);
- asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 4722ba2..2138d69 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -596,7 +596,7 @@ struct trap_array_entry {
++/*
++ * While not explicitly listed in the TLFS, Hyper-V always runs with a page size
++ * of 4096. These definitions are used when communicating with Hyper-V using
++ * guest physical pages and guest physical page addresses, since the guest page
++ * size may not be 4096 on all architectures.
++ */
++#define HV_HYP_PAGE_SHIFT      12
++#define HV_HYP_PAGE_SIZE       BIT(HV_HYP_PAGE_SHIFT)
++#define HV_HYP_PAGE_MASK       (~(HV_HYP_PAGE_SIZE - 1))
++
+ /*
+  * The below CPUID leaves are present if VersionAndFeatures.HypervisorPresent
+  * is set by CPUID(HvCpuIdFunctionVersionAndFeatures).
+@@ -847,7 +857,7 @@ union hv_gpa_page_range {
+  * count is equal with how many entries of union hv_gpa_page_range can
+  * be populated into the input parameter page.
+  */
+-#define HV_MAX_FLUSH_REP_COUNT ((PAGE_SIZE - 2 * sizeof(u64)) /	\
++#define HV_MAX_FLUSH_REP_COUNT ((HV_HYP_PAGE_SIZE - 2 * sizeof(u64)) /	\
+ 				sizeof(union hv_gpa_page_range))
  
- static struct trap_array_entry trap_array[] = {
- 	{ debug,                       xen_xendebug,                    true },
--	{ int3,                        xen_xenint3,                     true },
-+	{ int3,                        xen_int3,                        true },
- 	{ double_fault,                xen_double_fault,                true },
- #ifdef CONFIG_X86_MCE
- 	{ machine_check,               xen_machine_check,               true },
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 1e9ef0b..ebf610b 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -32,7 +32,6 @@ xen_pv_trap divide_error
- xen_pv_trap debug
- xen_pv_trap xendebug
- xen_pv_trap int3
--xen_pv_trap xenint3
- xen_pv_trap xennmi
- xen_pv_trap overflow
- xen_pv_trap bounds
+ struct hv_guest_mapping_flush_list {
 -- 
-1.8.3.1
+2.17.1
 
