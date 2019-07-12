@@ -2,168 +2,71 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCFEC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE50C742AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A751320644
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:44:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="om4dUHnr"
+	by mail.kernel.org (Postfix) with ESMTP id 4E62A20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbfGLDoN (ORCPT
+        id S1729541AbfGLDqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:44:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38787 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbfGLDoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:44:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z75so3891435pgz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 20:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FJEg1PSZtBDvEUaB1tANRkyXMe9y2BhABHvlVqK15CM=;
-        b=om4dUHnrAVTcB6VZSX3QaRGG8cW4pe28ysXcQAfegtJ9471WnmQy48pbF/6w4twSkP
-         g9C0CVRJtW+e4mKQ9V6wimOpulHkGb76sMC5DttiDZD22y2T60DwP/IUSYghEFaRj5ZM
-         gLtjjXwnDsEdq4Qtn44XjgYZPKez0Z3HjMw8mbzgaZ8WDnLepMfeX/+tVUp8ehaxdI2q
-         Du90ZLjjAGk//30F6fGpSGHt3jsHLnNtKHLwSgw50p019+YT7qel+pJid5MwWqap7MfP
-         VrCNXES1a3iO02buE5VDyxiA3wv7mC6iAeYra06n4kss0+U81cJ7sGedf7kn6BhBM8cQ
-         ZDRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FJEg1PSZtBDvEUaB1tANRkyXMe9y2BhABHvlVqK15CM=;
-        b=lUsTYjKn24CgmNShuDk0aGGWAKl0LSn9+ospEgmmbUw482UfHkJWRnIQ9XmuUHJRiD
-         CELG+PWvgs2nTA3OAN4WmHniE1kM+zQe3F05qtpO+ovR++4Zb0P6MtJtkOM5EOxAR1mm
-         NmFBVDOJTup/m961APHjga3H2ITfFNOwFLBCAaIakgQOBX15NYH5m5Ovj8tlZfl+ONSt
-         rGPzL5jvXNWz0fd07FUbyxXnmK4cx2S5L7ebkYmgiK05mpHwiIqMi8I7fJT4i5Aza7xA
-         zjQ89ZoIdCx+OYfqy1mDhuYDfJuxZM+VPr6Kfw6lh5KRFNXO5dHhWEHDvDYeuGyCztbd
-         Carg==
-X-Gm-Message-State: APjAAAU/8M2fcCBgcNY62gNDoVtnuq0dGPuZ4MBnEX9AnAWTWyEGiYrL
-        C4LL5GmK0s/GogWEn5WVgQTTrA==
-X-Google-Smtp-Source: APXvYqy9857Wgh/Qw5sD0c6p/uGpEMX3EoZjvjany601DZQGRDvfT7z/hTLtd+HWVqwjoJjgYV9amw==
-X-Received: by 2002:a63:c342:: with SMTP id e2mr8105277pgd.79.1562903052070;
-        Thu, 11 Jul 2019 20:44:12 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id 201sm9836656pfz.24.2019.07.11.20.44.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2019 20:44:11 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 09:14:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     rjw@rjwysocki.net, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v6] cpufreq/pasemi: fix an use-after-free in
- pas_cpufreq_cpu_init()
-Message-ID: <20190712034409.zyl6sskrr6ra5nd3@vireshk-i7>
-References: <1562899461-24045-1-git-send-email-wen.yang99@zte.com.cn>
+        Thu, 11 Jul 2019 23:46:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35638 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729450AbfGLDqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:46:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:46:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
+   d="scan'208";a="177382275"
+Received: from gonegri-mobl.ger.corp.intel.com (HELO localhost) ([10.252.48.192])
+  by orsmga002.jf.intel.com with ESMTP; 11 Jul 2019 20:46:17 -0700
+Date:   Fri, 12 Jul 2019 06:46:16 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: linux-next: Fixes tag needs some work in the tpmdd tree
+Message-ID: <20190712034616.ev7oue7tvm3dqyto@linux.intel.com>
+References: <20190712073703.6b6f7667@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562899461-24045-1-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190712073703.6b6f7667@canb.auug.org.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-07-19, 10:44, Wen Yang wrote:
-> The cpu variable is still being used in the of_get_property() call
-> after the of_node_put() call, which may result in use-after-free.
+On Fri, Jul 12, 2019 at 07:37:03AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> v6: keep the blank line and fix warning: label 'out_unmap_sdcpwr' defined but not used.
-> v5: put together the code to get, use, and release cpu device_node.
-> v4: restore the blank line.
-> v3: fix a leaked reference.
-> v2: clean up the code according to the advice of viresh.
+> In commit
 > 
->  drivers/cpufreq/pasemi-cpufreq.c | 26 ++++++++++++++------------
->  1 file changed, 14 insertions(+), 12 deletions(-)
+>   0ce9bf1a55c9 ("tpm: tpm_ibm_vtpm: Fix unallocated banks")
 > 
-> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-> index 6b1e4ab..7d557f9 100644
-> --- a/drivers/cpufreq/pasemi-cpufreq.c
-> +++ b/drivers/cpufreq/pasemi-cpufreq.c
-> @@ -131,10 +131,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	int err = -ENODEV;
->  
->  	cpu = of_get_cpu_node(policy->cpu, NULL);
-> +	if (!cpu)
-> +		goto out;
->  
-> +	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
->  	of_node_put(cpu);
-> -	if (!cpu)
-> +	if (!max_freqp) {
-> +		err = -EINVAL;
->  		goto out;
-> +	}
-> +
-> +	/* we need the freq in kHz */
-> +	max_freq = *max_freqp / 1000;
->  
->  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
->  	if (!dn)
-> @@ -171,16 +179,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	}
->  
->  	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
-> -
-> -	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
-> -	if (!max_freqp) {
-> -		err = -EINVAL;
-> -		goto out_unmap_sdcpwr;
-> -	}
-> -
-> -	/* we need the freq in kHz */
-> -	max_freq = *max_freqp / 1000;
-> -
->  	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
->  	pr_debug("initializing frequency table\n");
->  
-> @@ -196,7 +194,11 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	policy->cur = pas_freqs[cur_astate].frequency;
->  	ppc_proc_freq = policy->cur * 1000ul;
->  
-> -	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
-> +	err = cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+> Fixes tag
+> 
+>   Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+> 
+> has these problem(s):
+> 
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+> 
+> Please do not split Fixes tags over more than one line.
 
-So you are trying to fix an earlier issue here with this. Should have
-been a separate patch. Over that I have just sent a patch now to make
-this routine return void.
+Fixed.
 
-https://lore.kernel.org/lkml/ee8cf5fb4b4a01fdf9199037ff6d835b935cfd13.1562902877.git.viresh.kumar@linaro.org/
-
-So all you need to do is to remove the label out_unmap_sdcpwr instead.
-
-> +	if (err)
-> +		goto out_unmap_sdcpwr;
-> +
-> +	return 0;
->  
->  out_unmap_sdcpwr:
->  	iounmap(sdcpwr_mapbase);
-> -- 
-> 2.9.5
-
--- 
-viresh
+/Jarkko
