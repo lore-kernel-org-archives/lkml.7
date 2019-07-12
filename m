@@ -2,103 +2,215 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B5DC742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6440C742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661A221537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800AE206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfGLQA4 (ORCPT
+        id S1727110AbfGLQDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:00:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44314 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfGLQAz (ORCPT
+        Fri, 12 Jul 2019 12:03:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51064 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfGLQDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:00:55 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlxyU-0004Ej-To; Fri, 12 Jul 2019 18:00:43 +0200
-Date:   Fri, 12 Jul 2019 18:00:42 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-cc:     Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        jwadams@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-In-Reply-To: <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
-Message-ID: <alpine.DEB.2.21.1907121751430.1788@nanos.tec.linutronix.de>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de> <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 12 Jul 2019 12:03:44 -0400
+Received: from linux.home (2a01cb0c80061e007f541addd69f0d47.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:8006:1e00:7f54:1add:d69f:d47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6D3C828BBDA;
+        Fri, 12 Jul 2019 17:03:41 +0100 (BST)
+Date:   Fri, 12 Jul 2019 18:03:38 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        bbrezillon@kernel.org, Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v4 2/3] i3c: move i3c_device_match_id to device.c and
+ export it
+Message-ID: <20190712180338.47b50e9f@linux.home>
+In-Reply-To: <debadccffef84c541601a97162ac656cd7c58478.1562931742.git.vitor.soares@synopsys.com>
+References: <cover.1562931742.git.vitor.soares@synopsys.com>
+        <debadccffef84c541601a97162ac656cd7c58478.1562931742.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019, Alexandre Chartre wrote:
-> On 7/12/19 12:44 PM, Thomas Gleixner wrote:
-> > That ASI thing is just PTI on steroids.
-> > 
-> > So why do we need two versions of the same thing? That's absolutely bonkers
-> > and will just introduce subtle bugs and conflicting decisions all over the
-> > place.
-> > 
-> > The need for ASI is very tightly coupled to the need for PTI and there is
-> > absolutely no point in keeping them separate.
-> > 
-> > The only difference vs. interrupts and exceptions is that the PTI logic
-> > cares whether they enter from user or from kernel space while ASI only
-> > cares about the kernel entry.
+On Fri, 12 Jul 2019 13:53:29 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+
+> The i3c device driver needs the i3c_device_id table.
+
+"Some I3C device drivers need to know which entry matches the
+i3c_device object passed to the probe function" 
+
+> Lets move  to device.c and export it to be used.
+
+"Let's move i3c_device_match_id() to device.c and export it so it can be
+used by drivers."
+
 > 
-> I think that's precisely what makes ASI and PTI different and independent.
-> PTI is just about switching between userland and kernel page-tables, while
-> ASI is about switching page-table inside the kernel. You can have ASI without
-> having PTI. You can also use ASI for kernel threads so for code that won't
-> be triggered from userland and so which won't involve PTI.
-
-It's still the same concept. And you can argue in circles it does not
-justify yet another mapping setup with is a different copy of some other
-mapping setup. Whether PTI is replaced by ASI or PTI is extended to handle
-ASI does not matter at all. Having two similar concepts side by side is a
-guarantee for disaster.
-
-> > So why do you want ot treat that differently? There is absolutely zero
-> > reason to do so. And there is no reason to create a pointlessly different
-> > version of PTI which introduces yet another variant of a restricted page
-> > table instead of just reusing and extending what's there already.
-> > 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> ---
+> Changes in v4:
+>   None
 > 
-> As I've tried to explain, to me PTI and ASI are different and independent.
-> PTI manages switching between userland and kernel page-table, and ASI manages
-> switching between kernel and a reduced-kernel page-table.
+> Changes in v3:
+>   Remove i3c_get_device_id
+>   Move i3c_device_match_id from drivers/i3c/master.c to drivers/i3c/device.c
+>   Export i3c_device_match_id
+> 
+> Changes in v2:
+>   move this function to drivers/i3c/device.c
+> 
+>  drivers/i3c/device.c       | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/i3c/master.c       | 45 ---------------------------------------------
+>  include/linux/i3c/device.h |  4 ++++
+>  3 files changed, 50 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+> index 69cc040..383df3b 100644
+> --- a/drivers/i3c/device.c
+> +++ b/drivers/i3c/device.c
+> @@ -200,6 +200,52 @@ struct i3c_device *dev_to_i3cdev(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_to_i3cdev);
+>  
 
-Again. It's the same concept and it does not matter what form of reduced
-page tables you use. You always need transition points and in order to make
-the transition points work you need reliably mapped bits and pieces.
+You're missing a kerneldoc here.
 
-Also Paul wants to use the same concept for user space so trivial system
-calls can do w/o PTI. In some other thread you said yourself that this
-could be extended to cover the kvm ioctl, which is clearly a return to user
-space.
-
-Are we then going to add another set of randomly sprinkled transition
-points and yet another 'state machine' to duct-tape the fallout?
-
-Definitely not going to happen.
-
-Thanks,
-
-	tglx
+> +const struct i3c_device_id *
+> +i3c_device_match_id(struct i3c_device *i3cdev,
+> +		    const struct i3c_device_id *id_table)
+> +{
+> +	struct i3c_device_info devinfo;
+> +	const struct i3c_device_id *id;
+> +
+> +	i3c_device_get_info(i3cdev, &devinfo);
+> +
+> +	/*
+> +	 * The lower 32bits of the provisional ID is just filled with a random
+> +	 * value, try to match using DCR info.
+> +	 */
+> +	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
+> +		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
+> +		u16 part = I3C_PID_PART_ID(devinfo.pid);
+> +		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
+> +
+> +		/* First try to match by manufacturer/part ID. */
+> +		for (id = id_table; id->match_flags != 0; id++) {
+> +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+> +			    I3C_MATCH_MANUF_AND_PART)
+> +				continue;
+> +
+> +			if (manuf != id->manuf_id || part != id->part_id)
+> +				continue;
+> +
+> +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+> +			    ext_info != id->extra_info)
+> +				continue;
+> +
+> +			return id;
+> +		}
+> +	}
+> +
+> +	/* Fallback to DCR match. */
+> +	for (id = id_table; id->match_flags != 0; id++) {
+> +		if ((id->match_flags & I3C_MATCH_DCR) &&
+> +		    id->dcr == devinfo.dcr)
+> +			return id;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_device_match_id);
+> +
+>  /**
+>   * i3c_driver_register_with_owner() - register an I3C device driver
+>   *
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 5f4bd52..7667f84 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -270,51 +270,6 @@ static const struct device_type i3c_device_type = {
+>  	.uevent = i3c_device_uevent,
+>  };
+>  
+> -static const struct i3c_device_id *
+> -i3c_device_match_id(struct i3c_device *i3cdev,
+> -		    const struct i3c_device_id *id_table)
+> -{
+> -	struct i3c_device_info devinfo;
+> -	const struct i3c_device_id *id;
+> -
+> -	i3c_device_get_info(i3cdev, &devinfo);
+> -
+> -	/*
+> -	 * The lower 32bits of the provisional ID is just filled with a random
+> -	 * value, try to match using DCR info.
+> -	 */
+> -	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
+> -		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
+> -		u16 part = I3C_PID_PART_ID(devinfo.pid);
+> -		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
+> -
+> -		/* First try to match by manufacturer/part ID. */
+> -		for (id = id_table; id->match_flags != 0; id++) {
+> -			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+> -			    I3C_MATCH_MANUF_AND_PART)
+> -				continue;
+> -
+> -			if (manuf != id->manuf_id || part != id->part_id)
+> -				continue;
+> -
+> -			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+> -			    ext_info != id->extra_info)
+> -				continue;
+> -
+> -			return id;
+> -		}
+> -	}
+> -
+> -	/* Fallback to DCR match. */
+> -	for (id = id_table; id->match_flags != 0; id++) {
+> -		if ((id->match_flags & I3C_MATCH_DCR) &&
+> -		    id->dcr == devinfo.dcr)
+> -			return id;
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  static int i3c_device_match(struct device *dev, struct device_driver *drv)
+>  {
+>  	struct i3c_device *i3cdev;
+> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+> index 5ecb055..de102e4 100644
+> --- a/include/linux/i3c/device.h
+> +++ b/include/linux/i3c/device.h
+> @@ -188,6 +188,10 @@ static inline struct i3c_driver *drv_to_i3cdrv(struct device_driver *drv)
+>  struct device *i3cdev_to_dev(struct i3c_device *i3cdev);
+>  struct i3c_device *dev_to_i3cdev(struct device *dev);
+>  
+> +const struct i3c_device_id *
+> +i3c_device_match_id(struct i3c_device *i3cdev,
+> +		    const struct i3c_device_id *id_table);
+> +
+>  static inline void i3cdev_set_drvdata(struct i3c_device *i3cdev,
+>  				      void *data)
+>  {
 
