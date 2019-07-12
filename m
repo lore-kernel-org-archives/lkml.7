@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0AC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955A6C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2302166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CD5216E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934034;
-	bh=JcVTYSmEquGqUaaH+cWCIyPJmKR2psxEv0qovG255wo=;
+	s=default; t=1562934039;
+	bh=tcuzNV4CwkhlZAaLrml/xtkukk3tnDIOoYJlyeBbn6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Sf5Ofd5T9+Mmei1Y5nrG1uIdwe+7E8EtG+GWmOfd0QquWdZLGLzJZEmhTbEfeX7d
-	 KH2XNmK9AXHiG3gI0bBeu5SrHk9gkBBhep55kElJKxIe3EbbKtWuY+lej8Mg5++Jy4
-	 W6h2shww5Ma0h+tIyDatqmlapNDBEGeKKAB5KczY=
+	b=2Et7fj08r16fsdShTesgiYX13T/A4o9Pl/NI4QGg3zYD2O9kNv0oxtLP0cpwoCupC
+	 vC50ZgcmVEz2DMk4K2SKKYE9u5rlJ5QEOqVDYoqTG3ArjwmLUm0ll2SpUevolyPD9F
+	 kk7mRy8BzlOv4uZsRdam8Jryskfqhh4wv61gISL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfGLMUd (ORCPT
+        id S1727373AbfGLMUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:20:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbfGLMUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:20:31 -0400
+        id S1727357AbfGLMUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CBE12166E;
-        Fri, 12 Jul 2019 12:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FEA22166E;
+        Fri, 12 Jul 2019 12:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934030;
-        bh=JcVTYSmEquGqUaaH+cWCIyPJmKR2psxEv0qovG255wo=;
+        s=default; t=1562934032;
+        bh=tcuzNV4CwkhlZAaLrml/xtkukk3tnDIOoYJlyeBbn6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/DsrS9KfJ2jB4uOT7dk+cqwHuyu2lmdRLXWl1DRv5bqAPHgOuq5pfa/L8f5lhEmU
-         6bKGh4OTcCno4VmQYOQe5SukmyT7eaVnyeJBAuZMRIZksl4bu8OkijqvctHOWHxYg7
-         QyNoY47C160b8XirKKpqC4uZJoT9RtK0/q+GUF5U=
+        b=S/OVQv8GrPk7mujrFgz1HeVag8SnCdje0Ot3Ce+fgqJJG5flGsLd9XUyjD89UysJW
+         HqywThk3Dch9em0Ypwd56mRMgE6MRJ38Nbip6QTktrtmwV2ArBSgIV11luIPQtQnm9
+         SOhv1ihBKoT3P3aKCkHHK6MHjNr/XFYMhNOCnZ/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/91] ibmvnic: Do not close unopened driver during reset
-Date:   Fri, 12 Jul 2019 14:18:26 +0200
-Message-Id: <20190712121622.637816904@linuxfoundation.org>
+Subject: [PATCH 4.19 24/91] ibmvnic: Refresh device multicast list after reset
+Date:   Fri, 12 Jul 2019 14:18:27 +0200
+Message-Id: <20190712121622.707174959@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,33 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1f94608b0ce141be5286dde31270590bdf35b86a ]
+[ Upstream commit be32a24372cf162e825332da1a7ccef058d4f20b ]
 
-Check driver state before halting it during a reset. If the driver is
-not running, do nothing. Otherwise, a request to deactivate a down link
-can cause an error and the reset will fail.
+It was observed that multicast packets were no longer received after
+a device reset.  The fix is to resend the current multicast list to
+the backing device after recovery.
 
 Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 426789e2c23d..bf0a5fe0da17 100644
+index bf0a5fe0da17..b88af81499e8 100644
 --- a/drivers/net/ethernet/ibm/ibmvnic.c
 +++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1754,7 +1754,8 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+@@ -1854,6 +1854,9 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 		return 0;
+ 	}
  
- 	ibmvnic_cleanup(netdev);
- 
--	if (adapter->reset_reason != VNIC_RESET_MOBILITY &&
-+	if (reset_state == VNIC_OPEN &&
-+	    adapter->reset_reason != VNIC_RESET_MOBILITY &&
- 	    adapter->reset_reason != VNIC_RESET_FAILOVER) {
- 		rc = __ibmvnic_close(netdev);
- 		if (rc)
++	/* refresh device's multicast list */
++	ibmvnic_set_multi(netdev);
++
+ 	/* kick napi */
+ 	for (i = 0; i < adapter->req_rx_queues; i++)
+ 		napi_schedule(&adapter->napi[i]);
 -- 
 2.20.1
 
