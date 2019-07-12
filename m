@@ -2,137 +2,213 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2E9C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E93C742C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE6B206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88DB206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfGLO3d (ORCPT
+        id S1727210AbfGLOgC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:29:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60112 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbfGLO3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:29:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4EFCF36883;
-        Fri, 12 Jul 2019 14:29:32 +0000 (UTC)
-Received: from treble (ovpn-122-237.rdu2.redhat.com [10.10.122.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 194A360920;
-        Fri, 12 Jul 2019 14:29:30 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 09:29:28 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
-Message-ID: <20190712142928.gmt6gibikdjmkppm@treble>
-References: <CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com>
- <20190711172621.a7ab7jorolicid3z@treble>
- <CAK8P3a0iOMpMW-dXUY6g75HGC4mUe3P3=gv447WZOW8jmw2Vgg@mail.gmail.com>
- <CAG48ez3ipuPHLxbqqc50=Kn4QuoNczkd7VqEoLPVd3WWLk2s+Q@mail.gmail.com>
- <CAK8P3a2=SJQp7Jvyf+BX-7XsUr8bh6eBMo6ue2m8FW4aYf=PPw@mail.gmail.com>
- <CAK8P3a1_8kjzamn6_joBbZTO8NeGn0E3O+MZ+bcOQ0HkkRHXRQ@mail.gmail.com>
- <20190712135755.7qa4wxw3bfmwn5rp@treble>
- <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
+        Fri, 12 Jul 2019 10:36:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26802 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727110AbfGLOgB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 10:36:01 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CEYFvj039942
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:36:00 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.93])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpuxv0f44-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:36:00 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Fri, 12 Jul 2019 14:35:59 -0000
+Received: from us1a3-smtp06.a3.dal06.isc4sb.com (10.146.103.243)
+        by smtp.notes.na.collabserv.com (10.106.227.39) with smtp.notes.na.collabserv.com ESMTP;
+        Fri, 12 Jul 2019 14:35:51 -0000
+Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
+          by us1a3-smtp06.a3.dal06.isc4sb.com
+          with ESMTP id 2019071214355089-551209 ;
+          Fri, 12 Jul 2019 14:35:50 +0000 
+In-Reply-To: <20190712135339.GC27512@ziepe.ca>
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc:     "Arnd Bergmann" <arnd@arndb.de>,
+        "Doug Ledford" <dledford@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Jul 2019 14:35:50 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 12 Jul 2019 14:29:32 +0000 (UTC)
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20190712135339.GC27512@ziepe.ca>,<20190712120328.GB27512@ziepe.ca>
+ <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
+ SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
+X-LLNOutbound: False
+X-Disclaimed: 12499
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 19071214-1799-0000-0000-00000C368D1A
+X-IBM-SpamModules-Scores: BY=0.030592; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.011778
+X-IBM-SpamModules-Versions: BY=3.00011415; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01231133; UDB=6.00648522; IPR=6.01012417;
+ BA=6.00006355; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
+ ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027692; XFM=3.00000015;
+ UTC=2019-07-12 14:35:56
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2019-07-12 09:11:03 - 6.00010155
+x-cbparentid: 19071214-1800-0000-0000-0000004D9BE6
+Message-Id: <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+Subject: Re:  Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 04:19:02PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 12, 2019 at 3:57 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Fri, Jul 12, 2019 at 09:51:35AM +0200, Arnd Bergmann wrote:
-> > > I no longer see any of the "can't find switch jump table" in last
-> > > nights randconfig
-> > > builds. I do see one other rare warning, see attached object file:
-> > >
-> > > fs/reiserfs/do_balan.o: warning: objtool: replace_key()+0x158: stack
-> > > state mismatch: cfa1=7+40 cfa2=7+56
-> > > fs/reiserfs/do_balan.o: warning: objtool: balance_leaf()+0x2791: stack
-> > > state mismatch: cfa1=7+176 cfa2=7+192
-> > > fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0xe8f:
-> > > stack state mismatch: cfa1=7+240 cfa2=7+248
-> > > fs/reiserfs/ibalance.o: warning: objtool:
-> > > internal_move_pointers_items()+0x36f: stack state mismatch: cfa1=7+152
-> > > cfa2=7+144
-> > > fs/reiserfs/lbalance.o: warning: objtool:
-> > > leaf_cut_from_buffer()+0x58b: stack state mismatch: cfa1=7+128
-> > > cfa2=7+112
-> > > fs/reiserfs/lbalance.o: warning: objtool:
-> > > leaf_copy_boundary_item()+0x7a9: stack state mismatch: cfa1=7+104
-> > > cfa2=7+96
-> > > fs/reiserfs/lbalance.o: warning: objtool:
-> > > leaf_copy_items_entirely()+0x3d2: stack state mismatch: cfa1=7+120
-> > > cfa2=7+128
-> > >
-> > > I suspect this comes from the calls to the __reiserfs_panic() noreturn function,
-> > > but have not actually looked at the object file.
-> >
-> > Looking at one of the examples:
-> >
-> >     2346:       0f 85 6a 01 00 00       jne    24b6 <leaf_copy_items_entirely+0x3a8>
-> >     ...
-> >     23b1:       e9 2a 01 00 00          jmpq   24e0 <leaf_copy_items_entirely+0x3d2>
-> >     ...
-> >     24b6:       31 ff                   xor    %edi,%edi
-> >     24b8:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi
-> >                         24bb: R_X86_64_32S      .rodata.str1.1
-> >     24bf:       48 c7 c2 00 00 00 00    mov    $0x0,%rdx
-> >                         24c2: R_X86_64_32S      .rodata.str1.1+0x127b
-> >     24c6:       48 c7 c1 00 00 00 00    mov    $0x0,%rcx
-> >                         24c9: R_X86_64_32S      .rodata.str1.1+0x1679
-> >     24cd:       41 b8 90 01 00 00       mov    $0x190,%r8d
-> >     24d3:       49 c7 c1 00 00 00 00    mov    $0x0,%r9
-> >                         24d6: R_X86_64_32S      .rodata.str1.1+0x127b
-> >     24da:       b8 00 00 00 00          mov    $0x0,%eax
-> >     24df:       55                      push   %rbp
-> >     24e0:       41 52                   push   %r10
-> >     24e2:       e8 00 00 00 00          callq  24e7 <leaf_item_bottle>
-> >                         24e3: R_X86_64_PC32     __reiserfs_panic-0x4
-> >
-> > Objtool is correct this time: There *is* a stack state mismatch at
-> > 0x24e0.  The stack size is different at 0x24e0, depending on whether it
-> > came from 0x2346 or from 0x23b1.
-> >
-> > In this case it's not a problem for code flow, because the basic block
-> > is a dead end.
-> >
-> > But it *is* a problem for unwinding.  The location of the previous stack
-> > frame is nondeterministic.
-> >
-> > And that's extra important for calls to noreturn functions, because they
-> > often dump the stack before exiting.
-> >
-> > So it looks like a compiler bug to me.
-> 
-> The change below would shut up the warnings, and presumably avoid
-> the unwinding problem as well. Should I submit that for inclusion,
-> or should we try to fix clang first?
+-----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
 
-That should work, though I guess it's up to the reiserfs maintainers.
+>To: "Bernard Metzler" <BMT@zurich.ibm.com>
+>From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>Date: 07/12/2019 03:53PM
+>Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
+><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+>linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+>Subject: [EXTERNAL] Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on
+>a u64
+>
+>On Fri, Jul 12, 2019 at 01:05:14PM +0000, Bernard Metzler wrote:
+>> 
+>> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+>> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>> >Date: 07/12/2019 02:03PM
+>> >Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
+>> ><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+>> >linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+>> >Subject: [EXTERNAL] Re: [PATCH] rdma/siw: avoid smp_store_mb() on
+>a
+>> >u64
+>> >
+>> >On Fri, Jul 12, 2019 at 11:33:46AM +0000, Bernard Metzler wrote:
+>> >> >diff --git a/drivers/infiniband/sw/siw/siw_verbs.c
+>> >> >b/drivers/infiniband/sw/siw/siw_verbs.c
+>> >> >index 32dc79d0e898..41c5ab293fe1 100644
+>> >> >+++ b/drivers/infiniband/sw/siw/siw_verbs.c
+>> >> >@@ -1142,10 +1142,11 @@ int siw_req_notify_cq(struct ib_cq
+>> >*base_cq,
+>> >> >enum ib_cq_notify_flags flags)
+>> >> > 
+>> >> > 	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
+>> >> > 		/* CQ event for next solicited completion */
+>> >> >-		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
+>> >> >+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_SOLICITED);
+>> >> > 	else
+>> >> > 		/* CQ event for any signalled completion */
+>> >> >-		smp_store_mb(*cq->notify, SIW_NOTIFY_ALL);
+>> >> >+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_ALL);
+>> >> >+	smp_wmb();
+>> >> > 
+>> >> > 	if (flags & IB_CQ_REPORT_MISSED_EVENTS)
+>> >> > 		return cq->cq_put - cq->cq_get;
+>> >> 
+>> >> 
+>> >> Hi Arnd,
+>> >> Many thanks for pointing that out! Indeed, this CQ notification
+>> >> mechanism does not take 32 bit architectures into account.
+>> >> Since we have only three flags to hold here, it's probably
+>better
+>> >> to make it a 32bit value. That would remove the issue w/o
+>> >> introducing extra smp_wmb(). 
+>> >
+>> >I also prefer not to see smp_wmb() in drivers..
+>> >
+>> >> I'd prefer smp_store_mb(), since on some architectures it shall
+>be
+>> >> more efficient.  That would also make it sufficient to use
+>> >> READ_ONCE.
+>> >
+>> >The READ_ONCE is confusing to me too, if you need store_release
+>> >semantics then the reader also needs to pair with load_acquite -
+>> >otherwise it doesn't work.
+>> >
+>> >Still, we need to do something rapidly to fix the i386 build,
+>please
+>> >revise right away..
+>> >
+>> >Jason
+>> >
+>> >
+>> 
+>> We share CQ (completion queue) notification flags between
+>application
+>> (which may be user land) and producer (kernel QP's (queue pairs)).
+>> Those flags can be written by both application and QP's. The
+>application
+>> writes those flags to let the driver know if it shall inform about
+>new
+>> work completions. It can write those flags at any time.
+>> Only a kernel producer reads those flags to decide if
+>> the CQ notification handler shall be kicked, if a new CQ element
+>gets
+>> added to the CQ. When kicking the completion handler, the driver
+>resets the
+>> notification flag, which must get re-armed by the application.
+>
+>This looks wrong to me.. a userspace notification re-arm cannot be
+>lost, so have a split READ/TEST/WRITE sequence can't possibly work?
+>
+>I'd expect an atomic test and clear here?
 
-The issue still needs to get fixed in clang regardless.  There are other
-noreturn functions in the kernel and this problem could easily pop back
-up.
+We cannot avoid the case that the application re-arms the
+CQ only after a CQE got placed. That is why folks are polling the
+CQ once after re-arming it - to make sure they do not miss the
+very last and single CQE which would have produced a CQ event.
 
--- 
-Josh
+I do not think an atomic test and clear would change that picture.
+
+Also, per RDMA verbs semantics, if the user would re-arm the CQ
+more then once before it gets a CQ event, it will still get only one
+CQ event if a new CQ element becomes ready. 
+>
+>
+>> @@ -1141,11 +1145,17 @@ int siw_req_notify_cq(struct ib_cq
+>*base_cq, enum ib_cq_notify_flags flags)
+>>  	siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
+>>  
+>>  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
+>> -		/* CQ event for next solicited completion */
+>> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
+>> +		/*
+>> +		 * Enable CQ event for next solicited completion.
+>> +		 * and make it visible to all associated producers.
+>> +		 */
+>> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
+>
+>But what is the 2nd piece of data to motivate the smp_store_mb?
+
+Another core (such as a concurrent RX operation) shall see this
+CQ being re-armed asap.
+
+Best,
+Bernard.
+>
+>Jason
+>
+>
+
