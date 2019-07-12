@@ -2,99 +2,181 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EE1C742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96851C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A132080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67360208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfGLOER (ORCPT
+        id S1727151AbfGLOGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:04:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32960 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfGLOEQ (ORCPT
+        Fri, 12 Jul 2019 10:06:30 -0400
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:12229 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbfGLOGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:04:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id r6so3980232qtt.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:04:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qOSLjOC0a6pOm0G5m4ewIw/B4m7qP1LrJ+Nw6hOt0Ks=;
-        b=V3uOl+/Usuk6VklWC+ZYtaUKIVKiNKopcy2SFTorrhYz1JSLSfsbNmyaLWjenonB5T
-         TmC0sTFC504m01Oa81cHfTJG1VCt//18+3rsqzMb8HgN3vez7aP3k8q+fUJbWfXi0g3s
-         +Xzr3SXxZ8boynnR3aixpjD6nYt7UZ9C4CpJ7RiVwVAEiV/c0xOGCUBFWBHQx23KFZp1
-         BeupEeozcNx7jps0EyLYjeYoMSphFRFbw/dMeEEwk522rntQQDsuDaFwFc9ZE9hMlyeh
-         f4BwmxYA7H07XFRVDzaxx1jtYT+2Nn2qnQIUhg7bNRm+LLtK2CBGFXa/ts4pOZDzQQCu
-         y/TA==
-X-Gm-Message-State: APjAAAWjjkbQyHlfli5FJS1xYe8oultPFlR4X+8408KSAiKzi0y7qHUW
-        1vFtRa7EYF1sP+NJTsfIpjc16Q==
-X-Google-Smtp-Source: APXvYqw058I4WeqHkGmyQaJoOr3NNaqT1eRI4pdNh/6ynAM4gYk2cFoMchjCUD/MQuh7OK/ujczBLA==
-X-Received: by 2002:aed:2241:: with SMTP id o1mr6518892qtc.233.1562940255726;
-        Fri, 12 Jul 2019 07:04:15 -0700 (PDT)
-Received: from localhost.localdomain ([151.15.230.231])
-        by smtp.gmail.com with ESMTPSA id n184sm3643754qkc.114.2019.07.12.07.04.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jul 2019 07:04:14 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 16:04:09 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
-        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
-        mathieu.poirier@linaro.org, lizefan@huawei.com,
-        cgroups@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>
-Subject: Re: [PATCH v8 6/8] cgroup/cpuset: Change cpuset_rwsem and hotplug
- lock order
-Message-ID: <20190712140409.GB13885@localhost.localdomain>
-References: <20190628080618.522-1-juri.lelli@redhat.com>
- <20190628080618.522-7-juri.lelli@redhat.com>
- <20190628130308.GU3419@hirez.programming.kicks-ass.net>
- <20190701065233.GA26005@localhost.localdomain>
- <20190701082731.GP3402@hirez.programming.kicks-ass.net>
- <20190701145107.GY657710@devbig004.ftw2.facebook.com>
- <20190704084924.GC9099@localhost.localdomain>
+        Fri, 12 Jul 2019 10:06:30 -0400
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 8c49cXmEU4DVbzknZCNFFH/vhecAeN1PtOBv9TIf+TYshzn88tjaI/QrzDZc0UaZ+U2pZb/rwG
+ uBPoMDuBbOGKi0PrrlTCknCnOze2WQG9MPxgaDF1TBo7pJM8NqGzQvd8p9ciespPfNFC1L1ood
+ PJruXl2zoS6m96MWXHH7LhEfaSCVc+sHA7PgLEP/wOJts5H77lFWNt/T2Mhn0wVZDutSXLTFnK
+ S3CTcnK5hkKLTKdfu55xy9ANzGvAeURf5XlS095zv/9wOx0wLV9vBjd/AUOvmC3JSuBjT80U50
+ FgM=
+X-SBRS: 2.7
+X-MesageID: 2947113
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.63,482,1557201600"; 
+   d="scan'208";a="2947113"
+Subject: Re: [Xen-devel] [PATCH v2] xen/pv: Fix a boot up hang revealed by
+ int3 self test
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, <x86@kernel.org>,
+        <srinivas.eeda@oracle.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        <xen-devel@lists.xenproject.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
+ 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
+ 6+ahAA==
+Message-ID: <ebf9657b-7d97-87a0-e32e-af8453ee7bba@citrix.com>
+Date:   Fri, 12 Jul 2019 09:06:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704084924.GC9099@localhost.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/07/19 10:49, Juri Lelli wrote:
-> Hi,
-> 
-> On 01/07/19 07:51, Tejun Heo wrote:
-> > Hello,
-> > 
-> > On Mon, Jul 01, 2019 at 10:27:31AM +0200, Peter Zijlstra wrote:
-> > > IIRC TJ figured it wasn't strictly required to fix the lock invertion at
-> > > that time and they sorted it differently. If I (re)read the thread
-> > > correctly the other day, he didn't have fundamental objections against
-> > > it, but wanted the simpler fix.
-> > 
-> > Yeah I've got no objections to the change itself, it just wasn't
-> > needed at the time.  We've had multiple issues there tho, so please
-> > keep an eye open after the changes get merged.
-> 
-> Should I take this as an indication that you had a look at the set and
-> (apart from Peter's comments) you are OK with them?
-> 
-> If that's the case I will send a v9 out soon. Otherwise I'd kindly ask
-> you to please have a look.
+On 11/07/2019 03:15, Zhenzhong Duan wrote:
+> Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
+> selftest") is used to ensure there is a gap setup in exception stack
+> which could be used for inserting call return address.
+>
+> This gap is missed in XEN PV int3 exception entry path, then below panic
+> triggered:
+>
+> [    0.772876] general protection fault: 0000 [#1] SMP NOPTI
+> [    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
+> [    0.772893] RIP: e030:int3_magic+0x0/0x7
+> [    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
+> [    0.773334] Call Trace:
+> [    0.773334]  alternative_instructions+0x3d/0x12e
+> [    0.773334]  check_bugs+0x7c9/0x887
+> [    0.773334]  ? __get_locked_pte+0x178/0x1f0
+> [    0.773334]  start_kernel+0x4ff/0x535
+> [    0.773334]  ? set_init_arg+0x55/0x55
+> [    0.773334]  xen_start_kernel+0x571/0x57a
+>
+> As xenint3 and int3 entry code are same except xenint3 doesn't generate
+> a gap, we can fix it by using int3 and drop useless xenint3.
 
-Gentle ping.
+For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
+%rcx/%r11 on the stack.
 
-Thanks,
+To convert back to "normal" looking exceptions, the xen thunks do `pop
+%rcx; pop %r11; jmp do_*`...
 
-Juri
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index 0ea4831..35a66fc 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1176,7 +1176,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
+>  #ifdef CONFIG_XEN_PV
+>  idtentry xennmi			do_nmi			has_error_code=0
+>  idtentry xendebug		do_debug		has_error_code=0
+> -idtentry xenint3		do_int3			has_error_code=0
+>  #endif
+
+What is confusing is why there are 3 extra magic versions here.  At a
+guess, I'd say something to do with IST settings (given the vectors),
+but I don't see why #DB/#BP would need to be different in the first
+place.  (NMI sure, but that is more to do with the crazy hoops needing
+to be jumped through to keep native functioning safely.)
+
+~Andrew
