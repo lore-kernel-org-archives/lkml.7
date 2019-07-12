@@ -2,177 +2,181 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94497C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F10DC742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5FC2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="FeDvb65j";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FqbO97DB"
+	by mail.kernel.org (Postfix) with ESMTP id 44B032084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562920713;
+	bh=znfS1tIVsdDsPnI4loA05mUj2+D+UfKCfNMiKikS3qc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E2CczyFAW4x45A3e0DqcklHqsKLX4ZBvYlLYK0k9cMVO8Edw43O5pu3ePzPJkpml/
+	 fJgRGF5wUnUdWUpd+ZNGiBJ3jGkl7I2AjuxDLA73RNVxyulztgHO0IoNvCSbICLwJA
+	 lEhXRUyJcVwCSYen2fFOH7z/cxR620rLxnxtnhhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfGLIiY (ORCPT
+        id S1726546AbfGLIi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:38:24 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38837 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725877AbfGLIiX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:38:23 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id B749D2230E;
-        Fri, 12 Jul 2019 04:38:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 12 Jul 2019 04:38:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=/UVl1SfI1iLqkTsHe3vvfHE6leW
-        BQBCgm2DrQ+AZhuk=; b=FeDvb65jzKh9ghvM1HCsSOXtn9CnPAhANSHh0STjxKD
-        LbVqaYAd0KVoB5qZZdIwkrYK5cVDnAdF530XhX5ilO0wLC5pFmk52uYD+SvqMJKV
-        ZZH4nZvyDhCT1qjICj/a5Or0rQZ0C4a0IutgIgLZnYd5Bc7B3PwMskEmsXVLak22
-        7hO8ITIpH9OAhYveSIU90xbIya6AU7l7o0NvPKCghF7DCVhBILG19UL3n6mi9Zp5
-        UH4UE+I2m5YmckXxlpHiYGMq6uggaOCxik9XWvewRl65z8KPpkOHLS1vJ8H/QNfY
-        g8rSAjVBgWO9A5Ub6CYHJvZUA0l+6S5MEi5mV/8CPbg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/UVl1S
-        fI1iLqkTsHe3vvfHE6leWBQBCgm2DrQ+AZhuk=; b=FqbO97DBs5/ZTmPDcD3Glf
-        PjagPJr1GioWza5EKp4nmjemeHczqP6PwpZl1nJHbgnrK4O58rCZf1LBB+6sB/Tt
-        O1wHgnLiMtn3ZoEdGQmbVFT7A9sFWb9sJETPzA88ISCsgVllmWma67BQPF7Iggc0
-        wNxVX1JVFefj5sMs7u8QHBI0GjuRDbp/jit8Th3kDcw+AlJJXKYkjDNBg+GzlctN
-        UpCPaBE6VIWA7iqW0tCAVSmmLl7d8SLYb0467AEAlJtjzjOXCVVH28lhHprteyHt
-        tY9S6cWAHmE+z5q/vfNLNgnkhyzxkHCLdX5gJPBPqC8ztL8/p2caPhWsH3bwf6rA
-        ==
-X-ME-Sender: <xms:_UYoXQOguVlUqK9-SN_uHhS74SotEOGASz3FDsfw2VH2IQl14bHgrQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrhedtgddtgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:_UYoXf1E8-HxayeYP4JppO4Fch5OtgdS7fUCYwM2yUA2DQGZM6ay3Q>
-    <xmx:_UYoXWNeGIB9dO34uvdzCfjag_yrN0R1yq5MrikjNymKVtDZima6Aw>
-    <xmx:_UYoXSzWxYDvkc7nxMVp8KXBYR8xCHhZycLfpK4ZwUESSpVCuqUcVA>
-    <xmx:_kYoXUm_cxfpVqtNQEmLoQHqY7nywqV1nNhZHftTD3PZOgbSIPUVng>
+        Fri, 12 Jul 2019 04:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbfGLIiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:38:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5F2E480061;
-        Fri, 12 Jul 2019 04:38:21 -0400 (EDT)
-Date:   Fri, 12 Jul 2019 09:59:20 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20190712075920.GA18592@kroah.com>
-References: <20190708192345.53fce4cf@canb.auug.org.au>
- <20190712104430.739f1b61@canb.auug.org.au>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32FC52084B;
+        Fri, 12 Jul 2019 08:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562920704;
+        bh=znfS1tIVsdDsPnI4loA05mUj2+D+UfKCfNMiKikS3qc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O8/6HMhjSQdegv2kCpGxIva1Er3pQZ/I5WzjudAaiMTEB10s1cxD7mp5z19yVSZxi
+         RpLi25UFr4qpV5xph1Me6NViWypu62WhDBF0NYru/qStveIQfURSoXXOS7n2FKXjJ6
+         nMp2u8Kg1eeaA8Is/FwWfgRef6+hEL9pXjnoQyus=
+Date:   Fri, 12 Jul 2019 10:38:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Okash Khawaja <okash.khawaja@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
+        Simon Dickson <simonhdickson@gmail.com>,
+        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Christopher Brannon <chris@the-brannons.com>
+Subject: Re: Staging status of speakup
+Message-ID: <20190712083819.GA8862@kroah.com>
+References: <20190315130035.6a8f16e9@narunkot>
+ <20190316031831.GA2499@kroah.com>
+ <20190706200857.22918345@narunkot>
+ <20190707065710.GA5560@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712104430.739f1b61@canb.auug.org.au>
+In-Reply-To: <20190707065710.GA5560@kroah.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:44:30AM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Sun, Jul 07, 2019 at 08:57:10AM +0200, Greg Kroah-Hartman wrote:
+> On Sat, Jul 06, 2019 at 08:08:57PM +0100, Okash Khawaja wrote:
+> > On Fri, 15 Mar 2019 20:18:31 -0700
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > 
+> > > On Fri, Mar 15, 2019 at 01:01:27PM +0000, Okash Khawaja wrote:
+> > > > Hi,
+> > > > 
+> > > > We have made progress on the items in TODO file of speakup driver in
+> > > > staging directory and wanted to get some clarity on the remaining
+> > > > items. Below is a summary of status of each item along with the
+> > > > quotes from TODO file.
+> > > > 
+> > > > 1. "The first issue has to do with the way speakup communicates
+> > > > with serial ports.  Currently, we communicate directly with the
+> > > > hardware ports. This however conflicts with the standard serial
+> > > > port drivers, which poses various problems. This is also not
+> > > > working for modern hardware such as PCI-based serial ports.  Also,
+> > > > there is not a way we can communicate with USB devices.  The
+> > > > current serial port handling code is in serialio.c in this
+> > > > directory."
+> > > > 
+> > > > Drivers for all external synths now use TTY to communcate with the
+> > > > devices. Only ones still using direct communication with hardware
+> > > > ports are internal synths: acntpc, decpc, dtlk and keypc. These are
+> > > > typically ISA cards and generally hardware which is difficult to
+> > > > make work. We can leave these in staging.  
+> > > 
+> > > Ok, that's fine.
+> > > 
+> > > > 2. "Some places are currently using in_atomic() because speakup
+> > > > functions are called in various contexts, and a couple of things
+> > > > can't happen in these cases. Pushing work to some worker thread
+> > > > would probably help, as was already done for the serial port
+> > > > driving part."
+> > > > 
+> > > > There aren't any uses of in_atomic anymore. Commit d7500135802c
+> > > > "Staging: speakup: Move pasting into a work item" was the last one
+> > > > that removed such uses.  
+> > > 
+> > > Great, let's remove that todo item then.
+> > > 
+> > > > 3. "There is a duplication of the selection functions in
+> > > > selections.c. These functions should get exported from
+> > > > drivers/char/selection.c (clear_selection notably) and used from
+> > > > there instead."
+> > > > 
+> > > > This is yet to be done. I guess drivers/char/selection.c is now
+> > > > under drivers/tty/vt/selection.c.  
+> > > 
+> > > Yes, someone should update the todo item :)
+> > > 
+> > > > 4. "The kobjects may have to move to a more proper place in /sys.The
+> > > > discussion on lkml resulted to putting speech synthesizers in the
+> > > > "speech" class, and the speakup screen reader itself
+> > > > into /sys/class/vtconsole/vtcon0/speakup, the nasty path being
+> > > > handled by userland tools."
+> > > > 
+> > > > Although this makes logical sense, the change will mean changing
+> > > > interface with userspace and hence the user space tools. I tried to
+> > > > search the lkml discussion but couldn't find it. It will be good to
+> > > > know your thoughts on this.  
+> > > 
+> > > I don't remember, sorry.  I can review the kobject/sysfs usage if you
+> > > think it is "good enough" now and see if I find anything
+> > > objectionable.
+> > > 
+> > > > Finally there is an issue where text in output buffer sometimes gets
+> > > > garbled on SMP systems, but we can continue working on it after the
+> > > > driver is moved out of staging, if that's okay. Basically we need a
+> > > > reproducer of this issue.
+> > > > 
+> > > > In addition to above, there are likely code style issues which will
+> > > > need to be fixed.
+> > > > 
+> > > > We are very keen to get speakup out of staging both, for settling
+> > > > the driver but also for getting included in distros which build
+> > > > only the mainline drivers.  
+> > > 
+> > > That's great, I am glad to see this happen.  How about work on the
+> > > selection thing and then I can review the kobject stuff in a few
+> > > weeks, and then we can start moving things for 5.2?
+> > 
+> > Hi Greg,
+> > 
+> > Apologies for the delay. I de-duplicated selection code in speakup to
+> > use code that's already in kernel (commit ids 496124e5e16e and
+> > 41f13084506a). Following items are what remain now:
+> > 
+> > 1. moving kobjects location
+> > 2. fixing garbled text
+> > 
+> > I couldn't replicate garbled text but Simon (also in CC list) is
+> > looking into it.
+> > 
+> > Can you please advise on the way forward?
 > 
-> On Mon, 8 Jul 2019 19:23:45 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > 
-> > After merging the char-misc tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > drivers/misc/vmw_balloon.c: In function 'vmballoon_mount':
-> > drivers/misc/vmw_balloon.c:1736:14: error: 'simple_dname' undeclared (first use in this function); did you mean 'simple_rename'?
-> >    .d_dname = simple_dname,
-> >               ^~~~~~~~~~~~
-> >               simple_rename
-> > drivers/misc/vmw_balloon.c:1736:14: note: each undeclared identifier is reported only once for each function it appears in
-> > drivers/misc/vmw_balloon.c:1739:9: error: implicit declaration of function 'mount_pseudo'; did you mean 'mount_bdev'? [-Werror=implicit-function-declaration]
-> >   return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
-> >          ^~~~~~~~~~~~
-> >          mount_bdev
-> > drivers/misc/vmw_balloon.c:1739:9: warning: returning 'int' from a function with return type 'struct dentry *' makes pointer from integer without a cast [-Wint-conversion]
-> >   return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
-> >          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >         BALLOON_VMW_MAGIC);
-> >         ~~~~~~~~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >   83a8afa72e9c ("vmw_balloon: Compaction support")
-> > 
-> > interacting with commits
-> > 
-> >   7e5f7bb08b8c ("unexport simple_dname()")
-> >   8d9e46d80777 ("fold mount_pseudo_xattr() into pseudo_fs_get_tree()")
-> > 
-> > from the vfs tree.
-> > 
-> > I applied the following merge fix patch:
-> > 
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Mon, 8 Jul 2019 19:17:56 +1000
-> > Subject: [PATCH] convert vmwballoon to use the new mount API
-> > 
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/misc/vmw_balloon.c | 14 ++++----------
-> >  1 file changed, 4 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
-> > index 91fa43051535..e8c0f7525f13 100644
-> > --- a/drivers/misc/vmw_balloon.c
-> > +++ b/drivers/misc/vmw_balloon.c
-> > @@ -29,6 +29,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/mount.h>
-> > +#include <linux/pseudo_fs.h>
-> >  #include <linux/balloon_compaction.h>
-> >  #include <linux/vmw_vmci_defs.h>
-> >  #include <linux/vmw_vmci_api.h>
-> > @@ -1728,21 +1729,14 @@ static inline void vmballoon_debugfs_exit(struct vmballoon *b)
-> >  
-> >  #ifdef CONFIG_BALLOON_COMPACTION
-> >  
-> > -static struct dentry *vmballoon_mount(struct file_system_type *fs_type,
-> > -				      int flags, const char *dev_name,
-> > -				      void *data)
-> > +static int vmballoon_init_fs_context(struct fs_context *fc)
-> >  {
-> > -	static const struct dentry_operations ops = {
-> > -		.d_dname = simple_dname,
-> > -	};
-> > -
-> > -	return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
-> > -			    BALLOON_VMW_MAGIC);
-> > +	return init_pseudo(fc, BALLOON_VMW_MAGIC) ? 0 : -ENOMEM;
-> >  }
-> >  
-> >  static struct file_system_type vmballoon_fs = {
-> >  	.name           = "balloon-vmware",
-> > -	.mount          = vmballoon_mount,
-> > +	.init_fs_context          = vmballoon_init_fs_context,
-> >  	.kill_sb        = kill_anon_super,
-> >  };
-> >  
+> I don't think the "garbled text" is an issue to get this out of staging
+> if others do not see this.  It can be fixed like any other bug at a
+> later point if it is figured out.
 > 
-> This is now a conflict between the vfs tree and Linus' tree.
+> The kobject stuff does need to be looked at.  Let me carve out some time
+> next week to do that and I will let you know what I see/recommend.
 
-Looks good to me, I'll watch out for this when Al's tree is merged.
+At first glance, this might all be just fine.
+
+But, I can't quite figure out what some files are doing.  No matter
+what, you will need Documentation/ABI/ entries for the speakup code for
+these sysfs files.
+
+Can you make up a patch to create a
+drivers/staging/speakup/sysfs-speakup file with the needed information?
+That way it will be much easier to determine exactly what these sysfs
+files do and my review can be easier, and perhaps not needed at all :)
 
 thanks,
 
