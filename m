@@ -2,342 +2,259 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A41FC742D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15932C742D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B082204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC92204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzgVQvPb"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kabTbhuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfGLRtd (ORCPT
+        id S1727433AbfGLRuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:49:33 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33962 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfGLRtc (ORCPT
+        Fri, 12 Jul 2019 13:50:51 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:38904 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfGLRuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:49:32 -0400
-Received: by mail-qt1-f196.google.com with SMTP id k10so9000469qtq.1;
-        Fri, 12 Jul 2019 10:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2Af4m0BoGgUyJh88P/HiWq2/bRFzF0fAtz1mXVpi6QQ=;
-        b=AzgVQvPbZA/8pGDQOAwuj3clKXyldFuuPZgQgtsFdIcCuanYtgiCQPbDU898YkIcqQ
-         m/Blbqkl+Ac0TABUizPF/MA8n3MrL4/tIIC0LOkCWmcIIGiLBuD3oMs1d9wKU2dLyoyB
-         IrwoFF7arp2rm3Hf/iSkIFmdYIkPKwtIcBtCM3+9Db9ubO1YHhyQPE62OsxWDWm6wwIG
-         iD5NpA+DK7GA0wsg2Ts1zgQuPUN6QQ+f8j0a9kmQ/BWkVrtL9qxz1GVTXChimsSeSFwB
-         dlduIp5apVtZhhkj9eVHMIv9FIDCbv6rjPdlfdJsa/b0SXv5APmYxALqJMzPJ4QtdMam
-         SXUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2Af4m0BoGgUyJh88P/HiWq2/bRFzF0fAtz1mXVpi6QQ=;
-        b=m4Ycn/vwxa5Kz5WVa0apY78ja+7zQYUCfkaEYMkx76/FUkmeG+OCjD33q7hA6ME8pM
-         SigkBaARNELbfoIvwh7NFzcovp/eTI7zYEyZsTji9FtFWPwkSNy2XGw4gKDzX9Zkm0tB
-         M3yNUJ6AvJCxyGk9/lMJLNHeViGwStNXleEGXr+YjL+zuSWpstxtZOjFU6IKfqvxmo3I
-         c+ArtigejvUtRCxD4NHhZUSCwtYaD94C2xZHQe4mAU3INI7hIS1krSBpm/BkNfvRbxgQ
-         zXhA3U/1UmDX5ThqLMZDALPckbvqLRleEh2bnrK8y22uFTLj3e0Nl0jtBk5Oyha2CRVY
-         9agQ==
-X-Gm-Message-State: APjAAAXoC6J/fCr0pdWAT3LtTFfODwQEv+Y8LR+qnmekDSXNKpKzc6H0
-        odpfpjzMzcS102WnLWo+x45EdcFA2DANHp2bn2R6XIB/Mnjs0yEp
-X-Google-Smtp-Source: APXvYqyZLEI7nprG1zfD8pfLglgXYfpC0ILtQwEmN5bmmRpO/CpJyfjggncLuNVGZgGsMTZNt77U11Ib84aJosIUaKQ=
-X-Received: by 2002:ac8:290c:: with SMTP id y12mr7180858qty.141.1562953771196;
- Fri, 12 Jul 2019 10:49:31 -0700 (PDT)
+        Fri, 12 Jul 2019 13:50:50 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x6CHogQ0009227;
+        Sat, 13 Jul 2019 02:50:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6CHogQ0009227
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562953843;
+        bh=OH/1XHi/4PVTAwRaCENy+VQu4fQM/LkcnjSGBushwcg=;
+        h=From:Date:Subject:To:Cc:From;
+        b=kabTbhuEwcunOEgguptQiSz9NADJKSg3yoB4jApmeWMup0ObUlwGIGJ70d1vVRv/K
+         cGQcDVWcYGs46zClCiTl5ZYWJjEY8bk8Oo74nuqIko7exmxj5jRXfC32XQrPDdxdXt
+         obW1ODZIzpXJ6xAihGIf24S8y4gD8Xe5N4Tg6SUaZ37+44HmH9Jv12pAYs2TOYtzpD
+         UoKo8aFEWUD6c9e0aRKUKr3FGTfsRJvLQ7PCSUKa40SzNJPO/ul9Da6s0JNhP6vihF
+         S20uAY4SjoTDaCHV3YKW6UcH85Jg821WEx1ZC1brGYMnNSsIUlI+k8tX1zUzGWGV9+
+         x80V5/i+6DiOw==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id r3so7210373vsr.13;
+        Fri, 12 Jul 2019 10:50:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAVQ0SERhYhZXCCQ+cMloGjqMwnijwm7nbFgbg4p6e04UJ0JhXGt
+        ibMtgnACZpsfzrKyCfBtTNCzmUHTQ18/cHQOPTg=
+X-Google-Smtp-Source: APXvYqxH4ooWxLT5E/g7bppW27lQ9kxdLNWMTj7vpxXMTeXrRbvjpGXnIvDR+lvrzRd4eKaeraINAVom0UiQIp4uoaA=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr9553951vsn.181.1562953841419;
+ Fri, 12 Jul 2019 10:50:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-12-krzesimir@kinvolk.io>
- <CAEf4BzYaV=AxYZna225qKzyWPteU4YFPiBRE4cO30tYmyN_pJQ@mail.gmail.com> <CAGGp+cGMnumMx+GnKbD_ty1C+UWib70s0oBzqdS-=mA-L0jyHA@mail.gmail.com>
-In-Reply-To: <CAGGp+cGMnumMx+GnKbD_ty1C+UWib70s0oBzqdS-=mA-L0jyHA@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 12 Jul 2019 10:49:20 -0700
-Message-ID: <CAEf4BzZHJUns8uNuVJzF-77MCtctBOK53hxgkjqpGJxr9YcAoA@mail.gmail.com>
-Subject: Re: [bpf-next v3 11/12] selftests/bpf: Add tests for
- bpf_prog_test_run for perf events progs
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 13 Jul 2019 02:50:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATyxi5pjwi6zviW+kyZDWaYdt3tQNu+wFmyNeRDryGEKg@mail.gmail.com>
+Message-ID: <CAK7LNATyxi5pjwi6zviW+kyZDWaYdt3tQNu+wFmyNeRDryGEKg@mail.gmail.com>
+Subject: [GIT PULL 1/2] Kbuild updates for v5.3-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     masahiroy@kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:37 AM Krzesimir Nowak <krzesimir@kinvolk.io> wro=
-te:
->
-> On Fri, Jul 12, 2019 at 2:38 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> w=
-rote:
-> > >
-> > > The tests check if ctx and data are correctly prepared from ctx_in an=
-d
-> > > data_in, so accessing the ctx and using the bpf_perf_prog_read_value
-> > > work as expected.
-> > >
-> >
-> > These are x86_64-specific tests, aren't they? Should probably guard
-> > them behind #ifdef's.
->
-> Yeah, they are x86_64 specific, because pt_regs are arch specific. I
-> was wondering what to do here in the cover letter. Ifdef? Ifdef and
-> cover also other arches (please no)? Do some weird tricks with
-> overriding the definition of pt_regs? Else?
+Hi Linus,
 
-So one way to go about this would be to use bpf_helpers.h's
-PT_REGS_PARM{1-5} and PT_REGS_RC, which seem to be define for all
-"supported" platforms. You won't be testing all possible registers,
-but those that are most commonly used by BPF programs (to get input
-params and func result) would be tested, which is probably the most
-important one. That way your test will be arch-agnostic.
+Please pull Kbuild updates for v5.3
+Thanks!
 
->
-> >
-> > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> > > ---
-> > >  tools/testing/selftests/bpf/test_verifier.c   | 48 ++++++++++
-> > >  .../selftests/bpf/verifier/perf_event_run.c   | 96 +++++++++++++++++=
-++
-> > >  2 files changed, 144 insertions(+)
-> > >  create mode 100644 tools/testing/selftests/bpf/verifier/perf_event_r=
-un.c
-> > >
-> > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/test=
-ing/selftests/bpf/test_verifier.c
-> > > index 6f124cc4ee34..484ea8842b06 100644
-> > > --- a/tools/testing/selftests/bpf/test_verifier.c
-> > > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > > @@ -295,6 +295,54 @@ static void bpf_fill_scale(struct bpf_test *self=
-)
-> > >         }
-> > >  }
-> > >
-> > > +static void bpf_fill_perf_event_test_run_check(struct bpf_test *self=
-)
-> > > +{
-> > > +       compiletime_assert(
-> > > +               sizeof(struct bpf_perf_event_data) <=3D TEST_CTX_LEN,
-> > > +               "buffer for ctx is too short to fit struct bpf_perf_e=
-vent_data");
-> > > +       compiletime_assert(
-> > > +               sizeof(struct bpf_perf_event_value) <=3D TEST_DATA_LE=
-N,
-> > > +               "buffer for data is too short to fit struct bpf_perf_=
-event_value");
-> > > +
-> > > +       struct bpf_perf_event_data ctx =3D {
-> > > +               .regs =3D (bpf_user_pt_regs_t) {
-> > > +                       .r15 =3D 1,
-> > > +                       .r14 =3D 2,
-> > > +                       .r13 =3D 3,
-> > > +                       .r12 =3D 4,
-> > > +                       .rbp =3D 5,
-> > > +                       .rbx =3D 6,
-> > > +                       .r11 =3D 7,
-> > > +                       .r10 =3D 8,
-> > > +                       .r9 =3D 9,
-> > > +                       .r8 =3D 10,
-> > > +                       .rax =3D 11,
-> > > +                       .rcx =3D 12,
-> > > +                       .rdx =3D 13,
-> > > +                       .rsi =3D 14,
-> > > +                       .rdi =3D 15,
-> > > +                       .orig_rax =3D 16,
-> > > +                       .rip =3D 17,
-> > > +                       .cs =3D 18,
-> > > +                       .eflags =3D 19,
-> > > +                       .rsp =3D 20,
-> > > +                       .ss =3D 21,
-> > > +               },
-> > > +               .sample_period =3D 1,
-> > > +               .addr =3D 2,
-> > > +       };
-> > > +       struct bpf_perf_event_value data =3D {
-> > > +               .counter =3D 1,
-> > > +               .enabled =3D 2,
-> > > +               .running =3D 3,
-> > > +       };
-> > > +
-> > > +       memcpy(self->ctx, &ctx, sizeof(ctx));
-> > > +       memcpy(self->data, &data, sizeof(data));
-> >
-> > Just curious, just assignment didn't work?
-> >
-> > > +       free(self->fill_insns);
-> > > +       self->fill_insns =3D NULL;
-> > > +}
-> > > +
-> > >  /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up map=
-s */
-> > >  #define BPF_SK_LOOKUP(func)                                         =
-   \
-> > >         /* struct bpf_sock_tuple tuple =3D {} */                     =
-     \
-> > > diff --git a/tools/testing/selftests/bpf/verifier/perf_event_run.c b/=
-tools/testing/selftests/bpf/verifier/perf_event_run.c
-> > > new file mode 100644
-> > > index 000000000000..3f877458a7f8
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/bpf/verifier/perf_event_run.c
-> > > @@ -0,0 +1,96 @@
-> > > +#define PER_LOAD_AND_CHECK_PTREG(PT_REG_FIELD, VALUE)               =
-   \
-> > > +       PER_LOAD_AND_CHECK_CTX(offsetof(bpf_user_pt_regs_t, PT_REG_FI=
-ELD), VALUE)
-> > > +#define PER_LOAD_AND_CHECK_EVENT(PED_FIELD, VALUE)                  =
-   \
-> > > +       PER_LOAD_AND_CHECK_CTX(offsetof(struct bpf_perf_event_data, P=
-ED_FIELD), VALUE)
-> > > +#define PER_LOAD_AND_CHECK_CTX(OFFSET, VALUE)                       =
-   \
-> > > +       PER_LOAD_AND_CHECK_64(BPF_REG_4, BPF_REG_1, OFFSET, VALUE)
-> > > +#define PER_LOAD_AND_CHECK_VALUE(PEV_FIELD, VALUE)                  =
-   \
-> > > +       PER_LOAD_AND_CHECK_64(BPF_REG_7, BPF_REG_6, offsetof(struct b=
-pf_perf_event_value, PEV_FIELD), VALUE)
-> >
-> > Wrap long lines? Try also running scripts/checkpatch.pl again these
-> > files you are modifying.
->
-> Will wrap. Checkpatch was also complaining about complex macro not
-> being inside parens, but I can't see how to wrap it in parens and keep
-> it working at the same time.
->
-> >
-> > > +#define PER_LOAD_AND_CHECK_64(DST, SRC, OFFSET, VALUE)              =
-   \
-> > > +       BPF_LDX_MEM(BPF_DW, DST, SRC, OFFSET),                       =
-   \
-> > > +       BPF_JMP_IMM(BPF_JEQ, DST, VALUE, 2),                         =
-   \
-> > > +       BPF_MOV64_IMM(BPF_REG_0, VALUE),                             =
-   \
-> > > +       BPF_EXIT_INSN()
-> > > +
-> > > +{
-> > > +       "check if regs contain expected values",
-> > > +       .insns =3D {
-> > > +       PER_LOAD_AND_CHECK_PTREG(r15, 1),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r14, 2),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r13, 3),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r12, 4),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rbp, 5),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rbx, 6),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r11, 7),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r10, 8),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r9, 9),
-> > > +       PER_LOAD_AND_CHECK_PTREG(r8, 10),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rax, 11),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rcx, 12),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rdx, 13),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rsi, 14),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rdi, 15),
-> > > +       PER_LOAD_AND_CHECK_PTREG(orig_rax, 16),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rip, 17),
-> > > +       PER_LOAD_AND_CHECK_PTREG(cs, 18),
-> > > +       PER_LOAD_AND_CHECK_PTREG(eflags, 19),
-> > > +       PER_LOAD_AND_CHECK_PTREG(rsp, 20),
-> > > +       PER_LOAD_AND_CHECK_PTREG(ss, 21),
-> > > +       BPF_MOV64_IMM(BPF_REG_0, 0),
-> > > +       BPF_EXIT_INSN(),
-> > > +       },
-> > > +       .result =3D ACCEPT,
-> > > +       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
-> > > +       .ctx_len =3D sizeof(struct bpf_perf_event_data),
-> > > +       .data_len =3D sizeof(struct bpf_perf_event_value),
-> > > +       .fill_helper =3D bpf_fill_perf_event_test_run_check,
-> > > +       .override_data_out_len =3D true,
-> > > +},
-> > > +{
-> > > +       "check if sample period and addr contain expected values",
-> > > +       .insns =3D {
-> > > +       PER_LOAD_AND_CHECK_EVENT(sample_period, 1),
-> > > +       PER_LOAD_AND_CHECK_EVENT(addr, 2),
-> > > +       BPF_MOV64_IMM(BPF_REG_0, 0),
-> > > +       BPF_EXIT_INSN(),
-> > > +       },
-> > > +       .result =3D ACCEPT,
-> > > +       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
-> > > +       .ctx_len =3D sizeof(struct bpf_perf_event_data),
-> > > +       .data_len =3D sizeof(struct bpf_perf_event_value),
-> > > +       .fill_helper =3D bpf_fill_perf_event_test_run_check,
-> > > +       .override_data_out_len =3D true,
-> > > +},
-> > > +{
-> > > +       "check if bpf_perf_prog_read_value returns expected data",
-> > > +       .insns =3D {
-> > > +       // allocate space for a struct bpf_perf_event_value
-> > > +       BPF_MOV64_REG(BPF_REG_6, BPF_REG_10),
-> > > +       BPF_ALU64_IMM(BPF_ADD, BPF_REG_6, -(int)sizeof(struct bpf_per=
-f_event_value)),
-> > > +       // prepare parameters for bpf_perf_prog_read_value(ctx, struc=
-t bpf_perf_event_value*, u32)
-> > > +       // BPF_REG_1 already contains the context
-> > > +       BPF_MOV64_REG(BPF_REG_2, BPF_REG_6),
-> > > +       BPF_MOV64_IMM(BPF_REG_3, sizeof(struct bpf_perf_event_value))=
-,
-> > > +       BPF_EMIT_CALL(BPF_FUNC_perf_prog_read_value),
-> > > +       // check the return value
-> > > +       BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 1),
-> > > +       BPF_EXIT_INSN(),
-> > > +       // check if the fields match the expected values
-> >
-> > Use /* */ comments.
->
-> Oops. Will fix.
->
-> >
-> > > +       PER_LOAD_AND_CHECK_VALUE(counter, 1),
-> > > +       PER_LOAD_AND_CHECK_VALUE(enabled, 2),
-> > > +       PER_LOAD_AND_CHECK_VALUE(running, 3),
-> > > +       BPF_MOV64_IMM(BPF_REG_0, 0),
-> > > +       BPF_EXIT_INSN(),
-> > > +       },
-> > > +       .result =3D ACCEPT,
-> > > +       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
-> > > +       .ctx_len =3D sizeof(struct bpf_perf_event_data),
-> > > +       .data_len =3D sizeof(struct bpf_perf_event_value),
-> > > +       .fill_helper =3D bpf_fill_perf_event_test_run_check,
-> > > +       .override_data_out_len =3D true,
-> > > +},
-> > > +#undef PER_LOAD_AND_CHECK_64
-> > > +#undef PER_LOAD_AND_CHECK_VALUE
-> > > +#undef PER_LOAD_AND_CHECK_CTX
-> > > +#undef PER_LOAD_AND_CHECK_EVENT
-> > > +#undef PER_LOAD_AND_CHECK_PTREG
-> > > --
-> > > 2.20.1
-> > >
->
->
->
-> --
-> Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
-> Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago =
-L=C3=B3pez Galeiras
-> Registergericht/Court of registration: Amtsgericht Charlottenburg
-> Registernummer/Registration number: HRB 171414 B
-> Ust-ID-Nummer/VAT ID number: DE302207000
+
+The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
+
+  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.3
+
+for you to fetch changes up to d4a74bbfee03acf7bbddc77b9c9236462c744fc7:
+
+  kbuild: use -- separater intead of $(filter-out ...) for
+cc-cross-prefix (2019-07-11 23:34:52 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.3
+
+- remove headers_{install,check}_all targets
+
+- remove unreasonable 'depends on !UML' from CONFIG_SAMPLES
+
+- re-implement 'make headers_install' more cleanly
+
+- add new header-test-y syntax to compile-test headers
+
+- compile-test exported headers to ensure they are compilable in
+  user-space
+
+- compile-test headers under include/ to ensure they are self-contained
+
+- remove -Waggregate-return, -Wno-uninitialized, -Wno-unused-value flags
+
+- add -Werror=unknown-warning-option for Clang
+
+- add 128-bit built-in types support to genksyms
+
+- fix missed rebuild of modules.builtin
+
+- propagate 'No space left on device' error in fixdep to Make
+
+- allow Clang to use its integrated assembler
+
+- improve some coccinelle scripts
+
+- add a new flag KBUILD_ABS_SRCTREE to request Kbuild to use absolute
+  path for $(srctree).
+
+- do not ignore errors when compression utility is missing
+
+- misc cleanups
+
+----------------------------------------------------------------
+Geert Uytterhoeven (1):
+      kbuild: Inform user to pass ARCH= for make mrproper
+
+Harald Seiler (1):
+      kbuild: fix compression errors getting ignored
+
+Jani Nikula (1):
+      kbuild: add support for ensuring headers are self-contained
+
+Kirill Smelkov (1):
+      coccinelle: api/stream_open: treat all wait_.*() calls as blocking
+
+Markus Elfring (2):
+      coccinelle: put_device: Adjust a message construction
+      coccinelle: put_device: Add a cast to an expression for an assignment
+
+Masahiro Yamada (35):
+      kbuild: remove headers_{install,check}_all
+      kbuild: remove stale dependency between Documentation/ and headers_install
+      kbuild: make gdb_script depend on prepare0 instead of prepare
+      kbuild: fix Kconfig prompt of CONFIG_HEADERS_CHECK
+      kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of samples
+      kbuild: remove build_unifdef target in scripts/Makefile
+      kbuild: build all prerequisites of headers_install simultaneously
+      kbuild: add 'headers' target to build up uapi headers in usr/include
+      kbuild: re-implement Makefile.headersinst without recursion
+      kbuild: move hdr-inst shorthand to top Makefile
+      kbuild: simplify scripts/headers_install.sh
+      kbuild: deb-pkg: do not run headers_check
+      lib/raid6: remove duplicated CFLAGS_REMOVE_altivec8.o
+      lib/raid6: refactor unroll rules with pattern rules
+      kbuild: fix 'No such file or directory' warning for headers_install
+      kbuild: rename arg-check to cmd-check
+      kbuild: save $(strip ...) for calling any-prepreq
+      kbuild: save $(strip ...) for calling if_changed and friends
+      kbuild: fix missed rebuild of modules.builtin
+      kbuild: split modules.order build rule out of 'modules' target
+      fixdep: check return value of printf() and putchar()
+      kbuild: add more hints about SUBDIRS replacement
+      init/Kconfig: add CONFIG_CC_CAN_LINK
+      kbuild: compile-test exported headers to ensure they are self-contained
+      kbuild: do not create wrappers for header-test-y
+      kbuild: support header-test-pattern-y
+      kheaders: remove meaningless -R option of 'ls'
+      kheaders: include only headers into kheaders_data.tar.xz
+      kbuild: compile-test kernel headers to ensure they are self-contained
+      scripts/tags.sh: drop SUBARCH support for ARM
+      scripts/tags.sh: remove unused environment variables from comments
+      kbuild: remove src and obj from the top Makefile
+      kbuild: replace KBUILD_SRCTREE with boolean building_out_of_srctree
+      kbuild: add a flag to force absolute path for srctree
+      kbuild: use -- separater intead of $(filter-out ...) for cc-cross-prefix
+
+Mathieu Malaterre (1):
+      kbuild: Remove -Waggregate-return from scripts/Makefile.extrawarn
+
+Nathan Chancellor (3):
+      kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
+      kbuild: Enable -Wuninitialized
+      kbuild: Add ability to test Clang's integrated assembler
+
+Nathan Huckleberry (1):
+      kbuild: Remove unnecessary -Wno-unused-value
+
+Rikard Falkeborn (1):
+      coccinelle: kstrdup: Fix typo in warning messages
+
+Vasily Gorbik (1):
+      kallsyms: exclude kasan local symbols on s390
+
+Will Deacon (1):
+      genksyms: Teach parser about 128-bit built-in types
+
+ Documentation/kbuild/headers_install.txt  |    7 -
+ Documentation/kbuild/kbuild.txt           |    9 +
+ Documentation/kbuild/makefiles.txt        |   22 +-
+ Makefile                                  |  117 ++--
+ arch/arc/Makefile                         |    2 +-
+ arch/arc/configs/tb10x_defconfig          |    1 +
+ arch/nds32/configs/defconfig              |    1 +
+ arch/parisc/Makefile                      |   12 +-
+ arch/parisc/configs/a500_defconfig        |    1 +
+ arch/parisc/configs/b180_defconfig        |    1 +
+ arch/parisc/configs/c3000_defconfig       |    1 +
+ arch/parisc/configs/default_defconfig     |    1 +
+ arch/powerpc/configs/ppc6xx_defconfig     |    1 +
+ arch/s390/configs/debug_defconfig         |    1 +
+ arch/um/Makefile                          |    2 +-
+ drivers/gpu/drm/i915/.gitignore           |    1 -
+ drivers/gpu/drm/i915/Makefile.header-test |   12 +-
+ include/Kbuild                            | 1270
++++++++++++++++++++++++++++++++++++
+ include/uapi/{linux => }/Kbuild           |    6 +-
+ init/Kconfig                              |   33 +
+ kernel/gen_kheaders.sh                    |   51 +-
+ lib/Kconfig.debug                         |   25 +-
+ lib/raid6/Makefile                        |   98 +--
+ net/bpfilter/Kconfig                      |    2 +-
+ samples/Kconfig                           |   14 +-
+ samples/Makefile                          |    4 +-
+ scripts/Kbuild.include                    |   28 +-
+ scripts/Makefile                          |    5 -
+ scripts/Makefile.build                    |   11 +-
+ scripts/Makefile.extrawarn                |    3 -
+ scripts/Makefile.headersinst              |  134 ++--
+ scripts/Makefile.host                     |    2 +-
+ scripts/Makefile.lib                      |   26 +-
+ scripts/Makefile.modbuiltin               |    2 +-
+ scripts/basic/fixdep.c                    |   51 +-
+ scripts/coccinelle/api/kstrdup.cocci      |    8 +-
+ scripts/coccinelle/api/stream_open.cocci  |    8 +-
+ scripts/coccinelle/free/put_device.cocci  |   11 +-
+ scripts/gdb/linux/Makefile                |    2 +-
+ scripts/genksyms/keywords.c               |    4 +
+ scripts/genksyms/parse.y                  |    2 +
+ scripts/headers.sh                        |   29 -
+ scripts/headers_install.sh                |   48 +-
+ scripts/kallsyms.c                        |    3 +
+ scripts/package/builddeb                  |    2 +-
+ scripts/package/mkspec                    |    2 +-
+ scripts/tags.sh                           |   43 +-
+ tools/testing/selftests/Makefile          |    2 +-
+ tools/testing/selftests/lib.mk            |    4 +-
+ usr/.gitignore                            |    1 -
+ usr/Makefile                              |    2 +
+ usr/include/.gitignore                    |    3 +
+ usr/include/Makefile                      |  132 ++++
+ 53 files changed, 1805 insertions(+), 458 deletions(-)
+ delete mode 100644 drivers/gpu/drm/i915/.gitignore
+ create mode 100644 include/Kbuild
+ rename include/uapi/{linux => }/Kbuild (77%)
+ delete mode 100755 scripts/headers.sh
+ create mode 100644 usr/include/.gitignore
+ create mode 100644 usr/include/Makefile
+
+
+-- 
+Best Regards
+Masahiro Yamada
