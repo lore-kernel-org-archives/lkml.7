@@ -2,183 +2,84 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E31C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BDDC742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429B72084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txxE7X8W"
+	by mail.kernel.org (Postfix) with ESMTP id 2B08A2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:04:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562893460;
+	bh=Bo+q0hKf5LxeaSDApUoWhLNtI3MOCrePufeOx5LfW4Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wsKgg+2sJgy3o4pnopp0uACWX6aJZDZks6ZxqX2ZHAPPj9fjyRspCaShhewZXKd0m
+	 ruNj4S9VXSnCfy0KEg1nySmPiKDH1dJ9cazz2gGShmX3iiIHYSJGyxhjh7Rg0UMfs2
+	 tpK0RFc/FdYFwComC7S7MwAzfwyPmawyBQkN8y0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfGLA77 (ORCPT
+        id S1729002AbfGLBET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:59:59 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33953 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfGLA76 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:59:58 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k10so6501567qtq.1;
-        Thu, 11 Jul 2019 17:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vyRvdglp9w3WMAVwpZ8V5acwRWpsWl+iTtdEW4rvar4=;
-        b=txxE7X8WbuCKhCRBQru177MjuZze+pZCDz3RdJ4rEwr3Eb96rvgOhODAT0S/Xjmp9e
-         Gni8eX3BUNl8IyyKLVNknIJmMObUbzLUuNH/mDHhD6JyPrICshHweZEWKFuAaN4pXJqu
-         dKSFAFdAYFPnXuC05uU0QeDj2E2cDBR920oDu4WAC2m0w63JVhMS6umkNXSJoKcIvO7E
-         GtDhanc7eUXsVAQN8rpwJALT0FWxmqPXAmW7RpsJ9suJEVumWCIqt8BIIrVLFyRHY3Ax
-         nsj1kcysn/Rrm7zxT6MKFnlsKE+P7PXWYbTFGdeuXzwp1L7E1R9ryUtnWXFEsMXxuoE3
-         8IeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vyRvdglp9w3WMAVwpZ8V5acwRWpsWl+iTtdEW4rvar4=;
-        b=SssxtIbtCDllkKez6ptjmVSp0H372ZQvY+Z63xCNV/UIF9B90kt31nH9MrcslffUPE
-         S0X4ZpXwuERvmnBJl8j0lX653ByYS7JRylfffgxsh79Mmm85TunNOESS1DOpAsUnxgJG
-         Gxh5mWfnRWqk3rbRAkBfSRI7dx1ezsJ3vv2i0Vtzp/5EhuXwze0yOR2u8WlfiRIwShX7
-         2olgKjo4eO+RHnc878J6YSYKeV88/uoB2RA+j0d6L7hod8sIYLvRo3yrxQpOg/hdzOnl
-         uaoEX20k9WCk4xyY35t/qsPOtK+OdWzXtD/NNoPinLm7KgFaEHDEGC6z2zPzWYRLP0zL
-         OVrw==
-X-Gm-Message-State: APjAAAWob6Jad1/6pK5Gy4+3rWWG/vdkYx04FOhr3JLkcrwfZfSsVfyD
-        gAVYQEtR477eLf7Nf6VT8rUukmAg9Nfme3XjKKM=
-X-Google-Smtp-Source: APXvYqx/nmtN0ibOY1gKjWppu+MVnXd5hpjXGLRUTESB0ttPXoJNPVWlFkEp6N20LfxCuAlfqEqOIkKtHWjb2rkA+5M=
-X-Received: by 2002:ac8:6601:: with SMTP id c1mr3869170qtp.93.1562893196956;
- Thu, 11 Jul 2019 17:59:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-3-krzesimir@kinvolk.io>
- <CAEf4BzYra9njHOB8t6kxRu6n5NJdjjAG541OLt8ci=0zbbcUSg@mail.gmail.com> <CAGGp+cGnEBFoPAuhTPa_JFCW6Vbjp2NN0ZPqC3qGfWEXwTyVOQ@mail.gmail.com>
-In-Reply-To: <CAGGp+cGnEBFoPAuhTPa_JFCW6Vbjp2NN0ZPqC3qGfWEXwTyVOQ@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 11 Jul 2019 17:59:46 -0700
-Message-ID: <CAEf4Bzb-KW+p1zFcz39OSUuH0=DLFRNLa3NYT4V_-zz0Q_TJ5g@mail.gmail.com>
-Subject: Re: [bpf-next v3 02/12] selftests/bpf: Avoid a clobbering of errno
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 21:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728102AbfGLBES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:04:18 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C31E214AF;
+        Fri, 12 Jul 2019 01:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562893458;
+        bh=Bo+q0hKf5LxeaSDApUoWhLNtI3MOCrePufeOx5LfW4Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eIqKhpReC6BpOSmlhSKbSmEX+UF6UZwoQMoeeqZrA9bz5kt6Fa1wU4ocnSjH69X1g
+         +yGG+J0opFVEOtIjbLclYHqZvjMxeT4i+rTawAiYusSoyp3wM8lN4VSx+dRY7HjOjp
+         tvdun+s0YcfiReWs+eyaOs5n7rfM1HXSSVq6olg0=
+Date:   Thu, 11 Jul 2019 18:04:17 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Sai Charan Sane <s.charan@samsung.com>, mhocko@suse.com,
+        tglx@linutronix.de, rppt@linux.vnet.ibm.com,
+        gregkh@linuxfoundation.org, joe@perches.com,
+        miles.chen@mediatek.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, a.sahrawat@samsung.com,
+        pankaj.m@samsung.com, v.narang@samsung.com
+Subject: Re: [PATCH 1/1] mm/page_owner: store page_owner's gfp_mask in
+ stackdepot itself
+Message-Id: <20190711180417.1358ba8b359f68bbf92cf3c2@linux-foundation.org>
+In-Reply-To: <24037235-2174-423f-9055-c6a49aa659e2@suse.cz>
+References: <CGME20190607055426epcas5p24d6507b84fab957b8e0881d2ff727192@epcas5p2.samsung.com>
+        <1559886798-29585-1-git-send-email-s.charan@samsung.com>
+        <24037235-2174-423f-9055-c6a49aa659e2@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 5:04 AM Krzesimir Nowak <krzesimir@kinvolk.io> wrot=
-e:
->
-> On Thu, Jul 11, 2019 at 1:52 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> w=
-rote:
-> > >
-> > > Save errno right after bpf_prog_test_run returns, so we later check
-> > > the error code actually set by bpf_prog_test_run, not by some libcap
-> > > function.
-> > >
-> > > Changes since v1:
-> > > - Fix the "Fixes:" tag to mention actual commit that introduced the
-> > >   bug
-> > >
-> > > Changes since v2:
-> > > - Move the declaration so it fits the reverse christmas tree style.
-> > >
-> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > > Fixes: 832c6f2c29ec ("bpf: test make sure to run unpriv test cases in=
- test_verifier")
-> > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> > > ---
-> > >  tools/testing/selftests/bpf/test_verifier.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/test=
-ing/selftests/bpf/test_verifier.c
-> > > index b8d065623ead..3fe126e0083b 100644
-> > > --- a/tools/testing/selftests/bpf/test_verifier.c
-> > > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > > @@ -823,16 +823,18 @@ static int do_prog_test_run(int fd_prog, bool u=
-npriv, uint32_t expected_val,
-> > >         __u8 tmp[TEST_DATA_LEN << 2];
-> > >         __u32 size_tmp =3D sizeof(tmp);
-> > >         uint32_t retval;
-> > > +       int saved_errno;
-> > >         int err;
-> > >
-> > >         if (unpriv)
-> > >                 set_admin(true);
-> > >         err =3D bpf_prog_test_run(fd_prog, 1, data, size_data,
-> > >                                 tmp, &size_tmp, &retval, NULL);
-> >
-> > Given err is either 0 or -1, how about instead making err useful right
-> > here without extra variable?
-> >
-> > if (bpf_prog_test_run(...))
-> >         err =3D errno;
->
-> I change it later to bpf_prog_test_run_xattr, which can also return
-> -EINVAL and then errno is not set. But this one probably should not be
+On Mon, 17 Jun 2019 15:51:32 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-This is wrong. bpf_prog_test_run/bpf_prog_test_run_xattr should either
-always return -1 and set errno to actual error (like syscalls do), or
-always use return code with proper error. Give they are pretending to
-be just pure syscall, it's probably better to set errno to EINVAL and
-return -1 on invalid input args?
+> On 6/7/19 7:53 AM, Sai Charan Sane wrote:
+> > Memory overhead of 4MB is reduced by storing gfp_mask in stackdepot along
+> > with stacktrace. Stackdepot memory usage increased by ~100kb for 4GB of RAM.
+> > 
+> > Page owner logs from dmesg:
+> > 	Before patch:
+> > 		allocated 20971520 bytes of page_ext
+> > 	After patch:
+> > 		allocated 16777216 bytes of page_ext
+> > 
+> > Signed-off-by: Sai Charan Sane <s.charan@samsung.com>
+> 
+> I don't know, this looks like unneeded abuse to me. In the debug
+> scenario when someone boots a kernel with page_owner enabled, does 4MB
+> out of 4GB RAM really make a difference?
 
-> triggered by the test code. So not sure, probably would be better to
-> keep it as is for consistency?
->
-> >
-> > > +       saved_errno =3D errno;
-> > >         if (unpriv)
-> > >                 set_admin(false);
-> > >         if (err) {
-> > > -               switch (errno) {
-> > > +               switch (saved_errno) {
-> > >                 case 524/*ENOTSUPP*/:
-> >
-> > ENOTSUPP is defined in include/linux/errno.h, is there any problem
-> > with using this in selftests?
->
-> I just used whatever there was earlier. Seems like <linux/errno.h> is
-> not copied to tools include directory.
-
-Ok, let's leave it as is, thanks!
-
->
-> >
-> > >                         printf("Did not run the program (not supporte=
-d) ");
-> > >                         return 0;
-> > > --
-> > > 2.20.1
-> > >
->
->
->
-> --
-> Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
-> Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago =
-L=C3=B3pez Galeiras
-> Registergericht/Court of registration: Amtsgericht Charlottenburg
-> Registernummer/Registration number: HRB 171414 B
-> Ust-ID-Nummer/VAT ID number: DE302207000
+Thanks.  I'll drop this patch.
