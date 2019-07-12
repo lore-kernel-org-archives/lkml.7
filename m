@@ -2,120 +2,228 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C39C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0D9C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4372B21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:21:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGGOiAYW"
+	by mail.kernel.org (Postfix) with ESMTP id DD6CB21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfGLDV1 (ORCPT
+        id S1729387AbfGLDWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:21:27 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37043 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbfGLDV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:21:27 -0400
-Received: by mail-io1-f65.google.com with SMTP id q22so17329488iog.4;
-        Thu, 11 Jul 2019 20:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E7LVm4En99ffCjdSQOlCLFmZyKo+5KgGT1Gs50j8hsM=;
-        b=XGGOiAYWv7/LtWLb3fFHsucku023HvaBW9ern8zt9rFe1AyknFN0kxKFPziFQZPpU0
-         mSUbPmiUxLZBClWysvQHFmJPzjerUGcZmDtQtON9UMZ2C4htBoznEEz2/vFFy/yVuJja
-         T34RRf3SsfRNEsmhwekzCfWrfFfgARA567579Dr0mc521R6E52gp2ayCzNst2yQphWtb
-         SAT8Oq/dYdNEQwYhy2DLsF34PcwbUmqh8/5rJ58NESmddmsnlgfyv8urPDxPtMjHgLqU
-         fWnoeLnir4pIqAFryiTPsmzaD4bprxfXiinlG6R4m1tet7HqDGByU4JAdYYEUeQ+yvoL
-         /dlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E7LVm4En99ffCjdSQOlCLFmZyKo+5KgGT1Gs50j8hsM=;
-        b=ZhCnIr/Q7nDEWK8KIAfFSsiwrRSsYsyQPNu9MZO3imuX04BHYmjkRY8Sw9vL8R/WRH
-         wZT4ZT2GaIGr/XvOiXDr2G7yBGejZF+Fh6thZcQgx6yrq+a3QwqgmOlFVPHl3+6rksfU
-         OcPWAboKl56bAWTbtssKvk0slhRbLVtpYc1GX+gGSNOFJPoUYPJn0LhO0NHZoHPH0HtM
-         YzOeCpJqhlxrq4zxGbiRm5rI04q0UL5MMwU/WndaNDrup/H6Td7HRMBDPHOmWE/YxX70
-         iEa0O3FrsD5fb+LR+98LDv/TYaRqtix7/3TDBgYKhffZrsuqxDpMq1wP9NGGEKKkpcEv
-         avHQ==
-X-Gm-Message-State: APjAAAUBQbOmuk7yvAq3RegLmxGu53NUgIuamYQdIPXYXVb0uU+4j9BQ
-        bCQxoXsxGDT3DzphAEkelL2IaiJR6QAxdl1tjHU=
-X-Google-Smtp-Source: APXvYqyp5Ity6hBV3CWvEX0wudD0bshEvgzA9ul3uS1sRHoTyhwVoN3ni1XDKQh+sLTxNA7FAuOIv5IQ476yGT3CIBY=
-X-Received: by 2002:a02:8814:: with SMTP id r20mr9020971jai.115.1562901686256;
- Thu, 11 Jul 2019 20:21:26 -0700 (PDT)
+        Thu, 11 Jul 2019 23:22:04 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2084 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728796AbfGLDWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:22:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:22:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
+   d="scan'208";a="174337093"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Jul 2019 20:22:02 -0700
+Message-ID: <5D27FE26.1050002@intel.com>
+Date:   Fri, 12 Jul 2019 11:27:34 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-References: <20190522013045.21678-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190522013045.21678-1-andrew.smirnov@gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 11 Jul 2019 20:21:14 -0700
-Message-ID: <CAHQ1cqF+8i1RPi77pXhGv4GRMoWMC0PpvJcEWcKH1O+CKuGWpg@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: Retry configure request if result is L2CAP_CONF_UNKNOWN
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth@vger.kernel.org,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Florian Dollinger <dollinger.florian@gmx.de>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Eric Hankland <ehankland@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com
+CC:     linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: x86: PMU Event Filter
+References: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com>
+In-Reply-To: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 6:31 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+On 07/11/2019 09:25 AM, Eric Hankland wrote:
+> - Add a VM ioctl that can control which events the guest can monitor.
 >
-> Due to:
->
->  * Current implementation of l2cap_config_rsp() dropping BT
->    connection if sender of configuration response replied with unknown
->    option failure (Result=0x0003/L2CAP_CONF_UNKNOWN)
->
->  * Current implementation of l2cap_build_conf_req() adding
->    L2CAP_CONF_RFC(0x04) option to initial configure request sent by
->    the Linux host.
->
-> devices that do no recongninze L2CAP_CONF_RFC, such as Xbox One S
-> controllers, will get stuck in endless connect -> configure ->
-> disconnect loop, never connect and be generaly unusable.
->
-> To avoid this problem add code to do the following:
->
->  1. Parse the body of response L2CAP_CONF_UNKNOWN and, in case of
->     unsupported option being RFC, clear L2CAP_FEAT_ERTM and
->     L2CAP_FEAT_STREAMING from connection's feature mask (in order to
->     prevent RFC option from being added going forward)
->
->  2. Retry configuration step the same way it's done for
->     L2CAP_CONF_UNACCEPT
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> Cc: Florian Dollinger <dollinger.florian@gmx.de>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: linux-bluetooth@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: ehankland<ehankland@google.com>
 > ---
->
-> Changes since [v1]:
->
->    - Patch simplified to simply clear L2CAP_FEAT_ERTM |
->      L2CAP_FEAT_STREAMING from feat_mask when device flags RFC options
->      as unknown
->
-> [v1] lore.kernel.org/r/20190208025828.30901-1-andrew.smirnov@gmail.com
->
+> Changes since v1:
+> -Moved to a vm ioctl rather than a vcpu one
+> -Changed from a whitelist to a configurable filter which can either be
+> white or black
+> -Only restrict GP counters since fixed counters require extra handling
+> and they can be disabled by setting the guest cpuid (though only by
+> setting the number - they can't be disabled individually)
 
-Pinging the status of this. Marcel, do you have any feedback on v2?
+I think just disabling guest cpuid might not be enough, since guest
+could write to the msr without checking the cpuid.
 
-Thanks,
-Andrey Smirnov
+Why not just add a bitmap for fixed counter?
+e.g. fixed_counter_reject_bitmap
+
+At the beginning of reprogram_fixed_counter, we could add the check:
+
+if (test_bit(idx, &kvm->arch.fixed_counter_reject_bitmap))
+     return -EACCES;
+
+(Please test with your old guest and see if they have issues if we 
+inject #GP when
+they try to set the fixed_ctrl msr. If there is, we could drop -EACCESS 
+above)
+
+The bitmap could be set at kvm_vm_ioctl_set_pmu_event_filter.
+
+> +/* for KVM_CAP_PMU_EVENT_FILTER */
+> +struct kvm_pmu_event_filter {
+> +       __u32 type;
+> +       __u32 nevents;
+> +       __u64 events[0];
+> +};
+> +
+> +#define KVM_PMU_EVENT_WHITELIST 0
+> +#define KVM_PMU_EVENT_BLACKLIST 1
+
+I think it would be better to add more, please see below:
+
+enum kvm_pmu_action_type {
+     KVM_PMU_EVENT_ACTION_NONE = 0,
+     KVM_PMU_EVENT_ACTION_ACCEPT = 1,
+     KVM_PMU_EVENT_ACTION_REJECT = 2,
+     KVM_PMU_EVENT_ACTION_MAX
+};
+
+and do a check in kvm_vm_ioctl_set_pmu_event_filter()
+     if (filter->action >= KVM_PMU_EVENT_ACTION_MAX)
+         return -EINVAL;
+
+This is for detecting the case that we add a new action in
+userspace, while the kvm hasn't been updated to support that.
+
+KVM_PMU_EVENT_ACTION_NONE is for userspace to remove
+the filter after they set it.
+
+
+> +
+>   #endif /* _ASM_X86_KVM_H */
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index dd745b58ffd8..d674b79ff8da 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -22,6 +22,9 @@
+>   #include "lapic.h"
+>   #include "pmu.h"
+>
+> +/* This keeps the total size of the filter under 4k. */
+> +#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
+> +
+
+Why is this limit needed?
+
+>   /* NOTE:
+>    * - Each perf counter is defined as "struct kvm_pmc";
+>    * - There are two types of perf counters: general purpose (gp) and fixed.
+> @@ -144,6 +147,10 @@ void reprogram_gp_counter(struct kvm_pmc *pmc,
+> u64 eventsel)
+>   {
+>          unsigned config, type = PERF_TYPE_RAW;
+>          u8 event_select, unit_mask;
+> +       struct kvm_arch *arch = &pmc->vcpu->kvm->arch;
+> +       struct kvm_pmu_event_filter *filter;
+> +       int i;
+> +       bool allow_event = true;
+>
+>          if (eventsel & ARCH_PERFMON_EVENTSEL_PIN_CONTROL)
+>                  printk_once("kvm pmu: pin control bit is ignored\n");
+> @@ -155,6 +162,24 @@ void reprogram_gp_counter(struct kvm_pmc *pmc,
+> u64 eventsel)
+>          if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE) || !pmc_is_enabled(pmc))
+>                  return;
+>
+> +       rcu_read_lock();
+> +       filter = rcu_dereference(arch->pmu_event_filter);
+> +       if (filter) {
+> +               for (i = 0; i < filter->nevents; i++)
+> +                       if (filter->events[i] ==
+> +                           (eventsel & AMD64_RAW_EVENT_MASK_NB))
+> +                               break;
+> +               if (filter->type == KVM_PMU_EVENT_WHITELIST &&
+> +                   i == filter->nevents)
+> +                       allow_event = false;
+> +               if (filter->type == KVM_PMU_EVENT_BLACKLIST &&
+> +                   i < filter->nevents)
+> +                       allow_event = false;
+> +       }
+> +       rcu_read_unlock();
+> +       if (!allow_event)
+> +               return;
+> +
+
+I think it looks tidier to wrap the changes above into a function:
+
+     if (kvm_pmu_filter_event(kvm, eventsel & AMD64_RAW_EVENT_MASK_NB))
+         return;
+
+>          event_select = eventsel & ARCH_PERFMON_EVENTSEL_EVENT;
+>          unit_mask = (eventsel & ARCH_PERFMON_EVENTSEL_UMASK) >> 8;
+>
+> @@ -351,3 +376,39 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
+>   {
+>          kvm_pmu_reset(vcpu);
+>   }
+> +
+> +int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+> +{
+> +       struct kvm_pmu_event_filter tmp, *filter;
+> +       size_t size;
+> +       int r;
+> +
+> +       if (copy_from_user(&tmp, argp, sizeof(tmp)))
+> +               return -EFAULT;
+> +
+> +       if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
+> +               return -E2BIG;
+> +
+> +       size = sizeof(tmp) + sizeof(tmp.events[0]) * tmp.nevents;
+> +       filter = vmalloc(size);
+> +       if (!filter)
+> +               return -ENOMEM;
+> +
+> +       r = -EFAULT;
+> +       if (copy_from_user(filter, argp, size))
+
+Though the above functions correctly, I would just move "r = -EFAULT" here
+to have it executed conditionally.
+
+
+> +               goto cleanup;
+> +
+> +       /* Ensure nevents can't be changed between the user copies. */
+> +       *filter = tmp;
+> +
+> +       mutex_lock(&kvm->lock);
+> +       rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
+> +                          mutex_is_locked(&kvm->lock));
+> +       mutex_unlock(&kvm->lock);
+> +
+> +       synchronize_rcu();
+> +       r = 0;
+> +cleanup:
+> +       kvfree(filter);
+
+Probably better to have it conditionally?
+
+if (filter) {
+     synchronize_srcu();
+     kfree(filter)
+}
+
+
+You may want to factor it out, so that kvm_pmu_destroy could reuse.
+
+Best,
+Wei
