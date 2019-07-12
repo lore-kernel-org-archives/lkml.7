@@ -2,114 +2,114 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD609C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFD8C742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98C2206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600782084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:13:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="BlXyKnqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfGLPNB (ORCPT
+        id S1727189AbfGLPNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:13:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26427 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbfGLPNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:13:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 08:13:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
-   d="scan'208";a="171580427"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by orsmga006.jf.intel.com with ESMTP; 12 Jul 2019 08:13:00 -0700
-Date:   Fri, 12 Jul 2019 08:13:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-Subject: Re: [PATCH v7 1/3] KVM: x86: add support for user wait instructions
-Message-ID: <20190712151300.GB29659@linux.intel.com>
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-2-tao3.xu@intel.com>
+        Fri, 12 Jul 2019 11:13:46 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:61974 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfGLPNp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:13:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1562944425; x=1594480425;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=6paSjuY09ejpoRwHJwgN56Jb7OGwcZrtkGDYZABihlQ=;
+  b=BlXyKnqmu06am0Au76ruT2RPvd+7VWZsLgTbDIyXZzoYNUy0ZDgKJAJA
+   nnK9R5cE0BmXa1vlwrnOATX9jsLpgmeVRheeHSenvQTTa654mXfulaCGK
+   X577M2TyRFhIKK7AQW40qCOi4N2FQnhen3R3oW/ZTInO8YXYaV0fGgQSr
+   8=;
+X-IronPort-AV: E=Sophos;i="5.62,483,1554768000"; 
+   d="scan'208";a="685177933"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 12 Jul 2019 15:13:41 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 80BBAA2519;
+        Fri, 12 Jul 2019 15:13:40 +0000 (UTC)
+Received: from EX13D01EUB004.ant.amazon.com (10.43.166.180) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 12 Jul 2019 15:13:39 +0000
+Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
+ EX13D01EUB004.ant.amazon.com (10.43.166.180) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 12 Jul 2019 15:13:38 +0000
+Received: from EX13D01EUB003.ant.amazon.com ([10.43.166.248]) by
+ EX13D01EUB003.ant.amazon.com ([10.43.166.248]) with mapi id 15.00.1367.000;
+ Fri, 12 Jul 2019 15:13:38 +0000
+From:   "Raslan, KarimAllah" <karahmed@amazon.de>
+To:     "will@kernel.org" <will@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yaojun8558363@gmail.com" <yaojun8558363@gmail.com>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "info@metux.net" <info@metux.net>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "yuzhao@google.com" <yuzhao@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "anders.roxell@linaro.org" <anders.roxell@linaro.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] arm: Extend the check for RAM in /dev/mem
+Thread-Topic: [PATCH] arm: Extend the check for RAM in /dev/mem
+Thread-Index: AQHVODcIGfDHKrKqiE2jyO8cjDhCoqbHE70AgAAEl4A=
+Date:   Fri, 12 Jul 2019 15:13:38 +0000
+Message-ID: <1562944417.1345.17.camel@amazon.de>
+References: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
+         <20190712145711.mxmnuyn6kpv2dr7u@willie-the-truck>
+In-Reply-To: <20190712145711.mxmnuyn6kpv2dr7u@willie-the-truck>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.55]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CC75E5D1726FE342A05CE26978AF7023@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712082907.29137-2-tao3.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 04:29:05PM +0800, Tao Xu wrote:
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 46af3a5e9209..a4d5da34b306 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -2048,6 +2048,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->  				  SECONDARY_EXEC_ENABLE_INVPCID |
->  				  SECONDARY_EXEC_RDTSCP |
->  				  SECONDARY_EXEC_XSAVES |
-> +				  SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->  				  SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY |
->  				  SECONDARY_EXEC_APIC_REGISTER_VIRT |
->  				  SECONDARY_EXEC_ENABLE_VMFUNC);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index d98eac371c0a..f411c9ae5589 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2247,6 +2247,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->  			SECONDARY_EXEC_RDRAND_EXITING |
->  			SECONDARY_EXEC_ENABLE_PML |
->  			SECONDARY_EXEC_TSC_SCALING |
-> +			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->  			SECONDARY_EXEC_PT_USE_GPA |
->  			SECONDARY_EXEC_PT_CONCEAL_VMX |
->  			SECONDARY_EXEC_ENABLE_VMFUNC |
-> @@ -3984,6 +3985,25 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
->  		}
->  	}
->  
-> +	if (vmcs_config.cpu_based_2nd_exec_ctrl &
-> +		SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE) {
+T24gRnJpLCAyMDE5LTA3LTEyIGF0IDE1OjU3ICswMTAwLCBXaWxsIERlYWNvbiB3cm90ZToNCj4g
+T24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMTI6MjE6MjFBTSArMDIwMCwgS2FyaW1BbGxhaCBBaG1l
+ZCB3cm90ZToNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9tbS9tbXUuYyBiL2Fy
+Y2gvYXJtNjQvbW0vbW11LmMNCj4gPiBpbmRleCAzNjQ1ZjI5Li5jZGMzZThlIDEwMDY0NA0KPiA+
+IC0tLSBhL2FyY2gvYXJtNjQvbW0vbW11LmMNCj4gPiArKysgYi9hcmNoL2FybTY0L21tL21tdS5j
+DQo+ID4gQEAgLTc4LDcgKzc4LDcgQEAgdm9pZCBzZXRfc3dhcHBlcl9wZ2QocGdkX3QgKnBnZHAs
+IHBnZF90IHBnZCkNCj4gPiAgcGdwcm90X3QgcGh5c19tZW1fYWNjZXNzX3Byb3Qoc3RydWN0IGZp
+bGUgKmZpbGUsIHVuc2lnbmVkIGxvbmcgcGZuLA0KPiA+ICAJCQkgICAgICB1bnNpZ25lZCBsb25n
+IHNpemUsIHBncHJvdF90IHZtYV9wcm90KQ0KPiA+ICB7DQo+ID4gLQlpZiAoIXBmbl92YWxpZChw
+Zm4pKQ0KPiA+ICsJaWYgKCFtZW1ibG9ja19pc19tZW1vcnkoX19wZm5fdG9fcGh5cyhwZm4pKSkN
+Cj4gDQo+IFRoaXMgbG9va3MgYnJva2VuIHRvIG1lLCBzaW5jZSBpdCB3aWxsIGVuZCB1cCByZXR1
+cm5pbmcgJ3RydWUnIGZvciBub21hcA0KPiBtZW1vcnkgYW5kIHdlIHJlYWxseSBkb24ndCB3YW50
+IHRvIG1hcCB0aGF0IHVzaW5nIHdyaXRlYmFjayBhdHRyaWJ1dGVzLg0KDQpUcnVlLCBJIHdpbGwg
+Zml4IHRoaXMgYnkgdXNpbmfCoG1lbWJsb2NrX2lzX21hcF9tZW1vcnkgaW5zdGVhZC4gVGhhdCBz
+YWlkLCBkbw0KeW91IGhhdmUgYW55IGNvbmNlcm5zIGFib3V0IHRoaXMgYXBwcm9hY2ggaW7CoGdl
+bmVyYWw/DQoNCj4gDQo+IFdpbGwNCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFu
+eSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENo
+cmlzdGlhbiBTY2hsYWVnZXIsIFJhbGYgSGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmlj
+aHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6
+IERFIDI4OSAyMzcgODc5CgoK
 
-This should be aligned with the beginning of the conditional.
-Alternatively, add a vmx_waitpkg_supported() helper, which is fairly
-ubiquitous even when there is only a single call site.
-
-> +		/* Exposing WAITPKG only when WAITPKG is exposed */
-No need for this comment.  It's also oddly worded, e.g. the second
-"exposed" should probably be "enabled"?
-
-> +		bool waitpkg_enabled =
-> +			guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG);
-> +
-> +		if (!waitpkg_enabled)
-> +			exec_control &= ~SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
-> +
-> +		if (nested) {
-> +			if (waitpkg_enabled)
-> +				vmx->nested.msrs.secondary_ctls_high |=
-> +					SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
-> +			else
-> +				vmx->nested.msrs.secondary_ctls_high &=
-> +					~SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
-> +		}
-> +	}
-> +
->  	vmx->secondary_exec_control = exec_control;
->  }
->  
-> -- 
-> 2.20.1
-> 
