@@ -2,105 +2,115 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB27C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DB5C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576AE20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYyYj4Td"
+	by mail.kernel.org (Postfix) with ESMTP id ACB9E20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 05:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbfGLFNv (ORCPT
+        id S1726067AbfGLFQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 01:13:51 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:39610 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfGLFNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 01:13:51 -0400
-Received: by mail-lf1-f46.google.com with SMTP id v85so5576817lfa.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 22:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h1l+yKMs5eoMYO2qnNQH2xVuYFvFDBbrlUII08j6+mA=;
-        b=nYyYj4Td71VI953FAnyXurziweSCfNklLpK/20JzdgHfGVOtnzeWSnTD3QpkBj1m1j
-         0+XmP7aKHmB2tFrjhco2B+BLfXxMvapsbXEtTS75L9D50cT/Q2k5mi6/ZGUMADNYJ6M9
-         /wuGf83vcQk9fw1Hq2K8CgfhpnTk+MjsURGJYWwESfgUrX+cFxD0RX8+iLv9l+U1x+Ru
-         +2L7b1HpO0WufLCNfWtO6u0yVL2VhFfuXVTpsxpQBt1N2FTYYnoKgiYAm9CTf7lQSH+D
-         7//dX24mOdjvvoS0Rie7FLIkW9l4pAywDy0IClhfcvZNIxXxJhwrw4/kcgHqvDlhqhCu
-         WXTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h1l+yKMs5eoMYO2qnNQH2xVuYFvFDBbrlUII08j6+mA=;
-        b=jHEF3gap+GrA4YG3HTIVSudRZ+ekifNwj4t+N66gzexF2QuN4bk9qGy1kZlDdZ5A6i
-         kLV8c0NgnvaKVkOl4aDi6iz1cRd9j8jDLQaUi8iDLiDWRbYiaVEV8Wn5bJBsYDuC9uDi
-         6WVDpH6KQ1qmy/csbh2AcPL4LcZRXL/7A0jWiKjEG0exi/MLRG065287SvD+/hcEhlFt
-         gvc/xNUPCeGNHSCPrywpCYZSIH/4/gvzoAheUVpBDMEN2Z0SoccmdtUJGL4mGuDlIUfE
-         e6wInseN32Y9IF+gv2lkzKFniIDg13SDwtQ4fi3/69Ud58sCnhvvZmvT+Bmag+2yLN39
-         qfFA==
-X-Gm-Message-State: APjAAAXf+QrJS3QlE7fjli9uNqLqHS2v4SaBvWWcvhoofHag/rnvNGvE
-        r2FLqs897BIbq0IsF0DMm7XPW5QFyeqOB5pWEXCccA==
-X-Google-Smtp-Source: APXvYqyfBXA9XmXbGZHqcWD0t0USlZpN+WDbCnrmpXLdBk+4LqbchAml/Mo4CSWEgwoiXHjQ8mHI9xNYcHbD44LAJNo=
-X-Received: by 2002:a19:c7ca:: with SMTP id x193mr3592234lff.151.1562908429171;
- Thu, 11 Jul 2019 22:13:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562337154-26376-1-git-send-email-sumit.garg@linaro.org> <20190711192215.5w3fzdjwsebgoesh@linux.intel.com>
-In-Reply-To: <20190711192215.5w3fzdjwsebgoesh@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 12 Jul 2019 10:43:38 +0530
-Message-ID: <CAFA6WYMOyKo2vXY8bO448ikmdGioK3s5JMZLz6c2y8ObPm4zHw@mail.gmail.com>
-Subject: Re: [RFC/RFT] KEYS: trusted: Add generic trusted keys framework
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        jejb@linux.ibm.com, Mimi Zohar <zohar@linux.ibm.com>,
-        jmorris@namei.org, serge@hallyn.com,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 12 Jul 2019 01:16:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43322 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfGLFQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 01:16:24 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 92CE2308792E;
+        Fri, 12 Jul 2019 05:16:24 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-115.sin2.redhat.com [10.67.116.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3CC85DE6E;
+        Fri, 12 Jul 2019 05:16:14 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     dan.j.williams@intel.com
+Cc:     mst@redhat.com, lcapitulino@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-nvdimm@lists.01.org, cohuck@redhat.com,
+        yuval.shaia@oracle.com, linux-kernel@vger.kernel.org,
+        pagupta@redhat.com
+Subject: [PATCH v3] virtio_pmem: fix sparse warning
+Date:   Fri, 12 Jul 2019 10:46:10 +0530
+Message-Id: <20190712051610.15478-1-pagupta@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 12 Jul 2019 05:16:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 at 00:52, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Fri, Jul 05, 2019 at 08:02:34PM +0530, Sumit Garg wrote:
-> > Current trusted keys framework is tightly coupled to use TPM device as
-> > an underlying implementation which makes it difficult for implementations
-> > like Trusted Execution Environment (TEE) etc. to provide trusked keys
-> > support in case platform doesn't posses a TPM device.
-> >
-> > So this patch tries to add generic trusted keys framework where underlying
-> > implemtations like TPM, TEE etc. could be easily plugged-in.
-> >
-> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->
-> 1. Needs to be somehow dissected into digestable/reviewable pieces.
+This patch fixes below sparse warning related to __virtio
+type in virtio pmem driver. This is reported by Intel test
+bot on linux-next tree.
 
-Sure, will try to split this patch in next version.
+nd_virtio.c:56:28: warning: incorrect type in assignment
+                                (different base types)
+nd_virtio.c:56:28:    expected unsigned int [unsigned] [usertype] type
+nd_virtio.c:56:28:    got restricted __virtio32
+nd_virtio.c:93:59: warning: incorrect type in argument 2
+                                (different base types)
+nd_virtio.c:93:59:    expected restricted __virtio32 [usertype] val
+nd_virtio.c:93:59:    got unsigned int [unsigned] [usertype] ret
 
-> 2. As a precursory step probably would make sense to move all
->    existing trusted keys code into one subsystem first.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+---
+This fixes a warning, so submitting it as a separate
+patch on top of virtio pmem series.
 
-Okay.
+v2-> v3
+ Use __le for req/resp fields - Michael
 
--Sumit
+ drivers/nvdimm/nd_virtio.c       | 4 ++--
+ include/uapi/linux/virtio_pmem.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
->
-> /Jarkko
+diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+index 8645275c08c2..10351d5b49fa 100644
+--- a/drivers/nvdimm/nd_virtio.c
++++ b/drivers/nvdimm/nd_virtio.c
+@@ -53,7 +53,7 @@ static int virtio_pmem_flush(struct nd_region *nd_region)
+ 	init_waitqueue_head(&req_data->host_acked);
+ 	init_waitqueue_head(&req_data->wq_buf);
+ 	INIT_LIST_HEAD(&req_data->list);
+-	req_data->req.type = cpu_to_virtio32(vdev, VIRTIO_PMEM_REQ_TYPE_FLUSH);
++	req_data->req.type = cpu_to_le32(VIRTIO_PMEM_REQ_TYPE_FLUSH);
+ 	sg_init_one(&sg, &req_data->req, sizeof(req_data->req));
+ 	sgs[0] = &sg;
+ 	sg_init_one(&ret, &req_data->resp.ret, sizeof(req_data->resp));
+@@ -90,7 +90,7 @@ static int virtio_pmem_flush(struct nd_region *nd_region)
+ 	} else {
+ 		/* A host repsonse results in "host_ack" getting called */
+ 		wait_event(req_data->host_acked, req_data->done);
+-		err = virtio32_to_cpu(vdev, req_data->resp.ret);
++		err = le32_to_cpu(req_data->resp.ret);
+ 	}
+ 
+ 	kfree(req_data);
+diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
+index efcd72f2d20d..9a63ed6d062f 100644
+--- a/include/uapi/linux/virtio_pmem.h
++++ b/include/uapi/linux/virtio_pmem.h
+@@ -23,12 +23,12 @@ struct virtio_pmem_config {
+ 
+ struct virtio_pmem_resp {
+ 	/* Host return status corresponding to flush request */
+-	__u32 ret;
++	__le32 ret;
+ };
+ 
+ struct virtio_pmem_req {
+ 	/* command type */
+-	__u32 type;
++	__le32 type;
+ };
+ 
+ #endif
+-- 
+2.14.5
+
