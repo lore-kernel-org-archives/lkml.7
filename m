@@ -2,131 +2,175 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1969C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B23C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BB221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE38C2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yOt7w/De"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vN1vs52G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfGLEtz (ORCPT
+        id S1729266AbfGLEwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 00:49:55 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38149 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbfGLEty (ORCPT
+        Fri, 12 Jul 2019 00:52:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59050 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfGLEw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 00:49:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z75so3958611pgz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 21:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sZaWxx8XHNIJMce0La5YzhGUKfsnDTNKcipBsPeCHZ0=;
-        b=yOt7w/DexKthec8S9bla5Nx+r59GqFfAOL7iCfVyMvvo12JVGSvX3T81WoloMImi33
-         kqYLvYFnbIzGBh0eyfsd9A0LnYst3mMT6/NJY4r3NhPNnt7TTUTpl2mOkUwjTOfy2DNL
-         VOBKxv4cXPqq2gZ1bBRS4yYBmuTei0KY5yRss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sZaWxx8XHNIJMce0La5YzhGUKfsnDTNKcipBsPeCHZ0=;
-        b=qhl1JkZcJLWRW0vfCFCyDtmsEmCEBSQADQNrqB3QsUaoSCrbJiD08UniU5Bp9h7fvq
-         Wz1IlFPQlXxRO5GmHYIeCfCegYlY5Dwg0Jm7tPMAc17BhWip4VxSV/OhbvxCT9v0Ac02
-         wXEjmGN/lzbfNbPgzMDTBdN0cb0zSK6xWuDv41iKE5hUVTHD3CCPNR+KWNfVYIHjbl7s
-         jR8kvL6dD+fk1Z1rwjizs/gZxyj4rtO/la3AHhHw7AhwoX1NanR4/h+cmWutcWiyS1hE
-         z99CZ6qE6oXnPbmc5E7ytwE5+gOteh0j11rpeP9e20+XN7l0/ksDPen5qFW6+g0QXAfL
-         547Q==
-X-Gm-Message-State: APjAAAW0kpIsjmlS9Md/hhEuZRb7G0KZZ/5IoXNFIsv3kYTQ6TK5IpW2
-        bjKT4QqHOPtXg3hZD6H1AOFLtEWQ
-X-Google-Smtp-Source: APXvYqyKxfcbGoEQQr7C4E09kxjnHkhwtlg8G7zy1O2IKxrdHeSAKsj8iztsw+e5BFthlE80M3kf8A==
-X-Received: by 2002:a63:c008:: with SMTP id h8mr4417616pgg.427.1562906993264;
-        Thu, 11 Jul 2019 21:49:53 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d14sm9667480pfo.154.2019.07.11.21.49.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 21:49:52 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 00:49:51 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712044951.GA92297@google.com>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
+        Fri, 12 Jul 2019 00:52:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6C4q034077767;
+        Thu, 11 Jul 2019 23:52:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562907120;
+        bh=/zwfLA/aP4uvUzim1nRtJcVVP6jnOalIb4INZTWdV9c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vN1vs52GkKEgvfv7yQ7vcysw/2VTq69Hque/iNAvbfkUWsi+xuFC4Sacptoc2PDWc
+         OdJo2kS/1EZ2oJEclOb6Z7PcZ2dUXfvF9MJnvfPg3yoS9OSGDL3K6W2/axmWZCj87E
+         b0Ff8Q4WX7dQklyOBxYlIiiGbxk82EuyecqYvbvw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6C4q03W020067
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jul 2019 23:52:00 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
+ Jul 2019 23:52:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 11 Jul 2019 23:52:00 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6C4pu2t043488;
+        Thu, 11 Jul 2019 23:51:57 -0500
+Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <devicetree@vger.kernel.org>, Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Tokunori Ikegami <ikegami.t@gmail.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-4-vigneshr@ti.com>
+ <e5a7866d-bc34-887d-31d3-de4f745c8d65@cogentembedded.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <54c7ff30-ca8b-cf75-3914-cd5cad33c323@ti.com>
+Date:   Fri, 12 Jul 2019 10:22:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711234401.220336-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5a7866d-bc34-887d-31d3-de4f745c8d65@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> This patch adds support for checking RCU reader sections in list
-> traversal macros. Optionally, if the list macro is called under SRCU or
-> other lock/mutex protection, then appropriate lockdep expressions can be
-> passed to make the checks pass.
-> 
-> Existing list_for_each_entry_rcu() invocations don't need to pass the
-> optional fourth argument (cond) unless they are under some non-RCU
-> protection and needs to make lockdep check pass.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
->  include/linux/rcupdate.h |  7 +++++++
->  kernel/rcu/Kconfig.debug | 11 +++++++++++
->  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
->  4 files changed, 68 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index e91ec9ddcd30..78c15ec6b2c9 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
->   */
->  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
->  
-> +/*
-> + * Check during list traversal that we are within an RCU reader
-> + */
-> +
-> +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
-> +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
 
-Fyi, I made a cosmetic change by deleting the above 2 unused macros.
 
-- Joel
+On 12/07/19 12:56 AM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+> 
+>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>> Bus interface between a host system master and one or more slave
+>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>> or self refresh DRAM (called HyperRAM).
+>>
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in HyperBus
+>> specification[1].
+>>
+>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash with respect to bits per clock
+>> cycle. But HyperBus operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
+>>
+>> But, HyperBus memory controllers seem to abstract implementation details
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering HyperFlash devices with MTD framework. MTD
+>> maps framework along with CFI chip support framework are used to support
+>> communicating with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before trying to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported at the moment.
+>>
+>> HyperBus specification can be found at[1]
+>> HyperFlash datasheet can be found at[2]
+>>
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>     Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+> 
+>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>> new file mode 100644
+>> index 000000000000..63a9e64895bc
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>> @@ -0,0 +1,154 @@
+> [...]
+>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+>> +{
+> [...]
+>> +	map->name = dev_name(dev);
+>> +	map->bankwidth = 2;
+> 
+>    I think this should really be 1, judging on the comment to that field (and on
+> Cogent's own RPC-IF HF driver).
+> 
 
+I agree this setting is a bit confusing because DDR nature. What we have
+with HyperFlash in DDR mode is equivalent to 16bit flash on a 8bit bus
+and kind of equal to 2 bus cycles (in this case clock edges), therefore
+bandwidth would turn out to be 2. Otherwise cfi_build_cmd() would
+generate wrong addresses and simple map implmention of read/writes would
+use wrong accessors.
+Only way I see map->bankwidth = 1 working is if HF is used in SDR mode.
+So is Cogent's HF in SDR mode? I thought HyperFlash is DDR only but I
+may be wrong.
+
+>> +	map->device_node = np;
+> 
+> [...]
+> 
+> MBR, Sergei
+> 
+
+-- 
+Regards
+Vignesh
