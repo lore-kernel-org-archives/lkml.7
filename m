@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEA4C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E87C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3773D216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B620208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934442;
-	bh=BAFBXDE/XkrTaepSQKZvZbBpnnnUT+2lmJio4LktwF8=;
+	s=default; t=1562934445;
+	bh=RX8cF7VBzex5Kn9MPBH8m1pu80iOwfgVJoULW21VESE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JSX7IPjnQKFDwv03HdxEB/plfokY+Nw43BFFJxqEj4zOhtMrWQrlTChb6JpUwRvaD
-	 mGEWCFYh3ZKd5PcFZGFvoFQs8+QsImNJwL6onYsQOe8XhO3YayrCRGNGm1GcNT2mLO
-	 ZKuEpXxg6JO25HdTfYPO6vogUXvkasiOp+1hS7h0=
+	b=2khcyZmDJT/TT2FKHEBm0RZNgwT2Jb/WUTmi8BKuH+hjqQdabaMeLoNB2rg9oXDkD
+	 pffV7/fg+Mcyfbi1eXPJhd7doCDvhQfIKjx64tmbhvIOFkCELdq+GWnihUQ53XxYla
+	 eHCqpZNuIoSD+iWLWvlP+rJRQdChnNf88g4KCFyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfGLM1V (ORCPT
+        id S1727905AbfGLM1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbfGLM1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:27:18 -0400
+        id S1727645AbfGLM1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE8EB208E4;
-        Fri, 12 Jul 2019 12:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99876208E4;
+        Fri, 12 Jul 2019 12:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934438;
-        bh=BAFBXDE/XkrTaepSQKZvZbBpnnnUT+2lmJio4LktwF8=;
+        s=default; t=1562934441;
+        bh=RX8cF7VBzex5Kn9MPBH8m1pu80iOwfgVJoULW21VESE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5VGTeUztF54iduE8C4pFDCInOK6zHPfMgw6iLvYI8lWcoeKCJvW4w8Yp/NPnLyB7
-         CsQOlS7Yo9/nUcq+vQ/M6eiiey0/45YhJp7bXou61BAN+hlmo2ExrWg7Q6mh7pGDJY
-         Ja3lwUAC194QqJ0JP67pUXnbXRXJHLhZGsLJNiP8=
+        b=OBC9Qb1aQpn31ydgVmUUNweyNxOZy/ym3OlYB+cypFxZBF+u0xmphNzgehEcCuReh
+         NdsVE/kfaPJOOSpsMlYWOU5+otys9IeQ747J8xO9dV7coP56cKbso3dSEqY5IO34mK
+         linNWAdNrAhMojEMIp9iXFZhsyFgdQuvsIkOEVng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 055/138] ARM: davinci: da850-evm: call regulator_has_full_constraints()
-Date:   Fri, 12 Jul 2019 14:18:39 +0200
-Message-Id: <20190712121630.783123571@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 029/138] netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments
+Date:   Fri, 12 Jul 2019 14:18:13 +0200
+Message-Id: <20190712121629.817098776@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,36 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0c0c9b5753cd04601b17de09da1ed2885a3b42fe ]
+[ Upstream commit a0d56cb911ca301de81735f1d73c2aab424654ba ]
 
-The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
-the board doesn't set has_full_constraints to true in the regulator
-API.
+With commit 997dd9647164 ("net: IP6 defrag: use rbtrees in
+nf_conntrack_reasm.c"), nf_ct_frag6_reasm() is now called from
+nf_ct_frag6_queue(). With this change, nf_ct_frag6_queue() can fail
+after the skb has been added to the fragment queue and
+nf_ct_frag6_gather() was adapted to handle this case.
 
-Call regulator_has_full_constraints() at the end of board registration
-just like we do in da850-lcdk and da830-evm.
+But nf_ct_frag6_queue() can still fail before the fragment has been
+queued. nf_ct_frag6_gather() can't handle this case anymore, because it
+has no way to know if nf_ct_frag6_queue() queued the fragment before
+failing. If it didn't, the skb is lost as the error code is overwritten
+with -EINPROGRESS.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Fix this by setting -EINPROGRESS directly in nf_ct_frag6_queue(), so
+that nf_ct_frag6_gather() can propagate the error as is.
+
+Fixes: 997dd9647164 ("net: IP6 defrag: use rbtrees in nf_conntrack_reasm.c")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/board-da850-evm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv6/netfilter/nf_conntrack_reasm.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 1fdc9283a8c5..2450936b91d0 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1479,6 +1479,8 @@ static __init void da850_evm_init(void)
- 	if (ret)
- 		pr_warn("%s: dsp/rproc registration failed: %d\n",
- 			__func__, ret);
+diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
+index 3de0e9b0a482..5b3f65e29b6f 100644
+--- a/net/ipv6/netfilter/nf_conntrack_reasm.c
++++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
+@@ -293,7 +293,11 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+ 		skb->_skb_refdst = 0UL;
+ 		err = nf_ct_frag6_reasm(fq, skb, prev, dev);
+ 		skb->_skb_refdst = orefdst;
+-		return err;
 +
-+	regulator_has_full_constraints();
- }
++		/* After queue has assumed skb ownership, only 0 or
++		 * -EINPROGRESS must be returned.
++		 */
++		return err ? -EINPROGRESS : 0;
+ 	}
  
- #ifdef CONFIG_SERIAL_8250_CONSOLE
+ 	skb_dst_drop(skb);
+@@ -480,12 +484,6 @@ int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user)
+ 		ret = 0;
+ 	}
+ 
+-	/* after queue has assumed skb ownership, only 0 or -EINPROGRESS
+-	 * must be returned.
+-	 */
+-	if (ret)
+-		ret = -EINPROGRESS;
+-
+ 	spin_unlock_bh(&fq->q.lock);
+ 	inet_frag_put(&fq->q);
+ 	return ret;
 -- 
 2.20.1
 
