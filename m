@@ -2,140 +2,68 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F389BC742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDEFC742C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F5521019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E0021019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfGLONz (ORCPT
+        id S1727465AbfGLOOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:13:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:53403 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfGLONz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:13:55 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MrQN5-1iIXRL1mzv-00oVFL; Fri, 12 Jul 2019 16:13:24 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] [v3] x86: kvm: avoid -Wsometimes-uninitized warning
-Date:   Fri, 12 Jul 2019 16:13:09 +0200
-Message-Id: <20190712141322.1073650-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 12 Jul 2019 10:14:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58730 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727256AbfGLOOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 10:14:30 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4E21B3086202;
+        Fri, 12 Jul 2019 14:14:30 +0000 (UTC)
+Received: from redhat.com (ovpn-116-209.ams2.redhat.com [10.36.116.209])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0577960C66;
+        Fri, 12 Jul 2019 14:14:24 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 10:14:23 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: virtio_scsi: Use struct_size() helper
+Message-ID: <20190712101408-mutt-send-email-mst@kernel.org>
+References: <20190619192833.GA825@embeddedor>
+ <yq1a7dk9kb5.fsf@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mtFUcYRsvqsqU3QJWJ/dFFjF0Yd9wHzp908nlZK83caY6JGVHPq
- LXymdLgLCegnaDKfu159IL/7oAudJltdZwXMGK63ZUlU+Jfths5bnLOzEW07+2q31Yg0tT6
- 1cg0EE/DQ8ump88F0paELKlusq6DBC2eUaOp+T4qfsjCs0IEYgQKtvAVQsTYQPgN5n/2fGp
- epCCJ0s3Sh3bwoaLinvzQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LWYzu/LtLb0=:xHUs4tdQHd3Ct6Bu0svRXv
- PmWzRBS+0m95DYX/F7E+rFe5/XtDhnWQ6Tgs4mINPckQyZ/6MVAUsj0Xa70FI5l4+ppmPC7/x
- giOslqyC74d2r5fkPb6oDzt2fRVBSXCuNrWuX0zVgaJ8lou8DmUMBtpNmk8aVUsNx8yrJSZOY
- Z1tTYNcbvtrD+HQbondlxipmdzbY/YPT41GN1PvvrAPBX/49/8SYq8//DsoC0n2G/R7UKhldk
- 0zhoRK/WgQqBNPXo7nMihjnp5CzS2HerKKy+uMmt3IFZvWb6DQGKv+miSTTd3alE0t0t3FaCh
- 9iN0q+VNyr8gK1uAyY3DBYcD7Sp+cnr+e+XQqiWZDYKWPpV/IQD8UpNmOE3vytPncDe9MiDdo
- 4SJMRG1ZOVUcOoZOqBzR/hGq/qiRfDXfQXYMPfDl72JS2H8TOCL3kNkAj4IXZegf1ObSCy8KT
- ewuqXTfwJLV/Oxv2e7toe2Ge+4yujGs5LgcYjcGsvJiZwjxM1lVDSHqazN5juGS3rMADkCgb5
- m8z4SlBUMsfYz+4h2dNYGw/hywY3xv8nDSoidRF9FwTgnI2uPJSxS2sCOiPARtNXloGKVbItC
- zXlx7ENBiMSKBz4uXbwTiMFAB/v8mVFzK/y06yHdq/L6ki33fBO2mh7j/DF9pXkkZcV4tcd15
- 597nbyjIn8WS3XkTo4GeBukcP3LM1eXUqx8Dr5MYxrBfNFwm4we/sFFBTFAItSvXfIpwJcCjQ
- CwHjsApxyYZYx8uOwIvBbUb/Wjm/ii7WpxJIlg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1a7dk9kb5.fsf@oracle.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 12 Jul 2019 14:14:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang notices a code path in which some variables are never
-initialized, but fails to figure out that this can never happen
-on i386 because is_64_bit_mode() always returns false.
+On Thu, Jul 11, 2019 at 08:18:54PM -0400, Martin K. Petersen wrote:
+> 
+> Gustavo,
+> 
+> > One of the more common cases of allocation size calculations is finding
+> > the size of a structure that has a zero-sized array at the end, along
+> > with memory for some number of elements for that array. For example:
+> 
+> Applied to 5.4/scsi-queue, thanks!
 
-arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-        if (!longmode) {
-            ^~~~~~~~~
-arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
-        trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
-                                                             ^~~~~
-arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
-        if (!longmode) {
-        ^~~~~~~~~~~~~~~
-arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
-        u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
-                        ^
-                         = 0
-arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+Oh I put it in the virtio tree already.
+Can't hurt I guess :)
 
-Flip the condition around to avoid the conditional execution on i386.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v3: reword commit log, simplify patch again
-v2: make the change inside of is_64_bit_mode().
----
- arch/x86/kvm/hyperv.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index a39e38f13029..c10a8b10b203 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1594,7 +1594,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- {
- 	u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
- 	uint16_t code, rep_idx, rep_cnt;
--	bool fast, longmode, rep;
-+	bool fast, rep;
- 
- 	/*
- 	 * hypercall generates UD from non zero cpl and real mode
-@@ -1605,9 +1605,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		return 1;
- 	}
- 
--	longmode = is_64_bit_mode(vcpu);
--
--	if (!longmode) {
-+#ifdef CONFIG_X86_64
-+	if (is_64_bit_mode(vcpu)) {
-+		param = kvm_rcx_read(vcpu);
-+		ingpa = kvm_rdx_read(vcpu);
-+		outgpa = kvm_r8_read(vcpu);
-+	} else
-+#endif
-+	{
- 		param = ((u64)kvm_rdx_read(vcpu) << 32) |
- 			(kvm_rax_read(vcpu) & 0xffffffff);
- 		ingpa = ((u64)kvm_rbx_read(vcpu) << 32) |
-@@ -1615,13 +1620,6 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		outgpa = ((u64)kvm_rdi_read(vcpu) << 32) |
- 			(kvm_rsi_read(vcpu) & 0xffffffff);
- 	}
--#ifdef CONFIG_X86_64
--	else {
--		param = kvm_rcx_read(vcpu);
--		ingpa = kvm_rdx_read(vcpu);
--		outgpa = kvm_r8_read(vcpu);
--	}
--#endif
- 
- 	code = param & 0xffff;
- 	fast = !!(param & HV_HYPERCALL_FAST_BIT);
--- 
-2.20.0
-
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
