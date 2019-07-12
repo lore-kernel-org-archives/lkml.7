@@ -2,339 +2,313 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2A6C742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4FFC742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1F7208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KsdqWnAh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KvrDS3ET"
+	by mail.kernel.org (Postfix) with ESMTP id DB7E0208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfGLL3o (ORCPT
+        id S1726793AbfGLLd4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:29:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39990 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbfGLL3o (ORCPT
+        Fri, 12 Jul 2019 07:33:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6786 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726428AbfGLLd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:29:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 492CB60E7A; Fri, 12 Jul 2019 11:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562930982;
-        bh=dlKEgVZ2/VEXZWtIBg+WViP5XwGI5ccigZZLFWyus8I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KsdqWnAhmjfNUwG5gbrA1kacEyiuocEEMkNNnPTEbS4udAk2JeLWeiMkyX/spyS/Y
-         lZd3wYU3+lCZe+7dMXbR8B6o6NtlM1vGg77hyxiWOSOITvRwqW8M0v2GBdUhpq6tNu
-         XnBY2LsxWqUF8WuMDjOwmQ09vYkxhHLjH7mk6HCA=
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4871A6030E;
-        Fri, 12 Jul 2019 11:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562930981;
-        bh=dlKEgVZ2/VEXZWtIBg+WViP5XwGI5ccigZZLFWyus8I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KvrDS3ETy+nEOlQ0tjLsR7MuHzv9SRbBj2+mVR8JmGEbUU5ZyGjbtPxWV8T9vZaCw
-         TWSRF4KLkjNlg/xrWexjfzl252p9ZdJMEBr7FPTAt9yMSxASlSskyh3yCYC9sS67pS
-         GkxhHLd62Xzblm3/9uD6InyXIfKof+mh6dRB4wPk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4871A6030E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f51.google.com with SMTP id r12so8898396edo.5;
-        Fri, 12 Jul 2019 04:29:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAXR3E0XvPWJay/5gki6+XSKwqhiNsWxGKxCQIn16r89a26kfuY/
-        o9BZzDkvHq83qP+kh9UJPGAp78McXnG6VSOSIqU=
-X-Google-Smtp-Source: APXvYqyCfHG1+UOqftVIO8VLRfpL/QnPOpFb2MjMy7NvnZFofL0QM1DgyXDNVgh84YWGrRUzNUQxMW/SJQjoBmvnngg=
-X-Received: by 2002:a17:906:a39a:: with SMTP id k26mr7660426ejz.82.1562930979975;
- Fri, 12 Jul 2019 04:29:39 -0700 (PDT)
+        Fri, 12 Jul 2019 07:33:56 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CBWs1N019375
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:33:54 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.112])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tprnba2ap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:33:54 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Fri, 12 Jul 2019 11:33:54 -0000
+Received: from us1b3-smtp06.a3dr.sjc01.isc4sb.com (10.122.203.184)
+        by smtp.notes.na.collabserv.com (10.122.47.54) with smtp.notes.na.collabserv.com ESMTP;
+        Fri, 12 Jul 2019 11:33:47 -0000
+Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
+          by us1b3-smtp06.a3dr.sjc01.isc4sb.com
+          with ESMTP id 2019071211334723-334113 ;
+          Fri, 12 Jul 2019 11:33:47 +0000 
+In-Reply-To: <20190712085212.3901785-1-arnd@arndb.de>
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Arnd Bergmann" <arnd@arndb.de>
+Cc:     "Doug Ledford" <dledford@redhat.com>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Jason Gunthorpe" <jgg@mellanox.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 12 Jul 2019 11:33:46 +0000
 MIME-Version: 1.0
-References: <20190711110340.16672-1-vivek.gautam@codeaurora.org>
- <20190711110340.16672-2-vivek.gautam@codeaurora.org> <20190711160032.GR7234@tuxbook-pro>
-In-Reply-To: <20190711160032.GR7234@tuxbook-pro>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Fri, 12 Jul 2019 16:59:28 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iGXMYC5T3kNc1pXh4pkr_uxKOc5OLHWL+6HcwXvnJf_qA@mail.gmail.com>
-Message-ID: <CAFp+6iGXMYC5T3kNc1pXh4pkr_uxKOc5OLHWL+6HcwXvnJf_qA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] soc: qcom: llcc-plat: Make the driver more generic
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        rishabhb@codeaurora.org, vnkgutta@codeaurora.org,
-        Evan Green <evgreen@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20190712085212.3901785-1-arnd@arndb.de>
+X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
+ SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
+X-KeepSent: 05C1A780:433E36D1-00258435:003381DA;
+ type=4; name=$KeepSent
+X-LLNOutbound: False
+X-Disclaimed: 50775
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 19071211-4615-0000-0000-000000060386
+X-IBM-SpamModules-Scores: BY=0.030803; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.000012
+X-IBM-SpamModules-Versions: BY=3.00011414; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01231072; UDB=6.00648485; IPR=6.01012357;
+ MB=3.00027690; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 11:33:52
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2019-07-12 09:42:48 - 6.00010155
+x-cbparentid: 19071211-4616-0000-0000-0000000A0372
+Message-Id: <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+Subject: Re:  [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_03:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+-----"Arnd Bergmann" <arnd@arndb.de> wrote: -----
 
-
-Thanks for the review.
-
-On Thu, Jul 11, 2019 at 9:29 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+>To: "Bernard Metzler" <bmt@zurich.ibm.com>, "Doug Ledford"
+><dledford@redhat.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
+>From: "Arnd Bergmann" <arnd@arndb.de>
+>Date: 07/12/2019 10:52AM
+>Cc: "Arnd Bergmann" <arnd@arndb.de>, "Peter Zijlstra"
+><peterz@infradead.org>, "Jason Gunthorpe" <jgg@mellanox.com>,
+>linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+>Subject: [EXTERNAL] [PATCH] rdma/siw: avoid smp_store_mb() on a u64
 >
-> On Thu 11 Jul 04:03 PDT 2019, Vivek Gautam wrote:
+>The new siw driver fails to build on i386 with
 >
-> > - Remove 'sdm845' from names, and use 'plat' instead.
-> > - Move SCT_ENTRY macro to header file.
-> > - Create a new config structure to asssign to of-match-data.
-> >
+>drivers/infiniband/sw/siw/siw_qp.c:1025:3: error: invalid output size
+>for constraint '+q'
+>                smp_store_mb(*cq->notify, SIW_NOTIFY_NOT);
+>                ^
+>include/asm-generic/barrier.h:141:35: note: expanded from macro
+>'smp_store_mb'
+> #define smp_store_mb(var, value)  __smp_store_mb(var, value)
+>                                  ^
+>arch/x86/include/asm/barrier.h:65:47: note: expanded from macro
+>'__smp_store_mb'
+> #define __smp_store_mb(var, value) do { (void)xchg(&var, value); }
+>while (0)
+>                                              ^
+>include/asm-generic/atomic-instrumented.h:1648:2: note: expanded from
+>macro 'xchg'
+>        arch_xchg(__ai_ptr, __VA_ARGS__);
+>  \
+>        ^
+>arch/x86/include/asm/cmpxchg.h:78:27: note: expanded from macro
+>'arch_xchg'
+> #define arch_xchg(ptr, v)       __xchg_op((ptr), (v), xchg, "")
+>                                ^
+>arch/x86/include/asm/cmpxchg.h:48:19: note: expanded from macro
+>'__xchg_op'
+>                                      : "+q" (__ret), "+m" (*(ptr))
+>  \
+>                                              ^
+>drivers/infiniband/sw/siw/siw_qp.o: In function `siw_sqe_complete':
+>siw_qp.c:(.text+0x1450): undefined reference to `__xchg_wrong_size'
+>drivers/infiniband/sw/siw/siw_qp.o: In function `siw_rqe_complete':
+>siw_qp.c:(.text+0x15b0): undefined reference to `__xchg_wrong_size'
+>drivers/infiniband/sw/siw/siw_verbs.o: In function
+>`siw_req_notify_cq':
+>siw_verbs.c:(.text+0x18ff): undefined reference to
+>`__xchg_wrong_size'
 >
-> I interpret the intention of these two patches as that you want to add
-> some new platform without having to create one llcc-xyz.c per platform.
-
-That's right. The intention is to avoid creating a new platform specific file.
-
+>Since smp_store_mb() has to be an atomic store, but the architecture
+>can only do this on 32-bit quantities or smaller, but 'cq->notify'
+>is a 64-bit word.
 >
-> If that's the case then the only user of this macro would be in plat.c,
-> so I don't see a reason for moving it to the header file.
-
-Alright. Better to keep it in the driver file itself.
-
+>Apparently the smp_store_mb() is paired with a READ_ONCE() here,
+>which
+>seems like an odd choice because there is only a barrier on the
+>writer
+>side and not the reader, and READ_ONCE() is already not atomic on
+>quantities larger than a CPU register.
 >
-> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > ---
-> >  drivers/soc/qcom/llcc-plat.c       | 77 ++++++++++++--------------------------
-> >  include/linux/soc/qcom/llcc-qcom.h | 45 ++++++++++++++++++++++
-> >  2 files changed, 68 insertions(+), 54 deletions(-)
-> >
-> > diff --git a/drivers/soc/qcom/llcc-plat.c b/drivers/soc/qcom/llcc-plat.c
-> > index 86600d97c36d..31cff0f75b53 100644
-> > --- a/drivers/soc/qcom/llcc-plat.c
-> > +++ b/drivers/soc/qcom/llcc-plat.c
-> > @@ -1,6 +1,6 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /*
-> > - * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> > + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> >   *
-> >   */
-> >
-> > @@ -10,47 +10,7 @@
-> >  #include <linux/of_device.h>
-> >  #include <linux/soc/qcom/llcc-qcom.h>
-> >
-> > -/*
-> > - * SCT(System Cache Table) entry contains of the following members:
+>I suspect it is sufficient to use the (possibly nonatomic)
+>WRITE_ONCE()
+>and an SMP memory barrier here. If it does need to be atomic as well
+>as 64-bit quantities, using an
+>atomic64_set_release()/atomic64_read_acquire()
+>may be a better choice.
 >
-> Should have caught this during previous review, but this comment simply
-> duplicates the kerneldoc for struct llcc_slice_config.
-
-Ok, i noticed it now. Will clean it up. I can remove this comment, and update
-the one for struct llcc_slice_config.
-
+>Fixes: 303ae1cdfdf7 ("rdma/siw: application interface")
+>Fixes: f29dd55b0236 ("rdma/siw: queue pair methods")
+>Cc: Peter Zijlstra <peterz@infradead.org>
+>Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>---
+> drivers/infiniband/sw/siw/siw_qp.c    | 4 +++-
+> drivers/infiniband/sw/siw/siw_verbs.c | 5 +++--
+> 2 files changed, 6 insertions(+), 3 deletions(-)
 >
-> > - * usecase_id: Unique id for the client's use case
-> > - * slice_id: llcc slice id for each client
-> > - * max_cap: The maximum capacity of the cache slice provided in KB
-> > - * priority: Priority of the client used to select victim line for replacement
-> > - * fixed_size: Boolean indicating if the slice has a fixed capacity
-> > - * bonus_ways: Bonus ways are additional ways to be used for any slice,
-> > - *           if client ends up using more than reserved cache ways. Bonus
-> > - *           ways are allocated only if they are not reserved for some
-> > - *           other client.
-> > - * res_ways: Reserved ways for the cache slice, the reserved ways cannot
-> > - *           be used by any other client than the one its assigned to.
-> > - * cache_mode: Each slice operates as a cache, this controls the mode of the
-> > - *             slice: normal or TCM(Tightly Coupled Memory)
-> > - * probe_target_ways: Determines what ways to probe for access hit. When
-> > - *                    configured to 1 only bonus and reserved ways are probed.
-> > - *                    When configured to 0 all ways in llcc are probed.
-> > - * dis_cap_alloc: Disable capacity based allocation for a client
-> > - * retain_on_pc: If this bit is set and client has maintained active vote
-> > - *               then the ways assigned to this client are not flushed on power
-> > - *               collapse.
-> > - * activate_on_init: Activate the slice immediately after the SCT is programmed
-> > - */
-> > -#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
+>diff --git a/drivers/infiniband/sw/siw/siw_qp.c
+>b/drivers/infiniband/sw/siw/siw_qp.c
+>index 11383d9f95ef..a2c08f17f13d 100644
+>--- a/drivers/infiniband/sw/siw/siw_qp.c
+>+++ b/drivers/infiniband/sw/siw/siw_qp.c
+>@@ -1016,13 +1016,15 @@ static bool siw_cq_notify_now(struct siw_cq
+>*cq, u32 flags)
+> 	if (!cq->base_cq.comp_handler)
+> 		return false;
+> 
+>+	smp_rmb();
+> 	cq_notify = READ_ONCE(*cq->notify);
+> 
+> 	if ((cq_notify & SIW_NOTIFY_NEXT_COMPLETION) ||
+> 	    ((cq_notify & SIW_NOTIFY_SOLICITED) &&
+> 	     (flags & SIW_WQE_SOLICITED))) {
+> 		/* dis-arm CQ */
+>-		smp_store_mb(*cq->notify, SIW_NOTIFY_NOT);
+>+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_NOT);
+>+		smp_wmb();
+> 
+> 		return true;
+> 	}
+>diff --git a/drivers/infiniband/sw/siw/siw_verbs.c
+>b/drivers/infiniband/sw/siw/siw_verbs.c
+>index 32dc79d0e898..41c5ab293fe1 100644
+>--- a/drivers/infiniband/sw/siw/siw_verbs.c
+>+++ b/drivers/infiniband/sw/siw/siw_verbs.c
+>@@ -1142,10 +1142,11 @@ int siw_req_notify_cq(struct ib_cq *base_cq,
+>enum ib_cq_notify_flags flags)
+> 
+> 	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
+> 		/* CQ event for next solicited completion */
+>-		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
+>+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_SOLICITED);
+> 	else
+> 		/* CQ event for any signalled completion */
+>-		smp_store_mb(*cq->notify, SIW_NOTIFY_ALL);
+>+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_ALL);
+>+	smp_wmb();
+> 
+> 	if (flags & IB_CQ_REPORT_MISSED_EVENTS)
+> 		return cq->cq_put - cq->cq_get;
+>-- 
+>2.20.0
 >
-> This simply maps macro arguments 1:1 to struct members, there's no need
-> for a macro for this.
-
-Sure, will remove the macro.
-
 >
-> > -     {                                       \
-> > -             .usecase_id = uid,              \
-> > -             .slice_id = sid,                \
-> > -             .max_cap = mc,                  \
-> > -             .priority = p,                  \
-> > -             .fixed_size = fs,               \
-> > -             .bonus_ways = bway,             \
-> > -             .res_ways = rway,               \
-> > -             .cache_mode = cmod,             \
-> > -             .probe_target_ways = ptw,       \
-> > -             .dis_cap_alloc = dca,           \
-> > -             .retain_on_pc = rp,             \
-> > -             .activate_on_init = a,          \
-> > -     }
-> > -
-> > -static struct llcc_slice_config sdm845_data[] =  {
-> > +static const struct llcc_slice_config sdm845_data[] =  {
-> >       SCT_ENTRY(LLCC_CPUSS,    1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1),
-> >       SCT_ENTRY(LLCC_VIDSC0,   2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
-> >       SCT_ENTRY(LLCC_VIDSC1,   3,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
-> > @@ -71,30 +31,39 @@ static struct llcc_slice_config sdm845_data[] =  {
-> >       SCT_ENTRY(LLCC_AUDHW,    22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> >  };
-> >
-> > -static int sdm845_qcom_llcc_remove(struct platform_device *pdev)
-> > +static const struct qcom_llcc_config sdm845_cfg = {
-> > +     .sct_data       = sdm845_data,
-> > +     .size           = ARRAY_SIZE(sdm845_data),
-> > +};
-> > +
-> > +static int qcom_plat_llcc_remove(struct platform_device *pdev)
-> >  {
-> >       return qcom_llcc_remove(pdev);
-> >  }
-> >
-> > -static int sdm845_qcom_llcc_probe(struct platform_device *pdev)
-> > +static int qcom_plat_llcc_probe(struct platform_device *pdev)
-> >  {
-> > -     return qcom_llcc_probe(pdev, sdm845_data, ARRAY_SIZE(sdm845_data));
-> > +     const struct qcom_llcc_config *cfg;
-> > +
-> > +     cfg = of_device_get_match_data(&pdev->dev);
-> > +
-> > +     return qcom_llcc_probe(pdev, cfg->sct_data, cfg->size);
-> >  }
-> >
-> > -static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
-> > -     { .compatible = "qcom,sdm845-llcc", },
-> > +static const struct of_device_id qcom_plat_llcc_of_match[] = {
-> > +     { .compatible = "qcom,sdm845-llcc", .data = &sdm845_cfg },
-> >       { }
-> >  };
-> >
-> > -static struct platform_driver sdm845_qcom_llcc_driver = {
-> > +static struct platform_driver qcom_plat_llcc_driver = {
-> >       .driver = {
-> > -             .name = "sdm845-llcc",
-> > -             .of_match_table = sdm845_qcom_llcc_of_match,
-> > +             .name = "qcom-plat-llcc",
->
-> With this being the "one and only llcc driver", why not making it
-> "qcom_llcc"?
-
-Sure, will make it just "qcom_llcc" driver.
-
->
-> > +             .of_match_table = qcom_plat_llcc_of_match,
-> >       },
-> > -     .probe = sdm845_qcom_llcc_probe,
-> > -     .remove = sdm845_qcom_llcc_remove,
-> > +     .probe = qcom_plat_llcc_probe,
-> > +     .remove = qcom_plat_llcc_remove,
-> >  };
-> > -module_platform_driver(sdm845_qcom_llcc_driver);
-> > +module_platform_driver(qcom_plat_llcc_driver);
-> >
-> > -MODULE_DESCRIPTION("QCOM sdm845 LLCC driver");
-> > +MODULE_DESCRIPTION("QCOM platform LLCC driver");
-> >  MODULE_LICENSE("GPL v2");
-> > diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
->
-> This file should be describing the public interface to the llcc, the
-> private pieces is better kept in drivers/soc/qcom/llcc.h
-
-Yes. I will split the things in two separate files as suggested.
-
->
-> But this patch makes me wonder if there's a need to split llcc-slice and
-> llcc-plat (and have a header file to describe API between them) instead
-> of just having one file.
-
-Nice opportunity to merge the two files? :)
-
-Best regards
-Vivek
->
-> Regards,
-> Bjorn
->
-> > index eb71a50b8afc..8776bb5d3891 100644
-> > --- a/include/linux/soc/qcom/llcc-qcom.h
-> > +++ b/include/linux/soc/qcom/llcc-qcom.h
-> > @@ -27,6 +27,46 @@
-> >  #define LLCC_MDMPNG      21
-> >  #define LLCC_AUDHW       22
-> >
-> > +/*
-> > + * SCT(System Cache Table) entry contains of the following members:
-> > + * usecase_id: Unique id for the client's use case
-> > + * slice_id: llcc slice id for each client
-> > + * max_cap: The maximum capacity of the cache slice provided in KB
-> > + * priority: Priority of the client used to select victim line for replacement
-> > + * fixed_size: Boolean indicating if the slice has a fixed capacity
-> > + * bonus_ways: Bonus ways are additional ways to be used for any slice,
-> > + *           if client ends up using more than reserved cache ways. Bonus
-> > + *           ways are allocated only if they are not reserved for some
-> > + *           other client.
-> > + * res_ways: Reserved ways for the cache slice, the reserved ways cannot
-> > + *           be used by any other client than the one its assigned to.
-> > + * cache_mode: Each slice operates as a cache, this controls the mode of the
-> > + *             slice: normal or TCM(Tightly Coupled Memory)
-> > + * probe_target_ways: Determines what ways to probe for access hit. When
-> > + *                    configured to 1 only bonus and reserved ways are probed.
-> > + *                    When configured to 0 all ways in llcc are probed.
-> > + * dis_cap_alloc: Disable capacity based allocation for a client
-> > + * retain_on_pc: If this bit is set and client has maintained active vote
-> > + *               then the ways assigned to this client are not flushed on power
-> > + *               collapse.
-> > + * activate_on_init: Activate the slice immediately after the SCT is programmed
-> > + */
-> > +#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
-> > +     {                                       \
-> > +             .usecase_id = uid,              \
-> > +             .slice_id = sid,                \
-> > +             .max_cap = mc,                  \
-> > +             .priority = p,                  \
-> > +             .fixed_size = fs,               \
-> > +             .bonus_ways = bway,             \
-> > +             .res_ways = rway,               \
-> > +             .cache_mode = cmod,             \
-> > +             .probe_target_ways = ptw,       \
-> > +             .dis_cap_alloc = dca,           \
-> > +             .retain_on_pc = rp,             \
-> > +             .activate_on_init = a,          \
-> > +     }
-> > +
-> >  /**
-> >   * llcc_slice_desc - Cache slice descriptor
-> >   * @slice_id: llcc slice id
-> > @@ -67,6 +107,11 @@ struct llcc_slice_config {
-> >       bool activate_on_init;
-> >  };
-> >
-> > +struct qcom_llcc_config {
-> > +     const struct llcc_slice_config *sct_data;
-> > +     int size;
-> > +};
-> > +
-> >  /**
-> >   * llcc_drv_data - Data associated with the llcc driver
-> >   * @regmap: regmap associated with the llcc device
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> >
 
 
+Hi Arnd,
+Many thanks for pointing that out! Indeed, this CQ notification
+mechanism does not take 32 bit architectures into account.
+Since we have only three flags to hold here, it's probably better
+to make it a 32bit value. That would remove the issue w/o
+introducing extra smp_wmb(). I'd prefer smp_store_mb(),
+since on some architectures it shall be more efficient.
+That would also make it sufficient to use READ_ONCE. 
 
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+That would be the proposed fix:
+
+From c7c3e2dbc3555581be52cb5d76c15726dced0331 Mon Sep 17 00:00:00 2001
+From: Bernard Metzler <bmt@zurich.ibm.com>
+Date: Fri, 12 Jul 2019 13:19:27 +0200
+Subject: [PATCH] Make shared CQ notification flags 32bit to respect 32bit
+ architectures
+
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+---
+ drivers/infiniband/sw/siw/siw.h       | 2 +-
+ drivers/infiniband/sw/siw/siw_qp.c    | 6 +++---
+ drivers/infiniband/sw/siw/siw_verbs.c | 6 +++---
+ include/uapi/rdma/siw-abi.h           | 3 ++-
+ 4 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/infiniband/sw/siw/siw.h b/drivers/infiniband/sw/siw/siw.h
+index 409e2987cd45..d59d81f4d86b 100644
+--- a/drivers/infiniband/sw/siw/siw.h
++++ b/drivers/infiniband/sw/siw/siw.h
+@@ -216,7 +216,7 @@ struct siw_wqe {
+ struct siw_cq {
+ 	struct ib_cq base_cq;
+ 	spinlock_t lock;
+-	u64 *notify;
++	struct siw_cq_ctrl *notify;
+ 	struct siw_cqe *queue;
+ 	u32 cq_put;
+ 	u32 cq_get;
+diff --git a/drivers/infiniband/sw/siw/siw_qp.c b/drivers/infiniband/sw/siw/siw_qp.c
+index 83e50fe8e48b..0fcc5002d2da 100644
+--- a/drivers/infiniband/sw/siw/siw_qp.c
++++ b/drivers/infiniband/sw/siw/siw_qp.c
+@@ -1011,18 +1011,18 @@ int siw_activate_tx(struct siw_qp *qp)
+  */
+ static bool siw_cq_notify_now(struct siw_cq *cq, u32 flags)
+ {
+-	u64 cq_notify;
++	u32 cq_notify;
+ 
+ 	if (!cq->base_cq.comp_handler)
+ 		return false;
+ 
+-	cq_notify = READ_ONCE(*cq->notify);
++	cq_notify = READ_ONCE(cq->notify->flags);
+ 
+ 	if ((cq_notify & SIW_NOTIFY_NEXT_COMPLETION) ||
+ 	    ((cq_notify & SIW_NOTIFY_SOLICITED) &&
+ 	     (flags & SIW_WQE_SOLICITED))) {
+ 		/* dis-arm CQ */
+-		smp_store_mb(*cq->notify, SIW_NOTIFY_NOT);
++		smp_store_mb(cq->notify->flags, SIW_NOTIFY_NOT);
+ 
+ 		return true;
+ 	}
+diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+index d4fb78780765..bc6892229af0 100644
+--- a/drivers/infiniband/sw/siw/siw_verbs.c
++++ b/drivers/infiniband/sw/siw/siw_verbs.c
+@@ -1049,7 +1049,7 @@ int siw_create_cq(struct ib_cq *base_cq, const struct ib_cq_init_attr *attr,
+ 
+ 	spin_lock_init(&cq->lock);
+ 
+-	cq->notify = &((struct siw_cq_ctrl *)&cq->queue[size])->notify;
++	cq->notify = (struct siw_cq_ctrl *)&cq->queue[size];
+ 
+ 	if (udata) {
+ 		struct siw_uresp_create_cq uresp = {};
+@@ -1142,10 +1142,10 @@ int siw_req_notify_cq(struct ib_cq *base_cq, enum ib_cq_notify_flags flags)
+ 
+ 	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
+ 		/* CQ event for next solicited completion */
+-		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
++		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
+ 	else
+ 		/* CQ event for any signalled completion */
+-		smp_store_mb(*cq->notify, SIW_NOTIFY_ALL);
++	smp_store_mb(cq->notify->flags, SIW_NOTIFY_ALL);
+ 
+ 	if (flags & IB_CQ_REPORT_MISSED_EVENTS)
+ 		return cq->cq_put - cq->cq_get;
+diff --git a/include/uapi/rdma/siw-abi.h b/include/uapi/rdma/siw-abi.h
+index ba4d5315cb76..93298980d3a7 100644
+--- a/include/uapi/rdma/siw-abi.h
++++ b/include/uapi/rdma/siw-abi.h
+@@ -178,6 +178,7 @@ struct siw_cqe {
+  * to control CQ arming.
+  */
+ struct siw_cq_ctrl {
+-	__aligned_u64 notify;
++	__u32 flags;
++	__u32 pad;
+ };
+ #endif
+-- 
+2.17.2
+
+
