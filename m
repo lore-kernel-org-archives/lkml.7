@@ -2,101 +2,103 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB44C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE05C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608EF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6053F2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A9qfZo9s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHEVvDNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfGLNHg (ORCPT
+        id S1727646AbfGLNHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:07:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:32988 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfGLNHd (ORCPT
+        Fri, 12 Jul 2019 09:07:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45743 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbfGLNHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:07:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T+6x5moI4ijHJRrmZf1/HMLH18HnK/GwuxqCFGxwS5I=; b=A9qfZo9sr9OqLZBSfJxGmDAhT
-        ZZZxl019nrb97yxFuvWomOiduo/GheSG9p3CTkWHjArZa/UIhnADvaTM2LCb7qveLtJPfNHxCY5Ap
-        VzbwMtbtgFfbjgLgq3H8NkhaQxltntOiM2EFFj4c4+An38q/pSMHUFlzuTruF3le5kVT5DstWyawJ
-        0IM58fcRQ4R3Qv6CHhx3ZR71wy6honrRdfbJ4ndntJn2vZRnPGcXcNfzUR/MDifTTAU/5Pb33Ygw9
-        xfBSaPB1K6FZ6cTT7Qfx0psmi4ERnnwigSBp81Wf0w32b4Utoxw/Xs+GMw7Sw+zKMa/nE42cMR4oA
-        6jQAdEZ5w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlvGk-0006ES-Se; Fri, 12 Jul 2019 13:07:23 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E8AA3209772E8; Fri, 12 Jul 2019 15:07:20 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 15:07:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-Message-ID: <20190712130720.GQ3419@hirez.programming.kicks-ass.net>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <20190712114458.GU3402@hirez.programming.kicks-ass.net>
- <1f97f1d9-d209-f2ab-406d-fac765006f91@oracle.com>
- <20190712123653.GO3419@hirez.programming.kicks-ass.net>
- <b1b7f85f-dac3-80a3-c05c-160f58716ce8@oracle.com>
+        Fri, 12 Jul 2019 09:07:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so4751439plr.12;
+        Fri, 12 Jul 2019 06:07:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=M8wX1u1AyY8aIZh85CrgBQrNgkI4YoDiE4Y/ARBtWTI=;
+        b=rHEVvDNmjPN89MNTOPTSN3d/nJEc78QJ8AYNecX5Bs+ZA/Q004H178HvUmWoI/vgA0
+         GBEfWvjsCj4aGjGBm8uyQ7jsVLTdZcXbZUvRU5P8sruoji9Sb4qg/Z7NiJICtnpclT7W
+         T8YAR54AWq1g+hvk0GeXSi/hhtl+XsJbZaWhS1tCw0dW2OKqEbmpGIVCIpW5FNs/7KJY
+         WdsDRHhxgOJmLtwUYPAM1HBtYXaB8l66Nvsn7Eghe8itAoGMM65i37/Kc1bLc2bsCK5h
+         9+DvE7ZXQJV0sV5bDMAG2Su6TPAKs7tXjIWm8F0dvrWMsL4kudNNmddXsFWMrxcI/ajg
+         NKOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=M8wX1u1AyY8aIZh85CrgBQrNgkI4YoDiE4Y/ARBtWTI=;
+        b=c7Cn1jEgYzcUgXnPa9J8zL6SW9hyvni4jktfMG7cZEsWQmrG7Fk+UBPeK+Q6fEsDO9
+         xeh0PBvbO+COi2uuu3zHDQ5YGE2RHG1ErPXFMGrZvcL+8EzcvsrPajUnwN9h4pXYic0j
+         LEOfNVhx/8I9rJ0/CmVzh3dUt0tSYOODx6VK638cVBt9z15Chd1DVW9VJAZu7xUblgu/
+         qnfkP6bmnceNz7wCqE9RUIZOqdhPrJEGxg/+MLEYeY38KamxMUys9EcVfWPPkcsNmk2x
+         G67nwXAi4A+W+uiEDpEt7JTNwh2d//8XyDLmUZ0P8x4SjuTVBzp8FMQN9Xe5B1EWcBkY
+         cAzg==
+X-Gm-Message-State: APjAAAWQlW9KspLvJvJYd3eXzwapLGKpb8Fli+2U9e8DzXBNk4Bi1wDc
+        Y9mnfDvBETE+L/RXIwmuwMXN20yEK71VRQ==
+X-Google-Smtp-Source: APXvYqwI08yHxLj+rqHZ2SOoSwsAdYzhFDnXgc+bU4NS5ufbC623hYguS3v9WWJuXnXHwyrM1JlkFg==
+X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr11585166pll.238.1562936862121;
+        Fri, 12 Jul 2019 06:07:42 -0700 (PDT)
+Received: from localhost.localdomain ([116.66.213.65])
+        by smtp.gmail.com with ESMTPSA id z4sm15853303pfg.166.2019.07.12.06.07.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 12 Jul 2019 06:07:41 -0700 (PDT)
+From:   yangxingwu <xingwu.yang@gmail.com>
+To:     wensong@linux-vs.org
+Cc:     horms@verge.net.au, ja@ssi.bg, pablo@netfilter.org,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org, joe@perches.com,
+        yangxingwu <xingwu.yang@gmail.com>
+Subject: [PATCH] ipvs: remove unnecessary space
+Date:   Fri, 12 Jul 2019 21:07:21 +0800
+Message-Id: <20190712130721.7168-1-xingwu.yang@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <80a4e132f3be48899904eccdc023f5c53229840b.camel@perches.com>
+References: <80a4e132f3be48899904eccdc023f5c53229840b.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1b7f85f-dac3-80a3-c05c-160f58716ce8@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:47:23PM +0200, Alexandre Chartre wrote:
-> On 7/12/19 2:36 PM, Peter Zijlstra wrote:
-> > On Fri, Jul 12, 2019 at 02:17:20PM +0200, Alexandre Chartre wrote:
-> > > On 7/12/19 1:44 PM, Peter Zijlstra wrote:
-> > 
-> > > > AFAIK3 this wants/needs to be combined with core-scheduling to be
-> > > > useful, but not a single mention of that is anywhere.
-> > > 
-> > > No. This is actually an alternative to core-scheduling. Eventually, ASI
-> > > will kick all sibling hyperthreads when exiting isolation and it needs to
-> > > run with the full kernel page-table (note that's currently not in these
-> > > patches).
-> > > 
-> > > So ASI can be seen as an optimization to disabling hyperthreading: instead
-> > > of just disabling hyperthreading you run with ASI, and when ASI can't preserve
-> > > isolation you will basically run with a single thread.
-> > 
-> > You can't do that without much of the scheduler changes present in the
-> > core-scheduling patches.
-> > 
-> 
-> We hope we can do that without the whole core-scheduling mechanism. The idea
-> is to send an IPI to all sibling hyperthreads. This IPI will interrupt these
-> sibling hyperthreads and have them wait for a condition that will allow them
-> to resume execution (for example when re-entering isolation). We are
-> investigating this in parallel to ASI.
+this patch removes the extra space and use bitmap_zalloc instead
 
-You cannot wait from IPI context, so you have to go somewhere else to
-wait.
+Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
+---
+ net/netfilter/ipvs/ip_vs_mh.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Also, consider what happens when the task that entered isolation decides
-to schedule out / gets migrated.
+diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs_mh.c
+index 94d9d34..3229867 100644
+--- a/net/netfilter/ipvs/ip_vs_mh.c
++++ b/net/netfilter/ipvs/ip_vs_mh.c
+@@ -174,8 +174,7 @@ static int ip_vs_mh_populate(struct ip_vs_mh_state *s,
+ 		return 0;
+ 	}
+ 
+-	table =  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
+-			 sizeof(unsigned long), GFP_KERNEL);
++	table = bitmap_zalloc(IP_VS_MH_TAB_SIZE, GFP_KERNEL);
+ 	if (!table)
+ 		return -ENOMEM;
+ 
+-- 
+1.8.3.1
 
-I think you'll quickly find yourself back at core-scheduling.
