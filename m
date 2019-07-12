@@ -2,125 +2,101 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFB1C742D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E26BC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86900205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78642054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dx2+eI7n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvbNRCUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfGLR4x (ORCPT
+        id S1727434AbfGLR5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:56:53 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37111 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfGLR4w (ORCPT
+        Fri, 12 Jul 2019 13:57:20 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38121 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfGLR5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:56:52 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f17so9698749wme.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:56:51 -0700 (PDT)
+        Fri, 12 Jul 2019 13:57:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so10823695wrr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:57:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DJSixh5eUA7ZuYLo3zM8xEkgRu/s1ZTrnfSXH7ypmHc=;
-        b=Dx2+eI7nrYFsu9WMMxg8yMFuBZCeS3Z8SDdEnAG2fI9uXr1hpZquU0LMGuhLHKFWp+
-         lupWa4P3CCXbmTiTze1gzXb4OTXE4sXWsvELGlbwIVS7yayPfzQkb/QiXARO6hgk1ylI
-         PmZL8W9iApy+tMgfkzA8Rg9r/YWk7li7y5NxNNFnS3Hgk+FluZn0hK71KL/I0rJk986F
-         axWFd0GW2ONPhvlpTWYCWYRXORANKaKKOX39LPIB1bUXhkhHngomOBZxH86KtjvrkQkJ
-         GZBx6DEiY0OPofKJKw72IjuYJyaoOc9jJUOsZqbZfeWykQo+3tT8UdhJioWeXkVMAvSm
-         vCKQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=12w9YhMzTEceI3FF8gxwRGTZ2SJpBQ7cKMo01O/ztWg=;
+        b=fvbNRCUcHA5EF9w5+GiQrvMVZgK4Z0RBqPLbianwHZkzj1Wfcf6+EnVXvGLL20HLbN
+         Rpt6Q2WvRtCkuXEIE13mkicHw/oNEAOvLy7KjqmEkK+FFN3Nq+RTOsBt137F5L1zJxfv
+         XlRM37RIAZunhOcn6VmGJGkDf0B0ktuTTepU7L3c4hhikgOdkwWzNPwqgAPZ9ty9xRcM
+         FaFD43oWmyDMbqsN8AkxuVT19TsIFc8svNEaKjSZM0VDeEjNtosfuNQZ8lL1HApsc+yi
+         XiivUaq5+1DRpO+VeF24tCLdUYr9JpiXv1Wrc0w1ATm/xYbrp3NICswOxja7f931ClFI
+         fDWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DJSixh5eUA7ZuYLo3zM8xEkgRu/s1ZTrnfSXH7ypmHc=;
-        b=XNQio5jtsC8QpHijvLlnOcUV+OwwMtU3jZHS9AntId6WE9OH55AehwSq9D8z4XxTn8
-         N0nBnm/JBway7CNNCFlJTcOatB9ipypEpbV3kSfrSOqTkXnUWtnZVCDQ09hNJpId5GdB
-         W7k2gQvrQqATO9Q6OBQuhIHFCuD4SOZZKrqR8cHbxwPUfG1oP1hGqLvy0QPL8H7X5viJ
-         e0ol5cGbF/51rvXVyEHUNBnm//nP038BaKN+6nol2jekc6afKI5kpzUKyS6Jo6YQr0Iy
-         EnZ6kv6nSabc/h5GvEGBUAyM+igcG9WoQRyj1awLe+lks88xCxxIYTPb31uUTmSkx3im
-         ZBKw==
-X-Gm-Message-State: APjAAAUNr1mUHitZ5L8gbQ+dRun4vetI7/s302315cYSbCxCfvcFPm1C
-        hI18oSFU2DSHI3IzvuOUoqSHV1FgofiDeGl/fpw=
-X-Google-Smtp-Source: APXvYqyML4Lk6QCxD99I7qZEOiSKP9iDUkViZ1UmbngxvdSyqiF0OLh89O057bWk3ccYp26LS7x3xlkj6sjYmoeIG2I=
-X-Received: by 2002:a1c:a1c5:: with SMTP id k188mr10769220wme.102.1562954210408;
- Fri, 12 Jul 2019 10:56:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190712094009.1535662-1-arnd@arndb.de>
-In-Reply-To: <20190712094009.1535662-1-arnd@arndb.de>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 12 Jul 2019 13:56:39 -0400
-Message-ID: <CADnq5_O-LJHnHg_yw0jVxy9yT8ZqNq4s-U_surFXTcL=fPA21Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: return 'NULL' instead of 'false' from dcn20_acquire_idle_pipe_for_layer
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=12w9YhMzTEceI3FF8gxwRGTZ2SJpBQ7cKMo01O/ztWg=;
+        b=cdQsv0SeD8JyknaGxFV4aLgeqf6KibG0R6RZ3jkUBKr7pSIgVziuzFu9BL4LoJhV/P
+         hm3KuOQqplLdEHo+jL5Fxt4BJYbZrO63xBQ+XmJQr5N30oN7yu1sRkkeFOrCrw/xoetj
+         IpddDoFPpjM38yemeHRlNfO8faTBJJUNrHfR+PcfxvKmuov6soGpZTCH79VN8XFLXSOF
+         utBcEKBequAefNKOZgB469/FTB3StjwOVB1PyLqh5VNCjP6LVMxcjbZrdSdaqQiiTMCB
+         b90glIL3PCC1bOybX1PMb+k5Ppkj99uFCJnVC5DQ/1NmeEEplrsWhc4wMUvXrxa0UMMi
+         lbWg==
+X-Gm-Message-State: APjAAAXoy3poGTl1RivlekjnLFJQdZo56esi6kB65dBk1cI+tBwANbDz
+        WZKF3Zoz2rszNU7l82J0sr0=
+X-Google-Smtp-Source: APXvYqwuYdWB6sJTcg7lu3ary3cXGkPst6uJsKQ/xPttRCCOP42sFPSCTNUAC/5rbJqH417Atb6nRQ==
+X-Received: by 2002:a5d:4a46:: with SMTP id v6mr12758036wrs.105.1562954237869;
+        Fri, 12 Jul 2019 10:57:17 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id c14sm7204278wrr.56.2019.07.12.10.57.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 10:57:17 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 10:57:15 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Harry Wentland <harry.wentland@amd.com>,
         Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
         "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Charlene Liu <charlene.liu@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        clang-built-linux@googlegroups.com,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
         Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        Nikola Cornij <nikola.cornij@amd.com>,
+        Charlene Liu <charlene.liu@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] drm/amd/display: return 'NULL' instead of 'false' from
+ dcn20_acquire_idle_pipe_for_layer
+Message-ID: <20190712175715.GA21080@archlinux-threadripper>
+References: <20190712094009.1535662-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712094009.1535662-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 5:40 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
+On Fri, Jul 12, 2019 at 11:39:52AM +0200, Arnd Bergmann wrote:
 > clang complains that 'false' is a not a pointer:
->
+> 
 > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.c:2428:10: error: expression which evaluates to zero treated as a null pointer constant of type 'struct pipe_ctx *' [-Werror,-Wnon-literal-null-conversion]
 >                 return false;
->
+> 
 > Changing it to 'NULL' looks like the right thing that will shut up
 > the warning and make it easier to read, while not changing behavior.
->
+> 
 > Fixes: 7ed4e6352c16 ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Applied.  Thanks!
-
-Alex
-
-> ---
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> index 70ac8a95d2db..66aa414ad38f 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> @@ -2425,7 +2425,7 @@ struct pipe_ctx *dcn20_acquire_idle_pipe_for_layer(
->                 ASSERT(0);
->
->         if (!idle_pipe)
-> -               return false;
-> +               return NULL;
->
->         idle_pipe->stream = head_pipe->stream;
->         idle_pipe->stream_res.tg = head_pipe->stream_res.tg;
-> --
-> 2.20.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
