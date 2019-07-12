@@ -2,130 +2,139 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495C6C742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A32C742B4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5F02084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6C62084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfGLKwy (ORCPT
+        id S1726875AbfGLKxu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:52:54 -0400
-Received: from relay.sw.ru ([185.231.240.75]:38652 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfGLKwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:52:54 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hltAL-0005Ih-PS; Fri, 12 Jul 2019 13:52:38 +0300
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
+        Fri, 12 Jul 2019 06:53:50 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2420 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726050AbfGLKxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:53:49 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id BF800D2E2BFB2E395BE4;
+        Fri, 12 Jul 2019 18:53:46 +0800 (CST)
+Received: from dggeme757-chm.china.huawei.com (10.3.19.103) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 12 Jul 2019 18:53:46 +0800
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ dggeme757-chm.china.huawei.com (10.3.19.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 12 Jul 2019 18:53:45 +0800
+Received: from dggeme758-chm.china.huawei.com ([10.6.80.69]) by
+ dggeme758-chm.china.huawei.com ([10.6.80.69]) with mapi id 15.01.1591.008;
+ Fri, 12 Jul 2019 18:53:46 +0800
+From:   "chenjianhong (A)" <chenjianhong2@huawei.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Michel Lespinasse <walken@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
- <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
- <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
- <1560744017.15814.49.camel@mtksdccf07>
- <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
- <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
- <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
- <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
- <1562640832.9077.32.camel@mtksdccf07>
- <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
- <1562839579.5846.12.camel@mtksdccf07>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
-Date:   Fri, 12 Jul 2019 13:52:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        linux-mm <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "wangle (H)" <wangle6@huawei.com>,
+        "Chengang (L)" <cg.chen@huawei.com>
+Subject: RE: [PATCH] mm/mmap: fix the adjusted length error
+Thread-Topic: [PATCH] mm/mmap: fix the adjusted length error
+Thread-Index: AQHVDHYdPcl0kS4eg0Wb8Sh+xIS/waZvfcqAgADBHlCAVcHrAIAAiW9w
+Date:   Fri, 12 Jul 2019 10:53:45 +0000
+Message-ID: <71c4329e246344eeb38c8ac25c63c09d@huawei.com>
+References: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
+        <CANN689G6mGLSOkyj31ympGgnqxnJosPVc4EakW5gYGtA_45L7g@mail.gmail.com>
+        <df001b6fbe2a4bdc86999c78933dab7f@huawei.com>
+ <20190711182002.9bb943006da6b61ab66b95fd@linux-foundation.org>
+In-Reply-To: <20190711182002.9bb943006da6b61ab66b95fd@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.65.79.126]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <1562839579.5846.12.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thank you for your reply! 
+> How significant is this problem in real-world use cases?  How much trouble is it causing?
+   In my opinion, this problem is very rare in real-world use cases. In arm64
+   or x86 environment, the virtual memory is enough. In arm32 environment,
+   each process has only 3G or 4G or less, but we seldom use out all of the virtual memory,
+   it only happens in some special environment. They almost use out all the virtual memory, and
+   in some moment, they will change their working mode so they will release and allocate
+   memory again. This current length limitation will cause this problem. I explain it's the memory
+   length limitation. But they can't accept the reason, it is unreasonable that we fail to allocate
+   memory even though the memory gap is enough.
 
+> Have you looked further into this?  Michel is concerned about the performance cost of the current solution.
+   The current algorithm(change before) is wonderful, and it has been used for a long time, I don't
+   think it is worthy to change the whole algorithm in order to fix this problem. Therefore, I just
+   adjust the gap_start and gap_end value in place of the length. My change really affects the
+   performance because I calculate the gap_start and gap_end value again and again. Does it affect
+   too much performance?  I have no complex environment, so I can't test it, but I don't think it will cause
+   too much performance loss. First, I don't change the whole algorithm. Second, unmapped_area and
+   unmapped_area_topdown function aren't used frequently. Maybe there are some big performance problems
+   I'm not concerned about. But I think if that's not a problem, there should be a limitation description.
 
-On 7/11/19 1:06 PM, Walter Wu wrote:
-> On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
->>
->> On 7/9/19 5:53 AM, Walter Wu wrote:
->>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
->>>>
->>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
->>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->>
->>>>>
->>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
->>>>> promise any dates because the next week I am on a conference, then
->>>>> again a backlog and an intern starting...
->>>>>
->>>>> Andrey, do you still have concerns re this patch? This change allows
->>>>> to print the free stack.
->>>>
->>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
->>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
->>>> Same for previously used tags for better use-after-free identification.
->>>>
->>>
->>> Hi Andrey,
->>>
->>> We ever tried to use object itself to determine use-after-free
->>> identification, but tag-based KASAN immediately released the pointer
->>> after call kfree(), the original object will be used by another
->>> pointer, if we use object itself to determine use-after-free issue, then
->>> it has many false negative cases. so we create a lite quarantine(ring
->>> buffers) to record recent free stacks in order to avoid those false
->>> negative situations.
->>
->> I'm telling that *more* than one free stack and also tags per object can be stored.
->> If object reused we would still have information about n-last usages of the object.
->> It seems like much easier and more efficient solution than patch you proposing.
->>
-> To make the object reused, we must ensure that no other pointers uses it
-> after kfree() release the pointer.
-> Scenario:
-> 1). The object reused information is valid when no another pointer uses
-> it.
-> 2). The object reused information is invalid when another pointer uses
-> it.
-> Do you mean that the object reused is scenario 1) ?
-> If yes, maybe we can change the calling quarantine_put() location. It
-> will be fully use that quarantine, but at scenario 2) it looks like to
-> need this patch.
-> If no, maybe i miss your meaning, would you tell me how to use invalid
-> object information? or?
+-----Original Message-----
+From: Andrew Morton [mailto:akpm@linux-foundation.org] 
+Sent: Friday, July 12, 2019 9:20 AM
+To: chenjianhong (A) <chenjianhong2@huawei.com>
+Cc: Michel Lespinasse <walken@google.com>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; mhocko@suse.com; Vlastimil Babka <vbabka@suse.cz>; Kirill A. Shutemov <kirill.shutemov@linux.intel.com>; Yang Shi <yang.shi@linux.alibaba.com>; jannh@google.com; steve.capper@arm.com; tiny.windzz@gmail.com; LKML <linux-kernel@vger.kernel.org>; linux-mm <linux-mm@kvack.org>; stable@vger.kernel.org; willy@infradead.org
+Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
+
+On Sat, 18 May 2019 07:05:07 +0000 "chenjianhong (A)" <chenjianhong2@huawei.com> wrote:
+
+> I explain my test code and the problem in detail. This problem is 
+> found in 32-bit user process, because its virtual is limited, 3G or 4G.
 > 
+> First, I explain the bug I found. Function unmapped_area and 
+> unmapped_area_topdowns adjust search length to account for worst case 
+> alignment overhead, the code is ' length = info->length + info->align_mask; '.
+> The variable info->length is the length we allocate and the variable
+> info->align_mask accounts for the alignment, because the gap_start  or 
+> info->gap_end
+> value also should be an alignment address, but we can't know the alignment offset.
+> So in the current algorithm, it uses the max alignment offset, this 
+> value maybe zero or other(0x1ff000 for shmat function).
+> Is it reasonable way? The required value is longer than what I allocate.
+> What's more,  why for the first time I can allocate the memory 
+> successfully Via shmat, but after releasing the memory via shmdt and I 
+> want to attach again, it fails. This is not acceptable for many people.
+> 
+> Second, I explain my test code. The code I have sent an email. The 
+> following is the step. I don't think it's something unusual or 
+> unreasonable, because the virtual memory space is enough, but the 
+> process can allocate from it. And we can't pass explicit addresses to 
+> function mmap or shmat, the address is getting from the left vma gap.
+>  1, we allocat large virtual memory;
+>  2, we allocate hugepage memory via shmat, and release one  of the 
+> hugepage memory block;  3, we allocate hugepage memory by shmat again, 
+> this will fail.
 
+How significant is this problem in real-world use cases?  How much trouble is it causing?
 
-KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
-This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
-It could be extended to record more free stacktraces and also record previously used tags which will allow you
-to identify use-after-free and extract right free stacktrace.
+> Third, I want to introduce my change in the current algorithm. I don't 
+> change the current algorithm. Also, I think there maybe a better way 
+> to fix this error. Nowadays, I can just adjust the gap_start value.
+
+Have you looked further into this?  Michel is concerned about the performance cost of the current solution.
+
