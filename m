@@ -2,123 +2,94 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7807DC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF8C742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD7D2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D322083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGLLrq (ORCPT
+        id S1726823AbfGLLuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:47:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:20311 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfGLLrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:47:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 04:47:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
-   d="scan'208";a="157116847"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga007.jf.intel.com with ESMTP; 12 Jul 2019 04:47:42 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hlu1c-0006I1-3T; Fri, 12 Jul 2019 14:47:40 +0300
-Date:   Fri, 12 Jul 2019 14:47:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Busch <keith.busch@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] acpi: fix false-positive -Wuninitialized warning
-Message-ID: <20190712114740.GX9224@smile.fi.intel.com>
-References: <20190712090148.36582-1-arnd@arndb.de>
+        Fri, 12 Jul 2019 07:50:03 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:56059 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfGLLuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 07:50:03 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MxE1Q-1iexWi2oo4-00xaTo; Fri, 12 Jul 2019 13:49:52 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fTPM: fix PTR_ERR() usage
+Date:   Fri, 12 Jul 2019 13:49:35 +0200
+Message-Id: <20190712114951.912328-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712090148.36582-1-arnd@arndb.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Y4aWHaGBUu1LQNUgr6qeqziguqIEOIocdFZ3G+ST42Un1whZss6
+ su3C9oznzzFoKCV8L855WlFnPznQGg0abqUSozCYu8Am63w7UDzZ1FEWvsznjsgf5V5mbQF
+ OEw38h46frWJgcFGMWLg7X4vDGr2LLfyxXX4H4i9ywKDwaJC0+PrjX+4S1LMp1U5FCHsif7
+ NQSY01QKSdacAh/X7KthA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BB8YylfyT6Q=:Zu3NO3Skka7Pns4dz+s4wG
+ ORssiD4YiwI0erYpLlnQMekwLTiTFd9BZlydBb3hkhLKAJg0sGCK6WooqivPJfEMT2I7UNp1w
+ cXNMgTHwNhL7qbJGei+2kI1P+zyYgpkl4uZ3K8eGXxnK+1oZyvZVXcHuyDP+KuyhapUnpPOyf
+ I6f5P3zBtra1B0tkWyhK1a4wzYkHu0d1wVIGaZu0dovys0BKqUmzne4Dnc3aY3+loaxX3t3Ca
+ JhwRxMOg0ay7LQopSSsXYMJpNUI3b6F1MkNtGy/abPeoqyxZUm7qENBSzA5PFzDHlYKi4hgc6
+ KivVdsWF/O9ATEHFQk5SgIXW2VlnakvsRseaZT8rpXhTNv14Kg6AUFhCZ7qBlC7/H07JihbW0
+ i7vESoOfeBWdOLSShDuW7+WkJW3u7/JqabHC/Hwf0G4W09EYLNs+i5tX1GHI51OAR0dg8mK18
+ Degc139V/xHuxGhTbWHT5+3sgXIpChv7QZARgcXel0TbbisTL4AVka/4CK7k6Tsuj2m+dRf6J
+ 6BXSYjJRAlE8t9pu5l9+V9YV9C7e7hRZVaKRQFsxNG0xcorSuBcVcvy/BxBwXYKRW4NU8dDoL
+ M3xv7tl8ye17E0IOpD+AWfVbPxyr2Xai8N0kLB4V/Q/VBSLkZUbDWUkEu7f165/9bvABUpvfi
+ XgjkMlabbPUK1DvEYJzHgD7gDd/vi6u41WFMhEsdRyfidYTdIFwaQgHpkpDb5iPFHLeBPxT/V
+ sSQ3dOa7AO7hNeIAMwqk4vZG6v2ksrRmz3URCA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:01:21AM +0200, Arnd Bergmann wrote:
-> clang gets confused by an uninitialized variable in what looks
-> to it like a never executed code path:
-> 
-> arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
->         polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
->                    ^~~~~~~~
-> arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
->         int rc, irq, trigger, polarity;
->                                       ^
->                                        = 0
-> arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
->         trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
->                   ^~~~~~~
-> arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
->         int rc, irq, trigger, polarity;
->                             ^
->                              = 0
-> 
-> This is unfortunately a design decision in clang and won't be fixed.
-> 
-> Changing the acpi_get_override_irq() macro to an inline function
-> reliably avoids the issue.
+A last minute change must have confused PTR_ERR() and ERR_PTR():
 
-In this particular case it looks fine (perhaps in the future -1 shall be
-replaced with proper error code).
+drivers/char/tpm/tpm_ftpm_tee.c:236:15: error: incompatible pointer to integer conversion passing 'struct tee_context *' to parameter of type 'long' [-Werror,-Wint-conversion]
+                if (ERR_PTR(pvt_data->ctx) == -ENOENT)
+drivers/char/tpm/tpm_ftpm_tee.c:239:18: error: incompatible pointer to integer conversion passing 'struct tee_context *' to parameter of type 'long' [-Werror,-Wint-conversion]
+                return ERR_PTR(pvt_data->ctx);
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: c975c3911cc2 ("fTPM: firmware TPM running in TEE")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/char/tpm/tpm_ftpm_tee.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-But in general it looks like clang obscures use of pretty well working macros.
-
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/linux/acpi.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index a95cce5e82e7..9426b9aaed86 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -324,7 +324,10 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
->  #ifdef CONFIG_X86_IO_APIC
->  extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
->  #else
-> -#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-> +static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-> +{
-> +	return -1;
-> +}
->  #endif
->  /*
->   * This function undoes the effect of one call to acpi_register_gsi().
-> -- 
-> 2.20.0
-> 
-
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 74766a4d3280..5679a5af9a96 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -233,10 +233,10 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+ 	pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
+ 						NULL);
+ 	if (IS_ERR(pvt_data->ctx)) {
+-		if (ERR_PTR(pvt_data->ctx) == -ENOENT)
++		if (PTR_ERR(pvt_data->ctx) == -ENOENT)
+ 			return -EPROBE_DEFER;
+ 		dev_err(dev, "%s: tee_client_open_context failed\n", __func__);
+-		return ERR_PTR(pvt_data->ctx);
++		return PTR_ERR(pvt_data->ctx);
+ 	}
+ 
+ 	/* Open a session with fTPM TA */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.0
 
