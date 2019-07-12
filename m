@@ -2,162 +2,150 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32240C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6AFC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F140320863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADC920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:11:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DvsaEaFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfGLIKc (ORCPT
+        id S1726436AbfGLILR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:10:32 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42563 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLIKc (ORCPT
+        Fri, 12 Jul 2019 04:11:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42150 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLILR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:10:32 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D9AF6C000A;
-        Fri, 12 Jul 2019 08:10:27 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 10:10:27 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
-Message-ID: <20190712081027.arybdoxr6nzrmkxt@flea>
-References: <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
- <20190710125552.qvmnh6qs63ikiu2k@flea>
- <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
- <20190710130615.gvi2jwgr2cds66xr@flea>
- <75719cad-c65c-7ebc-3ea8-98134f86ddc3@gmail.com>
- <4a13f12f-05a7-473e-4e4e-7a7e32d09720@gmail.com>
- <20190710140504.t5lsk36gnn5cdn6b@flea>
- <e7d78307-4a48-45b1-ffbe-bc397fec0e40@gmail.com>
- <20190711090327.keuxt2ztfqecdbef@flea>
- <de21fe78-87a6-741f-caf7-2771f6468739@gmail.com>
+        Fri, 12 Jul 2019 04:11:17 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C896rx002321;
+        Fri, 12 Jul 2019 08:09:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=2tqEcmeLMeBgU3gGieUNuwSnxjbrQ/jmkTtByRX3RIE=;
+ b=DvsaEaFNL7mXZf4t8TbD1WICbedvS6gXnuNWRU6+EhUI9XdmryDQbk9oboMU6PwhEa/d
+ 28l5JpbAOTVmdiUJOo0kUEkSZwQzVV5A/3elCDczMiD1LMVgxz2Cl70jq+95JaCFwmiY
+ 88y+spRDwcQsEhg4fXreM4bRNOTFII/2UECL515bHyVQ3scJP53TAix2Uv+9ajtzU2K3
+ 6ScCbuMVR79YPhRS6tYss1/BMcLK9e6XvckJpnixvGoXnD57Nx/yYHQkBFsaE2wxsNK6
+ UEU7tyMVp2A3mqIqhf+iNdFA2/297k2DBHX65Vvl76VGG0Wdz45MCDDoPXqJby5YEEDh KA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tjk2u47nv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 08:09:59 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C87a4X087501;
+        Fri, 12 Jul 2019 08:09:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2tmwgyn6kp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 08:09:58 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C89tfH027689;
+        Fri, 12 Jul 2019 08:09:56 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Jul 2019 01:09:55 -0700
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+To:     Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <2791712a-9f7b-18bc-e686-653181461428@oracle.com>
+Date:   Fri, 12 Jul 2019 10:09:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6weybs6gnxo2efbk"
-Content-Disposition: inline
-In-Reply-To: <de21fe78-87a6-741f-caf7-2771f6468739@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---6weybs6gnxo2efbk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/12/19 12:38 AM, Dave Hansen wrote:
+> On 7/11/19 7:25 AM, Alexandre Chartre wrote:
+>> - Kernel code mapped to the ASI page-table has been reduced to:
+>>    . the entire kernel (I still need to test with only the kernel text)
+>>    . the cpu entry area (because we need the GDT to be mapped)
+>>    . the cpu ASI session (for managing ASI)
+>>    . the current stack
+>>
+>> - Optionally, an ASI can request the following kernel mapping to be added:
+>>    . the stack canary
+>>    . the cpu offsets (this_cpu_off)
+>>    . the current task
+>>    . RCU data (rcu_data)
+>>    . CPU HW events (cpu_hw_events).
+> 
+> I don't see the per-cpu areas in here.  But, the ASI macros in
+> entry_64.S (and asi_start_abort()) use per-cpu data.
 
-On Thu, Jul 11, 2019 at 06:55:03PM +0300, Dmitry Osipenko wrote:
-> 11.07.2019 12:03, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Wed, Jul 10, 2019 at 06:05:18PM +0300, Dmitry Osipenko wrote:
-> >> 10.07.2019 17:05, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> On Wed, Jul 10, 2019 at 04:29:19PM +0300, Dmitry Osipenko wrote:
-> >>>> This works:
-> >>>>
-> >>>> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/=
-drm_client_modeset.c
-> >>>> index 56d36779d213..e5a2f9c8f404 100644
-> >>>> --- a/drivers/gpu/drm/drm_client_modeset.c
-> >>>> +++ b/drivers/gpu/drm/drm_client_modeset.c
-> >>>> @@ -182,6 +182,8 @@ drm_connector_pick_cmdline_mode(struct drm_conne=
-ctor *connector)
-> >>>>         mode =3D drm_mode_create_from_cmdline_mode(connector->dev, c=
-mdline_mode);
-> >>>>         if (mode)
-> >>>>                 list_add(&mode->head, &connector->modes);
-> >>>> +       else
-> >>>> +               cmdline_mode->specified =3D false;
-> >>>
-> >>> Hmmm, it's not clear to me why that wouldn't be the case.
-> >>>
-> >>> If we come back to the beginning of that function, we retrieve the
-> >>> cmdline_mode buffer from the connector pointer, that will probably
-> >>> have been parsed a first time using drm_mode_create_from_cmdline_mode
-> >>> in drm_helper_probe_add_cmdline_mode.
-> >>>
-> >>> Now, I'm guessing that the issue is that in
-> >>> drm_mode_parse_command_line_for_connector, if we have a named mode, we
-> >>> just copy the mode over and set mode->specified.
-> >>>
-> >>> And we then move over to do other checks, and that's probably what
-> >>> fails and returns, but our drm_cmdline_mode will have been modified.
-> >>>
-> >>> I'm not entirely sure how to deal with that though.
-> >>>
-> >>> I guess we could allocate a drm_cmdline_mode structure on the stack,
-> >>> fill that, and if successful copy over its content to the one in
-> >>> drm_connector. That would allow us to only change the content on
-> >>> success, which is what I would expect from such a function?
-> >>>
-> >>> How does that sound?
-> >>
-> >> I now see that there is DRM_MODE_TYPE_USERDEF flag that is assigned on=
-ly
-> >> for the "cmdline" mode and drm_client_rotation() is the only place in
-> >> DRM code that cares about whether mode is from cmdline, hence looks li=
-ke
-> >> it will be more correct to do the following:
-> >
-> > I'm still under the impression that we're dealing with workarounds of
-> > a more central issue, which is that we shouldn't return a partially
-> > modified drm_cmdline_mode.
-> >
-> > You said it yourself, the breakage is in the commit changing the
-> > command line parsing logic, while you're fixing here some code that
-> > was introduced later on.
->
-> The problem stems from assumption that *any* named mode is valid. It
-> looks to me that the ultimate solution would be to move the mode's name
-> comparison into the [1], if that's possible.
->
-> [1] drm_mode_parse_command_line_for_connector()
+We don't map all per-cpu areas, but only the per-cpu variables we need. ASI
+code uses the per-cpu cpu_asi_session variable which is mapped when an ASI
+is created (see patch 15/26):
 
-Well, one could argue that video=3Dtegrafb is invalid and should be
-rejected as well, but we haven't cleared that up.
++	/*
++	 * Map the percpu ASI sessions. This is used by interrupt handlers
++	 * to figure out if we have entered isolation and switch back to
++	 * the kernel address space.
++	 */
++	err = ASI_MAP_CPUVAR(asi, cpu_asi_session);
++	if (err)
++		return err;
 
-> > Can you try the followintg patch?
-> > http://code.bulix.org/8cwk4c-794565?raw
->
-> This doesn't help because the problem with the rotation_reflection is
-> that it's 0 if "rotation" not present in the cmdline and then ilog2(0)
-> returns -1. So the patch "drm/modes: Don't apply cmdline's rotation if
-> it wasn't specified" should be correct in any case.
 
-So we would have the same issue with rotate=3D0 then?
+> Also, this stuff seems to do naughty stuff (calling C code, touching
+> per-cpu data) before the PTI CR3 writes have been done.  But, I don't
+> see anything excluding PTI and this code from coexisting.
 
-Maxime
+My understanding is that PTI CR3 writes only happens when switching to/from
+userland. While ASI enter/exit/abort happens while we are already in the kernel,
+so asi_start_abort() is not called when coming from userland and so not
+interacting with PTI.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+For example, if ASI in used during a syscall (e.g. with KVM), we have:
 
---6weybs6gnxo2efbk
-Content-Type: application/pgp-signature; name="signature.asc"
+  -> syscall
+     - PTI CR3 write (kernel CR3)
+     - syscall handler:
+       ...
+       asi_enter()-> write ASI CR3
+       .. code run with ASI ..
+       asi_exit() or asi abort -> restore original CR3
+       ...
+     - PTI CR3 write (userland CR3)
+  <- syscall
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXShAcwAKCRDj7w1vZxhR
-xTSIAQD/e1DSHvsHrh2flaNGAhwJVB74Bj9ujrC7VCEaL5GlwAD/ZUqWk9LNA1y+
-s25PrPo0pdy89EqHc9WFkd6x6juMrg8=
-=U3z3
------END PGP SIGNATURE-----
+Thanks,
 
---6weybs6gnxo2efbk--
+alex.
