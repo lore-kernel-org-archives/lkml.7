@@ -2,97 +2,137 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C045DC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101C8C742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADA62166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2107208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562936653;
-	bh=j08i/yzt8yihm95wbKxIa8ANHeLTJGyB1LowMPZRoQs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jdJFxk28is2YjCtlPDXQRjWz/Ffh7Uu1fNcb0BdtDA9l78rAZgrhFCGEuJBynB+G9
-	 Y9rlH2KkuWTQxu7gk4I5e1CE6kYzEARnJlLTaH0lflOs42uPRACzYjBjsUYUhcf4SH
-	 5ZBQf8x4EpIGz/nIPezHlafNchX1FB+PVO6NxM5g=
+	s=default; t=1562936664;
+	bh=u96N68lduvC3FQgAP3xAaT3SUCGGECkXStzM+/6LFiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eJ6JSp0PDBI/Hh14oq80cTenkgPoZD0loEEEFSaJEkCQtgsqMHnQ6ogd0XnC4eoQh
+	 kgyndC0cnnCRmR/cev1QtJClqxW2wbHxQbZyl7sGzRyy0ddGe52TK+Xnuv4T9gqSmI
+	 wKI4JFfSnVeZEDQ3pbJfH/IMyAMpHXq7NhJiNDjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfGLNEM (ORCPT
+        id S1727507AbfGLNEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53006 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 09:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbfGLNEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:04:11 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726449AbfGLNEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:04:23 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83496216C4;
-        Fri, 12 Jul 2019 13:04:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E0120863;
+        Fri, 12 Jul 2019 13:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562936650;
-        bh=j08i/yzt8yihm95wbKxIa8ANHeLTJGyB1LowMPZRoQs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tn4/f9n/k299HHdLN0F6ScJZKf/VYffpnnAYh+PPAzA7ZjRWQFYrqKf+oTQV+fuy4
-         ACXtzrbqpM/naLe0Cz/a11svW1mUDqExyut4Wh/u8EXdbSDYghpYV5xdCObec1WWpU
-         LNbCdcMo3gwFzWE9scGST+eZVaGIXGMXzio+pSbQ=
-Received: by mail-qt1-f179.google.com with SMTP id k10so7990455qtq.1;
-        Fri, 12 Jul 2019 06:04:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAVWKooERTk+d1Vgk3uqzGGJJaXeOFEhtduVtdPg6v8XdYb3lO6I
-        GLlMnQ+v9OfBMw/UKxIVh3xi2QbMAyh1cDJyog==
-X-Google-Smtp-Source: APXvYqy0Gw33CPTr5i9Ny8C1aCwNSn1BsAcArqdhs4L6Ao3k4lrTO3dV3h27CfJYvsBcR6H2d01/a3fqfjUcmFKloV0=
-X-Received: by 2002:a0c:b786:: with SMTP id l6mr6598069qve.148.1562936649734;
- Fri, 12 Jul 2019 06:04:09 -0700 (PDT)
+        s=default; t=1562936662;
+        bh=u96N68lduvC3FQgAP3xAaT3SUCGGECkXStzM+/6LFiE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aEqeNZhJm60hUaHF1LdMWBV+vec2TZTgGaYRf2jEI6LEoO1Zhth+4X8jI5iHz6xPP
+         MFT78SpOBHN7gUzUfx1XfrKytHizziPtXCb/mPANT/6//2LGzBhKJUFkZ24ZEmx0hk
+         lgh2IvzG+B5sjPFmw1TXmyLK4txUszERPJo209Xk=
+Date:   Fri, 12 Jul 2019 08:04:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org,
+        alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com,
+        talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/8] PCI: Add quirk to disable MSI support for Amazon's
+ Annapurna Labs host bridge
+Message-ID: <20190712130419.GA46935@google.com>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+ <20190710164519.17883-5-jonnyc@amazon.com>
 MIME-Version: 1.0
-References: <20190712033214.24713-1-andrew@aj.id.au> <20190712033214.24713-2-andrew@aj.id.au>
-In-Reply-To: <20190712033214.24713-2-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 12 Jul 2019 07:03:57 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq++J+K2goHiNrHJGnL6vrLjmKhM+vpYO=sTnmv6fm2sog@mail.gmail.com>
-Message-ID: <CAL_Jsq++J+K2goHiNrHJGnL6vrLjmKhM+vpYO=sTnmv6fm2sog@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document Aspeed SD controller
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ryan Chen <ryanchen.aspeed@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710164519.17883-5-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 9:32 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
-> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> data bus if only a single slot is enabled.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> In v2:
->
-> * Rename to aspeed,sdhci.yaml
-> * Rename sd-controller compatible
-> * Add `maxItems: 1` for reg properties
-> * Move sdhci subnode description to patternProperties
-> * Drop sdhci compatible requirement
-> * #address-cells and #size-cells are required
-> * Prevent additional properties
-> * Implement explicit ranges in example
-> * Remove slot property
->
->  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 90 +++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+On Thu, Jul 11, 2019 at 05:56:25PM +0300, Jonathan Chocron wrote:
+> On some platforms, the host bridge exposes an MSI-X capability but
+> doesn't actually support it.
+> This causes a crash during initialization by the pcieport driver, since
+> it tries to configure the MSI-X capability.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Nit: The formatting above is jarring to read because I can't tell
+whether it's one paragraph or two.
+
+Either rewrap it into a single paragraph or add a blank line to make
+two paragraphs.  I noticed this elsewhere, too, in a comment, I think.
+
+s/host bridge/Root Port/, if I understand correctly.
+
+I don't understand the "on some platforms..." part.  Do you mean that
+on *every* platform, this particular host bridge (identified by
+[1c36:0031]) advertises an MSI-X capability that doesn't work?
+
+Or are there some platforms that configure the bridge so it doesn't
+advertise MSI-X at all, while other platforms configure it so it
+*does* advertise MSI-X?
+
+If there's a line or two of diagnostics from the crash you could
+include here, that would help people who encounter the crash find
+the solution.
+
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> ---
+>  drivers/pci/quirks.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 11850b030637..0fb70d755977 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2925,6 +2925,14 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
+>  			quirk_msi_intx_disable_qca_bug);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+>  			quirk_msi_intx_disable_qca_bug);
+> +
+> +static void quirk_al_msi_disable(struct pci_dev *dev)
+> +{
+> +	dev->no_msi = 1;
+> +	dev_warn(&dev->dev, "Annapurna Labs pcie quirk - disabling MSI\n");
+
+s/pcie/PCIe/ in English text, comments, printk strings, etc.
+
+Actually, I think the whole "Annapurna Labs pcie quirk" part is
+probably unnecessary, since we can identify the device via the
+dev_printk() info.
+
+Speaking of which, you can use "pci_warn(dev)" here to be consistent
+with the rest of the file.
+
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
+
+Why do you use the class fixup here instead of the simpler
+DECLARE_PCI_FIXUP_FINAL()?  Requiring the class to match
+PCI_CLASS_BRIDGE_PCI suggests that there may be other [1c36:0031]
+devices that are not Root Ports.  If that's the case, please mention
+it so it's clear why we need DECLARE_PCI_FIXUP_CLASS_FINAL().  If not,
+just use DECLARE_PCI_FIXUP_FINAL().
+
+>  #endif /* CONFIG_PCI_MSI */
+>  
+>  /*
+> -- 
+> 2.17.1
+> 
+> 
