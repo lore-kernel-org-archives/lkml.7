@@ -2,180 +2,296 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73F7C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D202DC742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9268E2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AA720863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="udzUsKOC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJ6ww7yo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfGLQjk (ORCPT
+        id S1727360AbfGLQlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:39:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54954 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfGLQjj (ORCPT
+        Fri, 12 Jul 2019 12:41:07 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43219 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfGLQlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:39:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CGYu5W044476;
-        Fri, 12 Jul 2019 16:37:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=nyEsN/LT+qLQeAhJSw73nRDEiezb1wkuHqJmYoNu09Q=;
- b=udzUsKOCDBkPUmzOUDtUv3Rsrc9AjAPNDVOQAGhzxJz8cM/ac3qhx5la2ks5/yVkRxcN
- jeJuWWO1mCOVL7CdwMw1K5mrevYgdJ0U1KqrVJXYcGhsGKBybJTzoG1DmqR/AtKpiRUG
- /6cdcqaH7+uwyAS/A20qc+5Japv6c6FQGyZeWGHfpCZ0Cd11Z2ykMLdZrqwzh23px5JK
- zjP8561g4U1GdrrdSfcmHkKZXMW8rHVjPA3kl5NBx2d98FCqPiLcAhEa4FB571m6F2RM
- dyIFcDD4kndhbBovZteDlGSGO/H8G0eogKOqieLEXrwfqHR56AX8ZGkcAyv5JsZwO7iB hA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tjm9r6n6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 16:37:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CGHoBM082891;
-        Fri, 12 Jul 2019 16:37:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tn1j288h9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 16:37:55 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6CGbqMp028681;
-        Fri, 12 Jul 2019 16:37:52 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 09:37:51 -0700
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
- <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
- <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
- <20190712125059.GP3419@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <3ca70237-bf8e-57d9-bed5-bc2329d17177@oracle.com>
-Date:   Fri, 12 Jul 2019 18:37:47 +0200
+        Fri, 12 Jul 2019 12:41:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so9940493ljv.10;
+        Fri, 12 Jul 2019 09:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=07LEgoyEHoGLp0Ac/lWdvUvBRaQXzLrYtdrkGFRgizM=;
+        b=tJ6ww7yoECwP0CeZZVy94MX1ukQCov8d9Bd0f8HQ32l/tdRP6mZhyaH3Hr29u1YoDw
+         ruGVeqqVNvRJ0UnodnHVbg9FTNkliGuvTG42X2PqzHgpIDh4c/cqDrJXIu5isCVeMeRp
+         ax3gLgwh6DnoI2oqAlOCG2RIJ44cRBa6hTGLfOX4Qz8qwRT3WfVeFtCYHFKzaeOugJlU
+         MY4JrTK1M9Qq7L0xDy9R3TsaK3/hyGj31uHwC/p2pLGOn83azOY66a5Ef+HFJk3We694
+         hLLCMguBiU0g1Sq0bxESUj9lPhMYczjATXkJS1JV9+qUXOFE1sVg6kZ2OlO5Zw5Jt9qo
+         CQnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=07LEgoyEHoGLp0Ac/lWdvUvBRaQXzLrYtdrkGFRgizM=;
+        b=pFwoon7agaauwTSLa23L95FwINCMDbK+epXd0CPEE3CjmaHATB1rq6c3xqwq+yJhcx
+         D5gPvpazWVLbokLOnraZK2KRnqh0PZUP4tddrIsOtjJ+TZVTlOPcsdcvSlIe0OhC/3EQ
+         NwM8piC/v8U8NFcqq9FPpoIR++j0peL7b8UfjYx8MQyC9jyVNkkxMrsoe1vmIqRpn3tY
+         3rffvOQo9VfURok8wzNF53LWeMSOuKvpRch1t59S1jwC0k/X+1QsOGqGeKQViGBViPH/
+         StZAqocxpZvus5K+HCMMP4ZOWv9+atYnqjU8Xb+TthjQ2p2sipvhaZpu7g0EU1xMjYeZ
+         QjSg==
+X-Gm-Message-State: APjAAAXR7dpOrRv/QxrbrJT10pBnpXV7lX7l+h8qic+pnrXd4dMUCBCh
+        L5TxbnI3z+kAP//6P9PxclfDF65F
+X-Google-Smtp-Source: APXvYqy7NG6KmwLiCxhrn45MUR985yNGqvu4tsI3gQc4vdOWJTLgDrlkJEB11DCYhzKOpemfZiKL/Q==
+X-Received: by 2002:a2e:86c1:: with SMTP id n1mr6473745ljj.162.1562949663596;
+        Fri, 12 Jul 2019 09:41:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id k8sm1521898lja.24.2019.07.12.09.41.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 09:41:02 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] cpuidle: Add unified driver for NVIDIA Tegra SoCs
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190711031312.10038-1-digetx@gmail.com>
+ <20190711031312.10038-4-digetx@gmail.com>
+ <c54c43fd-9b11-4aa8-3acf-d2260d0fca4a@gmail.com>
+Message-ID: <01ec2515-8c54-4809-b79a-363db12c453f@gmail.com>
+Date:   Fri, 12 Jul 2019 19:41:01 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <c54c43fd-9b11-4aa8-3acf-d2260d0fca4a@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120171
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/12/19 5:16 PM, Thomas Gleixner wrote:
-> On Fri, 12 Jul 2019, Peter Zijlstra wrote:
->> On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
+11.07.2019 21:35, Dmitry Osipenko пишет:
+> 11.07.2019 6:13, Dmitry Osipenko пишет:
+>> The new driver is based on the old CPU Idle drivers that are removed now
+>> from arm/arch/mach-tegra/ directory. Those removed drivers were reworked
+>> and squashed into a single unified driver that covers multiple hardware
+>> generations, starting from Tegra20 and ending with Tegra124.
 >>
->>> I think that's precisely what makes ASI and PTI different and independent.
->>> PTI is just about switching between userland and kernel page-tables, while
->>> ASI is about switching page-table inside the kernel. You can have ASI without
->>> having PTI. You can also use ASI for kernel threads so for code that won't
->>> be triggered from userland and so which won't involve PTI.
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  arch/arm/mach-tegra/tegra.c     |   4 +
+>>  drivers/cpuidle/Kconfig.arm     |   8 +
+>>  drivers/cpuidle/Makefile        |   1 +
+>>  drivers/cpuidle/cpuidle-tegra.c | 304 ++++++++++++++++++++++++++++++++
+>>  include/soc/tegra/cpuidle.h     |   4 +
+>>  5 files changed, 321 insertions(+)
+>>  create mode 100644 drivers/cpuidle/cpuidle-tegra.c
 >>
->> PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
->> ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
->>
->> See how very similar they are?
->>
->> Furthermore, to recover SMT for userspace (under MDS) we not only need
->> core-scheduling but core-scheduling per address space. And ASI was
->> specifically designed to help mitigate the trainwreck just described.
->>
->> By explicitly exposing (hopefully harmless) part of the kernel to MDS,
->> we reduce the part that needs core-scheduling and thus reduce the rate
->> the SMT siblngs need to sync up/schedule.
->>
->> But looking at it that way, it makes no sense to retain 3 address
->> spaces, namely:
->>
->>    user / kernel exposed / kernel private.
->>
->> Specifically, it makes no sense to expose part of the kernel through MDS
->> but not through Meltdow. Therefore we can merge the user and kernel
->> exposed address spaces.
->>
->> And then we've fully replaced PTI.
->>
->> So no, they're not orthogonal.
+>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
+>> index d9237769a37c..f1ce2857a251 100644
+>> --- a/arch/arm/mach-tegra/tegra.c
+>> +++ b/arch/arm/mach-tegra/tegra.c
+>> @@ -36,6 +36,7 @@
+>>  #include <asm/mach/arch.h>
+>>  #include <asm/mach/time.h>
+>>  #include <asm/mach-types.h>
+>> +#include <asm/psci.h>
+>>  #include <asm/setup.h>
+>>  
+>>  #include "board.h"
+>> @@ -92,6 +93,9 @@ static void __init tegra_dt_init_late(void)
+>>  	if (IS_ENABLED(CONFIG_ARCH_TEGRA_2x_SOC) &&
+>>  	    of_machine_is_compatible("nvidia,tegra20"))
+>>  		platform_device_register_simple("tegra20-cpufreq", -1, NULL, 0);
+>> +
+>> +	if (IS_ENABLED(CONFIG_ARM_TEGRA_CPUIDLE) && !psci_smp_available())
+>> +		platform_device_register_simple("tegra-cpuidle", -1, NULL, 0);
+>>  }
+>>  
+>>  static const char * const tegra_dt_board_compat[] = {
+>> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+>> index 48cb3d4bb7d1..d90861361f1d 100644
+>> --- a/drivers/cpuidle/Kconfig.arm
+>> +++ b/drivers/cpuidle/Kconfig.arm
+>> @@ -76,3 +76,11 @@ config ARM_MVEBU_V7_CPUIDLE
+>>  	depends on ARCH_MVEBU && !ARM64
+>>  	help
+>>  	  Select this to enable cpuidle on Armada 370, 38x and XP processors.
+>> +
+>> +config ARM_TEGRA_CPUIDLE
+>> +	bool "CPU Idle Driver for NVIDIA Tegra SoCs"
+>> +	depends on ARCH_TEGRA && !ARM64
+>> +	select ARCH_NEEDS_CPU_IDLE_COUPLED if SMP
+>> +	select ARM_CPU_SUSPEND
+>> +	help
+>> +	  Select this to enable cpuidle for NVIDIA Tegra20/30/114/124 SoCs.
+>> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
+>> index 9d7176cee3d3..470d17fa8746 100644
+>> --- a/drivers/cpuidle/Makefile
+>> +++ b/drivers/cpuidle/Makefile
+>> @@ -20,6 +20,7 @@ obj-$(CONFIG_ARM_U8500_CPUIDLE)         += cpuidle-ux500.o
+>>  obj-$(CONFIG_ARM_AT91_CPUIDLE)          += cpuidle-at91.o
+>>  obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        += cpuidle-exynos.o
+>>  obj-$(CONFIG_ARM_CPUIDLE)		+= cpuidle-arm.o
+>> +obj-$(CONFIG_ARM_TEGRA_CPUIDLE)		+= cpuidle-tegra.o
+>>  
+>>  ###############################################################################
+>>  # MIPS drivers
+>> diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+>> new file mode 100644
+>> index 000000000000..54974cd2255f
+>> --- /dev/null
+>> +++ b/drivers/cpuidle/cpuidle-tegra.c
+>> @@ -0,0 +1,304 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * CPU idle driver for Tegra CPUs
+>> + *
+>> + * Copyright (c) 2010-2013, NVIDIA Corporation.
+>> + * Copyright (c) 2011 Google, Inc.
+>> + * Author: Colin Cross <ccross@android.com>
+>> + *         Gary King <gking@nvidia.com>
+>> + *
+>> + * Rework for 3.3 by Peter De Schrijver <pdeschrijver@nvidia.com>
+>> + *
+>> + * Tegra20/124 driver unification by Dmitry Osipenko <digetx@gmail.com>
+>> + */
+>> +
+>> +#include <linux/cpuidle.h>
+>> +#include <linux/cpumask.h>
+>> +#include <linux/cpu_pm.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/ktime.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/types.h>
+>> +
+>> +#include <linux/clk/tegra.h>
+>> +#include <linux/firmware/trusted_foundations.h>
+>> +
+>> +#include <soc/tegra/cpuidle.h>
+>> +#include <soc/tegra/flowctrl.h>
+>> +#include <soc/tegra/fuse.h>
+>> +#include <soc/tegra/pm.h>
+>> +
+>> +#include <asm/cpuidle.h>
+>> +#include <asm/firmware.h>
+>> +#include <asm/smp_plat.h>
+>> +#include <asm/suspend.h>
+>> +
+>> +#define TEGRA_C1		0
+>> +#define TEGRA_C7		1
+>> +#define TEGRA_CC6		2
+>> +
+>> +static atomic_t tegra_idle_barrier;
+>> +
+>> +static inline bool tegra_cpuidle_using_firmware(void)
+>> +{
+>> +	return firmware_ops->prepare_idle && firmware_ops->do_idle;
+>> +}
+>> +
+>> +static int tegra_shutdown_secondary_cpu(unsigned long cpu)
+>> +{
+>> +	tegra_cpu_die(cpu);
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int tegra_await_secondary_cpus_shutdown(void)
+>> +{
+>> +	ktime_t timeout = ktime_add_ms(ktime_get(), 1);
+>> +
+>> +	/*
+>> +	 * The boot CPU shall await for the secondaries shutdown in order
+>> +	 * to power-off CPU's cluster safely.
+>> +	 */
+>> +	do {
+>> +		if (tegra_cpu_rail_off_ready())
+>> +			return 0;
+>> +
+>> +	} while (ktime_compare(ktime_get(), timeout) < 0);
+>> +
+>> +	return -ETIMEDOUT;
+>> +}
+>> +
+>> +static void tegra_wake_up_secondary_cpus(void)
+>> +{
+>> +	unsigned int cpu, lcpu;
+>> +
+>> +	for_each_cpu(lcpu, cpu_online_mask) {
+>> +		cpu = cpu_logical_map(lcpu);
+>> +
+>> +		if (cpu > 0) {
+>> +			tegra_enable_cpu_clock(cpu);
+>> +			tegra_cpu_out_of_reset(cpu);
+>> +			flowctrl_write_cpu_halt(cpu, 0);
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static int tegra_cpuidle_cc6_enter(void)
+>> +{
+>> +	int err;
+>> +
+>> +	err = tegra_await_secondary_cpus_shutdown();
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = tegra_idle_lp2_last();
+>> +
+>> +	tegra_wake_up_secondary_cpus();
+>> +
+>> +	return err;
+>> +}
+>> +
+>> +static int tegra_cpuidle_c7_enter(void)
+>> +{
+>> +	int err;
+>> +
+>> +	if (tegra_cpuidle_using_firmware()) {
+>> +		err = call_firmware_op(prepare_idle, TF_PM_MODE_LP2_NOFLUSH_L2);
+>> +		if (err)
+>> +			return err;
+>> +
+>> +		return call_firmware_op(do_idle, 0);
+>> +	}
+>> +
+>> +	return cpu_suspend(0, tegra30_sleep_cpu_secondary_finish);
+>> +}
+>> +
+>> +static int tegra_cpuidle_enter(struct cpuidle_device *dev,
+>> +			       int index, unsigned int cpu)
+>> +{
+>> +	int err;
+>> +
+>> +	local_fiq_disable();
+>> +	tegra_set_cpu_in_lp2();
+>> +	cpu_pm_enter();
+>> +
+>> +	switch (index) {
+>> +	case TEGRA_C7:
+>> +		err = tegra_cpuidle_c7_enter();
+>> +		break;
+>> +	case TEGRA_CC6:
+>> +		cpuidle_coupled_parallel_barrier(dev, &tegra_idle_barrier);
 > 
-> Right. If we decide to expose more parts of the kernel mappings then that's
-> just adding more stuff to the existing user (PTI) map mechanics.
-  
+> I realized that this is not very correct. We still need to do a proper
+> barrier with SGI checking in order to bail out if other CPU sent IPI
+> during of the awaiting for a coupled barrier to avoid the overhead of
+> unnecessary power-gating. Will correct that in the next revision.
 
-If we expose more parts of the kernel mapping by adding them to the existing
-user (PTI) map, then we only control the mapping of kernel sensitive data but
-we don't control user mapping (with ASI, we exclude all user mappings).
-
-How would you control the mapping of userland sensitive data and exclude them
-from the user map? Would you have the application explicitly identify sensitive
-data (like Andy suggested with a /dev/xpfo device)?
-
-Thanks,
-
-alex.
-
-
-> As a consequence the CR3 switching points become different or can be
-> consolidated and that can be handled right at those switching points
-> depending on static keys or alternatives as we do today with PTI and other
-> mitigations.
-> 
-> All of that can do without that obscure "state machine" which is solely
-> there to duct-tape the complete lack of design. The same applies to that
-> mapping thing. Just mapping randomly selected parts by sticking them into
-> an array is a non-maintainable approach. This needs proper separation of
-> text and data sections, so violations of the mapping constraints can be
-> statically analyzed. Depending solely on the page fault at run time for
-> analysis is just bound to lead to hard to diagnose failures in the field.
-> 
-> TBH we all know already that this can be done and that this will solve some
-> of the issues caused by the speculation mess, so just writing some hastily
-> cobbled together POC code which explodes just by looking at it, does not
-> lead to anything else than time waste on all ends.
-> 
-> This first needs a clear definition of protection scope. That scope clearly
-> defines the required mappings and consequently the transition requirements
-> which provide the necessary transition points for flipping CR3.
-> 
-> If we have agreed on that, then we can think about the implementation
-> details.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+UPDATE: Actually, turned out it's even a necessity to handle the SGI
+because GIC's driver doesn't save and replay SGI across CPU cluster PM.
