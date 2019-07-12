@@ -7,155 +7,152 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7ABC742CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3ADC742CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2646B21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385D221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562945260;
-	bh=/PnY1//7IlAIuMawKhBmfn4u98uVswB+8uTzAFK7AFA=;
+	s=default; t=1562945299;
+	bh=kvRwMmpPgKOBlahNaD54ocvg9pjHc1Q2YXUDFky0kr4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZCvl1tNmNmUTlGV0S/LGFYgVMH3NOZUktMLhFoluIg2cC3MjP8Os2wt4Lw6nlXh8L
-	 APMzAAElhrmZH5yMsKxz1gbsF4yR1nJGpPjy+yB/vOcJfmxUuXvvcNa9vTWcU0oR5f
-	 WMZ4+G7CIPruMT46H1zd+3jfTd3bKwIEl5Ioz+bo=
+	b=ryfD5sIkOQVPQmHzm3w/cMYQhCwdgItR0517YOM5QAS0ticNBU2B28EmLnr9XFVKe
+	 8spMAjTRJAHqSscBSBNQbCZvPrBnEU0vEg97TIbRFbTMLx7E/QWpCSkgYGTBEDP4hk
+	 WecbllpGIHFe7LJN5tZjgcqadkG2xeNUEM56Bk+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfGLP1j (ORCPT
+        id S1727145AbfGLP2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33048 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 11:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbfGLP1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:27:39 -0400
+        id S1726254AbfGLP2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:28:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C9F208E4;
-        Fri, 12 Jul 2019 15:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B8FC208E4;
+        Fri, 12 Jul 2019 15:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562945257;
-        bh=/PnY1//7IlAIuMawKhBmfn4u98uVswB+8uTzAFK7AFA=;
+        s=default; t=1562945296;
+        bh=kvRwMmpPgKOBlahNaD54ocvg9pjHc1Q2YXUDFky0kr4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BXXqXSiL94+jmXovFWddcRFv36hnZJYq8wJU/yLC4OYQBnV6zyOUidljBxDU60Ezq
-         3PNOefRnIjTinVH8/A/DzgVQGTAHz1vwYGS7LR8OcVeFl7k/RvNtV/82CnMqwlrd/v
-         oxQzXha8uCdM9dh2gWhtkbn5MVycAkS2G5tTKF2w=
-Date:   Fri, 12 Jul 2019 17:27:34 +0200
+        b=JuPtoDzXrtSzfwjdLXCa6q4tqctFFJF+IOTDsZwpWFkNsxXGsrBvmLjCtgEyG6LLa
+         ZMXS3sNvcP8O1y4t7tmsxRxmv1Td+pv1T78xM6hkhWURRSFGe2Mdn0Y5DMLLrHxxBk
+         OddT+Jv3/rbiOjAYquBZXjJA/xE+m3U7/IjH2NnY=
+Date:   Fri, 12 Jul 2019 17:28:13 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, "# 4.0+" <stable@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
- operations
-Message-ID: <20190712152734.GA13940@kroah.com>
-References: <20190711162919.23813-1-dianders@chromium.org>
- <20190711163915.GD25807@ziepe.ca>
- <20190711170437.GA7544@kroah.com>
- <20190711171726.GE25807@ziepe.ca>
- <20190711172630.GA11371@kroah.com>
- <CAD=FV=U0ue_4FyS7MO+iaKQ5gr0PhuLZaTV1adPY3ZtNhKTmHA@mail.gmail.com>
- <20190712115025.GA8221@kroah.com>
- <CAD=FV=UBOWHrEFQRhxsnK-PmVkFjcvnEruuy0sYHh0p-Qnk8pA@mail.gmail.com>
+To:     Max Kellermann <mk@cm4all.com>
+Cc:     zhangliguang@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "NFS: readdirplus optimization by cache
+ mechanism" (memleak)
+Message-ID: <20190712152813.GB13940@kroah.com>
+References: <20190712141806.3063-1-mk@cm4all.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=UBOWHrEFQRhxsnK-PmVkFjcvnEruuy0sYHh0p-Qnk8pA@mail.gmail.com>
+In-Reply-To: <20190712141806.3063-1-mk@cm4all.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 08:00:12AM -0700, Doug Anderson wrote:
-> Hi,
+On Fri, Jul 12, 2019 at 04:18:06PM +0200, Max Kellermann wrote:
+> This reverts commit be4c2d4723a4a637f0d1b4f7c66447141a4b3564.
 > 
-> On Fri, Jul 12, 2019 at 4:50 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jul 11, 2019 at 10:28:01AM -0700, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Thu, Jul 11, 2019 at 10:26 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Thu, Jul 11, 2019 at 02:17:26PM -0300, Jason Gunthorpe wrote:
-> > > > > On Thu, Jul 11, 2019 at 07:04:37PM +0200, Greg KH wrote:
-> > > > > > On Thu, Jul 11, 2019 at 01:39:15PM -0300, Jason Gunthorpe wrote:
-> > > > > > > On Thu, Jul 11, 2019 at 09:29:19AM -0700, Douglas Anderson wrote:
-> > > > > > > > From: Vadim Sukhomlinov <sukhomlinov@google.com>
-> > > > > > > >
-> > > > > > > > commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
-> > > > > > > >
-> > > > > > > > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-> > > > > > > > future TPM operations. TPM 1.2 behavior was different, future TPM
-> > > > > > > > operations weren't disabled, causing rare issues. This patch ensures
-> > > > > > > > that future TPM operations are disabled.
-> > > > > > > >
-> > > > > > > > Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-> > > > > > > > Cc: stable@vger.kernel.org
-> > > > > > > > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-> > > > > > > > [dianders: resolved merge conflicts with mainline]
-> > > > > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > > > This is the backport of the patch referenced above to 4.19 as was done
-> > > > > > > > in Chrome OS.  See <https://crrev.com/c/1495114> for details.  It
-> > > > > > > > presumably applies to some older kernels.  NOTE that the problem
-> > > > > > > > itself has existed for a long time, but continuing to backport this
-> > > > > > > > exact solution to super old kernels is out of scope for me.  For those
-> > > > > > > > truly interested feel free to reference the past discussion [1].
-> > > > > > > >
-> > > > > > > > Reason for backport: mainline has commit a3fbfae82b4c ("tpm: take TPM
-> > > > > > > > chip power gating out of tpm_transmit()") and commit 719b7d81f204
-> > > > > > > > ("tpm: introduce tpm_chip_start() and tpm_chip_stop()") and it didn't
-> > > > > > > > seem like a good idea to backport 17 patches to avoid the conflict.
-> > > > > > >
-> > > > > > > Careful with this, you can't backport this to any kernels that don't
-> > > > > > > have the sysfs ops locking changes or they will crash in sysfs code.
-> > > > > >
-> > > > > > And what commit added that?
-> > > > >
-> > > > > commit 2677ca98ae377517930c183248221f69f771c921
-> > > > > Author: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > Date:   Sun Nov 4 11:38:27 2018 +0200
-> > > > >
-> > > > >     tpm: use tpm_try_get_ops() in tpm-sysfs.c.
-> > > > >
-> > > > >     Use tpm_try_get_ops() in tpm-sysfs.c so that we can consider moving
-> > > > >     other decorations (locking, localities, power management for example)
-> > > > >     inside it. This direction can be of course taken only after other call
-> > > > >     sites for tpm_transmit() have been treated in the same way.
-> > > > >
-> > > > > The last sentence suggests there are other patches needed too though..
-> > > >
-> > > > So 5.1.  So does this original patch need to go into the 5.2 and 5.1
-> > > > kernels?
-> > >
-> > > The patch ("Fix TPM 1.2 Shutdown sequence to prevent future TPM
-> > > operations")?  It's already done.  It just got merge conflicts when
-> > > going back to 4.19 which is why I sent the backport.
-> >
-> > But the sysfs comment means I should not apply this backport then?
-> >
-> > Totally confused by this long thread, sorry.
-> >
-> > What am I supposed to do for the stable trees here?
+> That commit caused a severe memory leak in nfs_readdir_make_qstr().
 > 
-> I think the answer is to drop my backport for now and Jarkko says
-> he'll take a fresh look at it in 2 weeks when he's back from his
-> leave.  Thus my understanding:
+> When listing a directory with more than 100 files (this is how many
+> struct nfs_cache_array_entry elements fit in one 4kB page), all
+> allocated file name strings past those 100 leak.
 > 
-> * On mainline: fixed
+> The root of the leakage is that those string pointers are managed in
+> pages which are never linked into the page cache.
 > 
-> * On 5.2 / 5.1: you've already got this picked to stable.  Good
+> fs/nfs/dir.c puts pages into the page cache by calling
+> read_cache_page(); the callback function nfs_readdir_filler() will
+> then fill the given page struct which was passed to it, which is
+> already linked in the page cache (by do_read_cache_page() calling
+> add_to_page_cache_lru()).
 > 
-> * On 4.14 / 4.19: Jarkko will look at in 2 weeks.
+> Commit be4c2d4723a4 added another (local) array of allocated pages, to
+> be filled with more data, instead of discarding excess items received
+> from the NFS server.  Those additional pages can be used by the next
+> nfs_readdir_filler() call (from within the same nfs_readdir() call).
 > 
-> * On 4.9 and older: I'd propose skipping unless someone is known to
-> need a solution here.
+> The leak happens when some of those additional pages are never used
+> (copied to the page cache using copy_highpage()).  The pages will be
+> freed by nfs_readdir_free_pages(), but their contents will not.  The
+> commit did not invoke nfs_readdir_clear_array() (and doing so would
+> have been dangerous, because it did not track which of those pages
+> were already copied to the page cache, risking double free bugs).
+> 
+> How to reproduce the leak:
+> 
+> - Use a kernel with CONFIG_SLUB_DEBUG_ON.
+> 
+> - Create a directory on a NFS mount with more than 100 files with
+>   names long enough to use the "kmalloc-32" slab (so we can easily
+>   look up the allocation counts):
+> 
+>   for i in `seq 110`; do touch ${i}_0123456789abcdef; done
+> 
+> - Drop all caches:
+> 
+>   echo 3 >/proc/sys/vm/drop_caches
+> 
+> - Check the allocation counter:
+> 
+>   grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
+>   30564391 nfs_readdir_add_to_array+0x73/0xd0 age=534558/4791307/6540952 pid=370-1048386 cpus=0-47 nodes=0-1
+> 
+> - Request a directory listing and check the allocation counters again:
+> 
+>   ls
+>   [...]
+>   grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
+>   30564511 nfs_readdir_add_to_array+0x73/0xd0 age=207/4792999/6542663 pid=370-1048386 cpus=0-47 nodes=0-1
+> 
+> There are now 120 new allocations.
+> 
+> - Drop all caches and check the counters again:
+> 
+>   echo 3 >/proc/sys/vm/drop_caches
+>   grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
+>   30564401 nfs_readdir_add_to_array+0x73/0xd0 age=735/4793524/6543176 pid=370-1048386 cpus=0-47 nodes=0-1
+> 
+> 110 allocations are gone, but 10 have leaked and will never be freed.
+> 
+> Unhelpfully, those allocations are explicitly excluded from KMEMLEAK,
+> that's why my initial attempts with KMEMLEAK were not successful:
+> 
+> 	/*
+> 	 * Avoid a kmemleak false positive. The pointer to the name is stored
+> 	 * in a page cache page which kmemleak does not scan.
+> 	 */
+> 	kmemleak_not_leak(string->name);
+> 
+> It would be possible to solve this bug without reverting the whole
+> commit:
+> 
+> - keep track of which pages were not used, and call
+>   nfs_readdir_clear_array() on them, or
+> - manually link those pages into the page cache
+> 
+> But for now I have decided to just revert the commit, because the real
+> fix would require complex considerations, risking more dangerous
+> (crash) bugs, which may seem unsuitable for the stable branches.
+> 
+> Signed-off-by: Max Kellermann <mk@cm4all.com>
+> ---
+>  fs/nfs/dir.c      | 90 ++++-------------------------------------------
+>  fs/nfs/internal.h |  3 +-
+>  2 files changed, 7 insertions(+), 86 deletions(-)
 
-Thanks, that makes sense now.
+No cc: stable@vger on this patch to get it backported?
+
+thanks,
 
 greg k-h
