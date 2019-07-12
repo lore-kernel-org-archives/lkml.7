@@ -2,95 +2,105 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBEEC742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8A6C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D150B21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9D521537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbfGLJMx (ORCPT
+        id S1726415AbfGLJNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:12:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53848 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726282AbfGLJMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:12:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 26689AE20;
-        Fri, 12 Jul 2019 09:12:52 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 11:12:51 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        Vincent Whitchurch <rabinv@axis.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
-Message-ID: <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
-References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
+        Fri, 12 Jul 2019 05:13:11 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:41875 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfGLJNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 05:13:10 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MeC1p-1iN7Ik04EJ-00bKOj; Fri, 12 Jul 2019 11:12:41 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
+Date:   Fri, 12 Jul 2019 11:12:29 +0200
+Message-Id: <20190712091239.716978-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711142937.4083-1-vincent.whitchurch@axis.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:jwYhgxUv0AqFLNDzVo6wysNnAi/KwXb/EoxoA0pMMuPkZD7WvpX
+ SiHy+yF55QFjTCdbtQYSYvGz7fCvrCkf5Fglh7UrM2Z3T2fIMOrK+VxQNEOcar71gln41fT
+ a0AcjmpKU0FFi9U/1kw9UuN38z7vudvXTKSFI3gNcKAgm+zdndz7cmKTmis62iY8kPINghL
+ 4jYB2F14QzSagGXw2O43w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4ze24aU6tjo=:rBuxHH89tgwq6563QiEIei
+ cCbeMAuQXh3Rwudc8KuL66S7hExosHEdrkySheaJ17Aci6pm/ZmFiUvPKU1BPWzPC6wC+ioX9
+ IAXHwOeqyJDFDaYWV53jAY7VJyt8QjaypiCMNHmWRL9S6qzYChL7f3dCrMqC+xZelZqkyfp14
+ OPPvsOc1fc+0faGqCLqW54UBOFCMwYnKAavVDradaOw4DFfOycQ+/65LZ1PNVYBqje7LHK06X
+ cbKpQUbLbCfkf+aWzup4lByTxUAJj/TbjozE/14E2HLKOOSNQZBE4feW75lm0NlnUJxM2JHVM
+ F/nV45kAUtzl9/SYBlAzUzV5mTzE52Fu0LHd78H1ROC0E4vh3QI8qEOYXQYpihzvhtBPPitzU
+ wwu8hRCQJK8/FJGUx9cy3SxvsUnH7VSpJqYcNuDacWEdZWv6ZrDirg/AWMCH0JtyP7YXxgzt9
+ 7jrlp6MOdemmD04ZNheEf9H+4QPtUM4ECEad9l4T2V0Gc5CzTdRmkcP2E/5FXdnIOuPHGJeVC
+ 18j/526Pngxu9IQqbzxMezvzP/ggjjwSA0KTSGhbLMnE56jpOMqNlaWd9cOGkaG6EvinfZIaJ
+ +YiErd93+F99VFS+lIgAasBSEnNv/7BnT+LqDWBJts49RKcKV2oSqkl2N4S1lPtg5666ZYbPN
+ e7R+iFYo9Gn5GdxqFw+Oql+rudlOgmMZVMZAjmsvnYFy1+i/M+drc2OeEH/f0W8sGE2Hmv6b/
+ h3IlW5CBYeVHpAYxHR6aqQechRU/sgPtsCq4xw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-07-11 16:29:37, Vincent Whitchurch wrote:
-> kmsg_dump_get_buffer() is supposed to select all the youngest log
-> messages which fit into the provided buffer.  It determines the correct
-> start index by using msg_print_text() with a NULL buffer to calculate
-> the size of each entry.  However, when performing the actual writes,
-> msg_print_text() only writes the entry to the buffer if the written len
-> is lesser than the size of the buffer.  So if the lengths of the
-> selected youngest log messages happen to precisely fill up the provided
-> buffer, the last log message is not included.
-> 
-> We don't want to modify msg_print_text() to fill up the buffer and start
-> returning a length which is equal to the size of the buffer, since
-> callers of its other users, such as kmsg_dump_get_line(), depend upon
-> the current behaviour.
-> 
-> Instead, fix kmsg_dump_get_buffer() to compensate for this.
-> 
-> For example, with the following two final prints:
-> 
-> [    6.427502] AAAAAAAAAAAAA
-> [    6.427769] BBBBBBBB12345
-> 
-> A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-> patch:
-> 
->  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
->  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
->  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> 
-> After this patch:
-> 
->  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
->  00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
->  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> 
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+clang points out that running a 64-bit guest on a 32-bit host
+would lead to uninitialized variables:
 
-I think that I need vacation. I have got lost in all the checks
-and got it wrongly in the morning.
+arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+        if (!longmode) {
+            ^~~~~~~~~
+arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
+        trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
+                                                             ^~~~~
+arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
+        if (!longmode) {
+        ^~~~~~~~~~~~~~~
+arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
+        u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
+                        ^
+                         = 0
+arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
 
-This patch fixes the calculation of messages that might fit
-into the buffer. It makes sure that the function that writes
-the messages will really allow to write them.
+Since that combination is not supported anyway, change the condition
+to tell the compiler how the code is actually executed.
 
-It seems to be the correct fix.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/kvm/hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index a39e38f13029..950436c502ba 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1607,7 +1607,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+ 
+ 	longmode = is_64_bit_mode(vcpu);
+ 
+-	if (!longmode) {
++	if (!IS_ENABLED(CONFIG_X86_64) || !longmode) {
+ 		param = ((u64)kvm_rdx_read(vcpu) << 32) |
+ 			(kvm_rax_read(vcpu) & 0xffffffff);
+ 		ingpa = ((u64)kvm_rbx_read(vcpu) << 32) |
+-- 
+2.20.0
 
-Best Regards,
-Petr
