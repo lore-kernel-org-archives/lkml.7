@@ -2,109 +2,71 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70F5C742BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09B8C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED52206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eXa/52mH"
+	by mail.kernel.org (Postfix) with ESMTP id 8EA1D208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfGLNgf (ORCPT
+        id S1727821AbfGLNhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:36:35 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4223 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfGLNgf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:36:35 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d288ce00002>; Fri, 12 Jul 2019 06:36:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 12 Jul 2019 06:36:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 12 Jul 2019 06:36:34 -0700
-Received: from [10.26.11.231] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jul
- 2019 13:36:31 +0000
-Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190712121620.632595223@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a1ae16a7-e8f7-b6fc-df4e-46079bebf9b3@nvidia.com>
-Date:   Fri, 12 Jul 2019 14:36:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 09:37:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727353AbfGLNhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:37:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CD247AF05;
+        Fri, 12 Jul 2019 13:37:23 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 15:37:22 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Krzysztof Halasa <khalasa@piap.pl>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] soc: ixp4xx: List the whole directory in MAINTAINERS
+Message-ID: <20190712153722.3d1498be@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562938593; bh=/1TRc1hGYrgGFTfD0KPEXIyozbkND1tNhD4Nt2U2u2Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eXa/52mHFSt0kO5cpVt8+0yDiTkJzI78XqpXmz1a6/LJ1y9Yb4TC5anz4iHyLelAG
-         6obpY2Jx/c27aqo85dLp7LBwmJRkygz5tjB6ABlmnIZK/6yMuBdXmmeGASaaRVgOKK
-         6r/uij5smCafeKQxNKxFb6AZgi1c4b4CgWWIZykHjzkTflmhW4qQl2VTPAOu0ysbEq
-         SSUHn8HKgl9FB7YgHm+FNTfgmJoBQqMNRbjcN0NWooBiwu2PLIu1nf3b7qTN29Je0d
-         NEpC/FZFpokTijKf+2iw7gMIyh3JOWs+Qqls3Zvjv6Yy9v1TvZHAImSMPj+Xk661X5
-         kuu0MI6iTWvGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mention the whole directory containing the ixp4xx soc drivers in
+MAINTAINERS instead of each driver separately. Otherwise changes
+done to Makefile and Kconfig will fail to find a matching entry.
+This will also let future drivers match without having to update
+the entry each time.
 
-On 12/07/2019 13:19, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.1 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: Krzysztof Halasa <khalasa@piap.pl>
+---
+ MAINTAINERS |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-All tests are passing for Tegra ...
-
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.2.1-rc1-g61731e8fe278
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
+--- linux-5.2.orig/MAINTAINERS	2019-07-12 15:33:28.106852821 +0200
++++ linux-5.2/MAINTAINERS	2019-07-12 15:35:54.309067537 +0200
+@@ -8023,10 +8023,8 @@ F:	Documentation/media/v4l-drivers/ipu3.
+ INTEL IXP4XX QMGR, NPE, ETHERNET and HSS SUPPORT
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ S:	Maintained
+-F:	include/linux/soc/ixp4xx/qmgr.h
+-F:	include/linux/soc/ixp4xx/npe.h
+-F:	drivers/soc/ixp4xx/ixp4xx-qmgr.c
+-F:	drivers/soc/ixp4xx/ixp4xx-npe.c
++F:	include/linux/soc/ixp4xx/
++F:	drivers/soc/ixp4xx/
+ F:	drivers/net/ethernet/xscale/ixp4xx_eth.c
+ F:	drivers/net/wan/ixp4xx_hss.c
+ 
 
 -- 
-nvpublic
+Jean Delvare
+SUSE L3 Support
