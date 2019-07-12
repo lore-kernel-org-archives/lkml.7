@@ -8,53 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89328C742D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360C0C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56263208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097BF208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFsPT/Cb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8hcH3V6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfGLUnX (ORCPT
+        id S1728057AbfGLUnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 16:43:23 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38815 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfGLUnW (ORCPT
+        Fri, 12 Jul 2019 16:43:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33721 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727921AbfGLUnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 16:43:22 -0400
-Received: by mail-io1-f65.google.com with SMTP id j6so23260565ioa.5;
-        Fri, 12 Jul 2019 13:43:22 -0700 (PDT)
+        Fri, 12 Jul 2019 16:43:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so23318034iog.0;
+        Fri, 12 Jul 2019 13:43:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0YO9X8JrVMhxS3C8ry3P1NpNE6uCJVJpb/vpFCRQayg=;
-        b=YFsPT/CbCO1LYM1qhpMoKr6yhOs70HOyZxWiAG04T809bxgw3U/rSVm6+OJCWo3/cW
-         Nu8hPOb34VukBWTpMKr3Mg4MG2b48byWj4eT6FSODq0k3+HJnV/YX3oDjoaAMnPdvcs0
-         PW+Iiq/XxaJHg0n5CZbLmrhMYGel/fLkar8lRQiWprQlMZnpnoAN6VU3FRxAuM2yNYIZ
-         X74+KB5GrKTBV1HI3OWGXUsirgVu+flnGc4YnMZZTCFd+U6nIkwedcf08xS0TSS1eB13
-         5BSmF77HrzE/1Bq+SVi5h3Iqw0qViCMn/JsnWiQwhgr7fdTCc+nPbVbqFYrtnWnZ2Up/
-         an1A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=g31FrlFxuFM+xjFOCSjFHeI9OKsmJhFCkAkzNbx5Z+4=;
+        b=X8hcH3V6OicPZyF+iBNl9yPFRYodLfeLabhL+gDENEtdOmHpWQQWe4jKCac6IbEqHv
+         SnxWymnXOjRXXfhUZUBqZcfoUvFOBR6GoNp5IR9Gl9j7r+U9+0xdbn4I7Fx8XHOk6VGJ
+         xiN7yncbQAeudz/U6f7RULTrnHlFEmofos+cV0FAdsWtn1UNEzNSWs2eE8w8v+KJ0oZH
+         nG3MdR0F6HHV6Aw4LMrPplHeY7rUwYlbPAJtKovFIcbYUH7OE+oy89k0rBwf0i9z796O
+         /i8Gz/HDdwkyZWjyAAIXr5eya1IKO4ue5S9UOEW2NGA3k/j31KZT2NLgraOp46zMH7um
+         a9Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0YO9X8JrVMhxS3C8ry3P1NpNE6uCJVJpb/vpFCRQayg=;
-        b=DwxUpn+R6XU7ZFJ7N3gu06F/pS7Ck+Ticy/9Dz0XnwIuYoQTrGNStDD/w6q5o8Q+oH
-         /5F1AMZmqRzvC/KoUIjt7Bz1XX7Y/Nsk2HQ9zCW11kpCOujasedqEjVxp54LFhXfrP68
-         S22Wd+u1TyBQSYlwTAeJ5lNJ984P+CV8ln/k4o82HGQLkENU2yZVbfJln0Zg985GSyoW
-         3DErYgWjKWW+fV3c/3AfIal+81CfX3UH+c4ri0S+Vr1Ac9R3k2qFoii/d1TTN3D2uTdf
-         CiCN1q23fQBZmcJaiun9LlwzVooeqU4+8iK5jW2sftyRaRhEft89zc3Y1Q5gbShmlOfU
-         3ARQ==
-X-Gm-Message-State: APjAAAVNgUmKYMIuVim9zIdUF3E6Y27bodOLkJvbZDFGxkUasNgQU1JM
-        R1XihyCOSyq0FV/TM5SD40c=
-X-Google-Smtp-Source: APXvYqxL6GxakGiydUYH7NlDpEoU/Uu55hmMkr19MRFB1ktpzJaP36AAZU5i0ateJw4T+t+kQFk8tg==
-X-Received: by 2002:a5d:8702:: with SMTP id u2mr13323425iom.228.1562964201758;
-        Fri, 12 Jul 2019 13:43:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=g31FrlFxuFM+xjFOCSjFHeI9OKsmJhFCkAkzNbx5Z+4=;
+        b=gFIVlIRT9zMFnAyT4y9PnJM4nisPBPEBrlWOz/Yz7tX64aC2X33dI2bf1KmQGDGXkv
+         SH3p5iV3I90hyNSY6DqmsntBMunto+3WYPYaFYn5ZhV1BvEmHM0A9GRlcVVrLivfsdT9
+         xhEVHrKrltKkWKE6li9ZxIBvzMoLupmxEhY+WdxlTFzdeEYvzaS+uadeA/AL0cArUURb
+         XUqsEYhUusP8FI8KDd6g6aWHzK4tQQ5aKvW7/sUGlnA31/uH+qUld47J+Wnz6+ZchJIH
+         jU3kUp6qdZ+QX5GAw5I30IC6Pjm6YypTraDgxV6/oYOU8eJUiIkBQN4E7OspGA5NRFoP
+         PSwg==
+X-Gm-Message-State: APjAAAXBCCYWKsG5VDC5NtuuA1UEW58aucxlmpo/9FAxVRSGEeSg60Wf
+        7YNpwuZoGWeVU9mPEn7Xtx8=
+X-Google-Smtp-Source: APXvYqxP2f2F9YZvE9gZj+i0IHuwbPUIDjLymCmzm8DfSmRxw+Mp7EzQ4drKtvZ8S8QQFWtaWNWzQw==
+X-Received: by 2002:a6b:ed09:: with SMTP id n9mr12266556iog.153.1562964202986;
+        Fri, 12 Jul 2019 13:43:22 -0700 (PDT)
 Received: from localhost.localdomain ([198.52.185.227])
-        by smtp.gmail.com with ESMTPSA id l14sm9725013iob.1.2019.07.12.13.43.20
+        by smtp.gmail.com with ESMTPSA id l14sm9725013iob.1.2019.07.12.13.43.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 13:43:21 -0700 (PDT)
+        Fri, 12 Jul 2019 13:43:22 -0700 (PDT)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
@@ -66,93 +67,41 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
-Date:   Fri, 12 Jul 2019 16:43:15 -0400
-Message-Id: <20190712204316.16783-1-TheSven73@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: bus: imx-weim: document optional burst clock mode
+Date:   Fri, 12 Jul 2019 16:43:16 -0400
+Message-Id: <20190712204316.16783-2-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190712204316.16783-1-TheSven73@gmail.com>
+References: <20190712204316.16783-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable burst clock mode, add the fsl,burst-clk-enable
-property to the weim bus's devicetree node.
-
-Example:
-weim: weim@21b8000 {
-	compatible = "fsl,imx6q-weim";
-	reg = <0x021b8000 0x4000>;
-	clocks = <&clks 196>;
-	#address-cells = <2>;
-	#size-cells = <1>;
-	ranges = <0 0 0x08000000 0x08000000>;
-	fsl,weim-cs-gpr = <&gpr>;
-	fsl,burst-clk-enable;
-
-	client-device@0,0 {
-		compatible = "something";
-		reg = <0 0 0x02000000>;
-		#address-cells = <1>;
-		#size-cells = <1>;
-		bank-width = <2>;
-		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
-				0x0000c000 0x1404a38e 0x00000000>;
-	};
-};
+An optional devicetree property was added to the imx-weim driver,
+which if present instructs it to operate in burst clock mode.
+Update the dt-bindings to reflect this.
 
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- drivers/bus/imx-weim.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Documentation/devicetree/bindings/bus/imx-weim.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-index db74334ca5ef..cb7d5504a22a 100644
---- a/drivers/bus/imx-weim.c
-+++ b/drivers/bus/imx-weim.c
-@@ -19,6 +19,8 @@ struct imx_weim_devtype {
- 	unsigned int	cs_count;
- 	unsigned int	cs_regs_count;
- 	unsigned int	cs_stride;
-+	unsigned int	wcr_offset;
-+	unsigned int	wcr_bcm;
- };
+diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
+index dda7d6d66479..1b1d1c5c21ea 100644
+--- a/Documentation/devicetree/bindings/bus/imx-weim.txt
++++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
+@@ -44,6 +44,10 @@ Optional properties:
+ 			what bootloader sets up in IOMUXC_GPR1[11:0] will be
+ 			used.
  
- static const struct imx_weim_devtype imx1_weim_devtype = {
-@@ -37,6 +39,8 @@ static const struct imx_weim_devtype imx50_weim_devtype = {
- 	.cs_count	= 4,
- 	.cs_regs_count	= 6,
- 	.cs_stride	= 0x18,
-+	.wcr_offset	= 0x90,
-+	.wcr_bcm	= BIT(0),
- };
- 
- static const struct imx_weim_devtype imx51_weim_devtype = {
-@@ -192,6 +196,7 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 	struct device_node *child;
- 	int ret, have_child = 0;
- 	struct cs_timing_state ts = {};
-+	u32 reg;
- 
- 	if (devtype == &imx50_weim_devtype) {
- 		ret = imx_weim_gpr_setup(pdev);
-@@ -199,6 +204,17 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 			return ret;
- 	}
- 
-+	if (of_property_read_bool(pdev->dev.of_node, "fsl,burst-clk-enable")) {
-+		if (devtype->wcr_bcm) {
-+			reg = readl(base + devtype->wcr_offset);
-+			writel(reg | devtype->wcr_bcm,
-+				base + devtype->wcr_offset);
-+		} else {
-+			dev_err(&pdev->dev, "burst clk mode not supported.\n");
-+			return -EINVAL;
-+		}
-+	}
++ - fsl,burst-clk-enable	For "fsl,imx50-weim" and "fsl,imx6q-weim" type of
++			devices, the presence of this property indicates that
++			the weim bus should operate in Burst Clock Mode.
 +
- 	for_each_available_child_of_node(pdev->dev.of_node, child) {
- 		ret = weim_timing_setup(&pdev->dev, child, base, devtype, &ts);
- 		if (ret)
+ Timing property for child nodes. It is mandatory, not optional.
+ 
+  - fsl,weim-cs-timing:	The timing array, contains timing values for the
 -- 
 2.17.1
 
