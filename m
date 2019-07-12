@@ -2,138 +2,158 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709A0C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B899C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D8F20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113C920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfGLNCq (ORCPT
+        id S1727491AbfGLNDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:02:46 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46705 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfGLNCq (ORCPT
+        Fri, 12 Jul 2019 09:03:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53194 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727444AbfGLNDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:03:09 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CD2VMV108975;
         Fri, 12 Jul 2019 09:02:46 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so7901918qtn.13;
-        Fri, 12 Jul 2019 06:02:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h9V1PDslHCmVXYBI8dBvQZXVzo3DG4NQfAvbqRPJOTM=;
-        b=J7lMChKQxsJgULgOjlM41ZmKw7/pENfAsG/D+7sf+VNxonhUEX941qNenw/40b9zG7
-         rVG1ECPv0KTEPHSduSbvLmWfZJ+xtIlOeBAw80vhWNT1W6e9pK47z2WZgTXzBo03lDot
-         Ej9gQNlMhTROvHh/Fsm3tyCWwDDN6FDGlyfgx1vMH5Y5Qkbh1OwubSPv4qWROQb2tlzV
-         ++UwSddk7xN7qV4RZBL8aLdqJOWGN+dS7s9wKq2jh9UCHTzLrjGPJzbgeJ6gC5pHJ9V+
-         QYkNiYtacZ2pcybLds8QuhLqt8dmc+7c8nyAaxVCsk118iYHHZODX5HMlbcXXlZ8uEaF
-         MBOg==
-X-Gm-Message-State: APjAAAXXNEbU4hJceQdUnBJIKSFubYvE8OxOm2ZAtU6HbFRkylfwDjag
-        15G2Nghh7oAQyhsK0mDf9Q/cVhXj32HOOvC9N7w=
-X-Google-Smtp-Source: APXvYqx3UBdn2uY78OgPzqrMWqQ/IsUoW5hiUWWOdKRO3otUEfKOHb8iFZH28gCSq3SHGEduVDjXSYi60ntwA3HpyEk=
-X-Received: by 2002:a0c:e952:: with SMTP id n18mr6222517qvo.63.1562936565085;
- Fri, 12 Jul 2019 06:02:45 -0700 (PDT)
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpqvyqfmx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 09:02:46 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6CD2gZS111031;
+        Fri, 12 Jul 2019 09:02:45 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpqvyqfkx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 09:02:45 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6CD0eJG021591;
+        Fri, 12 Jul 2019 13:02:44 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04dal.us.ibm.com with ESMTP id 2tjk973qn8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 13:02:44 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CD2hE250659670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 13:02:43 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31CFAB2066;
+        Fri, 12 Jul 2019 13:02:43 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 193D6B2064;
+        Fri, 12 Jul 2019 13:02:43 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.195.235])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Jul 2019 13:02:43 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id CFA5B16C191E; Fri, 12 Jul 2019 06:02:42 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 06:02:42 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Byungchul Park <byungchul.park@lge.com>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190712130242.GM26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190709055815.GA19459@X58A-UD3R>
+ <20190709124102.GR26519@linux.ibm.com>
+ <20190710012025.GA20711@X58A-UD3R>
+ <20190711123052.GI26519@linux.ibm.com>
+ <20190711130849.GA212044@google.com>
+ <20190711150215.GK26519@linux.ibm.com>
+ <20190711164818.GA260447@google.com>
+ <20190711195839.GA163275@google.com>
+ <20190712063240.GD7702@X58A-UD3R>
+ <20190712125116.GB92297@google.com>
 MIME-Version: 1.0
-References: <20190712091239.716978-1-arnd@arndb.de> <20190712120249.GA27820@rkaganb.sw.ru>
-In-Reply-To: <20190712120249.GA27820@rkaganb.sw.ru>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 12 Jul 2019 15:02:28 +0200
-Message-ID: <CAK8P3a3+QSRQkitXiDFLYvyYvOS+Q4sXb=xA_XPeX2O2zQ5kgw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
-To:     Roman Kagan <rkagan@virtuozzo.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712125116.GB92297@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 2:03 PM Roman Kagan <rkagan@virtuozzo.com> wrote:
->
-> On Fri, Jul 12, 2019 at 11:12:29AM +0200, Arnd Bergmann wrote:
-> > clang points out that running a 64-bit guest on a 32-bit host
-> > would lead to uninitialized variables:
-> >
-> > arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> >         if (!longmode) {
-> >             ^~~~~~~~~
-> > arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
-> >         trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
-> >                                                              ^~~~~
-> > arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
-> >         if (!longmode) {
-> >         ^~~~~~~~~~~~~~~
-> > arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
-> >         u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
-> >                         ^
-> >                          = 0
-> > arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> > arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> >
-> > Since that combination is not supported anyway, change the condition
-> > to tell the compiler how the code is actually executed.
->
-> Hmm, the compiler *is* told all it needs:
->
->
-> arch/x86/kvm/x86.h:
-> ...
-> static inline int is_long_mode(struct kvm_vcpu *vcpu)
-> {
-> #ifdef CONFIG_X86_64
->         return vcpu->arch.efer & EFER_LMA;
-> #else
->         return 0;
-> #endif
-> }
->
-> static inline bool is_64_bit_mode(struct kvm_vcpu *vcpu)
-> {
->         int cs_db, cs_l;
->
->         if (!is_long_mode(vcpu))
->                 return false;
->         kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
->         return cs_l;
-> }
-> ...
->
-> so in !CONFIG_X86_64 case is_64_bit_mode() unconditionally returns
-> false, and the branch setting the values of the variables is always
-> taken.
+On Fri, Jul 12, 2019 at 08:51:16AM -0400, Joel Fernandes wrote:
+> On Fri, Jul 12, 2019 at 03:32:40PM +0900, Byungchul Park wrote:
+> > On Thu, Jul 11, 2019 at 03:58:39PM -0400, Joel Fernandes wrote:
+> > > Hmm, speaking of grace period durations, it seems to me the maximum grace
+> > > period ever is recorded in rcu_state.gp_max. However it is not read from
+> > > anywhere.
+> > > 
+> > > Any idea why it was added but not used?
+> > > 
+> > > I am interested in dumping this value just for fun, and seeing what I get.
+> > > 
+> > > I wonder also it is useful to dump it in rcutorture/rcuperf to find any
+> > > issues, or even expose it in sys/proc fs to see what worst case grace periods
+> > > look like.
+> > 
+> > Hi,
+> > 
+> > 	commit ae91aa0adb14dc33114d566feca2f7cb7a96b8b7
+> > 	rcu: Remove debugfs tracing
+> > 
+> > removed all debugfs tracing, gp_max also included.
+> > 
+> > And you sounds great. And even looks not that hard to add it like,
+> > 
+> > :)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index ad9dc86..86095ff 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -1658,8 +1658,10 @@ static void rcu_gp_cleanup(void)
+> >  	raw_spin_lock_irq_rcu_node(rnp);
+> >  	rcu_state.gp_end = jiffies;
+> >  	gp_duration = rcu_state.gp_end - rcu_state.gp_start;
+> > -	if (gp_duration > rcu_state.gp_max)
+> > +	if (gp_duration > rcu_state.gp_max) {
+> >  		rcu_state.gp_max = gp_duration;
+> > +		trace_rcu_grace_period(something something);
+> > +	}
+> 
+> Yes, that makes sense. But I think it is much better off as a readable value
+> from a virtual fs. The drawback of tracing for this sort of thing are:
+>  - Tracing will only catch it if tracing is on
+>  - Tracing data can be lost if too many events, then no one has a clue what
+>    the max gp time is.
+>  - The data is already available in rcu_state::gp_max so copying it into the
+>    trace buffer seems a bit pointless IMHO
+>  - It is a lot easier on ones eyes to process a single counter than process
+>    heaps of traces.
+> 
+> I think a minimal set of RCU counters exposed to /proc or /sys should not
+> hurt and could do more good than not. The scheduler already does this for
+> scheduler statistics. I have seen Peter complain a lot about new tracepoints
+> but not much (or never) about new statistics.
+> 
+> Tracing has its strengths but may not apply well here IMO. I think a counter
+> like this could be useful for tuning of things like the jiffies_*_sched_qs,
+> the stall timeouts and also any other RCU knobs. What do you think?
 
-I think what happens here is that clang does not treat the return
-code of track the return code of is_64_bit_mode() as a constant
-expression, and therefore assumes that the if() condition
-may or may not be true, for the purpose of determining whether
-the variable is used without an inialization. This would hold even
-if it later eliminates the code leading up to the if() in an optimization
-stage. IS_ENABLED(CONFIG_X86_64) however is a constant
-expression, so with the patch, it understands this.
+Is this one of those cases where eBPF is the answer, regardless of
+the question?  ;-)
 
-In contrast, gcc seems to perform all the inlining first, and
-then see if some variable is used uninitialized in the final code.
-This gives additional information to the compiler, but makes the
-outcome less predictable since it depends on optimization flags
-and architecture specific behavior.
-
-Both approaches have their own sets of false positive and false
-negative warnings.
-
-       Arnd
+							Thanx, Paul
