@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334ACC742D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7ADC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C100217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386DD217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562973634;
-	bh=0XcWBpqgQuvOqn2EDRQYoSHFPu3bWBf7oYAMFQSUJkY=;
+	s=default; t=1562973636;
+	bh=5fnjQnEkilAfDp9J/VYRnGM31rtO2XqtGYhBIQgrLCE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=LArRzFihwzifOFYEK32+tlyexRnS/UFww7dAeIeqlTUjbclp8APhmVVw7RdAuqWxM
-	 +O5qD0MOVOYwpj0g7apm7ENScxQZEwrUkr3dk1WyLUh+CtEF+9gU1RePT/2X6Ree6n
-	 9G5EBDdfqwqRUuUfqSaqA3b13EAwC+wVja9PTb5g=
+	b=YmYKA9YO3gc4d9TgcZCOKP4BfgdHfjt8uBYHhqZUkRoWfOQ+NsjxrdGSG9R2LNNoo
+	 LiqBQ9xcUVVFP1y6uN6B1RpzTUYHUU6+L0N5mx2rdCkSOyGVkx4PYjqiMIQ7IV5VOE
+	 gtdbrkwHdIriX62R69cpvmQMmvSqVJcbergYHgvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfGLXU3 (ORCPT
+        id S1728572AbfGLXU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 19:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 19:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfGLXUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 19:20:20 -0400
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.3-rc1
+        id S1728496AbfGLXUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 19:20:18 -0400
+Subject: Re: [GIT PULL] First batch of KVM changes for Linux 5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562973620;
-        bh=0XcWBpqgQuvOqn2EDRQYoSHFPu3bWBf7oYAMFQSUJkY=;
+        s=default; t=1562973618;
+        bh=5fnjQnEkilAfDp9J/VYRnGM31rtO2XqtGYhBIQgrLCE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=F0qaHWp10KLAHYCWPrbHbXXKgk08nO4pPRUr59QZdEDsk9cK95Q2My0Bpu3Cez7uV
-         0XlMnZBv9Hcz3bNSB5Gd/3cvBTeqFkULsF6S7e1zQvi5xyQOIthRGUsLmxA8KzaxJu
-         uas51RT3hvhPvlEhCNuZPUpJb3JqHLPgEpeucnb8=
+        b=zskheKRk4oPMgxOKyuSikDQjP6otuY3WPDH/kXowdWpiogrpoHqrZ1Xzm9Ih2TEm/
+         p0bnA7UmLnVdHAQ8JZRHrKjKJQYHtg6rgRNNq4L89FiJPvOAzI6et8V+KVad6IhlAb
+         ymEzYdG8O6/jKjp/BbrpiWju1T+OylUrjbVKWYbc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <c5cd56e2-26ab-650b-581d-b3030ab31be4@linuxfoundation.org>
-References: <c5cd56e2-26ab-650b-581d-b3030ab31be4@linuxfoundation.org>
+In-Reply-To: <1562953464-55786-1-git-send-email-pbonzini@redhat.com>
+References: <1562953464-55786-1-git-send-email-pbonzini@redhat.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <c5cd56e2-26ab-650b-581d-b3030ab31be4@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
- tags/linux-kselftest-5.3-rc1
-X-PR-Tracked-Commit-Id: ee8a84c60bcc1f1615bd9cb3edfe501e26cdc85b
+X-PR-Tracked-Message-Id: <1562953464-55786-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: a45ff5994c9cde41af627c46abb9f32beae68943
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8487d8229990e6eacaf1c854a113c9d16b7b596c
-Message-Id: <156297362009.22922.7524407458441687990.pr-tracker-bot@kernel.org>
-Date:   Fri, 12 Jul 2019 23:20:20 +0000
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 39d7530d7494b4e47ba1856e741f513dafd17e3d
+Message-Id: <156297361804.22922.5531872921368121742.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Jul 2019 23:20:18 +0000
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jul 2019 12:07:27 -0600:
+The pull request you sent on Fri, 12 Jul 2019 19:44:24 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-5.3-rc1
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8487d8229990e6eacaf1c854a113c9d16b7b596c
+https://git.kernel.org/torvalds/c/39d7530d7494b4e47ba1856e741f513dafd17e3d
 
 Thank you!
 
