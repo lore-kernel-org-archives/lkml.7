@@ -2,116 +2,72 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2889C742C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9896DC742C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57C221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7226A206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfGLPRW (ORCPT
+        id S1727140AbfGLPSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:17:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44192 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfGLPRW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:17:22 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlxIF-0003Mo-Lj; Fri, 12 Jul 2019 17:17:03 +0200
-Date:   Fri, 12 Jul 2019 17:16:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-In-Reply-To: <20190712125059.GP3419@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de> <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
- <20190712125059.GP3419@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 12 Jul 2019 11:18:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34054 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbfGLPSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:18:46 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 21D2459455;
+        Fri, 12 Jul 2019 15:18:46 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBF005DE6B;
+        Fri, 12 Jul 2019 15:18:45 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 10:18:44 -0500
+From:   David Teigland <teigland@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dlm updates for 5.3 (second try)
+Message-ID: <20190712151844.GA24064@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 12 Jul 2019 15:18:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019, Peter Zijlstra wrote:
-> On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
-> 
-> > I think that's precisely what makes ASI and PTI different and independent.
-> > PTI is just about switching between userland and kernel page-tables, while
-> > ASI is about switching page-table inside the kernel. You can have ASI without
-> > having PTI. You can also use ASI for kernel threads so for code that won't
-> > be triggered from userland and so which won't involve PTI.
-> 
-> PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
-> ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
-> 
-> See how very similar they are?
-> 
-> Furthermore, to recover SMT for userspace (under MDS) we not only need
-> core-scheduling but core-scheduling per address space. And ASI was
-> specifically designed to help mitigate the trainwreck just described.
-> 
-> By explicitly exposing (hopefully harmless) part of the kernel to MDS,
-> we reduce the part that needs core-scheduling and thus reduce the rate
-> the SMT siblngs need to sync up/schedule.
-> 
-> But looking at it that way, it makes no sense to retain 3 address
-> spaces, namely:
-> 
->   user / kernel exposed / kernel private.
-> 
-> Specifically, it makes no sense to expose part of the kernel through MDS
-> but not through Meltdow. Therefore we can merge the user and kernel
-> exposed address spaces.
-> 
-> And then we've fully replaced PTI.
-> 
-> So no, they're not orthogonal.
+Hi Linus,
 
-Right. If we decide to expose more parts of the kernel mappings then that's
-just adding more stuff to the existing user (PTI) map mechanics.
+Please pull dlm updates from tag:
 
-As a consequence the CR3 switching points become different or can be
-consolidated and that can be handled right at those switching points
-depending on static keys or alternatives as we do today with PTI and other
-mitigations.
+git://git.kernel.org/pub/scm/linux/kernel/git/teigland/linux-dlm.git dlm-5.3
 
-All of that can do without that obscure "state machine" which is solely
-there to duct-tape the complete lack of design. The same applies to that
-mapping thing. Just mapping randomly selected parts by sticking them into
-an array is a non-maintainable approach. This needs proper separation of
-text and data sections, so violations of the mapping constraints can be
-statically analyzed. Depending solely on the page fault at run time for
-analysis is just bound to lead to hard to diagnose failures in the field.
+This set removes some unnecessary debugfs error handling, and
+checks that lowcomms workqueues are not NULL before destroying.
 
-TBH we all know already that this can be done and that this will solve some
-of the issues caused by the speculation mess, so just writing some hastily
-cobbled together POC code which explodes just by looking at it, does not
-lead to anything else than time waste on all ends.
-
-This first needs a clear definition of protection scope. That scope clearly
-defines the required mappings and consequently the transition requirements
-which provide the necessary transition points for flipping CR3.
-
-If we have agreed on that, then we can think about the implementation
-details.
+(Dropped the commits related to incorrect wait_event usage from the
+first pull request.)
 
 Thanks,
+Dave
 
-	tglx
+David Windsor (1):
+      dlm: check if workqueues are NULL before flushing/destroying
+
+Greg Kroah-Hartman (1):
+      dlm: no need to check return value of debugfs_create functions
+
+ fs/dlm/debug_fs.c     | 21 ++-------------------
+ fs/dlm/dlm_internal.h |  8 ++++----
+ fs/dlm/lowcomms.c     | 18 ++++++++++++------
+ fs/dlm/main.c         |  5 +----
+ 4 files changed, 19 insertions(+), 33 deletions(-)
+
