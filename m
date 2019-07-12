@@ -2,159 +2,131 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9762C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1969C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8F92084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BB221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 04:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pQPEW7Dx"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yOt7w/De"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfGLEou (ORCPT
+        id S1729660AbfGLEtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 00:44:50 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59630 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfGLEou (ORCPT
+        Fri, 12 Jul 2019 00:49:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38149 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfGLEty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 00:44:50 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C4dH4j056602;
-        Fri, 12 Jul 2019 04:43:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=uw9ARe8x7QtRm6OOT1c/IbRl5bsJpRHqHU8DP7hvV60=;
- b=pQPEW7Dx4el+JBLPt8X5lkuRVGTKaPyBnwXZoCQOAJekYwf8Y7K3H1fIMkpvvELMZmuA
- Li1Ucgf0pXYPFe92BXDYi+6ztpdw5dbxpOnFCTIKkXiqP/bQpTzS3sbx+/7+S2yWfPBO
- o/o3yFhFXl8262oWh/I04NkRq4MluTsLOIQyXkKiHaBCso8scqH52BBz4hgipWQ4Xd4+
- RkDrSj2dPUEoMfzb53xFUmHuyGmc8CGhBZu68mYfr2r1cMxbjYpsa/8U0M0r+dogTrxZ
- lYQzmPH/+YWoWRqkz+tYCgoub1bWlFFFnoWQPgztequYVPW4o1tAWaCRRqh1v3Md+ykQ zQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2tjm9r3d9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 04:43:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C4gWQZ162744;
-        Fri, 12 Jul 2019 04:43:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2tpefcvn8u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 04:43:34 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C4hUXJ012299;
-        Fri, 12 Jul 2019 04:43:32 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jul 2019 21:43:30 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+        Fri, 12 Jul 2019 00:49:54 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z75so3958611pgz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 21:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sZaWxx8XHNIJMce0La5YzhGUKfsnDTNKcipBsPeCHZ0=;
+        b=yOt7w/DexKthec8S9bla5Nx+r59GqFfAOL7iCfVyMvvo12JVGSvX3T81WoloMImi33
+         kqYLvYFnbIzGBh0eyfsd9A0LnYst3mMT6/NJY4r3NhPNnt7TTUTpl2mOkUwjTOfy2DNL
+         VOBKxv4cXPqq2gZ1bBRS4yYBmuTei0KY5yRss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sZaWxx8XHNIJMce0La5YzhGUKfsnDTNKcipBsPeCHZ0=;
+        b=qhl1JkZcJLWRW0vfCFCyDtmsEmCEBSQADQNrqB3QsUaoSCrbJiD08UniU5Bp9h7fvq
+         Wz1IlFPQlXxRO5GmHYIeCfCegYlY5Dwg0Jm7tPMAc17BhWip4VxSV/OhbvxCT9v0Ac02
+         wXEjmGN/lzbfNbPgzMDTBdN0cb0zSK6xWuDv41iKE5hUVTHD3CCPNR+KWNfVYIHjbl7s
+         jR8kvL6dD+fk1Z1rwjizs/gZxyj4rtO/la3AHhHw7AhwoX1NanR4/h+cmWutcWiyS1hE
+         z99CZ6qE6oXnPbmc5E7ytwE5+gOteh0j11rpeP9e20+XN7l0/ksDPen5qFW6+g0QXAfL
+         547Q==
+X-Gm-Message-State: APjAAAW0kpIsjmlS9Md/hhEuZRb7G0KZZ/5IoXNFIsv3kYTQ6TK5IpW2
+        bjKT4QqHOPtXg3hZD6H1AOFLtEWQ
+X-Google-Smtp-Source: APXvYqyKxfcbGoEQQr7C4E09kxjnHkhwtlg8G7zy1O2IKxrdHeSAKsj8iztsw+e5BFthlE80M3kf8A==
+X-Received: by 2002:a63:c008:: with SMTP id h8mr4417616pgg.427.1562906993264;
+        Thu, 11 Jul 2019 21:49:53 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d14sm9667480pfo.154.2019.07.11.21.49.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 21:49:52 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 00:49:51 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] xen/pv: Fix a boot up hang triggered by int3 self test
-Date:   Thu, 11 Jul 2019 12:47:18 +0800
-Message-Id: <1562820438-30328-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120047
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120046
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712044951.GA92297@google.com>
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711234401.220336-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-selftest") reveals a bug in XEN PV int3 assemble code. There is
-a double pop of register R11 and RCX currupting the exception
-frame, one in xen_int3 and the other in xen_xenint3.
+On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
+> This patch adds support for checking RCU reader sections in list
+> traversal macros. Optionally, if the list macro is called under SRCU or
+> other lock/mutex protection, then appropriate lockdep expressions can be
+> passed to make the checks pass.
+> 
+> Existing list_for_each_entry_rcu() invocations don't need to pass the
+> optional fourth argument (cond) unless they are under some non-RCU
+> protection and needs to make lockdep check pass.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
+>  include/linux/rcupdate.h |  7 +++++++
+>  kernel/rcu/Kconfig.debug | 11 +++++++++++
+>  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
+>  4 files changed, 68 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> index e91ec9ddcd30..78c15ec6b2c9 100644
+> --- a/include/linux/rculist.h
+> +++ b/include/linux/rculist.h
+> @@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+>   */
+>  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+>  
+> +/*
+> + * Check during list traversal that we are within an RCU reader
+> + */
+> +
+> +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
+> +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
 
-We see below hang at bootup:
+Fyi, I made a cosmetic change by deleting the above 2 unused macros.
 
-general protection fault: 0000 [#1] SMP NOPTI
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #6
-RIP: e030:int3_magic+0x0/0x7
-Call Trace:
- alternative_instructions+0x3d/0x12e
- check_bugs+0x7c9/0x887
- ?__get_locked_pte+0x178/0x1f0
- start_kernel+0x4ff/0x535
- ?set_init_arg+0x55/0x55
- xen_start_kernel+0x571/0x57a
-
-Fix it by removing xen_xenint3.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
----
- arch/x86/include/asm/traps.h | 2 +-
- arch/x86/xen/enlighten_pv.c  | 2 +-
- arch/x86/xen/xen-asm_64.S    | 1 -
- 3 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index 7d6f3f3..f2bd284 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -40,7 +40,7 @@
- asmlinkage void xen_divide_error(void);
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
--asmlinkage void xen_xenint3(void);
-+asmlinkage void xen_int3(void);
- asmlinkage void xen_overflow(void);
- asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 4722ba2..2138d69 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -596,7 +596,7 @@ struct trap_array_entry {
- 
- static struct trap_array_entry trap_array[] = {
- 	{ debug,                       xen_xendebug,                    true },
--	{ int3,                        xen_xenint3,                     true },
-+	{ int3,                        xen_int3,                        true },
- 	{ double_fault,                xen_double_fault,                true },
- #ifdef CONFIG_X86_MCE
- 	{ machine_check,               xen_machine_check,               true },
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 1e9ef0b..ebf610b 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -32,7 +32,6 @@ xen_pv_trap divide_error
- xen_pv_trap debug
- xen_pv_trap xendebug
- xen_pv_trap int3
--xen_pv_trap xenint3
- xen_pv_trap xennmi
- xen_pv_trap overflow
- xen_pv_trap bounds
--- 
-1.8.3.1
+- Joel
 
