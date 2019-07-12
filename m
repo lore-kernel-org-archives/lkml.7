@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB51CC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC9AC742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A19920645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB4620645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935126;
-	bh=/Jar8IeLznHx4REKRYSjt26qWLrEXBuOcKDnIMhnuzw=;
+	s=default; t=1562935133;
+	bh=IMQot/HOMIyuIRMyLHqWT19plTn8X5tINhLp925YUBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUjyRUYShIFoawK4EN6uUgjqeb4WeUpSZeshrDE6W8P/tMh5fjL/WqpJXcplHuM+w
-	 EtgZ9INPS+coeARQFIKhUYCX4iYnttxnPmgkMQFDyYOBHquB9OuM2S1cUAoAjhxWuS
-	 OsAlZrOd4lxSxZ7engC2AsRh0hzlV7O5uXxybPgg=
+	b=A8YyHm8PD3uEzS6mzkFXnuAYOh58DC38oJ35fGWzlWyLHtNtJ+YtL3cRMK06HWwpg
+	 n9uWrvbvVOOfacFuMVq7AMa16SxHK39yZXmegXNq6G2dFNHNtw9RSF/MS2QHSymfAh
+	 cjpvbvF3IDqs0lNXLUj1q9NOC6yTTaVHu3n60nr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfGLMip (ORCPT
+        id S1728234AbfGLM2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42970 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfGLM2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:28:43 -0400
+        id S1727530AbfGLM2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:28:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E1321721;
-        Fri, 12 Jul 2019 12:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7838F2084B;
+        Fri, 12 Jul 2019 12:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934522;
-        bh=/Jar8IeLznHx4REKRYSjt26qWLrEXBuOcKDnIMhnuzw=;
+        s=default; t=1562934500;
+        bh=IMQot/HOMIyuIRMyLHqWT19plTn8X5tINhLp925YUBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mio2sbqWBGMuSMYYtD0bQZ+8GonKNbF7pc9uXb5BjJUWphiEXEL58CMxu7MlwqKXA
-         qf9yqgZJ006NfXIXg5mQfiI7PT/0Ismf91bLJK89l02duqpLZO5YFukqOn7z4Ov07R
-         nFrlGmdr4//xrBdM1vU9FMTuZx3zN7dUsQZoenUw=
+        b=CNlok3POrOt7bskEqP1IO2XRhYnvZqoS5w4GAn45InqrUHFZQswnANVtFh78r0eFm
+         GOeHEaEVppCi3IWJnKLL9gVvg5oshciuhs+cfVTZy5AZbBoeeiXwNg1+W1em+DOBKP
+         mI8ioe7IAqQrcJAUP/U/CGIMAzFaA51hrLbT9QZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 084/138] quota: fix a problem about transfer quota
-Date:   Fri, 12 Jul 2019 14:19:08 +0200
-Message-Id: <20190712121631.963580721@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 031/138] soundwire: stream: fix bad unlock balance
+Date:   Fri, 12 Jul 2019 14:18:15 +0200
+Message-Id: <20190712121629.888401834@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -59,41 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c6d9c35d16f1bafd3fec64b865e569e48cbcb514 ]
+[ Upstream commit 9315d904c7e8f38886e2820fa6cb8d0fa723ea21 ]
 
-Run below script as root, dquot_add_space will return -EDQUOT since
-__dquot_transfer call dquot_add_space with flags=0, and dquot_add_space
-think it's a preallocation. Fix it by set flags as DQUOT_SPACE_WARN.
+the msg lock is taken for multi-link cases only but released
+unconditionally, leading to an unlock balance warning for single-link usages
+This patch fixes this.
 
-mkfs.ext4 -O quota,project /dev/vdb
-mount -o prjquota /dev/vdb /mnt
-setquota -P 23 1 1 0 0 /dev/vdb
-dd if=/dev/zero of=/mnt/test-file bs=4K count=1
-chattr -p 23 test-file
+ =====================================
+ WARNING: bad unlock balance detected!
+ 5.1.0-16506-gc1c383a6f0a2-dirty #1523 Tainted: G        W
+ -------------------------------------
+ aplay/2954 is trying to release lock (&bus->msg_lock) at:
+ do_bank_switch+0x21c/0x480
+ but there are no more locks to release!
 
-Fixes: 7b9ca4c61bc2 ("quota: Reduce contention on dq_data_lock")
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Acked-by: Sanyog Kale <sanyog.r.kale@intel.com>
+[vkoul: edited the change log as suggested by Pierre]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soundwire/stream.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index fc20e06c56ba..dd1783ea7003 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1993,8 +1993,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
- 				       &warn_to[cnt]);
- 		if (ret)
- 			goto over_quota;
--		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space, 0,
--				      &warn_to[cnt]);
-+		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space,
-+				      DQUOT_SPACE_WARN, &warn_to[cnt]);
- 		if (ret) {
- 			spin_lock(&transfer_to[cnt]->dq_dqb_lock);
- 			dquot_decr_inodes(transfer_to[cnt], inode_usage);
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index 00618de2ee12..794ced434cf2 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -805,7 +805,8 @@ static int do_bank_switch(struct sdw_stream_runtime *stream)
+ 			goto error;
+ 		}
+ 
+-		mutex_unlock(&bus->msg_lock);
++		if (bus->multi_link)
++			mutex_unlock(&bus->msg_lock);
+ 	}
+ 
+ 	return ret;
 -- 
 2.20.1
 
