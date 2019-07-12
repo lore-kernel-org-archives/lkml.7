@@ -2,122 +2,99 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587BCC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCDBC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D28A208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4761120989
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfGLUtO (ORCPT
+        id S1728030AbfGLVEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 16:49:14 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:37037 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726976AbfGLUtO (ORCPT
+        Fri, 12 Jul 2019 17:04:48 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40446 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfGLVEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 16:49:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TWjde2R_1562964544;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TWjde2R_1562964544)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 13 Jul 2019 04:49:11 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mhocko@suse.com, dvyukov@google.com, catalin.marinas@arm.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: page_alloc: document kmemleak's non-blockable __GFP_NOFAIL case
-Date:   Sat, 13 Jul 2019 04:49:04 +0800
-Message-Id: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 12 Jul 2019 17:04:48 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so9571557qtn.7;
+        Fri, 12 Jul 2019 14:04:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=mSMFuRKbx2HYgvgOC0DE3zBa5k/+Pq+uovL+hqxsxVk=;
+        b=doIFWy/bZ5b4p7mjQpyVevL1hYzR1LEyHYU0cqIIm1SFR5NVyv92bH+vtNocf60AXi
+         9Qe8f112sDSj6TxAuhItixVdroHOqI4X7xPKW7NctT6HvoKegfjaD1Ts3MKxisTf9M6r
+         VGHUJ2P0qJGX+p+Sa301XtABGOkZGA3ubGjhFQtIaGo+V5bTY/DsCFmIUFoZptWSpb2P
+         b2OOsrgfQv2c7SXLs9fScroFgggClzRkfcFRKskpnhw8uqicDT/XJMuIy3Z6QC4jfdiC
+         JGVOzOe/KKirWrENraVZRTJaeACbNTJlINmXlBrby57976N/aSqZf5cGH7F0O6YNjm6W
+         KxEA==
+X-Gm-Message-State: APjAAAU+mGcNKEIdUfMM+24rw0fQlsV8CspK6/KmG3vKl9w745gUPz1x
+        5VzW6K8wUne/jE8eXegCzeLpnb8XeMyPW+skfwQ=
+X-Google-Smtp-Source: APXvYqwUujy3kUTV2pdh54hutC3poR1IQl21jzeCx8GP35kKdZhBpQIZNvArgDx8xauO0iDCUbqjNgldedYnEsb8yws=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr7575984qve.45.1562965487204;
+ Fri, 12 Jul 2019 14:04:47 -0700 (PDT)
+MIME-Version: 1.0
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 12 Jul 2019 23:04:31 +0200
+Message-ID: <CAK8P3a1ic6ty+ktmur-77f-_=1hu4Drpt617jT8Bz3MMWixvoA@mail.gmail.com>
+Subject: [GIT PULL] asm-generic: remove ptrace.h
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running ltp's oom test with kmemleak enabled, the below warning was
-triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
-passed in:
+The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
 
-WARNING: CPU: 105 PID: 2138 at mm/page_alloc.c:4608 __alloc_pages_nodemask+0x1c31/0x1d50
-Modules linked in: loop dax_pmem dax_pmem_core
-ip_tables x_tables xfs virtio_net net_failover virtio_blk failover
-ata_generic virtio_pci virtio_ring virtio libata
-CPU: 105 PID: 2138 Comm: oom01 Not tainted 5.2.0-next-20190710+ #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__alloc_pages_nodemask+0x1c31/0x1d50
-...
- kmemleak_alloc+0x4e/0xb0
- kmem_cache_alloc+0x2a7/0x3e0
- ? __kmalloc+0x1d6/0x470
- ? ___might_sleep+0x9c/0x170
- ? mempool_alloc+0x2b0/0x2b0
- mempool_alloc_slab+0x2d/0x40
- mempool_alloc+0x118/0x2b0
- ? __kasan_check_read+0x11/0x20
- ? mempool_resize+0x390/0x390
- ? lock_downgrade+0x3c0/0x3c0
- bio_alloc_bioset+0x19d/0x350
- ? __swap_duplicate+0x161/0x240
- ? bvec_alloc+0x1b0/0x1b0
- ? do_raw_spin_unlock+0xa8/0x140
- ? _raw_spin_unlock+0x27/0x40
- get_swap_bio+0x80/0x230
- ? __x64_sys_madvise+0x50/0x50
- ? end_swap_bio_read+0x310/0x310
- ? __kasan_check_read+0x11/0x20
- ? check_chain_key+0x24e/0x300
- ? bdev_write_page+0x55/0x130
- __swap_writepage+0x5ff/0xb20
+  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
 
-The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, kmemleak has
-__GFP_NOFAIL set all the time due to commit
-d9570ee3bd1d4f20ce63485f5ef05663866fe6c0 ("kmemleak: allow to coexist
-with fault injection").
+are available in the Git repository at:
 
-The fault-injection would not try to fail slab or page allocation if
-__GFP_NOFAIL is used and that commit tries to turn off fault injection
-for kmemleak allocation.  Although __GFP_NOFAIL doesn't guarantee no
-failure for all the cases (i.e. non-blockable allocation may fail), it
-still makes sense to the most cases.  Kmemleak is also a debugging tool,
-so it sounds not worth changing the behavior.
+  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
+tags/asm-generic-5.3
 
-It also meaks sense to keep the warning, so just document the special
-case in the comment.
+for you to fetch changes up to 7f3a8dff1219fba3076fe207972d1d7893c099bb:
 
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/page_alloc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+  asm-generic: remove ptrace.h (2019-07-01 17:51:40 +0200)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d66bc8a..cac6efb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4531,8 +4531,14 @@ bool gfp_pfmemalloc_allowed(gfp_t gfp_mask)
- 	 */
- 	if (gfp_mask & __GFP_NOFAIL) {
- 		/*
--		 * All existing users of the __GFP_NOFAIL are blockable, so warn
--		 * of any new users that actually require GFP_NOWAIT
-+		 * The users of the __GFP_NOFAIL are expected be blockable,
-+		 * and this is true for the most cases except for kmemleak.
-+		 * The kmemleak pass in __GFP_NOFAIL to skip fault injection,
-+		 * however kmemleak may allocate object at some non-blockable
-+		 * context to trigger this warning.
-+		 *
-+		 * Keep this warning since it is still useful for the most
-+		 * normal cases.
- 		 */
- 		if (WARN_ON_ONCE(!can_direct_reclaim))
- 			goto fail;
--- 
-1.8.3.1
+----------------------------------------------------------------
+asm-generic: remove ptrace.h
 
+The asm-generic changes for 5.3 consist of a cleanup series from
+Christoph Hellwig, who explains:
+
+"asm-generic/ptrace.h is a little weird in that it doesn't actually
+implement any functionality, but it provided multiple layers of macros
+that just implement trivial inline functions.  We implement those
+directly in the few architectures and be off with a much simpler
+design."
+
+Link: https://lore.kernel.org/lkml/20190624054728.30966-1-hch@lst.de/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+----------------------------------------------------------------
+Christoph Hellwig (5):
+      arm64: don't use asm-generic/ptrace.h
+      powerpc: don't use asm-generic/ptrace.h
+      sh: don't use asm-generic/ptrace.h
+      x86: don't use asm-generic/ptrace.h
+      asm-generic: remove ptrace.h
+
+ MAINTAINERS                       |  1 -
+ arch/arm64/include/asm/ptrace.h   | 31 ++++++++++-------
+ arch/mips/include/asm/ptrace.h    |  5 ---
+ arch/powerpc/include/asm/ptrace.h | 29 ++++++++++++----
+ arch/sh/include/asm/ptrace.h      | 29 +++++++++++++---
+ arch/x86/include/asm/ptrace.h     | 30 +++++++++++++---
+ include/asm-generic/ptrace.h      | 73 ---------------------------------------
+ 7 files changed, 91 insertions(+), 107 deletions(-)
+ delete mode 100644 include/asm-generic/ptrace.h
