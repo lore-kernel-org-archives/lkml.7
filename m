@@ -2,106 +2,193 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12ECC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6C2C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F1F2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562914973;
-	bh=Ml0lRbW7XXHm175G2y/uGmIrQyNKMlxqv46HOEbpBvo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iNZF6NIUhmnfkMFS8Q+qhpoUGgV4E7xeV297EGc2oAUD4zsv5cACjGeKN9Z+OvPO8
-	 ww9/SIJ/doJGQOpE6EhArN9W7m6wEi/BWFBSs86Ipm641g8RY3nk0Cc2yQ36U4eS3E
-	 oo3e0QadVhYe31wmpt3dKWt1dtG7UG29Q79SccTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 09F5F2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfGLHCw (ORCPT
+        id S1726147AbfGLHDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:02:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46300 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbfGLHCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:02:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 21758AFF9;
-        Fri, 12 Jul 2019 07:02:50 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 09:02:47 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hoan Tran OS <hoan@os.amperecomputing.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Submission <patches@amperecomputing.com>
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20190712070247.GM29483@dhcp22.suse.cz>
-References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
+        Fri, 12 Jul 2019 03:03:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55902 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfGLHDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 03:03:40 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E93A485543;
+        Fri, 12 Jul 2019 07:03:39 +0000 (UTC)
+Received: from [10.36.116.46] (ovpn-116-46.ams2.redhat.com [10.36.116.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4939E5DDDC;
+        Fri, 12 Jul 2019 07:03:35 +0000 (UTC)
+From:   Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH] vfio: platform: reset: add support for XHCI reset hook
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>
+References: <20190711143159.21961-1-gregory.clement@bootlin.com>
+Message-ID: <c152f211-0757-521e-64ea-543f6c89d9b2@redhat.com>
+Date:   Fri, 12 Jul 2019 09:03:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190711143159.21961-1-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 12 Jul 2019 07:03:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-07-19 23:25:44, Hoan Tran OS wrote:
-> In NUMA layout which nodes have memory ranges that span across other nodes,
-> the mm driver can detect the memory node id incorrectly.
-> 
-> For example, with layout below
-> Node 0 address: 0000 xxxx 0000 xxxx
-> Node 1 address: xxxx 1111 xxxx 1111
-> 
-> Note:
->  - Memory from low to high
->  - 0/1: Node id
->  - x: Invalid memory of a node
-> 
-> When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> config, mm only checks the memory validity but not the node id.
-> Because of that, Node 1 also detects the memory from node 0 as below
-> when it scans from the start address to the end address of node 1.
-> 
-> Node 0 address: 0000 xxxx xxxx xxxx
-> Node 1 address: xxxx 1111 1111 1111
-> 
-> This layout could occur on any architecture. This patch enables
-> CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA to fix this issue.
+Hi Gregory,
 
-Yes it can occur on any arch but most sane platforms simply do not
-overlap physical ranges. So I do not really see any reason to
-unconditionally enable the config for everybody. What is an advantage?
+On 7/11/19 4:31 PM, Gregory CLEMENT wrote:
+> The VFIO reset hook is called every time a platform device is passed
+> to a guest or removed from a guest.
+> 
+> When the XHCI device is unbound from the host, the host driver
+> disables the XHCI clocks/phys/regulators so when the device is passed
+> to the guest it becomes dis-functional.
+> 
+> This initial implementation uses the VFIO reset hook to enable the
+> XHCI clocks/phys on behalf of the guest.
 
--- 
-Michal Hocko
-SUSE Labs
+the platform reset module must also make sure there are no more DMA
+requests and interrupts that can be sent by the device anymore.
+> 
+> Ported from Marvell LSP code originally written by Yehuda Yitschak
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  drivers/vfio/platform/reset/Kconfig           |  8 +++
+>  drivers/vfio/platform/reset/Makefile          |  2 +
+>  .../vfio/platform/reset/vfio_platform_xhci.c  | 60 +++++++++++++++++++
+>  3 files changed, 70 insertions(+)
+>  create mode 100644 drivers/vfio/platform/reset/vfio_platform_xhci.c
+> 
+> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
+> index 392e3c09def0..14f620fd250d 100644
+> --- a/drivers/vfio/platform/reset/Kconfig
+> +++ b/drivers/vfio/platform/reset/Kconfig
+> @@ -22,3 +22,11 @@ config VFIO_PLATFORM_BCMFLEXRM_RESET
+>  	  Enables the VFIO platform driver to handle reset for Broadcom FlexRM
+>  
+>  	  If you don't know what to do here, say N.
+> +
+> +config VFIO_PLATFORM_XHCI_RESET
+> +	tristate "VFIO support for USB XHCI reset"
+> +	depends on VFIO_PLATFORM
+> +	help
+> +	  Enables the VFIO platform driver to handle reset for USB XHCI
+> +
+> +	  If you don't know what to do here, say N.
+> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
+> index 7294c5ea122e..d84c4d3dc041 100644
+> --- a/drivers/vfio/platform/reset/Makefile
+> +++ b/drivers/vfio/platform/reset/Makefile
+> @@ -1,7 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
+>  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
+> +vfio-platform-xhci-y := vfio_platform_xhci.o
+>  
+>  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
+>  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
+>  obj-$(CONFIG_VFIO_PLATFORM_BCMFLEXRM_RESET) += vfio_platform_bcmflexrm.o
+> +obj-$(CONFIG_VFIO_PLATFORM_XHCI_RESET) += vfio-platform-xhci.o
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_xhci.c b/drivers/vfio/platform/reset/vfio_platform_xhci.c
+> new file mode 100644
+> index 000000000000..7b75a04402ee
+> --- /dev/null
+> +++ b/drivers/vfio/platform/reset/vfio_platform_xhci.c
+> @@ -0,0 +1,60 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * VFIO platform driver specialized for XHCI reset
+> + *
+> + * Copyright 2016 Marvell Semiconductors, Inc.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+io, init, kernel should be removable (noticed init and kernel.h also are
+in other reset modules though)
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/usb/phy.h>
+> +
+> +#include "../vfio_platform_private.h"
+> +
+> +#define MAX_XHCI_CLOCKS		4
+Where does this number come from?
+
+From Documentation/devicetree/bindings/usb/usb-xhci.txt I understand
+there are max 2 clocks, "core" and "reg" (I don't have any specific
+knowledge on the device though).
+
+> +#define MAX_XHCI_PHYS		2
+not used
+> +
+> +int vfio_platform_xhci_reset(struct vfio_platform_device *vdev)
+> +{
+> +	struct device *dev = vdev->device;
+> +	struct device_node *np = dev->of_node;
+> +	struct usb_phy *usb_phy;
+> +	struct clk *clk;
+> +	int ret, i;
+> +
+> +	/*
+> +	 * Compared to the native driver, no need to handle the
+> +	 * deferred case, because the resources are already
+> +	 * there
+> +	 */
+> +	for (i = 0; i < MAX_XHCI_CLOCKS; i++) {
+> +		clk = of_clk_get(np, i);
+> +		if (!IS_ERR(clk)) {
+> +			ret = clk_prepare_enable(clk);
+> +			if (ret)
+> +				return -ENODEV;
+return ret?
+> +		}
+> +	}
+> +
+> +	usb_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
+> +	if (!IS_ERR(usb_phy)) {
+> +		ret = usb_phy_init(usb_phy);
+> +		if (ret)
+> +			return -ENODEV;
+return ret?
+> +	}
+
+> +
+> +	return 0;
+> +}
+> +
+> +module_vfio_reset_handler("generic-xhci", vfio_platform_xhci_reset);
+> +
+> +MODULE_AUTHOR("Yehuda Yitschak");
+> +MODULE_DESCRIPTION("Reset support for XHCI vfio platform device");
+> +MODULE_LICENSE("GPL");
+> 
+Thanks
+
+Eric
