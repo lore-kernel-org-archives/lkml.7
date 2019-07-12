@@ -2,203 +2,126 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CA2C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B1AC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EF820665
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E983620651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PDwA/gZs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XvTriw7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfGLRBc (ORCPT
+        id S1727087AbfGLRFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:01:32 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36608 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfGLRA4 (ORCPT
+        Fri, 12 Jul 2019 13:05:19 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43775 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfGLRFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:00:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so4564382pfl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:00:56 -0700 (PDT)
+        Fri, 12 Jul 2019 13:05:19 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so6945135lfm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uLNu1bNfXx9GZiloNUkoMF2osR0IeSD3rZ+ilvr5XTc=;
-        b=PDwA/gZsXG+XYktKswWs/2Gn12cvdpksMcVfhV4f5cQ2amErP4DoEKs+QOyWFDZNEy
-         EhdkxYvI7be/FhngwlDuaBTUmRgc+ML7Qz9l7DKf6SbH3bUAXzcNbcO+1xqzK+xzKSRF
-         CqUS8bkdiHnwIWTF/f5Ak11AwwqHuzEO2jIsI=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s1N8n3V7P+ZrokJdWgOsoXRm7ISeimLMh/wha/tS3sA=;
+        b=XvTriw7AVxpugBaAAj32xt2jKI21Tu7sQLu5mGs8WTE9AJuJxhAV1nkUVwsz0rq3fm
+         pnu4f07LLR92rHalOArzjmQFRTI5dPFnA8AwlbRlOfDvWvmC+K8aq1XlkvLzryFkSMM/
+         U0jh6B3MLyRr7acX1slHST+I8KzVtg0qbUQSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uLNu1bNfXx9GZiloNUkoMF2osR0IeSD3rZ+ilvr5XTc=;
-        b=NWU0YtW0zvpD8YTzEABlUPkAaN/oU3Laos4cRdTggZPScC8yuK1Zgn7jHrBpbFHG7d
-         EoS1nJxrXevXjW6McFKa1mvSHUhGY+71Aox/5bPoF63zd66T3HG3QUmuo4oWPzZDTz82
-         gqO3arI41V686cnnKLw0n8wJFRYBpfQybgdMMXCEzQ1xgfccf4rw+Y/Gqkgjv8lT4XWZ
-         f5Ne+V7Vh4i1us6e2oyHLDrtUrb/DpfFM3E5HLguN1kH4eWH2G0ouU+yxnmuZYWd0NLk
-         beItWM3815j28bIjt1QB9kC+2wlpNB6zImC3LDKorw9BTH29wOYPy19jWIz1fxZjw/2B
-         2RyQ==
-X-Gm-Message-State: APjAAAVlr8yrAL360o9CQ398U57yY+YHDPoi4FN4xKG+X0ajBflYJSLb
-        BjhLMMQirkqQfhwAUo4iGt/YY+oZ
-X-Google-Smtp-Source: APXvYqxo29aUnJsblfaix5vIIyfwEhSW/G6KMDPHxkwFkI02a+GjQdJRmAHZ+ogBqlkPr4JyQ4+nQw==
-X-Received: by 2002:a65:5687:: with SMTP id v7mr12126488pgs.263.1562950854709;
-        Fri, 12 Jul 2019 10:00:54 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a15sm7127385pgw.3.2019.07.12.10.00.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:00:53 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH v2 5/9] driver/core: Convert to use built-in RCU list checking
-Date:   Fri, 12 Jul 2019 13:00:20 -0400
-Message-Id: <20190712170024.111093-6-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-In-Reply-To: <20190712170024.111093-1-joel@joelfernandes.org>
-References: <20190712170024.111093-1-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s1N8n3V7P+ZrokJdWgOsoXRm7ISeimLMh/wha/tS3sA=;
+        b=IAY1kNyOx/Nx319yMVnSTQ+bkGAEDGfGLx68OzREO4UtkWpFVMcCdrHrPxyOxmqdf1
+         b241d5ooh+JUBJyCY42ycaq/CkokYdHnE5NUS2OD3FE0SwsfiRFtQ+eBek4kyJvzvjUL
+         FjHZo7bzlFW4IXUBvs3//LZFe4sZBaG+JWNXWUdSHAvaQMto4chuXAu8ycTjMOXjf5/n
+         w3bZumcjGDQQEKHPLIoXShn9t5mefgxbur2Ch+ahJIQ5hb8yeieCCm0Dz68eGIfI8uS+
+         GKwEe8D7EG2UxsXOQnLPqFheGeGckr9xliqSV7AfV7ZsPx6VJ8gc937AUqGMI4KPGwD6
+         dNjw==
+X-Gm-Message-State: APjAAAVeSkW3Ds/vrB0S49k+GWrw6j4+zhPMevSJOt7tgik06i2CJbRn
+        10G1V5w2lnIHmybEse9oy1SKiXOTBtg=
+X-Google-Smtp-Source: APXvYqzpsBanBWetCOk2zPl7FnwYv4wRY6m384rfgh9kKM1eIfCwjqG6kBDBvvv70A19wnwOApMqjQ==
+X-Received: by 2002:ac2:419a:: with SMTP id z26mr5377683lfh.21.1562951116981;
+        Fri, 12 Jul 2019 10:05:16 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id 20sm1542554ljf.21.2019.07.12.10.05.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 10:05:15 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id s19so6932445lfb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:05:15 -0700 (PDT)
+X-Received: by 2002:ac2:568e:: with SMTP id 14mr5380609lfr.189.1562951115123;
+ Fri, 12 Jul 2019 10:05:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190627204446.52499-1-evgreen@chromium.org> <CAFqH_53cmq+1Y_uL3D4-84v_vDJsoB0Qxr_zTVnOzX1XD7VEgQ@mail.gmail.com>
+ <20190701060137.GB4652@dell> <14282971-65b1-f7db-26b9-d33636054ba6@collabora.com>
+In-Reply-To: <14282971-65b1-f7db-26b9-d33636054ba6@collabora.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 12 Jul 2019 10:04:38 -0700
+X-Gmail-Original-Message-ID: <CAE=gft6e46pL4-4eC5LPUgePj4ibWzJPzKHJ3_oeFuwoM0K+QQ@mail.gmail.com>
+Message-ID: <CAE=gft6e46pL4-4eC5LPUgePj4ibWzJPzKHJ3_oeFuwoM0K+QQ@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/chrome: Expose resume result via debugfs
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry_rcu has built-in RCU and lock checking. Make use of
-it in driver core.
+On Mon, Jul 1, 2019 at 6:41 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+>
+>
+> On 1/7/19 8:01, Lee Jones wrote:
+> > On Thu, 27 Jun 2019, Enric Balletbo Serra wrote:
+> >
+> >> Hi Evan, Lee,
+> >>
+> >> Missatge de Evan Green <evgreen@chromium.org> del dia dj., 27 de juny
+> >> 2019 a les 22:46:
+> >>>
+> >>> For ECs that support it, the EC returns the number of slp_s0
+> >>> transitions and whether or not there was a timeout in the resume
+> >>> response. Expose the last resume result to usermode via debugfs so
+> >>> that usermode can detect and report S0ix timeouts.
+> >>>
+> >>> Signed-off-by: Evan Green <evgreen@chromium.org>
+> >>
+> >> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>
+> >> Lee, actually this patch depends on some patches from chrome-platform
+> >> to apply cleanly. Once is fine with you and if you're happy to have
+> >> this merged for 5.3, I can just carry the patch with me, shouldn't be
+> >> any conflicts with your current changes or if you prefer I can create
+> >> an immutable branch for you.
+> >
+> > I won't be taking any more patches this cycle, so if you're sure that
+> > it does not conflict, there is no need for an immutable branch.
+> >
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+> >
+>
+> Thanks Lee.
+>
+> I think the patch is simple enough, I queued for the autobuilders to play with,
+> and if all goes well I'll add for 5.3 via chrome-platform.
+>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- drivers/base/base.h          |  1 +
- drivers/base/core.c          | 10 ++++++++++
- drivers/base/power/runtime.c | 15 ++++++++++-----
- 3 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index b405436ee28e..0d32544b6f91 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -165,6 +165,7 @@ static inline int devtmpfs_init(void) { return 0; }
- /* Device links support */
- extern int device_links_read_lock(void);
- extern void device_links_read_unlock(int idx);
-+extern int device_links_read_lock_held(void);
- extern int device_links_check_suppliers(struct device *dev);
- extern void device_links_driver_bound(struct device *dev);
- extern void device_links_driver_cleanup(struct device *dev);
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index fd7511e04e62..6c5ca9685647 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -68,6 +68,11 @@ void device_links_read_unlock(int idx)
- {
- 	srcu_read_unlock(&device_links_srcu, idx);
- }
-+
-+int device_links_read_lock_held(void)
-+{
-+	return srcu_read_lock_held(&device_links_srcu);
-+}
- #else /* !CONFIG_SRCU */
- static DECLARE_RWSEM(device_links_lock);
- 
-@@ -91,6 +96,11 @@ void device_links_read_unlock(int not_used)
- {
- 	up_read(&device_links_lock);
- }
-+
-+int device_links_read_lock_held(void)
-+{
-+	return lock_is_held(&device_links_lock);
-+}
- #endif /* !CONFIG_SRCU */
- 
- /**
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 952a1e7057c7..7a10e8379a70 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -287,7 +287,8 @@ static int rpm_get_suppliers(struct device *dev)
- {
- 	struct device_link *link;
- 
--	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
-+	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-+				device_links_read_lock_held()) {
- 		int retval;
- 
- 		if (!(link->flags & DL_FLAG_PM_RUNTIME) ||
-@@ -309,7 +310,8 @@ static void rpm_put_suppliers(struct device *dev)
- {
- 	struct device_link *link;
- 
--	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
-+	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-+				device_links_read_lock_held()) {
- 		if (READ_ONCE(link->status) == DL_STATE_SUPPLIER_UNBIND)
- 			continue;
- 
-@@ -1640,7 +1642,8 @@ void pm_runtime_clean_up_links(struct device *dev)
- 
- 	idx = device_links_read_lock();
- 
--	list_for_each_entry_rcu(link, &dev->links.consumers, s_node) {
-+	list_for_each_entry_rcu(link, &dev->links.consumers, s_node,
-+				device_links_read_lock_held()) {
- 		if (link->flags & DL_FLAG_STATELESS)
- 			continue;
- 
-@@ -1662,7 +1665,8 @@ void pm_runtime_get_suppliers(struct device *dev)
- 
- 	idx = device_links_read_lock();
- 
--	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
-+	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-+				device_links_read_lock_held())
- 		if (link->flags & DL_FLAG_PM_RUNTIME) {
- 			link->supplier_preactivated = true;
- 			refcount_inc(&link->rpm_active);
-@@ -1683,7 +1687,8 @@ void pm_runtime_put_suppliers(struct device *dev)
- 
- 	idx = device_links_read_lock();
- 
--	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
-+	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-+				device_links_read_lock_held())
- 		if (link->supplier_preactivated) {
- 			link->supplier_preactivated = false;
- 			if (refcount_dec_not_one(&link->rpm_active))
--- 
-2.22.0.510.g264f2c817a-goog
-
+I was hoping to pick this patch from a maintainer's tree, has it
+landed anywhere?
+-Evan
