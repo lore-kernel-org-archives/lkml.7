@@ -6,151 +6,97 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C0AC742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A93C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BA62080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C619D2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfGLNMO (ORCPT
+        id S1727477AbfGLNOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:12:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54852 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726449AbfGLNMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:12:13 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CAD78CE0BF21130718B8;
-        Fri, 12 Jul 2019 21:12:06 +0800 (CST)
-Received: from [127.0.0.1] (10.57.88.168) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 12 Jul 2019
- 21:11:57 +0800
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Vasily Averin <vvs@virtuozzo.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-CC:     "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
+        Fri, 12 Jul 2019 09:14:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34427 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfGLNON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:14:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so9977653wrm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 06:14:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VfT/FB70SYUZvSibHy6qxOxJHNCuzEaHFG9lYiqHVks=;
+        b=XDyCqClsFCX4P8N7DdrfueTc+QEck0hDVCBh4e82K8zR5CrgsgXhTCNQws235NPrN7
+         gh1tBwudsOFfBgRhUiKs2n4YBDARRkW0iwRlUd1Z9yU55oHPqtU04fH9KmZvJJ3FdDLX
+         ABl8yPZGgz3W5AdReW4HCIFTuWcr4SeXIaTQG8hscjkK5KFvIL5eU9//MktrCjadnMdv
+         l+iasLAr0HQtKq2E2JNIZnbBXUEa35CPPirIbwgSKTvPxzIgbns+7xZ3XnKq5Tw7smta
+         PVJLqZyERmk3wwUEruQwrSf/lZuRNXw5u7ThTzXoPT+of3NMbyW3pVdH6mIZaBv9gA5X
+         qzMQ==
+X-Gm-Message-State: APjAAAXN4lRtNZlUbcYQIhS+QLuc/suOcu/FEGNrTbaQxpZDpKemM9j9
+        Z9Qh7JrIYrQsiA4uITfaEwFubQ==
+X-Google-Smtp-Source: APXvYqxnCJN8ifBfaBldPbdVFdYWJmrV4AScCeUD8wYtYP4cKMb0VPikXLVesfil1bA6/91dAetwrw==
+X-Received: by 2002:a5d:564e:: with SMTP id j14mr11365756wrw.1.1562937251761;
+        Fri, 12 Jul 2019 06:14:11 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d066:6881:ec69:75ab? ([2001:b07:6468:f312:d066:6881:ec69:75ab])
+        by smtp.gmail.com with ESMTPSA id b2sm10615526wrp.72.2019.07.12.06.14.10
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 06:14:11 -0700 (PDT)
+Subject: Re: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
+To:     Arnd Bergmann <arnd@arndb.de>, Roman Kagan <rkagan@virtuozzo.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
-Date:   Fri, 12 Jul 2019 21:11:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+References: <20190712091239.716978-1-arnd@arndb.de>
+ <20190712120249.GA27820@rkaganb.sw.ru>
+ <CAK8P3a3+QSRQkitXiDFLYvyYvOS+Q4sXb=xA_XPeX2O2zQ5kgw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <b7da5e91-f23c-9f5d-2c61-07e7fc7af9b1@redhat.com>
+Date:   Fri, 12 Jul 2019 15:14:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAK8P3a3+QSRQkitXiDFLYvyYvOS+Q4sXb=xA_XPeX2O2zQ5kgw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.88.168]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/11 21:57, Vasily Averin wrote:
-> On 7/11/19 4:55 AM, Nixiaoming wrote:
->> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>>> Registering the same notifier to a hook repeatedly can cause the hook
->>>> list to form a ring or lose other members of the list.
->>>
->>> I think is not enough to _prevent_ 2nd register attempt,
->>> it's enough to detect just attempt and generate warning to mark host in bad state.
->>>
->>
->> Duplicate registration is prevented in my patch, not just "mark host in bad state"
->>
->> Duplicate registration is checked and exited in notifier_chain_cond_register()
->>
->> Duplicate registration was checked in notifier_chain_register() but only 
->> the alarm was triggered without exiting. added by commit 831246570d34692e 
->> ("kernel/notifier.c: double register detection")
->>
->> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->>  which triggers an alarm and exits when a duplicate registration is detected.
->>
->>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->>> and it can lead to host crash in any time: 
->>> you can unregister notifier on first attempt it can be too early, it can be still in use.
->>> on the other hand you can never call 2nd unregister at all.
->>
->> Since the member was not added to the linked list at the time of the second registration, 
->> no linked list ring was formed. 
->> The member is released on the first unregistration and -ENOENT on the second unregistration.
->> After patching, the fault has been alleviated
+On 12/07/19 15:02, Arnd Bergmann wrote:
+> I think what happens here is that clang does not treat the return
+> code of track the return code of is_64_bit_mode() as a constant
+> expression, and therefore assumes that the if() condition
+> may or may not be true, for the purpose of determining whether
+> the variable is used without an inialization. This would hold even
+> if it later eliminates the code leading up to the if() in an optimization
+> stage. IS_ENABLED(CONFIG_X86_64) however is a constant
+> expression, so with the patch, it understands this.
 > 
-> You are wrong here.
-> 2nd notifier's registration is a pure bug, this should never happen.
-> If you know the way to reproduce this situation -- you need to fix it. 
+> In contrast, gcc seems to perform all the inlining first, and
+> then see if some variable is used uninitialized in the final code.
+> This gives additional information to the compiler, but makes the
+> outcome less predictable since it depends on optimization flags
+> and architecture specific behavior.
 > 
-> 2nd registration can happen in 2 cases:
-> 1) missed rollback, when someone forget to call unregister after successfull registration, 
-> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
-> 2) some subsystem is registered twice, for example from  different namespaces.
-> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
-> in second namespace, it also can lead to unexpacted behaviour.
-> 
-So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
-But why does current notifier_chain_register() just trigger WARN() without exiting ?
-notifier_chain_cond_register() direct exit without triggering WARN() ?
+> Both approaches have their own sets of false positive and false
+> negative warnings.
 
-Thanks
+True, on the other hand constant returns are not really rocket science. :)
 
-Xiaoming Ni
+Maybe change is_long_mode to a macro if !CONFIG_X86_64?  That would be
+better if clang likes it.
 
->> It may be more helpful to return an error code when someone tries to register the same
->> notification program a second time.
-> 
-> You are wrong again here, it is senseless.
-> If you have detected 2nd register -- your node is already in bad state.
-> 
->> But I noticed that notifier_chain_cond_register() returns 0 when duplicate registration 
->> is detected. At the same time, in all the existing export function comments of notify,
->> "Currently always returns zero"
->>
->> I am a bit confused: which is better?
->>
->>>
->>> Unfortunately I do not see any ways to handle such cases properly,
->>> and it seems for me your patches does not resolve this problem.
->>>
->>> Am I missed something probably?
->>>
->>>> case1: An infinite loop in notifier_chain_register() can cause soft lockup
->>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
->>>>         atomic_notifier_chain_register(&test_notifier_list, &test1);
->>>>         atomic_notifier_chain_register(&test_notifier_list, &test2);
->>
->> Thanks
->>
->> Xiaoming Ni
->>
-> 
-> .
-> 
-
+Paolo
