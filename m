@@ -2,113 +2,190 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7249BC742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1008C742C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C23A21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BBD206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i30lgvwL"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xyHw0p49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfGLPJN (ORCPT
+        id S1727101AbfGLPKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:09:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35772 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfGLPJM (ORCPT
+        Fri, 12 Jul 2019 11:10:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46568 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfGLPKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:09:12 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a127so7526296oii.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:09:12 -0700 (PDT)
+        Fri, 12 Jul 2019 11:10:54 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c2so4894189plz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:10:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MJ8/wMSygZBfB3wNzWuYzcvp2/BWwETDvXU2IK3PdxQ=;
-        b=i30lgvwLkeVpXQsVjPYonpEPiGWlUBv2z2qDgJQMxrpKENxTorJSehxeqy+LUhfYzv
-         VtQK7axqN3W8U1LkXDuWZF1uP/L2p5KuLxKw4qI6wW++8B5fsIOnjjNBcW6teOiQ7tII
-         mzaCC2ZUY+uYaRDsXXA4s9KcaDlBUAOOWLZdYfvJUEAQEBDrP1cVZ7aiVZqE4JPjLspM
-         gGX5Sxlw25a4BwETR5XcKtZkSZrIlIkMg/I5T2vbeOKWQ6GxTtCPuP3CCKEjJvhuAnNI
-         gUc8VfcZTZNpYUjORWUUYKbazILP48oH1baF5oAlWmAp2Iq73gk63PjeR6tPL6TgX/5n
-         EdVg==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bpkdGumnCxVJ5QkvopMAKHuDk2Cmi1QHk5zgDoY3xmE=;
+        b=xyHw0p49aGG+bHJkAwOFsAyVLIy6ynGQUOVqJSZW2rdYBcMge9BS0dv8b3pXcc+QsB
+         52ZjWyLo4eCKwwXkK1MywW+/ICPskgQBpOWaqdYt311VFlay/UvS+NI+iDdRBDC8nfQH
+         7iG2DsYxsndMDH8pWwOufpGY4o74/6StEFO8o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MJ8/wMSygZBfB3wNzWuYzcvp2/BWwETDvXU2IK3PdxQ=;
-        b=pmO/InhCSjoSmH2w/HL68DRYlAR71Qso8YU+l1+bNzLI/1Ml2WwiKLMu3kIvcNlxOo
-         gR/D7fYz3EvBQ4iehjPmBwt9vC0V4Z8wNwjRpBZ/nQzah2rzfkFGwb8YXn4GJ3pjsGxB
-         7QUnBGax79Ham6WiqXmBmpqt27hizYmPP54AxWE1JihRHPlEmaLrN/tO5NBa2SdiaJkQ
-         H7oTwxdEYqHFoXrQ0XQi5OcRvn4Ag0DQ8WIM4BjHUz2fwGcLmIXIMZi3x0BPJpgbvPG6
-         xQstEB/HFICY+4hZ21g/LK84NpyhSKfIsx4PwiRZAIf7TX/UJQuhT7nllUt3Pz8TzbND
-         +kbA==
-X-Gm-Message-State: APjAAAWUn6hNtoVDMfZ9aoNNnMHuK4vb2YAyQQjotAfGk0VhC/RVGL35
-        NCW7IuTCzFvmpP0VKwKVL6Mb4YrUu8VQM5YMpMNdinImxmQjiA==
-X-Google-Smtp-Source: APXvYqx6mGiQZVnuJ8vBdqFSeKXfLAml4k5LUaP7pbQDRWmiFpLAtMv5q6hcSKqWv8vY99TgvNNCYqHMtYCIHspx+74=
-X-Received: by 2002:a05:6808:4d:: with SMTP id v13mr6048794oic.22.1562944151822;
- Fri, 12 Jul 2019 08:09:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bpkdGumnCxVJ5QkvopMAKHuDk2Cmi1QHk5zgDoY3xmE=;
+        b=ez7rH65DNbC4GN11VBG5yGKm3aPfnzftLPIa4X7bsAAcu7naGfBXe5dUN1R+/8B4ba
+         /loan2T3ps1uB9UKTpkQTo6ka8Ck0Jt7HSLEqVb0xpXSzLgklypsEnHHRA7o6cAL28UK
+         U22krSZUmtn72o1iBeQ5TFFG2rEMnRHMNTqtiUN2XEt7NFUVdbWPBoaEb9GGCP8QqASd
+         As8n4IucJn5qbNW7ZXULRJUSuWAn0UrQRhEVMgG5vygGBCnT/aHRPVturxwbI51syK1p
+         Izyt5lRiotYCFEBV26pjPm0LsYsJFLtPeYJFcouWfC7saXSFZjy09Q7tdbXsufSsi5Ss
+         enjQ==
+X-Gm-Message-State: APjAAAUwrQ9WezfbV4w7Iedh5f00is6TOCDOWvtMAGz3BuV8S+yH/5k9
+        zDoxWNbIe3io+pGe9dgDWTg=
+X-Google-Smtp-Source: APXvYqxJ7Kem+nQt02Z16GBq/vs2O/YsBJDeceBJIv6amPGaj5XayXNv7u5mL3pmC3eI8AkB/Vv2gw==
+X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr12077228plk.70.1562944253560;
+        Fri, 12 Jul 2019 08:10:53 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l124sm8863171pgl.54.2019.07.12.08.10.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 08:10:52 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 11:10:51 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712151051.GB235410@google.com>
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+ <20190712111125.GT3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190712120213.2825-1-lpf.vector@gmail.com> <20190712120213.2825-3-lpf.vector@gmail.com>
- <20190712134955.GV32320@bombadil.infradead.org>
-In-Reply-To: <20190712134955.GV32320@bombadil.infradead.org>
-From:   Pengfei Li <lpf.vector@gmail.com>
-Date:   Fri, 12 Jul 2019 23:09:00 +0800
-Message-ID: <CAD7_sbEoGRUOJdcHnfUTzP7GfUhCdhfo8uBpUFZ9HGwS36VkSg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mm/vmalloc.c: Modify struct vmap_area to reduce
- its size
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>, rpenyaev@suse.de,
-        peterz@infradead.org, guro@fb.com, rick.p.edgecombe@intel.com,
-        rppt@linux.ibm.com, aryabinin@virtuozzo.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712111125.GT3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 9:49 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Fri, Jul 12, 2019 at 08:02:13PM +0800, Pengfei Li wrote:
->
-> I don't think you need struct union struct union.  Because llist_node
-> is just a pointer, you can get the same savings with just:
->
->         union {
->                 struct llist_node purge_list;
->                 struct vm_struct *vm;
->                 unsigned long subtree_max_size;
->         };
->
+On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
+> On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
+> > +int rcu_read_lock_any_held(void)
+> > +{
+> > +	int lockdep_opinion = 0;
+> > +
+> > +	if (!debug_lockdep_rcu_enabled())
+> > +		return 1;
+> > +	if (!rcu_is_watching())
+> > +		return 0;
+> > +	if (!rcu_lockdep_current_cpu_online())
+> > +		return 0;
+> > +
+> > +	/* Preemptible RCU flavor */
+> > +	if (lock_is_held(&rcu_lock_map))
+> 
+> you forgot debug_locks here.
 
-Thanks for your comments.
+Actually, it turns out debug_locks checking is not even needed. If
+debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
+get to this point.
 
-As you said, I did this in v3.
-https://patchwork.kernel.org/patch/11031507/
+> > +		return 1;
+> > +
+> > +	/* BH flavor */
+> > +	if (in_softirq() || irqs_disabled())
+> 
+> I'm not sure I'd put irqs_disabled() under BH, also this entire
+> condition is superfluous, see below.
+> 
+> > +		return 1;
+> > +
+> > +	/* Sched flavor */
+> > +	if (debug_locks)
+> > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+> > +	return lockdep_opinion || !preemptible();
+> 
+> that !preemptible() turns into:
+> 
+>   !(preempt_count()==0 && !irqs_disabled())
+> 
+> which is:
+> 
+>   preempt_count() != 0 || irqs_disabled()
+> 
+> and already includes irqs_disabled() and in_softirq().
+> 
+> > +}
+> 
+> So maybe something lke:
+> 
+> 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
+> 			    lock_is_held(&rcu_sched_lock_map)))
+> 		return true;
 
-The reason why I use struct union struct in v4 is that I want to
-express "in the tree" and "in the purge list" are two completely
-isolated cases.
+Agreed, I will do it this way (without the debug_locks) like:
 
-struct vmap_area {
-        union {
-                struct {        /* Case A: In the tree */
-                        ...
-                };
+---8<-----------------------
 
-                struct {        /* Case B: In the purge list */
-                        ...
-                };
-        };
-};
-
-The "rb_node" and "list" should also not be used when va is in
-the purge list
-
-what do you think of this idea?
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index ba861d1716d3..339aebc330db 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
+ 
+ int rcu_read_lock_any_held(void)
+ {
+-	int lockdep_opinion = 0;
+-
+ 	if (!debug_lockdep_rcu_enabled())
+ 		return 1;
+ 	if (!rcu_is_watching())
+ 		return 0;
+ 	if (!rcu_lockdep_current_cpu_online())
+ 		return 0;
+-
+-	/* Preemptible RCU flavor */
+-	if (lock_is_held(&rcu_lock_map))
+-		return 1;
+-
+-	/* BH flavor */
+-	if (in_softirq() || irqs_disabled())
+-		return 1;
+-
+-	/* Sched flavor */
+-	if (debug_locks)
+-		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+-	return lockdep_opinion || !preemptible();
++	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
++		return 1;
++	return !preemptible();
+ }
+ EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
+ 
