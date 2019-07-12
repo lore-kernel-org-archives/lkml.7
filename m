@@ -2,126 +2,105 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D1FC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35277C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8AA21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E24E21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALfhC6m4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfGLI1Q (ORCPT
+        id S1726610AbfGLI1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:27:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44392 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfGLI1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:27:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DAC5BAC4C;
-        Fri, 12 Jul 2019 08:27:12 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 09:27:10 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, jhladky@redhat.com,
-        lvenanci@redhat.com, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
-Message-ID: <20190712082710.GH13484@suse.de>
-References: <20190624025604.30896-1-ying.huang@intel.com>
- <20190624140950.GF2947@suse.de>
- <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
- <20190703091747.GA13484@suse.de>
- <87ef3663nd.fsf@yhuang-dev.intel.com>
+        Fri, 12 Jul 2019 04:27:40 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33150 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLI1k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:27:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so4003413pfq.0;
+        Fri, 12 Jul 2019 01:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hZ8XQcqFPiBgKnC9B3u3J7ZO1DNl4k/Ar4Bg2fpOBFk=;
+        b=ALfhC6m44wKGFkOBKD8GefYMIEHZd/i4kpqkHV7sELvOgFNGfnbbzj6oHuAltng+he
+         AG0qyfbgmGNEe+ra92PRQ5Z1/meB/K87KLjtRJsLkGr3Lgijr+Ld5chPcmxmZcKi22iK
+         NeSP9XxEYXoNqwgmgWO3o1PE4RG9f3Nw0na5qw16WODApyKYZh9oBfi3z/o9mCDugvSs
+         dc6u1AJe+kvXzoSwouzr7z2EZbhBzzdrnJTz6ouMLahrTiQ/8En+7ySBO3o9P6tRN2a2
+         /W0K61bounkFiRtSkjas1o885NCV8YNnSBIWgZmega5Spfl2VQVZ6fnyc8d4d1YAbeQz
+         fWKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hZ8XQcqFPiBgKnC9B3u3J7ZO1DNl4k/Ar4Bg2fpOBFk=;
+        b=AL8VpcqlaSgXjpSd8yhjtc8OgYF1HBZnLc5dPhI7Ic+JGT8hn0x6Z2BMNavT0tOmIA
+         mBFy2i7gv1XYwsCkG7iTOKeqM92FmjLeefOsfb2YgOfLzZBipeHkhL995jdqGX0fYa2x
+         cPdOhQ9PeBrYuFQb6hC1R+5ABFf7M4NvNczlW7VxCoh2tgNdSMdqkTQAgwnfVz+ASHss
+         izAl1oFz35PkvuapRHvSJCuzJUYhze5OC77TATs5ZRO0y9H7iCWbZdleeddoY603ti6M
+         pJJkDh+2D5cw+PpT/Kwaji9QldMi6nmWt5NdI0WHVFw3RP33B7ZTObPXuCGl47myYGgd
+         +MRw==
+X-Gm-Message-State: APjAAAV9EZ+t0iAiLi3sMu//UEREVfOKhA17/EYVAg3rouFLtRJMvvMK
+        rbum1x0K9F4+/1l0TWvJz6PO9ejojRIuCQ==
+X-Google-Smtp-Source: APXvYqxonCLjfrokyrAVOBWC/q01LGs7wcdrgVS/OXZZhdP3H7d0IBGzolaTtQZrkHunsms/ZKWvlg==
+X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr10738884pje.128.1562920059465;
+        Fri, 12 Jul 2019 01:27:39 -0700 (PDT)
+Received: from maya190711 ([52.250.118.122])
+        by smtp.gmail.com with ESMTPSA id x25sm7938074pfa.90.2019.07.12.01.27.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 01:27:39 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:27:38 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 4/5] HID: hv: Remove dependencies on PAGE_SIZE for ring
+ buffer
+Message-ID: <5cfa6f8ded52ee709ede57a97fc71e8671b1ceb1.1562916939.git.m.maya.nakamura@gmail.com>
+References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ef3663nd.fsf@yhuang-dev.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 08:32:06AM +0800, Huang, Ying wrote:
-> Mel Gorman <mgorman@suse.de> writes:
-> 
-> > On Tue, Jun 25, 2019 at 09:23:22PM +0800, huang ying wrote:
-> >> On Mon, Jun 24, 2019 at 10:25 PM Mel Gorman <mgorman@suse.de> wrote:
-> >> >
-> >> > On Mon, Jun 24, 2019 at 10:56:04AM +0800, Huang Ying wrote:
-> >> > > The autonuma scan period should be increased (scanning is slowed down)
-> >> > > if the majority of the page accesses are shared with other processes.
-> >> > > But in current code, the scan period will be decreased (scanning is
-> >> > > speeded up) in that situation.
-> >> > >
-> >> > > This patch fixes the code.  And this has been tested via tracing the
-> >> > > scan period changing and /proc/vmstat numa_pte_updates counter when
-> >> > > running a multi-threaded memory accessing program (most memory
-> >> > > areas are accessed by multiple threads).
-> >> > >
-> >> >
-> >> > The patch somewhat flips the logic on whether shared or private is
-> >> > considered and it's not immediately obvious why that was required. That
-> >> > aside, other than the impact on numa_pte_updates, what actual
-> >> > performance difference was measured and on on what workloads?
-> >> 
-> >> The original scanning period updating logic doesn't match the original
-> >> patch description and comments.  I think the original patch
-> >> description and comments make more sense.  So I fix the code logic to
-> >> make it match the original patch description and comments.
-> >> 
-> >> If my understanding to the original code logic and the original patch
-> >> description and comments were correct, do you think the original patch
-> >> description and comments are wrong so we need to fix the comments
-> >> instead?  Or you think we should prove whether the original patch
-> >> description and comments are correct?
-> >> 
-> >
-> > I'm about to get knocked offline so cannot answer properly. The code may
-> > indeed be wrong and I have observed higher than expected NUMA scanning
-> > behaviour than expected although not enough to cause problems. A comment
-> > fix is fine but if you're changing the scanning behaviour, it should be
-> > backed up with data justifying that the change both reduces the observed
-> > scanning and that it has no adverse performance implications.
-> 
-> Got it!  Thanks for comments!  As for performance testing, do you have
-> some candidate workloads?
-> 
+Define the ring buffer size as a constant expression because it should
+not depend on the guest page size.
 
-Ordinarily I would hope that the patch was motivated by observed
-behaviour so you have a metric for goodness. However, for NUMA balancing
-I would typically run basic workloads first -- dbench, tbench, netperf,
-hackbench and pipetest. The objective would be to measure the degree
-automatic NUMA balancing is interfering with a basic workload to see if
-they patch reduces the number of minor faults incurred even though there
-is no NUMA balancing to be worried about. This measures the general
-overhead of a patch. If your reasoning is correct, you'd expect lower
-overhead.
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+ drivers/hid/hid-hyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For balancing itself, I usually look at Andrea's original autonuma
-benchmark, NAS Parallel Benchmark (D class usually although C class for
-much older or smaller machines) and spec JBB 2005 and 2015. Of the JBB
-benchmarks, 2005 is usually more reasonable for evaluating NUMA balancing
-than 2015 is (which can be unstable for a variety of reasons). In this
-case, I would be looking at whether the overhead is reduced, whether the
-ratio of local hits is the same or improved and the primary metric of
-each (time to completion for Andrea's and NAS, throughput for JBB).
-
-Even if there is no change to locality and the primary metric but there
-is less scanning and overhead overall, it would still be an improvement.
-
-If you have trouble doing such an evaluation, I'll queue tests if they
-are based on a patch that addresses the specific point of concern (scan
-period not updated) as it's still not obvious why flipping the logic of
-whether shared or private is considered was necessary.
-
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 7795831d37c2..cc5b09b87ab0 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -104,8 +104,8 @@ struct synthhid_input_report {
+ 
+ #pragma pack(pop)
+ 
+-#define INPUTVSC_SEND_RING_BUFFER_SIZE		(10*PAGE_SIZE)
+-#define INPUTVSC_RECV_RING_BUFFER_SIZE		(10*PAGE_SIZE)
++#define INPUTVSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
++#define INPUTVSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+ 
+ 
+ enum pipe_prot_msg_type {
 -- 
-Mel Gorman
-SUSE Labs
+2.17.1
+
