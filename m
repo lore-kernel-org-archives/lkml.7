@@ -2,187 +2,132 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61274C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E817C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33951208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5DX7PGyy"
+	by mail.kernel.org (Postfix) with ESMTP id 69949208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfGLHpF (ORCPT
+        id S1726269AbfGLHpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:45:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47032 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfGLHpF (ORCPT
+        Fri, 12 Jul 2019 03:45:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41420 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfGLHpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:45:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C7i7f6178923;
-        Fri, 12 Jul 2019 07:44:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=8T/t61hH+mxP53WzfTtGAJxdQjq9tmKdl9zDJcQJWT0=;
- b=5DX7PGyyiqAuHqdElQqOA4nGLmMdtiOKrdKtqVkBCGeRmC1rNLNWcBzr/XdK+h1EBtOE
- hQ+Q6neY2rtBbsU8vFeLSaXP+vl6vLk9dU25fu42tJrcGwfGOkPPySvBVMJSIQcoN8Ok
- xqMS2nf2qUM4tEKg1uD5x3Mk2k3EJ8DiF78j7sC1lIF9lBTUOrzSDX8B0kHKmnvxe5DJ
- PO1MVtehBbtIbtqHCPfUkI39iBsWtpMIDc5BuK5Nkt9DqRuyGdf3pBcbGmaK3w2zxAOd
- tPMNV8l2yuBlHrT0j3BPgSSzV2ri/NhdC80csgqE87Vlp1/u4WUCNR7Vf912WOzePgIJ Pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tjk2u445s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 07:44:07 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C7hXBw019439;
-        Fri, 12 Jul 2019 07:44:06 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2tmwgympn6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 07:44:06 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C7i3Sq030229;
-        Fri, 12 Jul 2019 07:44:04 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 00:44:03 -0700
-Subject: Re: [RFC v2 01/26] mm/x86: Introduce kernel address space isolation
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <1562855138-19507-2-git-send-email-alexandre.chartre@oracle.com>
- <alpine.DEB.2.21.1907112321570.1782@nanos.tec.linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <42eac268-9b3a-b444-8288-76d57faf0826@oracle.com>
-Date:   Fri, 12 Jul 2019 09:43:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 12 Jul 2019 03:45:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id v22so5720307qkj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 00:45:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2zDvUGnwlFGzvagKhUVJk8facxGemI4EdWJj1iZGmhg=;
+        b=A9CU1nUQb52qKCcR6YmsIgySoVqQdo+45AeW5UI4UkwseoJRRZ2UOE3Jvxf9ga+UNM
+         GiYddje1WG39rq7Ti6AM/Ru5sxWPIgQ8t79ZYUIRoAQDVc7vnJd2K75zL7eFkpi+siSn
+         eVGkPrbFsUDkldOBtNrgwV74HoL/YH8kscexsmiyeJMQUn7nxkkA+Ds1aAcXuhBQ1Dzj
+         Nych8e/i+u87+WRjwi7JpHBufd2CUdGTyrdlwzNzLHYMtl5DPJywrhYwcPxucOcPlUaE
+         sJbE+MNIdqfNl82AvZ6Q0tYFHThdYUyYR7ohb83lSaFrqzbeRMIfAfv7rEpYxihtSl7Z
+         ixZA==
+X-Gm-Message-State: APjAAAW01CBQswOTMkaj6SEuTPxMySc+LbNoFv+GlOilcLo+2xrER5UP
+        M5OEcTxmMgrNKX24g0pHmXuYUyMmu1TUwBkoLwA=
+X-Google-Smtp-Source: APXvYqzKaFVFH4FWCYrJDt+ENzHkf8xn407Kw66iBAjC78XR6zlfCepjBXeXRQwBVRRfIob9JcCYo4r1erXbXpmbelQ=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr4940302qka.138.1562917523902;
+ Fri, 12 Jul 2019 00:45:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907112321570.1782@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120080
+References: <20190703081119.209976-1-arnd@arndb.de> <20190711174949.dc74310efd1fd3c8bd4ea276@linux-foundation.org>
+In-Reply-To: <20190711174949.dc74310efd1fd3c8bd4ea276@linux-foundation.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 12 Jul 2019 09:45:06 +0200
+Message-ID: <CAK8P3a2ZRw9B=X76yL-bRzC+01z6VaHDzPAhQQw7V9MXtkp+Jg@mail.gmail.com>
+Subject: Re: [PATCH] waitqueue: fix clang -Wuninitialized warnings
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 2:49 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Wed,  3 Jul 2019 10:10:55 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
 
-On 7/11/19 11:33 PM, Thomas Gleixner wrote:
-> On Thu, 11 Jul 2019, Alexandre Chartre wrote:
->> +/*
->> + * When isolation is active, the address space doesn't necessarily map
->> + * the percpu offset value (this_cpu_off) which is used to get pointers
->> + * to percpu variables. So functions which can be invoked while isolation
->> + * is active shouldn't be getting pointers to percpu variables (i.e. with
->> + * get_cpu_var() or this_cpu_ptr()). Instead percpu variable should be
->> + * directly read or written to (i.e. with this_cpu_read() or
->> + * this_cpu_write()).
->> + */
->> +
->> +int asi_enter(struct asi *asi)
->> +{
->> +	enum asi_session_state state;
->> +	struct asi *current_asi;
->> +	struct asi_session *asi_session;
->> +
->> +	state = this_cpu_read(cpu_asi_session.state);
->> +	/*
->> +	 * We can re-enter isolation, but only with the same ASI (we don't
->> +	 * support nesting isolation). Also, if isolation is still active,
->> +	 * then we should be re-entering with the same task.
->> +	 */
->> +	if (state == ASI_SESSION_STATE_ACTIVE) {
->> +		current_asi = this_cpu_read(cpu_asi_session.asi);
->> +		if (current_asi != asi) {
->> +			WARN_ON(1);
->> +			return -EBUSY;
->> +		}
->> +		WARN_ON(this_cpu_read(cpu_asi_session.task) != current);
->> +		return 0;
->> +	}
->> +
->> +	/* isolation is not active so we can safely access the percpu pointer */
->> +	asi_session = &get_cpu_var(cpu_asi_session);
-> 
-> get_cpu_var()?? Where is the matching put_cpu_var() ? get_cpu_var()
-> contains a preempt_disable ...
-> 
-> What's wrong with a simple this_cpu_ptr() here?
-> 
+> <scratches head>
+>
+> Surely clang is being extraordinarily dumb here?
+>
+> DECLARE_WAIT_QUEUE_HEAD_ONSTACK() is effectively doing
+>
+>         struct wait_queue_head name = ({ __init_waitqueue_head(&name) ; name; })
+>
+> which is perfectly legitimate!  clang has no business assuming that
+> __init_waitqueue_head() will do any reads from the pointer which it was
+> passed, nor can clang assume that __init_waitqueue_head() leaves any of
+> *name uninitialized.
+>
+> Does it also warn if code does this?
+>
+>         struct wait_queue_head name;
+>         __init_waitqueue_head(&name);
+>         name = name;
+>
+> which is equivalent, isn't it?
 
-Oups, my mistake, I should be using this_cpu_ptr(). I will replace all get_cpu_var()
-with this_cpu_ptr().
+No, it does not warn for this.
 
+I've tried a few more variants here: https://godbolt.org/z/ykSX0r
 
->> +void asi_exit(struct asi *asi)
->> +{
->> +	struct asi_session *asi_session;
->> +	enum asi_session_state asi_state;
->> +	unsigned long original_cr3;
->> +
->> +	asi_state = this_cpu_read(cpu_asi_session.state);
->> +	if (asi_state == ASI_SESSION_STATE_INACTIVE)
->> +		return;
->> +
->> +	/* TODO: Kick sibling hyperthread before switching to kernel cr3 */
->> +	original_cr3 = this_cpu_read(cpu_asi_session.original_cr3);
->> +	if (original_cr3)
-> 
-> Why would this be 0 if the session is active?
-> 
+What I think is going on here is a result of clang and gcc fundamentally
+treating -Wuninitialized warnings differently. gcc tries to make the warnings
+as helpful as possible, but given the NP-complete nature of this problem
+it won't always get it right, and it traditionally allowed this syntax as a
+workaround.
 
-Correct, original_cr3 won't be 0. I think this is a remain from a previous version
-where original_cr3 was handled differently.
+int f(void)
+{
+    int i = i; // tell gcc not to warn
+    return i;
+}
 
+clang apparently implements the warnings in a way that is as
+completely predictable (and won't warn in cases that it
+doesn't completely understand), but decided as a result that the
+gcc 'int i = i' syntax is bogus and it always warns about a variable
+used in its own declaration that is later referenced, without looking
+at whether the declaration does initialize it or not.
 
->> +		write_cr3(original_cr3);
->> +
->> +	/* page-table was switched, we can now access the percpu pointer */
->> +	asi_session = &get_cpu_var(cpu_asi_session);
-> 
-> See above.
-> 
+> The proposed solution is, effectively, to open-code
+> __init_waitqueue_head() at each DECLARE_WAIT_QUEUE_HEAD_ONSTACK()
+> callsite.  That's pretty unpleasant and calls for an explanatory
+> comment at the __WAIT_QUEUE_HEAD_INIT_ONSTACK() definition site as well
+> as a cautionary comment at the __init_waitqueue_head() definition so we
+> can keep the two versions in sync as code evolves.
 
-Will fix that.
+Yes, makes sense.
 
+> Hopefully clang will soon be hit with the cluebat (yes?) and this
+> change becomes obsolete in the quite short term.  Surely 6-12 months
+> from now nobody will be using the uncluebatted version of clang on
+> contemporary kernel sources so we get to remove this nastiness again.
+> Which makes me wonder whether we should merge it at all.
 
-Thanks,
+Would it make you feel better to keep the current code but have an alternative
+version guarded with e.g. "#if defined(__clang__ && (__clang_major__ <= 9)"?
 
-alex.
+While it is probably a good idea to fix clang here, this is one of the last
+issues that causes a significant difference between gcc and clang in build
+testing with kernelci:
+https://kernelci.org/build/next/branch/master/kernel/next-20190709/
+I'm trying to get all the warnings fixed there so we can spot build-time
+regressions more easily.
 
->> +	WARN_ON(asi_session->task != current);
->> +	asi_session->state = ASI_SESSION_STATE_INACTIVE;
->> +	asi_session->asi = NULL;
->> +	asi_session->task = NULL;
->> +	asi_session->original_cr3 = 0;
->> +}
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+      Arnd
