@@ -2,94 +2,105 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE97C742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB77C742B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C2C21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CFE20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfGLI6i (ORCPT
+        id S1726312AbfGLI6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:58:38 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:57965 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfGLI6h (ORCPT
+        Fri, 12 Jul 2019 04:58:46 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:21624 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbfGLI6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:58:37 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N0qmr-1iiWJC3sCj-00wj0T; Fri, 12 Jul 2019 10:58:28 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Or Gerlitz <ogerlitz@mellanox.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Aya Levin <ayal@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next, netfilter] mlx5: avoid unused variable warning
-Date:   Fri, 12 Jul 2019 10:57:11 +0200
-Message-Id: <20190712085823.4111911-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 12 Jul 2019 04:58:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWh9RaS_1562921921;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWh9RaS_1562921921)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 12 Jul 2019 16:58:42 +0800
+Subject: Re: [PATCH 4/4] numa: introduce numa cling feature
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        Mel Gorman <mgorman@suse.de>, riel@surriel.com
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <9a440936-1e5d-d3bb-c795-ef6f9839a021@linux.alibaba.com>
+ <20190711142728.GF3402@hirez.programming.kicks-ass.net>
+ <82f42063-ce51-dd34-ba95-5b32ee733de7@linux.alibaba.com>
+ <20190712075318.GM3402@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <0a5066be-ac10-5dce-c0a6-408725bc0784@linux.alibaba.com>
+Date:   Fri, 12 Jul 2019 16:58:41 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190712075318.GM3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KbtTIUVijtjWb2BGudzBahmvRgrYsk9J81pM88PMcX4hIYF1S8L
- gwuD9vu1/nn6juu36bk9dM41BjnCzdAVdK1XblUpEIspkI+qFHDNupUopxdq+3WLf1KVgv4
- +eqnbxE9wGcbCeUugh7J1Lja5qJJ+Fz8cN/Elk8vdykzSlN6SdCcq+TxeKYaPEj2Qur3Auq
- BDDOpD5PUD3weUNF7oVgw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FvCGFSTd6E0=:asyyPiZ2WEID0yTUfqlLkO
- yDK9Trl6uOm5d4YOn38xx94BXBWk0eyHyhwG71UAts4NggelRuwSXc0MfaGT5jqdP9CkeuEwN
- wt9V90ChT8C+pLT+3PGVkWwcmmBBTDdHohOGOvIRVoPjMkj9sIHd6zK4pMlh4E9C6C+9D91Cv
- yP3Ky9REc91p0PoVMUib72W9zesKLaQHN+CB7AkG6Yd60RAF6g0XdCEW09LsN4tpvP0Yrsdcj
- oQBwED5oIRUaPH91IPJMaHYGUiBZYdeuAJhXPeqZfHHGeQ3LOnEkK901r3pvLkEclXfIIAXqg
- gRVoZQHm8g3XI6Uwl+yTo5jinQfenLrHn3clvliWJhwSOB3VJrgp1k9VRuX4T/vkCZH4pu4LB
- q0a8HgxA+CiEGuW9srVOozgJMuWwhYo5bSQiNceysbAHwVqfTnCIjAGGB6gYNH/yCnkM2h3hL
- S7bOf1/vTswustC+kCwhLhK0wmZZ8XYdLeUyG4upeGBZCfoh2MKQDkQV6QJZGgeLF78s9S16n
- ESm5pZt93aF60xeNyYLSvbVj6FePTfWI5P3YXy4GW34D6WrqI4dpj3YZzj/LESubYXw4JjvEi
- If4AhulwrRCJtCi/31aPfsyUYJS5HuBRU8nG6IcY15NRLSI4UXFkZlXrF/rqZGvrJpG6srDlO
- +A45Y/isoJWIsK93EgPxm+Iex5Qdj4gnHfT47T4Zj344PWeqeNsSeBiVPq3MrtxMfwKgjVL13
- FxXXpAQVrySO3Ci8uABOfS8yEwOFgfxsFk/S+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without CONFIG_MLX5_ESWITCH we get a harmless warning:
 
-drivers/net/ethernet/mellanox/mlx5/core/en_main.c:3467:21: error: unused variable 'priv' [-Werror,-Wunused-variable]
-        struct mlx5e_priv *priv = netdev_priv(dev);
 
-Hide the declaration in the same #ifdef as its usage.
+On 2019/7/12 下午3:53, Peter Zijlstra wrote:
+[snip]
+>>>>  	return target;
+>>>>  }
+>>>
+>>> Select idle sibling should never cross node boundaries and is thus the
+>>> entirely wrong place to fix anything.
+>>
+>> Hmm.. in our early testing the printk show both select_task_rq_fair() and
+>> task_numa_find_cpu() will call select_idle_sibling with prev and target on
+>> different node, thus we pick this point to save few lines.
+> 
+> But it will never return @prev if it is not in the same cache domain as
+> @target. See how everything is gated by:
+> 
+>   && cpus_share_cache(x, target)
 
-Fixes: 4e95bc268b91 ("net: flow_offload: add flow_block_cb_setup_simple()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+Yeah, that's right.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 6d0ae87c8ded..b562ba904ea1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3464,7 +3464,9 @@ static LIST_HEAD(mlx5e_block_cb_list);
- static int mlx5e_setup_tc(struct net_device *dev, enum tc_setup_type type,
- 			  void *type_data)
- {
-+#ifdef CONFIG_MLX5_ESWITCH
- 	struct mlx5e_priv *priv = netdev_priv(dev);
-+#endif
- 
- 	switch (type) {
- #ifdef CONFIG_MLX5_ESWITCH
--- 
-2.20.0
+> 
+>> But if the semantics of select_idle_sibling() is to return cpu on the same
+>> node of target, what about move the logical after select_idle_sibling() for
+>> the two callers?
+> 
+> No, that's insane. You don't do select_idle_sibling() to then ignore the
+> result. You have to change @target before calling select_idle_sibling().
+> 
 
+I see, we should not override the decision of select_idle_sibling().
+
+Actually the original design we try to achieve is:
+
+  let wake affine select the target
+  try find idle sibling of target
+  if got one
+	pick it
+  else if task cling to prev
+	pick prev
+
+That is to consider wake affine superior to numa cling.
+
+But after rethinking maybe this is not necessary, since numa cling is
+also some kind of strong wake affine hint, actually maybe even a better
+one to filter out the bad cases.
+
+I'll try change @target instead and give a retest then.
+
+Regards,
+Michael Wang
