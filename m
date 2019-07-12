@@ -2,223 +2,196 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A5C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5685C742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E4320651
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7179B21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ntqoYFzy"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QUdJPbnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfGLRAW (ORCPT
+        id S1727364AbfGLRAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:00:22 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39749 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfGLRAV (ORCPT
+        Fri, 12 Jul 2019 13:00:39 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43501 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfGLRAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:00:21 -0400
-Received: by mail-vs1-f66.google.com with SMTP id u3so7132639vsh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:00:20 -0700 (PDT)
+        Fri, 12 Jul 2019 13:00:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id cl9so5027859plb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Xa/JIc+XiGXpm5Gi1iHsvZxDgn8MNFaOrmXkkSzsQhU=;
-        b=ntqoYFzy45x5nH1dbIIy2cdYjWHGlisy72XlIy7vKgmOHMuEOp7rDYlRHlZK5KslUH
-         cSTpclAr5jlrXouH5YXj/oC00K9V2ghHhHw5d2MyX/IbEwftEaNyQEvwu+2TrCmJttMg
-         xijN++2pDIXgAsaQHll/UjzHAU3PaAauqgv+/kdMpO7jC1H7ZyUwIPBWmFNz+HsyGizf
-         MrMMIAbe0d4SZhTIaQ9W4WsvET4ZWBQevj8ib5gZJbA4OZV6O5oHSL7Gb+KNGINVtHcY
-         OQDqXrSB1xBkuCMCkTj4BW87ZeLpazRD/6qFbuYcuSIzLvdke2rMmvWZJ1YaNQ4tP6YS
-         LU5w==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4R73ECcFsgEJ+nDrVGaF7lXHe3UNCLl3CB9t/q9lNT4=;
+        b=QUdJPbnULiAaQGPSi2mqi0K5L8ZUkC7IX+RSaHrjNxvLiFWoKFYBoo/oGR4kaJ+If5
+         H+hJo/HgYMGa2Q0AVqNqfSZ4wCuzsyweIdbuCBwCruxs20caVT8lckLIacvRNFQKWd4U
+         5aEnPHEBflrCxzDnwhzGkmd+pAsgTBSfog6z8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Xa/JIc+XiGXpm5Gi1iHsvZxDgn8MNFaOrmXkkSzsQhU=;
-        b=fm39nAUd8EsslA8ccrtKDNn7niT15WI/RC3p6rGXnhPoMYtfftp0fsszO39joPLIvO
-         zjTpM2pvXGe2lIBOwQuuC9v3MsPM3iVmgJ8W0SiQuQQSS3f0z2SWV+DuAWWQOBicGrdf
-         fA8aGCxWKQ55bchz4A6RXtB2WfxUacmzjmXlw3ZIEaHYbcNzYIWsX12/1pBOV7/z3X47
-         nWE2qCEtEWobvKtoDqLVHyTorwLhfytW9L3ZNRLUJEzuqw8jFMeiRFZu0mOppdJCRFqx
-         Wpsz9Om0WPgU0tPoHuEFDPBlKuTUlRNx5qUiifB+WoQKBFzHqtLLEOwbCMBxJXXoYtdV
-         UJAQ==
-X-Gm-Message-State: APjAAAUKXDP3oIsy5zxsPoeXzwO5gU1iTwhFl9AO21r03BSPiZPEp0o+
-        S3l3MHSvXDimPk7dla6hPINmfEeUpbfRKRkmJZ8Dcw==
-X-Google-Smtp-Source: APXvYqwLnT96Jqh0/cv6O2LK00nrN85AzB6P4BY5Khs4jQZ53nF/9r7GJrdQ7XU76VyyHVvvZl0qdlQfCDUjrdBy0fc=
-X-Received: by 2002:a67:ba12:: with SMTP id l18mr9474162vsn.29.1562950819093;
- Fri, 12 Jul 2019 10:00:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
- <CANN689G6mGLSOkyj31ympGgnqxnJosPVc4EakW5gYGtA_45L7g@mail.gmail.com>
- <df001b6fbe2a4bdc86999c78933dab7f@huawei.com> <20190711182002.9bb943006da6b61ab66b95fd@linux-foundation.org>
- <71c4329e246344eeb38c8ac25c63c09d@huawei.com>
-In-Reply-To: <71c4329e246344eeb38c8ac25c63c09d@huawei.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Fri, 12 Jul 2019 10:00:06 -0700
-Message-ID: <CANN689H1wtbKOqhpTSuxvTDcsU00y1xXd8wRVFvbG_2p3WvoqQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
-To:     "chenjianhong (A)" <chenjianhong2@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4R73ECcFsgEJ+nDrVGaF7lXHe3UNCLl3CB9t/q9lNT4=;
+        b=i9IM7nHwefQ42U2L/+uwqZVKrE0vinBVMxj7khbjgCyvn407I4OIp0YQ+q42p/PyAZ
+         IG+0n5a4ObnwnvrOhejNk/FwRSgTNOLhBmNdRmmsBUXtHbimGxs+zGbOzjs5NfuDEVx9
+         4y+Btr+6iJxlyYLr9rpu2mbZ026gp6RaYhhHmujA/R0PDdqByAy4FFAcDu9Ex0zH+8d4
+         WQ1Y1xJ17FAdJzxS9V+bNOIkNRSX8NQlCqQ/AuGU/s1TM+qTBtoMtMZ5UeNusuGxF85E
+         4mm4Iy5mXbA3QKmuhfB29zz/TnMMaQa0BXB7T2sZuBxsHyLNPF1WWGS69CA1V1a9Wt1S
+         sbGQ==
+X-Gm-Message-State: APjAAAV09lO+HG4DHIW3LhlJnfsLtGZoMgeDcsIG6sm6uEif0P8CIkpt
+        LybhTxA1Ln1W2quu9GozCisrPPHO
+X-Google-Smtp-Source: APXvYqy/IfEk1KCS4o5ZDngZgPwSlK051hwLHg+0U99vqOwQGBX28IMyNjvCo8ritYeQERfyu/T2Kw==
+X-Received: by 2002:a17:902:296a:: with SMTP id g97mr12356829plb.115.1562950833539;
+        Fri, 12 Jul 2019 10:00:33 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a15sm7127385pgw.3.2019.07.12.10.00.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 10:00:32 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "wangle (H)" <wangle6@huawei.com>,
-        "Chengang (L)" <cg.chen@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH v2 0/9] Harden list_for_each_entry_rcu() and family
+Date:   Fri, 12 Jul 2019 13:00:15 -0400
+Message-Id: <20190712170024.111093-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 3:53 AM chenjianhong (A)
-<chenjianhong2@huawei.com> wrote:
-> Thank you for your reply!
-> > How significant is this problem in real-world use cases?  How much trou=
-ble is it causing?
->    In my opinion, this problem is very rare in real-world use cases. In a=
-rm64
->    or x86 environment, the virtual memory is enough. In arm32 environment=
-,
->    each process has only 3G or 4G or less, but we seldom use out all of t=
-he virtual memory,
->    it only happens in some special environment. They almost use out all t=
-he virtual memory, and
->    in some moment, they will change their working mode so they will relea=
-se and allocate
->    memory again. This current length limitation will cause this problem. =
-I explain it's the memory
->    length limitation. But they can't accept the reason, it is unreasonabl=
-e that we fail to allocate
->    memory even though the memory gap is enough.
+Hi,
+This series aims to provide lockdep checking to RCU list macros for additional
+kernel hardening.
 
-Right. So to summarize, you have a customer accidentally hitting this
-and asking you about it ? and I assume their workload is not public ?
+RCU has a number of primitives for "consumption" of an RCU protected pointer.
+Most of the time, these consumers make sure that such accesses are under a RCU
+reader-section (such as rcu_dereference{,sched,bh} or under a lock, such as
+with rcu_dereference_protected()).
 
-> > Have you looked further into this?  Michel is concerned about the perfo=
-rmance cost of the current solution.
->    The current algorithm(change before) is wonderful, and it has been use=
-d for a long time, I don't
->    think it is worthy to change the whole algorithm in order to fix this =
-problem. Therefore, I just
->    adjust the gap_start and gap_end value in place of the length. My chan=
-ge really affects the
->    performance because I calculate the gap_start and gap_end value again =
-and again. Does it affect
->    too much performance?  I have no complex environment, so I can't test =
-it, but I don't think it will cause
->    too much performance loss. First, I don't change the whole algorithm. =
-Second, unmapped_area and
->    unmapped_area_topdown function aren't used frequently. Maybe there are=
- some big performance problems
->    I'm not concerned about. But I think if that's not a problem, there sh=
-ould be a limitation description.
+However, there are other ways to consume RCU pointers, such as by
+list_for_each_entry_rcu or hlist_for_each_enry_rcu. Unlike the rcu_dereference
+family, these consumers do no lockdep checking at all. And with the growing
+number of RCU list uses (1000+), it is possible for bugs to creep in and go
+unnoticed which lockdep checks can catch.
 
-The case I am worried about is if there are a lot of gaps that are
-large enough for an unaligned allocation, but too small for an aligned
-one.
+Since RCU consolidation efforts last year, the different traditional RCU
+flavors (preempt, bh, sched) are all consolidated. In other words, any of these
+flavors can cause a reader section to occur and all of them must cease before
+the reader section is considered to be unlocked. Thanks to this, we can
+generically check if we are in an RCU reader. This is what patch 1 does. Note
+that the list_for_each_entry_rcu and family are different from the
+rcu_dereference family in that, there is no _bh or _sched version of this
+macro. They are used under many different RCU reader flavors, and also SRCU.
+Patch 1 adds a new internal function rcu_read_lock_any_held() which checks
+if any reader section is active at all, when these macros are called. If no
+reader section exists, then the optional fourth argument to
+list_for_each_entry_rcu() can be a lockdep expression which is evaluated
+(similar to how rcu_dereference_check() works). If no lockdep expression is
+passed, and we are not in a reader, then a splat occurs. Just take off the
+lockdep expression after applying the patches, by using the following diff and
+see what happens:
 
-You could create the bad case as follows:
-- Allocate a huge memory block (no need to populate it, so it can
-really be as large as virtual memory will allow)
-- Free a bunch of 2M holes in that block, but none of them are aligned
-- Try to force allocation of a 2M aligned block
++++ b/arch/x86/pci/mmconfig-shared.c
+@@ -55,7 +55,7 @@ static void list_add_sorted(struct pci_mmcfg_region *new)
+        struct pci_mmcfg_region *cfg;
 
-With the current code, the allocation will quickly skip over the
-unaligned 2M holes. It will either find a 4M gap and allocate a 2M
-aligned block from it, or it will fail, but it will be quick in either
-case. With the suggested change, the allocation would try each of the
-unaligned 2M holes, which could take a long time, before eventually
-either finding a large enough aligned gap, or failing.
-
-I can see two ways around this:
-- the code could search for a 4M gap at first, like it currently does,
-and that fails it could look at all 2M gaps and see if one of them is
-aligned. So, there would still be the slow case, but only if the
-initial (fast) check failed. Maybe there should be a sysfs setting to
-enable the second pass, which would be disabled by default at least on
-64-bit systems.
-- If the issue only happens when allocating huge pages, and we know
-the possible huge page sizes for a process from the start, we could
-maintain more information about the gaps so that we could quickly
-search for a suitable aligned gaps. that is, for each subtree we would
-store both the highest 4K aligned size that can be allocated, and the
-highest 2M aligned size as well. That makes a more complete solution
-but probably overkill as we are not hitting this frequently enough to
-justify the complications.
-
->
-> -----Original Message-----
-> From: Andrew Morton [mailto:akpm@linux-foundation.org]
-> Sent: Friday, July 12, 2019 9:20 AM
-> To: chenjianhong (A) <chenjianhong2@huawei.com>
-> Cc: Michel Lespinasse <walken@google.com>; Greg Kroah-Hartman <gregkh@lin=
-uxfoundation.org>; mhocko@suse.com; Vlastimil Babka <vbabka@suse.cz>; Kiril=
-l A. Shutemov <kirill.shutemov@linux.intel.com>; Yang Shi <yang.shi@linux.a=
-libaba.com>; jannh@google.com; steve.capper@arm.com; tiny.windzz@gmail.com;=
- LKML <linux-kernel@vger.kernel.org>; linux-mm <linux-mm@kvack.org>; stable=
-@vger.kernel.org; willy@infradead.org
-> Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
->
-> On Sat, 18 May 2019 07:05:07 +0000 "chenjianhong (A)" <chenjianhong2@huaw=
-ei.com> wrote:
->
-> > I explain my test code and the problem in detail. This problem is
-> > found in 32-bit user process, because its virtual is limited, 3G or 4G.
-> >
-> > First, I explain the bug I found. Function unmapped_area and
-> > unmapped_area_topdowns adjust search length to account for worst case
-> > alignment overhead, the code is ' length =3D info->length + info->align=
-_mask; '.
-> > The variable info->length is the length we allocate and the variable
-> > info->align_mask accounts for the alignment, because the gap_start  or
-> > info->gap_end
-> > value also should be an alignment address, but we can't know the alignm=
-ent offset.
-> > So in the current algorithm, it uses the max alignment offset, this
-> > value maybe zero or other(0x1ff000 for shmat function).
-> > Is it reasonable way? The required value is longer than what I allocate=
-.
-> > What's more,  why for the first time I can allocate the memory
-> > successfully Via shmat, but after releasing the memory via shmdt and I
-> > want to attach again, it fails. This is not acceptable for many people.
-> >
-> > Second, I explain my test code. The code I have sent an email. The
-> > following is the step. I don't think it's something unusual or
-> > unreasonable, because the virtual memory space is enough, but the
-> > process can allocate from it. And we can't pass explicit addresses to
-> > function mmap or shmat, the address is getting from the left vma gap.
-> >  1, we allocat large virtual memory;
-> >  2, we allocate hugepage memory via shmat, and release one  of the
-> > hugepage memory block;  3, we allocate hugepage memory by shmat again,
-> > this will fail.
->
-> How significant is this problem in real-world use cases?  How much troubl=
-e is it causing?
->
-> > Third, I want to introduce my change in the current algorithm. I don't
-> > change the current algorithm. Also, I think there maybe a better way
-> > to fix this error. Nowadays, I can just adjust the gap_start value.
->
-> Have you looked further into this?  Michel is concerned about the perform=
-ance cost of the current solution.
->
+        /* keep list sorted by segment and starting bus number */
+-       list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list, pci_mmcfg_lock_held()) {
++       list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list) {
 
 
---=20
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
+The optional argument trick to list_for_each_entry_rcu() can also be used in
+the future to possibly remove rcu_dereference_{,bh,sched}_protected() API and
+we can pass an optional lockdep expression to rcu_dereference() itself. Thus
+eliminating 3 more RCU APIs.
+
+Note that some list macro wrappers already do their own lockdep checking in the
+caller side. These can be eliminated in favor of the built-in lockdep checking
+in the list macro that this series adds. For example, workqueue code has a
+assert_rcu_or_wq_mutex() function which is called in for_each_wq().  This
+series replaces that in favor of the built-in check.
+
+Also in the future, we can extend these checks to list_entry_rcu() and other
+list macros as well, if needed.
+
+Please note that I have kept this option default-disabled under a new config:
+CONFIG_PROVE_RCU_LIST. This is so that until all users are converted to pass
+the optional argument, we should keep the check disabled. There are about a
+1000 or so users and it is not possible to pass in the optional lockdep
+expression in a single series since it is done on a case-by-case basis. I did
+convert a few users in this series itself.
+
+
+
+v1->v2: Have assert_rcu_or_wq_mutex deleted (Daniel Jordan)
+	Simplify rcu_read_lock_any_held()   (Peter Zijlstra)
+	Simplified rcu-sync logic	    (Oleg Nesterov)
+	Updated documentation and rculist comments.
+	Added GregKH ack.
+
+RFC->v1: 
+	Simplify list checking macro (Rasmus Villemoes)
+
+Joel Fernandes (Google) (9):
+rcu/update: Remove useless check for debug_locks
+rcu: Add support for consolidated-RCU reader checking
+rcu/sync: Remove custom check for reader-section
+ipv4: add lockdep condition to fix for_each_entry
+driver/core: Convert to use built-in RCU list checking
+workqueue: Convert for_each_wq to use built-in list check
+x86/pci: Pass lockdep condition to pcm_mmcfg_list iterator
+acpi: Use built-in RCU list checking for acpi_ioremaps list
+doc: Update documentation about list_for_each_entry_rcu
+
+Documentation/RCU/lockdep.txt   | 15 +++++++++++----
+Documentation/RCU/whatisRCU.txt |  9 ++++++++-
+arch/x86/pci/mmconfig-shared.c  |  5 +++--
+drivers/acpi/osl.c              |  6 ++++--
+drivers/base/base.h             |  1 +
+drivers/base/core.c             | 10 ++++++++++
+drivers/base/power/runtime.c    | 15 ++++++++++-----
+include/linux/rcu_sync.h        |  5 ++---
+include/linux/rculist.h         | 28 +++++++++++++++++++++++-----
+include/linux/rcupdate.h        |  7 +++++++
+kernel/rcu/Kconfig.debug        | 11 +++++++++++
+kernel/rcu/sync.c               | 22 ----------------------
+kernel/rcu/update.c             | 20 +++++++++++++++-----
+kernel/workqueue.c              | 10 ++--------
+net/ipv4/fib_frontend.c         |  3 ++-
+15 files changed, 109 insertions(+), 58 deletions(-)
+
+--
+2.22.0.510.g264f2c817a-goog
+
