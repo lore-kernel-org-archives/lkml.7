@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A70C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAE2C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D322084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF122166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934369;
-	bh=1aVc7ovjIYa62l+ZQtdWW56lXQfJDXqIcel5/nmDBhQ=;
+	s=default; t=1562934374;
+	bh=vQBdzWuLn1sqfRcFF+gUmWpDuYA8gg4YVK5T3Ukjz2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFuDT+GnR9hT7/kpfqfnzEvHUv8ox6eW3TXyjgDVx/UuhQhxptVfyES6/Ip5z8yIf
-	 HOXY398r8sZ6KWLRkmBt9Ex7ceSNEkNduluBNAIkFaEccg3rZUqHXMM1H8PXXh9wqk
-	 CbaRpmk/IH8bez41ydabRjXSmAIuE0RNDvMNCJbQ=
+	b=rHlBT47GqrPxkvPE+hwh+UsPypce0gbO6KV2tPLWiQY1JBpmQ0o2Mop0GSAyv8U+A
+	 74UEvd0GtbR8SteeM+R+tLZQ/5G3cE7QkqM/5n3/FpH/LzD4zFeAUSh55k6Ir84+Af
+	 BlbADL326g5TX6QmUoZH51EtchzJTjI8CcysQkq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfGLM0H (ORCPT
+        id S1728073AbfGLM0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36718 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728372AbfGLM0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:01 -0400
+        id S1728395AbfGLM0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86BC2084B;
-        Fri, 12 Jul 2019 12:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DF682084B;
+        Fri, 12 Jul 2019 12:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934361;
-        bh=1aVc7ovjIYa62l+ZQtdWW56lXQfJDXqIcel5/nmDBhQ=;
+        s=default; t=1562934366;
+        bh=vQBdzWuLn1sqfRcFF+gUmWpDuYA8gg4YVK5T3Ukjz2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Ag+9cepPZbLb80y2O8QccbfSX2qTcEN16xf85sQM8H6C/BPxr/V+d8LQgPNmPuTQ
-         yjAo0ZjHjNu0wLLu02qKroOdbw6WjffAMLXJEbruvO5702YoIkaupBTBh44QDrAx29
-         nJwZOT3S/BSE0TLvpU/rSv96I8uPgEo9IEGayQ8o=
+        b=N9sVsrrhc+GeEMtUcQ0/NsIDwh6ML3Yc0tWS547HF7M2xB/Onp52h7k4gpdV9LrOS
+         vHCwhs+TmQmpdKO9938cDoVdt33G0jC+rs0xjpZ7eyvoYwwMRQdJEC1HA5dWwjO27k
+         zv0OUP1I/+RPvi40B/Cvp0UWHtqeAlGdreQPtw9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 007/138] ARM: dts: dra71x: Disable usb4_tm target module
-Date:   Fri, 12 Jul 2019 14:17:51 +0200
-Message-Id: <20190712121629.001824218@linuxfoundation.org>
+Subject: [PATCH 5.1 009/138] soc: bcm: brcmstb: biuctrl: Register writes require a barrier
+Date:   Fri, 12 Jul 2019 14:17:53 +0200
+Message-Id: <20190712121629.069994333@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,32 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 34b1b8061de3215208db9accfe60cc3f5b40178f ]
+[ Upstream commit 6b23af0783a54efb348f0bd781b7850636023dbb ]
 
-usb4_tm is unsed on dra71 and accessing the module
-with ti,sysc is causing a boot crash hence disable its target
-module.
+The BIUCTRL register writes require that a data barrier be inserted
+after comitting the write to the register for the block to latch in the
+recently written values. Reads have no such requirement and are not
+changed.
 
-Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 34642650e5bc ("soc: Move brcmstb to bcm/brcmstb")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra71x.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/soc/bcm/brcmstb/biuctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/dra71x.dtsi b/arch/arm/boot/dts/dra71x.dtsi
-index aad7394902a6..695a08ed0360 100644
---- a/arch/arm/boot/dts/dra71x.dtsi
-+++ b/arch/arm/boot/dts/dra71x.dtsi
-@@ -11,3 +11,7 @@
- &rtctarget {
- 	status = "disabled";
- };
-+
-+&usb4_tm {
-+	status = "disabled";
-+};
+diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
+index c16273b31b94..20b63bee5b09 100644
+--- a/drivers/soc/bcm/brcmstb/biuctrl.c
++++ b/drivers/soc/bcm/brcmstb/biuctrl.c
+@@ -56,7 +56,7 @@ static inline void cbc_writel(u32 val, int reg)
+ 	if (offset == -1)
+ 		return;
+ 
+-	writel_relaxed(val,  cpubiuctrl_base + offset);
++	writel(val, cpubiuctrl_base + offset);
+ }
+ 
+ enum cpubiuctrl_regs {
 -- 
 2.20.1
 
