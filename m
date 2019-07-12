@@ -2,144 +2,85 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B96FC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC54C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B072146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SO1+NrHC"
+	by mail.kernel.org (Postfix) with ESMTP id CA1E6208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 21:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfGLVUg (ORCPT
+        id S1728069AbfGLV0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 17:20:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36818 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727967AbfGLVUf (ORCPT
+        Fri, 12 Jul 2019 17:26:00 -0400
+Received: from kich.slackware.pl ([193.218.152.244]:45170 "EHLO
+        kich.slackware.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbfGLVZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:20:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so4838764pfl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D3nQ6WqoKV1cJLu5kutjgFzb55g8DMnxDsBnzM+IJlk=;
-        b=SO1+NrHCsY/p+NPvc3Kvu0+XSrfRbRTLzv3DQJLqpiFFvqlLUD41ZoEkyf6m1oHe4Z
-         jPjUcQV+on58ZaeQw5aTtJ8kCYKORHDTh2WlfxPXov3Dc4CfdlQLXJImGmDxZH6tjgvr
-         Tws5g4mQ9PCoQ9DVbjsHk8SfTVehVb44KcsePAOf1bmonYeTpN3gthAddO14MhoderoH
-         6J3RLw1verLonYpdq5/f8xMwPEnmy7z+F4MS8Aj2pkiVXA98qdWKRL+foPi4qol44ogz
-         j1G5S+7Qz74srx1QdeYh8+UMNuuO+lonHyNVKHiSHGqcO67wRrUlERTwgtKnmG6/UQNb
-         Ojaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D3nQ6WqoKV1cJLu5kutjgFzb55g8DMnxDsBnzM+IJlk=;
-        b=rLF92HSFlYFasDxVqBHKzhdWsYHxZuSbJRMvGampF6xYX48Rx/4kIvFqNM17/rA3S2
-         uOTq0agZXfkujNhkmppdJTkpc5zEQvw3hSZkfU4hNjR78XdwLs39Id8xjm8fbWXhvoz3
-         89yN9cCWPxEuWQ70dF7hQuRfhsmo+89v+jh7tYDGt1Ha1ewYS8fOi7NMc7yUGSBubDFH
-         uaSKGgVV3WCeiKOkQNHgp5vrw0G5qOpc11Fg5O/4WWiIOEehN+2GkVKSs7RG1auCho8g
-         YdeOtyJ+VtNrwDuDuAMy5ZH+4G29mzn0v8WGS+3mb8tcW+BzVVKu9yXzPmr/TjylSI5i
-         mpPA==
-X-Gm-Message-State: APjAAAWy1uz/GtttHm+iJvcm9dFWmc+sYWx/YVzkNk0WizosvLgh2/qU
-        lnEDoFFYMetYhwCljQclr91DA2oXw9Mnl0kuC8CiU2JuKZa2vg==
-X-Google-Smtp-Source: APXvYqzG4QkIxbPOQ7VlpW4ch9ojpA1msBPUiP9xzzSCgv5/7yPWMvJXkWidRQ3SRI5VVIh7WKj1DZ1Xl5aorYOAyQQ=
-X-Received: by 2002:a65:5687:: with SMTP id v7mr13607513pgs.263.1562966434285;
- Fri, 12 Jul 2019 14:20:34 -0700 (PDT)
+        Fri, 12 Jul 2019 17:25:59 -0400
+X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 17:25:58 EDT
+Received: from kich.toxcorp.com (kich.toxcorp.com [193.218.152.244])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: shasta@toxcorp.com)
+        by kich.slackware.pl (Postfix) with ESMTPSA id A8A09C1;
+        Fri, 12 Jul 2019 23:17:03 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 23:17:03 +0200 (CEST)
+From:   Jakub Jankowski <shasta@toxcorp.com>
+To:     Alexey Izbyshev <izbyshev@ispras.ru>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        security@kernel.org
+Subject: Re: [PATCH] proc: Fix uninitialized byte read in get_mm_cmdline()
+In-Reply-To: <3de2d71b-37be-6238-7fd8-0a40c9b94a98@ispras.ru>
+Message-ID: <alpine.LNX.2.21.1907122312190.8869@kich.toxcorp.com>
+References: <20190712160913.17727-1-izbyshev@ispras.ru> <20190712163625.GF21989@redhat.com> <20190712174632.GA3175@avx2> <3de2d71b-37be-6238-7fd8-0a40c9b94a98@ispras.ru>
+User-Agent: Alpine 2.21 (LNX 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190712090740.340186-1-arnd@arndb.de>
-In-Reply-To: <20190712090740.340186-1-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 12 Jul 2019 14:20:23 -0700
-Message-ID: <CAKwvOdk2piniLx8x0QyvYseyhfXEWFt4kYaSnzNH1d_=LBTzLw@mail.gmail.com>
-Subject: Re: [PATCH] lib/mpi: fix building with 32-bit x86
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Joel Stanley <joel@jms.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 2:07 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The mpi library contains some rather old inline assembly statements
-> that produce a lot of warnings for 32-bit x86, such as:
->
-> lib/mpi/mpih-div.c:76:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
+On 2019-07-12, Alexey Izbyshev wrote:
 
-I feel like I'm having flashbacks here:
-https://lore.kernel.org/linuxppc-dev/CAKwvOd=f9OOR=i10q_auQuQCVH657neQtjt51UA176p_PMOHVw@mail.gmail.com/
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-(Thanks for the patch!)
+> On 7/12/19 8:46 PM, Alexey Dobriyan wrote:
+>> The proper fix to all /proc/*/cmdline problems is to revert
+>>
+>> 	f5b65348fd77839b50e79bc0a5e536832ea52d8d
+>> 	proc: fix missing final NUL in get_mm_cmdline() rewrite
+>>
+>> 	5ab8271899658042fabc5ae7e6a99066a210bc0e
+>> 	fs/proc: simplify and clarify get_mm_cmdline() function
+>>
+> Should this be interpreted as an actual suggestion to revert the patches,
+> fix the conflicts, test and submit them, or is this more like thinking out
+> loud? In the former case, will it be OK for long term branches?
+>
+> get_mm_cmdline() does seem easier to read for me before 5ab8271899658042.
+> But it also has different semantics in corner cases, for example:
+>
+> - If there is no NUL at arg_end-1, it reads only the first string in
+> the combined arg/env block, and doesn't terminate it with NUL.
+>
+> - If there is any problem with access_remote_vm() or copy_to_user(),
+> it returns -EFAULT even if some data were copied to userspace.
+>
+> On the other hand, 5ab8271899658042 was merged not too long ago (about a year),
+> so it's possible that the current semantics isn't heavily relied upon.
 
->                                 udiv_qrnnd(qp[i], n1, n1, np[i], d);
->                                 ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-> lib/mpi/longlong.h:423:20: note: expanded from macro 'udiv_qrnnd'
->         : "=a" ((USItype)(q)), \
->                 ~~~~~~~~~~^~
->
-> There is no point in doing a type cast for the output of an inline assembler
-> statement, so just remove the cast here, as we have done for other architectures
-> in the past.
->
-> See-also: dea632cadd12 ("lib/mpi: fix build with clang")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  lib/mpi/longlong.h | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-> index 08c60d10747f..3bb6260d8f42 100644
-> --- a/lib/mpi/longlong.h
-> +++ b/lib/mpi/longlong.h
-> @@ -397,8 +397,8 @@ do { \
->  #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
->         __asm__ ("addl %5,%1\n" \
->            "adcl %3,%0" \
-> -       : "=r" ((USItype)(sh)), \
-> -            "=&r" ((USItype)(sl)) \
-> +       : "=r" (sh), \
-> +            "=&r" (sl) \
->         : "%0" ((USItype)(ah)), \
->              "g" ((USItype)(bh)), \
->              "%1" ((USItype)(al)), \
-> @@ -406,22 +406,22 @@ do { \
->  #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
->         __asm__ ("subl %5,%1\n" \
->            "sbbl %3,%0" \
-> -       : "=r" ((USItype)(sh)), \
-> -            "=&r" ((USItype)(sl)) \
-> +       : "=r" (sh), \
-> +            "=&r" (sl) \
->         : "0" ((USItype)(ah)), \
->              "g" ((USItype)(bh)), \
->              "1" ((USItype)(al)), \
->              "g" ((USItype)(bl)))
->  #define umul_ppmm(w1, w0, u, v) \
->         __asm__ ("mull %3" \
-> -       : "=a" ((USItype)(w0)), \
-> -            "=d" ((USItype)(w1)) \
-> +       : "=a" (w0), \
-> +            "=d" (w1) \
->         : "%0" ((USItype)(u)), \
->              "rm" ((USItype)(v)))
->  #define udiv_qrnnd(q, r, n1, n0, d) \
->         __asm__ ("divl %4" \
-> -       : "=a" ((USItype)(q)), \
-> -            "=d" ((USItype)(r)) \
-> +       : "=a" (q), \
-> +            "=d" (r) \
+I posted this (corner?) case ~3 months ago, unfortunately it wasn't picked 
+up by anyone: https://lkml.org/lkml/2019/4/5/825
+You can treat it as another datapoint in this discussion.
+
+
+Regards,
+  Jakub
 
 -- 
-Thanks,
-~Nick Desaulniers
+Jakub Jankowski|shasta@toxcorp.com|https://toxcorp.com/
