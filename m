@@ -2,172 +2,192 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7EEC742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8662C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE242084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CBA20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="X22GS1wk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni1euwE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfGLJ14 (ORCPT
+        id S1726424AbfGLJaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:27:56 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34480 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfGLJ14 (ORCPT
+        Fri, 12 Jul 2019 05:30:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40280 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfGLJaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:27:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so8841755otk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 02:27:55 -0700 (PDT)
+        Fri, 12 Jul 2019 05:30:24 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r1so9196438wrl.7;
+        Fri, 12 Jul 2019 02:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jYy0XP6ethrem4b19nt43P11ZiYCCwivtW53JRcikeE=;
-        b=X22GS1wk91UjPm6+zhjoIjTp6TANbMdrUt6PVMNOW9CW/5FPKoxIlUCGugAB+NRfRQ
-         monlxmvfGjdkXHE0ZXj5TSesu/oigagcXG+j6OYS3f9S8e/jIh/2BrFN70n632G8bJlr
-         ArRi2NabuE5PXCf2lJC1fyNzO3ZGV7RMpfSmQmT5SJv8S0yYl8b5duVEmdRMT9zOjLV6
-         MMlp4NQ2biV1cCjV+lAXpJShoHW000qTR2iSqk+SzD7uaPhNExUrMOch2dzqjkDkaiI0
-         Wi1yENBcScRkf2Hq1RIw7hwJWljm7CgJxis3HKB0cvCOtLD888T6G++Uniy7ZJtM3XzJ
-         hhIg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=sXM7tRmdw5JLvtzlXPCQvimlB2RjvKIPilkRGUjvSNQ=;
+        b=Ni1euwE2ECJaoCd9a/bzAtrT4vq0jNRiSnI/ABN165oVkDf/jRHUPINZKDyn1WFJIp
+         X5jviyH/+5NFsDh6yu3tnv0C3Pv7Q+n5h5ZQJRCb3qD3TuZpYX6O4UwbIliuOeqe/vp8
+         Os4khUAgVVh9qWhOnh8h0BUneno4jXq4kx1kwSrH+XUUOpT5JjLuBthqXwI8JqQHJsI/
+         rGV6RGZaHfy3dz7/qQcehXSrPVkm8ICtAZAEHarjRy6UsmypBOvbVxwc/DXb1Ff++JYw
+         5+qmeSMbIJbgE6gGxDEXtusAg8rC9URQq8c+6x1FDWamzxMA/01YBnPx1xDd4n+iFHzm
+         /Nfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jYy0XP6ethrem4b19nt43P11ZiYCCwivtW53JRcikeE=;
-        b=DUiEqgBsad3XI5KrroGaoDdykg6D0UMlJcyfMwIhUOzTrRKKgK7m2isQIgT+2p05y3
-         g25XVAiw28kyQYXMKecxXWG2nsrOpIhy29XHqS36OtHzspuFPF3aYd7J4gnTu0hAht6R
-         pdSQi9ZaC6+U2KQ134794+FhfU8GZU8bYKaLwPAA/Aqv97tt0utDh15e7rptnSgdT5G3
-         Bh5rgIJbzadfbyIO7eAeXegq1xOia9A2+0sxLC63sRrFLCOUzDkWFzvsSg7gBQBpBJaJ
-         E2i/Y5AsAl7LUQVKwAhVDXXtpMZre3SWr9kflNlioV3w64Cl23TNWvap+/65F/3F7Wh+
-         31/g==
-X-Gm-Message-State: APjAAAVBdHB8VHWAISMgUwyJh6O3Zrw50rXFxAUegIkjUbgwIgLzNXRf
-        YR5LFsHQ/xIj0+Zna7ze+zBiMCLvA8vCCYy0LYMXECxh
-X-Google-Smtp-Source: APXvYqxmQFQAuZwu//RzFgfnJxLEi/izHgwx7Kkeq/oXPVKBHwaEP5wdAyHZxZ54Z6rZrZsRLEQzcJL5gRduQ6uOogU=
-X-Received: by 2002:a9d:7352:: with SMTP id l18mr2470502otk.292.1562923674988;
- Fri, 12 Jul 2019 02:27:54 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=sXM7tRmdw5JLvtzlXPCQvimlB2RjvKIPilkRGUjvSNQ=;
+        b=De3jE35amNzIAp9w2OMayLLqrZ+gT+THaXe0Yh1fEbB2UtMNu4GCsXBG/P1zpcbmoS
+         4ZNnyxGPnw9T9t+P/m6bFvtt1QqeNn9KCxIKa6ndOZV2E0BTsX8/6m+otEmgwncfQdig
+         Q7ftIlphLZVEgxg3hid7Cc7YS1nCaiekG//cUXXNZcdYmAwwEXaVfu7s0RSCUh1TAeQg
+         tDX4MgcpGAT8wK73HkyV9+ZQulnNXpU/0I+e9qPMgfSU0Dl345chPd7wI3j2SbkjRGS7
+         GkCgllr8hIAojIhxK1okPIVVAJLLSQ6xkY0aokaRfxmOh/LlX1Zc3sdnr91j6niOZDZs
+         tPGg==
+X-Gm-Message-State: APjAAAW/AuOK0cpugpswdtSeWm0s/m0CCrZugcwDPw4Vn1hpueGTyftZ
+        4CX6Nn90tybQLWyi9jg2kHAmIPRd1NcWhqvMJDQ=
+X-Google-Smtp-Source: APXvYqzVf73c+YxtMn7MvKOhKJh0dLo8M0biSrKTkQDwypJLNg/V+UzAwROXtKGCcxr1GhZNXJnOqtGdBgUWg2wAU0g=
+X-Received: by 2002:a5d:4403:: with SMTP id z3mr10886473wrq.29.1562923821526;
+ Fri, 12 Jul 2019 02:30:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be>
- <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
- <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
- <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com> <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 12 Jul 2019 11:27:43 +0200
-Message-ID: <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20190712091239.716978-1-arnd@arndb.de> <20190712091239.716978-2-arnd@arndb.de>
+In-Reply-To: <20190712091239.716978-2-arnd@arndb.de>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 12 Jul 2019 11:30:10 +0200
+Message-ID: <CA+icZUU2kfEbDjEgaQPY9WhNfeSAkMAS6YrscqxVS4E8CYUTvg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86: kvm: avoid constant-conversion warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Junaid Shahid <junaids@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Kai Huang <kai.huang@linux.intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: multipart/mixed; boundary="00000000000031a3a8058d788f42"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 9 lip 2019 o 17:59 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
-=82(a):
+--00000000000031a3a8058d788f42
+Content-Type: text/plain; charset="UTF-8"
+
+On Fri, Jul 12, 2019 at 11:12 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Hi Bartosz,
+> clang finds a contruct suspicious that converts an unsigned
+> character to a signed integer and back, causing an overflow:
 >
-> On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napi=
-sa=C5=82(a):
-> > > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
-> > > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be=
-> napisa=C5=82(a):
-> > > > > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > > > > character devices.  Access control to these devices is provided b=
-y
-> > > > > standard UNIX file system permissions, on an all-or-nothing basis=
-:
-> > > > > either a GPIO controller is accessible for a user, or it is not.
-> > > > > Currently no mechanism exists to control access to individual GPI=
-Os.
-> > > > >
-> > > > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up t=
-o 32),
-> > > > > and expose them as a new gpiochip.  This is useful for implementi=
-ng
-> > > > > access control, and assigning a set of GPIOs to a specific user.
-> > > > > Furthermore, it would simplify and harden exporting GPIOs to a vi=
-rtual
-> > > > > machine, as the VM can just grab the full virtual GPIO controller=
-, and
-> > > > > no longer needs to care about which GPIOs to grab and which not,
-> > > > > reducing the attack surface.
-> > > > >
-> > > > > Virtual GPIO controllers are instantiated by writing to the "new_=
-device"
-> > > > > attribute file in sysfs:
-> > > > >
-> > > > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> > > > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> > > > >
-> > > > > Likewise, virtual GPIO controllers can be destroyed after use:
-> > > > >
-> > > > >     $ echo gpio-virt-agg.<N> \
-> > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_devi=
-ce
+> arch/x86/kvm/mmu.c:4605:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Werror,-Wconstant-conversion]
+>                 u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+>                    ~~                               ^~
+> arch/x86/kvm/mmu.c:4607:38: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -241 to 15 [-Werror,-Wconstant-conversion]
+>                 u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
+>                    ~~                              ^~
+> arch/x86/kvm/mmu.c:4609:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -171 to 85 [-Werror,-Wconstant-conversion]
+>                 u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
+>                    ~~                               ^~
 >
-> > Am I doing it right? I'm trying to create a device and am only getting =
-this:
-> >
-> > # echo gpiochip2 23 > new_device
-> > [  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpio=
-chip2
-> >
-> > gpiochip2 *does* exist in the system.
->
-> Please try the name of the platform device instead.
-> I.e. for my koelsch (R-Car M2-W), it needs "e6052000.gpio" instead
-> of "gpiochip2".
->
-> Probably the driver should match on both.
->
-> > I see. I'll try to review it more thoroughly once I get to play with
-> > it. So far I'm stuck on creating the virtual chip.
->
-> Thanks, good luck!
+> Add an explicit cast to tell clang that everything works as
+> intended here.
 >
 
-This is not a show-stopper but one thing that's bothering me in this
-is that lines used by the aggregator are considered 'used' in regard
-to the original chip. I'm wondering how much effort would it take to
-have them be 'muxed' into two (real and virtual) chips at once.
+Feel free to add:
 
-Other than that - seems to works pretty nice other than the matching
-by chip name and by line names.
+Link: https://github.com/ClangBuiltLinux/linux/issues/95
+( See also patch proposal of Matthias Kaehlcke )
 
-Bart
+I had a different "simpler" approach to not see this anymore :-).
+( See attached 2 patches )
 
-> Gr{oetje,eeting}s,
+- Sedat -
+
+
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/x86/kvm/mmu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
->                         Geert
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index 17ece7b994b1..aea7f969ecb8 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -4602,11 +4602,11 @@ static void update_permission_bitmask(struct kvm_vcpu *vcpu,
+>                  */
+>
+>                 /* Faults from writes to non-writable pages */
+> -               u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+> +               u8 wf = (pfec & PFERR_WRITE_MASK) ? (u8)~w : 0;
+>                 /* Faults from user mode accesses to supervisor pages */
+> -               u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
+> +               u8 uf = (pfec & PFERR_USER_MASK) ? (u8)~u : 0;
+>                 /* Faults from fetches of non-executable pages*/
+> -               u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
+> +               u8 ff = (pfec & PFERR_FETCH_MASK) ? (u8)~x : 0;
+>                 /* Faults from kernel mode fetches of user pages */
+>                 u8 smepf = 0;
+>                 /* Faults from kernel mode accesses of user pages */
+> --
+> 2.20.0
 >
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190712091239.716978-2-arnd%40arndb.de.
+
+--00000000000031a3a8058d788f42
+Content-Type: application/x-patch; 
+	name="0001-kbuild-Enable-Wconstant-conversion-warning-for-make-.patch"
+Content-Disposition: attachment; 
+	filename="0001-kbuild-Enable-Wconstant-conversion-warning-for-make-.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jxzw8q9a0>
+X-Attachment-Id: f_jxzw8q9a0
+
+RnJvbSBiZmMzMmQ3ZjZjOGQ1YmQ3NzY2ZTQyOTJlMjVhMTg0NzQzYTRiM2IxIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTZWRhdCBEaWxlayA8c2VkYXQuZGlsZWtAY3JlZGF0aXYuZGU+
+CkRhdGU6IFR1ZSwgMTkgTWFyIDIwMTkgMDg6NTY6MDIgKzAxMDAKU3ViamVjdDogW1BBVENIXSBr
+YnVpbGQ6IEVuYWJsZSAtV2NvbnN0YW50LWNvbnZlcnNpb24gd2FybmluZyBmb3IgIm1ha2UgVz0z
+IgoKLS0tCiBzY3JpcHRzL01ha2VmaWxlLmV4dHJhd2FybiB8IDEgKwogMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvc2NyaXB0cy9NYWtlZmlsZS5leHRyYXdhcm4g
+Yi9zY3JpcHRzL01ha2VmaWxlLmV4dHJhd2FybgppbmRleCA3NjgzMDZhZGQ1OTEuLmViODMxYThj
+NmEyMCAxMDA2NDQKLS0tIGEvc2NyaXB0cy9NYWtlZmlsZS5leHRyYXdhcm4KKysrIGIvc2NyaXB0
+cy9NYWtlZmlsZS5leHRyYXdhcm4KQEAgLTQ3LDYgKzQ3LDcgQEAgd2FybmluZy0yICs9ICQoY2Fs
+bCBjYy1vcHRpb24sIC1XdW51c2VkLW1hY3JvcykKIHdhcm5pbmctMyA6PSAtV2JhZC1mdW5jdGlv
+bi1jYXN0CiB3YXJuaW5nLTMgKz0gLVdjYXN0LXF1YWwKIHdhcm5pbmctMyArPSAtV2NvbnZlcnNp
+b24KK3dhcm5pbmctMyArPSAkKGNhbGwgY2Mtb3B0aW9uLCAtV2NvbnN0YW50LWNvbnZlcnNpb24p
+CiB3YXJuaW5nLTMgKz0gLVdwYWNrZWQKIHdhcm5pbmctMyArPSAtV3BhZGRlZAogd2FybmluZy0z
+ICs9IC1XcG9pbnRlci1hcml0aAotLSAKMi4yMC4xCgo=
+--00000000000031a3a8058d788f42
+Content-Type: application/x-patch; 
+	name="0001-x86-kvm-clang-Disable-Wconstant-conversion-warning.patch"
+Content-Disposition: attachment; 
+	filename="0001-x86-kvm-clang-Disable-Wconstant-conversion-warning.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jxzw8t6j1>
+X-Attachment-Id: f_jxzw8t6j1
+
+RnJvbSBlOTU4YzFiN2IzMzUzMzcyYThmNmRlODdjNTVmZmE5NTM5MjMxNGU2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTZWRhdCBEaWxlayA8c2VkYXQuZGlsZWtAY3JlZGF0aXYuZGU+
+CkRhdGU6IFR1ZSwgMTkgTWFyIDIwMTkgMjM6Mzk6MzIgKzAxMDAKU3ViamVjdDogW1BBVENIXSB4
+ODY6IGt2bTogY2xhbmc6IERpc2FibGUgLVdjb25zdGFudC1jb252ZXJzaW9uIHdhcm5pbmcKCi0t
+LQogYXJjaC94ODYva3ZtL01ha2VmaWxlIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
+b24oKykKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vTWFrZWZpbGUgYi9hcmNoL3g4Ni9rdm0v
+TWFrZWZpbGUKaW5kZXggMzFlY2Y3YTc2ZDVhLi41NGRkNTJjMmU5MjcgMTAwNjQ0Ci0tLSBhL2Fy
+Y2gveDg2L2t2bS9NYWtlZmlsZQorKysgYi9hcmNoL3g4Ni9rdm0vTWFrZWZpbGUKQEAgLTEsNiAr
+MSw3IEBACiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCiAKIGNjZmxhZ3MteSAr
+PSAtSWFyY2gveDg2L2t2bQorY2NmbGFncy15ICs9ICQoY2FsbCBjYy1kaXNhYmxlLXdhcm5pbmcs
+IGNvbnN0YW50LWNvbnZlcnNpb24pCiAKIEtWTSA6PSAuLi8uLi8uLi92aXJ0L2t2bQogCi0tIAoy
+LjIwLjEKCg==
+--00000000000031a3a8058d788f42--
