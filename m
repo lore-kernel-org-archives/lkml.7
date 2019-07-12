@@ -2,136 +2,110 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B389C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D282C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CC920863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B3920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pxG2ppYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbfGLI4M (ORCPT
+        id S1726251AbfGLI4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:56:12 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2267 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726136AbfGLI4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:56:11 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 252D2A13B4022EAF004E;
-        Fri, 12 Jul 2019 16:56:09 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 12 Jul 2019 16:56:00 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 2/2] f2fs: fix panic of IO alignment feature
-Date:   Fri, 12 Jul 2019 16:55:42 +0800
-Message-ID: <20190712085542.4068-2-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20190712085542.4068-1-yuchao0@huawei.com>
-References: <20190712085542.4068-1-yuchao0@huawei.com>
+        Fri, 12 Jul 2019 04:56:15 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49344 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfGLI4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:56:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ye7QJTr/VL6E13dVCzENZu/bqsS/Cpo3ATNqw8M0Wbk=; b=pxG2ppYhl5upfZIplcnu4BB/J
+        C8O72GDBPB+mMJlIgQuFVo8voDRw0gWSSzD9M/au+DXaQXF2Qnqyo6KJ/2XbNhDrln110BxavS8HW
+        /jEHpLHkwOrPTZh0SL0E+EMRYGdWN3XuwJo9nnmA1W+QX0VJHJuYY+cABCL9CGPliDF8TpE5hO/3X
+        4Xm5DJi9NHh02iMQu78LT+p/u2yOFOWdUc9xl5+wTFasXX/+iVSUBshgElltYL/W41vFkrzSVj8Ua
+        V/I8xHMcaE1IoF3UGXj7GhlzNXLG2tb4H+le/43Bj4/aQzT2yigHtan9nv02+SN1uyXTJXwjcr1yS
+        93AjNjfKw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60362)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hlrLc-0000p6-7n; Fri, 12 Jul 2019 09:56:08 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hlrLX-0005XL-2W; Fri, 12 Jul 2019 09:56:03 +0100
+Date:   Fri, 12 Jul 2019 09:56:02 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Raslan, KarimAllah" <karahmed@amazon.de>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "yaojun8558363@gmail.com" <yaojun8558363@gmail.com>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "info@metux.net" <info@metux.net>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "yuzhao@google.com" <yuzhao@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "anders.roxell@linaro.org" <anders.roxell@linaro.org>,
+        "will@kernel.org" <will@kernel.org>
+Subject: Re: [PATCH] arm: Extend the check for RAM in /dev/mem
+Message-ID: <20190712085602.v2tncu5tsngtvbww@shell.armlinux.org.uk>
+References: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
+ <14f02e29-77b2-29d9-a9f4-7f89ad0194f6@arm.com>
+ <1562900298.1345.12.camel@amazon.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1562900298.1345.12.camel@amazon.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 07173c3ec276 ("block: enable multipage bvecs"), one bio vector
-can store multi pages, so that we can not calculate max IO size of
-bio as PAGE_SIZE * bio->bi_max_vecs. However IO alignment feature of
-f2fs always has that assumption, so finally, it may cause panic during
-IO submission as below stack.
+On Fri, Jul 12, 2019 at 02:58:18AM +0000, Raslan, KarimAllah wrote:
+> On Fri, 2019-07-12 at 08:06 +0530, Anshuman Khandual wrote:
+> > 
+> > On 07/12/2019 03:51 AM, KarimAllah Ahmed wrote:
+> > > 
+> > > Some valid RAM can live outside kernel control (e.g. using mem= kernel
+> > > command-line). For these regions, pfn_valid would return "false" causing
+> > > system RAM to be mapped as uncached. Use memblock instead to identify RAM.
+> > 
+> > Once the remaining memory is outside of the kernel (as the admin would have
+> > intended with mem= command line) what is the particular concern regarding
+> > the way those get mapped (cached or not) ? It is not to be used any way.
+> 
+> They can be used by user-space which might lead to them being used by the 
+> kernel. One use-case would be using them as guest memory for KVM as I detailed 
+> here:
+> 
+> https://lwn.net/Articles/778240/
 
- kernel BUG at fs/f2fs/data.c:317!
- RIP: 0010:__submit_merged_bio+0x8b0/0x8c0
- Call Trace:
-  f2fs_submit_page_write+0x3cd/0xdd0
-  do_write_page+0x15d/0x360
-  f2fs_outplace_write_data+0xd7/0x210
-  f2fs_do_write_data_page+0x43b/0xf30
-  __write_data_page+0xcf6/0x1140
-  f2fs_write_cache_pages+0x3ba/0xb40
-  f2fs_write_data_pages+0x3dd/0x8b0
-  do_writepages+0xbb/0x1e0
-  __writeback_single_inode+0xb6/0x800
-  writeback_sb_inodes+0x441/0x910
-  wb_writeback+0x261/0x650
-  wb_workfn+0x1f9/0x7a0
-  process_one_work+0x503/0x970
-  worker_thread+0x7d/0x820
-  kthread+0x1ad/0x210
-  ret_from_fork+0x35/0x40
+From the 32-bit ARM point of view...
 
-This patch adds one extra condition to check left space in bio while
-trying merging page to bio, to avoid panic.
+What if someone's already doing something similar with a non-coherent
+DSP and is relying on the current behaviour?  This change is a user
+visible behavioural change that could end up breaking userspace.
 
-This bug was reported in bugzilla:
+In other words, it isn't something we should rush into.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204043
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2: add IO type check.
- fs/f2fs/data.c          | 10 ++++++++++
- fs/f2fs/super.c         |  2 +-
- include/linux/f2fs_fs.h |  1 +
- 3 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index f1e401f9fc13..1971e59cdedb 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -504,6 +504,16 @@ static bool io_is_mergeable(struct f2fs_sb_info *sbi, struct bio *bio,
- 					block_t last_blkaddr,
- 					block_t cur_blkaddr)
- {
-+	if (F2FS_IO_ALIGNED(sbi) && (fio->type == DATA || fio->type == NODE)) {
-+		unsigned int filled_blocks =
-+				F2FS_BYTES_TO_BLK(bio->bi_iter.bi_size);
-+		unsigned int io_size = F2FS_IO_SIZE(sbi);
-+		unsigned int left_vecs = bio->bi_max_vecs - bio->bi_vcnt;
-+
-+		/* IOs in bio is aligned and left space of vectors is not enough */
-+		if (!(filled_blocks % io_size) && left_vecs < io_size)
-+			return false;
-+	}
- 	if (!page_is_mergeable(sbi, bio, last_blkaddr, cur_blkaddr))
- 		return false;
- 	return io_type_is_mergeable(io, fio);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index d95a681ef7c9..a98e3b93395d 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3204,7 +3204,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (err)
- 		goto free_bio_info;
- 
--	if (F2FS_IO_SIZE(sbi) > 1) {
-+	if (F2FS_IO_ALIGNED(sbi)) {
- 		sbi->write_io_dummy =
- 			mempool_create_page_pool(2 * (F2FS_IO_SIZE(sbi) - 1), 0);
- 		if (!sbi->write_io_dummy) {
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index 65559900d4d7..52af9ac164b4 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -41,6 +41,7 @@
- #define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
- #define F2FS_IO_SIZE_BITS(sbi)	(F2FS_OPTION(sbi).write_io_size_bits) /* power of 2 */
- #define F2FS_IO_SIZE_MASK(sbi)	(F2FS_IO_SIZE(sbi) - 1)
-+#define F2FS_IO_ALIGNED(sbi)	(F2FS_IO_SIZE(sbi) > 1)
- 
- /* This flag is used by node and meta inodes, and by recovery */
- #define GFP_F2FS_ZERO		(GFP_NOFS | __GFP_ZERO)
 -- 
-2.18.0.rc1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
