@@ -2,159 +2,210 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EDEC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647EDC742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A92521019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="y+5Jhhgm"
+	by mail.kernel.org (Postfix) with ESMTP id 33B612080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfGLQpL (ORCPT
+        id S1727165AbfGLQri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:45:11 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42262 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbfGLQpK (ORCPT
+        Fri, 12 Jul 2019 12:47:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35344 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726907AbfGLQrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:45:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s184so7739104oie.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 09:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6LnAzjOasKxUwXGzTNC0/064h+/s+kUgeRd8GGr+dNc=;
-        b=y+5JhhgmNMeM1wyuwj/XzOeYCh3l6ziC7Q771WlrgOuxNGzdruLij0Bd0bIoG5jM3d
-         Db3yFOQe9oJ72rqInCLv5IT5U/tzZ44PeQK0oBMW4m+IauKOslZy7IC+GgteBJcQrXLS
-         w3h9o5dlT/8wb9rL46HzQKkWKfxY+n/JIPNZ9G2FZIINBpDbDTRFNRtcHxKDRJVpwEqH
-         nipdZSzIaSUQBX0DYu19v+AM+C3QxQZUmy1qXgyaytK38F3Sv+yUnmfjmLiB7/oZYGXu
-         73n0iYnMYyaID7e2Y6q3kyCjzXOYqsuihAlcYX+2cpr0DFcDvSj1C1ys/nJkkUVByenh
-         Fn4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6LnAzjOasKxUwXGzTNC0/064h+/s+kUgeRd8GGr+dNc=;
-        b=ouKyA1pAyS5hBHfvW2RuIKLwB9/DN0L2UeQoXBN/jkiobJqmZAQv7KnDslNY4nfwFZ
-         BPVpluDmBUgXF4I22PPGwF6u20yWIRFTtQowsK3WqF2KBeF+ydv0pzXNqYGZrxVuobPZ
-         tB6YZ1FGBVnVOywED6POcNvuCrm3XQuywC6iyep/5CIBRKoG0de40sONTphszMEcvkvk
-         QB0OQNqi/5qoqR5teTol9nKvCG5X8kDqxcgNB1jeOkXTI7zwxG8amnObP3SUOOVIClTV
-         1IV9N5uuFB6n8oyLcrjKQlaThhGoYq4AkOwrHEJxGOrl08GowSDzOmEIkTuGOytUae4S
-         2lOA==
-X-Gm-Message-State: APjAAAX29QdMt0Ld5eHKzn7g87GjmT2WE9IY7wDCorhiwdXHAhHwaubX
-        NGZCf1eG1sHd7qBRhNm3KkrqFg==
-X-Google-Smtp-Source: APXvYqz43gvQBuChWBqcRDiu2PX0SnPMLctG+UPHeFtjNbnJ7Bi0dOA9Iyg8NVe3bAqg2MsnU8zG+w==
-X-Received: by 2002:aca:cfd0:: with SMTP id f199mr6026297oig.50.1562949909275;
-        Fri, 12 Jul 2019 09:45:09 -0700 (PDT)
-Received: from ?IPv6:2600:100e:b03e:b:3dba:7fb8:8988:ae37? ([2600:100e:b03e:b:3dba:7fb8:8988:ae37])
-        by smtp.gmail.com with ESMTPSA id l5sm3141381otf.53.2019.07.12.09.45.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 09:45:08 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <3ca70237-bf8e-57d9-bed5-bc2329d17177@oracle.com>
-Date:   Fri, 12 Jul 2019 10:45:06 -0600
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7FDF08CB-A429-441B-872D-FAE7293858F5@amacapital.net>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de> <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com> <20190712125059.GP3419@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de> <3ca70237-bf8e-57d9-bed5-bc2329d17177@oracle.com>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+        Fri, 12 Jul 2019 12:47:37 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CGbNjc009064;
+        Fri, 12 Jul 2019 12:45:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpwg69bjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 12:45:34 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6CGc9J3011494;
+        Fri, 12 Jul 2019 12:45:33 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpwg69bj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 12:45:33 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6CGZk3u012632;
+        Fri, 12 Jul 2019 16:45:32 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tjk974y8k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 16:45:32 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CGjWjN49938828
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 16:45:32 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 023ACB2064;
+        Fri, 12 Jul 2019 16:45:32 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A010DB2067;
+        Fri, 12 Jul 2019 16:45:31 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.195.235])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Jul 2019 16:45:31 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9973216C99E6; Fri, 12 Jul 2019 09:45:31 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 09:45:31 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712164531.GW26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+ <20190712111125.GT3402@hirez.programming.kicks-ass.net>
+ <20190712151051.GB235410@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712151051.GB235410@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 11:10:51AM -0400, Joel Fernandes wrote:
+> On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
+> > On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
+> > > +int rcu_read_lock_any_held(void)
+> > > +{
+> > > +	int lockdep_opinion = 0;
+> > > +
+> > > +	if (!debug_lockdep_rcu_enabled())
+> > > +		return 1;
+> > > +	if (!rcu_is_watching())
+> > > +		return 0;
+> > > +	if (!rcu_lockdep_current_cpu_online())
+> > > +		return 0;
+> > > +
+> > > +	/* Preemptible RCU flavor */
+> > > +	if (lock_is_held(&rcu_lock_map))
+> > 
+> > you forgot debug_locks here.
+> 
+> Actually, it turns out debug_locks checking is not even needed. If
+> debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
+> get to this point.
+> 
+> > > +		return 1;
+> > > +
+> > > +	/* BH flavor */
+> > > +	if (in_softirq() || irqs_disabled())
+> > 
+> > I'm not sure I'd put irqs_disabled() under BH, also this entire
+> > condition is superfluous, see below.
+> > 
+> > > +		return 1;
+> > > +
+> > > +	/* Sched flavor */
+> > > +	if (debug_locks)
+> > > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+> > > +	return lockdep_opinion || !preemptible();
+> > 
+> > that !preemptible() turns into:
+> > 
+> >   !(preempt_count()==0 && !irqs_disabled())
+> > 
+> > which is:
+> > 
+> >   preempt_count() != 0 || irqs_disabled()
+> > 
+> > and already includes irqs_disabled() and in_softirq().
+> > 
+> > > +}
+> > 
+> > So maybe something lke:
+> > 
+> > 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
+> > 			    lock_is_held(&rcu_sched_lock_map)))
+> > 		return true;
+> 
+> Agreed, I will do it this way (without the debug_locks) like:
+> 
+> ---8<-----------------------
+> 
+> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> index ba861d1716d3..339aebc330db 100644
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
+>  
+>  int rcu_read_lock_any_held(void)
+>  {
+> -	int lockdep_opinion = 0;
+> -
+>  	if (!debug_lockdep_rcu_enabled())
+>  		return 1;
+>  	if (!rcu_is_watching())
+>  		return 0;
+>  	if (!rcu_lockdep_current_cpu_online())
+>  		return 0;
+> -
+> -	/* Preemptible RCU flavor */
+> -	if (lock_is_held(&rcu_lock_map))
+> -		return 1;
+> -
+> -	/* BH flavor */
+> -	if (in_softirq() || irqs_disabled())
+> -		return 1;
+> -
+> -	/* Sched flavor */
+> -	if (debug_locks)
+> -		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+> -	return lockdep_opinion || !preemptible();
+> +	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
 
+OK, I will bite...  Why not also lock_is_held(&rcu_bh_lock_map)?
 
-> On Jul 12, 2019, at 10:37 AM, Alexandre Chartre <alexandre.chartre@oracle.=
-com> wrote:
->=20
->=20
->=20
->> On 7/12/19 5:16 PM, Thomas Gleixner wrote:
->>> On Fri, 12 Jul 2019, Peter Zijlstra wrote:
->>>> On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
->>>>=20
->>>> I think that's precisely what makes ASI and PTI different and independe=
-nt.
->>>> PTI is just about switching between userland and kernel page-tables, wh=
-ile
->>>> ASI is about switching page-table inside the kernel. You can have ASI w=
-ithout
->>>> having PTI. You can also use ASI for kernel threads so for code that wo=
-n't
->>>> be triggered from userland and so which won't involve PTI.
->>>=20
->>> PTI is not mapping         kernel space to avoid             speculation=
- crap (meltdown).
->>> ASI is not mapping part of kernel space to avoid (different) speculation=
- crap (MDS).
->>>=20
->>> See how very similar they are?
->>>=20
->>> Furthermore, to recover SMT for userspace (under MDS) we not only need
->>> core-scheduling but core-scheduling per address space. And ASI was
->>> specifically designed to help mitigate the trainwreck just described.
->>>=20
->>> By explicitly exposing (hopefully harmless) part of the kernel to MDS,
->>> we reduce the part that needs core-scheduling and thus reduce the rate
->>> the SMT siblngs need to sync up/schedule.
->>>=20
->>> But looking at it that way, it makes no sense to retain 3 address
->>> spaces, namely:
->>>=20
->>>   user / kernel exposed / kernel private.
->>>=20
->>> Specifically, it makes no sense to expose part of the kernel through MDS=
+							Thanx, Paul
 
->>> but not through Meltdow. Therefore we can merge the user and kernel
->>> exposed address spaces.
->>>=20
->>> And then we've fully replaced PTI.
->>>=20
->>> So no, they're not orthogonal.
->> Right. If we decide to expose more parts of the kernel mappings then that=
-'s
->> just adding more stuff to the existing user (PTI) map mechanics.
->=20
-> If we expose more parts of the kernel mapping by adding them to the existi=
-ng
-> user (PTI) map, then we only control the mapping of kernel sensitive data b=
-ut
-> we don't control user mapping (with ASI, we exclude all user mappings).
->=20
-> How would you control the mapping of userland sensitive data and exclude t=
-hem
-> from the user map?
-
-As I see it, if we think part of the kernel is okay to leak to VM guests, th=
-en it should think it=E2=80=99s okay to leak to userspace and versa. At the e=
-nd of the day, this may just have to come down to an administrator=E2=80=99s=
- choice of how careful the mitigations need to be.
-
-> Would you have the application explicitly identify sensitive
-> data (like Andy suggested with a /dev/xpfo device)?
-
-That=E2=80=99s not really the intent of my suggestion. I was suggesting that=
- maybe we don=E2=80=99t need ASI at all if we allow VMs to exclude their mem=
-ory from the kernel mapping entirely.  Heck, in a setup like this, we can ma=
-ybe even get away with turning PTI off under very, very controlled circumsta=
-nces.  I=E2=80=99m not quite sure what to do about the kernel random pools, t=
-hough.=
+> +		return 1;
+> +	return !preemptible();
+>  }
+>  EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
+>  
+> 
