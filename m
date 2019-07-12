@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD5FC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6A3C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84E520645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFBC20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934982;
-	bh=s77BrHJDsy+KnVUeQoS4PPzQPNBJKEn+JM1Jp9LqINs=;
+	s=default; t=1562934999;
+	bh=BsWAM+atvI3+ZA2AIsy+JvTm6Xz79e7Qd2BXv6ukdps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lnBaiJlOltz4DDkLrS03tmT85RzXzIjh9WmVUYMkWnFkTgEzG3dJwx9i5S+D55pR0
-	 NlcQ1PEy4flZ8dNBj5z0lYYmEb/LAWZotmnNSNyl/JffMZiNL0nVTKaZYhANdO6pbL
-	 h+Uh8zALK2eMQJcNfJyodhDYa2oANiXJ9Qu9PK4Q=
+	b=jiUqaxrgFd5If/x8HF7ETciZiZp2aDDleInhGicLElCbHrcCDQaTao3E4D8T8ExEf
+	 LO5tYjNRaEsFcXJB/i6byXdMkKPjJrjHXy/4A0MXKu4fdxXvvFgiOKf/9Vo1Ovtj3k
+	 au5bdJ2rsApugR4el92+MBc1N9jrfW/wq3rXocIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbfGLMgU (ORCPT
+        id S1729455AbfGLMcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51368 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729265AbfGLMcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:32:51 -0400
+        id S1729444AbfGLMcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:32:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5E7B21019;
-        Fri, 12 Jul 2019 12:32:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F830216C8;
+        Fri, 12 Jul 2019 12:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934770;
-        bh=s77BrHJDsy+KnVUeQoS4PPzQPNBJKEn+JM1Jp9LqINs=;
+        s=default; t=1562934732;
+        bh=BsWAM+atvI3+ZA2AIsy+JvTm6Xz79e7Qd2BXv6ukdps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rv3Ktk7o26voUdX/LE2Nlq7dDL58WfIlhbPUsQAkpqAKq3n7Fx9RSSm0X7qCG8qzt
-         ZUPFeP+ZAGYwSDCj66PAkdTVcEecb5z+cksLMEi6Xh8IesG+sQ9tKK52YF4l7OWupr
-         a3nz+/P/8HjmcJB4JeQH5i39sJLfMI2Q4DjWKQOQ=
+        b=U+0r20TRm0yJjt4DRCbcr1cKSz/4LHsXA5BfQU1CHpLhVqP3V9R2nEdMDGYm/RGcT
+         s7Tho+9Xw78PIZAPP8Nw0Taabewo9/qZFDtZ6W5s1xpL3cgD382jCc0S494SeC+cDP
+         nAStbJO24m6HxGmqzRMAkhPli1vU7XtVSDoJtjWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.2 25/61] USB: serial: option: add support for GosunCn ME3630 RNDIS mode
-Date:   Fri, 12 Jul 2019 14:19:38 +0200
-Message-Id: <20190712121621.978730702@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: [PATCH 5.2 14/61] perf auxtrace: Fix itrace defaults for perf script
+Date:   Fri, 12 Jul 2019 14:19:27 +0200
+Message-Id: <20190712121621.408663685@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,43 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit aed2a26283528fb69c38e414f649411aa48fb391 upstream.
+commit 355200e0f6a9ce14771625014aa469f5ecbd8977 upstream.
 
-Added USB IDs for GosunCn ME3630 cellular module in RNDIS mode.
+Commit 4eb068157121 ("perf script: Make itrace script default to all
+calls") does not work for the case when '--itrace' only is used, because
+default_no_sample is not being passed.
 
-T:  Bus=03 Lev=01 Prnt=01 Port=01 Cnt=03 Dev#= 18 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=19d2 ProdID=0601 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=b950269c
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+Example:
 
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+ Before:
+
+  $ perf record -e intel_pt/cyc/u ls
+  $ perf script --itrace > cmp1.txt
+  $ perf script --itrace=cepwx > cmp2.txt
+  $ diff -sq cmp1.txt cmp2.txt
+  Files cmp1.txt and cmp2.txt differ
+
+ After:
+
+  $ perf script --itrace > cmp1.txt
+  $ perf script --itrace=cepwx > cmp2.txt
+  $ diff -sq cmp1.txt cmp2.txt
+  Files cmp1.txt and cmp2.txt are identical
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 4eb068157121 ("perf script: Make itrace script default to all calls")
+Link: http://lkml.kernel.org/r/20190520113728.14389-3-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/auxtrace.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1343,6 +1343,7 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0414, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0417, 0xff, 0xff, 0xff) },
-+	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0601, 0xff) },	/* GosunCn ZTE WeLink ME3630 (RNDIS mode) */
- 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0602, 0xff) },	/* GosunCn ZTE WeLink ME3630 (MBIM mode) */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1008, 0xff, 0xff, 0xff),
- 	  .driver_info = RSVD(4) },
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1001,7 +1001,8 @@ int itrace_parse_synth_opts(const struct
+ 	}
+ 
+ 	if (!str) {
+-		itrace_synth_opts__set_default(synth_opts, false);
++		itrace_synth_opts__set_default(synth_opts,
++					       synth_opts->default_no_sample);
+ 		return 0;
+ 	}
+ 
 
 
