@@ -2,177 +2,132 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F2AC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC10C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD1B2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F15B2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfGLIsD (ORCPT
+        id S1726486AbfGLIta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:48:03 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:35919 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725877AbfGLIsD (ORCPT
+        Fri, 12 Jul 2019 04:49:30 -0400
+Received: from antares.kleine-koenig.org ([94.130.110.236]:42758 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfGLIta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:48:03 -0400
-X-UUID: a6087602278f4ecba3588607e09d4a2c-20190712
-X-UUID: a6087602278f4ecba3588607e09d4a2c-20190712
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <lecopzer.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1209527918; Fri, 12 Jul 2019 16:47:48 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 12 Jul 2019 16:47:46 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 12 Jul 2019 16:47:47 +0800
-From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <labbott@redhat.com>, <sumit.semwal@linaro.org>,
-        <gregkh@linuxfoundation.org>, <riandrews@android.com>,
-        <arve@android.com>, <devel@driverdev.osuosl.org>,
-        <dri-devel@lists.freedesktop.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        YJ Chiang <yj.chiang@mediatek.com>
-Subject: [PATCH] staging: android: ion: Remove unused rbtree for ion_buffer
-Date:   Fri, 12 Jul 2019 16:47:17 +0800
-Message-ID: <20190712084717.12441-1-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 12 Jul 2019 04:49:30 -0400
+X-Greylist: delayed 337 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 04:49:29 EDT
+Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
+        id 999A471D4A0; Fri, 12 Jul 2019 10:43:51 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 10:43:46 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Brad Love <brad@nextdimension.cc>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
+Message-ID: <20190712084343.GA28962@taurus.defre.kleine-koenig.org>
+References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 92F56628C2D35BF0FDAA2809FBCCFE1AB61FCD8B124717D9CCEB10392A8CBEA92000:8
-X-MTK:  N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
+In-Reply-To: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ion_buffer_add() insert ion_buffer into rbtree every time creating
-an ion_buffer but never use it after ION reworking.
-Also, buffer_lock protects only rbtree operation, remove it together.
 
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc: YJ Chiang <yj.chiang@mediatek.com>
-Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
----
- drivers/staging/android/ion/ion.c | 36 -------------------------------
- drivers/staging/android/ion/ion.h | 10 +--------
- 2 files changed, 1 insertion(+), 45 deletions(-)
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
-index 92c2914239e3..e6b1ca141b93 100644
---- a/drivers/staging/android/ion/ion.c
-+++ b/drivers/staging/android/ion/ion.c
-@@ -29,32 +29,6 @@
- static struct ion_device *internal_dev;
- static int heap_id;
- 
--/* this function should only be called while dev->lock is held */
--static void ion_buffer_add(struct ion_device *dev,
--			   struct ion_buffer *buffer)
--{
--	struct rb_node **p = &dev->buffers.rb_node;
--	struct rb_node *parent = NULL;
--	struct ion_buffer *entry;
--
--	while (*p) {
--		parent = *p;
--		entry = rb_entry(parent, struct ion_buffer, node);
--
--		if (buffer < entry) {
--			p = &(*p)->rb_left;
--		} else if (buffer > entry) {
--			p = &(*p)->rb_right;
--		} else {
--			pr_err("%s: buffer already found.", __func__);
--			BUG();
--		}
--	}
--
--	rb_link_node(&buffer->node, parent, p);
--	rb_insert_color(&buffer->node, &dev->buffers);
--}
--
- /* this function should only be called while dev->lock is held */
- static struct ion_buffer *ion_buffer_create(struct ion_heap *heap,
- 					    struct ion_device *dev,
-@@ -100,9 +74,6 @@ static struct ion_buffer *ion_buffer_create(struct ion_heap *heap,
- 
- 	INIT_LIST_HEAD(&buffer->attachments);
- 	mutex_init(&buffer->lock);
--	mutex_lock(&dev->buffer_lock);
--	ion_buffer_add(dev, buffer);
--	mutex_unlock(&dev->buffer_lock);
- 	return buffer;
- 
- err1:
-@@ -131,11 +102,6 @@ void ion_buffer_destroy(struct ion_buffer *buffer)
- static void _ion_buffer_destroy(struct ion_buffer *buffer)
- {
- 	struct ion_heap *heap = buffer->heap;
--	struct ion_device *dev = buffer->dev;
--
--	mutex_lock(&dev->buffer_lock);
--	rb_erase(&buffer->node, &dev->buffers);
--	mutex_unlock(&dev->buffer_lock);
- 
- 	if (heap->flags & ION_HEAP_FLAG_DEFER_FREE)
- 		ion_heap_freelist_add(heap, buffer);
-@@ -694,8 +660,6 @@ static int ion_device_create(void)
- 	}
- 
- 	idev->debug_root = debugfs_create_dir("ion", NULL);
--	idev->buffers = RB_ROOT;
--	mutex_init(&idev->buffer_lock);
- 	init_rwsem(&idev->lock);
- 	plist_head_init(&idev->heaps);
- 	internal_dev = idev;
-diff --git a/drivers/staging/android/ion/ion.h b/drivers/staging/android/ion/ion.h
-index e291299fd35f..74914a266e25 100644
---- a/drivers/staging/android/ion/ion.h
-+++ b/drivers/staging/android/ion/ion.h
-@@ -23,7 +23,6 @@
- 
- /**
-  * struct ion_buffer - metadata for a particular buffer
-- * @node:		node in the ion_device buffers tree
-  * @list:		element in list of deferred freeable buffers
-  * @dev:		back pointer to the ion_device
-  * @heap:		back pointer to the heap the buffer came from
-@@ -39,10 +38,7 @@
-  * @attachments:	list of devices attached to this buffer
-  */
- struct ion_buffer {
--	union {
--		struct rb_node node;
--		struct list_head list;
--	};
-+	struct list_head list;
- 	struct ion_device *dev;
- 	struct ion_heap *heap;
- 	unsigned long flags;
-@@ -61,14 +57,10 @@ void ion_buffer_destroy(struct ion_buffer *buffer);
- /**
-  * struct ion_device - the metadata of the ion device node
-  * @dev:		the actual misc device
-- * @buffers:		an rb tree of all the existing buffers
-- * @buffer_lock:	lock protecting the tree of buffers
-  * @lock:		rwsem protecting the tree of heaps and clients
-  */
- struct ion_device {
- 	struct miscdevice dev;
--	struct rb_root buffers;
--	struct mutex buffer_lock;
- 	struct rw_semaphore lock;
- 	struct plist_head heaps;
- 	struct dentry *debug_root;
--- 
-2.17.1
+Hello,
 
+On Thu, Jul 04, 2019 at 12:33:22PM +0200, Marc Gonzalez wrote:
+> Refactor the command setup code, and let the compiler determine
+> the size of each command.
+>=20
+> Reviewed-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+> Changes from v1:
+> - Use a real function to populate struct si2168_cmd *cmd, and a trivial
+> macro wrapping it (macro because sizeof).
+> Changes from v2:
+> - Fix header mess
+> - Add Jonathan's tag
+> ---
+>  drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------
+>  1 file changed, 45 insertions(+), 101 deletions(-)
+>=20
+> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-fro=
+ntends/si2168.c
+> index c64b360ce6b5..5e81e076369c 100644
+> --- a/drivers/media/dvb-frontends/si2168.c
+> +++ b/drivers/media/dvb-frontends/si2168.c
+> @@ -12,6 +12,16 @@
+> =20
+>  static const struct dvb_frontend_ops si2168_ops;
+> =20
+> +static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, int =
+rlen)
+
+I'd add an "inline" here. And you could add a const for *args.
+
+> +{
+> +	memcpy(cmd->args, args, wlen);
+> +	cmd->wlen =3D wlen;
+> +	cmd->rlen =3D rlen;
+> +}
+> +
+> +#define CMD_SETUP(cmd, args, rlen) \
+> +	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
+
+Here is the chance to add some static checking. Also it is a good habit
+to put parens around macro arguments.
+
+Something like:
+
+#define CMD_SETUP(cmd, args, rlen) ({ \
+	BUILD_BUG_ON(sizeof((args)) - 1 > SI2168_ARGLEN);
+	cmd_setup((cmd), (args), __must_be_array((args)) + sizeof((args)) - 1, (rl=
+en));
+
+Maybe let this macro live in drivers/media/dvb-frontends/si2168_priv.h
+where struct si2168_cmd is defined?
+
+I looked over the transformations in the rest of the patch and this
+looks good.
+
+Best regards
+Uwe
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl0oSDwACgkQwfwUeK3K
+7AkeBAf+I6QEDR298PCHto1ijeLdlLRFE7Ietsd+QeVUPOfW8FqfEowGHGd9gmPd
+kzR3NzgupP4MFxxw00BVwxf9iOeBMo94Q6ggPzBDI4X5BE71jFhwo3+QkJM7XuyX
+TAHq3pZ5aMInl27Kw54PxqCYRHPozZ4JxnsVys6kJvh/JkaiRMQApxm69ry10J23
+u/gBDTnC80FsAjJ0QRSGBzjPytcx0UeAf/RXPodE5mtz0PAiyVefyK6+NRXrxEcW
+mZqfi8T4azYGcijVK4qU+bSAkRjwwk8Xdthkby1C7IhjR0yOSh2g0ZyH0hG3w4Xi
+M+2jYIacxtSrd3sDzOvT3k6eB7DS9w==
+=yXyE
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
