@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C0C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063ACC742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AD420645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C756320645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935269;
-	bh=FqlQ/3Gp5hzqFhNccH8EbWf2qw4CxCzFQjP9Q6lPcgo=;
+	s=default; t=1562935273;
+	bh=cWPcw6h9DHowQiZYU03G9tXISuDsNEaXKAX0VKfkxiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVG0fgv+xtWFiXQqrGq+lG223uqeSAp+Kt9Cevg8UK/YAefl5yOMo+wlxHnakw928
-	 1r0w5UOfeVFfdqzMKHHNmTxEOXuKWmAL8qaEZTKfEJHA7LafQdNcYH3qMY7xwg4xmk
-	 MET1QJdJBUImiftQ8YTlKY019VAx6R3jHxifd+Iw=
+	b=rFHLehij2hVo9fwMFpRLTjlQoXW2MGPPcKcRGq4GtBhCqvhBemUZCezgyt974quyv
+	 m3fyly3TrXjED7EKadBhOgPKgFM/gyjfhQGtP/T0b4NGDMTSz2wK654Vop8fqIrOUp
+	 JtWVdxWkGYS76mprnlQanu9jlKCMazrs3bp0RGkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbfGLM0G (ORCPT
+        id S1728757AbfGLMlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36638 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbfGLMZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:25:59 -0400
+        id S1728042AbfGLM0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D2721019;
-        Fri, 12 Jul 2019 12:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EDB9208E4;
+        Fri, 12 Jul 2019 12:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934358;
-        bh=FqlQ/3Gp5hzqFhNccH8EbWf2qw4CxCzFQjP9Q6lPcgo=;
+        s=default; t=1562934363;
+        bh=cWPcw6h9DHowQiZYU03G9tXISuDsNEaXKAX0VKfkxiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOSn/WHWCHtN9FYjrIffMYlXfrd6VunT+Kds7gRAuVNCmeMwVbT/RUHTRd+kpdSJ7
-         8yn6R/UDNsHelpZlHiJTgwM2r6Upr95FAzD/ey8kGdckv0Y/Spf/gufX8Oyto6mnJK
-         mFMrXMUhPM3PUdHnwdJVf8YOHd8uzJVoKuJ5n8gM=
+        b=BbwaeTEVEm+4bnADiGuQd4b0Mw6dLzVP3gN4A6znUtqFSP0z9RCUopuOAscDCXkNI
+         uHTi1StGK+ySEG61PpuFvJW1aiuFQZNSJIzgTQQzSEf7IBGx4iDzogaIh90LZlTQzf
+         Y5dIo2fEWbVbtnJQIXka39ZM+j5Lc9DXANej3wv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 006/138] ARM: dts: dra71x: Disable rtc target module
-Date:   Fri, 12 Jul 2019 14:17:50 +0200
-Message-Id: <20190712121628.967654105@linuxfoundation.org>
+Subject: [PATCH 5.1 008/138] soc: brcmstb: Fix error path for unsupported CPUs
+Date:   Fri, 12 Jul 2019 14:17:52 +0200
+Message-Id: <20190712121629.035725171@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,54 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe9edfe648ac444150ec95da1fb10e2728cc9789 ]
+[ Upstream commit 490cad5a3ad6ef0bfd3168a5063140b982f3b22a ]
 
-Introduce dra71x.dtsi to include dra71x specific changes.
-rtc is fused out on dra71 and accessing target module
-register is causing a boot crash hence disable it.
+In case setup_hifcpubiuctrl_regs() returns an error, because of e.g:
+an unsupported CPU type, just catch that error and return instead of
+blindly continuing with the initialization. This fixes a NULL pointer
+de-reference with the code continuing without having a proper array of
+registers to use.
 
-Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 22f7a9116eba ("soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra71-evm.dts |  2 +-
- arch/arm/boot/dts/dra71x.dtsi   | 13 +++++++++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/dra71x.dtsi
+ drivers/soc/bcm/brcmstb/biuctrl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
-index 82cc7ec37af0..c496ae83e27e 100644
---- a/arch/arm/boot/dts/dra71-evm.dts
-+++ b/arch/arm/boot/dts/dra71-evm.dts
-@@ -6,7 +6,7 @@
-  * published by the Free Software Foundation.
-  */
+diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
+index 6d89ebf13b8a..c16273b31b94 100644
+--- a/drivers/soc/bcm/brcmstb/biuctrl.c
++++ b/drivers/soc/bcm/brcmstb/biuctrl.c
+@@ -246,7 +246,9 @@ static int __init brcmstb_biuctrl_init(void)
+ 	if (!np)
+ 		return 0;
  
--#include "dra72-evm-common.dtsi"
-+#include "dra71x.dtsi"
- #include "dra7-mmc-iodelay.dtsi"
- #include "dra72x-mmc-iodelay.dtsi"
- #include <dt-bindings/net/ti-dp83867.h>
-diff --git a/arch/arm/boot/dts/dra71x.dtsi b/arch/arm/boot/dts/dra71x.dtsi
-new file mode 100644
-index 000000000000..aad7394902a6
---- /dev/null
-+++ b/arch/arm/boot/dts/dra71x.dtsi
-@@ -0,0 +1,13 @@
-+/*
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "dra72-evm-common.dtsi"
-+
-+&rtctarget {
-+	status = "disabled";
-+};
+-	setup_hifcpubiuctrl_regs(np);
++	ret = setup_hifcpubiuctrl_regs(np);
++	if (ret)
++		return ret;
+ 
+ 	ret = mcp_write_pairing_set();
+ 	if (ret) {
 -- 
 2.20.1
 
