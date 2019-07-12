@@ -2,125 +2,112 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FB4C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C84BC742B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04346216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="FahXqdBH"
+	by mail.kernel.org (Postfix) with ESMTP id 70C1F21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfGLJAL (ORCPT
+        id S1726159AbfGLJCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:00:11 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:35650 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfGLJAK (ORCPT
+        Fri, 12 Jul 2019 05:02:07 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:58627 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfGLJCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:00:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1562922010; x=1594458010;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=OoeXV66HMCiCE8///mVVeViK+QsNj7YHb5Peo1lavf4=;
-  b=FahXqdBHLx9pfa3CMlHYIcIpbVSIgfxshXw5QkJQrtsUHJYbnR8ivrXN
-   EwSdIsPGMUbrtFQkhWkp6hmb2/+xQu1IHGMoC7YHOkR2+2pLsxdqZ3bKr
-   bTSW0sd5/DCuDzIbZ3/iqYMfJN/HyVOvomNofHqDbPQdJ1Q+XWQRDadoW
-   E=;
-X-IronPort-AV: E=Sophos;i="5.62,481,1554768000"; 
-   d="scan'208";a="404652279"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Jul 2019 09:00:06 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id B7E54141902;
-        Fri, 12 Jul 2019 09:00:01 +0000 (UTC)
-Received: from EX13D01EUB002.ant.amazon.com (10.43.166.113) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 12 Jul 2019 09:00:00 +0000
-Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
- EX13D01EUB002.ant.amazon.com (10.43.166.113) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 12 Jul 2019 08:59:59 +0000
-Received: from EX13D01EUB003.ant.amazon.com ([10.43.166.248]) by
- EX13D01EUB003.ant.amazon.com ([10.43.166.248]) with mapi id 15.00.1367.000;
- Fri, 12 Jul 2019 08:59:59 +0000
-From:   "Raslan, KarimAllah" <karahmed@amazon.de>
-To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yaojun8558363@gmail.com" <yaojun8558363@gmail.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "info@metux.net" <info@metux.net>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "yuzhao@google.com" <yuzhao@google.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "anders.roxell@linaro.org" <anders.roxell@linaro.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "will@kernel.org" <will@kernel.org>
-Subject: Re: [PATCH] arm: Extend the check for RAM in /dev/mem
-Thread-Topic: [PATCH] arm: Extend the check for RAM in /dev/mem
-Thread-Index: AQHVODcIGfDHKrKqiE2jyO8cjDhCoqbGRNqAgAAGCACAAGPzAIAAARkA
-Date:   Fri, 12 Jul 2019 08:59:59 +0000
-Message-ID: <1562921998.1345.15.camel@amazon.de>
-References: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
-         <14f02e29-77b2-29d9-a9f4-7f89ad0194f6@arm.com>
-         <1562900298.1345.12.camel@amazon.de>
-         <20190712085602.v2tncu5tsngtvbww@shell.armlinux.org.uk>
-In-Reply-To: <20190712085602.v2tncu5tsngtvbww@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.55]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <95EBDE33927643488B6CA975A983494F@amazon.com>
+        Fri, 12 Jul 2019 05:02:07 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1McYP5-1iKMN90Vnp-00czGd; Fri, 12 Jul 2019 11:01:50 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] acpi: fix false-positive -Wuninitialized warning
+Date:   Fri, 12 Jul 2019 11:01:21 +0200
+Message-Id: <20190712090148.36582-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:7sZP4eEbe+3OiH796kT5tvmwQXjNHcTkUqNNMEn68ZmKmEo6CTQ
+ BHFynryqQUJ0/HtOfAQXY9d+LLBQAXJMJRRJHooKDNPwyEnvjAYlLtoRb0ldEWkJW/xkusO
+ 1oTvc/LiVwcz7hpDVmKvm14Kq8+Xd00cN096yPpbmDoDvfG71/3ZH8kKhxTXObXZyf1T11h
+ vWXgjbh5NWnDpvFzM096Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iHma/eG3W/E=:8gCfiHXH5JxqNVMP9GtKqR
+ UfZhbNxOaHvx5labbIX9zIlNZ7ne9ANFBHnicgrff8XJFfaqw7KMc/oYMncjl475Fh1O+BCRs
+ p49tVXu3YWMwatDiUer/3A1ilmWiYF0F76TERsrDSAcChhnbXqyLsMHWVRylVSn68gOouyVlc
+ Ohl6W7ue5Q1knl1u1Fxxr8Glrsj9jbAptkGr+U+uRq08IfXZAuDlzQkSVnHv8A4speHHfe7hu
+ CACI9LX+yFR7dzxjFd8wqbSrefjiWb2DC5fRQz0K7Js+Gp/CRvS2y411arZj5aA7EW+qgys2L
+ eSnblhK2rbUqh+kjpWrXE9HqzgK/fZPjpOXZgkP/bW+5xYei1OOD/gWwViRx+v42R4RurEo7Q
+ SUHqfXA8SROVuRPQ2BqsWN78h7O1aHTmAZkqQ9v74ySlDOtakMUNUeObeDFfRM4DxZyQhyAmg
+ jHwJV1vSVh4vu4RPpirNNEppUV0VU8GBP9VJUc7ea+5mVmzTVU5fx1T5Bv6n17Qspywc+YzWf
+ azfcaqyQbANe4erhQr3q/4sIzv8PVhn2A8iyManBx5Ki07p+Ow+kquc0QexydmlfMg+PiDNKp
+ j7axKirR/LV0ABRNUjGP65aM4jxOeFni61kTN0X94onTHwEdAUiKrzaNsG6mRf1AI+NwJlkpq
+ MebMpNqLUdANRki6OwF5+PAqsyfoT4f2ci4t2kZZUQ2yg5lSwdIa4VavPR0/JCkilryIbysty
+ j8M+EhYvJ9wwr+uxZ8BX/vLmEE2zG4nn7duPyw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTEyIGF0IDA5OjU2ICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggYWRtaW4gd3JvdGU6DQo+IE9uIEZyaSwgSnVsIDEyLCAyMDE5IGF0IDAyOjU4OjE4QU0gKzAw
-MDAsIFJhc2xhbiwgS2FyaW1BbGxhaCB3cm90ZToNCj4gPiANCj4gPiBPbiBGcmksIDIwMTktMDct
-MTIgYXQgMDg6MDYgKzA1MzAsIEFuc2h1bWFuIEtoYW5kdWFsIHdyb3RlOg0KPiA+ID4gDQo+ID4g
-PiANCj4gPiA+IE9uIDA3LzEyLzIwMTkgMDM6NTEgQU0sIEthcmltQWxsYWggQWhtZWQgd3JvdGU6
-DQo+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gU29tZSB2YWxpZCBSQU0gY2FuIGxpdmUgb3V0
-c2lkZSBrZXJuZWwgY29udHJvbCAoZS5nLiB1c2luZyBtZW09IGtlcm5lbA0KPiA+ID4gPiBjb21t
-YW5kLWxpbmUpLiBGb3IgdGhlc2UgcmVnaW9ucywgcGZuX3ZhbGlkIHdvdWxkIHJldHVybiAiZmFs
-c2UiIGNhdXNpbmcNCj4gPiA+ID4gc3lzdGVtIFJBTSB0byBiZSBtYXBwZWQgYXMgdW5jYWNoZWQu
-IFVzZSBtZW1ibG9jayBpbnN0ZWFkIHRvIGlkZW50aWZ5IFJBTS4NCj4gPiA+IA0KPiA+ID4gT25j
-ZSB0aGUgcmVtYWluaW5nIG1lbW9yeSBpcyBvdXRzaWRlIG9mIHRoZSBrZXJuZWwgKGFzIHRoZSBh
-ZG1pbiB3b3VsZCBoYXZlDQo+ID4gPiBpbnRlbmRlZCB3aXRoIG1lbT0gY29tbWFuZCBsaW5lKSB3
-aGF0IGlzIHRoZSBwYXJ0aWN1bGFyIGNvbmNlcm4gcmVnYXJkaW5nDQo+ID4gPiB0aGUgd2F5IHRo
-b3NlIGdldCBtYXBwZWQgKGNhY2hlZCBvciBub3QpID8gSXQgaXMgbm90IHRvIGJlIHVzZWQgYW55
-IHdheS4NCj4gPiANCj4gPiBUaGV5IGNhbiBiZSB1c2VkIGJ5IHVzZXItc3BhY2Ugd2hpY2ggbWln
-aHQgbGVhZCB0byB0aGVtIGJlaW5nIHVzZWQgYnkgdGhlwqANCj4gPiBrZXJuZWwuIE9uZSB1c2Ut
-Y2FzZSB3b3VsZCBiZSB1c2luZyB0aGVtIGFzIGd1ZXN0IG1lbW9yeSBmb3IgS1ZNIGFzIEkgZGV0
-YWlsZWTCoA0KPiA+IGhlcmU6DQo+ID4gDQo+ID4gaHR0cHM6Ly9sd24ubmV0L0FydGljbGVzLzc3
-ODI0MC8NCj4gDQo+IEZyb20gdGhlIDMyLWJpdCBBUk0gcG9pbnQgb2Ygdmlldy4uLg0KPiANCj4g
-V2hhdCBpZiBzb21lb25lJ3MgYWxyZWFkeSBkb2luZyBzb21ldGhpbmcgc2ltaWxhciB3aXRoIGEg
-bm9uLWNvaGVyZW50DQo+IERTUCBhbmQgaXMgcmVseWluZyBvbiB0aGUgY3VycmVudCBiZWhhdmlv
-dXI/ICBUaGlzIGNoYW5nZSBpcyBhIHVzZXINCj4gdmlzaWJsZSBiZWhhdmlvdXJhbCBjaGFuZ2Ug
-dGhhdCBjb3VsZCBlbmQgdXAgYnJlYWtpbmcgdXNlcnNwYWNlLg0KPiANCj4gSW4gb3RoZXIgd29y
-ZHMsIGl0IGlzbid0IHNvbWV0aGluZyB3ZSBzaG91bGQgcnVzaCBpbnRvLg0KDQpZZXMsIHRoYXQg
-bWFrZXMgc2Vuc2UuIEhvdyBhYm91dCBhZGRpbmcgYSBjb21tYW5kLWxpbmUgb3B0aW9uIGZvciB0
-aGlzIG5ld8KgDQpiZWhhdmlvciBpbnN0ZWFkPyBXb3VsZCB0aGlzIGJlIG1vcmUgcmVhc29uYWJs
-ZT8KCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4g
-MzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwg
-UmFsZiBIZXJicmljaApFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1
-bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
+clang gets confused by an uninitialized variable in what looks
+to it like a never executed code path:
+
+arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
+        polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
+                   ^~~~~~~~
+arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
+        int rc, irq, trigger, polarity;
+                                      ^
+                                       = 0
+arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
+        trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
+                  ^~~~~~~
+arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
+        int rc, irq, trigger, polarity;
+                            ^
+                             = 0
+
+This is unfortunately a design decision in clang and won't be fixed.
+
+Changing the acpi_get_override_irq() macro to an inline function
+reliably avoids the issue.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/acpi.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index a95cce5e82e7..9426b9aaed86 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -324,7 +324,10 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+ #ifdef CONFIG_X86_IO_APIC
+ extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
+ #else
+-#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
++static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
++{
++	return -1;
++}
+ #endif
+ /*
+  * This function undoes the effect of one call to acpi_register_gsi().
+-- 
+2.20.0
 
