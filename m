@@ -2,145 +2,178 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB0CC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94497C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E19A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5FC2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:38:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="FeDvb65j";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FqbO97DB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfGLIcH (ORCPT
+        id S1726275AbfGLIiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:32:07 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9319 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfGLIcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:32:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 01:32:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
-   d="scan'208";a="317928831"
-Received: from tao-optiplex-7060.sh.intel.com ([10.239.13.104])
-  by orsmga004.jf.intel.com with ESMTP; 12 Jul 2019 01:32:01 -0700
-From:   Tao Xu <tao3.xu@intel.com>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com, tao3.xu@intel.com
-Subject: [PATCH v7 3/3] KVM: vmx: handle vm-exit for UMWAIT and TPAUSE
-Date:   Fri, 12 Jul 2019 16:29:07 +0800
-Message-Id: <20190712082907.29137-4-tao3.xu@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190712082907.29137-1-tao3.xu@intel.com>
-References: <20190712082907.29137-1-tao3.xu@intel.com>
+        Fri, 12 Jul 2019 04:38:24 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38837 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbfGLIiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:38:23 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id B749D2230E;
+        Fri, 12 Jul 2019 04:38:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 12 Jul 2019 04:38:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=/UVl1SfI1iLqkTsHe3vvfHE6leW
+        BQBCgm2DrQ+AZhuk=; b=FeDvb65jzKh9ghvM1HCsSOXtn9CnPAhANSHh0STjxKD
+        LbVqaYAd0KVoB5qZZdIwkrYK5cVDnAdF530XhX5ilO0wLC5pFmk52uYD+SvqMJKV
+        ZZH4nZvyDhCT1qjICj/a5Or0rQZ0C4a0IutgIgLZnYd5Bc7B3PwMskEmsXVLak22
+        7hO8ITIpH9OAhYveSIU90xbIya6AU7l7o0NvPKCghF7DCVhBILG19UL3n6mi9Zp5
+        UH4UE+I2m5YmckXxlpHiYGMq6uggaOCxik9XWvewRl65z8KPpkOHLS1vJ8H/QNfY
+        g8rSAjVBgWO9A5Ub6CYHJvZUA0l+6S5MEi5mV/8CPbg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/UVl1S
+        fI1iLqkTsHe3vvfHE6leWBQBCgm2DrQ+AZhuk=; b=FqbO97DBs5/ZTmPDcD3Glf
+        PjagPJr1GioWza5EKp4nmjemeHczqP6PwpZl1nJHbgnrK4O58rCZf1LBB+6sB/Tt
+        O1wHgnLiMtn3ZoEdGQmbVFT7A9sFWb9sJETPzA88ISCsgVllmWma67BQPF7Iggc0
+        wNxVX1JVFefj5sMs7u8QHBI0GjuRDbp/jit8Th3kDcw+AlJJXKYkjDNBg+GzlctN
+        UpCPaBE6VIWA7iqW0tCAVSmmLl7d8SLYb0467AEAlJtjzjOXCVVH28lhHprteyHt
+        tY9S6cWAHmE+z5q/vfNLNgnkhyzxkHCLdX5gJPBPqC8ztL8/p2caPhWsH3bwf6rA
+        ==
+X-ME-Sender: <xms:_UYoXQOguVlUqK9-SN_uHhS74SotEOGASz3FDsfw2VH2IQl14bHgrQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrhedtgddtgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:_UYoXf1E8-HxayeYP4JppO4Fch5OtgdS7fUCYwM2yUA2DQGZM6ay3Q>
+    <xmx:_UYoXWNeGIB9dO34uvdzCfjag_yrN0R1yq5MrikjNymKVtDZima6Aw>
+    <xmx:_UYoXSzWxYDvkc7nxMVp8KXBYR8xCHhZycLfpK4ZwUESSpVCuqUcVA>
+    <xmx:_kYoXUm_cxfpVqtNQEmLoQHqY7nywqV1nNhZHftTD3PZOgbSIPUVng>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5F2E480061;
+        Fri, 12 Jul 2019 04:38:21 -0400 (EDT)
+Date:   Fri, 12 Jul 2019 09:59:20 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20190712075920.GA18592@kroah.com>
+References: <20190708192345.53fce4cf@canb.auug.org.au>
+ <20190712104430.739f1b61@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712104430.739f1b61@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the latest Intel 64 and IA-32 Architectures Software Developer's
-Manual, UMWAIT and TPAUSE instructions cause a VM exit if the
-RDTSC exiting and enable user wait and pause VM-execution
-controls are both 1.
+On Fri, Jul 12, 2019 at 10:44:30AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Mon, 8 Jul 2019 19:23:45 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > 
+> > After merging the char-misc tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> > 
+> > drivers/misc/vmw_balloon.c: In function 'vmballoon_mount':
+> > drivers/misc/vmw_balloon.c:1736:14: error: 'simple_dname' undeclared (first use in this function); did you mean 'simple_rename'?
+> >    .d_dname = simple_dname,
+> >               ^~~~~~~~~~~~
+> >               simple_rename
+> > drivers/misc/vmw_balloon.c:1736:14: note: each undeclared identifier is reported only once for each function it appears in
+> > drivers/misc/vmw_balloon.c:1739:9: error: implicit declaration of function 'mount_pseudo'; did you mean 'mount_bdev'? [-Werror=implicit-function-declaration]
+> >   return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
+> >          ^~~~~~~~~~~~
+> >          mount_bdev
+> > drivers/misc/vmw_balloon.c:1739:9: warning: returning 'int' from a function with return type 'struct dentry *' makes pointer from integer without a cast [-Wint-conversion]
+> >   return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
+> >          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >         BALLOON_VMW_MAGIC);
+> >         ~~~~~~~~~~~~~~~~~~
+> > 
+> > Caused by commit
+> > 
+> >   83a8afa72e9c ("vmw_balloon: Compaction support")
+> > 
+> > interacting with commits
+> > 
+> >   7e5f7bb08b8c ("unexport simple_dname()")
+> >   8d9e46d80777 ("fold mount_pseudo_xattr() into pseudo_fs_get_tree()")
+> > 
+> > from the vfs tree.
+> > 
+> > I applied the following merge fix patch:
+> > 
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, 8 Jul 2019 19:17:56 +1000
+> > Subject: [PATCH] convert vmwballoon to use the new mount API
+> > 
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/misc/vmw_balloon.c | 14 ++++----------
+> >  1 file changed, 4 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
+> > index 91fa43051535..e8c0f7525f13 100644
+> > --- a/drivers/misc/vmw_balloon.c
+> > +++ b/drivers/misc/vmw_balloon.c
+> > @@ -29,6 +29,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/spinlock.h>
+> >  #include <linux/mount.h>
+> > +#include <linux/pseudo_fs.h>
+> >  #include <linux/balloon_compaction.h>
+> >  #include <linux/vmw_vmci_defs.h>
+> >  #include <linux/vmw_vmci_api.h>
+> > @@ -1728,21 +1729,14 @@ static inline void vmballoon_debugfs_exit(struct vmballoon *b)
+> >  
+> >  #ifdef CONFIG_BALLOON_COMPACTION
+> >  
+> > -static struct dentry *vmballoon_mount(struct file_system_type *fs_type,
+> > -				      int flags, const char *dev_name,
+> > -				      void *data)
+> > +static int vmballoon_init_fs_context(struct fs_context *fc)
+> >  {
+> > -	static const struct dentry_operations ops = {
+> > -		.d_dname = simple_dname,
+> > -	};
+> > -
+> > -	return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
+> > -			    BALLOON_VMW_MAGIC);
+> > +	return init_pseudo(fc, BALLOON_VMW_MAGIC) ? 0 : -ENOMEM;
+> >  }
+> >  
+> >  static struct file_system_type vmballoon_fs = {
+> >  	.name           = "balloon-vmware",
+> > -	.mount          = vmballoon_mount,
+> > +	.init_fs_context          = vmballoon_init_fs_context,
+> >  	.kill_sb        = kill_anon_super,
+> >  };
+> >  
+> 
+> This is now a conflict between the vfs tree and Linus' tree.
 
-This patch is to handle the vm-exit for UMWAIT and TPAUSE as this
-should never happen.
+Looks good to me, I'll watch out for this when Al's tree is merged.
 
-Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
-Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
-Signed-off-by: Tao Xu <tao3.xu@intel.com>
----
+thanks,
 
-Changes in v7:
-    - Add nested exit reason for UMWAIT and TPAUSE (Paolo)
----
- arch/x86/include/uapi/asm/vmx.h |  6 +++++-
- arch/x86/kvm/vmx/nested.c       |  3 +++
- arch/x86/kvm/vmx/vmx.c          | 16 ++++++++++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
-index d213ec5c3766..d88d7a68849b 100644
---- a/arch/x86/include/uapi/asm/vmx.h
-+++ b/arch/x86/include/uapi/asm/vmx.h
-@@ -85,6 +85,8 @@
- #define EXIT_REASON_PML_FULL            62
- #define EXIT_REASON_XSAVES              63
- #define EXIT_REASON_XRSTORS             64
-+#define EXIT_REASON_UMWAIT              67
-+#define EXIT_REASON_TPAUSE              68
- 
- #define VMX_EXIT_REASONS \
- 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-@@ -142,7 +144,9 @@
- 	{ EXIT_REASON_RDSEED,                "RDSEED" }, \
- 	{ EXIT_REASON_PML_FULL,              "PML_FULL" }, \
- 	{ EXIT_REASON_XSAVES,                "XSAVES" }, \
--	{ EXIT_REASON_XRSTORS,               "XRSTORS" }
-+	{ EXIT_REASON_XRSTORS,               "XRSTORS" }, \
-+	{ EXIT_REASON_UMWAIT,                "UMWAIT" }, \
-+	{ EXIT_REASON_TPAUSE,                "TPAUSE" }
- 
- #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
- #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index a4d5da34b306..9f91f834ec43 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5213,6 +5213,9 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 	case EXIT_REASON_ENCLS:
- 		/* SGX is never exposed to L1 */
- 		return false;
-+	case EXIT_REASON_UMWAIT: case EXIT_REASON_TPAUSE:
-+		return nested_cpu_has2(vmcs12,
-+			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE);
- 	default:
- 		return true;
- 	}
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 0787f140d155..e026b1313dc3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5349,6 +5349,20 @@ static int handle_monitor(struct kvm_vcpu *vcpu)
- 	return handle_nop(vcpu);
- }
- 
-+static int handle_umwait(struct kvm_vcpu *vcpu)
-+{
-+	kvm_skip_emulated_instruction(vcpu);
-+	WARN(1, "this should never happen\n");
-+	return 1;
-+}
-+
-+static int handle_tpause(struct kvm_vcpu *vcpu)
-+{
-+	kvm_skip_emulated_instruction(vcpu);
-+	WARN(1, "this should never happen\n");
-+	return 1;
-+}
-+
- static int handle_invpcid(struct kvm_vcpu *vcpu)
- {
- 	u32 vmx_instruction_info;
-@@ -5559,6 +5573,8 @@ static int (*kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
- 	[EXIT_REASON_VMFUNC]		      = handle_vmx_instruction,
- 	[EXIT_REASON_PREEMPTION_TIMER]	      = handle_preemption_timer,
- 	[EXIT_REASON_ENCLS]		      = handle_encls,
-+	[EXIT_REASON_UMWAIT]                  = handle_umwait,
-+	[EXIT_REASON_TPAUSE]                  = handle_tpause,
- };
- 
- static const int kvm_vmx_max_exit_handlers =
--- 
-2.20.1
-
+greg k-h
