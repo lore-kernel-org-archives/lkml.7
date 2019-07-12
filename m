@@ -2,141 +2,76 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE09C742BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD98C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9007206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3AA206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562938458;
+	bh=7DVIw6J/+3Y+t8Z186PXZUP4BTrAdMiN89HZu0/laIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CyZ4y+bcLJ4noRKXl/GoD8JGLpk2uqqhcqc98yble4C0uabIc2kkzkdeyCfVvDn8D
+	 8jO6YxpWet9C/PWg8LC4yuxfVlSLzCvhM8p+emwuS5PKBKRBI2LNyhyLJlH4OcGzcc
+	 bGD4Ovbpm2kn6BANXVjQMrMwG7QVr4pmdpV2nyto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfGLNeC (ORCPT
+        id S1727828AbfGLNeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:34:02 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:50129 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfGLNeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:34:02 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MpDRv-1iGMCu2szn-00qhJj; Fri, 12 Jul 2019 15:33:27 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] [v2] x86: kvm: avoid -Wsometimes-uninitized warning
-Date:   Fri, 12 Jul 2019 15:32:43 +0200
-Message-Id: <20190712133324.3934659-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 12 Jul 2019 09:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727800AbfGLNeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:34:17 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778BA206B8;
+        Fri, 12 Jul 2019 13:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562938456;
+        bh=7DVIw6J/+3Y+t8Z186PXZUP4BTrAdMiN89HZu0/laIE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JxmZBIP0Tv4Cbd9X/r7+UrAbIpmxLebTvVZWWJpH+Rwa32tYYYMOwT2m5bxOCAksS
+         QpMvEonzo1PZwz4QSwOImC/ZXwqqvRjVXn1izwryJq33LRF2h6KQg9u06695s9cvWI
+         5fWqC22VuJenwx7SeAxVQsUy65anKCrXNHzrB/bQ=
+Received: by mail-qk1-f181.google.com with SMTP id r21so6398998qke.2;
+        Fri, 12 Jul 2019 06:34:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAVXNZA0q0s/6hxmY2f0zLUW0W0daEgWTPpaMi+o9kN69+UkS8R9
+        Eeu2JuN0tlTGPXhiQ6lIBpJ4AxrKcz9hUckHHA==
+X-Google-Smtp-Source: APXvYqxoZc5cotlmgm5nkNDcer2rciXaWhu3NOBE539CmmHXCP4PxcjsozaAi4Fo52shXfIkxEK2Kzgw6i94UBHSDKg=
+X-Received: by 2002:a37:a010:: with SMTP id j16mr6521466qke.152.1562938455759;
+ Fri, 12 Jul 2019 06:34:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4qTu/galH0LnG6yIR0OsYJ+dLomxq+0RlUIYdobv6pAum7R6QII
- 6hLy/bGPMpMuK+mmmqzXvq7HNXuiT1FW4FKRYfRUWFuTN2uRcXWjljXFfY3wB6qXXtc39Z+
- cFmMhICSMc1GEfVw/mE2lEdf0oYg9QgajoZnAz93joMZLV1G6wQgHG79nmTmXKqAIsgu/2a
- TyedC/s/hsXJGXbQgX4MQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KxZJQApMqxA=:hJewgg17Kss7epoF/82dC1
- yuqf5BudQv16UzWu2NWNWkAvlqIUi3mwy6eqYQ+3t0UDAU0KbSu78bRvCkwAUGVF9Zs5ccQZ0
- r8eZG89bdLGxUdHIi+u00KuV5cxyQGFtbf6rByn2MI/I9WbPIhvRxvo2n5Is3vbp1uuHd5syf
- UJC5EO2nXalrmHqdJ+kNVFdiqKX6Ju6iAKUN+wgfXjKV7NWgbFVNfWEL6DEIvYX0kmg3zsZh0
- NDjFZElAQ6PIKaxDszWDZfyG8DJElTsqIO9+djhlUMw+Lrfy1nr3msBXs2bRWjvRD8aLAnxzk
- 5JjpY3xRiS8s8XqwII3McCFpBVNwJQWRaE+v2I9+HeT7xwlkzQVvBw1m7iZLD5g9kUjVvjDGS
- 261YSqmlEtZ4AsQhJhkAb+eTTXAjiGAtNNrafW/f1ZnJXCnCVDuecoQAL4GAUfbI7pIxI9oo2
- p/Hm3TnWRgJjbHNhb52Fh0M978QFC35YCeHKj1IkPUBIZhKqzm5ayywi74AYLA209SAulYmBJ
- dohugrtJPQxWUgJ/2uj81F3RXWUm/oty3b/9j4nlmTJCke4HtDymGIdEUmhim6qxBg9oS0JE2
- N+d59SWF7R8Z+W+IdPXhd5p3t9FZqBSMHlLQ8VgItMp9aaa5RXrP3eVb41hidG4suxeIKD656
- JgNKEMeuq5lDH52herWOQlfOLZQWmTor396875Gv4JftjH1x2QfcIZNwKDUH+ZuX0smde/DNJ
- r9/m/8QYXxGzZVFkoKD0qx2ZN034bzctxGLVaA==
+References: <20190712094050.17432-1-amergnat@baylibre.com>
+In-Reply-To: <20190712094050.17432-1-amergnat@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 12 Jul 2019 07:34:03 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLs-AGjf1A6nky+5VaTTTDyNkBPgmrGCPqyqKa=UvmLYw@mail.gmail.com>
+Message-ID: <CAL_JsqLs-AGjf1A6nky+5VaTTTDyNkBPgmrGCPqyqKa=UvmLYw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Add PAT9125 optical tracker driver
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        baylibre-upstreaming@groups.io,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang points out that running a 64-bit guest on a 32-bit host
-would lead to uninitialized variables:
+On Fri, Jul 12, 2019 at 3:41 AM Alexandre Mergnat <amergnat@baylibre.com> wrote:
+>
+> PixArt Imaging PAT9125 is a miniature low power optical navigation chip
+> using LASER light source enabling digital surface tracking.
 
-arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-        if (!longmode) {
-            ^~~~~~~~~
-arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
-        trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
-                                                             ^~~~~
-arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
-        if (!longmode) {
-        ^~~~~~~~~~~~~~~
-arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
-        u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
-                        ^
-                         = 0
-arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+Please resend to the DT list if you want this reviewed.
 
-Since that combination is not supported anyway, change the condition
-to tell the compiler how the code is actually executed.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: make the change inside of is_64_bit_mode().
----
- arch/x86/kvm/hyperv.c | 6 ++----
- arch/x86/kvm/x86.h    | 4 ++++
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index a39e38f13029..4c1c423a3d08 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1594,7 +1594,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- {
- 	u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
- 	uint16_t code, rep_idx, rep_cnt;
--	bool fast, longmode, rep;
-+	bool fast, rep;
- 
- 	/*
- 	 * hypercall generates UD from non zero cpl and real mode
-@@ -1605,9 +1605,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		return 1;
- 	}
- 
--	longmode = is_64_bit_mode(vcpu);
--
--	if (!longmode) {
-+	if (!is_64_bit_mode(vcpu)) {
- 		param = ((u64)kvm_rdx_read(vcpu) << 32) |
- 			(kvm_rax_read(vcpu) & 0xffffffff);
- 		ingpa = ((u64)kvm_rbx_read(vcpu) << 32) |
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index e08a12892e8b..b457b3267296 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -90,6 +90,7 @@ static inline int is_long_mode(struct kvm_vcpu *vcpu)
- #endif
- }
- 
-+#ifdef CONFIG_X86_64
- static inline bool is_64_bit_mode(struct kvm_vcpu *vcpu)
- {
- 	int cs_db, cs_l;
-@@ -99,6 +100,9 @@ static inline bool is_64_bit_mode(struct kvm_vcpu *vcpu)
- 	kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
- 	return cs_l;
- }
-+#else
-+#define is_64_bit_mode(vcpu) false
-+#endif
- 
- static inline bool is_la57_mode(struct kvm_vcpu *vcpu)
- {
--- 
-2.20.0
-
+Rob
