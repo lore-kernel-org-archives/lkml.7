@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2ABC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CE4C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59DA21670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1957B216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934059;
-	bh=AyMrDlvK9JOOsXx47vtxuqCDRX8Yg+Jq+LLv0NVejhc=;
+	s=default; t=1562934063;
+	bh=Rq1qE4Q+NB15mQzhFLDDE6hKkM47OvHr+VRz5Ui1n4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uwalJEm+gu6FarNX00vwCe1xj8evKQMkknGVWy8E6QCaBAWnDvr7zxP5AwRwvSkR1
-	 KIlPimoVDPsmwjlUoC0QIQFVP2Eh/ypWmiwreFo07pRY5dQLPzOHRoxsMAJFV7pAGw
-	 OPCMlJazG3hMn/JEltVYyDFB9gFy/QMfYmUGPMyg=
+	b=ZOmXdKV56dUiZNogzfEqQHS8emX/6Fe4t7fukaL2xU9r18nr7pBVvRxJWaI/u5BBk
+	 o18dio9c+WAJ6nmpJaVQ2C+eY7v1zsDyqisQUxqCPxDjxTCjjbLJ+GnfJyyBrP1H4b
+	 7BRY/E7emVh7OX3O+mWYc4dLOoJ9uc0cXp++489E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfGLMU7 (ORCPT
+        id S1727509AbfGLMVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727482AbfGLMU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:20:56 -0400
+        id S1727489AbfGLMU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:20:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8D31208E4;
-        Fri, 12 Jul 2019 12:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED5A21019;
+        Fri, 12 Jul 2019 12:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934055;
-        bh=AyMrDlvK9JOOsXx47vtxuqCDRX8Yg+Jq+LLv0NVejhc=;
+        s=default; t=1562934057;
+        bh=Rq1qE4Q+NB15mQzhFLDDE6hKkM47OvHr+VRz5Ui1n4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2n+iyTbdl3wElYHCXQAuyDVu22w1mpU+gE9IM9XvY/5dQ7D0ZdNhFNWdKjiKJhZ9H
-         q97Sh9Xo9oX7ZTTd3eaMSJo1C8dJKycHM0ZAt+HUTSGkCu/txcqTvXHpQClqReoyye
-         Gfr6LN9xvPTsG+DP2sFk1w2EBB9GoAOGA+O8KS9c=
+        b=LGW5DpRm1jUrTNNI6yKe4F2R1RRmMqoqwISpfaeBGW5x635deBZsqEW04+7xGmvry
+         hJT+t+pOj+8d9hEd3by2EDQEoYNUSgQGa/65X6BV37CscVHFP1AiYX+DKsCupQMPDq
+         v2uriO6ZR5uIZAVe14aNxnenAu7c7tEYHrqFg2AI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/91] riscv: Fix udelay in RV32.
-Date:   Fri, 12 Jul 2019 14:18:33 +0200
-Message-Id: <20190712121622.986765867@linuxfoundation.org>
+Subject: [PATCH 4.19 31/91] Input: imx_keypad - make sure keyboard can always wake up system
+Date:   Fri, 12 Jul 2019 14:18:34 +0200
+Message-Id: <20190712121623.032719898@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -61,35 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d0e1f2110a5eeb6e410b2dd37d98bc5b30da7bc7 ]
+[ Upstream commit ce9a53eb3dbca89e7ad86673d94ab886e9bea704 ]
 
-In RV32, udelay would delay the wrong cycle. When it shifts right
-"UDELAY_SHIFT" bits, it either delays 0 cycle or 1 cycle. It only works
-correctly in RV64. Because the 'ucycles' always needs to be 64 bits
-variable.
+There are several scenarios that keyboard can NOT wake up system
+from suspend, e.g., if a keyboard is depressed between system
+device suspend phase and device noirq suspend phase, the keyboard
+ISR will be called and both keyboard depress and release interrupts
+will be disabled, then keyboard will no longer be able to wake up
+system. Another scenario would be, if a keyboard is kept depressed,
+and then system goes into suspend, the expected behavior would be
+when keyboard is released, system will be waked up, but current
+implementation can NOT achieve that, because both depress and release
+interrupts are disabled in ISR, and the event check is still in
+progress.
 
-Signed-off-by: Nick Hu <nickhu@andestech.com>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-[paul.walmsley@sifive.com: fixed minor spelling error]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+To fix these issues, need to make sure keyboard's depress or release
+interrupt is enabled after noirq device suspend phase, this patch
+moves the suspend/resume callback to noirq suspend/resume phase, and
+enable the corresponding interrupt according to current keyboard status.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/lib/delay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
-index dce8ae24c6d3..ee6853c1e341 100644
---- a/arch/riscv/lib/delay.c
-+++ b/arch/riscv/lib/delay.c
-@@ -88,7 +88,7 @@ EXPORT_SYMBOL(__delay);
+diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
+index 539cb670de41..ae9c51cc85f9 100644
+--- a/drivers/input/keyboard/imx_keypad.c
++++ b/drivers/input/keyboard/imx_keypad.c
+@@ -526,11 +526,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
+ 	return 0;
+ }
  
- void udelay(unsigned long usecs)
+-static int __maybe_unused imx_kbd_suspend(struct device *dev)
++static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
  {
--	unsigned long ucycles = usecs * lpj_fine * UDELAY_MULT;
-+	u64 ucycles = (u64)usecs * lpj_fine * UDELAY_MULT;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+ 	struct input_dev *input_dev = kbd->input_dev;
++	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
  
- 	if (unlikely(usecs > MAX_UDELAY_US)) {
- 		__delay((u64)usecs * riscv_timebase / 1000000ULL);
+ 	/* imx kbd can wake up system even clock is disabled */
+ 	mutex_lock(&input_dev->mutex);
+@@ -540,13 +541,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
+-	if (device_may_wakeup(&pdev->dev))
++	if (device_may_wakeup(&pdev->dev)) {
++		if (reg_val & KBD_STAT_KPKD)
++			reg_val |= KBD_STAT_KRIE;
++		if (reg_val & KBD_STAT_KPKR)
++			reg_val |= KBD_STAT_KDIE;
++		writew(reg_val, kbd->mmio_base + KPSR);
++
+ 		enable_irq_wake(kbd->irq);
++	}
+ 
+ 	return 0;
+ }
+ 
+-static int __maybe_unused imx_kbd_resume(struct device *dev)
++static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+@@ -570,7 +578,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
+ 	return ret;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
++static const struct dev_pm_ops imx_kbd_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
++};
+ 
+ static struct platform_driver imx_keypad_driver = {
+ 	.driver		= {
 -- 
 2.20.1
 
