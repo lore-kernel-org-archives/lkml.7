@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66898C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8532DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC022084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECAE216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934383;
-	bh=lUM4YCGKvNWFCOk/arLaupJ/88bRs1Q8JoFExYmsvu8=;
+	s=default; t=1562934385;
+	bh=sQda5X8OhbphEM0HiM52nsxQoiE6xU95ggq+w19wymY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlxXDne1jDk7g+aBFJpWeniAp0gCl+0JMsmju86CgYx2rYSwKmGRA73rZrdzx7Cd9
-	 yQN6yUD+5Ice+4qiFQKI/XPH8AX5PgBcAFfPViUgDs4jcQIVCjL4gGusszKKAcNiQJ
-	 6rDkJPsmsC6m2YbKzq2Y1KaT6/FGgwolA2TaOkPg=
+	b=DEVRwTgx+RlRw+a1q41BtcTEH/7yfKNzE2DgCn9wHrFcGf2e0oSjRpGfPdwWvOKyl
+	 SQym0NCpmGLGuu6VHPNZ7Xlk4rVqj+bHHauA10BMvBEO5c3XjTLHPqar36inUam60t
+	 +WioKzIpvaxLc6lmGbOn3fdX9aRZGPkN2Npqsmu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfGLM0V (ORCPT
+        id S1727672AbfGLM0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbfGLM0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:19 -0400
+        id S1727295AbfGLM0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6486C2084B;
-        Fri, 12 Jul 2019 12:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B587C216C4;
+        Fri, 12 Jul 2019 12:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934378;
-        bh=lUM4YCGKvNWFCOk/arLaupJ/88bRs1Q8JoFExYmsvu8=;
+        s=default; t=1562934376;
+        bh=sQda5X8OhbphEM0HiM52nsxQoiE6xU95ggq+w19wymY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CiEoBY19LNDllOJIuhq8HqdWB++BeJOdLXJcM2+zcjqWvtJAObCzAH9PKHhMetzvn
-         zAS+lS1zUJAOuZh2Q+qhO2toU2ANg9yad/d+KPZHdr5y3cUzYLqqj9ku29lKzV369c
-         4nt2B3ql5MTKJDMt+Xn+XZXqf67elxYzI/zS5/fQ=
+        b=uuMO5tMl2+Yuew2JvCJdfprrNFsmt9xpNuYpUj+SpnxB4dqChskjpIaFWMD7cBKhq
+         DAdmI1uxAa3uh+8c0PM6yzeZkDHSzsnq9rOcsGV3Bpio8hKS/NzE/MEwwvBcqIQi2B
+         3DO4hZK+7iC5PihrBlFpNKFRBVpa/lyV451HyHYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 037/138] can: af_can: Fix error path of can_init()
-Date:   Fri, 12 Jul 2019 14:18:21 +0200
-Message-Id: <20190712121630.108968716@linuxfoundation.org>
+Subject: [PATCH 5.1 036/138] can: m_can: implement errata "Needless activation of MRAF irq"
+Date:   Fri, 12 Jul 2019 14:18:20 +0200
+Message-Id: <20190712121630.073815087@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,68 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5a3aed1cd3152429348ee1fe5cdcca65fe901ce ]
+[ Upstream commit 3e82f2f34c930a2a0a9e69fdc2de2f2f1388b442 ]
 
-This patch add error path for can_init() to avoid possible crash if some
-error occurs.
+During frame reception while the MCAN is in Error Passive state and the
+Receive Error Counter has thevalue MCAN_ECR.REC = 127, it may happen
+that MCAN_IR.MRAF is set although there was no Message RAM access
+failure. If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is
+generated.
 
-Fixes: 0d66548a10cb ("[CAN]: Add PF_CAN core module")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Work around:
+The Message RAM Access Failure interrupt routine needs to check whether
+
+    MCAN_ECR.RP = '1' and MCAN_ECR.REC = '127'.
+
+In this case, reset MCAN_IR.MRAF. No further action is required.
+This affects versions older than 3.2.0
+
+Errata explained on Sama5d2 SoC which includes this hardware block:
+http://ww1.microchip.com/downloads/en/DeviceDoc/SAMA5D2-Family-Silicon-Errata-and-Data-Sheet-Clarification-DS80000803B.pdf
+chapter 6.2
+
+Reproducibility: If 2 devices with m_can are connected back to back,
+configuring different bitrate on them will lead to interrupt storm on
+the receiving side, with error "Message RAM access failure occurred".
+Another way is to have a bad hardware connection. Bad wire connection
+can lead to this issue as well.
+
+This patch fixes the issue according to provided workaround.
+
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/af_can.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/net/can/m_can/m_can.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/net/can/af_can.c b/net/can/af_can.c
-index e386d654116d..04132b0b5d36 100644
---- a/net/can/af_can.c
-+++ b/net/can/af_can.c
-@@ -959,6 +959,8 @@ static struct pernet_operations can_pernet_ops __read_mostly = {
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 9b449400376b..deb274a19ba0 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -822,6 +822,27 @@ static int m_can_poll(struct napi_struct *napi, int quota)
+ 	if (!irqstatus)
+ 		goto end;
  
- static __init int can_init(void)
- {
-+	int err;
++	/* Errata workaround for issue "Needless activation of MRAF irq"
++	 * During frame reception while the MCAN is in Error Passive state
++	 * and the Receive Error Counter has the value MCAN_ECR.REC = 127,
++	 * it may happen that MCAN_IR.MRAF is set although there was no
++	 * Message RAM access failure.
++	 * If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is generated
++	 * The Message RAM Access Failure interrupt routine needs to check
++	 * whether MCAN_ECR.RP = ’1’ and MCAN_ECR.REC = 127.
++	 * In this case, reset MCAN_IR.MRAF. No further action is required.
++	 */
++	if ((priv->version <= 31) && (irqstatus & IR_MRAF) &&
++	    (m_can_read(priv, M_CAN_ECR) & ECR_RP)) {
++		struct can_berr_counter bec;
 +
- 	/* check for correct padding to be able to use the structs similarly */
- 	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
- 		     offsetof(struct canfd_frame, len) ||
-@@ -972,15 +974,31 @@ static __init int can_init(void)
- 	if (!rcv_cache)
- 		return -ENOMEM;
- 
--	register_pernet_subsys(&can_pernet_ops);
-+	err = register_pernet_subsys(&can_pernet_ops);
-+	if (err)
-+		goto out_pernet;
- 
- 	/* protocol register */
--	sock_register(&can_family_ops);
--	register_netdevice_notifier(&can_netdev_notifier);
-+	err = sock_register(&can_family_ops);
-+	if (err)
-+		goto out_sock;
-+	err = register_netdevice_notifier(&can_netdev_notifier);
-+	if (err)
-+		goto out_notifier;
++		__m_can_get_berr_counter(dev, &bec);
++		if (bec.rxerr == 127) {
++			m_can_write(priv, M_CAN_IR, IR_MRAF);
++			irqstatus &= ~IR_MRAF;
++		}
++	}
 +
- 	dev_add_pack(&can_packet);
- 	dev_add_pack(&canfd_packet);
- 
- 	return 0;
-+
-+out_notifier:
-+	sock_unregister(PF_CAN);
-+out_sock:
-+	unregister_pernet_subsys(&can_pernet_ops);
-+out_pernet:
-+	kmem_cache_destroy(rcv_cache);
-+
-+	return err;
- }
- 
- static __exit void can_exit(void)
+ 	psr = m_can_read(priv, M_CAN_PSR);
+ 	if (irqstatus & IR_ERR_STATE)
+ 		work_done += m_can_handle_state_errors(dev, psr);
 -- 
 2.20.1
 
