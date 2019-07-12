@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF9AC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32E8C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4150C216B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC342166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934836;
-	bh=6gxEAhsO1HLcQtZavycbTcyuT3ldIhrjwIC4kk7XOas=;
+	s=default; t=1562934839;
+	bh=LOjqXMQkYpBHBq0FVWz6MT6stsHQBZJOIBT/ryXpphw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpjT283+wLF2OzomYwoHkDkGjYX+015TkCdng3z3uUEp+HvyBC7gKzzNL2b8X6sQ4
-	 FpVl0AkiiO7YaNOfPKpHum2itr9XDsGPuTZXKSJBEUOlxvB8KqPGS9gw9LXW5XrfCn
-	 kmdcDf/3aCnEuV9eh8mnway12tLJHKso35jqBZkY=
+	b=kO1IQB4y2LGD2Exm4WMK1NEWg0tileyKqOSyy0yUmxZ+ePTS45Jgk1ItWQ27q+Z2T
+	 47GCcnV8o2bg6ifduAKJi6yQaTkDIoNP6GelFwt3O2nji6cEu+L0tIP4aSmOySk4Tb
+	 2Jbyy9v9YRjREs4ktFOsNXxdlm1d6qi14cCvXHzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbfGLMdz (ORCPT
+        id S1729692AbfGLMd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53320 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfGLMdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:50 -0400
+        id S1728879AbfGLMd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:33:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4912B216E3;
-        Fri, 12 Jul 2019 12:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF5320645;
+        Fri, 12 Jul 2019 12:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934829;
-        bh=6gxEAhsO1HLcQtZavycbTcyuT3ldIhrjwIC4kk7XOas=;
+        s=default; t=1562934836;
+        bh=LOjqXMQkYpBHBq0FVWz6MT6stsHQBZJOIBT/ryXpphw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TV280/KZEw6edpQP94ONo1kDjs3lcRO70qoAfQ78P0QAjRaimB8Qx5Oo7QSCt2fQ1
-         /7EhjU5Xx/yrPA5+iURZ8H42wNEC6+omcULvPW7frcP1lbwZHACw0Va0o/1zJ/B3yp
-         2au8grp5QIS2mIdOG+fFySi1JBUr+qK2IP1t0dko=
+        b=s5pNDEe7J9x9o663UehLqw+PWmgVVYovOfovtG1E81Dhj975Sel473y1GyB1rWhXO
+         qqjfAdS+GVdXCS8kRywb5SwH5OFfcrZjuTtwyDRkj7WdbkT8ZvgyAGeQFcGFbFWiIQ
+         PZH6RRgQ/mswF7c1149O/OCnrhYnxxOBAQHTwlI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com,
-        Todd Kjos <tkjos@google.com>
-Subject: [PATCH 5.2 42/61] binder: fix memory leak in error path
-Date:   Fri, 12 Jul 2019 14:19:55 +0200
-Message-Id: <20190712121622.886842397@linuxfoundation.org>
+        =?UTF-8?q?Ari=20Kohtam=C3=A4ki?= <ari.kohtamaki@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sean Young <sean@mess.org>
+Subject: [PATCH 5.2 06/61] media: stv0297: fix frequency range limit
+Date:   Fri, 12 Jul 2019 14:19:19 +0200
+Message-Id: <20190712121620.959309512@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,43 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-commit 1909a671dbc3606685b1daf8b22a16f65ea7edda upstream.
+commit b09a2ab2baeb36bf7ef7780405ad172281741c7c upstream.
 
-syzkallar found a 32-byte memory leak in a rarely executed error
-case. The transaction complete work item was not freed if put_user()
-failed when writing the BR_TRANSACTION_COMPLETE to the user command
-buffer. Fixed by freeing it before put_user() is called.
+There was a typo at the lower frequency limit for a DVB-C
+card, causing the driver to fail while tuning channels at the
+VHF range.
 
-Reported-by: syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Cc: stable <stable@vger.kernel.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=202083
+
+Fixes: f1b1eabff0eb ("media: dvb: represent min/max/step/tolerance freqs in Hz")
+Reported-by: Ari Kohtamäki <ari.kohtamaki@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/dvb-frontends/stv0297.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -4268,6 +4268,8 @@ retry:
- 		case BINDER_WORK_TRANSACTION_COMPLETE: {
- 			binder_inner_proc_unlock(proc);
- 			cmd = BR_TRANSACTION_COMPLETE;
-+			kfree(w);
-+			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
- 			if (put_user(cmd, (uint32_t __user *)ptr))
- 				return -EFAULT;
- 			ptr += sizeof(uint32_t);
-@@ -4276,8 +4278,6 @@ retry:
- 			binder_debug(BINDER_DEBUG_TRANSACTION_COMPLETE,
- 				     "%d:%d BR_TRANSACTION_COMPLETE\n",
- 				     proc->pid, thread->pid);
--			kfree(w);
--			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
- 		} break;
- 		case BINDER_WORK_NODE: {
- 			struct binder_node *node = container_of(w, struct binder_node, work);
+--- a/drivers/media/dvb-frontends/stv0297.c
++++ b/drivers/media/dvb-frontends/stv0297.c
+@@ -682,7 +682,7 @@ static const struct dvb_frontend_ops stv
+ 	.delsys = { SYS_DVBC_ANNEX_A },
+ 	.info = {
+ 		 .name = "ST STV0297 DVB-C",
+-		 .frequency_min_hz = 470 * MHz,
++		 .frequency_min_hz = 47 * MHz,
+ 		 .frequency_max_hz = 862 * MHz,
+ 		 .frequency_stepsize_hz = 62500,
+ 		 .symbol_rate_min = 870000,
 
 
