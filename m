@@ -4,129 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00725C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F236DC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0682166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA91D20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ne1Ixsc6"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="goMsRLSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfGLNC3 (ORCPT
+        id S1727405AbfGLNCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:02:29 -0400
-Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:15169
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727045AbfGLNC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:02:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0phNepfyJlON2igMCuCnLBhgeo1BHj/eZEaOI2FPzqQ=;
- b=Ne1Ixsc6onMGSRbbY9F8eU1EGPvoKpLjbounaat+rQ75+dwMBcSUm5VlAb9Mu/y1D6J89+jp9GcQxw5R/JJdzxy+wpJG/sl+ELBAocdAdwRB+vFawpiN5uZu8aoahrhk0aqtGBEeeCGBoyS/eopnsmXQFP8nJ6iTlVgcXH77Zeg=
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.17.31) by
- VI1PR0402MB3791.eurprd04.prod.outlook.com (52.134.15.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Fri, 12 Jul 2019 13:02:24 +0000
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::a4cb:fecc:3079:494]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::a4cb:fecc:3079:494%4]) with mapi id 15.20.2052.022; Fri, 12 Jul 2019
- 13:02:24 +0000
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
-        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>
-Subject: Re: [EXT] Re: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel
- format
-Thread-Topic: [EXT] Re: Re: [PATCH] media: v4l: Add packed YUV444 24bpp pixel
- format
-Thread-Index: AQHVN/CgZoYCDAU+vEW4YJIYV1JwU6bGtnSAgAA9wwA=
-Date:   Fri, 12 Jul 2019 13:02:24 +0000
-Message-ID: <1562936544.9511.25.camel@nxp.com>
-References: <1562166911-27454-1-git-send-email-mirela.rabulea@nxp.com>
-         <20190711081808.GA15389@aptenodytes> <1562853469.9511.6.camel@nxp.com>
-         <20190712092121.GF15882@aptenodytes>
-In-Reply-To: <20190712092121.GF15882@aptenodytes>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mirela.rabulea@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 592b0de1-e234-4166-92d6-08d706c92f2a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3791;
-x-ms-traffictypediagnostic: VI1PR0402MB3791:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR0402MB3791535DE7CE0473320215898FF20@VI1PR0402MB3791.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00963989E5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(199004)(189003)(36756003)(2351001)(476003)(7416002)(6436002)(66476007)(14454004)(26005)(486006)(2616005)(25786009)(2501003)(11346002)(966005)(5660300002)(478600001)(81156014)(99286004)(81166006)(8936002)(44832011)(91956017)(229853002)(66556008)(8676002)(54906003)(6506007)(102836004)(76116006)(64756008)(86362001)(186003)(6246003)(6486002)(66946007)(76176011)(2906002)(66446008)(316002)(3846002)(68736007)(256004)(6116002)(446003)(103116003)(53936002)(50226002)(71190400001)(5640700003)(4326008)(6916009)(7736002)(19627235002)(6306002)(305945005)(71200400001)(66066001)(6512007)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3791;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 75cOLT3cEBsCOJ2yQIyhxZlkLdpwzaf4WhLViuem20MFzNAI51MD5Ncg/3lF9cJ/HYJL6cWoQSQY6RV9bsNFvAxbqYMWYiZ3o0E/NlUECnCTEeMeOXZGUycm+ewXLHgVJaZ91Qw8i5eCXrqGznZfaJde6JXeaHlxIToozy2r5dTntR3JNE+uW77dVwzckpwQUOE8bUf6my+lg88ZWag53vxhaH5uTvBmD4XEuUkKdaGXF9wsWBnIZJbBT4FPTqLpCBQUrnG+yHuX2xIHyRDp8CNOhU1iaiiOLMi1s6e2yOCydQ2kAOlLkG18sV/RbGCNW4rYmFy5Bn/95qxhvoSZbbwFXxk0TXUNOHtBomw/X4BoQ4rYmKpUMOG3pW/lDiTaxG72FGkfcYzThXa4G5fjJ3pzfRaOlGgipSPrdW6D6aA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D75569C1F0B6BE44B6BE039BB4CDBE19@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 12 Jul 2019 09:02:40 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40406 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfGLNCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:02:40 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so8894007wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 06:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gfk3tzWXf4YoxNXS32QWXIth/W/aTkd2Ka3WZo9k3lQ=;
+        b=goMsRLSkAkkOJTFTe1bd5PF9Wprg6v0Tj9DemBKBSfRydsuBRLbA6rQ/cvYahqNfTd
+         vwWkJlvwSrNjX7tLb2tX46Ls1K8ZiAtjqWBd0pXUQ9IEjFLrszu/8r4yye47ZGuA46GS
+         q2T9DqYUOHEi71QKV+/Xd0mF57fewN+QdeuXnymnRDqGoJm16FN2+AmObttjVK3X77/r
+         tpNYRhzwpdNNTVUFZaysZYmW5gqX7QV2hpQGREyaXdybY8HCuR/potkyGb6fc1Fup5wt
+         cACxQ0iahZoa0PzaU4b2Unca20/V88j15rcy7FpNnXvxuN9V57xmfq5EVuyO5r/LQCE5
+         ZyWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gfk3tzWXf4YoxNXS32QWXIth/W/aTkd2Ka3WZo9k3lQ=;
+        b=bDZ2T7DE4o5deO31YVzUHYSd0mg8sxJcHOjyfmk9rrm4bVsoJQWHb2M/iSaZjTUJWw
+         yIpeJE15nAcGlcmXjaxdrXEo/KoIWSNlqceEqyyMbsAHM4C8eQ1/pU1I25FFc1xG5GY4
+         +Gp+LHXnIJdgj2VamqCHGxkrTs1iPeeC3/EDcJp8QIqZGC3Ln1PrbkROcDqx5RYDDNtN
+         +AJf053pqsuWXVBNjrsXrlvXd5a9vtZe5Beuudq0vaQddU5qPe4bsNvUNlg4jmQc6bHj
+         jQpjQB3kG9yql1L8AVr+pqpQ5KGWU2noI3AqHdrxxNc4zxmnZ6bd8sJn81er8TnhVYsd
+         q+TA==
+X-Gm-Message-State: APjAAAV8fxDt9hIGJty86+FnxPvl2QCU1hD0+T2ht9K4Qywne4L3fo+V
+        LHFP+B4PBMgBdDjgeokir9gYI4kSgYA=
+X-Google-Smtp-Source: APXvYqy+XIPsO3nSefTtw/VIT0Q1JEv+f8sHzOjftXxqvu8RDRt+41p8KAW+mPcR5sjMAEUHUs07cA==
+X-Received: by 2002:a1c:ca06:: with SMTP id a6mr9871923wmg.48.1562936557894;
+        Fri, 12 Jul 2019 06:02:37 -0700 (PDT)
+Received: from brauner.io ([213.220.153.21])
+        by smtp.gmail.com with ESMTPSA id i18sm9299673wrp.91.2019.07.12.06.02.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 06:02:37 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 15:02:36 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the pidfd
+ tree
+Message-ID: <20190712130235.2r4jlwpfffijz4hj@brauner.io>
+References: <20190515131629.405837b0@canb.auug.org.au>
+ <20190708120114.5ca1613d@canb.auug.org.au>
+ <20190712125304.GC92297@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 592b0de1-e234-4166-92d6-08d706c92f2a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2019 13:02:24.4767
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mirela.rabulea@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3791
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190712125304.GC92297@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVmksIDIwMTktMDctMTIgYXQgMTE6MjEgKzAyMDAsIHBhdWwua29jaWFsa293c2tpQGJvb3Rs
-aW4uY29tIHdyb3RlOg0KPiBIaSwNCj4gDQo+IE9uIFRodSAxMSBKdWwgMTksIDEzOjU3LCBNaXJl
-bGEgUmFidWxlYSB3cm90ZToNCj4gPiANCj4gPiBPbiBKbywgMjAxOS0wNy0xMSBhdCAxMDoxOCAr
-MDIwMCwgUGF1bCBLb2NpYWxrb3dza2kgd3JvdGU6DQo+ID4gPiANCj4gPiA+IENhdXRpb246IEVY
-VCBFbWFpbA0KPiA+ID4gDQo+ID4gPiBIaSwNCj4gPiA+IA0KPiA+ID4gT24gV2VkIDAzIEp1bCAx
-OSwgMTg6MTUsIE1pcmVsYSBSYWJ1bGVhIHdyb3RlOg0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4g
-PiA+IFRoZSBhZGRlZCBmb3JtYXQgaXMgVjRMMl9QSVhfRk1UX1lVVjI0LCB0aGlzIGlzIGEgcGFj
-a2VkDQo+ID4gPiA+IFlVViA0OjQ6NCBmb3JtYXQsIHdpdGggOCBiaXRzIGZvciBlYWNoIGNvbXBv
-bmVudCwgMjQgYml0cw0KPiA+ID4gPiBwZXIgc2FtcGxlLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhp
-cyBmb3JtYXQgaXMgdXNlZCBieSB0aGUgaS5NWCA4UXVhZE1heCBhbmQgaS5NWA0KPiA+ID4gPiA4
-RHVhbFhQbHVzLzhRdWFkWFBsdXMNCj4gPiA+ID4gSlBFRyBlbmNvZGVyL2RlY29kZXIuDQo+ID4g
-PiBTbyB0aGlzIGZvcm1hdCBpcyBub3QgYWxpZ25lZCB0byAzMi1iaXQgd29yZHMgYXQgYWxsIGFu
-ZCB3ZSBjYW4NCj4gPiA+IGV4cGVjdA0KPiA+ID4gdG8gc2VlIGNhc2VzIHdoZXJlIGEgc2luZ2xl
-IDMyLWJpdCB3b3JkIGNvbnRhaW5zIGRhdGEgZm9yIHR3bw0KPiA+ID4gcGl4ZWxzPw0KPiA+ID4g
-DQo+ID4gPiBOb3RoaW5nIHdyb25nIHdpdGggdGhhdCwganVzdCBjaGVja2luZyB3aGV0aGVyIEkg
-dW5kZXJzdG9vZCB0aGlzDQo+ID4gPiByaWdodCA6KQ0KPiA+ID4gDQo+ID4gSGkgUGF1bCwNCj4g
-PiB5ZXMsIHlvdXIgdW5kZXJzdGFuZGluZyBpcyBjb3JyZWN0Lg0KPiBPdXQgb2YgY3VyaW9zaXR5
-LCBpcyB0aGUgSlBFRyBibG9jayBhc3NtaWxpYXRlZCB0byAob25lIG9mKSB0aGUNCj4gSGFudHJv
-IFZQVXMNCj4gb3IgaXMgaXQgYSB0b3RhbGx5IGRpZmZlcmVudCBhbmQgdW5yZWxhdGVkIGhhcmR3
-YXJlIGJsb2NrPw0KPiANCj4gQW55d2F5IHRoZSBjaGFuZ2UgbG9va3MgZ29vZCB0byBtZToNCj4g
-UmV2aWV3ZWQtYnk6IFBhdWwgS29jaWFsa293c2tpIDxwYXVsLmtvY2lhbGtvd3NraUBib290bGlu
-LmNvbT4NCj4gDQo+IENoZWVycywNCj4gDQo+IFBhdWwNCg0KSGkgUGF1bCwNCnRoYW5rcyBmb3Ig
-dGFraW5nIHRoZSB0aW1lIHRvIHJldmlldy4NClRoZSBKUEVHIGRlY29kZXIgaXMgYSBzdGFuZGFs
-b25lIGNvcmUgJiB3cmFwcGVyLCBub3QgYXNzaW1pbGF0ZWQgdG8gdGhlDQpWUFUuIEl0IGlzIGRl
-c2NyaWJlZCBpbiB0aGUgcmVmZXJlbmNlIG1hbnVhbCBoZXJlOg0KaHR0cHM6Ly93d3cubnhwLmNv
-bS9kb2NzL2VuL3JlZmVyZW5jZS1tYW51YWwvSU1YOERRWFBSTS5wZGYNCmluIGNoYXB0ZXJzICIx
-NS42LjMgSlBFRyBEZWNvZGVyIChKUEVHREVDKSIgYW5kICIxNS42LjUgSlBFRyBEZWNvZGVyDQpX
-cmFwcGVyIi4NClRoZSBKUEVHIGNvcmUgaXMgZnJvbSBhIHRoaXJkIHBhcnR5LCBhbmQgdGhlIHdy
-YXBwZXIgZnJvbSBOWFAuDQoNClJlZ2FyZHMsDQpNaXJlbGENCg==
+On Fri, Jul 12, 2019 at 08:53:04AM -0400, Joel Fernandes wrote:
+> On Mon, Jul 08, 2019 at 12:01:14PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > On Wed, 15 May 2019 13:16:29 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > >
+> > > Today's linux-next merge of the akpm-current tree got a conflict in:
+> > > 
+> > >   include/linux/pid.h
+> > > 
+> > > between commit:
+> > > 
+> > >   51f1b521a515 ("pidfd: add polling support")
+> > > 
+> > > from the pidfd tree and commit:
+> > > 
+> > >   c02e28a1bb18 ("kernel/pid.c: convert struct pid:count to refcount_t")
+> > > 
+> > > from the akpm-current tree.
+> > > 
+> > > I fixed it up (see below) and can carry the fix as necessary. This
+> > > is now fixed as far as linux-next is concerned, but any non trivial
+> > > conflicts should be mentioned to your upstream maintainer when your tree
+> > > is submitted for merging.  You may also want to consider cooperating
+> > > with the maintainer of the conflicting tree to minimise any particularly
+> > > complex conflicts.
+> > > 
+> > > -- 
+> > > Cheers,
+> > > Stephen Rothwell
+> > > 
+> > > diff --cc include/linux/pid.h
+> > > index 1484db6ca8d1,0be5829ddd80..000000000000
+> > > --- a/include/linux/pid.h
+> > > +++ b/include/linux/pid.h
+> > > @@@ -3,7 -3,7 +3,8 @@@
+> > >   #define _LINUX_PID_H
+> > >   
+> > >   #include <linux/rculist.h>
+> > >  +#include <linux/wait.h>
+> > > + #include <linux/refcount.h>
+> > >   
+> > >   enum pid_type
+> > >   {
+> > 
+> > I am still getting this conflict (the commits have changed).  Just a
+> > reminder in case you think Linus may need to know.
+> 
+> Could you let me know if this trivial header inclusion conflict has been
+> resolved now? Let me know what else I can do to help.
+
+I've informed Linus about this conflict when I sent the PR and he has
+pulled the tag which includes your polling changes. So it shouldn't
+require you to do anything since the conflict is pretty trivial. :)
