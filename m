@@ -2,157 +2,112 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20053C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFC7C742AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1CF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CBC2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="uQKwZ7Jg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fyl9TSOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfGLIXA (ORCPT
+        id S1726365AbfGLIZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:23:00 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10819 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLIXA (ORCPT
+        Fri, 12 Jul 2019 04:25:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46204 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfGLIZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:23:00 -0400
+        Fri, 12 Jul 2019 04:25:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so3974274pfb.13;
+        Fri, 12 Jul 2019 01:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1562919779; x=1594455779;
-  h=from:to:cc:subject:date:message-id;
-  bh=2GHXvodd5mYiOI7g2dcIp8dLyBwMPtlaooER9mc1rHw=;
-  b=uQKwZ7Jg7PHZ8DeTmIOtcHBsqI1w2SDCconW1uI7qftZQV3HIDpm+h8a
-   xipaRH0bneeM4rsBvt4/tSWR9bpJK8kTKQk75QYDUN8TOb2382j7wkMVg
-   ltEWB3DkRrpzU3dq0MUUWvAl1kGbnj2/QuWcb+wEANGAhqmN8kifXalHu
-   E=;
-X-IronPort-AV: E=Sophos;i="5.62,481,1554768000"; 
-   d="scan'208";a="404647834"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Jul 2019 08:22:57 +0000
-Received: from u54e1ad5160425a4b64ea.ant.amazon.com (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214])
-        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id 8BFEEA252A;
-        Fri, 12 Jul 2019 08:22:53 +0000 (UTC)
-Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
-        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x6C8MoPk016257;
-        Fri, 12 Jul 2019 10:22:50 +0200
-Received: (from karahmed@localhost)
-        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id x6C8MnRH016242;
-        Fri, 12 Jul 2019 10:22:49 +0200
-From:   KarimAllah Ahmed <karahmed@amazon.de>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu
-Subject: [PATCH] KVM: arm/arm64: Properly check for MMIO regions
-Date:   Fri, 12 Jul 2019 10:22:08 +0200
-Message-Id: <1562919728-642-1-git-send-email-karahmed@amazon.de>
-X-Mailer: git-send-email 2.7.4
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
+        b=Fyl9TSOdi1j2XjtjDLhiWaqB0DR7tBZfgMMw50+vW0/xhDGFPXEnBIm5n0r/NH1kCW
+         2ZHdnbb+zwOvkoRgSuOcLVwFZOtTo5Z0qripJEWoYTVf0C/gY/3lgjFmDA2ICnAxPa33
+         QufU1HLF9B4rOLYz5QeL/SoM504liKmkClv5IHra9ZntnJ592tRlOEU6gMGLG9paHjhr
+         mgdLkRN1hKYdFsoqPN9QodWAvWbjK35mKeygwo39PmDNDBmWOLS44OuQhm4lJn9TyYOa
+         1rco+h38lsbWpXwQXI6nb0noKdxK+3dWK9DndsOA+Ng+6A5K5ySQlHMy43LMI/Iug9w3
+         ssWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
+        b=VN4UDX1w7pNMD95UfvZALG7s6eDx6uss+9aMxHJOMNNoUpLvclDMnXkMp3QVb1oAp9
+         //9Zx7xb6510dRdzty3WoP39mh4qH1GMTmb4acpjMeQ22fy910Pw3a/MZ0i+s4KhienR
+         RcAzWRDWXCHiEtTFC+lNaSt63Dj4TwSNFpEz9sxhdXMyziUcMGx+u9LHqYSIXRm5HZEk
+         4oMsIPDIaMYm8V3HT9z75uWFk1BfeOqWhWOWnKF0q/NydSKvndPIjGkEIjq1GRRkOghx
+         irIEZzsZ9q6xTqdKY81zcwoKKNQ000MW1pySt6qljQWHRiAAqpmO4/87qprDC5bdm26i
+         sleQ==
+X-Gm-Message-State: APjAAAUONp3grNvWB2IUm+gONnLFqE8gtp0bkG1vczn1alXq20J1NRYG
+        RslZa/d0cv7Np8ZT9T6QP9F8G8p8X1XM5Q==
+X-Google-Smtp-Source: APXvYqyZqz2vlQC4nbOA8cCJaC3xgKjcnepceJpYKLsSmt+PKJ7es87hhkONCLHvij6MF5XeRwPE0Q==
+X-Received: by 2002:a65:6448:: with SMTP id s8mr9376254pgv.223.1562919918915;
+        Fri, 12 Jul 2019 01:25:18 -0700 (PDT)
+Received: from maya190711 ([52.250.118.122])
+        by smtp.gmail.com with ESMTPSA id m13sm6175192pgv.89.2019.07.12.01.25.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 01:25:18 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:25:18 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/5] hv: vmbus: Replace page definition with Hyper-V
+ specific one
+Message-ID: <0d9e80ecabcc950dc279fdd2e39bea4060123ba4.1562916939.git.m.maya.nakamura@gmail.com>
+References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Valid RAM can live outside kernel control (e.g. using "mem=" command-line
-parameter). This memory can still be used as valid guest memory for KVM. So
-ensure that we validate that this memory is definitely not "RAM" before
-assuming that it is an MMIO region.
+Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
+not be 4096 on all architectures and Hyper-V always runs with a page
+size of 4096.
 
-One way to use memory outside kernel control is:
-
-1- Pass 'mem=' in the kernel command-line to limit the amount of memory managed
-   by the kernel.
-2- Map this physical memory you want to give to the guest with:
-   mmap("/dev/mem", physical_address_offset, ..)
-3- Use the user-space virtual address as the "userspace_addr" field in
-   KVM_SET_USER_MEMORY_REGION ioctl.
-
-One of the limitations of the current /dev/mem for ARM is that it would map
-this memory as uncached without this patch:
-https://lkml.org/lkml/2019/7/11/684
-
-This work is similar to the work done on x86 here:
-https://lkml.org/lkml/2019/1/31/933
-
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Julien Thierry <julien.thierry@arm.com>
-Cc: Suzuki K Pouloze <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: kvmarm@lists.cs.columbia.edu
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- virt/kvm/arm/mmu.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/hv/hyperv_vmbus.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 06180c9..2105134 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -8,6 +8,7 @@
- #include <linux/kvm_host.h>
- #include <linux/io.h>
- #include <linux/hugetlb.h>
-+#include <linux/memblock.h>
- #include <linux/sched/signal.h>
- #include <trace/events/kvm.h>
- #include <asm/pgalloc.h>
-@@ -89,7 +90,7 @@ static void kvm_flush_dcache_pud(struct kvm *kvm,
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 362e70e9d145..019469c3cbca 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -192,11 +192,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+ 		       u64 *requestid, bool raw);
  
- static bool kvm_is_device_pfn(unsigned long pfn)
- {
--	return !pfn_valid(pfn);
-+	return !memblock_is_memory(__pfn_to_phys(pfn));
- }
+ /*
+- * Maximum channels is determined by the size of the interrupt page
+- * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
+- * and the other is receive endpoint interrupt
++ * Maximum channels, 16348, is determined by the size of the interrupt page,
++ * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
++ * interrupt, and the other is to receive endpoint interrupt.
+  */
+-#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
++#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
  
- /**
-@@ -949,6 +950,7 @@ static void stage2_unmap_memslot(struct kvm *kvm,
- 	do {
- 		struct vm_area_struct *vma = find_vma(current->mm, hva);
- 		hva_t vm_start, vm_end;
-+		gpa_t gpa;
- 
- 		if (!vma || vma->vm_start >= reg_end)
- 			break;
-@@ -959,11 +961,14 @@ static void stage2_unmap_memslot(struct kvm *kvm,
- 		vm_start = max(hva, vma->vm_start);
- 		vm_end = min(reg_end, vma->vm_end);
- 
--		if (!(vma->vm_flags & VM_PFNMAP)) {
--			gpa_t gpa = addr + (vm_start - memslot->userspace_addr);
--			unmap_stage2_range(kvm, gpa, vm_end - vm_start);
--		}
- 		hva = vm_end;
-+
-+		if ((vma->vm_flags & VM_PFNMAP) &&
-+		    !memblock_is_memory(__pfn_to_phys(vma->vm_pgoff)))
-+			continue;
-+
-+		gpa = addr + (vm_start - memslot->userspace_addr);
-+		unmap_stage2_range(kvm, gpa, vm_end - vm_start);
- 	} while (hva < reg_end);
- }
- 
-@@ -2329,7 +2334,8 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 		vm_start = max(hva, vma->vm_start);
- 		vm_end = min(reg_end, vma->vm_end);
- 
--		if (vma->vm_flags & VM_PFNMAP) {
-+		if ((vma->vm_flags & VM_PFNMAP) &&
-+		    !memblock_is_memory(__pfn_to_phys(vma->vm_pgoff))) {
- 			gpa_t gpa = mem->guest_phys_addr +
- 				    (vm_start - mem->userspace_addr);
- 			phys_addr_t pa;
+ /* The value here must be in multiple of 32 */
+ /* TODO: Need to make this configurable */
 -- 
-2.7.4
+2.17.1
 
