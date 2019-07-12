@@ -4,120 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1815C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CC6C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE0420863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFC32166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfGLJHn (ORCPT
+        id S1726560AbfGLJIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:07:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:41329 "EHLO
+        Fri, 12 Jul 2019 05:08:55 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:39345 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfGLJHn (ORCPT
+        with ESMTP id S1726069AbfGLJIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:07:43 -0400
+        Fri, 12 Jul 2019 05:08:55 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MWR6x-1hxf5K14xf-00XsqW; Fri, 12 Jul 2019 11:07:41 +0200
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MplTn-1iG0uE1AyL-00qEvZ; Fri, 12 Jul 2019 11:08:19 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] lib/mpi: fix building with 32-bit x86
-Date:   Fri, 12 Jul 2019 11:07:34 +0200
-Message-Id: <20190712090740.340186-1-arnd@arndb.de>
+To:     Bill Metzenthen <billm@melbpc.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] x86: math-emu: hide clang warnings for 16-bit overflow
+Date:   Fri, 12 Jul 2019 11:08:05 +0200
+Message-Id: <20190712090816.350668-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:oshOUE/i3SB/+6j50OZzcgZaoU8IfG0hYfG87EvVrAoYQhBFCPj
- TYXcsD3c36xAYC+HbHBgw4TgevC2UdWi6oHQX7AL6pnoh6y+hvIRMl3Q0Mf9Aul4Mm7W4Fu
- j9PumrWVK4JrtKZDt8ChnFkB4vkMlznKcVJXeFtICQ9YCj0ckdi2R0xUkVnzLB7TBzZSwvq
- tvSKL//VB4vGstTl1rdJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:E7yiX+Q7/mY=:byTXnfUAj5/OJR3X6n4+7O
- JpZrOENWt75JJxW99jNUg8wMyY2aQzrHrnDhUg+LIzQcAsJlfSsqfK15iIgYD4Y4cWVIZdYaK
- Xhn0RyaspVrksHOZIV6mDJbVyGQ7lN4wdpH+f5Y+aR4NcnO9cLX/r+PSED3vGcqYSo4asqnmn
- 1M5rro6KQqttjjDXcidfu3jsK5WswGYeHpZ9fI+wZ1vWu68sk4Q+kKxtQdUzVDb9sXixnaLaf
- ZD5ib0U5KAjiZ7BMmwNFm1knxWEjxl3aisoDAn8dwxLIx3yBarUpBDsLnJGwE+qcWabQusJlI
- DjeFXYgJQmHiKWw5bIMBTA+jpzcOi9x8e7mm1P8v6g42NExrbfOhddLorlld0CzcNPBMkQ4R5
- uBNF/SixDQLbP9hw91nohqeShQp41NT9QmZ7Ub797INqBQoKIUX9IFw4ipOSlcI2wTRYGHUQ8
- fPotyEK+sNhrnNYLsvFXma8sM9MDDqFUPaNBOO5ghswuiQCvRytkYTVF5OILaTRzXPSqBeyfx
- 5pU37sQS6a6lupJX+J6TrAQTDKiA1NmgVwuDNJfHhkBGjX5cnLsPwAlLyZV4YINpd3MubwC6r
- BrfOVS2AMzLvmPsxD1qv+DE+6rhR/5lPJ3JL8plT+MV/Cvf+rDAmyszBwFbUqZpGEBQmhB8Y0
- N+Q1y0UnvDjFOk+o2uM65LKaWsWvmiqf7HcjBOpzN8bX3eeA264xK5bX0JKIjXFSYMvwT6zSy
- Obt4URscfAdBKyzZSgVzRZQVIoilAKe7Uliv8A==
+X-Provags-ID: V03:K1:uhLktPXipGj6UjosCrqPbx7X8MXcIoq8JHYIteyEjX5+chvN09m
+ nduPEVAS3tXz5QEMuMJoSbjgSPxubfKqoNq9gelCGmZ4qUcJyCjVAX9IlCU44FSmVGd0kOY
+ tJC59GiELBqUb7DBFtQomOTdVxux6lsCsNW2atgevOUK1GdUy3EXPCSuoI8GapZZHRoahDN
+ 1qkYo7cqbXOMbc9IYCY+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o6PG+rhksf0=:NUqwYYsc9m85a6HXmY8xe4
+ 7zgquXhqavLN5KLe0gnzkonSgYCYfpwXzsxMl0eFOuLzOu+AmbiF1os3kde3o9QMlRDdYumbJ
+ U3zYPXsHexYZK87gPKiAYu0UlXwb9dmWNtnQeHaDDejnbTwK0SkHWPW+6ZSbCXQxgOoJr0+Eb
+ tCt8/zLTRmC+aLS7az9vebwvzcp+/1AN45cOLO4lCW3DZwI0fwZRFMAsaVk2xO8cGoVQlHP1F
+ izhaIeYKUPmyg/MCGRB80t+z2RpHp35cRsx6wBSKplzaVKxYKqz3qA9mJqfhMDnhFezfnwosc
+ +n3gHYuXWeK0/CWg1WFf64huWV9nX7MrLNzf4gCDAFNK1T0SuavAc/tNRqSr18PEjOEHGtBDi
+ Gp20XDw0xEfJ7BX7twyKru3tqq26WA8Gn2SoGqSZwskmYbHZSbQWRIZscitRClxy4xC5fCazT
+ /Me3/1RnoFTttx6qvNalRXsIkOO/XI/pFY54+VNbI0zeQxPOxSRCXuyNMYqfFZb3KxTCn5zsD
+ GX+bLZ/LV0w78NeLYXeNZgERNjsdsspk3kZd0NZKed+Ux6zxMT1zFBDtCztzauJPyPMN8ODdq
+ wQ4FfXIXq7L5kU53y0I7PEnVoZ1dHnAkQrVAu44rrqgzd0sscFCNTf/3oP9EW+TejYK0+jEMJ
+ peMJ5gky6ORCtVi8E2v8TNS9GMB00r8VJUivNYTaWwRe6iH/PakRraYWVOOsnXgOyyOaANonm
+ XmYI7hDW5Jc6WDJkl6UUgJPbeK5jFBGXwwLhZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mpi library contains some rather old inline assembly statements
-that produce a lot of warnings for 32-bit x86, such as:
+clang warns about a few parts of the math-emu implementation
+where a 16-bit integer becomes negative during assignment:
 
-lib/mpi/mpih-div.c:76:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
-                                udiv_qrnnd(qp[i], n1, n1, np[i], d);
-                                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-lib/mpi/longlong.h:423:20: note: expanded from macro 'udiv_qrnnd'
-        : "=a" ((USItype)(q)), \
-                ~~~~~~~~~~^~
+arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
+                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
+ #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
+                                                      ~  ^
+arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
+                               ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There is no point in doing a type cast for the output of an inline assembler
-statement, so just remove the cast here, as we have done for other architectures
-in the past.
+The code seems correct to me, so add a typecast to shut up the warnings.
 
-See-also: dea632cadd12 ("lib/mpi: fix build with clang")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- lib/mpi/longlong.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/math-emu/fpu_emu.h      | 2 +-
+ arch/x86/math-emu/reg_constant.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
-index 08c60d10747f..3bb6260d8f42 100644
---- a/lib/mpi/longlong.h
-+++ b/lib/mpi/longlong.h
-@@ -397,8 +397,8 @@ do { \
- #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
- 	__asm__ ("addl %5,%1\n" \
- 	   "adcl %3,%0" \
--	: "=r" ((USItype)(sh)), \
--	     "=&r" ((USItype)(sl)) \
-+	: "=r" (sh), \
-+	     "=&r" (sl) \
- 	: "%0" ((USItype)(ah)), \
- 	     "g" ((USItype)(bh)), \
- 	     "%1" ((USItype)(al)), \
-@@ -406,22 +406,22 @@ do { \
- #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
- 	__asm__ ("subl %5,%1\n" \
- 	   "sbbl %3,%0" \
--	: "=r" ((USItype)(sh)), \
--	     "=&r" ((USItype)(sl)) \
-+	: "=r" (sh), \
-+	     "=&r" (sl) \
- 	: "0" ((USItype)(ah)), \
- 	     "g" ((USItype)(bh)), \
- 	     "1" ((USItype)(al)), \
- 	     "g" ((USItype)(bl)))
- #define umul_ppmm(w1, w0, u, v) \
- 	__asm__ ("mull %3" \
--	: "=a" ((USItype)(w0)), \
--	     "=d" ((USItype)(w1)) \
-+	: "=a" (w0), \
-+	     "=d" (w1) \
- 	: "%0" ((USItype)(u)), \
- 	     "rm" ((USItype)(v)))
- #define udiv_qrnnd(q, r, n1, n0, d) \
- 	__asm__ ("divl %4" \
--	: "=a" ((USItype)(q)), \
--	     "=d" ((USItype)(r)) \
-+	: "=a" (q), \
-+	     "=d" (r) \
- 	: "0" ((USItype)(n0)), \
- 	     "1" ((USItype)(n1)), \
- 	     "rm" ((USItype)(d)))
+diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
+index a5a41ec58072..0c122226ca56 100644
+--- a/arch/x86/math-emu/fpu_emu.h
++++ b/arch/x86/math-emu/fpu_emu.h
+@@ -177,7 +177,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
+ #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
+   ((y) + EXTENDED_Ebias) & 0x7fff; }
+ #define exponent16(x)         (*(short *)&((x)->exp))
+-#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
++#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
+ #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
+ #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
+ 
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 8dc9095bab22..742619e94bdf 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -18,7 +18,7 @@
+ #include "control_w.h"
+ 
+ #define MAKE_REG(s, e, l, h) { l, h, \
+-		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
++		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+ 
+ FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
+ #if 0
 -- 
 2.20.0
 
