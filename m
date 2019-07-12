@@ -2,200 +2,270 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B11AC742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38283C742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337722083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019F22083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="KyuZc7NB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Po5R+v4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfGLMDI (ORCPT
+        id S1727063AbfGLMDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:03:08 -0400
-Received: from mail-mr2fra01hn0201.outbound.protection.outlook.com ([52.101.140.201]:24702
-        "EHLO FRA01-MR2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbfGLMDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:03:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PYOP42WAQOCgeWncfJNjk+S8eHm4Eqk3wr5bM8vM9GHQHTiKj3r6/0a/XmEf/8fRVEJMbYM6FNQW314agkbIg/DQ2yczTZVLYdbJ/NQEL4Nzo/Vi+gPsI0LAmIliDhfRSbkahlc8lCqDdddIqPmf/tY0NmaY9NhMxJExVqQyfSMIaC05q317DuwmGhImyfMluWODcYrHOitzziR3eepHahU/LXbpGA1BFD/kf8Q7XFP5kk5c2v2oqTkKl2zMJc9zG5gVOdQ4zXaMVGMEw/zBNPvMPm9Fuc5mN6aSWYzsRCMzwNDS2gEPaAW7P3CrJdkUc5zlgb3hQOdnbKMoqRmtfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmY1mv+dHio+3MItvVkGF63PN/fcqxkb5pNdFzFKjac=;
- b=czxS7fCTdDOlpy9l0YOEt9h8lu3fGGlAeR+bLiGbAiDlBOjE4s7P/UnSaFvE8e3t170sQYQNg+6WdaS62kx8xZ88THO65JOaWt9+idChWAdYlcSj26Ugkz8f516DJ5pJzLlb93CPo/f2uiTPlGCk3b/is8IvKjbsQXMg7IMeBQRFYNgbZ4o2hwD3/P6XBCDuqZQZREyHem1xFOLAptpiP1wUukmdcYGGbTgTc57HM0eEuc5hrclhQyN9x98QAjj5LppwirEFYU4KefAmadKWCWgy4jeqLSvZFgm8bcBjblyJ1ajPrIFUSemah6c6avfV0UGV7ZEFGoyVWWv9Ua2MGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=virtuozzo.com;dmarc=pass action=none
- header.from=virtuozzo.com;dkim=pass header.d=virtuozzo.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmY1mv+dHio+3MItvVkGF63PN/fcqxkb5pNdFzFKjac=;
- b=KyuZc7NBMvmQS5vZOcfALTf/7XSwD8Fq/cYwLb0LjBEJlcv/K+igDUEiher2oy+BZGYh3emhIHF83rLUcE8xUTPZVaweBEF/BUJGzomsEFx3RYakPLWezJLdNF9Aft4uch/o7nrhsfNHtTTas8/0AFJYV+WsG2bNM6VrwiePsz0=
-Received: from PR2PR08MB4649.eurprd08.prod.outlook.com (52.133.107.81) by
- PR2PR08MB4876.eurprd08.prod.outlook.com (52.133.109.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Fri, 12 Jul 2019 12:02:53 +0000
-Received: from PR2PR08MB4649.eurprd08.prod.outlook.com
- ([fe80::bd59:a723:4d09:9e88]) by PR2PR08MB4649.eurprd08.prod.outlook.com
- ([fe80::bd59:a723:4d09:9e88%7]) with mapi id 15.20.2052.020; Fri, 12 Jul 2019
- 12:02:53 +0000
-From:   Roman Kagan <rkagan@virtuozzo.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
-Thread-Topic: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
-Thread-Index: AQHVOJH6diSyEW2P2EODPrXdUKWMMKbG4k+A
-Date:   Fri, 12 Jul 2019 12:02:53 +0000
-Message-ID: <20190712120249.GA27820@rkaganb.sw.ru>
-References: <20190712091239.716978-1-arnd@arndb.de>
-In-Reply-To: <20190712091239.716978-1-arnd@arndb.de>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.12.0 (2019-05-25)
-mail-followup-to: =?iso-8859-2?Q?Roman_Kagan_<rkagan@virtuozzo.com>,=09Arnd_Bergmann_<arnd@?=
- =?iso-8859-2?Q?arndb.de>,_Paolo_Bonzini_<pbonzini@redhat.com>,=09Radim_Kr?=
- =?iso-8859-2?Q?=E8m=E1=F8_<rkrcmar@redhat.com>,=09Thomas_Gleixner_<tglx@l?=
- =?iso-8859-2?Q?inutronix.de>,=09Ingo_Molnar_<mingo@redhat.com>,_Borislav_?=
- =?iso-8859-2?Q?Petkov_<bp@alien8.de>,=09x86@kernel.org,_"H._Peter_Anvin"_?=
- =?iso-8859-2?Q?<hpa@zytor.com>,=09Vitaly_Kuznetsov_<vkuznets@redhat.com>,?=
- =?iso-8859-2?Q?=09Liran_Alon_<liran.alon@oracle.com>,_kvm@vger.kernel.org?=
- =?iso-8859-2?Q?,=09linux-kernel@vger.kernel.org,_clang-built-linux@google?=
- =?iso-8859-2?Q?groups.com?=
-x-originating-ip: [185.231.240.5]
-x-clientproxiedby: HE1P18901CA0008.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:3:8b::18) To PR2PR08MB4649.eurprd08.prod.outlook.com
- (2603:10a6:101:18::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rkagan@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e546975-b305-4ea4-d086-08d706c0de75
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PR2PR08MB4876;
-x-ms-traffictypediagnostic: PR2PR08MB4876:|PR2PR08MB4876:
-x-microsoft-antispam-prvs: <PR2PR08MB4876A9811F5F39F7C0D5020AC9F20@PR2PR08MB4876.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 00963989E5
-x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(396003)(39850400004)(366004)(376002)(346002)(136003)(52314003)(189003)(199004)(11346002)(1076003)(8936002)(86362001)(446003)(26005)(66476007)(66446008)(64756008)(66556008)(305945005)(66946007)(7416002)(6506007)(386003)(6486002)(229853002)(53936002)(68736007)(7736002)(5660300002)(486006)(8676002)(81156014)(81166006)(476003)(33656002)(6116002)(36756003)(6436002)(54906003)(99286004)(52116002)(71200400001)(6916009)(71190400001)(14454004)(256004)(14444005)(76176011)(316002)(3846002)(478600001)(9686003)(6246003)(102836004)(58126008)(186003)(66066001)(2906002)(4326008)(6512007)(25786009)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:PR2PR08MB4876;H:PR2PR08MB4649.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aZEEVmJq9Ai+pTBpi0Z64R1J46fPFywjKn+Rny4npfJf93oQbVKE3MXqS0YWWmugIRSK0oTQd0QCF1yim3Fil1s6u2E97gWk/91eEPugOVaprimjDFJUqGSLGT+Yo/4R0iqFBOlMzBr8hL65OX4dsLC7vJ0l1LmnHU7moJzGyAXCUyk0eBLlPp7B3c2VrhVs7VJhWFQbpRaIxUAxRC1/VhpZbqO/E9xQNEZbKAuAdCsEHiBjj0kMb+3wFL4aifiITFpwg7Aq9KHjoOQ6ksmcoRVTZj85MBQp1vAQYKHPTMbD5VfEOirEEGH/7tpmD3yAGNLVUcGV0mSgA2LaPsc6/dyf4zzCRbFrUhP7SMSSupCenEwr1eWxrhOawMDUzqb7Tk56mEkxxJz6kbKeN04rOJSiGUVShWntTdVVkNjLQlxfRlFfjvZYdXxilzYjGZUymdIjEr3QuZnkooKQgdT1gkcZNIYbOIbBrkwMxEfWKj3pYqvdPfeWO/08qk1QVcHT
-Content-Type: text/plain; charset="iso-8859-2"
-Content-ID: <87266A893EA54040A4AA25B17E388B6A@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Jul 2019 08:03:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44357 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfGLMDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:03:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so4214690pfe.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 05:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pG1dMHtZH73TRwIerhkeF5MzPMCfsVBoJ6eMm8ohCck=;
+        b=Po5R+v4Tq9SSrH6dw19MSifuek7bEwcNoexmrF6UIV5Tic0O540E39uOdiAc+TZekt
+         Yg1XDZ8wGwfvTBgfg03ER1ZzIHw1fnAd17nF1igYdadTeCHdMGqxav3ZdjyJ5dcEu4Ll
+         +6xvShvyiUWzwC8GpyXvk1jQWe34DEo2q7aA19TOGfWTliGIiTjCJ2/4Do+j3zVIMGSJ
+         kdyIv9YZfhODXjrGut8IFHEjEpbWw2A2kFvsW3G+O6LoTv1FscJ4zqyzNuePsfo40fsY
+         NPnMmfLu69M433nqOSkZoKaW4WMb0WZQL9Hqn/x4gLADGzjSggjSfef6UOAhbUWRi3Ya
+         tIUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pG1dMHtZH73TRwIerhkeF5MzPMCfsVBoJ6eMm8ohCck=;
+        b=UM3MEyJtRLnIH7A+ar0RrOZEygcoe0Y6tWnTzBvx2+d9ncHeSK824ZRQA5PRqTaOWh
+         Bpupa5V9XGHBb0SN4ROVF+CYAuVyo3sZKRC0nxZiOZFlXEMA4dq0Wc/3EVH28s1vxLtH
+         OUSipQU/wgIZGsrQz3JB2wrI8DXlyAl2eLIFGv8MEgq0+noFno+VI2Da4u4G4DflzkZa
+         ZD1NIn/cs5UI/FM4D68gPAYiyfy3eK2u46p0b8Jdqu6MlrEebfDllAfSs5rk4Gk5Tjdp
+         +qQBtZu6GJcF70tfhMgR5K0uDwTsjGg9xNqwtpahhUVgunn+VWG4NscfVSmzCh42uieI
+         0AVg==
+X-Gm-Message-State: APjAAAVIpIKoGwenUdaTdpQdYtRwLW2rP3+o3AiHCu6Doy5z54VN5dMh
+        mNzqnSSuKL0LVvMV4Y+L/Lk=
+X-Google-Smtp-Source: APXvYqwah3U58lG/iFfoMWrOCymtN4tLD33/PiCMqjtD3w+TClssgHN7tIvimgRpgIKmVXP41rg6DQ==
+X-Received: by 2002:a63:d756:: with SMTP id w22mr10239371pgi.156.1562932991099;
+        Fri, 12 Jul 2019 05:03:11 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:478:b8c3:8577:bf2f:2])
+        by smtp.gmail.com with ESMTPSA id a128sm4605496pfb.185.2019.07.12.05.03.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 05:03:10 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     urezki@gmail.com, rpenyaev@suse.de, peterz@infradead.org,
+        guro@fb.com, rick.p.edgecombe@intel.com, rppt@linux.ibm.com,
+        aryabinin@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH v4 2/2] mm/vmalloc.c: Modify struct vmap_area to reduce its size
+Date:   Fri, 12 Jul 2019 20:02:13 +0800
+Message-Id: <20190712120213.2825-3-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190712120213.2825-1-lpf.vector@gmail.com>
+References: <20190712120213.2825-1-lpf.vector@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e546975-b305-4ea4-d086-08d706c0de75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2019 12:02:53.4013
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rkagan@virtuozzo.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB4876
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:12:29AM +0200, Arnd Bergmann wrote:
-> clang points out that running a 64-bit guest on a 32-bit host
-> would lead to uninitialized variables:
->=20
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitializ=
-ed whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         if (!longmode) {
->             ^~~~~~~~~
-> arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
->         trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgp=
-a);
->                                                              ^~~~~
-> arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is a=
-lways true
->         if (!longmode) {
->         ^~~~~~~~~~~~~~~
-> arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to s=
-ilence this warning
->         u64 param, ingpa, outgpa, ret =3D HV_STATUS_SUCCESS;
->                         ^
->                          =3D 0
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitiali=
-zed whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitializ=
-ed whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->=20
-> Since that combination is not supported anyway, change the condition
-> to tell the compiler how the code is actually executed.
+Objective
+---------
+The current implementation of struct vmap_area wasted space.
 
-Hmm, the compiler *is* told all it needs:
+After applying this commit, sizeof(struct vmap_area) has been
+reduced from 11 words to 8 words.
 
+Description
+-----------
+1) Pack "vm" and "subtree_max_size"
+This is no problem because
+  A) "vm" is only used when vmap_area is in "busy" tree
+  B) "subtree_max_size" is only used when vmap_area is in
+     "free" tree
 
-arch/x86/kvm/x86.h:
-...
-static inline int is_long_mode(struct kvm_vcpu *vcpu)
-{
-#ifdef CONFIG_X86_64
-	return vcpu->arch.efer & EFER_LMA;
-#else
-	return 0;
-#endif
-}
+2) Pack "purge_list"
+The variable "purge_list" is only used when vmap_area is in
+"lazy purge" list. So it can be packed with other variables,
+which are only used in rbtree and list sorted by address.
 
-static inline bool is_64_bit_mode(struct kvm_vcpu *vcpu)
-{
-	int cs_db, cs_l;
+3) Eliminate "flags".
+Since only one flag VM_VM_AREA is being used, and the same
+thing can be done by judging whether "vm" is NULL, then the
+"flags" can be eliminated.
 
-	if (!is_long_mode(vcpu))
-		return false;
-	kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
-	return cs_l;
-}
-...
+Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ include/linux/vmalloc.h | 40 +++++++++++++++++++++++++++++++---------
+ mm/vmalloc.c            | 28 +++++++++++++---------------
+ 2 files changed, 44 insertions(+), 24 deletions(-)
 
-so in !CONFIG_X86_64 case is_64_bit_mode() unconditionally returns
-false, and the branch setting the values of the variables is always
-taken.
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 9b21d0047710..6fb377ca9e7a 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -51,15 +51,37 @@ struct vmap_area {
+ 	unsigned long va_start;
+ 	unsigned long va_end;
+ 
+-	/*
+-	 * Largest available free size in subtree.
+-	 */
+-	unsigned long subtree_max_size;
+-	unsigned long flags;
+-	struct rb_node rb_node;         /* address sorted rbtree */
+-	struct list_head list;          /* address sorted list */
+-	struct llist_node purge_list;    /* "lazy purge" list */
+-	struct vm_struct *vm;
++	union {
++		/* In rbtree and list sorted by address */
++		struct {
++			union {
++				/*
++				 * In "busy" rbtree and list.
++				 * rbtree root:	vmap_area_root
++				 * list head:	vmap_area_list
++				 */
++				struct vm_struct *vm;
++
++				/*
++				 * In "free" rbtree and list.
++				 * rbtree root:	free_vmap_area_root
++				 * list head:	free_vmap_area_list
++				 */
++				unsigned long subtree_max_size;
++			};
++
++			struct rb_node rb_node;
++			struct list_head list;
++		};
++
++		/*
++		 * In "lazy purge" list.
++		 * llist head: vmap_purge_list
++		 */
++		struct {
++			struct llist_node purge_list;
++		};
++	};
+ };
+ 
+ /*
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 9eb700a2087b..1245d3285a32 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -329,7 +329,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
+ #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
+ #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
+ 
+-#define VM_VM_AREA	0x04
+ 
+ static DEFINE_SPINLOCK(vmap_area_lock);
+ /* Export for kexec only */
+@@ -1115,7 +1114,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 
+ 	va->va_start = addr;
+ 	va->va_end = addr + size;
+-	va->flags = 0;
++	va->vm = NULL;
+ 	insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
+ 
+ 	spin_unlock(&vmap_area_lock);
+@@ -1279,7 +1278,9 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
+ 	llist_for_each_entry_safe(va, n_va, valist, purge_list) {
+ 		unsigned long nr = (va->va_end - va->va_start) >> PAGE_SHIFT;
+ 
+-		__free_vmap_area(va);
++		merge_or_add_vmap_area(va,
++			&free_vmap_area_root, &free_vmap_area_list);
++
+ 		atomic_long_sub(nr, &vmap_lazy_nr);
+ 
+ 		if (atomic_long_read(&vmap_lazy_nr) < resched_threshold)
+@@ -1919,7 +1920,6 @@ void __init vmalloc_init(void)
+ 		if (WARN_ON_ONCE(!va))
+ 			continue;
+ 
+-		va->flags = VM_VM_AREA;
+ 		va->va_start = (unsigned long)tmp->addr;
+ 		va->va_end = va->va_start + tmp->size;
+ 		va->vm = tmp;
+@@ -2017,7 +2017,6 @@ static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+ 	vm->size = va->va_end - va->va_start;
+ 	vm->caller = caller;
+ 	va->vm = vm;
+-	va->flags |= VM_VM_AREA;
+ 	spin_unlock(&vmap_area_lock);
+ }
+ 
+@@ -2122,10 +2121,10 @@ struct vm_struct *find_vm_area(const void *addr)
+ 	struct vmap_area *va;
+ 
+ 	va = find_vmap_area((unsigned long)addr);
+-	if (va && va->flags & VM_VM_AREA)
+-		return va->vm;
++	if (!va)
++		return NULL;
+ 
+-	return NULL;
++	return va->vm;
+ }
+ 
+ /**
+@@ -2146,11 +2145,10 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 
+ 	spin_lock(&vmap_area_lock);
+ 	va = __find_vmap_area((unsigned long)addr);
+-	if (va && va->flags & VM_VM_AREA) {
++	if (va && va->vm) {
+ 		struct vm_struct *vm = va->vm;
+ 
+ 		va->vm = NULL;
+-		va->flags &= ~VM_VM_AREA;
+ 		spin_unlock(&vmap_area_lock);
+ 
+ 		kasan_free_shadow(vm);
+@@ -2853,7 +2851,7 @@ long vread(char *buf, char *addr, unsigned long count)
+ 		if (!count)
+ 			break;
+ 
+-		if (!(va->flags & VM_VM_AREA))
++		if (!va->vm)
+ 			continue;
+ 
+ 		vm = va->vm;
+@@ -2933,7 +2931,7 @@ long vwrite(char *buf, char *addr, unsigned long count)
+ 		if (!count)
+ 			break;
+ 
+-		if (!(va->flags & VM_VM_AREA))
++		if (!va->vm)
+ 			continue;
+ 
+ 		vm = va->vm;
+@@ -3463,10 +3461,10 @@ static int s_show(struct seq_file *m, void *p)
+ 	va = list_entry(p, struct vmap_area, list);
+ 
+ 	/*
+-	 * s_show can encounter race with remove_vm_area, !VM_VM_AREA on
+-	 * behalf of vmap area is being tear down or vm_map_ram allocation.
++	 * If !va->vm then this vmap_area object is allocated
++	 * by vm_map_ram.
+ 	 */
+-	if (!(va->flags & VM_VM_AREA)) {
++	if (!va->vm) {
+ 		seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+ 			(void *)va->va_start, (void *)va->va_end,
+ 			va->va_end - va->va_start);
+-- 
+2.21.0
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/x86/kvm/hyperv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index a39e38f13029..950436c502ba 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1607,7 +1607,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
-> =20
->  	longmode =3D is_64_bit_mode(vcpu);
-> =20
-> -	if (!longmode) {
-> +	if (!IS_ENABLED(CONFIG_X86_64) || !longmode) {
->  		param =3D ((u64)kvm_rdx_read(vcpu) << 32) |
->  			(kvm_rax_read(vcpu) & 0xffffffff);
->  		ingpa =3D ((u64)kvm_rbx_read(vcpu) << 32) |
-
-So this is rather a workaround for the compiler giving false positive.
-I suggest to at least rephrase the log message to inidcate this.
-
-Roman.
