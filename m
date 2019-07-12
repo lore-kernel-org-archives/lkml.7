@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A348BC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F07C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B52021019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A96216E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934514;
-	bh=jAbFcyGbvqDuahV01o/tyOYr3IHhrqzrwQuCsqfTRZo=;
+	s=default; t=1562934517;
+	bh=JRa2eEbk8WJA/i//yKvGucM4xdTlylVBekg2TwSXVIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dkSAZ/WDQRzh+Aa04xTOqRY6+if9ir/VIgd+EHwfjSgmcndDaPp14eMoGlhPQ5lTb
-	 TwNBg6M8sTlIeR01s0w4CKyhQli16kkMI9vCPEqccPUGJLX+rFdoIkJOeRkNlpLm57
-	 DZAWmA8hkHPimuPwb8WEpCUTzvdksId1nTmIk1MQ=
+	b=FI4ZLFWA19hT6CGxSX85xTQQm9BuROWoB27Ds1npUqApHzWLv2wZpsG5Wd7orpynK
+	 yFgGzfd+P4LrForjCmMG0Of9hfyCE4M4KB2nbqD8S5UjudgHHi07WGu6Ntf9k/999H
+	 keckLAeKLn+fmETxxyxtevxIfp8YsdDPdQO+QidM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfGLM23 (ORCPT
+        id S1728856AbfGLM2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42334 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728821AbfGLM21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:28:27 -0400
+        id S1728377AbfGLM2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2C821019;
-        Fri, 12 Jul 2019 12:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C7321019;
+        Fri, 12 Jul 2019 12:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934506;
-        bh=jAbFcyGbvqDuahV01o/tyOYr3IHhrqzrwQuCsqfTRZo=;
+        s=default; t=1562934511;
+        bh=JRa2eEbk8WJA/i//yKvGucM4xdTlylVBekg2TwSXVIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O49M1SmYCwcPwU9N6X6sSRsgPIzf5g6WDs2Q6HITsI/CXEKZdZPOE55VxYlALgAn7
-         DosSlPvx7d1QiHc+xKtEbY8GnTuZRmpqB7QtvnexaPw5doTSm4I/UGleIpLqAfw8Zi
-         WPvxMXCjr6/8tBl/xvjaKw3Vlzv2d5COjmyQcLek=
+        b=SeKNjc/OtQC3GNLKz9VaDSpFJQJXdoMCCVX52LZagU3OxiQhnGHaxN3z2B9WP5vVP
+         BQ5GCiymzid1I9l/xpZAJQY1dXzVlIh5RNdSUu08Eoonl3HwoSP0jrcQ5g06RCKSAT
+         T4CiqxfEVG2g7dLDZx/j/78KGLQF7VleJX5Yz/dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 033/138] netfilter: ipv6: nf_defrag: accept duplicate fragments again
-Date:   Fri, 12 Jul 2019 14:18:17 +0200
-Message-Id: <20190712121629.965015417@linuxfoundation.org>
+Subject: [PATCH 5.1 035/138] can: mcp251x: add support for mcp25625
+Date:   Fri, 12 Jul 2019 14:18:19 +0200
+Message-Id: <20190712121630.035300742@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,57 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a3dca632538c550930ce8bafa8c906b130d35cf ]
+[ Upstream commit 35b7fa4d07c43ad79b88e6462119e7140eae955c ]
 
-When fixing the skb leak introduced by the conversion to rbtree, I
-forgot about the special case of duplicate fragments. The condition
-under the 'insert_error' label isn't effective anymore as
-nf_ct_frg6_gather() doesn't override the returned value anymore. So
-duplicate fragments now get NF_DROP verdict.
+Fully compatible with mcp2515, the mcp25625 have integrated transceiver.
 
-To accept duplicate fragments again, handle them specially as soon as
-inet_frag_queue_insert() reports them. Return -EINPROGRESS which will
-translate to NF_STOLEN verdict, like any accepted fragment. However,
-such packets don't carry any new information and aren't queued, so we
-just drop them immediately.
+This patch adds support for the mcp25625 to the existing mcp251x driver.
 
-Fixes: a0d56cb911ca ("netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/netfilter/nf_conntrack_reasm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/can/spi/Kconfig   |  5 +++--
+ drivers/net/can/spi/mcp251x.c | 25 ++++++++++++++++---------
+ 2 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 5b3f65e29b6f..8951de8b568f 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -265,8 +265,14 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+diff --git a/drivers/net/can/spi/Kconfig b/drivers/net/can/spi/Kconfig
+index 8f2e0dd7b756..792e9c6c4a2f 100644
+--- a/drivers/net/can/spi/Kconfig
++++ b/drivers/net/can/spi/Kconfig
+@@ -8,9 +8,10 @@ config CAN_HI311X
+ 	  Driver for the Holt HI311x SPI CAN controllers.
  
- 	prev = fq->q.fragments_tail;
- 	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
--	if (err)
-+	if (err) {
-+		if (err == IPFRAG_DUP) {
-+			/* No error for duplicates, pretend they got queued. */
-+			kfree_skb(skb);
-+			return -EINPROGRESS;
-+		}
- 		goto insert_error;
-+	}
+ config CAN_MCP251X
+-	tristate "Microchip MCP251x SPI CAN controllers"
++	tristate "Microchip MCP251x and MCP25625 SPI CAN controllers"
+ 	depends on HAS_DMA
+ 	---help---
+-	  Driver for the Microchip MCP251x SPI CAN controllers.
++	  Driver for the Microchip MCP251x and MCP25625 SPI CAN
++	  controllers.
  
- 	if (dev)
- 		fq->iif = dev->ifindex;
-@@ -304,8 +310,6 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 	return -EINPROGRESS;
+ endmenu
+diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+index e90817608645..da64e71a62ee 100644
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -1,5 +1,5 @@
+ /*
+- * CAN bus driver for Microchip 251x CAN Controller with SPI Interface
++ * CAN bus driver for Microchip 251x/25625 CAN Controller with SPI Interface
+  *
+  * MCP2510 support and bug fixes by Christian Pellegrin
+  * <chripell@evolware.org>
+@@ -41,7 +41,7 @@
+  * static struct spi_board_info spi_board_info[] = {
+  *         {
+  *                 .modalias = "mcp2510",
+- *			// or "mcp2515" depending on your controller
++ *			// "mcp2515" or "mcp25625" depending on your controller
+  *                 .platform_data = &mcp251x_info,
+  *                 .irq = IRQ_EINT13,
+  *                 .max_speed_hz = 2*1000*1000,
+@@ -238,6 +238,7 @@ static const struct can_bittiming_const mcp251x_bittiming_const = {
+ enum mcp251x_model {
+ 	CAN_MCP251X_MCP2510	= 0x2510,
+ 	CAN_MCP251X_MCP2515	= 0x2515,
++	CAN_MCP251X_MCP25625	= 0x25625,
+ };
  
- insert_error:
--	if (err == IPFRAG_DUP)
--		goto err;
- 	inet_frag_kill(&fq->q);
- err:
- 	skb_dst_drop(skb);
+ struct mcp251x_priv {
+@@ -280,7 +281,6 @@ static inline int mcp251x_is_##_model(struct spi_device *spi) \
+ }
+ 
+ MCP251X_IS(2510);
+-MCP251X_IS(2515);
+ 
+ static void mcp251x_clean(struct net_device *net)
+ {
+@@ -639,7 +639,7 @@ static int mcp251x_hw_reset(struct spi_device *spi)
+ 
+ 	/* Wait for oscillator startup timer after reset */
+ 	mdelay(MCP251X_OST_DELAY_MS);
+-	
++
+ 	reg = mcp251x_read_reg(spi, CANSTAT);
+ 	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
+ 		return -ENODEV;
+@@ -820,9 +820,8 @@ static irqreturn_t mcp251x_can_ist(int irq, void *dev_id)
+ 		/* receive buffer 0 */
+ 		if (intf & CANINTF_RX0IF) {
+ 			mcp251x_hw_rx(spi, 0);
+-			/*
+-			 * Free one buffer ASAP
+-			 * (The MCP2515 does this automatically.)
++			/* Free one buffer ASAP
++			 * (The MCP2515/25625 does this automatically.)
+ 			 */
+ 			if (mcp251x_is_2510(spi))
+ 				mcp251x_write_bits(spi, CANINTF, CANINTF_RX0IF, 0x00);
+@@ -831,7 +830,7 @@ static irqreturn_t mcp251x_can_ist(int irq, void *dev_id)
+ 		/* receive buffer 1 */
+ 		if (intf & CANINTF_RX1IF) {
+ 			mcp251x_hw_rx(spi, 1);
+-			/* the MCP2515 does this automatically */
++			/* The MCP2515/25625 does this automatically. */
+ 			if (mcp251x_is_2510(spi))
+ 				clear_intf |= CANINTF_RX1IF;
+ 		}
+@@ -1006,6 +1005,10 @@ static const struct of_device_id mcp251x_of_match[] = {
+ 		.compatible	= "microchip,mcp2515",
+ 		.data		= (void *)CAN_MCP251X_MCP2515,
+ 	},
++	{
++		.compatible	= "microchip,mcp25625",
++		.data		= (void *)CAN_MCP251X_MCP25625,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, mcp251x_of_match);
+@@ -1019,6 +1022,10 @@ static const struct spi_device_id mcp251x_id_table[] = {
+ 		.name		= "mcp2515",
+ 		.driver_data	= (kernel_ulong_t)CAN_MCP251X_MCP2515,
+ 	},
++	{
++		.name		= "mcp25625",
++		.driver_data	= (kernel_ulong_t)CAN_MCP251X_MCP25625,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
+@@ -1259,5 +1266,5 @@ module_spi_driver(mcp251x_can_driver);
+ 
+ MODULE_AUTHOR("Chris Elston <celston@katalix.com>, "
+ 	      "Christian Pellegrin <chripell@evolware.org>");
+-MODULE_DESCRIPTION("Microchip 251x CAN driver");
++MODULE_DESCRIPTION("Microchip 251x/25625 CAN driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
