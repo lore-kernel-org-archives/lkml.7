@@ -2,179 +2,120 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890D7C742A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C39C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6219721019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4372B21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGGOiAYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfGLDTd (ORCPT
+        id S1729367AbfGLDV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:19:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45926 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbfGLDTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:19:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:19:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
-   d="scan'208";a="341578693"
-Received: from gonegri-mobl.ger.corp.intel.com (HELO localhost) ([10.252.48.192])
-  by orsmga005.jf.intel.com with ESMTP; 11 Jul 2019 20:19:27 -0700
-Date:   Fri, 12 Jul 2019 06:19:25 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Cedric Xing <cedric.xing@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        kai.svahn@intel.com, kai.huang@intel.com
-Subject: Re: [RFC PATCH v2 1/3] selftests/x86: Fixed Makefile for SGX selftest
-Message-ID: <20190712031925.32dqi3v3jetojaju@linux.intel.com>
-References: <cover.1555965327.git.cedric.xing@intel.com>
- <20190424062623.4345-2-cedric.xing@intel.com>
+        Thu, 11 Jul 2019 23:21:27 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37043 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729051AbfGLDV1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:21:27 -0400
+Received: by mail-io1-f65.google.com with SMTP id q22so17329488iog.4;
+        Thu, 11 Jul 2019 20:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7LVm4En99ffCjdSQOlCLFmZyKo+5KgGT1Gs50j8hsM=;
+        b=XGGOiAYWv7/LtWLb3fFHsucku023HvaBW9ern8zt9rFe1AyknFN0kxKFPziFQZPpU0
+         mSUbPmiUxLZBClWysvQHFmJPzjerUGcZmDtQtON9UMZ2C4htBoznEEz2/vFFy/yVuJja
+         T34RRf3SsfRNEsmhwekzCfWrfFfgARA567579Dr0mc521R6E52gp2ayCzNst2yQphWtb
+         SAT8Oq/dYdNEQwYhy2DLsF34PcwbUmqh8/5rJ58NESmddmsnlgfyv8urPDxPtMjHgLqU
+         fWnoeLnir4pIqAFryiTPsmzaD4bprxfXiinlG6R4m1tet7HqDGByU4JAdYYEUeQ+yvoL
+         /dlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7LVm4En99ffCjdSQOlCLFmZyKo+5KgGT1Gs50j8hsM=;
+        b=ZhCnIr/Q7nDEWK8KIAfFSsiwrRSsYsyQPNu9MZO3imuX04BHYmjkRY8Sw9vL8R/WRH
+         wZT4ZT2GaIGr/XvOiXDr2G7yBGejZF+Fh6thZcQgx6yrq+a3QwqgmOlFVPHl3+6rksfU
+         OcPWAboKl56bAWTbtssKvk0slhRbLVtpYc1GX+gGSNOFJPoUYPJn0LhO0NHZoHPH0HtM
+         YzOeCpJqhlxrq4zxGbiRm5rI04q0UL5MMwU/WndaNDrup/H6Td7HRMBDPHOmWE/YxX70
+         iEa0O3FrsD5fb+LR+98LDv/TYaRqtix7/3TDBgYKhffZrsuqxDpMq1wP9NGGEKKkpcEv
+         avHQ==
+X-Gm-Message-State: APjAAAUBQbOmuk7yvAq3RegLmxGu53NUgIuamYQdIPXYXVb0uU+4j9BQ
+        bCQxoXsxGDT3DzphAEkelL2IaiJR6QAxdl1tjHU=
+X-Google-Smtp-Source: APXvYqyp5Ity6hBV3CWvEX0wudD0bshEvgzA9ul3uS1sRHoTyhwVoN3ni1XDKQh+sLTxNA7FAuOIv5IQ476yGT3CIBY=
+X-Received: by 2002:a02:8814:: with SMTP id r20mr9020971jai.115.1562901686256;
+ Thu, 11 Jul 2019 20:21:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424062623.4345-2-cedric.xing@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+References: <20190522013045.21678-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190522013045.21678-1-andrew.smirnov@gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Thu, 11 Jul 2019 20:21:14 -0700
+Message-ID: <CAHQ1cqF+8i1RPi77pXhGv4GRMoWMC0PpvJcEWcKH1O+CKuGWpg@mail.gmail.com>
+Subject: Re: [PATCH v2] Bluetooth: Retry configure request if result is L2CAP_CONF_UNKNOWN
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     linux-bluetooth@vger.kernel.org,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Florian Dollinger <dollinger.florian@gmx.de>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:26:21PM -0700, Cedric Xing wrote:
-> The original x86/sgx/Makefile doesn't work when 'x86/sgx' is specified as the
-> test target. This patch fixes that problem, along with minor changes to the
-> dependencies between 'x86' and 'x86/sgx' in selftests/x86/Makefile.
-> 
-> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+On Tue, May 21, 2019 at 6:31 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+>
+> Due to:
+>
+>  * Current implementation of l2cap_config_rsp() dropping BT
+>    connection if sender of configuration response replied with unknown
+>    option failure (Result=0x0003/L2CAP_CONF_UNKNOWN)
+>
+>  * Current implementation of l2cap_build_conf_req() adding
+>    L2CAP_CONF_RFC(0x04) option to initial configure request sent by
+>    the Linux host.
+>
+> devices that do no recongninze L2CAP_CONF_RFC, such as Xbox One S
+> controllers, will get stuck in endless connect -> configure ->
+> disconnect loop, never connect and be generaly unusable.
+>
+> To avoid this problem add code to do the following:
+>
+>  1. Parse the body of response L2CAP_CONF_UNKNOWN and, in case of
+>     unsupported option being RFC, clear L2CAP_FEAT_ERTM and
+>     L2CAP_FEAT_STREAMING from connection's feature mask (in order to
+>     prevent RFC option from being added going forward)
+>
+>  2. Retry configuration step the same way it's done for
+>     L2CAP_CONF_UNACCEPT
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> Cc: Florian Dollinger <dollinger.florian@gmx.de>
+> Cc: Marcel Holtmann <marcel@holtmann.org>
+> Cc: Johan Hedberg <johan.hedberg@gmail.com>
+> Cc: linux-bluetooth@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  tools/testing/selftests/x86/Makefile     | 12 +++----
->  tools/testing/selftests/x86/sgx/Makefile | 45 +++++++++---------------
->  2 files changed, 22 insertions(+), 35 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-> index 4fc9a42f56ea..1294c5f5b6ca 100644
-> --- a/tools/testing/selftests/x86/Makefile
-> +++ b/tools/testing/selftests/x86/Makefile
-> @@ -70,11 +70,11 @@ all_32: $(BINARIES_32)
->  
->  all_64: $(BINARIES_64)
->  
-> -all_64: $(SUBDIRS_64)
-> -	@for DIR in $(SUBDIRS_64); do			\
-> -		BUILD_TARGET=$(OUTPUT)/$$DIR;		\
-> -		mkdir $$BUILD_TARGET  -p;		\
-> -		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
-> +all_64: | $(SUBDIRS_64)
-> +	@for DIR in $|; do					\
-> +		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-> +		mkdir $$BUILD_TARGET  -p;			\
-> +		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
+>
+> Changes since [v1]:
+>
+>    - Patch simplified to simply clear L2CAP_FEAT_ERTM |
+>      L2CAP_FEAT_STREAMING from feat_mask when device flags RFC options
+>      as unknown
+>
+> [v1] lore.kernel.org/r/20190208025828.30901-1-andrew.smirnov@gmail.com
+>
 
-This is not fix for anything. It is change in semantics. This diff
-should be isolated to its own commit as you are changing something
-outside of SGX scope.
+Pinging the status of this. Marcel, do you have any feedback on v2?
 
->  	done
->  
->  EXTRA_CLEAN := $(BINARIES_32) $(BINARIES_64)
-> @@ -90,7 +90,7 @@ ifeq ($(CAN_BUILD_I386)$(CAN_BUILD_X86_64),01)
->  all: warn_32bit_failure
->  
->  warn_32bit_failure:
-> -	@echo "Warning: you seem to have a broken 32-bit build" 2>&1; 	\
-> +	@echo "Warning: you seem to have a broken 32-bit build" 2>&1;	\
-
-Please clean this up.
-
->  	echo "environment.  This will reduce test coverage of 64-bit" 2>&1; \
->  	echo "kernels.  If you are using a Debian-like distribution," 2>&1; \
->  	echo "try:"; 2>&1; \
-> diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
-> index 1fd6f2708e81..3af15d7c8644 100644
-> --- a/tools/testing/selftests/x86/sgx/Makefile
-> +++ b/tools/testing/selftests/x86/sgx/Makefile
-> @@ -2,47 +2,34 @@ top_srcdir = ../../../../..
->  
->  include ../../lib.mk
->  
-> -HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC
-> -ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
-> +ifeq ($(shell $(CC) -dumpmachine | cut --delimiter=- -f1),x86_64)
-> +all: all_64
-> +endif
-> +
-> +HOST_CFLAGS := -Wall -Werror -g $(INCLUDES)
-> +ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIE \
->  	       -fno-stack-protector -mrdrnd $(INCLUDES)
->  
->  TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx
->  all_64: $(TEST_CUSTOM_PROGS)
->  
-> -$(TEST_CUSTOM_PROGS): $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o \
-> -		      $(OUTPUT)/encl_piggy.o
-> +$(TEST_CUSTOM_PROGS): main.c sgx_call.S $(OUTPUT)/encl_piggy.o
->  	$(CC) $(HOST_CFLAGS) -o $@ $^
->  
-> -$(OUTPUT)/main.o: main.c
-> -	$(CC) $(HOST_CFLAGS) -c $< -o $@
-> -
-> -$(OUTPUT)/sgx_call.o: sgx_call.S
-> -	$(CC) $(HOST_CFLAGS) -c $< -o $@
-> -
-> -$(OUTPUT)/encl_piggy.o: $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-> -	$(CC) $(HOST_CFLAGS) -c encl_piggy.S -o $@
-> +$(OUTPUT)/encl_piggy.o: encl_piggy.S $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-> +	$(CC) $(HOST_CFLAGS) -I$(OUTPUT) -c $< -o $@
->  
-> -$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
-> +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf
->  	objcopy --remove-section=.got.plt -O binary $< $@
->  
-> -$(OUTPUT)/encl.elf: $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o
-> -	$(CC) $(ENCL_CFLAGS) -T encl.lds -o $@ $^
-> +$(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
-> +	$(CC) $(ENCL_CFLAGS) -T $^ -o $@
->  
-> -$(OUTPUT)/encl.o: encl.c
-> -	$(CC) $(ENCL_CFLAGS) -c $< -o $@
-> -
-> -$(OUTPUT)/encl_bootstrap.o: encl_bootstrap.S
-> -	$(CC) $(ENCL_CFLAGS) -c $< -o $@
-> -
-> -$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin  $(OUTPUT)/sgxsign
-> -	$(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-> +$(OUTPUT)/encl.ss: $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin
-> +	$^ $@
->  
->  $(OUTPUT)/sgxsign: sgxsign.c
->  	$(CC) -o $@ $< -lcrypto
->  
-> -EXTRA_CLEAN := $(OUTPUT)/sgx-selftest $(OUTPUT)/sgx-selftest.o \
-> -	       $(OUTPUT)/sgx_call.o $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss \
-> -	       $(OUTPUT)/encl.elf $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o \
-> -	       $(OUTPUT)/sgxsign
-> -
-> -.PHONY: clean
-> +EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(addprefix $(OUTPUT)/,	\
-> +		encl.elf encl.bin encl.ss encl_piggy.o sgxsign)
-> -- 
-> 2.17.1
-> 
-
-What are all these changes to the makefile? I don't see mention of them
-in the commit message.
-
-/Jarkko
+Thanks,
+Andrey Smirnov
