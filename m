@@ -2,111 +2,85 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00944C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A9FC742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C917B20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:39:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IvWP7LKW"
+	by mail.kernel.org (Postfix) with ESMTP id 912232146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfGLSjI (ORCPT
+        id S1727382AbfGLSnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 14:39:08 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36850 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfGLSjI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 14:39:08 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CIcwZq015255;
-        Fri, 12 Jul 2019 13:38:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562956738;
-        bh=qoKT170R6U+xejiy045waJJnY7mObDoDXmCpVbDWlxU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IvWP7LKWUo/msn1Nf+yf/zMbneTgvg+6CLwE1sCOQdGFJtWl5L7kgspohdLbyA/RF
-         T2Ul1BJC3Z67GZax/DwW2PogmdN/9zAin0U5vFtfsnSypj4kHS9y6AVA6VdY8DMjlK
-         nUscF5Nw3fGj6IItwkAW85rmT6dzmCEzXMN6+6lk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CIcwFb052967
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jul 2019 13:38:58 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Jul 2019 13:38:57 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Jul 2019 13:38:57 -0500
-Received: from [128.247.59.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CIcvj9030014;
-        Fri, 12 Jul 2019 13:38:57 -0500
-Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
- property
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-3-jjhiblot@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <cd233d13-b4dd-1c4f-235e-d63cebab6f4f@ti.com>
-Date:   Fri, 12 Jul 2019 13:38:10 -0500
+        Fri, 12 Jul 2019 14:43:05 -0400
+Received: from bran.ispras.ru ([83.149.199.196]:19157 "EHLO smtp.ispras.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727053AbfGLSnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 14:43:05 -0400
+Received: from [10.10.3.112] (starling.intra.ispras.ru [10.10.3.112])
+        by smtp.ispras.ru (Postfix) with ESMTP id 284A8201D0;
+        Fri, 12 Jul 2019 21:43:03 +0300 (MSK)
+Subject: Re: [PATCH] proc: Fix uninitialized byte read in get_mm_cmdline()
+To:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        security@kernel.org
+References: <20190712160913.17727-1-izbyshev@ispras.ru>
+ <20190712163625.GF21989@redhat.com> <20190712174632.GA3175@avx2>
+From:   Alexey Izbyshev <izbyshev@ispras.ru>
+Message-ID: <3de2d71b-37be-6238-7fd8-0a40c9b94a98@ispras.ru>
+Date:   Fri, 12 Jul 2019 21:43:03 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190708103547.23528-3-jjhiblot@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190712174632.GA3175@avx2>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JJ
+On 7/12/19 8:46 PM, Alexey Dobriyan wrote:
+> On Fri, Jul 12, 2019 at 06:36:26PM +0200, Oleg Nesterov wrote:
+>> On 07/12, Alexey Izbyshev wrote:
+>>>
+>>> --- a/fs/proc/base.c
+>>> +++ b/fs/proc/base.c
+>>> @@ -275,6 +275,8 @@ static ssize_t get_mm_cmdline(struct mm_struct *mm, char __user *buf,
+>>>  		if (got <= offset)
+>>>  			break;
+>>>  		got -= offset;
+>>> +		if (got < size)
+>>> +			size = got;
+>>
+>> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> 
+> The proper fix to all /proc/*/cmdline problems is to revert
+> 
+> 	f5b65348fd77839b50e79bc0a5e536832ea52d8d
+> 	proc: fix missing final NUL in get_mm_cmdline() rewrite
+> 
+> 	5ab8271899658042fabc5ae7e6a99066a210bc0e
+> 	fs/proc: simplify and clarify get_mm_cmdline() function
+> 
+Should this be interpreted as an actual suggestion to revert the patches,
+fix the conflicts, test and submit them, or is this more like thinking out
+loud? In the former case, will it be OK for long term branches?
 
-On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
-> Most of the LEDs are powered by a voltage/current regulator. describing in
-> the device-tree makes it possible for the LED core to enable/disable it
-> when needed.
+get_mm_cmdline() does seem easier to read for me before 5ab8271899658042.
+But it also has different semantics in corner cases, for example:
 
-This should be patch 1.
+- If there is no NUL at arg_end-1, it reads only the first string in
+the combined arg/env block, and doesn't terminate it with NUL.
 
+- If there is any problem with access_remote_vm() or copy_to_user(),
+it returns -EFAULT even if some data were copied to userspace.
 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->   Documentation/devicetree/bindings/leds/common.txt | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 70876ac11367..e093a2b7eb90 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -61,6 +61,11 @@ Optional properties for child nodes:
->   - panic-indicator : This property specifies that the LED should be used,
->   		    if at all possible, as a panic indicator.
->   
-> +- power-supply : A voltage/current regulator used to to power the LED. When a
-> +		 LED is turned off, the LED core disable its regulator. The
-> +		 same regulator can power many LED (or other) devices. It is
-> +		 turned off only when all of its users disabled it.
-> +
->   - trigger-sources : List of devices which should be used as a source triggering
->   		    this LED activity. Some LEDs can be related to a specific
->   		    device and should somehow indicate its state. E.g. USB 2.0
+On the other hand, 5ab8271899658042 was merged not too long ago (about a year),
+so it's possible that the current semantics isn't heavily relied upon.
 
-
-Do you have an example update?
-
-Dan
-
+Alexey
