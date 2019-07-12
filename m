@@ -2,98 +2,115 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598D4C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1266AC742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE5021530
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27912084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k4aHKCd4"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DDRFsUzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfGLBrw (ORCPT
+        id S1729084AbfGLBuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:47:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46372 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfGLBrv (ORCPT
+        Thu, 11 Jul 2019 21:50:02 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:64039 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfGLBuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:47:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1ivXa138640;
-        Fri, 12 Jul 2019 01:47:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=bOeKf0HYORGyeDkLlZkGcOq9SCXba9RpDa+uFpu0rk8=;
- b=k4aHKCd4dVUvEZD1eTuCzxtGbYythkLDYur8hiLgYTzZ+odaFkbGF+g3lKPLg+1+mDR8
- r5irxzpvl8YVSWmCOUB4eAqehIEg+Ve7C7AC261GYyYXGfYYanM6xu/858TEDEGQUJqz
- Si1PQYjlMvlACo8mdHQ7jcf+HKm3q+2gxErvsnDknlrKo2o5wGA9JoXBxOlN/e9jre26
- dV24L7zMydHRljo6LWGhPAAQmBCIEzudbhkrBjvftX9v33ZxGhUVP0Bx2D29qhENbm/a
- QlkZ+IgcH+cMIMydPuChAydfjd5cIxSreVDoPw/Lj8MQCa9X4XfSfQCxlK1kKXPddMej dg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2tjm9r30bf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 01:47:45 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C1hVnu148329;
-        Fri, 12 Jul 2019 01:47:44 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2tmwgygv1b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 01:47:44 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6C1lgQk030476;
-        Fri, 12 Jul 2019 01:47:42 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jul 2019 18:47:42 -0700
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Colin King <colin.king@canonical.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: libfc: fix null pointer dereference on a null lport
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190702091835.13629-1-colin.king@canonical.com>
-Date:   Thu, 11 Jul 2019 21:47:40 -0400
-In-Reply-To: <20190702091835.13629-1-colin.king@canonical.com> (Colin King's
-        message of "Tue, 2 Jul 2019 10:18:35 +0100")
-Message-ID: <yq1h87s58hv.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 11 Jul 2019 21:50:02 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x6C1ntc4011030;
+        Fri, 12 Jul 2019 10:49:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6C1ntc4011030
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562896196;
+        bh=UqIjBkSfDb7t0Pa41cTBLGihL/zO0QROm2fafaKHDNU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DDRFsUzW/FiD24HPs+jHu5Bi/EKdDsgZRtxiPrWYXTA/3mPJR02kR6Hy4rfZEHuk4
+         qvxNPWehXgIcjTVRXoXezGnP8oMNzcUtrK1R+L+NUle34E3/6PuAbQb0o8Sk+DfTtF
+         Ql7Zz0K3NyI31hFTXnQjNhBqcgpC0ygMQmMSgwyAw8Wu9QEF9W2D7YNuCjT8EXMWZY
+         /y2W/oMVyEeUnJJLoc6pB74gDeXr3xiuHnWJO/y7RUtsXyp6Ny6i3l8/5N5xwdqON0
+         rSjdfFQ0PpEuUrUwDHdYthh6CtNVnSZGqLxg29YwNSiuY2uYkpLvpNKNlG1SnusZSg
+         aALQBRtpaACTw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id j8so3375398uan.6;
+        Thu, 11 Jul 2019 18:49:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAUAH8hkNLa9lFkiOx+JMLdZ8oX0oyTxbMLS3p0HWhfhxNiCjnXs
+        LK5obM/dn5Dh2KMTU9P34mDF+Q4sX8yh08RH/uk=
+X-Google-Smtp-Source: APXvYqzlydwB3gvvdA2lFPvhYp8V78j/y+++pFKcTD76YsRnM+JZbqCkUMFDsfvqSxGFW/eSSrak/E0XHSk37MO7KZk=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr7296356uag.40.1562896194749;
+ Thu, 11 Jul 2019 18:49:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=863
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907120020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907120020
+References: <20190712010556.248319-1-briannorris@chromium.org>
+ <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com> <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com>
+In-Reply-To: <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 12 Jul 2019 10:49:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARJ=aAf-iG7RVDp=bs7DTScJ1GBpEpkqtKDFDJYHEekUA@mail.gmail.com>
+Message-ID: <CAK7LNARJ=aAf-iG7RVDp=bs7DTScJ1GBpEpkqtKDFDJYHEekUA@mail.gmail.com>
+Subject: Re: [RFC PATCH] bug: always show source-tree-relative paths in WARN()/BUG()
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 10:23 AM Brian Norris <briannorris@chromium.org> wrote:
+>
+> On Thu, Jul 11, 2019 at 6:14 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > BTW, did you see this?
+> >
+> > commit a73619a845d5625079cc1b3b820f44c899618388
+> > Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Date:   Fri Mar 30 13:15:26 2018 +0900
+> >
+> >     kbuild: use -fmacro-prefix-map to make __FILE__ a relative path
+>
+> Oh, wow, no I did not. If my reading is correct, that's GCC only? I've
+> been using various combinations of newer (5.2) and older (4.14.y --
+> didn't have that patch) kernels, older GCC (doesn't have that feature
+> AFAICT), and newer Clang (doesn't appear to have that feature). So I'm
+> not totally sure if I ever actually tried a combo that *could* make
+> use of that. But I may give it another shot.
+>
+> In the event that this is GCC-specific...I don't suppose I could
+> convince anybody to expend any effort (e.g., taking a patch like mine)
+> to solve it for the non-GCC world?
+>
+> Thanks for the tip,
+> Brian
 
-Hannes,
 
-Please review!
+GCC 8 added this flag.
+So, it will be eventually all solved in the GCC world.
 
-> Currently if lport is null then the null lport pointer is dereference
-> when printing out debug via the FC_LPORT_DB macro. Fix this by using
-> the more generic FC_LIBFC_DBG debug macro instead that does not use
-> lport.
+Clang has not supported it yet...
+
+
+Trimming absolute path at run-time
+is no help for reducing the kernel image.
+
+Turning __FILE__ into a relative path at compile-time is better.
+
+
+I hope Clang people will consider to support it.
+I guess implementing this feature should not be so hard.
+
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Best Regards
+Masahiro Yamada
