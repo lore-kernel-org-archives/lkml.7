@@ -5,98 +5,109 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E26BC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A003EC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78642054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A16A2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvbNRCUc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGLyidCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfGLR5U (ORCPT
+        id S1727350AbfGLSA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:57:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38121 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfGLR5U (ORCPT
+        Fri, 12 Jul 2019 14:00:29 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45911 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfGLSA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:57:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g17so10823695wrr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:57:18 -0700 (PDT)
+        Fri, 12 Jul 2019 14:00:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f9so10782952wre.12;
+        Fri, 12 Jul 2019 11:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=12w9YhMzTEceI3FF8gxwRGTZ2SJpBQ7cKMo01O/ztWg=;
-        b=fvbNRCUcHA5EF9w5+GiQrvMVZgK4Z0RBqPLbianwHZkzj1Wfcf6+EnVXvGLL20HLbN
-         Rpt6Q2WvRtCkuXEIE13mkicHw/oNEAOvLy7KjqmEkK+FFN3Nq+RTOsBt137F5L1zJxfv
-         XlRM37RIAZunhOcn6VmGJGkDf0B0ktuTTepU7L3c4hhikgOdkwWzNPwqgAPZ9ty9xRcM
-         FaFD43oWmyDMbqsN8AkxuVT19TsIFc8svNEaKjSZM0VDeEjNtosfuNQZ8lL1HApsc+yi
-         XiivUaq5+1DRpO+VeF24tCLdUYr9JpiXv1Wrc0w1ATm/xYbrp3NICswOxja7f931ClFI
-         fDWQ==
+        bh=jSLflZiZITnN+LWl1xVscHlJHNXtKI7cPwZYoo7JveE=;
+        b=WGLyidCEeOzK+/lZEInF9f5d4dS2hTMttPJ3PdxHiqizfszjheSaWM5sarrGicoCQx
+         S/JEbVsLwK6DjB6bxOyVsH+FopUgT9zP5JW9r+h/t8ONPcjpFIfkp2y4tFAelWjunYso
+         bVc4vokhkEQIB7T6HnfRGCi17kFI1Zh2qosBccXw17acpzm07srUVnQyrUILeMm0jmEf
+         KUKac6MPFCJTV2KmyYDYLvXFV3YCNTGHCmpu0yR1LxSIMxr4OAKJPrGtuFnyHJ9Wrrdq
+         hBTLD7o1YI99Ig6bAy4/GKhdUn4qEeawrRCYDek7I+MQp5JkpVUl5wWeuBM5tn63KaWa
+         cQvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=12w9YhMzTEceI3FF8gxwRGTZ2SJpBQ7cKMo01O/ztWg=;
-        b=cdQsv0SeD8JyknaGxFV4aLgeqf6KibG0R6RZ3jkUBKr7pSIgVziuzFu9BL4LoJhV/P
-         hm3KuOQqplLdEHo+jL5Fxt4BJYbZrO63xBQ+XmJQr5N30oN7yu1sRkkeFOrCrw/xoetj
-         IpddDoFPpjM38yemeHRlNfO8faTBJJUNrHfR+PcfxvKmuov6soGpZTCH79VN8XFLXSOF
-         utBcEKBequAefNKOZgB469/FTB3StjwOVB1PyLqh5VNCjP6LVMxcjbZrdSdaqQiiTMCB
-         b90glIL3PCC1bOybX1PMb+k5Ppkj99uFCJnVC5DQ/1NmeEEplrsWhc4wMUvXrxa0UMMi
-         lbWg==
-X-Gm-Message-State: APjAAAXoy3poGTl1RivlekjnLFJQdZo56esi6kB65dBk1cI+tBwANbDz
-        WZKF3Zoz2rszNU7l82J0sr0=
-X-Google-Smtp-Source: APXvYqwuYdWB6sJTcg7lu3ary3cXGkPst6uJsKQ/xPttRCCOP42sFPSCTNUAC/5rbJqH417Atb6nRQ==
-X-Received: by 2002:a5d:4a46:: with SMTP id v6mr12758036wrs.105.1562954237869;
-        Fri, 12 Jul 2019 10:57:17 -0700 (PDT)
+        bh=jSLflZiZITnN+LWl1xVscHlJHNXtKI7cPwZYoo7JveE=;
+        b=p/IvhcYeEiniMgcq261fMTuJbrxKvnul473JzqBrrcXG+dywAnQtBFHOZsNJtHBsH1
+         oAbD9+O6dc+QGGPQ77S1ZLflq4KnEPqPwXaeba3qLkTUKIa9r9TMQJFOi6I96vBQ6b9S
+         LxeLvs966Sqdvn4JEf9kUTvwpM6ZVs9ZuEbwyH1sRMW2C8Np54OdZSP7ZqWxIzl5GoyJ
+         5+ZR2q1whKbGZc++VUzxPRs7KOrSa+MZORrMmMrRXb1butuGCj4iGzctv+2HyLlgOIIz
+         hzv3Vfr98DXcothvq+jA6LoLxRF2v3ylroznjDEkkilwOB5Jewg9HlivRU5JYt3stB0r
+         ufzQ==
+X-Gm-Message-State: APjAAAUrWSUjrCCGMtjEzgmpg+XoQoKf0vLqXkCfguydxejhpzv0sJYH
+        YJO+HOj1j2BgM4KmL/TyDN4=
+X-Google-Smtp-Source: APXvYqyYSBDpfiNbvOCc3Tq1Cngt99gUJ9KSnwXK1+CWFQ2tu4DN5ubh8tUfH2eiItrpYFlFhWsBxA==
+X-Received: by 2002:adf:f591:: with SMTP id f17mr3250076wro.119.1562954426638;
+        Fri, 12 Jul 2019 11:00:26 -0700 (PDT)
 Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c14sm7204278wrr.56.2019.07.12.10.57.16
+        by smtp.gmail.com with ESMTPSA id a6sm6755054wmj.15.2019.07.12.11.00.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:57:17 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 10:57:15 -0700
+        Fri, 12 Jul 2019 11:00:26 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 11:00:24 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] drm/amd/display: return 'NULL' instead of 'false' from
- dcn20_acquire_idle_pipe_for_layer
-Message-ID: <20190712175715.GA21080@archlinux-threadripper>
-References: <20190712094009.1535662-1-arnd@arndb.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] acpi: fix false-positive -Wuninitialized warning
+Message-ID: <20190712180024.GA21382@archlinux-threadripper>
+References: <20190712090148.36582-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712094009.1535662-1-arnd@arndb.de>
+In-Reply-To: <20190712090148.36582-1-arnd@arndb.de>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:39:52AM +0200, Arnd Bergmann wrote:
-> clang complains that 'false' is a not a pointer:
+On Fri, Jul 12, 2019 at 11:01:21AM +0200, Arnd Bergmann wrote:
+> clang gets confused by an uninitialized variable in what looks
+> to it like a never executed code path:
 > 
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.c:2428:10: error: expression which evaluates to zero treated as a null pointer constant of type 'struct pipe_ctx *' [-Werror,-Wnon-literal-null-conversion]
->                 return false;
+> arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
+>         polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
+>                    ^~~~~~~~
+> arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
+>         int rc, irq, trigger, polarity;
+>                                       ^
+>                                        = 0
+> arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
+>         trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
+>                   ^~~~~~~
+> arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
+>         int rc, irq, trigger, polarity;
+>                             ^
+>                              = 0
 > 
-> Changing it to 'NULL' looks like the right thing that will shut up
-> the warning and make it easier to read, while not changing behavior.
+> This is unfortunately a design decision in clang and won't be fixed.
 > 
-> Fixes: 7ed4e6352c16 ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
+> Changing the acpi_get_override_irq() macro to an inline function
+> reliably avoids the issue.
+> 
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
