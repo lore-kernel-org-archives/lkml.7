@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9CCC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC90AC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD302084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925F32166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934322;
-	bh=foU8/SdRjmkg8g68VdEPgAvGDd0f6MXFPOujEykaolc=;
+	s=default; t=1562934325;
+	bh=pN1VIaFp/A6iSBg6XUkeVTqyYKGNIO4fMOdnyanPy3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKqxRlTVI1fJedbjZ38HnaqsIIcvfN7gBYhgsKzWPgW9L72zZiT5yjj02LDsFCuc6
-	 teW/vCsIEfbA+CLRa8e1hyRQjuyGoTZd+JsEcBJJvfV2yAsYRj9yW0lflt0PDKm2fh
-	 Xy7j8KCPBYfODsy1tHaAE58qH2nYGqp73a0qzFEQ=
+	b=fIusPUOh6bsZS7+84X5GGTpA2s2pdqN7+ML32tRnBr+hpTqwpchdBict0UAF+MWl4
+	 uKKwtopa5i8Qkl/sQzppqjrmCN/NGTy8Ny/9MeOm//Ai3/xk2Svi9kTBO3QK2NpSko
+	 1UsxP+YLRNUvrI5MKnwhQ7JJdKkiWe6h8jh+eqKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfGLMZV (ORCPT
+        id S1727777AbfGLMZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbfGLMZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:25:14 -0400
+        id S1728254AbfGLMZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:25:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 992AD2171F;
-        Fri, 12 Jul 2019 12:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5402921721;
+        Fri, 12 Jul 2019 12:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934314;
-        bh=foU8/SdRjmkg8g68VdEPgAvGDd0f6MXFPOujEykaolc=;
+        s=default; t=1562934316;
+        bh=pN1VIaFp/A6iSBg6XUkeVTqyYKGNIO4fMOdnyanPy3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noCDBPPWXBkBB/ajvbAdlks9eXXuoeWRupleZHK2yMYqtpqo0snyM1wfnxdeqKFsH
-         +GGuBhC18GgYKUTkyGBVZUVcdXo/18DNvnlv4hsLGVdQMmGSVwcKpThjMA0TLX+MWZ
-         sWeV3jsjjM9SUB0AI7vhBFbQbL9XjdKMHz2+crXs=
+        b=LaBwmwUEvnLi8LfxosUMUof9OHQ+NeXgzgtKhZtxCDRYrf9jFDxP//4rDNO68XMfu
+         TrEpvl7+GVFT6/G0+k3Ze6ZmeEt2rIMtUgGhcOPknSRDviOtygL/Hxgi+xFBIPhDPu
+         Kj0qyRm+DKelU7zJPLJG4dj2/81gX5ch77XOHbV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shashidhar Lakkavalli <slakkavalli@datto.com>,
-        John Crispin <john@phrozen.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 015/138] mac80211: fix rate reporting inside cfg80211_calculate_bitrate_he()
-Date:   Fri, 12 Jul 2019 14:17:59 +0200
-Message-Id: <20190712121629.308138963@linuxfoundation.org>
+Subject: [PATCH 5.1 016/138] bpf: sockmap, fix use after free from sleep in psock backlog workqueue
+Date:   Fri, 12 Jul 2019 14:18:00 +0200
+Message-Id: <20190712121629.344998292@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,32 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 25d16d124a5e249e947c0487678b61dcff25cf8b ]
+[ Upstream commit bd95e678e0f6e18351ecdc147ca819145db9ed7b ]
 
-The reported rate is not scaled down correctly. After applying this patch,
-the function will behave just like the v/ht equivalents.
+Backlog work for psock (sk_psock_backlog) might sleep while waiting
+for memory to free up when sending packets. However, while sleeping
+the socket may be closed and removed from the map by the user space
+side.
 
-Signed-off-by: Shashidhar Lakkavalli <slakkavalli@datto.com>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This breaks an assumption in sk_stream_wait_memory, which expects the
+wait queue to be still there when it wakes up resulting in a
+use-after-free shown below. To fix his mark sendmsg as MSG_DONTWAIT
+to avoid the sleep altogether. We already set the flag for the
+sendpage case but we missed the case were sendmsg is used.
+Sockmap is currently the only user of skb_send_sock_locked() so only
+the sockmap paths should be impacted.
+
+==================================================================
+BUG: KASAN: use-after-free in remove_wait_queue+0x31/0x70
+Write of size 8 at addr ffff888069a0c4e8 by task kworker/0:2/110
+
+CPU: 0 PID: 110 Comm: kworker/0:2 Not tainted 5.0.0-rc2-00335-g28f9d1a3d4fe-dirty #14
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+Workqueue: events sk_psock_backlog
+Call Trace:
+ print_address_description+0x6e/0x2b0
+ ? remove_wait_queue+0x31/0x70
+ kasan_report+0xfd/0x177
+ ? remove_wait_queue+0x31/0x70
+ ? remove_wait_queue+0x31/0x70
+ remove_wait_queue+0x31/0x70
+ sk_stream_wait_memory+0x4dd/0x5f0
+ ? sk_stream_wait_close+0x1b0/0x1b0
+ ? wait_woken+0xc0/0xc0
+ ? tcp_current_mss+0xc5/0x110
+ tcp_sendmsg_locked+0x634/0x15d0
+ ? tcp_set_state+0x2e0/0x2e0
+ ? __kasan_slab_free+0x1d1/0x230
+ ? kmem_cache_free+0x70/0x140
+ ? sk_psock_backlog+0x40c/0x4b0
+ ? process_one_work+0x40b/0x660
+ ? worker_thread+0x82/0x680
+ ? kthread+0x1b9/0x1e0
+ ? ret_from_fork+0x1f/0x30
+ ? check_preempt_curr+0xaf/0x130
+ ? iov_iter_kvec+0x5f/0x70
+ ? kernel_sendmsg_locked+0xa0/0xe0
+ skb_send_sock_locked+0x273/0x3c0
+ ? skb_splice_bits+0x180/0x180
+ ? start_thread+0xe0/0xe0
+ ? update_min_vruntime.constprop.27+0x88/0xc0
+ sk_psock_backlog+0xb3/0x4b0
+ ? strscpy+0xbf/0x1e0
+ process_one_work+0x40b/0x660
+ worker_thread+0x82/0x680
+ ? process_one_work+0x660/0x660
+ kthread+0x1b9/0x1e0
+ ? __kthread_create_on_node+0x250/0x250
+ ret_from_fork+0x1f/0x30
+
+Fixes: 20bf50de3028c ("skbuff: Function to send an skbuf on a socket")
+Reported-by: Jakub Sitnicki <jakub@cloudflare.com>
+Tested-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/skbuff.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index 75899b62bdc9..5a03f38788e7 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -1237,7 +1237,7 @@ static u32 cfg80211_calculate_bitrate_he(struct rate_info *rate)
- 	if (rate->he_dcm)
- 		result /= 2;
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index e5bfd42fd083..4ea96fbf3b49 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -2309,6 +2309,7 @@ int skb_send_sock_locked(struct sock *sk, struct sk_buff *skb, int offset,
+ 		kv.iov_base = skb->data + offset;
+ 		kv.iov_len = slen;
+ 		memset(&msg, 0, sizeof(msg));
++		msg.msg_flags = MSG_DONTWAIT;
  
--	return result;
-+	return result / 10000;
- }
- 
- u32 cfg80211_calculate_bitrate(struct rate_info *rate)
+ 		ret = kernel_sendmsg_locked(sk, &msg, &kv, 1, slen);
+ 		if (ret <= 0)
 -- 
 2.20.1
 
