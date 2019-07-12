@@ -2,190 +2,66 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1008C742C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CFAC742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BBD206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:10:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xyHw0p49"
+	by mail.kernel.org (Postfix) with ESMTP id 34D01206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfGLPKy (ORCPT
+        id S1727142AbfGLPLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:10:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46568 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfGLPKy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:10:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c2so4894189plz.13
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bpkdGumnCxVJ5QkvopMAKHuDk2Cmi1QHk5zgDoY3xmE=;
-        b=xyHw0p49aGG+bHJkAwOFsAyVLIy6ynGQUOVqJSZW2rdYBcMge9BS0dv8b3pXcc+QsB
-         52ZjWyLo4eCKwwXkK1MywW+/ICPskgQBpOWaqdYt311VFlay/UvS+NI+iDdRBDC8nfQH
-         7iG2DsYxsndMDH8pWwOufpGY4o74/6StEFO8o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bpkdGumnCxVJ5QkvopMAKHuDk2Cmi1QHk5zgDoY3xmE=;
-        b=ez7rH65DNbC4GN11VBG5yGKm3aPfnzftLPIa4X7bsAAcu7naGfBXe5dUN1R+/8B4ba
-         /loan2T3ps1uB9UKTpkQTo6ka8Ck0Jt7HSLEqVb0xpXSzLgklypsEnHHRA7o6cAL28UK
-         U22krSZUmtn72o1iBeQ5TFFG2rEMnRHMNTqtiUN2XEt7NFUVdbWPBoaEb9GGCP8QqASd
-         As8n4IucJn5qbNW7ZXULRJUSuWAn0UrQRhEVMgG5vygGBCnT/aHRPVturxwbI51syK1p
-         Izyt5lRiotYCFEBV26pjPm0LsYsJFLtPeYJFcouWfC7saXSFZjy09Q7tdbXsufSsi5Ss
-         enjQ==
-X-Gm-Message-State: APjAAAUwrQ9WezfbV4w7Iedh5f00is6TOCDOWvtMAGz3BuV8S+yH/5k9
-        zDoxWNbIe3io+pGe9dgDWTg=
-X-Google-Smtp-Source: APXvYqxJ7Kem+nQt02Z16GBq/vs2O/YsBJDeceBJIv6amPGaj5XayXNv7u5mL3pmC3eI8AkB/Vv2gw==
-X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr12077228plk.70.1562944253560;
-        Fri, 12 Jul 2019 08:10:53 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l124sm8863171pgl.54.2019.07.12.08.10.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 08:10:52 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 11:10:51 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712151051.GB235410@google.com>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712111125.GT3402@hirez.programming.kicks-ass.net>
+        Fri, 12 Jul 2019 11:11:33 -0400
+Received: from verein.lst.de ([213.95.11.211]:38899 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726977AbfGLPLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:11:32 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7887F227A81; Fri, 12 Jul 2019 17:11:29 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 17:11:29 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
+ arch code
+Message-ID: <20190712151129.GA30636@lst.de>
+References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com> <20190712140812.GA29628@lst.de> <20190712165153.78d49095.pasic@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712111125.GT3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190712165153.78d49095.pasic@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> > +int rcu_read_lock_any_held(void)
-> > +{
-> > +	int lockdep_opinion = 0;
-> > +
-> > +	if (!debug_lockdep_rcu_enabled())
-> > +		return 1;
-> > +	if (!rcu_is_watching())
-> > +		return 0;
-> > +	if (!rcu_lockdep_current_cpu_online())
-> > +		return 0;
-> > +
-> > +	/* Preemptible RCU flavor */
-> > +	if (lock_is_held(&rcu_lock_map))
+On Fri, Jul 12, 2019 at 04:51:53PM +0200, Halil Pasic wrote:
+> Thank you very much! I will have another look, but it seems to me,
+> without further measures taken, this would break protected virtualization
+> support on s390. The effect of the che for s390 is that
+> force_dma_unencrypted() will always return false instead calling into
+> the platform code like it did before the patch, right?
 > 
-> you forgot debug_locks here.
+> Should I send a  Fixes: e67a5ed1f86f "dma-direct: Force unencrypted DMA
+> under SME for certain DMA masks" (Tom Lendacky, 2019-07-10) patch that
+> rectifies things for s390 or how do we want handle this?
 
-Actually, it turns out debug_locks checking is not even needed. If
-debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
-get to this point.
-
-> > +		return 1;
-> > +
-> > +	/* BH flavor */
-> > +	if (in_softirq() || irqs_disabled())
-> 
-> I'm not sure I'd put irqs_disabled() under BH, also this entire
-> condition is superfluous, see below.
-> 
-> > +		return 1;
-> > +
-> > +	/* Sched flavor */
-> > +	if (debug_locks)
-> > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > +	return lockdep_opinion || !preemptible();
-> 
-> that !preemptible() turns into:
-> 
->   !(preempt_count()==0 && !irqs_disabled())
-> 
-> which is:
-> 
->   preempt_count() != 0 || irqs_disabled()
-> 
-> and already includes irqs_disabled() and in_softirq().
-> 
-> > +}
-> 
-> So maybe something lke:
-> 
-> 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
-> 			    lock_is_held(&rcu_sched_lock_map)))
-> 		return true;
-
-Agreed, I will do it this way (without the debug_locks) like:
-
----8<-----------------------
-
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index ba861d1716d3..339aebc330db 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
- 
- int rcu_read_lock_any_held(void)
- {
--	int lockdep_opinion = 0;
--
- 	if (!debug_lockdep_rcu_enabled())
- 		return 1;
- 	if (!rcu_is_watching())
- 		return 0;
- 	if (!rcu_lockdep_current_cpu_online())
- 		return 0;
--
--	/* Preemptible RCU flavor */
--	if (lock_is_held(&rcu_lock_map))
--		return 1;
--
--	/* BH flavor */
--	if (in_softirq() || irqs_disabled())
--		return 1;
--
--	/* Sched flavor */
--	if (debug_locks)
--		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
--	return lockdep_opinion || !preemptible();
-+	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
-+		return 1;
-+	return !preemptible();
- }
- EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
- 
+Yes, please do.  I hadn't noticed the s390 support had landed in
+mainline already.
