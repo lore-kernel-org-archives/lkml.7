@@ -2,176 +2,131 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B01FC742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E12EC742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27052208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7766221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QOEsPXPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfGLOjn (ORCPT
+        id S1727197AbfGLOnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:39:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64708 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727102AbfGLOjn (ORCPT
+        Fri, 12 Jul 2019 10:43:00 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:47072 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbfGLOm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:39:43 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CEb75T122413
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:39:42 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpu8gtdkg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:39:42 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Fri, 12 Jul 2019 15:39:39 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 15:39:37 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CEdaMM39780438
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 14:39:36 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B5DB11C050;
-        Fri, 12 Jul 2019 14:39:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2765C11C05B;
-        Fri, 12 Jul 2019 14:39:36 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.168])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 12 Jul 2019 14:39:36 +0000 (GMT)
-Date:   Fri, 12 Jul 2019 16:39:34 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [GIT PULL] s390 patches for the 5.3 merge window #2
+        Fri, 12 Jul 2019 10:42:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r4so6515707qkm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c3BdLjsUkgLwHfdAsKdRe62P0E0PJoOA0Fuha9hcEks=;
+        b=QOEsPXPs/lkmtClQEqCWD2PByv8luGSKD7glXzSwu8n9xHK8eP7l9Nz7VxMP+dgpQZ
+         qVt7cABY3efBX0yb1aliiIl0/W41qPs/TM6/fVjlXBl/bkIuDI7AeoPm8UdZb6/KrnVN
+         CdjzVLYtvsLTECEdKD83FTAcxu25liR75c2DgFdBsd94ztwb+PijBlBUQ1Cmiyk6MuAA
+         y48Xn+z1WWX9I1qcC2KO8mLCNUnVkIcsQcmK4sxttJsKe+f+iWnTYr9O8RARpxIaBASI
+         TLnpK3kgRTPdcts3zst0PAXGUo4qZbVxZTyixyxRarYgg8OA1a/8Pk8JYXfpRzt7CIwg
+         xHHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c3BdLjsUkgLwHfdAsKdRe62P0E0PJoOA0Fuha9hcEks=;
+        b=mqqDwXm9jf0LC65wqSFPg276sp9Eh8kAYNgrmYjxGSgpsFB0Ybz+gm63tBnb8tTvBD
+         GGHbm2sK72xlyJ7LBTbtWq3Vq7IsD8hCgZTiN/LGUVwdKO0oGqIuH3Cuzmc/ttNGEOXt
+         t2sNmy2R1WO7yLfDbIVR35rcWQJuqD56Ct6lVOXl8GWviakJ/GaCju2us9TVRCVlsNCe
+         Jgs7riAdk0TzvManIyCVEKXGS823XyUOwCBk0Jr4Op2v3lU/W6eNU0Lwy5//4elloovx
+         ZLe8EFKjdwUE5qXEnQGSnnsRp+ISJwTXVr15AqE4B/yp0gb15CnUPody2prX9hiMvkIK
+         bhAA==
+X-Gm-Message-State: APjAAAXQKYTCiRVLWC2r9vXtq0Y3mwV1lfAzJagwsLDJ00fW80tVKIAS
+        FRIf0zm4/t0HR9Kw5BoQHu4mUoMu8WY1oQ==
+X-Google-Smtp-Source: APXvYqy/Pcvk8vVNUL2Et1UN+2Fg3a/OfJoXceL8cmfop9PGLqawx6jAHDxYaoDBtMhcGI2fvtYt3Q==
+X-Received: by 2002:a37:c448:: with SMTP id h8mr6570665qkm.308.1562942578921;
+        Fri, 12 Jul 2019 07:42:58 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id j78sm3781711qke.102.2019.07.12.07.42.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jul 2019 07:42:58 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlwlF-0001tF-Iv; Fri, 12 Jul 2019 11:42:57 -0300
+Date:   Fri, 12 Jul 2019 11:42:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Doug Ledford <dledford@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+Message-ID: <20190712144257.GE27512@ziepe.ca>
+References: <20190712135339.GC27512@ziepe.ca>
+ <20190712120328.GB27512@ziepe.ca>
+ <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071214-0008-0000-0000-000002FCBE6A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071214-0009-0000-0000-0000226A2AC5
-Message-Id: <your-ad-here.call-01562942374-ext-9116@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120159
+In-Reply-To: <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On Fri, Jul 12, 2019 at 02:35:50PM +0000, Bernard Metzler wrote:
 
-please pull the second round of s390 fixes and features for 5.3.
+> >This looks wrong to me.. a userspace notification re-arm cannot be
+> >lost, so have a split READ/TEST/WRITE sequence can't possibly work?
+> >
+> >I'd expect an atomic test and clear here?
+> 
+> We cannot avoid the case that the application re-arms the
+> CQ only after a CQE got placed. That is why folks are polling the
+> CQ once after re-arming it - to make sure they do not miss the
+> very last and single CQE which would have produced a CQ event.
 
-Thank you,
-Vasily
+That is different, that is re-arm happing after a CQE placement and
+this can't be fixed.
 
-The following changes since commit 1758feddb0f9751debdc865fefde94b45907c948:
+What I said is that a re-arm from userspace cannot be lost. So you
+can't blindly clear the arm flag with the WRITE_ONCE. It might be OK
+beacuse of the if, but...
 
-  Merge tag 's390-5.3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2019-07-08 10:06:12 -0700)
+It is just goofy to write it without a 'test and clear' atomic. If the
+writer side consumes the notify it should always be done atomically.
 
-are available in the Git repository at:
+And then I think all the weird barriers go away
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.3-2
+> >> @@ -1141,11 +1145,17 @@ int siw_req_notify_cq(struct ib_cq
+> >*base_cq, enum ib_cq_notify_flags flags)
+> >>  	siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
+> >>  
+> >>  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
+> >> -		/* CQ event for next solicited completion */
+> >> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
+> >> +		/*
+> >> +		 * Enable CQ event for next solicited completion.
+> >> +		 * and make it visible to all associated producers.
+> >> +		 */
+> >> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
+> >
+> >But what is the 2nd piece of data to motivate the smp_store_mb?
+> 
+> Another core (such as a concurrent RX operation) shall see this
+> CQ being re-armed asap.
 
-for you to fetch changes up to 9a159190414d461fdac7ae5bb749c2d532b35419:
+'ASAP' is not a '2nd piece of data'. 
 
-  s390/unwind: avoid int overflow in outside_of_stack (2019-07-11 20:40:02 +0200)
-
-----------------------------------------------------------------
-s390 updates for the 5.3 merge window #2
-
- - Fix integer overflow during stack frame unwind with invalid backchain.
-
- - Cleanup unused symbol export in zcrypt code.
-
- - Fix MIO addressing control activation in PCI code and expose its
-   usage via sysfs.
-
- - Fix kernel image signature verification report presence detection.
-
- - Fix irq registration in vfio-ap code.
-
- - Add CPU measurement counters for newer machines.
-
- - Add base DASD thin provisioning support and code cleanups.
-
-----------------------------------------------------------------
-Christian Borntraeger (1):
-      s390: vfio-ap: fix irq registration
-
-Denis Efremov (1):
-      s390/zcrypt: remove the exporting of ap_query_configuration
-
-Jan Höppner (14):
-      s390/dasd: Remove unused structs and function prototypes
-      s390/dasd: Remove old defines and function
-      s390/dasd: Make layout analysis ESE compatible
-      s390/dasd: Put sub-order definitions in a separate section
-      s390/dasd: Recognise data for ESE volumes
-      s390/dasd: Add dynamic formatting support for ESE volumes
-      s390/dasd: Fix whitespace
-      s390/dasd: Add missing intensity definition
-      s390/dasd: Add dasd_sleep_on_queue_interruptible()
-      s390/dasd: Add new ioctl to release space
-      s390/dasd: Make dasd_setup_queue() a discipline function
-      s390/dasd: Use ALIGN_DOWN macro
-      s390/dasd: Add discard support for ESE volumes
-      s390/dasd: Handle out-of-space constraint
-
-Philipp Rudo (1):
-      s390/ipl: Fix detection of has_secure attribute
-
-Sebastian Ott (2):
-      s390: fix setting of mio addressing control
-      s390/pci: add mio_enabled attribute
-
-Thomas Richter (1):
-      s390/cpumf: Add extended counter set definitions for model 8561 and 8562
-
-Vasily Gorbik (1):
-      s390/unwind: avoid int overflow in outside_of_stack
-
- arch/s390/include/asm/pci_insn.h       |  10 -
- arch/s390/include/asm/sclp.h           |   1 -
- arch/s390/include/uapi/asm/dasd.h      | 154 +++---
- arch/s390/kernel/early.c               |   2 -
- arch/s390/kernel/ipl.c                 |   7 +-
- arch/s390/kernel/perf_cpum_cf_events.c |   2 +
- arch/s390/kernel/unwind_bc.c           |   2 +-
- arch/s390/pci/pci.c                    |   4 +-
- arch/s390/pci/pci_sysfs.c              |  10 +
- drivers/s390/block/dasd.c              | 233 ++++++--
- drivers/s390/block/dasd_devmap.c       |  70 ++-
- drivers/s390/block/dasd_diag.c         |  22 +-
- drivers/s390/block/dasd_eckd.c         | 966 +++++++++++++++++++++++++++++++--
- drivers/s390/block/dasd_eckd.h         | 175 +++++-
- drivers/s390/block/dasd_eer.c          |   1 +
- drivers/s390/block/dasd_fba.c          |  45 +-
- drivers/s390/block/dasd_fba.h          |   5 +
- drivers/s390/block/dasd_int.h          |  33 +-
- drivers/s390/block/dasd_ioctl.c        |  56 ++
- drivers/s390/char/sclp_early.c         |   1 -
- drivers/s390/crypto/ap_bus.c           |   1 -
- drivers/s390/crypto/vfio_ap_ops.c      |   3 +-
- 22 files changed, 1547 insertions(+), 256 deletions(-)
-
+AFAICT this requirement is just a normal atomic set_bit which does
+also expedite making the change visible?
+ 
+Jason
