@@ -2,53 +2,52 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C139C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAE7C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F2320645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4F120645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935074;
-	bh=5meU9hHpgYxCdNPIwICjkp/CtbL+UAFXdcXK6MeI6IY=;
+	s=default; t=1562935083;
+	bh=c9LPplSzz/uVr4cX4W0O58ybJ3HneGqBkRGgS8Tz5aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nKuynrUqoqWhyggPJGw8p6YOPV853QO1vNGI5lfxEJF1G9oZUmc5XcaGs17gM3hhS
-	 xHZa7xSdBN2CQzNdPnf+Qd2LaZLaBkk5JVr1Agyjr0TT2Qpjgtdh/12Rg93pHeWbrH
-	 bnt8lx5Puun+Shb8VihAXdiSsQ5vsZuTdsIyRqzQ=
+	b=Mwtogm4GS53tnwq59qztFSIphEbrTjV43WrArm5GQ6yO8Vdjx0NJdYJhXOqFb3Yg+
+	 oN0QMbFnXh/REoskogTkcDnAf5kMVKSNP2BApHVLQloeXH+2wwHRw8poBn5r0vr3sg
+	 e7H4MiOQ0VeWlr0S7HDJuWz2M44XA+yXCrf+dJJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfGLMaZ (ORCPT
+        id S1729050AbfGLM3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45928 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729195AbfGLMaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:18 -0400
+        id S1728697AbfGLM3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43CAA208E4;
-        Fri, 12 Jul 2019 12:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D4121019;
+        Fri, 12 Jul 2019 12:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934617;
-        bh=5meU9hHpgYxCdNPIwICjkp/CtbL+UAFXdcXK6MeI6IY=;
+        s=default; t=1562934586;
+        bh=c9LPplSzz/uVr4cX4W0O58ybJ3HneGqBkRGgS8Tz5aI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQohUkZv1ofnSZyLSPCfIonAIAFisXslZEroDQJkNKg/iLfdwYFAjmiyKSdZZK/Xq
-         s/xfJjGjq+IgVr3LHxg7eJekd59aIZGrx5LpIbF5nxA4mjsfDE4stlhcFhYtUvyGRO
-         ULhVeaTJ/k7q0PJdXY+nV1IbaHfrRrkVjqFOfHEE=
+        b=I9/yRjwBkJcBKeuxl4Rb6lbwSJuNUQJ8la+oK2dZcirzU4NsfAV+9yheKpCDPJRbg
+         b0d+zXVVtbRj5bdFNtN0ge9LLyPx7cZKSogu/5c5DILBvPqrZWcW0MUy5bHwQsIAgV
+         EGy3aCojIvUXezCuKAblvxiDCvPBDQSWc0ww8DhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 077/138] md: fix for divide error in status_resync
-Date:   Fri, 12 Jul 2019 14:19:01 +0200
-Message-Id: <20190712121631.665080137@linuxfoundation.org>
+        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com
+Subject: [PATCH 5.1 103/138] x86/tls: Fix possible spectre-v1 in do_get_thread_area()
+Date:   Fri, 12 Jul 2019 14:19:27 +0200
+Message-Id: <20190712121632.716444080@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,91 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9642fa73d073527b0cbc337cc17a47d545d82cd2 ]
+From: Dianzhang Chen <dianzhangchen0@gmail.com>
 
-Stopping external metadata arrays during resync/recovery causes
-retries, loop of interrupting and starting reconstruction, until it
-hit at good moment to stop completely. While these retries
-curr_mark_cnt can be small- especially on HDD drives, so subtraction
-result can be smaller than 0. However it is casted to uint without
-checking. As a result of it the status bar in /proc/mdstat while stopping
-is strange (it jumps between 0% and 99%).
+commit 993773d11d45c90cb1c6481c2638c3d9f092ea5b upstream.
 
-The real problem occurs here after commit 72deb455b5ec ("block: remove
-CONFIG_LBDAF"). Sector_div() macro has been changed, now the
-divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
+The index to access the threads tls array is controlled by userspace
+via syscall: sys_ptrace(), hence leading to a potential exploitation
+of the Spectre variant 1 vulnerability.
 
-Check if db value can be really counted and replace these macro by
-div64_u64() inline.
+The index can be controlled from:
+        ptrace -> arch_ptrace -> do_get_thread_area.
 
-Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by sanitizing the user supplied index before using it to access
+the p->thread.tls_array.
+
+Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1561524630-3642-1-git-send-email-dianzhangchen0@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/md.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+ arch/x86/kernel/tls.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 295ff09cff4c..84aec3647994 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -7617,9 +7617,9 @@ static void status_unused(struct seq_file *seq)
- static int status_resync(struct seq_file *seq, struct mddev *mddev)
+--- a/arch/x86/kernel/tls.c
++++ b/arch/x86/kernel/tls.c
+@@ -5,6 +5,7 @@
+ #include <linux/user.h>
+ #include <linux/regset.h>
+ #include <linux/syscalls.h>
++#include <linux/nospec.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/desc.h>
+@@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struc
+ 		       struct user_desc __user *u_info)
  {
- 	sector_t max_sectors, resync, res;
--	unsigned long dt, db;
--	sector_t rt;
--	int scale;
-+	unsigned long dt, db = 0;
-+	sector_t rt, curr_mark_cnt, resync_mark_cnt;
-+	int scale, recovery_active;
- 	unsigned int per_milli;
+ 	struct user_desc info;
++	int index;
  
- 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
-@@ -7708,22 +7708,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
- 	 * db: blocks written from mark until now
- 	 * rt: remaining time
- 	 *
--	 * rt is a sector_t, so could be 32bit or 64bit.
--	 * So we divide before multiply in case it is 32bit and close
--	 * to the limit.
--	 * We scale the divisor (db) by 32 to avoid losing precision
--	 * near the end of resync when the number of remaining sectors
--	 * is close to 'db'.
--	 * We then divide rt by 32 after multiplying by db to compensate.
--	 * The '+1' avoids division by zero if db is very small.
-+	 * rt is a sector_t, which is always 64bit now. We are keeping
-+	 * the original algorithm, but it is not really necessary.
-+	 *
-+	 * Original algorithm:
-+	 *   So we divide before multiply in case it is 32bit and close
-+	 *   to the limit.
-+	 *   We scale the divisor (db) by 32 to avoid losing precision
-+	 *   near the end of resync when the number of remaining sectors
-+	 *   is close to 'db'.
-+	 *   We then divide rt by 32 after multiplying by db to compensate.
-+	 *   The '+1' avoids division by zero if db is very small.
- 	 */
- 	dt = ((jiffies - mddev->resync_mark) / HZ);
- 	if (!dt) dt++;
--	db = (mddev->curr_mark_cnt - atomic_read(&mddev->recovery_active))
--		- mddev->resync_mark_cnt;
+ 	if (idx == -1 && get_user(idx, &u_info->entry_number))
+ 		return -EFAULT;
+@@ -227,8 +229,11 @@ int do_get_thread_area(struct task_struc
+ 	if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
+ 		return -EINVAL;
+ 
+-	fill_user_desc(&info, idx,
+-		       &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
++	index = idx - GDT_ENTRY_TLS_MIN;
++	index = array_index_nospec(index,
++			GDT_ENTRY_TLS_MAX - GDT_ENTRY_TLS_MIN + 1);
 +
-+	curr_mark_cnt = mddev->curr_mark_cnt;
-+	recovery_active = atomic_read(&mddev->recovery_active);
-+	resync_mark_cnt = mddev->resync_mark_cnt;
-+
-+	if (curr_mark_cnt >= (recovery_active + resync_mark_cnt))
-+		db = curr_mark_cnt - (recovery_active + resync_mark_cnt);
++	fill_user_desc(&info, idx, &p->thread.tls_array[index]);
  
- 	rt = max_sectors - resync;    /* number of remaining sectors */
--	sector_div(rt, db/32+1);
-+	rt = div64_u64(rt, db/32+1);
- 	rt *= dt;
- 	rt >>= 5;
- 
--- 
-2.20.1
-
+ 	if (copy_to_user(u_info, &info, sizeof(info)))
+ 		return -EFAULT;
 
 
