@@ -2,64 +2,84 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9041C742A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A1AC742A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF10208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAEFB214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfGLD3t (ORCPT
+        id S1729391AbfGLDbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:29:49 -0400
-Received: from namei.org ([65.99.196.166]:34804 "EHLO namei.org"
+        Thu, 11 Jul 2019 23:31:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2706 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728955AbfGLD3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:29:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x6C3TXIY022499;
-        Fri, 12 Jul 2019 03:29:33 GMT
-Date:   Fri, 12 Jul 2019 13:29:32 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-cc:     Aaron Goidel <acgoide@tycho.nsa.gov>, paul@paul-moore.com,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, sds@tycho.nsa.gov, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-In-Reply-To: <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
-Message-ID: <alpine.LRH.2.21.1907121327150.22212@namei.org>
-References: <20190710133403.855-1-acgoide@tycho.nsa.gov> <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1728955AbfGLDbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:31:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:31:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
+   d="scan'208";a="250002070"
+Received: from gonegri-mobl.ger.corp.intel.com (HELO localhost) ([10.252.48.192])
+  by orsmga001.jf.intel.com with ESMTP; 11 Jul 2019 20:31:40 -0700
+Date:   Fri, 12 Jul 2019 06:31:38 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Douglas Anderson <dianders@chromium.org>, stable@vger.kernel.org,
+        groeck@chromium.org, gregkh@linuxfoundation.org,
+        sukhomlinov@google.com, Arnd Bergmann <arnd@arndb.de>,
+        Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
+ operations
+Message-ID: <20190712033138.tonhpqy4yfdlkvs4@linux.intel.com>
+References: <20190711162919.23813-1-dianders@chromium.org>
+ <20190711163915.GD25807@ziepe.ca>
+ <20190711183533.lypj2gwffwheq3qu@linux.intel.com>
+ <20190711194313.3w6gkbayq7yifvgg@linux.intel.com>
+ <20190711194626.GI25807@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711194626.GI25807@ziepe.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Casey Schaufler wrote:
-
-> On 7/10/2019 6:34 AM, Aaron Goidel wrote:
+On Thu, Jul 11, 2019 at 04:46:26PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jul 11, 2019 at 10:43:13PM +0300, Jarkko Sakkinen wrote:
+> > On Thu, Jul 11, 2019 at 09:35:33PM +0300, Jarkko Sakkinen wrote:
+> > > > Careful with this, you can't backport this to any kernels that don't
+> > > > have the sysfs ops locking changes or they will crash in sysfs code.
+> > > 
+> > > Oops, I was way too fast! Thanks Jason.
+> > 
+> > Hmm... hold on a second.
+> > 
+> > How would the crash realize? I mean this is at the point when user space
+> > should not be active. 
 > 
-> > Furthermore, fanotify watches grant more power to
-> > an application in the form of permission events. While notification events
-> > are solely, unidirectional (i.e. they only pass information to the
-> > receiving application), permission events are blocking. Permission events
-> > make a request to the receiving application which will then reply with a
-> > decision as to whether or not that action may be completed.
+> Not strictly, AFAIK
 > 
-> You're not saying why this is an issue.
+> > Secondly, why the crash would not realize with
+> > TPM2? The only thing the fix is doing is to do the same thing with TPM1
+> > essentially.
+> 
+> TPM2 doesn't use the unlocked sysfs path
 
-Also in the description, please explain the issues with read and write 
-notifications and why a simple 'read' permission is not adequate.
+Gah, sorry :-) I should have known that.
 
+I can go through the patches needed when I come back from my leave after
+two weeks.
 
--- 
-James Morris
-<jmorris@namei.org>
-
+/Jarkko
