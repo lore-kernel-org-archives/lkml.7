@@ -2,105 +2,118 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB77C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A51C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CFE20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1818120863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfGLI6q (ORCPT
+        id S1726189AbfGLI76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:58:46 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:21624 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726002AbfGLI6q (ORCPT
+        Fri, 12 Jul 2019 04:59:58 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:54105 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGLI75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:58:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWh9RaS_1562921921;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWh9RaS_1562921921)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jul 2019 16:58:42 +0800
-Subject: Re: [PATCH 4/4] numa: introduce numa cling feature
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <9a440936-1e5d-d3bb-c795-ef6f9839a021@linux.alibaba.com>
- <20190711142728.GF3402@hirez.programming.kicks-ass.net>
- <82f42063-ce51-dd34-ba95-5b32ee733de7@linux.alibaba.com>
- <20190712075318.GM3402@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <0a5066be-ac10-5dce-c0a6-408725bc0784@linux.alibaba.com>
-Date:   Fri, 12 Jul 2019 16:58:41 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Fri, 12 Jul 2019 04:59:57 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mi2Fj-1iPsyN4Apl-00e6a2; Fri, 12 Jul 2019 10:59:11 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jeremy Fitzhardinge <jeremy.fitzhardinge@citrix.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] xen/trace: avoid clang warning on function pointers
+Date:   Fri, 12 Jul 2019 10:58:48 +0200
+Message-Id: <20190712085908.4146364-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190712075318.GM3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:r9K45RUOqX7EL2FgFvB2I5Nlw7QMUweeL6eeTaUyO4nmnnOdEKZ
+ UVF9Re1lNEQUVmpmkCXtfUXSV+4pGIYXOJSBdhc2coR9OjLDrPGMYDyjR80itjqpVNYDyjr
+ tL7Z2txRDgexpWAhKuVSXidcoVb08GhRVOgqkrX+jmUT9rniOp770IlAaTpWjwSrd2+Tz9L
+ +RWlHH5KALpcd+4YvXc9w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lglkteexDEs=:n6oHHMme+/XkiTYmFdbiR0
+ Z2nMcZ+YbdTMXSUNBLnuMrtKnbo+CO//RyuFoU60NsAn75bnyFYXBe7oQ03zgXYiEJ74ZMNfi
+ xFYgwe9cOOZrHjYa7wFPq1tSYw4+xTF1p9v4md8PBTw2R7LGfV02afuobHmnKxu9jt1CiEHJm
+ PvbQQJW4hjD0TV4fg2fZFpcPAb0PwKflIEgO0cmbyUI5QvrBSvzCMHPYDED0noI3GhmUPEIvZ
+ PYGWj7VZlcVzxMR4ARiupKk/Q/t5wZ2Qj4PpWeMtBFH2u6eqkdq9OOZ8J30nUr8XsEaJFyg01
+ SmG5ioZrhkUfm+m2DbXeAPeA5UIc6jiRwwYqgiAe9Ax+H8mtDeoDE0PnEg+Pl/B/MZZ0If7SV
+ UxTCrX6pmqgIW75MPNjQGW6YUWoDIlPSEy9ARl+X5ZT8cN3jOFbuPV7PQS9JO1qYi1bOFlUvr
+ WePdNL2lgKEqw+aDEI7XijINJAiMIT76MXefQYHzcZEhuh/4ncfdD519PhY7DauRBvuagkq8S
+ 2o2M0jafjdVtDLsFtXHLfg6ImbMDu6M8oSgkhNClEPMOgr9im1+OTKfH5BNIxknJPm2yWdJPP
+ uBLH8dxDI846LpKhPaIUMcXOiJWqB6Pr9pavYArrvBQFxDrnE5gdMGAIR1zMxOgyr7vj6jJxO
+ VcbBYDqY6yXIB+lhwJkrVgQ2etAk6au3lIyhE1mc7oWVUuiVE/3qm8zjmzuYB9dGrwoQaM+dw
+ i4stcrjqqQkIsydTqh4sfgUUa/Vbc1QgnoFP5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+clang-9 does not like the way that the is_signed_type() compares
+function pointers deep inside of the trace even macros:
 
+In file included from arch/x86/xen/trace.c:21:
+In file included from include/trace/events/xen.h:475:
+In file included from include/trace/define_trace.h:102:
+In file included from include/trace/trace_events.h:467:
+include/trace/events/xen.h:69:7: error: ordered comparison of function pointers ('xen_mc_callback_fn_t' (aka 'void (*)(void *)') and 'xen_mc_callback_fn_t') [-Werror,-Wordered-compare-function-pointers]
+                    __field(xen_mc_callback_fn_t, fn)
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/trace/trace_events.h:415:29: note: expanded from macro '__field'
+ #define __field(type, item)     __field_ext(type, item, FILTER_OTHER)
+                                ^
+include/trace/trace_events.h:401:6: note: expanded from macro '__field_ext'
+                                 is_signed_type(type), filter_type);    \
+                                 ^
+include/linux/trace_events.h:540:44: note: expanded from macro 'is_signed_type'
+ #define is_signed_type(type)    (((type)(-1)) < (type)1)
+                                              ^
+note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+include/trace/trace_events.h:77:16: note: expanded from macro 'TRACE_EVENT'
+                             PARAMS(tstruct),                  \
+                             ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/tracepoint.h:95:25: note: expanded from macro 'PARAMS'
+ #define PARAMS(args...) args
+                        ^
+include/trace/trace_events.h:455:2: note: expanded from macro 'DECLARE_EVENT_CLASS'
+        tstruct;                                                        \
+        ^~~~~~~
 
-On 2019/7/12 下午3:53, Peter Zijlstra wrote:
-[snip]
->>>>  	return target;
->>>>  }
->>>
->>> Select idle sibling should never cross node boundaries and is thus the
->>> entirely wrong place to fix anything.
->>
->> Hmm.. in our early testing the printk show both select_task_rq_fair() and
->> task_numa_find_cpu() will call select_idle_sibling with prev and target on
->> different node, thus we pick this point to save few lines.
-> 
-> But it will never return @prev if it is not in the same cache domain as
-> @target. See how everything is gated by:
-> 
->   && cpus_share_cache(x, target)
+I guess the warning is reasonable in principle, though this seems to
+be the only instance we get in the entire kernel today.
+Shut up the warning by making it a void pointer in the exported
+structure.
 
-Yeah, that's right.
+Fixes: c796f213a693 ("xen/trace: add multicall tracing")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/trace/events/xen.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->> But if the semantics of select_idle_sibling() is to return cpu on the same
->> node of target, what about move the logical after select_idle_sibling() for
->> the two callers?
-> 
-> No, that's insane. You don't do select_idle_sibling() to then ignore the
-> result. You have to change @target before calling select_idle_sibling().
-> 
+diff --git a/include/trace/events/xen.h b/include/trace/events/xen.h
+index 9a0e8af21310..f75b77414ac1 100644
+--- a/include/trace/events/xen.h
++++ b/include/trace/events/xen.h
+@@ -66,7 +66,7 @@ TRACE_EVENT(xen_mc_callback,
+ 	    TP_PROTO(xen_mc_callback_fn_t fn, void *data),
+ 	    TP_ARGS(fn, data),
+ 	    TP_STRUCT__entry(
+-		    __field(xen_mc_callback_fn_t, fn)
++		    __field(void *, fn)
+ 		    __field(void *, data)
+ 		    ),
+ 	    TP_fast_assign(
+-- 
+2.20.0
 
-I see, we should not override the decision of select_idle_sibling().
-
-Actually the original design we try to achieve is:
-
-  let wake affine select the target
-  try find idle sibling of target
-  if got one
-	pick it
-  else if task cling to prev
-	pick prev
-
-That is to consider wake affine superior to numa cling.
-
-But after rethinking maybe this is not necessary, since numa cling is
-also some kind of strong wake affine hint, actually maybe even a better
-one to filter out the bad cases.
-
-I'll try change @target instead and give a retest then.
-
-Regards,
-Michael Wang
