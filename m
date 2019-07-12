@@ -2,52 +2,53 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161F2C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F401C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA79521019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6714F21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935226;
-	bh=Ise7hNeluUyWS2rzd+m7obAgIjz8DDTBbGfFLWoQ8V4=;
+	s=default; t=1562935234;
+	bh=DDcxO7wSGYZlws8b7PBLpP2BhHVd7B9Pkx8sqcmCuvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=saFTPcgIkbByg8KKAPbK0blh0nnVIHKMs39LBL60hRPRke59nZQDN8VqdpwCYuxZ4
-	 EXbfJbMEw6MO39gWdFoWm0cxenSe3o6O0SyccIHzjeSff0ISdktjCymCJU7wRhm7WI
-	 E3Z9mKkTfTOmWFs6iluczsyZWlpryz/yYic2n0so=
+	b=LDl06U7VRyiVPpfo3KnL3acpoQT+l0pFf9AFSVo0uHpM6x8L+aKXFclqgU4LNgmDI
+	 zyvRHv/k/yB0sJwFm+atX0WnZpO6YjA4H4PUOT/MeKZ2bNm0Di+nNfJFQkJzLrG7oJ
+	 y9AIQ7Gt0E7wc1RUeQ4GYdVIWAh1Y+OVnb/Tqk7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfGLMZf (ORCPT
+        id S1728353AbfGLMkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727624AbfGLMZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:25:29 -0400
+        id S1728259AbfGLMZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:25:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D8C216B7;
-        Fri, 12 Jul 2019 12:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE88321019;
+        Fri, 12 Jul 2019 12:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934329;
-        bh=Ise7hNeluUyWS2rzd+m7obAgIjz8DDTBbGfFLWoQ8V4=;
+        s=default; t=1562934320;
+        bh=DDcxO7wSGYZlws8b7PBLpP2BhHVd7B9Pkx8sqcmCuvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlyRBD2oMFWKYxhLVJbMk7QnPfpjM3mFModGIQoA7GihoyAsURXZ0bMD9oXgbRp3E
-         1/9WnRxS9FOSC5stjlZeA1moWgAmCEIS5SPZ1d1AuNVBDsa13Dpnc/JkYU4QZhTtcF
-         c1U7YrhEiqvWHv39fLucvhgvRd5qCOXeY/SHipic=
+        b=YoXe/Ry53tBk0qJmlvXmTpQP18NfqOTWaMyfwdHLhutsqnyOD1FrXI/AOHCG0RVgF
+         jcENg28mMWgzhx2bsK+AjsYBG07/fGKpojxnqg30WZM148ED5/JmwMl5tAOy8oM0iI
+         /vPcs/ImtZjSW5Th8/HRTmPXGvByI/smIa3S7xgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 002/138] crypto: lrw - use correct alignmask
-Date:   Fri, 12 Jul 2019 14:17:46 +0200
-Message-Id: <20190712121628.831649607@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 017/138] soundwire: stream: fix out of boundary access on port properties
+Date:   Fri, 12 Jul 2019 14:18:01 +0200
+Message-Id: <20190712121629.380616400@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,40 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit 03ecad90d3798be11b033248bbd4bbff4425a1c7 ]
 
-commit 20a0f9761343fba9b25ea46bd3a3e5e533d974f8 upstream.
+Assigning local iterator to array element and using it again for
+indexing would cross the array boundary.
+Fix this by directly referring array element without using the local
+variable.
 
-Commit c778f96bf347 ("crypto: lrw - Optimize tweak computation")
-incorrectly reduced the alignmask of LRW instances from
-'__alignof__(u64) - 1' to '__alignof__(__be32) - 1'.
-
-However, xor_tweak() and setkey() assume that the data and key,
-respectively, are aligned to 'be128', which has u64 alignment.
-
-Fix the alignmask to be at least '__alignof__(be128) - 1'.
-
-Fixes: c778f96bf347 ("crypto: lrw - Optimize tweak computation")
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/lrw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soundwire/stream.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -388,7 +388,7 @@ static int create(struct crypto_template
- 	inst->alg.base.cra_priority = alg->base.cra_priority;
- 	inst->alg.base.cra_blocksize = LRW_BLOCK_SIZE;
- 	inst->alg.base.cra_alignmask = alg->base.cra_alignmask |
--				       (__alignof__(__be32) - 1);
-+				       (__alignof__(be128) - 1);
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index bd879b1a76c8..00618de2ee12 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -1401,9 +1401,7 @@ struct sdw_dpn_prop *sdw_get_slave_dpn_prop(struct sdw_slave *slave,
+ 	}
  
- 	inst->alg.ivsize = LRW_BLOCK_SIZE;
- 	inst->alg.min_keysize = crypto_skcipher_alg_min_keysize(alg) +
+ 	for (i = 0; i < num_ports; i++) {
+-		dpn_prop = &dpn_prop[i];
+-
+-		if (dpn_prop->num == port_num)
++		if (dpn_prop[i].num == port_num)
+ 			return &dpn_prop[i];
+ 	}
+ 
+-- 
+2.20.1
+
 
 
