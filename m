@@ -6,84 +6,90 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534BFC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE97C742AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCE220863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C2C21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfGLI5Y (ORCPT
+        id S1726211AbfGLI6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:57:24 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40294 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725929AbfGLI5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:57:24 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 48D8F5B8F6391BDF6638;
-        Fri, 12 Jul 2019 16:57:15 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 12 Jul 2019 16:57:04 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: disallow switching io_bits option during remount
-Date:   Fri, 12 Jul 2019 16:57:00 +0800
-Message-ID: <20190712085700.4239-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 12 Jul 2019 04:58:38 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:57965 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfGLI6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:58:37 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N0qmr-1iiWJC3sCj-00wj0T; Fri, 12 Jul 2019 10:58:28 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Or Gerlitz <ogerlitz@mellanox.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Aya Levin <ayal@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [net-next, netfilter] mlx5: avoid unused variable warning
+Date:   Fri, 12 Jul 2019 10:57:11 +0200
+Message-Id: <20190712085823.4111911-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:KbtTIUVijtjWb2BGudzBahmvRgrYsk9J81pM88PMcX4hIYF1S8L
+ gwuD9vu1/nn6juu36bk9dM41BjnCzdAVdK1XblUpEIspkI+qFHDNupUopxdq+3WLf1KVgv4
+ +eqnbxE9wGcbCeUugh7J1Lja5qJJ+Fz8cN/Elk8vdykzSlN6SdCcq+TxeKYaPEj2Qur3Auq
+ BDDOpD5PUD3weUNF7oVgw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FvCGFSTd6E0=:asyyPiZ2WEID0yTUfqlLkO
+ yDK9Trl6uOm5d4YOn38xx94BXBWk0eyHyhwG71UAts4NggelRuwSXc0MfaGT5jqdP9CkeuEwN
+ wt9V90ChT8C+pLT+3PGVkWwcmmBBTDdHohOGOvIRVoPjMkj9sIHd6zK4pMlh4E9C6C+9D91Cv
+ yP3Ky9REc91p0PoVMUib72W9zesKLaQHN+CB7AkG6Yd60RAF6g0XdCEW09LsN4tpvP0Yrsdcj
+ oQBwED5oIRUaPH91IPJMaHYGUiBZYdeuAJhXPeqZfHHGeQ3LOnEkK901r3pvLkEclXfIIAXqg
+ gRVoZQHm8g3XI6Uwl+yTo5jinQfenLrHn3clvliWJhwSOB3VJrgp1k9VRuX4T/vkCZH4pu4LB
+ q0a8HgxA+CiEGuW9srVOozgJMuWwhYo5bSQiNceysbAHwVqfTnCIjAGGB6gYNH/yCnkM2h3hL
+ S7bOf1/vTswustC+kCwhLhK0wmZZ8XYdLeUyG4upeGBZCfoh2MKQDkQV6QJZGgeLF78s9S16n
+ ESm5pZt93aF60xeNyYLSvbVj6FePTfWI5P3YXy4GW34D6WrqI4dpj3YZzj/LESubYXw4JjvEi
+ If4AhulwrRCJtCi/31aPfsyUYJS5HuBRU8nG6IcY15NRLSI4UXFkZlXrF/rqZGvrJpG6srDlO
+ +A45Y/isoJWIsK93EgPxm+Iex5Qdj4gnHfT47T4Zj344PWeqeNsSeBiVPq3MrtxMfwKgjVL13
+ FxXXpAQVrySO3Ci8uABOfS8yEwOFgfxsFk/S+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If IO alignment feature is turned on after remount, we didn't
-initialize mempool of it, it turns out we will encounter panic
-during IO submission due to access NULL mempool pointer.
+Without CONFIG_MLX5_ESWITCH we get a harmless warning:
 
-This feature should be set only at mount time, so simply deny
-configuring during remount.
+drivers/net/ethernet/mellanox/mlx5/core/en_main.c:3467:21: error: unused variable 'priv' [-Werror,-Wunused-variable]
+        struct mlx5e_priv *priv = netdev_priv(dev);
 
-This fixes bug reported in bugzilla:
+Hide the declaration in the same #ifdef as its usage.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204135
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Fixes: 4e95bc268b91 ("net: flow_offload: add flow_block_cb_setup_simple()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/f2fs/super.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 84e5a9bf4571..602a0791246d 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1567,6 +1567,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 	bool need_stop_gc = false;
- 	bool no_extent_cache = !test_opt(sbi, EXTENT_CACHE);
- 	bool disable_checkpoint = test_opt(sbi, DISABLE_CHECKPOINT);
-+	bool no_io_align = !F2FS_IO_ALIGNED(sbi);
- 	bool checkpoint_changed;
- #ifdef CONFIG_QUOTA
- 	int i, j;
-@@ -1646,6 +1647,12 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 		goto restore_opts;
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 6d0ae87c8ded..b562ba904ea1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3464,7 +3464,9 @@ static LIST_HEAD(mlx5e_block_cb_list);
+ static int mlx5e_setup_tc(struct net_device *dev, enum tc_setup_type type,
+ 			  void *type_data)
+ {
++#ifdef CONFIG_MLX5_ESWITCH
+ 	struct mlx5e_priv *priv = netdev_priv(dev);
++#endif
  
-+	if (no_io_align == !!F2FS_IO_ALIGNED(sbi)) {
-+		err = -EINVAL;
-+		f2fs_warn(sbi, "switch io_bits option is not allowed");
-+		goto restore_opts;
-+	}
-+
- 	if ((*flags & SB_RDONLY) && test_opt(sbi, DISABLE_CHECKPOINT)) {
- 		err = -EINVAL;
- 		f2fs_warn(sbi, "disabling checkpoint not compatible with read-only");
+ 	switch (type) {
+ #ifdef CONFIG_MLX5_ESWITCH
 -- 
-2.18.0.rc1
+2.20.0
 
