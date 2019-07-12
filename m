@@ -2,104 +2,74 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC6FC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D49C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2072146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F48B217D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfGLUWW (ORCPT
+        id S1727606AbfGLUYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 16:22:22 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38738 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfGLUWV (ORCPT
+        Fri, 12 Jul 2019 16:24:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33174 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfGLUY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 16:22:21 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a27so7400877qkk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:22:21 -0700 (PDT)
+        Fri, 12 Jul 2019 16:24:29 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r6so7433307qkc.0;
+        Fri, 12 Jul 2019 13:24:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hAXsy38vfUxAdaLQ2cHfBZxaN3gFCt2GL2KOlavUUwQ=;
-        b=O7Q9YbNB0iO0B4HrAgmrPOqYAtR+dZF3CNlyTLri5xoCi4mlP2zlxQ3abiJgP3b7Iu
-         HWhNXa1uZ8cZr+KVkUhCOqfB681IDb+D6gpg8aPsn595H9A6kcCPM68fb0tLLBHP8U/R
-         JIaKNMartRb/AJUQprQnIn+19LC77vaO0zWq2oyHXCcI1aaYZnev/148aEq41RFU/Bpx
-         JTcV9NtsBhleXCl6L7U5AUOa0R9lgmx/LQFuS1roKDTS1Rz7m9JRFHBLXT38r4yOQvDJ
-         UgcsfLtJ/byaS9YqXdmG93LCShDDwj9jnsOEKghz02vezgoSnQdBcyE0Y0M+uAQOrM7p
-         LfAA==
-X-Gm-Message-State: APjAAAWtZ8Qxq+w9E8xnNiCKAQgM4pW7vQN+BhfHF6z2drF+/zT8IeuF
-        qHHNnNImvyYW5rZE18TLvyWD8RXHx+Dq4AM9732lIbRZn3k=
-X-Google-Smtp-Source: APXvYqwpYZCo9evjKCry92/VPntODrj6skVfA7DxlxAT3xv2z8F8wqoZqjjwl+fqDujGzPERH4MfFGzRBKLf84Qx9vs=
-X-Received: by 2002:a05:620a:b:: with SMTP id j11mr7976315qki.352.1562962940527;
- Fri, 12 Jul 2019 13:22:20 -0700 (PDT)
+        bh=5AnwL9QMhOvEkju5sgdju6SDmCAcrRdWohbiNJ53Gz8=;
+        b=YjMXGHWIS7wN9mB3TganGrcaA/Km/VKF4Hjvp4iu3CvR+c9eBNgNXobjzlz9JGRRrv
+         5uhPSWYQGuoXjIIH4gR8wb0W8/pJ8ZYC2qDNpJjPWEw4ElseOQXmtlyMjFMo9aCuxqb9
+         lDuXroZRasdYjNgcLnu0thP4gyMx0IyHnkTxjwdAjWXN4G+wy5//nDGsKJzX4t/JnI7r
+         U39rJkLcSsgT6xjIN1cuGFinRwNgzQ/ixiGdnN37B8tIdqmVW0GIWp7AEKzkFFtQjzc/
+         fH7p/sUFRVqK360anIpLyQgHwLjQt0NZrJacbpUgNvUVRo3d3U6NOKRqpk+cAwRRmxTR
+         yQMA==
+X-Gm-Message-State: APjAAAXhzGQOMMrL6NTtClnTD7eJDXCJyT3H3YH65aWCc5Q2NEXZQ0xG
+        xN5qZ+HSWCi2eWpu7jgHZ0Q4dXNdHOGLQR86s0yPA2mE
+X-Google-Smtp-Source: APXvYqyMaZHfK8W0Y+cZkQ8qPgpqVV/Kl0pC/cAZz3DeuvjrVg4FwV8mCqImWkc0fANtTclL7NvITtJY4Xx3o+0txh4=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr7933814qkb.286.1562963068694;
+ Fri, 12 Jul 2019 13:24:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190712094118.1559434-1-arnd@arndb.de> <CADnq5_McVegix-m87OwHUvk80NdsFZPQ7d0X8qQtUf84h+Fg1A@mail.gmail.com>
-In-Reply-To: <CADnq5_McVegix-m87OwHUvk80NdsFZPQ7d0X8qQtUf84h+Fg1A@mail.gmail.com>
+References: <20190712085212.3901785-1-arnd@arndb.de> <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <20190712120328.GB27512@ziepe.ca> <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <CAK8P3a3ZqY_qLSN1gw12EvzLS49RAnmG4nT9=N+Qj9XngQd0CA@mail.gmail.com> <20190712151423.GG27512@ziepe.ca>
+In-Reply-To: <20190712151423.GG27512@ziepe.ca>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 12 Jul 2019 22:22:03 +0200
-Message-ID: <CAK8P3a3wqWxPvDDYSQXBTgr335ONZ3beztoANO0hMcnWPFr0Aw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/amdgpu: hide #warning for missing DC config
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Jack Xiao <Jack.Xiao@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Huang Rui <ray.huang@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
+Date:   Fri, 12 Jul 2019 22:24:11 +0200
+Message-ID: <CAK8P3a0=48ULbgBhx97RncS_em+ymEnDZuVbA29+NF2QQ0KU4Q@mail.gmail.com>
+Subject: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 8:02 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+On Fri, Jul 12, 2019 at 5:14 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> On Fri, Jul 12, 2019 at 03:22:35PM +0200, Arnd Bergmann wrote:
+> > On Fri, Jul 12, 2019 at 3:05 PM Bernard Metzler <BMT@zurich.ibm.com> wrote:
 >
-> On Fri, Jul 12, 2019 at 5:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > It is annoying to have #warnings that trigger in randconfig
-> > builds like
-> >
-> > drivers/gpu/drm/amd/amdgpu/soc15.c:653:3: error: "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
-> > drivers/gpu/drm/amd/amdgpu/nv.c:400:3: error: "Enable CONFIG_DRM_AMD_DC for display support on navi."
-> >
-> > Remove these and rely on the users to turn these on.
->
-> Is there some sort of informational message we could use instead?
-> Unless you are a server user, most end users want this option enabled.
+> Since this is coming up so late in the merge window, I'm inclined to
+> take the simple path while Bernard makes a complete solution
+> here. What do you think Arnd?
 
-I don't think any compile-time output is a good idea here, a 'make -s'
-build should really have no output whatsoever (and usually does).
+I don't see a problem either way, since it's a new driver, so both
+disabling it on 32-bit and applying a fix that might cause something
+to break is not going to make it worse for anyone compared to the
+linux-5.2 release.
 
-I see that DRM_AMD_DC is already 'default y', which I would hope
-to be sufficient. If you want something stronger than that, you could
-make hide the option and leave it always-on unless CONFIG_EXPERT
-is enabled:
-
-diff --git a/drivers/gpu/drm/amd/display/Kconfig
-b/drivers/gpu/drm/amd/display/Kconfig
-index 2cfbbf3b85dd..9862a193349a 100644
---- a/drivers/gpu/drm/amd/display/Kconfig
-+++ b/drivers/gpu/drm/amd/display/Kconfig
-@@ -3,7 +3,7 @@ menu "Display Engine Configuration"
-        depends on DRM && DRM_AMDGPU
-
- config DRM_AMD_DC
--       bool "AMD DC - Enable new display engine"
-+       bool "AMD DC - Enable new display engine" if EXPERT
-        default y
-        select SND_HDA_COMPONENT if SND_HDA_CORE
-        select DRM_AMD_DC_DCN1_0 if X86 && !(KCOV_INSTRUMENT_ALL &&
-KCOV_ENABLE_COMPARISONS) && !CC_IS_CLANG
+      Arnd
