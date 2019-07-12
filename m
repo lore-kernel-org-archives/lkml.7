@@ -2,115 +2,113 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834DCC742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63873C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAED2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B142084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHN+AfMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfGLBnk (ORCPT
+        id S1728978AbfGLBoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:43:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60694 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbfGLBnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:43:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 18:43:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
-   d="scan'208";a="171416921"
-Received: from intel10-debian.sh.intel.com ([10.239.53.1])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jul 2019 18:43:37 -0700
-From:   Zhengjun Xing <zhengjun.xing@linux.intel.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, tom.zanussi@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, zhengjun.xing@linux.intel.com,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
-Date:   Fri, 12 Jul 2019 09:53:08 +0800
-Message-Id: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 11 Jul 2019 21:44:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35606 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbfGLBoW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 21:44:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so8222841wrm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 18:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lRWVv8sMYMKYocmhKIjrnQXwGIfPiESQt2vqD2pw6zk=;
+        b=kHN+AfMwIfWvbCzX/eK7qSCf1BewVjfqp1d9z24xOKwzQlFs6zfqnjUfdMEXe5atJ6
+         mFVYkfz2DQeu2rbqGE80IVOPARF4eVPFnukanQJQUpsfEVqu0MvuyhbFIGKOYded9Krd
+         dnWH3LHg6SvxKHDupiaPV+ihCRUGSq7cG1LAwlJtXuwN9pTixn3dTA3eZncHJBfzPFAF
+         rAdZa4juu3LFLppzcNdCX42Bjf538euDCiVZtkOX1lyEX2u+ZPS1QddMq5EeiK6DBzzY
+         zQQ6VnFqwAVqW1VKpUR4MSq4w6RccOGecw9yFjhY+DEWfbH8Ook1N61qpiAEGKTPnLTq
+         sfYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lRWVv8sMYMKYocmhKIjrnQXwGIfPiESQt2vqD2pw6zk=;
+        b=dTuvbgJrnxjvQdDW9Z2GgrdPn8qaf+Xv5EffBKu2R9Qs4cnJpobFhxrW5JzHBavkf6
+         GtVocGSRhAqJfIi9O6LMu9PAeiIxguSOV6tW6ZcJqWCKeAptHPh/kxomtktsCKsKPDe0
+         O7mWORtMg/gHe352F8oTLdr0rTBeHrzVngQD0uZS1AvjgUJsKwGT7FdetVQeP8m5OsLP
+         oOr4+/HNwiEZN2gT4IbrqRNAIDXZpmGnp6w7oWTAbUoqSOckxZnbKQ7kl6JGu93jUzQy
+         vTx/KM55DttU8JB3nvyxwrr9tZvaA0pkqQ1+LLxVhr7w5qyVIHiGjuOoeWs1/dWwchkc
+         am8w==
+X-Gm-Message-State: APjAAAUQSBadRGM8v4d8CLhYUt71BgR7TdwESgxUC88JFnrhR5ZkltQs
+        VecSrnRbW5LpA3dg7ybwgfQ=
+X-Google-Smtp-Source: APXvYqxW0bEAUwTusv0FyTqBh2bQSqPJE1T0dmhXPjiJpjySvSYlo6VoBdXsoD+zPFlh180GL/mH0Q==
+X-Received: by 2002:adf:ce88:: with SMTP id r8mr8254019wrn.42.1562895859848;
+        Thu, 11 Jul 2019 18:44:19 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id y12sm4409747wrm.79.2019.07.11.18.44.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Jul 2019 18:44:19 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Wen Yang <wen.yang99@zte.com.cn>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ASoC: audio-graph-card: Constify reg in graph_get_dai_id
+Date:   Thu, 11 Jul 2019 18:43:57 -0700
+Message-Id: <20190712014357.84245-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "gfp_t" support in synthetic_events, then the "gfp_t" type
-parameter in some functions can be traced.
+clang errors:
 
-Prints the gfp flags as hex in addition to the human-readable flag
-string.  Example output:
+sound/soc/generic/audio-graph-card.c:87:7: error: assigning to 'u32 *'
+(aka 'unsigned int *') from 'const void *' discards qualifiers
+[-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+                reg = of_get_property(node, "reg", NULL);
+                    ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
 
-  whoopsie-630 [000] ...1 78.969452: testevent: bar=b20 (GFP_ATOMIC|__GFP_ZERO)
-    rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
-    rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+Move the declaration up a bit to keep the reverse christmas tree look.
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Fixes: c152f8491a8d ("ASoC: audio-graph-card: fix an use-after-free in graph_get_dai_id()")
+Link: https://github.com/ClangBuiltLinux/linux/issues/599
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ sound/soc/generic/audio-graph-card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index ca6b0dff60c5..30f0f32aca62 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -13,6 +13,10 @@
- #include <linux/rculist.h>
- #include <linux/tracefs.h>
+diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
+index c8abb86afefa..c0d262a2ce2c 100644
+--- a/sound/soc/generic/audio-graph-card.c
++++ b/sound/soc/generic/audio-graph-card.c
+@@ -62,8 +62,8 @@ static int graph_get_dai_id(struct device_node *ep)
+ 	struct device_node *node;
+ 	struct device_node *endpoint;
+ 	struct of_endpoint info;
++	const u32 *reg;
+ 	int i, id;
+-	u32 *reg;
+ 	int ret;
  
-+/* for gfp flag names */
-+#include <linux/trace_events.h>
-+#include <trace/events/mmflags.h>
-+
- #include "tracing_map.h"
- #include "trace.h"
- #include "trace_dynevent.h"
-@@ -752,6 +756,8 @@ static int synth_field_size(char *type)
- 		size = sizeof(unsigned long);
- 	else if (strcmp(type, "pid_t") == 0)
- 		size = sizeof(pid_t);
-+	else if (strcmp(type, "gfp_t") == 0)
-+		size = sizeof(gfp_t);
- 	else if (synth_field_is_string(type))
- 		size = synth_field_string_size(type);
- 
-@@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
- 		fmt = "%lu";
- 	else if (strcmp(type, "pid_t") == 0)
- 		fmt = "%d";
-+	else if (strcmp(type, "gfp_t") == 0)
-+		fmt = "%x";
- 	else if (synth_field_is_string(type))
- 		fmt = "%s";
- 
-@@ -834,9 +842,20 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 					 i == se->n_fields - 1 ? "" : " ");
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
-+			struct trace_print_flags __flags[] = {
-+			    __def_gfpflag_names, {-1, NULL} };
-+
- 			trace_seq_printf(s, print_fmt, se->fields[i]->name,
- 					 entry->fields[n_u64],
- 					 i == se->n_fields - 1 ? "" : " ");
-+
-+			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
-+				trace_seq_puts(s, " (");
-+				trace_print_flags_seq(s, "|",
-+						      entry->fields[n_u64],
-+						      __flags);
-+				trace_seq_putc(s, ')');
-+			}
- 			n_u64++;
- 		}
- 	}
+ 	/* use driver specified DAI ID if exist */
 -- 
-2.14.1
+2.22.0
 
