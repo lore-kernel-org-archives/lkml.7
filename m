@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D3AC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C18C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECD620645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E9821019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934822;
-	bh=vaXuefLnQVX1WIZfUStZejGF9m9Z62dsxQs1bUacwK8=;
+	s=default; t=1562934828;
+	bh=NcZZzhaLzdat+yqaF8MIGu8GX/hbheQFPNJEoYo0n4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vbW6l19hTtdFWdwS2dJpiW3VECgrtU+U/sUaPZJhRg/056277FiG09VnELt/UZoer
-	 VaWvhhJmUmUzYPPEkIJhvd1Dk5d4pqKvUHMVg5KAHf+/WBztJHW3F1ZxVei7IJyhxt
-	 52ms0zv+4ddEFp8rMhEhmb093vA4dOq40k2AVGzw=
+	b=pf5h3s+LPylr+Hm0xv43C535a7aZw+e0dunW53gXeusufvBHzuLsi3G2DqNwB5J5t
+	 TYBRXw4CMk7FbNQGXKzi90bRh1PtxftL4K28xLPNXiuVVF2nAgLCG4otv8JXJTkFIN
+	 20+JwY9gpSHZa/iU4Nh4ee0byQ+uT8u7b2aokVDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbfGLMdk (ORCPT
+        id S1729320AbfGLMdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52838 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbfGLMde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:33:34 -0400
+        id S1729360AbfGLMdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:33:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A45B216C4;
-        Fri, 12 Jul 2019 12:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81ACD216C4;
+        Fri, 12 Jul 2019 12:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934814;
-        bh=vaXuefLnQVX1WIZfUStZejGF9m9Z62dsxQs1bUacwK8=;
+        s=default; t=1562934820;
+        bh=NcZZzhaLzdat+yqaF8MIGu8GX/hbheQFPNJEoYo0n4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e3fB5fQWs5rFAeqcQgVbvSdYi7k4dHcj/FfbitxEoEPICtEHn12A9g8G9qK7d+B3V
-         WG8SOeAi8Kk52AFcgLdRke63olcdtRUndpWY723IW/kH2MF/l1P4vjrH4/q7FQvVX1
-         4IaqczDBpsC8CjI4cz/F+U9EsUtQViYjqL/rmbsY=
+        b=XY45cI0waQ4oQYokAt04odXToLGJHG0+kIs7e0rJk5qGIk2HB3mwTAjiJYMqtFFm8
+         TEf0ErmUEHjQwr6Z28KPpcDGLDa/aXWSImqoFOChaNbK7qYJ28Uk1z7Nm+WDsujQEX
+         jz18w4wm0FKvSDIr/kTKi+WPP6Q7CKS5ptsQqhpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.2 38/61] staging: comedi: amplc_pci230: fix null pointer deref on interrupt
-Date:   Fri, 12 Jul 2019 14:19:51 +0200
-Message-Id: <20190712121622.673597199@linuxfoundation.org>
+        stable@vger.kernel.org, Hongjie Fang <hongjiefang@asrmicro.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.2 04/61] fscrypt: dont set policy for a dead directory
+Date:   Fri, 12 Jul 2019 14:19:17 +0200
+Message-Id: <20190712121620.843288952@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -58,45 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Hongjie Fang <hongjiefang@asrmicro.com>
 
-commit 7379e6baeddf580d01feca650ec1ad508b6ea8ee upstream.
+commit 5858bdad4d0d0fc18bf29f34c3ac836e0b59441f upstream.
 
-The interrupt handler `pci230_interrupt()` causes a null pointer
-dereference for a PCI260 card.  There is no analog output subdevice for
-a PCI260.  The `dev->write_subdev` subdevice pointer and therefore the
-`s_ao` subdevice pointer variable will be `NULL` for a PCI260.  The
-following call near the end of the interrupt handler results in the null
-pointer dereference for a PCI260:
+The directory may have been removed when entering
+fscrypt_ioctl_set_policy().  If so, the empty_dir() check will return
+error for ext4 file system.
 
-	comedi_handle_events(dev, s_ao);
+ext4_rmdir() sets i_size = 0, then ext4_empty_dir() reports an error
+because 'inode->i_size < EXT4_DIR_REC_LEN(1) + EXT4_DIR_REC_LEN(2)'.  If
+the fs is mounted with errors=panic, it will trigger a panic issue.
 
-Fix it by only calling the above function if `s_ao` is valid.
+Add the check IS_DEADDIR() to fix this problem.
 
-Note that the other uses of `s_ao` in the calls
-`pci230_handle_ao_nofifo(dev, s_ao);` and `pci230_handle_ao_fifo(dev,
-s_ao);` will never be reached for a PCI260, so they are safe.
-
-Fixes: 39064f23284c ("staging: comedi: amplc_pci230: use comedi_handle_events()")
-Cc: <stable@vger.kernel.org> # v3.19+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 9bd8212f981e ("ext4 crypto: add encryption policy and password salt support")
+Cc: <stable@vger.kernel.org> # v4.1+
+Signed-off-by: Hongjie Fang <hongjiefang@asrmicro.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/amplc_pci230.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/crypto/policy.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/staging/comedi/drivers/amplc_pci230.c
-+++ b/drivers/staging/comedi/drivers/amplc_pci230.c
-@@ -2330,7 +2330,8 @@ static irqreturn_t pci230_interrupt(int
- 	devpriv->intr_running = false;
- 	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
- 
--	comedi_handle_events(dev, s_ao);
-+	if (s_ao)
-+		comedi_handle_events(dev, s_ao);
- 	comedi_handle_events(dev, s_ai);
- 
- 	return IRQ_HANDLED;
+--- a/fs/crypto/policy.c
++++ b/fs/crypto/policy.c
+@@ -81,6 +81,8 @@ int fscrypt_ioctl_set_policy(struct file
+ 	if (ret == -ENODATA) {
+ 		if (!S_ISDIR(inode->i_mode))
+ 			ret = -ENOTDIR;
++		else if (IS_DEADDIR(inode))
++			ret = -ENOENT;
+ 		else if (!inode->i_sb->s_cop->empty_dir(inode))
+ 			ret = -ENOTEMPTY;
+ 		else
 
 
