@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FFCC742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2DBC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724EC2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0007208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935206;
-	bh=a1KIzy7Wcu8S/Fm6g0S8WiJ+h5aYZSnv4ONmq40IDoA=;
+	s=default; t=1562935214;
+	bh=zL6aqGAa5so6ji5VyfQpcIsTR3nG6SR8l5QdORUrsn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tf7F4bg6MmMCP4EL0dYqQYppuhJVzp9NtHhhwHRnHWW+6ydX13Mov5m8nv9pJIgUu
-	 ZBjLWkfwz/YWOoRV/SZGB4JI9FDX0y3WAcIKvWwpwXQsN4Wz9kBZksBCWyf3BbGnJz
-	 vPkFp56fq6gTJM1wxKrU0jQM6CBZOcXS3Vl0JU5I=
+	b=rHyyVXUUJGKIgoTI4BQmv0O/CtS0FpbQVfkA1YIsbI4xm5HkkZ7zaHaPwlajNmb20
+	 vYfTeNDGry+f44OM1iHG5iV7EfVg2M59UZV4nezaR7fomVUhvuqU88rQZge/8+IE9m
+	 DeschndejvC8HAPy2816Gxu1KGwMajnqD3b66odA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfGLMj5 (ORCPT
+        id S1727765AbfGLM0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbfGLM0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:13 -0400
+        id S1727731AbfGLMZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:25:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7034A2084B;
-        Fri, 12 Jul 2019 12:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACBC6208E4;
+        Fri, 12 Jul 2019 12:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934372;
-        bh=a1KIzy7Wcu8S/Fm6g0S8WiJ+h5aYZSnv4ONmq40IDoA=;
+        s=default; t=1562934353;
+        bh=zL6aqGAa5so6ji5VyfQpcIsTR3nG6SR8l5QdORUrsn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjfeXsYlmAY8W4whSqS44vR9GIL9IgHPA171XTXK6L0Sx9fQgl5KLzc/h6TM4SW3R
-         TT3GGKC22QJcfjDK7jydKk0xX5B0jWFwrRu+CYh1bBsgFN1Cf/P+Tv0k/miXPva1TV
-         P6ijyt3phONyew3N50w/TIZMs81bp9HqSJjsZ1Ow=
+        b=AfMQqqezNvJBvbbyG5cUnclSUNSe1FdqvCAHa0VbVUT4g30/9Roy3qaYRUn1R7Uc/
+         +coO5pvHQfRPQdGCwwunpdN+sixd95nvyC42YpAHfr596qnM+eUBfZPmxWNzma89Sq
+         v2+NjNtaDNuM7bdD3vUOJfSVlK9jc6RVkbn9V0QU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 027/138] iwlwifi: Fix double-free problems in iwl_req_fw_callback()
-Date:   Fri, 12 Jul 2019 14:18:11 +0200
-Message-Id: <20190712121629.743065819@linuxfoundation.org>
+Subject: [PATCH 5.1 004/138] ARM: dts: dra76x: Disable rtc target module
+Date:   Fri, 12 Jul 2019 14:17:48 +0200
+Message-Id: <20190712121628.899564305@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,37 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8627176b0de7ba3f4524f641ddff4abf23ae4e4 ]
+[ Upstream commit f7b9cb944a5d41fdede4e928a47e9d5fce5169d7 ]
 
-In the error handling code of iwl_req_fw_callback(), iwl_dealloc_ucode()
-is called to free data. In iwl_drv_stop(), iwl_dealloc_ucode() is called
-again, which can cause double-free problems.
+rtc is fused out on dra76 and accessing target module
+register is causing a boot crash hence disable it.
 
-To fix this bug, the call to iwl_dealloc_ucode() in
-iwl_req_fw_callback() is deleted.
-
-This bug is found by a runtime fuzzing tool named FIZZER written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/dra7-l4.dtsi | 2 +-
+ arch/arm/boot/dts/dra76x.dtsi  | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-index 689a65b11cc3..4fd1737d768b 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1579,7 +1579,6 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
- 	goto free;
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 414f1cd68733..73f5c050f586 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3543,7 +3543,7 @@
+ 			};
+ 		};
  
-  out_free_fw:
--	iwl_dealloc_ucode(drv);
- 	release_firmware(ucode_raw);
-  out_unbind:
- 	complete(&drv->request_firmware_complete);
+-		target-module@38000 {			/* 0x48838000, ap 29 12.0 */
++		rtctarget: target-module@38000 {			/* 0x48838000, ap 29 12.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+ 			ti,hwmods = "rtcss";
+ 			reg = <0x38074 0x4>,
+diff --git a/arch/arm/boot/dts/dra76x.dtsi b/arch/arm/boot/dts/dra76x.dtsi
+index 9ee45aa365d8..5c437271d307 100644
+--- a/arch/arm/boot/dts/dra76x.dtsi
++++ b/arch/arm/boot/dts/dra76x.dtsi
+@@ -81,3 +81,7 @@
+ 		reg = <0x3fc>;
+ 	};
+ };
++
++&rtctarget {
++	status = "disabled";
++};
 -- 
 2.20.1
 
