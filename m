@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F3C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060BFC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFD8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11D9216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934435;
-	bh=jxuRC5RWgmFE6A1v+sw6c/9f28Z+K+sY/u9/2MPqFmA=;
+	s=default; t=1562934440;
+	bh=b44Im4yuvraejeHtjxj2xoFfQZtu0cWcfXBhkj1k270=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ll2Flby3cVmNQqMJ2jq9IdLg9qumXLOhiS7i27VbP0y5acH1scZRucUY6pbSZzrNK
-	 NK8xL1SStqLizf1WBTz7iMqKecAL/IfplGHT2MWGycxrERELfxfgrPzVBbKfXCI5R3
-	 hWtu1nDyj1P0lEBpgp2XidGAbdEAY4aliV9knSw0=
+	b=aEYShIw4dvnJLx5yyQqWXzy2GorbbILbcMUwkfr40Z5YfDRmtpkTS9AN1rhCv6g0p
+	 6hArAmdav7cESzMVJygxLR4bWSBYlcKB1KOhNuw362r3OKTbvUuXBKEa625YyxcPNj
+	 tIOsyYholt2ULkuJI1AaKdTKRpeza2+uHCIr4niY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfGLM1O (ORCPT
+        id S1728593AbfGLM1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:27:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbfGLM1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:27:13 -0400
+        id S1728557AbfGLM1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CFA21019;
-        Fri, 12 Jul 2019 12:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D26E216C4;
+        Fri, 12 Jul 2019 12:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934432;
-        bh=jxuRC5RWgmFE6A1v+sw6c/9f28Z+K+sY/u9/2MPqFmA=;
+        s=default; t=1562934434;
+        bh=b44Im4yuvraejeHtjxj2xoFfQZtu0cWcfXBhkj1k270=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qa62tvIHtePOIGc6agk+V3uDD1Y+Fs8vQ9Zya1xMyf0m0BEU2pQr9g8UXkG2E8ySQ
-         BOCJ8OWXuNwF83nqTy2UZEXYv0lGRhXQ+OrWQKNF4W6j4HzD1V4vDXiI+8iM2UXh6c
-         kjfyZg9W10RRv96Z2AeBQ0hoq6gjMeAnJYfayLwQ=
+        b=YknI4Je5Yq6u9CfzCSKu1kWbB1uMe1Vm2THJ4bAkw9MCKHd2z3qgCInBIsFFSeqIO
+         oid+pRnxI3qrwwDC2UZv3JfaeP1lWYTBY6yDkd4p7oG9ajuNMRL3dAznb69YTk1sPY
+         RqK0z+kyuoDs2+KHvpuSWpwZN1HaMljpKjZD/NNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 053/138] KVM: nVMX: use correct clean fields when copying from eVMCS
-Date:   Fri, 12 Jul 2019 14:18:37 +0200
-Message-Id: <20190712121630.701445555@linuxfoundation.org>
+Subject: [PATCH 5.1 054/138] bpf: fix div64 overflow tests to properly detect errors
+Date:   Fri, 12 Jul 2019 14:18:38 +0200
+Message-Id: <20190712121630.742274478@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,45 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9bc5227652df4900eff12a9b8b38e9a8c7c78ea ]
+[ Upstream commit 3e0682695199bad51dd898fe064d1564637ff77a ]
 
-Unfortunately, a couple of mistakes were made while implementing
-Enlightened VMCS support, in particular, wrong clean fields were
-used in copy_enlightened_to_vmcs12():
-- exception_bitmap is covered by CONTROL_EXCPN;
-- vm_exit_controls/pin_based_vm_exec_control/secondary_vm_exec_control
-  are covered by CONTROL_GRP1.
+If the result of the division is LLONG_MIN, current tests do not detect
+the error since the return value is truncated to a 32-bit value and ends
+up being 0.
 
-Fixes: 945679e301ea0 ("KVM: nVMX: add enlightened VMCS state")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/nested.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../testing/selftests/bpf/verifier/div_overflow.c  | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 5fa0c17d0b41..4ca834d22169 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1404,7 +1404,7 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
- 	}
- 
- 	if (unlikely(!(evmcs->hv_clean_fields &
--		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_PROC))) {
-+		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_EXCPN))) {
- 		vmcs12->exception_bitmap = evmcs->exception_bitmap;
- 	}
- 
-@@ -1444,7 +1444,7 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
- 	}
- 
- 	if (unlikely(!(evmcs->hv_clean_fields &
--		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1))) {
-+		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP1))) {
- 		vmcs12->pin_based_vm_exec_control =
- 			evmcs->pin_based_vm_exec_control;
- 		vmcs12->vm_exit_controls = evmcs->vm_exit_controls;
+diff --git a/tools/testing/selftests/bpf/verifier/div_overflow.c b/tools/testing/selftests/bpf/verifier/div_overflow.c
+index bd3f38dbe796..acab4f00819f 100644
+--- a/tools/testing/selftests/bpf/verifier/div_overflow.c
++++ b/tools/testing/selftests/bpf/verifier/div_overflow.c
+@@ -29,8 +29,11 @@
+ 	"DIV64 overflow, check 1",
+ 	.insns = {
+ 	BPF_MOV64_IMM(BPF_REG_1, -1),
+-	BPF_LD_IMM64(BPF_REG_0, LLONG_MIN),
+-	BPF_ALU64_REG(BPF_DIV, BPF_REG_0, BPF_REG_1),
++	BPF_LD_IMM64(BPF_REG_2, LLONG_MIN),
++	BPF_ALU64_REG(BPF_DIV, BPF_REG_2, BPF_REG_1),
++	BPF_MOV32_IMM(BPF_REG_0, 0),
++	BPF_JMP_REG(BPF_JEQ, BPF_REG_0, BPF_REG_2, 1),
++	BPF_MOV32_IMM(BPF_REG_0, 1),
+ 	BPF_EXIT_INSN(),
+ 	},
+ 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
+@@ -40,8 +43,11 @@
+ {
+ 	"DIV64 overflow, check 2",
+ 	.insns = {
+-	BPF_LD_IMM64(BPF_REG_0, LLONG_MIN),
+-	BPF_ALU64_IMM(BPF_DIV, BPF_REG_0, -1),
++	BPF_LD_IMM64(BPF_REG_1, LLONG_MIN),
++	BPF_ALU64_IMM(BPF_DIV, BPF_REG_1, -1),
++	BPF_MOV32_IMM(BPF_REG_0, 0),
++	BPF_JMP_REG(BPF_JEQ, BPF_REG_0, BPF_REG_1, 1),
++	BPF_MOV32_IMM(BPF_REG_0, 1),
+ 	BPF_EXIT_INSN(),
+ 	},
+ 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
 -- 
 2.20.1
 
