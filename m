@@ -2,164 +2,169 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2679C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D7FC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A0D2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B081C21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BAFql+Ha"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVJUzQ++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfGLI0A (ORCPT
+        id S1726591AbfGLI0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:26:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45211 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLIZ7 (ORCPT
+        Fri, 12 Jul 2019 04:26:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55555 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLI0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:25:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r1so3971080pfq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 01:25:58 -0700 (PDT)
+        Fri, 12 Jul 2019 04:26:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so8035748wmj.5;
+        Fri, 12 Jul 2019 01:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/RTxoumVNtB1PBld0antS4Z7J0pCK7ZhiGq0s+u+T8Q=;
-        b=BAFql+HaVxohUfVl9mYP/S5YzuA9cwdMGK2nCDIC66akftcSMq/vzOqHPsPfc6/6QO
-         3jbIxFLWL9RGB511maoma3UoAL51vux8VnJePTL/VCgMZPr6RxN5Bw1+YMc/2Gt+m8we
-         3O5VAqNXBto7Ij4ZOE6HDlreMkSzh4Wj+AQqk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bwx+cMEft2PFGPMJbRtKXHY4DXSVCtrKSWASe73jxoo=;
+        b=nVJUzQ++TuIzNhHp2sLYUw+zqkM3/biyEDtZX9BKVXF0l4Ffui6czFlx1A9+iplc6v
+         bJqPgT+HN8a8iQd45BcMBOc/w4x6fI3jFtJU08ju5klNtT5/fx6RzYVJcKObOQROt2CY
+         4rXV8WotMfMRl/lpDVaE25rUZpMAd7e84foZioSpJa31el9luJi8wa2eIFq3/sythWVo
+         GJS49jhEQ0HNUgEFijbsJlHIi5HEzj0ujXlP6NZqo3YFaAA7n0n0fcYRjePAo7keVdcz
+         ER9gOS00DhYXHSPxx2xK1GLlULt8lj2FZiW8pjaimykyLb5KY5UM/jtEet0V8wsO1+TH
+         7/bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/RTxoumVNtB1PBld0antS4Z7J0pCK7ZhiGq0s+u+T8Q=;
-        b=J/qIqkykcc4PpXOHoLz2C5HxOvAmC+RRnCl392a2LbOKFmFqN3MD21DDmFV9WdDx2j
-         SIDZwOYLmklqQwyyp5TqQgRHHf4wItJbeCSudx/MfwJSU1R1aAM/a1gOrl2Qhf1uLRsd
-         evbXXZlBGBI/Yijy0OHfzoI4v0YuXOWmmS/h2H1tDyUPM7WSwWCcZKOGF7YLEEL+D+9r
-         AD5BhglrwgnXRrsbnRAODJk0IJVCPwUe/6eThQSj0bG1mIDrPEZrBZ+XY6zkeY/Eazuu
-         dBBqcmf7UNPFZvDPbpLSbsOMtXL169TVbGedgluJrAnfbUH8Nfc5vTmTHNFdYsE09eYk
-         CYeQ==
-X-Gm-Message-State: APjAAAV7O7eGuBEY8NUZherfzf07CHnxj9/pYiSF+FYUfuIemgUnJjt7
-        8o5tf9EiJrwdsnSomtlAs7oTKLjdk50kVChong1yIA==
-X-Google-Smtp-Source: APXvYqwAnknqjQvGUnrEC5ubqLeQGMCESFeladMIiOfwXF9UrCGRG+5+L2hqDm0nBHA51jOduboUlYnwqXtHNbzKgbU=
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr10306970pjq.114.1562919958370;
- Fri, 12 Jul 2019 01:25:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bwx+cMEft2PFGPMJbRtKXHY4DXSVCtrKSWASe73jxoo=;
+        b=aOv8IH2DpVe+FVJ9ekHSUPBxq/4o7rSrWyBYlEWjqbVaYh9C+hDf9MdaOsJZZ8OlHh
+         mTfzg96OFCN1pcsdlOhifSFcuJr7F2vwwDx7u+TG205kLWOQOosyp6hRNFwBBwlE1seo
+         l1pXdeqDSlUkctLcsEGV8mBlD0WVORenZbuQKxr7b+QX8wQrBzzUiE/DDQcqGdrKPWUp
+         LNqiD0OgGZcnbhXisKJZJPuUiN+xMVmQd1rlJWi+YYZUxJnS1GO95SXCXSbisUAHuEud
+         a3CJyR4/TxM1dnIH/wZywpGntVJ9qFYR2S1nXOurRdz/cj5HSY6HP0OMVldKk99M8Qx2
+         n9lA==
+X-Gm-Message-State: APjAAAW/M/WDvbowxSf3w21ENmv6MpKvfn3GmipxcpZ5F9wlBsaxjGO/
+        OgeMYN8dbWIrIWS+JxwYfrIRGxc7
+X-Google-Smtp-Source: APXvYqxNNdMGqOcPkE4ucROjcMN7gUWGanh74tXauE+2XgwZlZ1GZECA30YxeDpH3LaO+lBgrvVrJA==
+X-Received: by 2002:a7b:c748:: with SMTP id w8mr8078395wmk.36.1562919991584;
+        Fri, 12 Jul 2019 01:26:31 -0700 (PDT)
+Received: from alan-laptop.carrier.duckdns.org (host-89-243-246-11.as13285.net. [89.243.246.11])
+        by smtp.gmail.com with ESMTPSA id o11sm7305548wmh.37.2019.07.12.01.26.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 01:26:30 -0700 (PDT)
+From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
+To:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Subject: [PATCH] Documentation: proc.txt: emphasize that iowait cannot be relied on
+Date:   Fri, 12 Jul 2019 09:22:09 +0100
+Message-Id: <20190712082209.16073-1-alan.christopher.jenkins@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <CGME20190621063708epcms2p309f4173afabe5de28942ba15d13987f7@epcms2p3>
- <20190621063708epcms2p309f4173afabe5de28942ba15d13987f7@epcms2p3>
-In-Reply-To: <20190621063708epcms2p309f4173afabe5de28942ba15d13987f7@epcms2p3>
-From:   Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Date:   Fri, 12 Jul 2019 13:55:47 +0530
-Message-ID: <CAK=zhgr_T8vA=BCdFCT37RxGCgS3xr8Wp9MEMK_9nZ=oYHy=7Q@mail.gmail.com>
-Subject: Re: [RESEND RFC PATCH] mpt3sas: support target smid for [abort|query] task
-To:     minwoo.im@samsung.com
-Cc:     "sathya.prakash@broadcom.com" <sathya.prakash@broadcom.com>,
-        "suganath-prabu.subramani@broadcom.com" 
-        <suganath-prabu.subramani@broadcom.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "MPT-FusionLinux.pdl@broadcom.com" <MPT-FusionLinux.pdl@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Euihyeok Kwon <eh81.kwon@samsung.com>,
-        Sarah Cho <sohyeon.jo@samsung.com>,
-        Sanggwan Lee <sanggwan.lee@samsung.com>,
-        Gyeongmin Nam <gm.nam@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:07 PM Minwoo Im <minwoo.im@samsung.com> wrote:
->
-> We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MGMT)
-> to /dev/mpt3ctl.  If the given task_type is either abort task or query
-> task, it may need a field named "Initiator Port Transfer Tag to Manage"
-> in the IU.
->
-> Current code does not support to check target IPTT tag from the
-> tm_request.  This patch introduces to check TaskMID given from the
-> userspace as a target tag.  We have a rule of relationship between
-> (struct request *req->tag) and smid in mpt3sas_base.c:
->
-> 3318 u16
-> 3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_idx,
-> 3320         struct scsi_cmnd *scmd)
-> 3321 {
-> 3322         struct scsiio_tracker *request = scsi_cmd_priv(scmd);
-> 3323         unsigned int tag = scmd->request->tag;
-> 3324         u16 smid;
-> 3325
-> 3326         smid = tag + 1;
->
-> So if we want to abort a request tagged #X, then we can pass (X + 1) to
-> this IOCTL handler.
->
-> Cc: Sathya Prakash <sathya.prakash@broadcom.com>
-> Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: MPT-FusionLinux.pdl@broadcom.com
-> Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
-> ---
->  drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-> index b2bb47c14d35..5c7539dae713 100644
-> --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-> +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-> @@ -596,15 +596,17 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
->                 if (priv_data->sas_target->handle != handle)
->                         continue;
->                 st = scsi_cmd_priv(scmd);
-> -               tm_request->TaskMID = cpu_to_le16(st->smid);
-> -               found = 1;
-> +               if (tm_request->TaskMID == st->smid) {
+CPU "iowait" time in /proc/stat does not work on my laptop.
 
-I think it will difficult for the user to find the smid that he want
-to abort. For this user has to enable the scsi logging level and get
-the tag and pass the ioctl with tag +1 value in TaskMID field. And
-hence currently driver will loop over all the smid's and if it fines
-any outstanding smid then it will issue task abort or task query TM
-for this outstanding smid to the HBA firmware.
+I saw the documentation mention several problems with "iowait".  However
+each problem appeared to be qualified.  It gave me the impression I could
+probably account for each problem.  My impression was wrong.
 
-May be we can do like below,
-* First check whether user provided "TaskMID" is non zero or not. if
-user provided TaskMID is non-zero and if this TaskMID is outstanding
-then driver will issue TaskAbort/QueryTask TM with this TaskMID value
-else driver will loop over all the smid's and if finds any smid is
-outstanding then it will issue TaskAbort/QueryTask TM with TaskMID
-value set to outstanding smid.
+There are a couple of writeups explaining the specific problem I had.[1][2]
 
-With the above logic still legacy application will be supported
-without breaking anything where they provide TaskMID filed as zero.
-And it also allows the user to abort the IO which he wants.
+[1] "[RFC PATCH 0/8] rework iowait accounting", 2014-06-26:
+    https://lore.kernel.org/lkml/53ABE28F.6010402@jp.fujitsu.com/
 
-Thanks,
-Sreekanth
+[2] A recent writeup by myself:
+    https://unix.stackexchange.com/questions/517757/my-basic-assumption-about-system-iowait-does-not-hold/527836#527836
 
-> +                       tm_request->TaskMID = cpu_to_le16(st->smid);
-> +                       found = 1;
-> +               }
->         }
->
->         if (!found) {
->                 dctlprintk(ioc,
-> -                          ioc_info(ioc, "%s: handle(0x%04x), lun(%d), no active mid!!\n",
-> +                          ioc_info(ioc, "%s: handle(0x%04x), lun(%d), no matched mid(%d)!!\n",
->                                     desc, le16_to_cpu(tm_request->DevHandle),
-> -                                   lun));
-> +                                   lun, tm_request->TaskMID));
->                 tm_reply = ioc->ctl_cmds.reply;
->                 tm_reply->DevHandle = tm_request->DevHandle;
->                 tm_reply->Function = MPI2_FUNCTION_SCSI_TASK_MGMT;
-> --
-> 2.16.1
+This might just be me.  Partly, my small knowledge about the scheduler
+allowed for false assumptions.  But I think we can emphasize more strongly
+how broken iowait is on SMP.  Overall, I aim to make it sound much scarier
+to analyze iowait.  I add some precise details, and also some
+anxiety-inducing vagueness :-).
+
+[Detailed reasons for the specific points I included:]
+
+1. Let us say that "iowait _can_ be massively under-accounted".  It is
+likely to remain true in future.  At least since v4.16, the
+under-accounting problem seems very exposed on non-virtual, multi-CPU
+systems.  In theory the wheel might turn again; this exposure might be
+reduced in future.  But even on v4.15, I can reproduce the problem using
+CPU affinity.
+
+2. Point to NO_HZ_IDLE, as a good hint towards i) the nature of the problem
+and ii) and how widespread it is.  To give a more comprehensive picture,
+also point to NO_HZ_FULL and VIRT_CPU_ACCOUNTING_NATIVE.
+
+Setting down my exact scenario would require a lot of specifics.  That
+would be going beyond the point.  We could link to one of the writeups as
+well, but I don't think we need to.
+
+3. My own "use case" did not expose the problem when I ran it on a virtual
+machine.  Even using my CPU affinity method.[2]  I haven't tracked down
+why.  This is a significant qualification to point 1.  Explicitly
+acknowledge this.  It's a pain, but it makes the main point easier to
+verify, and hence more credible.
+
+(I suspect this is common at least to small test VMs.  It appears true
+for both a Fedora 30 VM (5.1.x) and a Debian 9 VM (4.9.x).  I also tried
+some different storage options, virtio-blk v.s. virtio-scsi v.s. isilogic.)
+
+[:end of details]
+
+Signed-off-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+---
+ Documentation/filesystems/proc.txt | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 66cad5c86171..f1da71cd276e 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -1348,16 +1348,23 @@ second).  The meanings of the columns are as follows, from left to right:
+ - nice: niced processes executing in user mode
+ - system: processes executing in kernel mode
+ - idle: twiddling thumbs
+-- iowait: In a word, iowait stands for waiting for I/O to complete. But there
+-  are several problems:
+-  1. Cpu will not wait for I/O to complete, iowait is the time that a task is
+-     waiting for I/O to complete. When cpu goes into idle state for
+-     outstanding task io, another task will be scheduled on this CPU.
+-  2. In a multi-core CPU, the task waiting for I/O to complete is not running
+-     on any CPU, so the iowait of each CPU is difficult to calculate.
+-  3. The value of iowait field in /proc/stat will decrease in certain
++- iowait: In a word, iowait stands for waiting for I/O to complete.  This
++  number is not reliable.  The problems include:
++  1. A CPU does not wait for I/O to complete; iowait is the time that a task
++     is waiting for I/O to complete.  When a CPU goes into idle state for
++     outstanding task I/O, another task will be scheduled on this CPU.
++  2. iowait was extended to support systems with multiple CPUs. But the
++     extended version is misleading.  Consider a two-CPU system, where you see
++     50% iowait.  This could represent two tasks that could use 100% of both
++     CPUs, if they were not waiting for I/O.
++  3. iowait can be massively under-accounted on modern kernels.  The iowait
++     code does not account for the behaviour of NO_HZ_IDLE, NO_HZ_FULL, or
++     VIRT_CPU_ACCOUNTING_NATIVE on multi-CPU systems.  The amount of
++     under-accounting varies depending on the exact system configuration and
++     kernel version.  The effects might be less obvious when running in a
++     virtual machine.
++  4. The value of iowait field in /proc/stat will decrease in certain
+      conditions.
+-  So, the iowait is not reliable by reading from /proc/stat.
+ - irq: servicing interrupts
+ - softirq: servicing softirqs
+ - steal: involuntary wait
+-- 
+2.21.0
+
