@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7E1C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D237EC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7250021670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A354921670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934844;
-	bh=+i7iY/l9TZAe+veQK61yPcVizrJYpDutITLJVwIXUcc=;
+	s=default; t=1562934849;
+	bh=KDB7BkkpHiBg9CX+rLZM9phDdX5FbUHbfnLEUuAj8Zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LmbqllFS+UE7nUivIjBm9U75YfonfHyeOl+/LPa1zEudo4wn4Ci/R+8od5WOotcJu
-	 LM04BX8NkgeY8i4F+9z1W5nN5V8MkvY3tueAWvdKhFS/kyV1ZXSjA7IM2/sdziCrml
-	 r7/sSUE0HneHEvuCjc/LpxCRG+j3v9VJGcu8AD2M=
+	b=PNqKQLdtZPrjK16xmKcWpCANAZ541akNP2OugDt0c7Zt6COwSg8qn/irt/sPZi4yF
+	 P+pIne5qovgsQl/TPZp5puZsus9RvMZrpJ0lQ8OdoJi0hbs6NMEDaQqbfsVBEF0LCl
+	 rz/W7unTHC71XG85fCuME3FG+4t8jSl9T2u11Mm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfGLMeD (ORCPT
+        id S1729708AbfGLMeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:34:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfGLMeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:34:00 -0400
+        id S1728132AbfGLMeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:34:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C0C420645;
-        Fri, 12 Jul 2019 12:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83F9F216C4;
+        Fri, 12 Jul 2019 12:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934838;
-        bh=+i7iY/l9TZAe+veQK61yPcVizrJYpDutITLJVwIXUcc=;
+        s=default; t=1562934845;
+        bh=KDB7BkkpHiBg9CX+rLZM9phDdX5FbUHbfnLEUuAj8Zc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ex5aihcLua/6NOCllQiNBgy8TSPYORhPrE5kP9AZOxJ27ixVCphOKKnAkp6FeweU8
-         PTLjGbtnMDaW1RalzyentvdlCs41YLuO8+dbrM8mD+0nNQQvdroGlb+oHDw0aQMIoA
-         DWfb4TYA8u8blOVwgaz77RfJlw/CFcQj0PoiyRY8=
+        b=Asx7jd17k9Zue098gWiwKiGJEn8uKO81jXiAR2OQse9eY/4KR8sA6oboiLuLivdah
+         p3/Dle9eb/uxa0cca9OPciEzNZRN25tYzkKkz7yXKfsfQLX2g/h+xQH7J0KSgY0u+z
+         gATGh9IdY9RKdZBvzaSsuWFdQBQdo2pbWhAsqq9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Sauer <ensonic@hora-obscura.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 07/61] ALSA: usb-audio: Fix parse of UAC2 Extension Units
-Date:   Fri, 12 Jul 2019 14:19:20 +0200
-Message-Id: <20190712121621.023786735@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Bartosz Szczepanek <bsz@semihalf.com>
+Subject: [PATCH 5.2 09/61] tpm: Actually fail on TPM errors during "get random"
+Date:   Fri, 12 Jul 2019 14:19:22 +0200
+Message-Id: <20190712121621.125477736@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -59,133 +64,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kees Cook <keescook@chromium.org>
 
-commit ca95c7bf3d29716916baccdc77c3c2284b703069 upstream.
+commit 782779b60faa2fc7ff609ac8ef938260fd792c0f upstream.
 
-Extension Unit (XU) is used to have a compatible layout with
-Processing Unit (PU) on UAC1, and the usb-audio driver code assumed it
-for parsing the descriptors.  Meanwhile, on UAC2, XU became slightly
-incompatible with PU; namely, XU has a one-byte bmControls bitmap
-while PU has two bytes bmControls bitmap.  This incompatibility
-results in the read of a wrong address for the last iExtension field,
-which ended up with an incorrect string for the mixer element name, as
-recently reported for Focusrite Scarlett 18i20 device.
+A "get random" may fail with a TPM error, but those codes were returned
+as-is to the caller, which assumed the result was the number of bytes
+that had been written to the target buffer, which could lead to a kernel
+heap memory exposure and over-read.
 
-This patch corrects this misalignment by introducing a couple of new
-macros and calling them depending on the descriptor type.
+This fixes tpm1_get_random() to mask positive TPM errors into -EIO, as
+before.
 
-Fixes: 23caaf19b11e ("ALSA: usb-mixer: Add support for Audio Class v2.0")
-Reported-by: Stefan Sauer <ensonic@hora-obscura.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[   18.092103] tpm tpm0: A TPM error (379) occurred attempting get random
+[   18.092106] usercopy: Kernel memory exposure attempt detected from SLUB object 'kmalloc-64' (offset 0, size 379)!
+
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+Reported-by: Phil Baker <baker1tex@gmail.com>
+Reported-by: Craig Robson <craig@zhatt.com>
+Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using tpm_buf structure")
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Tomas Winkler <tomas.winkler@intel.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Tomas Winkler <tomas.winkler@intel.com>
+Tested-by: Bartosz Szczepanek <bsz@semihalf.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/usb/audio.h |   37 +++++++++++++++++++++++++++++++++++++
- sound/usb/mixer.c              |   16 ++++++++++------
- 2 files changed, 47 insertions(+), 6 deletions(-)
+ drivers/char/tpm/tpm1-cmd.c |    7 +++++--
+ drivers/char/tpm/tpm2-cmd.c |    7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/include/uapi/linux/usb/audio.h
-+++ b/include/uapi/linux/usb/audio.h
-@@ -450,6 +450,43 @@ static inline __u8 *uac_processing_unit_
- 	}
- }
- 
-+/*
-+ * Extension Unit (XU) has almost compatible layout with Processing Unit, but
-+ * on UAC2, it has a different bmControls size (bControlSize); it's 1 byte for
-+ * XU while 2 bytes for PU.  The last iExtension field is a one-byte index as
-+ * well as iProcessing field of PU.
-+ */
-+static inline __u8 uac_extension_unit_bControlSize(struct uac_processing_unit_descriptor *desc,
-+						   int protocol)
-+{
-+	switch (protocol) {
-+	case UAC_VERSION_1:
-+		return desc->baSourceID[desc->bNrInPins + 4];
-+	case UAC_VERSION_2:
-+		return 1; /* in UAC2, this value is constant */
-+	case UAC_VERSION_3:
-+		return 4; /* in UAC3, this value is constant */
-+	default:
-+		return 1;
-+	}
-+}
-+
-+static inline __u8 uac_extension_unit_iExtension(struct uac_processing_unit_descriptor *desc,
-+						 int protocol)
-+{
-+	__u8 control_size = uac_extension_unit_bControlSize(desc, protocol);
-+
-+	switch (protocol) {
-+	case UAC_VERSION_1:
-+	case UAC_VERSION_2:
-+	default:
-+		return *(uac_processing_unit_bmControls(desc, protocol)
-+			 + control_size);
-+	case UAC_VERSION_3:
-+		return 0; /* UAC3 does not have this field */
-+	}
-+}
-+
- /* 4.5.2 Class-Specific AS Interface Descriptor */
- struct uac1_as_header_descriptor {
- 	__u8  bLength;			/* in bytes: 7 */
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2303,7 +2303,7 @@ static struct procunit_info extunits[] =
+--- a/drivers/char/tpm/tpm1-cmd.c
++++ b/drivers/char/tpm/tpm1-cmd.c
+@@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+  *
+  * Return:
+  * *  number of bytes read
+- * * -errno or a TPM return code otherwise
++ * * -errno (positive TPM return codes are masked to -EIO)
   */
- static int build_audio_procunit(struct mixer_build *state, int unitid,
- 				void *raw_desc, struct procunit_info *list,
--				char *name)
-+				bool extension_unit)
+ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
  {
- 	struct uac_processing_unit_descriptor *desc = raw_desc;
- 	int num_ins;
-@@ -2320,6 +2320,8 @@ static int build_audio_procunit(struct m
- 	static struct procunit_info default_info = {
- 		0, NULL, default_value_info
- 	};
-+	const char *name = extension_unit ?
-+		"Extension Unit" : "Processing Unit";
+@@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chi
  
- 	if (desc->bLength < 13) {
- 		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
-@@ -2433,7 +2435,10 @@ static int build_audio_procunit(struct m
- 		} else if (info->name) {
- 			strlcpy(kctl->id.name, info->name, sizeof(kctl->id.name));
- 		} else {
--			nameid = uac_processing_unit_iProcessing(desc, state->mixer->protocol);
-+			if (extension_unit)
-+				nameid = uac_extension_unit_iExtension(desc, state->mixer->protocol);
-+			else
-+				nameid = uac_processing_unit_iProcessing(desc, state->mixer->protocol);
- 			len = 0;
- 			if (nameid)
- 				len = snd_usb_copy_string_desc(state->chip,
-@@ -2466,10 +2471,10 @@ static int parse_audio_processing_unit(s
- 	case UAC_VERSION_2:
- 	default:
- 		return build_audio_procunit(state, unitid, raw_desc,
--				procunits, "Processing Unit");
-+					    procunits, false);
- 	case UAC_VERSION_3:
- 		return build_audio_procunit(state, unitid, raw_desc,
--				uac3_procunits, "Processing Unit");
-+					    uac3_procunits, false);
- 	}
- }
+ 		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+ 				      "attempting get random");
+-		if (rc)
++		if (rc) {
++			if (rc > 0)
++				rc = -EIO;
+ 			goto out;
++		}
  
-@@ -2480,8 +2485,7 @@ static int parse_audio_extension_unit(st
- 	 * Note that we parse extension units with processing unit descriptors.
- 	 * That's ok as the layout is the same.
- 	 */
--	return build_audio_procunit(state, unitid, raw_desc,
--				    extunits, "Extension Unit");
-+	return build_audio_procunit(state, unitid, raw_desc, extunits, true);
- }
+ 		out = (struct tpm1_get_random_out *)&buf.data[TPM_HEADER_SIZE];
  
- /*
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -297,7 +297,7 @@ struct tpm2_get_random_out {
+  *
+  * Return:
+  *   size of the buffer on success,
+- *   -errno otherwise
++ *   -errno otherwise (positive TPM return codes are masked to -EIO)
+  */
+ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ {
+@@ -324,8 +324,11 @@ int tpm2_get_random(struct tpm_chip *chi
+ 				       offsetof(struct tpm2_get_random_out,
+ 						buffer),
+ 				       "attempting get random");
+-		if (err)
++		if (err) {
++			if (err > 0)
++				err = -EIO;
+ 			goto out;
++		}
+ 
+ 		out = (struct tpm2_get_random_out *)
+ 			&buf.data[TPM_HEADER_SIZE];
 
 
