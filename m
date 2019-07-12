@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB36DC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B47C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C131C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD97216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934340;
-	bh=gJSx/fs7WM32HrnaDMAU7u+BbhEfVSier6eHccGZFwQ=;
+	s=default; t=1562934344;
+	bh=YYFitS3QpqRD8iXyGV2rKGoD5UzuSNyUVuK+t1RAXDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Sqd0n7YHKj9x6hwyveCidnNZatN0wjHVJJlz8Vv3y8xrq1Ex82+asbLr5Dipdv4k
-	 tR2iGH6gZxpjPyA5yGBy49UofX391JDm7GzZOiCeVnIH6SwnpPowRFJUeHJYCU4nYg
-	 tRZu4zZYXMvHOSZJuL0Q9assaK7cAfYSQvnEXC4A=
+	b=swLx2u8+VHrskVcP3BkXbsytOiqWFaC+6pkmnIrkCNMXOYOJ3zi/8fv6SrwbQ7wcg
+	 6JwfE9t5yuzSzHOSZSMYYXySH9iKvJHg0sGNcZQotUbV+mQawPfiL+iG+gGF+BUgj4
+	 Wa7R3Z1PeXpOqF2a2X5bHFwO5G1XGnEQCjqWxQdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfGLMZj (ORCPT
+        id S1728333AbfGLMZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35808 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbfGLMZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:25:36 -0400
+        id S1727348AbfGLMZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:25:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0A2D2084B;
-        Fri, 12 Jul 2019 12:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47EFE2084B;
+        Fri, 12 Jul 2019 12:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934335;
-        bh=gJSx/fs7WM32HrnaDMAU7u+BbhEfVSier6eHccGZFwQ=;
+        s=default; t=1562934338;
+        bh=YYFitS3QpqRD8iXyGV2rKGoD5UzuSNyUVuK+t1RAXDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxsbQig9ZF9/FvVPAShBYG8uVMutSSKEYEZTAvL74LGsPzYtBA8dzzUL/xdOZYWCR
-         Xj/0OPKCFo9KLPfMzF4mOqn7+zO7CFJeIcpd+XX+U9n0shMvxVQDn5X1E7TT3pVP/Z
-         Ott+5YfN6vT3Gl9NKBMxiCljbco2IPHAdNzs8dxI=
+        b=jvFpOJ1X6dmxGxNoKD+JxeNywVwdPnI9YBISyfj1pHW0btK+adu4TDakuDnUAAzqv
+         wamORtYt4GYYOdNgIbDJYFNSHSf35jyEvu4BxBnIxYQqdv9QN17jL/GSVj2Jmha4fV
+         46MwPWqkopNaSwa6lCc7+iCm2EKaqIw3kH+0kHa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, huangwen <huangwen@venustech.com.cn>,
+        Takashi Iwai <tiwai@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 021/138] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
-Date:   Fri, 12 Jul 2019 14:18:05 +0200
-Message-Id: <20190712121629.524768688@linuxfoundation.org>
+Subject: [PATCH 5.1 022/138] mwifiex: Fix possible buffer overflows at parsing bss descriptor
+Date:   Fri, 12 Jul 2019 14:18:06 +0200
+Message-Id: <20190712121629.561168990@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 34f61de87017aff3c8306280d196dddb1e168a88 ]
+[ Upstream commit 13ec7f10b87f5fc04c4ccbd491c94c7980236a74 ]
 
-There is no CLKSEL for timer12 on dra7 unlike for timer1. This
-causes issues on booting the device that Tomi noticed if
-DEBUG_SLAB is enabled and the clkctrl clock does not properly
-handle non-existing clock. Let's drop the bogus CLKSEL clock,
-the clkctrl clock handling gets fixed separately.
+mwifiex_update_bss_desc_with_ie() calls memcpy() unconditionally in
+a couple places without checking the destination size.  Since the
+source is given from user-space, this may trigger a heap buffer
+overflow.
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Fixes: 4ed0dfe3cf39 ("ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fix it by putting the length check before performing memcpy().
+
+This fix addresses CVE-2019-3846.
+
+Reported-by: huangwen <huangwen@venustech.com.cn>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 73f5c050f586..17f0d8e93622 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -4450,8 +4450,6 @@
- 			timer12: timer@0 {
- 				compatible = "ti,omap5430-timer";
- 				reg = <0x0 0x80>;
--				clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 24>;
--				clock-names = "fck";
- 				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
- 				ti,timer-alwon;
- 				ti,timer-secure;
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 935778ec9a1b..64ab6fe78c0d 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1247,6 +1247,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 		}
+ 		switch (element_id) {
+ 		case WLAN_EID_SSID:
++			if (element_len > IEEE80211_MAX_SSID_LEN)
++				return -EINVAL;
+ 			bss_entry->ssid.ssid_len = element_len;
+ 			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
+ 			       element_len);
+@@ -1256,6 +1258,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
+ 
+ 		case WLAN_EID_SUPP_RATES:
++			if (element_len > MWIFIEX_SUPPORTED_RATES)
++				return -EINVAL;
+ 			memcpy(bss_entry->data_rates, current_ptr + 2,
+ 			       element_len);
+ 			memcpy(bss_entry->supported_rates, current_ptr + 2,
 -- 
 2.20.1
 
