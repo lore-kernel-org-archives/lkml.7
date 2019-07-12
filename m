@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCBDC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACACAC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B68C208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8164221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934565;
-	bh=eUozmw0umQg+2JTk3e8I7qyBYjnpkikBmyDnrg4C1Eo=;
+	s=default; t=1562934575;
+	bh=lkindddp7am+EJxQW8maw9xn2dB1EDCqkcHxRx8pMvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=duqnxw/lbtPLN08bBPuUnxJRqjravggvtRWRoaOL7DQ2HDCmbVqgZNnRlrZBoZrL2
-	 0LP3iYPF5kBPSofQYKG+MwDIV5NWiDHPJ97I0VbbUfk1KU7c35qoGQFI3rsaIN4QMr
-	 OVKOM3QHKVmbLaKbs4A1+JaVsKak0SmOJxzUFTXo=
+	b=1bi4QhZzhWCcMt4mLG2xkhMv/Zptzb78QuzzPxYW86fAyJAcaDyP8JdzFaKkZgz3j
+	 R5cUXqtpE4/nRhfJj/9wEeVD+k0tns8bkeW5Qq1Q4WF/8Dihbf8Mubi27Z39WZzZMj
+	 GaIr7yJO+KQoNK0ZWBPYtTSCggJxRMoRZFRVWT1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfGLM3Y (ORCPT
+        id S1729010AbfGLM3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbfGLM3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:16 -0400
+        id S1728990AbfGLM33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55CCA208E4;
-        Fri, 12 Jul 2019 12:29:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDBF12084B;
+        Fri, 12 Jul 2019 12:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934555;
-        bh=eUozmw0umQg+2JTk3e8I7qyBYjnpkikBmyDnrg4C1Eo=;
+        s=default; t=1562934568;
+        bh=lkindddp7am+EJxQW8maw9xn2dB1EDCqkcHxRx8pMvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1yPGR9xuPtK0Vi75/Py10E4sPGgATZXrIxHnK7b/HRGorn9nvfdD4A9Fgy7sKO9qy
-         B1SCtpxmYO5IAPraO9hQgCs4Csb7ZxzRETe4OWhJcT1hyp7z003ZooklBxctq9T0vY
-         EhCx3BsTNMa+OwXP5s6FwtMmccO+Adwlqxw9u/xM=
+        b=twlnyza9utyIzkzKGYrkNq3lYa3XrtyPGSdMrmPIDPDO92m0He17IUHPuUlc9NBoS
+         Kl4UmCYHGPj9sUEyNSUcFyv+k4bRWKOthHUYvZDIJlN7vrfKFWEcWbqnfTo/M/JJ6w
+         hqKqzHkRQ9X0k4W9jgW72Sx3V4xJdX5fa1XjvZ3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.1 094/138] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
-Date:   Fri, 12 Jul 2019 14:19:18 +0200
-Message-Id: <20190712121632.371007090@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.1 098/138] perf intel-pt: Fix itrace defaults for perf script intel-pt documentation
+Date:   Fri, 12 Jul 2019 14:19:22 +0200
+Message-Id: <20190712121632.526201590@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,48 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Sukhomlinov <sukhomlinov@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream.
+commit a2d8a1585e35444789c1c8cf7e2e51fb15589880 upstream.
 
-TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-future TPM operations. TPM 1.2 behavior was different, future TPM
-operations weren't disabled, causing rare issues. This patch ensures
-that future TPM operations are disabled.
+Fix intel-pt documentation to reflect the change of itrace defaults for
+perf script.
 
-Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-[dianders: resolved merge conflicts with mainline]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Fixes: 4eb068157121 ("perf script: Make itrace script default to all calls")
+Link: http://lkml.kernel.org/r/20190520113728.14389-4-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm-chip.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/intel-pt.txt |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -294,15 +294,15 @@ static int tpm_class_shutdown(struct dev
- {
- 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
+--- a/tools/perf/Documentation/intel-pt.txt
++++ b/tools/perf/Documentation/intel-pt.txt
+@@ -88,16 +88,16 @@ smaller.
  
-+	down_write(&chip->ops_sem);
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
--		down_write(&chip->ops_sem);
- 		if (!tpm_chip_start(chip)) {
- 			tpm2_shutdown(chip, TPM2_SU_CLEAR);
- 			tpm_chip_stop(chip);
- 		}
--		chip->ops = NULL;
--		up_write(&chip->ops_sem);
- 	}
-+	chip->ops = NULL;
-+	up_write(&chip->ops_sem);
+ To represent software control flow, "branches" samples are produced.  By default
+ a branch sample is synthesized for every single branch.  To get an idea what
+-data is available you can use the 'perf script' tool with no parameters, which
+-will list all the samples.
++data is available you can use the 'perf script' tool with all itrace sampling
++options, which will list all the samples.
  
- 	return 0;
- }
+ 	perf record -e intel_pt//u ls
+-	perf script
++	perf script --itrace=ibxwpe
+ 
+ An interesting field that is not printed by default is 'flags' which can be
+ displayed as follows:
+ 
+-	perf script -Fcomm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,flags
++	perf script --itrace=ibxwpe -F+flags
+ 
+ The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
+ system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
+@@ -713,7 +713,7 @@ Having no option is the same as
+ 
+ which, in turn, is the same as
+ 
+-	--itrace=ibxwpe
++	--itrace=cepwx
+ 
+ The letters are:
+ 
 
 
