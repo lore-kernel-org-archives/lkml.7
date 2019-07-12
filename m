@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19C1C742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDE5C742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF13206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBF2206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XfKQX/WR"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R56V/rCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfGLKbJ (ORCPT
+        id S1726803AbfGLKb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:31:09 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33616 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfGLKbI (ORCPT
+        Fri, 12 Jul 2019 06:31:59 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52701 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfGLKb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:31:08 -0400
+        Fri, 12 Jul 2019 06:31:59 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190712103107euoutp01fa1ab52c83760cf0fc8d585c1f13e531~wokAni8_X1918119181euoutp01M
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:31:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190712103107euoutp01fa1ab52c83760cf0fc8d585c1f13e531~wokAni8_X1918119181euoutp01M
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190712103157euoutp029907e0f923ca31f42e83421fbb235ce8~wokvvJ3bH1445214452euoutp02B
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:31:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190712103157euoutp029907e0f923ca31f42e83421fbb235ce8~wokvvJ3bH1445214452euoutp02B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562927467;
-        bh=L9nTEdffmmppnQXXzaoMqKQFM3A683O7RSLnY9V3vuQ=;
+        s=mail20170921; t=1562927517;
+        bh=YxnS2+3M6pr5GjcHTelq9Mz+os4Y/hjBeH+yjaPYcOc=;
         h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=XfKQX/WR+lXEX+3t19ZRfwaN5MxGWrIbBfW3P0QNbli8+7JGl864GrqunNZjaX1O/
-         dey+68RTjZRetOcHg3z+zX4nMd8RpVMEg5/lSctvqjSvpNLYqSN8zfPnOwWK5KutpS
-         BEgdWxdlo5QDp6tYSSkHOg+VNkc3xDE6gd29Lxm0=
+        b=R56V/rCIcT6N46VPqh0tmFBlPiHvgRJlSplqyU0+dQ//ST2YtixGtRd1BX3FBUdkH
+         1RqUqgNO6SkbSt1iWhhdJZiW5TOcWoUk3UebV8ElRp+8TcNJEtQ0xLlJRmhqUMPZXb
+         L3++JPDyZk4Aek/dXQyBsNIKZS0vWYJerq861bpk=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190712103106eucas1p234a7723ba3e494ac099879c9d89a8efd~woj-lQhsn0791607916eucas1p2G;
-        Fri, 12 Jul 2019 10:31:06 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id FA.D1.04325.961682D5; Fri, 12
-        Jul 2019 11:31:05 +0100 (BST)
+        20190712103156eucas1p2aec8cd3026c079d2e2048d4e65ad5aed~wokuuCVrO2616926169eucas1p2s;
+        Fri, 12 Jul 2019 10:31:56 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C3.F1.04325.C91682D5; Fri, 12
+        Jul 2019 11:31:56 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190712103105eucas1p27d737c1a20ee65be2c8523f46bc9914e~woj_1Vi1x1832918329eucas1p2E;
-        Fri, 12 Jul 2019 10:31:05 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        20190712103155eucas1p2927c238305fdacc674f91c488719967d~wokt3gomK0175901759eucas1p2M;
+        Fri, 12 Jul 2019 10:31:55 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190712103104eusmtrp21847deb6947e25f75ae89567012a4fad~woj_nE0vW1384213842eusmtrp2k;
-        Fri, 12 Jul 2019 10:31:04 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-7e-5d28616992a3
+        20190712103155eusmtrp22fb95a427a341078d17a474032433829~woktpQ5Sn1432014320eusmtrp2v;
+        Fri, 12 Jul 2019 10:31:55 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-11-5d28619ce435
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 94.FB.04146.861682D5; Fri, 12
-        Jul 2019 11:31:04 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id CC.53.04140.B91682D5; Fri, 12
+        Jul 2019 11:31:55 +0100 (BST)
 Received: from [106.120.51.74] (unknown [106.120.51.74]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190712103104eusmtip23ed1f1601b70625ec1883bddcaa62231~woj961cqx1128711287eusmtip2J;
-        Fri, 12 Jul 2019 10:31:04 +0000 (GMT)
-Subject: Re: [PATCH 1/3] drm/bridge: sii902x: fix missing reference to mclk
- clock
+        20190712103154eusmtip2cac930228fdd8f39b08e3668355ec268~woks_lk4a1098410984eusmtip2j;
+        Fri, 12 Jul 2019 10:31:54 +0000 (GMT)
+Subject: Re: [PATCH 2/3] dt-bindings: display: sii902x: Change audio mclk
+ binding
 To:     Olivier Moysan <olivier.moysan@st.com>, narmstrong@baylibre.com,
         Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
         jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
@@ -69,81 +69,86 @@ To:     Olivier Moysan <olivier.moysan@st.com>, narmstrong@baylibre.com,
         robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
 From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <5d87caa7-faac-4461-4184-aff5b8af04b5@samsung.com>
-Date:   Fri, 12 Jul 2019 12:31:04 +0200
+Message-ID: <bc2b0a58-d5e2-ce82-d1c8-c17731e44e31@samsung.com>
+Date:   Fri, 12 Jul 2019 12:31:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
         Thunderbird/68.0
 MIME-Version: 1.0
-In-Reply-To: <1562082426-14876-2-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <1562082426-14876-3-git-send-email-olivier.moysan@st.com>
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUyMcRz3e97uKa49nayvWHRjZEhj9hgaZvbgD+RlpkVHj7S60+7pRaxp
-        FHel9yV1rWvJqFW4U4lqhE56UdGrWWcdlqRNijY5d/ec6b/P9/P9fn7fz+e7H43LrlJedLgq
-        mlerFJFyypWoaZ5+vSZcsTJ43dTkajatowVj71taEZuut5CstSYLZ/XPO0j27eQ4xfb8HMHZ
-        lq89BJuq1ZCsNqtUwhqGe0n2zaNCik3ptSlu9XVhbFN6EJtTr6PY5Ibnkm3uXEVRBeLG+5Ml
-        XMNUMcHpNPkkZyjXUtzLzG6Mq50yk9xQqgnjjKUXuSdpOQT3tNGf+/irAedM/bUYN2Hw3u92
-        zHVLKB8ZHsur/QJCXM98vGYmojLpc8UjJVgi+kalIBcamA1wVXcdS0GutIy5g6DqRTMhFj8Q
-        6ArfSMRiAkHJVK7kn+SS6QYlNm4jGB1OdOrHbMVMM2afms8chJdpGscSD6YXh7wxzo4pxhdm
-        jAMOXsoEwGDSb9KOCWY5dA6WIjtewByB6WKtc8YdWvIthB27MLvga2G5wwXOLIHL1TpcxJ4w
-        aNE7TABTRoO+rAoTre6E65dHnXg+fDE9cEZYDNY6vZO/CEN3knBRrEFQfa8OFxub4Zmpy+aO
-        tm3whbuP/ER6O/waznLQwLhB/5i76MENsmvycJGWguaKTJz2gaH2aueDnnCrc9J5dw4GBg1k
-        JvIpmJWyYFayglnJCv57KEZEOfLkYwRlGC+sV/FxawWFUohRha09dVZpQLbv2frHNPkQNf4+
-        2YQYGsnnSfs3rQiWkYpYIV7ZhIDG5R7ScquNkoYq4s/z6rMn1DGRvNCEFtGE3FN6YY45SMaE
-        KaL5CJ6P4tX/uhjt4pWIGka3K9vajCNWfeeTDOjrDN57oOtz8M09Nd/Hda++VO74sabkko85
-        yfs0kuY2WjZu1W5KWLGw3bdWVX/Mo0JZWhm6O3A64hDEDZVZlaaQHUsPz9QHfVqZGhYVKLTu
-        eRfiPZBgzL3ZnfF+btzJ8Ox9dXn+ZmPf0eiMhA8v0pcdjy96LCeEMwr/VbhaUPwFRmOOvpoD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleLIzCtJLcpLzFFi42I5/e/4Pd2MRI1Yg5cHzC16z51kstj45DSj
-        Rd/8J6wW/7dNZLaYf+Qcq8WVr+/ZLK5+f8lscfLNVRaL7s4OVovOiUvYLTY9vsZqcXnXHDaL
-        rmtAHUuvX2SyONQXbTF5z2w2i9a9R9gdBD3WzFvD6PH+Riu7x95vC1g8ZnfMZPXYtKqTzePE
-        hEtMHtu/PWD1uN99nMlj85J6jwO9k1k8Du4z9Hj6Yy+zx/Eb25k8Pm+SC+CL0rMpyi8tSVXI
-        yC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mt42vOApWACR8WCl4uY
-        GhjfsXUxcnJICJhINB2fAWYLCSxllDh/WAYiLi6xe/5bZghbWOLPtS6gGi6gmteMEldOXQFL
-        CAsES5zo7QBLiAhcY5b4tbOLBaLqKqPEvLvf2EGq2AQ0Jf5uvgm2glfATuJWyx9WEJtFQFXi
-        wq0ljF2MHByiAmESR0/kQZQISpyc+YQFxOYUcJN4M2cV2BhmAXWJP/MuMUPY8hLNW2dD2eIS
-        t57MZ5rAKDgLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4mRmBS2Hbs
-        5+YdjJc2Bh9iFOBgVOLhvWGpHivEmlhWXJl7iFGCg1lJhHfVf6AQb0piZVVqUX58UWlOavEh
-        RlOg3yYyS4km5wMTVl5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6p
-        BkadqPnrl1iePpf6bU1XR1PBhh095iv5vZSu8S9WuX/dMpPBS2Xzeq8yYT/XW1O77At1e9ZK
-        iD06ePm4kvABhfLFpx+5FmlPWbvkrXhCbcUTk4RC/jWnckTv8/9uMzuSzXOq8kwbQ772OtXZ
-        7PNLLx2bs6g2T+5SlP69+4VWWxTPBYXYJtruXqzEUpyRaKjFXFScCAAENZ72IAMAAA==
-X-CMS-MailID: 20190712103105eucas1p27d737c1a20ee65be2c8523f46bc9914e
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhUWRjGO/fce+eONXId250Xi8KBPqGvLdkThSVUHPpiKeqPItq7ddFY
+        HW1uuk1B34ZjaFqQ6Ygam2ZmWGMzrbMaNaV3bVjRNk1rw0qDPpykTCsqp7neIv/7ned93pfn
+        gSNg8yE+Rthh2yXbbVKylY9gvU0fWmYVS9O3zC258CPJaWlmyOXeACK5pb0cCXnzMSm91cKR
+        u4P9PGl/9xyT5r52lhxzZnHEmX/WQNw9HRz5z1fMk+yO8Eb5vTaG+HM3k5P1Lp5kNtwyLI2i
+        1SXViPZ3Zhpow1AZS11ZhRx1Vzl5+k/eHYZeHXrE0e5jKkNrz+6n13NOsvTGtXn06fsGTNXO
+        qwwdcE/6JXJTxOLtcvKODNk+J/7XiKSg838uzTV2d06mig+gP43ZyCiAuACuu1oN2ShCMIuV
+        CLoq7vD64y2CvopGVnOZxQEEj9vDLmFkwxfaqMvnEBysTNM5iGAgSDSOFtfD0JmXI6vjxQ4M
+        BUGqMS/OgM+1XbzGJjEeqgZrkMasOAU+qk1Y4x/EjfChzPnVEwXNhb0jd4ziCnj4xj2iY3Ey
+        HPa4sM4WuN9bymiZQbwowLv6fkbPuQyGT6/TS0bDC/WKQeeJEKrT/Brvh+7KI1jfzULguVSH
+        9cEiuKm2cdodHA5d45ujywkQ8lTw+vlI6AxG6REi4YS3AOuyCbKOmnV3LHT/6/l60ALlrYO8
+        zhR6Sk7hPBRbNKpk0ahiRaOKFX3PUIbYKmSR05WURFmZb5P/mK1IKUq6LXH2ttQUNwr/zMCw
+        OvgXuvbpNz8SBWQdZ+pcOG2LmZMyFEeKH4GAreNNVaGwZNouOfbI9tSt9vRkWfGjCQJrtZj2
+        jnm02SwmSrvk32U5TbZ/mzKCMeYAajqfX7sgEPcq/naPN3I45mJcRsHPq1Z6RQ6/zFwSCq5b
+        FHdBdVD3w7aWJ8WpO5dXT064kpQWW9dnkXYWPihvLIlbfdror82d5GAaD71x4PV5rkvup9PX
+        dK34u76ysPFIevmGnwIzfWvveYa23YQJe9SpCYv3PVMC0cdb62tsvhevraySJM2bie2K9AV7
+        JKmXlQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleLIzCtJLcpLzFFi42I5/e/4Pd3ZiRqxBgdXSFn0njvJZLHxyWlG
+        i775T1gt/m+byGwx/8g5VosrX9+zWVz9/pLZ4uSbqywW3Z0drBadE5ewW2x6fI3V4vKuOWwW
+        XdeAOpZev8hkcagv2mLyntlsFq17j7A7CHqsmbeG0eP9jVZ2j73fFrB4zO6YyeqxaVUnm8eJ
+        CZeYPLZ/e8Dqcb/7OJPH5iX1Hgd6J7N4HNxn6PH0x15mj+M3tjN5fN4kF8AXpWdTlF9akqqQ
+        kV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfxtvMOa8Fs7ore1uPM
+        DYyLObsYOTgkBEwkdv0P62Lk4hASWMooseb3C9YuRk6guLjE7vlvmSFsYYk/17rYIIpeM0rM
+        +/OQCSQhLBAs8W3haxaQhIjANWaJXzu7WCCqrjJK7Dg/G6ydTUBT4u/mm2wgNq+AncSqr+sZ
+        QWwWAVWJ38ePMYOcISoQJnH0RB5EiaDEyZlPWEBsTgE3ibufNoG1MguoS/yZd4kZwpaXaN46
+        G8oWl7j1ZD7TBEbBWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzEC
+        k8K2Yz+37GDsehd8iFGAg1GJh/eGpXqsEGtiWXFl7iFGCQ5mJRHeVf+BQrwpiZVVqUX58UWl
+        OanFhxhNgX6byCwlmpwPTFh5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6
+        mDg4pRoYA//OuqnL2hP6USA+fMKvBT/LYsU9Tuh2htW4dJ858ORD75SHpbcEnPJ4YoLjuLKT
+        21cw/9tYnWHbap44z1dNLvNcOdvOGZ587wJ5yr9eDFmo//jThITufWsPyk+3lVHk+GJgMZH1
+        9tVj9wLupDuo3nF96PD4ptrnfUdKVt1+s//DiazHX3kWKrEUZyQaajEXFScCAPejhnMgAwAA
+X-CMS-MailID: 20190712103155eucas1p2927c238305fdacc674f91c488719967d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190702154805epcas2p2f95d733d2f0df9d311ab5ed37f452d34
+X-RootMTR: 20190702154806epcas3p4058827de402f54ea3911c56ee17ae631
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190702154805epcas2p2f95d733d2f0df9d311ab5ed37f452d34
+X-CMS-RootMailID: 20190702154806epcas3p4058827de402f54ea3911c56ee17ae631
 References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
-        <CGME20190702154805epcas2p2f95d733d2f0df9d311ab5ed37f452d34@epcas2p2.samsung.com>
-        <1562082426-14876-2-git-send-email-olivier.moysan@st.com>
+        <CGME20190702154806epcas3p4058827de402f54ea3911c56ee17ae631@epcas3p4.samsung.com>
+        <1562082426-14876-3-git-send-email-olivier.moysan@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 02.07.2019 17:47, Olivier Moysan wrote:
-> Add devm_clk_get call to retrieve reference to master clock.
+> As stated in SiL9022/24 datasheet, master clock is not required for I2S.
+> Make mclk property optional in DT bindings.
 >
-> Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
+> Fixes: 3f18021f43a3 ("dt-bindings: display: sii902x: Add HDMI audio bindings")
 >
 > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 > ---
->  drivers/gpu/drm/bridge/sii902x.c | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/display/bridge/sii902x.txt | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-> index dd7aa466b280..36acc256e67e 100644
-> --- a/drivers/gpu/drm/bridge/sii902x.c
-> +++ b/drivers/gpu/drm/bridge/sii902x.c
-> @@ -750,6 +750,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
->  		sii902x->audio.i2s_fifo_sequence[i] |= audio_fifo_id[i] |
->  			i2s_lane_id[lanes[i]] |	SII902X_TPI_I2S_FIFO_ENABLE;
+> diff --git a/Documentation/devicetree/bindings/display/bridge/sii902x.txt b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> index 2df44b7d3821..6e14e087c0d0 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+> @@ -26,9 +26,8 @@ Optional properties:
+>  	- clocks: phandle and clock specifier for each clock listed in
+>             the clock-names property
+>  	- clock-names: "mclk"
+> -	   Describes SII902x MCLK input. MCLK is used to produce
+> -	   HDMI audio CTS values. This property is required if
+> -	   "#sound-dai-cells"-property is present. This property follows
+> +	   Describes SII902x MCLK input. MCLK can be used to produce
+> +	   HDMI audio CTS values. This property follows
+>  	   Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  	   consumer binding.
 >  
-> +	sii902x->audio.mclk = devm_clk_get(dev, "mclk");
->  	if (IS_ERR(sii902x->audio.mclk)) {
->  		dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
->  			__func__, PTR_ERR(sii902x->audio.mclk));
 
 Acked-by: Andrzej Hajda <a.hajda@samsung.com>
 
