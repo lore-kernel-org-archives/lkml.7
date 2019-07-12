@@ -2,228 +2,273 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0D9C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB93C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6CB21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50C0208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfGLDWE (ORCPT
+        id S1729380AbfGLDZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:22:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2084 "EHLO mga17.intel.com"
+        Thu, 11 Jul 2019 23:25:24 -0400
+Received: from mga14.intel.com ([192.55.52.115]:47160 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbfGLDWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:22:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1729158AbfGLDZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:25:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:22:03 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jul 2019 20:25:22 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,480,1557212400"; 
-   d="scan'208";a="174337093"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 Jul 2019 20:22:02 -0700
-Message-ID: <5D27FE26.1050002@intel.com>
-Date:   Fri, 12 Jul 2019 11:27:34 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+   d="scan'208";a="365035416"
+Received: from gonegri-mobl.ger.corp.intel.com (HELO localhost) ([10.252.48.192])
+  by fmsmga005.fm.intel.com with ESMTP; 11 Jul 2019 20:25:17 -0700
+Date:   Fri, 12 Jul 2019 06:25:16 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Cedric Xing <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        kai.svahn@intel.com, kai.huang@intel.com
+Subject: Re: [RFC PATCH v2 3/3] selftests/x86: Augment SGX selftest to test
+ new __vdso_sgx_enter_enclave() and its callback interface
+Message-ID: <20190712032516.cpiouzzz4f4pjvqm@linux.intel.com>
+References: <cover.1555965327.git.cedric.xing@intel.com>
+ <20190424062623.4345-4-cedric.xing@intel.com>
 MIME-Version: 1.0
-To:     Eric Hankland <ehankland@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com
-CC:     linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: x86: PMU Event Filter
-References: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com>
-In-Reply-To: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424062623.4345-4-cedric.xing@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/11/2019 09:25 AM, Eric Hankland wrote:
-> - Add a VM ioctl that can control which events the guest can monitor.
->
-> Signed-off-by: ehankland<ehankland@google.com>
+On Tue, Apr 23, 2019 at 11:26:23PM -0700, Cedric Xing wrote:
+> This patch augments SGX selftest with two new tests.
+> 
+> The first test exercises the newly added callback interface, by marking the
+> whole enclave range as PROT_READ, then calling mprotect() upon #PFs to add
+> necessary PTE permissions per PFEC (#PF Error Code) until the enclave finishes.
+> This test also serves as an example to demonstrate the callback interface.
+> 
+> The second test single-steps through __vdso_sgx_enter_enclave() to make sure
+> the call stack can be unwound at every instruction within that vDSO API. Its
+> purpose is to validate the hand-crafted CFI directives in the assembly.
+> 
+> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
 > ---
-> Changes since v1:
-> -Moved to a vm ioctl rather than a vcpu one
-> -Changed from a whitelist to a configurable filter which can either be
-> white or black
-> -Only restrict GP counters since fixed counters require extra handling
-> and they can be disabled by setting the guest cpuid (though only by
-> setting the number - they can't be disabled individually)
-
-I think just disabling guest cpuid might not be enough, since guest
-could write to the msr without checking the cpuid.
-
-Why not just add a bitmap for fixed counter?
-e.g. fixed_counter_reject_bitmap
-
-At the beginning of reprogram_fixed_counter, we could add the check:
-
-if (test_bit(idx, &kvm->arch.fixed_counter_reject_bitmap))
-     return -EACCES;
-
-(Please test with your old guest and see if they have issues if we 
-inject #GP when
-they try to set the fixed_ctrl msr. If there is, we could drop -EACCESS 
-above)
-
-The bitmap could be set at kvm_vm_ioctl_set_pmu_event_filter.
-
-> +/* for KVM_CAP_PMU_EVENT_FILTER */
-> +struct kvm_pmu_event_filter {
-> +       __u32 type;
-> +       __u32 nevents;
-> +       __u64 events[0];
-> +};
+>  tools/testing/selftests/x86/sgx/Makefile   |   6 +-
+>  tools/testing/selftests/x86/sgx/main.c     | 323 ++++++++++++++++++---
+>  tools/testing/selftests/x86/sgx/sgx_call.S |  40 ++-
+>  3 files changed, 322 insertions(+), 47 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
+> index 3af15d7c8644..31f937e220c4 100644
+> --- a/tools/testing/selftests/x86/sgx/Makefile
+> +++ b/tools/testing/selftests/x86/sgx/Makefile
+> @@ -14,16 +14,16 @@ TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx
+>  all_64: $(TEST_CUSTOM_PROGS)
+>  
+>  $(TEST_CUSTOM_PROGS): main.c sgx_call.S $(OUTPUT)/encl_piggy.o
+> -	$(CC) $(HOST_CFLAGS) -o $@ $^
+> +	$(CC) $(HOST_CFLAGS) -o $@ $^ -lunwind -ldl -Wl,--defsym,__image_base=0 -pie
+>  
+>  $(OUTPUT)/encl_piggy.o: encl_piggy.S $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+>  	$(CC) $(HOST_CFLAGS) -I$(OUTPUT) -c $< -o $@
+>  
+>  $(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf
+> -	objcopy --remove-section=.got.plt -O binary $< $@
+> +	objcopy -O binary $< $@
+>  
+>  $(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
+> -	$(CC) $(ENCL_CFLAGS) -T $^ -o $@
+> +	$(CC) $(ENCL_CFLAGS) -T $^ -o $@ -Wl,--build-id=none
+>  
+>  $(OUTPUT)/encl.ss: $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin
+>  	$^ $@
+> diff --git a/tools/testing/selftests/x86/sgx/main.c b/tools/testing/selftests/x86/sgx/main.c
+> index e2265f841fb0..d3e53c71306d 100644
+> --- a/tools/testing/selftests/x86/sgx/main.c
+> +++ b/tools/testing/selftests/x86/sgx/main.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+>  // Copyright(c) 2016-18 Intel Corporation.
+>  
+> +#define _GNU_SOURCE
+>  #include <elf.h>
+>  #include <fcntl.h>
+>  #include <stdbool.h>
+> @@ -9,16 +10,31 @@
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <unistd.h>
+> +#include <errno.h>
+>  #include <sys/ioctl.h>
+>  #include <sys/mman.h>
+>  #include <sys/stat.h>
+> -#include <sys/time.h>
+> +#include <sys/auxv.h>
+> +#include <signal.h>
+> +#include <sys/ucontext.h>
 > +
-> +#define KVM_PMU_EVENT_WHITELIST 0
-> +#define KVM_PMU_EVENT_BLACKLIST 1
-
-I think it would be better to add more, please see below:
-
-enum kvm_pmu_action_type {
-     KVM_PMU_EVENT_ACTION_NONE = 0,
-     KVM_PMU_EVENT_ACTION_ACCEPT = 1,
-     KVM_PMU_EVENT_ACTION_REJECT = 2,
-     KVM_PMU_EVENT_ACTION_MAX
-};
-
-and do a check in kvm_vm_ioctl_set_pmu_event_filter()
-     if (filter->action >= KVM_PMU_EVENT_ACTION_MAX)
-         return -EINVAL;
-
-This is for detecting the case that we add a new action in
-userspace, while the kvm hasn't been updated to support that.
-
-KVM_PMU_EVENT_ACTION_NONE is for userspace to remove
-the filter after they set it.
-
-
+> +#define UNW_LOCAL_ONLY
+> +#include <libunwind.h>
 > +
->   #endif /* _ASM_X86_KVM_H */
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index dd745b58ffd8..d674b79ff8da 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -22,6 +22,9 @@
->   #include "lapic.h"
->   #include "pmu.h"
->
-> +/* This keeps the total size of the filter under 4k. */
-> +#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
+>  #include "encl_piggy.h"
+>  #include "defines.h"
+>  #include "../../../../../arch/x86/kernel/cpu/sgx/arch.h"
+>  #include "../../../../../arch/x86/include/uapi/asm/sgx.h"
+>  
+> -static const uint64_t MAGIC = 0x1122334455667788ULL;
+> +#define _Q(x)	__Q(x)
+> +#define __Q(x)	#x
+> +#define ERRLN	"Line " _Q(__LINE__)
 > +
-
-Why is this limit needed?
-
->   /* NOTE:
->    * - Each perf counter is defined as "struct kvm_pmc";
->    * - There are two types of perf counters: general purpose (gp) and fixed.
-> @@ -144,6 +147,10 @@ void reprogram_gp_counter(struct kvm_pmc *pmc,
-> u64 eventsel)
->   {
->          unsigned config, type = PERF_TYPE_RAW;
->          u8 event_select, unit_mask;
-> +       struct kvm_arch *arch = &pmc->vcpu->kvm->arch;
-> +       struct kvm_pmu_event_filter *filter;
-> +       int i;
-> +       bool allow_event = true;
->
->          if (eventsel & ARCH_PERFMON_EVENTSEL_PIN_CONTROL)
->                  printk_once("kvm pmu: pin control bit is ignored\n");
-> @@ -155,6 +162,24 @@ void reprogram_gp_counter(struct kvm_pmc *pmc,
-> u64 eventsel)
->          if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE) || !pmc_is_enabled(pmc))
->                  return;
->
-> +       rcu_read_lock();
-> +       filter = rcu_dereference(arch->pmu_event_filter);
-> +       if (filter) {
-> +               for (i = 0; i < filter->nevents; i++)
-> +                       if (filter->events[i] ==
-> +                           (eventsel & AMD64_RAW_EVENT_MASK_NB))
-> +                               break;
-> +               if (filter->type == KVM_PMU_EVENT_WHITELIST &&
-> +                   i == filter->nevents)
-> +                       allow_event = false;
-> +               if (filter->type == KVM_PMU_EVENT_BLACKLIST &&
-> +                   i < filter->nevents)
-> +                       allow_event = false;
-> +       }
-> +       rcu_read_unlock();
-> +       if (!allow_event)
-> +               return;
+> +#define X86_EFLAGS_TF	(1ul << 8)
 > +
+> +extern char __image_base[];
+> +size_t eenter;
+> +static size_t vdso_base;
+>  
+>  struct vdso_symtab {
+>  	Elf64_Sym *elf_symtab;
+> @@ -26,20 +42,11 @@ struct vdso_symtab {
+>  	Elf64_Word *elf_hashtab;
+>  };
+>  
+> -static void *vdso_get_base_addr(char *envp[])
+> +static void vdso_init(void)
+>  {
+> -	Elf64_auxv_t *auxv;
+> -	int i;
+> -
+> -	for (i = 0; envp[i]; i++);
+> -	auxv = (Elf64_auxv_t *)&envp[i + 1];
+> -
+> -	for (i = 0; auxv[i].a_type != AT_NULL; i++) {
+> -		if (auxv[i].a_type == AT_SYSINFO_EHDR)
+> -			return (void *)auxv[i].a_un.a_val;
+> -	}
+> -
+> -	return NULL;
+> +	vdso_base = getauxval(AT_SYSINFO_EHDR);
+> +	if (!vdso_base)
+> +		exit(1);
+>  }
 
-I think it looks tidier to wrap the changes above into a function:
+The clean up makes sense but should be a separate patch i.e. one
+logical change per patch. Right now the patch does other mods
+than the ones explcitly stated in the commit message.
 
-     if (kvm_pmu_filter_event(kvm, eventsel & AMD64_RAW_EVENT_MASK_NB))
-         return;
+I'd suggest open coding vdso_init() to the call site in that
+patch.
 
->          event_select = eventsel & ARCH_PERFMON_EVENTSEL_EVENT;
->          unit_mask = (eventsel & ARCH_PERFMON_EVENTSEL_UMASK) >> 8;
->
-> @@ -351,3 +376,39 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
->   {
->          kvm_pmu_reset(vcpu);
->   }
+Please try to always minimize for diff's.
+
+>  
+>  static Elf64_Dyn *vdso_get_dyntab(void *addr)
+> @@ -66,8 +73,9 @@ static void *vdso_get_dyn(void *addr, Elf64_Dyn *dyntab, Elf64_Sxword tag)
+>  	return NULL;
+>  }
+>  
+> -static bool vdso_get_symtab(void *addr, struct vdso_symtab *symtab)
+> +static bool vdso_get_symtab(struct vdso_symtab *symtab)
+>  {
+> +	void *addr = (void *)vdso_base;
+>  	Elf64_Dyn *dyntab = vdso_get_dyntab(addr);
+>  
+>  	symtab->elf_symtab = vdso_get_dyn(addr, dyntab, DT_SYMTAB);
+> @@ -138,7 +146,7 @@ static bool encl_create(int dev_fd, unsigned long bin_size,
+>  	base = mmap(NULL, secs->size, PROT_READ | PROT_WRITE | PROT_EXEC,
+>  		    MAP_SHARED, dev_fd, 0);
+>  	if (base == MAP_FAILED) {
+> -		perror("mmap");
+> +		perror(ERRLN);
+>  		return false;
+>  	}
+>  
+> @@ -224,35 +232,271 @@ static bool encl_load(struct sgx_secs *secs, unsigned long bin_size)
+>  	return false;
+>  }
+>  
+> -void sgx_call(void *rdi, void *rsi, void *tcs,
+> -	      struct sgx_enclave_exception *exception,
+> -	      void *eenter);
+> +int sgx_call(void *rdi, void *rsi, long rdx, void *rcx, void *r8, void *r9,
+> +	     void *tcs, struct sgx_enclave_exinfo *ei, void *cb);
 > +
-> +int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+> +static void show_enclave_exinfo(const struct sgx_enclave_exinfo *exinfop,
+> +				const char *header)
 > +{
-> +       struct kvm_pmu_event_filter tmp, *filter;
-> +       size_t size;
-> +       int r;
+> +	static const char * const enclu_leaves[] = {
+> +		"EREPORT",
+> +		"EGETKEY",
+> +		"EENTER",
+> +		"ERESUME",
+> +		"EEXIT"
+> +	};
+> +	static const char * const exception_names[] = {
+> +		"#DE",
+> +		"#DB",
+> +		"NMI",
+> +		"#BP",
+> +		"#OF",
+> +		"#BR",
+> +		"#UD",
+> +		"#NM",
+> +		"#DF",
+> +		"CSO",
+> +		"#TS",
+> +		"#NP",
+> +		"#SS",
+> +		"#GP",
+> +		"#PF",
+> +		"Unknown",
+> +		"#MF",
+> +		"#AC",
+> +		"#MC",
+> +		"#XM",
+> +		"#VE",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown",
+> +		"Unknown"
+> +	};
 > +
-> +       if (copy_from_user(&tmp, argp, sizeof(tmp)))
-> +               return -EFAULT;
+> +	printf("%s: leaf:%s(%d)", header,
+> +		enclu_leaves[exinfop->leaf], exinfop->leaf);
+> +	if (exinfop->leaf != 4)
+> +		printf(" trap:%s(%d) ec:%d addr:0x%llx\n",
+> +			exception_names[exinfop->trapnr], exinfop->trapnr,
+> +			exinfop->error_code, exinfop->address);
+> +	else
+> +		printf("\n");
+> +}
 > +
-> +       if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
-> +               return -E2BIG;
-> +
-> +       size = sizeof(tmp) + sizeof(tmp.events[0]) * tmp.nevents;
-> +       filter = vmalloc(size);
-> +       if (!filter)
-> +               return -ENOMEM;
-> +
-> +       r = -EFAULT;
-> +       if (copy_from_user(filter, argp, size))
+> +static const uint64_t MAGIC = 0x1122334455667788ULL;
+>  
+> -int main(int argc, char *argv[], char *envp[])
+> +static void test1(struct sgx_secs *secs)
 
-Though the above functions correctly, I would just move "r = -EFAULT" here
-to have it executed conditionally.
+test1, test2 and test3 are not too descriptive names. Every patch should
+make the code base cleaner, not messier.
 
-
-> +               goto cleanup;
-> +
-> +       /* Ensure nevents can't be changed between the user copies. */
-> +       *filter = tmp;
-> +
-> +       mutex_lock(&kvm->lock);
-> +       rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
-> +                          mutex_is_locked(&kvm->lock));
-> +       mutex_unlock(&kvm->lock);
-> +
-> +       synchronize_rcu();
-> +       r = 0;
-> +cleanup:
-> +       kvfree(filter);
-
-Probably better to have it conditionally?
-
-if (filter) {
-     synchronize_srcu();
-     kfree(filter)
-}
-
-
-You may want to factor it out, so that kvm_pmu_destroy could reuse.
-
-Best,
-Wei
+/Jarkko
