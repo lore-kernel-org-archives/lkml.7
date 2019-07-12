@@ -2,213 +2,140 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E93C742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E600C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88DB206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F9C206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562942202;
+	bh=HHZaY2tFKhZh3Vou4+5i4iiP03K9QdtH44f6+mWjpsU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z7EIp1boYewOR9q/FY8PF/eh0/PRt4LnJpmW0zFJuxvU0pDcYeIfnHwxVDRcqBtF7
+	 VwFgKvORz93r7WF7RjgtI04+A6AnIOkLALSVKpXSnOXSo6vFt/mWyP95hhtEXUaDCv
+	 tMJ3mZcAiDnxf7DrD9JLHt69dsgfNHmjoPYO3Cvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfGLOgC convert rfc822-to-8bit (ORCPT
+        id S1727285AbfGLOgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:36:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26802 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727110AbfGLOgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:36:01 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CEYFvj039942
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:36:00 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.93])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpuxv0f44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:36:00 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 12 Jul 2019 14:35:59 -0000
-Received: from us1a3-smtp06.a3.dal06.isc4sb.com (10.146.103.243)
-        by smtp.notes.na.collabserv.com (10.106.227.39) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 12 Jul 2019 14:35:51 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp06.a3.dal06.isc4sb.com
-          with ESMTP id 2019071214355089-551209 ;
-          Fri, 12 Jul 2019 14:35:50 +0000 
-In-Reply-To: <20190712135339.GC27512@ziepe.ca>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "Arnd Bergmann" <arnd@arndb.de>,
-        "Doug Ledford" <dledford@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jul 2019 14:35:50 +0000
+        Fri, 12 Jul 2019 10:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726449AbfGLOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 10:36:39 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A86D4216C4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562942197;
+        bh=HHZaY2tFKhZh3Vou4+5i4iiP03K9QdtH44f6+mWjpsU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Psf1NjaQQet45SE1qUKg2HlyWLtBriCxn1RqxK5FXxZyfhEGf6Avgz72+9qBbVlyt
+         PNhwwNdc/arZmxDjpptLJIlITJITqa9TmMKLOEhilhyIaL4oiohOmBgk9cCNsdIzdD
+         LykORndiv/X8nO2SXVBWi68HRLe7tjTebEm1HBtI=
+Received: by mail-wr1-f44.google.com with SMTP id p13so10200279wru.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:36:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPe/963uFVgj0SiXcFbxqpxnCxi5cXhYQmdGC0mKKoNXUlBDYd
+        N160eKC7SvUhSpExoVuAGq2Uo/vmS3K1spj8O96aOQ==
+X-Google-Smtp-Source: APXvYqzjSAKUc/Rv0po3zmwiq8ExN5gO/owzILZFdZj8fMMJQ7W46dkC79xOvRhglNBrrHNGx+LK7GoJMcCxwv4cvX8=
+X-Received: by 2002:adf:a143:: with SMTP id r3mr12152043wrr.352.1562942196223;
+ Fri, 12 Jul 2019 07:36:36 -0700 (PDT)
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190712135339.GC27512@ziepe.ca>,<20190712120328.GB27512@ziepe.ca>
- <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-LLNOutbound: False
-X-Disclaimed: 12499
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19071214-1799-0000-0000-00000C368D1A
-X-IBM-SpamModules-Scores: BY=0.030592; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.011778
-X-IBM-SpamModules-Versions: BY=3.00011415; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231133; UDB=6.00648522; IPR=6.01012417;
- BA=6.00006355; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027692; XFM=3.00000015;
- UTC=2019-07-12 14:35:56
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-12 09:11:03 - 6.00010155
-x-cbparentid: 19071214-1800-0000-0000-0000004D9BE6
-Message-Id: <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
-Subject: Re:  Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
+ <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com> <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+ <a03db3a5-b033-a469-cc6c-c8c86fb25710@oracle.com>
+In-Reply-To: <a03db3a5-b033-a469-cc6c-c8c86fb25710@oracle.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 12 Jul 2019 07:36:24 -0700
+X-Gmail-Original-Message-ID: <CALCETrVcM-SpEqLMJSOdyGuN0gjr+97+cpu2KYneuTv1fJDoog@mail.gmail.com>
+Message-ID: <CALCETrVcM-SpEqLMJSOdyGuN0gjr+97+cpu2KYneuTv1fJDoog@mail.gmail.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Alexander Graf <graf@amazon.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+On Fri, Jul 12, 2019 at 6:45 AM Alexandre Chartre
+<alexandre.chartre@oracle.com> wrote:
+>
+>
+> On 7/12/19 2:50 PM, Peter Zijlstra wrote:
+> > On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
+> >
+> >> I think that's precisely what makes ASI and PTI different and independent.
+> >> PTI is just about switching between userland and kernel page-tables, while
+> >> ASI is about switching page-table inside the kernel. You can have ASI without
+> >> having PTI. You can also use ASI for kernel threads so for code that won't
+> >> be triggered from userland and so which won't involve PTI.
+> >
+> > PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
+> > ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
+> >
+> > See how very similar they are?
+> >
+> >
+> > Furthermore, to recover SMT for userspace (under MDS) we not only need
+> > core-scheduling but core-scheduling per address space. And ASI was
+> > specifically designed to help mitigate the trainwreck just described.
+> >
+> > By explicitly exposing (hopefully harmless) part of the kernel to MDS,
+> > we reduce the part that needs core-scheduling and thus reduce the rate
+> > the SMT siblngs need to sync up/schedule.
+> >
+> > But looking at it that way, it makes no sense to retain 3 address
+> > spaces, namely:
+> >
+> >    user / kernel exposed / kernel private.
+> >
+> > Specifically, it makes no sense to expose part of the kernel through MDS
+> > but not through Meltdow. Therefore we can merge the user and kernel
+> > exposed address spaces.
+>
+> The goal of ASI is to provide a reduced address space which exclude sensitive
+> data. A user process (for example a database daemon, a web server, or a vmm
+> like qemu) will likely have sensitive data mapped in its user address space.
+> Such data shouldn't be mapped with ASI because it can potentially leak to the
+> sibling hyperthread. For example, if an hyperthread is running a VM then the
+> VM could potentially access user sensitive data if they are mapped on the
+> sibling hyperthread with ASI.
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 07/12/2019 03:53PM
->Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
-><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
->linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on
->a u64
->
->On Fri, Jul 12, 2019 at 01:05:14PM +0000, Bernard Metzler wrote:
->> 
->> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >Date: 07/12/2019 02:03PM
->> >Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
->> ><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
->> >linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
->> >Subject: [EXTERNAL] Re: [PATCH] rdma/siw: avoid smp_store_mb() on
->a
->> >u64
->> >
->> >On Fri, Jul 12, 2019 at 11:33:46AM +0000, Bernard Metzler wrote:
->> >> >diff --git a/drivers/infiniband/sw/siw/siw_verbs.c
->> >> >b/drivers/infiniband/sw/siw/siw_verbs.c
->> >> >index 32dc79d0e898..41c5ab293fe1 100644
->> >> >+++ b/drivers/infiniband/sw/siw/siw_verbs.c
->> >> >@@ -1142,10 +1142,11 @@ int siw_req_notify_cq(struct ib_cq
->> >*base_cq,
->> >> >enum ib_cq_notify_flags flags)
->> >> > 
->> >> > 	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
->> >> > 		/* CQ event for next solicited completion */
->> >> >-		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
->> >> >+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_SOLICITED);
->> >> > 	else
->> >> > 		/* CQ event for any signalled completion */
->> >> >-		smp_store_mb(*cq->notify, SIW_NOTIFY_ALL);
->> >> >+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_ALL);
->> >> >+	smp_wmb();
->> >> > 
->> >> > 	if (flags & IB_CQ_REPORT_MISSED_EVENTS)
->> >> > 		return cq->cq_put - cq->cq_get;
->> >> 
->> >> 
->> >> Hi Arnd,
->> >> Many thanks for pointing that out! Indeed, this CQ notification
->> >> mechanism does not take 32 bit architectures into account.
->> >> Since we have only three flags to hold here, it's probably
->better
->> >> to make it a 32bit value. That would remove the issue w/o
->> >> introducing extra smp_wmb(). 
->> >
->> >I also prefer not to see smp_wmb() in drivers..
->> >
->> >> I'd prefer smp_store_mb(), since on some architectures it shall
->be
->> >> more efficient.  That would also make it sufficient to use
->> >> READ_ONCE.
->> >
->> >The READ_ONCE is confusing to me too, if you need store_release
->> >semantics then the reader also needs to pair with load_acquite -
->> >otherwise it doesn't work.
->> >
->> >Still, we need to do something rapidly to fix the i386 build,
->please
->> >revise right away..
->> >
->> >Jason
->> >
->> >
->> 
->> We share CQ (completion queue) notification flags between
->application
->> (which may be user land) and producer (kernel QP's (queue pairs)).
->> Those flags can be written by both application and QP's. The
->application
->> writes those flags to let the driver know if it shall inform about
->new
->> work completions. It can write those flags at any time.
->> Only a kernel producer reads those flags to decide if
->> the CQ notification handler shall be kicked, if a new CQ element
->gets
->> added to the CQ. When kicking the completion handler, the driver
->resets the
->> notification flag, which must get re-armed by the application.
->
->This looks wrong to me.. a userspace notification re-arm cannot be
->lost, so have a split READ/TEST/WRITE sequence can't possibly work?
->
->I'd expect an atomic test and clear here?
+So I've proposed the following slightly hackish thing:
 
-We cannot avoid the case that the application re-arms the
-CQ only after a CQE got placed. That is why folks are polling the
-CQ once after re-arming it - to make sure they do not miss the
-very last and single CQE which would have produced a CQ event.
+Add a mechanism (call it /dev/xpfo).  When you open /dev/xpfo and
+fallocate it to some size, you allocate that amount of memory and kick
+it out of the kernel direct map.  (And pay the IPI cost unless there
+were already cached non-direct-mapped pages ready.)  Then you map
+*that* into your VMs.  Now, for a dedicated VM host, you map *all* the
+VM private memory from /dev/xpfo.  Pretend it's SEV if you want to
+determine which pages can be set up like this.
 
-I do not think an atomic test and clear would change that picture.
+Does this get enough of the benefit at a negligible fraction of the
+code complexity cost?  (This plus core scheduling, anyway.)
 
-Also, per RDMA verbs semantics, if the user would re-arm the CQ
-more then once before it gets a CQ event, it will still get only one
-CQ event if a new CQ element becomes ready. 
->
->
->> @@ -1141,11 +1145,17 @@ int siw_req_notify_cq(struct ib_cq
->*base_cq, enum ib_cq_notify_flags flags)
->>  	siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
->>  
->>  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
->> -		/* CQ event for next solicited completion */
->> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
->> +		/*
->> +		 * Enable CQ event for next solicited completion.
->> +		 * and make it visible to all associated producers.
->> +		 */
->> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
->
->But what is the 2nd piece of data to motivate the smp_store_mb?
-
-Another core (such as a concurrent RX operation) shall see this
-CQ being re-armed asap.
-
-Best,
-Bernard.
->
->Jason
->
->
-
+--Andy
