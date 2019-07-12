@@ -2,112 +2,194 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A003EC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C63EC742D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A16A2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583CB2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGLyidCE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRgLmceC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfGLSA3 (ORCPT
+        id S1727419AbfGLSBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 14:00:29 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45911 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfGLSA3 (ORCPT
+        Fri, 12 Jul 2019 14:01:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44834 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfGLSBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 14:00:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f9so10782952wre.12;
-        Fri, 12 Jul 2019 11:00:27 -0700 (PDT)
+        Fri, 12 Jul 2019 14:01:38 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so5104893plr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 11:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jSLflZiZITnN+LWl1xVscHlJHNXtKI7cPwZYoo7JveE=;
-        b=WGLyidCEeOzK+/lZEInF9f5d4dS2hTMttPJ3PdxHiqizfszjheSaWM5sarrGicoCQx
-         S/JEbVsLwK6DjB6bxOyVsH+FopUgT9zP5JW9r+h/t8ONPcjpFIfkp2y4tFAelWjunYso
-         bVc4vokhkEQIB7T6HnfRGCi17kFI1Zh2qosBccXw17acpzm07srUVnQyrUILeMm0jmEf
-         KUKac6MPFCJTV2KmyYDYLvXFV3YCNTGHCmpu0yR1LxSIMxr4OAKJPrGtuFnyHJ9Wrrdq
-         hBTLD7o1YI99Ig6bAy4/GKhdUn4qEeawrRCYDek7I+MQp5JkpVUl5wWeuBM5tn63KaWa
-         cQvw==
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=b6hwgXA922LSiU77QdmFAK6M0uj4ZKo/a8bhNCXvaZI=;
+        b=gRgLmceCvYbTpcuxiDu6B/wRGW1Sid2xetbUgH5NjoJvHuQbGTLboGv+fsjK3hC49X
+         QG5c4Kmv5UEsJ5iOSkPs6oEdqMdj1lD8qw4KZpG4ZixNZipR316XpAJuIuzjbblIlT89
+         mmMWoyLeawiIelt0BspNgZVnxqP3P4ctHnbk/eNKv/FLPjXGK4docqWF4rsePqdKeg3z
+         rIxfuf/sxPP646RbS/qtyKxYAYA0eB+OkbVjDxvXPZE+/wtbZC+z0cOAgaILAjSS5Wji
+         psWSnMi9FGsl7PQxS+Qp6sOtd0IuZbnSf7vaq5jiCF3fH/OVPetpOqBSbam8HYTExlpV
+         Irbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jSLflZiZITnN+LWl1xVscHlJHNXtKI7cPwZYoo7JveE=;
-        b=p/IvhcYeEiniMgcq261fMTuJbrxKvnul473JzqBrrcXG+dywAnQtBFHOZsNJtHBsH1
-         oAbD9+O6dc+QGGPQ77S1ZLflq4KnEPqPwXaeba3qLkTUKIa9r9TMQJFOi6I96vBQ6b9S
-         LxeLvs966Sqdvn4JEf9kUTvwpM6ZVs9ZuEbwyH1sRMW2C8Np54OdZSP7ZqWxIzl5GoyJ
-         5+ZR2q1whKbGZc++VUzxPRs7KOrSa+MZORrMmMrRXb1butuGCj4iGzctv+2HyLlgOIIz
-         hzv3Vfr98DXcothvq+jA6LoLxRF2v3ylroznjDEkkilwOB5Jewg9HlivRU5JYt3stB0r
-         ufzQ==
-X-Gm-Message-State: APjAAAUrWSUjrCCGMtjEzgmpg+XoQoKf0vLqXkCfguydxejhpzv0sJYH
-        YJO+HOj1j2BgM4KmL/TyDN4=
-X-Google-Smtp-Source: APXvYqyYSBDpfiNbvOCc3Tq1Cngt99gUJ9KSnwXK1+CWFQ2tu4DN5ubh8tUfH2eiItrpYFlFhWsBxA==
-X-Received: by 2002:adf:f591:: with SMTP id f17mr3250076wro.119.1562954426638;
-        Fri, 12 Jul 2019 11:00:26 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id a6sm6755054wmj.15.2019.07.12.11.00.25
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=b6hwgXA922LSiU77QdmFAK6M0uj4ZKo/a8bhNCXvaZI=;
+        b=L5Pydmh1hqUD+p7BGR0CjzGlEOxS/zRUtDnd6EUQkJLQKHsa/UnLPhxpc/z1mB4Ahm
+         Vq/DPEdL7yJbsm8JhUWQI/G80q4g/b1ktIk93RrMmHiWjU0xY2NLQjHXRuyEHkoIfX6B
+         MziuRKV+vRZEQTOPi9f86BvM1GZYPOgzlBl8s/NjoQw7KMbJe5su9NvyzFXCiiNCpHhZ
+         m1h/PvdxT5THVfalQ1hiCKperbMnOTAinkQNPQFIy1+bihU7XVaZSscSqUmRFU/RF6FQ
+         2AgBFGY+zfTdmjATrM43F9nNohhizWzgFKycOL7FV80LLcThw2iWleqdMQ/WH5VXYO1c
+         VrwQ==
+X-Gm-Message-State: APjAAAXPMejTo4YSoZaREGC5HUZ5C6aBOw/ivuSzMBY6dLvu4+J37iGn
+        WkYR1wTDIWgNS7r0/J3F950NYg==
+X-Google-Smtp-Source: APXvYqwowaQhDJ+ynRQ8i6JkQUSv4PZETsbhuVaHAkZ3NWQw8s3foPy1DmT+joDB8E8cPRg+iBm7xw==
+X-Received: by 2002:a17:902:6a2:: with SMTP id 31mr12391837plh.296.1562954496844;
+        Fri, 12 Jul 2019 11:01:36 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id d14sm13175357pfo.154.2019.07.12.11.01.35
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 11:00:26 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 11:00:24 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Busch <keith.busch@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] acpi: fix false-positive -Wuninitialized warning
-Message-ID: <20190712180024.GA21382@archlinux-threadripper>
-References: <20190712090148.36582-1-arnd@arndb.de>
+        Fri, 12 Jul 2019 11:01:35 -0700 (PDT)
+From:   bsegall@google.com
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+        <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
+        <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
+        <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
+        <20190711095102.GX3402@hirez.programming.kicks-ass.net>
+        <xm26v9w8jwgl.fsf@bsegall-linux.svl.corp.google.com>
+        <CAC=E7cV4sO50NpYOZ06n_BkZTcBqf1KQp83prc+oave3ircBrw@mail.gmail.com>
+Date:   Fri, 12 Jul 2019 11:01:34 -0700
+In-Reply-To: <CAC=E7cV4sO50NpYOZ06n_BkZTcBqf1KQp83prc+oave3ircBrw@mail.gmail.com>
+        (Dave Chiluk's message of "Thu, 11 Jul 2019 18:48:24 -0500")
+Message-ID: <xm26r26vjfnl.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712090148.36582-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:01:21AM +0200, Arnd Bergmann wrote:
-> clang gets confused by an uninitialized variable in what looks
-> to it like a never executed code path:
-> 
-> arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
->         polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
->                    ^~~~~~~~
-> arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
->         int rc, irq, trigger, polarity;
->                                       ^
->                                        = 0
-> arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
->         trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
->                   ^~~~~~~
-> arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
->         int rc, irq, trigger, polarity;
->                             ^
->                              = 0
-> 
-> This is unfortunately a design decision in clang and won't be fixed.
-> 
-> Changing the acpi_get_override_irq() macro to an inline function
-> reliably avoids the issue.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Dave Chiluk <chiluk+linux@indeed.com> writes:
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> So I spent some more time testing this new patch as is *(interrupts disabled).  I know I probably should have fixed the patch, but it's hard to get time on big test hardware sometimes, and I was already well along my way with testing.
+>
+> In regards to the quota usage overage I was seeing earlier: I have a
+> theory as to what might be happening here, and I'm pretty sure it's
+> related to the IRQs being disabled during the rq->lock walk. I think
+> that the main fast thread was able to use an excess amount of quota
+> because the timer interrupt meant to stop it wasn't being handled
+> timely due to the interrupts being disabled. On my 8 core machine this
+> resulted in a what looked like simply improved usage of the quota, but
+> when I ran the test on an 80 core machine I saw a massive overage of
+> cpu usage when running fibtest. Specifically when running fibtest for
+> 5 seconds with 50ms quota/100ms period expecting ~2500ms of quota
+> usage; I got 3731 ms of cpu usage which was an unexpected overage of
+> 1231ms. Is that a reasonable theory?
+
+Tht doesn't seem likely - taking 1ms would be way longer than I'd expect
+to begin with, and runtime_remaining can go negative for that sort of
+reason anyways assuming the irq time is even counted towards the task.
+Also I don't that the enable-irqs version will help for the scheduler
+tick at least without rt patchsets.
+
+That is still also too much for what I was thinking of though. I'll have
+to look into this more.
+
+>
+> I'll try to get some time again tomorrow to test with IRQs disabled before the walk.  Ben if you have a chance to fix and resend the patch that'd help.
+>
+> I'm really starting to think that simply removing the quota expiration
+> may be the best solution here.  Mathmatically it works out, it makes
+> the code simpler, it doesn't have any of the lock walk issues, it
+> doesn't add extra latency or overhead due to the slack timer,
+
+It works out _for the job that is supposed to be throttled_. If the job
+then gets a burst of actually-expensive work on many threads it can then
+use NCPUs extra ms, adding latency to any other job on the system. Given
+that it's still only 1ms on each runqueue, maybe this isn't the end of
+the world, but the fail case does exist.
+
+(We have to do exactly the same locking stuff on distribute, both more
+rarely on the period timer, and on the currently existing slack timer)
+
+> and that behavior is exactly what the kernel was doing for 5 years with few complaints about overage afaik.
+>
+> Either way, I'm very glad that we are getting to the end of this one, and all solutions appear to solve the core of the problem.  I thank you all the work you guys have put into this.
+>
+> On Thu, Jul 11, 2019 at 12:46 PM <bsegall@google.com> wrote:
+>
+>  Peter Zijlstra <peterz@infradead.org> writes:
+>
+>  > FWIW, good to see progress, still waiting for you guys to agree :-)
+>  >
+>  > On Mon, Jul 01, 2019 at 01:15:44PM -0700, bsegall@google.com wrote:
+>  >
+>  >> - Taking up-to-every rq->lock is bad and expensive and 5ms may be too
+>  >>   short a delay for this. I haven't tried microbenchmarks on the cost of
+>  >>   this vs min_cfs_rq_runtime = 0 vs baseline.
+>  >
+>  > Yes, that's tricky, SGI/HPE have definite ideas about that.
+>  >
+>  >> @@ -4781,12 +4790,41 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>  >>   */
+>  >>  static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+>  >>  {
+>  >> -    u64 runtime = 0, slice = sched_cfs_bandwidth_slice();
+>  >> +    u64 runtime = 0;
+>  >>      unsigned long flags;
+>  >>      u64 expires;
+>  >> +    struct cfs_rq *cfs_rq, *temp;
+>  >> +    LIST_HEAD(temp_head);
+>  >> +
+>  >> +    local_irq_save(flags);
+>  >> +
+>  >> +    raw_spin_lock(&cfs_b->lock);
+>  >> +    cfs_b->slack_started = false;
+>  >> +    list_splice_init(&cfs_b->slack_cfs_rq, &temp_head);
+>  >> +    raw_spin_unlock(&cfs_b->lock);
+>  >> +
+>  >> +
+>  >> +    /* Gather all left over runtime from all rqs */
+>  >> +    list_for_each_entry_safe(cfs_rq, temp, &temp_head, slack_list) {
+>  >> +            struct rq *rq = rq_of(cfs_rq);
+>  >> +            struct rq_flags rf;
+>  >> +
+>  >> +            rq_lock(rq, &rf);
+>  >> +
+>  >> +            raw_spin_lock(&cfs_b->lock);
+>  >> +            list_del_init(&cfs_rq->slack_list);
+>  >> +            if (!cfs_rq->nr_running && cfs_rq->runtime_remaining > 0 &&
+>  >> +                cfs_rq->runtime_expires == cfs_b->runtime_expires) {
+>  >> +                    cfs_b->runtime += cfs_rq->runtime_remaining;
+>  >> +                    cfs_rq->runtime_remaining = 0;
+>  >> +            }
+>  >> +            raw_spin_unlock(&cfs_b->lock);
+>  >> +
+>  >> +            rq_unlock(rq, &rf);
+>  >> +    }
+>  >
+>  > But worse still, you take possibly every rq->lock without ever
+>  > re-enabling IRQs.
+>  >
+>
+>  Yeah, I'm not sure why I did that, it isn't correctness.
