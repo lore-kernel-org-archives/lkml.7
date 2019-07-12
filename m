@@ -2,117 +2,98 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C35C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211C8C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F92A2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A0F20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:06:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xyC1Qshs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfGLMGf (ORCPT
+        id S1727120AbfGLMGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:06:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:56428 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfGLMGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:06:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B4DD28;
-        Fri, 12 Jul 2019 05:06:34 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DEBC3F71F;
-        Fri, 12 Jul 2019 05:06:31 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
-        linux@armlinux.org.uk, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, salyzyn@android.com, pcc@google.com,
-        0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
-        huw@codeweavers.com, sthotton@marvell.com, andre.przywara@arm.com,
-        luto@kernel.org, john.stultz@linaro.org, naohiro.aota@wdc.com,
-        yamada.masahiro@socionext.com, Will Deacon <will@kernel.org>
-Subject: [PATCH] arm64: compat: Fix flip/flop vdso building bug
-Date:   Fri, 12 Jul 2019 13:06:18 +0100
-Message-Id: <20190712120618.6207-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712101556.17833-2-naohiro.aota@wdc.com>
-References: <20190712101556.17833-2-naohiro.aota@wdc.com>
+        Fri, 12 Jul 2019 08:06:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47776 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfGLMGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:06:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CC3vVq093722;
+        Fri, 12 Jul 2019 12:05:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=2/cY3ZWthVr4zF3BaBmwsNFGaTKeoOtuNhP6QeMTAA4=;
+ b=xyC1Qshs4IHx5WGHrLRX7cxrBMMFxGYxcQ3ts00xuizD+H2N77utRDZ8V13HlWAe8VeR
+ OjUKxmzKPrO9rasrb5+x1ZywsH+/3Y9w+ONk67rxTheNr+emRuR7wvD2NfUUYQSDf5d0
+ qLlehspat5zeQhLUU0hMrk+r1et2R+smHTonjgq26cruMtnSR2SLwemTra9yZG9YigbI
+ u/Wv2eeVJ2N7J5TdCuR8d/dGnlMWwVgzxurtZjBWsivtUVMKP7p+Sb2YYYtSzc3DUj2x
+ MH/+Jgp5rj9FeQjbljF9Aqeq5asYu3oz4xpcjagLBNlgaIi2+VWAwN5rbK7kkwtS39B7 Xw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2tjkkq57ax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 12:05:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CC3RVf095667;
+        Fri, 12 Jul 2019 12:03:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2tpefd28vm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 12:03:56 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6CC3r2t020605;
+        Fri, 12 Jul 2019 12:03:53 GMT
+Received: from tomti.i.net-space.pl (/10.175.167.233)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Jul 2019 04:58:14 -0700
+Date:   Fri, 12 Jul 2019 13:58:09 +0200
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc:     bp@alien8.de, corbet@lwn.net, dpsmith@apertussolutions.com,
+        eric.snowberg@oracle.com, hpa@zytor.com, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, mingo@redhat.com,
+        ross.philipson@oracle.com, tglx@linutronix.de
+Subject: Re: [PATCH v2 0/3] x86/boot: Introduce the kernel_info et consortes
+Message-ID: <20190712115809.slonryrqvpbgs6xh@tomti.i.net-space.pl>
+References: <20190704163612.14311-1-daniel.kiper@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704163612.14311-1-daniel.kiper@oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=647
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=703 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running "make" on an already compiled kernel tree will rebuild the
-vdso32 library even if this has not been modified.
+On Thu, Jul 04, 2019 at 06:36:09PM +0200, Daniel Kiper wrote:
+> Hi,
+>
+> Due to very limited space in the setup_header this patch series introduces new
+> kernel_info struct which will be used to convey information from the kernel to
+> the bootloader. This way the boot protocol can be extended regardless of the
+> setup_header limitations. Additionally, the patch series introduces some
+> convenience features like the setup_indirect struct and the
+> kernel_info.setup_type_max field.
 
-$ make
-  GEN     Makefile
-  Using linux as source for kernel
-  CALL    linux/scripts/atomic/check-atomics.sh
-  CALL    linux/scripts/checksyscalls.sh
-  VDSOCHK arch/arm64/kernel/vdso32/vdso.so.raw
-  VDSOSYM include/generated/vdso32-offsets.h
-  CHK     include/generated/compile.h
-  CC      arch/arm64/kernel/signal.o
-  CC      arch/arm64/kernel/vdso.o
-  CC      arch/arm64/kernel/signal32.o
-  VDSOL   arch/arm64/kernel/vdso32/vdso.so.raw
-  MUNGE   arch/arm64/kernel/vdso32/vdso.so.dbg
-  OBJCOPY arch/arm64/kernel/vdso32/vdso.so
-  AS      arch/arm64/kernel/vdso32/vdso.o
-  AR      arch/arm64/kernel/vdso32/built-in.a
-  AR      arch/arm64/kernel/built-in.a
-  GEN     .version
-  CHK     include/generated/compile.h
-  UPD     include/generated/compile.h
-  CC      init/version.o
-  AR      init/built-in.a
-  LD      vmlinux.o
-  MODPOST vmlinux.o
+Ping?
 
-The issue is generated by the fact that "if_changed" is called twice
-in a single target.
-
-Fix the build bug merging the two commands into a single function.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- arch/arm64/kernel/vdso32/Makefile | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 288c14d30b45..fb572b6f1bf5 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -144,8 +144,7 @@ $(obj)/vdso.so.dbg: $(obj)/vdso.so.raw $(obj)/$(munge) FORCE
- 
- # Link rule for the .so file, .lds has to be first
- $(obj)/vdso.so.raw: $(src)/vdso.lds $(obj-vdso) FORCE
--	$(call if_changed,vdsold)
--	$(call if_changed,vdso_check)
-+	$(call if_changed,vdsold_and_vdso_check)
- 
- # Compilation rules for the vDSO sources
- $(c-obj-vdso): %.o: %.c FORCE
-@@ -156,6 +155,9 @@ $(asm-obj-vdso): %.o: %.S FORCE
- 	$(call if_changed_dep,vdsoas)
- 
- # Actual build commands
-+quiet_cmd_vdsold_and_vdso_check = LD   $@
-+      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
-+
- quiet_cmd_vdsold = VDSOL   $@
-       cmd_vdsold = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
-                    -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
--- 
-2.22.0
-
+Daniel
