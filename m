@@ -2,52 +2,54 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D644CC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E1C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4282208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5BF21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934588;
-	bh=im/5EH16z/2KM02dgV1PXQid8Mz1fZ2RuFwbckq6wCk=;
+	s=default; t=1562934592;
+	bh=l+gQSEoRDnqdO8m78BRffvFCVtI5c3S8E0DX7f9ql/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6e5gLlfMnzKE1kCnk7dNpS1siyKCGktfNtdD8jLaqzjcynQ0bvw9A/uXRlF+qzjK
-	 8YiWb2v0gM1mj+e3ljPjclNahylbr6gbugcyI+SDInC/uNTKB5S9YILw0L/kkYEVSo
-	 46dkDLnXmVk/CsSeLq93m7+m/64gkk8FRWVYUiPI=
+	b=h5v+P5E42TGuWJt+jbjYrlHzLhwN7RX45RKalJ39fKhZyeFBM4OMq9aviD8VsrX1e
+	 w35mKXnJvaP8fAaSXu0zjX/oaNefH94zr/NpI4tb6KSZL1KJDD/ZbJZ5vgmXGKb3sa
+	 lMjTydEOaQ8TGyGwlzO0goPP7MEbW+GJ1G8l/5cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfGLM3r (ORCPT
+        id S1728600AbfGLM3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44750 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbfGLM3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:41 -0400
+        id S1728264AbfGLM3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D82208E4;
-        Fri, 12 Jul 2019 12:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D562521019;
+        Fri, 12 Jul 2019 12:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934580;
-        bh=im/5EH16z/2KM02dgV1PXQid8Mz1fZ2RuFwbckq6wCk=;
+        s=default; t=1562934583;
+        bh=l+gQSEoRDnqdO8m78BRffvFCVtI5c3S8E0DX7f9ql/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ai/anIo3fF168WMRQK/um+b05w4MSCl6TDv+1CwvAmAS7jq7oUJ89r46WajgbdeMU
-         Z12A6065u0s2RbDOdcpiATKeJXG2KEtI0eN3R59Q798ztRUZCFyCuqoN4hm+1ICOTZ
-         oABzWngn+3IH7e4+WOYnMrnwaMY7rHWSxBW30nlI=
+        b=degALWQoCupx3GVm7j5lFDlbu4G75iDjgKbd5G+tMt7d1sv0ca5UD9KQSMzc4oyoU
+         J3KPiiMY2MAJHpz1KWSH6+0vOy1tv2gUyWkqw7/7k9NNf8FJ6wO2vOGdusbKZJXRvO
+         4oC9YmKaBveEMcMTkJ3nkMkFdq8n7qI/9YlU4QVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 5.1 102/138] x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
-Date:   Fri, 12 Jul 2019 14:19:26 +0200
-Message-Id: <20190712121632.679106042@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 076/138] IB/hfi1: Handle port down properly in pio
+Date:   Fri, 12 Jul 2019 14:19:00 +0200
+Message-Id: <20190712121631.621836127@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,54 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+[ Upstream commit 942a899335707fc9cfc97cb382a60734b2ff4e03 ]
 
-commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
+The call to sc_buffer_alloc currently returns NULL (no buffer) or
+a buffer descriptor.
 
-The index to access the threads ptrace_bps is controlled by userspace via
-syscall: sys_ptrace(), hence leading to a potential exploitation of the
-Spectre variant 1 vulnerability.
+There is a third case when the port is down.  Currently that
+returns NULL and this prevents the caller from properly handling the
+sc_buffer_alloc() failure.  A verbs code link test after the call is
+racy so the indication needs to come from the state check inside the allocation
+routine to be valid.
 
-The index can be controlled from:
-    ptrace -> arch_ptrace -> ptrace_get_debugreg.
+Fix by encoding the ECOMM failure like SDMA.   IS_ERR_OR_NULL() tests
+are added at all call sites.  For verbs send, this needs to treat any
+error by returning a completion without any MMIO copy.
 
-Fix this by sanitizing the user supplied index before using it access
-thread->ptrace_bps.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/pio.c   | 5 +++--
+ drivers/infiniband/hw/hfi1/rc.c    | 2 +-
+ drivers/infiniband/hw/hfi1/ud.c    | 4 ++--
+ drivers/infiniband/hw/hfi1/verbs.c | 4 ++--
+ 4 files changed, 8 insertions(+), 7 deletions(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -24,6 +24,7 @@
- #include <linux/rcupdate.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-+#include <linux/nospec.h>
+diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
+index 1ee47838d4de..17ea224fbecb 100644
+--- a/drivers/infiniband/hw/hfi1/pio.c
++++ b/drivers/infiniband/hw/hfi1/pio.c
+@@ -1443,7 +1443,8 @@ void sc_stop(struct send_context *sc, int flag)
+  * @cb: optional callback to call when the buffer is finished sending
+  * @arg: argument for cb
+  *
+- * Return a pointer to a PIO buffer if successful, NULL if not enough room.
++ * Return a pointer to a PIO buffer, NULL if not enough room, -ECOMM
++ * when link is down.
+  */
+ struct pio_buf *sc_buffer_alloc(struct send_context *sc, u32 dw_len,
+ 				pio_release_cb cb, void *arg)
+@@ -1459,7 +1460,7 @@ struct pio_buf *sc_buffer_alloc(struct send_context *sc, u32 dw_len,
+ 	spin_lock_irqsave(&sc->alloc_lock, flags);
+ 	if (!(sc->flags & SCF_ENABLED)) {
+ 		spin_unlock_irqrestore(&sc->alloc_lock, flags);
+-		goto done;
++		return ERR_PTR(-ECOMM);
+ 	}
  
- #include <linux/uaccess.h>
- #include <asm/pgtable.h>
-@@ -642,9 +643,11 @@ static unsigned long ptrace_get_debugreg
- {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
-+	int index = n;
- 
- 	if (n < HBP_NUM) {
--		struct perf_event *bp = thread->ptrace_bps[n];
-+		index = array_index_nospec(index, HBP_NUM);
-+		struct perf_event *bp = thread->ptrace_bps[index];
- 
- 		if (bp)
- 			val = bp->hw.info.address;
+ retry:
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index 24cbac277bf0..b7b74222eaf0 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -1434,7 +1434,7 @@ void hfi1_send_rc_ack(struct hfi1_packet *packet, bool is_fecn)
+ 	pbc = create_pbc(ppd, pbc_flags, qp->srate_mbps,
+ 			 sc_to_vlt(ppd->dd, sc5), plen);
+ 	pbuf = sc_buffer_alloc(rcd->sc, plen, NULL, NULL);
+-	if (!pbuf) {
++	if (IS_ERR_OR_NULL(pbuf)) {
+ 		/*
+ 		 * We have no room to send at the moment.  Pass
+ 		 * responsibility for sending the ACK to the send engine
+diff --git a/drivers/infiniband/hw/hfi1/ud.c b/drivers/infiniband/hw/hfi1/ud.c
+index f88ad425664a..4cb0fce5c096 100644
+--- a/drivers/infiniband/hw/hfi1/ud.c
++++ b/drivers/infiniband/hw/hfi1/ud.c
+@@ -683,7 +683,7 @@ void return_cnp_16B(struct hfi1_ibport *ibp, struct rvt_qp *qp,
+ 	pbc = create_pbc(ppd, pbc_flags, qp->srate_mbps, vl, plen);
+ 	if (ctxt) {
+ 		pbuf = sc_buffer_alloc(ctxt, plen, NULL, NULL);
+-		if (pbuf) {
++		if (!IS_ERR_OR_NULL(pbuf)) {
+ 			trace_pio_output_ibhdr(ppd->dd, &hdr, sc5);
+ 			ppd->dd->pio_inline_send(ppd->dd, pbuf, pbc,
+ 						 &hdr, hwords);
+@@ -738,7 +738,7 @@ void return_cnp(struct hfi1_ibport *ibp, struct rvt_qp *qp, u32 remote_qpn,
+ 	pbc = create_pbc(ppd, pbc_flags, qp->srate_mbps, vl, plen);
+ 	if (ctxt) {
+ 		pbuf = sc_buffer_alloc(ctxt, plen, NULL, NULL);
+-		if (pbuf) {
++		if (!IS_ERR_OR_NULL(pbuf)) {
+ 			trace_pio_output_ibhdr(ppd->dd, &hdr, sc5);
+ 			ppd->dd->pio_inline_send(ppd->dd, pbuf, pbc,
+ 						 &hdr, hwords);
+diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+index 63d62ac7434a..117e73cd69d7 100644
+--- a/drivers/infiniband/hw/hfi1/verbs.c
++++ b/drivers/infiniband/hw/hfi1/verbs.c
+@@ -1039,10 +1039,10 @@ int hfi1_verbs_send_pio(struct rvt_qp *qp, struct hfi1_pkt_state *ps,
+ 	if (cb)
+ 		iowait_pio_inc(&priv->s_iowait);
+ 	pbuf = sc_buffer_alloc(sc, plen, cb, qp);
+-	if (unlikely(!pbuf)) {
++	if (unlikely(IS_ERR_OR_NULL(pbuf))) {
+ 		if (cb)
+ 			verbs_pio_complete(qp, 0);
+-		if (ppd->host_link_state != HLS_UP_ACTIVE) {
++		if (IS_ERR(pbuf)) {
+ 			/*
+ 			 * If we have filled the PIO buffers to capacity and are
+ 			 * not in an active state this request is not going to
+-- 
+2.20.1
+
 
 
