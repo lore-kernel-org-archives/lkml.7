@@ -2,215 +2,134 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6440C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA822C742CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800AE206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAD5206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfGLQDo (ORCPT
+        id S1727247AbfGLQDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:03:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51064 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfGLQDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:03:44 -0400
-Received: from linux.home (2a01cb0c80061e007f541addd69f0d47.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:8006:1e00:7f54:1add:d69f:d47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6D3C828BBDA;
-        Fri, 12 Jul 2019 17:03:41 +0100 (BST)
-Date:   Fri, 12 Jul 2019 18:03:38 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        bbrezillon@kernel.org, Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v4 2/3] i3c: move i3c_device_match_id to device.c and
- export it
-Message-ID: <20190712180338.47b50e9f@linux.home>
-In-Reply-To: <debadccffef84c541601a97162ac656cd7c58478.1562931742.git.vitor.soares@synopsys.com>
-References: <cover.1562931742.git.vitor.soares@synopsys.com>
-        <debadccffef84c541601a97162ac656cd7c58478.1562931742.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Jul 2019 12:03:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:36561 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726907AbfGLQDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 12:03:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 09:03:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
+   d="scan'208";a="174485411"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Jul 2019 09:03:52 -0700
+Date:   Fri, 12 Jul 2019 09:03:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
+        jingqi.liu@intel.com
+Subject: Re: [PATCH v7 3/3] KVM: vmx: handle vm-exit for UMWAIT and TPAUSE
+Message-ID: <20190712160352.GD29659@linux.intel.com>
+References: <20190712082907.29137-1-tao3.xu@intel.com>
+ <20190712082907.29137-4-tao3.xu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712082907.29137-4-tao3.xu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 13:53:29 +0200
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+On Fri, Jul 12, 2019 at 04:29:07PM +0800, Tao Xu wrote:
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5213,6 +5213,9 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+>  	case EXIT_REASON_ENCLS:
+>  		/* SGX is never exposed to L1 */
+>  		return false;
+> +	case EXIT_REASON_UMWAIT: case EXIT_REASON_TPAUSE:
 
-> The i3c device driver needs the i3c_device_id table.
+Grouped case statements are usually stacked vertically, e.g.:
 
-"Some I3C device drivers need to know which entry matches the
-i3c_device object passed to the probe function" 
+	case EXIT_REASON_UMWAIT:
+	case EXIT_REASON_TPAUSE:
 
-> Lets move  to device.c and export it to be used.
-
-"Let's move i3c_device_match_id() to device.c and export it so it can be
-used by drivers."
-
-> 
-> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> ---
-> Changes in v4:
->   None
-> 
-> Changes in v3:
->   Remove i3c_get_device_id
->   Move i3c_device_match_id from drivers/i3c/master.c to drivers/i3c/device.c
->   Export i3c_device_match_id
-> 
-> Changes in v2:
->   move this function to drivers/i3c/device.c
-> 
->  drivers/i3c/device.c       | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/i3c/master.c       | 45 ---------------------------------------------
->  include/linux/i3c/device.h |  4 ++++
->  3 files changed, 50 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
-> index 69cc040..383df3b 100644
-> --- a/drivers/i3c/device.c
-> +++ b/drivers/i3c/device.c
-> @@ -200,6 +200,52 @@ struct i3c_device *dev_to_i3cdev(struct device *dev)
+> +		return nested_cpu_has2(vmcs12,
+> +			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE);
+>  	default:
+>  		return true;
+>  	}
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 0787f140d155..e026b1313dc3 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5349,6 +5349,20 @@ static int handle_monitor(struct kvm_vcpu *vcpu)
+>  	return handle_nop(vcpu);
 >  }
->  EXPORT_SYMBOL_GPL(dev_to_i3cdev);
 >  
-
-You're missing a kerneldoc here.
-
-> +const struct i3c_device_id *
-> +i3c_device_match_id(struct i3c_device *i3cdev,
-> +		    const struct i3c_device_id *id_table)
+> +static int handle_umwait(struct kvm_vcpu *vcpu)
 > +{
-> +	struct i3c_device_info devinfo;
-> +	const struct i3c_device_id *id;
-> +
-> +	i3c_device_get_info(i3cdev, &devinfo);
-> +
-> +	/*
-> +	 * The lower 32bits of the provisional ID is just filled with a random
-> +	 * value, try to match using DCR info.
-> +	 */
-> +	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
-> +		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
-> +		u16 part = I3C_PID_PART_ID(devinfo.pid);
-> +		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
-> +
-> +		/* First try to match by manufacturer/part ID. */
-> +		for (id = id_table; id->match_flags != 0; id++) {
-> +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-> +			    I3C_MATCH_MANUF_AND_PART)
-> +				continue;
-> +
-> +			if (manuf != id->manuf_id || part != id->part_id)
-> +				continue;
-> +
-> +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-> +			    ext_info != id->extra_info)
-> +				continue;
-> +
-> +			return id;
-> +		}
-> +	}
-> +
-> +	/* Fallback to DCR match. */
-> +	for (id = id_table; id->match_flags != 0; id++) {
-> +		if ((id->match_flags & I3C_MATCH_DCR) &&
-> +		    id->dcr == devinfo.dcr)
-> +			return id;
-> +	}
-> +
-> +	return NULL;
+> +	kvm_skip_emulated_instruction(vcpu);
+> +	WARN(1, "this should never happen\n");
+
+Blech.  I'm guessing this code was copy-pasted from handle_xsaves() and
+handle_xrstors().  The blurb of "this should never happen" isn't very
+helpful, e.g. the WARN itself makes it pretty obvious that we don't expect
+to reach this point.  WARN_ONCE would also be preferable, no need to spam
+the log in the event things go completely haywire.
+
+Rather than propagate ugly code, what about defining a common helper, e.g.
+
+static int handle_unexpected_vmexit(struct kvm_vcpu *vcpu)
+{
+	kvm_skip_emulated_instruction(vcpu);
+	WARN_ONCE(1, "Unexpected VM-Exit = 0x%x", vmcs_read32(VM_EXIT_REASON));
+	return 1;
+}
+
+...
+{
+	[EXIT_REASON_XSAVES]                  = handle_unexpected_vmexit,
+	[EXIT_REASON_XRSTORS]                 = handle_unexpected_vmexit,
+
+	[EXIT_REASON_UMWAIT]                  = handle_unexpected_vmexit,
+	[EXIT_REASON_TPAUSE]                  = handle_unexpected_vmexit,
+
+}
+
+> +	return 1;
 > +}
-> +EXPORT_SYMBOL_GPL(i3c_device_match_id);
 > +
->  /**
->   * i3c_driver_register_with_owner() - register an I3C device driver
->   *
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> index 5f4bd52..7667f84 100644
-> --- a/drivers/i3c/master.c
-> +++ b/drivers/i3c/master.c
-> @@ -270,51 +270,6 @@ static const struct device_type i3c_device_type = {
->  	.uevent = i3c_device_uevent,
+> +static int handle_tpause(struct kvm_vcpu *vcpu)
+> +{
+> +	kvm_skip_emulated_instruction(vcpu);
+> +	WARN(1, "this should never happen\n");
+> +	return 1;
+> +}
+> +
+>  static int handle_invpcid(struct kvm_vcpu *vcpu)
+>  {
+>  	u32 vmx_instruction_info;
+> @@ -5559,6 +5573,8 @@ static int (*kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
+>  	[EXIT_REASON_VMFUNC]		      = handle_vmx_instruction,
+>  	[EXIT_REASON_PREEMPTION_TIMER]	      = handle_preemption_timer,
+>  	[EXIT_REASON_ENCLS]		      = handle_encls,
+> +	[EXIT_REASON_UMWAIT]                  = handle_umwait,
+> +	[EXIT_REASON_TPAUSE]                  = handle_tpause,
 >  };
 >  
-> -static const struct i3c_device_id *
-> -i3c_device_match_id(struct i3c_device *i3cdev,
-> -		    const struct i3c_device_id *id_table)
-> -{
-> -	struct i3c_device_info devinfo;
-> -	const struct i3c_device_id *id;
-> -
-> -	i3c_device_get_info(i3cdev, &devinfo);
-> -
-> -	/*
-> -	 * The lower 32bits of the provisional ID is just filled with a random
-> -	 * value, try to match using DCR info.
-> -	 */
-> -	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
-> -		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
-> -		u16 part = I3C_PID_PART_ID(devinfo.pid);
-> -		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
-> -
-> -		/* First try to match by manufacturer/part ID. */
-> -		for (id = id_table; id->match_flags != 0; id++) {
-> -			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-> -			    I3C_MATCH_MANUF_AND_PART)
-> -				continue;
-> -
-> -			if (manuf != id->manuf_id || part != id->part_id)
-> -				continue;
-> -
-> -			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-> -			    ext_info != id->extra_info)
-> -				continue;
-> -
-> -			return id;
-> -		}
-> -	}
-> -
-> -	/* Fallback to DCR match. */
-> -	for (id = id_table; id->match_flags != 0; id++) {
-> -		if ((id->match_flags & I3C_MATCH_DCR) &&
-> -		    id->dcr == devinfo.dcr)
-> -			return id;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
->  static int i3c_device_match(struct device *dev, struct device_driver *drv)
->  {
->  	struct i3c_device *i3cdev;
-> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
-> index 5ecb055..de102e4 100644
-> --- a/include/linux/i3c/device.h
-> +++ b/include/linux/i3c/device.h
-> @@ -188,6 +188,10 @@ static inline struct i3c_driver *drv_to_i3cdrv(struct device_driver *drv)
->  struct device *i3cdev_to_dev(struct i3c_device *i3cdev);
->  struct i3c_device *dev_to_i3cdev(struct device *dev);
->  
-> +const struct i3c_device_id *
-> +i3c_device_match_id(struct i3c_device *i3cdev,
-> +		    const struct i3c_device_id *id_table);
-> +
->  static inline void i3cdev_set_drvdata(struct i3c_device *i3cdev,
->  				      void *data)
->  {
-
+>  static const int kvm_vmx_max_exit_handlers =
+> -- 
+> 2.20.1
+> 
