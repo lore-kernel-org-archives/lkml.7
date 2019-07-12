@@ -2,132 +2,160 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6DDC742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580D1C742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2BC2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:57:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Eyr0dtWh"
+	by mail.kernel.org (Postfix) with ESMTP id 371422166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfGLK5y (ORCPT
+        id S1726995AbfGLK6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:57:54 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50878 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfGLK5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:57:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u9dynlJ3OM9MALiJSBcSG7FKkftfyq54pHYRnzPQTFA=; b=Eyr0dtWhsmlK2Q6BhgmXpUOL/
-        qymgs31El0emqh8IFE4WI3vF53WCcBAaX6vLcGPJDEh30I33KI7G6wSoN0u+M/D/BCSA1udbJvErH
-        nIDPBlSdgUpnsnRPshqdgvBlwZh+rqeIGCWGpUc+DhpBYN0jaKp9LJpI4PlEv5yRZ/CSfY7Z8HyYq
-        tBBBAz5DaPhve6iZyWd/UAkz7y6uKCCXVnCCXr3uYXQZrhzPLLkpOn95j/IOhrviJVxEXV07j5CsA
-        RFU80czsdSVH3CRpvfIGSrY4m2mqkYq99uWagRqbIE8jqCXlSABqwIIgCGdgiZ7x8M2xRsZ2I9Q0c
-        8ZwvU8lPQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59462)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hltFN-0001Mc-4Y; Fri, 12 Jul 2019 11:57:49 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hltFJ-0005c2-Nx; Fri, 12 Jul 2019 11:57:45 +0100
-Date:   Fri, 12 Jul 2019 11:57:45 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        dianders@chromium.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, tzungbi@chromium.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>, dgreid@chromium.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/5] ASoC: hdmi-codec: Add an op to set callback
- function for plug event
-Message-ID: <20190712105745.xr7jxc626lwoaajx@shell.armlinux.org.uk>
-References: <20190712100443.221322-1-cychiang@chromium.org>
- <20190712100443.221322-2-cychiang@chromium.org>
+        Fri, 12 Jul 2019 06:58:15 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:42972 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbfGLK6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:58:13 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 648AF5427E;
+        Fri, 12 Jul 2019 12:58:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id la_RnxBryad0; Fri, 12 Jul 2019 12:57:56 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 20:57:45 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190712105745.nruaftgeat6irhzr@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f3oogwkmh2sysq6o"
 Content-Disposition: inline
-In-Reply-To: <20190712100443.221322-2-cychiang@chromium.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190712043341.GI17978@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 06:04:39PM +0800, Cheng-Yi Chiang wrote:
-> Add an op in hdmi_codec_ops so codec driver can register callback
-> function to handle plug event.
-> 
-> Driver in DRM can use this callback function to report connector status.
-> 
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
->  include/sound/hdmi-codec.h    | 16 +++++++++++++
->  sound/soc/codecs/hdmi-codec.c | 45 +++++++++++++++++++++++++++++++++++
->  2 files changed, 61 insertions(+)
-> 
-> diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-> index 7fea496f1f34..9a8661680256 100644
-> --- a/include/sound/hdmi-codec.h
-> +++ b/include/sound/hdmi-codec.h
-> @@ -47,6 +47,9 @@ struct hdmi_codec_params {
->  	int channels;
->  };
->  
-> +typedef void (*hdmi_codec_plugged_cb)(struct device *dev,
-> +				      bool plugged);
-> +
 
-I'd like to pose a question for people to think about.
+--f3oogwkmh2sysq6o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Firstly, typedefs are generally shunned in the kernel.  However, for
-these cases it seems to make sense.
+On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Sun, Jul 07, 2019 at 12:57:32AM +1000, Aleksa Sarai wrote:
+> > @@ -1442,8 +1464,11 @@ static int follow_dotdot_rcu(struct nameidata *n=
+d)
+> >  	struct inode *inode =3D nd->inode;
+> > =20
+> >  	while (1) {
+> > -		if (path_equal(&nd->path, &nd->root))
+> > +		if (path_equal(&nd->path, &nd->root)) {
+> > +			if (unlikely(nd->flags & LOOKUP_BENEATH))
+> > +				return -EXDEV;
+>=20
+> > @@ -1468,6 +1493,8 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+> >  				return -ECHILD;
+> >  			if (&mparent->mnt =3D=3D nd->path.mnt)
+> >  				break;
+> > +			if (unlikely(nd->flags & LOOKUP_XDEV))
+> > +				return -EXDEV;
+> >  			/* we know that mountpoint was pinned */
+> >  			nd->path.dentry =3D mountpoint;
+> >  			nd->path.mnt =3D &mparent->mnt;
+> > @@ -1482,6 +1509,8 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+> >  			return -ECHILD;
+> >  		if (!mounted)
+> >  			break;
+> > +		if (unlikely(nd->flags & LOOKUP_XDEV))
+> > +			return -EXDEV;
+>=20
+> Are you sure these failure exits in follow_dotdot_rcu() won't give
+> suprious hard errors?
 
-However, should the "pointer"-ness be part of the typedef or not?  To
-see what I mean, consider:
+I could switch to -ECHILD for the *_rcu() checks if you'd prefer that.
+Though, I'd have (probably naively) thought that you'd have already
+gotten -ECHILD from the seqlock checks if there was a race during ".."
+handling.
 
-	typedef void (*hdmi_foo)(void);
+> > +	if (unlikely(nd->flags & LOOKUP_BENEATH)) {
+> > +		error =3D dirfd_path_init(nd);
+> > +		if (unlikely(error))
+> > +			return ERR_PTR(error);
+> > +		nd->root =3D nd->path;
+> > +		if (!(nd->flags & LOOKUP_RCU))
+> > +			path_get(&nd->root);
+> > +	}
+> >  	if (*s =3D=3D '/') {
+> >  		if (likely(!nd->root.mnt))
+> >  			set_root(nd);
+> > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *n=
+d, unsigned flags)
+> >  			s =3D ERR_PTR(error);
+> >  		return s;
+> >  	}
+> > -	error =3D dirfd_path_init(nd);
+> > -	if (unlikely(error))
+> > -		return ERR_PTR(error);
+> > +	if (likely(!nd->path.mnt)) {
+>=20
+> Is that a weird way of saying "if we hadn't already called dirfd_path_ini=
+t()"?
 
-	int register_foo(hdmi_foo foo);
+Yes. I did it to be more consistent with the other "have we got the
+root" checks elsewhere. Is there another way you'd prefer I do it?
 
-vs
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-	typedef void hdmi_foo(void);
+--f3oogwkmh2sysq6o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	int register_foo(hdmi_foo *foo);
+-----BEGIN PGP SIGNATURE-----
 
-which is more in keeping with how we code non-typedef'd code - it's
-obvious that foo is a pointer while reading the code.
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXShnpgAKCRCdlLljIbnQ
+EgLTAP4nuVmi0292tyCAkB4Di0UUtazb2EsZPgKq9s2vRoyuFAD/UKONDBSK3VN9
+06Id1xrmV0JIYJSqOIdF2oJIncJ8ZwI=
+=5hbR
+-----END PGP SIGNATURE-----
 
-It seems to me that the latter better matches what is in the kernel's
-coding style, which states:
-
-  In general, a pointer, or a struct that has elements that can
-  reasonably be directly accessed should **never** be a typedef.
-
-or maybe Documentation/process/coding-style.rst needs updating?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+--f3oogwkmh2sysq6o--
