@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E07BC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB427C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477DC216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B74216C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934525;
-	bh=tfB0Yjzx+vKSU/qmFD3zv4coZikWMkBZyaZVhmcmguU=;
+	s=default; t=1562934527;
+	bh=Huy+6T0Z/+vZR/qnaWHnDnSRRDB/9X1XLztqf99k3Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EC2vn2AF0gZTBZKqN3A/bFMg8q6YSZsPT8g7md5zqLjjZTT/I3wsH/oAqGyMEQr7i
-	 E4N8zP4h+NEAIES4BhC2Lo+yochpuUZtuP6mW9tTRRsD5cD0WskJlWuTld/tD/tE8G
-	 QfOJEx6EIfIjAv3fBmNx3qpYXGw1gtlY3ObkdqHY=
+	b=ncowoTcufjFmSm1glrMQuGpNuo2G4bE+mLgmKNFHq5W+dAbvmwNJOPIBnKG1XbP0E
+	 5VByqOyGrqwPcQMcVyR72FXwJeEwB3htpGHqNxKosYwU8bm6lnOYLBXVyENqYNSVTq
+	 P/pG8jg0cTGlARCe9QBGjopgusSz72JxZVkFN6qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfGLM2o (ORCPT
+        id S1728885AbfGLM2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:28:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbfGLM2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:28:34 -0400
+        id S1728855AbfGLM2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:28:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03950216E3;
-        Fri, 12 Jul 2019 12:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5440B21019;
+        Fri, 12 Jul 2019 12:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934514;
-        bh=tfB0Yjzx+vKSU/qmFD3zv4coZikWMkBZyaZVhmcmguU=;
+        s=default; t=1562934519;
+        bh=Huy+6T0Z/+vZR/qnaWHnDnSRRDB/9X1XLztqf99k3Mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0ycGOlGBNZENjJO883CVXq7H9v7ufRUJvxbWiqRTlcXBQuTZE7iSdM2GANnWzYdQ
-         Ah5sVbEMMBNnk9HEQqPUBnSdlanyJAOVr162Zt/OMfaBCz/ZJl/pwHC7GJp0FkWfya
-         R+oXZf2Uxt7wEBb9ZVcudUVI2bjMCXxp9uRKYJ58=
+        b=mhN5SU+htRZD3zlHwhVbpk+/3EakAMfaNzgp3az4pjJpj09xFfTA3lrTMqVBeK319
+         z3Xj2KScZ4RJddnEmvFrGK3OYqzj4TBmm7JNxQLfb0we4lAtKg4dwymW2bVqUc1q9q
+         kM3F/OOtBaUrdK1i6rTolW+lRwB4UZlpiGepgBTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Chen <matt.chen@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christoph Hellwig <hch@lst.de>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 026/138] iwlwifi: fix AX201 killer sku loading firmware issue
-Date:   Fri, 12 Jul 2019 14:18:10 +0200
-Message-Id: <20190712121629.706800471@linuxfoundation.org>
+Subject: [PATCH 5.1 083/138] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
+Date:   Fri, 12 Jul 2019 14:19:07 +0200
+Message-Id: <20190712121631.924549848@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,44 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b17dc0632a17fbfe66b34ee7c24e1cc10cfc503e ]
+[ Upstream commit 9739ab7eda459f0669ec9807e0d9be5020bab88c ]
 
-When try to bring up the AX201 2 killer sku, we
-run into:
-[81261.392463] iwlwifi 0000:01:00.0: loaded firmware version 46.8c20f243.0 op_mode iwlmvm
-[81261.407407] iwlwifi 0000:01:00.0: Detected Intel(R) Dual Band Wireless AX 22000, REV=0x340
-[81262.424778] iwlwifi 0000:01:00.0: Collecting data: trigger 16 fired.
-[81262.673359] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
-[81262.673365] iwlwifi 0000:01:00.0: Status: 0x00000000, count: -906373681
-[81262.673368] iwlwifi 0000:01:00.0: Loaded firmware version: 46.8c20f243.0
-[81262.673371] iwlwifi 0000:01:00.0: 0x507C015D | ADVANCED_SYSASSERT
+With the strict dma mask checking introduced with the switch to
+the generic DMA direct code common wifi chips on 32-bit powerbooks
+stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
+to allow them to reliably allocate dma coherent memory.
 
-Fix this issue by adding 2 more cfg to avoid modifying the
-original cfg configuration.
-
-Signed-off-by: Matt Chen <matt.chen@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
+Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/page.h         | 7 +++++++
+ arch/powerpc/mm/mem.c                   | 3 ++-
+ arch/powerpc/platforms/powermac/Kconfig | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 2a03d34afa3b..80695584e406 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3585,7 +3585,9 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 		}
- 	} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
- 		   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
--		   (trans->cfg != &iwl_ax200_cfg_cc ||
-+		   ((trans->cfg != &iwl_ax200_cfg_cc &&
-+		    trans->cfg != &killer1650x_2ax_cfg &&
-+		    trans->cfg != &killer1650w_2ax_cfg) ||
- 		    trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0)) {
- 		u32 hw_status;
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index ed870468ef6f..d408711d09fb 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -330,6 +330,13 @@ struct vm_area_struct;
+ #endif /* __ASSEMBLY__ */
+ #include <asm/slice.h>
  
++/*
++ * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
++ */
++#ifdef CONFIG_PPC32
++#define ARCH_ZONE_DMA_BITS 30
++#else
+ #define ARCH_ZONE_DMA_BITS 31
++#endif
+ 
+ #endif /* _ASM_POWERPC_PAGE_H */
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index f6787f90e158..b98ce400a889 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -255,7 +255,8 @@ void __init paging_init(void)
+ 	       (long int)((top_of_ram - total_ram) >> 20));
+ 
+ #ifdef CONFIG_ZONE_DMA
+-	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
++	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
++			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
+ #endif
+ 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+ #ifdef CONFIG_HIGHMEM
+diff --git a/arch/powerpc/platforms/powermac/Kconfig b/arch/powerpc/platforms/powermac/Kconfig
+index f834a19ed772..c02d8c503b29 100644
+--- a/arch/powerpc/platforms/powermac/Kconfig
++++ b/arch/powerpc/platforms/powermac/Kconfig
+@@ -7,6 +7,7 @@ config PPC_PMAC
+ 	select PPC_INDIRECT_PCI if PPC32
+ 	select PPC_MPC106 if PPC32
+ 	select PPC_NATIVE
++	select ZONE_DMA if PPC32
+ 	default y
+ 
+ config PPC_PMAC64
 -- 
 2.20.1
 
