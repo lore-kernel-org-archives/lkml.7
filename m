@@ -2,198 +2,377 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F37C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B324C742CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA7F208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4750F2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aVwLdTOJ"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ONgB6x3K";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="lwT6Tzs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfGLQPM (ORCPT
+        id S1727239AbfGLQPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:15:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33713 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfGLQPM (ORCPT
+        Fri, 12 Jul 2019 12:15:25 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:38490 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726449AbfGLQPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:15:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id r6so4454691qtt.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 09:15:11 -0700 (PDT)
+        Fri, 12 Jul 2019 12:15:25 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id ACD92C216D;
+        Fri, 12 Jul 2019 16:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562948124; bh=P7341mapqEM/2PaPN+qiuIYqsp4u8llhQvF0wUm40y4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ONgB6x3KkWcDKxPYT5PB75GHsVqBrtdNmjdB/uOfN6E0t/cis+cVsWtIfzl5TCCrL
+         hgLofINZAk99az0ko7Ih0dNX9h7IPVUh2p2N+bI4/xbQoULswvUdjelwZMNfQt5s9k
+         ch/9zFxUrEFUa6F8DhpQzlKSei4VDRgKYROecbw/+PJkXFV++/9/RSI6RgKTCzm5/0
+         C2ZKpfcbwAt3/c2mrVnc1w5D5PXXUjEUMAMq9DzDyNScm6Ez5M4gk4QcujvAgZiq5p
+         Aan9SR81a5jHZ+czreZ/XeihQUdhlLNzJribhjCvMEHKirFhPhgjNLJJ8UDU6Wkokn
+         uEcMuWsVV+PCA==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 85B29A023B;
+        Fri, 12 Jul 2019 16:15:13 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 12 Jul 2019 09:14:56 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 12 Jul 2019 09:14:56 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=NFa47ynvJNVKijb8ipsUqShcDYxM8i8guWDLcd1fJdY=;
-        b=aVwLdTOJhRLneF7C+yyvbofowq4Wx+ZKFxls9sj6tIGx/JIF/PM4blmdXborKxscoI
-         IJ2DjnJpQU4Y3VM3yTR6V+GOqlAZ/Vq93V0799wIaV/mLuvuxMp8B87UxYon0KxvWxb+
-         ekCZw6rtVBDvY3Ym53olKYaOebzKTZY4W8USH8ijznC1Q9Mkfr6FfnJ3l+cyDmanSg5f
-         caYbP52s8MdU+GTPSM/t+3CzXpvC9kTI0DCedsQp+jTY0WoGXth7Gl36VRz1LsiND5P/
-         OUP0yDmmjl43/qEzGe4cBLVcrhC8x/VoiucN/h00Fo7hJtIDuSFKGcs74Hw1Np6ugmNa
-         DIeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NFa47ynvJNVKijb8ipsUqShcDYxM8i8guWDLcd1fJdY=;
-        b=L8aexdcS2XCzl+yVizPzjPyQ//tyKFz148uYVAJNFwXwweesjL07YYbejtT+LuKS3z
-         Ko0N1JjRsb7ap/jNjfm4az4K3Vh3YMJ/oagTQk9LMIyzcOn2H29pMRDYOYroIZDcyNxD
-         fmuS83954n8O6XqMrrv/ktc7HzhZtW1Ilsp5cH1vYmab9jYM0YYCIfJ1Hw540yzdiM0w
-         oEtX6TSm+MgmOYvd5tg2wpoOG7lJoPvPT7NF4jUlTL9M38FJU42al23MlkvM6vneVGSV
-         lweg4qVaE0oFEqsfSFlltNKtGqrtll4jvsNuU5Qztip2h3ndTVK3kfsjHJMpKMxe9DJp
-         G+uA==
-X-Gm-Message-State: APjAAAVavItg4/UEI3zq8Z8MNVcRkIDpjDmpHLf/ujcyECopJp3SRLFW
-        GqTn3Hr4DDLvDBKSXL0w8UKv+w==
-X-Google-Smtp-Source: APXvYqzJpsr0V6tw0AJ2IK66ngUsHrsW73Hd904xsHbRKoy1m09e3gShD8WVbTlk123Mg3V+s0Swaw==
-X-Received: by 2002:ac8:2642:: with SMTP id v2mr6641202qtv.333.1562948111022;
-        Fri, 12 Jul 2019 09:15:11 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id r36sm1438381qte.71.2019.07.12.09.15.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 09:15:10 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     rostedt@goodmis.org, mingo@redhat.com
-Cc:     tj@kernel.org, dchinner@redhat.com, fengguang.wu@intel.com,
-        jack@suse.cz, linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] trace/writeback: fix Wstringop-truncation warnings
-Date:   Fri, 12 Jul 2019 12:14:47 -0400
-Message-Id: <1562948087-5374-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6DZCbbUJWRlsEaT1FQNb7WKmjfb8RoDnR2qlj8ZAfbY=;
+ b=lwT6Tzs5vrP3myPOi8NvHH+p6+B6BkAKd3BVFVgXrm1Vbm+1yx5KwZVRUWgp9rTl3sabWSPKGIkSIUukoRsEr3SvdWGfk9RjDIhXm6AU/gPE3qferVoNTWLmSaDCjiHP/rfhES+uVGVNokk+4r89zeuDj5QlAH9klL4uUN6eNWs=
+Received: from SN6PR12MB2655.namprd12.prod.outlook.com (52.135.103.20) by
+ SN6PR12MB2672.namprd12.prod.outlook.com (52.135.103.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Fri, 12 Jul 2019 16:14:54 +0000
+Received: from SN6PR12MB2655.namprd12.prod.outlook.com
+ ([fe80::1dbd:69dc:e782:92b6]) by SN6PR12MB2655.namprd12.prod.outlook.com
+ ([fe80::1dbd:69dc:e782:92b6%6]) with mapi id 15.20.2073.012; Fri, 12 Jul 2019
+ 16:14:54 +0000
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Vitor Soares <Vitor.Soares@synopsys.com>
+CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: RE: [PATCH v4 1/3] regmap: add i3c bus support
+Thread-Topic: [PATCH v4 1/3] regmap: add i3c bus support
+Thread-Index: AQHVOKiAIa725p4WnEuCvwLFFA54lqbHJDGAgAAEDZA=
+Date:   Fri, 12 Jul 2019 16:14:53 +0000
+Message-ID: <SN6PR12MB26554B97ADDB5E248844E97FAEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1562931742.git.vitor.soares@synopsys.com>
+        <7deb1300474b68ebb6fc3ecb02577e4f657250a5.1562931742.git.vitor.soares@synopsys.com>
+ <20190712175915.4c4260a9@linux.home>
+In-Reply-To: <20190712175915.4c4260a9@linux.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc29hcmVzXGFw?=
+ =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
+ =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctMmM4ZjE4NDItYTRjMC0xMWU5LTgyNGItYjgwOGNm?=
+ =?us-ascii?Q?NTlkN2ZjXGFtZS10ZXN0XDJjOGYxODQ0LWE0YzAtMTFlOS04MjRiLWI4MDhj?=
+ =?us-ascii?Q?ZjU5ZDdmY2JvZHkudHh0IiBzej0iNjMxOSIgdD0iMTMyMDc0MjE2OTEwMDMx?=
+ =?us-ascii?Q?OTM3IiBoPSJyTzdlclN5eHlCZ3VvZ3hCdk82U0VIN2p3Yk09IiBpZD0iIiBi?=
+ =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFCUUpBQUJC?=
+ =?us-ascii?Q?RE9udXpEalZBUUhCWDFkQi9OdFNBY0ZmVjBIODIxSU9BQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDa0NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBUUFCQUFBQVZ6ZGhHZ0FBQUFBQUFBQUFBQUFBQUo0QUFBQm1BR2tBYmdC?=
+ =?us-ascii?Q?aEFHNEFZd0JsQUY4QWNBQnNBR0VBYmdCdUFHa0FiZ0JuQUY4QWR3QmhBSFFB?=
+ =?us-ascii?Q?WlFCeUFHMEFZUUJ5QUdzQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FYd0J3?=
+ =?us-ascii?Q?QUdFQWNnQjBBRzRBWlFCeUFITUFYd0JuQUdZQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
+ =?us-ascii?Q?QUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJnQmxB?=
+ =?us-ascii?Q?SElBY3dCZkFITUFZUUJ0QUhNQWRRQnVBR2NBWHdCakFHOEFiZ0JtQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFHOEFk?=
+ =?us-ascii?Q?UUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBY3dCaEFH?=
+ =?us-ascii?Q?MEFjd0IxQUc0QVp3QmZBSElBWlFCekFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QnpBRzBBYVFCakFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQWRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFkQUJ6?=
+ =?us-ascii?Q?QUcwQVl3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCMUFHMEFZd0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWndCMEFITUFYd0J3QUhJQWJ3QmtBSFVBWXdCMEFGOEFk?=
+ =?us-ascii?Q?QUJ5QUdFQWFRQnVBR2tBYmdCbkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpB?=
+ =?us-ascii?Q?R0VBYkFCbEFITUFYd0JoQUdNQVl3QnZBSFVBYmdCMEFGOEFjQUJzQUdFQWJn?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhNQVlRQnNBR1VBY3dCZkFI?=
+ =?us-ascii?Q?RUFkUUJ2QUhRQVpRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFjd0J1QUhBQWN3QmZBR3dBYVFCakFHVUFiZ0J6QUdV?=
+ =?us-ascii?Q?QVh3QjBBR1VBY2dCdEFGOEFNUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHNEFjQUJ6QUY4QWJBQnBBR01BWlFCdUFITUFaUUJmQUhRQVpRQnlBRzBB?=
+ =?us-ascii?Q?WHdCekFIUUFkUUJrQUdVQWJnQjBBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSFlBWndCZkFHc0FaUUI1?=
+ =?us-ascii?Q?QUhjQWJ3QnlBR1FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=soares@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4c6a9948-50e3-490a-1bff-08d706e4133f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2672;
+x-ms-traffictypediagnostic: SN6PR12MB2672:
+x-microsoft-antispam-prvs: <SN6PR12MB26721B3CB0804713ED6056DDAEF20@SN6PR12MB2672.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00963989E5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(346002)(376002)(136003)(396003)(189003)(199004)(74316002)(3846002)(6116002)(33656002)(8936002)(81156014)(86362001)(6506007)(26005)(229853002)(305945005)(54906003)(81166006)(110136005)(8676002)(7736002)(478600001)(102836004)(99286004)(316002)(186003)(2906002)(7696005)(4326008)(25786009)(71190400001)(476003)(76176011)(6436002)(256004)(14444005)(6246003)(107886003)(9686003)(53936002)(55016002)(71200400001)(446003)(486006)(11346002)(76116006)(52536014)(5660300002)(66066001)(64756008)(66556008)(66476007)(66946007)(68736007)(66446008)(6636002)(14454004)(5024004)(42413003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR12MB2672;H:SN6PR12MB2655.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /8mXkWo8v97S9ZqqMAKBpo8RjWYs2xr7sbzO7/3EvvdvjYbmh3RS5p6AL6JuqC8Q3sYGL8vPwlyL+382LNFFlaxCdqznyBkEQIj1Gj+YgghLpylHIwOwRv3GG17ONmr7MWp3iCoMM0qMZiqTPPMAKqWozUGyRaC29Si+rtCsMHtxczNESPVIj4c8l4Qzvqpgc5RjEs4xtLCX8RnrEFReDERvi9Hxs2MXoQDJmnsAEph9UxDqBtv7Y9WK2fSHXe/cvR8//pVxPopCnBlIgbGRPukjzlG4qnzDvLzn04lK7LkhjhhyRhPOK1NWzQQUUxqHpsKH4UXesbA7bNtMk7Dbz1RItaiIQgF5HEffQ37uQWh3ztrD1JfkaMaOZaJ8YNpfLCmaLfH1TjjCv1FHScWlcBCkiMUz69tQ5r0IbIcrrVw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c6a9948-50e3-490a-1bff-08d706e4133f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2019 16:14:53.9918
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: soares@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2672
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many of those warnings.
+Hi Boris,
 
-In file included from ./arch/powerpc/include/asm/paca.h:15,
-                 from ./arch/powerpc/include/asm/current.h:13,
-                 from ./include/linux/thread_info.h:21,
-                 from ./include/asm-generic/preempt.h:5,
-                 from ./arch/powerpc/include/generated/asm/preempt.h:1,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:51,
-                 from fs/fs-writeback.c:19:
-In function 'strncpy',
-    inlined from 'perf_trace_writeback_page_template' at
-./include/trace/events/writeback.h:56:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified
-bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Date: Fri, Jul 12, 2019 at 16:59:15
 
-Fix it by using strlcpy() which will always be NUL-terminated instead of
-strncpy(). strlcpy() has already been used at some places in this file.
+> On Fri, 12 Jul 2019 13:53:28 +0200
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+>=20
+> > Add basic support for i3c bus.
+> > This is a simple implementation that only give support
+> > for SDR Read and Write commands.
+> >=20
+>=20
+> This patch has been applied by Mark already. Please make sure to drop
+> already applied patches when submitting a new version.
 
-Fixes: 455b2864686d ("writeback: Initial tracing support")
-Fixes: 028c2dd184c0 ("writeback: Add tracing to balance_dirty_pages")
-Fixes: e84d0a4f8e39 ("writeback: trace event writeback_queue_io")
-Fixes: b48c104d2211 ("writeback: trace event bdi_dirty_ratelimit")
-Fixes: cc1676d917f3 ("writeback: Move requeueing when I_SYNC set to writeback_sb_inodes()")
-Fixes: 9fb0a7da0c52 ("writeback: add more tracepoints")
+I mention that in the cover letter and I kept it for reference.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/trace/events/writeback.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Next time I will drop it.
 
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-index aa7f3aeac740..8e3b3c4fd964 100644
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -66,7 +66,7 @@
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name,
-+		strlcpy(__entry->name,
- 			mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)", 32);
- 		__entry->ino = mapping ? mapping->host->i_ino : 0;
- 		__entry->index = page->index;
-@@ -110,7 +110,7 @@
- 		struct backing_dev_info *bdi = inode_to_bdi(inode);
- 
- 		/* may be called for files on pseudo FSes w/ unregistered bdi */
--		strncpy(__entry->name,
-+		strlcpy(__entry->name,
- 			bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->state		= inode->i_state;
-@@ -190,7 +190,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name,
-+		strlcpy(__entry->name,
- 			dev_name(inode_to_bdi(inode)->dev), 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->sync_mode	= wbc->sync_mode;
-@@ -234,7 +234,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 		__field(unsigned int, cgroup_ino)
- 	),
- 	TP_fast_assign(
--		strncpy(__entry->name,
-+		strlcpy(__entry->name,
- 			wb->bdi->dev ? dev_name(wb->bdi->dev) : "(unknown)", 32);
- 		__entry->nr_pages = work->nr_pages;
- 		__entry->sb_dev = work->sb ? work->sb->s_dev : 0;
-@@ -288,7 +288,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 		__field(unsigned int, cgroup_ino)
- 	),
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(wb->bdi->dev), 32);
- 		__entry->cgroup_ino = __trace_wb_assign_cgroup(wb);
- 	),
- 	TP_printk("bdi %s: cgroup_ino=%u",
-@@ -310,7 +310,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 		__array(char, name, 32)
- 	),
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev), 32);
- 	),
- 	TP_printk("bdi %s",
- 		__entry->name
-@@ -335,7 +335,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev), 32);
- 		__entry->nr_to_write	= wbc->nr_to_write;
- 		__entry->pages_skipped	= wbc->pages_skipped;
- 		__entry->sync_mode	= wbc->sync_mode;
-@@ -386,7 +386,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 	),
- 	TP_fast_assign(
- 		unsigned long *older_than_this = work->older_than_this;
--		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(wb->bdi->dev), 32);
- 		__entry->older	= older_than_this ?  *older_than_this : 0;
- 		__entry->age	= older_than_this ?
- 				  (jiffies - *older_than_this) * 1000 / HZ : -1;
-@@ -597,7 +597,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name,
-+		strlcpy(__entry->name,
- 		        dev_name(inode_to_bdi(inode)->dev), 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->state		= inode->i_state;
-@@ -671,7 +671,7 @@ static inline unsigned int __trace_wbc_assign_cgroup(struct writeback_control *w
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name,
-+		strlcpy(__entry->name,
- 			dev_name(inode_to_bdi(inode)->dev), 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->state		= inode->i_state;
--- 
-1.8.3.1
+>=20
+> > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > ---
+> >  drivers/base/regmap/Kconfig      |  6 +++-
+> >  drivers/base/regmap/Makefile     |  1 +
+> >  drivers/base/regmap/regmap-i3c.c | 60 ++++++++++++++++++++++++++++++++=
+++++++++
+> >  include/linux/regmap.h           | 20 ++++++++++++++
+> >  4 files changed, 86 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/base/regmap/regmap-i3c.c
+> >=20
+> > diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+> > index 6ad5ef4..c8bbf53 100644
+> > --- a/drivers/base/regmap/Kconfig
+> > +++ b/drivers/base/regmap/Kconfig
+> > @@ -4,7 +4,7 @@
+> >  # subsystems should select the appropriate symbols.
+> > =20
+> >  config REGMAP
+> > -	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 ||=
+ REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ)
+> > +	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 ||=
+ REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
+> >  	select IRQ_DOMAIN if REGMAP_IRQ
+> >  	bool
+> > =20
+> > @@ -49,3 +49,7 @@ config REGMAP_SOUNDWIRE
+> >  config REGMAP_SCCB
+> >  	tristate
+> >  	depends on I2C
+> > +
+> > +config REGMAP_I3C
+> > +	tristate
+> > +	depends on I3C
+> > diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefil=
+e
+> > index f5b4e88..ff6c7d8 100644
+> > --- a/drivers/base/regmap/Makefile
+> > +++ b/drivers/base/regmap/Makefile
+> > @@ -16,3 +16,4 @@ obj-$(CONFIG_REGMAP_IRQ) +=3D regmap-irq.o
+> >  obj-$(CONFIG_REGMAP_W1) +=3D regmap-w1.o
+> >  obj-$(CONFIG_REGMAP_SOUNDWIRE) +=3D regmap-sdw.o
+> >  obj-$(CONFIG_REGMAP_SCCB) +=3D regmap-sccb.o
+> > +obj-$(CONFIG_REGMAP_I3C) +=3D regmap-i3c.o
+> > diff --git a/drivers/base/regmap/regmap-i3c.c b/drivers/base/regmap/reg=
+map-i3c.c
+> > new file mode 100644
+> > index 0000000..1578fb5
+> > --- /dev/null
+> > +++ b/drivers/base/regmap/regmap-i3c.c
+> > @@ -0,0 +1,60 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
+> > +
+> > +#include <linux/regmap.h>
+> > +#include <linux/i3c/device.h>
+> > +#include <linux/i3c/master.h>
+> > +#include <linux/module.h>
+> > +
+> > +static int regmap_i3c_write(void *context, const void *data, size_t co=
+unt)
+> > +{
+> > +	struct device *dev =3D context;
+> > +	struct i3c_device *i3c =3D dev_to_i3cdev(dev);
+> > +	struct i3c_priv_xfer xfers[] =3D {
+> > +		{
+> > +			.rnw =3D false,
+> > +			.len =3D count,
+> > +			.data.out =3D data,
+> > +		},
+> > +	};
+> > +
+> > +	return i3c_device_do_priv_xfers(i3c, xfers, 1);
+> > +}
+> > +
+> > +static int regmap_i3c_read(void *context,
+> > +			   const void *reg, size_t reg_size,
+> > +			   void *val, size_t val_size)
+> > +{
+> > +	struct device *dev =3D context;
+> > +	struct i3c_device *i3c =3D dev_to_i3cdev(dev);
+> > +	struct i3c_priv_xfer xfers[2];
+> > +
+> > +	xfers[0].rnw =3D false;
+> > +	xfers[0].len =3D reg_size;
+> > +	xfers[0].data.out =3D reg;
+> > +
+> > +	xfers[1].rnw =3D true;
+> > +	xfers[1].len =3D val_size;
+> > +	xfers[1].data.in =3D val;
+> > +
+> > +	return i3c_device_do_priv_xfers(i3c, xfers, 2);
+> > +}
+> > +
+> > +static struct regmap_bus regmap_i3c =3D {
+> > +	.write =3D regmap_i3c_write,
+> > +	.read =3D regmap_i3c_read,
+> > +};
+> > +
+> > +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
+> > +				      const struct regmap_config *config,
+> > +				      struct lock_class_key *lock_key,
+> > +				      const char *lock_name)
+> > +{
+> > +	return __devm_regmap_init(&i3c->dev, &regmap_i3c, &i3c->dev, config,
+> > +				  lock_key, lock_name);
+> > +}
+> > +EXPORT_SYMBOL_GPL(__devm_regmap_init_i3c);
+> > +
+> > +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
+> > +MODULE_DESCRIPTION("Regmap I3C Module");
+> > +MODULE_LICENSE("GPL v2");
+> > diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+> > index daeec7d..f65984d 100644
+> > --- a/include/linux/regmap.h
+> > +++ b/include/linux/regmap.h
+> > @@ -25,6 +25,7 @@ struct module;
+> >  struct clk;
+> >  struct device;
+> >  struct i2c_client;
+> > +struct i3c_device;
+> >  struct irq_domain;
+> >  struct slim_device;
+> >  struct spi_device;
+> > @@ -624,6 +625,10 @@ struct regmap *__devm_regmap_init_slimbus(struct s=
+lim_device *slimbus,
+> >  				 const struct regmap_config *config,
+> >  				 struct lock_class_key *lock_key,
+> >  				 const char *lock_name);
+> > +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
+> > +				 const struct regmap_config *config,
+> > +				 struct lock_class_key *lock_key,
+> > +				 const char *lock_name);
+> >  /*
+> >   * Wrapper for regmap_init macros to include a unique lockdep key and =
+name
+> >   * for each call. No-op if CONFIG_LOCKDEP is not set.
+> > @@ -982,6 +987,21 @@ bool regmap_ac97_default_volatile(struct device *d=
+ev, unsigned int reg);
+> >  #define devm_regmap_init_slimbus(slimbus, config)			\
+> >  	__regmap_lockdep_wrapper(__devm_regmap_init_slimbus, #config,	\
+> >  				slimbus, config)
+> > +
+> > +/**
+> > + * devm_regmap_init_i3c() - Initialise managed register map
+> > + *
+> > + * @i3c: Device that will be interacted with
+> > + * @config: Configuration for register map
+> > + *
+> > + * The return value will be an ERR_PTR() on error or a valid pointer
+> > + * to a struct regmap.  The regmap will be automatically freed by the
+> > + * device management code.
+> > + */
+> > +#define devm_regmap_init_i3c(i3c, config)				\
+> > +	__regmap_lockdep_wrapper(__devm_regmap_init_i3c, #config,	\
+> > +				i3c, config)
+> > +
+> >  int regmap_mmio_attach_clk(struct regmap *map, struct clk *clk);
+> >  void regmap_mmio_detach_clk(struct regmap *map);
+> >  void regmap_exit(struct regmap *map);
+
 
