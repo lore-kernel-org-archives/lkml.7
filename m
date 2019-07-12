@@ -2,51 +2,54 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A60FC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81171C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C0821670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F56216B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934550;
-	bh=rpOhO19P5RxT3c4tT3PD9onp8/BeCGDabR7yxt779pI=;
+	s=default; t=1562934556;
+	bh=MQW6gcqWb9Ou1jl2cgKzV6NWp7OyOLckPyJ0EKuQCLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gA2XLrMvR1FpAz7KRGN8dQ3OMAmQF23noQ7oZwJLizR/wCCPw7KFPO/yCw38owAz6
-	 HiUO5JJ6tro7LHCqZXqvQA28cQ1yauwdqGeWS4t0goRtp27LH9jEWhLW7Myqjmryh2
-	 M65vujxNweSKYu6C/iQKwEsz11CtxLwx73pVGZbQ=
+	b=bXvNUBIve7lFMvGAgClp/gpski9DClB4BGgA2SRaR1jxGboczAVTbLKn8+vqNnvPp
+	 2ZfA6Zk8jekIQyyrrbo7X+UgSaY/x7CfTHVE+MXWnolPLPUEv30Z+m8wsrZbZjO/6b
+	 BNccbt8JyA3lj4kmpniUfHOlGwh158kgAxD3iBUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfGLM3I (ORCPT
+        id S1728611AbfGLM3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43682 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbfGLM3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:04 -0400
+        id S1728389AbfGLM3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:29:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10CD6216B7;
-        Fri, 12 Jul 2019 12:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DCD208E4;
+        Fri, 12 Jul 2019 12:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934543;
-        bh=rpOhO19P5RxT3c4tT3PD9onp8/BeCGDabR7yxt779pI=;
+        s=default; t=1562934549;
+        bh=MQW6gcqWb9Ou1jl2cgKzV6NWp7OyOLckPyJ0EKuQCLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o14FGZYNhuU6VuRT+RVqO8E8nKpxkFsmuq8fH+CKk80jmymHUZ2qxR5v0zYOsIqTW
-         RSHKUiDKRPEiz2GiMAKkL9xllE1BFxxH7LdATZn+34o0lPBmhBu3ama+kGpSSpAyXL
-         m5PvGkfpDSE+ldfKakTBAOWUkppT7NX0l5MHKT/M=
+        b=ISva7/9JSrYKq+/prpgavgUYB5GeE/cT+ZFmMdYi/iKx1CJ0iJ+kC0DFYJuQux1cW
+         0ZacZfrlpvrQfHEVGsc3ddaH4K/rmZpw4JwNV4sJq03qyTYep1ShwfrHNF1ayeuF7I
+         gthRCrraMYQDYTnwtDOtFyJsN0AsV9Cp4T/2mr0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Sauer <ensonic@hora-obscura.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 091/138] ALSA: usb-audio: Fix parse of UAC2 Extension Units
-Date:   Fri, 12 Jul 2019 14:19:15 +0200
-Message-Id: <20190712121632.252081640@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 075/138] IB/hfi1: Handle wakeup of orphaned QPs for pio
+Date:   Fri, 12 Jul 2019 14:18:59 +0200
+Message-Id: <20190712121631.570931948@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -59,133 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+[ Upstream commit 099a884ba4c00145cef283d36e050726311c2e95 ]
 
-commit ca95c7bf3d29716916baccdc77c3c2284b703069 upstream.
+Once a send context is taken down due to a link failure, any QPs waiting
+for pio credits will stay on the waitlist indefinitely.
 
-Extension Unit (XU) is used to have a compatible layout with
-Processing Unit (PU) on UAC1, and the usb-audio driver code assumed it
-for parsing the descriptors.  Meanwhile, on UAC2, XU became slightly
-incompatible with PU; namely, XU has a one-byte bmControls bitmap
-while PU has two bytes bmControls bitmap.  This incompatibility
-results in the read of a wrong address for the last iExtension field,
-which ended up with an incorrect string for the mixer element name, as
-recently reported for Focusrite Scarlett 18i20 device.
+Fix by wakeing up all QPs linked to piowait list.
 
-This patch corrects this misalignment by introducing a couple of new
-macros and calling them depending on the descriptor type.
-
-Fixes: 23caaf19b11e ("ALSA: usb-mixer: Add support for Audio Class v2.0")
-Reported-by: Stefan Sauer <ensonic@hora-obscura.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/usb/audio.h |   37 +++++++++++++++++++++++++++++++++++++
- sound/usb/mixer.c              |   16 ++++++++++------
- 2 files changed, 47 insertions(+), 6 deletions(-)
+ drivers/infiniband/hw/hfi1/pio.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/include/uapi/linux/usb/audio.h
-+++ b/include/uapi/linux/usb/audio.h
-@@ -450,6 +450,43 @@ static inline __u8 *uac_processing_unit_
+diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
+index a1de566fe95e..1ee47838d4de 100644
+--- a/drivers/infiniband/hw/hfi1/pio.c
++++ b/drivers/infiniband/hw/hfi1/pio.c
+@@ -952,6 +952,22 @@ void sc_disable(struct send_context *sc)
+ 		}
  	}
- }
- 
-+/*
-+ * Extension Unit (XU) has almost compatible layout with Processing Unit, but
-+ * on UAC2, it has a different bmControls size (bControlSize); it's 1 byte for
-+ * XU while 2 bytes for PU.  The last iExtension field is a one-byte index as
-+ * well as iProcessing field of PU.
-+ */
-+static inline __u8 uac_extension_unit_bControlSize(struct uac_processing_unit_descriptor *desc,
-+						   int protocol)
-+{
-+	switch (protocol) {
-+	case UAC_VERSION_1:
-+		return desc->baSourceID[desc->bNrInPins + 4];
-+	case UAC_VERSION_2:
-+		return 1; /* in UAC2, this value is constant */
-+	case UAC_VERSION_3:
-+		return 4; /* in UAC3, this value is constant */
-+	default:
-+		return 1;
+ 	spin_unlock(&sc->release_lock);
++
++	write_seqlock(&sc->waitlock);
++	while (!list_empty(&sc->piowait)) {
++		struct iowait *wait;
++		struct rvt_qp *qp;
++		struct hfi1_qp_priv *priv;
++
++		wait = list_first_entry(&sc->piowait, struct iowait, list);
++		qp = iowait_to_qp(wait);
++		priv = qp->priv;
++		list_del_init(&priv->s_iowait.list);
++		priv->s_iowait.lock = NULL;
++		hfi1_qp_wakeup(qp, RVT_S_WAIT_PIO | HFI1_S_WAIT_PIO_DRAIN);
 +	}
-+}
++	write_sequnlock(&sc->waitlock);
 +
-+static inline __u8 uac_extension_unit_iExtension(struct uac_processing_unit_descriptor *desc,
-+						 int protocol)
-+{
-+	__u8 control_size = uac_extension_unit_bControlSize(desc, protocol);
-+
-+	switch (protocol) {
-+	case UAC_VERSION_1:
-+	case UAC_VERSION_2:
-+	default:
-+		return *(uac_processing_unit_bmControls(desc, protocol)
-+			 + control_size);
-+	case UAC_VERSION_3:
-+		return 0; /* UAC3 does not have this field */
-+	}
-+}
-+
- /* 4.5.2 Class-Specific AS Interface Descriptor */
- struct uac1_as_header_descriptor {
- 	__u8  bLength;			/* in bytes: 7 */
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2318,7 +2318,7 @@ static struct procunit_info extunits[] =
-  */
- static int build_audio_procunit(struct mixer_build *state, int unitid,
- 				void *raw_desc, struct procunit_info *list,
--				char *name)
-+				bool extension_unit)
- {
- 	struct uac_processing_unit_descriptor *desc = raw_desc;
- 	int num_ins;
-@@ -2335,6 +2335,8 @@ static int build_audio_procunit(struct m
- 	static struct procunit_info default_info = {
- 		0, NULL, default_value_info
- 	};
-+	const char *name = extension_unit ?
-+		"Extension Unit" : "Processing Unit";
- 
- 	if (desc->bLength < 13) {
- 		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
-@@ -2448,7 +2450,10 @@ static int build_audio_procunit(struct m
- 		} else if (info->name) {
- 			strlcpy(kctl->id.name, info->name, sizeof(kctl->id.name));
- 		} else {
--			nameid = uac_processing_unit_iProcessing(desc, state->mixer->protocol);
-+			if (extension_unit)
-+				nameid = uac_extension_unit_iExtension(desc, state->mixer->protocol);
-+			else
-+				nameid = uac_processing_unit_iProcessing(desc, state->mixer->protocol);
- 			len = 0;
- 			if (nameid)
- 				len = snd_usb_copy_string_desc(state->chip,
-@@ -2481,10 +2486,10 @@ static int parse_audio_processing_unit(s
- 	case UAC_VERSION_2:
- 	default:
- 		return build_audio_procunit(state, unitid, raw_desc,
--				procunits, "Processing Unit");
-+					    procunits, false);
- 	case UAC_VERSION_3:
- 		return build_audio_procunit(state, unitid, raw_desc,
--				uac3_procunits, "Processing Unit");
-+					    uac3_procunits, false);
- 	}
+ 	spin_unlock_irq(&sc->alloc_lock);
  }
  
-@@ -2495,8 +2500,7 @@ static int parse_audio_extension_unit(st
- 	 * Note that we parse extension units with processing unit descriptors.
- 	 * That's ok as the layout is the same.
- 	 */
--	return build_audio_procunit(state, unitid, raw_desc,
--				    extunits, "Extension Unit");
-+	return build_audio_procunit(state, unitid, raw_desc, extunits, true);
- }
- 
- /*
+-- 
+2.20.1
+
 
 
