@@ -2,89 +2,99 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB61C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A7FC742B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89ADA2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D5B2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfGLJN5 (ORCPT
+        id S1726762AbfGLJOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:13:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54274 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfGLJN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:13:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 93769AC63;
-        Fri, 12 Jul 2019 09:13:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 3D21A1E43CB; Thu, 11 Jul 2019 17:41:11 +0200 (CEST)
-Date:   Thu, 11 Jul 2019 17:41:11 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190711154111.GA29284@quack2.suse.cz>
-References: <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
- <20190705191004.GC32320@bombadil.infradead.org>
- <CAPcyv4jVARa38Qc4NjQ04wJ4ZKJ6On9BbJgoL95wQqU-p-Xp_w@mail.gmail.com>
- <20190710190204.GB14701@quack2.suse.cz>
- <20190710201539.GN32320@bombadil.infradead.org>
- <20190710202647.GA7269@quack2.suse.cz>
- <20190711141350.GS32320@bombadil.infradead.org>
- <20190711152550.GT32320@bombadil.infradead.org>
+        Fri, 12 Jul 2019 05:14:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:40649 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfGLJOK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 05:14:10 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N1fei-1iRkwp00C0-0123fC; Fri, 12 Jul 2019 11:13:59 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] dma: ste_dma40: fix unneeded variable warning
+Date:   Fri, 12 Jul 2019 11:13:30 +0200
+Message-Id: <20190712091357.744515-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711152550.GT32320@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:IqYlz58Jar5GCfS+BZKg5bdqodHpJJt/MRJG83qdyqbt2wfk7ay
+ jgv77Bskqmv+zThYp5kQxBEEFUeJK/7TEWSZWua867UbUso4FFhHQKnxPAM/k8dUhftd1aX
+ y7qCx5kTs23ZNbzvo1LLw0T8py9EL/oY97aciP7U+nRyTwDquP+Q3p4UaA05YRQuw1y8Kge
+ hBQ0KI5XLuPXrw1icvKAQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6sMZM3JYPV8=:jyJYAUc8zscanrU6pozE1G
+ AX+FwJn88+Pr8mfWbhlSKByrpoMhzgLZCQYLOWr0kfZzOWog3drPLTiCLB1w80P7ooJSYjYs4
+ Q/r+AzrbR6rxiU165D24jzF8eRXYFFa40MctPdcGfVURNTGf1UMWxg5z5AXM4KfegjpbJTY5+
+ OPIF6md7cG9OA/ysWXOFLV1PQsndISFclli8Sl967GgvqSp9Znh+94EUaNHeWvEXLKEN0kygR
+ CAgixXrKg/apAFlYh7wViBwKEy1Laxfds4HLQH8R52roaRnOqTUV51JUubf26QH78X/NsrtLB
+ XNjW1HlYcf41tdHVnDj3QZDycjtEbdVA7qnfVDzi5WQATtIg32WC8WNSCobXgKXKdZrSugMF1
+ zzozNu/5LLK83os0EscPV+OYd29crmsV7myk/5kpZ79nONHb5eakWYLhGbmTXkJg2eFfdr9nu
+ KRgmTtmChv5BscbncoZF/SZq11klmYDmzaxmNhumLqO03tMj3PVPQlfcbTbh5EVb4+srb24rl
+ BKWrKgkoB868mZGy1L7Yc98QnjbkjxQx0GEQjeH+208gc/qogGi/yqNTex07RNhSu1akZL+r2
+ 0kjgrM0lkGEFH7qj6uo500ZqYWnmX/LDbgSvOPOv6ghorjrW2HgdIzvFjDVFanpRB/993IYe1
+ LJZcifHQGymfvYOAKR0IUYyeuoqXMqd5rWrB9EbHJrBLR6Dkf39jFwIVPxynKNbnOnSnpl5z1
+ rJG1dNpLPukoJm1tg3QKCmoTAKqZ0a2X5H1/PA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-07-19 08:25:50, Matthew Wilcox wrote:
-> On Thu, Jul 11, 2019 at 07:13:50AM -0700, Matthew Wilcox wrote:
-> > However, the XA_RETRY_ENTRY might be a good choice.  It doesn't normally
-> > appear in an XArray (it may appear if you're looking at a deleted node,
-> > but since we're holding the lock, we can't see deleted nodes).
-> 
-...
+clang-9 points out that there are two variables that depending on the
+configuration may only be used in an ARRAY_SIZE() expression but not
+referenced:
 
-> @@ -254,7 +267,7 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
->  static void put_unlocked_entry(struct xa_state *xas, void *entry)
->  {
->  	/* If we were the only waiter woken, wake the next one */
-> -	if (entry)
-> +	if (entry && dax_is_conflict(entry))
+drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs[] = {
+           ^
+drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs_chan[] = {
 
-This should be !dax_is_conflict(entry)...
+Mark these __maybe_unused to shut up the warning.
 
->  		dax_wake_entry(xas, entry, false);
->  }
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma/ste_dma40.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Otherwise the patch looks good to me so feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-once you fix this.
-
-								Honza
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index 89d710899010..de8bfd9a76e9 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -142,7 +142,7 @@ enum d40_events {
+  * when the DMA hw is powered off.
+  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
+  */
+-static u32 d40_backup_regs[] = {
++static __maybe_unused u32 d40_backup_regs[] = {
+ 	D40_DREG_LCPA,
+ 	D40_DREG_LCLA,
+ 	D40_DREG_PRMSE,
+@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
+ 
+ #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
+ 
+-static u32 d40_backup_regs_chan[] = {
++static __maybe_unused u32 d40_backup_regs_chan[] = {
+ 	D40_CHAN_REG_SSCFG,
+ 	D40_CHAN_REG_SSELT,
+ 	D40_CHAN_REG_SSPTR,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.0
+
