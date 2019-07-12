@@ -2,123 +2,139 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E712FC742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A090EC742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C6920645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839DA20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfGLMnp (ORCPT
+        id S1727965AbfGLMoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:43:45 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:49266 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfGLMno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:43:44 -0400
-Received: from [167.98.27.226] (helo=[10.35.6.255])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hlutl-0005uA-Hz; Fri, 12 Jul 2019 13:43:37 +0100
-Subject: Re: [PATCH v1 08/11] dt-bindings: display/bridge: Add bindings for
- ti949
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@lists.codethink.co.uk,
-        Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
-References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
- <20190611140412.32151-9-michael.drake@codethink.co.uk>
- <20190611181351.GW5016@pendragon.ideasonboard.com>
-From:   Michael Drake <michael.drake@codethink.co.uk>
-Message-ID: <534c485b-2074-1fcc-2d8f-11e5a9f278e4@codethink.co.uk>
-Date:   Fri, 12 Jul 2019 13:43:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 08:44:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32362 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726449AbfGLMoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:44:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 05:43:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
+   d="scan'208";a="166671615"
+Received: from jroll-mobl.ger.corp.intel.com (HELO localhost) ([10.249.35.79])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Jul 2019 05:43:56 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     tweek@google.com, matthewgarrett@google.com,
+        jorhand@linux.microsoft.com, rdunlap@infradead.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v2] tpm: Document UEFI event log quirks
+Date:   Fri, 12 Jul 2019 15:43:45 +0300
+Message-Id: <20190712124353.9264-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190611181351.GW5016@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+There are some weird quirks when it comes to UEFI event log. Provide a
+brief introduction to TPM event log mechanism and describe the quirks
+and how they can be sorted out.
 
-On 11/06/2019 19:13, Laurent Pinchart wrote:
-> Hi Michael,
-> 
-> Thank you for the patch.
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+v2: Fixed one type, adjusted the last paragraph and added the file
+    to index.rst
+ Documentation/security/tpm/index.rst         |  1 +
+ Documentation/security/tpm/tpm_event_log.rst | 56 ++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
+ create mode 100644 Documentation/security/tpm/tpm_event_log.rst
 
-My pleasure, and thank you for the feedback!
-
-> On Tue, Jun 11, 2019 at 03:04:09PM +0100, Michael Drake wrote:
->> Adds device tree bindings for:
->>
->>   TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
->>
->> It supports instantiation via device tree / ACPI table.
->>
->> The device has the compatible string "ti,ds90ub949", and
->> and allows an arrray of strings to be provided as regulator
->> names to enable for operation of the device.
-> 
-> All the comments I made regarding the ds90ub948 DT bindings apply here
-> too. Same for the comments related to the driver, they apply to the
-> subsequent patches in this series.
-
-OK, understood.
-
-Thank you very much for the review.
-
->> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
->> Cc: Patrick Glaser <pglaser@tesla.com>
->> Cc: Nate Case <ncase@tesla.com>
->> ---
->>  .../bindings/display/bridge/ti,ds90ub949.txt  | 24 +++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
->> new file mode 100644
->> index 000000000000..3ba3897d5e81
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
->> @@ -0,0 +1,24 @@
->> +TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
->> +============================================================
->> +
->> +This is the binding for Texas Instruments DS90UB949-Q1 bridge serializer.
->> +
->> +This device supports I2C only.
->> +
->> +Required properties:
->> +
->> +- compatible: "ti,ds90ub949"
->> +
->> +Optional properties:
->> +
->> +- regulators: List of regulator name strings to enable for operation of device.
->> +
->> +Example
->> +-------
->> +
->> +ti949: ds90ub949@0 {
->> +	compatible = "ti,ds90ub949";
->> +
->> +	regulators: "vcc",
->> +	            "vcc_hdmi";
->> +};
-> 
-
+diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
+index 15783668644f..9e0815cb1e7f 100644
+--- a/Documentation/security/tpm/index.rst
++++ b/Documentation/security/tpm/index.rst
+@@ -4,5 +4,6 @@ Trusted Platform Module documentation
+ 
+ .. toctree::
+ 
++   tpm_event_log
+    tpm_ftpm_tee
+    tpm_vtpm_proxy
+diff --git a/Documentation/security/tpm/tpm_event_log.rst b/Documentation/security/tpm/tpm_event_log.rst
+new file mode 100644
+index 000000000000..b8c39a1a3f33
+--- /dev/null
++++ b/Documentation/security/tpm/tpm_event_log.rst
+@@ -0,0 +1,56 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=============
++TPM Event Log
++=============
++
++| Authors:
++| Stefan Berger <stefanb@linux.vnet.ibm.com>
++
++This document briefly describes what TPM log is and how it is handed
++over from the preboot firmware to the operating system.
++
++Introduction
++============
++
++The preboot firmware maintains an event log that gets new entries every
++time something gets hashed by it to any of the PCR registers. The events
++are segregated by their type and contain the value of the hashed PCR
++register. Typically, the preboot firmware will hash the components to
++who execution is to be handed over or actions relevant to the boot
++process.
++
++The main application for this is remote attestation and the reason why
++it is useful is nicely put in the very first section of [1]:
++
++"Attestation is used to provide information about the platform’s state
++to a challenger. However, PCR contents are difficult to interpret;
++therefore, attestation is typically more useful when the PCR contents
++are accompanied by a measurement log. While not trusted on their own,
++the measurement log contains a richer set of information than do the PCR
++contents. The PCR contents are used to provide the validation of the
++measurement log."
++
++UEFI event log
++==============
++
++UEFI provided event log has a few somewhat weird quirks.
++
++Before calling ExitBootServices() Linux EFI stub copies the event log to
++a custom configuration table defined by the stub itself. Unfortanely,
++the events generated by ExitBootServices() don't end up in the table.
++
++The firmware provides so called final events configuration table to sort
++out this issue. Events gets mirrored to this table after the first time
++EFI_TCG2_PROTOCOL.GetEventLog() gets called.
++
++This introduces another problem: nothing guarantees that it is not called
++before the Linux EFI stub gets to run. Thus, it needs to calculate and save the
++final events table size while the stub is still running to the custom
++configuration table so that the TPM driver can later on skip these events when
++concatenating two halves of the event log from the custom configuration table
++and the final events table.
++
++[1]
++https://trustedcomputinggroup.org/resource/pc-client-specific-platform-firmware-profile-specification/
++[2] The final concatenation is done in drivers/char/tpm/eventlog/efi.c
 -- 
-Michael Drake                 https://www.codethink.co.uk/
+2.20.1
+
