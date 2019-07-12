@@ -2,194 +2,145 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C63EC742D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E592C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583CB2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7473F205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 18:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRgLmceC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSqm1Ltn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfGLSBj (ORCPT
+        id S1727444AbfGLSCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 14:01:39 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44834 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbfGLSBi (ORCPT
+        Fri, 12 Jul 2019 14:02:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46072 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfGLSCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 14:01:38 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so5104893plr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 11:01:37 -0700 (PDT)
+        Fri, 12 Jul 2019 14:02:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so10787160wre.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 11:01:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=b6hwgXA922LSiU77QdmFAK6M0uj4ZKo/a8bhNCXvaZI=;
-        b=gRgLmceCvYbTpcuxiDu6B/wRGW1Sid2xetbUgH5NjoJvHuQbGTLboGv+fsjK3hC49X
-         QG5c4Kmv5UEsJ5iOSkPs6oEdqMdj1lD8qw4KZpG4ZixNZipR316XpAJuIuzjbblIlT89
-         mmMWoyLeawiIelt0BspNgZVnxqP3P4ctHnbk/eNKv/FLPjXGK4docqWF4rsePqdKeg3z
-         rIxfuf/sxPP646RbS/qtyKxYAYA0eB+OkbVjDxvXPZE+/wtbZC+z0cOAgaILAjSS5Wji
-         psWSnMi9FGsl7PQxS+Qp6sOtd0IuZbnSf7vaq5jiCF3fH/OVPetpOqBSbam8HYTExlpV
-         Irbw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1KGfkWXQEB4DpNuxrw2Ty2JDtJAoJ1RvfNqKFWK4TmA=;
+        b=jSqm1LtnSvPzjsEt3Vm0O1vNGwSwHmI0yx63fhSHLkuYxhZ5z9qmHWioZIgaScrqeR
+         etUMH8wAhEv2dyR+4cu8JZWOlJSA69URvDJsccJpw2L2VVaI8I/CxatTLZJEFmtnDS5x
+         yTx6821ZqeKE/r67dpU3wAKXBMTPmR3JGBlm6wprm6SWTyROE+2VZ72oDI/jta6aIVT3
+         d0Gw+oc4kXxjL7jkNap/mPbG9qYuRLooCq8Pi0eN5guhVXbPez5ycnH9Ftm0afPSdwLK
+         6TroVa8wgcDnXqi2lBHeVzOH9OykYjIamQs1F8IBh3+5cI51mJEP0flcXy1o4MD6Wfhc
+         RrNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=b6hwgXA922LSiU77QdmFAK6M0uj4ZKo/a8bhNCXvaZI=;
-        b=L5Pydmh1hqUD+p7BGR0CjzGlEOxS/zRUtDnd6EUQkJLQKHsa/UnLPhxpc/z1mB4Ahm
-         Vq/DPEdL7yJbsm8JhUWQI/G80q4g/b1ktIk93RrMmHiWjU0xY2NLQjHXRuyEHkoIfX6B
-         MziuRKV+vRZEQTOPi9f86BvM1GZYPOgzlBl8s/NjoQw7KMbJe5su9NvyzFXCiiNCpHhZ
-         m1h/PvdxT5THVfalQ1hiCKperbMnOTAinkQNPQFIy1+bihU7XVaZSscSqUmRFU/RF6FQ
-         2AgBFGY+zfTdmjATrM43F9nNohhizWzgFKycOL7FV80LLcThw2iWleqdMQ/WH5VXYO1c
-         VrwQ==
-X-Gm-Message-State: APjAAAXPMejTo4YSoZaREGC5HUZ5C6aBOw/ivuSzMBY6dLvu4+J37iGn
-        WkYR1wTDIWgNS7r0/J3F950NYg==
-X-Google-Smtp-Source: APXvYqwowaQhDJ+ynRQ8i6JkQUSv4PZETsbhuVaHAkZ3NWQw8s3foPy1DmT+joDB8E8cPRg+iBm7xw==
-X-Received: by 2002:a17:902:6a2:: with SMTP id 31mr12391837plh.296.1562954496844;
-        Fri, 12 Jul 2019 11:01:36 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id d14sm13175357pfo.154.2019.07.12.11.01.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 11:01:35 -0700 (PDT)
-From:   bsegall@google.com
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Paul Turner <pjt@google.com>
-Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
-        <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
-        <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
-        <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
-        <20190711095102.GX3402@hirez.programming.kicks-ass.net>
-        <xm26v9w8jwgl.fsf@bsegall-linux.svl.corp.google.com>
-        <CAC=E7cV4sO50NpYOZ06n_BkZTcBqf1KQp83prc+oave3ircBrw@mail.gmail.com>
-Date:   Fri, 12 Jul 2019 11:01:34 -0700
-In-Reply-To: <CAC=E7cV4sO50NpYOZ06n_BkZTcBqf1KQp83prc+oave3ircBrw@mail.gmail.com>
-        (Dave Chiluk's message of "Thu, 11 Jul 2019 18:48:24 -0500")
-Message-ID: <xm26r26vjfnl.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1KGfkWXQEB4DpNuxrw2Ty2JDtJAoJ1RvfNqKFWK4TmA=;
+        b=k4vDKY+fDuSl1UrOtIOljNCSKPavQLT/Z2nQZ5T5V8sMD2I7ivwSgDRc4ucdB0FvbI
+         dDQFGRJ37E9RcSZr//y5xg/tdxZirlQLNUZRffEKHLyqAaLDiQCfEAq5OdaBXJZAmNFH
+         XqGuquK00V/WM7RScI/iywq+y1C7lzrArJ9Kvjt4QVZTOj5DKaQzluoy6CsSWcHUm3Mh
+         GkZQY+aBJqPlKcmYFEfhTQ2GmhjzFFAe2RHQ4O2mYHTUZA8kLHbJKWzWhQjbgBaGbxk4
+         UFJP3Ud5yXtpZdtiXZKzlYrzj55mhoWPfULCGSLqAeqNySE8O6aKl3WSKDuMCSzAs3BF
+         G54Q==
+X-Gm-Message-State: APjAAAW+2WWpc1ZPRSKZSnBSxxUEFPpv5coH70C8IQpVUHPH3yaxJszA
+        +0NH7WMED+tv/yPrVnoUCpm/QJRGwX3LiUJis1lQdQ==
+X-Google-Smtp-Source: APXvYqwss/WvLjL/LGiOM8mHDUS8Lv25N53N+kxrEQ5ijpXyO7RwUkDOJ7LCTtzdDh/UYPw/K3XQuWp7G/oNIyvp/EE=
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr12513676wrw.323.1562954518109;
+ Fri, 12 Jul 2019 11:01:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190712094118.1559434-1-arnd@arndb.de>
+In-Reply-To: <20190712094118.1559434-1-arnd@arndb.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 12 Jul 2019 14:01:46 -0400
+Message-ID: <CADnq5_McVegix-m87OwHUvk80NdsFZPQ7d0X8qQtUf84h+Fg1A@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/amdgpu: hide #warning for missing DC config
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Jack Xiao <Jack.Xiao@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Huang Rui <ray.huang@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Chiluk <chiluk+linux@indeed.com> writes:
-
-> So I spent some more time testing this new patch as is *(interrupts disabled).  I know I probably should have fixed the patch, but it's hard to get time on big test hardware sometimes, and I was already well along my way with testing.
+On Fri, Jul 12, 2019 at 5:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> In regards to the quota usage overage I was seeing earlier: I have a
-> theory as to what might be happening here, and I'm pretty sure it's
-> related to the IRQs being disabled during the rq->lock walk. I think
-> that the main fast thread was able to use an excess amount of quota
-> because the timer interrupt meant to stop it wasn't being handled
-> timely due to the interrupts being disabled. On my 8 core machine this
-> resulted in a what looked like simply improved usage of the quota, but
-> when I ran the test on an 80 core machine I saw a massive overage of
-> cpu usage when running fibtest. Specifically when running fibtest for
-> 5 seconds with 50ms quota/100ms period expecting ~2500ms of quota
-> usage; I got 3731 ms of cpu usage which was an unexpected overage of
-> 1231ms. Is that a reasonable theory?
+> It is annoying to have #warnings that trigger in randconfig
+> builds like
+>
+> drivers/gpu/drm/amd/amdgpu/soc15.c:653:3: error: "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
+> drivers/gpu/drm/amd/amdgpu/nv.c:400:3: error: "Enable CONFIG_DRM_AMD_DC for display support on navi."
+>
+> Remove these and rely on the users to turn these on.
 
-Tht doesn't seem likely - taking 1ms would be way longer than I'd expect
-to begin with, and runtime_remaining can go negative for that sort of
-reason anyways assuming the irq time is even counted towards the task.
-Also I don't that the enable-irqs version will help for the scheduler
-tick at least without rt patchsets.
+Is there some sort of informational message we could use instead?
+Unless you are a server user, most end users want this option enabled.
 
-That is still also too much for what I was thinking of though. I'll have
-to look into this more.
+Alex
 
 >
-> I'll try to get some time again tomorrow to test with IRQs disabled before the walk.  Ben if you have a chance to fix and resend the patch that'd help.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/nv.c    | 2 --
+>  drivers/gpu/drm/amd/amdgpu/soc15.c | 4 ----
+>  2 files changed, 6 deletions(-)
 >
-> I'm really starting to think that simply removing the quota expiration
-> may be the best solution here.  Mathmatically it works out, it makes
-> the code simpler, it doesn't have any of the lock walk issues, it
-> doesn't add extra latency or overhead due to the slack timer,
-
-It works out _for the job that is supposed to be throttled_. If the job
-then gets a burst of actually-expensive work on many threads it can then
-use NCPUs extra ms, adding latency to any other job on the system. Given
-that it's still only 1ms on each runqueue, maybe this isn't the end of
-the world, but the fail case does exist.
-
-(We have to do exactly the same locking stuff on distribute, both more
-rarely on the period timer, and on the currently existing slack timer)
-
-> and that behavior is exactly what the kernel was doing for 5 years with few complaints about overage afaik.
+> diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
+> index 9253c03d387a..10ec0e81ee58 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/nv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/nv.c
+> @@ -396,8 +396,6 @@ int nv_set_ip_blocks(struct amdgpu_device *adev)
+>  #if defined(CONFIG_DRM_AMD_DC)
+>                 else if (amdgpu_device_has_dc_support(adev))
+>                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
+> -#else
+> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on navi."
+>  #endif
+>                 amdgpu_device_ip_block_add(adev, &gfx_v10_0_ip_block);
+>                 amdgpu_device_ip_block_add(adev, &sdma_v5_0_ip_block);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> index 87152d8ef0df..90fb0149fbea 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> @@ -649,8 +649,6 @@ int soc15_set_ip_blocks(struct amdgpu_device *adev)
+>  #if defined(CONFIG_DRM_AMD_DC)
+>                 else if (amdgpu_device_has_dc_support(adev))
+>                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
+> -#else
+> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
+>  #endif
+>                 if (!(adev->asic_type == CHIP_VEGA20 && amdgpu_sriov_vf(adev))) {
+>                         amdgpu_device_ip_block_add(adev, &uvd_v7_0_ip_block);
+> @@ -671,8 +669,6 @@ int soc15_set_ip_blocks(struct amdgpu_device *adev)
+>  #if defined(CONFIG_DRM_AMD_DC)
+>                 else if (amdgpu_device_has_dc_support(adev))
+>                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
+> -#else
+> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
+>  #endif
+>                 amdgpu_device_ip_block_add(adev, &vcn_v1_0_ip_block);
+>                 break;
+> --
+> 2.20.0
 >
-> Either way, I'm very glad that we are getting to the end of this one, and all solutions appear to solve the core of the problem.  I thank you all the work you guys have put into this.
->
-> On Thu, Jul 11, 2019 at 12:46 PM <bsegall@google.com> wrote:
->
->  Peter Zijlstra <peterz@infradead.org> writes:
->
->  > FWIW, good to see progress, still waiting for you guys to agree :-)
->  >
->  > On Mon, Jul 01, 2019 at 01:15:44PM -0700, bsegall@google.com wrote:
->  >
->  >> - Taking up-to-every rq->lock is bad and expensive and 5ms may be too
->  >>   short a delay for this. I haven't tried microbenchmarks on the cost of
->  >>   this vs min_cfs_rq_runtime = 0 vs baseline.
->  >
->  > Yes, that's tricky, SGI/HPE have definite ideas about that.
->  >
->  >> @@ -4781,12 +4790,41 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
->  >>   */
->  >>  static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
->  >>  {
->  >> -    u64 runtime = 0, slice = sched_cfs_bandwidth_slice();
->  >> +    u64 runtime = 0;
->  >>      unsigned long flags;
->  >>      u64 expires;
->  >> +    struct cfs_rq *cfs_rq, *temp;
->  >> +    LIST_HEAD(temp_head);
->  >> +
->  >> +    local_irq_save(flags);
->  >> +
->  >> +    raw_spin_lock(&cfs_b->lock);
->  >> +    cfs_b->slack_started = false;
->  >> +    list_splice_init(&cfs_b->slack_cfs_rq, &temp_head);
->  >> +    raw_spin_unlock(&cfs_b->lock);
->  >> +
->  >> +
->  >> +    /* Gather all left over runtime from all rqs */
->  >> +    list_for_each_entry_safe(cfs_rq, temp, &temp_head, slack_list) {
->  >> +            struct rq *rq = rq_of(cfs_rq);
->  >> +            struct rq_flags rf;
->  >> +
->  >> +            rq_lock(rq, &rf);
->  >> +
->  >> +            raw_spin_lock(&cfs_b->lock);
->  >> +            list_del_init(&cfs_rq->slack_list);
->  >> +            if (!cfs_rq->nr_running && cfs_rq->runtime_remaining > 0 &&
->  >> +                cfs_rq->runtime_expires == cfs_b->runtime_expires) {
->  >> +                    cfs_b->runtime += cfs_rq->runtime_remaining;
->  >> +                    cfs_rq->runtime_remaining = 0;
->  >> +            }
->  >> +            raw_spin_unlock(&cfs_b->lock);
->  >> +
->  >> +            rq_unlock(rq, &rf);
->  >> +    }
->  >
->  > But worse still, you take possibly every rq->lock without ever
->  > re-enabling IRQs.
->  >
->
->  Yeah, I'm not sure why I did that, it isn't correctness.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
