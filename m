@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E56C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF9DC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7163220645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC1C20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934916;
-	bh=NBEgzH7zDHs1KXoYrcYiQsc8peFfybDbqtRpyWgw9Bw=;
+	s=default; t=1562934919;
+	bh=QmKnUG+IKIzYAACa0xAZB+0Oimp/n+KJPMPj8GJ7ajc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s4emBhWwKQ4qV5mjs65eRG6pxZWxG9G+e25q87wZ1jrk9RTW2yfg41F1utF5PTWVt
-	 KjY4OCHaJ/K+CxDyqgLcH6/kDcO2XsGBPaLZ+W2ejLiW51IPlIAd2JnYZiiGdN5SoD
-	 +chP8oVDhBQUcH6z+i3H8mhZ8acXt2WF1qsEbypU=
+	b=jCihRfAD6YcreSUrpm1c2G7OSIjgO0T3y57tRXYhDT0kAmL/85SLpr2nGoqxsDrZP
+	 pZV3PTb8+pz0TqTK3pVDFE1daeEl5w6y7eDdMlSBxKWp5X/sek4X37XiAYBAlsHY/B
+	 AXSEoDDyn7o9DCSvoLn9E0avovzGDtfRU3bMGGFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfGLMfP (ORCPT
+        id S1729790AbfGLMeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55416 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729018AbfGLMfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:35:05 -0400
+        id S1729213AbfGLMeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:34:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5798C20645;
-        Fri, 12 Jul 2019 12:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AE320645;
+        Fri, 12 Jul 2019 12:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934903;
-        bh=NBEgzH7zDHs1KXoYrcYiQsc8peFfybDbqtRpyWgw9Bw=;
+        s=default; t=1562934885;
+        bh=QmKnUG+IKIzYAACa0xAZB+0Oimp/n+KJPMPj8GJ7ajc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tG21NupdsLk0KFxqzvEbGMxBmPQNEmDAcfEgt97mBCMyjyQLVOrzxXbDpxBZC7w0A
-         yK9ale2NWQHO3IPWvIblACJEyBkIHnD5z8W4KSEz3IYy2nh9DuSdPHAL15/Fnv1TKP
-         nA+Gi6UlpwWSkf8MnKZWsV/WSmSYsNDWdTlioCew=
+        b=TTTxNfKt/X6aVAvdBfyzCVFa5JkmFBQS+Y720iqms4DhixSnh/sYmLh6EFvuRBfMu
+         7gvd9i/qyHZn01HmSB/KnUqUJQI2rpnLKfPbmwSnGfg8O7IHCAOloLLCbVjglEXA+y
+         TJsMcubCV7roMonkN/03Li021sQFQVv7E8bZJ4t0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishnu Dasa <vdasa@vmware.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: [PATCH 5.2 52/61] VMCI: Fix integer overflow in VMCI handle arrays
-Date:   Fri, 12 Jul 2019 14:20:05 +0200
-Message-Id: <20190712121623.506839436@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 5.2 46/61] coresight: etb10: Do not call smp_processor_id from preemptible
+Date:   Fri, 12 Jul 2019 14:19:59 +0200
+Message-Id: <20190712121623.098342297@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,374 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishnu DASA <vdasa@vmware.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 1c2eb5b2853c9f513690ba6b71072d8eb65da16a upstream.
+commit 730766bae3280a25d40ea76a53dc6342e84e6513 upstream.
 
-The VMCI handle array has an integer overflow in
-vmci_handle_arr_append_entry when it tries to expand the array. This can be
-triggered from a guest, since the doorbell link hypercall doesn't impose a
-limit on the number of doorbell handles that a VM can create in the
-hypervisor, and these handles are stored in a handle array.
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it is not bound to a CPU, we
+use the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-In this change, we introduce a mandatory max capacity for handle
-arrays/lists to avoid excessive memory usage.
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
 
-Signed-off-by: Vishnu Dasa <vdasa@vmware.com>
-Reviewed-by: Adit Ranadive <aditr@vmware.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
-Cc: stable <stable@vger.kernel.org>
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
+
+Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org> # 4.6+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/vmw_vmci/vmci_context.c      |   80 ++++++++++++++++--------------
- drivers/misc/vmw_vmci/vmci_handle_array.c |   38 +++++++++-----
- drivers/misc/vmw_vmci/vmci_handle_array.h |   29 +++++++---
- include/linux/vmw_vmci_defs.h             |   11 +++-
- 4 files changed, 99 insertions(+), 59 deletions(-)
+ drivers/hwtracing/coresight/coresight-etb10.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/misc/vmw_vmci/vmci_context.c
-+++ b/drivers/misc/vmw_vmci/vmci_context.c
-@@ -21,6 +21,9 @@
- #include "vmci_driver.h"
- #include "vmci_event.h"
- 
-+/* Use a wide upper bound for the maximum contexts. */
-+#define VMCI_MAX_CONTEXTS 2000
-+
- /*
-  * List of current VMCI contexts.  Contexts can be added by
-  * vmci_ctx_create() and removed via vmci_ctx_destroy().
-@@ -117,19 +120,22 @@ struct vmci_ctx *vmci_ctx_create(u32 cid
- 	/* Initialize host-specific VMCI context. */
- 	init_waitqueue_head(&context->host_context.wait_queue);
- 
--	context->queue_pair_array = vmci_handle_arr_create(0);
-+	context->queue_pair_array =
-+		vmci_handle_arr_create(0, VMCI_MAX_GUEST_QP_COUNT);
- 	if (!context->queue_pair_array) {
- 		error = -ENOMEM;
- 		goto err_free_ctx;
- 	}
- 
--	context->doorbell_array = vmci_handle_arr_create(0);
-+	context->doorbell_array =
-+		vmci_handle_arr_create(0, VMCI_MAX_GUEST_DOORBELL_COUNT);
- 	if (!context->doorbell_array) {
- 		error = -ENOMEM;
- 		goto err_free_qp_array;
- 	}
- 
--	context->pending_doorbell_array = vmci_handle_arr_create(0);
-+	context->pending_doorbell_array =
-+		vmci_handle_arr_create(0, VMCI_MAX_GUEST_DOORBELL_COUNT);
- 	if (!context->pending_doorbell_array) {
- 		error = -ENOMEM;
- 		goto err_free_db_array;
-@@ -204,7 +210,7 @@ static int ctx_fire_notification(u32 con
- 	 * We create an array to hold the subscribers we find when
- 	 * scanning through all contexts.
- 	 */
--	subscriber_array = vmci_handle_arr_create(0);
-+	subscriber_array = vmci_handle_arr_create(0, VMCI_MAX_CONTEXTS);
- 	if (subscriber_array == NULL)
- 		return VMCI_ERROR_NO_MEM;
- 
-@@ -623,20 +629,26 @@ int vmci_ctx_add_notification(u32 contex
- 
- 	spin_lock(&context->lock);
- 
--	list_for_each_entry(n, &context->notifier_list, node) {
--		if (vmci_handle_is_equal(n->handle, notifier->handle)) {
--			exists = true;
--			break;
-+	if (context->n_notifiers < VMCI_MAX_CONTEXTS) {
-+		list_for_each_entry(n, &context->notifier_list, node) {
-+			if (vmci_handle_is_equal(n->handle, notifier->handle)) {
-+				exists = true;
-+				break;
-+			}
- 		}
--	}
- 
--	if (exists) {
--		kfree(notifier);
--		result = VMCI_ERROR_ALREADY_EXISTS;
-+		if (exists) {
-+			kfree(notifier);
-+			result = VMCI_ERROR_ALREADY_EXISTS;
-+		} else {
-+			list_add_tail_rcu(&notifier->node,
-+					  &context->notifier_list);
-+			context->n_notifiers++;
-+			result = VMCI_SUCCESS;
-+		}
- 	} else {
--		list_add_tail_rcu(&notifier->node, &context->notifier_list);
--		context->n_notifiers++;
--		result = VMCI_SUCCESS;
-+		kfree(notifier);
-+		result = VMCI_ERROR_NO_MEM;
- 	}
- 
- 	spin_unlock(&context->lock);
-@@ -721,8 +733,7 @@ static int vmci_ctx_get_chkpt_doorbells(
- 					u32 *buf_size, void **pbuf)
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -373,12 +373,10 @@ static void *etb_alloc_buffer(struct cor
+ 			      struct perf_event *event, void **pages,
+ 			      int nr_pages, bool overwrite)
  {
- 	struct dbell_cpt_state *dbells;
--	size_t n_doorbells;
--	int i;
-+	u32 i, n_doorbells;
+-	int node, cpu = event->cpu;
++	int node;
+ 	struct cs_buffers *buf;
  
- 	n_doorbells = vmci_handle_arr_get_size(context->doorbell_array);
- 	if (n_doorbells > 0) {
-@@ -860,7 +871,8 @@ int vmci_ctx_rcv_notifications_get(u32 c
- 	spin_lock(&context->lock);
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
  
- 	*db_handle_array = context->pending_doorbell_array;
--	context->pending_doorbell_array = vmci_handle_arr_create(0);
-+	context->pending_doorbell_array =
-+		vmci_handle_arr_create(0, VMCI_MAX_GUEST_DOORBELL_COUNT);
- 	if (!context->pending_doorbell_array) {
- 		context->pending_doorbell_array = *db_handle_array;
- 		*db_handle_array = NULL;
-@@ -942,12 +954,11 @@ int vmci_ctx_dbell_create(u32 context_id
- 		return VMCI_ERROR_NOT_FOUND;
- 
- 	spin_lock(&context->lock);
--	if (!vmci_handle_arr_has_entry(context->doorbell_array, handle)) {
--		vmci_handle_arr_append_entry(&context->doorbell_array, handle);
--		result = VMCI_SUCCESS;
--	} else {
-+	if (!vmci_handle_arr_has_entry(context->doorbell_array, handle))
-+		result = vmci_handle_arr_append_entry(&context->doorbell_array,
-+						      handle);
-+	else
- 		result = VMCI_ERROR_DUPLICATE_ENTRY;
--	}
- 
- 	spin_unlock(&context->lock);
- 	vmci_ctx_put(context);
-@@ -1083,15 +1094,16 @@ int vmci_ctx_notify_dbell(u32 src_cid,
- 			if (!vmci_handle_arr_has_entry(
- 					dst_context->pending_doorbell_array,
- 					handle)) {
--				vmci_handle_arr_append_entry(
-+				result = vmci_handle_arr_append_entry(
- 					&dst_context->pending_doorbell_array,
- 					handle);
--
--				ctx_signal_notify(dst_context);
--				wake_up(&dst_context->host_context.wait_queue);
--
-+				if (result == VMCI_SUCCESS) {
-+					ctx_signal_notify(dst_context);
-+					wake_up(&dst_context->host_context.wait_queue);
-+				}
-+			} else {
-+				result = VMCI_SUCCESS;
- 			}
--			result = VMCI_SUCCESS;
- 		}
- 		spin_unlock(&dst_context->lock);
- 	}
-@@ -1118,13 +1130,11 @@ int vmci_ctx_qp_create(struct vmci_ctx *
- 	if (context == NULL || vmci_handle_is_invalid(handle))
- 		return VMCI_ERROR_INVALID_ARGS;
- 
--	if (!vmci_handle_arr_has_entry(context->queue_pair_array, handle)) {
--		vmci_handle_arr_append_entry(&context->queue_pair_array,
--					     handle);
--		result = VMCI_SUCCESS;
--	} else {
-+	if (!vmci_handle_arr_has_entry(context->queue_pair_array, handle))
-+		result = vmci_handle_arr_append_entry(
-+			&context->queue_pair_array, handle);
-+	else
- 		result = VMCI_ERROR_DUPLICATE_ENTRY;
--	}
- 
- 	return result;
- }
---- a/drivers/misc/vmw_vmci/vmci_handle_array.c
-+++ b/drivers/misc/vmw_vmci/vmci_handle_array.c
-@@ -8,24 +8,29 @@
- #include <linux/slab.h>
- #include "vmci_handle_array.h"
- 
--static size_t handle_arr_calc_size(size_t capacity)
-+static size_t handle_arr_calc_size(u32 capacity)
- {
--	return sizeof(struct vmci_handle_arr) +
-+	return VMCI_HANDLE_ARRAY_HEADER_SIZE +
- 	    capacity * sizeof(struct vmci_handle);
- }
- 
--struct vmci_handle_arr *vmci_handle_arr_create(size_t capacity)
-+struct vmci_handle_arr *vmci_handle_arr_create(u32 capacity, u32 max_capacity)
- {
- 	struct vmci_handle_arr *array;
- 
-+	if (max_capacity == 0 || capacity > max_capacity)
-+		return NULL;
-+
- 	if (capacity == 0)
--		capacity = VMCI_HANDLE_ARRAY_DEFAULT_SIZE;
-+		capacity = min((u32)VMCI_HANDLE_ARRAY_DEFAULT_CAPACITY,
-+			       max_capacity);
- 
- 	array = kmalloc(handle_arr_calc_size(capacity), GFP_ATOMIC);
- 	if (!array)
- 		return NULL;
- 
- 	array->capacity = capacity;
-+	array->max_capacity = max_capacity;
- 	array->size = 0;
- 
- 	return array;
-@@ -36,27 +41,34 @@ void vmci_handle_arr_destroy(struct vmci
- 	kfree(array);
- }
- 
--void vmci_handle_arr_append_entry(struct vmci_handle_arr **array_ptr,
--				  struct vmci_handle handle)
-+int vmci_handle_arr_append_entry(struct vmci_handle_arr **array_ptr,
-+				 struct vmci_handle handle)
- {
- 	struct vmci_handle_arr *array = *array_ptr;
- 
- 	if (unlikely(array->size >= array->capacity)) {
- 		/* reallocate. */
- 		struct vmci_handle_arr *new_array;
--		size_t new_capacity = array->capacity * VMCI_ARR_CAP_MULT;
--		size_t new_size = handle_arr_calc_size(new_capacity);
-+		u32 capacity_bump = min(array->max_capacity - array->capacity,
-+					array->capacity);
-+		size_t new_size = handle_arr_calc_size(array->capacity +
-+						       capacity_bump);
-+
-+		if (array->size >= array->max_capacity)
-+			return VMCI_ERROR_NO_MEM;
- 
- 		new_array = krealloc(array, new_size, GFP_ATOMIC);
- 		if (!new_array)
--			return;
-+			return VMCI_ERROR_NO_MEM;
- 
--		new_array->capacity = new_capacity;
-+		new_array->capacity += capacity_bump;
- 		*array_ptr = array = new_array;
- 	}
- 
- 	array->entries[array->size] = handle;
- 	array->size++;
-+
-+	return VMCI_SUCCESS;
- }
- 
- /*
-@@ -66,7 +78,7 @@ struct vmci_handle vmci_handle_arr_remov
- 						struct vmci_handle entry_handle)
- {
- 	struct vmci_handle handle = VMCI_INVALID_HANDLE;
--	size_t i;
-+	u32 i;
- 
- 	for (i = 0; i < array->size; i++) {
- 		if (vmci_handle_is_equal(array->entries[i], entry_handle)) {
-@@ -101,7 +113,7 @@ struct vmci_handle vmci_handle_arr_remov
-  * Handle at given index, VMCI_INVALID_HANDLE if invalid index.
-  */
- struct vmci_handle
--vmci_handle_arr_get_entry(const struct vmci_handle_arr *array, size_t index)
-+vmci_handle_arr_get_entry(const struct vmci_handle_arr *array, u32 index)
- {
- 	if (unlikely(index >= array->size))
- 		return VMCI_INVALID_HANDLE;
-@@ -112,7 +124,7 @@ vmci_handle_arr_get_entry(const struct v
- bool vmci_handle_arr_has_entry(const struct vmci_handle_arr *array,
- 			       struct vmci_handle entry_handle)
- {
--	size_t i;
-+	u32 i;
- 
- 	for (i = 0; i < array->size; i++)
- 		if (vmci_handle_is_equal(array->entries[i], entry_handle))
---- a/drivers/misc/vmw_vmci/vmci_handle_array.h
-+++ b/drivers/misc/vmw_vmci/vmci_handle_array.h
-@@ -9,32 +9,41 @@
- #define _VMCI_HANDLE_ARRAY_H_
- 
- #include <linux/vmw_vmci_defs.h>
-+#include <linux/limits.h>
- #include <linux/types.h>
- 
--#define VMCI_HANDLE_ARRAY_DEFAULT_SIZE 4
--#define VMCI_ARR_CAP_MULT 2	/* Array capacity multiplier */
--
- struct vmci_handle_arr {
--	size_t capacity;
--	size_t size;
-+	u32 capacity;
-+	u32 max_capacity;
-+	u32 size;
-+	u32 pad;
- 	struct vmci_handle entries[];
- };
- 
--struct vmci_handle_arr *vmci_handle_arr_create(size_t capacity);
-+#define VMCI_HANDLE_ARRAY_HEADER_SIZE				\
-+	offsetof(struct vmci_handle_arr, entries)
-+/* Select a default capacity that results in a 64 byte sized array */
-+#define VMCI_HANDLE_ARRAY_DEFAULT_CAPACITY			6
-+/* Make sure that the max array size can be expressed by a u32 */
-+#define VMCI_HANDLE_ARRAY_MAX_CAPACITY				\
-+	((U32_MAX - VMCI_HANDLE_ARRAY_HEADER_SIZE - 1) /	\
-+	sizeof(struct vmci_handle))
-+
-+struct vmci_handle_arr *vmci_handle_arr_create(u32 capacity, u32 max_capacity);
- void vmci_handle_arr_destroy(struct vmci_handle_arr *array);
--void vmci_handle_arr_append_entry(struct vmci_handle_arr **array_ptr,
--				  struct vmci_handle handle);
-+int vmci_handle_arr_append_entry(struct vmci_handle_arr **array_ptr,
-+				 struct vmci_handle handle);
- struct vmci_handle vmci_handle_arr_remove_entry(struct vmci_handle_arr *array,
- 						struct vmci_handle
- 						entry_handle);
- struct vmci_handle vmci_handle_arr_remove_tail(struct vmci_handle_arr *array);
- struct vmci_handle
--vmci_handle_arr_get_entry(const struct vmci_handle_arr *array, size_t index);
-+vmci_handle_arr_get_entry(const struct vmci_handle_arr *array, u32 index);
- bool vmci_handle_arr_has_entry(const struct vmci_handle_arr *array,
- 			       struct vmci_handle entry_handle);
- struct vmci_handle *vmci_handle_arr_get_handles(struct vmci_handle_arr *array);
- 
--static inline size_t vmci_handle_arr_get_size(
-+static inline u32 vmci_handle_arr_get_size(
- 	const struct vmci_handle_arr *array)
- {
- 	return array->size;
---- a/include/linux/vmw_vmci_defs.h
-+++ b/include/linux/vmw_vmci_defs.h
-@@ -62,9 +62,18 @@ enum {
- 
- /*
-  * A single VMCI device has an upper limit of 128MB on the amount of
-- * memory that can be used for queue pairs.
-+ * memory that can be used for queue pairs. Since each queue pair
-+ * consists of at least two pages, the memory limit also dictates the
-+ * number of queue pairs a guest can create.
-  */
- #define VMCI_MAX_GUEST_QP_MEMORY (128 * 1024 * 1024)
-+#define VMCI_MAX_GUEST_QP_COUNT  (VMCI_MAX_GUEST_QP_MEMORY / PAGE_SIZE / 2)
-+
-+/*
-+ * There can be at most PAGE_SIZE doorbells since there is one doorbell
-+ * per byte in the doorbell bitmap page.
-+ */
-+#define VMCI_MAX_GUEST_DOORBELL_COUNT PAGE_SIZE
- 
- /*
-  * Queues with pre-mapped data pages must be small, so that we don't pin
+ 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+ 	if (!buf)
 
 
