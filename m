@@ -2,107 +2,116 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482E1C742C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2889C742C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2172421537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BMS+LBZ1"
+	by mail.kernel.org (Postfix) with ESMTP id D57C221019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfGLPPc (ORCPT
+        id S1727132AbfGLPRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:15:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44485 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfGLPPc (ORCPT
+        Fri, 12 Jul 2019 11:17:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44192 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGLPRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:15:32 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so20997610iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2opEnBuVBF2b4E5QanZT3B1PxQTl1jpFqVeaeD4Jvac=;
-        b=BMS+LBZ1HOJ+oPmT+jj9cCB2CMuhLD9hOgL1EGxhXgjcCFU+uRhdlTEHJctcvcAfAC
-         93xCyhVww0XoYzbRJRJbpZBsYO3Bm1q/MlPGVvrNSmWS6qfkXQz8BXXUjRJsSG2wkg1B
-         oUhykgoEyU+U5WMY8pngtLd8pQv2pIfwtfSV3MVO+kJRkbbD+jxi3cwlmNKFU6maqscI
-         iIz0r5umTAoC5x9daY2n1PVhdWCYjSYP5JjtzczVfPEaIuMScEe303uYSFPRxEjPxbTY
-         wo2uvzLdn+ynMMpp8KKHkC8MInm7bHAk0Gz2dmFjF6xGUKzzWIe57apPN0x9lMRWIqqQ
-         wFDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2opEnBuVBF2b4E5QanZT3B1PxQTl1jpFqVeaeD4Jvac=;
-        b=QueSMYtIT7wCOI7Bqb9SlDPjQi8pkSz0Z4zNjV6nOnNSga+f1Rlmi7uY9gSXGS0nY4
-         CySGexSpFdgOy6G/jleSx/1GIf5liLPwI/hktYPyDp1oOa9YlmP6Ny2Gc/LejMIT4++1
-         e3FyXx75GhbtL3SPu6OqM3kc9XVcOMJmaakuZOuDsd8axoIuskvSKGfeLAufN/9//6BI
-         2LCgG3wvh++wKz+Qvocden2dm7d9P+8jTZdmhdlFVarQUMlH6gDDUrcY+rwfXTphsBsR
-         bkf70PE1eHPje4cDFDutxciO4afFHVjNm4up9UAzUHHrVVVL/jb9UTkzQnAzqjV410V7
-         Jj4w==
-X-Gm-Message-State: APjAAAWbsviybZr2YKfIAnZ6wnad1wUnvh6ohOHQgh3kIMdQ9UR9QOit
-        EvzD1VCCHIWTfiSYgZeTaN70uGs0u/o=
-X-Google-Smtp-Source: APXvYqxNzK45erpGagcbIG8GrfCOqm46U/1e0qdgZFVftYMWqnRGnTZfkMPl7UYDH4Wj4yMq6IdAPw==
-X-Received: by 2002:a02:b812:: with SMTP id o18mr1716469jam.64.1562944530468;
-        Fri, 12 Jul 2019 08:15:30 -0700 (PDT)
-Received: from [192.168.1.158] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id e22sm6692139iob.66.2019.07.12.08.15.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 08:15:29 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: add entry for block io cgroup
-To:     Tejun Heo <tj@kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org
-References: <156284038698.3851.6531328622774377848.stgit@buzz>
- <20190712142502.GA680549@devbig004.ftw2.facebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <82bc7337-c48f-7559-bd9b-6a21ccbfceb0@kernel.dk>
-Date:   Fri, 12 Jul 2019 09:15:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 11:17:22 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hlxIF-0003Mo-Lj; Fri, 12 Jul 2019 17:17:03 +0200
+Date:   Fri, 12 Jul 2019 17:16:58 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+In-Reply-To: <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de> <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+ <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190712142502.GA680549@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/19 8:25 AM, Tejun Heo wrote:
-> Hello, Konstantin.
+On Fri, 12 Jul 2019, Peter Zijlstra wrote:
+> On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
 > 
-> On Thu, Jul 11, 2019 at 01:19:47PM +0300, Konstantin Khlebnikov wrote:
->> +CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)
->> +L:	cgroups@vger.kernel.org
->> +F:	Documentation/cgroup-v1/blkio-controller.rst
->> +F:	block/blk-cgroup.c
->> +F:	include/linux/blk-cgroup.h
->> +F:	block/blk-throttle.c
->> +F:	block/blk-iolatency.c
->> +F:	block/bfq-cgroup.c
+> > I think that's precisely what makes ASI and PTI different and independent.
+> > PTI is just about switching between userland and kernel page-tables, while
+> > ASI is about switching page-table inside the kernel. You can have ASI without
+> > having PTI. You can also use ASI for kernel threads so for code that won't
+> > be triggered from userland and so which won't involve PTI.
 > 
-> Given that blkcg changes are often entangled with generic block
-> changes and best routed through block tree, I think it'd be useful to
-> add the followings.
+> PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
+> ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
 > 
-> M:      Tejun Heo <tj@kernel.org>
-> M:      Jens Axboe <axboe@kernel.dk>
-> L:      linux-block@vger.kernel.org
-> T:      git git://git.kernel.dk/linux-block
+> See how very similar they are?
+> 
+> Furthermore, to recover SMT for userspace (under MDS) we not only need
+> core-scheduling but core-scheduling per address space. And ASI was
+> specifically designed to help mitigate the trainwreck just described.
+> 
+> By explicitly exposing (hopefully harmless) part of the kernel to MDS,
+> we reduce the part that needs core-scheduling and thus reduce the rate
+> the SMT siblngs need to sync up/schedule.
+> 
+> But looking at it that way, it makes no sense to retain 3 address
+> spaces, namely:
+> 
+>   user / kernel exposed / kernel private.
+> 
+> Specifically, it makes no sense to expose part of the kernel through MDS
+> but not through Meltdow. Therefore we can merge the user and kernel
+> exposed address spaces.
+> 
+> And then we've fully replaced PTI.
+> 
+> So no, they're not orthogonal.
 
-I applied the patch with these additions.
+Right. If we decide to expose more parts of the kernel mappings then that's
+just adding more stuff to the existing user (PTI) map mechanics.
 
--- 
-Jens Axboe
+As a consequence the CR3 switching points become different or can be
+consolidated and that can be handled right at those switching points
+depending on static keys or alternatives as we do today with PTI and other
+mitigations.
 
+All of that can do without that obscure "state machine" which is solely
+there to duct-tape the complete lack of design. The same applies to that
+mapping thing. Just mapping randomly selected parts by sticking them into
+an array is a non-maintainable approach. This needs proper separation of
+text and data sections, so violations of the mapping constraints can be
+statically analyzed. Depending solely on the page fault at run time for
+analysis is just bound to lead to hard to diagnose failures in the field.
+
+TBH we all know already that this can be done and that this will solve some
+of the issues caused by the speculation mess, so just writing some hastily
+cobbled together POC code which explodes just by looking at it, does not
+lead to anything else than time waste on all ends.
+
+This first needs a clear definition of protection scope. That scope clearly
+defines the required mappings and consequently the transition requirements
+which provide the necessary transition points for flipping CR3.
+
+If we have agreed on that, then we can think about the implementation
+details.
+
+Thanks,
+
+	tglx
