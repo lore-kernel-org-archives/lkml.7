@@ -2,118 +2,126 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9CAC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C521C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C61E208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562937012;
-	bh=Y4fu5b10Lz5nbSlHs+QhwIoZP7DL4Djo1lCeP2/TmUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TyJLzcMUO/JahwSRQbk0zbrwsYFOXXF7XYvfZqyFa8CGIBVjxN4m4PclfF8CZRLLE
-	 tVP8MhtsQTGbt/Zkq8X3L3FjpEOcif5dECeHg51vb5AanYFWMJrDcmtc1cVYwROzk3
-	 FaJA+OEncvf2znWOYajYyifIvMfdmAalKeoCFV2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 1DD8E2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfGLNKL (ORCPT
+        id S1727761AbfGLNKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfGLNKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:10:10 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 856892080A;
-        Fri, 12 Jul 2019 13:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562937009;
-        bh=Y4fu5b10Lz5nbSlHs+QhwIoZP7DL4Djo1lCeP2/TmUo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dQsV3LQzb+J5e3BU3RqQsQM2ATNq6oPo4YsTpDBACSBNWRbwMVlcCeTq9nTfUGTG3
-         XRb6/+OiYHi9mlb4RhYeN5ifVgxs/Jxcg0/zYY4AS2KQt7JcWAiv9JKa8jC5Ui7OvO
-         7F2T43bDVtSoFftpq/ow5AhgX/ju8tz7kNndfkLA=
-Date:   Fri, 12 Jul 2019 08:10:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org,
-        alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com,
-        talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/8] PCI/VPD: Add VPD release quirk for Amazon Annapurna
- Labs host bridge
-Message-ID: <20190712131008.GC46935@google.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
- <20190710164519.17883-4-jonnyc@amazon.com>
+        Fri, 12 Jul 2019 09:10:37 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38300 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfGLNKg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:10:36 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlvJN-0007n9-6P; Fri, 12 Jul 2019 13:10:05 +0000
+Date:   Fri, 12 Jul 2019 14:10:05 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 01/10] namei: obey trailing magic-link DAC permissions
+Message-ID: <20190712131005.GM17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-2-cyphar@cyphar.com>
+ <20190712041454.GG17978@ZenIV.linux.org.uk>
+ <20190712122017.xkowq2cjreylpotm@yavin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710164519.17883-4-jonnyc@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190712122017.xkowq2cjreylpotm@yavin>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 05:55:56PM +0300, Jonathan Chocron wrote:
-> The Amazon Annapurna Labs pcie host bridge exposes the VPD capability,
-> but there is no actual support for it.
-
-s/pcie/PCIe/
-s/host bridge/Root Port/
-
-> The reason for not using the already existing quirk_blacklist_vpd()
-> is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
-> entry still exists. When running lspci -vv, for example, this
-> results in the following error:
+On Fri, Jul 12, 2019 at 10:20:17PM +1000, Aleksa Sarai wrote:
+> On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > On Sun, Jul 07, 2019 at 12:57:28AM +1000, Aleksa Sarai wrote:
+> > > @@ -514,7 +516,14 @@ static void set_nameidata(struct nameidata *p, int dfd, struct filename *name)
+> > >  	p->stack = p->internal;
+> > >  	p->dfd = dfd;
+> > >  	p->name = name;
+> > > -	p->total_link_count = old ? old->total_link_count : 0;
+> > > +	p->total_link_count = 0;
+> > > +	p->acc_mode = 0;
+> > > +	p->opath_mask = FMODE_PATH_READ | FMODE_PATH_WRITE;
+> > > +	if (old) {
+> > > +		p->total_link_count = old->total_link_count;
+> > > +		p->acc_mode = old->acc_mode;
+> > > +		p->opath_mask = old->opath_mask;
+> > > +	}
+> > 
+> > Huh?  Could somebody explain why traversals of NFS4 referrals should inherit
+> > ->acc_mode and ->opath_mask?
 > 
-> pcilib: sysfs_read_vpd: read failed: Input/output error
-> 
-> This quirk removes the sysfs entry, which avoids the error print.
-> 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> ---
->  drivers/pci/vpd.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 4963c2e2bd4c..b594b2895ffe 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -644,4 +644,16 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->  			quirk_chelsio_extend_vpd);
->  
-> +static void quirk_al_vpd_release(struct pci_dev *dev)
-> +{
-> +	if (dev->vpd) {
-> +		pci_vpd_release(dev);
-> +		dev->vpd = NULL;
-> +		pci_warn(dev, FW_BUG "Annapurna Labs pcie quirk - Releasing VPD capability (No support for VPD read/write transactions)\n");
+> I'll be honest -- I don't understand what set_nameidata() did so I just
+> did what I thought would be an obvious change (to just copy the
+> contents). I thought it was related to some aspect of the symlink stack
+> handling.
 
-The "Annapurna Labs pcie quirk" text is superfluous.
+No.  It's handling of (very rare) nested pathwalk.  The only case I can think
+of is handling of NFS4 referrals - they are triggered by ->d_automount()
+and include NFS4 mount.  Which does internal pathwalk of its own, to get
+to the root of subtree being automounted.
 
-> +	}
-> +}
-> +
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_vpd_release);
+NFS has its own recursion protection on that path (no deeper nesting than
+one level of referral traversals), but there some nesting is inevitable;
+we do get another nameidata instance on stack.  And for nd_jump_link() we
+need to keep track of the innermost one.
 
-Why DECLARE_PCI_FIXUP_CLASS_FINAL()?  See comments on the MSI-X quirk
-patch.
+For symlinks nothing of that sort happens - they are dealt with on the same
+struct nameidata.  ->total_link_count copying is there for one reason only -
+we want the total amount of symlinks traversed during the pathwalk (including
+the referral processing, etc.) to count towards MAXSYMLINKS check.  It could've
+been moved from nameidata to task_struct, but it's cheaper to handle it that
+way.
 
-> +
->  #endif
-> -- 
-> 2.17.1
-> 
-> 
+Again, nesting is *rare*.
+
+> In that case, should they both be set to 0 on set_nameidata()? This will
+> mean that fd re-opening (or magic-link opening) through a
+> set_nameidata() would always fail.
+
+Huh?  set_nameidata() is done for *all* instances - it's pretty much the
+constructor of that object (and restore_nameidata() - a destructor).
+Everything goes through it.
+
+And again, I'm not sure we want these fields in nameidata - IMO they belong
+in open_flags.  Things like e.g. stat() don't need them at all.
+
+Incidentally, O_PATH opening of symlinks combined with subsequent procfs
+symlink traversals is worth testing - that's where the things get subtle
+and that's where it's easy to get in trouble on modifications.
