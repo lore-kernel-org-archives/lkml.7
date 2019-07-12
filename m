@@ -2,190 +2,339 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE0CC742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2A6C742B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C7420863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1F7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 11:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KsdqWnAh";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KvrDS3ET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfGLLVJ (ORCPT
+        id S1726792AbfGLL3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 07:21:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:56070 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfGLLVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:21:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A855B28;
-        Fri, 12 Jul 2019 04:21:08 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3DB73F71F;
-        Fri, 12 Jul 2019 04:21:07 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 12:21:05 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Phil Elwell <phil@raspberrypi.org>
-Cc:     Russell King <linux@arm.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tty: amba-pl011: Make TX optimisation conditional
-Message-ID: <20190712112105.GH2790@e103592.cambridge.arm.com>
-References: <1562852732-123411-1-git-send-email-phil@raspberrypi.org>
+        Fri, 12 Jul 2019 07:29:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39990 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfGLL3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 07:29:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 492CB60E7A; Fri, 12 Jul 2019 11:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562930982;
+        bh=dlKEgVZ2/VEXZWtIBg+WViP5XwGI5ccigZZLFWyus8I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KsdqWnAhmjfNUwG5gbrA1kacEyiuocEEMkNNnPTEbS4udAk2JeLWeiMkyX/spyS/Y
+         lZd3wYU3+lCZe+7dMXbR8B6o6NtlM1vGg77hyxiWOSOITvRwqW8M0v2GBdUhpq6tNu
+         XnBY2LsxWqUF8WuMDjOwmQ09vYkxhHLjH7mk6HCA=
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4871A6030E;
+        Fri, 12 Jul 2019 11:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562930981;
+        bh=dlKEgVZ2/VEXZWtIBg+WViP5XwGI5ccigZZLFWyus8I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KvrDS3ETy+nEOlQ0tjLsR7MuHzv9SRbBj2+mVR8JmGEbUU5ZyGjbtPxWV8T9vZaCw
+         TWSRF4KLkjNlg/xrWexjfzl252p9ZdJMEBr7FPTAt9yMSxASlSskyh3yCYC9sS67pS
+         GkxhHLd62Xzblm3/9uD6InyXIfKof+mh6dRB4wPk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4871A6030E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f51.google.com with SMTP id r12so8898396edo.5;
+        Fri, 12 Jul 2019 04:29:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAXR3E0XvPWJay/5gki6+XSKwqhiNsWxGKxCQIn16r89a26kfuY/
+        o9BZzDkvHq83qP+kh9UJPGAp78McXnG6VSOSIqU=
+X-Google-Smtp-Source: APXvYqyCfHG1+UOqftVIO8VLRfpL/QnPOpFb2MjMy7NvnZFofL0QM1DgyXDNVgh84YWGrRUzNUQxMW/SJQjoBmvnngg=
+X-Received: by 2002:a17:906:a39a:: with SMTP id k26mr7660426ejz.82.1562930979975;
+ Fri, 12 Jul 2019 04:29:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562852732-123411-1-git-send-email-phil@raspberrypi.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190711110340.16672-1-vivek.gautam@codeaurora.org>
+ <20190711110340.16672-2-vivek.gautam@codeaurora.org> <20190711160032.GR7234@tuxbook-pro>
+In-Reply-To: <20190711160032.GR7234@tuxbook-pro>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Fri, 12 Jul 2019 16:59:28 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iGXMYC5T3kNc1pXh4pkr_uxKOc5OLHWL+6HcwXvnJf_qA@mail.gmail.com>
+Message-ID: <CAFp+6iGXMYC5T3kNc1pXh4pkr_uxKOc5OLHWL+6HcwXvnJf_qA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: qcom: llcc-plat: Make the driver more generic
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        rishabhb@codeaurora.org, vnkgutta@codeaurora.org,
+        Evan Green <evgreen@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 02:45:32PM +0100, Phil Elwell wrote:
-> pl011_tx_chars takes a "from_irq" parameter to reduce the number of
-> register accesses. When from_irq is true the function assumes that the
-> FIFO is half empty and writes up to half a FIFO's worth of bytes
-> without polling the FIFO status register, the reasoning being that
-> the function is being called as a result of the TX interrupt being
-> raised. This logic would work were it not for the fact that
-> pl011_rx_chars, called from pl011_int before pl011_tx_chars, releases
-> the spinlock before calling tty_flip_buffer_push.
-> 
-> A user thread writing to the UART claims the spinlock and ultimately
-> calls pl011_tx_chars with from_irq set to false. This reverts to the
-> older logic that polls the FIFO status register before sending every
-> byte. If this happen on an SMP system during the section of the IRQ
-> handler where the spinlock has been released, then by the time the TX
-> interrupt handler is called, the FIFO may already be full, and any
-> further writes are likely to be lost.
-> 
-> The fix involves adding a per-port flag that is true iff running from
-> within the interrupt handler and the spinlock has not yet been released.
-> This flag is then used as the value for the from_irq parameter of
-> pl011_tx_chars, causing polling to be used in the unsafe case.
-
-Releasing the lock in pl011_int() before calling pl011_tx_chars()
-wouldn't the source of this issue, though it may make it easier to hit:
-there would anyway be a window between the interrupt being asserted and
-the initial spin_lock_irqsave() in pl011_int(), during which the TX
-FIFO could be topped up by another cpu.
-
-So, assuming you've diagnosed the problem correctly, I'm not sure this
-patch really fixes it.
-
-What's the failure scenario exactly?  Are you using DMA?
-
-If chars are being lost and falling back to polled TXFF per char fixes
-it, then that does suggest a TX FIFO overflow somewhere.
-
-Looking at the code, I'm slightly amazed we don't hit this more often.
-It looks like if we have stuttering output that is sufficient to fill
-the TX FIFO to the interrupt trigger threshold sometimes, but
-uap->port.state->xmit stays empty, then we can probably get pl011_int()
-and pl011_start_tx_pio() fighting with each other, as you suggest.
+Hi Bjorn,
 
 
-One option would be to track who can write the TX FIFO, either the
-irq handler, or regular task context, and make them mutually exclusive.
+Thanks for the review.
 
-We already have a flag for that in the form of the TXIM interrupt mask
-bit.  So, fixing this might be as simple as [1].  Can you give it a
-try?
+On Thu, Jul 11, 2019 at 9:29 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 11 Jul 04:03 PDT 2019, Vivek Gautam wrote:
+>
+> > - Remove 'sdm845' from names, and use 'plat' instead.
+> > - Move SCT_ENTRY macro to header file.
+> > - Create a new config structure to asssign to of-match-data.
+> >
+>
+> I interpret the intention of these two patches as that you want to add
+> some new platform without having to create one llcc-xyz.c per platform.
 
-If is works, I can work it up into a proper patch.
+That's right. The intention is to avoid creating a new platform specific file.
 
-Cheers
----Dave
+>
+> If that's the case then the only user of this macro would be in plat.c,
+> so I don't see a reason for moving it to the header file.
 
-> 
-> Fixes: 1e84d22322ce ("serial/amba-pl011: Refactor and simplify TX FIFO handling")
-> 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> ---
->  drivers/tty/serial/amba-pl011.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 5921a33..70c1dc9 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -270,6 +270,7 @@ struct uart_amba_port {
->  	unsigned int		old_cr;		/* state during shutdown */
->  	unsigned int		fixed_baud;	/* vendor-set fixed baud rate */
->  	char			type[12];
-> +	bool			irq_locked;	/* in irq, unreleased lock */
->  #ifdef CONFIG_DMA_ENGINE
->  	/* DMA stuff */
->  	bool			using_tx_dma;
-> @@ -814,6 +815,7 @@ __acquires(&uap->port.lock)
->  		return;
->  
->  	/* Avoid deadlock with the DMA engine callback */
-> +	uap->irq_locked = 0;
->  	spin_unlock(&uap->port.lock);
->  	dmaengine_terminate_all(uap->dmatx.chan);
->  	spin_lock(&uap->port.lock);
-> @@ -941,6 +943,7 @@ static void pl011_dma_rx_chars(struct uart_amba_port *uap,
->  		fifotaken = pl011_fifo_to_tty(uap);
->  	}
->  
-> +	uap->irq_locked = 0;
->  	spin_unlock(&uap->port.lock);
->  	dev_vdbg(uap->port.dev,
->  		 "Took %d chars from DMA buffer and %d chars from the FIFO\n",
-> @@ -1349,6 +1352,7 @@ __acquires(&uap->port.lock)
->  {
->  	pl011_fifo_to_tty(uap);
->  
-> +	uap->irq_locked = 0;
->  	spin_unlock(&uap->port.lock);
->  	tty_flip_buffer_push(&uap->port.state->port);
->  	/*
-> @@ -1483,6 +1487,7 @@ static irqreturn_t pl011_int(int irq, void *dev_id)
->  	int handled = 0;
->  
->  	spin_lock_irqsave(&uap->port.lock, flags);
-> +	uap->irq_locked = 1;
->  	status = pl011_read(uap, REG_RIS) & uap->im;
->  	if (status) {
->  		do {
-> @@ -1502,7 +1507,7 @@ static irqreturn_t pl011_int(int irq, void *dev_id)
->  				      UART011_CTSMIS|UART011_RIMIS))
->  				pl011_modem_status(uap);
->  			if (status & UART011_TXIS)
-> -				pl011_tx_chars(uap, true);
-> +				pl011_tx_chars(uap, uap->irq_locked);
->  
->  			if (pass_counter-- == 0)
->  				break;
-> -- 
-> 2.7.4
-> 
+Alright. Better to keep it in the driver file itself.
 
-[1] Untested, alternative "fix"
+>
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > ---
+> >  drivers/soc/qcom/llcc-plat.c       | 77 ++++++++++++--------------------------
+> >  include/linux/soc/qcom/llcc-qcom.h | 45 ++++++++++++++++++++++
+> >  2 files changed, 68 insertions(+), 54 deletions(-)
+> >
+> > diff --git a/drivers/soc/qcom/llcc-plat.c b/drivers/soc/qcom/llcc-plat.c
+> > index 86600d97c36d..31cff0f75b53 100644
+> > --- a/drivers/soc/qcom/llcc-plat.c
+> > +++ b/drivers/soc/qcom/llcc-plat.c
+> > @@ -1,6 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /*
+> > - * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+> > + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> >   *
+> >   */
+> >
+> > @@ -10,47 +10,7 @@
+> >  #include <linux/of_device.h>
+> >  #include <linux/soc/qcom/llcc-qcom.h>
+> >
+> > -/*
+> > - * SCT(System Cache Table) entry contains of the following members:
+>
+> Should have caught this during previous review, but this comment simply
+> duplicates the kerneldoc for struct llcc_slice_config.
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 89ade21..1902071 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -1307,6 +1307,13 @@ static bool pl011_tx_chars(struct uart_amba_port *uap, bool from_irq);
- /* Start TX with programmed I/O only (no DMA) */
- static void pl011_start_tx_pio(struct uart_amba_port *uap)
- {
-+	/*
-+	 * Avoid FIFO overfills if the TX IRQ is active:
-+	 * pl011_int() will comsume chars waiting in the xmit queue anyway.
-+	 */
-+	if (uap->im & UART011_TXIM)
-+		return;
-+
- 	if (pl011_tx_chars(uap, false)) {
- 		uap->im |= UART011_TXIM;
- 		pl011_write(uap->im, uap, REG_IMSC);
+Ok, i noticed it now. Will clean it up. I can remove this comment, and update
+the one for struct llcc_slice_config.
+
+>
+> > - * usecase_id: Unique id for the client's use case
+> > - * slice_id: llcc slice id for each client
+> > - * max_cap: The maximum capacity of the cache slice provided in KB
+> > - * priority: Priority of the client used to select victim line for replacement
+> > - * fixed_size: Boolean indicating if the slice has a fixed capacity
+> > - * bonus_ways: Bonus ways are additional ways to be used for any slice,
+> > - *           if client ends up using more than reserved cache ways. Bonus
+> > - *           ways are allocated only if they are not reserved for some
+> > - *           other client.
+> > - * res_ways: Reserved ways for the cache slice, the reserved ways cannot
+> > - *           be used by any other client than the one its assigned to.
+> > - * cache_mode: Each slice operates as a cache, this controls the mode of the
+> > - *             slice: normal or TCM(Tightly Coupled Memory)
+> > - * probe_target_ways: Determines what ways to probe for access hit. When
+> > - *                    configured to 1 only bonus and reserved ways are probed.
+> > - *                    When configured to 0 all ways in llcc are probed.
+> > - * dis_cap_alloc: Disable capacity based allocation for a client
+> > - * retain_on_pc: If this bit is set and client has maintained active vote
+> > - *               then the ways assigned to this client are not flushed on power
+> > - *               collapse.
+> > - * activate_on_init: Activate the slice immediately after the SCT is programmed
+> > - */
+> > -#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
+>
+> This simply maps macro arguments 1:1 to struct members, there's no need
+> for a macro for this.
+
+Sure, will remove the macro.
+
+>
+> > -     {                                       \
+> > -             .usecase_id = uid,              \
+> > -             .slice_id = sid,                \
+> > -             .max_cap = mc,                  \
+> > -             .priority = p,                  \
+> > -             .fixed_size = fs,               \
+> > -             .bonus_ways = bway,             \
+> > -             .res_ways = rway,               \
+> > -             .cache_mode = cmod,             \
+> > -             .probe_target_ways = ptw,       \
+> > -             .dis_cap_alloc = dca,           \
+> > -             .retain_on_pc = rp,             \
+> > -             .activate_on_init = a,          \
+> > -     }
+> > -
+> > -static struct llcc_slice_config sdm845_data[] =  {
+> > +static const struct llcc_slice_config sdm845_data[] =  {
+> >       SCT_ENTRY(LLCC_CPUSS,    1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1),
+> >       SCT_ENTRY(LLCC_VIDSC0,   2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
+> >       SCT_ENTRY(LLCC_VIDSC1,   3,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
+> > @@ -71,30 +31,39 @@ static struct llcc_slice_config sdm845_data[] =  {
+> >       SCT_ENTRY(LLCC_AUDHW,    22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0),
+> >  };
+> >
+> > -static int sdm845_qcom_llcc_remove(struct platform_device *pdev)
+> > +static const struct qcom_llcc_config sdm845_cfg = {
+> > +     .sct_data       = sdm845_data,
+> > +     .size           = ARRAY_SIZE(sdm845_data),
+> > +};
+> > +
+> > +static int qcom_plat_llcc_remove(struct platform_device *pdev)
+> >  {
+> >       return qcom_llcc_remove(pdev);
+> >  }
+> >
+> > -static int sdm845_qcom_llcc_probe(struct platform_device *pdev)
+> > +static int qcom_plat_llcc_probe(struct platform_device *pdev)
+> >  {
+> > -     return qcom_llcc_probe(pdev, sdm845_data, ARRAY_SIZE(sdm845_data));
+> > +     const struct qcom_llcc_config *cfg;
+> > +
+> > +     cfg = of_device_get_match_data(&pdev->dev);
+> > +
+> > +     return qcom_llcc_probe(pdev, cfg->sct_data, cfg->size);
+> >  }
+> >
+> > -static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
+> > -     { .compatible = "qcom,sdm845-llcc", },
+> > +static const struct of_device_id qcom_plat_llcc_of_match[] = {
+> > +     { .compatible = "qcom,sdm845-llcc", .data = &sdm845_cfg },
+> >       { }
+> >  };
+> >
+> > -static struct platform_driver sdm845_qcom_llcc_driver = {
+> > +static struct platform_driver qcom_plat_llcc_driver = {
+> >       .driver = {
+> > -             .name = "sdm845-llcc",
+> > -             .of_match_table = sdm845_qcom_llcc_of_match,
+> > +             .name = "qcom-plat-llcc",
+>
+> With this being the "one and only llcc driver", why not making it
+> "qcom_llcc"?
+
+Sure, will make it just "qcom_llcc" driver.
+
+>
+> > +             .of_match_table = qcom_plat_llcc_of_match,
+> >       },
+> > -     .probe = sdm845_qcom_llcc_probe,
+> > -     .remove = sdm845_qcom_llcc_remove,
+> > +     .probe = qcom_plat_llcc_probe,
+> > +     .remove = qcom_plat_llcc_remove,
+> >  };
+> > -module_platform_driver(sdm845_qcom_llcc_driver);
+> > +module_platform_driver(qcom_plat_llcc_driver);
+> >
+> > -MODULE_DESCRIPTION("QCOM sdm845 LLCC driver");
+> > +MODULE_DESCRIPTION("QCOM platform LLCC driver");
+> >  MODULE_LICENSE("GPL v2");
+> > diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
+>
+> This file should be describing the public interface to the llcc, the
+> private pieces is better kept in drivers/soc/qcom/llcc.h
+
+Yes. I will split the things in two separate files as suggested.
+
+>
+> But this patch makes me wonder if there's a need to split llcc-slice and
+> llcc-plat (and have a header file to describe API between them) instead
+> of just having one file.
+
+Nice opportunity to merge the two files? :)
+
+Best regards
+Vivek
+>
+> Regards,
+> Bjorn
+>
+> > index eb71a50b8afc..8776bb5d3891 100644
+> > --- a/include/linux/soc/qcom/llcc-qcom.h
+> > +++ b/include/linux/soc/qcom/llcc-qcom.h
+> > @@ -27,6 +27,46 @@
+> >  #define LLCC_MDMPNG      21
+> >  #define LLCC_AUDHW       22
+> >
+> > +/*
+> > + * SCT(System Cache Table) entry contains of the following members:
+> > + * usecase_id: Unique id for the client's use case
+> > + * slice_id: llcc slice id for each client
+> > + * max_cap: The maximum capacity of the cache slice provided in KB
+> > + * priority: Priority of the client used to select victim line for replacement
+> > + * fixed_size: Boolean indicating if the slice has a fixed capacity
+> > + * bonus_ways: Bonus ways are additional ways to be used for any slice,
+> > + *           if client ends up using more than reserved cache ways. Bonus
+> > + *           ways are allocated only if they are not reserved for some
+> > + *           other client.
+> > + * res_ways: Reserved ways for the cache slice, the reserved ways cannot
+> > + *           be used by any other client than the one its assigned to.
+> > + * cache_mode: Each slice operates as a cache, this controls the mode of the
+> > + *             slice: normal or TCM(Tightly Coupled Memory)
+> > + * probe_target_ways: Determines what ways to probe for access hit. When
+> > + *                    configured to 1 only bonus and reserved ways are probed.
+> > + *                    When configured to 0 all ways in llcc are probed.
+> > + * dis_cap_alloc: Disable capacity based allocation for a client
+> > + * retain_on_pc: If this bit is set and client has maintained active vote
+> > + *               then the ways assigned to this client are not flushed on power
+> > + *               collapse.
+> > + * activate_on_init: Activate the slice immediately after the SCT is programmed
+> > + */
+> > +#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
+> > +     {                                       \
+> > +             .usecase_id = uid,              \
+> > +             .slice_id = sid,                \
+> > +             .max_cap = mc,                  \
+> > +             .priority = p,                  \
+> > +             .fixed_size = fs,               \
+> > +             .bonus_ways = bway,             \
+> > +             .res_ways = rway,               \
+> > +             .cache_mode = cmod,             \
+> > +             .probe_target_ways = ptw,       \
+> > +             .dis_cap_alloc = dca,           \
+> > +             .retain_on_pc = rp,             \
+> > +             .activate_on_init = a,          \
+> > +     }
+> > +
+> >  /**
+> >   * llcc_slice_desc - Cache slice descriptor
+> >   * @slice_id: llcc slice id
+> > @@ -67,6 +107,11 @@ struct llcc_slice_config {
+> >       bool activate_on_init;
+> >  };
+> >
+> > +struct qcom_llcc_config {
+> > +     const struct llcc_slice_config *sct_data;
+> > +     int size;
+> > +};
+> > +
+> >  /**
+> >   * llcc_drv_data - Data associated with the llcc driver
+> >   * @regmap: regmap associated with the llcc device
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+> >
+
+
+
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
