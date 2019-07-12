@@ -2,54 +2,54 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-18.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE46C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96446C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5282E20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665E521019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562917016;
-	bh=xbkZ/Oq5oDy1re5CaXwMMAkzfuy4exkGQY4fFBabPeQ=;
+	s=default; t=1562917135;
+	bh=2qIqkpyUwKy5ZEg6KI4VLnowH1Qpn3q5tnQKn5M+iiQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yMUw4O+LcV2Dt8w8Y3tXqFNe8lSvCe1jIEHd27GwPDRx8IsjuEbnJ8X5qp74VRMZj
-	 yulL8blC/wK1deu447LEGK01gTJ5z/jQF26BcTux7wSWZI3a7Dr1iR1z93nT+u9lmr
-	 1ge76S+isUvZ+JhYRLiCV2gPJzMwoED/Pb5FJoGs=
+	b=D94px7XXIod9iaKqtYy9a0Eb9QwIMEhIjMIycciWcYuvXN8r3A2LSE/pnUmGD5TJH
+	 oAcTGLj+mO00fKqKW9KuHvJF7awKX6pcZFIQTG4ZFIUQJboWdTPpFtD1hMNxsq/+rP
+	 x9lM/JxvUFHKKKPPZ7nT4QhvbTkCEXxIk0cf7EuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfGLHgy (ORCPT
+        id S1726200AbfGLHiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 03:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfGLHgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:36:54 -0400
+        id S1725877AbfGLHix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 03:38:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEEA820863;
-        Fri, 12 Jul 2019 07:36:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E619208E4;
+        Fri, 12 Jul 2019 07:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562917013;
-        bh=xbkZ/Oq5oDy1re5CaXwMMAkzfuy4exkGQY4fFBabPeQ=;
+        s=default; t=1562917132;
+        bh=2qIqkpyUwKy5ZEg6KI4VLnowH1Qpn3q5tnQKn5M+iiQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zZEtnCwnnucMx98snEsSPIkrXlyv9jx/eKYeQlRg5jeC7cOMpBj17tsSoId5UyktT
-         naDzHdgOMdifSp6cQaFqELrSDcFMmXkhC4LKMOvkmDleMqJd6RSVvbsZ8bKsloNue5
-         CJkdAOHTxwhV3ij9+QNtBVXEN1xbQ0k5Pw7zA9Pc=
-Date:   Fri, 12 Jul 2019 09:36:50 +0200
+        b=SocOGJdYS12ewRV0pv3s74pJMdr91qiXFF8Ku/1UEgVOlKku22bL54eFvoS0DY7gD
+         gjVF3y0n/P3SGwJ4sjM5zMGFUduUW0XIP+7rECgbvG6Hyvf0Zbst3WUb48CwAeFC2m
+         J5jztwHBRjPBoey3UYkN2UZg1RZqSyiSzHAvpCFk=
+Date:   Fri, 12 Jul 2019 09:38:50 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org,
         Stephen Rothwell <sfr@canb.auug.org.au>
 Subject: Re: [GIT PULL] Driver core patches for 5.3-rc1
-Message-ID: <20190712073650.GB16253@kroah.com>
+Message-ID: <20190712073850.GC16253@kroah.com>
 References: <20190712073623.GA16253@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="SLDf9lqlvOQaIe6s"
 Content-Disposition: inline
 In-Reply-To: <20190712073623.GA16253@kroah.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
@@ -57,6 +57,11 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 On Fri, Jul 12, 2019 at 09:36:23AM +0200, Greg KH wrote:
 > The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
@@ -80,116 +85,50 @@ On Fri, Jul 12, 2019 at 09:36:23AM +0200, Greg KH wrote:
 > changes and lots of debugfs cleanups.  Because of this, there is going
 > to be some merge issues with your tree at the moment, I'll follow up
 > with the expected resolutions to make it easier for you.
+> 
+> Other than the debugfs cleanups, in this set of changes we have:
+> 	- bus iteration function cleanups (will cause build warnings
+> 	  with s390 and coresight drivers in your tree)
 
-Here's the merge resolution patch that worked for me:
+Here's the s390 patch that was sent previously to resolve this issue.
 
 
-diff --cc drivers/acpi/sleep.c
-index fcf4386ecc78,f0fe7c15d657..000000000000
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-diff --cc drivers/misc/mei/debugfs.c
-index df6bf8b81936,47cfd5005e1b..000000000000
---- a/drivers/misc/mei/debugfs.c
-+++ b/drivers/misc/mei/debugfs.c
-@@@ -233,22 -154,46 +154,21 @@@ void mei_dbgfs_deregister(struct mei_de
-   *
-   * @dev: the mei device structure
-   * @name: the mei device name
- - *
- - * Return: 0 on success, <0 on failure.
-   */
- -int mei_dbgfs_register(struct mei_device *dev, const char *name)
- +void mei_dbgfs_register(struct mei_device *dev, const char *name)
-  {
- -	struct dentry *dir, *f;
- +	struct dentry *dir;
-  
-  	dir = debugfs_create_dir(name, NULL);
- -	if (!dir)
- -		return -ENOMEM;
- -
-  	dev->dbgfs_dir = dir;
-  
- -	f = debugfs_create_file("meclients", S_IRUSR, dir,
- -				dev, &mei_dbgfs_meclients_fops);
- -	if (!f) {
- -		dev_err(dev->dev, "meclients: registration failed\n");
- -		goto err;
- -	}
- -	f = debugfs_create_file("active", S_IRUSR, dir,
- -				dev, &mei_dbgfs_active_fops);
- -	if (!f) {
- -		dev_err(dev->dev, "active: registration failed\n");
- -		goto err;
- -	}
- -	f = debugfs_create_file("devstate", S_IRUSR, dir,
- -				dev, &mei_dbgfs_devstate_fops);
- -	if (!f) {
- -		dev_err(dev->dev, "devstate: registration failed\n");
- -		goto err;
- -	}
- -	f = debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
- -				&dev->allow_fixed_address,
- -				&mei_dbgfs_allow_fa_fops);
- -	if (!f) {
- -		dev_err(dev->dev, "allow_fixed_address: registration failed\n");
- -		goto err;
- -	}
- -	return 0;
- -err:
- -	mei_dbgfs_deregister(dev);
- -	return -ENODEV;
- +	debugfs_create_file("meclients", S_IRUSR, dir, dev,
-- 			    &mei_dbgfs_fops_meclients);
-++			    &mei_dbgfs_meclients_fops);
- +	debugfs_create_file("active", S_IRUSR, dir, dev,
-- 			    &mei_dbgfs_fops_active);
-++			    &mei_dbgfs_active_fops);
- +	debugfs_create_file("devstate", S_IRUSR, dir, dev,
-- 			    &mei_dbgfs_fops_devstate);
-++			    &mei_dbgfs_devstate_fops);
- +	debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
- +			    &dev->allow_fixed_address,
-- 			    &mei_dbgfs_fops_allow_fa);
-++			    &mei_dbgfs_allow_fa_fops);
-  }
-- 
-diff --cc drivers/misc/vmw_balloon.c
-index fdf5ad757226,043eed845246..000000000000
---- a/drivers/misc/vmw_balloon.c
-+++ b/drivers/misc/vmw_balloon.c
-@@@ -1553,15 -1942,26 +1932,24 @@@ static int __init vmballoon_init(void
-  	if (x86_hyper_type != X86_HYPER_VMWARE)
-  		return -ENODEV;
-  
-- 	for (page_size = VMW_BALLOON_4K_PAGE;
-- 	     page_size <= VMW_BALLOON_LAST_SIZE; page_size++)
-- 		INIT_LIST_HEAD(&balloon.page_sizes[page_size].pages);
-- 
-- 
-  	INIT_DELAYED_WORK(&balloon.dwork, vmballoon_work);
-  
-+ 	error = vmballoon_register_shrinker(&balloon);
-+ 	if (error)
-+ 		goto fail;
-+ 
- -	error = vmballoon_debugfs_init(&balloon);
- -	if (error)
- -		goto fail;
- +	vmballoon_debugfs_init(&balloon);
-  
-+ 	/*
-+ 	 * Initialization of compaction must be done after the call to
-+ 	 * balloon_devinfo_init() .
-+ 	 */
-+ 	balloon_devinfo_init(&balloon.b_dev_info);
-+ 	error = vmballoon_compaction_init(&balloon);
-+ 	if (error)
-+ 		goto fail;
-+ 
-+ 	INIT_LIST_HEAD(&balloon.huge_pages);
-  	spin_lock_init(&balloon.comm_lock);
-  	init_rwsem(&balloon.conf_sem);
-  	balloon.vmci_doorbell = VMCI_INVALID_HANDLE;
-* Unmerged path drivers/hwtracing/coresight/of_coresight.c
+
+
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="s390-fixup.patch"
+
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+
+commit 92ce7e83b4e5 ("driver_find_device: Unify the match function with
+class_find_device()") changed the prototype of driver_find_device to
+use a const void pointer.
+
+Change match_apqn accordingly.
+
+Fixes: ec89b55e3bce ("s390: ap: implement PAPQ AQIC interception in kernel")
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 2c9fb1423a39..7e85ba7c6ef0 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -26,7 +26,7 @@
+ 
+ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+ 
+-static int match_apqn(struct device *dev, void *data)
++static int match_apqn(struct device *dev, const void *data)
+ {
+ 	struct vfio_ap_queue *q = dev_get_drvdata(dev);
+ 
+-- 
+2.21.0
+
+
+--SLDf9lqlvOQaIe6s--
