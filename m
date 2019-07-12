@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15609C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE736C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B5D20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9878B21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934884;
-	bh=8Ofvv33rPGmjDL2rDLnBVau085DetjhXDbhPidErydk=;
+	s=default; t=1562934893;
+	bh=BKlA4wVcFUt/TCMgw1qZXZnd3pCfWL8lN5nCZOm9q3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqgXbgC8yP2taEBM7Ha8bhkuE/9i0Es91deBSyRDakl3cySxnBuZsct2BdmXG3eIr
-	 MZbSJaK5BM5mPy14peO814lpwUnzbh9MKdCe2qGw0N2DYFdFVOjHRxxN2t6QYBdBuW
-	 9ToE1HPDK0NUzh/Ha0RRK3bV1VCR2pewSoqW3jMc=
+	b=L4rLsaw0LUSmYtcQi1B2bCPzZ/omA7u3syvHSfSaNmVcIfBMGuBlRivZT+XRIOLuj
+	 32BiuK4QaU3HxXPyfPT3BE6b6Szub10lq+/qqNViUhzSDNMHRTtfweFZtwjKq091+C
+	 EgDgo/0aY77GQBe3+vT/n/uxSKk+dpZhyztQz7pE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfGLMen (ORCPT
+        id S1729800AbfGLMew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729011AbfGLMel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:34:41 -0400
+        id S1729785AbfGLMet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:34:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F17B216C4;
-        Fri, 12 Jul 2019 12:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2224F21019;
+        Fri, 12 Jul 2019 12:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934879;
-        bh=8Ofvv33rPGmjDL2rDLnBVau085DetjhXDbhPidErydk=;
+        s=default; t=1562934888;
+        bh=BKlA4wVcFUt/TCMgw1qZXZnd3pCfWL8lN5nCZOm9q3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UwRi82k0JY052hwSZt21eqkeFfbL4zM+IaIhm4Ssgf9uu7oldIcbK2KeHQ12ujWvy
-         y64GUazC9jANr4WlmBcLWY//xDXeBXRc0wfUJF2d2KgLhDiG/BHKGf0M+mHsLtbf5g
-         +Ul1IwKYIlXrU6BQj9xONLfjPvc0wW3aFSmsurhU=
+        b=MLf/vkLKzEV8kG1Nh5rGnnlEAdKaCvdP2zQPYuuVHQaxNaVD7GBrPGEulmzIJDLPU
+         mNi9530IURW+ZdHak89ROmIAeWamuOXpIrqkgEM/12Hl3R6Bfi8IuPh51rV9KMzVUX
+         VBvcQGmGR7B+gcRhK7qrhdXkj91ZXaVMuyuGEGfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.2 61/61] staging: rtl8712: reduce stack usage, again
-Date:   Fri, 12 Jul 2019 14:20:14 +0200
-Message-Id: <20190712121624.151046396@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 5.2 47/61] coresight: tmc-etr: Do not call smp_processor_id() from preemptible
+Date:   Fri, 12 Jul 2019 14:20:00 +0200
+Message-Id: <20190712121623.164723729@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -58,205 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit fbd6b25009ac76b2034168cd21d5e01f8c2d83d1 upstream.
+commit 3ff44563dbb02456a33f2a42000f04db4ef19a8f upstream.
 
-An earlier patch I sent reduced the stack usage enough to get
-below the warning limit, and I could show this was safe, but with
-GCC_PLUGIN_STRUCTLEAK_BYREF_ALL, it gets worse again because large stack
-variables in the same function no longer overlap:
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it's not bound to a CPU, we use
+the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-drivers/staging/rtl8712/rtl871x_ioctl_linux.c: In function 'translate_scan.isra.2':
-drivers/staging/rtl8712/rtl871x_ioctl_linux.c:322:1: error: the frame size of 1200 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/1743
+ caller is alloc_etr_buf.isra.6+0x80/0xa0
+ CPU: 1 PID: 1743 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
+ Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
+  Call trace:
+   dump_backtrace+0x0/0x150
+   show_stack+0x14/0x20
+   dump_stack+0x9c/0xc4
+   debug_smp_processor_id+0x10c/0x110
+   alloc_etr_buf.isra.6+0x80/0xa0
+   tmc_alloc_etr_buffer+0x12c/0x1f0
+   etm_setup_aux+0x1c4/0x230
+   rb_alloc_aux+0x1b8/0x2b8
+   perf_mmap+0x35c/0x478
+   mmap_region+0x34c/0x4f0
+   do_mmap+0x2d8/0x418
+   vm_mmap_pgoff+0xd0/0xf8
+   ksys_mmap_pgoff+0x88/0xf8
+   __arm64_sys_mmap+0x28/0x38
+   el0_svc_handler+0xd8/0x138
+   el0_svc+0x8/0xc
 
-Split out the largest two blocks in the affected function into two
-separate functions and mark those noinline_for_stack.
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
 
-Fixes: 8c5af16f7953 ("staging: rtl8712: reduce stack usage")
-Fixes: 81a56f6dcd20 ("gcc-plugins: structleak: Generalize to all variable types")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 855ab61c16bf70b646 ("coresight: tmc-etr: Refactor function tmc_etr_setup_perf_buf()")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-2-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8712/rtl871x_ioctl_linux.c |  159 ++++++++++++++------------
- 1 file changed, 89 insertions(+), 70 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etr.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-+++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-@@ -124,10 +124,91 @@ static inline void handle_group_key(stru
- 	}
- }
- 
--static noinline_for_stack char *translate_scan(struct _adapter *padapter,
--				   struct iw_request_info *info,
--				   struct wlan_network *pnetwork,
--				   char *start, char *stop)
-+static noinline_for_stack char *translate_scan_wpa(struct iw_request_info *info,
-+						   struct wlan_network *pnetwork,
-+						   struct iw_event *iwe,
-+						   char *start, char *stop)
-+{
-+	/* parsing WPA/WPA2 IE */
-+	u8 buf[MAX_WPA_IE_LEN];
-+	u8 wpa_ie[255], rsn_ie[255];
-+	u16 wpa_len = 0, rsn_len = 0;
-+	int n, i;
-+
-+	r8712_get_sec_ie(pnetwork->network.IEs,
-+			 pnetwork->network.IELength, rsn_ie, &rsn_len,
-+			 wpa_ie, &wpa_len);
-+	if (wpa_len > 0) {
-+		memset(buf, 0, MAX_WPA_IE_LEN);
-+		n = sprintf(buf, "wpa_ie=");
-+		for (i = 0; i < wpa_len; i++) {
-+			n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
-+						"%02x", wpa_ie[i]);
-+			if (n >= MAX_WPA_IE_LEN)
-+				break;
-+		}
-+		memset(iwe, 0, sizeof(*iwe));
-+		iwe->cmd = IWEVCUSTOM;
-+		iwe->u.data.length = (u16)strlen(buf);
-+		start = iwe_stream_add_point(info, start, stop,
-+			iwe, buf);
-+		memset(iwe, 0, sizeof(*iwe));
-+		iwe->cmd = IWEVGENIE;
-+		iwe->u.data.length = (u16)wpa_len;
-+		start = iwe_stream_add_point(info, start, stop,
-+			iwe, wpa_ie);
-+	}
-+	if (rsn_len > 0) {
-+		memset(buf, 0, MAX_WPA_IE_LEN);
-+		n = sprintf(buf, "rsn_ie=");
-+		for (i = 0; i < rsn_len; i++) {
-+			n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
-+						"%02x", rsn_ie[i]);
-+			if (n >= MAX_WPA_IE_LEN)
-+				break;
-+		}
-+		memset(iwe, 0, sizeof(*iwe));
-+		iwe->cmd = IWEVCUSTOM;
-+		iwe->u.data.length = strlen(buf);
-+		start = iwe_stream_add_point(info, start, stop,
-+			iwe, buf);
-+		memset(iwe, 0, sizeof(*iwe));
-+		iwe->cmd = IWEVGENIE;
-+		iwe->u.data.length = rsn_len;
-+		start = iwe_stream_add_point(info, start, stop, iwe,
-+			rsn_ie);
-+	}
-+
-+	return start;
-+}
-+
-+static noinline_for_stack char *translate_scan_wps(struct iw_request_info *info,
-+						   struct wlan_network *pnetwork,
-+						   struct iw_event *iwe,
-+						   char *start, char *stop)
-+{
-+	/* parsing WPS IE */
-+	u8 wps_ie[512];
-+	uint wps_ielen;
-+
-+	if (r8712_get_wps_ie(pnetwork->network.IEs,
-+	    pnetwork->network.IELength,
-+	    wps_ie, &wps_ielen)) {
-+		if (wps_ielen > 2) {
-+			iwe->cmd = IWEVGENIE;
-+			iwe->u.data.length = (u16)wps_ielen;
-+			start = iwe_stream_add_point(info, start, stop,
-+				iwe, wps_ie);
-+		}
-+	}
-+
-+	return start;
-+}
-+
-+static char *translate_scan(struct _adapter *padapter,
-+			    struct iw_request_info *info,
-+			    struct wlan_network *pnetwork,
-+			    char *start, char *stop)
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1317,13 +1317,11 @@ static struct etr_perf_buffer *
+ tmc_etr_setup_perf_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
+ 		       int nr_pages, void **pages, bool snapshot)
  {
- 	struct iw_event iwe;
- 	struct ieee80211_ht_cap *pht_capie;
-@@ -240,73 +321,11 @@ static noinline_for_stack char *translat
- 	/* Check if we added any event */
- 	if ((current_val - start) > iwe_stream_lcp_len(info))
- 		start = current_val;
--	/* parsing WPA/WPA2 IE */
--	{
--		u8 buf[MAX_WPA_IE_LEN];
--		u8 wpa_ie[255], rsn_ie[255];
--		u16 wpa_len = 0, rsn_len = 0;
--		int n;
--
--		r8712_get_sec_ie(pnetwork->network.IEs,
--				 pnetwork->network.IELength, rsn_ie, &rsn_len,
--				 wpa_ie, &wpa_len);
--		if (wpa_len > 0) {
--			memset(buf, 0, MAX_WPA_IE_LEN);
--			n = sprintf(buf, "wpa_ie=");
--			for (i = 0; i < wpa_len; i++) {
--				n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
--							"%02x", wpa_ie[i]);
--				if (n >= MAX_WPA_IE_LEN)
--					break;
--			}
--			memset(&iwe, 0, sizeof(iwe));
--			iwe.cmd = IWEVCUSTOM;
--			iwe.u.data.length = (u16)strlen(buf);
--			start = iwe_stream_add_point(info, start, stop,
--				&iwe, buf);
--			memset(&iwe, 0, sizeof(iwe));
--			iwe.cmd = IWEVGENIE;
--			iwe.u.data.length = (u16)wpa_len;
--			start = iwe_stream_add_point(info, start, stop,
--				&iwe, wpa_ie);
--		}
--		if (rsn_len > 0) {
--			memset(buf, 0, MAX_WPA_IE_LEN);
--			n = sprintf(buf, "rsn_ie=");
--			for (i = 0; i < rsn_len; i++) {
--				n += snprintf(buf + n, MAX_WPA_IE_LEN - n,
--							"%02x", rsn_ie[i]);
--				if (n >= MAX_WPA_IE_LEN)
--					break;
--			}
--			memset(&iwe, 0, sizeof(iwe));
--			iwe.cmd = IWEVCUSTOM;
--			iwe.u.data.length = strlen(buf);
--			start = iwe_stream_add_point(info, start, stop,
--				&iwe, buf);
--			memset(&iwe, 0, sizeof(iwe));
--			iwe.cmd = IWEVGENIE;
--			iwe.u.data.length = rsn_len;
--			start = iwe_stream_add_point(info, start, stop, &iwe,
--				rsn_ie);
--		}
--	}
+-	int node, cpu = event->cpu;
++	int node;
+ 	struct etr_buf *etr_buf;
+ 	struct etr_perf_buffer *etr_perf;
  
--	{ /* parsing WPS IE */
--		u8 wps_ie[512];
--		uint wps_ielen;
--
--		if (r8712_get_wps_ie(pnetwork->network.IEs,
--		    pnetwork->network.IELength,
--		    wps_ie, &wps_ielen)) {
--			if (wps_ielen > 2) {
--				iwe.cmd = IWEVGENIE;
--				iwe.u.data.length = (u16)wps_ielen;
--				start = iwe_stream_add_point(info, start, stop,
--					&iwe, wps_ie);
--			}
--		}
--	}
-+	start = translate_scan_wpa(info, pnetwork, &iwe, start, stop);
-+
-+	start = translate_scan_wps(info, pnetwork, &iwe, start, stop);
-+
- 	/* Add quality statistics */
- 	iwe.cmd = IWEVQUAL;
- 	rssi = r8712_signal_scale_mapping(pnetwork->network.Rssi);
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
+ 
+ 	etr_perf = kzalloc_node(sizeof(*etr_perf), GFP_KERNEL, node);
+ 	if (!etr_perf)
 
 
