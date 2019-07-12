@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E189BC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D9DC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC9E2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8412521670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934452;
-	bh=zYP2Ti/Utohd5XGJj5U02ylzBFMqcU/5tV7xvYzf0EY=;
+	s=default; t=1562934456;
+	bh=up/VqfVdtX7dNfyQg0SVx7gE5FZPPYce5pUzktaZStA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwLufOs5kBhW46fohuu4kstw5wVEiE/enNYGw83ls4JbneoiEM9D4ezzxX5JdJ9ZR
-	 6yqxrS0QJC+7fKvnMkiC4Du00c4adiCATdY8qKBX5DsfBF9LBfNgjKAysg6HENQS8U
-	 WjrIEuJvIBVxtn8ZhRwRCwQpFjll0LB+FBwN97yw=
+	b=NgAkwEYUePktSXZP1EbwZXrE0u/qwC7iEKk5sHvX52ITI+z39l3WkglFd8nxR1cTn
+	 KRTl9DtPJUs9qbzZPozr+ZiX6AEtlKKvDldvpEHpxmE4yVWqLBoiHlU9GLinuZKxl5
+	 B6nSQoomA0Eb39oSBtyUbnGSiqp1pAdX+AKU6YAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbfGLM1b (ORCPT
+        id S1728649AbfGLM1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39950 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfGLM12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:27:28 -0400
+        id S1728629AbfGLM1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35512166E;
-        Fri, 12 Jul 2019 12:27:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 523E12166E;
+        Fri, 12 Jul 2019 12:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934447;
-        bh=zYP2Ti/Utohd5XGJj5U02ylzBFMqcU/5tV7xvYzf0EY=;
+        s=default; t=1562934450;
+        bh=up/VqfVdtX7dNfyQg0SVx7gE5FZPPYce5pUzktaZStA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kC3l1bWsM5CszyO4WjiZXsZY7UrnxkAqjMWb/GpI3ap0R09jfFMRkpzRdCjLnOQON
-         9SoMCxUUqj5iL8DMqolvALDcjjIoIR+o6MED+Tu8qKSYqaJQLc+7lJpfAKE1ChHCit
-         uXXCImUzPy0KgQd+3KCMgqLSPdoBRDedfDi/+/18=
+        b=onx5iBmuGJERniVNsJbQcZKC6mXdOfvwm0TC421D426kyo6WKm06rN3GJ2dzKGL11
+         SZIQTRGlHIdMptSx3TbDXQc5/jwEJVlnThETg6W6nbkIH4YmKDaW3pqCgGMBz43/G/
+         Z+dIORk72Fna4G7FItbg4D6y2PqLAU8OmwM7N7V4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        stable@vger.kernel.org,
+        Harsha Manjula Mallikarjun 
+        <Harsha.ManjulaMallikarjun@in.bosch.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 057/138] gpu: ipu-v3: image-convert: Fix input bytesperline width/height align
-Date:   Fri, 12 Jul 2019 14:18:41 +0200
-Message-Id: <20190712121630.859600179@linuxfoundation.org>
+Subject: [PATCH 5.1 058/138] gpu: ipu-v3: image-convert: Fix input bytesperline for packed formats
+Date:   Fri, 12 Jul 2019 14:18:42 +0200
+Message-Id: <20190712121630.897056625@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -60,75 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ff391ecd65a1b8324c49046c3db98d9c8ab29af9 ]
+[ Upstream commit bca4d70cf1b8f6478a711c448a3a1e47b794b162 ]
 
-The output width and height alignment values were being used in the
-input bytesperline calculation. Fix by separating local vars w_align
-and h_align into w_align_in, h_align_in, w_align_out, and h_align_out.
+The input bytesperline calculation for packed pixel formats was
+incorrect. The min/max clamping values must be multiplied by the
+packed bits-per-pixel. This was causing corrupted converted images
+when the input format was RGB4 (probably also other input packed
+formats).
 
 Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
 adjustment")
 
+Reported-by: Harsha Manjula Mallikarjun <Harsha.ManjulaMallikarjun@in.bosch.com>
+Suggested-by: Harsha Manjula Mallikarjun <Harsha.ManjulaMallikarjun@in.bosch.com>
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-image-convert.c | 32 +++++++++++++++++---------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ drivers/gpu/ipu-v3/ipu-image-convert.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 13103ab86050..0d971985f8c9 100644
+index 0d971985f8c9..19d3b85e0e98 100644
 --- a/drivers/gpu/ipu-v3/ipu-image-convert.c
 +++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -1885,7 +1885,8 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
- 			      enum ipu_rotate_mode rot_mode)
- {
- 	const struct ipu_image_pixfmt *infmt, *outfmt;
--	u32 w_align, h_align;
-+	u32 w_align_out, h_align_out;
-+	u32 w_align_in, h_align_in;
- 
- 	infmt = get_format(in->pix.pixelformat);
- 	outfmt = get_format(out->pix.pixelformat);
-@@ -1917,22 +1918,31 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
- 	}
- 
- 	/* align input width/height */
--	w_align = ilog2(tile_width_align(IMAGE_CONVERT_IN, infmt, rot_mode));
--	h_align = ilog2(tile_height_align(IMAGE_CONVERT_IN, infmt, rot_mode));
--	in->pix.width = clamp_align(in->pix.width, MIN_W, MAX_W, w_align);
--	in->pix.height = clamp_align(in->pix.height, MIN_H, MAX_H, h_align);
-+	w_align_in = ilog2(tile_width_align(IMAGE_CONVERT_IN, infmt,
-+					    rot_mode));
-+	h_align_in = ilog2(tile_height_align(IMAGE_CONVERT_IN, infmt,
-+					     rot_mode));
-+	in->pix.width = clamp_align(in->pix.width, MIN_W, MAX_W,
-+				    w_align_in);
-+	in->pix.height = clamp_align(in->pix.height, MIN_H, MAX_H,
-+				     h_align_in);
- 
- 	/* align output width/height */
--	w_align = ilog2(tile_width_align(IMAGE_CONVERT_OUT, outfmt, rot_mode));
--	h_align = ilog2(tile_height_align(IMAGE_CONVERT_OUT, outfmt, rot_mode));
--	out->pix.width = clamp_align(out->pix.width, MIN_W, MAX_W, w_align);
--	out->pix.height = clamp_align(out->pix.height, MIN_H, MAX_H, h_align);
-+	w_align_out = ilog2(tile_width_align(IMAGE_CONVERT_OUT, outfmt,
-+					     rot_mode));
-+	h_align_out = ilog2(tile_height_align(IMAGE_CONVERT_OUT, outfmt,
-+					      rot_mode));
-+	out->pix.width = clamp_align(out->pix.width, MIN_W, MAX_W,
-+				     w_align_out);
-+	out->pix.height = clamp_align(out->pix.height, MIN_H, MAX_H,
-+				      h_align_out);
- 
- 	/* set input/output strides and image sizes */
- 	in->pix.bytesperline = infmt->planar ?
--		clamp_align(in->pix.width, 2 << w_align, MAX_W, w_align) :
-+		clamp_align(in->pix.width, 2 << w_align_in, MAX_W,
-+			    w_align_in) :
+@@ -1942,7 +1942,9 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
+ 		clamp_align(in->pix.width, 2 << w_align_in, MAX_W,
+ 			    w_align_in) :
  		clamp_align((in->pix.width * infmt->bpp) >> 3,
--			    2 << w_align, MAX_W, w_align);
-+			    2 << w_align_in, MAX_W, w_align_in);
+-			    2 << w_align_in, MAX_W, w_align_in);
++			    ((2 << w_align_in) * infmt->bpp) >> 3,
++			    (MAX_W * infmt->bpp) >> 3,
++			    w_align_in);
  	in->pix.sizeimage = infmt->planar ?
  		(in->pix.height * in->pix.bytesperline * infmt->bpp) >> 3 :
  		in->pix.height * in->pix.bytesperline;
