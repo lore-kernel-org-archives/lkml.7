@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BBC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9846EC742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34432166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE52216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934658;
-	bh=lzhyzfmwmUKawTmQ/mElfmssS/iFia+yCKcYouMRLtQ=;
+	s=default; t=1562934664;
+	bh=d+yzvsCVqmFVjfTp/ocSLjqvx7jbhZKhRraSyB6ZyMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X91PswLJL4cDdt9ytmAHGJBGXisbA90ArWpVqt72uLv4gbM28vT0K5+fKpSp4oyWE
-	 ut/Brh2z9zjodncl/m4otO6FuVQrEX3SbJC2I3m7fJt4Bf5FZ9BROoVztddbg13FqU
-	 tevFRIF4CU+RjpIqxc/JoO3049G60u1hArGgT+Gg=
+	b=0RgjHc4oJbd45XF0D6gehDUnbob9WnUvtZ4Tynn7VIWfYjdyCPv0hhuSazcPK2SKy
+	 dSiNf/0esiCyh0g7x1n+NdpBU7WNhO07hNQxFnGbjp9QNz/srBWdjkDei9tWSgoePm
+	 SrLk4SfsPnnAuUfEWU7A7PtHBM986M/uW3OXpq/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfGLMa4 (ORCPT
+        id S1729286AbfGLMbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47002 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729254AbfGLMaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:30:52 -0400
+        id S1728212AbfGLMa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:30:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F28208E4;
-        Fri, 12 Jul 2019 12:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC33521019;
+        Fri, 12 Jul 2019 12:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934651;
-        bh=lzhyzfmwmUKawTmQ/mElfmssS/iFia+yCKcYouMRLtQ=;
+        s=default; t=1562934655;
+        bh=d+yzvsCVqmFVjfTp/ocSLjqvx7jbhZKhRraSyB6ZyMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAG0V7b6lutT+vTaGlbdrBWIBC5ry53DnW71EKIVCl1do2jOws3hS+HaDCR60LlKF
-         p9j6BZmdvbqkOSaHNU/zd0NqXpaJQD8yI/rIPLLEUZ2RItBExaVjXtKPHx4AD9Ipfe
-         QKvw8JGxaH0QdkW+Rwx/+vbjs9UJOGISN0TgQ3cw=
+        b=02byuqRttgv2XNtQrzOt90LRCaAam9Tj+u+xQ+jk4J07OopJF4uMfpiKkrOLDmWEX
+         sXz+aAYygm6jwhdmasD7S/fJVhuz/2U7IqOPwcxilr/gqPyPMI5pYYS70JutqAtTDl
+         j4nFdLTd0zitKYGYy8EX75rPlOkTwfD0AmKaWFWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 082/138] scsi: qedi: Check targetname while finding boot target information
-Date:   Fri, 12 Jul 2019 14:19:06 +0200
-Message-Id: <20190712121631.884352148@linuxfoundation.org>
+Subject: [PATCH 5.1 073/138] IB/hfi1: Use aborts to trigger RC throttling
+Date:   Fri, 12 Jul 2019 14:18:57 +0200
+Message-Id: <20190712121631.489173630@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -61,68 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1ac3549ed58cdfdaf43bbf31ac260e2381cc0dae ]
+[ Upstream commit 4bb02e9572af1383038d83ad196d7166c515f2ee ]
 
-The kernel panic was observed during iSCSI discovery via offload with below
-call trace,
+SDMA and pio flushes will cause a lot of packets to be transmitted
+after a link has gone down, using a lot of CPU to retransmit
+packets.
 
-[ 2115.646901] BUG: unable to handle kernel NULL pointer dereference at (null)
-[ 2115.646909] IP: [<ffffffffacf7f0cc>] strncmp+0xc/0x60
-[ 2115.646927] PGD 0
-[ 2115.646932] Oops: 0000 [#1] SMP
-[ 2115.647107] CPU: 24 PID: 264 Comm: kworker/24:1 Kdump: loaded Tainted: G
-               OE  ------------   3.10.0-957.el7.x86_64 #1
-[ 2115.647133] Workqueue: slowpath-13:00. qed_slowpath_task [qed]
-[ 2115.647135] task: ffff8d66af80b0c0 ti: ffff8d66afb80000 task.ti: ffff8d66afb80000
-[ 2115.647136] RIP: 0010:[<ffffffffacf7f0cc>]  [<ffffffffacf7f0cc>] strncmp+0xc/0x60
-[ 2115.647141] RSP: 0018:ffff8d66afb83c68  EFLAGS: 00010206
-[ 2115.647143] RAX: 0000000000000001 RBX: 0000000000000007 RCX: 000000000000000a
-[ 2115.647144] RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8d632b3ba040
-[ 2115.647145] RBP: ffff8d66afb83c68 R08: 0000000000000000 R09: 000000000000ffff
-[ 2115.647147] R10: 0000000000000007 R11: 0000000000000800 R12: ffff8d66a30007a0
-[ 2115.647148] R13: ffff8d66747a3c10 R14: ffff8d632b3ba000 R15: ffff8d66747a32f8
-[ 2115.647149] FS:  0000000000000000(0000) GS:ffff8d66aff00000(0000) knlGS:0000000000000000
-[ 2115.647151] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2115.647152] CR2: 0000000000000000 CR3: 0000000509610000 CR4: 00000000007607e0
-[ 2115.647153] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 2115.647154] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 2115.647155] PKRU: 00000000
-[ 2115.647157] Call Trace:
-[ 2115.647165]  [<ffffffffc0634cc5>] qedi_get_protocol_tlv_data+0x2c5/0x510 [qedi]
-[ 2115.647184]  [<ffffffffc05968f5>] ? qed_mfw_process_tlv_req+0x245/0xbe0 [qed]
-[ 2115.647195]  [<ffffffffc05496cb>] qed_mfw_fill_tlv_data+0x4b/0xb0 [qed]
-[ 2115.647206]  [<ffffffffc0596911>] qed_mfw_process_tlv_req+0x261/0xbe0 [qed]
-[ 2115.647215]  [<ffffffffacce0e8e>] ? dequeue_task_fair+0x41e/0x660
-[ 2115.647221]  [<ffffffffacc2a59e>] ? __switch_to+0xce/0x580
-[ 2115.647230]  [<ffffffffc0546013>] qed_slowpath_task+0xa3/0x160 [qed]
-[ 2115.647278] RIP  [<ffffffffacf7f0cc>] strncmp+0xc/0x60
+Fix for RC QPs by recognizing the flush status and:
+- Forcing a timer start
+- Putting the QP into a "send one" mode
 
-Fix kernel panic by validating the session targetname before providing TLV
-data and confirming the presence of boot targets.
-
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Reviewed-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/hfi1/rc.c    | 30 ++++++++++++++++++++++++++++++
+ drivers/infiniband/hw/hfi1/verbs.c | 10 ++++++----
+ drivers/infiniband/hw/hfi1/verbs.h |  1 +
+ 3 files changed, 37 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_main.c b/drivers/scsi/qedi/qedi_main.c
-index e5db9a9954dc..a6ff7be0210a 100644
---- a/drivers/scsi/qedi/qedi_main.c
-+++ b/drivers/scsi/qedi/qedi_main.c
-@@ -990,6 +990,9 @@ static int qedi_find_boot_info(struct qedi_ctx *qedi,
- 		if (!iscsi_is_session_online(cls_sess))
- 			continue;
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index 82f101878e33..24cbac277bf0 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -1703,6 +1703,36 @@ static void reset_sending_psn(struct rvt_qp *qp, u32 psn)
+ 	}
+ }
  
-+		if (!sess->targetname)
-+			continue;
++/**
++ * hfi1_rc_verbs_aborted - handle abort status
++ * @qp: the QP
++ * @opah: the opa header
++ *
++ * This code modifies both ACK bit in BTH[2]
++ * and the s_flags to go into send one mode.
++ *
++ * This serves to throttle the send engine to only
++ * send a single packet in the likely case the
++ * a link has gone down.
++ */
++void hfi1_rc_verbs_aborted(struct rvt_qp *qp, struct hfi1_opa_header *opah)
++{
++	struct ib_other_headers *ohdr = hfi1_get_rc_ohdr(opah);
++	u8 opcode = ib_bth_get_opcode(ohdr);
++	u32 psn;
 +
- 		if (pri_ctrl_flags) {
- 			if (!strcmp(pri_tgt->iscsi_name, sess->targetname) &&
- 			    !strcmp(pri_tgt->ip_addr, ep_ip_addr)) {
++	/* ignore responses */
++	if ((opcode >= OP(RDMA_READ_RESPONSE_FIRST) &&
++	     opcode <= OP(ATOMIC_ACKNOWLEDGE)) ||
++	    opcode == TID_OP(READ_RESP) ||
++	    opcode == TID_OP(WRITE_RESP))
++		return;
++
++	psn = ib_bth_get_psn(ohdr) | IB_BTH_REQ_ACK;
++	ohdr->bth[2] = cpu_to_be32(psn);
++	qp->s_flags |= RVT_S_SEND_ONE;
++}
++
+ /*
+  * This should be called with the QP s_lock held and interrupts disabled.
+  */
+diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+index ea68eeba3f22..63d62ac7434a 100644
+--- a/drivers/infiniband/hw/hfi1/verbs.c
++++ b/drivers/infiniband/hw/hfi1/verbs.c
+@@ -638,6 +638,8 @@ static void verbs_sdma_complete(
+ 		struct hfi1_opa_header *hdr;
+ 
+ 		hdr = &tx->phdr.hdr;
++		if (unlikely(status == SDMA_TXREQ_S_ABORTED))
++			hfi1_rc_verbs_aborted(qp, hdr);
+ 		hfi1_rc_send_complete(qp, hdr);
+ 	}
+ 	spin_unlock(&qp->s_lock);
+@@ -1095,15 +1097,15 @@ int hfi1_verbs_send_pio(struct rvt_qp *qp, struct hfi1_pkt_state *ps,
+ 			       &ps->s_txreq->phdr.hdr, ib_is_sc5(sc5));
+ 
+ pio_bail:
++	spin_lock_irqsave(&qp->s_lock, flags);
+ 	if (qp->s_wqe) {
+-		spin_lock_irqsave(&qp->s_lock, flags);
+ 		rvt_send_complete(qp, qp->s_wqe, wc_status);
+-		spin_unlock_irqrestore(&qp->s_lock, flags);
+ 	} else if (qp->ibqp.qp_type == IB_QPT_RC) {
+-		spin_lock_irqsave(&qp->s_lock, flags);
++		if (unlikely(wc_status == IB_WC_GENERAL_ERR))
++			hfi1_rc_verbs_aborted(qp, &ps->s_txreq->phdr.hdr);
+ 		hfi1_rc_send_complete(qp, &ps->s_txreq->phdr.hdr);
+-		spin_unlock_irqrestore(&qp->s_lock, flags);
+ 	}
++	spin_unlock_irqrestore(&qp->s_lock, flags);
+ 
+ 	ret = 0;
+ 
+diff --git a/drivers/infiniband/hw/hfi1/verbs.h b/drivers/infiniband/hw/hfi1/verbs.h
+index 62ace0b2d17a..1714c0f6475d 100644
+--- a/drivers/infiniband/hw/hfi1/verbs.h
++++ b/drivers/infiniband/hw/hfi1/verbs.h
+@@ -415,6 +415,7 @@ void hfi1_rc_hdrerr(
+ 
+ u8 ah_to_sc(struct ib_device *ibdev, struct rdma_ah_attr *ah_attr);
+ 
++void hfi1_rc_verbs_aborted(struct rvt_qp *qp, struct hfi1_opa_header *opah);
+ void hfi1_rc_send_complete(struct rvt_qp *qp, struct hfi1_opa_header *opah);
+ 
+ void hfi1_ud_rcv(struct hfi1_packet *packet);
 -- 
 2.20.1
 
