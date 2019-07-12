@@ -2,114 +2,164 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFD8C742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A25BC742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600782084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFD7206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="BlXyKnqm"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="l45/aiqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfGLPNq (ORCPT
+        id S1727204AbfGLPOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:13:46 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:61974 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfGLPNp (ORCPT
+        Fri, 12 Jul 2019 11:14:25 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41701 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfGLPOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:13:45 -0400
+        Fri, 12 Jul 2019 11:14:25 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d17so8394819qtj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:14:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1562944425; x=1594480425;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=6paSjuY09ejpoRwHJwgN56Jb7OGwcZrtkGDYZABihlQ=;
-  b=BlXyKnqmu06am0Au76ruT2RPvd+7VWZsLgTbDIyXZzoYNUy0ZDgKJAJA
-   nnK9R5cE0BmXa1vlwrnOATX9jsLpgmeVRheeHSenvQTTa654mXfulaCGK
-   X577M2TyRFhIKK7AQW40qCOi4N2FQnhen3R3oW/ZTInO8YXYaV0fGgQSr
-   8=;
-X-IronPort-AV: E=Sophos;i="5.62,483,1554768000"; 
-   d="scan'208";a="685177933"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 12 Jul 2019 15:13:41 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 80BBAA2519;
-        Fri, 12 Jul 2019 15:13:40 +0000 (UTC)
-Received: from EX13D01EUB004.ant.amazon.com (10.43.166.180) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 12 Jul 2019 15:13:39 +0000
-Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
- EX13D01EUB004.ant.amazon.com (10.43.166.180) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 12 Jul 2019 15:13:38 +0000
-Received: from EX13D01EUB003.ant.amazon.com ([10.43.166.248]) by
- EX13D01EUB003.ant.amazon.com ([10.43.166.248]) with mapi id 15.00.1367.000;
- Fri, 12 Jul 2019 15:13:38 +0000
-From:   "Raslan, KarimAllah" <karahmed@amazon.de>
-To:     "will@kernel.org" <will@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yaojun8558363@gmail.com" <yaojun8558363@gmail.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "info@metux.net" <info@metux.net>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "yuzhao@google.com" <yuzhao@google.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "anders.roxell@linaro.org" <anders.roxell@linaro.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>
-Subject: Re: [PATCH] arm: Extend the check for RAM in /dev/mem
-Thread-Topic: [PATCH] arm: Extend the check for RAM in /dev/mem
-Thread-Index: AQHVODcIGfDHKrKqiE2jyO8cjDhCoqbHE70AgAAEl4A=
-Date:   Fri, 12 Jul 2019 15:13:38 +0000
-Message-ID: <1562944417.1345.17.camel@amazon.de>
-References: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
-         <20190712145711.mxmnuyn6kpv2dr7u@willie-the-truck>
-In-Reply-To: <20190712145711.mxmnuyn6kpv2dr7u@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.55]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CC75E5D1726FE342A05CE26978AF7023@amazon.com>
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1NndeDHC4SKCtD2njC25wcF/fpw0ZFMG+wxyiwc8W7Y=;
+        b=l45/aiqYWpvyQ1RtFqL4X2dgQ4zP4rHvDqXZDf+brdvNfOSxkqU5NzKU7E56br/H+e
+         zoJ7wBWrL//znBKcRoro1c9RrDoLsxUlUGt0b3WHUvQ1gaOavfbEMrsCEBBw0Zj0iuxp
+         41/CfFkA8o6kRCiaXTE1ZeevDGmvF41ji1PiODQU8nizvAgIpiAJdoSlHvLbKodPZb4L
+         gXoFZpa+1EKQHdqp9CrqPvV49ZfSKr4i/QcQdaGpudb1mnXU6gXicDgbomjMdopnFJPH
+         PXqnAt74gvGMDuT5DzQeeHxli7baf1lzNYDqPHzPlzYkhpOAjqk+jqXegqzk1GCB+A1q
+         sECQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1NndeDHC4SKCtD2njC25wcF/fpw0ZFMG+wxyiwc8W7Y=;
+        b=PTI/ZU4kn2OeA9AGQhs93gffbFc6rrpCsSGKHguJdXJYk4yW6UmL83NVe4CcbIyXGX
+         eXOunYr4lETigFSnFsn+nq6AmfnJ5bG1FNEW4TRv7pKAjBHt21qJ1dQluGLzqA30nRh2
+         i07DjbkEhDzXvvB0Tr1NKSK0pvdXdofNYPip5lSs7u+h36D1v8NhzY4V+BGsmQconNJu
+         7SXd0RRScLdcudrmIUUlGFfh7bnD8J9vT461c4seThBhRV0ym0D5Mt83QlrHSzBhRJz8
+         /fCM+oKDaywQMaVnknz6k9VjIpLNA3mgiGsnOWXhI078JAkROTdbFOUNwilCb4HY+AKv
+         oZow==
+X-Gm-Message-State: APjAAAWGSzZRhjOx1bRcyPfv5p06i7Vopw3Yy+/v5lu++4r23gNOZcyc
+        82+VKTQZxZiQBZVKpVNfrnmEeQ==
+X-Google-Smtp-Source: APXvYqzVsPvT5muHqZYRh1ti9OhEbH2ZE+gb0xXnUhlfTc2I3i5b2FRluj/KK3RazAZvETosrH8YnA==
+X-Received: by 2002:a05:6214:1447:: with SMTP id b7mr7231470qvy.89.1562944464279;
+        Fri, 12 Jul 2019 08:14:24 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id d25sm3518972qko.96.2019.07.12.08.14.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jul 2019 08:14:23 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlxFf-0002BK-4s; Fri, 12 Jul 2019 12:14:23 -0300
+Date:   Fri, 12 Jul 2019 12:14:23 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bernard Metzler <BMT@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+Message-ID: <20190712151423.GG27512@ziepe.ca>
+References: <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <20190712120328.GB27512@ziepe.ca>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <CAK8P3a3ZqY_qLSN1gw12EvzLS49RAnmG4nT9=N+Qj9XngQd0CA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3ZqY_qLSN1gw12EvzLS49RAnmG4nT9=N+Qj9XngQd0CA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTEyIGF0IDE1OjU3ICswMTAwLCBXaWxsIERlYWNvbiB3cm90ZToNCj4g
-T24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMTI6MjE6MjFBTSArMDIwMCwgS2FyaW1BbGxhaCBBaG1l
-ZCB3cm90ZToNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9tbS9tbXUuYyBiL2Fy
-Y2gvYXJtNjQvbW0vbW11LmMNCj4gPiBpbmRleCAzNjQ1ZjI5Li5jZGMzZThlIDEwMDY0NA0KPiA+
-IC0tLSBhL2FyY2gvYXJtNjQvbW0vbW11LmMNCj4gPiArKysgYi9hcmNoL2FybTY0L21tL21tdS5j
-DQo+ID4gQEAgLTc4LDcgKzc4LDcgQEAgdm9pZCBzZXRfc3dhcHBlcl9wZ2QocGdkX3QgKnBnZHAs
-IHBnZF90IHBnZCkNCj4gPiAgcGdwcm90X3QgcGh5c19tZW1fYWNjZXNzX3Byb3Qoc3RydWN0IGZp
-bGUgKmZpbGUsIHVuc2lnbmVkIGxvbmcgcGZuLA0KPiA+ICAJCQkgICAgICB1bnNpZ25lZCBsb25n
-IHNpemUsIHBncHJvdF90IHZtYV9wcm90KQ0KPiA+ICB7DQo+ID4gLQlpZiAoIXBmbl92YWxpZChw
-Zm4pKQ0KPiA+ICsJaWYgKCFtZW1ibG9ja19pc19tZW1vcnkoX19wZm5fdG9fcGh5cyhwZm4pKSkN
-Cj4gDQo+IFRoaXMgbG9va3MgYnJva2VuIHRvIG1lLCBzaW5jZSBpdCB3aWxsIGVuZCB1cCByZXR1
-cm5pbmcgJ3RydWUnIGZvciBub21hcA0KPiBtZW1vcnkgYW5kIHdlIHJlYWxseSBkb24ndCB3YW50
-IHRvIG1hcCB0aGF0IHVzaW5nIHdyaXRlYmFjayBhdHRyaWJ1dGVzLg0KDQpUcnVlLCBJIHdpbGwg
-Zml4IHRoaXMgYnkgdXNpbmfCoG1lbWJsb2NrX2lzX21hcF9tZW1vcnkgaW5zdGVhZC4gVGhhdCBz
-YWlkLCBkbw0KeW91IGhhdmUgYW55IGNvbmNlcm5zIGFib3V0IHRoaXMgYXBwcm9hY2ggaW7CoGdl
-bmVyYWw/DQoNCj4gDQo+IFdpbGwNCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFu
-eSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENo
-cmlzdGlhbiBTY2hsYWVnZXIsIFJhbGYgSGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmlj
-aHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6
-IERFIDI4OSAyMzcgODc5CgoK
+On Fri, Jul 12, 2019 at 03:22:35PM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 12, 2019 at 3:05 PM Bernard Metzler <BMT@zurich.ibm.com> wrote:
+> 
+> >
+> > We share CQ (completion queue) notification flags between application
+> > (which may be user land) and producer (kernel QP's (queue pairs)).
+> > Those flags can be written by both application and QP's. The application
+> > writes those flags to let the driver know if it shall inform about new
+> > work completions. It can write those flags at any time.
+> > Only a kernel producer reads those flags to decide if
+> > the CQ notification handler shall be kicked, if a new CQ element gets
+> > added to the CQ. When kicking the completion handler, the driver resets the
+> > notification flag, which must get re-armed by the application.
+> >
+> > We use READ_ONCE() and WRITE_ONCE(), since the flags are potentially
+> > shared (mmap'd) between user and kernel land.
+> >
+> > siw_req_notify_cq() is being called only by kernel consumers to change
+> > (write) the CQ notification state. We use smp_store_mb() to make sure
+> > the new value becomes visible to all kernel producers (QP's) asap.
+> >
+> >
+> > From cfb861a09dcfb24a98ba0f1e26bdaa1529d1b006 Mon Sep 17 00:00:00 2001
+> > From: Bernard Metzler <bmt@zurich.ibm.com>
+> > Date: Fri, 12 Jul 2019 13:19:27 +0200
+> > Subject: [PATCH] Make shared CQ notification flags 32bit to respect 32bit
+> >  architectures
+> >
+> > Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+> 
+> This fixes the build for me, thanks!
+> 
+> Tested-by: Arnd Bergmann <arnd@arndb.de>
+
+Since this is coming up so late in the merge window, I'm inclined to
+take the simple path while Bernard makes a complete solution
+here. What do you think Arnd?
+
+From 0b043644c0ca601cb19943a81aa1f1455dbe9461 Mon Sep 17 00:00:00 2001
+From: Jason Gunthorpe <jgg@mellanox.com>
+Date: Fri, 12 Jul 2019 12:12:06 -0300
+Subject: [PATCH] RMDA/siw: Require a 64 bit arch
+
+The new siw driver fails to build on i386 with
+
+drivers/infiniband/sw/siw/siw_qp.c:1025:3: error: invalid output size for constraint '+q'
+                smp_store_mb(*cq->notify, SIW_NOTIFY_NOT);
+
+As it is using 64 bit values with the smp_store_mb.
+
+Since the entire scheme here seems questionable, and we are in the merge
+window, fix the compile failures by disabling 32 bit support on this
+driver.
+
+A proper fix will be reviewed post merge window.
+
+Fixes: c0cf5bdde46c ("rdma/siw: addition to kernel build environment")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+---
+ drivers/infiniband/sw/siw/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/sw/siw/Kconfig b/drivers/infiniband/sw/siw/Kconfig
+index b622fc62f2cd6d..dace276aea1413 100644
+--- a/drivers/infiniband/sw/siw/Kconfig
++++ b/drivers/infiniband/sw/siw/Kconfig
+@@ -1,6 +1,6 @@
+ config RDMA_SIW
+ 	tristate "Software RDMA over TCP/IP (iWARP) driver"
+-	depends on INET && INFINIBAND && LIBCRC32C
++	depends on INET && INFINIBAND && LIBCRC32C && 64BIT
+ 	select DMA_VIRT_OPS
+ 	help
+ 	This driver implements the iWARP RDMA transport over
+-- 
+2.21.0
+
 
