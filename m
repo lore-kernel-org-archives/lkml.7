@@ -2,84 +2,101 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7721BC742AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D946C742B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B68A21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2443521537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfGLJLb (ORCPT
+        id S1726585AbfGLJMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:11:31 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:58282 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725989AbfGLJLa (ORCPT
+        Fri, 12 Jul 2019 05:12:03 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:35829 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfGLJMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:11:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWh00oy_1562922685;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWh00oy_1562922685)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jul 2019 17:11:25 +0800
-Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
- statistic
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
- <20190711134754.GD3402@hirez.programming.kicks-ass.net>
- <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
- <20190712075815.GN3402@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <37474414-1a54-8e3a-60df-eb7e5e1cc1ed@linux.alibaba.com>
-Date:   Fri, 12 Jul 2019 17:11:25 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Fri, 12 Jul 2019 05:12:02 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MnaTt-1iDnxj0N1B-00jd8T; Fri, 12 Jul 2019 11:11:50 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thp: fix unused shmem_parse_huge() function warning
+Date:   Fri, 12 Jul 2019 11:11:31 +0200
+Message-Id: <20190712091141.673355-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190712075815.GN3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:2eYIEw+FuGFLaFFnKIH/ts58p8jvvELIVRGUWlzkTykX3ykX0/v
+ ts+nAn49miAUJt8DvK+mqbmcyi6PwAVzbh9XnS5MWrU1+0O/eSmcmtzcL9ONUd/zHoqYZcr
+ fsERZV6Xr78UtnbuWoFCE8702Z6CLbbbh8uTN8jvzkak2k/Uz76hgbkwxo/Sl1gDg9Wr9RL
+ vH2DwCgQDpxF8RtsHhT/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kB4x/oMdogU=:EO0/ZP+FT9QwyUf+U6kfWc
+ 7qWi0vAfAJ0UNZxCoPw1s9vdsQR5HuuxaUcG620tLFT5CDfqfKRlAZZ2zi09a1BGb7yxqoIqs
+ dXF7oouoNuO8xAB9EwpGaBiEzWxZIXheV8BK4jZ1wYdrMVrvEYx+G39Ltz0ecHVVOd8fgh66o
+ HFRmBkzd81ZvnRLNE30PdmqghI1UMsKfQ4gf00oSovZ9UU0wRhXENIcgQLuJzA9rTcMX203Bq
+ aubOpVMzPrrxwCZxb2bpRmgAL9PnYCwHqw7vBG5BDxlPD40BZdXfq2hzCTsKhM+FigKAr5y80
+ auciZSt6hMaNNlL8AqEERLNvLNgvGES2Z7Gc8lOtYlyvR8I/wSg/x1Ke998J3R8oGwrutri/Z
+ Xw15NZr+Oh+i3sGPXFx7K5SVXJPXJ0F3hQhk0LwBwITvpcNwFDGsGQAsow2L1yJRItHppX901
+ 7rHz2v7ZaC/8vdF04KI9HM+LftErdeoJHUDXBYpFJMJKx50Ja/JLDPLDlrufKTizK5oCATuZv
+ KD0pTtN/NQdld53T3TbwP0T7386ZTJvtRlP+LyHZioJxy/RsnaaSwPkWz3xXK5ou0WtLNUyOw
+ Es67mvHLLd5k/DylVctvadLlv1rNaqd8TlemH7KRuNT3bh9gDDCdiwz0d6BkmPr9tjf8Kq2FM
+ wAUBQZ2G2DwJ8HAPIOTLd3bTMLSdM2cbK7Tvl/wQCz0XpCvZ2ugC+PBDteVUooi3bLMAdaC15
+ fCKn4ZEtReAb3mM0txlBiUjFw2vGxdSET/R6pg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When CONFIG_SYSFS is disabled but CONFIG_TMPFS is enabled, we get a warning
+about shmem_parse_huge() never being called:
 
+mm/shmem.c:417:12: error: unused function 'shmem_parse_huge' [-Werror,-Wunused-function]
+static int shmem_parse_huge(const char *str)
 
-On 2019/7/12 下午3:58, Peter Zijlstra wrote:
-[snip]
->>>
->>> Then our task t1 should be accounted to B (as you do), but also to A and
->>> R.
->>
->> I get the point but not quite sure about this...
->>
->> Not like pages there are no hierarchical limitation on locality, also tasks
-> 
-> You can use cpusets to affect that.
+Change the #ifdef so we no longer build this function in that configuration.
 
-Could you please give more detail on this?
+Fixes: 144df3b288c4 ("vfs: Convert ramfs, shmem, tmpfs, devtmpfs, rootfs to use the new mount API")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ mm/shmem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> 
->> running in a particular group have no influence to others, not to mention the
->> extra overhead, does it really meaningful to account the stuff hierarchically?
-> 
-> AFAIU it's a requirement of cgroups to be hierarchical. All our other
-> cgroup accounting is like that.
+diff --git a/mm/shmem.c b/mm/shmem.c
+index ba40fac908c5..32aa9d46b87c 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -413,7 +413,7 @@ static bool shmem_confirm_swap(struct address_space *mapping,
+ 
+ static int shmem_huge __read_mostly;
+ 
+-#if defined(CONFIG_SYSFS) || defined(CONFIG_TMPFS)
++#if defined(CONFIG_SYSFS)
+ static int shmem_parse_huge(const char *str)
+ {
+ 	if (!strcmp(str, "never"))
+@@ -430,7 +430,9 @@ static int shmem_parse_huge(const char *str)
+ 		return SHMEM_HUGE_FORCE;
+ 	return -EINVAL;
+ }
++#endif
+ 
++#if defined(CONFIG_SYSFS) || defined(CONFIG_TMPFS)
+ static const char *shmem_format_huge(int huge)
+ {
+ 	switch (huge) {
+-- 
+2.20.0
 
-Ok, should respect the convention :-)
-
-Regards,
-Michael Wang
-
-> 
