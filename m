@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D37BC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404CFC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBB321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1048321019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934192;
-	bh=c9LPplSzz/uVr4cX4W0O58ybJ3HneGqBkRGgS8Tz5aI=;
+	s=default; t=1562934201;
+	bh=jz4QdF75ZQmZg10jBk1fPZWL3pu6t/6Ae9I3qsqqKOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3w/Q4kauEP8/sGUlWXgCDFXD8w0X3fJzk57FVvZZw3WigHIA+4OZ9SdvhxcwizNL
-	 TFJSs0qXdZ3gBhDHujlXACmoTHGfY2A14E4mkhHFKYsopAxRqbmjyRMbnie/ySJp/B
-	 TpmUnHw5PE/TOZGRWxrNJvdDyMvUU19H1wc5gqRE=
+	b=aoZ3j7rRcfXPMRoc25sz+nXlRAqykE/95QWF8y18I0hmv2FXfYC6fl20D2CUBOIXT
+	 eyC06SuqlWgsRdk42v5X2Bn86zg9jRxhntLAkTTgj7f+Hq/8G1mlDoIkW3zTpPmorn
+	 VkbH800zmDJVTGzUCMaCI180YRKk4UPZCuCWunys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfGLMXL (ORCPT
+        id S1727898AbfGLMXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:23:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbfGLMXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:23:07 -0400
+        id S1727877AbfGLMXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52F5216B7;
-        Fri, 12 Jul 2019 12:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21B882084B;
+        Fri, 12 Jul 2019 12:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934187;
-        bh=c9LPplSzz/uVr4cX4W0O58ybJ3HneGqBkRGgS8Tz5aI=;
+        s=default; t=1562934193;
+        bh=jz4QdF75ZQmZg10jBk1fPZWL3pu6t/6Ae9I3qsqqKOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qe0m7Zxk71RNsAbgjcgiFD3LjTz8Pt9KpVO98c1AtXf/5xfZxvng1E8ZJHwzt1l+A
-         Dz5R4X+pw6b7DCe/GKaDoHPk5OU168uwSq1idTm+2BQKgXU/Y2Yq3eMadFpqpyzArQ
-         aNEWMtSDMsZgAQVsEG4JPxN070iwcXF5YYaI9eE4=
+        b=Y6INyY1DsJqFxLyr2JowQv1MmEFa+sJMHR8DUj3BEm5QYa+QANO+GmMIOc3YyC+9z
+         KB429YXsETSjo2VDiVswFDnsJCR4O7U2+2Ca7m1bmvHwQWNKdYGItaCAg44CZpC/WU
+         yPic920XVuZVL8zFmziP0rgPt/IhubCWm7ycfL1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.19 64/91] x86/tls: Fix possible spectre-v1 in do_get_thread_area()
-Date:   Fri, 12 Jul 2019 14:19:07 +0200
-Message-Id: <20190712121625.277228756@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 4.19 66/91] Documentation/admin: Remove the vsyscall=native documentation
+Date:   Fri, 12 Jul 2019 14:19:09 +0200
+Message-Id: <20190712121625.381583411@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,63 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 993773d11d45c90cb1c6481c2638c3d9f092ea5b upstream.
+commit d974ffcfb7447db5f29a4b662a3eaf99a4e1109e upstream.
 
-The index to access the threads tls array is controlled by userspace
-via syscall: sys_ptrace(), hence leading to a potential exploitation
-of the Spectre variant 1 vulnerability.
+The vsyscall=native feature is gone -- remove the docs.
 
-The index can be controlled from:
-        ptrace -> arch_ptrace -> do_get_thread_area.
-
-Fix this by sanitizing the user supplied index before using it to access
-the p->thread.tls_array.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
+Fixes: 076ca272a14c ("x86/vsyscall/64: Drop "native" vsyscalls")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Jann Horn <jannh@google.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1561524630-3642-1-git-send-email-dianzhangchen0@gmail.com
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/d77c7105eb4c57c1a95a95b6a5b8ba194a18e764.1561610354.git.luto@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/tls.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/arch/x86/kernel/tls.c
-+++ b/arch/x86/kernel/tls.c
-@@ -5,6 +5,7 @@
- #include <linux/user.h>
- #include <linux/regset.h>
- #include <linux/syscalls.h>
-+#include <linux/nospec.h>
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4976,12 +4976,6 @@
+ 			emulate     [default] Vsyscalls turn into traps and are
+ 			            emulated reasonably safely.
  
- #include <linux/uaccess.h>
- #include <asm/desc.h>
-@@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struc
- 		       struct user_desc __user *u_info)
- {
- 	struct user_desc info;
-+	int index;
- 
- 	if (idx == -1 && get_user(idx, &u_info->entry_number))
- 		return -EFAULT;
-@@ -227,8 +229,11 @@ int do_get_thread_area(struct task_struc
- 	if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
- 		return -EINVAL;
- 
--	fill_user_desc(&info, idx,
--		       &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
-+	index = idx - GDT_ENTRY_TLS_MIN;
-+	index = array_index_nospec(index,
-+			GDT_ENTRY_TLS_MAX - GDT_ENTRY_TLS_MIN + 1);
-+
-+	fill_user_desc(&info, idx, &p->thread.tls_array[index]);
- 
- 	if (copy_to_user(u_info, &info, sizeof(info)))
- 		return -EFAULT;
+-			native      Vsyscalls are native syscall instructions.
+-			            This is a little bit faster than trapping
+-			            and makes a few dynamic recompilers work
+-			            better than they would in emulation mode.
+-			            It also makes exploits much easier to write.
+-
+ 			none        Vsyscalls don't work at all.  This makes
+ 			            them quite hard to use for exploits but
+ 			            might break your system.
 
 
