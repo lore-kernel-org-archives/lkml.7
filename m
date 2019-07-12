@@ -2,51 +2,53 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9553BC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D744C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6200D20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA87120645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935109;
-	bh=SLJo6E/igP1Ax35ABgU4VpRSPqCcVBeIe/N25frQ2eE=;
+	s=default; t=1562935119;
+	bh=H6I2/ksPnVbn5p9q6Yu9BDSMuPFeLGvZrFTXPm23iHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlnqRrKk/oMqmxjVqHjNM8+wNCn5KvrlnX+DOd422+SP/CGE3yr9kcU+N7tWGppJ6
-	 W63snySW9Cr0yT25tsme5m+cixOOVZ01v/m/sISHViX+4rxAEyPpGkM7QqoHmYSvcK
-	 aqo/c5sAYDawt2lQ9Cjf/mqdI2t61+pHmgyV0A9Y=
+	b=CEf49rD6Djt/tXiUXzClnLxmRYPTH6AS/gxnaCaiATpVWRi+f4sgBDhCTtLnOrjeS
+	 uFo4wINIMhrXgctzQFBmaz6SM5UTzmHQzNAN6kMmJDrTbebrlsRvzAfU6iVp2DcMQa
+	 tKxJM4ERdqcynt652JtTOreC4K7rWCeZn5Tf+Nu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfGLM3M (ORCPT
+        id S1728791AbfGLMih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbfGLM3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:29:07 -0400
+        id S1728886AbfGLM2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:28:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3536216B7;
-        Fri, 12 Jul 2019 12:29:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C653A21019;
+        Fri, 12 Jul 2019 12:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934546;
-        bh=SLJo6E/igP1Ax35ABgU4VpRSPqCcVBeIe/N25frQ2eE=;
+        s=default; t=1562934531;
+        bh=H6I2/ksPnVbn5p9q6Yu9BDSMuPFeLGvZrFTXPm23iHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghqfomxlTvzvwX2HK6eiRQ2TO05zZYpsK1EsNS+dQwrJShTPdPvpjfNPKTliQYYji
-         H0hdtHqJlGNf2vyVjII7XDAg+us0IYASPJNhLtlpsn/7ID28O/lHugYlbkkRERr/s0
-         Idf+YedEO9fIpLUVuj5RPGxvMPsSRGFth/zjE8Rk=
+        b=QDiwCvCCSvqjPhpAMYTHeXueHCp7rur69PL6OLZmwzmWp8LfTfrwZArLQ0+ZzU+LB
+         1aEHyJw990XA+CQ1KXMT0n3QFI9QkuamOeopEwOpZrenF4tZCCEPzXI9N/0E/TCYo9
+         rp1Cn+9GzaVispXgViki3Lz1TUb2sO2Qc5Ps/OM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 092/138] ALSA: hda/realtek - Headphone Mic cant record after S3
-Date:   Fri, 12 Jul 2019 14:19:16 +0200
-Message-Id: <20190712121632.291970527@linuxfoundation.org>
+        stable@vger.kernel.org, Trond Myklebust <trondmy@hammerspace.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 087/138] NFS4: Only set creation opendata if O_CREAT
+Date:   Fri, 12 Jul 2019 14:19:11 +0200
+Message-Id: <20190712121632.082259484@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -59,43 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+[ Upstream commit 909105199a682cb09c500acd443d34b182846c9c ]
 
-commit d07a9a4f66e944fcc900812cbc2f6817bde6a43d upstream.
+We can end up in nfs4_opendata_alloc during task exit, in which case
+current->fs has already been cleaned up.  This leads to a crash in
+current_umask().
 
-Dell headset mode platform with ALC236.
-It doesn't recording after system resume from S3.
-S3 mode was deep. s2idle was not has this issue.
-S3 deep will cut of codec power. So, the register will back to default
-after resume back.
-This patch will solve this issue.
+Fix this by only setting creation opendata if we are actually doing an open
+with O_CREAT.  We can drop the check for NULL nfs4_open_createattrs, since
+O_CREAT will never be set for the recovery path.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3236,6 +3236,7 @@ static void alc256_init(struct hda_codec
- 	alc_update_coefex_idx(codec, 0x57, 0x04, 0x0007, 0x4); /* Hight power */
- 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 1 << 15); /* Clear bit */
- 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 0 << 15);
-+	alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
- }
- 
- static void alc256_shutup(struct hda_codec *codec)
-@@ -7782,7 +7783,6 @@ static int patch_alc269(struct hda_codec
- 		spec->shutup = alc256_shutup;
- 		spec->init_hook = alc256_init;
- 		spec->gen.mixer_nid = 0; /* ALC256 does not have any loopback mixer path */
--		alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
- 		break;
- 	case 0x10ec0257:
- 		spec->codec_variant = ALC269_TYPE_ALC257;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index eeee100785a5..fd2c19eea647 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1234,10 +1234,20 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 	atomic_inc(&sp->so_count);
+ 	p->o_arg.open_flags = flags;
+ 	p->o_arg.fmode = fmode & (FMODE_READ|FMODE_WRITE);
+-	p->o_arg.umask = current_umask();
+ 	p->o_arg.claim = nfs4_map_atomic_open_claim(server, claim);
+ 	p->o_arg.share_access = nfs4_map_atomic_open_share(server,
+ 			fmode, flags);
++	if (flags & O_CREAT) {
++		p->o_arg.umask = current_umask();
++		p->o_arg.label = nfs4_label_copy(p->a_label, label);
++		if (c->sattr != NULL && c->sattr->ia_valid != 0) {
++			p->o_arg.u.attrs = &p->attrs;
++			memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
++
++			memcpy(p->o_arg.u.verifier.data, c->verf,
++					sizeof(p->o_arg.u.verifier.data));
++		}
++	}
+ 	/* don't put an ACCESS op in OPEN compound if O_EXCL, because ACCESS
+ 	 * will return permission denied for all bits until close */
+ 	if (!(flags & O_EXCL)) {
+@@ -1261,7 +1271,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 	p->o_arg.server = server;
+ 	p->o_arg.bitmask = nfs4_bitmask(server, label);
+ 	p->o_arg.open_bitmap = &nfs4_fattr_bitmap[0];
+-	p->o_arg.label = nfs4_label_copy(p->a_label, label);
+ 	switch (p->o_arg.claim) {
+ 	case NFS4_OPEN_CLAIM_NULL:
+ 	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
+@@ -1274,13 +1283,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
+ 	case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
+ 		p->o_arg.fh = NFS_FH(d_inode(dentry));
+ 	}
+-	if (c != NULL && c->sattr != NULL && c->sattr->ia_valid != 0) {
+-		p->o_arg.u.attrs = &p->attrs;
+-		memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
+-
+-		memcpy(p->o_arg.u.verifier.data, c->verf,
+-				sizeof(p->o_arg.u.verifier.data));
+-	}
+ 	p->c_arg.fh = &p->o_res.fh;
+ 	p->c_arg.stateid = &p->o_res.stateid;
+ 	p->c_arg.seqid = p->o_arg.seqid;
+-- 
+2.20.1
+
 
 
