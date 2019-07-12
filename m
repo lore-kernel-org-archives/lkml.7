@@ -2,57 +2,55 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDC2C742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C0C742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85CC20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AD420645
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935267;
-	bh=pm8q++Y9dYFYoF/2eqrnoIc+x6cNiUOwX1h3tqzg3uY=;
+	s=default; t=1562935269;
+	bh=FqlQ/3Gp5hzqFhNccH8EbWf2qw4CxCzFQjP9Q6lPcgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMXC1MrFzCZ5JRlzDTHKcz9A0waLv+pBZdz9KMrO3POvGDFpabZ2MTEd/9MGJ5M8+
-	 KNI5Yk+nn9aEW2fxRi6B/KBmCntOeitJ6sX7OM+NH8ANlSGSimdmZ+E30gRJm+lSiL
-	 EuxKOja4WyCakPVfs2eSNxGO+4WRZbx8JT5Q8ypM=
+	b=rVG0fgv+xtWFiXQqrGq+lG223uqeSAp+Kt9Cevg8UK/YAefl5yOMo+wlxHnakw928
+	 1r0w5UOfeVFfdqzMKHHNmTxEOXuKWmAL8qaEZTKfEJHA7LafQdNcYH3qMY7xwg4xmk
+	 MET1QJdJBUImiftQ8YTlKY019VAx6R3jHxifd+Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfGLMlF (ORCPT
+        id S1728392AbfGLM0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32864 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbfGLMYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:24:22 -0400
+        id S1728027AbfGLMZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:25:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F08242084B;
-        Fri, 12 Jul 2019 12:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D2721019;
+        Fri, 12 Jul 2019 12:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934261;
-        bh=pm8q++Y9dYFYoF/2eqrnoIc+x6cNiUOwX1h3tqzg3uY=;
+        s=default; t=1562934358;
+        bh=FqlQ/3Gp5hzqFhNccH8EbWf2qw4CxCzFQjP9Q6lPcgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=irMKK96X5Ak+MxIqwyrTWFyhKMK6yZ/4oARFXQTi+JHe0fslQqCaNfg2mHkEj9hgR
-         TZB/dZHgTfny74465mroSWdMl5X0TmmuJzquj5wBc1tKL0dZZa5he3Efn/Bp0ANJG3
-         ZZpI+BVgmwZnETc+cJx/ueGKJY92VEy7aodRvas4=
+        b=YOSn/WHWCHtN9FYjrIffMYlXfrd6VunT+Kds7gRAuVNCmeMwVbT/RUHTRd+kpdSJ7
+         8yn6R/UDNsHelpZlHiJTgwM2r6Upr95FAzD/ey8kGdckv0Y/Spf/gufX8Oyto6mnJK
+         mFMrXMUhPM3PUdHnwdJVf8YOHd8uzJVoKuJ5n8gM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 87/91] staging: bcm2835-camera: Replace spinlock protecting context_map with mutex
-Date:   Fri, 12 Jul 2019 14:19:30 +0200
-Message-Id: <20190712121626.390070383@linuxfoundation.org>
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 006/138] ARM: dts: dra71x: Disable rtc target module
+Date:   Fri, 12 Jul 2019 14:17:50 +0200
+Message-Id: <20190712121628.967654105@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
-References: <20190712121621.422224300@linuxfoundation.org>
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+References: <20190712121628.731888964@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,75 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+[ Upstream commit fe9edfe648ac444150ec95da1fb10e2728cc9789 ]
 
-commit 8dedab2903f152aa3cee9ae3d57c828dea0d356e upstream.
+Introduce dra71x.dtsi to include dra71x specific changes.
+rtc is fused out on dra71 and accessing target module
+register is causing a boot crash hence disable it.
 
-The commit "staging: bcm2835-camera: Replace open-coded idr with a struct idr."
-replaced an internal implementation of an idr with the standard functions
-and a spinlock. idr_alloc(GFP_KERNEL) can sleep whilst calling kmem_cache_alloc
-to allocate the new node, but this is not valid whilst in an atomic context
-due to the spinlock.
-
-There is no need for this to be a spinlock as a standard mutex is
-sufficient.
-
-Fixes: 950fd867c635 ("staging: bcm2835-camera: Replace open-coded idr with a struct idr.")
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 549fce068a3112 ("ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data")
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/dra71-evm.dts |  2 +-
+ arch/arm/boot/dts/dra71x.dtsi   | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/dra71x.dtsi
 
---- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-@@ -162,7 +162,8 @@ struct vchiq_mmal_instance {
- 	void *bulk_scratch;
+diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
+index 82cc7ec37af0..c496ae83e27e 100644
+--- a/arch/arm/boot/dts/dra71-evm.dts
++++ b/arch/arm/boot/dts/dra71-evm.dts
+@@ -6,7 +6,7 @@
+  * published by the Free Software Foundation.
+  */
  
- 	struct idr context_map;
--	spinlock_t context_map_lock;
-+	/* protect accesses to context_map */
-+	struct mutex context_map_lock;
- 
- 	/* component to use next */
- 	int component_idx;
-@@ -185,10 +186,10 @@ get_msg_context(struct vchiq_mmal_instan
- 	 * that when we service the VCHI reply, we can look up what
- 	 * message is being replied to.
- 	 */
--	spin_lock(&instance->context_map_lock);
-+	mutex_lock(&instance->context_map_lock);
- 	handle = idr_alloc(&instance->context_map, msg_context,
- 			   0, 0, GFP_KERNEL);
--	spin_unlock(&instance->context_map_lock);
-+	mutex_unlock(&instance->context_map_lock);
- 
- 	if (handle < 0) {
- 		kfree(msg_context);
-@@ -212,9 +213,9 @@ release_msg_context(struct mmal_msg_cont
- {
- 	struct vchiq_mmal_instance *instance = msg_context->instance;
- 
--	spin_lock(&instance->context_map_lock);
-+	mutex_lock(&instance->context_map_lock);
- 	idr_remove(&instance->context_map, msg_context->handle);
--	spin_unlock(&instance->context_map_lock);
-+	mutex_unlock(&instance->context_map_lock);
- 	kfree(msg_context);
- }
- 
-@@ -1854,7 +1855,7 @@ int vchiq_mmal_init(struct vchiq_mmal_in
- 
- 	instance->bulk_scratch = vmalloc(PAGE_SIZE);
- 
--	spin_lock_init(&instance->context_map_lock);
-+	mutex_init(&instance->context_map_lock);
- 	idr_init_base(&instance->context_map, 1);
- 
- 	params.callback_param = instance;
+-#include "dra72-evm-common.dtsi"
++#include "dra71x.dtsi"
+ #include "dra7-mmc-iodelay.dtsi"
+ #include "dra72x-mmc-iodelay.dtsi"
+ #include <dt-bindings/net/ti-dp83867.h>
+diff --git a/arch/arm/boot/dts/dra71x.dtsi b/arch/arm/boot/dts/dra71x.dtsi
+new file mode 100644
+index 000000000000..aad7394902a6
+--- /dev/null
++++ b/arch/arm/boot/dts/dra71x.dtsi
+@@ -0,0 +1,13 @@
++/*
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "dra72-evm-common.dtsi"
++
++&rtctarget {
++	status = "disabled";
++};
+-- 
+2.20.1
+
 
 
