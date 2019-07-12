@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72DCC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18087C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768BE2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E22872084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934349;
-	bh=FTAfikbxU9YXt3lnnvnuZ+VFd56L0+fLtENCxqH/FSM=;
+	s=default; t=1562934353;
+	bh=QgeCaSs0WFCBBb9xg0R1fRjrrhR04XELJAOQkKcP1bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMqdP4/x3bXoVAY2CLkCLte48Vqgbt4WJEtNGWMzMhvizNrMXQtiMxZhToiH+mqsw
-	 8oVtvQp3TyBWQ7eVNbsiRnhHLpUt2WFFEKm0g7GST+OfmmQYLnk/qt5qu9sOGpm7Mf
-	 fpoMWhrHU2fPL52bI95E+7XiRVXx3VQijygMrwfE=
+	b=TiyCfXqADNGRvOhkzEWJws6Rprf2KLafsq9qH7stl+HzwMye19B1lKmWuGvdRSMOk
+	 fdgXbuQjXt763E/hEeelzXjEXRvLiGuxwI5CC+/CfNnKzttzidxADFUUTjzLd+SaBp
+	 J8UmuYzGwVMMdmvsbc/c1x/wfchCDRAfoFk95d9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfGLMZs (ORCPT
+        id S1728019AbfGLMZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36138 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfGLMZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:25:46 -0400
+        id S1727391AbfGLMZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:25:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E8B208E4;
-        Fri, 12 Jul 2019 12:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBCE7216C4;
+        Fri, 12 Jul 2019 12:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934344;
-        bh=FTAfikbxU9YXt3lnnvnuZ+VFd56L0+fLtENCxqH/FSM=;
+        s=default; t=1562934341;
+        bh=QgeCaSs0WFCBBb9xg0R1fRjrrhR04XELJAOQkKcP1bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ASPoVgqySPQWn6nHrXEIfIRtC2YkP9L6LyU5ljt5eSiH2aGrfALo8PWFwSSt4iQ2Q
-         FHJGn8cMM594I22UZ3xSLY0iNbWSRoZRwIfBX/Te83tfvyL5WjDf1T9uJMgLl9yBbN
-         7ynDFab3/6IIsoi8uOjwiRWDhCdWewAdqKBmdDcA=
+        b=IzaOE7wd8qMtNtHqG8ieYPuRB9wH0ymeuHM59RrDz++WgbXtZHIEozUAd+yvm6wk8
+         IzdsvgMkeqCsnnH5Dcpq6S7lFIjFvPTqhhj+DoIm0Hu0tDiV6X9QbA7ayeJ8LaQbue
+         wWfU+Zz9YOySf6kpE4GcPIANb6O+jEw6np9LVfsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 024/138] iwlwifi: fix load in rfkill flow for unified firmware
-Date:   Fri, 12 Jul 2019 14:18:08 +0200
-Message-Id: <20190712121629.633803419@linuxfoundation.org>
+Subject: [PATCH 5.1 023/138] bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
+Date:   Fri, 12 Jul 2019 14:18:07 +0200
+Message-Id: <20190712121629.597450597@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,199 +64,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b3500b472c880b5abe90ffd5c4a25aa736f906ad ]
+[ Upstream commit 1e692f09e091bf5c8b38384f297d6dae5dbf0f12 ]
 
-When we have a single image (same firmware image for INIT and
-OPERATIONAL), we couldn't load the driver and register to the
-stack if we had hardware RF-Kill asserted.
+In BPF, 32-bit ALU operations should zero-extend their results into
+the 64-bit registers.
 
-Fix this. This required a few changes:
+The current BPF JIT on RISC-V emits incorrect instructions that perform
+sign extension only (e.g., addw, subw) on 32-bit add, sub, lsh, rsh,
+arsh, and neg. This behavior diverges from the interpreter and JITs
+for other architectures.
 
-1) Run the firmware as part of the INIT phase even if its
-   ucode_type is not IWL_UCODE_INIT.
-2) Send the commands that are sent to the unified image in
-   INIT flow even in RF-Kill.
-3) Don't ask the transport to stop the hardware upon RF-Kill
-   interrupt if the RF-Kill is asserted.
-4) Allow the RF-Kill interrupt to take us out of L1A so that
-   the RF-Kill interrupt will be received by the host (to
-   enable the radio).
+This patch fixes the bugs by performing zero extension on the destination
+register of 32-bit ALU operations.
 
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
+Cc: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Björn Töpel <bjorn.topel@gmail.com>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c   | 23 ++++++++++++++-----
- .../net/wireless/intel/iwlwifi/mvm/mac80211.c |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/ops.c  | 17 ++++++++++----
- .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
- 5 files changed, 33 insertions(+), 13 deletions(-)
+ arch/riscv/net/bpf_jit_comp.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index ab68b5d53ec9..153717587aeb 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -311,6 +311,8 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
- 	int ret;
- 	enum iwl_ucode_type old_type = mvm->fwrt.cur_fw_img;
- 	static const u16 alive_cmd[] = { MVM_ALIVE };
-+	bool run_in_rfkill =
-+		ucode_type == IWL_UCODE_INIT || iwl_mvm_has_unified_ucode(mvm);
+diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
+index e5c8d675bd6e..426d5c33ea90 100644
+--- a/arch/riscv/net/bpf_jit_comp.c
++++ b/arch/riscv/net/bpf_jit_comp.c
+@@ -751,10 +751,14 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
+ 	case BPF_ALU | BPF_ADD | BPF_X:
+ 	case BPF_ALU64 | BPF_ADD | BPF_X:
+ 		emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
+ 	case BPF_ALU | BPF_SUB | BPF_X:
+ 	case BPF_ALU64 | BPF_SUB | BPF_X:
+ 		emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
+ 	case BPF_ALU | BPF_AND | BPF_X:
+ 	case BPF_ALU64 | BPF_AND | BPF_X:
+@@ -795,14 +799,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
+ 	case BPF_ALU | BPF_LSH | BPF_X:
+ 	case BPF_ALU64 | BPF_LSH | BPF_X:
+ 		emit(is64 ? rv_sll(rd, rd, rs) : rv_sllw(rd, rd, rs), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
+ 	case BPF_ALU | BPF_RSH | BPF_X:
+ 	case BPF_ALU64 | BPF_RSH | BPF_X:
+ 		emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
+ 	case BPF_ALU | BPF_ARSH | BPF_X:
+ 	case BPF_ALU64 | BPF_ARSH | BPF_X:
+ 		emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
  
- 	if (ucode_type == IWL_UCODE_REGULAR &&
- 	    iwl_fw_dbg_conf_usniffer(mvm->fw, FW_DBG_START_FROM_ALIVE) &&
-@@ -328,7 +330,12 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
- 				   alive_cmd, ARRAY_SIZE(alive_cmd),
- 				   iwl_alive_fn, &alive_data);
+ 	/* dst = -dst */
+@@ -810,6 +820,8 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
+ 	case BPF_ALU64 | BPF_NEG:
+ 		emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
+ 		     rv_subw(rd, RV_REG_ZERO, rd), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
  
--	ret = iwl_trans_start_fw(mvm->trans, fw, ucode_type == IWL_UCODE_INIT);
-+	/*
-+	 * We want to load the INIT firmware even in RFKILL
-+	 * For the unified firmware case, the ucode_type is not
-+	 * INIT, but we still need to run it.
-+	 */
-+	ret = iwl_trans_start_fw(mvm->trans, fw, run_in_rfkill);
- 	if (ret) {
- 		iwl_fw_set_current_image(&mvm->fwrt, old_type);
- 		iwl_remove_notification(&mvm->notif_wait, &alive_wait);
-@@ -433,7 +440,8 @@ static int iwl_run_unified_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 	 * commands
- 	 */
- 	ret = iwl_mvm_send_cmd_pdu(mvm, WIDE_ID(SYSTEM_GROUP,
--						INIT_EXTENDED_CFG_CMD), 0,
-+						INIT_EXTENDED_CFG_CMD),
-+				   CMD_SEND_IN_RFKILL,
- 				   sizeof(init_cfg), &init_cfg);
- 	if (ret) {
- 		IWL_ERR(mvm, "Failed to run init config command: %d\n",
-@@ -457,7 +465,8 @@ static int iwl_run_unified_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 	}
+ 	/* dst = BSWAP##imm(dst) */
+@@ -964,14 +976,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
+ 	case BPF_ALU | BPF_LSH | BPF_K:
+ 	case BPF_ALU64 | BPF_LSH | BPF_K:
+ 		emit(is64 ? rv_slli(rd, rd, imm) : rv_slliw(rd, rd, imm), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
+ 	case BPF_ALU | BPF_RSH | BPF_K:
+ 	case BPF_ALU64 | BPF_RSH | BPF_K:
+ 		emit(is64 ? rv_srli(rd, rd, imm) : rv_srliw(rd, rd, imm), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
+ 	case BPF_ALU | BPF_ARSH | BPF_K:
+ 	case BPF_ALU64 | BPF_ARSH | BPF_K:
+ 		emit(is64 ? rv_srai(rd, rd, imm) : rv_sraiw(rd, rd, imm), ctx);
++		if (!is64)
++			emit_zext_32(rd, ctx);
+ 		break;
  
- 	ret = iwl_mvm_send_cmd_pdu(mvm, WIDE_ID(REGULATORY_AND_NVM_GROUP,
--						NVM_ACCESS_COMPLETE), 0,
-+						NVM_ACCESS_COMPLETE),
-+				   CMD_SEND_IN_RFKILL,
- 				   sizeof(nvm_complete), &nvm_complete);
- 	if (ret) {
- 		IWL_ERR(mvm, "Failed to run complete NVM access: %d\n",
-@@ -482,6 +491,8 @@ static int iwl_run_unified_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 		}
- 	}
- 
-+	mvm->rfkill_safe_init_done = true;
-+
- 	return 0;
- 
- error:
-@@ -526,7 +537,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 
- 	lockdep_assert_held(&mvm->mutex);
- 
--	if (WARN_ON_ONCE(mvm->calibrating))
-+	if (WARN_ON_ONCE(mvm->rfkill_safe_init_done))
- 		return 0;
- 
- 	iwl_init_notification_wait(&mvm->notif_wait,
-@@ -576,7 +587,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 		goto remove_notif;
- 	}
- 
--	mvm->calibrating = true;
-+	mvm->rfkill_safe_init_done = true;
- 
- 	/* Send TX valid antennas before triggering calibrations */
- 	ret = iwl_send_tx_ant_cfg(mvm, iwl_mvm_get_valid_tx_ant(mvm));
-@@ -612,7 +623,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- remove_notif:
- 	iwl_remove_notification(&mvm->notif_wait, &calib_wait);
- out:
--	mvm->calibrating = false;
-+	mvm->rfkill_safe_init_done = false;
- 	if (iwlmvm_mod_params.init_dbg && !mvm->nvm_data) {
- 		/* we want to debug INIT and we have no NVM - fake */
- 		mvm->nvm_data = kzalloc(sizeof(struct iwl_nvm_data) +
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 6a3b11dd2edf..4ddf620c267d 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -1211,7 +1211,7 @@ static void iwl_mvm_restart_cleanup(struct iwl_mvm *mvm)
- 
- 	mvm->scan_status = 0;
- 	mvm->ps_disabled = false;
--	mvm->calibrating = false;
-+	mvm->rfkill_safe_init_done = false;
- 
- 	/* just in case one was running */
- 	iwl_mvm_cleanup_roc_te(mvm);
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index a50dc53df086..b698d55ace1b 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -877,7 +877,7 @@ struct iwl_mvm {
- 	struct iwl_mvm_vif *bf_allowed_vif;
- 
- 	bool hw_registered;
--	bool calibrating;
-+	bool rfkill_safe_init_done;
- 	bool support_umac_log;
- 
- 	u32 ampdu_ref;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ops.c b/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
-index 13681b03c10e..20115770e75a 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
-@@ -1222,7 +1222,8 @@ void iwl_mvm_set_hw_ctkill_state(struct iwl_mvm *mvm, bool state)
- static bool iwl_mvm_set_hw_rfkill_state(struct iwl_op_mode *op_mode, bool state)
- {
- 	struct iwl_mvm *mvm = IWL_OP_MODE_GET_MVM(op_mode);
--	bool calibrating = READ_ONCE(mvm->calibrating);
-+	bool rfkill_safe_init_done = READ_ONCE(mvm->rfkill_safe_init_done);
-+	bool unified = iwl_mvm_has_unified_ucode(mvm);
- 
- 	if (state)
- 		set_bit(IWL_MVM_STATUS_HW_RFKILL, &mvm->status);
-@@ -1231,15 +1232,23 @@ static bool iwl_mvm_set_hw_rfkill_state(struct iwl_op_mode *op_mode, bool state)
- 
- 	iwl_mvm_set_rfkill_state(mvm);
- 
--	/* iwl_run_init_mvm_ucode is waiting for results, abort it */
--	if (calibrating)
-+	 /* iwl_run_init_mvm_ucode is waiting for results, abort it. */
-+	if (rfkill_safe_init_done)
- 		iwl_abort_notification_waits(&mvm->notif_wait);
- 
-+	/*
-+	 * Don't ask the transport to stop the firmware. We'll do it
-+	 * after cfg80211 takes us down.
-+	 */
-+	if (unified)
-+		return false;
-+
- 	/*
- 	 * Stop the device if we run OPERATIONAL firmware or if we are in the
- 	 * middle of the calibrations.
- 	 */
--	return state && (mvm->fwrt.cur_fw_img != IWL_UCODE_INIT || calibrating);
-+	return state && (mvm->fwrt.cur_fw_img != IWL_UCODE_INIT ||
-+			 rfkill_safe_init_done);
- }
- 
- static void iwl_mvm_free_skb(struct iwl_op_mode *op_mode, struct sk_buff *skb)
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-index 59213164f35e..2afce5c41322 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-@@ -948,7 +948,7 @@ static inline void iwl_enable_rfkill_int(struct iwl_trans *trans)
- 					   MSIX_HW_INT_CAUSES_REG_RF_KILL);
- 	}
- 
--	if (trans->cfg->device_family == IWL_DEVICE_FAMILY_9000) {
-+	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_9000) {
- 		/*
- 		 * On 9000-series devices this bit isn't enabled by default, so
- 		 * when we power down the device we need set the bit to allow it
+ 	/* JUMP off */
 -- 
 2.20.1
 
