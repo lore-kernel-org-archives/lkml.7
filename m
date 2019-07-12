@@ -2,134 +2,204 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DDDC742CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA66C742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBB7208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:12:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ctbFyOgL"
+	by mail.kernel.org (Postfix) with ESMTP id 0339E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfGLQMZ (ORCPT
+        id S1727057AbfGLQOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:12:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35808 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbfGLQMY (ORCPT
+        Fri, 12 Jul 2019 12:14:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51128 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfGLQOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:12:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dG6diy7V6S4lK/b3VvWqSMbbXCrffARazC3Zctr1xxs=; b=ctbFyOgLoT6nwqZqoDaaHy2SR
-        Q1T4rvUj8j+B6wujCcNEnoaPYyEUBa9JpDZmJ4UHZwDlHqBMbRijWEfZRWSHecs9cUD5XBAcR+s/1
-        LIBP6F2cXen0350mqZwY6yvkSDp7J92diHZ5qlt3LzJ/1y/SXyk8zvY1E6DXgO1qcvbqGNIB3uWkg
-        5PQlfmC5l+p5VrhDb6yaiOWck5eK45YK61Xgfl2I4OO+vA1FxwB14mG/itQtThPCzb1zBsD89AhxS
-        J7NezN6kMe34TtuLlCqZ8odBu3cGKAr13LmL2XDQDMSXrIzaB7z2xi++BFjok9/KJHvSe+ay2BzHW
-        IsXeg8elg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hly9d-0006vn-It; Fri, 12 Jul 2019 16:12:15 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3AA8A209772E8; Fri, 12 Jul 2019 18:12:12 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 18:12:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-Message-ID: <20190712161212.GW3419@hirez.programming.kicks-ass.net>
-References: <20190712144257.GE27512@ziepe.ca>
- <20190712135339.GC27512@ziepe.ca>
- <20190712120328.GB27512@ziepe.ca>
- <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
- <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
- <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
+        Fri, 12 Jul 2019 12:14:35 -0400
+Received: from linux.home (2a01cb0c80061e007f541addd69f0d47.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:8006:1e00:7f54:1add:d69f:d47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 58A8328A85E;
+        Fri, 12 Jul 2019 17:14:33 +0100 (BST)
+Date:   Fri, 12 Jul 2019 18:14:29 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        bbrezillon@kernel.org, Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v4 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
+ LSM6DSO and LSM6DSR
+Message-ID: <20190712181332.04f8b3da@linux.home>
+In-Reply-To: <f239834a6b8bd179094cdc19a3ac5ecaf807cee3.1562931742.git.vitor.soares@synopsys.com>
+References: <cover.1562931742.git.vitor.soares@synopsys.com>
+        <f239834a6b8bd179094cdc19a3ac5ecaf807cee3.1562931742.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 03:24:09PM +0000, Bernard Metzler wrote:
-> -----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+On Fri, 12 Jul 2019 13:53:30 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-> Hmmm, I don't yet get why we should test and clear atomically, if we
-> clear anyway - is it because we want to avoid clearing a re-arm which
-> happens just after testing and before clearing?
-> (1) If the test was positive, we will call the CQ event handler,
-> and per RDMA verbs spec, the application MUST re-arm the CQ after it
-> got a CQ event, to get another one. So clearing it sometimes before
-> calling the handler is right.
-> (2) If the test was negative, a test and reset would not change
-> anything.
+> For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
+> spi and i2c mode.
 > 
-> Another complication -- test_and_set_bit() operates on a single
-> bit, but we have to test two bits, and reset both, if one is
-> set. Can we do that atomically, if we test the bits conditionally?
-> I didn't find anything appropriate.
-
-There's cmpxchg() loops that can do that.
-
-	unsigned int new, val = atomic_read(&var);
-	do {
-		if (!(val & MY_TWO_BITS))
-			break;
-
-		new = val | MY_TWO_BITS;
-	} while (!atomic_try_cmpxchg(&var, &val, new));
-
-only problem is you probably shouldn't share atomic_t with userspace,
-unless you put conditions on what archs you support.
-
-> >And then I think all the weird barriers go away
-> >
-> >> >> @@ -1141,11 +1145,17 @@ int siw_req_notify_cq(struct ib_cq
-> >> >*base_cq, enum ib_cq_notify_flags flags)
-> >> >>  	siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
-> >> >>  
-> >> >>  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
-> >> >> -		/* CQ event for next solicited completion */
-> >> >> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
-> >> >> +		/*
-> >> >> +		 * Enable CQ event for next solicited completion.
-> >> >> +		 * and make it visible to all associated producers.
-> >> >> +		 */
-> >> >> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
-> >> >
-> >> >But what is the 2nd piece of data to motivate the smp_store_mb?
-> >> 
-> >> Another core (such as a concurrent RX operation) shall see this
-> >> CQ being re-armed asap.
-> >
-> >'ASAP' is not a '2nd piece of data'. 
-> >
-> >AFAICT this requirement is just a normal atomic set_bit which does
-> >also expedite making the change visible?
+> The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
+> them.
 > 
-> Absolutely!!
-> good point....this is just a single flag we are operating on.
-> And the weird barrier goes away ;)
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+> Changes in v4:
+>   Remove hw_id variable
+> 
+> Changes in v3:
+>   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
+>   Use st_lsm6dsx_probe new form
+> 
+> Changes in v2:
+>   Add support for LSM6DSR
+>   Set pm_ops to st_lsm6dsx_pm_ops
+> 
+>  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+>  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 58 +++++++++++++++++++++++++++++
+>  3 files changed, 66 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> index 9e59297..6b5a73c 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -1,11 +1,12 @@
+>  
+>  config IIO_ST_LSM6DSX
+>  	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
+> -	depends on (I2C || SPI)
+> +	depends on (I2C || SPI || I3C)
+>  	select IIO_BUFFER
+>  	select IIO_KFIFO_BUF
+>  	select IIO_ST_LSM6DSX_I2C if (I2C)
+>  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
+> +	select IIO_ST_LSM6DSX_I3C if (I3C)
+>  	help
+>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+> @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
+>  	tristate
+>  	depends on IIO_ST_LSM6DSX
+>  	select REGMAP_SPI
+> +
+> +config IIO_ST_LSM6DSX_I3C
+> +	tristate
+> +	depends on IIO_ST_LSM6DSX
+> +	select REGMAP_I3C
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
+> index e5f733c..c676965 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Makefile
+> +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
+> @@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
+>  obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
+>  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
+>  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
+> +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> new file mode 100644
+> index 0000000..2e89524
+> --- /dev/null
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> @@ -0,0 +1,58 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
+> + *
+> + * Author: Vitor Soares <vitor.soares@synopsys.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/i3c/device.h>
+> +#include <linux/i3c/master.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "st_lsm6dsx.h"
+> +
+> +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
+> +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
+> +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),
 
-atomic ops don't expedite anything, and memory barriers don't make
-things happen asap.
+I think you need an uintptr_t cast here:
 
-That is; the stores from atomic ops can stay in store buffers just like
-any other store, and memory barriers don't flush store buffers, they
-only impose order between memops.
+	I3C_DEVICE(0x0104, 0x006C, (void *)(uintptr_t)ST_LSM6DSO_ID),
+	I3C_DEVICE(0x0104, 0x006B, (void *)(uintptr_t)ST_LSM6DSR_ID),
+
+otherwise gcc might complain that the integer and pointer do not have
+the same size (on 64-bit architectures).
+
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
+> +
+> +static const struct regmap_config st_lsm6dsx_i3c_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+
+This can be moved ...
+
+> +
+> +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
+> +{
+
+... here without the static and const qualifiers:
+
+	struct regmap_config regmap_config = {
+		.reg_bits = 8,
+		.val_bits = 8,
+	};
+
+> +	const struct i3c_device_id *id = i3c_device_match_id(i3cdev,
+> +							    st_lsm6dsx_i3c_ids);
+> +	struct regmap *regmap;
+> +
+> +	regmap = devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
+> +			(int)PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	return st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
+
+uintptr_t cast here.
+
+> +}
+> +
+> +static struct i3c_driver st_lsm6dsx_driver = {
+> +	.driver = {
+> +		.name = "st_lsm6dsx_i3c",
+> +		.pm = &st_lsm6dsx_pm_ops,
+> +	},
+> +	.probe = st_lsm6dsx_i3c_probe,
+> +	.id_table = st_lsm6dsx_i3c_ids,
+> +};
+> +module_i3c_driver(st_lsm6dsx_driver);
+> +
+> +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
+> +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
+> +MODULE_LICENSE("GPL v2");
+
