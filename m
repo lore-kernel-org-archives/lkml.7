@@ -2,116 +2,375 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FEFC742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F7DC742AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFFD2084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6637A2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562915997;
+	bh=KsPbkm/97ElkztbdM6F2bzj1796PTHYOsD+AX/EU+Dg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sMdWkkVG49uzea6YoghrDx0uX8Lol2cHvMpG7dlfBDiTb+xZ3o64g1GsGaRD4kG+8
+	 oAygXbC9GyDKuHEQ8zOAERZP+COJ2ZwFCF4cnOuD8TNcm5z4Jwd6e2qD3FvNvbpIAL
+	 1pg0gmt//bh12jeZZLWxd16bnLFhipUU2fk5+4Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfGLHRi (ORCPT
+        id S1726126AbfGLHTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:17:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43771 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfGLHRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:17:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i189so3906328pfg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 00:17:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HXsmvvgoYnPg11ObtkwJ6+EqE/8B+1DtT9GF/thKYqI=;
-        b=MWgO6EQKNROUZVUyfVy4xAEUxy6t8HS6dh288+v0wwKxcMQSAklHS0xuRiyZY6eME6
-         MgxH9kQcRm6TKlTTGQOKQGLht7Y/+x9N07KvyUuPAFz1Ip8z8oSgaisMugwnJBIAXfL8
-         teIsRjYEOFY1puFjNXzlQmyXpue+E+QiXmEnxGY6PEoPwmkTOeto7mljCXVc5uKAI9a7
-         acmViAd6DexY5ZMM2kpWOTuaCEPhTXu1cxncKHy8gsQENwwCv/48+hzF3Barse+Q3cLi
-         dalrKzgEgqKxU4ls5dumFuQ+fFsZ+lrTKTGrcy0lOlna/foAF8PaRoQr544DbJNJe7oh
-         nc1w==
-X-Gm-Message-State: APjAAAUsbzKdh4eTFDpC4dwrZps2HvQJ+cN1p+Cfz1ORCfiqu6OAkY1B
-        FGabhkYc/ZzqUv/JQ3ddBU0=
-X-Google-Smtp-Source: APXvYqwoOS3vz69Q4xBB7TZBqppk4aiQHJz8Tbu2nOMyKRHJFlOisywyLYZ9OrRWHRbIew30Kk/oxA==
-X-Received: by 2002:a63:6ec6:: with SMTP id j189mr9352493pgc.168.1562915857427;
-        Fri, 12 Jul 2019 00:17:37 -0700 (PDT)
-Received: from sultan-box.localdomain ([2601:200:c001:5f40:3dac:1a9b:f47c:b78e])
-        by smtp.gmail.com with ESMTPSA id r6sm12610256pjb.22.2019.07.12.00.17.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 00:17:36 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 00:17:18 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scatterlist: Allocate a contiguous array instead of
- chaining
-Message-ID: <20190712071718.GA17944@sultan-box.localdomain>
-References: <20190712063657.17088-1-sultan@kerneltoast.com>
- <20190712065613.GA3036@ming.t460p>
- <alpine.DEB.2.21.1907120901190.11639@nanos.tec.linutronix.de>
+        Fri, 12 Jul 2019 03:19:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51926 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725840AbfGLHTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 03:19:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0C9DCAD4E;
+        Fri, 12 Jul 2019 07:19:53 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 09:19:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v4 4/4] mm: introduce MADV_PAGEOUT
+Message-ID: <20190712071951.GO29483@dhcp22.suse.cz>
+References: <20190711012528.176050-1-minchan@kernel.org>
+ <20190711012528.176050-5-minchan@kernel.org>
+ <20190711184223.GD20341@cmpxchg.org>
+ <20190712051828.GA128252@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907120901190.11639@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190712051828.GA128252@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 09:06:40AM +0200, Thomas Gleixner wrote:
-> On Fri, 12 Jul 2019, Ming Lei wrote:
-> > vmalloc() may sleep, so it is impossible to be called in atomic context.
+On Fri 12-07-19 14:18:28, Minchan Kim wrote:
+[...]
+> >From 41592f23e876ec21e49dc3c76dc89538e2bb16be Mon Sep 17 00:00:00 2001
+> From: Minchan Kim <minchan@kernel.org>
+> Date: Fri, 12 Jul 2019 14:05:36 +0900
+> Subject: [PATCH] mm: factor out common parts between MADV_COLD and
+>  MADV_PAGEOUT
 > 
-> Allocations from atomic context should be avoided wherever possible and you
-> really have to have a very convincing argument why an atomic allocation is
-> absolutely necessary. I cleaned up quite some GFP_ATOMIC users over the
-> last couple of years and all of them were doing it for the very wrong
-> reasons and mostly just to silence the warning which is triggered with
-> GFP_KERNEL when called from a non-sleepable context.
+> There are many common parts between MADV_COLD and MADV_PAGEOUT.
+> This patch factor them out to save code duplication.
+
+This looks better indeed. I still hope that this can get improved even
+further but let's do that in a follow up patch.
+
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/madvise.c | 201 +++++++++++++--------------------------------------
+>  1 file changed, 52 insertions(+), 149 deletions(-)
 > 
-> So I suggest to audit all call sites first and figure out whether they
-> really must use GFP_ATOMIC and if possible clean them up, remove the GFP
-> argument and then do the vmalloc thing on top.
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index bc2f0138982e..3d3d14517cc8 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -30,6 +30,11 @@
+>  
+>  #include "internal.h"
+>  
+> +struct madvise_walk_private {
+> +	struct mmu_gather *tlb;
+> +	bool pageout;
+> +};
+> +
+>  /*
+>   * Any behaviour which results in changes to the vma->vm_flags needs to
+>   * take mmap_sem for writing. Others, which simply traverse vmas, need
+> @@ -310,16 +315,23 @@ static long madvise_willneed(struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  
+> -static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+> -				unsigned long end, struct mm_walk *walk)
+> +static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+> +				unsigned long addr, unsigned long end,
+> +				struct mm_walk *walk)
+>  {
+> -	struct mmu_gather *tlb = walk->private;
+> +	struct madvise_walk_private *private = walk->private;
+> +	struct mmu_gather *tlb = private->tlb;
+> +	bool pageout = private->pageout;
+>  	struct mm_struct *mm = tlb->mm;
+>  	struct vm_area_struct *vma = walk->vma;
+>  	pte_t *orig_pte, *pte, ptent;
+>  	spinlock_t *ptl;
+> -	struct page *page;
+>  	unsigned long next;
+> +	struct page *page = NULL;
+> +	LIST_HEAD(page_list);
+> +
+> +	if (fatal_signal_pending(current))
+> +		return -EINTR;
+>  
+>  	next = pmd_addr_end(addr, end);
+>  	if (pmd_trans_huge(*pmd)) {
+> @@ -358,6 +370,12 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  			return 0;
+>  		}
+>  
+> +		if (pageout) {
+> +			if (isolate_lru_page(page))
+> +				goto huge_unlock;
+> +			list_add(&page->lru, &page_list);
+> +		}
+> +
+>  		if (pmd_young(orig_pmd)) {
+>  			pmdp_invalidate(vma, addr, pmd);
+>  			orig_pmd = pmd_mkold(orig_pmd);
+> @@ -366,10 +384,14 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  			tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
+>  		}
+>  
+> +		ClearPageReferenced(page);
+>  		test_and_clear_page_young(page);
+> -		deactivate_page(page);
+>  huge_unlock:
+>  		spin_unlock(ptl);
+> +		if (pageout)
+> +			reclaim_pages(&page_list);
+> +		else
+> +			deactivate_page(page);
+>  		return 0;
+>  	}
+>  
+> @@ -423,6 +445,12 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  
+>  		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+>  
+> +		if (pageout) {
+> +			if (isolate_lru_page(page))
+> +				continue;
+> +			list_add(&page->lru, &page_list);
+> +		}
+> +
+>  		if (pte_young(ptent)) {
+>  			ptent = ptep_get_and_clear_full(mm, addr, pte,
+>  							tlb->fullmm);
+> @@ -437,12 +465,16 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  		 * As a side effect, it makes confuse idle-page tracking
+>  		 * because they will miss recent referenced history.
+>  		 */
+> +		ClearPageReferenced(page);
+>  		test_and_clear_page_young(page);
+> -		deactivate_page(page);
+> +		if (!pageout)
+> +			deactivate_page(page);
+>  	}
+>  
+>  	arch_enter_lazy_mmu_mode();
+>  	pte_unmap_unlock(orig_pte, ptl);
+> +	if (pageout)
+> +		reclaim_pages(&page_list);
+>  	cond_resched();
+>  
+>  	return 0;
+> @@ -452,10 +484,15 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
+>  			     struct vm_area_struct *vma,
+>  			     unsigned long addr, unsigned long end)
+>  {
+> +	struct madvise_walk_private walk_private = {
+> +		.tlb = tlb,
+> +		.pageout = false,
+> +	};
+> +
+>  	struct mm_walk cold_walk = {
+> -		.pmd_entry = madvise_cold_pte_range,
+> +		.pmd_entry = madvise_cold_or_pageout_pte_range,
+>  		.mm = vma->vm_mm,
+> -		.private = tlb,
+> +		.private = &walk_private,
+>  	};
+>  
+>  	tlb_start_vma(tlb, vma);
+> @@ -482,153 +519,19 @@ static long madvise_cold(struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  
+> -static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> -				unsigned long end, struct mm_walk *walk)
+> -{
+> -	struct mmu_gather *tlb = walk->private;
+> -	struct mm_struct *mm = tlb->mm;
+> -	struct vm_area_struct *vma = walk->vma;
+> -	pte_t *orig_pte, *pte, ptent;
+> -	spinlock_t *ptl;
+> -	LIST_HEAD(page_list);
+> -	struct page *page;
+> -	unsigned long next;
+> -
+> -	if (fatal_signal_pending(current))
+> -		return -EINTR;
+> -
+> -	next = pmd_addr_end(addr, end);
+> -	if (pmd_trans_huge(*pmd)) {
+> -		pmd_t orig_pmd;
+> -
+> -		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
+> -		ptl = pmd_trans_huge_lock(pmd, vma);
+> -		if (!ptl)
+> -			return 0;
+> -
+> -		orig_pmd = *pmd;
+> -		if (is_huge_zero_pmd(orig_pmd))
+> -			goto huge_unlock;
+> -
+> -		if (unlikely(!pmd_present(orig_pmd))) {
+> -			VM_BUG_ON(thp_migration_supported() &&
+> -					!is_pmd_migration_entry(orig_pmd));
+> -			goto huge_unlock;
+> -		}
+> -
+> -		page = pmd_page(orig_pmd);
+> -		if (next - addr != HPAGE_PMD_SIZE) {
+> -			int err;
+> -
+> -			if (page_mapcount(page) != 1)
+> -				goto huge_unlock;
+> -			get_page(page);
+> -			spin_unlock(ptl);
+> -			lock_page(page);
+> -			err = split_huge_page(page);
+> -			unlock_page(page);
+> -			put_page(page);
+> -			if (!err)
+> -				goto regular_page;
+> -			return 0;
+> -		}
+> -
+> -		if (isolate_lru_page(page))
+> -			goto huge_unlock;
+> -
+> -		if (pmd_young(orig_pmd)) {
+> -			pmdp_invalidate(vma, addr, pmd);
+> -			orig_pmd = pmd_mkold(orig_pmd);
+> -
+> -			set_pmd_at(mm, addr, pmd, orig_pmd);
+> -			tlb_remove_tlb_entry(tlb, pmd, addr);
+> -		}
+> -
+> -		ClearPageReferenced(page);
+> -		test_and_clear_page_young(page);
+> -		list_add(&page->lru, &page_list);
+> -huge_unlock:
+> -		spin_unlock(ptl);
+> -		reclaim_pages(&page_list);
+> -		return 0;
+> -	}
+> -
+> -	if (pmd_trans_unstable(pmd))
+> -		return 0;
+> -regular_page:
+> -	tlb_change_page_size(tlb, PAGE_SIZE);
+> -	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> -	flush_tlb_batched_pending(mm);
+> -	arch_enter_lazy_mmu_mode();
+> -	for (; addr < end; pte++, addr += PAGE_SIZE) {
+> -		ptent = *pte;
+> -		if (!pte_present(ptent))
+> -			continue;
+> -
+> -		page = vm_normal_page(vma, addr, ptent);
+> -		if (!page)
+> -			continue;
+> -
+> -		/*
+> -		 * creating a THP page is expensive so split it only if we
+> -		 * are sure it's worth. Split it if we are only owner.
+> -		 */
+> -		if (PageTransCompound(page)) {
+> -			if (page_mapcount(page) != 1)
+> -				break;
+> -			get_page(page);
+> -			if (!trylock_page(page)) {
+> -				put_page(page);
+> -				break;
+> -			}
+> -			pte_unmap_unlock(orig_pte, ptl);
+> -			if (split_huge_page(page)) {
+> -				unlock_page(page);
+> -				put_page(page);
+> -				pte_offset_map_lock(mm, pmd, addr, &ptl);
+> -				break;
+> -			}
+> -			unlock_page(page);
+> -			put_page(page);
+> -			pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
+> -			pte--;
+> -			addr -= PAGE_SIZE;
+> -			continue;
+> -		}
+> -
+> -		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+> -
+> -		if (isolate_lru_page(page))
+> -			continue;
+> -
+> -		if (pte_young(ptent)) {
+> -			ptent = ptep_get_and_clear_full(mm, addr, pte,
+> -							tlb->fullmm);
+> -			ptent = pte_mkold(ptent);
+> -			set_pte_at(mm, addr, pte, ptent);
+> -			tlb_remove_tlb_entry(tlb, pte, addr);
+> -		}
+> -		ClearPageReferenced(page);
+> -		test_and_clear_page_young(page);
+> -		list_add(&page->lru, &page_list);
+> -	}
+> -
+> -	arch_leave_lazy_mmu_mode();
+> -	pte_unmap_unlock(orig_pte, ptl);
+> -	reclaim_pages(&page_list);
+> -	cond_resched();
+> -
+> -	return 0;
+> -}
+> -
+>  static void madvise_pageout_page_range(struct mmu_gather *tlb,
+>  			     struct vm_area_struct *vma,
+>  			     unsigned long addr, unsigned long end)
+>  {
+> +	struct madvise_walk_private walk_private = {
+> +		.pageout = true,
+> +		.tlb = tlb,
+> +	};
+> +
+>  	struct mm_walk pageout_walk = {
+> -		.pmd_entry = madvise_pageout_pte_range,
+> +		.pmd_entry = madvise_cold_or_pageout_pte_range,
+>  		.mm = vma->vm_mm,
+> -		.private = tlb,
+> +		.private = &walk_private,
+>  	};
+>  
+>  	tlb_start_vma(tlb, vma);
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
 
-Hello Thomas and Ming,
-
-It looks like the following call sites are atomic:
-drivers/crypto/qce/ablkcipher.c:92:	ret = sg_alloc_table(&rctx->dst_tbl, rctx->dst_nents, gfp);
-drivers/crypto/ccp/ccp-crypto-aes-cmac.c:110:	ret = sg_alloc_table(&rctx->data_sg, sg_count, gfp);
-drivers/crypto/ccp/ccp-crypto-sha.c:103:		ret = sg_alloc_table(&rctx->data_sg, sg_count, gfp);
-drivers/spi/spi-pl022.c:1035:	ret = sg_alloc_table(&pl022->sgt_rx, pages, GFP_ATOMIC);
-drivers/spi/spi-pl022.c:1039:	ret = sg_alloc_table(&pl022->sgt_tx, pages, GFP_ATOMIC);
-
-The crypto ones are conditionally made atomic depending on the presence of
-CRYPTO_TFM_REQ_MAY_SLEEP.
-
-Additionally, the following allocation could be problematic with kvmalloc:
-net/ceph/crypto.c:180:		ret = sg_alloc_table(sgt, chunk_cnt, GFP_NOFS);
-
-This is a snippet from kvmalloc:
-	/*
-	 * vmalloc uses GFP_KERNEL for some internal allocations (e.g page tables)
-	 * so the given set of flags has to be compatible.
-	 */
-	if ((flags & GFP_KERNEL) != GFP_KERNEL)
-		return kmalloc_node(size, flags, node);
-
-Use of GFP_NOFS in net/ceph/crypto.c would cause kvmalloc to fall back to
-kmalloc_node, which could cause problems if the allocation size is too large for
-kmalloc_node to reasonably accomodate.
-
-Also, it looks like the vmalloc family doesn't have kvmalloc's GFP_KERNEL check.
-Is this intentional, or does vmalloc really not require GFP_KERNEL context?
-
-Thanks,
-Sultan
+-- 
+Michal Hocko
+SUSE Labs
