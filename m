@@ -2,176 +2,116 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AA9C742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D36C742A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A91208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07260208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BB/aUiEp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QkEPqMp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfGLAof (ORCPT
+        id S1728877AbfGLAsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:44:35 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41625 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfGLAoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:44:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45lDhb2PSBz9sMr;
-        Fri, 12 Jul 2019 10:44:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562892271;
-        bh=l/JfEetmGiTQbE17ezOkcEKybuDLnf5J4bq6IQRRqlw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BB/aUiEpr9AQnfhDGVIFpi2HfCrmTgjh9XNd0p9Dg/5pl73jFmZcoBj/VRb0kUvR6
-         W1rO/ZCA0jBCENPF/ZqBnZ1nZbefbM3h3GI2rujifGy5yqW0768ZTpUWx8SgyAQX7l
-         3pzRMmTVcBKpPkfw1EdiH/cYctX0SCXwUDg51yBe30XK49P0saHiiynQyvZ5Mcd3FW
-         1Gio6+yMshLi254mJdR7TLTs6JwFMf4B35vKGEym+G8BGyVroHHJLS8mXj7scHqjcq
-         7xRf58qxUQh113Ri/bEOYg2PsRlvn25C2qp10rLxIoW99QwtOLikm4eSNPhcuwwMox
-         R57XvkY4c/sgA==
-Date:   Fri, 12 Jul 2019 10:44:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20190712104430.739f1b61@canb.auug.org.au>
-In-Reply-To: <20190708192345.53fce4cf@canb.auug.org.au>
-References: <20190708192345.53fce4cf@canb.auug.org.au>
+        Thu, 11 Jul 2019 20:48:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57558 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfGLAsk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 20:48:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0hjBs185711;
+        Fri, 12 Jul 2019 00:47:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=bswtM7KXfcTUrZa5tnJd6JLuh5yaxIc3HYQdk3Zuwr4=;
+ b=QkEPqMp3mKHL42qF1Uaya2p5wJUkj3FO2QR4290uZjskPuH+45kpwJstRfLq2CQZsHXI
+ bGvmrTEyFoUgSvLt9UqzWx7zuKq7gXPjoHJOqOB0OAWocwzVyE1jI5VIB2qLUVXOLTb1
+ 4MoD99TdxTY0/Md8hMz/ROHW3oDkPYr5AA+HrV0/VUqyykGXJH0uy+ZwC0SE6Oyxg0CI
+ k6XtjbOE5Z3qGpSgkbdih4M3+q5Dl7s00OOj1iOH7Vyd09uDepWKW+k/jFw9uxUfLhJQ
+ J1oZl4Ro0Zzn3tcGseuiYkmMIrHIitgN27aZoCxwFCHhGWunD9ZG7RQtqLkGTv4rsDw4 AQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2tjkkq2vb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 00:47:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6C0gtFo163677;
+        Fri, 12 Jul 2019 00:47:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2tmwgyfrj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 00:47:25 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6C0l81a008418;
+        Fri, 12 Jul 2019 00:47:10 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jul 2019 17:47:08 -0700
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        James Morris <jmorris@namei.org>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hannes Reinecke <hare@suse.com>, Willy Tarreau <w@1wt.eu>,
+        Silvio Cesare <silvio.cesare@gmail.com>
+Subject: Re: [PATCH 2/4] lpfc: reduce stack size with CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190628123819.2785504-1-arnd@arndb.de>
+        <20190628123819.2785504-2-arnd@arndb.de>
+Date:   Thu, 11 Jul 2019 20:47:03 -0400
+In-Reply-To: <20190628123819.2785504-2-arnd@arndb.de> (Arnd Bergmann's message
+        of "Fri, 28 Jun 2019 14:37:47 +0200")
+Message-ID: <yq1y3146pvc.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/mQvolzmOpIqHqWuZ0oeUFXj"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120007
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/mQvolzmOpIqHqWuZ0oeUFXj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Arnd,
 
-On Mon, 8 Jul 2019 19:23:45 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->=20
-> After merging the char-misc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> drivers/misc/vmw_balloon.c: In function 'vmballoon_mount':
-> drivers/misc/vmw_balloon.c:1736:14: error: 'simple_dname' undeclared (fir=
-st use in this function); did you mean 'simple_rename'?
->    .d_dname =3D simple_dname,
->               ^~~~~~~~~~~~
->               simple_rename
-> drivers/misc/vmw_balloon.c:1736:14: note: each undeclared identifier is r=
-eported only once for each function it appears in
-> drivers/misc/vmw_balloon.c:1739:9: error: implicit declaration of functio=
-n 'mount_pseudo'; did you mean 'mount_bdev'? [-Werror=3Dimplicit-function-d=
-eclaration]
->   return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
->          ^~~~~~~~~~~~
->          mount_bdev
-> drivers/misc/vmw_balloon.c:1739:9: warning: returning 'int' from a functi=
-on with return type 'struct dentry *' makes pointer from integer without a =
-cast [-Wint-conversion]
->   return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->         BALLOON_VMW_MAGIC);
->         ~~~~~~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   83a8afa72e9c ("vmw_balloon: Compaction support")
->=20
-> interacting with commits
->=20
->   7e5f7bb08b8c ("unexport simple_dname()")
->   8d9e46d80777 ("fold mount_pseudo_xattr() into pseudo_fs_get_tree()")
->=20
-> from the vfs tree.
->=20
-> I applied the following merge fix patch:
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 8 Jul 2019 19:17:56 +1000
-> Subject: [PATCH] convert vmwballoon to use the new mount API
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/misc/vmw_balloon.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
-> index 91fa43051535..e8c0f7525f13 100644
-> --- a/drivers/misc/vmw_balloon.c
-> +++ b/drivers/misc/vmw_balloon.c
-> @@ -29,6 +29,7 @@
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/mount.h>
-> +#include <linux/pseudo_fs.h>
->  #include <linux/balloon_compaction.h>
->  #include <linux/vmw_vmci_defs.h>
->  #include <linux/vmw_vmci_api.h>
-> @@ -1728,21 +1729,14 @@ static inline void vmballoon_debugfs_exit(struct =
-vmballoon *b)
-> =20
->  #ifdef CONFIG_BALLOON_COMPACTION
-> =20
-> -static struct dentry *vmballoon_mount(struct file_system_type *fs_type,
-> -				      int flags, const char *dev_name,
-> -				      void *data)
-> +static int vmballoon_init_fs_context(struct fs_context *fc)
->  {
-> -	static const struct dentry_operations ops =3D {
-> -		.d_dname =3D simple_dname,
-> -	};
-> -
-> -	return mount_pseudo(fs_type, "balloon-vmware:", NULL, &ops,
-> -			    BALLOON_VMW_MAGIC);
-> +	return init_pseudo(fc, BALLOON_VMW_MAGIC) ? 0 : -ENOMEM;
->  }
-> =20
->  static struct file_system_type vmballoon_fs =3D {
->  	.name           =3D "balloon-vmware",
-> -	.mount          =3D vmballoon_mount,
-> +	.init_fs_context          =3D vmballoon_init_fs_context,
->  	.kill_sb        =3D kill_anon_super,
->  };
-> =20
+> The lpfc_debug_dump_all_queues() function repeatedly calls into
+> lpfc_debug_dump_qe(), which has a temporary 128 byte buffer.  This was
+> fine before the introduction of CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE
+> because each instance could occupy the same stack slot. However, now
+> they each get their own copy, which leads to a huge increase in stack
+> usage as seen from the compiler warning:
 
-This is now a conflict between the vfs tree and Linus' tree.
---=20
-Cheers,
-Stephen Rothwell
+Applied to 5.3/scsi-fixes. Thank you!
 
---Sig_/mQvolzmOpIqHqWuZ0oeUFXj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0n1+4ACgkQAVBC80lX
-0GzVJAf/RDoLlHds5kYTXclzo2ds+aY91gXqvGzsZJz/28mZElrTV15W8gvE6L3j
-YOJ9hsbY4kgkacLhWm2iYSV/nkSvFBmrt2s5pRs1qk4rXgEQWC7VQv7br8VMsBpJ
-PCdoHznmZEU8tMMdwP6fUJ4ob41pOnfUSBHHPnIlGqE/RMn5xIsCoYNr2yr/RIY1
-rOI4lATfOr5AG6Vfm4X+pZXCHJ431h4dgeZmMdr1ckG1KqoYCjYhvHgR7nJiR6mQ
-a9CutMwD74KiAS39/28hZgtLXG1aOSN7wIgCSoEVVjXluion8/bfhhJfy0+7h3M+
-NmuEYupvU9lr2Vcl2lccqKs1em0wug==
-=8P35
------END PGP SIGNATURE-----
-
---Sig_/mQvolzmOpIqHqWuZ0oeUFXj--
+-- 
+Martin K. Petersen	Oracle Linux Engineering
