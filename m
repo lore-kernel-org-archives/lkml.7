@@ -2,190 +2,153 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B604EC742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E17C742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81AF221537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A81E2063F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omIzIBYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nltokVSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfGLQWu (ORCPT
+        id S1727253AbfGLQXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:22:50 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46975 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfGLQWt (ORCPT
+        Fri, 12 Jul 2019 12:23:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39768 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfGLQXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:22:49 -0400
-Received: by mail-io1-f66.google.com with SMTP id i10so21475184iol.13;
-        Fri, 12 Jul 2019 09:22:49 -0700 (PDT)
+        Fri, 12 Jul 2019 12:23:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v18so9888775ljh.6;
+        Fri, 12 Jul 2019 09:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zYH8Vo9Y5F5IqrJ/iOICmwuOeumCdZOyTM3iTd+JfOs=;
-        b=omIzIBYlKRTPh8j23nq6YfsvemBgq2R3BwAVy/MNC4IayYHC/jfN2QFZafA7sS9JSC
-         H2WrrCsAkxMxc7Hs+RMx+lj0Dt05CSDOEEIYbHpunimaev2HmJc3Ie9ocayPIWFSLM2u
-         TW2zczhZrlnKfGQiQWV0I1YYQCOMIxDkMfN4DQaVFAxkCDM2dW643VGB/VplMFbdaTPX
-         2QI9A4ueJVt+2LJS8OwsJlO30zkesxIAfS+HYLgXzUNsPFfRdr4NaV3A1jS1ogHqE/TX
-         Fp4Hj4SoepzsqVL0/BH+TUvhpJ+RNBLLO07t3oOCA65C4edKxQjUQ971ohgS+1ZoorJ3
-         ipTQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8YX2LaoIpYXot2QMtvHwy8R8N2TUvBM9RDNiIQ4cQ7Q=;
+        b=nltokVSSN/p/Xkq4jRStuN4Lk6uX7ML12OYVy4WMZHboGjVH5zflEh5vOBKm3BAFs1
+         7N0nc0uuadGFPHi7NcI6dYRDU+LyFG6K6hsnQF0mGD/QC9lY8Xnr0UPWBwayvB8V4e+e
+         hLON9HJcfPfaQ4O6CAPQlsrDbSFvRbKrCUP8QS9fOxWn6gEpjfVH8bVs5HwzhpDkIkao
+         xXp3tdv1I/5AojtEDHVDj7NLqvajgZyzH4mLRg9EY9ET6t6x+BSQPtjtJeIVBpDQYUyv
+         cWEYG0ZKwcf+HQ+w10g+gOGCTHuBfgAMYQuKrSGGy0PTcfYLEYL63nj8tY4KgW+IMUlg
+         pMTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zYH8Vo9Y5F5IqrJ/iOICmwuOeumCdZOyTM3iTd+JfOs=;
-        b=MKo9F6axWVyvCh66NnlwX28rRpnSYgWQgHo+l174s/DDITk4Vt/+c0DBJrfdiiSexf
-         +jaC/8MSNDJLEJYn8bvae+U43CYik9B2/tCJYXN3tAu/3TpM/DSHoFAO4CDoCmZdNMaR
-         88V5DX0jBGfe+Myfj3E8T6rVZd9zqe8JroAT5KQqtvF/Bmin85XhexzpQWi9mNCSK8kj
-         gEjFkUzSDMJRmzPMix8oDM6vK7NmaGvzQfKFJJLBfbILtxesrqH///pSXyVpippEbuWl
-         rhltu19Wb5S1Fcr3V5SS/AR2fWw3jsRuE6cHh+htpjm9tWaRlWdK4Mpx4CWLIMBVoJtt
-         l+KA==
-X-Gm-Message-State: APjAAAVzzvPh/xs32Ao0YoHt/6XOgw64HTJf2WISv+NLIKbFQsMK3j6r
-        TPilrajKfU5nrrx1QjqgC/LpyaQJVHxxaU1t01k=
-X-Google-Smtp-Source: APXvYqw2lc2T9kiB5p8fuhbtGKenrvLboCsn3CGdEb4CKCRRbYs33Sb1RaNqUex99oZ/LJbYFUObBQcX1R489/T1RVs=
-X-Received: by 2002:a6b:dd18:: with SMTP id f24mr10989410ioc.97.1562948568501;
- Fri, 12 Jul 2019 09:22:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8YX2LaoIpYXot2QMtvHwy8R8N2TUvBM9RDNiIQ4cQ7Q=;
+        b=itWCDz4nGSoTS9EfEsHX3ZhkbZVrL2nJJMjlMIejv7eFvVHuqvucaGViKwiqDGkkMZ
+         SW6Pp/k3vS8zWnBX6jH0UTIcKNePSuDIePSYuw0zOWeTV8nxty6rXgvYY/AZstzjaEB3
+         hNF0JBUJMX40zXCx0qBz1pK7Np50spBt1f7mp/BxEhnWpDtyeHXBdcZBa9A0ydiYyKkQ
+         ciwEoGMHHjGMmYBy1dIUZC7JO2GCGuKf2ebEHA5aOyAlbRFUuG7oV9XpjI8RI21QHK1Q
+         S1NeKdq4qDFYxjg2pz+rrVCfBJYYimEHcCqos6inwXXriWxvUV2Y4hNd2/R0JCSdQ1pd
+         IM3Q==
+X-Gm-Message-State: APjAAAVA8VtnOdyP9ZT3ollnsD7oGDM7zrlorr17JUKrT0P6I/7fsELo
+        nbpAckkj8L/UzFZ1+ohL/UxnZelN
+X-Google-Smtp-Source: APXvYqwVVpBQgAJ+iBwLONW4YShysAZHExOb7cuYCRG3sez9mFiaH1eutiGR89WwWo+77OdA1NyzaQ==
+X-Received: by 2002:a2e:4794:: with SMTP id u142mr6521643lja.222.1562948627718;
+        Fri, 12 Jul 2019 09:23:47 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id h3sm1549158lja.93.2019.07.12.09.23.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 09:23:46 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] ARM: tegra: Remove cpuidle drivers
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190711031312.10038-1-digetx@gmail.com>
+ <20190711031312.10038-2-digetx@gmail.com>
+ <c087a5cb-2ffa-1cf6-f0bf-631234759a22@nvidia.com>
+ <a6e4b43e-369c-c501-6d2e-69d5b940ff9c@gmail.com>
+ <73781434-d25a-b17b-aacb-95ace5ac5f95@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9d79ed3e-a37f-af9c-0696-31dc33bbdefd@gmail.com>
+Date:   Fri, 12 Jul 2019 19:23:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190710195158.19640-1-nitesh@redhat.com> <20190710195158.19640-2-nitesh@redhat.com>
- <CAKgT0Ue3mVZ_J0GgMUP4PBW4SUD1=L9ixD5nUZybw9_vmBAT0A@mail.gmail.com>
- <3c6c6b93-eb21-a04c-d0db-6f1b134540db@redhat.com> <CAKgT0UcaKhAf+pTeE1CRxqhiPtR2ipkYZZ2+aChetV7=LDeSeA@mail.gmail.com>
- <521db934-3acd-5287-6e75-67feead8ca63@redhat.com>
-In-Reply-To: <521db934-3acd-5287-6e75-67feead8ca63@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 12 Jul 2019 09:22:37 -0700
-Message-ID: <CAKgT0Uf7xsdh9OgBq-kyTkyvh8Qo9kV4uiWTVP7NKqzO4X0wyg@mail.gmail.com>
-Subject: Re: [RFC][Patch v11 1/2] mm: page_hinting: core infrastructure
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <73781434-d25a-b17b-aacb-95ace5ac5f95@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 6:13 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
->
-> On 7/11/19 7:20 PM, Alexander Duyck wrote:
-> > On Thu, Jul 11, 2019 at 10:58 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>
-> >> On 7/10/19 5:56 PM, Alexander Duyck wrote:
-> >>> On Wed, Jul 10, 2019 at 12:52 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>> This patch introduces the core infrastructure for free page hinting in
-> >>>> virtual environments. It enables the kernel to track the free pages which
-> >>>> can be reported to its hypervisor so that the hypervisor could
-> >>>> free and reuse that memory as per its requirement.
-> >>>>
-> >>>> While the pages are getting processed in the hypervisor (e.g.,
-> >>>> via MADV_FREE), the guest must not use them, otherwise, data loss
-> >>>> would be possible. To avoid such a situation, these pages are
-> >>>> temporarily removed from the buddy. The amount of pages removed
-> >>>> temporarily from the buddy is governed by the backend(virtio-balloon
-> >>>> in our case).
-> >>>>
-> >>>> To efficiently identify free pages that can to be hinted to the
-> >>>> hypervisor, bitmaps in a coarse granularity are used. Only fairly big
-> >>>> chunks are reported to the hypervisor - especially, to not break up THP
-> >>>> in the hypervisor - "MAX_ORDER - 2" on x86, and to save space. The bits
-> >>>> in the bitmap are an indication whether a page *might* be free, not a
-> >>>> guarantee. A new hook after buddy merging sets the bits.
-> >>>>
-> >>>> Bitmaps are stored per zone, protected by the zone lock. A workqueue
-> >>>> asynchronously processes the bitmaps, trying to isolate and report pages
-> >>>> that are still free. The backend (virtio-balloon) is responsible for
-> >>>> reporting these batched pages to the host synchronously. Once reporting/
-> >>>> freeing is complete, isolated pages are returned back to the buddy.
-> >>>>
-> >>>> There are still various things to look into (e.g., memory hotplug, more
-> >>>> efficient locking, possible races when disabling).
-> >>>>
-> >>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> > So just FYI, I thought I would try the patches. It looks like there
-> > might be a bug somewhere that is causing it to free memory it
-> > shouldn't be. After about 10 minutes my VM crashed with a system log
-> > full of various NULL pointer dereferences.
->
-> That's interesting, I have tried the patches with MADV_DONTNEED as well.
-> I just retried it but didn't see any crash. May I know what kind of
-> workload you are running?
+12.07.2019 12:39, Jon Hunter пишет:
+> 
+> On 11/07/2019 18:03, Dmitry Osipenko wrote:
+>> 11.07.2019 12:26, Jon Hunter пишет:
+>>>
+>>> On 11/07/2019 04:13, Dmitry Osipenko wrote:
+>>>> Remove the old drivers to replace them cleanly with a new one later on.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  arch/arm/mach-tegra/Makefile           |  13 --
+>>>>  arch/arm/mach-tegra/cpuidle-tegra114.c |  89 -----------
+>>>>  arch/arm/mach-tegra/cpuidle-tegra20.c  | 212 -------------------------
+>>>>  arch/arm/mach-tegra/cpuidle-tegra30.c  | 132 ---------------
+>>>>  arch/arm/mach-tegra/cpuidle.c          |  50 ------
+>>>>  arch/arm/mach-tegra/cpuidle.h          |  21 ---
+>>>>  arch/arm/mach-tegra/irq.c              |  18 ---
+>>>>  arch/arm/mach-tegra/irq.h              |  11 --
+>>>>  arch/arm/mach-tegra/pm.c               |   7 -
+>>>>  arch/arm/mach-tegra/pm.h               |   1 -
+>>>>  arch/arm/mach-tegra/reset-handler.S    |  11 --
+>>>>  arch/arm/mach-tegra/reset.h            |   9 +-
+>>>>  arch/arm/mach-tegra/sleep-tegra20.S    | 190 +---------------------
+>>>>  arch/arm/mach-tegra/sleep.h            |  12 --
+>>>>  arch/arm/mach-tegra/tegra.c            |   3 -
+>>>>  drivers/soc/tegra/Kconfig              |   1 -
+>>>>  include/soc/tegra/cpuidle.h            |   4 -
+>>>>  17 files changed, 5 insertions(+), 779 deletions(-)
+>>>>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
+>>>>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
+>>>>  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
+>>>>  delete mode 100644 arch/arm/mach-tegra/cpuidle.c
+>>>>  delete mode 100644 arch/arm/mach-tegra/cpuidle.h
+>>>>  delete mode 100644 arch/arm/mach-tegra/irq.h
+>>>
+>>> By removing all the above, it is really hard to review the diff. Is
+>>> there any way you could first consolidate the cpuidle drivers into say
+>>> the existing arch/arm/mach-tegra/cpuidle-tegra20.c and then move to
+>>> drivers/cpuidle?
+>>
+>> I'm afraid that it will make reviewing even more difficult because
+>> everything that is removed here is not returned in the further patches.
+>> The new driver is based on the older ones, but I wrote it from scratch
+>> and it's not only looks different, but also works a bit different as you
+>> may see.
+>>
+>> Could you please clarify what exactly makes it hard to review? The diff
+>> looks pretty clean to me, while squashing everything into existing
+>> driver should be quite a mess.
+> 
+> Ideally a patch should standalone and can be reviewed by itself.
+> However, to review this, we need to review patches 1, 2 and 3 at the
+> same time. So IMO it is not that convenient from a reviewers
+> perspective. Furthermore, patches 1 and 3 are large and so easy to miss
+> something.
+> 
+> Is there really no way to have a patch to combined the existing drivers,
+> then a patch to convert them into the newer rewritten version you have
+> implemented, then move the driver?
 
-I was running the page_fault1 test on a VM with 80G of memory.
-
-> >  The only change I had made
-> > is to use MADV_DONTNEED instead of MADV_FREE in QEMU since my headers
-> > didn't have MADV_FREE on the host. It occurs to me one advantage of
-> > MADV_DONTNEED over MADV_FREE is that you are more likely to catch
-> > these sort of errors since it zeros the pages instead of leaving them
-> > intact.
-> For development purpose maybe. For the final patch-set I think we
-> discussed earlier why we should keep MADV_FREE.
-
-I'm still not convinced MADV_FREE is a net win, at least for
-performance. You are still paying the cost for the VMEXIT in order to
-regain ownership of the page. In the case that you are under memory
-pressure it is essentially equivalent to MADV_DONTNEED. Also it
-doesn't really do much to help with the memory footprint of the VM
-itself. With the MADV_DONTNEED the pages are freed back and you have a
-greater liklihood of reducing the overall memory footprint of the
-entire system since you would be more likely to be assigned pages that
-were recently used rather than having to access a cold page.
-
-<snip>
-
-> >>>> +void page_hinting_enqueue(struct page *page, int order)
-> >>>> +{
-> >>>> +       int zone_idx;
-> >>>> +
-> >>>> +       if (!page_hitning_conf || order < PAGE_HINTING_MIN_ORDER)
-> >>>> +               return;
-> >>> I would think it is going to be expensive to be jumping into this
-> >>> function for every freed page. You should probably have an inline
-> >>> taking care of the order check before you even get here since it would
-> >>> be faster that way.
-> >> I see, I can take a look. Thanks.
-> >>>> +
-> >>>> +       bm_set_pfn(page);
-> >>>> +       if (atomic_read(&page_hinting_active))
-> >>>> +               return;
-> >>> So I would think this piece is racy. Specifically if you set a PFN
-> >>> that is somewhere below the PFN you are currently processing in your
-> >>> scan it is going to remain unset until you have another page freed
-> >>> after the scan is completed. I would worry you can end up with a batch
-> >>> free of memory resulting in a group of pages sitting at the start of
-> >>> your bitmap unhinted.
-> >> True, but that will be hinted next time threshold is met.
-> > Yes, but that assumes that there is another free immediately coming.
-> > It is possible that you have a big application run and then
-> > immediately shut down and have it free all its memory at once. Worst
-> > case scenario would be that it starts by freeing from the end and
-> > works toward the start. With that you could theoretically end up with
-> > a significant chunk of memory waiting some time for another big free
-> > to come along.
->
-> Any suggestion on some benchmark/test application which I could run to
-> see this kind of behavior?
-
-Like I mentioned before, try doing a VM with a bigger memory
-footprint. You could probably just do a stack of VMs like what we were
-doing with the memhog test. Basically the longer it takes to process
-all the pages the greater the liklihood that there are still pages
-left when they are freed.
+Probably I spent a bit too much time with that code, so now yours
+suggestion looks to me like an unnecessary step. But I will try and see
+how it goes, at least it should be possible to break down the patch 1 a
+bit more, hopefully it will help to better understand what's going on in
+the further patches if you're not familiar or don't remember how it all
+works.
