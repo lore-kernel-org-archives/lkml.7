@@ -2,124 +2,164 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEB2C742BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3296CC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5336720863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E9320863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfGLMIK (ORCPT
+        id S1726990AbfGLMJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:08:10 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:27932 "EHLO mx2.mailbox.org"
+        Fri, 12 Jul 2019 08:09:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:56524 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbfGLMII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:08:08 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 9E9DDA1FD8;
-        Fri, 12 Jul 2019 14:08:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id vunrqErDeJEg; Fri, 12 Jul 2019 14:07:58 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 22:07:43 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
+        id S1726266AbfGLMJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:09:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AAD928;
+        Fri, 12 Jul 2019 05:09:48 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FE9C3F71F;
+        Fri, 12 Jul 2019 05:09:47 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] x86/vdso: fix flip/flop vdso build bug
+To:     Naohiro Aota <naohiro.aota@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 04/10] namei: split out nd->dfd handling to
- dirfd_path_init
-Message-ID: <20190712120743.mka3vl5t4zndc5wj@yavin>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-5-cyphar@cyphar.com>
- <20190712042050.GH17978@ZenIV.linux.org.uk>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Collingbourne <pcc@google.com>
+References: <20190712101556.17833-1-naohiro.aota@wdc.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <55d3bd43-d703-83f2-1258-6be9df8330b6@arm.com>
+Date:   Fri, 12 Jul 2019 13:09:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d4v7lkh6hn3fnrr5"
-Content-Disposition: inline
-In-Reply-To: <20190712042050.GH17978@ZenIV.linux.org.uk>
+In-Reply-To: <20190712101556.17833-1-naohiro.aota@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Naohiro,
 
---d4v7lkh6hn3fnrr5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was working on a similar patch set, but I just noticed you posted this one.
+Thanks for that.
 
-On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Sun, Jul 07, 2019 at 12:57:31AM +1000, Aleksa Sarai wrote:
-> > Previously, path_init's handling of *at(dfd, ...) was only done once,
-> > but with LOOKUP_BENEATH (and LOOKUP_IN_ROOT) we have to parse the
-> > initial nd->path at different times (before or after absolute path
-> > handling) depending on whether we have been asked to scope resolution
-> > within a root.
->=20
-> >  	if (*s =3D=3D '/') {
-> > -		set_root(nd);
-> > -		if (likely(!nd_jump_root(nd)))
-> > -			return s;
-> > -		return ERR_PTR(-ECHILD);
->=20
-> > +		if (likely(!nd->root.mnt))
-> > +			set_root(nd);
->=20
-> How can we get there with non-NULL nd->root.mnt, when LOOKUP_ROOT case
-> has been already handled by that point?
+In reply to your series I am adding similar fix for arm64 compat.
 
-Yup, you're completely right. I will remove the
-  if (!nd->root.mnt)
-in the next version.
+On 12/07/2019 11:15, Naohiro Aota wrote:
+> Two consecutive "make" on an already compiled kernel tree will show
+> different behavior:
+> 
+> $ make
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   DESCEND  objtool
+>   CHK     include/generated/compile.h
+>   VDSOCHK arch/x86/entry/vdso/vdso64.so.dbg
+>   VDSOCHK arch/x86/entry/vdso/vdso32.so.dbg
+> Kernel: arch/x86/boot/bzImage is ready  (#3)
+>   Building modules, stage 2.
+>   MODPOST 12 modules
+> 
+> $ make
+> make
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   DESCEND  objtool
+>   CHK     include/generated/compile.h
+>   VDSO    arch/x86/entry/vdso/vdso64.so.dbg
+>   OBJCOPY arch/x86/entry/vdso/vdso64.so
+>   VDSO2C  arch/x86/entry/vdso/vdso-image-64.c
+>   CC      arch/x86/entry/vdso/vdso-image-64.o
+>   VDSO    arch/x86/entry/vdso/vdso32.so.dbg
+>   OBJCOPY arch/x86/entry/vdso/vdso32.so
+>   VDSO2C  arch/x86/entry/vdso/vdso-image-32.c
+>   CC      arch/x86/entry/vdso/vdso-image-32.o
+>   AR      arch/x86/entry/vdso/built-in.a
+>   AR      arch/x86/entry/built-in.a
+>   AR      arch/x86/built-in.a
+>   GEN     .version
+>   CHK     include/generated/compile.h
+>   UPD     include/generated/compile.h
+>   CC      init/version.o
+>   AR      init/built-in.a
+>   LD      vmlinux.o
+> <snip>
+> 
+> This is causing "LD vmlinux" once every two times even without any
+> modifications. This is the same bug fixed in commit 92a4728608a8
+> ("x86/boot: Fix if_changed build flip/flop bug"). We cannot use two
+> "if_changed" in one target. Fix this build bug by merging two commands into
+> one function.
+> 
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Fixes: 7ac870747988 ("x86/vdso: Switch to generic vDSO implementation")
+> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
 
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+> ---
+>  arch/x86/entry/vdso/Makefile | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> index 39106111be86..34773395139a 100644
+> --- a/arch/x86/entry/vdso/Makefile
+> +++ b/arch/x86/entry/vdso/Makefile
+> @@ -56,8 +56,7 @@ VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
+>  			-z max-page-size=4096
+>  
+>  $(obj)/vdso64.so.dbg: $(obj)/vdso.lds $(vobjs) FORCE
+> -	$(call if_changed,vdso)
+> -	$(call if_changed,vdso_check)
+> +	$(call if_changed,vdso_and_check)
+>  
+>  HOST_EXTRACFLAGS += -I$(srctree)/tools/include -I$(srctree)/include/uapi -I$(srctree)/arch/$(SUBARCH)/include/uapi
+>  hostprogs-y			+= vdso2c
+> @@ -127,8 +126,7 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
+> -	$(call if_changed,vdso)
+> -	$(call if_changed,vdso_check)
+> +	$(call if_changed,vdso_and_check)
+>  
+>  CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
+>  VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
+> @@ -167,8 +165,7 @@ $(obj)/vdso32.so.dbg: FORCE \
+>  		      $(obj)/vdso32/note.o \
+>  		      $(obj)/vdso32/system_call.o \
+>  		      $(obj)/vdso32/sigreturn.o
+> -	$(call if_changed,vdso)
+> -	$(call if_changed,vdso_check)
+> +	$(call if_changed,vdso_and_check)
+>  
+>  #
+>  # The DSO images are built using a special linker script.
+> @@ -184,6 +181,9 @@ VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
+>  	-Bsymbolic
+>  GCOV_PROFILE := n
+>  
+> +quiet_cmd_vdso_and_check = VDSO    $@
+> +      cmd_vdso_and_check = $(cmd_vdso); $(cmd_vdso_check)
+> +
+>  #
+>  # Install the unstripped copies of vdso*.so.  If our toolchain supports
+>  # build-id, install .build-id links as well.
+> 
 
---d4v7lkh6hn3fnrr5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSh4CgAKCRCdlLljIbnQ
-EmXbAP9tX+q7bWxunLL4KxbGY/ld+vFqPXrdHyJAsnYXD1QLXwEAosmgLN7YU35t
-LUn9+NWS+cu0VbO4qtSioBcFwh5cpwA=
-=zvz5
------END PGP SIGNATURE-----
-
---d4v7lkh6hn3fnrr5--
+-- 
+Regards,
+Vincenzo
