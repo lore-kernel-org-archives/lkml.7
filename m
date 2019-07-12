@@ -2,112 +2,136 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D42C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3035C742C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB2B21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFA620863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="VCxaaTIt";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iGO0vzMt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9jOcluI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfGLOTt (ORCPT
+        id S1727358AbfGLOWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:19:49 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57290 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727089AbfGLOTs (ORCPT
+        Fri, 12 Jul 2019 10:22:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43608 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfGLOWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:19:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 19D7A8EE331;
-        Fri, 12 Jul 2019 07:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562941188;
-        bh=Dp5a0UrH9hKoPaQtN8NMeqGJ73pmNknix42kASn6zxs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VCxaaTItFh6NC+DFhY5jQFgBXHoCm+NCJSqectbFZbBep25ieqYrtlTfwSiZZZZBB
-         8BsXsUeOPXxuxXysoVjlBzluStZeuXYBzSh9KT1JmROTOLAn4yYEKmvg7th5/2W1oP
-         cm6iDhW90Dn+SrZldgLwk55/D4sSC1p9HSNS/nPc=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0Jw-QcXrd_p4; Fri, 12 Jul 2019 07:19:47 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 6925F8EE1F7;
-        Fri, 12 Jul 2019 07:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562941187;
-        bh=Dp5a0UrH9hKoPaQtN8NMeqGJ73pmNknix42kASn6zxs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iGO0vzMtpj+2FTqUdMvhfBOs8fjXi7+T29UOioFgPCgGq5ucBAQEuaKfZDSAh0SNm
-         0zTJwZZmCWp/3z+Vi1Sci9qtPHTrwPjf/H+zgAyMmmAmKoB9nZJIFVv9cOJC/vKhj8
-         DDAHJ3E3j7M8wT1RSFNRT2gMRXtfcXCXy68x54yg=
-Message-ID: <1562941185.3398.1.camel@HansenPartnership.com>
-Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     "Souza, Jose" <jose.souza@intel.com>,
-        "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 12 Jul 2019 07:19:45 -0700
-In-Reply-To: <1562888433.2915.0.camel@HansenPartnership.com>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-         <1562875878.2840.0.camel@HansenPartnership.com>
-         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
-         <1562876880.2840.12.camel@HansenPartnership.com>
-         <1562882235.13723.1.camel@HansenPartnership.com>
-         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
-         <1562884722.15001.3.camel@HansenPartnership.com>
-         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
-         <1562888433.2915.0.camel@HansenPartnership.com>
+        Fri, 12 Jul 2019 10:22:45 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so20646843ios.10;
+        Fri, 12 Jul 2019 07:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nGPJaLLrwimgpDuREnLtjr8F7xnTIflmgbQ9hHlyOpQ=;
+        b=h9jOcluIb6ww2CKPkNW/sCP5MUssFNFfo0eU3XK9p5+YpV+7emWd40fuQ0aguUlM9O
+         SfMrf+m/5YOcM1qa0dWndBpgkz4Qf9EGlyTiqz+6Y7JfRFAgXKOiqXiCzMj/UING1hQK
+         scP1RFCeJ3R4/WI+CNFRDFjyahtAk+rWVWR0IuQj7nPfOfOJ66wZq62M+xb3Dc8zqLHh
+         7OKh5uoWtjoEXRLbSMp+jHa1EJkzjK5EAf3zVnOt4gap7JtE0RNtC7abt3UjoaIXQZKZ
+         9vyQ3Ys5NMV/5OAzKCJeNjBwZ+sbQ1MsrhJazHGjIncJuDsrADav8uSg9bJTbg3Z6slp
+         LwRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nGPJaLLrwimgpDuREnLtjr8F7xnTIflmgbQ9hHlyOpQ=;
+        b=oZ+oPpzLAOR3A+9KAikTmIFIC3wdZz6Hv7CwnwHEjwMHmpa3pPffGEHJk5ejPpiAwq
+         bBokLNdTyrVa2Z+w++qllOOFUd7hbYBm41lAEwH/cvgN6Ud23h0QCEYjz7mOJQp9awHU
+         5xNalTFxXgrb8ddPFr4z/sW8Q07jY/DU/PokwbjxWkGWOCKDqCo+eu1CUUKirzLTocpC
+         rKKQ7QuaF62o6hbdRFgL6SzhixkgMbXhoj6fr8XRMppkwv+n5cFF9bFuOf7v/qlYqz7Z
+         oXnKIRcv1O4rZ9EycjvaLwL8AmxCARN0ZVxHOisagXlCKlVQ9zMPB6993drf0voUMlgr
+         ShHQ==
+X-Gm-Message-State: APjAAAW4TT3qdQJM/w5w7ZO3MW8MYAMSOwdgI5SyL6WWU9M6Htgr2ZC6
+        ZJKXoBYH0LgX/F/wOscvkX7K2TCvQx4AM5lcYrg=
+X-Google-Smtp-Source: APXvYqyd1oIXsBnzN7dG75lZKkuN70UrVbbdWWU17WfiRt880v2QjEESBBiu9clKHIbyAFlTaHjA8LuvFTEITgzhLUI=
+X-Received: by 2002:a6b:3b89:: with SMTP id i131mr10329306ioa.33.1562941364182;
+ Fri, 12 Jul 2019 07:22:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+ <20190703214512.41319-1-jeffrey.l.hugo@gmail.com> <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
+ <20190706010604.GG20625@sirena.org.uk> <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+ <CAF6AEGtGjKRA3A8v6pgaXLgpeiLZuz6HuDSFRjKrNp4iQNVZtA@mail.gmail.com> <10b1313f-7a60-df04-a9e3-76649b74f2f0@samsung.com>
+In-Reply-To: <10b1313f-7a60-df04-a9e3-76649b74f2f0@samsung.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 12 Jul 2019 08:22:33 -0600
+Message-ID: <CAOCk7NoyCmPQF3s4GWD1Oa4t5hdqi6vdcOdHyJpo3Gc1JQqXcw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Rob Clark <robdclark@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-11 at 16:40 -0700, James Bottomley wrote:
-> On Thu, 2019-07-11 at 23:28 +0000, Souza, Jose wrote:
-> > On Fri, 2019-07-12 at 01:03 +0200, Paul Bolle wrote:
-> > > James Bottomley schreef op do 11-07-2019 om 15:38 [-0700]:
-> > > > On Thu, 2019-07-11 at 22:26 +0000, Souza, Jose wrote:
-> > > > > It eventually comes back from screen freeze? Like moving the
-> > > > > mouse or typing brings it back?
-> > > > 
-> > > > No, it seems to be frozen for all time (at least until I got
-> > > > bored waiting, which was probably 20 minutes).  Even if I
-> > > > reboot the machine, the current screen state stays until the
-> > > > system powers off.
-> > > 
-> > > As I mentioned earlier, a suspend/resume cycle unfreezes the
-> > > screen.
-> > > 
-> > > And I seem to remember that, if the gnome screen-locking
-> > > eventually kicks in, unlocking the screen still works, as the
-> > > screen then isn't frozen anymore.
-> > > 
-> > > Thanks,
-> > 
-> > Thanks for all the information Paul.
-> > 
-> > Could test with the patch attached?
-> 
-> Applied and running with it now.
+On Fri, Jul 12, 2019 at 7:01 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> On 11.07.2019 15:56, Rob Clark wrote:
+> > On Thu, Jul 11, 2019 at 6:11 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+> >> On 06.07.2019 03:06, Mark Brown wrote:
+> >>> On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
+> >>>> Add basic support with a simple implementation that utilizes the generic
+> >>>> read/write commands to allow device registers to be configured.
+> >>> This looks good to me but I really don't know anything about DSI,
+> >>> I'd appreciate some review from other people who do.  I take it
+> >>> there's some spec thing in DSI that says registers and bytes must
+> >>> both be 8 bit?
+> >>
+> >> I am little bit confused about regmap usage here. On the one hand it
+> >> nicely fits to this specific driver, probably because it already uses
+> >> regmap_i2c.
+> >>
+> >> On the other it will be unusable for almost all current DSI drivers and
+> >> probably for most new drivers. Why?
+> >>
+> >> 1. DSI protocol defines actually more than 30 types of transactions[1],
+> >> but this patchset implements only few of them (dsi generic write/read
+> >> family). Is it possible to implement multiple types of transactions in
+> >> regmap?
+> >>
+> >> 2. There is already some set of helpers which uses dsi bus, rewriting it
+> >> on regmap is possible or driver could use of regmap and direct access
+> >> together, the question is if it is really necessary.
+> >>
+> >> 3. DSI devices are no MFDs so regmap abstraction has no big value added
+> >> (correct me, if there are other significant benefits).
+> >>
+> > I assume it is not *just* this one bridge that can be programmed over
+> > either i2c or dsi, depending on how things are wired up on the board.
+> > It certainly would be nice for regmap to support this case, so we
+> > don't have to write two different bridge drivers for the same bridge.
+> > I wouldn't expect a panel that is only programmed via dsi to use this.
+>
+>
+> On the other side supporting DSI and I2C in one driver is simply matter
+> of writing proper accesors.
 
-It has survived 6h without manifesting the regression.  Starting again
-to try a whole day.
+To me, this reads like your counter argument to not using regmap, is
+to reinvent regmap.  Maybe I don't understand what you are proposing
+here, but it sounds like remove the regmap support, define sn65
+specific accessors that just before sending the write to the bus does
+a check if the access needs to go over i2c or DSI.  Feels like a
+clunky version of regmap to me.  Why not use the existing "generic"
+framework?
 
-James
-
+To your point that DSI defines over 30 message types, yes it does, but
+that seems to be outside of the scope.  How many of those are actually
+for doing register access?  I'm thinking just 4 (technically a hair
+more than that because of the multiple version of the same message) -
+generic read, generic write, dcs read, dcs write.  I don't view regmap
+as a generic abstraction layer over a particular mechanism, and thus
+needs to support everything that mechanism does.  Sending sync
+commands, or pixel data over DSI is outside the scope of regmap to me.
