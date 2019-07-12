@@ -2,118 +2,162 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB58C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32240C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5DB20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F140320863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfGLIJI (ORCPT
+        id S1726336AbfGLIKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:09:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38884 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfGLIJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:09:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2FD6CAF9C;
-        Fri, 12 Jul 2019 08:09:06 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 10:09:04 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        Vincent Whitchurch <rabinv@axis.com>,
+        Fri, 12 Jul 2019 04:10:32 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42563 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLIKc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:10:32 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D9AF6C000A;
+        Fri, 12 Jul 2019 08:10:27 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 10:10:27 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
-Message-ID: <20190712080904.tab57k3rtyeaxs5z@pathway.suse.cz>
-References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
+Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
+Message-ID: <20190712081027.arybdoxr6nzrmkxt@flea>
+References: <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
+ <20190710125552.qvmnh6qs63ikiu2k@flea>
+ <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
+ <20190710130615.gvi2jwgr2cds66xr@flea>
+ <75719cad-c65c-7ebc-3ea8-98134f86ddc3@gmail.com>
+ <4a13f12f-05a7-473e-4e4e-7a7e32d09720@gmail.com>
+ <20190710140504.t5lsk36gnn5cdn6b@flea>
+ <e7d78307-4a48-45b1-ffbe-bc397fec0e40@gmail.com>
+ <20190711090327.keuxt2ztfqecdbef@flea>
+ <de21fe78-87a6-741f-caf7-2771f6468739@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6weybs6gnxo2efbk"
 Content-Disposition: inline
-In-Reply-To: <20190711142937.4083-1-vincent.whitchurch@axis.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <de21fe78-87a6-741f-caf7-2771f6468739@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-07-11 16:29:37, Vincent Whitchurch wrote:
-> kmsg_dump_get_buffer() is supposed to select all the youngest log
-> messages which fit into the provided buffer.  It determines the correct
-> start index by using msg_print_text() with a NULL buffer to calculate
-> the size of each entry.  However, when performing the actual writes,
-> msg_print_text() only writes the entry to the buffer if the written len
-> is lesser than the size of the buffer.  So if the lengths of the
-> selected youngest log messages happen to precisely fill up the provided
-> buffer, the last log message is not included.
-> 
-> We don't want to modify msg_print_text() to fill up the buffer and start
-> returning a length which is equal to the size of the buffer, since
-> callers of its other users, such as kmsg_dump_get_line(), depend upon
-> the current behaviour.
-> 
-> Instead, fix kmsg_dump_get_buffer() to compensate for this.
-> 
-> For example, with the following two final prints:
-> 
-> [    6.427502] AAAAAAAAAAAAA
-> [    6.427769] BBBBBBBB12345
-> 
-> A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-> patch:
-> 
->  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
->  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
->  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> 
-> After this patch:
-> 
->  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
->  00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
->  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> 
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> ---
-> v2: Move fix to kmsg_dump_get_buffer()
-> 
->  kernel/printk/printk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 1888f6a3b694..424abf802f02 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -3274,7 +3274,7 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
->  	/* move first record forward until length fits into the buffer */
->  	seq = dumper->cur_seq;
->  	idx = dumper->cur_idx;
-> -	while (l > size && seq < dumper->next_seq) {
-> +	while (l >= size && seq < dumper->next_seq) {
 
-This cycle searches how many messages would fit into the buffer.
+--6weybs6gnxo2efbk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The patch looks like a hack using a hole that the next cycle
-does not longer check the number of really stored characters.
+On Thu, Jul 11, 2019 at 06:55:03PM +0300, Dmitry Osipenko wrote:
+> 11.07.2019 12:03, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Wed, Jul 10, 2019 at 06:05:18PM +0300, Dmitry Osipenko wrote:
+> >> 10.07.2019 17:05, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Wed, Jul 10, 2019 at 04:29:19PM +0300, Dmitry Osipenko wrote:
+> >>>> This works:
+> >>>>
+> >>>> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/=
+drm_client_modeset.c
+> >>>> index 56d36779d213..e5a2f9c8f404 100644
+> >>>> --- a/drivers/gpu/drm/drm_client_modeset.c
+> >>>> +++ b/drivers/gpu/drm/drm_client_modeset.c
+> >>>> @@ -182,6 +182,8 @@ drm_connector_pick_cmdline_mode(struct drm_conne=
+ctor *connector)
+> >>>>         mode =3D drm_mode_create_from_cmdline_mode(connector->dev, c=
+mdline_mode);
+> >>>>         if (mode)
+> >>>>                 list_add(&mode->head, &connector->modes);
+> >>>> +       else
+> >>>> +               cmdline_mode->specified =3D false;
+> >>>
+> >>> Hmmm, it's not clear to me why that wouldn't be the case.
+> >>>
+> >>> If we come back to the beginning of that function, we retrieve the
+> >>> cmdline_mode buffer from the connector pointer, that will probably
+> >>> have been parsed a first time using drm_mode_create_from_cmdline_mode
+> >>> in drm_helper_probe_add_cmdline_mode.
+> >>>
+> >>> Now, I'm guessing that the issue is that in
+> >>> drm_mode_parse_command_line_for_connector, if we have a named mode, we
+> >>> just copy the mode over and set mode->specified.
+> >>>
+> >>> And we then move over to do other checks, and that's probably what
+> >>> fails and returns, but our drm_cmdline_mode will have been modified.
+> >>>
+> >>> I'm not entirely sure how to deal with that though.
+> >>>
+> >>> I guess we could allocate a drm_cmdline_mode structure on the stack,
+> >>> fill that, and if successful copy over its content to the one in
+> >>> drm_connector. That would allow us to only change the content on
+> >>> success, which is what I would expect from such a function?
+> >>>
+> >>> How does that sound?
+> >>
+> >> I now see that there is DRM_MODE_TYPE_USERDEF flag that is assigned on=
+ly
+> >> for the "cmdline" mode and drm_client_rotation() is the only place in
+> >> DRM code that cares about whether mode is from cmdline, hence looks li=
+ke
+> >> it will be more correct to do the following:
+> >
+> > I'm still under the impression that we're dealing with workarounds of
+> > a more central issue, which is that we shouldn't return a partially
+> > modified drm_cmdline_mode.
+> >
+> > You said it yourself, the breakage is in the commit changing the
+> > command line parsing logic, while you're fixing here some code that
+> > was introduced later on.
+>
+> The problem stems from assumption that *any* named mode is valid. It
+> looks to me that the ultimate solution would be to move the mode's name
+> comparison into the [1], if that's possible.
+>
+> [1] drm_mode_parse_command_line_for_connector()
 
-What would happen when msg_print_text() starts adding
-the trailing '\0' as suggested by
-https://lkml.kernel.org/r/20190710121049.rwhk7fknfzn3cfkz@pathway.suse.cz
+Well, one could argue that video=3Dtegrafb is invalid and should be
+rejected as well, but we haven't cleared that up.
 
-I would much more appreciate if we make the code more secure instead
-of stretching its weakness to the limits.
+> > Can you try the followintg patch?
+> > http://code.bulix.org/8cwk4c-794565?raw
+>
+> This doesn't help because the problem with the rotation_reflection is
+> that it's 0 if "rotation" not present in the cmdline and then ilog2(0)
+> returns -1. So the patch "drm/modes: Don't apply cmdline's rotation if
+> it wasn't specified" should be correct in any case.
 
-BTW: What is the motivation for this fix? Is a bug report
-or just some research of possible buffer overflows?
+So we would have the same issue with rotate=3D0 then?
 
-The commit message pretends that the problem is bigger than
-it really is. It is about one byte and not one line.
+Maxime
 
-Best Regards,
-Petr
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--6weybs6gnxo2efbk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXShAcwAKCRDj7w1vZxhR
+xTSIAQD/e1DSHvsHrh2flaNGAhwJVB74Bj9ujrC7VCEaL5GlwAD/ZUqWk9LNA1y+
+s25PrPo0pdy89EqHc9WFkd6x6juMrg8=
+=U3z3
+-----END PGP SIGNATURE-----
+
+--6weybs6gnxo2efbk--
