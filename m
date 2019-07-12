@@ -2,238 +2,107 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF97C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEC8C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA73208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OriKHNe8"
+	by mail.kernel.org (Postfix) with ESMTP id A85DC20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfGLMyN (ORCPT
+        id S1727219AbfGLMzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:54:13 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:40932 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfGLMyN (ORCPT
+        Fri, 12 Jul 2019 08:55:32 -0400
+Received: from mail.savoirfairelinux.com ([208.88.110.44]:37914 "EHLO
+        mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfGLMzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:54:13 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190712125410euoutp029421b36860813e13a7466acb89b165ed~wqg6xRju22490024900euoutp02Z
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 12:54:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190712125410euoutp029421b36860813e13a7466acb89b165ed~wqg6xRju22490024900euoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562936050;
-        bh=SvNBqsasmMJ35pKfe52wEDcdzqVXxeLAO+14YQc5HjA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=OriKHNe8UYzZneVkTvcpZv+t3OzcXzcmVNnPOI2m7DRKxa2BI4rJQ9sl38PxEHdJ/
-         z9ZUHDm9Gl97K7j7IhjMBIn7vpm1JglfjPxOXhi8yL0erVZpWX4HsYsLGXjDGHwgEe
-         +UvcA/OMfMSmTdvpJZdW+IbbInAkdpVzA415FVRU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190712125409eucas1p1366c6c3b34756b2e52d0491dc1246412~wqg50NMA31697116971eucas1p1H;
-        Fri, 12 Jul 2019 12:54:09 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id D0.42.04325.1F2882D5; Fri, 12
-        Jul 2019 13:54:09 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190712125408eucas1p166fd03846592d11ffbea036072607dc4~wqg4_69BW2455424554eucas1p1g;
-        Fri, 12 Jul 2019 12:54:08 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190712125408eusmtrp2e23ca1e107a35086ef09c865cf042369~wqg4wiEm00521605216eusmtrp29;
-        Fri, 12 Jul 2019 12:54:08 +0000 (GMT)
-X-AuditID: cbfec7f5-fbbf09c0000010e5-ef-5d2882f10e25
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 00.7C.04146.0F2882D5; Fri, 12
-        Jul 2019 13:54:08 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190712125407eusmtip1755535a5147b6e9225a0e62a4bb7f407~wqg36aWav0388503885eusmtip1e;
-        Fri, 12 Jul 2019 12:54:07 +0000 (GMT)
-Subject: Re: [PATCH 00/12] treewide: Fix GENMASK misuses
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org, linux-media@vger.kernel.org
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <469b0d3d-9466-b287-5ca3-27f3d01ff3cd@samsung.com>
-Date:   Fri, 12 Jul 2019 14:54:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.0
+        Fri, 12 Jul 2019 08:55:32 -0400
+X-Greylist: delayed 597 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 08:55:31 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 04D2B9C01BD;
+        Fri, 12 Jul 2019 08:45:33 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 1UOPf-CcN0wq; Fri, 12 Jul 2019 08:45:32 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 5A6009C019E;
+        Fri, 12 Jul 2019 08:45:32 -0400 (EDT)
+X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 895H-f0LM7Ys; Fri, 12 Jul 2019 08:45:32 -0400 (EDT)
+Received: from localhost.localdomain (lfbn-1-1474-163.w86-253.abo.wanadoo.fr [86.253.99.163])
+        by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 0EA2F9C01BD;
+        Fri, 12 Jul 2019 08:45:30 -0400 (EDT)
+From:   Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     linux-imx@nxp.com, festevam@gmail.com, kernel@pengutronix.de,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: [PATCH] arm: dts: imx6qdl: add gpio expander pca9535
+Date:   Fri, 12 Jul 2019 14:45:22 +0200
+Message-Id: <20190712124522.571-1-gilles.doffe@savoirfairelinux.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <cover.1562734889.git.joe@perches.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHfXfOzo7a6rjUPVhkza5CmhT1RiEmYQciqC/WEqmVB4vcis1Z
-        5gfFe9oNDbVNdIWlmalpq1zOahPtouYtsTJX6gepLEJHqaXtdIz89nv+z+3/vLw0Icui/Ojj
-        mnhOq1HFKSgP8n7LZMf676lrozcUji7FxTVVFO7tsomwpYfGRdYPBG5sm5LgXuc3ChsdwyQ2
-        GT1x3XCfGKfd7iBwSfNXEvdYiil8vtYsxj1pXQg3z15COKdvRIy/VAxIcIvJF79IHyWx9cld
-        EmdO3aTCfNjXWRYJWzueSrGDTXaSNdXp2WdF0yTryG0VsfVlyeyromuInajsI9inTSHseN2y
-        vZ4HPbbHcHHHEzhtcOhhj2OPhx3EqdzVZ26V7EpBNv8cRNPAbILyehd60DKmAkHHzCwlBBMI
-        hiyPiBzk7grGEVhfB/LMN5g/j0qEonIE6VNFcx1jCB7+zBLxVYsZDGb7R5JPeDM1JAzk5BN8
-        QDAFCDqHL/6dSzHr4Hf9G4pnKRMKF57lSXgmmVVgGbGLefZhImHSdG6uxgueXx0heePuzEZo
-        cy7nZYLxhzSzkRBYDm9HSkX8LmCaaejLqEKC752Qm/eOFHgxfGq9JxF4Kcw2lIoETgZHRToh
-        NGcjMNc2EEJiG9hbu8T8YsJlusYSLMg74O1Tq0h4yIXQP+YleFgIefcLCUGWQnamTKheAY52
-        89xAOdzodFKXkcIw7zDDvGsM864x/N9rQmQlknN6nTqW023UcKeDdCq1Tq+JDTp6Ul2HXN/z
-        5Uyr8yFq+nXEhhgaKRZI+7euiZaJVQm6RLUNAU0ovKWVsy5JGqNKPMtpTx7S6uM4nQ0toUmF
-        XJrk9iFKxsSq4rkTHHeK0/7Limh3vxR0YOX76qmhPb4VsjBlZ1R7bUto150DARJnRPd1ercn
-        HPFKqQ7Ux1jRWGjs4KFuL3l/5nSEttnXe8wncrBEtD8lo1eZOGmPLMtvLG9veBBo2qL8QU/8
-        XHvFLSY+nKXCjWL1vtJGzUDA5uBFSv8CY9VN/e6LjfiHmyEyVSlJT8pUkLpjqpBAQqtT/QH2
-        QnULmgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsVy+t/xu7ofmjRiDa4uVrCYs34Nm8WVi4eY
-        LHZd5rCYsfcBs8WeM7/YLa58fc9mMfv+YxaLBbO5LTY9vsZq0bz6HLPFvCPvWCwu75rDZtGz
-        YSurxeXmi4wWR/73M1p0XXvCavFmxR12i2MLxCxOtbxgsdh7YCOLRduvZWwOoh5X23exe2z4
-        3MTmcW/fYRaPBZtKPU7M+M3icb/7OJPH5iX1HudnLGT0+LLqGrPHwX2GHp83yQVwR+nZFOWX
-        lqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehl7H98n7mgW61i
-        5Tz3BsZD8l2MnBwSAiYSW1+/YO9i5OIQEljKKHHweTcTREJcYvf8t8wQtrDEn2tdbCC2kMBr
-        RonZ90xBbGEBC4mthx+ygDSLCKxnkXi3s4cZxGEWmMYoMeX1OSaIsW2MEt1H1rGCtLAJaEr8
-        3XwTbBSvgJ1E74lJ7CA2i4CqxK4nh4FqODhEBcIkjp7IgygRlDg58wkLSJhTwFjizFcFkDCz
-        gLrEn3mXmCFseYnmrbOhbHGJW0/mM01gFJqFpHsWkpZZSFpmIWlZwMiyilEktbQ4Nz232FCv
-        ODG3uDQvXS85P3cTIzBdbDv2c/MOxksbgw8xCnAwKvHw3rBUjxViTSwrrsw9xCjBwawkwrvq
-        P1CINyWxsiq1KD++qDQntfgQoynQaxOZpUST84GpLK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCM
-        kEB6YklqdmpqQWoRTB8TB6dUA6Ob0u0C22WmNaeeTtq1bteBOQGX5jl2LlJ9vsfuNc+PpSWN
-        DG9370iKnTd/97uCkh0rvP7O4U9ht+s2WZ+WFuPVZfJF40+opO0DE5WA5ByBypJfyw7O/mB/
-        e6H2IoaZnRYOy3z+v6//2zEl6wjXBZ16dcfumb6NL5PemQo5Bz97Kly2PsT++BMlluKMREMt
-        5qLiRAAlheMYLQMAAA==
-X-CMS-MailID: 20190712125408eucas1p166fd03846592d11ffbea036072607dc4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190710050444epcas1p250f7aa0f8798a7757df51d66f5970c2a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190710050444epcas1p250f7aa0f8798a7757df51d66f5970c2a
-References: <CGME20190710050444epcas1p250f7aa0f8798a7757df51d66f5970c2a@epcas1p2.samsung.com>
-        <cover.1562734889.git.joe@perches.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+The pca9535 gpio expander is present on the Rex baseboard, but missing
+from the dtsi.
 
-On 10.07.2019 07:04, Joe Perches wrote:
-> These GENMASK uses are inverted argument order and the
-> actual masks produced are incorrect.  Fix them.
->
-> Add checkpatch tests to help avoid more misuses too.
->
-> Joe Perches (12):
->   checkpatch: Add GENMASK tests
->   clocksource/drivers/npcm: Fix misuse of GENMASK macro
->   drm: aspeed_gfx: Fix misuse of GENMASK macro
->   iio: adc: max9611: Fix misuse of GENMASK macro
->   irqchip/gic-v3-its: Fix misuse of GENMASK macro
->   mmc: meson-mx-sdio: Fix misuse of GENMASK macro
->   net: ethernet: mediatek: Fix misuses of GENMASK macro
->   net: stmmac: Fix misuses of GENMASK macro
->   rtw88: Fix misuse of GENMASK macro
->   phy: amlogic: G12A: Fix misuse of GENMASK macro
->   staging: media: cedrus: Fix misuse of GENMASK macro
->   ASoC: wcd9335: Fix misuse of GENMASK macro
->
->  drivers/clocksource/timer-npcm7xx.c               |  2 +-
->  drivers/gpu/drm/aspeed/aspeed_gfx.h               |  2 +-
->  drivers/iio/adc/max9611.c                         |  2 +-
->  drivers/irqchip/irq-gic-v3-its.c                  |  2 +-
->  drivers/mmc/host/meson-mx-sdio.c                  |  2 +-
->  drivers/net/ethernet/mediatek/mtk_eth_soc.h       |  2 +-
->  drivers/net/ethernet/mediatek/mtk_sgmii.c         |  2 +-
->  drivers/net/ethernet/stmicro/stmmac/descs.h       |  2 +-
->  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  4 ++--
->  drivers/net/wireless/realtek/rtw88/rtw8822b.c     |  2 +-
->  drivers/phy/amlogic/phy-meson-g12a-usb2.c         |  2 +-
->  drivers/staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +-
->  scripts/checkpatch.pl                             | 15 +++++++++++++++
->  sound/soc/codecs/wcd-clsh-v2.c                    |  2 +-
->  14 files changed, 29 insertions(+), 14 deletions(-)
->
-After adding following compile time check:
+Add the new gpio controller and the associated interrupt line
+MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
 
-------
+Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+---
+ arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index 5102b2bbd224..ac4ea5f443a9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -457,7 +457,7 @@ KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
- KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
-                   -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
-                   -Werror=implicit-function-declaration
--Werror=implicit-int \
--                  -Wno-format-security \
-+                  -Wno-format-security -Werror=div-by-zero \
-                   -std=gnu89
- KBUILD_CPPFLAGS := -D__KERNEL__
- KBUILD_AFLAGS_KERNEL :=
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index 669d69441a62..61d74b103055 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -19,11 +19,11 @@
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
- #define GENMASK(h, l) \
--       (((~UL(0)) - (UL(1) << (l)) + 1) & \
-+       (((~UL(0)) - (UL(1) << (l)) + 1 + 0/((h) >= (l))) & \
-         (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
- 
- #define GENMASK_ULL(h, l) \
--       (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
-+       (((~ULL(0)) - (ULL(1) << (l)) + 1 + 0/((h) >= (l))) & \
-         (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
- 
- #endif /* __LINUX_BITS_H */
-
--------
-
-I was able to detect one more GENMASK misue (AARCH64, allyesconfig):
-
-  CC      drivers/phy/rockchip/phy-rockchip-inno-hdmi.o
-In file included from ../include/linux/bitops.h:5:0,
-                 from ../include/linux/kernel.h:12,
-                 from ../include/linux/clk.h:13,
-                 from ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:9:
-../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c: In function
-‘inno_hdmi_phy_rk3328_power_on’:
-../include/linux/bits.h:22:37: error: division by zero [-Werror=div-by-zero]
-  (((~UL(0)) - (UL(1) << (l)) + 1 + 0/((h) >= (l))) & \
-                                     ^
-../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:24:42: note: in
-expansion of macro ‘GENMASK’
- #define UPDATE(x, h, l)  (((x) << (l)) & GENMASK((h), (l)))
-                                          ^~~~~~~
-../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:201:50: note: in
-expansion of macro ‘UPDATE’
- #define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)  UPDATE(x, 7, 9)
-                                                  ^~~~~~
-../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:1046:26: note: in
-expansion of macro ‘RK3328_TERM_RESISTOR_CALIB_SPEED_7_0’
-   inno_write(inno, 0xc6, RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(v));
-
-
-Of course I do not advise to add the check as is to Kernel - it is
-undefined behavior area AFAIK.
-
-
-Regards
-
-Andrzej
+diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6q=
+dl-rex.dtsi
+index 97f1659144ea..d5324c6761c1 100644
+--- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+@@ -136,6 +136,19 @@
+ 		compatible =3D "atmel,24c02";
+ 		reg =3D <0x57>;
+ 	};
++
++	gpio8: pca9535@27 {
++		compatible =3D "nxp,pca9535";
++		reg =3D <0x27>;
++		gpio-controller;
++		#gpio-cells =3D <2>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_pca9535>;
++		interrupt-parent =3D <&gpio6>;
++		interrupts =3D <16 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells =3D <2>;
++	};
+ };
+=20
+ &i2c3 {
+@@ -237,6 +250,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_pca9535: pca9535 {
++			fsl,pins =3D <
++				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
++		   >;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins =3D <
+ 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+--=20
+2.19.1
 
