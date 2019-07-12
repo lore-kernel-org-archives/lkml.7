@@ -2,169 +2,157 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724F9C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20053C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC3A20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1CF208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="uQKwZ7Jg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfGLIVg (ORCPT
+        id S1726417AbfGLIXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:21:36 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:31655 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGLIVf (ORCPT
+        Fri, 12 Jul 2019 04:23:00 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10819 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLIXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:21:35 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 0nKJFzhFvuZ347cB/1iiOa0gusRvfdBglhNi2o0z9N/fIyHAPcTdgecYmTmIkYUI0QIejHKQnG
- +f+1HheYLXKArKACJuXk7O2Uhe86jslFjq2mI57IY0bNjUxlg1tw2eCrM5ZmUUcF5ccyiU5giF
- gmrGI4Ne4wsOcSl9iMxQ9cRI+UaJ7jEMD+4oxeIVy+JBNiGrVxRQSwpBrRpKH6To1dDo9+3TFP
- ehkXFDSs9lCGlYq9Tf260yBnuier1zs8uLlkU4Z/LtPRITUYb3LuxVU0QLiupiyuj27Vkfr6wz
- tf8=
-X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
-   d="scan'208";a="41053477"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2019 01:21:34 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 12 Jul 2019 01:21:33 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 12 Jul 2019 01:21:31 -0700
-Date:   Fri, 12 Jul 2019 10:20:44 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-CC:     "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pierre-yves.mordret@st.com" <pierre-yves.mordret@st.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v3 0/9] i2c: add support for filters
-Message-ID: <20190712082044.6eteunzehyptsibk@M43218.corp.atmel.com>
-Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pierre-yves.mordret@st.com" <pierre-yves.mordret@st.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
-User-Agent: NeoMutt/20180716
+        Fri, 12 Jul 2019 04:23:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1562919779; x=1594455779;
+  h=from:to:cc:subject:date:message-id;
+  bh=2GHXvodd5mYiOI7g2dcIp8dLyBwMPtlaooER9mc1rHw=;
+  b=uQKwZ7Jg7PHZ8DeTmIOtcHBsqI1w2SDCconW1uI7qftZQV3HIDpm+h8a
+   xipaRH0bneeM4rsBvt4/tSWR9bpJK8kTKQk75QYDUN8TOb2382j7wkMVg
+   ltEWB3DkRrpzU3dq0MUUWvAl1kGbnj2/QuWcb+wEANGAhqmN8kifXalHu
+   E=;
+X-IronPort-AV: E=Sophos;i="5.62,481,1554768000"; 
+   d="scan'208";a="404647834"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Jul 2019 08:22:57 +0000
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214])
+        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id 8BFEEA252A;
+        Fri, 12 Jul 2019 08:22:53 +0000 (UTC)
+Received: from u54e1ad5160425a4b64ea.ant.amazon.com (localhost [127.0.0.1])
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id x6C8MoPk016257;
+        Fri, 12 Jul 2019 10:22:50 +0200
+Received: (from karahmed@localhost)
+        by u54e1ad5160425a4b64ea.ant.amazon.com (8.15.2/8.15.2/Submit) id x6C8MnRH016242;
+        Fri, 12 Jul 2019 10:22:49 +0200
+From:   KarimAllah Ahmed <karahmed@amazon.de>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu
+Subject: [PATCH] KVM: arm/arm64: Properly check for MMIO regions
+Date:   Fri, 12 Jul 2019 10:22:08 +0200
+Message-Id: <1562919728-642-1-git-send-email-karahmed@amazon.de>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 03:19:26PM +0200, Eugen Hristev - M18282 wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Hello,
-> 
-> This series adds support for analog and digital filters for i2c controllers
-> 
-> This series is based on the series:
-> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
-> and enhanced to add the bindings for all controllers plus an extra binding
-> for the width of the spikes in nanoseconds.
-> 
-> First, bindings are created for
-> 'i2c-ana-filter'
-> 'i2c-dig-filter'
-> 'i2c-filter-width-ns'
-> 
-> The support is added in the i2c core to retrieve filter width and add it
-> to the timings structure.
-> Next, the at91 driver is enhanced for supporting digital filter, advanced
-> digital filter (with selectable spike width) and the analog filter.
-> 
-> Finally the device tree for two boards are modified to make use of the
-> new properties.
-> 
-> This series is the result of the comments on the ML in the direction
-> requested: to make the bindings globally available for i2c drivers.
-> 
-> Changes in v3:
-> - made bindings global for i2c controllers and modified accordingly
-> - gave up PADFCDF bit because it's a lack in datasheet
-> - the computation on the width of the spike is based on periph clock as it
-> is done for hold time.
-> 
-> Changes in v2:
-> - added device tree bindings and support for enable-ana-filt and
-> enable-dig-filt
-> - added the new properties to the DT for sama5d4_xplained/sama5d2_xplained
-> 
-> Eugen Hristev (9):
->   dt-bindings: i2c: at91: add new compatible
->   dt-bindings: i2c: add bindings for i2c analog and digital filter
->   i2c: add support for filter-width-ns optional property
->   i2c: at91: add new platform support for sam9x60
->   i2c: at91: add support for digital filtering
->   i2c: at91: add support for advanced digital filtering
->   i2c: at91: add support for analog filtering
->   ARM: dts: at91: sama5d2_xplained: add analog and digital filter for
->     i2c
->   ARM: dts: at91: sama5d4_xplained: add analog filter for i2c
-> 
->  Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
->  Documentation/devicetree/bindings/i2c/i2c.txt      | 11 +++++
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  6 +++
->  arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  1 +
->  drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++++++++
->  drivers/i2c/busses/i2c-at91-master.c               | 49 ++++++++++++++++++++--
->  drivers/i2c/busses/i2c-at91.h                      | 13 ++++++
->  drivers/i2c/i2c-core-base.c                        |  2 +
->  include/linux/i2c.h                                |  2 +
->  9 files changed, 121 insertions(+), 4 deletions(-)
+Valid RAM can live outside kernel control (e.g. using "mem=" command-line
+parameter). This memory can still be used as valid guest memory for KVM. So
+ensure that we validate that this memory is definitely not "RAM" before
+assuming that it is an MMIO region.
 
-Hi,
+One way to use memory outside kernel control is:
 
-I don't know if it will fit other vendors need concerning the binding
-but for Microchip it sounds good.
+1- Pass 'mem=' in the kernel command-line to limit the amount of memory managed
+   by the kernel.
+2- Map this physical memory you want to give to the guest with:
+   mmap("/dev/mem", physical_address_offset, ..)
+3- Use the user-space virtual address as the "userspace_addr" field in
+   KVM_SET_USER_MEMORY_REGION ioctl.
 
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-for the whole serie.
+One of the limitations of the current /dev/mem for ARM is that it would map
+this memory as uncached without this patch:
+https://lkml.org/lkml/2019/7/11/684
 
-Regards
+This work is similar to the work done on x86 here:
+https://lkml.org/lkml/2019/1/31/933
 
-Ludovic
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Julien Thierry <julien.thierry@arm.com>
+Cc: Suzuki K Pouloze <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: kvmarm@lists.cs.columbia.edu
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
+---
+ virt/kvm/arm/mmu.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 06180c9..2105134 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -8,6 +8,7 @@
+ #include <linux/kvm_host.h>
+ #include <linux/io.h>
+ #include <linux/hugetlb.h>
++#include <linux/memblock.h>
+ #include <linux/sched/signal.h>
+ #include <trace/events/kvm.h>
+ #include <asm/pgalloc.h>
+@@ -89,7 +90,7 @@ static void kvm_flush_dcache_pud(struct kvm *kvm,
+ 
+ static bool kvm_is_device_pfn(unsigned long pfn)
+ {
+-	return !pfn_valid(pfn);
++	return !memblock_is_memory(__pfn_to_phys(pfn));
+ }
+ 
+ /**
+@@ -949,6 +950,7 @@ static void stage2_unmap_memslot(struct kvm *kvm,
+ 	do {
+ 		struct vm_area_struct *vma = find_vma(current->mm, hva);
+ 		hva_t vm_start, vm_end;
++		gpa_t gpa;
+ 
+ 		if (!vma || vma->vm_start >= reg_end)
+ 			break;
+@@ -959,11 +961,14 @@ static void stage2_unmap_memslot(struct kvm *kvm,
+ 		vm_start = max(hva, vma->vm_start);
+ 		vm_end = min(reg_end, vma->vm_end);
+ 
+-		if (!(vma->vm_flags & VM_PFNMAP)) {
+-			gpa_t gpa = addr + (vm_start - memslot->userspace_addr);
+-			unmap_stage2_range(kvm, gpa, vm_end - vm_start);
+-		}
+ 		hva = vm_end;
++
++		if ((vma->vm_flags & VM_PFNMAP) &&
++		    !memblock_is_memory(__pfn_to_phys(vma->vm_pgoff)))
++			continue;
++
++		gpa = addr + (vm_start - memslot->userspace_addr);
++		unmap_stage2_range(kvm, gpa, vm_end - vm_start);
+ 	} while (hva < reg_end);
+ }
+ 
+@@ -2329,7 +2334,8 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ 		vm_start = max(hva, vma->vm_start);
+ 		vm_end = min(reg_end, vma->vm_end);
+ 
+-		if (vma->vm_flags & VM_PFNMAP) {
++		if ((vma->vm_flags & VM_PFNMAP) &&
++		    !memblock_is_memory(__pfn_to_phys(vma->vm_pgoff))) {
+ 			gpa_t gpa = mem->guest_phys_addr +
+ 				    (vm_start - mem->userspace_addr);
+ 			phys_addr_t pa;
+-- 
+2.7.4
+
