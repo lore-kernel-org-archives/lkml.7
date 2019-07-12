@@ -2,146 +2,169 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE476C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724F9C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A99B20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:21:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jO/GNaSk"
+	by mail.kernel.org (Postfix) with ESMTP id 4EC3A20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfGLIV1 (ORCPT
+        id S1726695AbfGLIVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:21:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34835 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfGLIV1 (ORCPT
+        Fri, 12 Jul 2019 04:21:36 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:31655 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLIVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:21:27 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so4428033plp.2;
-        Fri, 12 Jul 2019 01:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=APl5dbgN+eZue0lzxfYmWgGhXRjD2NfOpuLfGcmFZXw=;
-        b=jO/GNaSk2UOTfBD++EpjxqMFJzQ8oX3E9s+dIj/gF9+MD0EHK/GDpDSPXFMVBpaJyF
-         csYANtV6AjwbySkV6a+itemJ4JdKAJ8V33jWZCZ80eIDHMhdhGKO1r4eafwpIPEEQ0rN
-         C737aRqM/igEF8xhlc8LziTNe8o8uj99h0ccGc+v40q9+YWfI2hTzHAOaYQkAEdMhddq
-         fmn805UtNk1hNEWlLC2gV6k0Ea0NlVsqxztx1bCcFFWHmAhJu9SfMY1n7zjfcRmNhmQ5
-         OMvqaGYl9GUu88RkKjQN6jTcAIH2guD7sKIAG/7E1z+RaZqvJHkbvGS4JpUfQtHSLfpC
-         ZltQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=APl5dbgN+eZue0lzxfYmWgGhXRjD2NfOpuLfGcmFZXw=;
-        b=McV2i23Lhrj9RnhCs8BTCp/72CPoufW1l7Z+pQ1Ckylj3KuggkTv1UqvTSXW4aCtoR
-         4if8uabDKiIXStQ94ds0gccLDiBMa+rm5iCfqEYexubRYQWsGDCKHor9adORZIUxl6c1
-         X09AivwbkS9OLJ8sgVOrqtMKy9Cea/uKhUKCJXr+G9kiaNBL9Sm/IT7OJGws6fFf6xOG
-         X7Npu8jb7IME0OVi8BCNbtYbMaTJLpm9s/C2785Z9d87srfLlUAolqoNsjdrqISACEA7
-         ZuwLkEyiT4UMP6Oae4BBT5RK32iYawAJfiTCGCbURKSIrGPieqvX6MQjLyqyH7HXZyyf
-         WY1A==
-X-Gm-Message-State: APjAAAWYZMas/Yj6zxJf5VDojOyb9xaMUSgr9VNchFYkAnM3Qoa0ZFTW
-        2RnCXbOof1iI7qD1NWj0JY5Dv3glrRTg6Q==
-X-Google-Smtp-Source: APXvYqzL7NuUDTwd1C14X5XazK8Cr13VnIx7ezBRx2v9qJ8kkhdXmwvxSYbMheoTuDNcOsxX/0+gGw==
-X-Received: by 2002:a17:902:d:: with SMTP id 13mr9721990pla.153.1562919686310;
-        Fri, 12 Jul 2019 01:21:26 -0700 (PDT)
-Received: from maya190711 ([52.250.118.122])
-        by smtp.gmail.com with ESMTPSA id a16sm8337649pfd.68.2019.07.12.01.21.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 01:21:26 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 08:21:25 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/5] x86: hv: Add functions to allocate/deallocate page
- for Hyper-V
-Message-ID: <706b2e71eb3e587b5f8801e50f090fae2a00e35d.1562916939.git.m.maya.nakamura@gmail.com>
-References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+        Fri, 12 Jul 2019 04:21:35 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 0nKJFzhFvuZ347cB/1iiOa0gusRvfdBglhNi2o0z9N/fIyHAPcTdgecYmTmIkYUI0QIejHKQnG
+ +f+1HheYLXKArKACJuXk7O2Uhe86jslFjq2mI57IY0bNjUxlg1tw2eCrM5ZmUUcF5ccyiU5giF
+ gmrGI4Ne4wsOcSl9iMxQ9cRI+UaJ7jEMD+4oxeIVy+JBNiGrVxRQSwpBrRpKH6To1dDo9+3TFP
+ ehkXFDSs9lCGlYq9Tf260yBnuier1zs8uLlkU4Z/LtPRITUYb3LuxVU0QLiupiyuj27Vkfr6wz
+ tf8=
+X-IronPort-AV: E=Sophos;i="5.63,481,1557212400"; 
+   d="scan'208";a="41053477"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2019 01:21:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 12 Jul 2019 01:21:33 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 12 Jul 2019 01:21:31 -0700
+Date:   Fri, 12 Jul 2019 10:20:44 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+CC:     "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "peda@axentia.se" <peda@axentia.se>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pierre-yves.mordret@st.com" <pierre-yves.mordret@st.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH v3 0/9] i2c: add support for filters
+Message-ID: <20190712082044.6eteunzehyptsibk@M43218.corp.atmel.com>
+Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "peda@axentia.se" <peda@axentia.se>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pierre-yves.mordret@st.com" <pierre-yves.mordret@st.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
+References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <cover.1562916939.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce two new functions, hv_alloc_hyperv_page() and
-hv_free_hyperv_page(), to allocate/deallocate memory with the size and
-alignment that Hyper-V expects as a page. Although currently they are
-not used, they are ready to be used to allocate/deallocate memory on x86
-when their ARM64 counterparts are implemented, keeping symmetry between
-architectures with potentially different guest page sizes.
+On Tue, Jul 09, 2019 at 03:19:26PM +0200, Eugen Hristev - M18282 wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Hello,
+> 
+> This series adds support for analog and digital filters for i2c controllers
+> 
+> This series is based on the series:
+> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+> and enhanced to add the bindings for all controllers plus an extra binding
+> for the width of the spikes in nanoseconds.
+> 
+> First, bindings are created for
+> 'i2c-ana-filter'
+> 'i2c-dig-filter'
+> 'i2c-filter-width-ns'
+> 
+> The support is added in the i2c core to retrieve filter width and add it
+> to the timings structure.
+> Next, the at91 driver is enhanced for supporting digital filter, advanced
+> digital filter (with selectable spike width) and the analog filter.
+> 
+> Finally the device tree for two boards are modified to make use of the
+> new properties.
+> 
+> This series is the result of the comments on the ML in the direction
+> requested: to make the bindings globally available for i2c drivers.
+> 
+> Changes in v3:
+> - made bindings global for i2c controllers and modified accordingly
+> - gave up PADFCDF bit because it's a lack in datasheet
+> - the computation on the width of the spike is based on periph clock as it
+> is done for hold time.
+> 
+> Changes in v2:
+> - added device tree bindings and support for enable-ana-filt and
+> enable-dig-filt
+> - added the new properties to the DT for sama5d4_xplained/sama5d2_xplained
+> 
+> Eugen Hristev (9):
+>   dt-bindings: i2c: at91: add new compatible
+>   dt-bindings: i2c: add bindings for i2c analog and digital filter
+>   i2c: add support for filter-width-ns optional property
+>   i2c: at91: add new platform support for sam9x60
+>   i2c: at91: add support for digital filtering
+>   i2c: at91: add support for advanced digital filtering
+>   i2c: at91: add support for analog filtering
+>   ARM: dts: at91: sama5d2_xplained: add analog and digital filter for
+>     i2c
+>   ARM: dts: at91: sama5d4_xplained: add analog filter for i2c
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
+>  Documentation/devicetree/bindings/i2c/i2c.txt      | 11 +++++
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  6 +++
+>  arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  1 +
+>  drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++++++++
+>  drivers/i2c/busses/i2c-at91-master.c               | 49 ++++++++++++++++++++--
+>  drivers/i2c/busses/i2c-at91.h                      | 13 ++++++
+>  drivers/i2c/i2c-core-base.c                        |  2 +
+>  include/linux/i2c.h                                |  2 +
+>  9 files changed, 121 insertions(+), 4 deletions(-)
 
-Link: https://lore.kernel.org/lkml/alpine.DEB.2.21.1906272334560.32342@nanos.tec.linutronix.de/
-Link: https://lore.kernel.org/lkml/87muindr9c.fsf@vitty.brq.redhat.com/
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/hyperv/hv_init.c       | 14 ++++++++++++++
- arch/x86/include/asm/mshyperv.h |  5 ++++-
- 2 files changed, 18 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 0e033ef11a9f..e8960a83add7 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
- u32 hv_max_vp_index;
- EXPORT_SYMBOL_GPL(hv_max_vp_index);
- 
-+void *hv_alloc_hyperv_page(void)
-+{
-+	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
-+
-+	return (void *)__get_free_page(GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
-+
-+void hv_free_hyperv_page(unsigned long addr)
-+{
-+	free_page(addr);
-+}
-+EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
-+
- static int hv_cpu_init(unsigned int cpu)
- {
- 	u64 msr_vp_index;
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 2a793bf6ebb0..32ec9df39a99 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -218,7 +218,8 @@ static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
- 
- void __init hyperv_init(void);
- void hyperv_setup_mmu_ops(void);
--
-+void *hv_alloc_hyperv_page(void);
-+void hv_free_hyperv_page(unsigned long addr);
- void hyperv_reenlightenment_intr(struct pt_regs *regs);
- void set_hv_tscchange_cb(void (*cb)(void));
- void clear_hv_tscchange_cb(void);
-@@ -241,6 +242,8 @@ static inline void hv_apic_init(void) {}
- #else /* CONFIG_HYPERV */
- static inline void hyperv_init(void) {}
- static inline void hyperv_setup_mmu_ops(void) {}
-+static inline void *hv_alloc_hyperv_page(void) { return NULL; }
-+static inline void hv_free_hyperv_page(unsigned long addr) {}
- static inline void set_hv_tscchange_cb(void (*cb)(void)) {}
- static inline void clear_hv_tscchange_cb(void) {}
- static inline void hyperv_stop_tsc_emulation(void) {};
--- 
-2.17.1
+I don't know if it will fit other vendors need concerning the binding
+but for Microchip it sounds good.
 
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+for the whole serie.
+
+Regards
+
+Ludovic
