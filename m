@@ -2,107 +2,207 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81D0C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9456C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8811E20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C9020863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="miJbyZsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfGLM4Q (ORCPT
+        id S1727222AbfGLNBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:56:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38082 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbfGLM4P (ORCPT
+        Fri, 12 Jul 2019 09:01:48 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53128 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfGLNBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:56:15 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlv5c-0007Pc-Mt; Fri, 12 Jul 2019 12:55:52 +0000
-Date:   Fri, 12 Jul 2019 13:55:52 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190712125552.GL17978@ZenIV.linux.org.uk>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
+        Fri, 12 Jul 2019 09:01:47 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190712130145euoutp01b189cc16ce3ea8cec806bac4843feed5~wqnircuZX0163101631euoutp01D
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:01:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190712130145euoutp01b189cc16ce3ea8cec806bac4843feed5~wqnircuZX0163101631euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562936505;
+        bh=0Ph+jlbDFqlic9RlOSrcIKz2JKpU+ek5a4NYj/6z2ys=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=miJbyZskVcrhDa7qC19aY2wpoji1Zut2W5q0JrcBpNRHyldTkyYHYqWH9PLjiAjJc
+         fhhA4rx7RGbhWG3f3fEPnbAQGNFzaAU4AssBelYNr9Qw7bOxdG7URf2/yw8T+ZcrhZ
+         mkqCCs+nj2vOIPdxz25AvYSDKvXqT0XdwFqOl8zA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190712130145eucas1p23e4e0971a626de5b7a229d1c81566fb2~wqniAROjQ3006530065eucas1p2O;
+        Fri, 12 Jul 2019 13:01:45 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 82.33.04325.8B4882D5; Fri, 12
+        Jul 2019 14:01:44 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190712130144eucas1p18e10379bdec5a07d218f775495cd3db1~wqnhHqbG30135501355eucas1p1D;
+        Fri, 12 Jul 2019 13:01:44 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190712130144eusmtrp1748cf5233b9a72a42c4c4e27528dbdc5~wqng5kBYx1905319053eusmtrp1o;
+        Fri, 12 Jul 2019 13:01:44 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-fc-5d2884b8ca55
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 21.A4.04140.7B4882D5; Fri, 12
+        Jul 2019 14:01:43 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190712130143eusmtip254e80d709661cfbfe69a4e165de522ff~wqngdl3Db0500405004eusmtip2d;
+        Fri, 12 Jul 2019 13:01:43 +0000 (GMT)
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <10b1313f-7a60-df04-a9e3-76649b74f2f0@samsung.com>
+Date:   Fri, 12 Jul 2019 15:01:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712123924.GK17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAF6AEGtGjKRA3A8v6pgaXLgpeiLZuz6HuDSFRjKrNp4iQNVZtA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFKsWRmVeSWpSXmKPExsWy7djP87o7WjRiDebeNrfoPXeSyeL0/ncs
+        FlMfPmGz+L9tIrPFla/v2Szaln9jtuicuITdYuL+s+wWl3fNYbN4vvAHswOXx95vC1g8ds66
+        y+4xu2Mmq8emVZ1sHneu7WHz2P7tAavH/e7jTB6fN8kFcERx2aSk5mSWpRbp2yVwZXx/dJ+l
+        YKFExax/rSwNjGeFuhg5OSQETCSuXLnO3sXIxSEksIJR4u+XdVDOF0aJm783QDmfGSVWTrnN
+        AtPy8P06FojEckaJz5uuskE4bxklfs6bwwhSJQxUtW7pAWYQW0RAWWLV1v1gHcwCU5gldl+9
+        AlbEJqAp8XfzTTYQm1fATqK/aQtYnEVAVWL21YPsILaoQJjEzwWdUDWCEidnPgE7g1MgUGLh
+        7WtgcWYBeYntb+cwQ9jiEreezGcCWSYhcI9d4ureNiaIu10k7v9+xQ5hC0u8Or4FypaROD25
+        B+q3eon7K1qYIZo7GCW2btjJDJGwljh8/CJrFyMH0AZNifW79CHCjhKLvi9mAQlLCPBJ3Hgr
+        CHEDn8SkbdOZIcK8Eh1t0MBWlLh/divUQHGJpRe+sk1gVJqF5LNZSL6ZheSbWQh7FzCyrGIU
+        Ty0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMYaf/Hf+6g3Hfn6RDjAIcjEo8vDcs1WOFWBPL
+        iitzDzFKcDArifCu+g8U4k1JrKxKLcqPLyrNSS0+xCjNwaIkzlvN8CBaSCA9sSQ1OzW1ILUI
+        JsvEwSnVwKiqkVr8/0XocR+elcc1bHo29RxYvuqx2Y2Ab7JXrnrvirI1lXhwX9Pb10FXL1ju
+        Rn94/7TjUqv7G2y+Mj+I63rqoMh3vJw1xXfLna3BS364rz768N6FvUVrSw6fSDvsZGSTeO43
+        Z/2SpberhBI/mbLbf/pRkh2j5y79ZOM03p/vv+S6hfQ5eiqxFGckGmoxFxUnAgA3HWjfXQMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsVy+t/xe7rbWzRiDTre21j0njvJZHF6/zsW
+        i6kPn7BZ/N82kdniytf3bBZty78xW3ROXMJuMXH/WXaLy7vmsFk8X/iD2YHLY++3BSweO2fd
+        ZfeY3TGT1WPTqk42jzvX9rB5bP/2gNXjfvdxJo/Pm+QCOKL0bIryS0tSFTLyi0tslaINLYz0
+        DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mr4/us9SsFCiYta/VpYGxrNCXYycHBIC
+        JhIP369j6WLk4hASWMoo8frkHSaIhLjE7vlvmSFsYYk/17rYIIpeM0o0TdjNApIQBupet/QA
+        WJGIgLLEqq37wSYxC0xhlpj56iwzRMcrJom3sx+xglSxCWhK/N18kw3E5hWwk+hv2sIIYrMI
+        qErMvnqQvYuRg0NUIEzi6Ik8iBJBiZMzn4At4xQIlFh4+xpYK7OAusSfeZeYIWx5ie1v50DZ
+        4hK3nsxnmsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYMxu
+        O/Zzyw7GrnfBhxgFOBiVeHhvWKrHCrEmlhVX5h5ilOBgVhLhXfUfKMSbklhZlVqUH19UmpNa
+        fIjRFOi3icxSosn5wHSSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mD
+        U6qB8SYjz/U+Z5E/WjFcktxKD5eeXbPg4KtJecLpC9RDd2/n9I+/5F/ouzCg1/dVuc3iwAnz
+        5cRFldauXSH9o+SoJfNjm81dyaw9i7Y2y9Zfs2ZaGKn1MMQnVf6VzfrdEel9U8UrfzREbtzB
+        9I+9OIlVavfSOdbrXr4zjD5086V4vMK3O5xcxpv+KLEUZyQaajEXFScCANMElHPvAgAA
+X-CMS-MailID: 20190712130144eucas1p18e10379bdec5a07d218f775495cd3db1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+        <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+        <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
+        <20190706010604.GG20625@sirena.org.uk>
+        <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+        <CAF6AEGtGjKRA3A8v6pgaXLgpeiLZuz6HuDSFRjKrNp4iQNVZtA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
-> On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
-> 
-> > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
-> > > >  			s = ERR_PTR(error);
-> > > >  		return s;
-> > > >  	}
-> > > > -	error = dirfd_path_init(nd);
-> > > > -	if (unlikely(error))
-> > > > -		return ERR_PTR(error);
-> > > > +	if (likely(!nd->path.mnt)) {
-> > > 
-> > > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
-> > 
-> > Yes. I did it to be more consistent with the other "have we got the
-> > root" checks elsewhere. Is there another way you'd prefer I do it?
-> 
-> "Have we got the root" checks are inevitable evil; here you are making the
-> control flow in a single function hard to follow.
-> 
-> I *think* what you are doing is
-> 	absolute pathname, no LOOKUP_BENEATH:
-> 		set_root
-> 		error = nd_jump_root(nd)
-> 	else
-> 		error = dirfd_path_init(nd)
-> 	return unlikely(error) ? ERR_PTR(error) : s;
-> which should be a lot easier to follow (not to mention shorter), but I might
-> be missing something in all of that.
+On 11.07.2019 15:56, Rob Clark wrote:
+> On Thu, Jul 11, 2019 at 6:11 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> On 06.07.2019 03:06, Mark Brown wrote:
+>>> On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
+>>>> Add basic support with a simple implementation that utilizes the generic
+>>>> read/write commands to allow device registers to be configured.
+>>> This looks good to me but I really don't know anything about DSI,
+>>> I'd appreciate some review from other people who do.  I take it
+>>> there's some spec thing in DSI that says registers and bytes must
+>>> both be 8 bit?
+>>
+>> I am little bit confused about regmap usage here. On the one hand it
+>> nicely fits to this specific driver, probably because it already uses
+>> regmap_i2c.
+>>
+>> On the other it will be unusable for almost all current DSI drivers and
+>> probably for most new drivers. Why?
+>>
+>> 1. DSI protocol defines actually more than 30 types of transactions[1],
+>> but this patchset implements only few of them (dsi generic write/read
+>> family). Is it possible to implement multiple types of transactions in
+>> regmap?
+>>
+>> 2. There is already some set of helpers which uses dsi bus, rewriting it
+>> on regmap is possible or driver could use of regmap and direct access
+>> together, the question is if it is really necessary.
+>>
+>> 3. DSI devices are no MFDs so regmap abstraction has no big value added
+>> (correct me, if there are other significant benefits).
+>>
+> I assume it is not *just* this one bridge that can be programmed over
+> either i2c or dsi, depending on how things are wired up on the board.
+> It certainly would be nice for regmap to support this case, so we
+> don't have to write two different bridge drivers for the same bridge.
+> I wouldn't expect a panel that is only programmed via dsi to use this.
 
-PS: if that's what's going on, I would be tempted to turn the entire
-path_init() part into this:
-	if (flags & LOOKUP_BENEATH)
-		while (*s == '/')
-			s++;
-in the very beginning (plus the handling of nd_jump_root() prototype
-change, but that belongs with nd_jump_root() change itself, obviously).
-Again, I might be missing something here...
+
+On the other side supporting DSI and I2C in one driver is simply matter
+of writing proper accesors.
+
+
+Regards
+
+Andrzej
+
+
+>
+> BR,
+> -R
+>
+>> [1]:
+>> https://elixir.bootlin.com/linux/latest/source/include/video/mipi_display.h#L15
+>>
+>>
+>> Regards
+>>
+>> Andrzej
+>>
+>>
+>>> A couple of minor comments, no need to resend just for these:
+>>>
+>>>> +       payload[0] = (char)reg;
+>>>> +       payload[1] = (char)val;
+>>> Do you need the casts?
+>>>
+>>>> +    ret = mipi_dsi_generic_write(dsi, payload, 2);
+>>>> +    return ret < 0 ? ret : 0;
+>>> Please just write an if statement, it helps with legibility.
+>>>
+>>>> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
+>>>> +                             const struct regmap_config *config,
+>>>> +                             struct lock_class_key *lock_key,
+>>>> +                             const char *lock_name)
+>>>> +{
+>>>> +    return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
+>>>> +                         lock_key, lock_name);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
+>>> Perhaps validate that the config is OK (mainly the register/value
+>>> sizes)?  Though I'm not sure it's worth it so perhaps not - up to
+>>> you.
+>>
+
