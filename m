@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308F1C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06891C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F044D21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E98208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934050;
-	bh=AOLOOMSEGhe4lIwl7gpI2otGa4PS0CAr/wrU3MXzVpA=;
+	s=default; t=1562934053;
+	bh=zRrVbauX8vmHUnsUzwXp9I3sbDUqFbwzZ38iRRtPzRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEuR7w/qseoOTBisXOyJTOKdvT3nqYdVSPNQJ8fMLwEoWMSulFx3nsVLvupjUoxVe
-	 6eAourP3mDmFbWcev7gRuwIgreL1PbmudI8PrW/mCIdaKa0JL1dZa9kwsOQjKg8qw/
-	 trQam5+LtxarBwfVeisuERe85bRyBaJnesARcf/c=
+	b=qx77Sh+46ORx0Y7F4HO+HRSmSYGEQF4TjOdmqa8zJPeZ+T+6jhGk5dHy+QK8Az4Dx
+	 9O1p5eS4RZrGYHT9sCE1Fw3J4ZZQX729vQcNzOGuU6GnlR0lJwdJwTFb6IRosRRM49
+	 Lx6FW35BcXhEHqOp0h0RRFRt678/CBWjyB2mcVcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfGLMUs (ORCPT
+        id S1727469AbfGLMUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfGLMUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:20:43 -0400
+        id S1727456AbfGLMUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:20:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B05208E4;
-        Fri, 12 Jul 2019 12:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E62C208E4;
+        Fri, 12 Jul 2019 12:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934042;
-        bh=AOLOOMSEGhe4lIwl7gpI2otGa4PS0CAr/wrU3MXzVpA=;
+        s=default; t=1562934048;
+        bh=zRrVbauX8vmHUnsUzwXp9I3sbDUqFbwzZ38iRRtPzRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0TEnV4qhNC66PFecyi49vWfDJXZ6N4k1Gh20Fldd4wmn8usXg/NqlckIAJqrfRPV
-         ZUbAGX3uX5au/jeccMHNq44ujZpXY5/rw79s0OrYuXAdCAFnM9I6KgPIdQ9bqQ0XD9
-         MYW22dpBHx/yFKSqb7yHg+iuMvAUNzgY9wM8YT6M=
+        b=odA6Cci1ztAVEjjePu7S4bAG4A/u5j/FdVBFwUpYx9kRdTDxVptiUKVbMf1NjtJxW
+         +90YC0XB4nIyHAV6AK81D5lzF6YnmGi+60hKCCwDSPDgt6CXu3Sc8uU1MSWgLWgzAq
+         NBXZjt37exV1EOJ+Y/4Q0JCc/bC0B+YUG+iD2l8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/91] s390/boot: disable address-of-packed-member warning
-Date:   Fri, 12 Jul 2019 14:18:30 +0200
-Message-Id: <20190712121622.850914408@linuxfoundation.org>
+Subject: [PATCH 4.19 29/91] drm/vmwgfx: fix a warning due to missing dma_parms
+Date:   Fri, 12 Jul 2019 14:18:32 +0200
+Message-Id: <20190712121622.951304016@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,37 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9364df30420987e77599c4789ec0065c609a507 ]
+[ Upstream commit 39916897cd815a0ee07ba1f6820cf88a63e459fc ]
 
-Get rid of gcc9 warnings like this:
+Booting up with DMA_API_DEBUG_SG=y generates a warning due to the driver
+forgot to set dma_parms appropriately. Set it just after vmw_dma_masks()
+in vmw_driver_load().
 
-arch/s390/boot/ipl_report.c: In function 'find_bootdata_space':
-arch/s390/boot/ipl_report.c:42:26: warning: taking address of packed member of 'struct ipl_rb_components' may result in an unaligned pointer value [-Waddress-of-packed-member]
-   42 |  for_each_rb_entry(comp, comps)
-      |                          ^~~~~
+DMA-API: vmwgfx 0000:00:0f.0: mapping sg segment longer than device
+claims to support [len=2097152] [max=65536]
+WARNING: CPU: 2 PID: 261 at kernel/dma/debug.c:1232
+debug_dma_map_sg+0x360/0x480
+Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop
+Reference Platform, BIOS 6.00 04/13/2018
+RIP: 0010:debug_dma_map_sg+0x360/0x480
+Call Trace:
+ vmw_ttm_map_dma+0x3b1/0x5b0 [vmwgfx]
+ vmw_bo_map_dma+0x25/0x30 [vmwgfx]
+ vmw_otables_setup+0x2a8/0x750 [vmwgfx]
+ vmw_request_device_late+0x78/0xc0 [vmwgfx]
+ vmw_request_device+0xee/0x4e0 [vmwgfx]
+ vmw_driver_load.cold+0x757/0xd84 [vmwgfx]
+ drm_dev_register+0x1ff/0x340 [drm]
+ drm_get_pci_dev+0x110/0x290 [drm]
+ vmw_probe+0x15/0x20 [vmwgfx]
+ local_pci_probe+0x7a/0xc0
+ pci_device_probe+0x1b9/0x290
+ really_probe+0x1b5/0x630
+ driver_probe_device+0xa3/0x1a0
+ device_driver_attach+0x94/0xa0
+ __driver_attach+0xdd/0x1c0
+ bus_for_each_dev+0xfe/0x150
+ driver_attach+0x2d/0x40
+ bus_add_driver+0x290/0x350
+ driver_register+0xdc/0x1d0
+ __pci_register_driver+0xda/0xf0
+ vmwgfx_init+0x34/0x1000 [vmwgfx]
+ do_one_initcall+0xe5/0x40a
+ do_init_module+0x10f/0x3a0
+ load_module+0x16a5/0x1a40
+ __se_sys_finit_module+0x183/0x1c0
+ __x64_sys_finit_module+0x43/0x50
+ do_syscall_64+0xc8/0x606
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This is effectively the s390 variant of commit 20c6c1890455
-("x86/boot: Disable the address-of-packed-member compiler warning").
-
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Fixes: fb1d9738ca05 ("drm/vmwgfx: Add DRM driver for VMware Virtual GPU")
+Co-developed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index ee65185bbc80..e6c2e8925fef 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -24,6 +24,7 @@ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
- KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
- KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
-+KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
- KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
- KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
- UTS_MACHINE	:= s390x
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+index 82ae68716696..05a800807c26 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -789,6 +789,9 @@ static int vmw_driver_load(struct drm_device *dev, unsigned long chipset)
+ 	if (unlikely(ret != 0))
+ 		goto out_err0;
+ 
++	dma_set_max_seg_size(dev->dev, min_t(unsigned int, U32_MAX & PAGE_MASK,
++					     SCATTERLIST_MAX_SEGMENT));
++
+ 	if (dev_priv->capabilities & SVGA_CAP_GMR2) {
+ 		DRM_INFO("Max GMR ids is %u\n",
+ 			 (unsigned)dev_priv->max_gmr_ids);
 -- 
 2.20.1
 
