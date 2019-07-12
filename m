@@ -2,149 +2,109 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E0DC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC39C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDE92084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AB321019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562934474;
+	bh=UgvX4NKm8hwhyfUD3407gBRNpyry022uPnp8FgjLEEA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u/8sxtUfr2r4INaVuXLI1WymnWxucYjuHqhHNgqWHJZNi2Lj2N7HjWWIt6t6YHCbr
+	 msqkFsTTAt9qHIU9+4D3hBndsJ6622YSW/N+lrdKid1Y9m6EHWidET5q2cGbF4XQ3U
+	 UaDBCKvsvjjAOCFgiALnWPkgCUWKmVrxiMXNgGZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfGLM1q convert rfc822-to-8bit (ORCPT
+        id S1728708AbfGLM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6848 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728250AbfGLM1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:27:41 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CCRejH147847
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:27:40 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.119])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tprrabq2e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:27:40 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 12 Jul 2019 12:27:34 -0000
-Received: from us1b3-smtp06.a3dr.sjc01.isc4sb.com (10.122.203.184)
-        by smtp.notes.na.collabserv.com (10.122.182.123) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 12 Jul 2019 12:27:27 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp06.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2019071212272659-375697 ;
-          Fri, 12 Jul 2019 12:27:26 +0000 
-In-Reply-To: <20190712120328.GB27512@ziepe.ca>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "Arnd Bergmann" <arnd@arndb.de>,
-        "Doug Ledford" <dledford@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jul 2019 12:27:26 +0000
+        Fri, 12 Jul 2019 08:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728677AbfGLM1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7481216C8;
+        Fri, 12 Jul 2019 12:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562934469;
+        bh=UgvX4NKm8hwhyfUD3407gBRNpyry022uPnp8FgjLEEA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DV/8PEq6LvSpw8T66e6ZeXAcvuzzmd9TMbEDBezuZXkormBhIT1s8V2Gctq+hzGfp
+         B+pEh2ZDSEcgoZsfsUnN2vD6ul1suy+0tC2k3lnQydtuQrs58NcqE3pBZXatGYrOZA
+         GAdL0obzjGMB1KISzt0/cqGdGoXWcQZKGI+X2TsM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 064/138] bpf, devmap: Fix premature entry free on destroying map
+Date:   Fri, 12 Jul 2019 14:18:48 +0200
+Message-Id: <20190712121631.132305427@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+References: <20190712121628.731888964@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190712120328.GB27512@ziepe.ca>,<20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-KeepSent: 6D0AC131:1EAB95BA-00258435:00445D02;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 24191
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset=UTF-8
-x-cbid: 19071212-6115-0000-0000-000006651901
-X-IBM-SpamModules-Scores: BY=0.031249; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.011778
-X-IBM-SpamModules-Versions: BY=3.00011414; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231090; UDB=6.00648496; IPR=6.01012375;
- BA=6.00006355; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027691; XFM=3.00000015;
- UTC=2019-07-12 12:27:32
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-12 09:49:44 - 6.00010155
-x-cbparentid: 19071212-6116-0000-0000-0000B16B1ACE
-Message-Id: <OF6D0AC131.1EAB95BA-ON00258435.00445D02-00258435.00446E58@notes.na.collabserv.com>
-Subject: Re:  Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+[ Upstream commit d4dd153d551634683fccf8881f606fa9f3dfa1ef ]
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 07/12/2019 02:03PM
->Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
-><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
->linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
->Subject: [EXTERNAL] Re: [PATCH] rdma/siw: avoid smp_store_mb() on a
->u64
->
->On Fri, Jul 12, 2019 at 11:33:46AM +0000, Bernard Metzler wrote:
->> >diff --git a/drivers/infiniband/sw/siw/siw_verbs.c
->> >b/drivers/infiniband/sw/siw/siw_verbs.c
->> >index 32dc79d0e898..41c5ab293fe1 100644
->> >+++ b/drivers/infiniband/sw/siw/siw_verbs.c
->> >@@ -1142,10 +1142,11 @@ int siw_req_notify_cq(struct ib_cq
->*base_cq,
->> >enum ib_cq_notify_flags flags)
->> > 
->> > 	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
->> > 		/* CQ event for next solicited completion */
->> >-		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
->> >+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_SOLICITED);
->> > 	else
->> > 		/* CQ event for any signalled completion */
->> >-		smp_store_mb(*cq->notify, SIW_NOTIFY_ALL);
->> >+		WRITE_ONCE(*cq->notify, SIW_NOTIFY_ALL);
->> >+	smp_wmb();
->> > 
->> > 	if (flags & IB_CQ_REPORT_MISSED_EVENTS)
->> > 		return cq->cq_put - cq->cq_get;
->> 
->> 
->> Hi Arnd,
->> Many thanks for pointing that out! Indeed, this CQ notification
->> mechanism does not take 32 bit architectures into account.
->> Since we have only three flags to hold here, it's probably better
->> to make it a 32bit value. That would remove the issue w/o
->> introducing extra smp_wmb(). 
->
->I also prefer not to see smp_wmb() in drivers..
->
->> I'd prefer smp_store_mb(), since on some architectures it shall be
->> more efficient.  That would also make it sufficient to use
->> READ_ONCE.
->
->The READ_ONCE is confusing to me too, if you need store_release
->semantics then the reader also needs to pair with load_acquite -
->otherwise it doesn't work.
->
+dev_map_free() waits for flush_needed bitmap to be empty in order to
+ensure all flush operations have completed before freeing its entries.
+However the corresponding clear_bit() was called before using the
+entries, so the entries could be used after free.
 
-I used READ_ONCE since it is a potentially user land shared
-object. Since we are under spinlock, we might just do a matching
-WRITE_ONCE instead of the smp_store_mb() ??
+All access to the entries needs to be done before clearing the bit.
+It seems commit a5e2da6e9787 ("bpf: netdev is never null in
+__dev_map_flush") accidentally changed the clear_bit() and memory access
+order.
 
-Many thanks!
-Bernard.
+Note that the problem happens only in __dev_map_flush(), not in
+dev_map_flush_old(). dev_map_flush_old() is called only after nulling
+out the corresponding netdev_map entry, so dev_map_free() never frees
+the entry thus no such race happens there.
 
->Still, we need to do something rapidly to fix the i386 build, please
->revise right away..
->
->Jason
->
->
+Fixes: a5e2da6e9787 ("bpf: netdev is never null in __dev_map_flush")
+Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/bpf/devmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 1e525d70f833..e001fb1a96b1 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -291,10 +291,10 @@ void __dev_map_flush(struct bpf_map *map)
+ 		if (unlikely(!dev))
+ 			continue;
+ 
+-		__clear_bit(bit, bitmap);
+-
+ 		bq = this_cpu_ptr(dev->bulkq);
+ 		bq_xmit_all(dev, bq, XDP_XMIT_FLUSH, true);
++
++		__clear_bit(bit, bitmap);
+ 	}
+ }
+ 
+-- 
+2.20.1
+
+
 
