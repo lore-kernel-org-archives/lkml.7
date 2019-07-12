@@ -2,110 +2,103 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9FDC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B5DC742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8556B21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OJmluq10"
+	by mail.kernel.org (Postfix) with ESMTP id 661A221537
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfGLQA2 (ORCPT
+        id S1727363AbfGLQA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:00:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35724 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfGLQA2 (ORCPT
+        Fri, 12 Jul 2019 12:00:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44314 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfGLQAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:00:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tyTl1YbLBKPDWZGZvgKJMIcMQjGDx2jzfk/EinyXaGw=; b=OJmluq10NP9ipXVsYrmwopFcf
-        do+lSJThkEy+P/MV/f2o9QPEWNc0Gh7X0FBRZSWSNdmGaYj4is98cT3u0ezQl96GDgZSt+jAi7LUF
-        dgmWzIepmiPHhH4mZYRWfi7kxUTmjmcDJz7hlYH60YSSdmd3Hw0IttJOqjQ1kbRyE1tIxZJk8srJB
-        IlCUyCp9dTm7j7m3hz11ELDmm4StRo9BXM8WcqhoSdEXy+QlzQMk2rwFn7NYspxNWjPesn9gCPQWU
-        Iq/HoBQSN9wY4c/HLnRVXbE/JfP0y4ilrxP/RMaRHC4JdB7795AK+0L93m59yddMBltlvPsbIJi/Z
-        DkwYvlJSQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlxwr-0006qv-UH; Fri, 12 Jul 2019 15:59:02 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 546B4209772E8; Fri, 12 Jul 2019 17:58:59 +0200 (CEST)
-Date:   Fri, 12 Jul 2019 17:58:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712155859.GV3419@hirez.programming.kicks-ass.net>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712111125.GT3402@hirez.programming.kicks-ass.net>
- <20190712151051.GB235410@google.com>
+        Fri, 12 Jul 2019 12:00:55 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hlxyU-0004Ej-To; Fri, 12 Jul 2019 18:00:43 +0200
+Date:   Fri, 12 Jul 2019 18:00:42 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+cc:     Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, konrad.wilk@oracle.com,
+        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
+        jwadams@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+In-Reply-To: <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+Message-ID: <alpine.DEB.2.21.1907121751430.1788@nanos.tec.linutronix.de>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com> <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de> <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712151051.GB235410@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:10:51AM -0400, Joel Fernandes wrote:
-> Agreed, I will do it this way (without the debug_locks) like:
+On Fri, 12 Jul 2019, Alexandre Chartre wrote:
+> On 7/12/19 12:44 PM, Thomas Gleixner wrote:
+> > That ASI thing is just PTI on steroids.
+> > 
+> > So why do we need two versions of the same thing? That's absolutely bonkers
+> > and will just introduce subtle bugs and conflicting decisions all over the
+> > place.
+> > 
+> > The need for ASI is very tightly coupled to the need for PTI and there is
+> > absolutely no point in keeping them separate.
+> > 
+> > The only difference vs. interrupts and exceptions is that the PTI logic
+> > cares whether they enter from user or from kernel space while ASI only
+> > cares about the kernel entry.
 > 
-> ---8<-----------------------
-> 
-> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> index ba861d1716d3..339aebc330db 100644
-> --- a/kernel/rcu/update.c
-> +++ b/kernel/rcu/update.c
-> @@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
->  
->  int rcu_read_lock_any_held(void)
->  {
->  	if (!debug_lockdep_rcu_enabled())
->  		return 1;
->  	if (!rcu_is_watching())
->  		return 0;
->  	if (!rcu_lockdep_current_cpu_online())
->  		return 0;
-> +	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
-> +		return 1;
-> +	return !preemptible();
->  }
->  EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
+> I think that's precisely what makes ASI and PTI different and independent.
+> PTI is just about switching between userland and kernel page-tables, while
+> ASI is about switching page-table inside the kernel. You can have ASI without
+> having PTI. You can also use ASI for kernel threads so for code that won't
+> be triggered from userland and so which won't involve PTI.
 
-OK, that looks sane. Thanks!
+It's still the same concept. And you can argue in circles it does not
+justify yet another mapping setup with is a different copy of some other
+mapping setup. Whether PTI is replaced by ASI or PTI is extended to handle
+ASI does not matter at all. Having two similar concepts side by side is a
+guarantee for disaster.
+
+> > So why do you want ot treat that differently? There is absolutely zero
+> > reason to do so. And there is no reason to create a pointlessly different
+> > version of PTI which introduces yet another variant of a restricted page
+> > table instead of just reusing and extending what's there already.
+> > 
+> 
+> As I've tried to explain, to me PTI and ASI are different and independent.
+> PTI manages switching between userland and kernel page-table, and ASI manages
+> switching between kernel and a reduced-kernel page-table.
+
+Again. It's the same concept and it does not matter what form of reduced
+page tables you use. You always need transition points and in order to make
+the transition points work you need reliably mapped bits and pieces.
+
+Also Paul wants to use the same concept for user space so trivial system
+calls can do w/o PTI. In some other thread you said yourself that this
+could be extended to cover the kvm ioctl, which is clearly a return to user
+space.
+
+Are we then going to add another set of randomly sprinkled transition
+points and yet another 'state machine' to duct-tape the fallout?
+
+Definitely not going to happen.
+
+Thanks,
+
+	tglx
+
