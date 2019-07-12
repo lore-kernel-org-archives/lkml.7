@@ -2,126 +2,121 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A612C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7116AC742BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF2220863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438F120863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="o/GSzzDe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NX3566Q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfGLMxH (ORCPT
+        id S1727276AbfGLMyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:53:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37696 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfGLMxG (ORCPT
+        Fri, 12 Jul 2019 08:54:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33476 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfGLMyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:53:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g15so4517203pgi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 05:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HI/mPiOEky9IcN8kS3GAyMwb2WWtW08o4dxxmi5JJzQ=;
-        b=o/GSzzDeFZJYGL8gC1qzeODGZyPyccRvW7WFIM/TBszKrfccscktOx80indrs2Th/Z
-         1S1vbKvQi9JMqg6S8DlC6E4i6zdtuVIpyeTsUHzLx5RIhdjOMYmL4Z3a7NBwVlgy2G6n
-         r3e7HUHLc562l0tosf3QIe438m3wAZfxGaB8I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HI/mPiOEky9IcN8kS3GAyMwb2WWtW08o4dxxmi5JJzQ=;
-        b=K8L5Zv10uEPH9CAD1Tq19NMEQTzPUXSK50ORwtj81H5XWfAi46nQm1PK8FOzL6T+1y
-         sK4LqZiLTFc2MqOBiYWWU+C+PlCcTDuVWKGkjXXtTzpoETQHryyNuKBxoD07ubZRQNMS
-         uVp1+2onDBpXZzR6JpRqUCxKs7xOBVfeAVn4UO6ZQQZUuk6+3Fry7ckH4+KLlziXQ9By
-         xThSZtwzvcJVv6ZeeXLmfJFuU3vUv4+8Rylo1BH0DoDcgZ5/1jXqbbC5RVUrioNnh59v
-         lhUaoFiVMZEMGxMV9Q6kcR9sLljQ+6gx+SrThRcQRwYJAMoQakWFHlwpHKkdxtb5y+eV
-         O3yQ==
-X-Gm-Message-State: APjAAAVu8Amifl6Xf2JMRz9/IKc4g2bOlKCRjLfg9Vlm4L28iGSYKApd
-        uqBTU1/45h3Nw7f97M3A7g/YVsYK
-X-Google-Smtp-Source: APXvYqxx7zQ52H1iMObta5D8se4d9ugDoG5ANXfkkI6qD9dsi42nD4wX82aDi8zaB90MkhUWI+lYuw==
-X-Received: by 2002:a17:90a:2023:: with SMTP id n32mr11133889pjc.3.1562935986173;
-        Fri, 12 Jul 2019 05:53:06 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o15sm10639138pgj.18.2019.07.12.05.53.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 05:53:05 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 08:53:04 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the pidfd
- tree
-Message-ID: <20190712125304.GC92297@google.com>
-References: <20190515131629.405837b0@canb.auug.org.au>
- <20190708120114.5ca1613d@canb.auug.org.au>
+        Fri, 12 Jul 2019 08:54:02 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CCnDU5044556;
+        Fri, 12 Jul 2019 12:51:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=8vLEs/JBMWlFWXGIz+UNcNz5pVXTEU4KP1e0LBWVMWA=;
+ b=NX3566Q5oHi6CcoRFVXeDCUAd2SUixaEFsGt/kWj+xlLRBG3Q0bb+0+ZcHXax9tbOrma
+ jOavemz+RkRm9sLFEAI2a1//NAu+YVa9CqE9l4XddjHl4H+J2Iza83IToF7sZlPa5Jl1
+ R5SmSPrUfve8+ZaabvSmPvKDvrGmKLnixX7lh0PGQqqrcZpGPBpouxXXYzBhAP3PsGZ9
+ w0bsi8u3/mNn9/eHzLLYkLYgVSdw2Ina+tuTbPSQuew6n0ClflQVEIXepzBnHXtJjz1y
+ 2qSJiTotkYAYun7ywTdz/2kTzUMnJAwmiWu1PYLPMJSQcv+5VEpzK0QyM/Ec5kxuqsrz WQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2tjm9r5e0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 12:51:25 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6CClhL5192025;
+        Fri, 12 Jul 2019 12:51:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2tpefd2wwt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 12:51:24 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6CCpLW1010069;
+        Fri, 12 Jul 2019 12:51:21 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Jul 2019 05:47:27 -0700
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
+        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <20190712114458.GU3402@hirez.programming.kicks-ass.net>
+ <1f97f1d9-d209-f2ab-406d-fac765006f91@oracle.com>
+ <20190712123653.GO3419@hirez.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <b1b7f85f-dac3-80a3-c05c-160f58716ce8@oracle.com>
+Date:   Fri, 12 Jul 2019 14:47:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708120114.5ca1613d@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190712123653.GO3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907120139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9315 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907120140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 12:01:14PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Wed, 15 May 2019 13:16:29 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Today's linux-next merge of the akpm-current tree got a conflict in:
-> > 
-> >   include/linux/pid.h
-> > 
-> > between commit:
-> > 
-> >   51f1b521a515 ("pidfd: add polling support")
-> > 
-> > from the pidfd tree and commit:
-> > 
-> >   c02e28a1bb18 ("kernel/pid.c: convert struct pid:count to refcount_t")
-> > 
-> > from the akpm-current tree.
-> > 
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> > 
-> > -- 
-> > Cheers,
-> > Stephen Rothwell
-> > 
-> > diff --cc include/linux/pid.h
-> > index 1484db6ca8d1,0be5829ddd80..000000000000
-> > --- a/include/linux/pid.h
-> > +++ b/include/linux/pid.h
-> > @@@ -3,7 -3,7 +3,8 @@@
-> >   #define _LINUX_PID_H
-> >   
-> >   #include <linux/rculist.h>
-> >  +#include <linux/wait.h>
-> > + #include <linux/refcount.h>
-> >   
-> >   enum pid_type
-> >   {
-> 
-> I am still getting this conflict (the commits have changed).  Just a
-> reminder in case you think Linus may need to know.
 
-Could you let me know if this trivial header inclusion conflict has been
-resolved now? Let me know what else I can do to help.
+On 7/12/19 2:36 PM, Peter Zijlstra wrote:
+> On Fri, Jul 12, 2019 at 02:17:20PM +0200, Alexandre Chartre wrote:
+>> On 7/12/19 1:44 PM, Peter Zijlstra wrote:
+> 
+>>> AFAIK3 this wants/needs to be combined with core-scheduling to be
+>>> useful, but not a single mention of that is anywhere.
+>>
+>> No. This is actually an alternative to core-scheduling. Eventually, ASI
+>> will kick all sibling hyperthreads when exiting isolation and it needs to
+>> run with the full kernel page-table (note that's currently not in these
+>> patches).
+>>
+>> So ASI can be seen as an optimization to disabling hyperthreading: instead
+>> of just disabling hyperthreading you run with ASI, and when ASI can't preserve
+>> isolation you will basically run with a single thread.
+> 
+> You can't do that without much of the scheduler changes present in the
+> core-scheduling patches.
+> 
 
+We hope we can do that without the whole core-scheduling mechanism. The idea
+is to send an IPI to all sibling hyperthreads. This IPI will interrupt these
+sibling hyperthreads and have them wait for a condition that will allow them
+to resume execution (for example when re-entering isolation). We are
+investigating this in parallel to ASI.
+
+alex.
