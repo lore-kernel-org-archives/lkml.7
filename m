@@ -2,88 +2,168 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38676C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCFEC742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B34021530
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A751320644
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:44:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="om4dUHnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbfGLDnW (ORCPT
+        id S1729544AbfGLDoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:43:22 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:46903 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729293AbfGLDnV (ORCPT
+        Thu, 11 Jul 2019 23:44:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38787 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729398AbfGLDoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:43:21 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWfco61_1562902997;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWfco61_1562902997)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jul 2019 11:43:18 +0800
-Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
- statistic
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        Mel Gorman <mgorman@suse.de>, riel@surriel.com
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
- <20190711134754.GD3402@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
-Date:   Fri, 12 Jul 2019 11:43:17 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 11 Jul 2019 23:44:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z75so3891435pgz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 20:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FJEg1PSZtBDvEUaB1tANRkyXMe9y2BhABHvlVqK15CM=;
+        b=om4dUHnrAVTcB6VZSX3QaRGG8cW4pe28ysXcQAfegtJ9471WnmQy48pbF/6w4twSkP
+         g9C0CVRJtW+e4mKQ9V6wimOpulHkGb76sMC5DttiDZD22y2T60DwP/IUSYghEFaRj5ZM
+         gLtjjXwnDsEdq4Qtn44XjgYZPKez0Z3HjMw8mbzgaZ8WDnLepMfeX/+tVUp8ehaxdI2q
+         Du90ZLjjAGk//30F6fGpSGHt3jsHLnNtKHLwSgw50p019+YT7qel+pJid5MwWqap7MfP
+         VrCNXES1a3iO02buE5VDyxiA3wv7mC6iAeYra06n4kss0+U81cJ7sGedf7kn6BhBM8cQ
+         ZDRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FJEg1PSZtBDvEUaB1tANRkyXMe9y2BhABHvlVqK15CM=;
+        b=lUsTYjKn24CgmNShuDk0aGGWAKl0LSn9+ospEgmmbUw482UfHkJWRnIQ9XmuUHJRiD
+         CELG+PWvgs2nTA3OAN4WmHniE1kM+zQe3F05qtpO+ovR++4Zb0P6MtJtkOM5EOxAR1mm
+         NmFBVDOJTup/m961APHjga3H2ITfFNOwFLBCAaIakgQOBX15NYH5m5Ovj8tlZfl+ONSt
+         rGPzL5jvXNWz0fd07FUbyxXnmK4cx2S5L7ebkYmgiK05mpHwiIqMi8I7fJT4i5Aza7xA
+         zjQ89ZoIdCx+OYfqy1mDhuYDfJuxZM+VPr6Kfw6lh5KRFNXO5dHhWEHDvDYeuGyCztbd
+         Carg==
+X-Gm-Message-State: APjAAAU/8M2fcCBgcNY62gNDoVtnuq0dGPuZ4MBnEX9AnAWTWyEGiYrL
+        C4LL5GmK0s/GogWEn5WVgQTTrA==
+X-Google-Smtp-Source: APXvYqy9857Wgh/Qw5sD0c6p/uGpEMX3EoZjvjany601DZQGRDvfT7z/hTLtd+HWVqwjoJjgYV9amw==
+X-Received: by 2002:a63:c342:: with SMTP id e2mr8105277pgd.79.1562903052070;
+        Thu, 11 Jul 2019 20:44:12 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id 201sm9836656pfz.24.2019.07.11.20.44.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2019 20:44:11 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 09:14:09 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     rjw@rjwysocki.net, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v6] cpufreq/pasemi: fix an use-after-free in
+ pas_cpufreq_cpu_init()
+Message-ID: <20190712034409.zyl6sskrr6ra5nd3@vireshk-i7>
+References: <1562899461-24045-1-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <20190711134754.GD3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562899461-24045-1-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/11 下午9:47, Peter Zijlstra wrote:
-[snip]
->> +	rcu_read_lock();
->> +	memcg = mem_cgroup_from_task(p);
->> +	if (idx != -1)
->> +		this_cpu_inc(memcg->stat_numa->locality[idx]);
+On 12-07-19, 10:44, Wen Yang wrote:
+> The cpu variable is still being used in the of_get_property() call
+> after the of_node_put() call, which may result in use-after-free.
 > 
-> I thought cgroups were supposed to be hierarchical. That is, if we have:
+> Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v6: keep the blank line and fix warning: label 'out_unmap_sdcpwr' defined but not used.
+> v5: put together the code to get, use, and release cpu device_node.
+> v4: restore the blank line.
+> v3: fix a leaked reference.
+> v2: clean up the code according to the advice of viresh.
 > 
->           R
-> 	 / \
-> 	 A
-> 	/\
-> 	  B
-> 	  \
-> 	   t1
+>  drivers/cpufreq/pasemi-cpufreq.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
 > 
-> Then our task t1 should be accounted to B (as you do), but also to A and
-> R.
+> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+> index 6b1e4ab..7d557f9 100644
+> --- a/drivers/cpufreq/pasemi-cpufreq.c
+> +++ b/drivers/cpufreq/pasemi-cpufreq.c
+> @@ -131,10 +131,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	int err = -ENODEV;
+>  
+>  	cpu = of_get_cpu_node(policy->cpu, NULL);
+> +	if (!cpu)
+> +		goto out;
+>  
+> +	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+>  	of_node_put(cpu);
+> -	if (!cpu)
+> +	if (!max_freqp) {
+> +		err = -EINVAL;
+>  		goto out;
+> +	}
+> +
+> +	/* we need the freq in kHz */
+> +	max_freq = *max_freqp / 1000;
+>  
+>  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+>  	if (!dn)
+> @@ -171,16 +179,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	}
+>  
+>  	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+> -
+> -	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+> -	if (!max_freqp) {
+> -		err = -EINVAL;
+> -		goto out_unmap_sdcpwr;
+> -	}
+> -
+> -	/* we need the freq in kHz */
+> -	max_freq = *max_freqp / 1000;
+> -
+>  	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+>  	pr_debug("initializing frequency table\n");
+>  
+> @@ -196,7 +194,11 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	policy->cur = pas_freqs[cur_astate].frequency;
+>  	ppc_proc_freq = policy->cur * 1000ul;
+>  
+> -	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+> +	err = cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
 
-I get the point but not quite sure about this...
+So you are trying to fix an earlier issue here with this. Should have
+been a separate patch. Over that I have just sent a patch now to make
+this routine return void.
 
-Not like pages there are no hierarchical limitation on locality, also tasks
-running in a particular group have no influence to others, not to mention the
-extra overhead, does it really meaningful to account the stuff hierarchically?
+https://lore.kernel.org/lkml/ee8cf5fb4b4a01fdf9199037ff6d835b935cfd13.1562902877.git.viresh.kumar@linaro.org/
 
-Regards,
-Michael Wang
+So all you need to do is to remove the label out_unmap_sdcpwr instead.
 
-> 
->> +	rcu_read_unlock();
->> +}
->> +#endif
+> +	if (err)
+> +		goto out_unmap_sdcpwr;
+> +
+> +	return 0;
+>  
+>  out_unmap_sdcpwr:
+>  	iounmap(sdcpwr_mapbase);
+> -- 
+> 2.9.5
+
+-- 
+viresh
