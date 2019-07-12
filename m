@@ -2,152 +2,157 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF1FC742D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89328C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50D5217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56263208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 20:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YyK3fGOg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFsPT/Cb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfGLUmB (ORCPT
+        id S1728039AbfGLUnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 16:42:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46078 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbfGLUmB (ORCPT
+        Fri, 12 Jul 2019 16:43:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38815 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727921AbfGLUnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 16:42:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so5297455plr.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:42:01 -0700 (PDT)
+        Fri, 12 Jul 2019 16:43:22 -0400
+Received: by mail-io1-f65.google.com with SMTP id j6so23260565ioa.5;
+        Fri, 12 Jul 2019 13:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=UfopCKCD/U3scimCJ539JfCijiZlPDvdefwUoYerYYc=;
-        b=YyK3fGOghGrzZIzEU3WLIopzhU8oX7JHvVA+pNlSBPxUFJ28vRI3SIazdlvJ0kYSB/
-         lOPaRejOMaPp32GC+IprPgv61souwxkqOWQJHNSbSDZzvqSFjSKUjN3Bot0JPbgf6mBV
-         QjuYxUsE6WBCvHLCqHyhNQVj7DhN19JIyZmFel2EW+YR65Uhmw1Hy/oQ99cqrdwL3DZJ
-         XseB6WK0iPRXzIE0korofD3WszL17utLMo+PWvl6QJgdoWFa2Xm97+JHFNhbNdbpGFwE
-         iiYc8MnCXRl0ZkvymLXDS0FfXtSwbCqPi/MdBEBO0uc5kUcM47pzBVG+qF9XwokoBeH4
-         b0Iw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0YO9X8JrVMhxS3C8ry3P1NpNE6uCJVJpb/vpFCRQayg=;
+        b=YFsPT/CbCO1LYM1qhpMoKr6yhOs70HOyZxWiAG04T809bxgw3U/rSVm6+OJCWo3/cW
+         Nu8hPOb34VukBWTpMKr3Mg4MG2b48byWj4eT6FSODq0k3+HJnV/YX3oDjoaAMnPdvcs0
+         PW+Iiq/XxaJHg0n5CZbLmrhMYGel/fLkar8lRQiWprQlMZnpnoAN6VU3FRxAuM2yNYIZ
+         X74+KB5GrKTBV1HI3OWGXUsirgVu+flnGc4YnMZZTCFd+U6nIkwedcf08xS0TSS1eB13
+         5BSmF77HrzE/1Bq+SVi5h3Iqw0qViCMn/JsnWiQwhgr7fdTCc+nPbVbqFYrtnWnZ2Up/
+         an1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=UfopCKCD/U3scimCJ539JfCijiZlPDvdefwUoYerYYc=;
-        b=EzyaAv1Mx1RP+xuFKBFa42X2ri9SMQQLrCrtyKZRV6AuKqrFLEHU7fJHaBLDCgiaBB
-         9V4+8WQiw0yUWnzhpuiQv2vSs15c/kZZXZ30o/qL3xVPcEP9naAYRk9LA73zr4OcN1Uk
-         3W1SUcrA9hMNGl4TiyT3sGdC/F3fhqMW7AR9N7f+sB0OFfXJJGD5SARfLJS4x8vieBB8
-         Ng1omrDwgRjoQRUF2Z5tWGawIgFDIgLoiUz/CWECnaee+AIgNTiq0WNE66UxiGGAVS9w
-         jqHJa+mdZGj0krmHqFej30JabkueyIHnUGWjFifY+6wtT91+csxn3aS5MVs3ytI7coSZ
-         FAoA==
-X-Gm-Message-State: APjAAAVJIXsISkrB7DcoZVVLA3uvn8wgUdOaQrNbRIVbTODTe5lT5Aqr
-        mNR5ze3LqOEkIcukyxgDLaplDQ==
-X-Google-Smtp-Source: APXvYqwR1BHl6+/pg0D3KYguhMpw9SQw8mIfRIvxpw0z72hsFTLmLDChrHPgIq0Xk6MvJXN/FGdfog==
-X-Received: by 2002:a17:902:6b02:: with SMTP id o2mr12833026plk.99.1562964120350;
-        Fri, 12 Jul 2019 13:42:00 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id x65sm10268625pfd.139.2019.07.12.13.41.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0YO9X8JrVMhxS3C8ry3P1NpNE6uCJVJpb/vpFCRQayg=;
+        b=DwxUpn+R6XU7ZFJ7N3gu06F/pS7Ck+Ticy/9Dz0XnwIuYoQTrGNStDD/w6q5o8Q+oH
+         /5F1AMZmqRzvC/KoUIjt7Bz1XX7Y/Nsk2HQ9zCW11kpCOujasedqEjVxp54LFhXfrP68
+         S22Wd+u1TyBQSYlwTAeJ5lNJ984P+CV8ln/k4o82HGQLkENU2yZVbfJln0Zg985GSyoW
+         3DErYgWjKWW+fV3c/3AfIal+81CfX3UH+c4ri0S+Vr1Ac9R3k2qFoii/d1TTN3D2uTdf
+         CiCN1q23fQBZmcJaiun9LlwzVooeqU4+8iK5jW2sftyRaRhEft89zc3Y1Q5gbShmlOfU
+         3ARQ==
+X-Gm-Message-State: APjAAAVNgUmKYMIuVim9zIdUF3E6Y27bodOLkJvbZDFGxkUasNgQU1JM
+        R1XihyCOSyq0FV/TM5SD40c=
+X-Google-Smtp-Source: APXvYqxL6GxakGiydUYH7NlDpEoU/Uu55hmMkr19MRFB1ktpzJaP36AAZU5i0ateJw4T+t+kQFk8tg==
+X-Received: by 2002:a5d:8702:: with SMTP id u2mr13323425iom.228.1562964201758;
+        Fri, 12 Jul 2019 13:43:21 -0700 (PDT)
+Received: from localhost.localdomain ([198.52.185.227])
+        by smtp.gmail.com with ESMTPSA id l14sm9725013iob.1.2019.07.12.13.43.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 13:41:59 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 13:41:58 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Cfir Cohen <cfir@google.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [patch v2] crypto: ccp - Fix SEV_VERSION_GREATER_OR_EQUAL
-In-Reply-To: <e30eae0f-415b-842e-39c4-801227126367@amd.com>
-Message-ID: <alpine.DEB.2.21.1907121341210.37390@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1907101426290.2777@chino.kir.corp.google.com> <e30eae0f-415b-842e-39c4-801227126367@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 12 Jul 2019 13:43:21 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
+Date:   Fri, 12 Jul 2019 16:43:15 -0400
+Message-Id: <20190712204316.16783-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SEV_VERSION_GREATER_OR_EQUAL() will fail if upgrading from 2.2 to 3.1, for
-example, because the minor version is not equal to or greater than the
-major.
+To enable burst clock mode, add the fsl,burst-clk-enable
+property to the weim bus's devicetree node.
 
-Fix this and move to a static inline function for appropriate type
-checking.
+Example:
+weim: weim@21b8000 {
+	compatible = "fsl,imx6q-weim";
+	reg = <0x021b8000 0x4000>;
+	clocks = <&clks 196>;
+	#address-cells = <2>;
+	#size-cells = <1>;
+	ranges = <0 0 0x08000000 0x08000000>;
+	fsl,weim-cs-gpr = <&gpr>;
+	fsl,burst-clk-enable;
 
-Fixes: edd303ff0e9e ("crypto: ccp - Add DOWNLOAD_FIRMWARE SEV command")
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
+	client-device@0,0 {
+		compatible = "something";
+		reg = <0 0 0x02000000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		bank-width = <2>;
+		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
+				0x0000c000 0x1404a38e 0x00000000>;
+	};
+};
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- v2: no need to check api_major >= maj after checking api_major > maj
-     per Thomas
+ drivers/bus/imx-weim.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
- drivers/crypto/ccp/psp-dev.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
---- a/drivers/crypto/ccp/psp-dev.c
-+++ b/drivers/crypto/ccp/psp-dev.c
-@@ -24,10 +24,6 @@
- #include "sp-dev.h"
- #include "psp-dev.h"
+diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+index db74334ca5ef..cb7d5504a22a 100644
+--- a/drivers/bus/imx-weim.c
++++ b/drivers/bus/imx-weim.c
+@@ -19,6 +19,8 @@ struct imx_weim_devtype {
+ 	unsigned int	cs_count;
+ 	unsigned int	cs_regs_count;
+ 	unsigned int	cs_stride;
++	unsigned int	wcr_offset;
++	unsigned int	wcr_bcm;
+ };
  
--#define SEV_VERSION_GREATER_OR_EQUAL(_maj, _min)	\
--		((psp_master->api_major) >= _maj &&	\
--		 (psp_master->api_minor) >= _min)
--
- #define DEVICE_NAME		"sev"
- #define SEV_FW_FILE		"amd/sev.fw"
- #define SEV_FW_NAME_SIZE	64
-@@ -47,6 +43,15 @@ MODULE_PARM_DESC(psp_probe_timeout, " default timeout value, in seconds, during
- static bool psp_dead;
- static int psp_timeout;
+ static const struct imx_weim_devtype imx1_weim_devtype = {
+@@ -37,6 +39,8 @@ static const struct imx_weim_devtype imx50_weim_devtype = {
+ 	.cs_count	= 4,
+ 	.cs_regs_count	= 6,
+ 	.cs_stride	= 0x18,
++	.wcr_offset	= 0x90,
++	.wcr_bcm	= BIT(0),
+ };
  
-+static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
-+{
-+	if (psp_master->api_major > maj)
-+		return true;
-+	if (psp_master->api_major == maj && psp_master->api_minor >= min)
-+		return true;
-+	return false;
-+}
-+
- static struct psp_device *psp_alloc_struct(struct sp_device *sp)
- {
- 	struct device *dev = sp->dev;
-@@ -588,7 +593,7 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
- 	int ret;
+ static const struct imx_weim_devtype imx51_weim_devtype = {
+@@ -192,6 +196,7 @@ static int __init weim_parse_dt(struct platform_device *pdev,
+ 	struct device_node *child;
+ 	int ret, have_child = 0;
+ 	struct cs_timing_state ts = {};
++	u32 reg;
  
- 	/* SEV GET_ID is available from SEV API v0.16 and up */
--	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
-+	if (!sev_version_greater_or_equal(0, 16))
- 		return -ENOTSUPP;
- 
- 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
-@@ -651,7 +656,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
- 	int ret;
- 
- 	/* SEV GET_ID available from SEV API v0.16 and up */
--	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
-+	if (!sev_version_greater_or_equal(0, 16))
- 		return -ENOTSUPP;
- 
- 	/* SEV FW expects the buffer it fills with the ID to be
-@@ -1053,7 +1058,7 @@ void psp_pci_init(void)
- 		psp_master->sev_state = SEV_STATE_UNINIT;
+ 	if (devtype == &imx50_weim_devtype) {
+ 		ret = imx_weim_gpr_setup(pdev);
+@@ -199,6 +204,17 @@ static int __init weim_parse_dt(struct platform_device *pdev,
+ 			return ret;
  	}
  
--	if (SEV_VERSION_GREATER_OR_EQUAL(0, 15) &&
-+	if (sev_version_greater_or_equal(0, 15) &&
- 	    sev_update_firmware(psp_master->dev) == 0)
- 		sev_get_api_version();
- 
++	if (of_property_read_bool(pdev->dev.of_node, "fsl,burst-clk-enable")) {
++		if (devtype->wcr_bcm) {
++			reg = readl(base + devtype->wcr_offset);
++			writel(reg | devtype->wcr_bcm,
++				base + devtype->wcr_offset);
++		} else {
++			dev_err(&pdev->dev, "burst clk mode not supported.\n");
++			return -EINVAL;
++		}
++	}
++
+ 	for_each_available_child_of_node(pdev->dev.of_node, child) {
+ 		ret = weim_timing_setup(&pdev->dev, child, base, devtype, &ts);
+ 		if (ret)
+-- 
+2.17.1
+
