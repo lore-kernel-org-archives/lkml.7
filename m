@@ -2,207 +2,126 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FF0C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F12CC742D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABB220651
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:06:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fv7p9nvP"
+	by mail.kernel.org (Postfix) with ESMTP id 4F6D220651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfGLRGf (ORCPT
+        id S1727378AbfGLRHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:06:35 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37069 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfGLRGf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:06:35 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g15so4807859pgi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U4r9fJhOOfKvEr/lr0XXxLZ2PxseLa8j58vIX2MDIbg=;
-        b=fv7p9nvPni/JgBkN2DWvJ1P31XFtjqlhxVv7ZlWssudMvP9WPZSHYjuMfBevfuT3Ss
-         knuButmyP+N3aV3R22zlawh7Z8X678G5pwYCFuWxtBvhtoGDhuSNXOwazo0lMuX8BfH+
-         CswFAH2EOg3MwPdv1vUL19wj1rk6CZWcf1sBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U4r9fJhOOfKvEr/lr0XXxLZ2PxseLa8j58vIX2MDIbg=;
-        b=OmbN+wpZv6PSuw3JRXaRmxz+/htO20TLgs2pd27hNlSEgKE1EA8G474YIhQfSQGMox
-         WRWeLbgytUGCa9T8gV+1tabfXh/hLC5NHzQn0Ldtlo0aGU5vPo3sGCxxqNBP7/gVe6Rw
-         pKXZjzylksZUgGiQ7pTmxzvBKYwySznunt58zvRmA1OA5QgiUtS9mqce8hgQYb2qzwAA
-         nDFAo9mgC73yrKdA6GoawiVWLIGSL+um4O6KXUwdn4WAsvWZrNZBlBnoQg1t86mnBq52
-         n0tesQC28ZXRvbruHxxuznNnU76JSTgv0wtxdETXdrOLWxF5JXxeJKp1jQ8QI0Apjbqj
-         3gMA==
-X-Gm-Message-State: APjAAAWmEGNrXp3ROOl+459sgXG9XWKHKcGvR889X0x9mL+zf272sI15
-        mOhYfrz03cSABRv7Dj/OiHA=
-X-Google-Smtp-Source: APXvYqxWZ1lBG2pygGPOpQ8lfw5pnGgRdRphaQTQsIi1EoLggu/tzCkWCRTxy5YCUJKUx975qaz1Kw==
-X-Received: by 2002:a63:8f16:: with SMTP id n22mr5755652pgd.306.1562951194055;
-        Fri, 12 Jul 2019 10:06:34 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a3sm10044435pfo.49.2019.07.12.10.06.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:06:33 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 13:06:31 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190712170631.GA111598@google.com>
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712111125.GT3402@hirez.programming.kicks-ass.net>
- <20190712151051.GB235410@google.com>
- <20190712164531.GW26519@linux.ibm.com>
+        Fri, 12 Jul 2019 13:07:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35024 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727031AbfGLRHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 13:07:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 10:07:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
+   d="scan'208";a="171607073"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 12 Jul 2019 10:06:58 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 12 Jul 2019 20:06:57 +0300
+Date:   Fri, 12 Jul 2019 20:06:57 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Tony Camuso <tcamuso@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        airlied@linux.ie, dkwon@redhat.com
+Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
+Message-ID: <20190712170657.GL5942@intel.com>
+References: <20190523110905.22445-1-tcamuso@redhat.com>
+ <87v9y0mept.fsf@intel.com>
+ <5111581c-9d73-530d-d3ff-4f6950bf3f8c@redhat.com>
+ <20190710135617.GE5942@intel.com>
+ <374b7e4e-40a2-f3c0-ae14-c533bd42243f@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190712164531.GW26519@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <374b7e4e-40a2-f3c0-ae14-c533bd42243f@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 09:45:31AM -0700, Paul E. McKenney wrote:
-> On Fri, Jul 12, 2019 at 11:10:51AM -0400, Joel Fernandes wrote:
-> > On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
-> > > On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> > > > +int rcu_read_lock_any_held(void)
-> > > > +{
-> > > > +	int lockdep_opinion = 0;
-> > > > +
-> > > > +	if (!debug_lockdep_rcu_enabled())
-> > > > +		return 1;
-> > > > +	if (!rcu_is_watching())
-> > > > +		return 0;
-> > > > +	if (!rcu_lockdep_current_cpu_online())
-> > > > +		return 0;
-> > > > +
-> > > > +	/* Preemptible RCU flavor */
-> > > > +	if (lock_is_held(&rcu_lock_map))
-> > > 
-> > > you forgot debug_locks here.
+On Fri, Jul 12, 2019 at 12:07:46PM -0400, Tony Camuso wrote:
+> On 7/10/19 9:56 AM, Ville Syrjälä wrote:
+> > On Wed, Jul 10, 2019 at 09:47:11AM -0400, Tony Camuso wrote:
+> >> On 5/24/19 4:36 AM, Jani Nikula wrote:
+> >>> On Thu, 23 May 2019, tcamuso <tcamuso@redhat.com> wrote:
+> >>>>   From Daniel Kwon <dkwon@redhat.com>
+> >>>>
+> >>>> The system was crashed due to invalid memory access while trying to access
+> >>>> auxiliary device.
+> >>>>
+> >>>> crash> bt
+> >>>> PID: 9863   TASK: ffff89d1bdf11040  CPU: 1   COMMAND: "ipmitool"
+> >>>>    #0 [ffff89cedd7f3868] machine_kexec at ffffffffb0663674
+> >>>>    #1 [ffff89cedd7f38c8] __crash_kexec at ffffffffb071cf62
+> >>>>    #2 [ffff89cedd7f3998] crash_kexec at ffffffffb071d050
+> >>>>    #3 [ffff89cedd7f39b0] oops_end at ffffffffb0d6d758
+> >>>>    #4 [ffff89cedd7f39d8] no_context at ffffffffb0d5bcde
+> >>>>    #5 [ffff89cedd7f3a28] __bad_area_nosemaphore at ffffffffb0d5bd75
+> >>>>    #6 [ffff89cedd7f3a78] bad_area at ffffffffb0d5c085
+> >>>>    #7 [ffff89cedd7f3aa0] __do_page_fault at ffffffffb0d7080c
+> >>>>    #8 [ffff89cedd7f3b10] do_page_fault at ffffffffb0d70905
+> >>>>    #9 [ffff89cedd7f3b40] page_fault at ffffffffb0d6c758
+> >>>>       [exception RIP: drm_dp_aux_dev_get_by_minor+0x3d]
+> >>>>       RIP: ffffffffc0a589bd  RSP: ffff89cedd7f3bf0  RFLAGS: 00010246
+> >>>>       RAX: 0000000000000000  RBX: 0000000000000000  RCX: ffff89cedd7f3fd8
+> >>>>       RDX: 0000000000000000  RSI: 0000000000000000  RDI: ffffffffc0a613e0
+> >>>>       RBP: ffff89cedd7f3bf8   R8: ffff89f1bcbabbd0   R9: 0000000000000000
+> >>>>       R10: ffff89f1be7a1cc0  R11: 0000000000000000  R12: 0000000000000000
+> >>>>       R13: ffff89f1b32a2830  R14: ffff89d18fadfa00  R15: 0000000000000000
+> >>>>       ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> >>>>       RIP: 00002b45f0d80d30  RSP: 00007ffc416066a0  RFLAGS: 00010246
+> >>>>       RAX: 0000000000000002  RBX: 000056062e212d80  RCX: 00007ffc41606810
+> >>>>       RDX: 0000000000000000  RSI: 0000000000000002  RDI: 00007ffc41606ec0
+> >>>>       RBP: 0000000000000000   R8: 000056062dfed229   R9: 00002b45f0cdf14d
+> >>>>       R10: 0000000000000002  R11: 0000000000000246  R12: 00007ffc41606ec0
+> >>>>       R13: 00007ffc41606ed0  R14: 00007ffc41606ee0  R15: 0000000000000000
+> >>>>       ORIG_RAX: 0000000000000002  CS: 0033  SS: 002b
+> >>>>
+> >>>> ----------------------------------------------------------------------------
+> >>>>
+> >>>> It was trying to open '/dev/ipmi0', but as no entry in aux_dir, it returned
+> >>>> NULL from 'idr_find()'. This drm_dp_aux_dev_get_by_minor() should have done a
+> >>>> check on this, but had failed to do it.
+> >>>
+> >>> I think the better question is, *why* does the idr_find() return NULL? I
+> >>> don't think it should, under any circumstances. I fear adding the check
+> >>> here papers over some other problem, taking us further away from the
+> >>> root cause.
+> >>>
+> >>> Also, can you reproduce this on a recent upstream kernel? The aux device
+> >>> nodes were introduced in kernel v4.6. Whatever you reproduced on v3.10
+> >>> is pretty much irrelevant for upstream.
+> >>>
+> >>>
+> >>> BR,
+> >>> Jani.
+> >>
+> >> I have not been able to reproduce this problem.
 > > 
-> > Actually, it turns out debug_locks checking is not even needed. If
-> > debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
-> > get to this point.
+> > mknod /dev/foo c <drm_dp_aux major> 255
+> > cat /dev/foo
 > > 
-> > > > +		return 1;
-> > > > +
-> > > > +	/* BH flavor */
-> > > > +	if (in_softirq() || irqs_disabled())
-> > > 
-> > > I'm not sure I'd put irqs_disabled() under BH, also this entire
-> > > condition is superfluous, see below.
-> > > 
-> > > > +		return 1;
-> > > > +
-> > > > +	/* Sched flavor */
-> > > > +	if (debug_locks)
-> > > > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > > > +	return lockdep_opinion || !preemptible();
-> > > 
-> > > that !preemptible() turns into:
-> > > 
-> > >   !(preempt_count()==0 && !irqs_disabled())
-> > > 
-> > > which is:
-> > > 
-> > >   preempt_count() != 0 || irqs_disabled()
-> > > 
-> > > and already includes irqs_disabled() and in_softirq().
-> > > 
-> > > > +}
-> > > 
-> > > So maybe something lke:
-> > > 
-> > > 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
-> > > 			    lock_is_held(&rcu_sched_lock_map)))
-> > > 		return true;
-> > 
-> > Agreed, I will do it this way (without the debug_locks) like:
-> > 
-> > ---8<-----------------------
-> > 
-> > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> > index ba861d1716d3..339aebc330db 100644
-> > --- a/kernel/rcu/update.c
-> > +++ b/kernel/rcu/update.c
-> > @@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
-> >  
-> >  int rcu_read_lock_any_held(void)
-> >  {
-> > -	int lockdep_opinion = 0;
-> > -
-> >  	if (!debug_lockdep_rcu_enabled())
-> >  		return 1;
-> >  	if (!rcu_is_watching())
-> >  		return 0;
-> >  	if (!rcu_lockdep_current_cpu_online())
-> >  		return 0;
-> > -
-> > -	/* Preemptible RCU flavor */
-> > -	if (lock_is_held(&rcu_lock_map))
-> > -		return 1;
-> > -
-> > -	/* BH flavor */
-> > -	if (in_softirq() || irqs_disabled())
-> > -		return 1;
-> > -
-> > -	/* Sched flavor */
-> > -	if (debug_locks)
-> > -		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > -	return lockdep_opinion || !preemptible();
-> > +	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
+> > should do it.
 > 
-> OK, I will bite...  Why not also lock_is_held(&rcu_bh_lock_map)?
+> How do I determine <drm_dp_aux major>?
 
-Hmm, I was borrowing the strategy from rcu_read_lock_bh_held() which does not
-check for a lock held in this map.
+ls,file,stat. Take your pick.
 
-Honestly, even  lock_is_held(&rcu_sched_lock_map) seems unnecessary per-se
-since !preemptible() will catch that? rcu_read_lock_sched() disables
-preemption already, so lockdep's opinion of the matter seems redundant there.
-
-Sorry I already sent out patches again before seeing your comment but I can
-rework and resend them based on any other suggestions.
-
-thanks,
-
- - Joel
-
-
+-- 
+Ville Syrjälä
+Intel
