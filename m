@@ -2,337 +2,134 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A3C742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DDDC742CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F891208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBB7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ctbFyOgL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfGLQL1 (ORCPT
+        id S1727185AbfGLQMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:11:27 -0400
-Received: from nibbler.cm4all.net ([82.165.145.151]:36915 "EHLO
-        nibbler.cm4all.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfGLQL0 (ORCPT
+        Fri, 12 Jul 2019 12:12:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35808 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfGLQMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:11:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by nibbler.cm4all.net (Postfix) with ESMTP id 784CCC00D2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 18:11:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at nibbler.cm4all.net
-Received: from nibbler.cm4all.net ([127.0.0.1])
-        by localhost (nibbler.cm4all.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id WwqU4s43-6Iy for <linux-kernel@vger.kernel.org>;
-        Fri, 12 Jul 2019 18:11:18 +0200 (CEST)
-Received: from zero.intern.cm-ag (zero.intern.cm-ag [172.30.16.10])
-        by nibbler.cm4all.net (Postfix) with SMTP id 4BC9CC0101
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 18:11:18 +0200 (CEST)
-Received: (qmail 17800 invoked from network); 12 Jul 2019 18:42:54 +0200
-Received: from unknown (HELO rabbit.intern.cm-ag) (172.30.3.1)
-  by zero.intern.cm-ag with SMTP; 12 Jul 2019 18:42:54 +0200
-Received: by rabbit.intern.cm-ag (Postfix, from userid 1023)
-        id 0A88A460C4C; Fri, 12 Jul 2019 18:11:18 +0200 (CEST)
-From:   Max Kellermann <mk@cm4all.com>
-To:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com
-Cc:     linux-kernel@vger.kernel.org, Max Kellermann <mk@cm4all.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] Revert "NFS: readdirplus optimization by cache mechanism" (memleak)
-Date:   Fri, 12 Jul 2019 18:10:56 +0200
-Message-Id: <20190712161055.14098-1-mk@cm4all.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 12 Jul 2019 12:12:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dG6diy7V6S4lK/b3VvWqSMbbXCrffARazC3Zctr1xxs=; b=ctbFyOgLoT6nwqZqoDaaHy2SR
+        Q1T4rvUj8j+B6wujCcNEnoaPYyEUBa9JpDZmJ4UHZwDlHqBMbRijWEfZRWSHecs9cUD5XBAcR+s/1
+        LIBP6F2cXen0350mqZwY6yvkSDp7J92diHZ5qlt3LzJ/1y/SXyk8zvY1E6DXgO1qcvbqGNIB3uWkg
+        5PQlfmC5l+p5VrhDb6yaiOWck5eK45YK61Xgfl2I4OO+vA1FxwB14mG/itQtThPCzb1zBsD89AhxS
+        J7NezN6kMe34TtuLlCqZ8odBu3cGKAr13LmL2XDQDMSXrIzaB7z2xi++BFjok9/KJHvSe+ay2BzHW
+        IsXeg8elg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hly9d-0006vn-It; Fri, 12 Jul 2019 16:12:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3AA8A209772E8; Fri, 12 Jul 2019 18:12:12 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 18:12:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+Message-ID: <20190712161212.GW3419@hirez.programming.kicks-ass.net>
+References: <20190712144257.GE27512@ziepe.ca>
+ <20190712135339.GC27512@ziepe.ca>
+ <20190712120328.GB27512@ziepe.ca>
+ <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+ <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit be4c2d4723a4a637f0d1b4f7c66447141a4b3564.
+On Fri, Jul 12, 2019 at 03:24:09PM +0000, Bernard Metzler wrote:
+> -----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
 
-That commit caused a severe memory leak in nfs_readdir_make_qstr().
+> Hmmm, I don't yet get why we should test and clear atomically, if we
+> clear anyway - is it because we want to avoid clearing a re-arm which
+> happens just after testing and before clearing?
+> (1) If the test was positive, we will call the CQ event handler,
+> and per RDMA verbs spec, the application MUST re-arm the CQ after it
+> got a CQ event, to get another one. So clearing it sometimes before
+> calling the handler is right.
+> (2) If the test was negative, a test and reset would not change
+> anything.
+> 
+> Another complication -- test_and_set_bit() operates on a single
+> bit, but we have to test two bits, and reset both, if one is
+> set. Can we do that atomically, if we test the bits conditionally?
+> I didn't find anything appropriate.
 
-When listing a directory with more than 100 files (this is how many
-struct nfs_cache_array_entry elements fit in one 4kB page), all
-allocated file name strings past those 100 leak.
+There's cmpxchg() loops that can do that.
 
-The root of the leakage is that those string pointers are managed in
-pages which are never linked into the page cache.
+	unsigned int new, val = atomic_read(&var);
+	do {
+		if (!(val & MY_TWO_BITS))
+			break;
 
-fs/nfs/dir.c puts pages into the page cache by calling
-read_cache_page(); the callback function nfs_readdir_filler() will
-then fill the given page struct which was passed to it, which is
-already linked in the page cache (by do_read_cache_page() calling
-add_to_page_cache_lru()).
+		new = val | MY_TWO_BITS;
+	} while (!atomic_try_cmpxchg(&var, &val, new));
 
-Commit be4c2d4723a4 added another (local) array of allocated pages, to
-be filled with more data, instead of discarding excess items received
-from the NFS server.  Those additional pages can be used by the next
-nfs_readdir_filler() call (from within the same nfs_readdir() call).
+only problem is you probably shouldn't share atomic_t with userspace,
+unless you put conditions on what archs you support.
 
-The leak happens when some of those additional pages are never used
-(copied to the page cache using copy_highpage()).  The pages will be
-freed by nfs_readdir_free_pages(), but their contents will not.  The
-commit did not invoke nfs_readdir_clear_array() (and doing so would
-have been dangerous, because it did not track which of those pages
-were already copied to the page cache, risking double free bugs).
+> >And then I think all the weird barriers go away
+> >
+> >> >> @@ -1141,11 +1145,17 @@ int siw_req_notify_cq(struct ib_cq
+> >> >*base_cq, enum ib_cq_notify_flags flags)
+> >> >>  	siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
+> >> >>  
+> >> >>  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
+> >> >> -		/* CQ event for next solicited completion */
+> >> >> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
+> >> >> +		/*
+> >> >> +		 * Enable CQ event for next solicited completion.
+> >> >> +		 * and make it visible to all associated producers.
+> >> >> +		 */
+> >> >> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
+> >> >
+> >> >But what is the 2nd piece of data to motivate the smp_store_mb?
+> >> 
+> >> Another core (such as a concurrent RX operation) shall see this
+> >> CQ being re-armed asap.
+> >
+> >'ASAP' is not a '2nd piece of data'. 
+> >
+> >AFAICT this requirement is just a normal atomic set_bit which does
+> >also expedite making the change visible?
+> 
+> Absolutely!!
+> good point....this is just a single flag we are operating on.
+> And the weird barrier goes away ;)
 
-How to reproduce the leak:
+atomic ops don't expedite anything, and memory barriers don't make
+things happen asap.
 
-- Use a kernel with CONFIG_SLUB_DEBUG_ON.
-
-- Create a directory on a NFS mount with more than 100 files with
-  names long enough to use the "kmalloc-32" slab (so we can easily
-  look up the allocation counts):
-
-  for i in `seq 110`; do touch ${i}_0123456789abcdef; done
-
-- Drop all caches:
-
-  echo 3 >/proc/sys/vm/drop_caches
-
-- Check the allocation counter:
-
-  grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
-  30564391 nfs_readdir_add_to_array+0x73/0xd0 age=534558/4791307/6540952 pid=370-1048386 cpus=0-47 nodes=0-1
-
-- Request a directory listing and check the allocation counters again:
-
-  ls
-  [...]
-  grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
-  30564511 nfs_readdir_add_to_array+0x73/0xd0 age=207/4792999/6542663 pid=370-1048386 cpus=0-47 nodes=0-1
-
-There are now 120 new allocations.
-
-- Drop all caches and check the counters again:
-
-  echo 3 >/proc/sys/vm/drop_caches
-  grep nfs_readdir /sys/kernel/slab/kmalloc-32/alloc_calls
-  30564401 nfs_readdir_add_to_array+0x73/0xd0 age=735/4793524/6543176 pid=370-1048386 cpus=0-47 nodes=0-1
-
-110 allocations are gone, but 10 have leaked and will never be freed.
-
-Unhelpfully, those allocations are explicitly excluded from KMEMLEAK,
-that's why my initial attempts with KMEMLEAK were not successful:
-
-	/*
-	 * Avoid a kmemleak false positive. The pointer to the name is stored
-	 * in a page cache page which kmemleak does not scan.
-	 */
-	kmemleak_not_leak(string->name);
-
-It would be possible to solve this bug without reverting the whole
-commit:
-
-- keep track of which pages were not used, and call
-  nfs_readdir_clear_array() on them, or
-- manually link those pages into the page cache
-
-But for now I have decided to just revert the commit, because the real
-fix would require complex considerations, risking more dangerous
-(crash) bugs, which may seem unsuitable for the stable branches.
-
-Signed-off-by: Max Kellermann <mk@cm4all.com>
-Cc: stable@vger.kernel.org
----
- fs/nfs/dir.c      | 90 ++++-------------------------------------------
- fs/nfs/internal.h |  3 +-
- 2 files changed, 7 insertions(+), 86 deletions(-)
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 57b6a45576ad..9f44ddc34c7b 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -140,19 +140,12 @@ struct nfs_cache_array {
- 	struct nfs_cache_array_entry array[0];
- };
- 
--struct readdirvec {
--	unsigned long nr;
--	unsigned long index;
--	struct page *pages[NFS_MAX_READDIR_RAPAGES];
--};
--
- typedef int (*decode_dirent_t)(struct xdr_stream *, struct nfs_entry *, bool);
- typedef struct {
- 	struct file	*file;
- 	struct page	*page;
- 	struct dir_context *ctx;
- 	unsigned long	page_index;
--	struct readdirvec pvec;
- 	u64		*dir_cookie;
- 	u64		last_cookie;
- 	loff_t		current_index;
-@@ -532,10 +525,6 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
- 	struct nfs_cache_array *array;
- 	unsigned int count = 0;
- 	int status;
--	int max_rapages = NFS_MAX_READDIR_RAPAGES;
--
--	desc->pvec.index = desc->page_index;
--	desc->pvec.nr = 0;
- 
- 	scratch = alloc_page(GFP_KERNEL);
- 	if (scratch == NULL)
-@@ -560,40 +549,20 @@ int nfs_readdir_page_filler(nfs_readdir_descriptor_t *desc, struct nfs_entry *en
- 		if (desc->plus)
- 			nfs_prime_dcache(file_dentry(desc->file), entry);
- 
--		status = nfs_readdir_add_to_array(entry, desc->pvec.pages[desc->pvec.nr]);
--		if (status == -ENOSPC) {
--			desc->pvec.nr++;
--			if (desc->pvec.nr == max_rapages)
--				break;
--			status = nfs_readdir_add_to_array(entry, desc->pvec.pages[desc->pvec.nr]);
--		}
-+		status = nfs_readdir_add_to_array(entry, page);
- 		if (status != 0)
- 			break;
- 	} while (!entry->eof);
- 
--	/*
--	 * page and desc->pvec.pages[0] are valid, don't need to check
--	 * whether or not to be NULL.
--	 */
--	copy_highpage(page, desc->pvec.pages[0]);
--
- out_nopages:
- 	if (count == 0 || (status == -EBADCOOKIE && entry->eof != 0)) {
--		array = kmap_atomic(desc->pvec.pages[desc->pvec.nr]);
-+		array = kmap(page);
- 		array->eof_index = array->size;
- 		status = 0;
--		kunmap_atomic(array);
-+		kunmap(page);
- 	}
- 
- 	put_page(scratch);
--
--	/*
--	 * desc->pvec.nr > 0 means at least one page was completely filled,
--	 * we should return -ENOSPC. Otherwise function
--	 * nfs_readdir_xdr_to_array will enter infinite loop.
--	 */
--	if (desc->pvec.nr > 0)
--		return -ENOSPC;
- 	return status;
- }
- 
-@@ -627,24 +596,6 @@ int nfs_readdir_alloc_pages(struct page **pages, unsigned int npages)
- 	return -ENOMEM;
- }
- 
--/*
-- * nfs_readdir_rapages_init initialize rapages by nfs_cache_array structure.
-- */
--static
--void nfs_readdir_rapages_init(nfs_readdir_descriptor_t *desc)
--{
--	struct nfs_cache_array *array;
--	int max_rapages = NFS_MAX_READDIR_RAPAGES;
--	int index;
--
--	for (index = 0; index < max_rapages; index++) {
--		array = kmap_atomic(desc->pvec.pages[index]);
--		memset(array, 0, sizeof(struct nfs_cache_array));
--		array->eof_index = -1;
--		kunmap_atomic(array);
--	}
--}
--
- static
- int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, struct inode *inode)
- {
-@@ -655,12 +606,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page,
- 	int status = -ENOMEM;
- 	unsigned int array_size = ARRAY_SIZE(pages);
- 
--	/*
--	 * This means we hit readdir rdpages miss, the preallocated rdpages
--	 * are useless, the preallocate rdpages should be reinitialized.
--	 */
--	nfs_readdir_rapages_init(desc);
--
- 	entry.prev_cookie = 0;
- 	entry.cookie = desc->last_cookie;
- 	entry.eof = 0;
-@@ -721,24 +666,9 @@ int nfs_readdir_filler(void *data, struct page* page)
- 	struct inode	*inode = file_inode(desc->file);
- 	int ret;
- 
--	/*
--	 * If desc->page_index in range desc->pvec.index and
--	 * desc->pvec.index + desc->pvec.nr, we get readdir cache hit.
--	 */
--	if (desc->page_index >= desc->pvec.index &&
--		desc->page_index < (desc->pvec.index + desc->pvec.nr)) {
--		/*
--		 * page and desc->pvec.pages[x] are valid, don't need to check
--		 * whether or not to be NULL.
--		 */
--		copy_highpage(page, desc->pvec.pages[desc->page_index - desc->pvec.index]);
--		ret = 0;
--	} else {
--		ret = nfs_readdir_xdr_to_array(desc, page, inode);
--		if (ret < 0)
--			goto error;
--	}
--
-+	ret = nfs_readdir_xdr_to_array(desc, page, inode);
-+	if (ret < 0)
-+		goto error;
- 	SetPageUptodate(page);
- 
- 	if (invalidate_inode_pages2_range(inode->i_mapping, page->index + 1, -1) < 0) {
-@@ -903,7 +833,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 			*desc = &my_desc;
- 	struct nfs_open_dir_context *dir_ctx = file->private_data;
- 	int res = 0;
--	int max_rapages = NFS_MAX_READDIR_RAPAGES;
- 
- 	dfprintk(FILE, "NFS: readdir(%pD2) starting at cookie %llu\n",
- 			file, (long long)ctx->pos);
-@@ -923,12 +852,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	desc->decode = NFS_PROTO(inode)->decode_dirent;
- 	desc->plus = nfs_use_readdirplus(inode, ctx);
- 
--	res = nfs_readdir_alloc_pages(desc->pvec.pages, max_rapages);
--	if (res < 0)
--		return -ENOMEM;
--
--	nfs_readdir_rapages_init(desc);
--
- 	if (ctx->pos == 0 || nfs_attribute_cache_expired(inode))
- 		res = nfs_revalidate_mapping(inode, file->f_mapping);
- 	if (res < 0)
-@@ -964,7 +887,6 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 			break;
- 	} while (!desc->eof);
- out:
--	nfs_readdir_free_pages(desc->pvec.pages, max_rapages);
- 	if (res > 0)
- 		res = 0;
- 	dfprintk(FILE, "NFS: readdir(%pD2) returns %d\n", file, res);
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 498fab72f70b..81e2fdff227e 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -69,8 +69,7 @@ struct nfs_clone_mount {
-  * Maximum number of pages that readdir can use for creating
-  * a vmapped array of pages.
-  */
--#define NFS_MAX_READDIR_PAGES 64
--#define NFS_MAX_READDIR_RAPAGES 8
-+#define NFS_MAX_READDIR_PAGES 8
- 
- struct nfs_client_initdata {
- 	unsigned long init_flags;
--- 
-2.20.1
-
+That is; the stores from atomic ops can stay in store buffers just like
+any other store, and memory barriers don't flush store buffers, they
+only impose order between memops.
