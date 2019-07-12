@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4EC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F1BC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CDC21707
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5D02166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934767;
-	bh=m4atKtWxwNsdWMmPKBnGNNVfQ4ouO8QtM5/ynhUxPw0=;
+	s=default; t=1562934773;
+	bh=T/Oa2dK6GoM4tKHT07w1iRVwjd7s80b2skmvamRAhPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fBPJOOB3DVdzpN93XJIiwMblGq0StnkQl/3edJcaH6IzqAHeIz/H3N/cRhtMCowsm
-	 wq4t/Vu3wtBMqJKiEbdraGovC2mtFw6/E+Q407/E78QoD22m1E4URzlYQm876NI4+U
-	 WZSEjM+OXLjzG9Xcemx/vYu9dLj1NmKRKz4Yx9oY=
+	b=DV+n0UVpehbtfIJohLu2x7yYS02saEjnRyxkzH/Ip36InIX5Uk+5eF2EuXuiBtXiz
+	 EbFIpVWzORj/LMWO/DEJnwCk/lkwVZkR4NH47y3h7ZX/Otd070ghA0CqbBiDW34GuQ
+	 nghPX7phPs3huzBSZtKXEEX9frXYzfgB5+dd5GHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfGLMcp (ORCPT
+        id S1729539AbfGLMcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51006 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:32:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729507AbfGLMcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:32:41 -0400
+        id S1728127AbfGLMcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:32:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F62B21670;
-        Fri, 12 Jul 2019 12:32:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F6D216E3;
+        Fri, 12 Jul 2019 12:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934761;
-        bh=m4atKtWxwNsdWMmPKBnGNNVfQ4ouO8QtM5/ynhUxPw0=;
+        s=default; t=1562934767;
+        bh=T/Oa2dK6GoM4tKHT07w1iRVwjd7s80b2skmvamRAhPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fvwEbnpZOXvEAOAsvJ/Wju/4jtWe/q/M+lwTnYIzEuTqPkwhbFAONwccFfeZRbiSJ
-         ND6gNYBdfUHaNYiHLLzZ6MsnPcWLTocQrse7DClDaKrwUQuf8UUIoySp9VPv48T/jK
-         Z6Pzt+sijUsbQz04Bq6fORhqpudWof0Vp35VtkaQ=
+        b=2JdtATwvEE7lCqmmTUbGbb7J21kJjTjWefgzoWfUf+V/l6o08I2ORjqH9urrfTnYb
+         zpSqr6obShWWO2wBArGZ62ZiRvo2u0TvVbd6k7Qk52GyNXaVGlx4enAqwU1PyBLyGf
+         S8BEwlxx92hEzNJnvdUwyh61vWfrVTkF5ZKDGg1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 5.2 22/61] Documentation/admin: Remove the vsyscall=native documentation
-Date:   Fri, 12 Jul 2019 14:19:35 +0200
-Message-Id: <20190712121621.837838383@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andreas Fritiofson <andreas.fritiofson@unjo.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.2 24/61] USB: serial: ftdi_sio: add ID for isodebug v1
+Date:   Fri, 12 Jul 2019 14:19:37 +0200
+Message-Id: <20190712121621.931437679@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -64,43 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Andreas Fritiofson <andreas.fritiofson@unjo.com>
 
-commit d974ffcfb7447db5f29a4b662a3eaf99a4e1109e upstream.
+commit f8377eff548170e8ea8022c067a1fbdf9e1c46a8 upstream.
 
-The vsyscall=native feature is gone -- remove the docs.
+This adds the vid:pid of the isodebug v1 isolated JTAG/SWD+UART. Only the
+second channel is available for use as a serial port.
 
-Fixes: 076ca272a14c ("x86/vsyscall/64: Drop "native" vsyscalls")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: stable@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/d77c7105eb4c57c1a95a95b6a5b8ba194a18e764.1561610354.git.luto@kernel.org
+Signed-off-by: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/kernel-parameters.txt |    6 ------
- 1 file changed, 6 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     |    1 +
+ drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
+ 2 files changed, 7 insertions(+)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5102,12 +5102,6 @@
- 			emulate     [default] Vsyscalls turn into traps and are
- 			            emulated reasonably safely.
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1029,6 +1029,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
+ 	/* EZPrototypes devices */
+ 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
++	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
+ 	{ }					/* Terminating entry */
+ };
  
--			native      Vsyscalls are native syscall instructions.
--			            This is a little bit faster than trapping
--			            and makes a few dynamic recompilers work
--			            better than they would in emulation mode.
--			            It also makes exploits much easier to write.
--
- 			none        Vsyscalls don't work at all.  This makes
- 			            them quite hard to use for exploits but
- 			            might break your system.
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1543,3 +1543,9 @@
+ #define CHETCO_SEASMART_DISPLAY_PID	0xA5AD /* SeaSmart NMEA2000 Display */
+ #define CHETCO_SEASMART_LITE_PID	0xA5AE /* SeaSmart Lite USB Adapter */
+ #define CHETCO_SEASMART_ANALOG_PID	0xA5AF /* SeaSmart Analog Adapter */
++
++/*
++ * Unjo AB
++ */
++#define UNJO_VID			0x22B7
++#define UNJO_ISODEBUG_V1_PID		0x150D
 
 
