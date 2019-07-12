@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F1BC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821E1C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5D02166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDAF2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934773;
-	bh=T/Oa2dK6GoM4tKHT07w1iRVwjd7s80b2skmvamRAhPY=;
+	s=default; t=1562934777;
+	bh=nkZ6Tz3khAsmsQ82x8OX7tgmPnhebC4vG3Vhlk1ApSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DV+n0UVpehbtfIJohLu2x7yYS02saEjnRyxkzH/Ip36InIX5Uk+5eF2EuXuiBtXiz
-	 EbFIpVWzORj/LMWO/DEJnwCk/lkwVZkR4NH47y3h7ZX/Otd070ghA0CqbBiDW34GuQ
-	 nghPX7phPs3huzBSZtKXEEX9frXYzfgB5+dd5GHY=
+	b=aSmEFQwWb2/QIYn3HB9NperUbrfyTdHLsh0wG5XO6RCXypd+CIQRzfBO1W9hS2A4v
+	 SEEyclMsMh4OgP56+9ReQk0Z2/ygdFLTu15+H8u/Qh/V03Q97BbGHbmHoCFCdpr+4P
+	 1R13HVp0DqAb/P2+//Kh/wMsmCkM6TiPzn+PsNMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfGLMcw (ORCPT
+        id S1729285AbfGLMc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:32:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbfGLMcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:32:48 -0400
+        id S1728842AbfGLMcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:32:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F6D216E3;
-        Fri, 12 Jul 2019 12:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 389C321019;
+        Fri, 12 Jul 2019 12:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934767;
-        bh=T/Oa2dK6GoM4tKHT07w1iRVwjd7s80b2skmvamRAhPY=;
+        s=default; t=1562934773;
+        bh=nkZ6Tz3khAsmsQ82x8OX7tgmPnhebC4vG3Vhlk1ApSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JdtATwvEE7lCqmmTUbGbb7J21kJjTjWefgzoWfUf+V/l6o08I2ORjqH9urrfTnYb
-         zpSqr6obShWWO2wBArGZ62ZiRvo2u0TvVbd6k7Qk52GyNXaVGlx4enAqwU1PyBLyGf
-         S8BEwlxx92hEzNJnvdUwyh61vWfrVTkF5ZKDGg1M=
+        b=q6fc5PN8GA1ib/l3X3u8M/DeS+Q+oZJ677XIHpmbz7LoDP13qPjlzb6FmarB/5iEG
+         WShvcQefqmD8FDQomBM/P2XELxKjuYbzIXoa97hTcdJOH8C/0cKNg7+j5yNQohwi3B
+         Qin3bbRTO/vFXhcrvE4UdnJ0IMX2ntzx7i8G0IdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andreas Fritiofson <andreas.fritiofson@unjo.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.2 24/61] USB: serial: ftdi_sio: add ID for isodebug v1
-Date:   Fri, 12 Jul 2019 14:19:37 +0200
-Message-Id: <20190712121621.931437679@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Barta <o.barta89@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.2 26/61] Revert "serial: 8250: Dont service RX FIFO if interrupts are disabled"
+Date:   Fri, 12 Jul 2019 14:19:39 +0200
+Message-Id: <20190712121622.030062321@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,44 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+From: Oliver Barta <o.barta89@gmail.com>
 
-commit f8377eff548170e8ea8022c067a1fbdf9e1c46a8 upstream.
+commit 3f2640ed7be838c3f05c0d2b0f7c7508e7431e48 upstream.
 
-This adds the vid:pid of the isodebug v1 isolated JTAG/SWD+UART. Only the
-second channel is available for use as a serial port.
+This reverts commit 2e9fe539108320820016f78ca7704a7342788380.
 
-Signed-off-by: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+Reading LSR unconditionally but processing the error flags only if
+UART_IIR_RDI bit was set before in IIR may lead to a loss of transmission
+error information on UARTs where the transmission error flags are cleared
+by a read of LSR. Information are lost in case an error is detected right
+before the read of LSR while processing e.g. an UART_IIR_THRI interrupt.
+
+Signed-off-by: Oliver Barta <o.barta89@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 2e9fe5391083 ("serial: 8250: Don't service RX FIFO if interrupts are disabled")
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ftdi_sio.c     |    1 +
- drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
- 2 files changed, 7 insertions(+)
+ drivers/tty/serial/8250/8250_port.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1029,6 +1029,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
- 	/* EZPrototypes devices */
- 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
-+	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
- 	{ }					/* Terminating entry */
- };
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1869,8 +1869,7 @@ int serial8250_handle_irq(struct uart_po
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1543,3 +1543,9 @@
- #define CHETCO_SEASMART_DISPLAY_PID	0xA5AD /* SeaSmart NMEA2000 Display */
- #define CHETCO_SEASMART_LITE_PID	0xA5AE /* SeaSmart Lite USB Adapter */
- #define CHETCO_SEASMART_ANALOG_PID	0xA5AF /* SeaSmart Analog Adapter */
-+
-+/*
-+ * Unjo AB
-+ */
-+#define UNJO_VID			0x22B7
-+#define UNJO_ISODEBUG_V1_PID		0x150D
+ 	status = serial_port_in(port, UART_LSR);
+ 
+-	if (status & (UART_LSR_DR | UART_LSR_BI) &&
+-	    iir & UART_IIR_RDI) {
++	if (status & (UART_LSR_DR | UART_LSR_BI)) {
+ 		if (!up->dma || handle_rx_dma(up, iir))
+ 			status = serial8250_rx_chars(up, status);
+ 	}
 
 
