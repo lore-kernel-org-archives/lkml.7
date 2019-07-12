@@ -2,109 +2,103 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096FFC742D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F80C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2A82053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3EB204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCGUlMqK"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ntIle1vF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfGLRo7 (ORCPT
+        id S1727464AbfGLRp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:44:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35103 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfGLRo7 (ORCPT
+        Fri, 12 Jul 2019 13:45:27 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43353 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfGLRp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:44:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y4so10824037wrm.2;
-        Fri, 12 Jul 2019 10:44:57 -0700 (PDT)
+        Fri, 12 Jul 2019 13:45:27 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m14so6987594qka.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=lHUKPh97ovneR+jDvYGIi2nNeLvm3FEJyqMoQsO3Cw8=;
-        b=QCGUlMqK5B1quSCyGoAcIkiOgg388g7Xls60Fqvq4ZpodWBQxwUoFPlvE33KbN47lj
-         B9LpGCdbIDsiKme2dxcVxhmWO1rhaAkIYanx5X7FynPmshJg7ey1svufsGYSrEWELbzL
-         P+jn4+eEcQo6588FehkRMIV6YVWfnVmTuIwmacXYWLV3GezbW3qCeK0DJb1bb3S6Lnrj
-         psG+mI6PR+cl5hSQo1kgW+o26sR+eRoovKl88jbNkYH2uB5qT89oRkfGWikS3uxDd9Qe
-         E28x1azhylqQ7v/2r3vReiX0PZZbSwmmGPJK+YfH0E1aBngKVJP4gWrbGKGXBvTKAkYD
-         YxcA==
+        bh=0z5HbMzk+TNHcYVHCO/5rmn/u7ficHQ0wbbFTmo5UzU=;
+        b=ntIle1vFd4ZRdhL76VdsyNncHbXMdq6YNaWmDXrUKzA+t8Vh0t4u+t7axMcNHs0iuw
+         +6BMZPBIubJ/OADehqKIjDhkvwuy+nA1yXtaPdRNNCEGjETMn+QSWuolgrprj/tTsHV/
+         wOa7AY/RdD5MwyK+uag+ltgfrIaM5XwVSVgBV2+w1C/cqFSKXbZIq9M6wdgGWt5IQ9ni
+         BoHdbjyXjLcddyWoUDcw5j4m9hccSbEs9/iKYjJcUOOd3Y+roGowiR2ewSqn4OcsFLyS
+         QqvMoOtBCOasiWF7sy+bSugWWJjPhsk0QBAdFofi25fIGvfj/bo3SBiCeWHAzhEV4Yts
+         momw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lHUKPh97ovneR+jDvYGIi2nNeLvm3FEJyqMoQsO3Cw8=;
-        b=f9VzFiGZ/cX9nyyNa6zTlPqFcG1EWTzyKA//5ve/XCpEh5fEqnWGCsCohOO4dcTESM
-         rBeJodTRXCqu5ekiyrq7h+gwQaDkAQDXnq/bnC17Ctpm+e2wPDvlvNAVl8VT6f2qEDbd
-         meg4WUtjAIs4/ndXJoQ0nSDFIUFACKuyqQAvkDbjgNshVjPUlOU/j1oIMrHPjqoKXIQ8
-         jTluH6/HQMHzOypzHPWCTkkjftd+45XmPZhTR3HDwK0E/ZIrKJ8fOR0VqHoUUoKyQgJE
-         1Y5JM0puPTJbk8ZU84vXyoria+FGcBlDmI/RhKfqi3Iw1OTpo7Mgqb1ebxqzPz/CRGj0
-         QQLA==
-X-Gm-Message-State: APjAAAWoaDvz8d9Lh/y1c0FR+In+cpnz4VlLNf+Ju3l25G1/ot37PqB2
-        rFFhtiMAdmcx6QCu1GVJItk=
-X-Google-Smtp-Source: APXvYqy4KqpsDEOZJLk74bD59Jir3YB8IxQwIxc2RMK8xRXK5QNzAgrcRcH00VOIA9PzEKl403m2Bw==
-X-Received: by 2002:adf:f6cb:: with SMTP id y11mr13510997wrp.245.1562953497008;
-        Fri, 12 Jul 2019 10:44:57 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id v18sm10522732wrs.80.2019.07.12.10.44.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:44:56 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 10:44:54 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] [v3] x86: kvm: avoid -Wsometimes-uninitized warning
-Message-ID: <20190712174454.GA3845@archlinux-threadripper>
-References: <20190712141322.1073650-1-arnd@arndb.de>
+        bh=0z5HbMzk+TNHcYVHCO/5rmn/u7ficHQ0wbbFTmo5UzU=;
+        b=oIp21OYUy7m/RZGxm6WwoOkPzrslHYV1GHkRI9L5Ztq0zEVBOdzmWhXTnw4r2I9Hq9
+         C7aQNAEA+miMfbPM02Wd0Mj9k9NNjqIzbq2Rm7wTvsR5X9R4xQMO3qQzAMxNEolVv7KD
+         0HJYsqSmXKuqYiANdWJveuT9j977BC3Nmwn2ftPpGKYYyf42RzkzWu0eo+DeGG3q4vH0
+         6ejaF6i6GbJ3tnwCoDCnGil870FSb4p4W25BMBRgepzrS6XIodVjrqzpar1hDVCRCT80
+         DJB0oxPrDN1NB0+X7U2QASBw9to3/ERCQLSboFXrbJtqGVkJ0xdcYxvC8750hzCQWGwN
+         pLQw==
+X-Gm-Message-State: APjAAAXdeo1eCkUKJ5U+waZwaLAf13/E/5gSkOfoGFKTT/gKAKnGqt1L
+        US7ua/UUbTHpf1+5h5g9u4YiTA==
+X-Google-Smtp-Source: APXvYqxO7Pu7cyayLc2eUuHye7UyvHfBFgn42OETbQ3/0lzN915uNwmMT3yv7kbtcWLsGn4LaKpKig==
+X-Received: by 2002:a37:6290:: with SMTP id w138mr6884162qkb.139.1562953526125;
+        Fri, 12 Jul 2019 10:45:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id w24sm3091129qtb.35.2019.07.12.10.45.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jul 2019 10:45:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlzbp-0003rz-7O; Fri, 12 Jul 2019 14:45:25 -0300
+Date:   Fri, 12 Jul 2019 14:45:25 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Doug Ledford <dledford@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+Message-ID: <20190712174525.GM27512@ziepe.ca>
+References: <20190712153243.GI27512@ziepe.ca>
+ <20190712144257.GE27512@ziepe.ca>
+ <20190712135339.GC27512@ziepe.ca>
+ <20190712120328.GB27512@ziepe.ca>
+ <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+ <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
+ <OFAB0712BA.E95178B5-ON00258435.00611CBE-00258435.00611CC4@notes.na.collabserv.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712141322.1073650-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <OFAB0712BA.E95178B5-ON00258435.00611CBE-00258435.00611CC4@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 04:13:09PM +0200, Arnd Bergmann wrote:
-> Clang notices a code path in which some variables are never
-> initialized, but fails to figure out that this can never happen
-> on i386 because is_64_bit_mode() always returns false.
+On Fri, Jul 12, 2019 at 05:40:43PM +0000, Bernard Metzler wrote:
+ 
+> It is because there are two levels a CQ can be armed:
 > 
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         if (!longmode) {
->             ^~~~~~~~~
-> arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
->         trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
->                                                              ^~~~~
-> arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
->         if (!longmode) {
->         ^~~~~~~~~~~~~~~
-> arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
->         u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
->                         ^
->                          = 0
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-> arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+>        #include <infiniband/verbs.h>
 > 
-> Flip the condition around to avoid the conditional execution on i386.
+>        int ibv_req_notify_cq(struct ibv_cq *cq, int solicited_only);
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> If we kick the CQ handler, we have to clear the whole
+> thing. The user later again decides how he wants to get it
+> re-armed...SOLICITED completions only, or ALL signaled.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Arrange it so only one of the two bits is ever set and do two
+test-and-set bits when a SOLICITED CQE comes in?
+
+Jason
