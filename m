@@ -2,133 +2,138 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F236DC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709A0C742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA91D20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="goMsRLSk"
+	by mail.kernel.org (Postfix) with ESMTP id 49D8F20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 13:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfGLNCk (ORCPT
+        id S1727435AbfGLNCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 09:02:40 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40406 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfGLNCk (ORCPT
+        Fri, 12 Jul 2019 09:02:46 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46705 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfGLNCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:02:40 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so8894007wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 06:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gfk3tzWXf4YoxNXS32QWXIth/W/aTkd2Ka3WZo9k3lQ=;
-        b=goMsRLSkAkkOJTFTe1bd5PF9Wprg6v0Tj9DemBKBSfRydsuBRLbA6rQ/cvYahqNfTd
-         vwWkJlvwSrNjX7tLb2tX46Ls1K8ZiAtjqWBd0pXUQ9IEjFLrszu/8r4yye47ZGuA46GS
-         q2T9DqYUOHEi71QKV+/Xd0mF57fewN+QdeuXnymnRDqGoJm16FN2+AmObttjVK3X77/r
-         tpNYRhzwpdNNTVUFZaysZYmW5gqX7QV2hpQGREyaXdybY8HCuR/potkyGb6fc1Fup5wt
-         cACxQ0iahZoa0PzaU4b2Unca20/V88j15rcy7FpNnXvxuN9V57xmfq5EVuyO5r/LQCE5
-         ZyWg==
+        Fri, 12 Jul 2019 09:02:46 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so7901918qtn.13;
+        Fri, 12 Jul 2019 06:02:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gfk3tzWXf4YoxNXS32QWXIth/W/aTkd2Ka3WZo9k3lQ=;
-        b=bDZ2T7DE4o5deO31YVzUHYSd0mg8sxJcHOjyfmk9rrm4bVsoJQWHb2M/iSaZjTUJWw
-         yIpeJE15nAcGlcmXjaxdrXEo/KoIWSNlqceEqyyMbsAHM4C8eQ1/pU1I25FFc1xG5GY4
-         +Gp+LHXnIJdgj2VamqCHGxkrTs1iPeeC3/EDcJp8QIqZGC3Ln1PrbkROcDqx5RYDDNtN
-         +AJf053pqsuWXVBNjrsXrlvXd5a9vtZe5Beuudq0vaQddU5qPe4bsNvUNlg4jmQc6bHj
-         jQpjQB3kG9yql1L8AVr+pqpQ5KGWU2noI3AqHdrxxNc4zxmnZ6bd8sJn81er8TnhVYsd
-         q+TA==
-X-Gm-Message-State: APjAAAV8fxDt9hIGJty86+FnxPvl2QCU1hD0+T2ht9K4Qywne4L3fo+V
-        LHFP+B4PBMgBdDjgeokir9gYI4kSgYA=
-X-Google-Smtp-Source: APXvYqy+XIPsO3nSefTtw/VIT0Q1JEv+f8sHzOjftXxqvu8RDRt+41p8KAW+mPcR5sjMAEUHUs07cA==
-X-Received: by 2002:a1c:ca06:: with SMTP id a6mr9871923wmg.48.1562936557894;
-        Fri, 12 Jul 2019 06:02:37 -0700 (PDT)
-Received: from brauner.io ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id i18sm9299673wrp.91.2019.07.12.06.02.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 06:02:37 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 15:02:36 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the pidfd
- tree
-Message-ID: <20190712130235.2r4jlwpfffijz4hj@brauner.io>
-References: <20190515131629.405837b0@canb.auug.org.au>
- <20190708120114.5ca1613d@canb.auug.org.au>
- <20190712125304.GC92297@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h9V1PDslHCmVXYBI8dBvQZXVzo3DG4NQfAvbqRPJOTM=;
+        b=J7lMChKQxsJgULgOjlM41ZmKw7/pENfAsG/D+7sf+VNxonhUEX941qNenw/40b9zG7
+         rVG1ECPv0KTEPHSduSbvLmWfZJ+xtIlOeBAw80vhWNT1W6e9pK47z2WZgTXzBo03lDot
+         Ej9gQNlMhTROvHh/Fsm3tyCWwDDN6FDGlyfgx1vMH5Y5Qkbh1OwubSPv4qWROQb2tlzV
+         ++UwSddk7xN7qV4RZBL8aLdqJOWGN+dS7s9wKq2jh9UCHTzLrjGPJzbgeJ6gC5pHJ9V+
+         QYkNiYtacZ2pcybLds8QuhLqt8dmc+7c8nyAaxVCsk118iYHHZODX5HMlbcXXlZ8uEaF
+         MBOg==
+X-Gm-Message-State: APjAAAXXNEbU4hJceQdUnBJIKSFubYvE8OxOm2ZAtU6HbFRkylfwDjag
+        15G2Nghh7oAQyhsK0mDf9Q/cVhXj32HOOvC9N7w=
+X-Google-Smtp-Source: APXvYqx3UBdn2uY78OgPzqrMWqQ/IsUoW5hiUWWOdKRO3otUEfKOHb8iFZH28gCSq3SHGEduVDjXSYi60ntwA3HpyEk=
+X-Received: by 2002:a0c:e952:: with SMTP id n18mr6222517qvo.63.1562936565085;
+ Fri, 12 Jul 2019 06:02:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190712125304.GC92297@google.com>
-User-Agent: NeoMutt/20180716
+References: <20190712091239.716978-1-arnd@arndb.de> <20190712120249.GA27820@rkaganb.sw.ru>
+In-Reply-To: <20190712120249.GA27820@rkaganb.sw.ru>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 12 Jul 2019 15:02:28 +0200
+Message-ID: <CAK8P3a3+QSRQkitXiDFLYvyYvOS+Q4sXb=xA_XPeX2O2zQ5kgw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86: kvm: avoid -Wsometimes-uninitized warning
+To:     Roman Kagan <rkagan@virtuozzo.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 08:53:04AM -0400, Joel Fernandes wrote:
-> On Mon, Jul 08, 2019 at 12:01:14PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > On Wed, 15 May 2019 13:16:29 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > Today's linux-next merge of the akpm-current tree got a conflict in:
-> > > 
-> > >   include/linux/pid.h
-> > > 
-> > > between commit:
-> > > 
-> > >   51f1b521a515 ("pidfd: add polling support")
-> > > 
-> > > from the pidfd tree and commit:
-> > > 
-> > >   c02e28a1bb18 ("kernel/pid.c: convert struct pid:count to refcount_t")
-> > > 
-> > > from the akpm-current tree.
-> > > 
-> > > I fixed it up (see below) and can carry the fix as necessary. This
-> > > is now fixed as far as linux-next is concerned, but any non trivial
-> > > conflicts should be mentioned to your upstream maintainer when your tree
-> > > is submitted for merging.  You may also want to consider cooperating
-> > > with the maintainer of the conflicting tree to minimise any particularly
-> > > complex conflicts.
-> > > 
-> > > -- 
-> > > Cheers,
-> > > Stephen Rothwell
-> > > 
-> > > diff --cc include/linux/pid.h
-> > > index 1484db6ca8d1,0be5829ddd80..000000000000
-> > > --- a/include/linux/pid.h
-> > > +++ b/include/linux/pid.h
-> > > @@@ -3,7 -3,7 +3,8 @@@
-> > >   #define _LINUX_PID_H
-> > >   
-> > >   #include <linux/rculist.h>
-> > >  +#include <linux/wait.h>
-> > > + #include <linux/refcount.h>
-> > >   
-> > >   enum pid_type
-> > >   {
-> > 
-> > I am still getting this conflict (the commits have changed).  Just a
-> > reminder in case you think Linus may need to know.
-> 
-> Could you let me know if this trivial header inclusion conflict has been
-> resolved now? Let me know what else I can do to help.
+On Fri, Jul 12, 2019 at 2:03 PM Roman Kagan <rkagan@virtuozzo.com> wrote:
+>
+> On Fri, Jul 12, 2019 at 11:12:29AM +0200, Arnd Bergmann wrote:
+> > clang points out that running a 64-bit guest on a 32-bit host
+> > would lead to uninitialized variables:
+> >
+> > arch/x86/kvm/hyperv.c:1610:6: error: variable 'ingpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+> >         if (!longmode) {
+> >             ^~~~~~~~~
+> > arch/x86/kvm/hyperv.c:1632:55: note: uninitialized use occurs here
+> >         trace_kvm_hv_hypercall(code, fast, rep_cnt, rep_idx, ingpa, outgpa);
+> >                                                              ^~~~~
+> > arch/x86/kvm/hyperv.c:1610:2: note: remove the 'if' if its condition is always true
+> >         if (!longmode) {
+> >         ^~~~~~~~~~~~~~~
+> > arch/x86/kvm/hyperv.c:1595:18: note: initialize the variable 'ingpa' to silence this warning
+> >         u64 param, ingpa, outgpa, ret = HV_STATUS_SUCCESS;
+> >                         ^
+> >                          = 0
+> > arch/x86/kvm/hyperv.c:1610:6: error: variable 'outgpa' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+> > arch/x86/kvm/hyperv.c:1610:6: error: variable 'param' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+> >
+> > Since that combination is not supported anyway, change the condition
+> > to tell the compiler how the code is actually executed.
+>
+> Hmm, the compiler *is* told all it needs:
+>
+>
+> arch/x86/kvm/x86.h:
+> ...
+> static inline int is_long_mode(struct kvm_vcpu *vcpu)
+> {
+> #ifdef CONFIG_X86_64
+>         return vcpu->arch.efer & EFER_LMA;
+> #else
+>         return 0;
+> #endif
+> }
+>
+> static inline bool is_64_bit_mode(struct kvm_vcpu *vcpu)
+> {
+>         int cs_db, cs_l;
+>
+>         if (!is_long_mode(vcpu))
+>                 return false;
+>         kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
+>         return cs_l;
+> }
+> ...
+>
+> so in !CONFIG_X86_64 case is_64_bit_mode() unconditionally returns
+> false, and the branch setting the values of the variables is always
+> taken.
 
-I've informed Linus about this conflict when I sent the PR and he has
-pulled the tag which includes your polling changes. So it shouldn't
-require you to do anything since the conflict is pretty trivial. :)
+I think what happens here is that clang does not treat the return
+code of track the return code of is_64_bit_mode() as a constant
+expression, and therefore assumes that the if() condition
+may or may not be true, for the purpose of determining whether
+the variable is used without an inialization. This would hold even
+if it later eliminates the code leading up to the if() in an optimization
+stage. IS_ENABLED(CONFIG_X86_64) however is a constant
+expression, so with the patch, it understands this.
+
+In contrast, gcc seems to perform all the inlining first, and
+then see if some variable is used uninitialized in the final code.
+This gives additional information to the compiler, but makes the
+outcome less predictable since it depends on optimization flags
+and architecture specific behavior.
+
+Both approaches have their own sets of false positive and false
+negative warnings.
+
+       Arnd
