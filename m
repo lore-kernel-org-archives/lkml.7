@@ -2,101 +2,95 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D946C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBEEC742B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2443521537
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D150B21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfGLJMD (ORCPT
+        id S1726641AbfGLJMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:12:03 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:35829 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfGLJMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:12:02 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MnaTt-1iDnxj0N1B-00jd8T; Fri, 12 Jul 2019 11:11:50 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thp: fix unused shmem_parse_huge() function warning
-Date:   Fri, 12 Jul 2019 11:11:31 +0200
-Message-Id: <20190712091141.673355-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 12 Jul 2019 05:12:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53848 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726282AbfGLJMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 05:12:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 26689AE20;
+        Fri, 12 Jul 2019 09:12:52 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 11:12:51 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        Vincent Whitchurch <rabinv@axis.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
+Message-ID: <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
+References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2eYIEw+FuGFLaFFnKIH/ts58p8jvvELIVRGUWlzkTykX3ykX0/v
- ts+nAn49miAUJt8DvK+mqbmcyi6PwAVzbh9XnS5MWrU1+0O/eSmcmtzcL9ONUd/zHoqYZcr
- fsERZV6Xr78UtnbuWoFCE8702Z6CLbbbh8uTN8jvzkak2k/Uz76hgbkwxo/Sl1gDg9Wr9RL
- vH2DwCgQDpxF8RtsHhT/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kB4x/oMdogU=:EO0/ZP+FT9QwyUf+U6kfWc
- 7qWi0vAfAJ0UNZxCoPw1s9vdsQR5HuuxaUcG620tLFT5CDfqfKRlAZZ2zi09a1BGb7yxqoIqs
- dXF7oouoNuO8xAB9EwpGaBiEzWxZIXheV8BK4jZ1wYdrMVrvEYx+G39Ltz0ecHVVOd8fgh66o
- HFRmBkzd81ZvnRLNE30PdmqghI1UMsKfQ4gf00oSovZ9UU0wRhXENIcgQLuJzA9rTcMX203Bq
- aubOpVMzPrrxwCZxb2bpRmgAL9PnYCwHqw7vBG5BDxlPD40BZdXfq2hzCTsKhM+FigKAr5y80
- auciZSt6hMaNNlL8AqEERLNvLNgvGES2Z7Gc8lOtYlyvR8I/wSg/x1Ke998J3R8oGwrutri/Z
- Xw15NZr+Oh+i3sGPXFx7K5SVXJPXJ0F3hQhk0LwBwITvpcNwFDGsGQAsow2L1yJRItHppX901
- 7rHz2v7ZaC/8vdF04KI9HM+LftErdeoJHUDXBYpFJMJKx50Ja/JLDPLDlrufKTizK5oCATuZv
- KD0pTtN/NQdld53T3TbwP0T7386ZTJvtRlP+LyHZioJxy/RsnaaSwPkWz3xXK5ou0WtLNUyOw
- Es67mvHLLd5k/DylVctvadLlv1rNaqd8TlemH7KRuNT3bh9gDDCdiwz0d6BkmPr9tjf8Kq2FM
- wAUBQZ2G2DwJ8HAPIOTLd3bTMLSdM2cbK7Tvl/wQCz0XpCvZ2ugC+PBDteVUooi3bLMAdaC15
- fCKn4ZEtReAb3mM0txlBiUjFw2vGxdSET/R6pg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711142937.4083-1-vincent.whitchurch@axis.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_SYSFS is disabled but CONFIG_TMPFS is enabled, we get a warning
-about shmem_parse_huge() never being called:
+On Thu 2019-07-11 16:29:37, Vincent Whitchurch wrote:
+> kmsg_dump_get_buffer() is supposed to select all the youngest log
+> messages which fit into the provided buffer.  It determines the correct
+> start index by using msg_print_text() with a NULL buffer to calculate
+> the size of each entry.  However, when performing the actual writes,
+> msg_print_text() only writes the entry to the buffer if the written len
+> is lesser than the size of the buffer.  So if the lengths of the
+> selected youngest log messages happen to precisely fill up the provided
+> buffer, the last log message is not included.
+> 
+> We don't want to modify msg_print_text() to fill up the buffer and start
+> returning a length which is equal to the size of the buffer, since
+> callers of its other users, such as kmsg_dump_get_line(), depend upon
+> the current behaviour.
+> 
+> Instead, fix kmsg_dump_get_buffer() to compensate for this.
+> 
+> For example, with the following two final prints:
+> 
+> [    6.427502] AAAAAAAAAAAAA
+> [    6.427769] BBBBBBBB12345
+> 
+> A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
+> patch:
+> 
+>  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
+>  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
+>  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> 
+> After this patch:
+> 
+>  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
+>  00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
+>  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> 
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-mm/shmem.c:417:12: error: unused function 'shmem_parse_huge' [-Werror,-Wunused-function]
-static int shmem_parse_huge(const char *str)
+I think that I need vacation. I have got lost in all the checks
+and got it wrongly in the morning.
 
-Change the #ifdef so we no longer build this function in that configuration.
+This patch fixes the calculation of messages that might fit
+into the buffer. It makes sure that the function that writes
+the messages will really allow to write them.
 
-Fixes: 144df3b288c4 ("vfs: Convert ramfs, shmem, tmpfs, devtmpfs, rootfs to use the new mount API")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- mm/shmem.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+It seems to be the correct fix.
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index ba40fac908c5..32aa9d46b87c 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -413,7 +413,7 @@ static bool shmem_confirm_swap(struct address_space *mapping,
- 
- static int shmem_huge __read_mostly;
- 
--#if defined(CONFIG_SYSFS) || defined(CONFIG_TMPFS)
-+#if defined(CONFIG_SYSFS)
- static int shmem_parse_huge(const char *str)
- {
- 	if (!strcmp(str, "never"))
-@@ -430,7 +430,9 @@ static int shmem_parse_huge(const char *str)
- 		return SHMEM_HUGE_FORCE;
- 	return -EINVAL;
- }
-+#endif
- 
-+#if defined(CONFIG_SYSFS) || defined(CONFIG_TMPFS)
- static const char *shmem_format_huge(int huge)
- {
- 	switch (huge) {
--- 
-2.20.0
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
+Best Regards,
+Petr
