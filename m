@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A330FC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F8EC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFD0216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A622C21670
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934027;
-	bh=sQda5X8OhbphEM0HiM52nsxQoiE6xU95ggq+w19wymY=;
+	s=default; t=1562934031;
+	bh=lNIW06PdV4Mggwnkyoq5rXknBfOd4SwzD8KlbvSXEMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z6uhAHX2F6Ma0/vWXZ71XVMUq/Jv7JDx/FghyOwPl6bPBYgxvGpUtWLjyfIzISacc
-	 QPoNQcgFTJYZfqq5Lw1ch9Mwtu5x3rnqXKX5arv5YROlaoH54GLJX850bzp14v7w4O
-	 4C6BT3er7af7YrwEsv6ZrIbK3cM4gqOqCtw42+to=
+	b=02oeEt7QRvrO9OQHnt9hvnJiULHDbppuVlhZJ/xjuX9zDvN0xzZBfCXJ8Xl/NKe3g
+	 Ts/dKP235hQPiHS8WUzsiMsMVAUrnyVGT9zKSpcev/W7pZYqZEqfmMrc44HlihZBxg
+	 DIcO8Tgq6JPKBYwelUGeBb4kT49J6dWPpl6euHXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfGLMUZ (ORCPT
+        id S1727343AbfGLMUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfGLMUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:20:21 -0400
+        id S1727319AbfGLMU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:20:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E4E421670;
-        Fri, 12 Jul 2019 12:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D702166E;
+        Fri, 12 Jul 2019 12:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934020;
-        bh=sQda5X8OhbphEM0HiM52nsxQoiE6xU95ggq+w19wymY=;
+        s=default; t=1562934026;
+        bh=lNIW06PdV4Mggwnkyoq5rXknBfOd4SwzD8KlbvSXEMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DlydkyRmopPahId5CwqEYkOWIs/PlIvlf0PLRN9nE01KuZPgboqBLJoFIdUiT8Y9q
-         kuBT1btEL7c4xexNcmdN2v4nGCVtvJibe3ZSH++wm4fswb8bCwux1AAnsI5wME5MNs
-         IOSOXTH45R+9pC05ptloBbwDsuOtycyVDUmTAIEg=
+        b=gv7eYgn5hp3SLFevFWLZKEpxp1X5pt2G0lO8DUoT80Vq+f4/mRTRoZ2YKVCUTeB2H
+         OSdzhLR+YjihRzxwVXPDrV1WnuV4gnHqjBnizQn0DmeCZGvgsYK3tMfZYp84P9WNKx
+         IrNFOxlDW30dSaChKGqgehCN98QdY0ptjLYuNwLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/91] can: m_can: implement errata "Needless activation of MRAF irq"
-Date:   Fri, 12 Jul 2019 14:18:23 +0200
-Message-Id: <20190712121622.472929950@linuxfoundation.org>
+Subject: [PATCH 4.19 22/91] net: phy: rename Asix Electronics PHY driver
+Date:   Fri, 12 Jul 2019 14:18:25 +0200
+Message-Id: <20190712121622.586366470@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -62,74 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e82f2f34c930a2a0a9e69fdc2de2f2f1388b442 ]
+[ Upstream commit a9520543b123bbd7275a0ab8d0375a5412683b41 ]
 
-During frame reception while the MCAN is in Error Passive state and the
-Receive Error Counter has thevalue MCAN_ECR.REC = 127, it may happen
-that MCAN_IR.MRAF is set although there was no Message RAM access
-failure. If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is
-generated.
+[Resent to net instead of net-next - may clash with Anders Roxell's patch
+series addressing duplicate module names]
 
-Work around:
-The Message RAM Access Failure interrupt routine needs to check whether
+Commit 31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
+introduced a new PHY driver drivers/net/phy/asix.c that causes a module
+name conflict with a pre-existiting driver (drivers/net/usb/asix.c).
 
-    MCAN_ECR.RP = '1' and MCAN_ECR.REC = '127'.
+The PHY driver is used by the X-Surf 100 ethernet card driver, and loaded
+by that driver via its PHY ID. A rename of the driver looks unproblematic.
 
-In this case, reset MCAN_IR.MRAF. No further action is required.
-This affects versions older than 3.2.0
+Rename PHY driver to ax88796b.c in order to resolve name conflict.
 
-Errata explained on Sama5d2 SoC which includes this hardware block:
-http://ww1.microchip.com/downloads/en/DeviceDoc/SAMA5D2-Family-Silicon-Errata-and-Data-Sheet-Clarification-DS80000803B.pdf
-chapter 6.2
-
-Reproducibility: If 2 devices with m_can are connected back to back,
-configuring different bitrate on them will lead to interrupt storm on
-the receiving side, with error "Message RAM access failure occurred".
-Another way is to have a bad hardware connection. Bad wire connection
-can lead to this issue as well.
-
-This patch fixes the issue according to provided workaround.
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Fixes: 31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/m_can/m_can.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/net/ethernet/8390/Kconfig      | 2 +-
+ drivers/net/phy/Kconfig                | 2 +-
+ drivers/net/phy/Makefile               | 2 +-
+ drivers/net/phy/{asix.c => ax88796b.c} | 0
+ 4 files changed, 3 insertions(+), 3 deletions(-)
+ rename drivers/net/phy/{asix.c => ax88796b.c} (100%)
 
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 9b449400376b..deb274a19ba0 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -822,6 +822,27 @@ static int m_can_poll(struct napi_struct *napi, int quota)
- 	if (!irqstatus)
- 		goto end;
+diff --git a/drivers/net/ethernet/8390/Kconfig b/drivers/net/ethernet/8390/Kconfig
+index f2f0264c58ba..443b34e2725f 100644
+--- a/drivers/net/ethernet/8390/Kconfig
++++ b/drivers/net/ethernet/8390/Kconfig
+@@ -49,7 +49,7 @@ config XSURF100
+ 	tristate "Amiga XSurf 100 AX88796/NE2000 clone support"
+ 	depends on ZORRO
+ 	select AX88796
+-	select ASIX_PHY
++	select AX88796B_PHY
+ 	help
+ 	  This driver is for the Individual Computers X-Surf 100 Ethernet
+ 	  card (based on the Asix AX88796 chip). If you have such a card,
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 82070792edbb..1f5fd24cd749 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -227,7 +227,7 @@ config AQUANTIA_PHY
+ 	---help---
+ 	  Currently supports the Aquantia AQ1202, AQ2104, AQR105, AQR405
  
-+	/* Errata workaround for issue "Needless activation of MRAF irq"
-+	 * During frame reception while the MCAN is in Error Passive state
-+	 * and the Receive Error Counter has the value MCAN_ECR.REC = 127,
-+	 * it may happen that MCAN_IR.MRAF is set although there was no
-+	 * Message RAM access failure.
-+	 * If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is generated
-+	 * The Message RAM Access Failure interrupt routine needs to check
-+	 * whether MCAN_ECR.RP = ’1’ and MCAN_ECR.REC = 127.
-+	 * In this case, reset MCAN_IR.MRAF. No further action is required.
-+	 */
-+	if ((priv->version <= 31) && (irqstatus & IR_MRAF) &&
-+	    (m_can_read(priv, M_CAN_ECR) & ECR_RP)) {
-+		struct can_berr_counter bec;
-+
-+		__m_can_get_berr_counter(dev, &bec);
-+		if (bec.rxerr == 127) {
-+			m_can_write(priv, M_CAN_IR, IR_MRAF);
-+			irqstatus &= ~IR_MRAF;
-+		}
-+	}
-+
- 	psr = m_can_read(priv, M_CAN_PSR);
- 	if (irqstatus & IR_ERR_STATE)
- 		work_done += m_can_handle_state_errors(dev, psr);
+-config ASIX_PHY
++config AX88796B_PHY
+ 	tristate "Asix PHYs"
+ 	help
+ 	  Currently supports the Asix Electronics PHY found in the X-Surf 100
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index 5805c0b7d60e..f21cda9d865e 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -46,7 +46,7 @@ obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+ 
+ obj-$(CONFIG_AMD_PHY)		+= amd.o
+ obj-$(CONFIG_AQUANTIA_PHY)	+= aquantia.o
+-obj-$(CONFIG_ASIX_PHY)		+= asix.o
++obj-$(CONFIG_AX88796B_PHY)	+= ax88796b.o
+ obj-$(CONFIG_AT803X_PHY)	+= at803x.o
+ obj-$(CONFIG_BCM63XX_PHY)	+= bcm63xx.o
+ obj-$(CONFIG_BCM7XXX_PHY)	+= bcm7xxx.o
+diff --git a/drivers/net/phy/asix.c b/drivers/net/phy/ax88796b.c
+similarity index 100%
+rename from drivers/net/phy/asix.c
+rename to drivers/net/phy/ax88796b.c
 -- 
 2.20.1
 
