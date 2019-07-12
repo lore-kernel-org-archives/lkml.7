@@ -2,112 +2,80 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2A1C742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD14C742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EBB208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C0821019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfGLPdf (ORCPT
+        id S1727180AbfGLPea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:33:35 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:10600 "EHLO mx1.mailbox.org"
+        Fri, 12 Jul 2019 11:34:30 -0400
+Received: from mga14.intel.com ([192.55.52.115]:47700 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfGLPdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:33:33 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id A1467511F2;
-        Fri, 12 Jul 2019 17:33:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id QDRC6RVdbb1k; Fri, 12 Jul 2019 17:33:19 +0200 (CEST)
-Date:   Sat, 13 Jul 2019 01:32:27 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 00/10] namei: openat2(2) path resolution restrictions
-Message-ID: <20190712153227.owkjmx47lzrggweo@yavin>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190712151118.GP17978@ZenIV.linux.org.uk>
+        id S1726724AbfGLPea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:34:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 08:34:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,483,1557212400"; 
+   d="scan'208";a="174477892"
+Received: from yanbeibe-mobl2.ger.corp.intel.com ([10.249.32.118])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Jul 2019 08:34:25 -0700
+Message-ID: <730715760b20d9a76aa93c3ebc39a62045c9ee34.camel@linux.intel.com>
+Subject: Re: [PATCH] fTPM: fix PTR_ERR() usage
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>
+Cc:     Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Jul 2019 18:34:24 +0300
+In-Reply-To: <20190712114951.912328-1-arnd@arndb.de>
+References: <20190712114951.912328-1-arnd@arndb.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="whm56wbfs3ehouyz"
-Content-Disposition: inline
-In-Reply-To: <20190712151118.GP17978@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-07-12 at 13:49 +0200, Arnd Bergmann wrote:
+> A last minute change must have confused PTR_ERR() and ERR_PTR():
+> 
+> drivers/char/tpm/tpm_ftpm_tee.c:236:15: error: incompatible pointer to integer
+> conversion passing 'struct tee_context *' to parameter of type 'long' [-
+> Werror,-Wint-conversion]
+>                 if (ERR_PTR(pvt_data->ctx) == -ENOENT)
+> drivers/char/tpm/tpm_ftpm_tee.c:239:18: error: incompatible pointer to integer
+> conversion passing 'struct tee_context *' to parameter of type 'long' [-
+> Werror,-Wint-conversion]
+>                 return ERR_PTR(pvt_data->ctx);
+> 
+> Fixes: c975c3911cc2 ("fTPM: firmware TPM running in TEE")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
---whm56wbfs3ehouyz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Arnd, thanks.
 
-On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Sun, Jul 07, 2019 at 12:57:27AM +1000, Aleksa Sarai wrote:
-> > Patch changelog:
-> >   v9:
-> >     * Replace resolveat(2) with openat2(2). [Linus]
-> >     * Output a warning to dmesg if may_open_magiclink() is violated.
-> >     * Add an openat2(O_CREAT) testcase.
->=20
-> One general note for the future, BTW: for such series it's generally
-> a good idea to put it into a public git tree somewhere and mention that
-> in the announcement...
+I squashed this to the associated commit.
 
-Sure, I'll mention it next time. For the record the tree is
-  <https://github.com/cyphar/linux/tree/resolveat/master>
+I also fine-tuned the commit messages a bit (tag, imperative form).
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+Started also wondering tha tpm_ftpm_tee is a too generic name given that
+this is for ARM TZ only. Would it make sense to rename it as something
+like tpm_ftpm_tee_arm? Other proposals are welcome. Just made something
+up.
 
---whm56wbfs3ehouyz
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+/Jarkko
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSioAwAKCRCdlLljIbnQ
-EgzkAQChn28FqDC8mwoRBSpKSsYawQ4zVuMzbt7zKNknJNg7nQD/cmJDlKpmnt40
-Jbd8FP1RPFVHA8Y7yVeIE+cOpg3nbw4=
-=RciL
------END PGP SIGNATURE-----
-
---whm56wbfs3ehouyz--
