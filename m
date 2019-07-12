@@ -2,138 +2,125 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084AAC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28514C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4EBD20874
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0068720874
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="fwj5TEDe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NuFa6cXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfGLXxK (ORCPT
+        id S1727511AbfGLXxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 19:53:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51928 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728599AbfGLXxG (ORCPT
+        Fri, 12 Jul 2019 19:53:39 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:39928 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728648AbfGLXxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 19:53:06 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so10286543wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 16:53:05 -0700 (PDT)
+        Fri, 12 Jul 2019 19:53:12 -0400
+Received: by mail-pl1-f202.google.com with SMTP id r7so6011365plo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 16:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=AS78fkGwPznrOvf/DrMdaP9ctBPtIVJwOugMvrmJs4c=;
-        b=fwj5TEDemEpyWBqtQq3+jA8lBHtoGdEc58oA7J/G2sFnVoXcFQiYIN5a3Ez08/bTZk
-         aWjxlPR3Ml3tqBy9ChhD8/hyTUKrrkJKMt/G2jYIndBlsqYrf8Cw9ls/S6Tg8fnydl3w
-         F0BD8Sxs1dlQcFXCts/I/8djE+q67q8xTrCk923RwtO5Ueq6zRHnwi8dNTbWU5VeHEQL
-         m0RhttWyRD8u1PFKBH4FewGDn++vUQS9c+56a+DJh8Ucq6L0xVLwaQjjVUsfIQE2hRNz
-         uXA7ZxftngIWDusXeOdFcx2jDQg4iGt0UJGbDq1hh9FX7QPIXxbslXZgqYjFgqJZN+Ap
-         5kTA==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=u0aCbzfqst+D0QpebqfgPDDHqeCzNETI6rpepbYOqAg=;
+        b=NuFa6cXOZ03xsdBH/ZfK+iY9xs3bPy/PkCnlYauhFuo7hp8ItcNakBHm6+e4a6FW2/
+         Qy9eIPHN9QVYImgGz3vPgOgEL1Rh9APmS9LNzfVQyfr6nhAZXkcaPKv770hkuZ4I7FQo
+         mPmItCpQQAy5CB2VrS/cMO2g4JsLM8S1emnd+9zU3+Xe0k044I2r6InPphZxx4momvaj
+         7uKzqvPnB8g0uXab+/biy4Ex+MSTlHVndbwTeKi+rsrxW1L6kkIj29IQXCIfhS160bMb
+         o/0MTn6NSnijj7JgBcEIScY75jodS+cD0NP6BucvNliohtB+o9sS3ZOoYnFmDXIwDtgE
+         sliw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=AS78fkGwPznrOvf/DrMdaP9ctBPtIVJwOugMvrmJs4c=;
-        b=tJJzpOKtY/JWOPES3yiKJb/76mAO2D4WZoJkW74lmB/CB8OtvQobWd5b56gypJ4raw
-         GQ/WS7FEExDDSqGMy9ezTXtax0a3IvnUfZf0y9e9p1Fm2yMsZU28Wv85qiZQnTblaSp+
-         urJz6ruZ6GKmfAy4qsMKr5LER85Gt+mXSS5pC7poBYe4/SToOP7DAq8W1IrzE9hHeal6
-         wkkOF9pcYvOtiMtCKnH/SKuZxGERhS8dkMopSTcOT2XTUT9XwaT7tXr3ZOfP7SheqeVh
-         hZ0eWeYTY6lPjxSfESLd60AHxNc749GcIR8VmfRIEeylCryZ6ohYPAqA/moBOcuyW9RC
-         c/Kw==
-X-Gm-Message-State: APjAAAXYT6HUHDfhtAa0A2zEwRTgXqH6FXbH6aFEpY+/rTWL8jZawmK4
-        kc9rQ32V0bBV7hAacrXMTC4=
-X-Google-Smtp-Source: APXvYqy6F7KeeoYQq36of+L4xIICXeDHFQZtRhLC/q0YB0+36Q4D3e+h2JCbn68XR2bAKUYRpOdQBg==
-X-Received: by 2002:a1c:f018:: with SMTP id a24mr11198037wmb.66.1562975584601;
-        Fri, 12 Jul 2019 16:53:04 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id 2sm12182171wrn.29.2019.07.12.16.53.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 16:53:04 -0700 (PDT)
-Message-ID: <5d291d60.1c69fb81.ba0a4.8774@mx.google.com>
-Date:   Fri, 12 Jul 2019 16:53:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.19.58-92-gd66f8e7f112f
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.19.y
-In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
-References: <20190712121621.422224300@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/91] 4.19.59-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=u0aCbzfqst+D0QpebqfgPDDHqeCzNETI6rpepbYOqAg=;
+        b=kQLvCaoN9t0MN/NDkAfTQLU9IHMLK03RiGPUGreLmrZrrOnMQPpNvLh8LfCEUzEAdF
+         pdPvx3aLQ2JI9lak6q9E93UuF0jCCfXMXj6Jt0aA3VHfVieyhcU9UUohjwRBPOlRzKV1
+         JBa+evjMfoe8GRJoqGu4RXo6nRHgW2/+PA25adQ49vYx9JRdEwEIy9ShA2MTIXGAq04F
+         ncdYne+Gu/MLR1I9U48rJGHJO0F4O0oaVvJUKTvRr1LDdMPcRbhE8u3cb3FBY6sxGMi9
+         BHqtjGvJ5UUPidVdIXDs+7iHi5iSonzN7HMl0tSngd4vgLxZgN2rswOhdnum4j0qQZJz
+         S8Jw==
+X-Gm-Message-State: APjAAAXf5hnR9WcU/X20nvj1uTxeYdvhv0i4qub2A3LV6NA5NKeYeRqN
+        RaTwBkh2++8Or/GKovFdln2ZlARrq0DxaTU=
+X-Google-Smtp-Source: APXvYqyWvabAfyxvg6UIJqiHNYu3Re+Ps/dXojaoKmsWOUDI0X+STCObr0nnDdxk3G7ga5ZyPciHY8ModRXmB94=
+X-Received: by 2002:a63:e90b:: with SMTP id i11mr14217259pgh.351.1562975591373;
+ Fri, 12 Jul 2019 16:53:11 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 16:52:40 -0700
+In-Reply-To: <20190712235245.202558-1-saravanak@google.com>
+Message-Id: <20190712235245.202558-8-saravanak@google.com>
+Mime-Version: 1.0
+References: <20190712235245.202558-1-saravanak@google.com>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH v5 07/11] of/platform: Sanity check DT bindings before
+ creating device links
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 122 boots: 4 failed, 117 passed with 1 offline=
- (v4.19.58-92-gd66f8e7f112f)
+If a common DT binding is pointing to a child DT node of a particular
+parent DT node, don't add device links for such DT references. This is
+because, by definition, a child node can't be a functional dependency for
+the parent node.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.58-92-gd66f8e7f112f/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.58-92-gd66f8e7f112f/
-
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.58-92-gd66f8e7f112f
-Git Commit: d66f8e7f112fefe0c1d2a0f77da022a56ccde6dc
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 70 unique boards, 27 SoC families, 17 builds out of 206
-
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxbb-nanopi-k2:
-              lab-baylibre: new failure (last pass: v4.19.58)
-
-Boot Failures Detected:
-
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            sun7i-a20-bananapi: 1 failed lab
-
-    sunxi_defconfig:
-        gcc-8:
-            sun7i-a20-bananapi: 1 failed lab
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxbb-nanopi-k2: 1 failed lab
-
-arc:
-    hsdk_defconfig:
-        gcc-8:
-            hsdk: 1 failed lab
-
-Offline Platforms:
-
-arm64:
-
-    defconfig:
-        gcc-8
-            meson-gxl-s905d-p230: 1 offline lab
-
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
-For more info write to <info@kernelci.org>
+ drivers/of/platform.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index dba962a0ee50..98414ba53b1f 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -512,6 +512,19 @@ int of_platform_default_populate(struct device_node *root,
+ }
+ EXPORT_SYMBOL_GPL(of_platform_default_populate);
+ 
++bool of_link_is_valid(struct device_node *con, struct device_node *sup)
++{
++	of_node_get(sup);
++	while (sup) {
++		if (sup == con) {
++			of_node_put(sup);
++			return false;
++		}
++		sup = of_get_next_parent(sup);
++	}
++	return true;
++}
++
+ static int of_link_binding(struct device *dev,
+ 			   const char *binding, const char *cell)
+ {
+@@ -522,6 +535,10 @@ static int of_link_binding(struct device *dev,
+ 
+ 	while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
+ 					   &sup_args)) {
++		if (!of_link_is_valid(dev->of_node, sup_args.np)) {
++			of_node_put(sup_args.np);
++			continue;
++		}
+ 		i++;
+ 		sup_dev = of_find_device_by_node(sup_args.np);
+ 		of_node_put(sup_args.np);
+-- 
+2.22.0.510.g264f2c817a-goog
+
