@@ -4,192 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DC5C742D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CB1C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F5D2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA3C21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 16:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfGLQn3 (ORCPT
+        id S1727124AbfGLQoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 12:43:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51432 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfGLQn2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 12:43:28 -0400
-Received: from pc-381.home (2a01cb0c80061e00e835b5cf688fec09.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:8006:1e00:e835:b5cf:688f:ec09])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 69B69260701;
-        Fri, 12 Jul 2019 17:43:26 +0100 (BST)
-Date:   Fri, 12 Jul 2019 18:43:23 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v4 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
- LSM6DSO and LSM6DSR
-Message-ID: <20190712184323.28547c44@pc-381.home>
-In-Reply-To: <SN6PR12MB26553046898233A094DCC952AEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
-References: <cover.1562931742.git.vitor.soares@synopsys.com>
-        <f239834a6b8bd179094cdc19a3ac5ecaf807cee3.1562931742.git.vitor.soares@synopsys.com>
-        <20190712181332.04f8b3da@linux.home>
-        <SN6PR12MB26553046898233A094DCC952AEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Jul 2019 12:44:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:60020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfGLQoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 12:44:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47AF22B;
+        Fri, 12 Jul 2019 09:44:29 -0700 (PDT)
+Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 274553F246;
+        Fri, 12 Jul 2019 09:44:27 -0700 (PDT)
+Subject: Re: [PATCHv8 1/5] arm64: dts: qcom: sdm845: Add Coresight support
+To:     saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
+        mathieu.poirier@linaro.org, leo.yan@linaro.org,
+        alexander.shishkin@linux.intel.com, mike.leach@linaro.org,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, david.brown@linaro.org,
+        mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        marc.w.gonzalez@free.fr
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <06c1a087-53f7-4841-1ae3-07ccbed22a72@arm.com>
+Date:   Fri, 12 Jul 2019 17:44:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 16:28:02 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+Hi Sai,
 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Fri, Jul 12, 2019 at 17:14:29
-> 
-> > On Fri, 12 Jul 2019 13:53:30 +0200
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
-> > > spi and i2c mode.
-> > > 
-> > > The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
-> > > them.
-> > > 
-> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > ---
-> > > Changes in v4:
-> > >   Remove hw_id variable
-> > > 
-> > > Changes in v3:
-> > >   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
-> > >   Use st_lsm6dsx_probe new form
-> > > 
-> > > Changes in v2:
-> > >   Add support for LSM6DSR
-> > >   Set pm_ops to st_lsm6dsx_pm_ops
-> > > 
-> > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
-> > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
-> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 58 +++++++++++++++++++++++++++++
-> > >  3 files changed, 66 insertions(+), 1 deletion(-)
-> > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > 
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > index 9e59297..6b5a73c 100644
-> > > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > @@ -1,11 +1,12 @@
-> > >  
-> > >  config IIO_ST_LSM6DSX
-> > >  	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
-> > > -	depends on (I2C || SPI)
-> > > +	depends on (I2C || SPI || I3C)
-> > >  	select IIO_BUFFER
-> > >  	select IIO_KFIFO_BUF
-> > >  	select IIO_ST_LSM6DSX_I2C if (I2C)
-> > >  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
-> > > +	select IIO_ST_LSM6DSX_I3C if (I3C)
-> > >  	help
-> > >  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
-> > >  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
-> > > @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
-> > >  	tristate
-> > >  	depends on IIO_ST_LSM6DSX
-> > >  	select REGMAP_SPI
-> > > +
-> > > +config IIO_ST_LSM6DSX_I3C
-> > > +	tristate
-> > > +	depends on IIO_ST_LSM6DSX
-> > > +	select REGMAP_I3C
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > index e5f733c..c676965 100644
-> > > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > @@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
-> > >  obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
-> > >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
-> > >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
-> > > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > new file mode 100644
-> > > index 0000000..2e89524
-> > > --- /dev/null
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > @@ -0,0 +1,58 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> > > + *
-> > > + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> > > + */
-> > > +
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/i3c/device.h>
-> > > +#include <linux/i3c/master.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +#include "st_lsm6dsx.h"
-> > > +
-> > > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
-> > > +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
-> > > +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),  
-> > 
-> > I think you need an uintptr_t cast here:
-> > 
-> > 	I3C_DEVICE(0x0104, 0x006C, (void *)(uintptr_t)ST_LSM6DSO_ID),
-> > 	I3C_DEVICE(0x0104, 0x006B, (void *)(uintptr_t)ST_LSM6DSR_ID),
-> > 
-> > otherwise gcc might complain that the integer and pointer do not have
-> > the same size (on 64-bit architectures).  
-> 
-> I don't understand this part. Can you provide or point some background?
-
-If you don't do that you'll get the following warning:
-
-	warning: cast to 'void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
+On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
+> Add coresight components found on Qualcomm SDM845 SoC.
 
 > 
-> >   
-> > > +	{ /* sentinel */ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
-> > > +
-> > > +static const struct regmap_config st_lsm6dsx_i3c_regmap_config = {
-> > > +	.reg_bits = 8,
-> > > +	.val_bits = 8,
-> > > +};  
-> > 
-> > This can be moved ...
-> >   
-> > > +
-> > > +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
-> > > +{  
-> > 
-> > ... here without the static and const qualifiers:  
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 +++++++++++++++++++++++++++
+>   1 file changed, 451 insertions(+)
 > 
-> I understand that can be move to here, but I don't understand the 
-> advantages. Can you explain?
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 4babff5f19b5..5d7e3f8e0f91 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1815,6 +1815,457 @@
+>   			clock-names = "xo";
+>   		};
+>   
+> +		stm@6002000 {
+> +			compatible = "arm,coresight-stm", "arm,primecell";
+> +			reg = <0 0x06002000 0 0x1000>,
+> +			      <0 0x16280000 0 0x180000>;
+> +			reg-names = "stm-base", "stm-stimulus-base";
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb_pclk";
 
-It reduces the variable scope (this variable is only needed in the
-probe path) and avoids consuming space in the .bss section, though the
-second point is not so important.
+
+Which tree is this based on ? I can't see aoss_qmp anywhere under dts/qcom
+on 5.2-rc7.
+
+
+Cheers
+Suzuki
