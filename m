@@ -2,259 +2,159 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15932C742D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C2FC742D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC92204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7760E204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kabTbhuE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDMX9IIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfGLRuv (ORCPT
+        id S1727473AbfGLRvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:50:51 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:38904 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfGLRuu (ORCPT
+        Fri, 12 Jul 2019 13:51:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35789 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfGLRvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:50:50 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6CHogQ0009227;
-        Sat, 13 Jul 2019 02:50:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6CHogQ0009227
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562953843;
-        bh=OH/1XHi/4PVTAwRaCENy+VQu4fQM/LkcnjSGBushwcg=;
-        h=From:Date:Subject:To:Cc:From;
-        b=kabTbhuEwcunOEgguptQiSz9NADJKSg3yoB4jApmeWMup0ObUlwGIGJ70d1vVRv/K
-         cGQcDVWcYGs46zClCiTl5ZYWJjEY8bk8Oo74nuqIko7exmxj5jRXfC32XQrPDdxdXt
-         obW1ODZIzpXJ6xAihGIf24S8y4gD8Xe5N4Tg6SUaZ37+44HmH9Jv12pAYs2TOYtzpD
-         UoKo8aFEWUD6c9e0aRKUKr3FGTfsRJvLQ7PCSUKa40SzNJPO/ul9Da6s0JNhP6vihF
-         S20uAY4SjoTDaCHV3YKW6UcH85Jg821WEx1ZC1brGYMnNSsIUlI+k8tX1zUzGWGV9+
-         x80V5/i+6DiOw==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id r3so7210373vsr.13;
-        Fri, 12 Jul 2019 10:50:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAVQ0SERhYhZXCCQ+cMloGjqMwnijwm7nbFgbg4p6e04UJ0JhXGt
-        ibMtgnACZpsfzrKyCfBtTNCzmUHTQ18/cHQOPTg=
-X-Google-Smtp-Source: APXvYqxH4ooWxLT5E/g7bppW27lQ9kxdLNWMTj7vpxXMTeXrRbvjpGXnIvDR+lvrzRd4eKaeraINAVom0UiQIp4uoaA=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr9553951vsn.181.1562953841419;
- Fri, 12 Jul 2019 10:50:41 -0700 (PDT)
+        Fri, 12 Jul 2019 13:51:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so10839442wrm.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fYa05UH7mYYSqEPDopwNxAMSVNVWoZBhWk4yJQZslm8=;
+        b=nDMX9IINQd40UuthTZ+AmI54a9XV2VKnSmT2iOJ76YzakV3CCrBZn6HHV/Iy+6D1Q2
+         yV7+Gqc8jWCNxrJffxHVlnHbYfm0+u0PG4+TqxJFlurXYJ2kUoQ3OhSVNf8EgJH/rZDj
+         yw2t/Z9Yy3mBhGp3urERGvBhMmnUX0z96s6JX/V0wyyOtf/gEL9qdtuq4/NK3jhHssmt
+         Ch0i+abC6cTcE/uyDHf8yc7WRGouGfIUzpedzlQoiJN4R2kOY4k5Ap4YYqeImWQCmJZI
+         F5Ntn4NNH4QZB3cR28U3yALBzpblBiMd3bUGbFAO5pjNEdfaL+TLvrOts+YLAh8T2ccC
+         Fixw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fYa05UH7mYYSqEPDopwNxAMSVNVWoZBhWk4yJQZslm8=;
+        b=mIjmKi3BzSm9mw8DTsJcc4SMoNOHSF7cmqcE3ZbcBFGb6P4BCAPNSjDW369bqHaryU
+         uJImFiUV4vROIl+uoXn7cRc1cucFU3WS9XrkaaRtx5SD6tEwIxR504T67/GMxaJ5tFFE
+         nItWvMQF2+GxTROtgCJCqez9Rwlad5+Cktv2ZVbX4w6arJpmu/n7AkzNOHnNKID1+uOl
+         Dn4ACCbx/dsTAODBQlW07wynLf04St/nwULbqkJiHcBtnhcZW2ZmCmGIQJeUDh2H0C8G
+         jNp2cx1uVODXqmAF6Kc54HurTOJ+7Ef5l8tew84hfAH+EjIqJQkzoDSyYeF/f4vXuUpn
+         XxCg==
+X-Gm-Message-State: APjAAAUrOrxEAw7hMVQm7DoE7GJEcbukeVZJ8CjCTD/HYt9k9PIgaKYA
+        LnrPyWDIxwEWCKUyNuYA8prPJglShA3pE+Z433U=
+X-Google-Smtp-Source: APXvYqxzKqSnB6g+6t1T4eeuBWsXb+aYieIdJBcbsr58GeWc1PwO1xAStg2YUGXX0pq2k45hxpR19iL74Le3Dm4+RLM=
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr12482439wrw.323.1562953881684;
+ Fri, 12 Jul 2019 10:51:21 -0700 (PDT)
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 13 Jul 2019 02:50:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATyxi5pjwi6zviW+kyZDWaYdt3tQNu+wFmyNeRDryGEKg@mail.gmail.com>
-Message-ID: <CAK7LNATyxi5pjwi6zviW+kyZDWaYdt3tQNu+wFmyNeRDryGEKg@mail.gmail.com>
-Subject: [GIT PULL 1/2] Kbuild updates for v5.3-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     masahiroy@kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190712093720.1461418-1-arnd@arndb.de>
+In-Reply-To: <20190712093720.1461418-1-arnd@arndb.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 12 Jul 2019 13:51:09 -0400
+Message-ID: <CADnq5_Mm=Fj4AkFtuo+W_295q8r6DY3Sumo7gTG-McUYY=CeVg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Support clang option for stack alignment
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Charlene Liu <charlene.liu@amd.com>, Duke Du <Duke.Du@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        clang-built-linux@googlegroups.com,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 12, 2019 at 5:37 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> As previously fixed for dml in commit 4769278e5c7f ("amdgpu/dc/dml:
+> Support clang option for stack alignment") and calcs in commit
+> cc32ad8f559c ("amdgpu/dc/calcs: Support clang option for stack
+> alignment"), dcn20 uses an option that is not available with clang:
+>
+> clang: error: unknown argument: '-mpreferred-stack-boundary=4'
+> scripts/Makefile.build:281: recipe for target 'drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.o' failed
+>
+> Use the same trick that we have in the other two files.
+>
+> Fixes: 7ed4e6352c16 ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Please pull Kbuild updates for v5.3
-Thanks!
+Applied.  thanks!
 
+Alex
 
-The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
-
-  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-v5.3
-
-for you to fetch changes up to d4a74bbfee03acf7bbddc77b9c9236462c744fc7:
-
-  kbuild: use -- separater intead of $(filter-out ...) for
-cc-cross-prefix (2019-07-11 23:34:52 +0900)
-
-----------------------------------------------------------------
-Kbuild updates for v5.3
-
-- remove headers_{install,check}_all targets
-
-- remove unreasonable 'depends on !UML' from CONFIG_SAMPLES
-
-- re-implement 'make headers_install' more cleanly
-
-- add new header-test-y syntax to compile-test headers
-
-- compile-test exported headers to ensure they are compilable in
-  user-space
-
-- compile-test headers under include/ to ensure they are self-contained
-
-- remove -Waggregate-return, -Wno-uninitialized, -Wno-unused-value flags
-
-- add -Werror=unknown-warning-option for Clang
-
-- add 128-bit built-in types support to genksyms
-
-- fix missed rebuild of modules.builtin
-
-- propagate 'No space left on device' error in fixdep to Make
-
-- allow Clang to use its integrated assembler
-
-- improve some coccinelle scripts
-
-- add a new flag KBUILD_ABS_SRCTREE to request Kbuild to use absolute
-  path for $(srctree).
-
-- do not ignore errors when compression utility is missing
-
-- misc cleanups
-
-----------------------------------------------------------------
-Geert Uytterhoeven (1):
-      kbuild: Inform user to pass ARCH= for make mrproper
-
-Harald Seiler (1):
-      kbuild: fix compression errors getting ignored
-
-Jani Nikula (1):
-      kbuild: add support for ensuring headers are self-contained
-
-Kirill Smelkov (1):
-      coccinelle: api/stream_open: treat all wait_.*() calls as blocking
-
-Markus Elfring (2):
-      coccinelle: put_device: Adjust a message construction
-      coccinelle: put_device: Add a cast to an expression for an assignment
-
-Masahiro Yamada (35):
-      kbuild: remove headers_{install,check}_all
-      kbuild: remove stale dependency between Documentation/ and headers_install
-      kbuild: make gdb_script depend on prepare0 instead of prepare
-      kbuild: fix Kconfig prompt of CONFIG_HEADERS_CHECK
-      kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of samples
-      kbuild: remove build_unifdef target in scripts/Makefile
-      kbuild: build all prerequisites of headers_install simultaneously
-      kbuild: add 'headers' target to build up uapi headers in usr/include
-      kbuild: re-implement Makefile.headersinst without recursion
-      kbuild: move hdr-inst shorthand to top Makefile
-      kbuild: simplify scripts/headers_install.sh
-      kbuild: deb-pkg: do not run headers_check
-      lib/raid6: remove duplicated CFLAGS_REMOVE_altivec8.o
-      lib/raid6: refactor unroll rules with pattern rules
-      kbuild: fix 'No such file or directory' warning for headers_install
-      kbuild: rename arg-check to cmd-check
-      kbuild: save $(strip ...) for calling any-prepreq
-      kbuild: save $(strip ...) for calling if_changed and friends
-      kbuild: fix missed rebuild of modules.builtin
-      kbuild: split modules.order build rule out of 'modules' target
-      fixdep: check return value of printf() and putchar()
-      kbuild: add more hints about SUBDIRS replacement
-      init/Kconfig: add CONFIG_CC_CAN_LINK
-      kbuild: compile-test exported headers to ensure they are self-contained
-      kbuild: do not create wrappers for header-test-y
-      kbuild: support header-test-pattern-y
-      kheaders: remove meaningless -R option of 'ls'
-      kheaders: include only headers into kheaders_data.tar.xz
-      kbuild: compile-test kernel headers to ensure they are self-contained
-      scripts/tags.sh: drop SUBARCH support for ARM
-      scripts/tags.sh: remove unused environment variables from comments
-      kbuild: remove src and obj from the top Makefile
-      kbuild: replace KBUILD_SRCTREE with boolean building_out_of_srctree
-      kbuild: add a flag to force absolute path for srctree
-      kbuild: use -- separater intead of $(filter-out ...) for cc-cross-prefix
-
-Mathieu Malaterre (1):
-      kbuild: Remove -Waggregate-return from scripts/Makefile.extrawarn
-
-Nathan Chancellor (3):
-      kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
-      kbuild: Enable -Wuninitialized
-      kbuild: Add ability to test Clang's integrated assembler
-
-Nathan Huckleberry (1):
-      kbuild: Remove unnecessary -Wno-unused-value
-
-Rikard Falkeborn (1):
-      coccinelle: kstrdup: Fix typo in warning messages
-
-Vasily Gorbik (1):
-      kallsyms: exclude kasan local symbols on s390
-
-Will Deacon (1):
-      genksyms: Teach parser about 128-bit built-in types
-
- Documentation/kbuild/headers_install.txt  |    7 -
- Documentation/kbuild/kbuild.txt           |    9 +
- Documentation/kbuild/makefiles.txt        |   22 +-
- Makefile                                  |  117 ++--
- arch/arc/Makefile                         |    2 +-
- arch/arc/configs/tb10x_defconfig          |    1 +
- arch/nds32/configs/defconfig              |    1 +
- arch/parisc/Makefile                      |   12 +-
- arch/parisc/configs/a500_defconfig        |    1 +
- arch/parisc/configs/b180_defconfig        |    1 +
- arch/parisc/configs/c3000_defconfig       |    1 +
- arch/parisc/configs/default_defconfig     |    1 +
- arch/powerpc/configs/ppc6xx_defconfig     |    1 +
- arch/s390/configs/debug_defconfig         |    1 +
- arch/um/Makefile                          |    2 +-
- drivers/gpu/drm/i915/.gitignore           |    1 -
- drivers/gpu/drm/i915/Makefile.header-test |   12 +-
- include/Kbuild                            | 1270
-+++++++++++++++++++++++++++++++++++
- include/uapi/{linux => }/Kbuild           |    6 +-
- init/Kconfig                              |   33 +
- kernel/gen_kheaders.sh                    |   51 +-
- lib/Kconfig.debug                         |   25 +-
- lib/raid6/Makefile                        |   98 +--
- net/bpfilter/Kconfig                      |    2 +-
- samples/Kconfig                           |   14 +-
- samples/Makefile                          |    4 +-
- scripts/Kbuild.include                    |   28 +-
- scripts/Makefile                          |    5 -
- scripts/Makefile.build                    |   11 +-
- scripts/Makefile.extrawarn                |    3 -
- scripts/Makefile.headersinst              |  134 ++--
- scripts/Makefile.host                     |    2 +-
- scripts/Makefile.lib                      |   26 +-
- scripts/Makefile.modbuiltin               |    2 +-
- scripts/basic/fixdep.c                    |   51 +-
- scripts/coccinelle/api/kstrdup.cocci      |    8 +-
- scripts/coccinelle/api/stream_open.cocci  |    8 +-
- scripts/coccinelle/free/put_device.cocci  |   11 +-
- scripts/gdb/linux/Makefile                |    2 +-
- scripts/genksyms/keywords.c               |    4 +
- scripts/genksyms/parse.y                  |    2 +
- scripts/headers.sh                        |   29 -
- scripts/headers_install.sh                |   48 +-
- scripts/kallsyms.c                        |    3 +
- scripts/package/builddeb                  |    2 +-
- scripts/package/mkspec                    |    2 +-
- scripts/tags.sh                           |   43 +-
- tools/testing/selftests/Makefile          |    2 +-
- tools/testing/selftests/lib.mk            |    4 +-
- usr/.gitignore                            |    1 -
- usr/Makefile                              |    2 +
- usr/include/.gitignore                    |    3 +
- usr/include/Makefile                      |  132 ++++
- 53 files changed, 1805 insertions(+), 458 deletions(-)
- delete mode 100644 drivers/gpu/drm/i915/.gitignore
- create mode 100644 include/Kbuild
- rename include/uapi/{linux => }/Kbuild (77%)
- delete mode 100755 scripts/headers.sh
- create mode 100644 usr/include/.gitignore
- create mode 100644 usr/include/Makefile
-
-
--- 
-Best Regards
-Masahiro Yamada
+> ---
+>  drivers/gpu/drm/amd/display/dc/dcn20/Makefile |  8 +++++++-
+>  drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 16 ++++++++++++----
+>  2 files changed, 19 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+> index 1b68de27ba74..e9721a906592 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+> @@ -10,7 +10,13 @@ ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
+>  DCN20 += dcn20_dsc.o
+>  endif
+>
+> -CFLAGS_dcn20_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+> +       cc_stack_align := -mpreferred-stack-boundary=4
+> +else ifneq ($(call cc-option, -mstack-alignment=16),)
+> +       cc_stack_align := -mstack-alignment=16
+> +endif
+> +
+> +CFLAGS_dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
+>
+>  AMD_DAL_DCN20 = $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dsc/Makefile b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+> index c5d5b94e2604..e019cd9447e8 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+> @@ -1,10 +1,18 @@
+>  #
+>  # Makefile for the 'dsc' sub-component of DAL.
+>
+> -CFLAGS_rc_calc.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> -CFLAGS_rc_calc_dpi.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> -CFLAGS_codec_main_amd.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> -CFLAGS_dc_dsc.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+> +       cc_stack_align := -mpreferred-stack-boundary=4
+> +else ifneq ($(call cc-option, -mstack-alignment=16),)
+> +       cc_stack_align := -mstack-alignment=16
+> +endif
+> +
+> +dsc_ccflags := -mhard-float -msse $(cc_stack_align)
+> +
+> +CFLAGS_rc_calc.o := $(dsc_ccflags)
+> +CFLAGS_rc_calc_dpi.o := $(dsc_ccflags)
+> +CFLAGS_codec_main_amd.o := $(dsc_ccflags)
+> +CFLAGS_dc_dsc.o := $(dsc_ccflags)
+>
+>  DSC = dc_dsc.o rc_calc.o rc_calc_dpi.o
+>
+> --
+> 2.20.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
