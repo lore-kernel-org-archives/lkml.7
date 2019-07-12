@@ -2,251 +2,211 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE0FC742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812E2C742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DA321019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sqtGhTVl"
+	by mail.kernel.org (Postfix) with ESMTP id 4D17421019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 01:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfGLBO2 (ORCPT
+        id S1729136AbfGLBTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 21:14:28 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:34843 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfGLBO1 (ORCPT
+        Thu, 11 Jul 2019 21:19:22 -0400
+Received: from smtpq5.tb.mail.iss.as9143.net ([212.54.42.168]:53982 "EHLO
+        smtpq5.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729061AbfGLBTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 21:14:27 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x6C1E6m1029468;
-        Fri, 12 Jul 2019 10:14:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6C1E6m1029468
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562894047;
-        bh=1XlKNIsRyo1l/cxW3VBAJovS/iXd6i68z26pLb22QEc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sqtGhTVlzop7FbaFI9lmnsAJ1i/aUrM1kGVxyYsm6zKXRfF1Fs2dlQilUwRrxPV8E
-         Yt95eZFEDvohY0mbcb0wK/2KdI4lPnAWQyKIG+5exZc344MoVQ06Co/rgV5vGOyZRp
-         RLdjYWUvsKMhfYVy8eBgZ3ds//fGO5+2Ed8bPFxnMO/438XJcLYykP0frwUBwrwTdV
-         jxA+Dfzzcln5KwUfw+x6+tnhHEdV7F2Bx0r0F1EcH2zVQJjM+E6YiG5z0WibyNrOf3
-         HCMoXgJy4INaWEjGmZP7NrJ2jIQhCVGcuDbhxX23vyn6Kge6sL7V9+FyrmZ3ApU4P0
-         0+R7f475jxn1g==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id o2so3358533uae.10;
-        Thu, 11 Jul 2019 18:14:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAXAYLd4Lu6xY5raQZi7aVpLMo11Ew3nfXPXpJ7grGmO0aajS/qP
-        EPPqHkGQiNjBRXCly+4RMxvISVFndf/zkLA8TN0=
-X-Google-Smtp-Source: APXvYqxcYiDYHQs17TJsCeED1Rf1S4KyBF4LSvM07qFUCehhjvIrwGH9whv3NcCrkQMgrbv0hNuOoy5oQDDQWdc6m9g=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr7042711uaf.95.1562894046337;
- Thu, 11 Jul 2019 18:14:06 -0700 (PDT)
+        Thu, 11 Jul 2019 21:19:22 -0400
+Received: from [212.54.42.117] (helo=lsmtp3.tb.mail.iss.as9143.net)
+        by smtpq5.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <carlo@alinoe.com>)
+        id 1hlkDW-000327-Lw; Fri, 12 Jul 2019 03:19:18 +0200
+Received: from 92-109-146-195.cable.dynamic.v4.ziggo.nl ([92.109.146.195] helo=mail9.alinoe.com)
+        by lsmtp3.tb.mail.iss.as9143.net with esmtp (Exim 4.90_1)
+        (envelope-from <carlo@alinoe.com>)
+        id 1hlkDW-00069n-Hq; Fri, 12 Jul 2019 03:19:18 +0200
+Received: from carlo by mail9.alinoe.com with local (Exim 4.86_2)
+        (envelope-from <carlo@alinoe.com>)
+        id 1hlkDV-0003FT-Ky; Fri, 12 Jul 2019 03:19:17 +0200
+Date:   Fri, 12 Jul 2019 03:19:17 +0200
+From:   Carlo Wood <carlo@alinoe.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     wangyun@linux.vnet.ibm.com, palewis@adobe.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>, jbaron@redhat.com,
+        pholland@adobe.com, Davide Libenzi <davidel@xmailserver.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Neal Cardwell <ncardwell@google.com>, carlo@alinoe.com
+Subject: Re: Is a new EPOLLCLOSED a solution to the problem that
+ EPOLL_CTL_DISABLE tried to solve?
+Message-ID: <20190712031917.4eabf240@hikaru>
+In-Reply-To: <CALCETrWkmaB5K4AR0R6CYcdq8mJwKtbWbmYEq6oxeaoqdA3ZWA@mail.gmail.com>
+References: <20190712014223.66326995@hikaru>
+        <CALCETrWkmaB5K4AR0R6CYcdq8mJwKtbWbmYEq6oxeaoqdA3ZWA@mail.gmail.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190712010556.248319-1-briannorris@chromium.org>
-In-Reply-To: <20190712010556.248319-1-briannorris@chromium.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 12 Jul 2019 10:13:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
-Message-ID: <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] bug: always show source-tree-relative paths in WARN()/BUG()
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: carlo@alinoe.com
+X-SA-Exim-Scanned: No (on mail9.alinoe.com); SAEximRunCond expanded to false
+X-SourceIP: 92.109.146.195
+X-Ziggo-spambar: /
+X-Ziggo-spamscore: 0.0
+X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=JMuPTPCb c=1 sm=1 tr=0 a=at3gEZHPcpTZPMkiLtqVSg==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10 a=VwQbUJbxAAAA:8 a=BjFOTwK7AAAA:8 a=hNgpY4UhNZx4Anvnp_cA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=N3Up1mgHhB-0MyeZKEz1:22
+X-Ziggo-Spam-Status: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:06 AM Brian Norris <briannorris@chromium.org> wrote:
->
-> When building out-of-tree (e.g., 'make O=...'), __FILE__ ends up being
-> an absolute path, and so WARN() and BUG() end up putting path names from
-> the build system into the log text. For example:
->
->   # echo BUG > /sys/kernel/debug/provoke-crash/DIRECT
->   ...
->   kernel BUG at /mnt/host/source/[...]/drivers/misc/lkdtm/bugs.c:71!
->
-> Not only is this excessively verbose, it also adds extra noise into
-> tools that might parse this output. (For example, if builder paths
-> change across versions, we suddenly get a "new" crash signature.)
->
-> All in all, this looks much better as:
->
->   kernel BUG at drivers/misc/lkdtm/bugs.c:71!
->
-> It appears the Kbuild system is fairly entrenched in using
-> $(KBUILD_OUTPUT) for the ${CWD}, which necessarily means that the
-> preprocessor will get handed an absolute path. It seems the only
-> solution then, is to do some sort of post-processing on __FILE__.
->
-> It so happens that lib/dynamic_debug.c already solves this sort of
-> problem, so I steal its solution for use in panic/warn/bug code as well.
+Hi Andy,
 
+thank you for you quick reply.
 
-BTW, did you see this?
+On Thu, 11 Jul 2019 17:32:21 -0700
+Andy Lutomirski <luto@kernel.org> wrote:
 
-commit a73619a845d5625079cc1b3b820f44c899618388
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri Mar 30 13:15:26 2018 +0900
+> > I propose to add a new EPOLL event EPOLLCLOSED that will cause
+> > epoll_wait to return (for that event) whenever a file descriptor is
+> > closed.  
+> 
+> This totally falls apart if you ever want to add a feature to your
+> library to detach the handler for a given fd without closing the fd.
 
-    kbuild: use -fmacro-prefix-map to make __FILE__ a relative path
+Another way to cause epoll_wait() to wake up for that specific fd is
+okay too, of course.
 
+For example, since the new event basically will mean "resources
+can now be deleted", the event could be called EPOLLDELETE.
+It is just needed to have some easy way to trigger this event.
 
+Nevertheless, in the more exceptional case that one wants to destroy
+the object/rss that data.ptr points to without closing the fd it is
+probably possible to first dup the fd and then close the old one.
 
+> > The Worker Thread then does not remove an object from the
+> > interest list, but either adds (if it was removed before) or
+> > modifies the event (using EPOLL_CTL_MOD) to watch that fd
+> > for closing, and then closes it.
+> >
+> > Aka,
+> >
+> >   Working Thread:
+> >
+> >   epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event);
+> >   close(fd);
+> >
+> > where event contains the new EPOLLCLOSED (compare EPOLLOUT, EPOLLIN
+> > etc).
+> >
+> > This must then guarantee the event EPOLLCLOSED to be reported
+> > by exactly one epoll_wait(), the caller thread of which can then
+> > proceed with deleting the resources.
+> >
+> > Note that close(fd) must cause the removal from the interest list
+> > of any epoll struct before causing the event - and that the
+> > EPOLLCLOSED event may only be reported after all other events
+> > for that fd have already been reported (although it would be
+> > ok to report them at the same time: simply handle the other
+> > events first).  
+> 
+> This is a bunch of subtle semantics in the kernel to support your
+> particular use case.
 
+My particular use case? How so? The problem I'm trying to address
+is the fact that "It is not currently possible to reliably delete epoll
+items when using the same epoll set from multiple threads", end quote
+of Paton Lewis' email from 2012.
 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> I'd be happy to entertain better solutions to this problem, but so far,
-> I haven't been creative enough to come up with one.
->
-> I'm also unsure of who best to address this to. If anyone has better
-> pointers, I'm all ears.
->
->  include/linux/bug.h |  2 ++
->  kernel/panic.c      | 21 +++++++++++++++++++--
->  lib/bug.c           |  3 ++-
->  lib/dynamic_debug.c | 18 ++++--------------
->  4 files changed, 27 insertions(+), 17 deletions(-)
->
-> diff --git a/include/linux/bug.h b/include/linux/bug.h
-> index fe5916550da8..6ab59e53801d 100644
-> --- a/include/linux/bug.h
-> +++ b/include/linux/bug.h
-> @@ -76,4 +76,6 @@ static inline __must_check bool check_data_corruption(bool v) { return v; }
->                 corruption;                                              \
->         }))
->
-> +const char *trim_filepath_prefix(const char *path);
-> +
->  #endif /* _LINUX_BUG_H */
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 4d9f55bf7d38..0bed3101f049 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -546,6 +546,23 @@ struct warn_args {
->         va_list args;
->  };
->
-> +/**
-> + * trim_filepath_prefix - retrieve source-root relative path from a __FILE__
-> + * @path: a __FILE__-like path argument.
-> + * Return: path relative to source root.
-> + */
-> +const char *trim_filepath_prefix(const char *path)
-> +{
-> +       int skip = strlen(__FILE__) - strlen("kernel/panic.c");
-> +
-> +       BUILD_BUG_ON(strlen(__FILE__) < strlen("kernel/panic.c"));
-> +
-> +       if (strncmp(path, __FILE__, skip))
-> +               skip = 0; /* prefix mismatch, don't skip */
-> +
-> +       return path + skip;
-> +}
-> +
->  void __warn(const char *file, int line, void *caller, unsigned taint,
->             struct pt_regs *regs, struct warn_args *args)
->  {
-> @@ -556,8 +573,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
->
->         if (file)
->                 pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS\n",
-> -                       raw_smp_processor_id(), current->pid, file, line,
-> -                       caller);
-> +                       raw_smp_processor_id(), current->pid,
-> +                       trim_filepath_prefix(file), line, caller);
->         else
->                 pr_warn("WARNING: CPU: %d PID: %d at %pS\n",
->                         raw_smp_processor_id(), current->pid, caller);
-> diff --git a/lib/bug.c b/lib/bug.c
-> index 1077366f496b..2aa91d330451 100644
-> --- a/lib/bug.c
-> +++ b/lib/bug.c
-> @@ -191,7 +191,8 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
->         printk(KERN_DEFAULT CUT_HERE);
->
->         if (file)
-> -               pr_crit("kernel BUG at %s:%u!\n", file, line);
-> +               pr_crit("kernel BUG at %s:%u!\n", trim_filepath_prefix(file),
-> +                       line);
->         else
->                 pr_crit("Kernel BUG at %pB [verbose debug info unavailable]\n",
->                         (void *)bugaddr);
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> index 8a16c2d498e9..0896f067ba17 100644
-> --- a/lib/dynamic_debug.c
-> +++ b/lib/dynamic_debug.c
-> @@ -13,6 +13,7 @@
->
->  #define pr_fmt(fmt) KBUILD_MODNAME ":%s: " fmt, __func__
->
-> +#include <linux/bug.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
-> @@ -67,17 +68,6 @@ static LIST_HEAD(ddebug_tables);
->  static int verbose;
->  module_param(verbose, int, 0644);
->
-> -/* Return the path relative to source root */
-> -static inline const char *trim_prefix(const char *path)
-> -{
-> -       int skip = strlen(__FILE__) - strlen("lib/dynamic_debug.c");
-> -
-> -       if (strncmp(path, __FILE__, skip))
-> -               skip = 0; /* prefix mismatch, don't skip */
-> -
-> -       return path + skip;
-> -}
-> -
->  static struct { unsigned flag:8; char opt_char; } opt_array[] = {
->         { _DPRINTK_FLAGS_PRINT, 'p' },
->         { _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
-> @@ -164,7 +154,7 @@ static int ddebug_change(const struct ddebug_query *query,
->                             !match_wildcard(query->filename,
->                                            kbasename(dp->filename)) &&
->                             !match_wildcard(query->filename,
-> -                                          trim_prefix(dp->filename)))
-> +                                          trim_filepath_prefix(dp->filename)))
->                                 continue;
->
->                         /* match against the function */
-> @@ -199,7 +189,7 @@ static int ddebug_change(const struct ddebug_query *query,
->  #endif
->                         dp->flags = newflags;
->                         vpr_info("changed %s:%d [%s]%s =%s\n",
-> -                                trim_prefix(dp->filename), dp->lineno,
-> +                                trim_filepath_prefix(dp->filename), dp->lineno,
->                                  dt->mod_name, dp->function,
->                                  ddebug_describe_flags(dp, flagbuf,
->                                                        sizeof(flagbuf)));
-> @@ -827,7 +817,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
->         }
->
->         seq_printf(m, "%s:%u [%s]%s =%s \"",
-> -                  trim_prefix(dp->filename), dp->lineno,
-> +                  trim_filepath_prefix(dp->filename), dp->lineno,
->                    iter->table->mod_name, dp->function,
->                    ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
->         seq_escape(m, dp->format, "\t\r\n\"");
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+If there is a simple, generally accepted solution for this in user-space
+then of course there is no reason to change the kernel; but despite
+all my efforts to research the net for a solution for this, all can
+find are people with the same question and no good answers.
 
+If there was a way to pass a special event to the thread waiting in
+epoll_wait() that it now is safe to free the memory that data.ptr is
+pointing to, then problem would evaporate to something trivally simple.
+
+Lets say we would not be using close(2), but instead some
+epoll_destruct(epoll_fd, fd). Then the worker thread, instead of,
+
+  if (last reference to object has gone)
+  {
+    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, object->fd, NULL);
+    delete object;  // Unsafe
+  }
+
+could do,
+
+  if (last reference to object has gone)
+    epoll_destuct(epoll_fd, object->fd);
+        // Or [optionally dup() and] close(object->fd);
+
+Whereas the thread that waits for epoll_fd would take care
+of the deletion:
+
+  for (;;)
+  {
+    int ready = epoll_wait(epoll_fd, s_events, maxevents, -1);
+    while (ready > 0)
+    {
+      epoll_event& event(s_events[--ready]);
+      if ((event.events & EPOLLDELETE)) // Or EPOLLCLOSED, or
+                                        // whatever the name is.
+      {
+        delete event.data.ptr;
+        break;
+      }
+      // Handle other events.
+    }
+  }
+
+In this case, if epoll_wait() had returned just prior to
+the call to epoll_destruct()/close(), the object will not be deleted;
+The returned events would be handled, epoll_wait() reentered,
+and only once EPOLLDELETE is returned the object would be deleted.
+
+The bunch of subtle requirements as you call it is just about how
+to implement this in a way that it will do what it is supposed to do,
+and in no way specific for my particular use case.
+
+The requirements are, namely:
+
+1. Only one epoll_fd may have added an epoll_event structure with
+   a pointer to the resource (if more than one need to point to it,
+   you could add a pointer to a smart pointer to the object to
+   the epoll_event structure instead). I'd be surprised if this
+   is not ALREADY a required for normal implementations.
+
+2. The call to epoll_destruct() (as introduced as example above)
+   must remove the fd from the epoll's interest list. Of course
+   it doesn't HAVE to - but then the user MUST call epoll_ctl(epoll_fd,
+   EPOLL_CTL_DEL, ...) right before it, so why not? The reason
+   I opted close(2) is because that ALREADY has this behavior,
+   hence it seems a good candidate for epoll_destruct.
+
+3. After an EPOLLDELETE (formly EPOLLCLOSED) has been returned by
+   an epoll_wait() no other events may be returned for that fd.
+   This is obvious, and should be easy to implement. I just added it for
+   completeness ;).
+ 
+> But this case is fairly straightforward with the user mode approach --
+> for example, add it to the list for all threads calling epoll_wait.
+> Or otherwise defer the deletion until all epoll_wait threads have
+> woken.
+
+That really seems a hell of lot more complex (involving mutexes and
+updating a queue that might grow till unknown sizes, hence requiring
+possibly calls to malloc) then my proposed solution, for something that
+basically every application that uses epoll needs.
 
 -- 
-Best Regards
-Masahiro Yamada
+Carlo Wood <carlo@alinoe.com>
