@@ -2,88 +2,136 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9099C742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41618C742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDF7208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B58B2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:27:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dvbQz8jW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfGLKSM (ORCPT
+        id S1726342AbfGLK1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 06:18:12 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:44154 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfGLKSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 06:18:12 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hlsck-0005dS-D9; Fri, 12 Jul 2019 18:17:54 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hlscb-0008KQ-6Y; Fri, 12 Jul 2019 18:17:45 +0800
-Date:   Fri, 12 Jul 2019 18:17:45 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] crypto: crypto4xx: fix a potential double free in
- ppc4xx_trng_probe
-Message-ID: <20190712101745.3owecyrrpltsozmy@gondor.apana.org.au>
-References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
- <1562566745-7447-2-git-send-email-wen.yang99@zte.com.cn>
+        Fri, 12 Jul 2019 06:27:51 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60761 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfGLK1u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:27:50 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190712102748euoutp011c0096f2c279f306f7479d02a1c500b5~wohHnFUuz1771517715euoutp01k
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:27:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190712102748euoutp011c0096f2c279f306f7479d02a1c500b5~wohHnFUuz1771517715euoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562927268;
+        bh=lakT5IvZPewFHKpfWnaitlRRseevezRjb/QpbnwhAUc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dvbQz8jWPKxRtA4MXKNK1AzzAoj8AkcYyDLBXaYSbDWLsqKedshMx8YKLOz1Wws9R
+         p37XuvUIolIKVV9QAW86F3blj+TipgaN4VkHOFkfUhQlyqfxljvUvyYYAoV8EDW33J
+         YVI0YzEqgXfRuNmAcNkvJJMJs2QINFC42IzaH+sQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190712102748eucas1p2bdeba0118252ef40fcce73154d5f9b57~wohHRqixq2376623766eucas1p2v;
+        Fri, 12 Jul 2019 10:27:48 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B1.95.04298.3A0682D5; Fri, 12
+        Jul 2019 11:27:47 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190712102747eucas1p25e29b56e7b4fd11b403a3bb8fc9a0263~wohGmNJUK1562615626eucas1p2i;
+        Fri, 12 Jul 2019 10:27:47 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190712102747eusmtrp1431636753e0ec0443454243e7aa5b0bc~wohGYIv5-1664416644eusmtrp1-;
+        Fri, 12 Jul 2019 10:27:47 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-d2-5d2860a37247
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B1.AB.04146.2A0682D5; Fri, 12
+        Jul 2019 11:27:47 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190712102746eusmtip2dedd242a5f8feec072425ccd54395f32~wohF7uOuv0703007030eusmtip27;
+        Fri, 12 Jul 2019 10:27:46 +0000 (GMT)
+Subject: Re: [PATCH 4/6] media: i2c: s5c73m3: Convert to new i2c device
+ probe()
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <4c343c7b-5c43-7234-fae4-4f384c6d09ed@samsung.com>
+Date:   Fri, 12 Jul 2019 12:27:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562566745-7447-2-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190710215149.9208-5-kieran.bingham+renesas@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djPc7qLEzRiDeY9Mrb4dK2b0eJs0xt2
+        i46/XxgtLu+aw2bRs2Erq8XWl++YLJZt+sNksfLELGYHDo/ZHTNZPTat6mTz6NuyitHj5Kkn
+        LB6fN8kFsEZx2aSk5mSWpRbp2yVwZXx5to+14C9zxc1HX1gaGBcxdzFyckgImEicfTaVrYuR
+        i0NIYAWjxP75c1khnC+MEjNv9rOBVAkJfGaUWPcqFKbj2OoZTBBFyxklLjZfZYEoessosWau
+        NogtLBAo8WLxG0aQIhGB2YwScw9PBtvBLLCSUeLtkmtMIFVsApoSfzffBEpwcPAK2Ek8PWAL
+        EmYRUJXourkArERUIEzi54JOsCt4BQQlTs58AraMU8BHYu+uHrA4s4C8RPPW2cwQtrjErSfz
+        wa6TENjFLtHx8j87xNkuEktWP2GEsIUlXh3fAhWXkTg9uYcFwq6XuL+ihRmiuYNRYuuGndBQ
+        spY4fPwiK8ihzEBHr9+lDxF2lOhbvIARJCwhwCdx460gxA18EpO2TWeGCPNKdLQJQVQrStw/
+        uxVqoLjE0gtf2SYwKs1C8tksJN/MQvLNLIS9CxhZVjGKp5YW56anFhvmpZbrFSfmFpfmpesl
+        5+duYgQmo9P/jn/awfj1UtIhRgEORiUe3huW6rFCrIllxZW5hxglOJiVRHhX/QcK8aYkVlal
+        FuXHF5XmpBYfYpTmYFES561meBAtJJCeWJKanZpakFoEk2Xi4JRqYNTStgkLubftsfCnvBRn
+        cSu1ubrnmZr0PI57GUca/qk8sPGxj37emW1sb+bPTuad9HCtpRmL1JmNtozbrR8urajxPbrQ
+        yPOxr7hH01Vfq8835T5wztSeJ1GX6fErIHjNZyF7RxP9LYq/zgm2edlP3iU5K3UDb/Wq+M6v
+        f1Z3numewFa48tgTbyWW4oxEQy3mouJEAKf9MIhCAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7qLEzRiDZasYrL4dK2b0eJs0xt2
+        i46/XxgtLu+aw2bRs2Erq8XWl++YLJZt+sNksfLELGYHDo/ZHTNZPTat6mTz6NuyitHj5Kkn
+        LB6fN8kFsEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp
+        2yXoZXx5to+14C9zxc1HX1gaGBcxdzFyckgImEgcWz2DqYuRi0NIYCmjxMP9P6AS4hK757+F
+        soUl/lzrYgOxhQReM0rMWZQKYgsLBEq8WPyGEaRZRGA2o8TOU6vAipgFVjNKHDoSADH1IaPE
+        0X37WEASbAKaEn833wQq4uDgFbCTeHrAFiTMIqAq0XVzARNIWFQgTOLoiTyQMK+AoMTJmU/A
+        OjkFfCT27uqBGq8u8WfeJWYIW16ieetsKFtc4taT+UwTGIVmIWmfhaRlFpKWWUhaFjCyrGIU
+        SS0tzk3PLTbUK07MLS7NS9dLzs/dxAiMvm3Hfm7ewXhpY/AhRgEORiUe3huW6rFCrIllxZW5
+        hxglOJiVRHhX/QcK8aYkVlalFuXHF5XmpBYfYjQF+m0is5Rocj4wMeSVxBuaGppbWBqaG5sb
+        m1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamDsMp1W8lzr/SqLC7xBN0Ue7fv9P89qw4Jl
+        EhyzGLevNF1kuD27W4TLfdK6+exr9tqe/pCvP/Ebw/fLa/R6nrsGlJ2L4zz6x3z3v4wdnVFi
+        s9oLL8/oWy1/MU6P/ciL7MsdP1u+NHkKRX03/cRXEZp6NWJGbW675k7fi0cuisy+rm3Qfub8
+        7EOcSizFGYmGWsxFxYkAEE9P49QCAAA=
+X-CMS-MailID: 20190712102747eucas1p25e29b56e7b4fd11b403a3bb8fc9a0263
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190710215208epcas2p4a00565b70691c0afb0c3a04f9c43f6cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190710215208epcas2p4a00565b70691c0afb0c3a04f9c43f6cd
+References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
+        <CGME20190710215208epcas2p4a00565b70691c0afb0c3a04f9c43f6cd@epcas2p4.samsung.com>
+        <20190710215149.9208-5-kieran.bingham+renesas@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 02:19:03PM +0800, Wen Yang wrote:
-> There is a possible double free issue in ppc4xx_trng_probe():
-> 
-> 85:	dev->trng_base = of_iomap(trng, 0);
-> 86:	of_node_put(trng);          ---> released here
-> 87:	if (!dev->trng_base)
-> 88:		goto err_out;
-> ...
-> 110:	ierr_out:
-> 111:		of_node_put(trng);  ---> double released here
-> ...
-> 
-> This issue was detected by using the Coccinelle software.
-> We fix it by removing the unnecessary of_node_put().
-> 
-> Fixes: 5343e674f32 ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Armijn Hemel <armijn@tjaldur.nl>
-> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/crypto/amcc/crypto4xx_trng.c | 1 -
->  1 file changed, 1 deletion(-)
+On 10.07.2019 23:51, Kieran Bingham wrote:
+> The I2C core framework provides a simplified probe framework from commit
+> b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
+>
+> This driver does not utilise the i2c_device_id table in the probe, so we can
+> easily convert it to utilise the simplfied i2c driver registration.
+>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+Acked-by: Andrzej Hajda <a.hajda@samsung.com>
+
+
+ --
+Regards
+Andrzej
+
+
