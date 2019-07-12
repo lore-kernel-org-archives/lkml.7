@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB2AC742BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F258DC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAD4216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F4B216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934167;
-	bh=/T3rBfyNMd4s89OXKH3VPrhhGzsi43ZonvJrirmgypo=;
+	s=default; t=1562934174;
+	bh=2FpaDrEkkU/OejyQ1varbZjE+hpLbG/ApQ22rKgnvig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzs42JLDWlDX0IYI1NR7L9gBrxQ7RfEJ1pMCL6nHdXsm3zFII/7Rsdk1URmMnuiky
-	 u428zf1WJfH6fgGGSwsFiKHA2jsByVzcc9xWd15COkMdFtWJt8z0LbtV5mQ4kr8hjC
-	 L1EKS8lBX9J+dWCmNX6EJ90PGNYOmKeYBgyNCz40=
+	b=Idd29RF7TgbvwJcZfHXGdg0PH0IARTfuAAuyCxUgX6/Sok4QSQcNYxwibOjwyYArk
+	 WDskZB4hTUNvxro6xffXg61z7D4jW+LjRt98Qs7dgtFyMQGIyvKhYdH5vXQTOj0w7i
+	 yXBKos9ujHoTAiVjfcFEbCQ1VdqcQn4ZFuflUtEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfGLMWq (ORCPT
+        id S1727803AbfGLMWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57662 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727147AbfGLMWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:22:44 -0400
+        id S1727788AbfGLMWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:22:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 934A2216C4;
-        Fri, 12 Jul 2019 12:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD362216B7;
+        Fri, 12 Jul 2019 12:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934163;
-        bh=/T3rBfyNMd4s89OXKH3VPrhhGzsi43ZonvJrirmgypo=;
+        s=default; t=1562934169;
+        bh=2FpaDrEkkU/OejyQ1varbZjE+hpLbG/ApQ22rKgnvig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBA/rVx+f9j89nmEisE+7/GFhxXRwIaNBfJn2N8HoAhgmytDl2uT0pOY4KdFHaepN
-         9iy/TWNk0p55hBpGtilhW9wb5jJH4qqJjIpEdHlSGwhQHEtiz3zt9oztcPdF5p4QsP
-         Y5ySrng6NxnIXDZLQVU7TYICIElbwAf5JFi3z898=
+        b=ZoKQwA2yORos0AbcdKrPfjSAuZnE/K3KP4nouxh0Q5HULVrht0AwJxeVO/X8JDjWy
+         P1zG/5qlJ0+KIS2EPqUceiRwXSw8yi4wuw40WgDiWAEln+nkTfcpsvQW/FVgL1vP/r
+         JdOzymsWmrGdn9Efke2oAHMVQn09Tvqm4iEJkv9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven J. Magnani" <steve@digidescorp.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 57/91] udf: Fix incorrect final NOT_ALLOCATED (hole) extent length
-Date:   Fri, 12 Jul 2019 14:19:00 +0200
-Message-Id: <20190712121624.789594115@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Sauer <ensonic@hora-obscura.de>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 59/91] ALSA: usb-audio: Fix parse of UAC2 Extension Units
+Date:   Fri, 12 Jul 2019 14:19:02 +0200
+Message-Id: <20190712121624.909362477@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
 References: <20190712121621.422224300@linuxfoundation.org>
@@ -60,223 +59,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven J. Magnani <steve.magnani@digidescorp.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit fa33cdbf3eceb0206a4f844fe91aeebcf6ff2b7a upstream.
+commit ca95c7bf3d29716916baccdc77c3c2284b703069 upstream.
 
-In some cases, using the 'truncate' command to extend a UDF file results
-in a mismatch between the length of the file's extents (specifically, due
-to incorrect length of the final NOT_ALLOCATED extent) and the information
-(file) length. The discrepancy can prevent other operating systems
-(i.e., Windows 10) from opening the file.
+Extension Unit (XU) is used to have a compatible layout with
+Processing Unit (PU) on UAC1, and the usb-audio driver code assumed it
+for parsing the descriptors.  Meanwhile, on UAC2, XU became slightly
+incompatible with PU; namely, XU has a one-byte bmControls bitmap
+while PU has two bytes bmControls bitmap.  This incompatibility
+results in the read of a wrong address for the last iExtension field,
+which ended up with an incorrect string for the mixer element name, as
+recently reported for Focusrite Scarlett 18i20 device.
 
-Two particular errors have been observed when extending a file:
+This patch corrects this misalignment by introducing a couple of new
+macros and calling them depending on the descriptor type.
 
-1. The final extent is larger than it should be, having been rounded up
-   to a multiple of the block size.
-
-B. The final extent is not shorter than it should be, due to not having
-   been updated when the file's information length was increased.
-
-[JK: simplified udf_do_extend_final_block(), fixed up some types]
-
-Fixes: 2c948b3f86e5 ("udf: Avoid IO in udf_clear_inode")
-CC: stable@vger.kernel.org
-Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
-Link: https://lore.kernel.org/r/1561948775-5878-1-git-send-email-steve@digidescorp.com
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 23caaf19b11e ("ALSA: usb-mixer: Add support for Audio Class v2.0")
+Reported-by: Stefan Sauer <ensonic@hora-obscura.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/udf/inode.c |   93 ++++++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 60 insertions(+), 33 deletions(-)
+ include/uapi/linux/usb/audio.h |   37 +++++++++++++++++++++++++++++++++++++
+ sound/usb/mixer.c              |   16 ++++++++++------
+ 2 files changed, 47 insertions(+), 6 deletions(-)
 
---- a/fs/udf/inode.c
-+++ b/fs/udf/inode.c
-@@ -470,13 +470,15 @@ static struct buffer_head *udf_getblk(st
- 	return NULL;
+--- a/include/uapi/linux/usb/audio.h
++++ b/include/uapi/linux/usb/audio.h
+@@ -450,6 +450,43 @@ static inline __u8 *uac_processing_unit_
+ 	}
  }
  
--/* Extend the file by 'blocks' blocks, return the number of extents added */
-+/* Extend the file with new blocks totaling 'new_block_bytes',
-+ * return the number of extents added
++/*
++ * Extension Unit (XU) has almost compatible layout with Processing Unit, but
++ * on UAC2, it has a different bmControls size (bControlSize); it's 1 byte for
++ * XU while 2 bytes for PU.  The last iExtension field is a one-byte index as
++ * well as iProcessing field of PU.
 + */
- static int udf_do_extend_file(struct inode *inode,
- 			      struct extent_position *last_pos,
- 			      struct kernel_long_ad *last_ext,
--			      sector_t blocks)
-+			      loff_t new_block_bytes)
- {
--	sector_t add;
-+	uint32_t add;
- 	int count = 0, fake = !(last_ext->extLength & UDF_EXTENT_LENGTH_MASK);
- 	struct super_block *sb = inode->i_sb;
- 	struct kernel_lb_addr prealloc_loc = {};
-@@ -486,7 +488,7 @@ static int udf_do_extend_file(struct ino
- 
- 	/* The previous extent is fake and we should not extend by anything
- 	 * - there's nothing to do... */
--	if (!blocks && fake)
-+	if (!new_block_bytes && fake)
- 		return 0;
- 
- 	iinfo = UDF_I(inode);
-@@ -517,13 +519,12 @@ static int udf_do_extend_file(struct ino
- 	/* Can we merge with the previous extent? */
- 	if ((last_ext->extLength & UDF_EXTENT_FLAG_MASK) ==
- 					EXT_NOT_RECORDED_NOT_ALLOCATED) {
--		add = ((1 << 30) - sb->s_blocksize -
--			(last_ext->extLength & UDF_EXTENT_LENGTH_MASK)) >>
--			sb->s_blocksize_bits;
--		if (add > blocks)
--			add = blocks;
--		blocks -= add;
--		last_ext->extLength += add << sb->s_blocksize_bits;
-+		add = (1 << 30) - sb->s_blocksize -
-+			(last_ext->extLength & UDF_EXTENT_LENGTH_MASK);
-+		if (add > new_block_bytes)
-+			add = new_block_bytes;
-+		new_block_bytes -= add;
-+		last_ext->extLength += add;
- 	}
- 
- 	if (fake) {
-@@ -544,28 +545,27 @@ static int udf_do_extend_file(struct ino
- 	}
- 
- 	/* Managed to do everything necessary? */
--	if (!blocks)
-+	if (!new_block_bytes)
- 		goto out;
- 
- 	/* All further extents will be NOT_RECORDED_NOT_ALLOCATED */
- 	last_ext->extLocation.logicalBlockNum = 0;
- 	last_ext->extLocation.partitionReferenceNum = 0;
--	add = (1 << (30-sb->s_blocksize_bits)) - 1;
--	last_ext->extLength = EXT_NOT_RECORDED_NOT_ALLOCATED |
--				(add << sb->s_blocksize_bits);
-+	add = (1 << 30) - sb->s_blocksize;
-+	last_ext->extLength = EXT_NOT_RECORDED_NOT_ALLOCATED | add;
- 
- 	/* Create enough extents to cover the whole hole */
--	while (blocks > add) {
--		blocks -= add;
-+	while (new_block_bytes > add) {
-+		new_block_bytes -= add;
- 		err = udf_add_aext(inode, last_pos, &last_ext->extLocation,
- 				   last_ext->extLength, 1);
- 		if (err)
- 			return err;
- 		count++;
- 	}
--	if (blocks) {
-+	if (new_block_bytes) {
- 		last_ext->extLength = EXT_NOT_RECORDED_NOT_ALLOCATED |
--			(blocks << sb->s_blocksize_bits);
-+			new_block_bytes;
- 		err = udf_add_aext(inode, last_pos, &last_ext->extLocation,
- 				   last_ext->extLength, 1);
- 		if (err)
-@@ -596,6 +596,24 @@ out:
- 	return count;
- }
- 
-+/* Extend the final block of the file to final_block_len bytes */
-+static void udf_do_extend_final_block(struct inode *inode,
-+				      struct extent_position *last_pos,
-+				      struct kernel_long_ad *last_ext,
-+				      uint32_t final_block_len)
++static inline __u8 uac_extension_unit_bControlSize(struct uac_processing_unit_descriptor *desc,
++						   int protocol)
 +{
-+	struct super_block *sb = inode->i_sb;
-+	uint32_t added_bytes;
-+
-+	added_bytes = final_block_len -
-+		      (last_ext->extLength & (sb->s_blocksize - 1));
-+	last_ext->extLength += added_bytes;
-+	UDF_I(inode)->i_lenExtents += added_bytes;
-+
-+	udf_write_aext(inode, last_pos, &last_ext->extLocation,
-+			last_ext->extLength, 1);
++	switch (protocol) {
++	case UAC_VERSION_1:
++		return desc->baSourceID[desc->bNrInPins + 4];
++	case UAC_VERSION_2:
++		return 1; /* in UAC2, this value is constant */
++	case UAC_VERSION_3:
++		return 4; /* in UAC3, this value is constant */
++	default:
++		return 1;
++	}
 +}
 +
- static int udf_extend_file(struct inode *inode, loff_t newsize)
- {
- 
-@@ -605,10 +623,12 @@ static int udf_extend_file(struct inode
- 	int8_t etype;
- 	struct super_block *sb = inode->i_sb;
- 	sector_t first_block = newsize >> sb->s_blocksize_bits, offset;
-+	unsigned long partial_final_block;
- 	int adsize;
- 	struct udf_inode_info *iinfo = UDF_I(inode);
- 	struct kernel_long_ad extent;
--	int err;
-+	int err = 0;
-+	int within_final_block;
- 
- 	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_SHORT)
- 		adsize = sizeof(struct short_ad);
-@@ -618,18 +638,8 @@ static int udf_extend_file(struct inode
- 		BUG();
- 
- 	etype = inode_bmap(inode, first_block, &epos, &eloc, &elen, &offset);
-+	within_final_block = (etype != -1);
- 
--	/* File has extent covering the new size (could happen when extending
--	 * inside a block)? */
--	if (etype != -1)
--		return 0;
--	if (newsize & (sb->s_blocksize - 1))
--		offset++;
--	/* Extended file just to the boundary of the last file block? */
--	if (offset == 0)
--		return 0;
--
--	/* Truncate is extending the file by 'offset' blocks */
- 	if ((!epos.bh && epos.offset == udf_file_entry_alloc_offset(inode)) ||
- 	    (epos.bh && epos.offset == sizeof(struct allocExtDesc))) {
- 		/* File has no extents at all or has empty last
-@@ -643,7 +653,22 @@ static int udf_extend_file(struct inode
- 				      &extent.extLength, 0);
- 		extent.extLength |= etype << 30;
- 	}
--	err = udf_do_extend_file(inode, &epos, &extent, offset);
++static inline __u8 uac_extension_unit_iExtension(struct uac_processing_unit_descriptor *desc,
++						 int protocol)
++{
++	__u8 control_size = uac_extension_unit_bControlSize(desc, protocol);
 +
-+	partial_final_block = newsize & (sb->s_blocksize - 1);
-+
-+	/* File has extent covering the new size (could happen when extending
-+	 * inside a block)?
-+	 */
-+	if (within_final_block) {
-+		/* Extending file within the last file block */
-+		udf_do_extend_final_block(inode, &epos, &extent,
-+					  partial_final_block);
-+	} else {
-+		loff_t add = ((loff_t)offset << sb->s_blocksize_bits) |
-+			     partial_final_block;
-+		err = udf_do_extend_file(inode, &epos, &extent, add);
++	switch (protocol) {
++	case UAC_VERSION_1:
++	case UAC_VERSION_2:
++	default:
++		return *(uac_processing_unit_bmControls(desc, protocol)
++			 + control_size);
++	case UAC_VERSION_3:
++		return 0; /* UAC3 does not have this field */
 +	}
++}
 +
- 	if (err < 0)
- 		goto out;
- 	err = 0;
-@@ -745,6 +770,7 @@ static sector_t inode_getblk(struct inod
- 	/* Are we beyond EOF? */
- 	if (etype == -1) {
- 		int ret;
-+		loff_t hole_len;
- 		isBeyondEOF = true;
- 		if (count) {
- 			if (c)
-@@ -760,7 +786,8 @@ static sector_t inode_getblk(struct inod
- 			startnum = (offset > 0);
- 		}
- 		/* Create extents for the hole between EOF and offset */
--		ret = udf_do_extend_file(inode, &prev_epos, laarr, offset);
-+		hole_len = (loff_t)offset << inode->i_blkbits;
-+		ret = udf_do_extend_file(inode, &prev_epos, laarr, hole_len);
- 		if (ret < 0) {
- 			*err = ret;
- 			newblock = 0;
+ /* 4.5.2 Class-Specific AS Interface Descriptor */
+ struct uac1_as_header_descriptor {
+ 	__u8  bLength;			/* in bytes: 7 */
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2322,7 +2322,7 @@ static struct procunit_info extunits[] =
+  */
+ static int build_audio_procunit(struct mixer_build *state, int unitid,
+ 				void *raw_desc, struct procunit_info *list,
+-				char *name)
++				bool extension_unit)
+ {
+ 	struct uac_processing_unit_descriptor *desc = raw_desc;
+ 	int num_ins;
+@@ -2339,6 +2339,8 @@ static int build_audio_procunit(struct m
+ 	static struct procunit_info default_info = {
+ 		0, NULL, default_value_info
+ 	};
++	const char *name = extension_unit ?
++		"Extension Unit" : "Processing Unit";
+ 
+ 	if (desc->bLength < 13) {
+ 		usb_audio_err(state->chip, "invalid %s descriptor (id %d)\n", name, unitid);
+@@ -2452,7 +2454,10 @@ static int build_audio_procunit(struct m
+ 		} else if (info->name) {
+ 			strlcpy(kctl->id.name, info->name, sizeof(kctl->id.name));
+ 		} else {
+-			nameid = uac_processing_unit_iProcessing(desc, state->mixer->protocol);
++			if (extension_unit)
++				nameid = uac_extension_unit_iExtension(desc, state->mixer->protocol);
++			else
++				nameid = uac_processing_unit_iProcessing(desc, state->mixer->protocol);
+ 			len = 0;
+ 			if (nameid)
+ 				len = snd_usb_copy_string_desc(state->chip,
+@@ -2485,10 +2490,10 @@ static int parse_audio_processing_unit(s
+ 	case UAC_VERSION_2:
+ 	default:
+ 		return build_audio_procunit(state, unitid, raw_desc,
+-				procunits, "Processing Unit");
++					    procunits, false);
+ 	case UAC_VERSION_3:
+ 		return build_audio_procunit(state, unitid, raw_desc,
+-				uac3_procunits, "Processing Unit");
++					    uac3_procunits, false);
+ 	}
+ }
+ 
+@@ -2499,8 +2504,7 @@ static int parse_audio_extension_unit(st
+ 	 * Note that we parse extension units with processing unit descriptors.
+ 	 * That's ok as the layout is the same.
+ 	 */
+-	return build_audio_procunit(state, unitid, raw_desc,
+-				    extunits, "Extension Unit");
++	return build_audio_procunit(state, unitid, raw_desc, extunits, true);
+ }
+ 
+ /*
 
 
