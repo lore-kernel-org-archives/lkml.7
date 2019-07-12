@@ -2,257 +2,161 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8FDC742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F42C742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44EC20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194E220863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 02:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pO5GOjk0"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="GgC1fvic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfGLC5Z (ORCPT
+        id S1729260AbfGLC61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 22:57:25 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34826 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728485AbfGLC5Y (ORCPT
+        Thu, 11 Jul 2019 22:58:27 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:10495 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728485AbfGLC61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 22:57:24 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r21so5404386qke.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 19:57:23 -0700 (PDT)
+        Thu, 11 Jul 2019 22:58:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gH7Y7cFOueYPN5yFqZDzD04ZIFx+RhIlsetMf9Nx5+o=;
-        b=pO5GOjk07zU2XxvSfObP3pjHpabhX7+5aoX/iVrGHtS7u/yxLSXAKaycQvoBWCobfN
-         8dZnD88hDnkaeT6BHjXNFiCOEW+CssQaEhSIBdJ5MMpuJitDMzEs6XbDv9G3ilIr/Lnv
-         YU3CDKOKjVEqyC7uiDSk0CU0cxsocQfrwUaD2mDVNXxSOx4bcCei+dkjjhlzWMRwwNnz
-         197548TBGl7ogwYMaZ8NgjJt/3/o+KtUO2QKTDNQCpXN6fq/l832QKUHbqo9d4STlO1g
-         7x9bmgRPgKPVj9rXIjf2ez7ifaNiuzvmwjlcQDdczDIdfVDTrOBmY/awUbNk0SGyYOnK
-         1J2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gH7Y7cFOueYPN5yFqZDzD04ZIFx+RhIlsetMf9Nx5+o=;
-        b=PqzQicRhLbyVJOY/L3aNozyJ08ziIDMgiHnyV9+3gofm4E5XUsXV6PXG4OR8GT7YiP
-         NwhKY/T9DNDQAPt824yFOrPcDDbvNL7l2rQPpubBZ+xQ6nvO8jNN6+PirzrYVXKp1rs5
-         WaVWvc2PDAC3Ve/JUoWIIAUlwU8hJ7q0NnkI8vGExQdtZDKTkacgewyBDtla9MB+rQDH
-         FoTjD5u85KZPpf1uEbMQIUaCT349uF0GndII+zkEbhyvFWjc4PxHwKlpRoVnLLpzL0Gf
-         GbxGv2ZSQzgo/VtZP9d9Y2XHES/z+tTmKzES7yvGtnX5MFoXXEvBqkpu46BnqFCt4LzH
-         Exfw==
-X-Gm-Message-State: APjAAAU+7C0GN66wM3MRh/0a/hMG4mycAcqo8Man5AplMzBnDpzLaTzi
-        T+zRMHV+ySa3vGAZRRkshh9ri9tzMgw=
-X-Google-Smtp-Source: APXvYqz/+y5OFrmlmUM9SCtY/18cDgPqvt7HcNp2++p29xMbLv4ZXLhsT3E4yCfyoTv+mQ4C+W9pjg==
-X-Received: by 2002:a37:62ca:: with SMTP id w193mr4054040qkb.363.1562900243132;
-        Thu, 11 Jul 2019 19:57:23 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.22])
-        by smtp.gmail.com with ESMTPSA id c192sm3088511qkg.33.2019.07.11.19.57.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 19:57:22 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 23:57:18 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Simon Ser <contact@emersion.fr>,
-        Oleg Vasilev <oleg.vasilev@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] drm/vkms: Add support for vkms work without vblank
-Message-ID: <20190712025718.wdlafaujpxhpupj7@smtp.gmail.com>
-References: <20190710015514.42anrmx3r2ijaomz@smtp.gmail.com>
- <20190710164036.GZ15868@phenom.ffwll.local>
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1562900304; x=1594436304;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=iCD4e8hPuxHCnv157GFsiS4zayQ1yJlQokpYLe+tSbM=;
+  b=GgC1fvicxqfn7Oxjs4j2ZlcrUItM01zn1aOrTLFDYnR7OxNrwauVPeaK
+   YKjfb515LDIQ3Upv+laT0gJZ6kypEcTDftAvTRY+xio79NESWrqgPwa5+
+   yVG1xYqThe1Q66h0oDN4eaj9x/6xnApDs6Y/jMO/HS8TY+eFbvoeQGqiP
+   U=;
+X-IronPort-AV: E=Sophos;i="5.62,480,1554768000"; 
+   d="scan'208";a="774254445"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 Jul 2019 02:58:22 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id BB1CBA2837;
+        Fri, 12 Jul 2019 02:58:20 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 12 Jul 2019 02:58:20 +0000
+Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 12 Jul 2019 02:58:19 +0000
+Received: from EX13D01EUB003.ant.amazon.com ([10.43.166.248]) by
+ EX13D01EUB003.ant.amazon.com ([10.43.166.248]) with mapi id 15.00.1367.000;
+ Fri, 12 Jul 2019 02:58:19 +0000
+From:   "Raslan, KarimAllah" <karahmed@amazon.de>
+To:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>
+CC:     "yaojun8558363@gmail.com" <yaojun8558363@gmail.com>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "info@metux.net" <info@metux.net>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "yuzhao@google.com" <yuzhao@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "anders.roxell@linaro.org" <anders.roxell@linaro.org>,
+        "will@kernel.org" <will@kernel.org>
+Subject: Re: [PATCH] arm: Extend the check for RAM in /dev/mem
+Thread-Topic: [PATCH] arm: Extend the check for RAM in /dev/mem
+Thread-Index: AQHVODcIGfDHKrKqiE2jyO8cjDhCoqbGRNqAgAAGCAA=
+Date:   Fri, 12 Jul 2019 02:58:18 +0000
+Message-ID: <1562900298.1345.12.camel@amazon.de>
+References: <1562883681-18659-1-git-send-email-karahmed@amazon.de>
+         <14f02e29-77b2-29d9-a9f4-7f89ad0194f6@arm.com>
+In-Reply-To: <14f02e29-77b2-29d9-a9f4-7f89ad0194f6@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.165.98]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CC9E4E50AFB62A48A1902AC30C85C401@amazon.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mwulvtdqb5ysendt"
-Content-Disposition: inline
-In-Reply-To: <20190710164036.GZ15868@phenom.ffwll.local>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gRnJpLCAyMDE5LTA3LTEyIGF0IDA4OjA2ICswNTMwLCBBbnNodW1hbiBLaGFuZHVhbCB3cm90
+ZToNCj4gDQo+IE9uIDA3LzEyLzIwMTkgMDM6NTEgQU0sIEthcmltQWxsYWggQWhtZWQgd3JvdGU6
+DQo+ID4gDQo+ID4gU29tZSB2YWxpZCBSQU0gY2FuIGxpdmUgb3V0c2lkZSBrZXJuZWwgY29udHJv
+bCAoZS5nLiB1c2luZyBtZW09IGtlcm5lbA0KPiA+IGNvbW1hbmQtbGluZSkuIEZvciB0aGVzZSBy
+ZWdpb25zLCBwZm5fdmFsaWQgd291bGQgcmV0dXJuICJmYWxzZSIgY2F1c2luZw0KPiA+IHN5c3Rl
+bSBSQU0gdG8gYmUgbWFwcGVkIGFzIHVuY2FjaGVkLiBVc2UgbWVtYmxvY2sgaW5zdGVhZCB0byBp
+ZGVudGlmeSBSQU0uDQo+IA0KPiBPbmNlIHRoZSByZW1haW5pbmcgbWVtb3J5IGlzIG91dHNpZGUg
+b2YgdGhlIGtlcm5lbCAoYXMgdGhlIGFkbWluIHdvdWxkIGhhdmUNCj4gaW50ZW5kZWQgd2l0aCBt
+ZW09IGNvbW1hbmQgbGluZSkgd2hhdCBpcyB0aGUgcGFydGljdWxhciBjb25jZXJuIHJlZ2FyZGlu
+Zw0KPiB0aGUgd2F5IHRob3NlIGdldCBtYXBwZWQgKGNhY2hlZCBvciBub3QpID8gSXQgaXMgbm90
+IHRvIGJlIHVzZWQgYW55IHdheS4NCg0KVGhleSBjYW4gYmUgdXNlZCBieSB1c2VyLXNwYWNlIHdo
+aWNoIG1pZ2h0IGxlYWQgdG8gdGhlbSBiZWluZyB1c2VkIGJ5IHRoZcKgDQprZXJuZWwuIE9uZSB1
+c2UtY2FzZSB3b3VsZCBiZSB1c2luZyB0aGVtIGFzIGd1ZXN0IG1lbW9yeSBmb3IgS1ZNIGFzIEkg
+ZGV0YWlsZWTCoA0KaGVyZToNCg0KaHR0cHM6Ly9sd24ubmV0L0FydGljbGVzLzc3ODI0MC8NCg0K
+PiANCj4gPiANCj4gPiANCj4gPiBDYzogUnVzc2VsbCBLaW5nIDxsaW51eEBhcm1saW51eC5vcmcu
+dWs+DQo+ID4gQ2M6IENhdGFsaW4gTWFyaW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFybS5jb20+DQo+
+ID4gQ2M6IFdpbGwgRGVhY29uIDx3aWxsQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IE1pa2UgUmFwb3Bv
+cnQgPHJwcHRAbGludXguaWJtLmNvbT4NCj4gPiBDYzogQW5kcmV3IE1vcnRvbiA8YWtwbUBsaW51
+eC1mb3VuZGF0aW9uLm9yZz4NCj4gPiBDYzogQW5kZXJzIFJveGVsbCA8YW5kZXJzLnJveGVsbEBs
+aW5hcm8ub3JnPg0KPiA+IENjOiBFbnJpY28gV2VpZ2VsdCA8aW5mb0BtZXR1eC5uZXQ+DQo+ID4g
+Q2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiA+IENjOiBLYXJpbUFs
+bGFoIEFobWVkIDxrYXJhaG1lZEBhbWF6b24uZGU+DQo+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8bWFy
+ay5ydXRsYW5kQGFybS5jb20+DQo+ID4gQ2M6IEphbWVzIE1vcnNlIDxqYW1lcy5tb3JzZUBhcm0u
+Y29tPg0KPiA+IENjOiBBbnNodW1hbiBLaGFuZHVhbCA8YW5zaHVtYW4ua2hhbmR1YWxAYXJtLmNv
+bT4NCj4gPiBDYzogSnVuIFlhbyA8eWFvanVuODU1ODM2M0BnbWFpbC5jb20+DQo+ID4gQ2M6IFl1
+IFpoYW8gPHl1emhhb0Bnb29nbGUuY29tPg0KPiA+IENjOiBSb2JpbiBNdXJwaHkgPHJvYmluLm11
+cnBoeUBhcm0uY29tPg0KPiA+IENjOiBBcmQgQmllc2hldXZlbCA8YXJkLmJpZXNoZXV2ZWxAbGlu
+YXJvLm9yZz4NCj4gPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
+ID4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBTaWduZWQtb2ZmLWJ5OiBL
+YXJpbUFsbGFoIEFobWVkIDxrYXJhaG1lZEBhbWF6b24uZGU+DQo+ID4gLS0tDQo+ID4gIGFyY2gv
+YXJtL21tL21tdS5jICAgfCAyICstDQo+ID4gIGFyY2gvYXJtNjQvbW0vbW11LmMgfCAyICstDQo+
+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+
+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tbS9tbXUuYyBiL2FyY2gvYXJtL21tL21tdS5j
+DQo+ID4gaW5kZXggMWFhMjU4Ni4uNDkyNzc0YiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9t
+bS9tbXUuYw0KPiA+ICsrKyBiL2FyY2gvYXJtL21tL21tdS5jDQo+ID4gQEAgLTcwNSw3ICs3MDUs
+NyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgYnVpbGRfbWVtX3R5cGVfdGFibGUodm9pZCkNCj4gPiAg
+cGdwcm90X3QgcGh5c19tZW1fYWNjZXNzX3Byb3Qoc3RydWN0IGZpbGUgKmZpbGUsIHVuc2lnbmVk
+IGxvbmcgcGZuLA0KPiA+ICAJCQkgICAgICB1bnNpZ25lZCBsb25nIHNpemUsIHBncHJvdF90IHZt
+YV9wcm90KQ0KPiA+ICB7DQo+ID4gLQlpZiAoIXBmbl92YWxpZChwZm4pKQ0KPiA+ICsJaWYgKCFt
+ZW1ibG9ja19pc19tZW1vcnkoX19wZm5fdG9fcGh5cyhwZm4pKSkNCj4gPiAgCQlyZXR1cm4gcGdw
+cm90X25vbmNhY2hlZCh2bWFfcHJvdCk7DQo+ID4gIAllbHNlIGlmIChmaWxlLT5mX2ZsYWdzICYg
+T19TWU5DKQ0KPiA+ICAJCXJldHVybiBwZ3Byb3Rfd3JpdGVjb21iaW5lKHZtYV9wcm90KTsNCj4g
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9tbS9tbXUuYyBiL2FyY2gvYXJtNjQvbW0vbW11LmMN
+Cj4gPiBpbmRleCAzNjQ1ZjI5Li5jZGMzZThlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQv
+bW0vbW11LmMNCj4gPiArKysgYi9hcmNoL2FybTY0L21tL21tdS5jDQo+ID4gQEAgLTc4LDcgKzc4
+LDcgQEAgdm9pZCBzZXRfc3dhcHBlcl9wZ2QocGdkX3QgKnBnZHAsIHBnZF90IHBnZCkNCj4gPiAg
+cGdwcm90X3QgcGh5c19tZW1fYWNjZXNzX3Byb3Qoc3RydWN0IGZpbGUgKmZpbGUsIHVuc2lnbmVk
+IGxvbmcgcGZuLA0KPiA+ICAJCQkgICAgICB1bnNpZ25lZCBsb25nIHNpemUsIHBncHJvdF90IHZt
+YV9wcm90KQ0KPiA+ICB7DQo+ID4gLQlpZiAoIXBmbl92YWxpZChwZm4pKQ0KPiA+ICsJaWYgKCFt
+ZW1ibG9ja19pc19tZW1vcnkoX19wZm5fdG9fcGh5cyhwZm4pKSkNCj4gDQo+IHBmbl92YWxpZCgp
+IG9uIGFybTY0IGNoZWNrcyBpZiB0aGUgbWVtYmxvY2sgcmVnaW9uIGlzIG1hcHBlZCBpLmUgZG9l
+cyBpdCBoYXZlDQo+IGEgbGluZWFyIG1hcHBpbmcgb3Igbm90LiBJZiBhIHNlZ21lbnQgb2YgUkFN
+IGlzIG91dHNpZGUgbGluZWFyIG1hcHBpbmcgZHVlIHRvDQo+IG1lbT0gZGlyZWN0aXZlIGFuZCBs
+YWNrcyBhIGxpbmVhciBtYXBwaW5nIHRoZW4gd2h5IHNob3VsZCBpdCBiZSBtYXBwZWQgc2ltaWxh
+cmx5DQo+IGxpa2Ugc3lzdGVtIFJBTSBvbiB0aGlzIHBhdGggPw0KDQpJIGFjdHVhbGx5IHN0cnVn
+Z2xlZCBhIGJpdCBoZXJlIGJlY2F1c2UgdGhlcmUgaXMgcmVhbGx5IG5vICpleHBsaWNpdCrCoA0K
+ZG9jdW1lbnRhdGlvbiBvZiB3aGF0IGlzIHRoZSBleHBlY3RlZCBiZWhhdmlvciBoZXJlLCBzbyBm
+b3IgbWUgaXQgd2FzIG9wZW4gdG/CoA0KaW50ZXJwcmV0YXRpb24uDQoNCkl0IHNlZW1zIGxpa2Ug
+Zm9yIHlvdSB0aGUgZGVjaWRpbmcgZmFjdG9yIGJldHdlZW4gY2FjaGVkIGFuZCB1bmNhY2hlZCBp
+cyB0aGXCoA0KZXhpc3RlbmNlIG9mIGxpbmVhciBtYXBwaW5nLiBIb3dldmVyLCBmb3IgbWUgdGhl
+IGRlY2lkaW5nIGZhY3RvciBpcyB3aGV0aGVyIGl0DQppcyBSQU0gb3Igbm90LiBJIGNob29zZSB0
+aGlzIGludGVycHJldGF0aW9uIGJlY2F1c2UgaXQgaGVscHMgaW4gdGhlIEtWTQ0Kc2NlbmFyaW8g
+dGhhdCBJIG1lbnRpb25lZCBhYm92ZSA6KQ0KDQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVy
+IEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhy
+dW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBSYWxmIEhlcmJyaWNoCkVpbmdldHJhZ2VuIGFtIEFt
+dHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4K
+VXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
 
---mwulvtdqb5ysendt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 07/10, Daniel Vetter wrote:
-> On Tue, Jul 09, 2019 at 10:55:14PM -0300, Rodrigo Siqueira wrote:
-> > Currently, vkms only work with enabled VBlank. This patch adds another
-> > operation model that allows vkms to work without VBlank support. In this
-> > scenario, vblank signaling is faked by calling drm_send_vblank_event()
-> > in vkms_crtc_atomic_flush(); this approach works due to the
-> > drm_vblank_get() =3D=3D 0 checking.
-> >=20
-> > Changes since V2:
-> >  - Rebase
-> >=20
-> > Changes since V1:
-> >   Daniel Vetter:
-> >   - Change module parameter name from disablevblank to virtual_hw
-> >   - Improve parameter description
-> >   - Improve commit message
-> >=20
-> > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > ---
-> >  drivers/gpu/drm/vkms/vkms_crtc.c | 10 ++++++++++
-> >  drivers/gpu/drm/vkms/vkms_drv.c  | 13 +++++++++++--
-> >  drivers/gpu/drm/vkms/vkms_drv.h  |  2 ++
-> >  3 files changed, 23 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vk=
-ms_crtc.c
-> > index 49a8ec2cb1c1..a0c75b8c4335 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> > @@ -207,12 +207,22 @@ static int vkms_crtc_atomic_check(struct drm_crtc=
- *crtc,
-> >  static void vkms_crtc_atomic_enable(struct drm_crtc *crtc,
-> >  				    struct drm_crtc_state *old_state)
-> >  {
-> > +	struct vkms_output *vkms_out =3D drm_crtc_to_vkms_output(crtc);
-> > +
-> > +	if (vkms_out->disable_vblank)
-> > +		return;
-> > +
-> >  	drm_crtc_vblank_on(crtc);
-> >  }
-> > =20
-> >  static void vkms_crtc_atomic_disable(struct drm_crtc *crtc,
-> >  				     struct drm_crtc_state *old_state)
-> >  {
-> > +	struct vkms_output *vkms_out =3D drm_crtc_to_vkms_output(crtc);
-> > +
-> > +	if (vkms_out->disable_vblank)
-> > +		return;
-> > +
-> >  	drm_crtc_vblank_off(crtc);
-> >  }
-> > =20
-> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkm=
-s_drv.c
-> > index 152d7de24a76..542a002ef9d5 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> > @@ -34,6 +34,11 @@ bool enable_writeback;
-> >  module_param_named(enable_writeback, enable_writeback, bool, 0444);
-> >  MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector=
-");
-> > =20
-> > +bool virtual_hw;
->=20
-> Can be static, you only use this in vkms_drv.c.
->=20
-> > +module_param_named(virtual_hw, virtual_hw, bool, 0444);
-> > +MODULE_PARM_DESC(virtual_hw,
-> > +		 "Enable virtual hardware mode (disables vblanks and immediately com=
-pletes flips)");
-> > +
-> >  static const struct file_operations vkms_driver_fops =3D {
-> >  	.owner		=3D THIS_MODULE,
-> >  	.open		=3D drm_open,
-> > @@ -154,9 +159,13 @@ static int __init vkms_init(void)
-> >  	if (ret)
-> >  		goto out_unregister;
-> > =20
-> > -	vkms_device->drm.irq_enabled =3D true;
-> > +	vkms_device->output.disable_vblank =3D virtual_hw;
-> > +	vkms_device->drm.irq_enabled =3D !virtual_hw;
-> > +
-> > +	if (virtual_hw)
-> > +		DRM_INFO("Virtual hardware mode enabled");
-> > =20
-> > -	ret =3D drm_vblank_init(&vkms_device->drm, 1);
-> > +	ret =3D (virtual_hw) ? 0 : drm_vblank_init(&vkms_device->drm, 1);
-> >  	if (ret) {
-> >  		DRM_ERROR("Failed to vblank\n");
-> >  		goto out_fini;
-> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkm=
-s_drv.h
-> > index 9ff2cd4ebf81..256e5e65c947 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> > +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> > @@ -21,6 +21,7 @@
-> > =20
-> >  extern bool enable_cursor;
-> >  extern bool enable_writeback;
-> > +extern bool virtual_hw;
-> > =20
-> >  struct vkms_composer {
-> >  	struct drm_framebuffer fb;
-> > @@ -69,6 +70,7 @@ struct vkms_output {
-> >  	struct drm_connector connector;
-> >  	struct drm_writeback_connector wb_connector;
-> >  	struct hrtimer vblank_hrtimer;
-> > +	bool disable_vblank;
-> >  	ktime_t period_ns;
-> >  	struct drm_pending_vblank_event *event;
-> >  	/* ordered wq for composer_work */
->=20
-> I'm kinda wondering how this works at all ... does writeback/crc still
-> work if you set virtual mode? Writeback since this seems based on the
-> writeback series ...
-
-Hi,
-
-I tested this patch with kms_flip with the "drm/drm_vblank: Change
-EINVAL by the correct errno" patch [1]. However, you=E2=80=99re right about=
- the
-writeback/crc tests, they does not pass because this patch disables
-vblank which in turn does not invoke "vkms_vblank_simulate()".
-
-In this sense, I=E2=80=99m a little bit confused about how should I handle =
-this
-issue. If I correctly understood, without vblank support we have to
-trigger vkms_composer_worker() when the userspace invoke
-drmModePageFlip(), am I right?  If so, an approach could add page_flip()
-callback to vkms and invoke vkms_composer_worker(); however, the
-documentation says that page_flip is a legacy entry point. Do you have a
-suggestion?
-
-1. https://patchwork.freedesktop.org/patch/314399/?series=3D50697&rev=3D7
-
-Thanks
-=20
-> btw if you send out patches that need other patches, point at that other
-> series in the cover letter or patch. Gets confusing fast otherwise.
-> -Daniel
-> --=20
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
---=20
-Rodrigo Siqueira
-https://siqueira.tech
-
---mwulvtdqb5ysendt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0n9w0ACgkQWJzP/com
-vP+zFw/+KnhGkI5jsmMuS9n46upkghxAEc26ucICUIZAApqkTP8E4HEKNAW/CbGq
-FOyKX0KDlT6gMUmDy5fCbre4kwgVB2XHJWZQB3ODQ2LBtvDXXJC0Gl7aqgswtPf6
-Ec4KQ4ki7Dy0ZpCu+YFn+thqJ+jmiYf2otv6tTmibpr/BkWPHoNQaIwerG+b6VT8
-FL0X5Nu0+Ph1skcRbYL8K7kJID2umWD5f0msM01f/s8uculPbfI0iYZJMFOtuYlI
-HBs3MBPC3xWkAcLg5ycFBobjGw2tcJMACh7QJU2RKdwX2bkaTIAbv425lSLr0B9b
-QTOTAMlMG8+WVtn6n86UcUiYTMASZNHs8OzORKNs8KKG7ev6i/wJXHFkh/nRVtTf
-REHpMczG2oCjBbMbk8bhyR9SvhQdGhJLzwmwfa0C1K/diukgZ4cpzgR1hKBGK1JH
-/rpBwP/wQtfkA/kdP5E2jFi6Tc7cIBw7Bebbortb54Xcyj1tp8bQZCHUU99sEQRi
-Qz3apmrfNPcjDheVRqnM/cVaGb0TGCMENLOQOauQgU1TQDAHdnt2WZyny6WGCq6s
-9jQpV8Z8pnzXbFtrRuuhvIAmym3Q0z+wrbanJ4Qn/MKTev1Wqh7Xvk35wsqlr5xt
-xJP4cOQfGzRFWniIzhAwAIMrn1lX5UBzsMD3wwSp6JMIqg4ucQE=
-=xm8F
------END PGP SIGNATURE-----
-
---mwulvtdqb5ysendt--
