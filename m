@@ -2,138 +2,96 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD34C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADAAC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C002080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935192;
-	bh=KeNf6QfzbHhC0UdjC81omhs6P0360g1qsMqo+/TFbD8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hALgaqNWTMxyNo/cUmHr22A425XzXOPTG1bPRGJ5btLXAa9uS+EIOGWCgpYnSbTce
-	 Xn88V4PzWYiPYR+azRc9YzNq4dV2sFLVrBgpjo73MlGobMMQPG+hjD+DD9ytgFLR52
-	 9VqSWhVqkA4VSjd/Ck+nj87Y7BC3VxrJHVhGkyiU=
+	by mail.kernel.org (Postfix) with ESMTP id 7CE4D2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfGLMjv (ORCPT
+        id S1729164AbfGLMkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727546AbfGLM0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:26:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E8A62084B;
-        Fri, 12 Jul 2019 12:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934385;
-        bh=KeNf6QfzbHhC0UdjC81omhs6P0360g1qsMqo+/TFbD8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wt6CqTcnHkNmV6FfG+kkMs7NpGcC0622dV/AN47HIP244oqhHUbhdVt+HL+ysDnJ3
-         LD0AJ4iZ6QEUZ6qqPQDuO2HLcors4sI0akSXuLuvdd2nthpKlAkUF2R7vAnN1//3Oj
-         fHkvTyO0QVodDP90vToPMmEuN17ZXR8ZSuywV81o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 039/138] net: phy: rename Asix Electronics PHY driver
-Date:   Fri, 12 Jul 2019 14:18:23 +0200
-Message-Id: <20190712121630.179102388@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
-References: <20190712121628.731888964@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 12 Jul 2019 08:40:01 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:37880 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729066AbfGLMj6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:39:58 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlupg-0006xX-Tg; Fri, 12 Jul 2019 12:39:25 +0000
+Date:   Fri, 12 Jul 2019 13:39:24 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190712123924.GK17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712105745.nruaftgeat6irhzr@yavin>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9520543b123bbd7275a0ab8d0375a5412683b41 ]
+On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
 
-[Resent to net instead of net-next - may clash with Anders Roxell's patch
-series addressing duplicate module names]
+> > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+> > >  			s = ERR_PTR(error);
+> > >  		return s;
+> > >  	}
+> > > -	error = dirfd_path_init(nd);
+> > > -	if (unlikely(error))
+> > > -		return ERR_PTR(error);
+> > > +	if (likely(!nd->path.mnt)) {
+> > 
+> > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
+> 
+> Yes. I did it to be more consistent with the other "have we got the
+> root" checks elsewhere. Is there another way you'd prefer I do it?
 
-Commit 31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
-introduced a new PHY driver drivers/net/phy/asix.c that causes a module
-name conflict with a pre-existiting driver (drivers/net/usb/asix.c).
+"Have we got the root" checks are inevitable evil; here you are making the
+control flow in a single function hard to follow.
 
-The PHY driver is used by the X-Surf 100 ethernet card driver, and loaded
-by that driver via its PHY ID. A rename of the driver looks unproblematic.
-
-Rename PHY driver to ax88796b.c in order to resolve name conflict.
-
-Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Fixes: 31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/8390/Kconfig      | 2 +-
- drivers/net/phy/Kconfig                | 2 +-
- drivers/net/phy/Makefile               | 2 +-
- drivers/net/phy/{asix.c => ax88796b.c} | 0
- 4 files changed, 3 insertions(+), 3 deletions(-)
- rename drivers/net/phy/{asix.c => ax88796b.c} (100%)
-
-diff --git a/drivers/net/ethernet/8390/Kconfig b/drivers/net/ethernet/8390/Kconfig
-index f2f0264c58ba..443b34e2725f 100644
---- a/drivers/net/ethernet/8390/Kconfig
-+++ b/drivers/net/ethernet/8390/Kconfig
-@@ -49,7 +49,7 @@ config XSURF100
- 	tristate "Amiga XSurf 100 AX88796/NE2000 clone support"
- 	depends on ZORRO
- 	select AX88796
--	select ASIX_PHY
-+	select AX88796B_PHY
- 	help
- 	  This driver is for the Individual Computers X-Surf 100 Ethernet
- 	  card (based on the Asix AX88796 chip). If you have such a card,
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 520657945b82..b0c13f8c2b62 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -242,7 +242,7 @@ config AQUANTIA_PHY
- 	---help---
- 	  Currently supports the Aquantia AQ1202, AQ2104, AQR105, AQR405
- 
--config ASIX_PHY
-+config AX88796B_PHY
- 	tristate "Asix PHYs"
- 	help
- 	  Currently supports the Asix Electronics PHY found in the X-Surf 100
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index ece5dae67174..6d44ab91fbf6 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -51,7 +51,7 @@ ifdef CONFIG_HWMON
- aquantia-objs			+= aquantia_hwmon.o
- endif
- obj-$(CONFIG_AQUANTIA_PHY)	+= aquantia.o
--obj-$(CONFIG_ASIX_PHY)		+= asix.o
-+obj-$(CONFIG_AX88796B_PHY)	+= ax88796b.o
- obj-$(CONFIG_AT803X_PHY)	+= at803x.o
- obj-$(CONFIG_BCM63XX_PHY)	+= bcm63xx.o
- obj-$(CONFIG_BCM7XXX_PHY)	+= bcm7xxx.o
-diff --git a/drivers/net/phy/asix.c b/drivers/net/phy/ax88796b.c
-similarity index 100%
-rename from drivers/net/phy/asix.c
-rename to drivers/net/phy/ax88796b.c
--- 
-2.20.1
-
-
-
+I *think* what you are doing is
+	absolute pathname, no LOOKUP_BENEATH:
+		set_root
+		error = nd_jump_root(nd)
+	else
+		error = dirfd_path_init(nd)
+	return unlikely(error) ? ERR_PTR(error) : s;
+which should be a lot easier to follow (not to mention shorter), but I might
+be missing something in all of that.
