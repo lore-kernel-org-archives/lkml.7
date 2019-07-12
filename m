@@ -2,109 +2,175 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1054EC742D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F5DC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B49217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA6F2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 23:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sZfogWVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfGLXnW (ORCPT
+        id S1728520AbfGLXwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 19:43:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4528 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727708AbfGLXnV (ORCPT
+        Fri, 12 Jul 2019 19:52:51 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:48597 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbfGLXwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 19:43:21 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CNfvm1034924;
-        Fri, 12 Jul 2019 19:42:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq31ahvng-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 19:42:49 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6CNgnmu036004;
-        Fri, 12 Jul 2019 19:42:49 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq31ahvn3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 19:42:49 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6CNdMRr019151;
-        Fri, 12 Jul 2019 23:42:48 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 2tjk97y53g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jul 2019 23:42:48 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CNglgS51118432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 23:42:47 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85C7AAC05B;
-        Fri, 12 Jul 2019 23:42:47 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6DD3AC059;
-        Fri, 12 Jul 2019 23:42:40 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.135.203])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 12 Jul 2019 23:42:40 +0000 (GMT)
-References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-3-bauerman@linux.ibm.com> <20190712071328.GA22889@lst.de>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        "Lendacky\, Thomas" <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 2/3] DMA mapping: Move SME handling to x86-specific files
-In-reply-to: <20190712071328.GA22889@lst.de>
-Date:   Fri, 12 Jul 2019 20:42:31 -0300
-Message-ID: <87r26ug6qg.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120244
+        Fri, 12 Jul 2019 19:52:50 -0400
+Received: by mail-pg1-f202.google.com with SMTP id k20so6610101pgg.15
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 16:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kubhLUQUEQ+MMlDaxxhREyfqUccCsBdmf65YIfZuyiU=;
+        b=sZfogWVpl0WupSgXxobwPVgtqFYb8RoRRma3OwBoaxhRXn57Dp+oMlhhpkTesNxiqu
+         rh5btlSMmGgrlpXdS8vINrZ+PoA++Y8u9UQu9GHf/Vh+5LBb6Se5KSzMPFB3hFAdZhVh
+         zDN/3cU7eFXUd/Wlnl4VSbBF4Dbr++txX+9q56pXTPHHMo1PlG0bxbxWLsxZmt1eMPgK
+         C15UAqLlhU22gPHx+YSnnhR8rbEmoEEgu34+Wf30ejxvtU2G6wUw/62xOqQUW2m17qz4
+         RffQtmoHceXFzW2yPwRn8SPk1UiP3uiUlWYiZ5fuTuV+oDY1vS/YHiRRFJYh73zAzxx8
+         lgvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kubhLUQUEQ+MMlDaxxhREyfqUccCsBdmf65YIfZuyiU=;
+        b=ivBVEIu/A7nBN5j1yfsMNosm+rodNZ6/EgrrVJc0mYRg3a158nxNS3vfR69++YrY2A
+         ecoGQsxGfctVN6jVrGBS84z+Ye5gr1nHHjqPmUqDFI0ymssEG1rZosZMU6xHLgPDDF2Z
+         AckIuRU/KxVUCh8MXSm5dQTdiP11rROOqso09ft6Lv2tbeNb+ujOH73WrVtqgqjYCOMb
+         3wNp2fOnlnYvrcpKWQBeiMz1myoq9yChtYe29Bir9aWIcbJ3N2sbvx0YgekvZ88au9ff
+         ABeTOXqIuEvkU91nbYBxlvERp8N01PS+t3TvkxiYx/GTeib2Q/LuRQw9EUWm450sg7KC
+         5aLQ==
+X-Gm-Message-State: APjAAAVaTiXdyZGMSviQKwNmnJG5J/nasHvcMXiPXNn++pJBjVR+a6A1
+        9KunCSs0RtufO/1QfYY5RkgV5t8g/8+ZskY=
+X-Google-Smtp-Source: APXvYqyLvGuZNnM67TcwOHOvl29k6lf0GENmWIwfnemtAT0jfPDGWFKhSQwbTQ0RHkdaGTQE2XWNaazjxmOyKkg=
+X-Received: by 2002:a63:e213:: with SMTP id q19mr13928383pgh.180.1562975569235;
+ Fri, 12 Jul 2019 16:52:49 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 16:52:33 -0700
+Message-Id: <20190712235245.202558-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH v5 00/11] Solve postboot supplier cleanup and optimize probe ordering
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add device-links to track functional dependencies between devices
+after they are created (but before they are probed) by looking at
+their common DT bindings like clocks, interconnects, etc.
 
-[ Cc'ing Tom Lendacky which I forgot to do earlier. Sorry about that. ]
+Having functional dependencies automatically added before the devices
+are probed, provides the following benefits:
 
-Hello Christoph,
+- Optimizes device probe order and avoids the useless work of
+  attempting probes of devices that will not probe successfully
+  (because their suppliers aren't present or haven't probed yet).
 
-Christoph Hellwig <hch@lst.de> writes:
+  For example, in a commonly available mobile SoC, registering just
+  one consumer device's driver at an initcall level earlier than the
+  supplier device's driver causes 11 failed probe attempts before the
+  consumer device probes successfully. This was with a kernel with all
+  the drivers statically compiled in. This problem gets a lot worse if
+  all the drivers are loaded as modules without direct symbol
+  dependencies.
 
-> Honestly I think this code should go away without any replacement.
-> There is no reason why we should have a special debug printk just
-> for one specific reason why there is a requirement for a large DMA
-> mask.
+- Supplier devices like clock providers, interconnect providers, etc
+  need to keep the resources they provide active and at a particular
+  state(s) during boot up even if their current set of consumers don't
+  request the resource to be active. This is because the rest of the
+  consumers might not have probed yet and turning off the resource
+  before all the consumers have probed could lead to a hang or
+  undesired user experience.
 
-Makes sense. I'll submit a v2 which just removes this code.
+  Some frameworks (Eg: regulator) handle this today by turning off
+  "unused" resources at late_initcall_sync and hoping all the devices
+  have probed by then. This is not a valid assumption for systems with
+  loadable modules. Other frameworks (Eg: clock) just don't handle
+  this due to the lack of a clear signal for when they can turn off
+  resources. This leads to downstream hacks to handle cases like this
+  that can easily be solved in the upstream kernel.
+
+  By linking devices before they are probed, we give suppliers a clear
+  count of the number of dependent consumers. Once all of the
+  consumers are active, the suppliers can turn off the unused
+  resources without making assumptions about the number of consumers.
+
+By default we just add device-links to track "driver presence" (probe
+succeeded) of the supplier device. If any other functionality provided
+by device-links are needed, it is left to the consumer/supplier
+devices to change the link when they probe.
+
+v1 -> v2:
+- Drop patch to speed up of_find_device_by_node()
+- Drop depends-on property and use existing bindings
+v2 -> v3:
+- Refactor the code to have driver core initiate the linking of devs
+- Have driver core link consumers to supplier before it's probed
+- Add support for drivers to edit the device links before probing
+v3 -> v4
+- Tested edit_links() on system with cyclic dependency. Works.
+- Added some checks to make sure device link isn't attempted from
+  parent device node to child device node.
+- Added way to pause/resume sync_state callbacks across
+  of_platform_populate().
+- Recursively parse DT node to create device links from parent to
+  suppliers of parent and all child nodes.
+v4 -> v5
+- Fixed copy-pasta bugs with linked list handling
+- Walk up the phandle reference till I find an actual device (needed
+  for regulators to work)
+- Added support for linking devices from regulator DT bindings
+- Tested the whole series again to make sure cyclic dependencies are
+  broken with edit_links() and regulator links are created properly.
+
+I could probably squash some of the patches, but leaving them like this
+because I think it's easier to understand this way.
+
+I've also not updated this patch series to handle the new patch [1] from
+Rafael. Will do that once this patch series is close to being Acked.
+
+[1] - https://lore.kernel.org/lkml/3121545.4lOhFoIcdQ@kreacher/
+
+-Saravana
+
+
+Saravana Kannan (11):
+  driver core: Add support for linking devices during device addition
+  of/platform: Add functional dependency link from DT bindings
+  driver core: Add sync_state driver/bus callback
+  driver core: Add edit_links() callback for drivers
+  driver core: Add APIs to pause/resume sync state callbacks
+  of/platform: Pause/resume sync state in of_platform_populate()
+  of/platform: Sanity check DT bindings before creating device links
+  of/platform: Make sure supplier DT node is device when creating device
+    links
+  of/platform: Create device links for all child-supplier depencencies
+  of/platform: Add functional dependency link from DT regulator bindings
+  of/platform: Don't create device links default busses
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ drivers/base/core.c                           | 168 ++++++++++++++++++
+ drivers/base/dd.c                             |  29 +++
+ drivers/of/platform.c                         | 132 ++++++++++++++
+ include/linux/device.h                        |  47 +++++
+ 5 files changed, 381 insertions(+)
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.22.0.510.g264f2c817a-goog
+
