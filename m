@@ -2,131 +2,142 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E12EC742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C521C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7766221019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F032080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QOEsPXPs"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KOp/FTLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfGLOnA (ORCPT
+        id S1727157AbfGLOt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:43:00 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:47072 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbfGLOm7 (ORCPT
+        Fri, 12 Jul 2019 10:49:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46752 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfGLOt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:42:59 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r4so6515707qkm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:42:59 -0700 (PDT)
+        Fri, 12 Jul 2019 10:49:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i8so4627638pgm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=c3BdLjsUkgLwHfdAsKdRe62P0E0PJoOA0Fuha9hcEks=;
-        b=QOEsPXPs/lkmtClQEqCWD2PByv8luGSKD7glXzSwu8n9xHK8eP7l9Nz7VxMP+dgpQZ
-         qVt7cABY3efBX0yb1aliiIl0/W41qPs/TM6/fVjlXBl/bkIuDI7AeoPm8UdZb6/KrnVN
-         CdjzVLYtvsLTECEdKD83FTAcxu25liR75c2DgFdBsd94ztwb+PijBlBUQ1Cmiyk6MuAA
-         y48Xn+z1WWX9I1qcC2KO8mLCNUnVkIcsQcmK4sxttJsKe+f+iWnTYr9O8RARpxIaBASI
-         TLnpK3kgRTPdcts3zst0PAXGUo4qZbVxZTyixyxRarYgg8OA1a/8Pk8JYXfpRzt7CIwg
-         xHHA==
+        bh=jBnw+bj5T3Oj46YKg63m75/M9E4pXCF4gtk0jQxRSXU=;
+        b=KOp/FTLlbPVrmtrESx26ciK+CMNvbkeSL4QP0Lj6JLKzSMGH7LcPtUDIBGFMz4xNBR
+         HjyGCYh4oX95P+F+GW4vHbwJmHhtIANe/76JHUmqTCLEJnEQqDVcsDR2QKmjjip7dp/y
+         Fs5wmHPUnwEv4E5Xcjpll4PYPsaq5Jw19jQ5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c3BdLjsUkgLwHfdAsKdRe62P0E0PJoOA0Fuha9hcEks=;
-        b=mqqDwXm9jf0LC65wqSFPg276sp9Eh8kAYNgrmYjxGSgpsFB0Ybz+gm63tBnb8tTvBD
-         GGHbm2sK72xlyJ7LBTbtWq3Vq7IsD8hCgZTiN/LGUVwdKO0oGqIuH3Cuzmc/ttNGEOXt
-         t2sNmy2R1WO7yLfDbIVR35rcWQJuqD56Ct6lVOXl8GWviakJ/GaCju2us9TVRCVlsNCe
-         Jgs7riAdk0TzvManIyCVEKXGS823XyUOwCBk0Jr4Op2v3lU/W6eNU0Lwy5//4elloovx
-         ZLe8EFKjdwUE5qXEnQGSnnsRp+ISJwTXVr15AqE4B/yp0gb15CnUPody2prX9hiMvkIK
-         bhAA==
-X-Gm-Message-State: APjAAAXQKYTCiRVLWC2r9vXtq0Y3mwV1lfAzJagwsLDJ00fW80tVKIAS
-        FRIf0zm4/t0HR9Kw5BoQHu4mUoMu8WY1oQ==
-X-Google-Smtp-Source: APXvYqy/Pcvk8vVNUL2Et1UN+2Fg3a/OfJoXceL8cmfop9PGLqawx6jAHDxYaoDBtMhcGI2fvtYt3Q==
-X-Received: by 2002:a37:c448:: with SMTP id h8mr6570665qkm.308.1562942578921;
-        Fri, 12 Jul 2019 07:42:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id j78sm3781711qke.102.2019.07.12.07.42.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jul 2019 07:42:58 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlwlF-0001tF-Iv; Fri, 12 Jul 2019 11:42:57 -0300
-Date:   Fri, 12 Jul 2019 11:42:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Doug Ledford <dledford@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
-Message-ID: <20190712144257.GE27512@ziepe.ca>
-References: <20190712135339.GC27512@ziepe.ca>
- <20190712120328.GB27512@ziepe.ca>
- <20190712085212.3901785-1-arnd@arndb.de>
- <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
- <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
- <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+        bh=jBnw+bj5T3Oj46YKg63m75/M9E4pXCF4gtk0jQxRSXU=;
+        b=IJLKfBRtXDBMJLJo76yUryZPNNyxaAiWjt8iZzwluYS0Q2beVeklMJxfjA9408erTY
+         3LJy2RfefscxCDxEATSrTwYJNeT/OzMm17c3up68XXY+9udGNeYq2obCuixbthZRV3Wr
+         ghZLabBq3IXRgyyS72YpdJI3wJjZa5qHTze/uTOtmoRfxCyWgveiwbKPnkDJnSMVCFAW
+         yL7SzQojHQu/otclA+efvCn3fSCsGNJK3uaYiRj7UvxhoR/fMzsd6CEJRnYZSdsF9LYz
+         c2wwYO0JaQFoXxNLEpzPEYcM1a4vnJ5l9Cmw6iZKVqs822DqbpSvk3hfIezitW4oGbsB
+         l/+Q==
+X-Gm-Message-State: APjAAAWeibrjp8EuHarcba3tmYKNV5vnVR4/i94GDcDH3k7RZwZ0pwLp
+        z7LwLy4kKMT8hh5TrVegM95cfylA
+X-Google-Smtp-Source: APXvYqy6jBLSnDZta2GtS/zN+m3PUtaVacX1IRd1BaAhWjyV06geRNBslZ66J2GoeWCO1s2L6yvsyA==
+X-Received: by 2002:a17:90a:1904:: with SMTP id 4mr12585583pjg.116.1562942966736;
+        Fri, 12 Jul 2019 07:49:26 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r1sm7928157pgv.70.2019.07.12.07.49.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 07:49:25 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 10:49:24 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190712144924.GA235410@google.com>
+References: <20190711234401.220336-1-joel@joelfernandes.org>
+ <20190711234401.220336-2-joel@joelfernandes.org>
+ <20190712110142.GS3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190712110142.GS3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:35:50PM +0000, Bernard Metzler wrote:
-
-> >This looks wrong to me.. a userspace notification re-arm cannot be
-> >lost, so have a split READ/TEST/WRITE sequence can't possibly work?
-> >
-> >I'd expect an atomic test and clear here?
+On Fri, Jul 12, 2019 at 01:01:42PM +0200, Peter Zijlstra wrote:
+> On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
+> > This patch adds support for checking RCU reader sections in list
+> > traversal macros. Optionally, if the list macro is called under SRCU or
+> > other lock/mutex protection, then appropriate lockdep expressions can be
+> > passed to make the checks pass.
+> > 
+> > Existing list_for_each_entry_rcu() invocations don't need to pass the
+> > optional fourth argument (cond) unless they are under some non-RCU
+> > protection and needs to make lockdep check pass.
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  include/linux/rculist.h  | 29 ++++++++++++++++++++++++-----
+> >  include/linux/rcupdate.h |  7 +++++++
+> >  kernel/rcu/Kconfig.debug | 11 +++++++++++
+> >  kernel/rcu/update.c      | 26 ++++++++++++++++++++++++++
+> >  4 files changed, 68 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> > index e91ec9ddcd30..78c15ec6b2c9 100644
+> > --- a/include/linux/rculist.h
+> > +++ b/include/linux/rculist.h
+> > @@ -40,6 +40,23 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+> >   */
+> >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+> >  
+> > +/*
+> > + * Check during list traversal that we are within an RCU reader
+> > + */
+> > +
+> > +#define SIXTH_ARG(a1, a2, a3, a4, a5, a6, ...) a6
+> > +#define COUNT_VARGS(...) SIXTH_ARG(dummy, ## __VA_ARGS__, 4, 3, 2, 1, 0)
 > 
-> We cannot avoid the case that the application re-arms the
-> CQ only after a CQE got placed. That is why folks are polling the
-> CQ once after re-arming it - to make sure they do not miss the
-> very last and single CQE which would have produced a CQ event.
+> You don't seem to actually use it in this patch; also linux/kernel.h has
+> COUNT_ARGS().
 
-That is different, that is re-arm happing after a CQE placement and
-this can't be fixed.
+Yes, I replied after sending patches that I fixed this. I will remove them.
 
-What I said is that a re-arm from userspace cannot be lost. So you
-can't blindly clear the arm flag with the WRITE_ONCE. It might be OK
-beacuse of the if, but...
 
-It is just goofy to write it without a 'test and clear' atomic. If the
-writer side consumes the notify it should always be done atomically.
+thanks,
 
-And then I think all the weird barriers go away
+ - Joel
 
-> >> @@ -1141,11 +1145,17 @@ int siw_req_notify_cq(struct ib_cq
-> >*base_cq, enum ib_cq_notify_flags flags)
-> >>  	siw_dbg_cq(cq, "flags: 0x%02x\n", flags);
-> >>  
-> >>  	if ((flags & IB_CQ_SOLICITED_MASK) == IB_CQ_SOLICITED)
-> >> -		/* CQ event for next solicited completion */
-> >> -		smp_store_mb(*cq->notify, SIW_NOTIFY_SOLICITED);
-> >> +		/*
-> >> +		 * Enable CQ event for next solicited completion.
-> >> +		 * and make it visible to all associated producers.
-> >> +		 */
-> >> +		smp_store_mb(cq->notify->flags, SIW_NOTIFY_SOLICITED);
-> >
-> >But what is the 2nd piece of data to motivate the smp_store_mb?
-> 
-> Another core (such as a concurrent RX operation) shall see this
-> CQ being re-armed asap.
 
-'ASAP' is not a '2nd piece of data'. 
 
-AFAICT this requirement is just a normal atomic set_bit which does
-also expedite making the change visible?
- 
-Jason
