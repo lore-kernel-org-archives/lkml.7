@@ -2,176 +2,177 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95850C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30A9C742C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E64521670
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:17:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oyW9mtD/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I1Q43Zi+"
+	by mail.kernel.org (Postfix) with ESMTP id BECEE2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfGLORb (ORCPT
+        id S1727321AbfGLOTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:17:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34732 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfGLORa (ORCPT
+        Fri, 12 Jul 2019 10:19:20 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:32885 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfGLOTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:17:30 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7180F618DC; Fri, 12 Jul 2019 14:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562941049;
-        bh=j34YjdOI22zXeGZb1tMjjkyFGeXTEfmtACkRK82dp6w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oyW9mtD/R3K+xw45vMeHawqWd6bNOhhaCcfkniWrpcN9LGqGO2WQCREnlWXtRdur1
-         MH33lAw2psv27U+iYMWYSGdJWWLAPH2ZmhYPB8f/fxljvbBsq20+LaTtO2/eYNpuQ7
-         JtvazmXLbROL41rn+6tHeVhwPqYSE/xFbKxQEqJo=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC901617A3;
-        Fri, 12 Jul 2019 14:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562941048;
-        bh=j34YjdOI22zXeGZb1tMjjkyFGeXTEfmtACkRK82dp6w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I1Q43Zi+CwcMNDPK2F6kSyCxRvtugaCZMOTtnNkdIXixxWFZrk+NDqO8R3OfC1BUH
-         R5Wi4gkotdTEOSAkbCh4dMcuG9JIf/2zv7896yGOGbTHm9sqEz+SN/+N17tLAl2OdP
-         hqDUsmOsxRXrdOLUomowCpCVjIKcVKyXrtidbFgY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC901617A3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv8 5/5] coresight: cpu-debug: Add support for Qualcomm Kryo
-Date:   Fri, 12 Jul 2019 19:46:27 +0530
-Message-Id: <e2c4cc7c6ccaa5695f25af20c8e487ac53b39955.1562940244.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+        Fri, 12 Jul 2019 10:19:19 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so6525959qkc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:19:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3tYEou2N5iYZgK6m9seQqHkvwf0ic0Qe60XG2Zt42iA=;
+        b=H09D2ob0pgFQV5GLnnvq/vbr1uSyp9TTEfXBtwWBxsLTqDYK17EOhdXX1RhA0hboJM
+         yt0hQNGj+O8J9MS4lEfKsahmJQkPxALS89ByLJ33OIfh2jsrJqP1+9cqCQpsCEaOVG+A
+         IeXMT9bVFjqzgVzAbBJyRVy2OCUyGmzfHS+ZdNhXYgaaj4QlRNalWAxJXoIYQZYGA6sR
+         a401hqRifQ8sGeEwBmSD8pXJACHZvqqT0uR5cmN5KeqCf8r8qUpZWyCxpJhazFLlXd0w
+         FKoltE7ivvwMNWFauwTKG8e9JFv2dqR56PjboV8USe/vMXiKBDTjEsAlQqFolvMNptNP
+         iDMw==
+X-Gm-Message-State: APjAAAWeJ0bm2OFNj01GhMjK3EMK2iBXHCzFLQ8FotJIU9hVZ8w8MgUH
+        rUkukoreMplfYK5/SoWAUstilU+++BkmaVDJtLs=
+X-Google-Smtp-Source: APXvYqwfrTYNQUf83cpy0XRewpTXnYGeQtS7l7c7joqDFZpv0TL0Nmmvem0UJFbWA4siwv3v24UAoKlL/IIIOjQkzy0=
+X-Received: by 2002:a37:76c5:: with SMTP id r188mr6456377qkc.394.1562941158403;
+ Fri, 12 Jul 2019 07:19:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com>
+ <20190711172621.a7ab7jorolicid3z@treble> <CAK8P3a0iOMpMW-dXUY6g75HGC4mUe3P3=gv447WZOW8jmw2Vgg@mail.gmail.com>
+ <CAG48ez3ipuPHLxbqqc50=Kn4QuoNczkd7VqEoLPVd3WWLk2s+Q@mail.gmail.com>
+ <CAK8P3a2=SJQp7Jvyf+BX-7XsUr8bh6eBMo6ue2m8FW4aYf=PPw@mail.gmail.com>
+ <CAK8P3a1_8kjzamn6_joBbZTO8NeGn0E3O+MZ+bcOQ0HkkRHXRQ@mail.gmail.com> <20190712135755.7qa4wxw3bfmwn5rp@treble>
+In-Reply-To: <20190712135755.7qa4wxw3bfmwn5rp@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 12 Jul 2019 16:19:02 +0200
+Message-ID: <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
+Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for coresight CPU debug module on Qualcomm
-Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
-found on MSM8996 which shares the same PIDs as ETMs.
+On Fri, Jul 12, 2019 at 3:57 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Fri, Jul 12, 2019 at 09:51:35AM +0200, Arnd Bergmann wrote:
+> > I no longer see any of the "can't find switch jump table" in last
+> > nights randconfig
+> > builds. I do see one other rare warning, see attached object file:
+> >
+> > fs/reiserfs/do_balan.o: warning: objtool: replace_key()+0x158: stack
+> > state mismatch: cfa1=7+40 cfa2=7+56
+> > fs/reiserfs/do_balan.o: warning: objtool: balance_leaf()+0x2791: stack
+> > state mismatch: cfa1=7+176 cfa2=7+192
+> > fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0xe8f:
+> > stack state mismatch: cfa1=7+240 cfa2=7+248
+> > fs/reiserfs/ibalance.o: warning: objtool:
+> > internal_move_pointers_items()+0x36f: stack state mismatch: cfa1=7+152
+> > cfa2=7+144
+> > fs/reiserfs/lbalance.o: warning: objtool:
+> > leaf_cut_from_buffer()+0x58b: stack state mismatch: cfa1=7+128
+> > cfa2=7+112
+> > fs/reiserfs/lbalance.o: warning: objtool:
+> > leaf_copy_boundary_item()+0x7a9: stack state mismatch: cfa1=7+104
+> > cfa2=7+96
+> > fs/reiserfs/lbalance.o: warning: objtool:
+> > leaf_copy_items_entirely()+0x3d2: stack state mismatch: cfa1=7+120
+> > cfa2=7+128
+> >
+> > I suspect this comes from the calls to the __reiserfs_panic() noreturn function,
+> > but have not actually looked at the object file.
+>
+> Looking at one of the examples:
+>
+>     2346:       0f 85 6a 01 00 00       jne    24b6 <leaf_copy_items_entirely+0x3a8>
+>     ...
+>     23b1:       e9 2a 01 00 00          jmpq   24e0 <leaf_copy_items_entirely+0x3d2>
+>     ...
+>     24b6:       31 ff                   xor    %edi,%edi
+>     24b8:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi
+>                         24bb: R_X86_64_32S      .rodata.str1.1
+>     24bf:       48 c7 c2 00 00 00 00    mov    $0x0,%rdx
+>                         24c2: R_X86_64_32S      .rodata.str1.1+0x127b
+>     24c6:       48 c7 c1 00 00 00 00    mov    $0x0,%rcx
+>                         24c9: R_X86_64_32S      .rodata.str1.1+0x1679
+>     24cd:       41 b8 90 01 00 00       mov    $0x190,%r8d
+>     24d3:       49 c7 c1 00 00 00 00    mov    $0x0,%r9
+>                         24d6: R_X86_64_32S      .rodata.str1.1+0x127b
+>     24da:       b8 00 00 00 00          mov    $0x0,%eax
+>     24df:       55                      push   %rbp
+>     24e0:       41 52                   push   %r10
+>     24e2:       e8 00 00 00 00          callq  24e7 <leaf_item_bottle>
+>                         24e3: R_X86_64_PC32     __reiserfs_panic-0x4
+>
+> Objtool is correct this time: There *is* a stack state mismatch at
+> 0x24e0.  The stack size is different at 0x24e0, depending on whether it
+> came from 0x2346 or from 0x23b1.
+>
+> In this case it's not a problem for code flow, because the basic block
+> is a dead end.
+>
+> But it *is* a problem for unwinding.  The location of the previous stack
+> frame is nondeterministic.
+>
+> And that's extra important for calls to noreturn functions, because they
+> often dump the stack before exiting.
+>
+> So it looks like a compiler bug to me.
 
-Without this, below error is observed on MSM8996:
+The change below would shut up the warnings, and presumably avoid
+the unwinding problem as well. Should I submit that for inclusion,
+or should we try to fix clang first?
 
-[    5.429867] OF: graph: no port node found in /soc/debug@3810000
-[    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-[    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-[    5.446474] OF: graph: no port node found in /soc/debug@3910000
-[    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-[    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-[    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-[    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-[    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-[    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-[    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-[    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+       Arnd
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
- drivers/hwtracing/coresight/coresight-priv.h  | 10 +++---
- 2 files changed, 21 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 2463aa7ab4f6..96544b348c27 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -646,24 +646,23 @@ static int debug_remove(struct amba_device *adev)
- 	return 0;
+diff --git a/fs/reiserfs/prints.c b/fs/reiserfs/prints.c
+index 9fed1c05f1f4..da996eaaebac 100644
+--- a/fs/reiserfs/prints.c
++++ b/fs/reiserfs/prints.c
+@@ -387,7 +387,6 @@ void __reiserfs_panic(struct super_block *sb,
+const char *id,
+        else
+                printk(KERN_WARNING "REISERFS panic: %s%s%s: %s\n",
+                      id ? id : "", id ? " " : "", function, error_buf);
+-       BUG();
  }
- 
-+static const struct amba_cs_uci_id uci_id_debug[] = {
-+	{
-+		/*  CPU Debug UCI data */
-+		.devarch	= 0x47706a15,
-+		.devarch_mask	= 0xfff0ffff,
-+		.devtype	= 0x00000015,
-+	}
-+};
-+
- static const struct amba_id debug_ids[] = {
--	{       /* Debug for Cortex-A53 */
--		.id	= 0x000bbd03,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A57 */
--		.id	= 0x000bbd07,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A72 */
--		.id	= 0x000bbd08,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A73 */
--		.id	= 0x000bbd09,
--		.mask	= 0x000fffff,
--	},
--	{ 0, 0 },
-+	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
-+	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
-+	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
-+	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
-+	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
-+	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
-+	{},
- };
- 
- static struct amba_driver debug_driver = {
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 7d401790dd7e..41ae5863104d 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -185,11 +185,11 @@ static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
- 	}
- 
- /* coresight AMBA ID, full UCI structure: id table entry. */
--#define CS_AMBA_UCI_ID(pid, uci_ptr)	\
--	{				\
--		.id	= pid,		\
--		.mask	= 0x000fffff,	\
--		.data	= uci_ptr	\
-+#define CS_AMBA_UCI_ID(pid, uci_ptr)		\
-+	{					\
-+		.id	= pid,			\
-+		.mask	= 0x000fffff,		\
-+		.data	= (void *)uci_ptr	\
- 	}
- 
- /* extract the data value from a UCI structure given amba_id pointer. */
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
 
+ void __reiserfs_error(struct super_block *sb, const char *id,
+@@ -397,8 +396,10 @@ void __reiserfs_error(struct super_block *sb,
+const char *id,
+
+        BUG_ON(sb == NULL);
+
+-       if (reiserfs_error_panic(sb))
++       if (reiserfs_error_panic(sb)) {
+                __reiserfs_panic(sb, id, function, error_buf);
++               BUG();
++       }
+
+        if (id && id[0])
+                printk(KERN_CRIT "REISERFS error (device %s): %s %s: %s\n",
+diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
+index e5ca9ed79e54..f5bd17ee21f6 100644
+--- a/fs/reiserfs/reiserfs.h
++++ b/fs/reiserfs/reiserfs.h
+@@ -3185,10 +3185,9 @@ void unfix_nodes(struct tree_balance *);
+
+ /* prints.c */
+ void __reiserfs_panic(struct super_block *s, const char *id,
+-                     const char *function, const char *fmt, ...)
+-    __attribute__ ((noreturn));
++                     const char *function, const char *fmt, ...);
+ #define reiserfs_panic(s, id, fmt, args...) \
+-       __reiserfs_panic(s, id, __func__, fmt, ##args)
++       do { __reiserfs_panic(s, id, __func__, fmt, ##args); BUG(); } while (0)
+ void __reiserfs_error(struct super_block *s, const char *id,
+                      const char *function, const char *fmt, ...);
+ #define reiserfs_error(s, id, fmt, args...) \
