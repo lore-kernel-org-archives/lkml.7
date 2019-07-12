@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56322C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3392FC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310A3216C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0871C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934860;
-	bh=bMDBISCFA1Y9UGDCNYOasL4S4+ir75q8XGtLoIPGPmQ=;
+	s=default; t=1562934866;
+	bh=z2PB0owPThVnK2H60EQBS4IbVg/99sL+l3sZvBSv2fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bO4jgKV9a2YPhHuYWyfMqQeB1M/igJtyr4yM4UPcOfX3mssUD8GJnruSqWIjF6oU6
-	 gTVmegO1DthAlrd0oB7BIOkObiINDy+QoVoYC/5pYhzF3w7orc3AXFbBBcHEMOcxBk
-	 v5VAJ5nkRnX+1JF11rsBOMiSzr16K5rf6fX48XxQ=
+	b=Xhg1CcX3H3NmHi/hD6b/6NcW8ZcvR2NzV/Rew6QekE3SU9GkCz8cIyPabtjDhLGXz
+	 xpCPukaYzpW9Um1zf8Dpe36RFJlwwpR0w99fvtEcCw4LND2adZkctjTsRH7cWXAi+V
+	 knOfVk2//DJTZWyb68GSnR0UXDeYpR6so7+qofys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfGLMeT (ORCPT
+        id S1729729AbfGLMeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53984 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbfGLMeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:34:15 -0400
+        id S1727683AbfGLMeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:34:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F8B220645;
-        Fri, 12 Jul 2019 12:34:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FE7208E4;
+        Fri, 12 Jul 2019 12:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934854;
-        bh=bMDBISCFA1Y9UGDCNYOasL4S4+ir75q8XGtLoIPGPmQ=;
+        s=default; t=1562934851;
+        bh=z2PB0owPThVnK2H60EQBS4IbVg/99sL+l3sZvBSv2fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8ggqw8d2oUON48KII1lgClrFCP78RHyIM5XYjf0X4T6fmSndrGN4yRt5BBFiQkYX
-         PU6QFgmHChCgLnJPjXbJomVuj/e9+QyX6H4c8jkvWqE8dgOYzh+sTCkLsBvWgFKkD2
-         J+gWI80KCwd2hUDdMIpTvHFFpwK1ssDnlnR4Mtlo=
+        b=oer0wU1xAO83QqcXbvgYNclEZrvd937ZkZZ8ePhrBKfkKMWeWX8JAPEhcnEHwZMZ4
+         7H++jdNj6bWi4VLN8ONPOLrXyFfBnMStaKgyZ0xN8SrpHztuvoGDY/QwtQ9jC6GDJo
+         lhM0/QdExOVqgBthLFCpXTprTF6wZoQJqZVuiAf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 5.2 53/61] staging: vchiq_2835_arm: revert "quit using custom down_interruptible()"
-Date:   Fri, 12 Jul 2019 14:20:06 +0200
-Message-Id: <20190712121623.580255307@linuxfoundation.org>
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.2 44/61] iio: adc: stm32-adc: add missing vdda-supply
+Date:   Fri, 12 Jul 2019 14:19:57 +0200
+Message-Id: <20190712121622.994345336@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -60,34 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit 061ca1401f96c254e7f179bf97a1fc5c7f47e1e1 upstream.
+commit 7685010fca2ba0284f31fd1380df3cffc96d847e upstream.
 
-The killable version of down() is meant to be used on situations where
-it should not fail at all costs, but still have the convenience of being
-able to kill it if really necessary. VCHIQ doesn't fit this criteria, as
-it's mainly used as an interface to V4L2 and ALSA devices.
+Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
+an independent supply, it needs to be properly turned on or off to supply
+the ADC.
 
-Fixes: ff5979ad8636 ("staging: vchiq_2835_arm: quit using custom down_interruptible()")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Fixes: 1add69880240 ("iio: adc: Add support for STM32 ADC core").
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/stm32-adc-core.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -523,7 +523,7 @@ create_pagelist(char __user *buf, size_t
- 		(g_cache_line_size - 1)))) {
- 		char *fragments;
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -87,6 +87,7 @@ struct stm32_adc_priv_cfg {
+  * @domain:		irq domain reference
+  * @aclk:		clock reference for the analog circuitry
+  * @bclk:		bus clock common for all ADCs, depends on part used
++ * @vdda:		vdda analog supply reference
+  * @vref:		regulator reference
+  * @cfg:		compatible configuration data
+  * @common:		common data for all ADC instances
+@@ -97,6 +98,7 @@ struct stm32_adc_priv {
+ 	struct irq_domain		*domain;
+ 	struct clk			*aclk;
+ 	struct clk			*bclk;
++	struct regulator		*vdda;
+ 	struct regulator		*vref;
+ 	const struct stm32_adc_priv_cfg	*cfg;
+ 	struct stm32_adc_common		common;
+@@ -394,10 +396,16 @@ static int stm32_adc_core_hw_start(struc
+ 	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
+ 	int ret;
  
--		if (down_killable(&g_free_fragments_sema)) {
-+		if (down_interruptible(&g_free_fragments_sema) != 0) {
- 			cleanup_pagelistinfo(pagelistinfo);
- 			return NULL;
- 		}
++	ret = regulator_enable(priv->vdda);
++	if (ret < 0) {
++		dev_err(dev, "vdda enable failed %d\n", ret);
++		return ret;
++	}
++
+ 	ret = regulator_enable(priv->vref);
+ 	if (ret < 0) {
+ 		dev_err(dev, "vref enable failed\n");
+-		return ret;
++		goto err_vdda_disable;
+ 	}
+ 
+ 	if (priv->bclk) {
+@@ -425,6 +433,8 @@ err_bclk_disable:
+ 		clk_disable_unprepare(priv->bclk);
+ err_regulator_disable:
+ 	regulator_disable(priv->vref);
++err_vdda_disable:
++	regulator_disable(priv->vdda);
+ 
+ 	return ret;
+ }
+@@ -441,6 +451,7 @@ static void stm32_adc_core_hw_stop(struc
+ 	if (priv->bclk)
+ 		clk_disable_unprepare(priv->bclk);
+ 	regulator_disable(priv->vref);
++	regulator_disable(priv->vdda);
+ }
+ 
+ static int stm32_adc_probe(struct platform_device *pdev)
+@@ -468,6 +479,14 @@ static int stm32_adc_probe(struct platfo
+ 		return PTR_ERR(priv->common.base);
+ 	priv->common.phys_base = res->start;
+ 
++	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
++	if (IS_ERR(priv->vdda)) {
++		ret = PTR_ERR(priv->vdda);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
++		return ret;
++	}
++
+ 	priv->vref = devm_regulator_get(&pdev->dev, "vref");
+ 	if (IS_ERR(priv->vref)) {
+ 		ret = PTR_ERR(priv->vref);
 
 
