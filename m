@@ -2,228 +2,125 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D28C742D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7140BC742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5CE2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6FC2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfGLRqo (ORCPT
+        id S1727573AbfGLRrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:46:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727538AbfGLRqn (ORCPT
+        Fri, 12 Jul 2019 13:47:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39877 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfGLRrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:46:43 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CHkYho100497
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:46:43 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpxbfs7k2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 13:46:42 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 12 Jul 2019 18:46:41 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 18:46:32 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CHkV9l45744612
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 17:46:31 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15274B2068;
-        Fri, 12 Jul 2019 17:46:31 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDE0AB2065;
-        Fri, 12 Jul 2019 17:46:30 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.195.235])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 17:46:30 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D5A7B16C0E5D; Fri, 12 Jul 2019 10:46:30 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 10:46:30 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org, oleg@redhat.com,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v1 1/6] rcu: Add support for consolidated-RCU reader
- checking
-Reply-To: paulmck@linux.ibm.com
-References: <20190711234401.220336-1-joel@joelfernandes.org>
- <20190711234401.220336-2-joel@joelfernandes.org>
- <20190712111125.GT3402@hirez.programming.kicks-ass.net>
- <20190712151051.GB235410@google.com>
- <20190712164531.GW26519@linux.ibm.com>
- <20190712170631.GA111598@google.com>
+        Fri, 12 Jul 2019 13:47:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so10788781wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:47:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=33ROaBIziKCKc1mhqPdQtlXJvh7o/Q/v1uM0fuHCI78=;
+        b=DG//oUn90DZ5O2LCctn0nr2nQI44OVs3s1z1riWyh1ithn++pM9x8iTz2IwEdV7gI3
+         mbY/to7xwARinzrRkOSBCIg4Awcu+blHLzIzEocxWgKNBrbZTZNwhwOw6MFBWphXkVMW
+         KDYsKjgxSYj6g2UNkwBC+nV3AmZkHQzU5uuMAT32xYRrD5cGf+i15nyUb8H+auNi0Hty
+         2DR4TlO8V3PvooJzI23BaznRP5H7peAJpObBSzBMpZzPgrlfmh6i3puOoGJIJNrz8p0a
+         oYDr91T/YRCxt9Rfa/crxj5/1T6FETuMSvp7QIhuuKSvalxIHccpBX4Dt66HdO1KDUwX
+         abVw==
+X-Gm-Message-State: APjAAAUxJNbhiixhVOr66lxfd55gxv/DT3uETHTh6dCP7PItb6qJz3Pg
+        D52aHbex9cdfDeTSG2lOaPWbFA==
+X-Google-Smtp-Source: APXvYqy0VccFEaWxyCvOu8o97Zs2IK189UrDn3tEQwntg06bZ/SCw2MqMFM2tnF/rz4ZFV2mwp5EkQ==
+X-Received: by 2002:adf:9c83:: with SMTP id d3mr226717wre.160.1562953627498;
+        Fri, 12 Jul 2019 10:47:07 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d066:6881:ec69:75ab? ([2001:b07:6468:f312:d066:6881:ec69:75ab])
+        by smtp.gmail.com with ESMTPSA id d10sm11228180wro.18.2019.07.12.10.47.06
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 10:47:06 -0700 (PDT)
+Subject: Re: [PATCH 2/2] x86: kvm: avoid constant-conversion warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Junaid Shahid <junaids@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Kai Huang <kai.huang@linux.intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20190712091239.716978-1-arnd@arndb.de>
+ <20190712091239.716978-2-arnd@arndb.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <4694728a-a2bc-a681-7084-476a7bc28dfd@redhat.com>
+Date:   Fri, 12 Jul 2019 19:47:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712170631.GA111598@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19071217-0064-0000-0000-000003FB1044
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011416; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231197; UDB=6.00648560; IPR=6.01012481;
- MB=3.00027693; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 17:46:39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071217-0065-0000-0000-00003E3CAF14
-Message-Id: <20190712174630.GX26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120180
+In-Reply-To: <20190712091239.716978-2-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:06:31PM -0400, Joel Fernandes wrote:
-> On Fri, Jul 12, 2019 at 09:45:31AM -0700, Paul E. McKenney wrote:
-> > On Fri, Jul 12, 2019 at 11:10:51AM -0400, Joel Fernandes wrote:
-> > > On Fri, Jul 12, 2019 at 01:11:25PM +0200, Peter Zijlstra wrote:
-> > > > On Thu, Jul 11, 2019 at 07:43:56PM -0400, Joel Fernandes (Google) wrote:
-> > > > > +int rcu_read_lock_any_held(void)
-> > > > > +{
-> > > > > +	int lockdep_opinion = 0;
-> > > > > +
-> > > > > +	if (!debug_lockdep_rcu_enabled())
-> > > > > +		return 1;
-> > > > > +	if (!rcu_is_watching())
-> > > > > +		return 0;
-> > > > > +	if (!rcu_lockdep_current_cpu_online())
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	/* Preemptible RCU flavor */
-> > > > > +	if (lock_is_held(&rcu_lock_map))
-> > > > 
-> > > > you forgot debug_locks here.
-> > > 
-> > > Actually, it turns out debug_locks checking is not even needed. If
-> > > debug_locks == 0, then debug_lockdep_rcu_enabled() returns 0 and we would not
-> > > get to this point.
-> > > 
-> > > > > +		return 1;
-> > > > > +
-> > > > > +	/* BH flavor */
-> > > > > +	if (in_softirq() || irqs_disabled())
-> > > > 
-> > > > I'm not sure I'd put irqs_disabled() under BH, also this entire
-> > > > condition is superfluous, see below.
-> > > > 
-> > > > > +		return 1;
-> > > > > +
-> > > > > +	/* Sched flavor */
-> > > > > +	if (debug_locks)
-> > > > > +		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > > > > +	return lockdep_opinion || !preemptible();
-> > > > 
-> > > > that !preemptible() turns into:
-> > > > 
-> > > >   !(preempt_count()==0 && !irqs_disabled())
-> > > > 
-> > > > which is:
-> > > > 
-> > > >   preempt_count() != 0 || irqs_disabled()
-> > > > 
-> > > > and already includes irqs_disabled() and in_softirq().
-> > > > 
-> > > > > +}
-> > > > 
-> > > > So maybe something lke:
-> > > > 
-> > > > 	if (debug_locks && (lock_is_held(&rcu_lock_map) ||
-> > > > 			    lock_is_held(&rcu_sched_lock_map)))
-> > > > 		return true;
-> > > 
-> > > Agreed, I will do it this way (without the debug_locks) like:
-> > > 
-> > > ---8<-----------------------
-> > > 
-> > > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> > > index ba861d1716d3..339aebc330db 100644
-> > > --- a/kernel/rcu/update.c
-> > > +++ b/kernel/rcu/update.c
-> > > @@ -296,27 +296,15 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
-> > >  
-> > >  int rcu_read_lock_any_held(void)
-> > >  {
-> > > -	int lockdep_opinion = 0;
-> > > -
-> > >  	if (!debug_lockdep_rcu_enabled())
-> > >  		return 1;
-> > >  	if (!rcu_is_watching())
-> > >  		return 0;
-> > >  	if (!rcu_lockdep_current_cpu_online())
-> > >  		return 0;
-> > > -
-> > > -	/* Preemptible RCU flavor */
-> > > -	if (lock_is_held(&rcu_lock_map))
-> > > -		return 1;
-> > > -
-> > > -	/* BH flavor */
-> > > -	if (in_softirq() || irqs_disabled())
-> > > -		return 1;
-> > > -
-> > > -	/* Sched flavor */
-> > > -	if (debug_locks)
-> > > -		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
-> > > -	return lockdep_opinion || !preemptible();
-> > > +	if (lock_is_held(&rcu_lock_map) || lock_is_held(&rcu_sched_lock_map))
-> > 
-> > OK, I will bite...  Why not also lock_is_held(&rcu_bh_lock_map)?
+On 12/07/19 11:12, Arnd Bergmann wrote:
+> clang finds a contruct suspicious that converts an unsigned
+> character to a signed integer and back, causing an overflow:
+
+I like how the commit message conveys the braindead-ness of the warning.
+
+Queued, thanks.
+
+Paolo
+
+> arch/x86/kvm/mmu.c:4605:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Werror,-Wconstant-conversion]
+>                 u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+>                    ~~                               ^~
+> arch/x86/kvm/mmu.c:4607:38: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -241 to 15 [-Werror,-Wconstant-conversion]
+>                 u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
+>                    ~~                              ^~
+> arch/x86/kvm/mmu.c:4609:39: error: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -171 to 85 [-Werror,-Wconstant-conversion]
+>                 u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
+>                    ~~                               ^~
 > 
-> Hmm, I was borrowing the strategy from rcu_read_lock_bh_held() which does not
-> check for a lock held in this map.
+> Add an explicit cast to tell clang that everything works as
+> intended here.
 > 
-> Honestly, even  lock_is_held(&rcu_sched_lock_map) seems unnecessary per-se
-> since !preemptible() will catch that? rcu_read_lock_sched() disables
-> preemption already, so lockdep's opinion of the matter seems redundant there.
-
-Good point!  At least as long as the lockdep splats list RCU-bh among
-the locks held, which they did last I checked.
-
-Of course, you could make the same argument for getting rid of
-rcu_sched_lock_map.  Does it make sense to have the one without
-the other?
-
-> Sorry I already sent out patches again before seeing your comment but I can
-> rework and resend them based on any other suggestions.
-
-Not a problem!
-
-							Thax, Paul
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/x86/kvm/mmu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index 17ece7b994b1..aea7f969ecb8 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -4602,11 +4602,11 @@ static void update_permission_bitmask(struct kvm_vcpu *vcpu,
+>  		 */
+>  
+>  		/* Faults from writes to non-writable pages */
+> -		u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+> +		u8 wf = (pfec & PFERR_WRITE_MASK) ? (u8)~w : 0;
+>  		/* Faults from user mode accesses to supervisor pages */
+> -		u8 uf = (pfec & PFERR_USER_MASK) ? ~u : 0;
+> +		u8 uf = (pfec & PFERR_USER_MASK) ? (u8)~u : 0;
+>  		/* Faults from fetches of non-executable pages*/
+> -		u8 ff = (pfec & PFERR_FETCH_MASK) ? ~x : 0;
+> +		u8 ff = (pfec & PFERR_FETCH_MASK) ? (u8)~x : 0;
+>  		/* Faults from kernel mode fetches of user pages */
+>  		u8 smepf = 0;
+>  		/* Faults from kernel mode accesses of user pages */
+> 
 
