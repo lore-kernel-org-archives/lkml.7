@@ -2,85 +2,131 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BBDC742A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C7DC742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69411208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:32:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bLD4vkk+"
+	by mail.kernel.org (Postfix) with ESMTP id 07247208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562891557;
+	bh=mWM1msUOi3sWCWjf4g3ssBFe9C4HtXvJFdU4LXMJXnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MehnFHyQzYjBlCWqiaQscOzHWvgnAoyDRGg6dhfhXd9ZVs38NPmPWj9h/RlwikgKU
+	 GLJNwjKB8q3ZdbkmHbhS9NVxusswXabkLAnjhYTA2Tg5spTzRmJQxy4kh+zJ4e4Ht3
+	 sPgcIObqa8SNjD1y9q+wdWe1xHmlZITI0OlaXccE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbfGLAcA (ORCPT
+        id S1730611AbfGLAcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:32:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36413 "EHLO ozlabs.org"
+        Thu, 11 Jul 2019 20:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbfGLAcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:32:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728582AbfGLAcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 20:32:35 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45lDP34S5Kz9sBt;
-        Fri, 12 Jul 2019 10:31:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562891512;
-        bh=tAyTsSMqJI7TR8669ycCC1PyQtmKW7Zr5Lc2ObC0jcw=;
-        h=Date:From:To:Subject:From;
-        b=bLD4vkk+FX278l4wZ1lznOZI6U1hLeJIrNmylr8wRsCrZxwcrS6e8FwiwJSZ410Zn
-         RBcWX/Q2ltEng8UVRTXNCfL5nnOFSYFueUDchnPC8VE04lgSE/kbQEVXYdZuO1QtyE
-         6TSIC9yxH31sTseaBwSh19p+u8c6f+6m79J58BdZYqHXX6eZgJC84f65HlA1PbTUH7
-         jYwkBU9csiBUM0C29PVLyxezNVfP5XKpNGdkFw40Am0M1v4DcS7uTVUfNFcF9JHp98
-         C+Ir9Nyu2cylnaHjwUpwlnb1d6JK00gXVwNm4zHeJT/jGJNN4mmw6PtYmGFMDJVQn8
-         o2fikL2thDGVg==
-Date:   Fri, 12 Jul 2019 10:30:45 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: we are in the merge window
-Message-ID: <20190712102601.6d23c330@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EC90216C4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 00:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562891554;
+        bh=mWM1msUOi3sWCWjf4g3ssBFe9C4HtXvJFdU4LXMJXnc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TNBTRT9qR6L8EFYhNz5ASz+ZSFBFK7Podkuohl7zBGCBx3dor5jxsyP6TgcBTP4vx
+         rRURMYTNBt/YTG1Vrh0NTFXQa2ENANmkzHM28Eg8BloZigmelWTTjfGQsAoJsDUFVi
+         Dc9aFjzSzlb3K5GcZjhEvMO5QIwy/352cHXlh5oA=
+Received: by mail-wr1-f54.google.com with SMTP id p13so8073881wru.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2019 17:32:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAX0WkDiDCwMVW9BX3FYb2+6ODO0ZDvefGMZ3sBXGdHdDLXJ6+R0
+        087RUnrRc3QDOfweX9c4FL4+U9Bh40b02Upzbyo3ag==
+X-Google-Smtp-Source: APXvYqzYUbiQjsAFPvwO5qXqTxo0KY5ClCpaWxsq/N/U0gdy8IwG3JlKoh9B7aRbc28in82BCDpQ4MvKw3xy/GQuTjQ=
+X-Received: by 2002:adf:dd0f:: with SMTP id a15mr7002359wrm.265.1562891552611;
+ Thu, 11 Jul 2019 17:32:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/J=0z2gxGWvbPHCe95IAmoOA"; protocol="application/pgp-signature"
+References: <20190712014223.66326995@hikaru>
+In-Reply-To: <20190712014223.66326995@hikaru>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 11 Jul 2019 17:32:21 -0700
+X-Gmail-Original-Message-ID: <CALCETrWkmaB5K4AR0R6CYcdq8mJwKtbWbmYEq6oxeaoqdA3ZWA@mail.gmail.com>
+Message-ID: <CALCETrWkmaB5K4AR0R6CYcdq8mJwKtbWbmYEq6oxeaoqdA3ZWA@mail.gmail.com>
+Subject: Re: On
+To:     Carlo Wood <carlo@alinoe.com>
+Cc:     wangyun@linux.vnet.ibm.com, palewis@adobe.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>, jbaron@redhat.com,
+        pholland@adobe.com, Davide Libenzi <davidel@xmailserver.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Neal Cardwell <ncardwell@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/J=0z2gxGWvbPHCe95IAmoOA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 11, 2019 at 5:01 PM Carlo Wood <carlo@alinoe.com> wrote:
+>
+> I believe that the only safe solution is to let the Event Loop
+> Thread do the deleting. So, if all else fails I'll have to add
+> objects that a Worker Thread thinks need to be deleted to a
+> FIFO that is processed by the Event Loop Thread before entering
+> epoll_wait(). But that is a lot of extra code for something
+> that could be achieved with just a small change to epoll:
 
-Hi all,
+This doesn't seem so bad at all.
 
-[This has been Bcc'd to all the contacts I have for tree in linux-next]
+>
+>
+> I propose to add a new EPOLL event EPOLLCLOSED that will cause
+> epoll_wait to return (for that event) whenever a file descriptor is
+> closed.
 
-Please do not add v5.4 material to your linux-next included branches
-until after v5.3-rc1 has been released.
+This totally falls apart if you ever want to add a feature to your
+library to detach the handler for a given fd without closing the fd.
 
---=20
-Cheers,
-Stephen Rothwell
+>
+> The Worker Thread then does not remove an object from the
+> interest list, but either adds (if it was removed before) or
+> modifies the event (using EPOLL_CTL_MOD) to watch that fd
+> for closing, and then closes it.
+>
+> Aka,
+>
+>   Working Thread:
+>
+>   epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event);
+>   close(fd);
+>
+> where event contains the new EPOLLCLOSED (compare EPOLLOUT, EPOLLIN
+> etc).
+>
+> This must then guarantee the event EPOLLCLOSED to be reported
+> by exactly one epoll_wait(), the caller thread of which can then
+> proceed with deleting the resources.
+>
+> Note that close(fd) must cause the removal from the interest list
+> of any epoll struct before causing the event - and that the
+> EPOLLCLOSED event may only be reported after all other events
+> for that fd have already been reported (although it would be
+> ok to report them at the same time: simply handle the other
+> events first).
 
---Sig_/J=0z2gxGWvbPHCe95IAmoOA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This is a bunch of subtle semantics in the kernel to support your
+particular use case.
 
------BEGIN PGP SIGNATURE-----
+>
+> I am not sure how this will work when more than one thread
+> calls epoll_wait and more than one watch the same fd: in
+> that case it is less trivial because then it seems always
+> possible that the EPOLLCLOSED event will be reported before
+> another event in another thread.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0n1LUACgkQAVBC80lX
-0GyLiggAhMqBKs8tiEWFZ3gkpZcCYh/SFFNWL6TZ9Q8Q8dk9It4OjdZqLendVOqI
-niObkrawbEmuAi7ST5HmPyl3Apt3MxILNzqe9UrpV+aO0byOz25ase5n9Zehf3Dd
-I/D5HSo5tkpjmMc/EgX0N9kzZr8hN5stv8MDj/iYBaUYeNI0gbZ9vBqEjIj5nv06
-Xkdcj+EfTGi+uVnFf6LO0hXH5JOgwImNqcqAzRzmkSGwli3xvk7eVbodkyWsCX/T
-8wwBm1VQ4b2to3QerJ+COKOBMO0rhKybKkji1m4hAR5VlaIzcwL8+BvmmzrZvLta
-/mO4Os/KoXRP+gPIm/cCLxILFw/kiA==
-=tjPW
------END PGP SIGNATURE-----
-
---Sig_/J=0z2gxGWvbPHCe95IAmoOA--
+But this case is fairly straightforward with the user mode approach --
+for example, add it to the list for all threads calling epoll_wait.
+Or otherwise defer the deletion until all epoll_wait threads have
+woken.
