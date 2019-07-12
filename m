@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DF5C742BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9355C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354F42080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FDD2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562935144;
-	bh=IK2zhGaF/SO+co1gOpELFAiaA54IetBWtJdanPhix90=;
+	s=default; t=1562935149;
+	bh=Z2D7VmgLRn4bBj7uuHlx3DG9p9aGq6l3mqAOp7Iv3BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xp31ym31SNxGOzfQOuHgvVrxmd0nTbDIlifRBGQ0sL8/4Z61kQIkaz2q/PfMtOmqn
-	 w96kctaJ1vH9OYVJchBoRnmFJePX8HGU4GOr+T55u0QSfAEqNHLAZU2K1PaZjyCP9/
-	 YqnWgUAK7CKPy1U6DM3WSFTS7XDtRaHdVKa1H8Ko=
+	b=WcD5Ng/4BIjUtAHN9D3dQrdv+pxtiNfmqTF1CoFZFGLmmkbJQBGgsp07jpgYZFP/H
+	 IXeDhopX7w9rizNbjBJaShWJ7RNjUN+ijS+JSPMN7uNCRdD2CDvjY4VYXkAH4OMv+/
+	 kE+wM+HumKFwNMFfRwx2F9Rma1mx5QIt4JraY+fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfGLM1z (ORCPT
+        id S1728693AbfGLM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:27:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728694AbfGLM1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Jul 2019 08:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728666AbfGLM1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:27:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C8D2084B;
-        Fri, 12 Jul 2019 12:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D36A2084B;
+        Fri, 12 Jul 2019 12:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934472;
-        bh=IK2zhGaF/SO+co1gOpELFAiaA54IetBWtJdanPhix90=;
+        s=default; t=1562934465;
+        bh=Z2D7VmgLRn4bBj7uuHlx3DG9p9aGq6l3mqAOp7Iv3BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FWcEdRjfFWYy1lVcg4xY0XkcdxVhOS9c4NyaZodiX9Oi6EdaqewWyX24/b2g/Jn84
-         pkbX5kM92567Lfe9uAU9jSs1hiUbWPs668GrbEU99vPp/8NTTnD4vIFofWBwuwO7Wq
-         TBxUAe5o5niTaN21TXUNbaOK9uSdijSMXLaO/agw=
+        b=wRa/EMxSj0rRejAqfIHcLOd/Fi3C/LMCQW+euLmQ0juAmOqPbGzwFFz3/tUO/3Z88
+         Gp39LRKGjXXYWVuXVjZEXGfhl+4Ilv+BlC9d9xFTIF5P4Ad1Nqypev9LZuRkKwktR5
+         JlOA1j/LhcwCc9NkFLdHfxrQCpf2K400oXj7EuYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Avraham Stern <avraham.stern@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 065/138] bpf, devmap: Add missing bulk queue free
-Date:   Fri, 12 Jul 2019 14:18:49 +0200
-Message-Id: <20190712121631.168716634@linuxfoundation.org>
+Subject: [PATCH 5.1 063/138] cfg80211: report measurement start TSF correctly
+Date:   Fri, 12 Jul 2019 14:18:47 +0200
+Message-Id: <20190712121631.095478375@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,31 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit edabf4d9dd905acd60048ea1579943801e3a4876 ]
+[ Upstream commit b65842025335711e2a0259feb4dbadb0c9ffb6d9 ]
 
-dev_map_free() forgot to free bulk queue when freeing its entries.
+Instead of reporting the AP's TSF, host time was reported. Fix it.
 
-Fixes: 5d053f9da431 ("bpf: devmap prepare xdp frames for bulking")
-Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Avraham Stern <avraham.stern@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/pmsr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index e001fb1a96b1..a126d95d12de 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -186,6 +186,7 @@ static void dev_map_free(struct bpf_map *map)
- 		if (!dev)
- 			continue;
+diff --git a/net/wireless/pmsr.c b/net/wireless/pmsr.c
+index 5e2ab01d325c..d06d514f0bba 100644
+--- a/net/wireless/pmsr.c
++++ b/net/wireless/pmsr.c
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (C) 2018 Intel Corporation
++ * Copyright (C) 2018 - 2019 Intel Corporation
+  */
+ #ifndef __PMSR_H
+ #define __PMSR_H
+@@ -446,7 +446,7 @@ static int nl80211_pmsr_send_result(struct sk_buff *msg,
  
-+		free_percpu(dev->bulkq);
- 		dev_put(dev->dev);
- 		kfree(dev);
- 	}
+ 	if (res->ap_tsf_valid &&
+ 	    nla_put_u64_64bit(msg, NL80211_PMSR_RESP_ATTR_AP_TSF,
+-			      res->host_time, NL80211_PMSR_RESP_ATTR_PAD))
++			      res->ap_tsf, NL80211_PMSR_RESP_ATTR_PAD))
+ 		goto error;
+ 
+ 	if (res->final && nla_put_flag(msg, NL80211_PMSR_RESP_ATTR_FINAL))
 -- 
 2.20.1
 
