@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33729C742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E28C742B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E7020645
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08049208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934931;
-	bh=MSPgBwwjCbXeXXZrUmdqZApuH6gsttF8DqwzR4eoduQ=;
+	s=default; t=1562934935;
+	bh=kHmhzJ+BlbwwuCrF47YLjZgNe7oXTK2407h6My7ZG7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MpHMpA+4l/FKZ5jJ00GrWKTDCGfHtj/7mqJPH0yVyV6TvCiqW+Fx2WTW7uEwUR0vR
-	 xQPK8m4OEJKFypAtONht2uVGYH7Bz7h7+7xWgGEE+2FKoiXGP8RjG/ZSKUiQj4xpIU
-	 9fSq9AFU1YccsvpbVWyfkgLJ21VJaybQu4jIaX1U=
+	b=QHkvvOzugrm5Zgor1Deoqz8oJ0mTBsxg/8xzu7pO42VVZeH3gHiZ+EUmKbIr13SxW
+	 4SxG8lxQvgmebEI0BXCTV5FNdh6i0GqCGY1vgCxNr5rz6KQJa7wM8G0ccYhtCfrGp4
+	 d6VjtZsvGjdCB+8x8gC5Podcjrp8zzoXjA5iLPug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbfGLMfa (ORCPT
+        id S1729744AbfGLMed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54494 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729748AbfGLMee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:34:34 -0400
+        id S1729742AbfGLMe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:34:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F148720645;
-        Fri, 12 Jul 2019 12:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C909320645;
+        Fri, 12 Jul 2019 12:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934873;
-        bh=MSPgBwwjCbXeXXZrUmdqZApuH6gsttF8DqwzR4eoduQ=;
+        s=default; t=1562934867;
+        bh=kHmhzJ+BlbwwuCrF47YLjZgNe7oXTK2407h6My7ZG7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIEbhXCkRfENYqkKKZZUv2ArlHMxXKuFuoujeX+ZgLM1lnrRMs0E3qnEJza3+M/47
-         ZasRjy0rQD4+tRRVOei3tb+l8p6D3nbdiXqoTTrZ9h3whtjTjB+f9Xj2a6h3UXwXw0
-         KRkkPl6Dh2uAj5kP0dsVphrQ160R9H2MfkUGv02o=
+        b=AmbmMySm/5EpCtN8AgxSnLud4g3W0MBPUFaDim3NhBMt0+PVhP4giIFQtW93ix46b
+         bWy36sz5wVEMep4OT0h3l33/YwXAvYgmxAkdEhVCYysTC6bFPkG+LjmaKtsEt0pySu
+         lWg0w42HYStYp9EruPIdNKfAe4B3hVoZXxgDhVWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Stefan Wahren <wahrenst@gmx.net>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.2 59/61] staging: bcm2835-camera: Remove check of the number of buffers supplied
-Date:   Fri, 12 Jul 2019 14:20:12 +0200
-Message-Id: <20190712121624.000598444@linuxfoundation.org>
+Subject: [PATCH 5.2 57/61] staging: bcm2835-camera: Replace spinlock protecting context_map with mutex
+Date:   Fri, 12 Jul 2019 14:20:10 +0200
+Message-Id: <20190712121623.850418045@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
 References: <20190712121620.632595223@linuxfoundation.org>
@@ -64,17 +64,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-commit bb8e97006d701ae725a177f8f322e5a75fa761b7 upstream.
+commit 8dedab2903f152aa3cee9ae3d57c828dea0d356e upstream.
 
-Before commit "staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping"
-there was a need to ensure that there were sufficient buffers supplied from
-the user to cover those being sent to the VPU (always 1).
+The commit "staging: bcm2835-camera: Replace open-coded idr with a struct idr."
+replaced an internal implementation of an idr with the standard functions
+and a spinlock. idr_alloc(GFP_KERNEL) can sleep whilst calling kmem_cache_alloc
+to allocate the new node, but this is not valid whilst in an atomic context
+due to the spinlock.
 
-Now the buffers are linked 1:1 between MMAL and V4L2,
-therefore there is no need for that check, and indeed it is wrong
-as there is no need to submit all the buffers before starting streaming.
+There is no need for this to be a spinlock as a standard mutex is
+sufficient.
 
-Fixes: 938416707071 ("staging: bcm2835-camera: Remove V4L2/MMAL buffer remapping")
+Fixes: 950fd867c635 ("staging: bcm2835-camera: Replace open-coded idr with a struct idr.")
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
@@ -82,27 +83,54 @@ Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c |   10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 --- a/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
 +++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-vchiq.c
-@@ -1328,16 +1328,6 @@ static int port_enable(struct vchiq_mmal
- 	if (port->enabled)
- 		return 0;
+@@ -161,7 +161,8 @@ struct vchiq_mmal_instance {
+ 	void *bulk_scratch;
  
--	/* ensure there are enough buffers queued to cover the buffer headers */
--	if (port->buffer_cb) {
--		hdr_count = 0;
--		list_for_each(buf_head, &port->buffers) {
--			hdr_count++;
--		}
--		if (hdr_count < port->current_buffer.num)
--			return -ENOSPC;
--	}
--
- 	ret = port_action_port(instance, port,
- 			       MMAL_MSG_PORT_ACTION_TYPE_ENABLE);
- 	if (ret)
+ 	struct idr context_map;
+-	spinlock_t context_map_lock;
++	/* protect accesses to context_map */
++	struct mutex context_map_lock;
+ 
+ 	/* component to use next */
+ 	int component_idx;
+@@ -184,10 +185,10 @@ get_msg_context(struct vchiq_mmal_instan
+ 	 * that when we service the VCHI reply, we can look up what
+ 	 * message is being replied to.
+ 	 */
+-	spin_lock(&instance->context_map_lock);
++	mutex_lock(&instance->context_map_lock);
+ 	handle = idr_alloc(&instance->context_map, msg_context,
+ 			   0, 0, GFP_KERNEL);
+-	spin_unlock(&instance->context_map_lock);
++	mutex_unlock(&instance->context_map_lock);
+ 
+ 	if (handle < 0) {
+ 		kfree(msg_context);
+@@ -211,9 +212,9 @@ release_msg_context(struct mmal_msg_cont
+ {
+ 	struct vchiq_mmal_instance *instance = msg_context->instance;
+ 
+-	spin_lock(&instance->context_map_lock);
++	mutex_lock(&instance->context_map_lock);
+ 	idr_remove(&instance->context_map, msg_context->handle);
+-	spin_unlock(&instance->context_map_lock);
++	mutex_unlock(&instance->context_map_lock);
+ 	kfree(msg_context);
+ }
+ 
+@@ -1849,7 +1850,7 @@ int vchiq_mmal_init(struct vchiq_mmal_in
+ 
+ 	instance->bulk_scratch = vmalloc(PAGE_SIZE);
+ 
+-	spin_lock_init(&instance->context_map_lock);
++	mutex_init(&instance->context_map_lock);
+ 	idr_init_base(&instance->context_map, 1);
+ 
+ 	params.callback_param = instance;
 
 
