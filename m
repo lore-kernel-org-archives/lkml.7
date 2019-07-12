@@ -2,98 +2,137 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D943C742C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EF0C742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A19821019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562945473;
-	bh=3t+6wjpJFOQt0JVl6oztKApAO9yZH1Bl74JWDDgu/kk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eMIL6MIRGSowftpPe/CtV4s8f6sHVlL/oZDysZ/vPyCiB9jYUGWbhkP/FqY8XaNrh
-	 mRVFsmY+IFad7lRXA8yIZNY7d0OFva2f2kKGSI7a8Gq5xZC7BfukkAP1pWRfsxRw+P
-	 cbi4hbPDcIItfLPeiC2cTAdwnW5tf/tz0dsAYQBo=
+	by mail.kernel.org (Postfix) with ESMTP id CF6C2208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 15:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WhHL4nEa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfGLPbM (ORCPT
+        id S1727060AbfGLPcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 11:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfGLPbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:31:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB1F208E4;
-        Fri, 12 Jul 2019 15:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562945471;
-        bh=3t+6wjpJFOQt0JVl6oztKApAO9yZH1Bl74JWDDgu/kk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OY22DrZk1GEUN/LX3LkHcHgRDlZdhb565nA0K6nQyluWxpdrUnF1G6g25c1GP/MN2
-         mtuXWyd0UJMXvuBrt6XGtRpIE+Rjzg5LfpxBiv7/QVawXu+RYmnmwCXgiVJgaz0dJN
-         G7+ZtPLT4QjwEWRUtU1sR7pVqFCVoopac3030Fys=
-Date:   Fri, 12 Jul 2019 17:31:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
-Message-ID: <20190712153108.GD13940@kroah.com>
-References: <20190712121620.632595223@linuxfoundation.org>
- <a1ae16a7-e8f7-b6fc-df4e-46079bebf9b3@nvidia.com>
+        Fri, 12 Jul 2019 11:32:45 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42204 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfGLPcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:32:45 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h18so8469284qtm.9
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 08:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6zUuNAxC0W8UA4PyJfN+NTLv2uHwtQW0uxPeJFySWhY=;
+        b=WhHL4nEaSeEd0vRZOuyDcURKZ0cIDxWXvxDZbS9TJi+X/uea1BzMCjEV3BPQDBS7kF
+         Dpkkz2XDk8Cq31X6ysMikLsVpO4/A6/XX+9SpUG+W1O09Ph1QgZt6F95E72Jvv5xOz7E
+         q7g3yVOFNmZDNJiyrLb7uSW1KGLl0Q1+OFgPCeLMQs4aOOlyJ3DLJmK3xFUpVrkpjcsB
+         QQY6IbgORFPsALQkh8diwYLGK2Iijn5DUi7LcqCzPyJj5Pixni0GPZh99oEQHA9a1HDc
+         QuLsPci3N/i5e6QkqSbRmroGlDOqP8DKDJE1pkprzCZ4CQ2YDpVXaUlmhimtsJwtsYcH
+         a6bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6zUuNAxC0W8UA4PyJfN+NTLv2uHwtQW0uxPeJFySWhY=;
+        b=UmXGdEGHfMixbIsJyZ+5BxQfTxvxvNY2V9Fc1QzEotKi+1Zj1QjW6M2DPinzyqjSfD
+         TaaDz9wL8rYcNpNYIv5Ao14rugQgiblkSTYJZeKKj/Euczo2OZ7sv8ZxdrzRHqftIqrj
+         5wvg6J28TRjrBNEZ7KlQ0ionCTYlRslgZ4hAUwrLTb99vxl2VWLvWuv8u2SIT90vyqYZ
+         4c8Lzpp3GtHWHecOWwURvYlXxt1WG/b8sxCkiToDHeIoxiUDy570boIZKi3hG3ccta9u
+         nWzg88hVhxZeJ9KFAFLNG+zIyo8pNXZCU8CyUmjpCDNf7c08ET1bSJGHnuxC1bWJUDMT
+         qyWA==
+X-Gm-Message-State: APjAAAUVN6Nj0yfZOlaR9GiqUlZ/qFJFM2EW2jkat5XiEnGcL0RN23BV
+        PeeH13Apl8V8BtBuYkjiTLRUtw==
+X-Google-Smtp-Source: APXvYqzEwIAjKS3Em026GIl/n6OaECDF5z0P7UjmcJEJgVEtwMvAC0d3LOiyLBn306FibVuHBvyEHQ==
+X-Received: by 2002:ac8:444c:: with SMTP id m12mr6913649qtn.306.1562945564475;
+        Fri, 12 Jul 2019 08:32:44 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id v75sm4201337qka.38.2019.07.12.08.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jul 2019 08:32:44 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlxXP-0002Tp-KZ; Fri, 12 Jul 2019 12:32:43 -0300
+Date:   Fri, 12 Jul 2019 12:32:43 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Doug Ledford <dledford@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: Re: [PATCH] rdma/siw: avoid smp_store_mb() on a u64
+Message-ID: <20190712153243.GI27512@ziepe.ca>
+References: <20190712144257.GE27512@ziepe.ca>
+ <20190712135339.GC27512@ziepe.ca>
+ <20190712120328.GB27512@ziepe.ca>
+ <20190712085212.3901785-1-arnd@arndb.de>
+ <OF05C1A780.433E36D1-ON00258435.003381DA-00258435.003F847E@notes.na.collabserv.com>
+ <OF36428621.B839DE8B-ON00258435.00461748-00258435.0047E413@notes.na.collabserv.com>
+ <OF3D069E00.E0996A14-ON00258435.004DD8C8-00258435.00502F8C@notes.na.collabserv.com>
+ <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a1ae16a7-e8f7-b6fc-df4e-46079bebf9b3@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <OF9F46C3F6.DC3E03FF-ON00258435.00521546-00258435.00549C01@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:36:29PM +0100, Jon Hunter wrote:
+On Fri, Jul 12, 2019 at 03:24:09PM +0000, Bernard Metzler wrote:
 > 
-> On 12/07/2019 13:19, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.1 release.
-> > There are 61 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.2:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.2.1-rc1-g61731e8fe278
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
+> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> >Date: 07/12/2019 04:43PM
+> >Cc: "Arnd Bergmann" <arnd@arndb.de>, "Doug Ledford"
+> ><dledford@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+> >linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+> >Subject: [EXTERNAL] Re: Re: Re: [PATCH] rdma/siw: avoid
+> >smp_store_mb() on a u64
+> >
+> >On Fri, Jul 12, 2019 at 02:35:50PM +0000, Bernard Metzler wrote:
+> >
+> >> >This looks wrong to me.. a userspace notification re-arm cannot be
+> >> >lost, so have a split READ/TEST/WRITE sequence can't possibly
+> >work?
+> >> >
+> >> >I'd expect an atomic test and clear here?
+> >> 
+> >> We cannot avoid the case that the application re-arms the
+> >> CQ only after a CQE got placed. That is why folks are polling the
+> >> CQ once after re-arming it - to make sure they do not miss the
+> >> very last and single CQE which would have produced a CQ event.
+> >
+> >That is different, that is re-arm happing after a CQE placement and
+> >this can't be fixed.
+> >
+> >What I said is that a re-arm from userspace cannot be lost. So you
+> >can't blindly clear the arm flag with the WRITE_ONCE. It might be OK
+> >beacuse of the if, but...
+> >
+> >It is just goofy to write it without a 'test and clear' atomic. If
+> >the
+> >writer side consumes the notify it should always be done atomically.
+> >
+> Hmmm, I don't yet get why we should test and clear atomically, if we
+> clear anyway - is it because we want to avoid clearing a re-arm which
+> happens just after testing and before clearing?
 
-That was fast, thanks for testing all of these.
+It is just clearer as to the intent.. 
 
-greg k-h
+Are you trying to optimize away an atomic or something? That might
+work better as a dual counter scheme.
+
+> Another complication -- test_and_set_bit() operates on a single
+> bit, but we have to test two bits, and reset both, if one is
+> set.
+
+Why are two bits needed to represent armed and !armed?
+
+Jason
