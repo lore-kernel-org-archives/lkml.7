@@ -2,87 +2,115 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8277C742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D34C742D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3CC208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC9D208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 22:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="i0yJjUJO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NFurjCS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfGLWHv (ORCPT
+        id S1728046AbfGLWKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 18:07:51 -0400
-Received: from mout.gmx.net ([212.227.17.21]:48299 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727245AbfGLWHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 18:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562969259;
-        bh=fq3Eu2ziIA671I7SsmDCF6l1LQRFKArhSLSl56LX2rE=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=i0yJjUJOIPQQBV5nUDzcy6lcuiN7rQx29HsMp5wlv6/vesemvblZ+W9nQ4nMMc6q2
-         guUpTeEeT9vn/x5V0m4iZ548l15BakVVxtibcVwGdfDjeyvwdMC0R7eqwpUujM7C85
-         SNDMWbWQJ6eGwFBPl2MG8AA8lwnCY+emlev3DV1I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.0.18] ([82.19.195.159]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MCsQ4-1hdIGB1sga-008olC; Sat, 13
- Jul 2019 00:07:39 +0200
-Subject: Re: Asus C101P Chromeboot fails to boot with Linux 5.2
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
- <CANBLGcyO5wAHgSVjYFB+hcp+SzaKY9d0QJm-hxqnSYbZ4Yv97g@mail.gmail.com>
- <862e98f3-8a89-a05e-1e85-e6f6004da32b@gmx.co.uk>
-Message-ID: <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
-Date:   Fri, 12 Jul 2019 23:07:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 18:10:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34675 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfGLWKA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 18:10:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so4891669pfo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 15:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=zuU348vMM9aXraE4ccy+eAHv0CShi7BKwdNOAqDmvDI=;
+        b=NFurjCS4ooi0Fvo+RA6fYOmAV3aI9uoCXtAdcbExWzcIftI8DfV9JB8MhRl69Nkd12
+         WJlgvG6DaRBT85EjBYvmNsJOMUBjLpOwKA8/MF6ehv7mq7G2SQDEX+RScKErCld4Oh9n
+         lx5EEDhrlZvfID2u1YwWjPNskhw8Msgc1X2OpGnLqrmXlt123SbRgZQKprlIhWhxHowA
+         TFO95zYgyxnLNE1dsmf/IhAx9WFRQHstemWHiXAeZf3/oQbfFufly73Y48mzb1yXanjg
+         PtQD6sHac7/JTOtjepbHEuZ7hG6AzXCbirlxWuFgsUgBTQe5LnVv2jdiqCqZ0ALh3FsT
+         nm3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=zuU348vMM9aXraE4ccy+eAHv0CShi7BKwdNOAqDmvDI=;
+        b=YTgqQx42OYTMchr19sVhZJS1bYMlEGc5bCRuc0GpOtMVTpjYIH2SjxgayFGDFet9DZ
+         oVZDRjFM5HzXnolOc1r0DcCEQsxDC70TahO9ClghOEKqgyu4h4dkpfZY7oN+Uk9I+jlo
+         2ZOpvQkvvcRgQ96aTKMpnC53KjwvpRd6b7sbayzKUK7kXEbsolYAIQ71gxpfdTC0LkHR
+         rgaSc9Oew4cFo2BXZSVyzCeBMi6aGzIr+tkMiyXd/8/qajO5MB0BknnjqownWDOcESYT
+         fZcecVdxpYoWqgt6JxwrJDwwc/lBNWtShLEb+ngbTkZxEqBPSMkc6SP+ArvKD88JdYAJ
+         53mw==
+X-Gm-Message-State: APjAAAXXwAXfvP5Du1oNmUpIGKUVa9V/5DrH7q2WuurMfhTBiO8oZacw
+        KGJCe/mLcMlvYx0iwJsNkcDlbg==
+X-Google-Smtp-Source: APXvYqwtSX+yfy8odN8PRwvf2FSTIt4YJkTQBI3CdsfQxFtcWWA+E8aK56vQe+awruZFmyJt1JcKhg==
+X-Received: by 2002:a63:231c:: with SMTP id j28mr13362263pgj.430.1562969399631;
+        Fri, 12 Jul 2019 15:09:59 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id f7sm9398759pfd.43.2019.07.12.15.09.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 15:09:58 -0700 (PDT)
+From:   bsegall@google.com
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+        <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
+        <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
+        <xm26lfxhwlxr.fsf@bsegall-linux.svl.corp.google.com>
+        <20190711095102.GX3402@hirez.programming.kicks-ass.net>
+        <xm26v9w8jwgl.fsf@bsegall-linux.svl.corp.google.com>
+        <CAC=E7cV4sO50NpYOZ06n_BkZTcBqf1KQp83prc+oave3ircBrw@mail.gmail.com>
+Date:   Fri, 12 Jul 2019 15:09:57 -0700
+In-Reply-To: <CAC=E7cV4sO50NpYOZ06n_BkZTcBqf1KQp83prc+oave3ircBrw@mail.gmail.com>
+        (Dave Chiluk's message of "Thu, 11 Jul 2019 18:48:24 -0500")
+Message-ID: <xm26muhikiq2.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <862e98f3-8a89-a05e-1e85-e6f6004da32b@gmx.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wM6J7pCtfh2xM9icqBRa8aCSzjrU4kNCO9rWjhjgxXlj1P34JwA
- s2sLTX6BkjnBIeUDAYpI0G7I9TSJfUy6Mc2HEGBP+Z8WQUoFiRsGlBqtVHJtbX/7AeCL3h+
- 3Nrn1KH6hcjKZbTsmxpNK5FLggvEq2ejKQCmxu9gB4+QcabipEirpdj9LpDrZ6yrqt5gms+
- uLy9VPtyC8f9GRW8+GLig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Uc0Z/ZQQ3QM=:x7qcb3W6leQ49tXe59YmvK
- dbpxxswm5QMx2N6gQz3JnrgUHezku28Jjowo8HE23fOWTUIRUWqPPMmqPJGRSJ6Es5ffl5zHP
- t4U8/ftDE9RmYtdhNeahPEC5QqT59m0ZRocLm2RHVCi3xoyrvwmZw+DxJSXIgKAL4LLJ0gjku
- LQfcBqiOQH0mRihOqLT2h+gA3zSRBYgyvj/n1t7+rGRb8zHKGUMC10LexjsZKPELFjQ6cL99N
- Ty7HSAyZ2AY9CVJpyhE3dbqs3F+/QW3J9TIYfUXS3ehkV04FNwkyzX5zM9YDpGhZT075BXKKV
- tKvIfjN43UVRQobDa+MsRimMp8aU4h41WAXmUK7o9gcpY88ni3oxof+9mI41zAfbyzGd6Intx
- 0p+kbthPMgWuVTrPyTj3YnQQ4NWL9arCxBdU5Hns3xWkt0Keya924xp0a0KparYfc+TbRQ8gf
- umTOYKibTIZOZJEmZ137d0KlEfvdRY8qoGv4abUrpaIuTUU7iqi6k+256XXwBUdmNkun5qrkR
- ldBFYlae8cO+Ckxt8gwuvy0rh/QCjIkHKDj9yTLMQ5hOom/3zkO8aMzl4om/2ce+LJjPTE4Q+
- 11RftmSHaHc7dGsOaxdoScTiYnZQrHnr5h5LstJ+vBVwIJ9kqyhSmMG303cFpD0phlu07LQHv
- P7UCYwjiN/whfIb9ZTIibWPoNyd/jSjg4iqRQN6vnDgOl5e10n2Od8TeiGZ3e+3s4e81s0Z9/
- zwpcYmvJ23ripEc2G83B8r5EEmJdAW/TayJ879MZcnFuYsSokmnqONAvtq1doP80/L1jADlvv
- YxwE3W0AAY+pCB6yRhkNNG6uUQbA2vmBD4LevCYWm9oVg/zQk0bs2L1voMbHkAGIgbfVpCjOK
- 0SEEPF2fovMPtoB4QzODt4rdFmjzOyZp6TaC7V7UfOu67Rr93ycSWAYpmQgWi8DwETyhm18UY
- 9Ywy+Nk6nWDzAgMItqeS1Tm8nnOMs9Lp3IFoQEz93wkIb2658+HDxBUFjyI529xiYci5rwV+f
- 8hwc+M9K0XUvtNCZ6C1o8Kcyh7MLs/BViux7V6qq91T13PPxr6I8FWr2U2Xr6xqMGei3n+ZIc
- JSDiwaYWLtE8S9F2C0I5x+h1jDsvDfdYZp7
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I just built v5.1 and v5.2 from source, without the Arch patches, and
-get the same result: 5.1 boots and 5.2 doesn't. I tried adding
-ignore_loglevel, but still just get a blinking cursor. So it's
-definitely a regression.
+Dave Chiluk <chiluk+linux@indeed.com> writes:
 
-I can have a go at bisecting this if it would help? Or is there
-something else we could try first?
+> So I spent some more time testing this new patch as is *(interrupts disabled).  I know I probably should have fixed the patch, but it's hard to get time on big test hardware sometimes, and I was already well along my way with testing.
+>
+> In regards to the quota usage overage I was seeing earlier: I have a theory as to what might be happening here, and I'm pretty sure it's related to the IRQs being disabled during the rq->lock walk.  I think that the main fast thread was able to use an excess amount
+> of quota because the timer interrupt meant to stop it wasn't being handled timely due to the interrupts being disabled.  On my 8 core machine this resulted in a what looked like simply improved usage of the quota, but when I ran the test on an 80 core machine I
+> saw a massive overage of cpu usage when running fibtest.  Specifically when running fibtest for 5 seconds with 50ms quota/100ms period expecting ~2500ms of quota usage; I got 3731 ms of cpu usage which was an unexpected overage of 1231ms. Is that a
+> reasonable theory?
 
-Alex
+I think I've figured out what's going on here (and a related issue
+that gave me some inconsistency when trying to debug it): other "slow"
+threads can wake up while the slack timer is in distribute and
+double-spend some runtime. Since we lsub_positive rather than allow
+cfs_b->runtime to be negative this double-spending is permanent, and can
+go on indefinitely.
+
+In addition, if things fall out in a slightly different way, all the
+"slow" threads can wind up getting on cpu and claiming slices of runtime
+before the "fast" thread, and then it just has to wait another slack
+period to hope that the ordering winds up better that time. This just
+depends on things like IPI latency and maybe what order things happened
+to happen at the start of the period.
+
+Ugh. Maybe we /do/ just give up and say that most people don't seem to
+be using cfs_b in a way that expiration of the leftover 1ms matters.
