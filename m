@@ -2,154 +2,131 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97F4C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8475C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C6120863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD08E20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtk0aFMg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrtWikF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfGLH0S (ORCPT
+        id S1726262AbfGLH0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:26:18 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44080 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfGLH0S (ORCPT
+        Fri, 12 Jul 2019 03:26:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36099 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfGLH0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:26:18 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b7so8505022otl.11;
-        Fri, 12 Jul 2019 00:26:17 -0700 (PDT)
+        Fri, 12 Jul 2019 03:26:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so3927952pfl.3;
+        Fri, 12 Jul 2019 00:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VNJoqRcbKfhKDWhUvxkLWT9gQ3/MJRqP0B1UNXuiT+8=;
-        b=jtk0aFMgPDlpMm17OP1lFrIdxOQ0uzR0e3NMANmavwJE6BItiooHjsecvrMVwueA67
-         ceZGyHG/4TuyMk7CfqWZhfZ4VYBugW9pCFEa6a9o51IqD8WrRgzX29CF8nIMp6rHsbn3
-         exyCxg65v5NW1T5VnJkHqyoDx0NHwaJlR7Tanb/N+aEyDZ0rnj47HqNV1t8N3/RkbVmr
-         GR/2n9vDXMruYdWSmwOw14Bgl1EkfidHPoW5Cpuizhci+YGoMEOH55EbZWOabrPOacwM
-         xtFf2t5nb5hfW7IGcfeBiqFTxDMIi5qGqpzLh1SmPeWlJhdQXwwBFLQo715gdsuN+n/C
-         +QdA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GM4E4omai6eUpjjddeuGvkdyjfxAyCJ8u0HfjV4CSgM=;
+        b=VrtWikF60K5u7Np2ZPQAb5qhwb8APG0QWk6xD8wZVT5sAbatel/6WvweQLuiu+jOmH
+         d8ghD9oVVCeD801BozuxJaAZ3yD4sP6hoI9FaM14Doig8m4cuxdIZOXu4MywMZQ1nl2Z
+         cCVsAusIYq24+cD9r4BKrBhVvZF6Aawil78oZM3DAyUemEleBVmwKp/W88B8iEWpz5eP
+         TzOcDvTe1KlxOkA5k1oOh5d5NplC0ltF3MPBIB8i7eFwiMD/WcrgKLtt4QkX4nzB5T6e
+         8wZQUQIV+0r/n3QVKHmJbWI7Ae+6MP4VhxdNwEe6/7IO7h38mFSHU+2x/27Dj1fctS5K
+         twjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VNJoqRcbKfhKDWhUvxkLWT9gQ3/MJRqP0B1UNXuiT+8=;
-        b=qaBhxibKqP1IDS3rXyQ/moNrOgBHuZN1NMXOBSoKDNMghRaPJ4Jpx0S2AeuMCPsZJ8
-         Vm6pAI9/tq7cDAoF5/f7uT+++cnWVQbXjali34zUA4tGiaY6PYKIPULAoi/+7FJYD+4p
-         Y0eBCIQGOZeyFoZO/VbGiB6RYoXY6ry1ohBCdVZikH3xgeFTAtvW9INrGrTYEbeiCgsO
-         wX/QhNz1kNwmEthBCpP0MKa0BrIFu6TXJ04iDuBP5ng3IxeI1R9Gh9gtGg14qQ61CBbz
-         CiFHrN1BMUyhwJ5pSOYpmSCTz2RXeMDyK8upx0hc/OUABUT0i9Y0RBM7QzzUclX9uhiH
-         6TTQ==
-X-Gm-Message-State: APjAAAW85i/ur0+QJ1pRjJvHxnCyie5cUbKLNluWbAeGAcwAVGZW9geU
-        O3K601M5L45JFHlRdHbw6KRPnJfaR2IPY5zrTWoLvM4Y
-X-Google-Smtp-Source: APXvYqxZ48Ky19BaIBic7RiSxjxV70cGtBoykOEGaL6a1fjG15SWP04gqSUsJOcP1Frrrm3Y0jMGzL1WW/fiAhUJs34=
-X-Received: by 2002:a9d:4590:: with SMTP id x16mr6715741ote.254.1562916377053;
- Fri, 12 Jul 2019 00:26:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GM4E4omai6eUpjjddeuGvkdyjfxAyCJ8u0HfjV4CSgM=;
+        b=GHyiLBfseuPCMT3aFPBS5wopkrAfV/4/h7tGUkvvR25Cbc81dEkpyaBWwacFdf2Bvu
+         UVsBPSB5hEkkTplM586jf1bwoYRTlyUHC21u+X0jeLH8/eVo4K/QxZbYH+5vY5sN3wgl
+         TC7qi+euSPYhBhQRQtFkHJKRlUkZNscQorOaqkPiiF3PEgnuoH9kbMhBNZQKdwqNsHL9
+         g7JRdrDtpEEkWuqOUW3EayDYjTWRvQTBjS3cpK5Bfch0uoIJRjm/tbzawm7nL7Xoajae
+         bxyhVxS2r/1LDeSm3WjoSOaJxWXsUUehtsdWzE5/5Njho+BGd/uosxi0ZHTbXutw/Tgj
+         m1LQ==
+X-Gm-Message-State: APjAAAUL9yHp+2xSf0OTiyS8os1Gdg9mosjR57L0t1EWz3hAmzqBMvHW
+        IWuEHh8vK5gPKEeukD/GWoE9ipeZseE=
+X-Google-Smtp-Source: APXvYqztXegq2ZsLM8aK1h6VgHcW+DGB0dnrXVu7KE6Td9QrRPf+FzaxubdlwNmmHl3Unq6C2BXJEQ==
+X-Received: by 2002:a17:90a:5806:: with SMTP id h6mr9638201pji.126.1562916400651;
+        Fri, 12 Jul 2019 00:26:40 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id c8sm13795725pjq.2.2019.07.12.00.26.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 00:26:40 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] usb: dwc3: Use devres to get clocks
+Date:   Fri, 12 Jul 2019 00:26:33 -0700
+Message-Id: <20190712072634.3107-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 12 Jul 2019 15:25:55 +0800
-Message-ID: <CANRm+Cz-FuQ4hvDOUVn-1_H8hH9uOv=+N7R5YaFUw6kPFTC_4Q@mail.gmail.com>
-Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 at 15:15, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during vcpu w=
-akeup
-> and interrupt delivery), except the lock holder, we want to also boost vC=
-PUs
-> that are delivering interrupts. Actually most smp_call_function_many call=
-s are
-> synchronous ipi calls, the ipi target vCPUs are also good yield candidate=
-s.
-> This patch sets preempted flag during wakeup and interrupt delivery time.
->
+Use devres to get clocks and drop explicit clock freeing. No
+functional change intended.
 
-I forgot to mention that I disable pv tlb shootdown during testing,
-function call interrupts are not easy to be triggered directly by
-userspace workloads, in addition, distros' guest kernel w/o pv tlb
-shootdown support can also get benefit in both tlb shootdown and
-function call interrupts scenarios.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/usb/dwc3/core.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-> Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
-> ebizzy -M
->
->             vanilla     boosting    improved
-> 1VM          23000       21232        -9%
-> 2VM           2800        8000       180%
-> 3VM           1800        3100        72%
->
-> Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs,
-> one running ebizzy -M, the other running 'stress --cpu 2':
->
-> w/ boosting + w/o pv sched yield(vanilla)
->
->             vanilla     boosting   improved
->               1570         4000       55%
->
-> w/ boosting + w/ pv sched yield(vanilla)
->
->             vanilla     boosting   improved
->               1844         5157       79%
->
-> w/o boosting, perf top in VM:
->
->  72.33%  [kernel]       [k] smp_call_function_many
->   4.22%  [kernel]       [k] call_function_i
->   3.71%  [kernel]       [k] async_page_fault
->
-> w/ boosting, perf top in VM:
->
->  38.43%  [kernel]       [k] smp_call_function_many
->   6.31%  [kernel]       [k] async_page_fault
->   6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
->   4.88%  [kernel]       [k] call_function_interrupt
->
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  virt/kvm/kvm_main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index b4ab59d..2c46705 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
->         int me;
->         int cpu =3D vcpu->cpu;
->
-> -       if (kvm_vcpu_wake_up(vcpu))
-> +       if (kvm_vcpu_wake_up(vcpu)) {
-> +               vcpu->preempted =3D true;
->                 return;
-> +       }
->
->         me =3D get_cpu();
->         if (cpu !=3D me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
-> --
-> 2.7.4
->
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index c9bb93a2c81e..768023a2553c 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1436,7 +1436,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	if (dev->of_node) {
+ 		dwc->num_clks = ARRAY_SIZE(dwc3_core_clks);
+ 
+-		ret = clk_bulk_get(dev, dwc->num_clks, dwc->clks);
++		ret = devm_clk_bulk_get(dev, dwc->num_clks, dwc->clks);
+ 		if (ret == -EPROBE_DEFER)
+ 			return ret;
+ 		/*
+@@ -1449,7 +1449,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 
+ 	ret = reset_control_deassert(dwc->reset);
+ 	if (ret)
+-		goto put_clks;
++		return ret;
+ 
+ 	ret = clk_bulk_prepare(dwc->num_clks, dwc->clks);
+ 	if (ret)
+@@ -1536,8 +1536,6 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
+ assert_reset:
+ 	reset_control_assert(dwc->reset);
+-put_clks:
+-	clk_bulk_put(dwc->num_clks, dwc->clks);
+ 
+ 	return ret;
+ }
+@@ -1560,7 +1558,6 @@ static int dwc3_remove(struct platform_device *pdev)
+ 
+ 	dwc3_free_event_buffers(dwc);
+ 	dwc3_free_scratch_buffers(dwc);
+-	clk_bulk_put(dwc->num_clks, dwc->clks);
+ 
+ 	return 0;
+ }
+-- 
+2.21.0
+
