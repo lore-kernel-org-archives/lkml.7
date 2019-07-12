@@ -2,57 +2,57 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F16EC742D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8461C742D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381DC20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846A220651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 17:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eYXrM2WL"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="UAjbMqka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfGLRBL (ORCPT
+        id S1727671AbfGLRBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 13:01:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40715 "EHLO
+        Fri, 12 Jul 2019 13:01:15 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44089 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727621AbfGLRBI (ORCPT
+        with ESMTP id S1727654AbfGLRBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:01:08 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so4794338pgj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:01:08 -0700 (PDT)
+        Fri, 12 Jul 2019 13:01:13 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so4783624pgl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:01:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6RmNbUV7T0k7oTgTgqPSb316w9vmnfcC0D62WW7RJx8=;
-        b=eYXrM2WLV58NP1KCONebjPFiinEkCr1PbfKqKosZ55g7UxqG77r9zIodU73tp0Qth+
-         IFhRfs5YGzzzu/R0J0skbnp9mq5m9zRDKJdbmZdoCIWguTdAS0yXjSU62Vg6aDYQ7P+s
-         azz8V1gMNfUhQsOnaJFdrIUfDYyIaqTbweOzQ=
+        bh=/5hJQY7vBLoyimOM3U70MNxFgsc86oXhHYtdVzU5ujQ=;
+        b=UAjbMqka7p1GCxFlNusyg29g1RCPFz9WIMtWvkN7qrcNF+ATnO9YKmLvPnuqPRJWG8
+         01CXWPFPyGYm3lOSoebpREdMbvmnc55dMqjKROvd/t5QxrZ6o7iZwPGUGOYk4Ll55hdr
+         IVAnsP7Rq6Ff+RAPzreODHBCQNzqAghR4nuBM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6RmNbUV7T0k7oTgTgqPSb316w9vmnfcC0D62WW7RJx8=;
-        b=l8asCc/0fbr7twh7NeJZhNs9swFvse6hv0Ksi0tHZNsm1HWywtCjiFUnq9Vs6MqvNb
-         9Wit4pXJtRvy1OO30+jOL4f/f0qDcGKtO0FSiHhshvp2rEO+IJZLmD6WGbqwsmJIuI6E
-         CkoGObrAJujwi1t7A96UXnSYNJjDFSKB8v1/9F5SSrVZb4tiBGtQqmHr1M31F0OLMnAh
-         cgrUG5E4Kz0Ihaoo3WtRHGNkrI1NYYMxvMyzGRj03qfSryML/Caov65KtfHyUkPNg+8I
-         8AO/Y3a3tx7BgLSqNW9rI6we+LIDmOo9cG6h3h8l5C0RJ6Pohv9VZ+TEvv0HZv+uOG42
-         xumA==
-X-Gm-Message-State: APjAAAWs77DfXTJWTf/40LZgnxqEWVQjPk1ntey0qSYI0/YPADV6W+gn
-        yaqiXQ0tdWPYVEC1XfU/Kwz1Gmin
-X-Google-Smtp-Source: APXvYqxKxYQtb3kCi5Es2va1si+e4rA1c+EDf95PgVgddPYvjU993xnsOY781zySY6KXMLZ7Ba/CQg==
-X-Received: by 2002:a63:1d2:: with SMTP id 201mr11952298pgb.232.1562950867353;
-        Fri, 12 Jul 2019 10:01:07 -0700 (PDT)
+        bh=/5hJQY7vBLoyimOM3U70MNxFgsc86oXhHYtdVzU5ujQ=;
+        b=G7iack0dedj0nsPTM2lMHWx6niCtANxyxgpnESvDyMfvHNDBFlprhnCn2027ORE0uW
+         WlUGwupEoWyTbUtZKGjkJDAgl0tAVk/Sp7id2LsbAdtJV3tpctrJCue1+0h41ADEPj/U
+         Lmf1U392UUk8shmr7fv2u3X51EjmT/hrWiRKjSrTUb/GW6kL1vRXdSQPUTdO2VI/G3y0
+         mB6m8wit80sGcZtigyty6TGQeBQNTJpviJJSx1c6LvkC33iZTkvwR6IIA1oyGq6vT7yD
+         IXLT/h7rlxdJqEVhHfbGWWKiV+1ocS3pROByyXqfiIr3zK4AYsENBJlN5UN43omeQcmH
+         bw/A==
+X-Gm-Message-State: APjAAAVRqfn9WaUkZyTPwRAHZYxJ//X5lxhbWLkXaGbL5+6DtKLrlOVJ
+        wlnTsT745adoUkDdzFvLkObHJRvL
+X-Google-Smtp-Source: APXvYqysKQjlbPJnzD1SgXu0qrPOgUWrpmjWhJmLr3dLME/oF4p6YcJaiWDgGdC5pNxKNHie+MpwEA==
+X-Received: by 2002:a63:dc56:: with SMTP id f22mr12036675pgj.305.1562950871565;
+        Fri, 12 Jul 2019 10:01:11 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a15sm7127385pgw.3.2019.07.12.10.01.03
+        by smtp.gmail.com with ESMTPSA id a15sm7127385pgw.3.2019.07.12.10.01.07
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 10:01:06 -0700 (PDT)
+        Fri, 12 Jul 2019 10:01:10 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -81,9 +81,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Tejun Heo <tj@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
         x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH v2 8/9] acpi: Use built-in RCU list checking for acpi_ioremaps list
-Date:   Fri, 12 Jul 2019 13:00:23 -0400
-Message-Id: <20190712170024.111093-9-joel@joelfernandes.org>
+Subject: [PATCH v2 9/9] doc: Update documentation about list_for_each_entry_rcu
+Date:   Fri, 12 Jul 2019 13:00:24 -0400
+Message-Id: <20190712170024.111093-10-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
 In-Reply-To: <20190712170024.111093-1-joel@joelfernandes.org>
 References: <20190712170024.111093-1-joel@joelfernandes.org>
@@ -94,52 +94,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry_rcu has built-in RCU and lock checking. Make use of
-it for acpi_ioremaps list traversal.
+This patch updates the documentation with information about
+usage of lockdep with list_for_each_entry_rcu().
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- drivers/acpi/osl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/RCU/lockdep.txt   | 15 +++++++++++----
+ Documentation/RCU/whatisRCU.txt |  9 ++++++++-
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index f29e427d0d1d..c8b5d712c7ae 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -28,6 +28,7 @@
- #include <linux/slab.h>
- #include <linux/mm.h>
- #include <linux/highmem.h>
-+#include <linux/lockdep.h>
- #include <linux/pci.h>
- #include <linux/interrupt.h>
- #include <linux/kmod.h>
-@@ -94,6 +95,7 @@ struct acpi_ioremap {
+diff --git a/Documentation/RCU/lockdep.txt b/Documentation/RCU/lockdep.txt
+index da51d3068850..3d967df3a801 100644
+--- a/Documentation/RCU/lockdep.txt
++++ b/Documentation/RCU/lockdep.txt
+@@ -96,7 +96,14 @@ other flavors of rcu_dereference().  On the other hand, it is illegal
+ to use rcu_dereference_protected() if either the RCU-protected pointer
+ or the RCU-protected data that it points to can change concurrently.
  
- static LIST_HEAD(acpi_ioremaps);
- static DEFINE_MUTEX(acpi_ioremap_lock);
-+#define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
+-There are currently only "universal" versions of the rcu_assign_pointer()
+-and RCU list-/tree-traversal primitives, which do not (yet) check for
+-being in an RCU read-side critical section.  In the future, separate
+-versions of these primitives might be created.
++Similar to rcu_dereference_protected, The RCU list and hlist traversal
++primitives also check for whether there are called from within a reader
++section. However, an optional lockdep expression can be passed to them as
++the last argument in case they are called under other non-RCU protection.
++
++For example, the workqueue for_each_pwq() macro is implemented as follows.
++It is safe to call for_each_pwq() outside a reader section but under protection
++of wq->mutex:
++#define for_each_pwq(pwq, wq)
++	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,
++				lock_is_held(&(wq->mutex).dep_map))
+diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
+index 981651a8b65d..a08c03735963 100644
+--- a/Documentation/RCU/whatisRCU.txt
++++ b/Documentation/RCU/whatisRCU.txt
+@@ -290,7 +290,7 @@ rcu_dereference()
+ 	at any time, including immediately after the rcu_dereference().
+ 	And, again like rcu_assign_pointer(), rcu_dereference() is
+ 	typically used indirectly, via the _rcu list-manipulation
+-	primitives, such as list_for_each_entry_rcu().
++	primitives, such as list_for_each_entry_rcu() [2].
  
- static void __init acpi_request_region (struct acpi_generic_address *gas,
- 	unsigned int length, char *desc)
-@@ -220,7 +222,7 @@ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
- {
- 	struct acpi_ioremap *map;
+ 	[1] The variant rcu_dereference_protected() can be used outside
+ 	of an RCU read-side critical section as long as the usage is
+@@ -305,6 +305,13 @@ rcu_dereference()
+ 	a lockdep splat is emitted.  See RCU/Design/Requirements/Requirements.html
+ 	and the API's code comments for more details and example usage.
  
--	list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-+	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
- 		if (map->phys <= phys &&
- 		    phys + size <= map->phys + map->size)
- 			return map;
-@@ -263,7 +265,7 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
++	[2] In case the list_for_each_entry_rcu() primitive is intended
++	to be used outside of an RCU reader section such as when
++	protected by a lock, then an additional lockdep expression can be
++	passed as the last argument to it so that RCU lockdep checking code
++	knows that the dereference of the list pointers are safe. If the
++	indicated protection is not provided, a lockdep splat is emitted.
++
+ The following diagram shows how each API communicates among the
+ reader, updater, and reclaimer.
  
--	list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-+	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
- 		if (map->virt <= virt &&
- 		    virt + size <= map->virt + map->size)
- 			return map;
 -- 
 2.22.0.510.g264f2c817a-goog
 
