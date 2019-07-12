@@ -2,87 +2,304 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FE9C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC29C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63302084B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE60D20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 07:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfGLHVt (ORCPT
+        id S1726174AbfGLHXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 03:21:49 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:55009 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfGLHVt (ORCPT
+        Fri, 12 Jul 2019 03:23:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40810 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfGLHXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 03:21:49 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 54820E0004;
-        Fri, 12 Jul 2019 07:21:46 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 09:21:45 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Zeng Tao <prime.zeng@hisilicon.com>
-Cc:     kishon@ti.com, Chen-Yu Tsai <wens@csie.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] phy: Change the configuration interface param to void*
- to make it more general
-Message-ID: <20190712072145.gr3dbfvdfgrye6yi@flea>
-References: <1562923580-47746-1-git-send-email-prime.zeng@hisilicon.com>
+        Fri, 12 Jul 2019 03:23:33 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a15so7115527qtn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 00:23:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZN5x6Ys58BLlrYAsJgOSevY7V/yhMtrVcdtnejK+Hg=;
+        b=ZtgE4yUbkMPlAZAXS13brJHfqgT9pkrzBC8PEguYudg8zMpXX+FHAr4je7ECzp+RGp
+         BDqifo9NXK/9oEitREZiAFiCGLHu697pE10kyp2rVA/7O33ChUTj/wylyisFiAo4t3le
+         Np42KZpYOQaZrRX2Pgw1EMI2CIc7VSfdGjcjADLa9ApEMlRWJUox5EvbHwXYKSV+8gIA
+         5WeW6hUEIk2al/ZfkBCD3SZ78tSycBfnsOqlBEIaeibQKBY4MaZrJJhEkdCHShWTER3v
+         U8XJvhLf25rxaxVb6CuntY3qXcmUizo1+a2HtHGtPzQTk1f/eeOSkb7rLwilv/RZRKRb
+         S4ow==
+X-Gm-Message-State: APjAAAWAGSl2R4KpSFwLxwwV4wUoHR1D0vHogsXVOYQ46kGNR4Uv7WSk
+        Ut3qVLzb9s+HmsD17+pXJv1sM+Z4JZq5XQ3Bky1sHg==
+X-Google-Smtp-Source: APXvYqwV3Hjfdt6v18zMFmkS67+5p5Zd40nf+pcaUCmEGumWxDpBUOzadiADlSsmIQ7Yr4lOasrqfw7oAs278LCDhFw=
+X-Received: by 2002:aed:3ac1:: with SMTP id o59mr5149174qte.260.1562916212139;
+ Fri, 12 Jul 2019 00:23:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q4ycfudq7dncn663"
-Content-Disposition: inline
-In-Reply-To: <1562923580-47746-1-git-send-email-prime.zeng@hisilicon.com>
-User-Agent: NeoMutt/20180716
+References: <20190710230410.9386-1-atifniyaz@google.com> <20190712064134.GA150689@dtor-ws>
+In-Reply-To: <20190712064134.GA150689@dtor-ws>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 12 Jul 2019 09:23:20 +0200
+Message-ID: <CAO-hwJK-VAGpjN03XDTmmT4fYxb1V_izfvT9Z3tKDmLJ3henGw@mail.gmail.com>
+Subject: Re: [PATCH] input: API for Setting a Timestamp from a Driver
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Atif Niyaz <atifniyaz@google.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        Atif Niyaz <atifniyaz11@gmail.com>,
+        Siarhei Vishniakou <svv@google.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---q4ycfudq7dncn663
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jul 12, 2019 at 05:26:04PM +0800, Zeng Tao wrote:
-> The phy framework now allows runtime configurations, but only limited
-> to mipi now, and it's not reasonable to introduce user specified
-> configurations into the union phy_configure_opts structure. An simple
-> way is to replace with a void *.
+On Fri, Jul 12, 2019 at 8:41 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> We have already got some phy drivers which introduce private phy API
-> for runtime configurations, and with this patch, they can switch to
-> the phy_configure as a replace.
+> Hi Atif,
 >
-> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> On Wed, Jul 10, 2019 at 04:04:10PM -0700, Atif Niyaz wrote:
+> > Currently, evdev stamps time with timestamps acquired in
+> > evdev_events. However, this timestamping may not be accurate in terms of
+> > measuring when the actual event happened. This API allows any 3rd party
+> > driver to be able to call input_set_timestamp, and provide a timestamp
+> > that can be utilized in order to provide a more accurate sense of time
+> > for the event
+> >
+> > Signed-off-by: Atif Niyaz <atifniyaz@google.com>
+>
+> This looks OK to me. Benjamin, Peter, any concerns here?
+>
 
-I still don't believe this is the right approach, for the reasons
-exposed in my first review of that patch.
+No red flags from me (though Peter is the one using all of this).
 
-Maxime
+Just curious, which drivers do you think will be using this new API?
+I can see that we might want to use hid-multitouch for it, with the
+Scan Time forwarded by the device, but what do you have in mind?
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Cheers,
+Benjamin
 
---q4ycfudq7dncn663
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSg1CQAKCRDj7w1vZxhR
-xcl7AQD/l+gpdt4tLbilzX+6ZMKAGS3WAQO2akmyeVmUZrz6cwEA9wIVIvz4R8Zy
-JSba5uROdmHDOd3ljw0dOctpSOHXmAw=
-=FZ3v
------END PGP SIGNATURE-----
-
---q4ycfudq7dncn663--
+>
+> > ---
+> >  drivers/input/evdev.c | 42 ++++++++++++++++--------------------------
+> >  drivers/input/input.c | 17 +++++++++++++++++
+> >  include/linux/input.h | 38 ++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 71 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
+> > index 867c2cfd0038..a331efa0a3f6 100644
+> > --- a/drivers/input/evdev.c
+> > +++ b/drivers/input/evdev.c
+> > @@ -25,13 +25,6 @@
+> >  #include <linux/cdev.h>
+> >  #include "input-compat.h"
+> >
+> > -enum evdev_clock_type {
+> > -     EV_CLK_REAL = 0,
+> > -     EV_CLK_MONO,
+> > -     EV_CLK_BOOT,
+> > -     EV_CLK_MAX
+> > -};
+> > -
+> >  struct evdev {
+> >       int open;
+> >       struct input_handle handle;
+> > @@ -53,7 +46,7 @@ struct evdev_client {
+> >       struct fasync_struct *fasync;
+> >       struct evdev *evdev;
+> >       struct list_head node;
+> > -     unsigned int clk_type;
+> > +     input_clk_t clk_type;
+> >       bool revoked;
+> >       unsigned long *evmasks[EV_CNT];
+> >       unsigned int bufsize;
+> > @@ -150,16 +143,18 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
+> >  static void __evdev_queue_syn_dropped(struct evdev_client *client)
+> >  {
+> >       struct input_event ev;
+> > -     ktime_t time;
+> >       struct timespec64 ts;
+> > +     ktime_t *time = input_get_timestamp(client->evdev->handle.dev);
+> >
+> > -     time = client->clk_type == EV_CLK_REAL ?
+> > -                     ktime_get_real() :
+> > -                     client->clk_type == EV_CLK_MONO ?
+> > -                             ktime_get() :
+> > -                             ktime_get_boottime();
+> > +     switch (client->clk_type) {
+> > +     case INPUT_CLK_REAL:
+> > +     case INPUT_CLK_MONO:
+> > +             ts = ktime_to_timespec64(time[client->clk_type]);
+> > +             break;
+> > +     default:
+> > +             ts = ktime_to_timespec64(time[INPUT_CLK_BOOT]);
+>
+> Add "break" here please.
+>
+> > +     }
+> >
+> > -     ts = ktime_to_timespec64(time);
+> >       ev.input_event_sec = ts.tv_sec;
+> >       ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
+> >       ev.type = EV_SYN;
+> > @@ -185,21 +180,21 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
+> >       spin_unlock_irqrestore(&client->buffer_lock, flags);
+> >  }
+> >
+> > -static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
+> > +static int evdev_set_clk_type(struct evdev_client *client, clockid_t clkid)
+> >  {
+> >       unsigned long flags;
+> > -     unsigned int clk_type;
+> > +     input_clk_t clk_type;
+> >
+> >       switch (clkid) {
+> >
+> >       case CLOCK_REALTIME:
+> > -             clk_type = EV_CLK_REAL;
+> > +             clk_type = INPUT_CLK_REAL;
+> >               break;
+> >       case CLOCK_MONOTONIC:
+> > -             clk_type = EV_CLK_MONO;
+> > +             clk_type = INPUT_CLK_MONO;
+> >               break;
+> >       case CLOCK_BOOTTIME:
+> > -             clk_type = EV_CLK_BOOT;
+> > +             clk_type = INPUT_CLK_BOOT;
+> >               break;
+> >       default:
+> >               return -EINVAL;
+> > @@ -307,12 +302,7 @@ static void evdev_events(struct input_handle *handle,
+> >  {
+> >       struct evdev *evdev = handle->private;
+> >       struct evdev_client *client;
+> > -     ktime_t ev_time[EV_CLK_MAX];
+> > -
+> > -     ev_time[EV_CLK_MONO] = ktime_get();
+> > -     ev_time[EV_CLK_REAL] = ktime_mono_to_real(ev_time[EV_CLK_MONO]);
+> > -     ev_time[EV_CLK_BOOT] = ktime_mono_to_any(ev_time[EV_CLK_MONO],
+> > -                                              TK_OFFS_BOOT);
+> > +     ktime_t *ev_time = input_get_timestamp(handle->dev);
+> >
+> >       rcu_read_lock();
+> >
+> > diff --git a/drivers/input/input.c b/drivers/input/input.c
+> > index 7f3c5fcb9ed6..ae8b0ee58120 100644
+> > --- a/drivers/input/input.c
+> > +++ b/drivers/input/input.c
+> > @@ -1894,6 +1894,23 @@ void input_free_device(struct input_dev *dev)
+> >  }
+> >  EXPORT_SYMBOL(input_free_device);
+> >
+> > +/**
+> > + * input_get_timestamp - get timestamp for input events
+> > + * @dev: input device to get timestamp from
+> > + *
+> > + * A valid timestamp is a timestamp of non-zero value.
+> > + */
+> > +ktime_t *input_get_timestamp(struct input_dev *dev)
+> > +{
+> > +     const ktime_t invalid_timestamp = ktime_set(0, 0);
+> > +
+> > +     if (!ktime_compare(dev->timestamp[INPUT_CLK_MONO], ktime_zero)) {
+>
+> You need to replace ktime_zero with invalid_timestamp here.
+>
+> > +             input_set_timestamp(dev, ktime_get());
+> > +     }
+>
+> No need for curly braces for 1-line body.
+>
+> > +     return dev->timestamp;
+> > +}
+> > +EXPORT_SYMBOL(input_get_timestamp);
+> > +
+> >  /**
+> >   * input_set_capability - mark device as capable of a certain event
+> >   * @dev: device that is capable of emitting or accepting event
+> > diff --git a/include/linux/input.h b/include/linux/input.h
+> > index 510e78558c10..3929b62ccbe5 100644
+> > --- a/include/linux/input.h
+> > +++ b/include/linux/input.h
+> > @@ -33,6 +33,14 @@ struct input_value {
+> >       __s32 value;
+> >  };
+> >
+> > +enum input_clock_type {
+> > +     INPUT_CLK_REAL = 0,
+> > +     INPUT_CLK_MONO,
+> > +     INPUT_CLK_BOOT,
+> > +     INPUT_CLK_MAX
+> > +};
+> > +typedef enum input_clock_type input_clk_t;
+>
+> We typically avoid typedefs unless we really want to hide kind of data
+> we are dealing with. Let's just use "enum input_clock_type" everywhere.
+>
+> > +
+> >  /**
+> >   * struct input_dev - represents an input device
+> >   * @name: name of the device
+> > @@ -114,6 +122,8 @@ struct input_value {
+> >   * @vals: array of values queued in the current frame
+> >   * @devres_managed: indicates that devices is managed with devres framework
+> >   *   and needs not be explicitly unregistered or freed.
+> > + * @timestamp: storage for a timestamp set by input_set_timestamp called
+> > + *  by a driver
+> >   */
+> >  struct input_dev {
+> >       const char *name;
+> > @@ -184,6 +194,8 @@ struct input_dev {
+> >       struct input_value *vals;
+> >
+> >       bool devres_managed;
+> > +
+> > +     ktime_t timestamp[INPUT_CLK_MAX];
+> >  };
+> >  #define to_input_dev(d) container_of(d, struct input_dev, dev)
+> >
+> > @@ -382,6 +394,32 @@ void input_close_device(struct input_handle *);
+> >
+> >  int input_flush_device(struct input_handle *handle, struct file *file);
+> >
+> > +/**
+> > + * input_set_timestamp - set timestamp for input events
+> > + * @dev: input device to set timestamp for
+> > + * @timestamp: the time at which the event has occurred
+> > + *   in CLOCK_MONOTONIC
+> > + *
+> > + * This function is intended to provide to the input system a more
+> > + * accurate time of when an event actually occurred. The driver should
+> > + * call this function as soon as a timestamp is acquired ensuring
+> > + * clock conversions in input_set_timestamp are done correctly.
+> > + *
+> > + * The system entering a suspend between timestamp acquisition and
+> > + * calling input_set_timestamp can result in inaccurate conversions.
+> > + *
+> > + */
+> > +static inline void input_set_timestamp(struct input_dev *dev,
+> > +     ktime_t timestamp)
+> > +{
+> > +     dev->timestamp[INPUT_CLK_MONO] = timestamp;
+> > +     dev->timestamp[INPUT_CLK_REAL] = ktime_mono_to_real(timestamp);
+> > +     dev->timestamp[INPUT_CLK_BOOT] = ktime_mono_to_any(
+> > +             timestamp, TK_OFFS_BOOT);
+> > +}
+> > +
+> > +ktime_t *input_get_timestamp(struct input_dev *dev);
+> > +
+> >  void input_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
+> >  void input_inject_event(struct input_handle *handle, unsigned int type, unsigned int code, int value);
+> >
+> > --
+> > 2.22.0.410.gd8fdbe21b5-goog
+> >
+>
+> --
+> Dmitry
