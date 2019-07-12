@@ -2,140 +2,114 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E600C742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7820EC742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F9C206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52372208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562942202;
-	bh=HHZaY2tFKhZh3Vou4+5i4iiP03K9QdtH44f6+mWjpsU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z7EIp1boYewOR9q/FY8PF/eh0/PRt4LnJpmW0zFJuxvU0pDcYeIfnHwxVDRcqBtF7
-	 VwFgKvORz93r7WF7RjgtI04+A6AnIOkLALSVKpXSnOXSo6vFt/mWyP95hhtEXUaDCv
-	 tMJ3mZcAiDnxf7DrD9JLHt69dsgfNHmjoPYO3Cvk=
+	s=default; t=1562942261;
+	bh=Q0fQ8cIZPQQvRl+HqtEP93tavumXUJrRQeEzq/T0ZjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J1hj+UFhOrOVIMk+bsxMZyCy+B3AnFsLMUqySLxgThGcIzMQXaT7A8Dup+ATkeEDT
+	 P+XYRZA7ayLSdwpi93dc5gz14FybHJvXdMFYTF67HHo10PAV1D0mDgtthM95PBBCyV
+	 OYO/VcTnuMI94Y+FchkQGNJXqHn+WLs0pwXUu3WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfGLOgk (ORCPT
+        id S1727310AbfGLOhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 10:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbfGLOgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:36:39 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726449AbfGLOhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 10:37:39 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86D4216C4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 14:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997A82080A;
+        Fri, 12 Jul 2019 14:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562942197;
-        bh=HHZaY2tFKhZh3Vou4+5i4iiP03K9QdtH44f6+mWjpsU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Psf1NjaQQet45SE1qUKg2HlyWLtBriCxn1RqxK5FXxZyfhEGf6Avgz72+9qBbVlyt
-         PNhwwNdc/arZmxDjpptLJIlITJITqa9TmMKLOEhilhyIaL4oiohOmBgk9cCNsdIzdD
-         LykORndiv/X8nO2SXVBWi68HRLe7tjTebEm1HBtI=
-Received: by mail-wr1-f44.google.com with SMTP id p13so10200279wru.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:36:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAWPe/963uFVgj0SiXcFbxqpxnCxi5cXhYQmdGC0mKKoNXUlBDYd
-        N160eKC7SvUhSpExoVuAGq2Uo/vmS3K1spj8O96aOQ==
-X-Google-Smtp-Source: APXvYqzjSAKUc/Rv0po3zmwiq8ExN5gO/owzILZFdZj8fMMJQ7W46dkC79xOvRhglNBrrHNGx+LK7GoJMcCxwv4cvX8=
-X-Received: by 2002:adf:a143:: with SMTP id r3mr12152043wrr.352.1562942196223;
- Fri, 12 Jul 2019 07:36:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
- <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
- <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com> <20190712125059.GP3419@hirez.programming.kicks-ass.net>
- <a03db3a5-b033-a469-cc6c-c8c86fb25710@oracle.com>
-In-Reply-To: <a03db3a5-b033-a469-cc6c-c8c86fb25710@oracle.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 12 Jul 2019 07:36:24 -0700
-X-Gmail-Original-Message-ID: <CALCETrVcM-SpEqLMJSOdyGuN0gjr+97+cpu2KYneuTv1fJDoog@mail.gmail.com>
-Message-ID: <CALCETrVcM-SpEqLMJSOdyGuN0gjr+97+cpu2KYneuTv1fJDoog@mail.gmail.com>
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        s=default; t=1562942258;
+        bh=Q0fQ8cIZPQQvRl+HqtEP93tavumXUJrRQeEzq/T0ZjU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oSDuCh7A+Xs42MXbXEieBsFty+Z7wObUN12OgwqLbOFW9oih/BmQBTm6f9I5uATLs
+         k3FxtcxVs2OyWqrnzMXueSISfTrdrWEpEWu7/gxb4zS9dLiXyM0oMjuEOYKj4+vyf3
+         slAytCaCOnyinCVXlJAAWb5BUeKOp+4U+rFpZcIw=
+Date:   Fri, 12 Jul 2019 15:37:30 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Alexander Graf <graf@amazon.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>, willy@infradead.org
+Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20190712143730.au3662g4ua2tjudu@willie-the-truck>
+References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20190712070247.GM29483@dhcp22.suse.cz>
+ <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
+ <20190712121223.GR29483@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712121223.GR29483@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 6:45 AM Alexandre Chartre
-<alexandre.chartre@oracle.com> wrote:
->
->
-> On 7/12/19 2:50 PM, Peter Zijlstra wrote:
-> > On Fri, Jul 12, 2019 at 01:56:44PM +0200, Alexandre Chartre wrote:
-> >
-> >> I think that's precisely what makes ASI and PTI different and independent.
-> >> PTI is just about switching between userland and kernel page-tables, while
-> >> ASI is about switching page-table inside the kernel. You can have ASI without
-> >> having PTI. You can also use ASI for kernel threads so for code that won't
-> >> be triggered from userland and so which won't involve PTI.
-> >
-> > PTI is not mapping         kernel space to avoid             speculation crap (meltdown).
-> > ASI is not mapping part of kernel space to avoid (different) speculation crap (MDS).
-> >
-> > See how very similar they are?
-> >
-> >
-> > Furthermore, to recover SMT for userspace (under MDS) we not only need
-> > core-scheduling but core-scheduling per address space. And ASI was
-> > specifically designed to help mitigate the trainwreck just described.
-> >
-> > By explicitly exposing (hopefully harmless) part of the kernel to MDS,
-> > we reduce the part that needs core-scheduling and thus reduce the rate
-> > the SMT siblngs need to sync up/schedule.
-> >
-> > But looking at it that way, it makes no sense to retain 3 address
-> > spaces, namely:
-> >
-> >    user / kernel exposed / kernel private.
-> >
-> > Specifically, it makes no sense to expose part of the kernel through MDS
-> > but not through Meltdow. Therefore we can merge the user and kernel
-> > exposed address spaces.
->
-> The goal of ASI is to provide a reduced address space which exclude sensitive
-> data. A user process (for example a database daemon, a web server, or a vmm
-> like qemu) will likely have sensitive data mapped in its user address space.
-> Such data shouldn't be mapped with ASI because it can potentially leak to the
-> sibling hyperthread. For example, if an hyperthread is running a VM then the
-> VM could potentially access user sensitive data if they are mapped on the
-> sibling hyperthread with ASI.
+Hi all,
 
-So I've proposed the following slightly hackish thing:
+On Fri, Jul 12, 2019 at 02:12:23PM +0200, Michal Hocko wrote:
+> On Fri 12-07-19 10:56:47, Hoan Tran OS wrote:
+> [...]
+> > It would be good if we can enable it by-default. Otherwise, let arch 
+> > enables it by them-self. Do you have any suggestions?
+> 
+> I can hardly make any suggestions when it is not really clear _why_ you
+> want to remove this config option in the first place. Please explain
+> what motivated you to make this change.
 
-Add a mechanism (call it /dev/xpfo).  When you open /dev/xpfo and
-fallocate it to some size, you allocate that amount of memory and kick
-it out of the kernel direct map.  (And pay the IPI cost unless there
-were already cached non-direct-mapped pages ready.)  Then you map
-*that* into your VMs.  Now, for a dedicated VM host, you map *all* the
-VM private memory from /dev/xpfo.  Pretend it's SEV if you want to
-determine which pages can be set up like this.
+Sorry, I think this confusion might actually be my fault and Hoan has just
+been implementing my vague suggestion here:
 
-Does this get enough of the benefit at a negligible fraction of the
-code complexity cost?  (This plus core scheduling, anyway.)
+https://lore.kernel.org/linux-arm-kernel/20190625101245.s4vxfosoop52gl4e@willie-the-truck/
 
---Andy
+If the preference of the mm folks is to leave CONFIG_NODES_SPAN_OTHER_NODES
+as it is, then we can define it for arm64. I just find it a bit weird that
+the majority of NUMA-capable architectures have to add a symbol in the arch
+Kconfig file, for what appears to be a performance optimisation applicable
+only to ia64, mips and sh.
+
+At the very least we could make the thing selectable.
+
+Will
