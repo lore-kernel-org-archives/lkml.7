@@ -2,211 +2,160 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE17C742A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AFCC742A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1BE21019
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE8220863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 08:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ickDPmWd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JtlStr7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfGLIPn (ORCPT
+        id S1726322AbfGLIRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 04:15:43 -0400
-Received: from mail-eopbgr150077.outbound.protection.outlook.com ([40.107.15.77]:40359
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbfGLIPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 04:15:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BX2+lkD6KHguYisdIUo6085OAIUth2ZDwGtqqFSP3m3fpC5shLIOS3OPZJWL5NfKNlNZgmrchO4LB2Ei+6/XuodzxZu9Dof/HQc+TLaWDtmti2ZHIZrcCYKlksdkSi2sm+i3fLsaFZyCRYtIluEKC77WJDSrBbgJNfJSjKbpJVzCs/+MGikJ85uD7CWwE2WRQ62udKeI1aYeqLr4y+EyIoSIG9HVXu3TPPvyyfWp1F4fj1yxfVuS7+XcLDSGvH5AWJSjjmUgisf97Gk6UUE4fClR8FrMcOQHw0QftnbQK0tX2thhemSmiDRnTBXg3AGWzb0n+1mLD+is8Xyi0aKqtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G+CjbQZ2Hzdk2S495Z+A9qf6opd87+PBdjGIQnqaXWQ=;
- b=M2Fb4z9X55i2/WyzS7DD0qPvQroy8JbjvwyIhRHmvDIUcUJcixMuR4Wljx6ksYLs0QQZ79qniLxmyN/caeaQD2A1QRzP26tybx6R+M7y8onGaBpaeW13IEKHCGfzIUwHejCXslbXZqeduyu9iBnuLmiGegUNavJhMYHTmVv9B9wZk2KnUnVrVI28LEUEdvGhb/hvB5xs8mx58BExOKfGLZbHAqpTu/3DOclVK2SMT9XJ9igmXsIN5AU4v7ZadJ5LJDv9eMPH7vi/feJqJ+CuCPW07JM4JsgcTIRamfSvjB1mt317AtdPHySTs2c3JNElB9N8gIqOvQQYNUZZLHZ8iQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G+CjbQZ2Hzdk2S495Z+A9qf6opd87+PBdjGIQnqaXWQ=;
- b=ickDPmWdRAAOaDK+9VIPg1SOe5oJf2Y2OuMKRUo+AI4ZXuKcPuFA/11ldmTy3wPJfQ//pMs29woPAxp1SyVkCpw4oeotmLS8SsAS6MByCBZZntEcvwGjKfEiXvANzU+RuYk5ev/ghO1nMfq32l5rpeayAyN+kdprTOtZT9+Qzw4=
-Received: from DB8PR04MB6715.eurprd04.prod.outlook.com (20.179.251.14) by
- DB8PR04MB7033.eurprd04.prod.outlook.com (52.135.62.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Fri, 12 Jul 2019 08:15:33 +0000
-Received: from DB8PR04MB6715.eurprd04.prod.outlook.com
- ([fe80::5d5c:c0b9:a85a:900f]) by DB8PR04MB6715.eurprd04.prod.outlook.com
- ([fe80::5d5c:c0b9:a85a:900f%5]) with mapi id 15.20.2052.020; Fri, 12 Jul 2019
- 08:15:33 +0000
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     "agx@sigxcpu.org" <agx@sigxcpu.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
- driver
-Thread-Topic: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
- driver
-Thread-Index: AQHVLCOX39rb+e39GkGlwLk9dRqh9KbFm3mAgAEgMYA=
-Date:   Fri, 12 Jul 2019 08:15:32 +0000
-Message-ID: <1562919331.3209.11.camel@nxp.com>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
-         <20190711150403.GB23195@bogon.m.sigxcpu.org>
-In-Reply-To: <20190711150403.GB23195@bogon.m.sigxcpu.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=robert.chiras@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9e327ed6-8dae-4d3d-328e-08d706a11c72
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7033;
-x-ms-traffictypediagnostic: DB8PR04MB7033:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <DB8PR04MB703361372A86155B436B7A5BE3F20@DB8PR04MB7033.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00963989E5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(199004)(189003)(6436002)(91956017)(2906002)(76116006)(26005)(66946007)(66556008)(64756008)(66476007)(7416002)(44832011)(68736007)(186003)(6512007)(2351001)(229853002)(86362001)(6486002)(5660300002)(5024004)(14444005)(53936002)(66446008)(66574012)(486006)(6306002)(8936002)(5640700003)(256004)(6506007)(76176011)(4326008)(71190400001)(7736002)(476003)(478600001)(316002)(102836004)(66066001)(81166006)(54906003)(966005)(446003)(2501003)(8676002)(11346002)(103116003)(25786009)(45080400002)(1730700003)(99286004)(81156014)(71200400001)(14454004)(2616005)(6246003)(50226002)(305945005)(36756003)(6916009)(3846002)(6116002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7033;H:DB8PR04MB6715.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nS98uNkjEgLQ5XJqu4trnGfbt/cfhtjuMFQ9eISXlYV7NxxJpGsDIXTzMnQd9y2lJ19LyX8oxkzL1r0c0+2Q9swvAqx/JNj/EAIa9IqXIkzO2GHuU7jv91TcfN83CXo/Vguho63BWuaU9LyHUff4zPxUjwdD2acrmQBx8lM8QgRHM+bheFRQ3JPus4/CpBPX43LdgVU/dNdWL6M2JoYPjwdzHopKPzzJSBTvImVNMxhTCmSEw4zIuWl4YmDFeeFwAz0SPVfc+zuBaQwsIrSHZwge9KwoVEphoCxi6q5MO8hWXJlF6jjHmUk1ly0gPuph89VnXNY1y21VRdIOIuI1J5KqV9GXWflDYSzb+8ebAsFRNTpxstD2dHLbhQosH2obfPcQZn0+YMi+L6MxC34IDo7wGBPa8yyhQd8uQbOKqcU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E9B2574B3BBE654EB1C0BABA73DF44AA@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e327ed6-8dae-4d3d-328e-08d706a11c72
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2019 08:15:32.9054
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: robert.chiras@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7033
+        Fri, 12 Jul 2019 04:17:52 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:40267 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfGLIRv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:17:51 -0400
+Received: by mail-pg1-f202.google.com with SMTP id d187so5285898pga.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 01:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UvKno1DQ1En2T0BAydqL8aKwWtOHxHpLOB0ZXuFETLs=;
+        b=JtlStr7snNzmz5ulMB5eP37s7rbgIx50z+AVGP2t2WlEdfRbEZO8W2XTT3bE3WZnLv
+         keBpChTguji20fGG9MZtiJLfIGuGAQMR0xBWsqfAPNv7xBwu2S4omSfLGIwdCobd9HG0
+         xEIx+MC/l52zarabPfgQ095HslgbhlLi4Z2VOa7yRbXGn1OMnhIjlbG9wufHRgT48Rw8
+         N31KLcKdJR3xIPKj8X7rcKFfr9bJzXFefGvAJSqFErU5ciZBVgJrNxh12tyuyphu+Fd0
+         ntbZjblO4lofJT/rrUQvPdmmolFfkVV45QPFi2V3CSuuX8nBjrc2V4ynCPPNIkIg5MTd
+         4B0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UvKno1DQ1En2T0BAydqL8aKwWtOHxHpLOB0ZXuFETLs=;
+        b=U/2Rf12atcYCdO4ywpQG2ajWdPjPEs/J2clsE0ECLA2S0ahmdgDH3vOqBRor87wCTn
+         SWHtdaE378SvLtpMzpf8fzFTNpzHoXm5RtPcGA8QjQxfcQIj/6TI1cmVAyK5aynuvrFK
+         ya6hnqbMy2YS+OH4UrSxJPBPEYXSXpQyOFGTkEFFgzoqjGLKOs1WTwTtnZAYraxKCrvg
+         ZkE4SzM7C1wbQITciMqqpPRpc0exBF/9GHgSHT6UPgg6JpLj/72JGnpWr6S5lqnMCZI8
+         mlqBK1hMsueV99ruJETcGvYigfW5Bsr0DjMRbtuQ17ouVo+9vNfWnoxmZxEtajx2hgtT
+         Lo3g==
+X-Gm-Message-State: APjAAAWHJJSu3bpu4oWTLEI3lMKvr/h6VAkwljtk+fmQTSxImu5Fgwh+
+        3BQ1LaVXTuplFYl6vgjw57b9wufat+7YsXX6N27bPA==
+X-Google-Smtp-Source: APXvYqwxVjSSyLsmH5X5K9D5aFhrhgELvG+6tDMdeYJeUGZ3SfBpCQBrCaJmP5g1KYNhq+xNRut9+ZtuWUgQ3Ro3jfxY+Q==
+X-Received: by 2002:a65:5348:: with SMTP id w8mr9232476pgr.176.1562919470178;
+ Fri, 12 Jul 2019 01:17:50 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 01:17:26 -0700
+Message-Id: <20190712081744.87097-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v9 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Iurii Zaikin <yzaikin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR3VpZG8sDQoNCk9uIEpvLCAyMDE5LTA3LTExIGF0IDE3OjA0ICswMjAwLCBHdWlkbyBHw7xu
-dGhlciB3cm90ZToNCj4gSGkgUm9iZXJ0LA0KPiBPbiBXZWQsIEp1biAyNiwgMjAxOSBhdCAwNDoz
-MjowOFBNICswMzAwLCBSb2JlcnQgQ2hpcmFzIHdyb3RlOg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2gt
-c2V0IGltcHJvdmVzIHRoZSB1c2Ugb2YgZUxDRElGIGJsb2NrIG9uIGlNWCA4IFNvQ3MgKGxpa2UN
-Cj4gPiA4TVEsIDhNTQ0KPiA+IGFuZCA4UVhQKS4gRm9sbG93aW5nLCBhcmUgdGhlIG5ldyBmZWF0
-dXJlcyBhZGRlZCBhbmQgZml4ZXMgZnJvbQ0KPiA+IHRoaXMNCj4gPiBwYXRjaC1zZXQ6DQo+ID4g
-DQo+ID4gMS4gQWRkIHN1cHBvcnQgZm9yIGRybV9icmlkZ2UNCj4gPiBPbiA4TVEgYW5kIDhNTSwg
-dGhlIExDRElGIGJsb2NrIGlzIG5vdCBkaXJlY3RseSBjb25uZWN0ZWQgdG8gYQ0KPiA+IHBhcmFs
-bGVsDQo+ID4gZGlzcGxheSBjb25uZWN0b3IsIHdoZXJlIGFuIExDRCBwYW5lbCBjYW4gYmUgYXR0
-YWNoZWQsIGJ1dCBpbnN0ZWFkDQo+ID4gaXQgaXMNCj4gPiBjb25uZWN0ZWQgdG8gRFNJIGNvbnRy
-b2xsZXIuIFNpbmNlIHRoaXMgRFNJIHN0YW5kcyBiZXR3ZWVuIHRoZQ0KPiA+IGRpc3BsYXkNCj4g
-PiBjb250cm9sbGVyIChlTENESUYpIGFuZCB0aGUgcGh5c2ljYWwgY29ubmVjdG9yLCB0aGUgRFNJ
-IGNhbiBiZQ0KPiA+IGltcGxlbWVudGVkDQo+ID4gYXMgYSBEUk0gYnJpZGdlLiBTbywgaW4gb3Jk
-ZXIgdG8gYmUgYWJsZSB0byBjb25uZWN0IHRoZSBteHNmYg0KPiA+IGRyaXZlciB0bw0KPiA+IHRo
-ZSBEU0kgZHJpdmVyLCB0aGUgc3VwcG9ydCBmb3IgYSBkcm1fYnJpZGdlIHdhcyBuZWVkZWQgaW4g
-bXhzZmINCj4gPiBEUk0NCj4gPiBkcml2ZXIgKHRoZSBhY3R1YWwgZHJpdmVyIGZvciB0aGUgZUxD
-RElGIGJsb2NrKS4NCj4gU28gSSB3YW50ZWQgdG8gdGVzdCB0aGlzIGJ1dCB3aXRoIGJvdGggbXkg
-c29tZXdoYXQgY2xlYW5lZCB1cCBud2wNCj4gZHJpdmVywrkgYW5kIHRoZSBud2wgZHJpdmVyIGZv
-cndhcmQgcG9ydGVkIGZyb20gdGhlIG54cCB2ZW5kb3IgdHJlZQ0KPiBJJ20NCj4gbG9va2luZyBh
-dCBhIGJsYWNrIHNjcmVlbiB3aXRoIGN1cnJlbnQgbWFpbmxpbmUgLSB3aGlsZSBteSBkY3NzDQo+
-IGZvcndhcmQNCj4gcG9ydCBnaXZlcyBtZSBuaWNlIG91dHB1dCBvbiBtaXBpIGRzaS4gRG8geW91
-IGhhdmUgYSB0cmVlIHRoYXQgdXNlcw0KPiBtaXBpDQo+IGRzaSBvbiBpbXg4bXEgd2hlcmUgSSBj
-b3VsZCBsb29rIGF0IHRvIGNoZWNrIGZvciBkaWZmZXJlbmNlcz8NClNvbWV3aGVyZSBvbiB0aGUg
-cGl4ZWwgcGF0aCAoYmV0d2VlbiB0aGUgZGlzcGxheSBjb250cm9sbGVyIGFuZCB0aGUNCkRTSSkg
-dGhlcmUgaXMgYSBibG9jayB0aGF0IGludmVydHMgdGhlIHBvbGFyaXR5LiBJIGNhbid0IHJlbWVt
-YmVyDQpleGFjdGx5IHdoYXQgd2FzIHRoZSByb2xlIG9mIHRoaXMgYmxvY2ssIGJ1dCB0aGUgcG9s
-YXJpdHkgaXMgaW52ZXJ0ZWQNCndoZW4gZUxDRElGIGlzIHVzZWQgaW4gY29tYmluYXRpb24gd2l0
-aCB0aGUgRFNJLg0KSWYgeW91IHRha2UgYSBsb29rIGF0IG15IERTSSBkcml2ZXIgZnJvbSBOWFAg
-cmVsZWFzZXMgKEkgZ3Vlc3MgeW91IGhhdmUNCnRoZW0pLCB5b3Ugd2lsbCBzZWUgdGhlcmUgaXMg
-YSBoYWNrIGluIG1vZGVfZml4dXA6DQoNCnVuc2lnbmVkIGludCAqZmxhZ3MgPSAmbW9kZS0+Zmxh
-Z3M7DQppZiAoZHNpLT5zeW5jX3BvbCB7DQoJKmZsYWdzIHw9IERSTV9NT0RFX0ZMQUdfUEhTWU5D
-Ow0KCSpmbGFncyB8PSBEUk1fTU9ERV9GTEFHX1BWU1lOQzsNCgkqZmxhZ3MgJj0gfkRSTV9NT0RF
-X0ZMQUdfTkhTWU5DOw0KCSpmbGFncyAmPSB+RFJNX01PREVfRkxBR19OVlNZTkM7DQp9IGVsc2Ug
-ew0KCSpmbGFncyAmPSB+RFJNX01PREVfRkxBR19QSFNZTkM7DQoJKmZsYWdzICY9IH5EUk1fTU9E
-RV9GTEFHX1BWU1lOQzsNCgkqZmxhZ3MgfD0gRFJNX01PREVfRkxBR19OSFNZTkM7DQoJKmZsYWdz
-IHw9IERSTV9NT0RFX0ZMQUdfTlZTWU5DOw0KfQ0KDQpJIGtub3cgaXQncyBub3QgY2xlYW4sIGJ1
-dCBpdCB3b3JrcyBmb3Igbm93LiBZb3UgY2FuIHRyeSB0aGlzIGluIHlvdXINCmRyaXZlciBhbmQg
-c2VlIGlmIGl0IGhlbHBzLg0KVGhlc2UgZGF5cyBJIHdpbGwgYWxzbyB0YWtlIHlvdXIgbndsLWRz
-aSBkcml2ZXIgYW5kIHRlc3QgaXQsIGFuZCBhbHNvDQphZGQgc3VwcG9ydCBmb3IgYnJpZGdlIGFu
-ZCBlTENESUYgdG8gc2VlIGlmIEkgY2FuIG1ha2UgaXQgd29yay4NCg0KQmVzdCByZWdhcmRzLA0K
-Um9iZXJ0DQo+IA0KPiBDaGVlcnMsDQo+IMKgLS0gR3VpZG8NCj4gDQo+ID4gDQo+ID4gDQo+ID4g
-Mi4gQWRkIHN1cHBvcnQgZm9yIGFkZGl0aW9uYWwgcGl4ZWwgZm9ybWF0cw0KPiA+IFNvbWUgb2Yg
-dGhlIHBpeGVsIGZvcm1hdHMgbmVlZGVkIGJ5IEFuZHJvaWQgd2VyZSBub3QgaW1wbGVtZW50ZWQg
-aW4NCj4gPiB0aGlzDQo+ID4gZHJpdmVyLCBidXQgdGhleSB3ZXJlIGFjdHVhbGx5IHN1cHBvcnRl
-ZC4gU28sIGFkZCBzdXBwb3J0IGZvciB0aGVtLg0KPiA+IA0KPiA+IDMuIEFkZCBzdXBwb3J0IGZv
-ciBob3Jpem9udGFsIHN0cmlkZQ0KPiA+IEhhdmluZyBzdXBwb3J0IGZvciBob3Jpem9udGFsIHN0
-cmlkZSBhbGxvd3MgdGhlIHVzZSBvZiBlTENESUYgd2l0aA0KPiA+IGEgR1BVDQo+ID4gKGZvciBl
-eGFtcGxlKSB0aGF0IGNhbiBvbmx5IG91dHB1dCByZXNvbHV0aW9uIHNpemVzIG11bHRpcGxlIG9m
-IGENCj4gPiBwb3dlciBvZg0KPiA+IDguIEZvciBleGFtcGxlLCAxMDgwIGlzIG5vdCBhIHBvd2Vy
-IG9mIDE2LCBzbyBpbiBvcmRlciB0byBzdXBwb3J0DQo+ID4gMTkyMHgxMDgwDQo+ID4gb3V0cHV0
-IGZyb20gR1BVcyB0aGF0IGNhbiBwcm9kdWNlIGxpbmVhciBidWZmZXJzIG9ubHkgaW4gc2l6ZXMN
-Cj4gPiBtdWx0aXBsZSB0byAxNiwNCj4gPiB0aGlzIGZlYXR1cmUgaXMgbmVlZGVkLg0KPiA+IA0K
-PiA+IDMuIEZldyBtaW5vciBmZWF0dXJlcyBhbmQgYnVnLWZpeGluZw0KPiA+IFRoZSBhZGRpdGlv
-biBvZiBtYXgtcmVzIERUIHByb3BlcnR5IHdhcyBhY3R1YWxseSBuZWVkZWQgaW4gb3JkZXIgdG8N
-Cj4gPiBsaW1pdA0KPiA+IHRoZSBiYW5kd2lkdGggdXNhZ2Ugb2YgdGhlIGVMQ0RJRiBibG9jay4g
-VGhpcyBpcyBuZWVkIG9uIHN5c3RlbXMNCj4gPiB3aGVyZQ0KPiA+IG11bHRpcGxlIGRpc3BsYXkg
-Y29udHJvbGxlcnMgYXJlIHByZXNlbmQgYW5kIHRoZSBtZW1vcnkgYmFuZHdpZHRoDQo+ID4gaXMg
-bm90DQo+ID4gZW5vdWdoIHRvIGhhbmRsZSBhbGwgb2YgdGhlbSBhdCBtYXhpbXVtIGNhcGFjaXR5
-IChsaWtlIGl0IGlzIHRoZQ0KPiA+IGNhc2Ugb24NCj4gPiA4TVEsIHdoZXJlIHRoZXJlIGFyZSB0
-d28gZGlzcGxheSBjb250cm9sbGVyczogRENTUyBhbmQgZUxDRElGKS4NCj4gPiBUaGUgcmVzdCBv
-ZiB0aGUgcGF0Y2hlcyBhcmUgYnVnLWZpeGVzLg0KPiA+IA0KPiA+IE1pcmVsYSBSYWJ1bGVhICgx
-KToNCj4gPiDCoCBkcm0vbXhzZmI6IFNpZ25hbCBtb2RlIGNoYW5nZWQgd2hlbiBicHAgY2hhbmdl
-ZA0KPiA+IA0KPiA+IFJvYmVydCBDaGlyYXMgKDkpOg0KPiA+IMKgIGRybS9teHNmYjogVXBkYXRl
-IG14c2ZiIHRvIHN1cHBvcnQgYSBicmlkZ2UNCj4gPiDCoCBkcm0vbXhzZmI6IFVwZGF0ZSBteHNm
-YiB3aXRoIGFkZGl0aW9uYWwgcGl4ZWwgZm9ybWF0cw0KPiA+IMKgIGRybS9teHNmYjogRml4IHRo
-ZSB2YmxhbmsgZXZlbnRzDQo+ID4gwqAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IEFkZCBtYXgtcmVz
-IHByb3BlcnR5IGZvciBteHNmYg0KPiA+IMKgIGRybS9teHNmYjogQWRkIG1heC1yZXMgcHJvcGVy
-dHkgZm9yIE1YU0ZCDQo+ID4gwqAgZHJtL214c2ZiOiBVcGRhdGUgbXhzZmIgdG8gc3VwcG9ydCBM
-Q0QgcmVzZXQNCj4gPiDCoCBkcm0vbXhzZmI6IEltcHJvdmUgdGhlIGF4aSBjbG9jayB1c2FnZQ0K
-PiA+IMKgIGRybS9teHNmYjogQ2xlYXIgT1VUU1RBTkRJTkdfUkVRUyBiaXRzDQo+ID4gwqAgZHJt
-L214c2ZiOiBBZGQgc3VwcG9ydCBmb3IgaG9yaXpvbnRhbCBzdHJpZGUNCj4gPiANCj4gPiDCoC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0wqDCoMKgwqDCoMKgwqDCoMKg
-wqB8wqDCoMKgNiArDQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5jwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHwgMjkwDQo+ID4gKysrKysrKysrKysrKysr
-KysrLS0tDQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmPCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDE4OQ0KPiA+ICsrKysrKysrKysrLS0tDQo+ID4g
-wqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB8wqDCoDEwICstDQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhz
-ZmJfb3V0LmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDI2ICstDQo+
-ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfcmVncy5owqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoHwgMTI4ICsrKysrKy0tLQ0KPiA+IMKgNiBmaWxlcyBjaGFuZ2VkLCA1
-MzEgaW5zZXJ0aW9ucygrKSwgMTE4IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IC0tDQo+ID4gMi43
-LjQNCj4gPiANCj4gPiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlu
-a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZsaQ0KPiA+IHN0cy5p
-bmZyYWRlYWQub3JnJTJGbWFpbG1hbiUyRmxpc3RpbmZvJTJGbGludXgtYXJtLQ0KPiA+IGtlcm5l
-bCZhbXA7ZGF0YT0wMiU3QzAxJTdDcm9iZXJ0LmNoaXJhcyU0MG54cC5jb20lN0M3ZGMwMWEwYmRm
-OTI0NWINCj4gPiA4ZDg3MDA4ZDcwNjExMDU1YiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVj
-MzAxNjM1JTdDMCU3QzAlN0M2MzY5DQo+ID4gODQ1NDI0ODE5MDM0MjUmYW1wO3NkYXRhPXlTSW5P
-NkgxQjRrSnRKVXdSczJ1VElVdmUwU1NOWkYwcyUyQnYlMkZEVQ0KPiA+IDBWeTFFJTNEJmFtcDty
-ZXNlcnZlZD0wDQo+ID4gDQo+IMK5IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24u
-b3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmwNCj4gaXN0cy5mcmVlZGVza3RvcC5vcmcl
-MkZhcmNoaXZlcyUyRmRyaS1kZXZlbCUyRjIwMTktDQo+IE1hcmNoJTJGMjA5Njg1Lmh0bWwmYW1w
-O2RhdGE9MDIlN0MwMSU3Q3JvYmVydC5jaGlyYXMlNDBueHAuY29tJTdDN2RjMA0KPiAxYTBiZGY5
-MjQ1YjhkODcwMDhkNzA2MTEwNTViJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUl
-N0MwJTcNCj4gQzAlN0M2MzY5ODQ1NDI0ODE5MTM0MTYmYW1wO3NkYXRhPXVjWURRTGlLN1JhbFJG
-JTJCNU1lQjMlMkY3NmNGTEdXYTdDDQo+IG14Q0ZMRWc0V3ZxYyUzRCZhbXA7cmVzZXJ2ZWQ9MA==
+## TL;DR
+
+This new patch set only contains a very minor change to address a sparse
+warning in the PROC SYSCTL KUnit test. Otherwise this patchset is
+identical to the previous.
+
+As I mentioned in the previous patchset, all patches now have acks and
+reviews.
+
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2/v9 branch.
+
+## Changes Since Last Version
+
+Like I said in the TL;DR, there is only one minor change since the
+previous revision. That change only affects patch 17/18; it addresses a
+sparse warning in the PROC SYSCTL unit test.
+
+Thanks to Masahiro for applying previous patches to a branch in his
+kbuild tree and running sparse and other static analysis tools against
+my patches.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2/v9
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
