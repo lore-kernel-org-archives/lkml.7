@@ -2,177 +2,112 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30A9C742C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D42C742BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECEE2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB2B21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="VCxaaTIt";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iGO0vzMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfGLOTU (ORCPT
+        id S1727406AbfGLOTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:19:20 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32885 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfGLOTT (ORCPT
+        Fri, 12 Jul 2019 10:19:49 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57290 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727089AbfGLOTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:19:19 -0400
-Received: by mail-qk1-f194.google.com with SMTP id r6so6525959qkc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 07:19:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3tYEou2N5iYZgK6m9seQqHkvwf0ic0Qe60XG2Zt42iA=;
-        b=H09D2ob0pgFQV5GLnnvq/vbr1uSyp9TTEfXBtwWBxsLTqDYK17EOhdXX1RhA0hboJM
-         yt0hQNGj+O8J9MS4lEfKsahmJQkPxALS89ByLJ33OIfh2jsrJqP1+9cqCQpsCEaOVG+A
-         IeXMT9bVFjqzgVzAbBJyRVy2OCUyGmzfHS+ZdNhXYgaaj4QlRNalWAxJXoIYQZYGA6sR
-         a401hqRifQ8sGeEwBmSD8pXJACHZvqqT0uR5cmN5KeqCf8r8qUpZWyCxpJhazFLlXd0w
-         FKoltE7ivvwMNWFauwTKG8e9JFv2dqR56PjboV8USe/vMXiKBDTjEsAlQqFolvMNptNP
-         iDMw==
-X-Gm-Message-State: APjAAAWeJ0bm2OFNj01GhMjK3EMK2iBXHCzFLQ8FotJIU9hVZ8w8MgUH
-        rUkukoreMplfYK5/SoWAUstilU+++BkmaVDJtLs=
-X-Google-Smtp-Source: APXvYqwfrTYNQUf83cpy0XRewpTXnYGeQtS7l7c7joqDFZpv0TL0Nmmvem0UJFbWA4siwv3v24UAoKlL/IIIOjQkzy0=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr6456377qkc.394.1562941158403;
- Fri, 12 Jul 2019 07:19:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com>
- <20190711172621.a7ab7jorolicid3z@treble> <CAK8P3a0iOMpMW-dXUY6g75HGC4mUe3P3=gv447WZOW8jmw2Vgg@mail.gmail.com>
- <CAG48ez3ipuPHLxbqqc50=Kn4QuoNczkd7VqEoLPVd3WWLk2s+Q@mail.gmail.com>
- <CAK8P3a2=SJQp7Jvyf+BX-7XsUr8bh6eBMo6ue2m8FW4aYf=PPw@mail.gmail.com>
- <CAK8P3a1_8kjzamn6_joBbZTO8NeGn0E3O+MZ+bcOQ0HkkRHXRQ@mail.gmail.com> <20190712135755.7qa4wxw3bfmwn5rp@treble>
-In-Reply-To: <20190712135755.7qa4wxw3bfmwn5rp@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 12 Jul 2019 16:19:02 +0200
-Message-ID: <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
-Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
+        Fri, 12 Jul 2019 10:19:48 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 19D7A8EE331;
+        Fri, 12 Jul 2019 07:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1562941188;
+        bh=Dp5a0UrH9hKoPaQtN8NMeqGJ73pmNknix42kASn6zxs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=VCxaaTItFh6NC+DFhY5jQFgBXHoCm+NCJSqectbFZbBep25ieqYrtlTfwSiZZZZBB
+         8BsXsUeOPXxuxXysoVjlBzluStZeuXYBzSh9KT1JmROTOLAn4yYEKmvg7th5/2W1oP
+         cm6iDhW90Dn+SrZldgLwk55/D4sSC1p9HSNS/nPc=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0Jw-QcXrd_p4; Fri, 12 Jul 2019 07:19:47 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 6925F8EE1F7;
+        Fri, 12 Jul 2019 07:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1562941187;
+        bh=Dp5a0UrH9hKoPaQtN8NMeqGJ73pmNknix42kASn6zxs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=iGO0vzMtpj+2FTqUdMvhfBOs8fjXi7+T29UOioFgPCgGq5ucBAQEuaKfZDSAh0SNm
+         0zTJwZZmCWp/3z+Vi1Sci9qtPHTrwPjf/H+zgAyMmmAmKoB9nZJIFVv9cOJC/vKhj8
+         DDAHJ3E3j7M8wT1RSFNRT2gMRXtfcXCXy68x54yg=
+Message-ID: <1562941185.3398.1.camel@HansenPartnership.com>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     "Souza, Jose" <jose.souza@intel.com>,
+        "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 12 Jul 2019 07:19:45 -0700
+In-Reply-To: <1562888433.2915.0.camel@HansenPartnership.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 3:57 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Jul 12, 2019 at 09:51:35AM +0200, Arnd Bergmann wrote:
-> > I no longer see any of the "can't find switch jump table" in last
-> > nights randconfig
-> > builds. I do see one other rare warning, see attached object file:
-> >
-> > fs/reiserfs/do_balan.o: warning: objtool: replace_key()+0x158: stack
-> > state mismatch: cfa1=7+40 cfa2=7+56
-> > fs/reiserfs/do_balan.o: warning: objtool: balance_leaf()+0x2791: stack
-> > state mismatch: cfa1=7+176 cfa2=7+192
-> > fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0xe8f:
-> > stack state mismatch: cfa1=7+240 cfa2=7+248
-> > fs/reiserfs/ibalance.o: warning: objtool:
-> > internal_move_pointers_items()+0x36f: stack state mismatch: cfa1=7+152
-> > cfa2=7+144
-> > fs/reiserfs/lbalance.o: warning: objtool:
-> > leaf_cut_from_buffer()+0x58b: stack state mismatch: cfa1=7+128
-> > cfa2=7+112
-> > fs/reiserfs/lbalance.o: warning: objtool:
-> > leaf_copy_boundary_item()+0x7a9: stack state mismatch: cfa1=7+104
-> > cfa2=7+96
-> > fs/reiserfs/lbalance.o: warning: objtool:
-> > leaf_copy_items_entirely()+0x3d2: stack state mismatch: cfa1=7+120
-> > cfa2=7+128
-> >
-> > I suspect this comes from the calls to the __reiserfs_panic() noreturn function,
-> > but have not actually looked at the object file.
->
-> Looking at one of the examples:
->
->     2346:       0f 85 6a 01 00 00       jne    24b6 <leaf_copy_items_entirely+0x3a8>
->     ...
->     23b1:       e9 2a 01 00 00          jmpq   24e0 <leaf_copy_items_entirely+0x3d2>
->     ...
->     24b6:       31 ff                   xor    %edi,%edi
->     24b8:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi
->                         24bb: R_X86_64_32S      .rodata.str1.1
->     24bf:       48 c7 c2 00 00 00 00    mov    $0x0,%rdx
->                         24c2: R_X86_64_32S      .rodata.str1.1+0x127b
->     24c6:       48 c7 c1 00 00 00 00    mov    $0x0,%rcx
->                         24c9: R_X86_64_32S      .rodata.str1.1+0x1679
->     24cd:       41 b8 90 01 00 00       mov    $0x190,%r8d
->     24d3:       49 c7 c1 00 00 00 00    mov    $0x0,%r9
->                         24d6: R_X86_64_32S      .rodata.str1.1+0x127b
->     24da:       b8 00 00 00 00          mov    $0x0,%eax
->     24df:       55                      push   %rbp
->     24e0:       41 52                   push   %r10
->     24e2:       e8 00 00 00 00          callq  24e7 <leaf_item_bottle>
->                         24e3: R_X86_64_PC32     __reiserfs_panic-0x4
->
-> Objtool is correct this time: There *is* a stack state mismatch at
-> 0x24e0.  The stack size is different at 0x24e0, depending on whether it
-> came from 0x2346 or from 0x23b1.
->
-> In this case it's not a problem for code flow, because the basic block
-> is a dead end.
->
-> But it *is* a problem for unwinding.  The location of the previous stack
-> frame is nondeterministic.
->
-> And that's extra important for calls to noreturn functions, because they
-> often dump the stack before exiting.
->
-> So it looks like a compiler bug to me.
+On Thu, 2019-07-11 at 16:40 -0700, James Bottomley wrote:
+> On Thu, 2019-07-11 at 23:28 +0000, Souza, Jose wrote:
+> > On Fri, 2019-07-12 at 01:03 +0200, Paul Bolle wrote:
+> > > James Bottomley schreef op do 11-07-2019 om 15:38 [-0700]:
+> > > > On Thu, 2019-07-11 at 22:26 +0000, Souza, Jose wrote:
+> > > > > It eventually comes back from screen freeze? Like moving the
+> > > > > mouse or typing brings it back?
+> > > > 
+> > > > No, it seems to be frozen for all time (at least until I got
+> > > > bored waiting, which was probably 20 minutes).  Even if I
+> > > > reboot the machine, the current screen state stays until the
+> > > > system powers off.
+> > > 
+> > > As I mentioned earlier, a suspend/resume cycle unfreezes the
+> > > screen.
+> > > 
+> > > And I seem to remember that, if the gnome screen-locking
+> > > eventually kicks in, unlocking the screen still works, as the
+> > > screen then isn't frozen anymore.
+> > > 
+> > > Thanks,
+> > 
+> > Thanks for all the information Paul.
+> > 
+> > Could test with the patch attached?
+> 
+> Applied and running with it now.
 
-The change below would shut up the warnings, and presumably avoid
-the unwinding problem as well. Should I submit that for inclusion,
-or should we try to fix clang first?
+It has survived 6h without manifesting the regression.  Starting again
+to try a whole day.
 
-       Arnd
+James
 
-diff --git a/fs/reiserfs/prints.c b/fs/reiserfs/prints.c
-index 9fed1c05f1f4..da996eaaebac 100644
---- a/fs/reiserfs/prints.c
-+++ b/fs/reiserfs/prints.c
-@@ -387,7 +387,6 @@ void __reiserfs_panic(struct super_block *sb,
-const char *id,
-        else
-                printk(KERN_WARNING "REISERFS panic: %s%s%s: %s\n",
-                      id ? id : "", id ? " " : "", function, error_buf);
--       BUG();
- }
-
- void __reiserfs_error(struct super_block *sb, const char *id,
-@@ -397,8 +396,10 @@ void __reiserfs_error(struct super_block *sb,
-const char *id,
-
-        BUG_ON(sb == NULL);
-
--       if (reiserfs_error_panic(sb))
-+       if (reiserfs_error_panic(sb)) {
-                __reiserfs_panic(sb, id, function, error_buf);
-+               BUG();
-+       }
-
-        if (id && id[0])
-                printk(KERN_CRIT "REISERFS error (device %s): %s %s: %s\n",
-diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
-index e5ca9ed79e54..f5bd17ee21f6 100644
---- a/fs/reiserfs/reiserfs.h
-+++ b/fs/reiserfs/reiserfs.h
-@@ -3185,10 +3185,9 @@ void unfix_nodes(struct tree_balance *);
-
- /* prints.c */
- void __reiserfs_panic(struct super_block *s, const char *id,
--                     const char *function, const char *fmt, ...)
--    __attribute__ ((noreturn));
-+                     const char *function, const char *fmt, ...);
- #define reiserfs_panic(s, id, fmt, args...) \
--       __reiserfs_panic(s, id, __func__, fmt, ##args)
-+       do { __reiserfs_panic(s, id, __func__, fmt, ##args); BUG(); } while (0)
- void __reiserfs_error(struct super_block *s, const char *id,
-                      const char *function, const char *fmt, ...);
- #define reiserfs_error(s, id, fmt, args...) \
