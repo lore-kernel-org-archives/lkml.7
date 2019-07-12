@@ -2,105 +2,121 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36759C742A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B3C742A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1D2214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34BF2084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 00:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="EEftpfHj"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="D+QCDTRF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0VkkckC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfGLAyR (ORCPT
+        id S1728991AbfGLA4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 20:54:17 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:24359 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbfGLAyR (ORCPT
+        Thu, 11 Jul 2019 20:56:25 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:47649 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728102AbfGLA4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:54:17 -0400
-Date:   Fri, 12 Jul 2019 00:54:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1562892854;
-        bh=orTq4C3s0FSpoWnv+D1q0tFTbbD4MyDqjOUl1joNFtA=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=EEftpfHj61KKgsS+rmEzgvdukLD7figa148IAEq3z5ZNmXccnatu94ktW+DBqqhJk
-         4vx34SbjuL0ApoSav4PoqA5a4SYy8hcIWN88uzAXbVe51lrmW1RofXrFhqlunpiizO
-         3tCYD96RUQTiJnX8MmAM2NpIfHDiHYXwEWtE82oc=
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Subject: =?UTF-8?Q?Re:_Fair_Pay_Project_is_now:_Od=C3=A9n_OS?=
-Message-ID: <89Zq1KfvLyK64IMxS-irSTzW-SjgKlfZ_AE5gclbpZkddj4e6v-xBFe2VQz-YIByU6EpDpwBGYujFWCocws3MeQUnHwFbGQYgmKJKqrrq5o=@protonmail.com>
-In-Reply-To: <a0fdd4ad-c2ab-4b31-9aaa-afbb13538242@metux.net>
-References: <OlRBTjSHu2VQ5oCicx8H5NNsXwVoXplHBLzhInvc6TMUuaDnDLBeRc0NiAmSfkfS2Ne07fZQDYtsqlKS1CC18e19cTXTnrwmsYNKSXE4Cq0=@protonmail.com>
- <a0fdd4ad-c2ab-4b31-9aaa-afbb13538242@metux.net>
-Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jul 2019 20:56:24 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id E4909450;
+        Thu, 11 Jul 2019 20:56:20 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 11 Jul 2019 20:56:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=n5XgGSR9S3ycrfXAbbJwSWuvFtXox+Z
+        XDAlvGeNuQ/E=; b=D+QCDTRFT6VhyD9yXJX+mJoIcIOBkqobcOFP75bo0G7biFH
+        sr+C7fQM0mbSSguhjV47U7g2HCEErQxTriZGuvwM88keKehbJdsBLceKu48J2sfY
+        Q0XMikgRdtzMuo5qL+xAE/myWyRC4nxWrqM6KGc6HWS7PtHHLK2iPR7pn+Ywkxlm
+        9jPqcBjC7bOT95J54SM90ki4sl542N1QMfcCURrkX54xe6dWtBd2DPLBExw0UoJf
+        Q3IQxt8qTLWfz4xcvnfk8+CieO+MbrHKM0Vyk5GHDFLJEVjB7bIfj+sPNvpjQoYV
+        UuRUHACCSSL4wrT7Ty2m/ITxlHSxFyExmxTTEgQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=n5XgGS
+        R9S3ycrfXAbbJwSWuvFtXox+ZXDAlvGeNuQ/E=; b=0VkkckC23DIWDoIbCWksLd
+        PAdXXctdxiNsnIlfNnItkIWnqdfK41EPp2IWEa6mVdQdedfIP4S3aTuH/OY8QmkI
+        CHhF2GCYIUaIlymNZfM+StYINhYfh92Rm31F4j3df8OINp0rXuq1o12MYJM7LdJM
+        FkE6jMM5rXQgbkmqmjUDKOZdtPttx+63nqVEpQWQSO3kr6Kle4ndy8CmvODnMz6f
+        IkXkLS8K6FUoNlnL09j6IabuZBJBL2EoD+ogbBkpgbcFD7XIFngUvSlqjOH3zy2q
+        76OFjAVlwb/GCooEyV21l2OQNwnX3C9fJ4Kt/6m3CXfuy6h+ZIpGBD8nkmqCY69A
+        ==
+X-ME-Sender: <xms:s9onXXqNoGvQnLC9z5kvUYwQZzLZS1pj2UFMBpZpwXCGdxDFQzMNmA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeelgdegudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:s9onXYNdBaN1A61qtAwiMjBIcmvWTUl5K2psGOZn2NaCntsnricA6Q>
+    <xmx:s9onXRoMLbG3o8vJUKM-1LkluxpSQzEjXBd0AllxsNQRdGy0fIEE5Q>
+    <xmx:s9onXbFmKdAWEdI9JXBuTZHpHH57je1z5nSoHnRSegHwO0M4jNX8iQ>
+    <xmx:tNonXcK5xcTSQja0JucwCL81a3aFNCfqo3nNUCj4_gZCjZFr5ZkXLg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 61999E0128; Thu, 11 Jul 2019 20:56:19 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
+Mime-Version: 1.0
+Message-Id: <8ed970e9-7062-4905-9d8e-d5f28a0a4919@www.fastmail.com>
+In-Reply-To: <20190711142457.37028-1-yuehaibing@huawei.com>
+References: <20190711142457.37028-1-yuehaibing@huawei.com>
+Date:   Fri, 12 Jul 2019 10:26:26 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] pinctrl: aspeed: Make aspeed_pinmux_ips static
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, I=C2=B4ve been a user of OSs since the early 90s, starting with the "Ir=
-ix for homecomputers" Amiga. And gone through some thinkings with that. Unf=
-ortunately Microsoft took over, and everybody hated that OS. Particulary he=
-re in Scandinavia. We expected big money, but it seems not much happened wi=
-th that. All that happened on the Amiga was early versions of streaming (mo=
-dules), picturesharing, chat etc.
-
-Money did not come. As I grew up I realized I could do it myself, and havin=
-g had top 1% research on Academia edu, I took a stab at OS design myself. N=
-ow including the finely granulated internet ecnonomy, aiming for autmated f=
-inances in the kernel itself. One thing popculture never really could do, w=
-as finances. So the traditional role of record company, publisher or even e=
-mployer now is in the OS itself. Making all streams, data and files having =
-attributes about re-use or not, taking part in this finely granulated inter=
-net economy and making the best of this.
-
-And with a good enough file catalog structure, say
-
-WTTP://Category/Subcategory/Country/15.000km2 zone/Person/Groupings(can be =
-several)
-
-With pop-statistics pr. folder, people find what they want, and could comme=
-nt on the files.
-
-With Groupings being for instance an aggregator for instance for this versi=
-on of news, using files from publishers for the content.
-
-Peace.
 
 
-Sent with ProtonMail Secure Email.
+On Thu, 11 Jul 2019, at 23:55, YueHaibing wrote:
+> Fix sparse warning:
+> 
+> drivers/pinctrl/aspeed/pinmux-aspeed.c:8:12: warning:
+>  symbol 'aspeed_pinmux_ips' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On Thursday 11. July 2019 kl. 19:53, Enrico Weigelt, metux IT consult <lkml=
-@metux.net> wrote:
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-> On 11.07.19 15:01, Ywe C=C3=A6rlyn wrote:
+> ---
+>  drivers/pinctrl/aspeed/pinmux-aspeed.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.c 
+> b/drivers/pinctrl/aspeed/pinmux-aspeed.c
+> index 5b0fe17..839c01b 100644
+> --- a/drivers/pinctrl/aspeed/pinmux-aspeed.c
+> +++ b/drivers/pinctrl/aspeed/pinmux-aspeed.c
+> @@ -5,7 +5,7 @@
+>  
+>  #include "pinmux-aspeed.h"
+>  
+> -const char *const aspeed_pinmux_ips[] = {
+> +static const char *const aspeed_pinmux_ips[] = {
+>  	[ASPEED_IP_SCU] = "SCU",
+>  	[ASPEED_IP_GFX] = "GFX",
+>  	[ASPEED_IP_LPC] = "LPC",
+> -- 
+> 2.7.4
+> 
+> 
 >
-> > I had the most brilliant idea - Fair Pay Project is now: Od=C3=A9n OS.
-> > Us norse always liked a bit faster OS.
->
-> What exactly do you wanna do differently ?
->
-> --mtx
->
->
-> -----------------------------------------------------
->
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
-
-
