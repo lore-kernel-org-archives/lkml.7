@@ -2,113 +2,64 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063D5C742A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9041C742A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69E7208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDAdGMyU"
+	by mail.kernel.org (Postfix) with ESMTP id CAF10208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 03:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfGLDZc (ORCPT
+        id S1729358AbfGLD3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jul 2019 23:25:32 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36552 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbfGLDZb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jul 2019 23:25:31 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so17388651iom.3;
-        Thu, 11 Jul 2019 20:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=915jr1GvJqW/XnIrI3t1cz5Ff5V+KSrPiSwAsvPilYA=;
-        b=jDAdGMyUD3QP0hDtMwRDoksOAUXjXCNAb8xrFWjIC6U59Jqn2rzmjAC9TjWKRU3oAg
-         YeVglVOpwPTMKgy5jtpuGKFZfPUqG3VV0d6E3gZ2DGhSIyMFRW3vqXK9T/AQiXKhe87e
-         hob4i6tNfEf3sW+zdh46mx5EPOz/T36Hw4jBLelr/DNfyZE1VEmjNUdnpHEW5h9NvAgc
-         LXgdjZm7sFjWZspS9JToXExMoEMJ6oYou1wt9h/noA3gddJYFT3AAuEBZHrSeDvxXl09
-         F2UXKBCcyy+PCTZkylpc+E5OEosTkbvexsGVFeHvC6ufTpgmrHGPbWPEXJ9WK22hekYw
-         D7Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=915jr1GvJqW/XnIrI3t1cz5Ff5V+KSrPiSwAsvPilYA=;
-        b=kmBCsrzosx4qwrK5KEtlbe057+GupOh23ZpcIl3E+Nc4jwtT3IwrBJYf74kH9re7G1
-         eF735PVK8qmq93+EU9pw2vExYm/p01xmbpwxADuzlfkO8zybzQLOrzy2n5ksAPrZPu+r
-         dfMU4oglVsMqNLTuDcb/0vWleO88EIq0mXGAS027UmLqJeZMi03XV8Tyw9diL3LIdHe7
-         iQUm6RkFXjd+u6mkP8zHDel2dsQfamGd7s1mXfxqsCKwmh1soJrnYjzb+JD+m22D8xz7
-         RNaoD7Euq/1hQR5NuRU9buChrCV+WuvkcjtS4t7G1t0lLUmLobRqkEKcMjl0cMsNzQV7
-         fBVg==
-X-Gm-Message-State: APjAAAXQJi0Se1eR8IfamguyM4e5qyuoBw3ezlsbun2FQL6r5pbfZYHK
-        uClht3hXTAFjtF+36uYCN+vrOitfYftCDkDIQH4=
-X-Google-Smtp-Source: APXvYqza8rWHidcHCCjVSBTPT+5lCJioVNWdyCZbW7cNHRuU9UZiZ+nqv4uprd5V5nvKK7gywSHHdFQ5iv3dyS8WUXM=
-X-Received: by 2002:a6b:4107:: with SMTP id n7mr7372020ioa.12.1562901930907;
- Thu, 11 Jul 2019 20:25:30 -0700 (PDT)
+        Thu, 11 Jul 2019 23:29:49 -0400
+Received: from namei.org ([65.99.196.166]:34804 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728955AbfGLD3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jul 2019 23:29:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x6C3TXIY022499;
+        Fri, 12 Jul 2019 03:29:33 GMT
+Date:   Fri, 12 Jul 2019 13:29:32 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+cc:     Aaron Goidel <acgoide@tycho.nsa.gov>, paul@paul-moore.com,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
+        amir73il@gmail.com, sds@tycho.nsa.gov, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
+ hook for fs notifications
+In-Reply-To: <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
+Message-ID: <alpine.LRH.2.21.1907121327150.22212@namei.org>
+References: <20190710133403.855-1-acgoide@tycho.nsa.gov> <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190609055658.3446-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190609055658.3446-1-andrew.smirnov@gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 11 Jul 2019 20:25:19 -0700
-Message-ID: <CAHQ1cqG0=_ONFALzqCmsvKU-Lm4TFqjuiNWF=qz-GGm+5EJGag@mail.gmail.com>
-Subject: Re: [PATCH] i2c: imx: Initialize DMA before registering I2C adapter
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-i2c@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 8, 2019 at 10:57 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Allocating DMA after registering I2C adapter can lead to infinite
-> probing loop, for example, consider the following scenario:
->
->     1. i2c_imx_probe() is called and successfully registers an I2C
->        adapter via i2c_add_numbered_adapter()
->
->     2. As a part of i2c_add_numbered_adapter() new I2C slave devices
->        are added from DT which results in a call to
->        driver_deferred_probe_trigger()
->
->     3. i2c_imx_probe() continues and calls i2c_imx_dma_request() which
->        due to lack of proper DMA driver returns -EPROBE_DEFER
->
->     4. i2c_imx_probe() fails, removes I2C adapter and returns
->        -EPROBE_DEFER, which places it into deferred probe list
->
->     5. Deferred probe work triggered in #2 above kicks in and calls
->        i2c_imx_probe() again thus bringing us to step #1
->
-> To avoid having this problem, move i2c_imx_dma_request() to happen
-> before i2c_add_numbered_adapter().
->
-> This problem was encountered on VF610 CFU1 board with
-> CONFIG_FSL_EDMA=n.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+On Wed, 10 Jul 2019, Casey Schaufler wrote:
 
-Gentle ping. Any feedback on this?
+> On 7/10/2019 6:34 AM, Aaron Goidel wrote:
+> 
+> > Furthermore, fanotify watches grant more power to
+> > an application in the form of permission events. While notification events
+> > are solely, unidirectional (i.e. they only pass information to the
+> > receiving application), permission events are blocking. Permission events
+> > make a request to the receiving application which will then reply with a
+> > decision as to whether or not that action may be completed.
+> 
+> You're not saying why this is an issue.
 
-Thanks,
-Andrey Smirnov
+Also in the description, please explain the issues with read and write 
+notifications and why a simple 'read' permission is not adequate.
+
+
+-- 
+James Morris
+<jmorris@namei.org>
+
