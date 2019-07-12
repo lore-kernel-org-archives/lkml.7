@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D0BC742B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E07BC742BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B36216E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477DC216C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 12:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562934522;
-	bh=azWYwh6IPpI2P6Z5Z2wpZrKKRWFZxrzSyb78rRez08E=;
+	s=default; t=1562934525;
+	bh=tfB0Yjzx+vKSU/qmFD3zv4coZikWMkBZyaZVhmcmguU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9+aD0PAGbWg7I1bUGGJ7d1OHVOaCoT5NqZU+yCu03UHvuUrMmasP7fR4NUMsWgI7
-	 T85h/8R4JGTGA9c9F6+ijDM55DYoNVzG2971O4y2u8g2G0vQ4slI4ZS5C3RUAwjSQS
-	 /nGJi/RNvVjm9R5FFqv5igHpGan8xXc4Z9SnH5Tc=
+	b=EC2vn2AF0gZTBZKqN3A/bFMg8q6YSZsPT8g7md5zqLjjZTT/I3wsH/oAqGyMEQr7i
+	 E4N8zP4h+NEAIES4BhC2Lo+yochpuUZtuP6mW9tTRRsD5cD0WskJlWuTld/tD/tE8G
+	 QfOJEx6EIfIjAv3fBmNx3qpYXGw1gtlY3ObkdqHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfGLM2l (ORCPT
+        id S1727044AbfGLM2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 08:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42776 "EHLO mail.kernel.org"
+        Fri, 12 Jul 2019 08:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbfGLM2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 08:28:37 -0400
+        id S1728831AbfGLM2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:28:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A68D621019;
-        Fri, 12 Jul 2019 12:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03950216E3;
+        Fri, 12 Jul 2019 12:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562934517;
-        bh=azWYwh6IPpI2P6Z5Z2wpZrKKRWFZxrzSyb78rRez08E=;
+        s=default; t=1562934514;
+        bh=tfB0Yjzx+vKSU/qmFD3zv4coZikWMkBZyaZVhmcmguU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2vmxegbJbnV1KT3vP4hupV4liBvSDXOhfN1HGAz/61grzyN8w5UL4LtLYQpGegAA
-         GH24MCjD8etqUwjGMnJ0Ok0U8WYgL84TcFmWaeSy4eyqhJc04Pqfbv6suO6NyPEqs6
-         ZeLdmfv39+ufw+r6luXIiZEgi5S+J0O34A8XGeU8=
+        b=R0ycGOlGBNZENjJO883CVXq7H9v7ufRUJvxbWiqRTlcXBQuTZE7iSdM2GANnWzYdQ
+         Ah5sVbEMMBNnk9HEQqPUBnSdlanyJAOVr162Zt/OMfaBCz/ZJl/pwHC7GJp0FkWfya
+         R+oXZf2Uxt7wEBb9ZVcudUVI2bjMCXxp9uRKYJ58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Matt Chen <matt.chen@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 074/138] IB/hfi1: Wakeup QPs orphaned on wait list after flush
-Date:   Fri, 12 Jul 2019 14:18:58 +0200
-Message-Id: <20190712121631.527663570@linuxfoundation.org>
+Subject: [PATCH 5.1 026/138] iwlwifi: fix AX201 killer sku loading firmware issue
+Date:   Fri, 12 Jul 2019 14:18:10 +0200
+Message-Id: <20190712121629.706800471@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
 References: <20190712121628.731888964@linuxfoundation.org>
@@ -62,62 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f972775b1cc0441ae22c9f8d06dd16b118463632 ]
+[ Upstream commit b17dc0632a17fbfe66b34ee7c24e1cc10cfc503e ]
 
-Once an SDMA engine is taken down due to a link failure, any waiting QPs
-that do not have outstanding descriptors in the ring will stay
-on the dmawait list as long as the port is down.
+When try to bring up the AX201 2 killer sku, we
+run into:
+[81261.392463] iwlwifi 0000:01:00.0: loaded firmware version 46.8c20f243.0 op_mode iwlmvm
+[81261.407407] iwlwifi 0000:01:00.0: Detected Intel(R) Dual Band Wireless AX 22000, REV=0x340
+[81262.424778] iwlwifi 0000:01:00.0: Collecting data: trigger 16 fired.
+[81262.673359] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
+[81262.673365] iwlwifi 0000:01:00.0: Status: 0x00000000, count: -906373681
+[81262.673368] iwlwifi 0000:01:00.0: Loaded firmware version: 46.8c20f243.0
+[81262.673371] iwlwifi 0000:01:00.0: 0x507C015D | ADVANCED_SYSASSERT
 
-Since there is no timer running, they will stay there for a long time.
+Fix this issue by adding 2 more cfg to avoid modifying the
+original cfg configuration.
 
-The fix is to wake up all iowaits linked to dmawait. The send engine
-will build and post packets that get flushed back.
-
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Matt Chen <matt.chen@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/sdma.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index 70828de7436b..28b66bd70b74 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -405,6 +405,7 @@ static void sdma_flush(struct sdma_engine *sde)
- 	struct sdma_txreq *txp, *txp_next;
- 	LIST_HEAD(flushlist);
- 	unsigned long flags;
-+	uint seq;
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 2a03d34afa3b..80695584e406 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -3585,7 +3585,9 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 		}
+ 	} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
+ 		   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
+-		   (trans->cfg != &iwl_ax200_cfg_cc ||
++		   ((trans->cfg != &iwl_ax200_cfg_cc &&
++		    trans->cfg != &killer1650x_2ax_cfg &&
++		    trans->cfg != &killer1650w_2ax_cfg) ||
+ 		    trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0)) {
+ 		u32 hw_status;
  
- 	/* flush from head to tail */
- 	sdma_flush_descq(sde);
-@@ -415,6 +416,22 @@ static void sdma_flush(struct sdma_engine *sde)
- 	/* flush from flush list */
- 	list_for_each_entry_safe(txp, txp_next, &flushlist, list)
- 		complete_tx(sde, txp, SDMA_TXREQ_S_ABORTED);
-+	/* wakeup QPs orphaned on the dmawait list */
-+	do {
-+		struct iowait *w, *nw;
-+
-+		seq = read_seqbegin(&sde->waitlock);
-+		if (!list_empty(&sde->dmawait)) {
-+			write_seqlock(&sde->waitlock);
-+			list_for_each_entry_safe(w, nw, &sde->dmawait, list) {
-+				if (w->wakeup) {
-+					w->wakeup(w, SDMA_AVAIL_REASON);
-+					list_del_init(&w->list);
-+				}
-+			}
-+			write_sequnlock(&sde->waitlock);
-+		}
-+	} while (read_seqretry(&sde->waitlock, seq));
- }
- 
- /*
 -- 
 2.20.1
 
