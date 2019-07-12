@@ -2,136 +2,172 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21316C742B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7EEC742B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98C120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE242084B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ATRurzya";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dngCM7R9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="X22GS1wk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfGLJZz (ORCPT
+        id S1726418AbfGLJ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:25:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41992 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfGLJZz (ORCPT
+        Fri, 12 Jul 2019 05:27:56 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34480 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfGLJ14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:25:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 218AA60A97; Fri, 12 Jul 2019 09:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562923554;
-        bh=lfw/i17VNza47JF8I9sz0hN3tbZXkPak5SrFyt8d4CU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ATRurzyaYPBVFWHGYY1tGUvtd/0NV01+D4DFnnmvQTNJZ6LO4tnpYl1vvuxt2m/EU
-         4UPQLyrjehdy/2Zcvb9HMGOIswqu2mBJ7d5U2zLSy2sIbinuD480ftmEF4uZEgG46V
-         YGN2gry5oarAm+DB9OyB54HpiWqKvEWslUpwiMCU=
-Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F03CD60A97;
-        Fri, 12 Jul 2019 09:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562923553;
-        bh=lfw/i17VNza47JF8I9sz0hN3tbZXkPak5SrFyt8d4CU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dngCM7R9t8x14Twx4Pe1hOnBGa9Cl4J+RTmDwx1WaYs4lqF4eWb3ZmJ2Qdw4FL7fN
-         Zxmsf5vBGSVwxA5Xq+J+AQh+FAVL1g47KDGb9Ha1VPNJHSNuSa8FHq8Wkk+JyA1hXT
-         eKtxRaL5Zpa0bsnW16TPYNIedsnb5WXHUmV14xmE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F03CD60A97
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3] arm64: dts: sdm845: Add video nodes
-To:     Aniket Masule <amasule@codeaurora.org>, andy.gross@linaro.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        Malathi Gottam <mgottam@codeaurora.org>
-References: <1562069549-25384-1-git-send-email-amasule@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <81590b01-e9e7-dbc7-c2c8-0d6093db7ce0@codeaurora.org>
-Date:   Fri, 12 Jul 2019 14:55:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 12 Jul 2019 05:27:56 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so8841755otk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 02:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jYy0XP6ethrem4b19nt43P11ZiYCCwivtW53JRcikeE=;
+        b=X22GS1wk91UjPm6+zhjoIjTp6TANbMdrUt6PVMNOW9CW/5FPKoxIlUCGugAB+NRfRQ
+         monlxmvfGjdkXHE0ZXj5TSesu/oigagcXG+j6OYS3f9S8e/jIh/2BrFN70n632G8bJlr
+         ArRi2NabuE5PXCf2lJC1fyNzO3ZGV7RMpfSmQmT5SJv8S0yYl8b5duVEmdRMT9zOjLV6
+         MMlp4NQ2biV1cCjV+lAXpJShoHW000qTR2iSqk+SzD7uaPhNExUrMOch2dzqjkDkaiI0
+         Wi1yENBcScRkf2Hq1RIw7hwJWljm7CgJxis3HKB0cvCOtLD888T6G++Uniy7ZJtM3XzJ
+         hhIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jYy0XP6ethrem4b19nt43P11ZiYCCwivtW53JRcikeE=;
+        b=DUiEqgBsad3XI5KrroGaoDdykg6D0UMlJcyfMwIhUOzTrRKKgK7m2isQIgT+2p05y3
+         g25XVAiw28kyQYXMKecxXWG2nsrOpIhy29XHqS36OtHzspuFPF3aYd7J4gnTu0hAht6R
+         pdSQi9ZaC6+U2KQ134794+FhfU8GZU8bYKaLwPAA/Aqv97tt0utDh15e7rptnSgdT5G3
+         Bh5rgIJbzadfbyIO7eAeXegq1xOia9A2+0sxLC63sRrFLCOUzDkWFzvsSg7gBQBpBJaJ
+         E2i/Y5AsAl7LUQVKwAhVDXXtpMZre3SWr9kflNlioV3w64Cl23TNWvap+/65F/3F7Wh+
+         31/g==
+X-Gm-Message-State: APjAAAVBdHB8VHWAISMgUwyJh6O3Zrw50rXFxAUegIkjUbgwIgLzNXRf
+        YR5LFsHQ/xIj0+Zna7ze+zBiMCLvA8vCCYy0LYMXECxh
+X-Google-Smtp-Source: APXvYqxmQFQAuZwu//RzFgfnJxLEi/izHgwx7Kkeq/oXPVKBHwaEP5wdAyHZxZ54Z6rZrZsRLEQzcJL5gRduQ6uOogU=
+X-Received: by 2002:a9d:7352:: with SMTP id l18mr2470502otk.292.1562923674988;
+ Fri, 12 Jul 2019 02:27:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1562069549-25384-1-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+ <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
+ <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
+ <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com> <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUkF32+wOLkfd2BL4h-=0nZjPDMtVOpOcyDYzBbhWXteQ@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 12 Jul 2019 11:27:43 +0200
+Message-ID: <CAMpxmJXCYeGjCu_PhCPffZQZ+ST9YCp27-PTHfL2SJ0Bh8SJFQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Graf <agraf@suse.de>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wt., 9 lip 2019 o 17:59 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
+=82(a):
+>
+> Hi Bartosz,
+>
+> On Tue, Jul 9, 2019 at 4:59 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napi=
+sa=C5=82(a):
+> > > On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
+> > > <bgolaszewski@baylibre.com> wrote:
+> > > > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be=
+> napisa=C5=82(a):
+> > > > > GPIO controllers are exported to userspace using /dev/gpiochip*
+> > > > > character devices.  Access control to these devices is provided b=
+y
+> > > > > standard UNIX file system permissions, on an all-or-nothing basis=
+:
+> > > > > either a GPIO controller is accessible for a user, or it is not.
+> > > > > Currently no mechanism exists to control access to individual GPI=
+Os.
+> > > > >
+> > > > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up t=
+o 32),
+> > > > > and expose them as a new gpiochip.  This is useful for implementi=
+ng
+> > > > > access control, and assigning a set of GPIOs to a specific user.
+> > > > > Furthermore, it would simplify and harden exporting GPIOs to a vi=
+rtual
+> > > > > machine, as the VM can just grab the full virtual GPIO controller=
+, and
+> > > > > no longer needs to care about which GPIOs to grab and which not,
+> > > > > reducing the attack surface.
+> > > > >
+> > > > > Virtual GPIO controllers are instantiated by writing to the "new_=
+device"
+> > > > > attribute file in sysfs:
+> > > > >
+> > > > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+> > > > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+> > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+> > > > >
+> > > > > Likewise, virtual GPIO controllers can be destroyed after use:
+> > > > >
+> > > > >     $ echo gpio-virt-agg.<N> \
+> > > > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_devi=
+ce
+>
+> > Am I doing it right? I'm trying to create a device and am only getting =
+this:
+> >
+> > # echo gpiochip2 23 > new_device
+> > [  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpio=
+chip2
+> >
+> > gpiochip2 *does* exist in the system.
+>
+> Please try the name of the platform device instead.
+> I.e. for my koelsch (R-Car M2-W), it needs "e6052000.gpio" instead
+> of "gpiochip2".
+>
+> Probably the driver should match on both.
+>
+> > I see. I'll try to review it more thoroughly once I get to play with
+> > it. So far I'm stuck on creating the virtual chip.
+>
+> Thanks, good luck!
+>
 
+This is not a show-stopper but one thing that's bothering me in this
+is that lines used by the aggregator are considered 'used' in regard
+to the original chip. I'm wondering how much effort would it take to
+have them be 'muxed' into two (real and virtual) chips at once.
 
-On 7/2/2019 5:42 PM, Aniket Masule wrote:
-> From: Malathi Gottam <mgottam@codeaurora.org>
-> 
-> This adds video nodes to sdm845 based on the examples
-> in the bindings.
-> 
-> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
-> Co-developed-by: Aniket Masule <amasule@codeaurora.org>
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+Other than that - seems to works pretty nice other than the matching
+by chip name and by line names.
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+Bart
 
-> ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 30 ++++++++++++++++++++++++++++++
->   1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index fcb9330..f3cd94f 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1893,6 +1893,36 @@
->   			};
->   		};
->   
-> +		video-codec@aa00000 {
-> +			compatible = "qcom,sdm845-venus";
-> +			reg = <0 0x0aa00000 0 0xff000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			power-domains = <&videocc VENUS_GDSC>;
-> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-> +			clock-names = "core", "iface", "bus";
-> +			iommus = <&apps_smmu 0x10a0 0x8>,
-> +				 <&apps_smmu 0x10b0 0x0>;
-> +			memory-region = <&venus_mem>;
-> +
-> +			video-core0 {
-> +				compatible = "venus-decoder";
-> +				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> +					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> +				clock-names = "core", "bus";
-> +				power-domains = <&videocc VCODEC0_GDSC>;
-> +			};
-> +
-> +			video-core1 {
-> +				compatible = "venus-encoder";
-> +				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-> +					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-> +				clock-names = "core", "bus";
-> +				power-domains = <&videocc VCODEC1_GDSC>;
-> +			};
-> +		};
-> +
->   		videocc: clock-controller@ab00000 {
->   			compatible = "qcom,sdm845-videocc";
->   			reg = <0 0x0ab00000 0 0x10000>;
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
