@@ -2,127 +2,154 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B1DC742BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58EEC742C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6408A208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AAC20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 14:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfGLOwJ (ORCPT
+        id S1727252AbfGLOwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 10:52:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726984AbfGLOwI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:52:08 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CEorVD053426
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:52:06 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpucd2r2x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 10:52:06 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 12 Jul 2019 15:52:03 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 15:51:57 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CEptPa46399566
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 14:51:55 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72848A4062;
-        Fri, 12 Jul 2019 14:51:55 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3367A405C;
-        Fri, 12 Jul 2019 14:51:54 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.222])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 14:51:54 +0000 (GMT)
-Date:   Fri, 12 Jul 2019 16:51:53 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>, x86@kernel.org,
-        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-In-Reply-To: <20190712140812.GA29628@lst.de>
-References: <20190712053631.9814-1-bauerman@linux.ibm.com>
-        <20190712053631.9814-4-bauerman@linux.ibm.com>
-        <20190712150912.3097215e.pasic@linux.ibm.com>
-        <20190712140812.GA29628@lst.de>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 12 Jul 2019 10:52:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:58764 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726984AbfGLOwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 10:52:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 321FD2B;
+        Fri, 12 Jul 2019 07:52:24 -0700 (PDT)
+Received: from [10.1.34.155] (e110723.arm.com [10.1.34.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 306493F59C;
+        Fri, 12 Jul 2019 07:52:23 -0700 (PDT)
+Subject: Re: [PATCH 17/17] riscv: add nommu support
+To:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190624054311.30256-1-hch@lst.de>
+ <20190624054311.30256-18-hch@lst.de>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <7b382b7a-41b6-62a5-02ab-189b3da9df70@arm.com>
+Date:   Fri, 12 Jul 2019 15:52:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071214-4275-0000-0000-0000034C810B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071214-4276-0000-0000-0000385C8C00
-Message-Id: <20190712165153.78d49095.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120161
+In-Reply-To: <20190624054311.30256-18-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 16:08:12 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+Hi Christoph,
 
-> On Fri, Jul 12, 2019 at 03:09:12PM +0200, Halil Pasic wrote:
-> > This is the implementation for the guys that don't
-> > have ARCH_HAS_MEM_ENCRYPT.
-> > 
-> > Means sev_active() may not be used in such code after this
-> > patch. What about 
-> > 
-> > static inline bool force_dma_unencrypted(void)
-> > {
-> >         return sev_active();
-> > }
-> > 
-> > in kernel/dma/direct.c?
+On 6/24/19 6:43 AM, Christoph Hellwig wrote:
+> The kernel runs in M-mode without using page tables, and thus can't run
+> bare metal without help from additional firmware.
 > 
-> FYI, I have this pending in the dma-mapping tree:
+> Most of the patch is just stubbing out code not needed without page
+> tables, but there is an interesting detail in the signals implementation:
 > 
-> http://git.infradead.org/users/hch/dma-mapping.git/commitdiff/e67a5ed1f86f4370991c601f2fcad9ebf9e1eebb
+>  - The normal RISC-V syscall ABI only implements rt_sigreturn as VDSO
+>    entry point, but the ELF VDSO is not supported for nommu Linux.
+>    We instead copy the code to call the syscall onto the stack.
+> 
+> In addition to enabling the nommu code a new defconfig for a small
+> kernel image that can run in nommu mode on qemu is also provided, to run
+> a kernel in qemu you can use the following command line:
+> 
+> qemu-system-riscv64 -smp 2 -m 64 -machine virt -nographic \
+> 	-kernel arch/riscv/boot/loader \
+> 	-drive file=rootfs.ext2,format=raw,id=hd0 \
+> 	-device virtio-blk-device,drive=hd0
+> 
+> Contains contributions from Damien Le Moal <Damien.LeMoal@wdc.com>.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/Kconfig                      | 24 +++++---
+>  arch/riscv/configs/nommu_virt_defconfig | 78 +++++++++++++++++++++++++
+>  arch/riscv/include/asm/elf.h            |  4 +-
+>  arch/riscv/include/asm/futex.h          |  6 ++
+>  arch/riscv/include/asm/io.h             |  4 ++
+>  arch/riscv/include/asm/mmu.h            |  3 +
+>  arch/riscv/include/asm/page.h           | 12 +++-
+>  arch/riscv/include/asm/pgalloc.h        |  2 +
+>  arch/riscv/include/asm/pgtable.h        | 38 ++++++++----
+>  arch/riscv/include/asm/tlbflush.h       |  7 ++-
+>  arch/riscv/include/asm/uaccess.h        |  4 ++
+>  arch/riscv/kernel/Makefile              |  3 +-
+>  arch/riscv/kernel/entry.S               | 11 ++++
+>  arch/riscv/kernel/head.S                |  6 ++
+>  arch/riscv/kernel/signal.c              | 17 +++++-
+>  arch/riscv/lib/Makefile                 |  8 +--
+>  arch/riscv/mm/Makefile                  |  3 +-
+>  arch/riscv/mm/cacheflush.c              |  2 +
+>  arch/riscv/mm/context.c                 |  2 +
+>  arch/riscv/mm/init.c                    |  2 +
+>  20 files changed, 200 insertions(+), 36 deletions(-)
+>  create mode 100644 arch/riscv/configs/nommu_virt_defconfig
+> 
 
-Thank you very much! I will have another look, but it seems to me,
-without further measures taken, this would break protected virtualization
-support on s390. The effect of the che for s390 is that
-force_dma_unencrypted() will always return false instead calling into
-the platform code like it did before the patch, right?
+snip...
 
-Should I send a  Fixes: e67a5ed1f86f "dma-direct: Force unencrypted DMA
-under SME for certain DMA masks" (Tom Lendacky, 2019-07-10) patch that
-rectifies things for s390 or how do we want handle this?
+>  
+> diff --git a/arch/riscv/configs/nommu_virt_defconfig b/arch/riscv/configs/nommu_virt_defconfig
+> new file mode 100644
+> index 000000000000..cf74e179bf90
+> --- /dev/null
+> +++ b/arch/riscv/configs/nommu_virt_defconfig
+> @@ -0,0 +1,78 @@
+> +# CONFIG_CPU_ISOLATION is not set
+> +CONFIG_LOG_BUF_SHIFT=16
+> +CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=12
+> +CONFIG_BLK_DEV_INITRD=y
+> +# CONFIG_RD_BZIP2 is not set
+> +# CONFIG_RD_LZMA is not set
+> +# CONFIG_RD_XZ is not set
+> +# CONFIG_RD_LZO is not set
+> +# CONFIG_RD_LZ4 is not set
+> +CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+> +CONFIG_EXPERT=y
+> +# CONFIG_SYSFS_SYSCALL is not set
+> +# CONFIG_FHANDLE is not set
+> +# CONFIG_BASE_FULL is not set
+> +# CONFIG_EPOLL is not set
+> +# CONFIG_SIGNALFD is not set
+> +# CONFIG_TIMERFD is not set
+> +# CONFIG_EVENTFD is not set
+> +# CONFIG_AIO is not set
+> +# CONFIG_IO_URING is not set
+> +# CONFIG_ADVISE_SYSCALLS is not set
+> +# CONFIG_MEMBARRIER is not set
+> +# CONFIG_KALLSYMS is not set
+> +# CONFIG_VM_EVENT_COUNTERS is not set
+> +# CONFIG_COMPAT_BRK is not set
+> +CONFIG_SLOB=y
+> +# CONFIG_SLAB_MERGE_DEFAULT is not set
+> +# CONFIG_MMU is not set
+> +CONFIG_MAXPHYSMEM_2GB=y
+> +CONFIG_SMP=y
+> +CONFIG_CMDLINE="root=/dev/vda rw earlycon=uart8250,mmio,0x10000000,115200n8 console=ttyS0"
+> +CONFIG_CMDLINE_FORCE=y
+> +# CONFIG_BLK_DEV_BSG is not set
+> +CONFIG_PARTITION_ADVANCED=y
+> +# CONFIG_MSDOS_PARTITION is not set
+> +# CONFIG_EFI_PARTITION is not set
+> +# CONFIG_MQ_IOSCHED_DEADLINE is not set
+> +# CONFIG_MQ_IOSCHED_KYBER is not set
+> +CONFIG_BINFMT_FLAT=y
 
-Regards,
-Halil
+IIUC, RISC-V requires stack pointer to be 16 byte aligned, but flat loader would
+align stack pointer to max(sizeof(void *), ARCH_SLAB_MINALIGN). So, I think you
+might want to define ARCH_SLAB_MINALIGN.
 
+Cheers
+Vladimir
