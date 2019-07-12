@@ -2,92 +2,106 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547C6C742B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7FCC742B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309A420863
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 09:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E15B208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 10:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5+1/qjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfGLJ5O (ORCPT
+        id S1726568AbfGLKC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 05:57:14 -0400
-Received: from mga17.intel.com ([192.55.52.151]:23447 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbfGLJ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 05:57:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jul 2019 02:57:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,482,1557212400"; 
-   d="scan'208";a="189792493"
-Received: from epronina-mobl.ccr.corp.intel.com ([10.252.5.80])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2019 02:57:11 -0700
-Message-ID: <ea73cd31cc634a1aec9fce8c5629c609f30d7d26.camel@intel.com>
-Subject: Re: iwl_mvm_add_new_dqa_stream_wk BUG in lib/list_debug.c:56
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Marc Haber <mh+netdev@zugschlus.de>, Yussuf Khalil <dev@pp3345.net>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>
-Date:   Fri, 12 Jul 2019 12:57:10 +0300
-In-Reply-To: <20190607204421.GK31088@torres.zugschlus.de>
-References: <20190530081257.GA26133@torres.zugschlus.de>
-         <20190602134842.GC3249@torres.zugschlus.de>
-         <29401822-d7e9-430b-d284-706bf68acb8a@pp3345.net>
-         <20190607204421.GK31088@torres.zugschlus.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 12 Jul 2019 06:02:29 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52132 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfGLKC2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 06:02:28 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 207so8348453wma.1;
+        Fri, 12 Jul 2019 03:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=PVznxIgOJnlqE5rODHHWrAxuxQ+5+E+kFPlhzOL7qDQ=;
+        b=R5+1/qjJl+3YpWHEZkTpsk6puFGtmsVkY5J/NsogQ9vzS73dYa5eMD1VPNun0oQVxB
+         DMQdhzY+mxoY5oUQEf1795qpNPPNrcmNJjtqBM9zhDfBx5g5lbHkastxQUmnrJHEtB+Z
+         Epalw+tOcRhh4Wx3blUcayWABvfKFmyXJi+8HThkOiCIEF5nSQI1NJQNpjCXtok4Bbc/
+         5eQ4F2viDXDKsciFyVWNrHJ8GtGdVzYN4wnp3Q3pnEsxirfMhSuzV/kHlT/dzV1OX7DY
+         ezPW2OvCzNCZmdvMGPiIjEf6loEEs1LkZdSCna6xvTZ63rSWAoxgWBmMdNR+1EEBSWcn
+         ToSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=PVznxIgOJnlqE5rODHHWrAxuxQ+5+E+kFPlhzOL7qDQ=;
+        b=ftxuXImbxRhv869ishbDFz2fLr9OgEA4kBSupIuzw3zQrta5OAIiYWXaDpD3c/Y8TS
+         dNqTqAhLpVK+3YdNAlnyxMbXhI8Yzw+4q3q/delHmU+NeFstuczijms5OSPvYAyE4Mnj
+         aCc7nslN37Obg+5F+xEEv22Y9EFs6k3XAiyYQi+oJKWoKZouZylAxCfp315Cx8SmhnTQ
+         rt2ouBfcZPHRT3aOHPm0pgO1FVRL0jtnwVhKSUPTO4llkreHYhrGI4u4kJAfmjGMh1qH
+         UPLJBECkBS0ICb70QaPVUpB2WDvVBImSKTAFYpGZs/fzR9B9QENHBXkbOVJYbn+267UA
+         lg0g==
+X-Gm-Message-State: APjAAAXD52jen4YI5eflc4/BzkwNQZfzc5ZTuWN83cDsScEWNzra37AX
+        Nod1Ul6coQFXo+njNhx6k48=
+X-Google-Smtp-Source: APXvYqwVkDbIqxSOP3zyc1XG88KVHvtUgjV3NOM+MrukPDAWPxbvgfn0l1J6GpoxNmOM+sWy/8SFMQ==
+X-Received: by 2002:a05:600c:20ca:: with SMTP id y10mr8792513wmm.72.1562925746299;
+        Fri, 12 Jul 2019 03:02:26 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id i13sm8047696wrr.73.2019.07.12.03.02.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jul 2019 03:02:25 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 12:02:24 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Jan Kara <jack@suse.com>,
+        "Steven J. Magnani" <steve.magnani@digidescorp.com>,
+        Roald Strauss <mr_lou@dewfall.dk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: UDF filesystem image with Write-Once UDF Access Type
+Message-ID: <20190712100224.s2chparxszlbnill@pali>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 22:44 +0200, Marc Haber wrote:
-> On Fri, Jun 07, 2019 at 10:20:56PM +0200, Yussuf Khalil wrote:
-> > CC'ing iwlwifi maintainers to get some attention for this issue.
-> > 
-> > I am experiencing the very same bug on a ThinkPad T480s running 5.1.6 with
-> > Fedora 30. A friend is seeing it on his X1 Carbon 6th Gen, too. Both have an
-> > "Intel Corporation Wireless 8265 / 8275" card according to lspci.
-> 
-> I have an older 04:00.0 Network controller [0280]: Intel Corporation
-> Wireless 8260 [8086:24f3] (rev 3a) on a Thinkpad X260.
-> 
-> > Notably, in all cases I've observed it occurred right after roaming from one
-> > AP to another (though I can't guarantee this isn't a coincidence).
-> 
-> I also have multiple Access Points broadcasting the same SSID in my
-> house, and yes, I experience those issues often when I move from one
-> part of the hose to another. I have, however, also experienced it in a
-> hotel when I was using the mobile hotspot offered by my mobile, so that
-> was clearly not a roaming situation.
+Hello,
 
-Hi,
+I had discussion with Roald and based on his tests, Linux kernel udf.ko
+driver mounts UDF filesystem image with Write-Once UDF Access Type as
+normal read/write filesystem.
 
-Sorry this got under the radar for a while.  Yesterday someone created
-a bugzilla entry with the same error:
+I think this is a bug as Write-Once Access Type is defined that existing
+blocks on filesystem cannot be rewritten. Only new blocks can be
+appended after end of device. Basically it means special HW support from
+underlying media, e.g. for optical medias packet-writing technique (or
+ability to burn new session) and CDROM_LAST_WRITTEN ioctl to locate
+"current" end of device.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=204141
+In my opinion without support for additional layer, kernel should treat
+UDF Write-Once Access Type as read-only mount for userspace. And not
+classic read/write mount.
 
-I'm going to file an internal bug report and then have someone look
-further into it.
+If you want to play with Write-Once Access Type, use recent version of
+mkudffs and choose --media-type=cdr option, which generates UDF
+filesystem suitable for CD-R (Write-Once Access Type with VAT and other
+UDF options according to UDF specification).
 
-Any additional comments/reproductions/etc. please use that bugzilla
-entry.
+Also in git master of udftools has mkduffs now new option --read-only
+which creates UDF image with Read-Only Access Type.
 
-Thanks for reporting!
+It seems that udf.ko does not support updating VAT table, so probably it
+should treat also filesystem with VAT as read-only too.
 
---
-Cheers,
-Luca.
-
+-- 
+Pali Rohár
+pali.rohar@gmail.com
