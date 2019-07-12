@@ -2,102 +2,132 @@ Return-Path: <SRS0=V+Ds=VJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044F6C742AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DB3C742A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE54208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DA1208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jul 2019 06:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbfGLGdj (ORCPT
+        id S1726072AbfGLGeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 02:33:39 -0400
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:34777 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725562AbfGLGdj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 02:33:39 -0400
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-        by 156.147.23.53 with ESMTP; 12 Jul 2019 15:33:36 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.126 with ESMTP; 12 Jul 2019 15:33:36 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 12 Jul 2019 15:32:40 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-Message-ID: <20190712063240.GD7702@X58A-UD3R>
-References: <20190708125013.GG26519@linux.ibm.com>
- <20190708130359.GA42888@google.com>
- <20190709055815.GA19459@X58A-UD3R>
- <20190709124102.GR26519@linux.ibm.com>
- <20190710012025.GA20711@X58A-UD3R>
- <20190711123052.GI26519@linux.ibm.com>
- <20190711130849.GA212044@google.com>
- <20190711150215.GK26519@linux.ibm.com>
- <20190711164818.GA260447@google.com>
- <20190711195839.GA163275@google.com>
+        Fri, 12 Jul 2019 02:34:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40234 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbfGLGeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 02:34:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 405B5AFA9;
+        Fri, 12 Jul 2019 06:34:34 +0000 (UTC)
+Subject: Re: [PATCH] scsi: libfc: fix null pointer dereference on a null lport
+To:     Colin King <colin.king@canonical.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190702091835.13629-1-colin.king@canonical.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <14c9e345-dd98-63e7-5ba2-679f10760fe6@suse.de>
+Date:   Fri, 12 Jul 2019 08:34:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711195839.GA163275@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190702091835.13629-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 03:58:39PM -0400, Joel Fernandes wrote:
-> Hmm, speaking of grace period durations, it seems to me the maximum grace
-> period ever is recorded in rcu_state.gp_max. However it is not read from
-> anywhere.
+On 7/2/19 11:18 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Any idea why it was added but not used?
+> Currently if lport is null then the null lport pointer is dereference
+> when printing out debug via the FC_LPORT_DB macro. Fix this by using
+> the more generic FC_LIBFC_DBG debug macro instead that does not use
+> lport.
 > 
-> I am interested in dumping this value just for fun, and seeing what I get.
+> Addresses-Coverity: ("Dereference after null check")
+> Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/scsi/libfc/fc_exch.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> I wonder also it is useful to dump it in rcutorture/rcuperf to find any
-> issues, or even expose it in sys/proc fs to see what worst case grace periods
-> look like.
+> diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
+> index 025cd2ff9f65..c477fadbf504 100644
+> --- a/drivers/scsi/libfc/fc_exch.c
+> +++ b/drivers/scsi/libfc/fc_exch.c
+> @@ -2591,8 +2591,8 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
+>  
+>  	/* lport lock ? */
+>  	if (!lport || lport->state == LPORT_ST_DISABLED) {
+> -		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
+> -			     "has not been initialized correctly\n");
+> +		FC_LIBFC_DBG("Receiving frames for an lport that "
+> +			     "has not been initialized correctly\n");
+>  		fc_frame_free(fp);
+>  		return;
+>  	}
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.com>
 
-Hi,
+Cheers,
 
-	commit ae91aa0adb14dc33114d566feca2f7cb7a96b8b7
-	rcu: Remove debugfs tracing
-
-removed all debugfs tracing, gp_max also included.
-
-And you sounds great. And even looks not that hard to add it like,
-
-:)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ad9dc86..86095ff 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1658,8 +1658,10 @@ static void rcu_gp_cleanup(void)
- 	raw_spin_lock_irq_rcu_node(rnp);
- 	rcu_state.gp_end = jiffies;
- 	gp_duration = rcu_state.gp_end - rcu_state.gp_start;
--	if (gp_duration > rcu_state.gp_max)
-+	if (gp_duration > rcu_state.gp_max) {
- 		rcu_state.gp_max = gp_duration;
-+		trace_rcu_grace_period(something something);
-+	}
- 
- 	/*
- 	 * We know the grace period is complete, but to everyone else
-
-Thanks,
-Byungchul
-
+Hannes
+-- 
+Dr. Hannes Reinecke		   Teamlead Storage & Networking
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
