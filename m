@@ -2,118 +2,128 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56363C742DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 08:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CFEC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 08:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E66B20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 08:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDDB2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 08:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFMyJlnY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/ZD3Fhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfGMIZh (ORCPT
+        id S1727274AbfGMIqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 04:25:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44397 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfGMIZh (ORCPT
+        Sat, 13 Jul 2019 04:46:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43774 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfGMIqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 04:25:37 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k18so11489792ljc.11
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 01:25:36 -0700 (PDT)
+        Sat, 13 Jul 2019 04:46:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so5328308pfg.10;
+        Sat, 13 Jul 2019 01:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6QTd4eX3sc1qUhKub9n3hlO3YZ/+QH5MhW+wPUN67nI=;
-        b=VFMyJlnY+HNmqN+/0XkHTCcE4XUlcWBudV8DdALA0mOHLcnTYnfBhIgHqG2Xia3xSO
-         U+C7VUV0ICM2Hmaomy7KZ2TG1eODRaAmDL0dWsWvdt5A53muSbUu9XZkAGgJC5+LwetN
-         lW8zno8kHgmXJnpTg0QCSv1xy5GT766oLuiTEqraYE9aijU6bOKyd61VOecp57itocUb
-         uEaW5eY3ol9CwZOfno3tKtv/y4qBybA/MtM2HH/XVQgHgkbTRq+up5pN6UQN/lTs0L5h
-         O7QG8D7CX18kqSuOrowDeVuMJ+jtN/IJaXZHniI7gtVawa9IIz+TkAy60/rj4ho1Fs03
-         ZWJA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=TidFut9OwzlW0ckjd0UWlmPGsBc3cKq+HKK2tjI05FU=;
+        b=t/ZD3FhsnoPnm2E+3B/ARqrJg0QJ+ZECapNTZ3zU6U9HQ5APb+bT6vYUyNrIyndBNu
+         z0ds0/WboGAnuxrzYOwEXUuVJzlA1013DnTY4CgsuHZP7yjswiY1fQJboK1SP0Arw8cX
+         Z03axsvNnaNEejEM/QNbjeM7ANE33RaM4c832DFE6tRALSexkiCp0wtKg7g+YOMWAA7f
+         O+hpC6tHalRp/SdPGzvfQEOU+7dG98HKKSbS0h1t2x42cTCIRsbYNkocw4UUIUNauXMz
+         Y3Sj0HPKsrQKViZyNRfDENg9nEa3V11mFKqnIgm7BlaHQOYk03f2A33Xw9KKVLtrcBS1
+         JkDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6QTd4eX3sc1qUhKub9n3hlO3YZ/+QH5MhW+wPUN67nI=;
-        b=DO3RG9HQ4OeO4wSSV4WqfMoXSgNKsqNYBpmzlvS0U1ebia+nsNDFxqR8jhuTsEOst8
-         xMeTvU3FkhtUKoi7a8n8IyxNJIdj+53t/umEm6xzKvWmEXXYHrGi+g5nK/j1jzDkyEtP
-         YRm5FmAv5lKwNFnTarT2oEKa06ON+MpOyLCP7bIb1zXGevmLV5l4CDHUHjcVLaqWFFDK
-         3H5ambObSGGVNdoeOynwUNKvZSJY+DFmPqslTEyCN1uCKED0MN1YgBNphvi1ywGOm7yr
-         PkXOqkKFj2wqOz0imK8IqMhlP6txYmvk1Rp73ri/e/7c9uFkEdVPfum2zVJqt6DQZXN/
-         /5nw==
-X-Gm-Message-State: APjAAAWzG2TiGTVQTi/pNYo+pAxf/TSiypwoGhE6qFDsPCUfGXmR37aV
-        1MbYW8rFy8R1H1SVu6FStPJ35NE7FJVWWblfnQM=
-X-Google-Smtp-Source: APXvYqwp76JJ/0WJFWcpBXbQNkvry0BV51hxWYJa9soCGBmQZQIk3fJZkjhExYfCppqBMazsYp4R4aCwpUGHoXRwkOM=
-X-Received: by 2002:a2e:8ed2:: with SMTP id e18mr8207102ljl.235.1563006335346;
- Sat, 13 Jul 2019 01:25:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=TidFut9OwzlW0ckjd0UWlmPGsBc3cKq+HKK2tjI05FU=;
+        b=K2azVKaOZ8v7WCuxffpAa5BUCg8YCzhNZgIHxx26qSsmeKGf55wzEqsJvQkI74Au0j
+         fRrRdBoQU09b98rHYpYu02RtreZMFJGKEdJERdVaVGKb/ui2CHoXF3BatvTzaDtoboae
+         wKcOMx4G2/79R/PgyoatiwmyjSxPgOLHGBST920UIrzxSD0+4BOlc5f6ch4STHk4uxQF
+         ErXKlf+YoZM1FN0tX1CoP/R23t5h4pR61SqLgkJO9Yrf2VT+SAPU6VtgE2mRH7Kbo8ZN
+         eZf3izdKgDn2avuqOOEB7F9copQtWCkNhssfwRfDeyI5Hgni6D8RxZbZRxz+dlejI8T2
+         sMkw==
+X-Gm-Message-State: APjAAAXKi+OnSaqRr96Cp+JNNcCozIxgYVNu867sQv8/7nCjtmE9tvjQ
+        U2NEdyBXZgdI8fmJ8Wl39SUOSVJnwEk=
+X-Google-Smtp-Source: APXvYqybBXEMVzLYTL2ekVN1YTgAolvKRFUmUqko0Us4zHccKRgSKftzFoQOezW1W/9C9ZUxmgdH3g==
+X-Received: by 2002:a17:90a:17a6:: with SMTP id q35mr17183784pja.118.1563007612348;
+        Sat, 13 Jul 2019 01:46:52 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 25sm10757516pfp.76.2019.07.13.01.46.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 13 Jul 2019 01:46:51 -0700 (PDT)
+Date:   Sat, 13 Jul 2019 01:46:49 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        KT Liao <kt.liao@emc.com.tw>, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: elan_i2c - switch to using devm_device_add_groups()
+Message-ID: <20190713084649.GA103402@dtor-ws>
 MIME-Version: 1.0
-References: <20190712222118.108192-1-henryburns@google.com>
-In-Reply-To: <20190712222118.108192-1-henryburns@google.com>
-From:   Vitaly Wool <vitalywool@gmail.com>
-Date:   Sat, 13 Jul 2019 10:24:30 +0200
-Message-ID: <CAMJBoFNvYP9J=LC2U1McMa2D4=C5szOStzebDd4e2MV6tbpBsw@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold.c: Allow __GFP_HIGHMEM in z3fold_alloc
-To:     Henry Burns <henryburns@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Snild Dolkow <snild@sony.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 12:22 AM Henry Burns <henryburns@google.com> wrote:
->
-> One of the gfp flags used to show that a page is movable is
-> __GFP_HIGHMEM.  Currently z3fold_alloc() fails when __GFP_HIGHMEM is
-> passed.  Now that z3fold pages are movable, we allow __GFP_HIGHMEM. We
-> strip the movability related flags from the call to kmem_cache_alloc()
-> for our slots since it is a kernel allocation.
->
-> Signed-off-by: Henry Burns <henryburns@google.com>
+Instead of installing custom devm cleanup action to remove attribute
+groups on failure, let's use the dedicated devm API.
 
-Acked-by: Vitaly Wool <vitalywool@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/mouse/elan_i2c_core.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
-> ---
->  mm/z3fold.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/z3fold.c b/mm/z3fold.c
-> index e78f95284d7c..cb567ddf051c 100644
-> --- a/mm/z3fold.c
-> +++ b/mm/z3fold.c
-> @@ -193,7 +193,8 @@ static inline struct z3fold_buddy_slots *alloc_slots(struct z3fold_pool *pool,
->                                                         gfp_t gfp)
->  {
->         struct z3fold_buddy_slots *slots = kmem_cache_alloc(pool->c_handle,
-> -                                                           gfp);
-> +                                                           (gfp & ~(__GFP_HIGHMEM
-> +                                                                  | __GFP_MOVABLE)));
->
->         if (slots) {
->                 memset(slots->slot, 0, sizeof(slots->slot));
-> @@ -844,7 +845,7 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
->         enum buddy bud;
->         bool can_sleep = gfpflags_allow_blocking(gfp);
->
-> -       if (!size || (gfp & __GFP_HIGHMEM))
-> +       if (!size)
->                 return -EINVAL;
->
->         if (size > PAGE_SIZE)
-> --
-> 2.22.0.510.g264f2c817a-goog
->
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index d9b103a81a79..b549d032da93 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1138,13 +1138,6 @@ static void elan_disable_regulator(void *_data)
+ 	regulator_disable(data->vcc);
+ }
+ 
+-static void elan_remove_sysfs_groups(void *_data)
+-{
+-	struct elan_tp_data *data = _data;
+-
+-	sysfs_remove_groups(&data->client->dev.kobj, elan_sysfs_groups);
+-}
+-
+ static int elan_probe(struct i2c_client *client,
+ 		      const struct i2c_device_id *dev_id)
+ {
+@@ -1269,20 +1262,12 @@ static int elan_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
+-	error = sysfs_create_groups(&dev->kobj, elan_sysfs_groups);
++	error = devm_device_add_groups(dev, elan_sysfs_groups);
+ 	if (error) {
+ 		dev_err(dev, "failed to create sysfs attributes: %d\n", error);
+ 		return error;
+ 	}
+ 
+-	error = devm_add_action(dev, elan_remove_sysfs_groups, data);
+-	if (error) {
+-		elan_remove_sysfs_groups(data);
+-		dev_err(dev, "Failed to add sysfs cleanup action: %d\n",
+-			error);
+-		return error;
+-	}
+-
+ 	error = input_register_device(data->input);
+ 	if (error) {
+ 		dev_err(dev, "failed to register input device: %d\n", error);
+-- 
+2.22.0.510.g264f2c817a-goog
+
+
+-- 
+Dmitry
