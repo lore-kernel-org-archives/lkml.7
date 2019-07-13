@@ -2,110 +2,96 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2985C71142
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 17:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C824C71142
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 17:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A822B20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 17:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1516720838
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 17:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbfGMRNi (ORCPT
+        id S1728017AbfGMR3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 13:13:38 -0400
-Received: from mga01.intel.com ([192.55.52.88]:19294 "EHLO mga01.intel.com"
+        Sat, 13 Jul 2019 13:29:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:41843 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbfGMRNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 13:13:38 -0400
+        id S1727853AbfGMR3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 13:29:14 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jul 2019 10:13:37 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jul 2019 10:29:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,487,1557212400"; 
-   d="scan'208";a="341981751"
-Received: from hbriegel-mobl.ger.corp.intel.com (HELO localhost) ([10.252.50.48])
-  by orsmga005.jf.intel.com with ESMTP; 13 Jul 2019 10:13:28 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
+   d="scan'208";a="318289249"
+Received: from bxing-mobl.amr.corp.intel.com (HELO [10.255.230.48]) ([10.255.230.48])
+  by orsmga004.jf.intel.com with ESMTP; 13 Jul 2019 10:29:13 -0700
+Subject: Re: [RFC PATCH v4 1/3] selftests/x86/sgx: Fix Makefile for SGX
+ selftest
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org
 Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
+        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
         shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v21 28/28] docs: x86/sgx: Document the enclave API
-Date:   Sat, 13 Jul 2019 20:08:04 +0300
-Message-Id: <20190713170804.2340-29-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+        kai.svahn@intel.com, kai.huang@intel.com
+References: <cover.1563000446.git.cedric.xing@intel.com>
+ <757d44a0e67bfa09d97eea918bc0d20383b5e80e.1563000446.git.cedric.xing@intel.com>
+ <c6a99c107c1e6b814c1968146c87291c3e84aa2f.camel@linux.intel.com>
+ <8bf125023ad2e99a8620112a393ca95f9939f4fd.camel@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <84c792d8-a5ef-1030-9072-9670b6ba966c@intel.com>
+Date:   Sat, 13 Jul 2019 10:29:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8bf125023ad2e99a8620112a393ca95f9939f4fd.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the enclave driver API i.e. the set of ioctl's used to create
-and manage enclaves and set their privileges
+On 7/13/2019 8:15 AM, Jarkko Sakkinen wrote:
+> On Sat, 2019-07-13 at 18:10 +0300, Jarkko Sakkinen wrote:
+>> On Fri, 2019-07-12 at 23:51 -0700, Cedric Xing wrote:
+>>> The original x86/sgx/Makefile didn't work when "x86/sgx" was specified as the
+>>> test target, nor did it work with "run_tests" as the make target. Yet another
+>>> problem was that it breaks 32-bit only build. This patch fixes those problems,
+>>> along with adjustments to compiler/linker options and simplifications to the
+>>> build rules.
+>>>
+>>> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+>>
+>> You must split this in quite a few separate patches:
+>>
+>> 1. One for each fix.
+>> 2. At least one patch for each change in compiler and linker options with a
+>>     commit message clearly expalaining why the change was made.
+>> 3. One for each simplification.
+>>
+>> We don't support 32-bit build:
+>>
+>> config INTEL_SGX
+>> 	bool "Intel SGX core functionality"
+>> 	depends on X86_64 && CPU_SUP_INTEL
+> 
+> This is not to say that changes suck. This just in "unreviewable" state as far
+> as the kernel processes go...
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- Documentation/x86/sgx/3.API.rst | 27 +++++++++++++++++++++++++++
- Documentation/x86/sgx/index.rst |  1 +
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/x86/sgx/3.API.rst
+Please note that your patchset hasn't been upstreamed yet. Your Makefile 
+is problematic to begin with. Technically it's your job to make it work 
+before sending out any patches. You didn't explain what's done for each 
+line of Makefile in your commit message either.
 
-diff --git a/Documentation/x86/sgx/3.API.rst b/Documentation/x86/sgx/3.API.rst
-new file mode 100644
-index 000000000000..b113aeb05f54
---- /dev/null
-+++ b/Documentation/x86/sgx/3.API.rst
-@@ -0,0 +1,27 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===
-+API
-+===
-+
-+The enclave life-cycle starts by opening `/dev/sgx/enclave`. After this there is
-+already a data structure inside kernel tracking the enclave that is initially
-+uncreated. After this a set of ioctl's can be used to create, populate and
-+initialize the enclave.
-+
-+You can close (if you want) the fd after you've mmap()'d. As long as the file is
-+open the enclave stays alive so you might want to do that after you don't need
-+it anymore. Even munmap() won't destruct the enclave if the file is open.
-+Neither will closing the fd as long as you have mmap() done over the fd (even
-+if it does not across the range defined in SECS).
-+
-+Finally, there is ioctl to authorize priviliged attributes:
-+`SGX_IOC_ENCLAVE_SET_ATTRIBUTE`. Each of them is presented by a file inside
-+`/dev/sgx/`. Right now there is only one such file `/dev/sgx/provision`, which
-+controls the `PROVISON_KEY` attribute.
-+
-+.. kernel-doc:: arch/x86/kernel/cpu/sgx/driver/ioctl.c
-+   :functions: sgx_ioc_enclave_create
-+               sgx_ioc_enclave_add_page
-+               sgx_ioc_enclave_init
-+               sgx_ioc_enclave_set_attribute
-diff --git a/Documentation/x86/sgx/index.rst b/Documentation/x86/sgx/index.rst
-index 5d660e83d984..de0b78328611 100644
---- a/Documentation/x86/sgx/index.rst
-+++ b/Documentation/x86/sgx/index.rst
-@@ -15,3 +15,4 @@ potentially malicious.
- 
-    1.Architecture
-    2.Kernel-internals
-+   3.API
--- 
-2.20.1
+Not saying documentation is unimportant, but the purposes for those 
+changes are obvious and easy to understand for anyone having reasonable 
+knowledge on how Makefile works.
 
+I'm totally fine not fixing the Makefile. You can just leave them out.
+
+> /Jarkko
+> 
