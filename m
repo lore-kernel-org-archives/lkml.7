@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4271C742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF27C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785322083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801BA2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KFxofTuH"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cadvFf4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfGMLGK (ORCPT
+        id S1727884AbfGMLGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 07:06:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41841 "EHLO
+        Sat, 13 Jul 2019 07:06:48 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53023 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfGMLGK (ORCPT
+        with ESMTP id S1726755AbfGMLGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 07:06:10 -0400
+        Sat, 13 Jul 2019 07:06:48 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB5v8w3840872
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB6etY3841141
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 04:05:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB5v8w3840872
+        Sat, 13 Jul 2019 04:06:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB6etY3841141
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563015958;
-        bh=oiJllkUEe3bvX1caGxx3UspuML9qGy2is/bPD1y+r14=;
+        s=2019061801; t=1563016000;
+        bh=RzICi9GCKEj2ygzQv5NJHcYbE1HZCtvrNnYQ9WrsqqE=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KFxofTuHICog3nGEJvXvBg1HXVdUaearvg+Q28sxvCV0vxCgooQa0SL1lsiMeeLM6
-         lNq19fMb4YeLBRs+n2IgjpTTsbozAnnOFdm8T2TbyspUPhB+W0s/WWwxfZkxqsMzfZ
-         0GluP8IU5VaVmQmY25jGwh+8g5ytzOIeUYcbiHTia1G0x0cwQoD8Cfx5OGGr1RRLCr
-         S4Ly67fJIIFcEzTgjtyqu3Y5G/daq6djUsgC+X/b4qyc88FfETNU6FvSH7ntinTFFt
-         E2jThcnAZDa00HIsFl2nEx7Q28SeCXfFPYhLd71bm5fJkQNwAgs7sfGpOZqlnxhFfv
-         6Hh5CUz77FQ6w==
+        b=cadvFf4makL2bfrIY+qYspZGiDLW01zqIEkG8U+DU0JFftn6ffbVAWZwp3BdUU13j
+         NCMi5PKPmLybtgdILS+F4LgrWjzGCffTyuensV2uiz13S+s4O3cKzsKmOtPXpDk+/T
+         tqRGZbQbfot1QUjwoYAFmD6/6hRR/+2SSazpSMrV+ik8Xpx+wVzptMjt+vyOsmH1jW
+         ckgFtnTOZFeshEpE2Z20Q7TG7Hf4XWzViwo4m5HrQCjhMaj5B/dq4NTNfyC2Ope+UV
+         mEzZ/40FfafyeWFWJODNahuM6lBP82vxiOr77YcjX2GkrEa73VmZZhgG0OMd1DYGX9
+         FHpXEv2HlaO5w==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB5vsj3840869;
-        Sat, 13 Jul 2019 04:05:57 -0700
-Date:   Sat, 13 Jul 2019 04:05:57 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB6dFd3841138;
+        Sat, 13 Jul 2019 04:06:39 -0700
+Date:   Sat, 13 Jul 2019 04:06:39 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Leo Yan <tipbot@zytor.com>
-Message-ID: <tip-ceb75476db1617a88cc29b09839acacb69aa076e@git.kernel.org>
-Cc:     ak@linux.intel.com, adrian.hunter@intel.com, mingo@kernel.org,
-        hpa@zytor.com, suzuki.poulose@arm.com, tglx@linutronix.de,
-        leo.yan@linaro.org, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org, jolsa@kernel.org, namhyung@kernel.org,
-        acme@redhat.com, alexander.shishkin@linux.intel.com
-Reply-To: tglx@linutronix.de, leo.yan@linaro.org,
-          linux-kernel@vger.kernel.org, ak@linux.intel.com,
-          adrian.hunter@intel.com, mingo@kernel.org, hpa@zytor.com,
-          suzuki.poulose@arm.com, alexander.shishkin@linux.intel.com,
-          mathieu.poirier@linaro.org, namhyung@kernel.org,
-          jolsa@kernel.org, acme@redhat.com
-In-Reply-To: <20190708143937.7722-2-leo.yan@linaro.org>
-References: <20190708143937.7722-2-leo.yan@linaro.org>
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-d8d051df9f906232715282cc0570c94273b197bc@git.kernel.org>
+Cc:     adrian.hunter@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        acme@redhat.com, mingo@kernel.org
+Reply-To: tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org,
+          acme@redhat.com, jolsa@redhat.com, adrian.hunter@intel.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190708055232.5032-2-adrian.hunter@intel.com>
+References: <20190708055232.5032-2-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf hists browser: Fix potential NULL pointer
- dereference found by the smatch tool
-Git-Commit-ID: ceb75476db1617a88cc29b09839acacb69aa076e
+Subject: [tip:perf/urgent] perf scripts python: export-to-postgresql.py: Fix
+ DROP VIEW power_events_view
+Git-Commit-ID: d8d051df9f906232715282cc0570c94273b197bc
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,92 +70,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ceb75476db1617a88cc29b09839acacb69aa076e
-Gitweb:     https://git.kernel.org/tip/ceb75476db1617a88cc29b09839acacb69aa076e
-Author:     Leo Yan <leo.yan@linaro.org>
-AuthorDate: Mon, 8 Jul 2019 22:39:34 +0800
+Commit-ID:  d8d051df9f906232715282cc0570c94273b197bc
+Gitweb:     https://git.kernel.org/tip/d8d051df9f906232715282cc0570c94273b197bc
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Mon, 8 Jul 2019 08:52:31 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 9 Jul 2019 10:13:27 -0300
 
-perf hists browser: Fix potential NULL pointer dereference found by the smatch tool
+perf scripts python: export-to-postgresql.py: Fix DROP VIEW power_events_view
 
-Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+PostgreSQL can error if power_events_view is not dropped before its
+dependent tables e.g.
 
-  tools/perf/ui/browsers/hists.c:641
-  hist_browser__run() error: we previously assumed 'hbt' could be
-  null (see line 625)
+  Exception: Query failed: ERROR:  cannot drop table mwait because other
+  objects depend on it
+  DETAIL:  view power_events_view depends on table mwait
 
-  tools/perf/ui/browsers/hists.c:3088
-  perf_evsel__hists_browse() error: we previously assumed
-  'browser->he_selection' could be null (see line 2902)
-
-  tools/perf/ui/browsers/hists.c:3272
-  perf_evsel_menu__run() error: we previously assumed 'hbt' could be
-  null (see line 3260)
-
-This patch firstly validating the pointers before access them, so can
-fix potential NULL pointer dereference.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190708143937.7722-2-leo.yan@linaro.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Fixes: aba44287a224 ("perf scripts python: export-to-postgresql.py: Export Intel PT power and ptwrite events")
+Link: http://lkml.kernel.org/r/20190708055232.5032-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ tools/perf/scripts/python/export-to-postgresql.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 85581cfb9112..a94eb0755e8b 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -639,7 +639,11 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
- 		switch (key) {
- 		case K_TIMER: {
- 			u64 nr_entries;
--			hbt->timer(hbt->arg);
-+
-+			WARN_ON_ONCE(!hbt);
-+
-+			if (hbt)
-+				hbt->timer(hbt->arg);
+diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+index 4447f0d7c754..92713d93e956 100644
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -898,11 +898,11 @@ def trace_end():
+ 	if is_table_empty("ptwrite"):
+ 		drop("ptwrite")
+ 	if is_table_empty("mwait") and is_table_empty("pwre") and is_table_empty("exstop") and is_table_empty("pwrx"):
++		do_query(query, 'DROP VIEW power_events_view');
+ 		drop("mwait")
+ 		drop("pwre")
+ 		drop("exstop")
+ 		drop("pwrx")
+-		do_query(query, 'DROP VIEW power_events_view');
+ 		if is_table_empty("cbr"):
+ 			drop("cbr")
  
- 			if (hist_browser__has_filter(browser) ||
- 			    symbol_conf.report_hierarchy)
-@@ -2821,7 +2825,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- {
- 	struct hists *hists = evsel__hists(evsel);
- 	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env, annotation_opts);
--	struct branch_info *bi;
-+	struct branch_info *bi = NULL;
- #define MAX_OPTIONS  16
- 	char *options[MAX_OPTIONS];
- 	struct popup_action actions[MAX_OPTIONS];
-@@ -3087,7 +3091,9 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- 			goto skip_annotation;
- 
- 		if (sort__mode == SORT_MODE__BRANCH) {
--			bi = browser->he_selection->branch_info;
-+
-+			if (browser->he_selection)
-+				bi = browser->he_selection->branch_info;
- 
- 			if (bi == NULL)
- 				goto skip_annotation;
-@@ -3271,7 +3277,8 @@ static int perf_evsel_menu__run(struct perf_evsel_menu *menu,
- 
- 		switch (key) {
- 		case K_TIMER:
--			hbt->timer(hbt->arg);
-+			if (hbt)
-+				hbt->timer(hbt->arg);
- 
- 			if (!menu->lost_events_warned &&
- 			    menu->lost_events &&
