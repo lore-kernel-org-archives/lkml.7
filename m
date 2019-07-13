@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9EFC742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB51AC742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D544C2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A16F2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="c3Mnwdkn"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pfFS9vyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfGMLB5 (ORCPT
+        id S1727850AbfGMLCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 07:01:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59619 "EHLO
+        Sat, 13 Jul 2019 07:02:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60071 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfGMLB4 (ORCPT
+        with ESMTP id S1726460AbfGMLCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 07:01:56 -0400
+        Sat, 13 Jul 2019 07:02:37 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB1jHh3838764
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB2Stu3838801
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 04:01:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB1jHh3838764
+        Sat, 13 Jul 2019 04:02:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB2Stu3838801
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563015706;
-        bh=+wJShjDvosbjv7JS+ap9y6e/dJ3V1GdT8LJyJ2aora4=;
+        s=2019061801; t=1563015749;
+        bh=PuEuSmTYudhcB+snH/yi+Jbi/iTaQFeyTH3ZR0/Z82Y=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=c3Mnwdkn2qw4N3VJnG2G53KSIHC6aHZjhLPW3+FhNc63RRJYbwJWIRAaDC/D70Rek
-         oXBHz2r/ep1cHc24S0A5NLOQihpPkTH51dmbToK8G1guTeJAiSCJsKi5HKqQoXVrDC
-         w6ZP+hATUiSGwYc3GoDpf4tadpVWYtvFjeiHUM+82wm8L9+iZ0vghBXWX8UKDlg2Eu
-         pKZ0bHrehdX/g05eGDhzU5pmfCFxOnH9vRJKq1zUWMCHLvBfIG6c1DC3PIq/1qrpzs
-         EoiQHUejo28TA84aBZjUzeh5iPPK4ut9CERtbdezZ8J6G5Ooa+2+00IdmKhRzgDJsx
-         GXVfkL4KJtGCQ==
+        b=pfFS9vyIF8dQmdXEdBphRQ6hW822/2T6QozgeV2/sASswV3tZW6Fm+MYclKvcbeD2
+         ZEarkLsr8GqN7Im8tybuc8HYexnLpsGuiLnvAnFsdzuc65u6Kwfqixgr0Kxt32oAMR
+         GISaAZuOyma7yYzwpTi7LgzNGV9OaKSZljXeWAsMD/QxAmQBJlLCVjwv39wyP6b5NV
+         OaXhB4ZqPtrD9lGRQNFLpBuqPnbfqv2Z2uTY3yp80DUr9jEzRY78Px/gL0DEJXCJMY
+         DqmUOlyrHJobEjv9jt25kN8D0fYbZ7vTIgZ2vH8TrJgtyC5XOjqpUEizmoWzaeR1eC
+         GkReSMpGdq78g==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB1jkZ3838761;
-        Sat, 13 Jul 2019 04:01:45 -0700
-Date:   Sat, 13 Jul 2019 04:01:45 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB2RU53838798;
+        Sat, 13 Jul 2019 04:02:27 -0700
+Date:   Sat, 13 Jul 2019 04:02:27 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-jatyoofo5boc1bsvoig6bb6i@git.kernel.org>
-Cc:     mingo@kernel.org, hpa@zytor.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        namhyung@kernel.org, adrian.hunter@intel.com, acme@redhat.com
-Reply-To: hpa@zytor.com, mingo@kernel.org, jolsa@kernel.org,
-          namhyung@kernel.org, linux-kernel@vger.kernel.org,
-          tglx@linutronix.de, acme@redhat.com, adrian.hunter@intel.com
+Message-ID: <tip-deh17ub44atyox3j90e6rksu@git.kernel.org>
+Cc:     hpa@zytor.com, mingo@kernel.org, namhyung@kernel.org,
+        acme@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        adrian.hunter@intel.com, jolsa@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+          jolsa@kernel.org, mingo@kernel.org, namhyung@kernel.org,
+          hpa@zytor.com, acme@redhat.com, tglx@linutronix.de
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf tools: Use zfree() where applicable
-Git-Commit-ID: d8f9da240495b50766239410f9b0c715ca506a67
+Subject: [tip:perf/urgent] perf tools: Use list_del_init() more thorougly
+Git-Commit-ID: e56fbc9dc79ce0fdc49ffadd062214ddd02f65b6
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -67,910 +67,466 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d8f9da240495b50766239410f9b0c715ca506a67
-Gitweb:     https://git.kernel.org/tip/d8f9da240495b50766239410f9b0c715ca506a67
+Commit-ID:  e56fbc9dc79ce0fdc49ffadd062214ddd02f65b6
+Gitweb:     https://git.kernel.org/tip/e56fbc9dc79ce0fdc49ffadd062214ddd02f65b6
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 4 Jul 2019 12:06:20 -0300
+AuthorDate: Thu, 4 Jul 2019 12:13:46 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 9 Jul 2019 10:13:27 -0300
 
-perf tools: Use zfree() where applicable
+perf tools: Use list_del_init() more thorougly
 
-In places where the equivalent was already being done, i.e.:
-
-   free(a);
-   a = NULL;
-
-And in placs where struct members are being freed so that if we have
-some erroneous reference to its struct, then accesses to freed members
-will result in segfaults, which we can detect faster than use after free
-to areas that may still have something seemingly valid.
+To allow for destructors to check if they're operating on a object still
+in a list, and to avoid going from use after free list entries into
+still valid, or even also other already removed from list entries.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-jatyoofo5boc1bsvoig6bb6i@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-deh17ub44atyox3j90e6rksu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/futex-hash.c            |  3 +-
- tools/perf/bench/futex-lock-pi.c         |  3 +-
- tools/perf/builtin-record.c              |  4 +--
- tools/perf/builtin-stat.c                |  4 +--
- tools/perf/tests/dwarf-unwind.c          |  5 ++--
- tools/perf/tests/expr.c                  |  3 +-
- tools/perf/tests/mem2node.c              |  3 +-
- tools/perf/tests/thread-map.c            |  3 +-
- tools/perf/ui/browsers/res_sample.c      |  6 ++--
- tools/perf/ui/browsers/scripts.c         |  4 +--
- tools/perf/util/annotate.c               |  3 +-
- tools/perf/util/auxtrace.c               |  5 ++--
- tools/perf/util/cgroup.c                 |  2 +-
- tools/perf/util/cputopo.c                |  2 +-
- tools/perf/util/cs-etm.c                 |  5 ++--
- tools/perf/util/data-convert-bt.c        |  2 +-
- tools/perf/util/data.c                   |  2 +-
- tools/perf/util/env.c                    |  8 ++---
- tools/perf/util/event.c                  |  2 +-
- tools/perf/util/header.c                 |  6 ++--
- tools/perf/util/hist.c                   | 14 ++++-----
- tools/perf/util/jitdump.c                |  7 ++---
- tools/perf/util/llvm-utils.c             |  3 +-
- tools/perf/util/machine.c                |  4 +--
- tools/perf/util/metricgroup.c            |  9 +++---
- tools/perf/util/probe-event.c            | 51 +++++++++++++++-----------------
- tools/perf/util/s390-cpumsf.c            |  7 ++---
- tools/perf/util/srccode.c                |  9 +++---
- tools/perf/util/stat-shadow.c            |  3 +-
- tools/perf/util/stat.c                   |  2 +-
- tools/perf/util/symbol-elf.c             | 10 +++----
- tools/perf/util/thread_map.c             |  2 +-
- tools/perf/util/unwind-libunwind-local.c |  3 +-
- 33 files changed, 100 insertions(+), 99 deletions(-)
+ tools/perf/builtin-ftrace.c        |  2 +-
+ tools/perf/builtin-lock.c          |  8 ++++----
+ tools/perf/pmu-events/jevents.c    |  2 +-
+ tools/perf/tests/switch-tracking.c |  2 +-
+ tools/perf/ui/gtk/annotate.c       |  2 +-
+ tools/perf/util/annotate.c         |  4 ++--
+ tools/perf/util/auxtrace.c         |  4 ++--
+ tools/perf/util/bpf-loader.c       |  2 +-
+ tools/perf/util/call-path.c        |  2 +-
+ tools/perf/util/callchain.c        | 10 +++++-----
+ tools/perf/util/db-export.c        |  4 ++--
+ tools/perf/util/dso.c              |  2 +-
+ tools/perf/util/evsel.c            |  2 +-
+ tools/perf/util/hist.c             |  4 ++--
+ tools/perf/util/ordered-events.c   |  6 +++---
+ tools/perf/util/parse-events.c     |  2 +-
+ tools/perf/util/pmu.c              |  2 +-
+ tools/perf/util/probe-event.c      |  2 +-
+ tools/perf/util/s390-cpumsf.c      |  2 +-
+ tools/perf/util/srccode.c          |  2 +-
+ tools/perf/util/symbol-elf.c       |  6 +++---
+ tools/perf/util/thread.c           |  4 ++--
+ 22 files changed, 38 insertions(+), 38 deletions(-)
 
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index 9aa3a674829b..a80797763e1f 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -18,6 +18,7 @@
- #include <stdlib.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include <sys/time.h>
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 9c228c55e1fb..66d5a6658daf 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -431,7 +431,7 @@ static void delete_filter_func(struct list_head *head)
+ 	struct filter_entry *pos, *tmp;
  
- #include "../util/stat.h"
-@@ -214,7 +215,7 @@ int bench_futex_hash(int argc, const char **argv)
- 				       &worker[i].futex[nfutexes-1], t);
- 		}
- 
--		free(worker[i].futex);
-+		zfree(&worker[i].futex);
+ 	list_for_each_entry_safe(pos, tmp, head, list) {
+-		list_del(&pos->list);
++		list_del_init(&pos->list);
+ 		free(pos);
  	}
- 
- 	print_summary();
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-index 8e9c4753e304..d02330a69745 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -12,6 +12,7 @@
- #include <subcmd/parse-options.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include <errno.h>
- #include "bench.h"
- #include "futex.h"
-@@ -217,7 +218,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 			       worker[i].tid, worker[i].futex, t);
- 
- 		if (multi)
--			free(worker[i].futex);
-+			zfree(&worker[i].futex);
- 	}
- 
- 	print_summary();
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index dca55997934e..8779cee58185 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -11,7 +11,6 @@
- #include "perf.h"
- 
- #include "util/build-id.h"
--#include "util/util.h"
- #include <subcmd/parse-options.h>
- #include "util/parse-events.h"
- #include "util/config.h"
-@@ -54,6 +53,7 @@
- #include <sys/mman.h>
- #include <sys/wait.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- 
- struct switch_output {
- 	bool		 enabled;
-@@ -1110,7 +1110,7 @@ record__switch_output(struct record *rec, bool at_exit)
- 		rec->switch_output.cur_file = n;
- 		if (rec->switch_output.filenames[n]) {
- 			remove(rec->switch_output.filenames[n]);
--			free(rec->switch_output.filenames[n]);
-+			zfree(&rec->switch_output.filenames[n]);
- 		}
- 		rec->switch_output.filenames[n] = new_filename;
- 	} else {
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c72f4a0831a8..b55a534b4de0 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1586,7 +1586,7 @@ static void runtime_stat_delete(struct perf_stat_config *config)
- 	for (i = 0; i < config->stats_num; i++)
- 		runtime_stat__exit(&config->stats[i]);
- 
--	free(config->stats);
-+	zfree(&config->stats);
  }
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index c0be44e65e9d..574e30ec6d7c 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -454,7 +454,7 @@ broken:
+ 		/* broken lock sequence, discard it */
+ 		ls->discard = 1;
+ 		bad_hist[BROKEN_ACQUIRE]++;
+-		list_del(&seq->list);
++		list_del_init(&seq->list);
+ 		free(seq);
+ 		goto end;
+ 	default:
+@@ -515,7 +515,7 @@ static int report_lock_acquired_event(struct perf_evsel *evsel,
+ 		/* broken lock sequence, discard it */
+ 		ls->discard = 1;
+ 		bad_hist[BROKEN_ACQUIRED]++;
+-		list_del(&seq->list);
++		list_del_init(&seq->list);
+ 		free(seq);
+ 		goto end;
+ 	default:
+@@ -570,7 +570,7 @@ static int report_lock_contended_event(struct perf_evsel *evsel,
+ 		/* broken lock sequence, discard it */
+ 		ls->discard = 1;
+ 		bad_hist[BROKEN_CONTENDED]++;
+-		list_del(&seq->list);
++		list_del_init(&seq->list);
+ 		free(seq);
+ 		goto end;
+ 	default:
+@@ -639,7 +639,7 @@ static int report_lock_release_event(struct perf_evsel *evsel,
  
- static const char * const stat_report_usage[] = {
-@@ -2003,7 +2003,7 @@ int cmd_stat(int argc, const char **argv)
- 	perf_stat__exit_aggr_mode();
- 	perf_evlist__free_stats(evsel_list);
- out:
--	free(stat_config.walltime_run);
-+	zfree(&stat_config.walltime_run);
- 
- 	if (smi_cost && smi_reset)
- 		sysfs__write_int(FREEZE_ON_SMI_PATH, 0);
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 077c306c1cae..f33709a79335 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
- #include <linux/types.h>
-+#include <linux/zalloc.h>
- #include <inttypes.h>
- #include <unistd.h>
- #include "tests.h"
-@@ -115,8 +116,8 @@ noinline int test_dwarf_unwind__thread(struct thread *thread)
- 	}
- 
-  out:
--	free(sample.user_stack.data);
--	free(sample.user_regs.regs);
-+	zfree(&sample.user_stack.data);
-+	zfree(&sample.user_regs.regs);
- 	return err;
- }
- 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 9acc1e80b936..ee1d88650e69 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -3,6 +3,7 @@
- #include "util/expr.h"
- #include "tests.h"
- #include <stdlib.h>
-+#include <linux/zalloc.h>
- 
- static int test(struct parse_ctx *ctx, const char *e, double val2)
- {
-@@ -58,7 +59,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	TEST_ASSERT_VAL("find other", other[3] == NULL);
- 
- 	for (i = 0; i < num_other; i++)
--		free((void *)other[i]);
-+		zfree(&other[i]);
- 	free((void *)other);
- 
+ 	ls->nr_release++;
+ free_seq:
+-	list_del(&seq->list);
++	list_del_init(&seq->list);
+ 	free(seq);
+ end:
  	return 0;
-diff --git a/tools/perf/tests/mem2node.c b/tools/perf/tests/mem2node.c
-index d23ff1b68eba..520cc91af256 100644
---- a/tools/perf/tests/mem2node.c
-+++ b/tools/perf/tests/mem2node.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
- #include <linux/bitmap.h>
-+#include <linux/zalloc.h>
- #include "cpumap.h"
- #include "mem2node.h"
- #include "tests.h"
-@@ -67,7 +68,7 @@ int test__mem2node(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	T("failed: mem2node__node", -1 == mem2node__node(&map, 0x1050));
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 287a6f10ca48..1a91a197cafb 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -407,7 +407,7 @@ static void free_arch_std_events(void)
  
- 	for (i = 0; i < ARRAY_SIZE(nodes); i++)
--		free(nodes[i].set);
-+		zfree(&nodes[i].set);
- 
- 	mem2node__exit(&map);
- 	return 0;
-diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-index 4de1939b58ba..ccc17aced49e 100644
---- a/tools/perf/tests/thread-map.c
-+++ b/tools/perf/tests/thread-map.c
-@@ -6,6 +6,7 @@
- #include "tests.h"
- #include "thread_map.h"
- #include "debug.h"
-+#include <linux/zalloc.h>
- 
- #define NAME	(const char *) "perf"
- #define NAMEUL	(unsigned long) NAME
-@@ -133,7 +134,7 @@ int test__thread_map_remove(struct test *test __maybe_unused, int subtest __mayb
- 			thread_map__remove(threads, 0));
- 
- 	for (i = 0; i < threads->nr; i++)
--		free(threads->map[i].comm);
-+		zfree(&threads->map[i].comm);
- 
- 	free(threads);
- 	return 0;
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index c0dd73176d42..8aa3547bb9ff 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Display a menu with individual samples to browse with perf script */
--#include "util.h"
- #include "hist.h"
- #include "evsel.h"
- #include "hists.h"
-@@ -8,6 +7,7 @@
- #include "config.h"
- #include "time-utils.h"
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- 
- static u64 context_len = 10 * NSEC_PER_MSEC;
- 
-@@ -46,14 +46,14 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		if (asprintf(&names[i], "%s: CPU %d tid %d", tbuf,
- 			     res_samples[i].cpu, res_samples[i].tid) < 0) {
- 			while (--i >= 0)
--				free(names[i]);
-+				zfree(&names[i]);
- 			free(names);
- 			return -1;
- 		}
- 	}
- 	choice = ui__popup_menu(num_res, names);
- 	for (i = 0; i < num_res; i++)
--		free(names[i]);
-+		zfree(&names[i]);
- 	free(names);
- 
- 	if (choice < 0 || choice >= num_res)
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 27cf3ab88d13..4d565cc14076 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "../../util/sort.h"
--#include "../../util/util.h"
- #include "../../util/hist.h"
- #include "../../util/debug.h"
- #include "../../util/symbol.h"
- #include "../browser.h"
- #include "../libslang.h"
- #include "config.h"
-+#include <linux/zalloc.h>
- 
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
-@@ -142,7 +142,7 @@ static int list_scripts(char *script_name, bool *custom,
- out:
- 	free(buf);
- 	for (i = 0; i < max_std; i++)
--		free(paths[i]);
-+		zfree(&paths[i]);
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 944a6507a5e3..ef0e6028684c 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1235,8 +1235,7 @@ void disasm_line__free(struct disasm_line *dl)
- 		dl->ins.ops->free(&dl->ops);
- 	else
- 		ins__delete(&dl->ops);
--	free((void *)dl->ins.name);
--	dl->ins.name = NULL;
-+	zfree(&dl->ins.name);
- 	annotation_line__delete(&dl->al);
- }
- 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 0812a11a0dbe..b033a43dfe3b 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1413,7 +1413,7 @@ void auxtrace_cache__free(struct auxtrace_cache *c)
- 		return;
- 
- 	auxtrace_cache__drop(c);
--	free(c->hashtable);
-+	zfree(&c->hashtable);
- 	free(c);
- }
- 
-@@ -1459,12 +1459,11 @@ void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key)
- 
- static void addr_filter__free_str(struct addr_filter *filt)
- {
--	free(filt->str);
-+	zfree(&filt->str);
- 	filt->action   = NULL;
- 	filt->sym_from = NULL;
- 	filt->sym_to   = NULL;
- 	filt->filename = NULL;
--	filt->str      = NULL;
- }
- 
- static struct addr_filter *addr_filter__new(void)
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index f505d78f059b..484c29830a81 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -124,7 +124,7 @@ static struct cgroup *cgroup__new(const char *name)
- 	return cgroup;
- 
- out_free_name:
--	free(cgroup->name);
-+	zfree(&cgroup->name);
- out_err:
- 	free(cgroup);
- 	return NULL;
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index fa1778aee5d6..64336a280967 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -344,7 +344,7 @@ void numa_topology__delete(struct numa_topology *tp)
- 	u32 i;
- 
- 	for (i = 0; i < tp->nr; i++)
--		free(tp->nodes[i].cpus);
-+		zfree(&tp->nodes[i].cpus);
- 
- 	free(tp);
- }
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index d92516edbead..508e4a3ddc8c 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -555,8 +555,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
- 	etmq->traceid_queues_list = NULL;
- 
- 	/* finally free the traceid_queues array */
--	free(etmq->traceid_queues);
--	etmq->traceid_queues = NULL;
-+	zfree(&etmq->traceid_queues);
- }
- 
- static void cs_etm__free_queue(void *priv)
-@@ -2569,7 +2568,7 @@ err_free_etm:
- err_free_metadata:
- 	/* No need to check @metadata[j], free(NULL) is supported */
- 	for (j = 0; j < num_cpu; j++)
--		free(metadata[j]);
-+		zfree(&metadata[j]);
- 	zfree(&metadata);
- err_free_traceid_list:
- 	intlist__delete(traceid_list);
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 1e93f2e94c40..ddbcd59f2d9b 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -1353,7 +1353,7 @@ static void free_streams(struct ctf_writer *cw)
- 	for (cpu = 0; cpu < cw->stream_cnt; cpu++)
- 		ctf_stream__delete(cw->stream[cpu]);
- 
--	free(cw->stream);
-+	zfree(&cw->stream);
- }
- 
- static int ctf_writer__setup_env(struct ctf_writer *cw,
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index df7e000e19ea..1d1b97a92c3f 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -21,7 +21,7 @@ static void close_dir(struct perf_data_file *files, int nr)
- {
- 	while (--nr >= 1) {
- 		close(files[nr].fd);
--		free(files[nr].path);
-+		zfree(&files[nr].path);
- 	}
- 	free(files);
- }
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index f92d992bd2db..9909ec40c6d2 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -187,7 +187,7 @@ void perf_env__exit(struct perf_env *env)
- 	zfree(&env->caches);
- 
- 	for (i = 0; i < env->nr_memory_nodes; i++)
--		free(env->memory_nodes[i].set);
-+		zfree(&env->memory_nodes[i].set);
- 	zfree(&env->memory_nodes);
- }
- 
-@@ -287,9 +287,9 @@ int perf_env__nr_cpus_avail(struct perf_env *env)
- 
- void cpu_cache_level__free(struct cpu_cache_level *cache)
- {
--	free(cache->type);
--	free(cache->map);
--	free(cache->size);
-+	zfree(&cache->type);
-+	zfree(&cache->map);
-+	zfree(&cache->size);
- }
- 
- /*
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 7524bda5140b..f1f4848947ce 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -856,7 +856,7 @@ free_threads:
- 	free(synthesize_threads);
- free_dirent:
- 	for (i = 0; i < n; i++)
--		free(dirent[i]);
-+		zfree(&dirent[i]);
- 	free(dirent);
- 
- 	return err;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4e2efaa50c2f..c24db7f4909c 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1052,7 +1052,7 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 
- 	scnprintf(file, PATH_MAX, "%s/size", path);
- 	if (sysfs__read_str(file, &cache->size, &len)) {
--		free(cache->type);
-+		zfree(&cache->type);
- 		return -1;
- 	}
- 
-@@ -1061,8 +1061,8 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 
- 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
- 	if (sysfs__read_str(file, &cache->map, &len)) {
--		free(cache->map);
--		free(cache->type);
-+		zfree(&cache->map);
-+		zfree(&cache->type);
- 		return -1;
- 	}
- 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index bb1d77331add..9b0ee0ef0f44 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -472,16 +472,16 @@ static int hist_entry__init(struct hist_entry *he,
- 	return 0;
- 
- err_srcline:
--	free(he->srcline);
-+	zfree(&he->srcline);
- 
- err_rawdata:
--	free(he->raw_data);
-+	zfree(&he->raw_data);
- 
- err_infos:
- 	if (he->branch_info) {
- 		map__put(he->branch_info->from.map);
- 		map__put(he->branch_info->to.map);
--		free(he->branch_info);
-+		zfree(&he->branch_info);
- 	}
- 	if (he->mem_info) {
- 		map__put(he->mem_info->iaddr.map);
-@@ -489,7 +489,7 @@ err_infos:
- 	}
- err:
- 	map__zput(he->ms.map);
--	free(he->stat_acc);
-+	zfree(&he->stat_acc);
- 	return -ENOMEM;
- }
- 
-@@ -1254,10 +1254,10 @@ void hist_entry__delete(struct hist_entry *he)
- 	zfree(&he->stat_acc);
- 	free_srcline(he->srcline);
- 	if (he->srcfile && he->srcfile[0])
--		free(he->srcfile);
-+		zfree(&he->srcfile);
- 	free_callchain(he->callchain);
--	free(he->trace_output);
--	free(he->raw_data);
-+	zfree(&he->trace_output);
-+	zfree(&he->raw_data);
- 	ops->free(he);
- }
- 
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 28908afedec4..18c34f0c1966 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -29,6 +29,7 @@
- #include "../builtin.h"
- 
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- struct jit_buf_desc {
- 	struct perf_data *output;
-@@ -431,14 +432,12 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 			   jd->unwinding_data, jd->eh_frame_hdr_size, jd->unwinding_size);
- 
- 	if (jd->debug_data && jd->nr_debug_entries) {
--		free(jd->debug_data);
--		jd->debug_data = NULL;
-+		zfree(&jd->debug_data);
- 		jd->nr_debug_entries = 0;
- 	}
- 
- 	if (jd->unwinding_data && jd->eh_frame_hdr_size) {
--		free(jd->unwinding_data);
--		jd->unwinding_data = NULL;
-+		zfree(&jd->unwinding_data);
- 		jd->eh_frame_hdr_size = 0;
- 		jd->unwinding_mapped_size = 0;
- 		jd->unwinding_size = 0;
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index b9fddb809d58..9f0470ecbca9 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -353,8 +353,7 @@ void llvm__get_kbuild_opts(char **kbuild_dir, char **kbuild_include_opts)
- "     \toption in [llvm] to \"\" to suppress this detection.\n\n",
- 			*kbuild_dir);
- 
--		free(*kbuild_dir);
--		*kbuild_dir = NULL;
-+		zfree(kbuild_dir);
- 		goto errout;
- 	}
- 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f523da3009e4..cf826eca3aaf 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -810,7 +810,7 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
- out:
- 	/* put the dso here, corresponding to  machine__findnew_module_dso */
- 	dso__put(dso);
--	free(m.name);
-+	zfree(&m.name);
- 	return map;
- }
- 
-@@ -1350,7 +1350,7 @@ static int map_groups__set_modules_path_dir(struct map_groups *mg,
- 			if (m.kmod)
- 				ret = map_groups__set_module_path(mg, path, &m);
- 
--			free(m.name);
-+			zfree(&m.name);
- 
- 			if (ret)
- 				goto out;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index d8164574cb16..0d8c840f88c0 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -18,6 +18,7 @@
- #include "strlist.h"
- #include <assert.h>
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 					 struct perf_evsel *evsel,
-@@ -235,7 +236,7 @@ static struct rb_node *mep_new(struct rblist *rl __maybe_unused,
- 		goto out_name;
- 	return &me->nd;
- out_name:
--	free((char *)me->name);
-+	zfree(&me->name);
- out_me:
- 	free(me);
- 	return NULL;
-@@ -263,7 +264,7 @@ static void mep_delete(struct rblist *rl __maybe_unused,
- 	struct mep *me = container_of(nd, struct mep, nd);
- 
- 	strlist__delete(me->metrics);
--	free((void *)me->name);
-+	zfree(&me->name);
- 	free(me);
- }
- 
-@@ -489,8 +490,8 @@ static void metricgroup__free_egroups(struct list_head *group_list)
- 
- 	list_for_each_entry_safe (eg, egtmp, group_list, nd) {
- 		for (i = 0; i < eg->idnum; i++)
--			free((char *)eg->ids[i]);
--		free(eg->ids);
-+			zfree(&eg->ids[i]);
-+		zfree(&eg->ids);
- 		free(eg);
+ 	list_for_each_entry_safe(es, next, &arch_std_events, list) {
+ 		FOR_ALL_EVENT_STRUCT_FIELDS(FREE_EVENT_FIELD);
+-		list_del(&es->list);
++		list_del_init(&es->list);
+ 		free(es);
  	}
  }
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 80c0eca0f1ee..0a57b316c4dd 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -214,9 +214,9 @@ out:
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index 744409dce65f..6cdab5f4812a 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -238,7 +238,7 @@ static void free_event_nodes(struct list_head *events)
  
- static void clear_perf_probe_point(struct perf_probe_point *pp)
- {
--	free(pp->file);
--	free(pp->function);
--	free(pp->lazy_line);
-+	zfree(&pp->file);
-+	zfree(&pp->function);
-+	zfree(&pp->lazy_line);
- }
- 
- static void clear_probe_trace_events(struct probe_trace_event *tevs, int ntevs)
-@@ -1175,12 +1175,11 @@ int show_available_vars(struct perf_probe_event *pevs __maybe_unused,
- 
- void line_range__clear(struct line_range *lr)
- {
--	free(lr->function);
--	free(lr->file);
--	free(lr->path);
--	free(lr->comp_dir);
-+	zfree(&lr->function);
-+	zfree(&lr->file);
-+	zfree(&lr->path);
-+	zfree(&lr->comp_dir);
- 	intlist__delete(lr->line_list);
--	memset(lr, 0, sizeof(*lr));
- }
- 
- int line_range__init(struct line_range *lr)
-@@ -2203,15 +2202,15 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
- 	struct perf_probe_arg_field *field, *next;
- 	int i;
- 
--	free(pev->event);
--	free(pev->group);
--	free(pev->target);
-+	zfree(&pev->event);
-+	zfree(&pev->group);
-+	zfree(&pev->target);
- 	clear_perf_probe_point(&pev->point);
- 
- 	for (i = 0; i < pev->nargs; i++) {
--		free(pev->args[i].name);
--		free(pev->args[i].var);
--		free(pev->args[i].type);
-+		zfree(&pev->args[i].name);
-+		zfree(&pev->args[i].var);
-+		zfree(&pev->args[i].type);
- 		field = pev->args[i].field;
- 		while (field) {
- 			next = field->next;
-@@ -2220,8 +2219,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
- 			field = next;
- 		}
- 	}
--	free(pev->args);
--	memset(pev, 0, sizeof(*pev));
-+	zfree(&pev->args);
- }
- 
- #define strdup_or_goto(str, label)	\
-@@ -2302,15 +2300,15 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
- 	struct probe_trace_arg_ref *ref, *next;
- 	int i;
- 
--	free(tev->event);
--	free(tev->group);
--	free(tev->point.symbol);
--	free(tev->point.realname);
--	free(tev->point.module);
-+	zfree(&tev->event);
-+	zfree(&tev->group);
-+	zfree(&tev->point.symbol);
-+	zfree(&tev->point.realname);
-+	zfree(&tev->point.module);
- 	for (i = 0; i < tev->nargs; i++) {
--		free(tev->args[i].name);
--		free(tev->args[i].value);
--		free(tev->args[i].type);
-+		zfree(&tev->args[i].name);
-+		zfree(&tev->args[i].value);
-+		zfree(&tev->args[i].type);
- 		ref = tev->args[i].ref;
- 		while (ref) {
- 			next = ref->next;
-@@ -2318,8 +2316,7 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
- 			ref = next;
- 		}
- 	}
--	free(tev->args);
--	memset(tev, 0, sizeof(*tev));
-+	zfree(&tev->args);
- }
- 
- struct kprobe_blacklist_node {
-@@ -2337,7 +2334,7 @@ static void kprobe_blacklist__delete(struct list_head *blacklist)
- 		node = list_first_entry(blacklist,
- 					struct kprobe_blacklist_node, list);
- 		list_del(&node->list);
--		free(node->symbol);
-+		zfree(&node->symbol);
+ 	while (!list_empty(events)) {
+ 		node = list_entry(events->next, struct event_node, list);
+-		list_del(&node->list);
++		list_del_init(&node->list);
  		free(node);
  	}
  }
+diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
+index df49c9ba1785..3af87c18a914 100644
+--- a/tools/perf/ui/gtk/annotate.c
++++ b/tools/perf/ui/gtk/annotate.c
+@@ -152,7 +152,7 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct symbol *sym,
+ 	gtk_container_add(GTK_CONTAINER(window), view);
+ 
+ 	list_for_each_entry_safe(pos, n, &notes->src->source, al.node) {
+-		list_del(&pos->al.node);
++		list_del_init(&pos->al.node);
+ 		disasm_line__free(pos);
+ 	}
+ 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ef0e6028684c..ac9ad2330f93 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1586,7 +1586,7 @@ static void delete_last_nop(struct symbol *sym)
+ 				return;
+ 		}
+ 
+-		list_del(&dl->al.node);
++		list_del_init(&dl->al.node);
+ 		disasm_line__free(dl);
+ 	}
+ }
+@@ -2463,7 +2463,7 @@ void annotated_source__purge(struct annotated_source *as)
+ 	struct annotation_line *al, *n;
+ 
+ 	list_for_each_entry_safe(al, n, &as->source, node) {
+-		list_del(&al->node);
++		list_del_init(&al->node);
+ 		disasm_line__free(disasm_line(al));
+ 	}
+ }
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index b033a43dfe3b..ec0af36697c4 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -408,7 +408,7 @@ void auxtrace_queues__free(struct auxtrace_queues *queues)
+ 
+ 			buffer = list_entry(queues->queue_array[i].head.next,
+ 					    struct auxtrace_buffer, list);
+-			list_del(&buffer->list);
++			list_del_init(&buffer->list);
+ 			auxtrace_buffer__free(buffer);
+ 		}
+ 	}
+@@ -612,7 +612,7 @@ void auxtrace_index__free(struct list_head *head)
+ 	struct auxtrace_index *auxtrace_index, *n;
+ 
+ 	list_for_each_entry_safe(auxtrace_index, n, head, list) {
+-		list_del(&auxtrace_index->list);
++		list_del_init(&auxtrace_index->list);
+ 		free(auxtrace_index);
+ 	}
+ }
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index 93d0f239ad4f..c61974a50aa5 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -829,7 +829,7 @@ static void
+ bpf_map_op__delete(struct bpf_map_op *op)
+ {
+ 	if (!list_empty(&op->list))
+-		list_del(&op->list);
++		list_del_init(&op->list);
+ 	if (op->key_type == BPF_MAP_KEY_RANGES)
+ 		parse_events__clear_array(&op->k.array);
+ 	free(op);
+diff --git a/tools/perf/util/call-path.c b/tools/perf/util/call-path.c
+index e8a80c41cba3..5c60b8be1cf6 100644
+--- a/tools/perf/util/call-path.c
++++ b/tools/perf/util/call-path.c
+@@ -40,7 +40,7 @@ void call_path_root__free(struct call_path_root *cpr)
+ 	struct call_path_block *pos, *n;
+ 
+ 	list_for_each_entry_safe(pos, n, &cpr->blocks, node) {
+-		list_del(&pos->node);
++		list_del_init(&pos->node);
+ 		free(pos);
+ 	}
+ 	free(cpr);
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index b4af25dca5eb..8d7d8f62fcca 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -636,7 +636,7 @@ add_child(struct callchain_node *parent,
+ 		struct callchain_list *call, *tmp;
+ 
+ 		list_for_each_entry_safe(call, tmp, &new->val, list) {
+-			list_del(&call->list);
++			list_del_init(&call->list);
+ 			map__zput(call->ms.map);
+ 			free(call);
+ 		}
+@@ -1002,7 +1002,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
+ 		callchain_cursor_append(cursor, list->ip,
+ 					list->ms.map, list->ms.sym,
+ 					false, NULL, 0, 0, 0, list->srcline);
+-		list_del(&list->list);
++		list_del_init(&list->list);
+ 		map__zput(list->ms.map);
+ 		free(list);
+ 	}
+@@ -1453,13 +1453,13 @@ static void free_callchain_node(struct callchain_node *node)
+ 	struct rb_node *n;
+ 
+ 	list_for_each_entry_safe(list, tmp, &node->parent_val, list) {
+-		list_del(&list->list);
++		list_del_init(&list->list);
+ 		map__zput(list->ms.map);
+ 		free(list);
+ 	}
+ 
+ 	list_for_each_entry_safe(list, tmp, &node->val, list) {
+-		list_del(&list->list);
++		list_del_init(&list->list);
+ 		map__zput(list->ms.map);
+ 		free(list);
+ 	}
+@@ -1544,7 +1544,7 @@ int callchain_node__make_parent_list(struct callchain_node *node)
+ 
+ out:
+ 	list_for_each_entry_safe(chain, new, &head, list) {
+-		list_del(&chain->list);
++		list_del_init(&chain->list);
+ 		map__zput(chain->ms.map);
+ 		free(chain);
+ 	}
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index 3f2694ccfac7..2394c7506abe 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -34,7 +34,7 @@ static int db_export__deferred(struct db_export *dbe)
+ 		de = list_entry(dbe->deferred.next, struct deferred_export,
+ 				node);
+ 		err = dbe->export_comm(dbe, de->comm);
+-		list_del(&de->node);
++		list_del_init(&de->node);
+ 		free(de);
+ 		if (err)
+ 			return err;
+@@ -50,7 +50,7 @@ static void db_export__free_deferred(struct db_export *dbe)
+ 	while (!list_empty(&dbe->deferred)) {
+ 		de = list_entry(dbe->deferred.next, struct deferred_export,
+ 				node);
+-		list_del(&de->node);
++		list_del_init(&de->node);
+ 		free(de);
+ 	}
+ }
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index ebacf07fc9ee..ebc9d46c15a7 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -434,7 +434,7 @@ static void dso__list_add(struct dso *dso)
+ 
+ static void dso__list_del(struct dso *dso)
+ {
+-	list_del(&dso->data.open_entry);
++	list_del_init(&dso->data.open_entry);
+ 	WARN_ONCE(dso__data_open_cnt <= 0,
+ 		  "DSO data fd counter out of bounds.");
+ 	dso__data_open_cnt--;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 7ede674edf07..ebb46da4dfe5 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1298,7 +1298,7 @@ static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
+ 	struct perf_evsel_config_term *term, *h;
+ 
+ 	list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
+-		list_del(&term->list);
++		list_del_init(&term->list);
+ 		free(term);
+ 	}
+ }
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 9b0ee0ef0f44..f24fd1954f6c 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2741,10 +2741,10 @@ static void hists_evsel__exit(struct perf_evsel *evsel)
+ 
+ 	list_for_each_entry_safe(node, tmp, &hists->hpp_formats, list) {
+ 		perf_hpp_list__for_each_format_safe(&node->hpp, fmt, pos) {
+-			list_del(&fmt->list);
++			list_del_init(&fmt->list);
+ 			free(fmt);
+ 		}
+-		list_del(&node->list);
++		list_del_init(&node->list);
+ 		free(node);
+ 	}
+ }
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index 989fed6f43b5..bb5f34b7ab44 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -138,7 +138,7 @@ static struct ordered_event *alloc_event(struct ordered_events *oe,
+ 
+ 	if (!list_empty(cache)) {
+ 		new = list_entry(cache->next, struct ordered_event, list);
+-		list_del(&new->list);
++		list_del_init(&new->list);
+ 	} else if (oe->buffer) {
+ 		new = &oe->buffer->event[oe->buffer_idx];
+ 		if (++oe->buffer_idx == MAX_SAMPLE_BUFFER)
+@@ -394,13 +394,13 @@ void ordered_events__free(struct ordered_events *oe)
+ 	 * yet, we need to free only allocated ones ...
+ 	 */
+ 	if (oe->buffer) {
+-		list_del(&oe->buffer->list);
++		list_del_init(&oe->buffer->list);
+ 		ordered_events_buffer__free(oe->buffer, oe->buffer_idx, oe);
+ 	}
+ 
+ 	/* ... and continue with the rest */
+ 	list_for_each_entry_safe(buffer, tmp, &oe->to_free, list) {
+-		list_del(&buffer->list);
++		list_del_init(&buffer->list);
+ 		ordered_events_buffer__free(buffer, MAX_SAMPLE_BUFFER, oe);
+ 	}
+ }
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index aa439853f20a..371ff3aee769 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -652,7 +652,7 @@ static int add_bpf_event(const char *group, const char *event, int fd,
+ 		pr_debug("Failed to add BPF event %s:%s\n",
+ 			 group, event);
+ 		list_for_each_entry_safe(evsel, tmp, &new_evsels, node) {
+-			list_del(&evsel->node);
++			list_del_init(&evsel->node);
+ 			perf_evsel__delete(evsel);
+ 		}
+ 		return err;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 12b677902fbc..f32b710347db 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1245,7 +1245,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
+ 		info->metric_expr = alias->metric_expr;
+ 		info->metric_name = alias->metric_name;
+ 
+-		list_del(&term->list);
++		list_del_init(&term->list);
+ 		free(term);
+ 	}
+ 
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 0a57b316c4dd..0c3b55d0617d 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2333,7 +2333,7 @@ static void kprobe_blacklist__delete(struct list_head *blacklist)
+ 	while (!list_empty(blacklist)) {
+ 		node = list_first_entry(blacklist,
+ 					struct kprobe_blacklist_node, list);
+-		list_del(&node->list);
++		list_del_init(&node->list);
+ 		zfree(&node->symbol);
+ 		free(node);
+ 	}
 diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index ea669702825d..cca9cb851d02 100644
+index cca9cb851d02..83d2e149ef19 100644
 --- a/tools/perf/util/s390-cpumsf.c
 +++ b/tools/perf/util/s390-cpumsf.c
-@@ -1044,7 +1044,7 @@ static void s390_cpumsf_free(struct perf_session *session)
- 	auxtrace_heap__free(&sf->heap);
- 	s390_cpumsf_free_queues(session);
- 	session->auxtrace = NULL;
--	free(sf->logdir);
-+	zfree(&sf->logdir);
- 	free(sf);
- }
- 
-@@ -1101,8 +1101,7 @@ static int s390_cpumsf__config(const char *var, const char *value, void *cb)
- 	if (rc == -1 || !S_ISDIR(stbuf.st_mode)) {
- 		pr_err("Missing auxtrace log directory %s,"
- 		       " continue with current directory...\n", value);
--		free(sf->logdir);
--		sf->logdir = NULL;
-+		zfree(&sf->logdir);
- 	}
- 	return 1;
- }
-@@ -1162,7 +1161,7 @@ err_free_queues:
- 	auxtrace_queues__free(&sf->queues);
- 	session->auxtrace = NULL;
- err_free:
--	free(sf->logdir);
-+	zfree(&sf->logdir);
- 	free(sf);
- 	return err;
- }
+@@ -756,7 +756,7 @@ static int s390_cpumsf_run_decoder(struct s390_cpumsf_queue *sfq,
+ 	 */
+ 	if (err) {
+ 		sfq->buffer = NULL;
+-		list_del(&buffer->list);
++		list_del_init(&buffer->list);
+ 		auxtrace_buffer__free(buffer);
+ 		if (err > 0)		/* Buffer done, no error */
+ 			err = 0;
 diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
-index 684b155c222a..688a85a3d454 100644
+index 688a85a3d454..adfcf1ff464c 100644
 --- a/tools/perf/util/srccode.c
 +++ b/tools/perf/util/srccode.c
-@@ -4,7 +4,8 @@
-  * Copyright (c) 2017, Intel Corporation.
-  * Author: Andi Kleen
-  */
--#include "linux/list.h"
-+#include <linux/list.h>
-+#include <linux/zalloc.h>
- #include <stdlib.h>
- #include <sys/mman.h>
- #include <sys/stat.h>
-@@ -86,8 +87,8 @@ static void free_srcfile(struct srcfile *sf)
+@@ -83,7 +83,7 @@ static void fill_lines(char **lines, int maxline, char *map, int maplen)
+ 
+ static void free_srcfile(struct srcfile *sf)
+ {
+-	list_del(&sf->nd);
++	list_del_init(&sf->nd);
  	hlist_del(&sf->hash_nd);
  	map_total_sz -= sf->maplen;
  	munmap(sf->map, sf->maplen);
--	free(sf->lines);
--	free(sf->fn);
-+	zfree(&sf->lines);
-+	zfree(&sf->fn);
- 	free(sf);
- 	num_srcfiles--;
- }
-@@ -153,7 +154,7 @@ static struct srcfile *find_srcfile(char *fn)
- out_map:
- 	munmap(h->map, sz);
- out_fn:
--	free(h->fn);
-+	zfree(&h->fn);
- out_h:
- 	free(h);
- 	return NULL;
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index cb891e5c2969..656065af4971 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -8,6 +8,7 @@
- #include "evlist.h"
- #include "expr.h"
- #include "metricgroup.h"
-+#include <linux/zalloc.h>
- 
- /*
-  * AGGR_GLOBAL: Use CPU 0
-@@ -775,7 +776,7 @@ static void generic_metric(struct perf_stat_config *config,
- 		print_metric(config, ctxp, NULL, NULL, "", 0);
- 
- 	for (i = 1; i < pctx.num_ids; i++)
--		free((void *)pctx.ids[i].name);
-+		zfree(&pctx.ids[i].name);
- }
- 
- void perf_stat__print_shadow_stats(struct perf_stat_config *config,
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index c967715c1d4c..db8a6cf336be 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -133,7 +133,7 @@ static void perf_evsel__free_stat_priv(struct perf_evsel *evsel)
- 	struct perf_stat_evsel *ps = evsel->stats;
- 
- 	if (ps)
--		free(ps->group_data);
-+		zfree(&ps->group_data);
- 	zfree(&evsel->stats);
- }
- 
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index ad683fbe9678..1d5447594f5d 100644
+index 1d5447594f5d..7d504dc22108 100644
 --- a/tools/perf/util/symbol-elf.c
 +++ b/tools/perf/util/symbol-elf.c
-@@ -2133,11 +2133,11 @@ static int populate_sdt_note(Elf **elf, const char *data, size_t len,
- 	return 0;
+@@ -1478,7 +1478,7 @@ static void kcore_copy__free_phdrs(struct kcore_copy_info *kci)
+ 	struct phdr_data *p, *tmp;
  
- out_free_args:
--	free(tmp->args);
-+	zfree(&tmp->args);
- out_free_name:
--	free(tmp->name);
-+	zfree(&tmp->name);
- out_free_prov:
--	free(tmp->provider);
-+	zfree(&tmp->provider);
- out_free_note:
- 	free(tmp);
- out_err:
-@@ -2253,8 +2253,8 @@ int cleanup_sdt_note_list(struct list_head *sdt_notes)
+ 	list_for_each_entry_safe(p, tmp, &kci->phdrs, node) {
+-		list_del(&p->node);
++		list_del_init(&p->node);
+ 		free(p);
+ 	}
+ }
+@@ -1501,7 +1501,7 @@ static void kcore_copy__free_syms(struct kcore_copy_info *kci)
+ 	struct sym_data *s, *tmp;
+ 
+ 	list_for_each_entry_safe(s, tmp, &kci->syms, node) {
+-		list_del(&s->node);
++		list_del_init(&s->node);
+ 		free(s);
+ 	}
+ }
+@@ -2252,7 +2252,7 @@ int cleanup_sdt_note_list(struct list_head *sdt_notes)
+ 	int nr_free = 0;
  
  	list_for_each_entry_safe(pos, tmp, sdt_notes, note_list) {
- 		list_del(&pos->note_list);
--		free(pos->name);
--		free(pos->provider);
-+		zfree(&pos->name);
-+		zfree(&pos->provider);
+-		list_del(&pos->note_list);
++		list_del_init(&pos->note_list);
+ 		zfree(&pos->name);
+ 		zfree(&pos->provider);
  		free(pos);
- 		nr_free++;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index bbfb9c767f5f..873ab505ca80 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -93,14 +93,14 @@ void thread__delete(struct thread *thread)
+ 	down_write(&thread->namespaces_lock);
+ 	list_for_each_entry_safe(namespaces, tmp_namespaces,
+ 				 &thread->namespaces_list, list) {
+-		list_del(&namespaces->list);
++		list_del_init(&namespaces->list);
+ 		namespaces__free(namespaces);
  	}
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index c291874352cf..5b3511f2b6b1 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -480,7 +480,7 @@ int thread_map__remove(struct thread_map *threads, int idx)
- 	/*
- 	 * Free the 'idx' item and shift the rest up.
- 	 */
--	free(threads->map[idx].comm);
-+	zfree(&threads->map[idx].comm);
+ 	up_write(&thread->namespaces_lock);
  
- 	for (i = idx; i < threads->nr - 1; i++)
- 		threads->map[i] = threads->map[i + 1];
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 25e1406b1f8b..71a788921b62 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -25,6 +25,7 @@
- #include <unistd.h>
- #include <sys/mman.h>
- #include <linux/list.h>
-+#include <linux/zalloc.h>
- #ifndef REMOTE_UNWIND_LIBUNWIND
- #include <libunwind.h>
- #include <libunwind-ptrace.h>
-@@ -345,7 +346,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
- 							__func__,
- 							dso->symsrc_filename,
- 							debuglink);
--					free(dso->symsrc_filename);
-+					zfree(&dso->symsrc_filename);
- 				}
- 				dso->symsrc_filename = debuglink;
- 			} else {
+ 	down_write(&thread->comm_lock);
+ 	list_for_each_entry_safe(comm, tmp_comm, &thread->comm_list, list) {
+-		list_del(&comm->list);
++		list_del_init(&comm->list);
+ 		comm__free(comm);
+ 	}
+ 	up_write(&thread->comm_lock);
