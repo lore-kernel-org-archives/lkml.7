@@ -7,60 +7,71 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023E9C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3FEC742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A852083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56642083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yBiG4ihX"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZaI8aAPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfGMKxG (ORCPT
+        id S1727724AbfGMKxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 06:53:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50951 "EHLO
+        Sat, 13 Jul 2019 06:53:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56603 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfGMKxF (ORCPT
+        with ESMTP id S1726460AbfGMKxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 06:53:05 -0400
+        Sat, 13 Jul 2019 06:53:55 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DAqO2B3837429
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DArADE3837497
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 03:52:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DAqO2B3837429
+        Sat, 13 Jul 2019 03:53:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DArADE3837497
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563015145;
-        bh=c7PkIHOd4Cs+8uiLrOFi603cWwVghZS3JqS2QX0EezQ=;
+        s=2019061801; t=1563015192;
+        bh=hDq1tiBBkrgtrsyHkCKYXRUoo8rYajHBrpyquSiZ28A=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=yBiG4ihXxN4cbT1Jz/0ckjcS8/vmB6AG872Ig49qMm3igSxgqiZUI/zkPOV/yqmIj
-         5IH8KsUGuauLvLRcBLFRhzi+IPbxbdoMopPu6GVwwhNcmdwUg3LYKELVBOzmoYJZ4q
-         tL0kZl9xOI8IuNTcsZ7LN1cyAo8cVjgiR0rkP07ayRBUlvn6OzsAxn69RYS1kJ+dBB
-         Hm2cxHS3kE+AhN2tCNstMa3ABrLm61FU7hjkHyPNxWedeXvcb9aNcInT37UewcPVwu
-         cSp37NUN74TNKMELoWTzvRegc2gMRAi4aCU4JSLr9YKHAEFrbB59gdQFenWPkChNAC
-         GDNSEP0LKBWwg==
+        b=ZaI8aAPNv7WQclgYjdxXUGk08ktJ6dm8ixZreO7ghR+6cpWUchC/qwfLkY41l6fwQ
+         03TEZHuT8eh7cBDt03XZCMeSF9Gy0gofDfmZHRJi5Dz7UG2UEoXZhK0liBIYP5tYLo
+         iI/1oX7ZcQpheRhJZYiyMzn83G5axid4AWU2xO57kEcUREFNAoc7BAWO4YIOBLjCZJ
+         GBLcPq7YwnCArWW+bDzpbomp7QDn52EiPy624MT5dg1fvRhGNyWyopcSOeZCL7cqSZ
+         Ro0viOGkf1OOI4RbkUvm11K1AWJCmKDrHEMZxD9z5KWOf9cSuk9trMxm4XT2p2ofe/
+         /p1/BuwS76uJA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DAqNxs3837422;
-        Sat, 13 Jul 2019 03:52:23 -0700
-Date:   Sat, 13 Jul 2019 03:52:23 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DAr6xB3837479;
+        Sat, 13 Jul 2019 03:53:06 -0700
+Date:   Sat, 13 Jul 2019 03:53:06 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Numfor Mbiziwo-Tiapo <tipbot@zytor.com>
-Message-ID: <tip-4e4cf62b37da5ff45c904a3acf242ab29ed5881d@git.kernel.org>
-Cc:     mbd@fb.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        namhyung@kernel.org, hpa@zytor.com, irogers@google.com,
-        alexander.shishkin@linux.intel.com, songliubraving@fb.com,
-        tglx@linutronix.de, eranian@google.com, jolsa@redhat.com,
-        acme@redhat.com, peterz@infradead.org, nums@google.com
-Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org, mbd@fb.com,
-          nums@google.com, peterz@infradead.org, jolsa@redhat.com,
-          acme@redhat.com, eranian@google.com, songliubraving@fb.com,
-          tglx@linutronix.de, alexander.shishkin@linux.intel.com,
-          irogers@google.com, hpa@zytor.com, namhyung@kernel.org
-In-Reply-To: <20190702173716.181223-1-nums@google.com>
-References: <20190702173716.181223-1-nums@google.com>
+From:   tip-bot for Leo Yan <tipbot@zytor.com>
+Message-ID: <tip-c74b05030edb3b52f4208d8415b8c933bc509a29@git.kernel.org>
+Cc:     adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, leo.yan@linaro.org, dave@stgolabs.net,
+        suzuki.poulose@arm.com, tmricht@linux.ibm.com, jolsa@kernel.org,
+        changbin.du@intel.com, tglx@linutronix.de, acme@redhat.com,
+        mingo@kernel.org, yao.jin@linux.intel.com, davem@davemloft.net,
+        alexios.zavras@intel.com, peterz@infradead.org,
+        songliubraving@fb.com, eric.saint.etienne@oracle.com,
+        mathieu.poirier@linaro.org, alexey.budankov@linux.intel.com,
+        hpa@zytor.com, khlebnikov@yandex-team.ru, ak@linux.intel.com,
+        linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org
+Reply-To: hpa@zytor.com, khlebnikov@yandex-team.ru, ak@linux.intel.com,
+          linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, songliubraving@fb.com,
+          eric.saint.etienne@oracle.com, mathieu.poirier@linaro.org,
+          alexey.budankov@linux.intel.com, jolsa@kernel.org,
+          changbin.du@intel.com, tglx@linutronix.de, acme@redhat.com,
+          yao.jin@linux.intel.com, mingo@kernel.org, davem@davemloft.net,
+          alexios.zavras@intel.com, adrian.hunter@intel.com,
+          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+          dave@stgolabs.net, leo.yan@linaro.org, suzuki.poulose@arm.com,
+          tmricht@linux.ibm.com
+In-Reply-To: <20190702103420.27540-3-leo.yan@linaro.org>
+References: <20190702103420.27540-3-leo.yan@linaro.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf test mmap-thread-lookup: Initialize variable
- to suppress memory sanitizer warning
-Git-Commit-ID: 4e4cf62b37da5ff45c904a3acf242ab29ed5881d
+Subject: [tip:perf/urgent] perf stat: Fix use-after-freed pointer detected
+ by the smatch tool
+Git-Commit-ID: c74b05030edb3b52f4208d8415b8c933bc509a29
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,54 +85,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4e4cf62b37da5ff45c904a3acf242ab29ed5881d
-Gitweb:     https://git.kernel.org/tip/4e4cf62b37da5ff45c904a3acf242ab29ed5881d
-Author:     Numfor Mbiziwo-Tiapo <nums@google.com>
-AuthorDate: Tue, 2 Jul 2019 10:37:15 -0700
+Commit-ID:  c74b05030edb3b52f4208d8415b8c933bc509a29
+Gitweb:     https://git.kernel.org/tip/c74b05030edb3b52f4208d8415b8c933bc509a29
+Author:     Leo Yan <leo.yan@linaro.org>
+AuthorDate: Tue, 2 Jul 2019 18:34:11 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 9 Jul 2019 09:33:54 -0300
 
-perf test mmap-thread-lookup: Initialize variable to suppress memory sanitizer warning
+perf stat: Fix use-after-freed pointer detected by the smatch tool
 
-Running the 'perf test' command after building perf with a memory
-sanitizer causes a warning that says:
+Based on the following report from Smatch, fix the use-after-freed
+pointer.
 
-  WARNING: MemorySanitizer: use-of-uninitialized-value... in mmap-thread-lookup.c
+  tools/perf/builtin-stat.c:1353
+  add_default_attributes() warn: passing freed memory 'str'.
 
-Initializing the go variable to 0 silences this harmless warning.
+The pointer 'str' has been freed but later it is still passed into the
+function parse_events_print_error().  This patch fixes this
+use-after-freed issue.
 
-Committer warning:
-
-This was harmless, just a simple test writing whatever was at that
-sizeof(int) memory area just to signal another thread blocked reading
-that file created with pipe(). Initialize it tho so that we don't get
-this warning.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Changbin Du <changbin.du@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190702173716.181223-1-nums@google.com
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20190702103420.27540-3-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/mmap-thread-lookup.c | 2 +-
+ tools/perf/builtin-stat.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index ba87e6e8d18c..0a4301a5155c 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -53,7 +53,7 @@ static void *thread_fn(void *arg)
- {
- 	struct thread_data *td = arg;
- 	ssize_t ret;
--	int go;
-+	int go = 0;
- 
- 	if (thread_init(td))
- 		return NULL;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index e5e19b461061..b81f7b197d24 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1349,8 +1349,8 @@ static int add_default_attributes(void)
+ 				fprintf(stderr,
+ 					"Cannot set up top down events %s: %d\n",
+ 					str, err);
+-				free(str);
+ 				parse_events_print_error(&errinfo, str);
++				free(str);
+ 				return -1;
+ 			}
+ 		} else {
