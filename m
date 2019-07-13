@@ -2,177 +2,91 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659C3C742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5936CC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F75204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="S3Yk/627"
+	by mail.kernel.org (Postfix) with ESMTP id 3CA4520830
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfGMDnF (ORCPT
+        id S1727632AbfGMDrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 23:43:05 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:55707 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfGMDnF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 23:43:05 -0400
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x6D3glSi020261;
-        Sat, 13 Jul 2019 12:42:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x6D3glSi020261
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562989367;
-        bh=57jXn/kli5cGXMKS10omqKGu33q3IQPitAGnq/f/wAk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S3Yk/6271A1r9mPbgrfSCi8D/oJIYfKqbiW7rY+gJ/cBVwXIggZOUgV481psWnEMK
-         4VmTiMr5UFp5PvgpPuWYg1UNWV1P0sZl+PDpmS2O9/2fFPqsdy7RE9cxjBjGCGTuVT
-         s0aODElamWOlXatjXIe5TNRtvGmCxxRaHgW0kbVxnaEmokFw3cfmI7KI5KeLs/nEoQ
-         w6oluOSzfC7VRxL9JBE4ebYI8faG8PbCKU4YiuGGpLNd0h+UoZQluklGeA/xWGUgdJ
-         qiH9kJnGQsx2Z68RHgLv3A7uyArwgbCAbFM7eHZP/nZfS26xjXvmxaccEBO3TEtXff
-         nkkjyyIuU+iSQ==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id 130so2483257vkn.9;
-        Fri, 12 Jul 2019 20:42:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAWMbMDsTHGIcymR0/bSYQ86vOy33UOLIt4X9PZkFv1wreo3Vnee
-        MFjUbIVm5B12SfgGVGBs9BmNMxQ/61nV3ve8MOM=
-X-Google-Smtp-Source: APXvYqyg/6KeYQzaEoOOt9CzsL8EPmgeV88YwIhhEwlw31RKFn3sQIjIXzEsEhjpNkzFcU2a+DMNwxjPIeIEuF+n2q4=
-X-Received: by 2002:a1f:4107:: with SMTP id o7mr7211911vka.34.1562989366294;
- Fri, 12 Jul 2019 20:42:46 -0700 (PDT)
+        Fri, 12 Jul 2019 23:47:11 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:42637 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727466AbfGMDrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jul 2019 23:47:11 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id E474F6EA60;
+        Sat, 13 Jul 2019 03:47:04 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v4 0/8] Support for Allwinner V3/S3L and Sochip S3
+Date:   Sat, 13 Jul 2019 11:46:26 +0800
+Message-Id: <20190713034634.44585-1-icenowy@aosc.io>
 MIME-Version: 1.0
-References: <20190713024558.27214-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190713024558.27214-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 13 Jul 2019 12:42:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATY4B2OG2GpTePNquNFqdesM8e+2stX4WVGQcCVcVgM0w@mail.gmail.com>
-Message-ID: <CAK7LNATY4B2OG2GpTePNquNFqdesM8e+2stX4WVGQcCVcVgM0w@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: get rid of misleading $(AS) from documents
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 11:46 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> The assembler files in the kernel are *.S instead of *.s, so they must
-> be preprocessed. Since 'as' of GNU binutils is not able to preprocess,
-> we always use $(CC) as an assembler driver.
->
-> $(AS) is almost unused in Kbuild. As of v5.2, there is just one place
-> that directly invokes $(AS).
->
->   $ git grep -e '$(AS)' -e '${AS}' -e '$AS' -e '$(AS:' -e '${AS:' -- :^Documentation
->   drivers/net/wan/Makefile:  AS68K = $(AS)
->
-> The documentation about *_AFLAGS* sounds like the flags were passed
-> to $(AS). This is somewhat misleading.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+This patchset tries to add support for Allwinner V3/S3L and Sochip S3.
 
-Applied to linux-kbuild.
+Allwinner V3/V3s/S3L and Sochip S3 share the same die, but with
+different package. V3 is BGA w/o co-packaged DDR, V3s is QFP w/ DDR2,
+S3L is BGA w/ DDR2 and S3 is BGA w/ DDR3. (S3 and S3L is compatible
+for pinout, but because of different DDR, DDR voltage is different
+between the two variants). Because of the pin count of V3s is
+restricted due to the package, some pins are not bound on V3s, but
+they're bound on V3/S3/S3L.
 
+Currently the kernel is only prepared for the features available on V3s.
+This patchset adds the features missing on V3s for using them on
+V3/S3/S3L, and add bindings for V3/S3/S3L. It also adds a S3 SoM by
+Sipeed, called Lichee Zero Plus.
 
+Icenowy Zheng (8):
+  pinctrl: sunxi: v3s: introduce support for V3
+  clk: sunxi-ng: v3s: add the missing PLL_DDR1
+  dt-bindings: clk: sunxi-ccu: add compatible string for V3 CCU
+  clk: sunxi-ng: v3s: add missing clock slices for MMC2 module clocks
+  clk: sunxi-ng: v3s: add Allwinner V3 support
+  ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
+  dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+  ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
 
-> Changes in v3:
->   - Rebase
->
-> Changes in v2:
->   - Rephrase without using "assembling"
->
->  Documentation/kbuild/kbuild.rst    |  5 ++---
->  Documentation/kbuild/makefiles.rst | 12 ++++++------
->  2 files changed, 8 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-> index b25548963d70..727520b3d7b1 100644
-> --- a/Documentation/kbuild/kbuild.rst
-> +++ b/Documentation/kbuild/kbuild.rst
-> @@ -38,12 +38,11 @@ Additional options to the assembler (for built-in and modules).
->
->  AFLAGS_MODULE
->  -------------
-> -Additional module specific options to use for $(AS).
-> +Additional assembler options for modules.
->
->  AFLAGS_KERNEL
->  -------------
-> -Additional options for $(AS) when used for assembler
-> -code for code that is compiled as built-in.
-> +Additional assembler options for built-in.
->
->  KCFLAGS
->  -------
-> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> index 093f2d79ab95..67e47589d9d2 100644
-> --- a/Documentation/kbuild/makefiles.rst
-> +++ b/Documentation/kbuild/makefiles.rst
-> @@ -328,7 +328,7 @@ more details, with real examples.
->         variable $(KBUILD_CFLAGS) and uses it for compilation flags for the
->         entire tree.
->
-> -       asflags-y specifies options for assembling with $(AS).
-> +       asflags-y specifies assembler options.
->
->         Example::
->
-> @@ -489,7 +489,7 @@ more details, with real examples.
->         as-instr checks if the assembler reports a specific instruction
->         and then outputs either option1 or option2
->         C escapes are supported in the test instruction
-> -       Note: as-instr-option uses KBUILD_AFLAGS for $(AS) options
-> +       Note: as-instr-option uses KBUILD_AFLAGS for assembler options
->
->      cc-option
->         cc-option is used to check if $(CC) supports a given option, and if
-> @@ -905,7 +905,7 @@ When kbuild executes, the following steps are followed (roughly):
->         vmlinux. The usage of $(call if_changed,xxx) will be described later.
->
->      KBUILD_AFLAGS
-> -       $(AS) assembler flags
-> +       Assembler flags
->
->         Default value - see top level Makefile
->         Append or modify as required per architecture.
-> @@ -948,16 +948,16 @@ When kbuild executes, the following steps are followed (roughly):
->         to 'y' when selected.
->
->      KBUILD_AFLAGS_KERNEL
-> -       $(AS) options specific for built-in
-> +       Assembler options specific for built-in
->
->         $(KBUILD_AFLAGS_KERNEL) contains extra C compiler flags used to compile
->         resident kernel code.
->
->      KBUILD_AFLAGS_MODULE
-> -       Options for $(AS) when building modules
-> +       Assembler options specific for modules
->
->         $(KBUILD_AFLAGS_MODULE) is used to add arch-specific options that
-> -       are used for $(AS).
-> +       are used for assembler.
->
->         From commandline AFLAGS_MODULE shall be used (see kbuild.txt).
->
-> --
-> 2.17.1
->
-
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../clock/allwinner,sun4i-a10-ccu.yaml        |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |   8 +
+ .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    |  46 +++
+ arch/arm/boot/dts/sun8i-s3.dtsi               |   6 +
+ arch/arm/boot/dts/sun8i-s3l.dtsi              |   6 +
+ arch/arm/boot/dts/sun8i-v3.dtsi               |  14 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c          | 250 ++++++++++++++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h          |   6 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     | 265 +++++++++++++++++-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   2 +
+ include/dt-bindings/clock/sun8i-v3s-ccu.h     |   4 +
+ include/dt-bindings/reset/sun8i-v3s-ccu.h     |   3 +
+ 14 files changed, 604 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
 
 -- 
-Best Regards
-Masahiro Yamada
+2.21.0
+
