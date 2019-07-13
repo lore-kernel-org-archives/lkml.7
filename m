@@ -2,91 +2,75 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674E3C742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 08:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDCBC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 09:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C272084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 08:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPRiaoV0"
+	by mail.kernel.org (Postfix) with ESMTP id E87FE2084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 09:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfGMIwk (ORCPT
+        id S1727474AbfGMJH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 04:52:40 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42808 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfGMIwk (ORCPT
+        Sat, 13 Jul 2019 05:07:27 -0400
+Received: from mailoutvs27.siol.net ([185.57.226.218]:37198 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726421AbfGMJH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 04:52:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t132so5574100pgb.9;
-        Sat, 13 Jul 2019 01:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ye7CFB+RNkDFFPibm62xijLFC7byqXV66LMUUwrJqM0=;
-        b=iPRiaoV0fDW3wzE3blxO0+ssT/u9Q759YjTI1r+tgcGM2BbA5Do9nTfkEN0ONYbn+V
-         53I4ALG6Z/7RjE/+DyLNaeusK+5f+9I+VhY7MVOH1PhiA57E833ya/AB0+2Gw/k44Lh9
-         fwVYmRaHKeGMotizenBdVYpJXp1RmCwX4xNgrXP0PkV8ggiZaUDrmC2vfSb5zVRmcPcK
-         yRPw5LbO83UqO8e1ShKshujfPwHvQ6fDjJoYl3HQZ+U5yGinFrJvqcvjBXDd5q2SVw1O
-         XGRo2G6Wo4p3Gedj3YbcqQ79+nmXU1MQ2TPP0Hprsl5xIm/kb4OpK9nbvK93JAY/sOWi
-         U6QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ye7CFB+RNkDFFPibm62xijLFC7byqXV66LMUUwrJqM0=;
-        b=kmcN+iVgDlH4ab1xIqrMayjZhz7foJ6/yr1hi/Eo0BQjxvoBG0L40R1U/ngdAfStrM
-         d2G63LU+qLGz//ehi9reSIySRUvaSgMyIvvBhrIp4NHxO3ImM6azd9zTFcwakHIjA5FG
-         kqUJu4GQH30PFuNJo2F/Ir/w5vvYmdyFTtFUO6Rp8c/Htwu8/DpF8qlgOfenlSCBEgbK
-         z3/TyXGNqRX9VBFhcdBMWQbTb3bPiAVk+40xe721UDbbWYeoY1rOn8+unwCM80dBrUDw
-         Pe1dWXWF/arGWcrqj4DGRpJ1p6LPyF9muxhn3ZMugIjl2t7+L5+YoeF/K6Kjc0JaAXsO
-         OUcg==
-X-Gm-Message-State: APjAAAWnS+eZZtt8i09+aaa/4k26xlwBY+EPbvtARU3RRJl4+mYf/QZ6
-        9p/FKrF/d9YUrcdNKB4fQBo=
-X-Google-Smtp-Source: APXvYqx6hKtqvPf/5rj5ZlzNfmxlQOhbG8hlM0MVQ1gmkMLShdyDqD6erkpobstYhZDxzU6MRerNsg==
-X-Received: by 2002:a17:90a:8c06:: with SMTP id a6mr17499768pjo.45.1563007959665;
-        Sat, 13 Jul 2019 01:52:39 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id a16sm11385795pfd.68.2019.07.13.01.52.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 13 Jul 2019 01:52:39 -0700 (PDT)
-Date:   Sat, 13 Jul 2019 01:52:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/14] Input: cyapa - Replace devm_add_action() followed
- by failure action with devm_add_action_or_reset()
-Message-ID: <20190713085237.GC103820@dtor-ws>
-References: <20190708123323.11943-1-huangfq.daxian@gmail.com>
+        Sat, 13 Jul 2019 05:07:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 9AC04521342;
+        Sat, 13 Jul 2019 11:07:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id m-6CwcbiJgKp; Sat, 13 Jul 2019 11:07:24 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 5C9CD521385;
+        Sat, 13 Jul 2019 11:07:24 +0200 (CEST)
+Received: from localhost.localdomain (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Zimbra) with ESMTPSA id BE1CF521342;
+        Sat, 13 Jul 2019 11:07:23 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     broonie@kernel.org, wens@csie.org
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: [PATCH v2 0/2] regulator: axp20x: Fix bugs for AXP803/6
+Date:   Sat, 13 Jul 2019 11:07:15 +0200
+Message-Id: <20190713090717.347-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708123323.11943-1-huangfq.daxian@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 08:33:23PM +0800, Fuqian Huang wrote:
-> devm_add_action_or_reset() is introduced as a helper function which 
-> internally calls devm_add_action(). If devm_add_action() fails 
-> then it will execute the action mentioned and return the error code.
-> This reduce source code size (avoid writing the action twice) 
-> and reduce the likelyhood of bugs.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Driver refactoring caused few bugs and most of them are already fixed.
+However, some are still present, namely in AXP806 and AXP803 regulator
+definitions.
 
-I'll apply parts of this as the driver should use
-devm_device_add_group() for the main sysfs group.
+This short patch series fix them.
 
-Thanks.
+Please take a look.
 
--- 
-Dmitry
+Best regards,
+Jernej
+
+Changes from v1:
+- Expanded commit message
+- Added fix for AXP803 DCDC5
+
+Jernej Skrabec (2):
+  regulator: axp20x: fix DCDCA and DCDCD for AXP806
+  regulator: axp20x: fix DCDC5 and DCDC6 for AXP803
+
+ drivers/regulator/axp20x-regulator.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--=20
+2.22.0
+
