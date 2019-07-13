@@ -2,95 +2,97 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543ECC742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D4C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A882084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563028369;
-	bh=ylDyKOmWTYulTWHBIjFdesqcerW9m+T420/PmqHvVbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jgNlS9iHBDAROeKBNQX6bryMj9JhhMHdgRq8+6UYUs5gZUyPzQ45PmGH4VUoCcH6K
-	 lDEuFVPOjbQe2IuuU7x4Wwlh6U+ot6unB7vV4LJAK5cUSuEQapSpK0Bc22WaMt1TgZ
-	 5JUfxwgFzfYFxTmnFOssfe4K4afnqQ1Biuk6lnPM=
+	by mail.kernel.org (Postfix) with ESMTP id C6C0020838
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfGMOcr (ORCPT
+        id S1727903AbfGMOgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 10:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbfGMOcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 10:32:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1718520838;
-        Sat, 13 Jul 2019 14:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563028366;
-        bh=ylDyKOmWTYulTWHBIjFdesqcerW9m+T420/PmqHvVbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ega8OaLnYZzbfnmzgA3n5n3wcWHtIDXi1gOQVg9f9UqKjJXFmL3LS+p2X+0oLLJJm
-         ldwNcV6WvWl5K5WSP5DCUQWg6bN2ZxcW5mvvRrcBXegnIQd0v1yCA3dTJVA8UJsTo5
-         K5Wqrn04yZBuQa2jlstdPLKler6EYGDvbap4gvzI=
-Date:   Sat, 13 Jul 2019 16:32:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
-Message-ID: <20190713143244.GC7695@kroah.com>
-References: <20190712121620.632595223@linuxfoundation.org>
- <CA+G9fYsm6jgQm6tdQU9Pyc5cUoW9D5Ff7kxb-2mPzzhE99+Q5w@mail.gmail.com>
+        Sat, 13 Jul 2019 10:36:55 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:34607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727504AbfGMOgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 10:36:55 -0400
+Received: from [192.168.1.110] ([95.114.35.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MEmpp-1hfxbZ3JOt-00GLtU; Sat, 13 Jul 2019 16:36:38 +0200
+Subject: Re: [PATCH] platform/x86: pcengines-apu2 needs gpiolib
+To:     Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20190712085437.4007720-1-arnd@arndb.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <fb36b507-e637-e4d9-fdd4-2947eb7faf14@metux.net>
+Date:   Sat, 13 Jul 2019 16:36:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190712085437.4007720-1-arnd@arndb.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsm6jgQm6tdQU9Pyc5cUoW9D5Ff7kxb-2mPzzhE99+Q5w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:F7Bx1iEZ00JHjygR9CYKTD/F5605d0pFDcWaxn95S/PAyp3hxEu
+ UhrALD/kDGETh91QL+CLArgovGI5jvHFpDE315r684R/9HdQBsfNO94teG1gdgkcDMTlsa6
+ D/9RpuO0V74lqkluprvr10GH0XtYdCwzHAKlkB0kO8BlLzCZXx/bfw+kPrs/TQ6uWwso4Lj
+ 7f91K33um10ysGW4rqL8g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FCEWFvElarQ=:ecKfbDh8tqANzzRfepbk+8
+ lFD3DwMrEvYRmSqY1PvotZA7Zca0hqcK/EcGLhXXlJv5amv65ryvRsxr6HWRYA3D3TCxmuT/4
+ pTOpj0hSB299DR+944uhPt5EC/kauFVxI/Tu7nPB3ulu1VU37hmGXhU/sEHlYJy7EYit3wxNk
+ dkvWns1zMioVeV3qjOEWlE2QKMipYT1qedF9ZzFP2btmrj3Acb5FVqFhu2t3UUJ9seUunDrVu
+ ywXR7XN9aaLtTCl5miIJ9YO+A0QVl6HeaUIkQkUwAeTSqWh2sZK+mOW3ydk+3zs7xCKeuaMu/
+ oWJNlTzMyv8zr7oBNaTcokMdXMA27618xdNijW6NiG52Von1j0h+06zMjNZZDUNSv+IxaAJ2o
+ fPv5i2C1zNYwUXyw+B+Bo7qN6gmCP+bx8mTDIpkFXgKA7A8zQCiSplJ/I5R8BmVvAQdxckwDz
+ NJjGt+5OiFvD77hYhUwiL4tLS4nMejtvf/4FK+ygnz7Eju8w3sI7uV1dQP5JZ26+OZ3mqOMXw
+ bJpMbyrTs9PirwtLsn4S8yfikBcnliZiyo974YtbeDbCfF2VLvjnz48jKak8ewXAUuZfxB0NH
+ PK5X2PYAOqQDOmBRE3VZQMraMv7fiOEPi+1BJwapy4p/MTsEzePoFSeVAeOKbgFlcdA+Yb4E0
+ 6DZHU6dXwUXoDqhP1RWMVOj+en40KPjgb22FxZm1BDIK0L/McATYZPutFBGufRhjYsk3U5LDD
+ NtYlEp1aN3pUwiXpc4raOYlR5Ba3cdcj519OmY73mVBd80Lm/jl5kD8CyRc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 08:34:51AM +0530, Naresh Kamboju wrote:
-> On Fri, 12 Jul 2019 at 18:04, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.2.1 release.
-> > There are 61 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+On 12.07.19 10:54, Arnd Bergmann wrote:
 
-Great!  Thanks for testing these and letting me know.
+Hi,
 
-greg k-h
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index e869a5c760b6..cf48b9068843 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1324,8 +1324,8 @@ config PCENGINES_APU2
+>  	tristate "PC Engines APUv2/3 front button and LEDs driver"
+>  	depends on INPUT && INPUT_KEYBOARD
+>  	depends on LEDS_CLASS
+> -	select GPIO_AMD_FCH
+> -	select KEYBOARD_GPIO_POLLED
+> +	select GPIO_AMD_FCH if GPIOLIB
+> +	select KEYBOARD_GPIO_POLLED if GPIOLIB
+>  	select LEDS_GPIO
+>  	help
+>  	  This driver provides support for the front button and LEDs on
+
+That might compile but the driver won't work, if KEYBOARD_GPIO_POLLED
+or GPIO_AMD_FCH isn't there.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
