@@ -2,74 +2,88 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEEBC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540BC742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB0A20863
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97B120838
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563031321;
+	bh=1aqpqVE0jdvQsXhc4WnTryI+AbAnIS85tEZGzFF5NmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AXmXiQ53uEHLStOoJS86t7D58wRJdlF5agne880xca0C8DmzO3lZ8pbt9stqgfc1v
+	 Ve7LxVsWW0HfchxQylXSGyu6XcxR53vLZ6ZmYjSReZz8oxqrsN40UysHEDPwLwwaGj
+	 ZB/p7dgnqKzW/Kr25RFcsDUGEP7po7nroP4rCTmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfGMPRR (ORCPT
+        id S1727897AbfGMPWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 11:17:17 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:49290 "EHLO gloria.sntech.de"
+        Sat, 13 Jul 2019 11:22:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfGMPRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 11:17:17 -0400
-Received: from p508fcc68.dip0.t-ipconnect.de ([80.143.204.104] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hmJlt-0006eI-7X; Sat, 13 Jul 2019 17:17:09 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: Re: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux v5.2 (was Asus C101P Chromeboot fails to boot with Linux 5.2)
-Date:   Sat, 13 Jul 2019 17:17:08 +0200
-Message-ID: <2648434.ut0pN6mfR1@phil>
-In-Reply-To: <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
-References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk> <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk> <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
+        id S1727626AbfGMPWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 11:22:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37E1A20850;
+        Sat, 13 Jul 2019 15:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563031319;
+        bh=1aqpqVE0jdvQsXhc4WnTryI+AbAnIS85tEZGzFF5NmQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QjdOyQ4Rcd/wXIfxugVPGrFfD+O3eS8Nmc9FZ1yvuUpon6Eh2X7ZT7Yq7eay3mkYU
+         WoZLeeuQglU9FPK6YGPaDVNXxX9bkYK7ZdYHyJW1j9n3XIoT2fe0QiRg1i8cmrZY6r
+         HCMdvMcASKmV/6ZpKmZuKL7AP5achgXlQRazId1A=
+Date:   Sat, 13 Jul 2019 17:21:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "skha >> Shuah Khan" <skhan@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>
+Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
+Message-ID: <20190713152156.GA10284@kroah.com>
+References: <20190712121620.632595223@linuxfoundation.org>
+ <c32535cfc39724655c7ed0933cae44a779d120f9.camel@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c32535cfc39724655c7ed0933cae44a779d120f9.camel@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Am Samstag, 13. Juli 2019, 13:38:45 CEST schrieb Alex Dewar:
-> I initially thought my machine was failing to boot entirely, but it
-> turns out it was just failing to start the display manager. I managed to
-> escape to a tty by hammering the keyboard a bit.
+On Sat, Jul 13, 2019 at 03:45:14PM +0530, Shreeya Patel wrote:
+> On Fri, 2019-07-12 at 14:19 +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.2.1 release.
+> > There are 61 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied,
+> > please
+> > let me know.
+> > 
+> > Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	
+> > https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-
+> > stable-rc.git linux-5.2.y
+> > and the diffstat can be found below.
+> > 
 > 
-> I suspect the culprit is the rockchip_vpu driver (in staging/media),
-> which has been renamed to hantro in this merge window. When I run startx
-> from a terminal, X fails to start and Xorg segfaults (log here:
-> http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
-> issues in v5.1.
+> Compiled and booted successfully. No dmesg regressions.
 
-5.2 also has support for Panfrost (Mali-Midgard GPUs) but I'm not
-sure if it already can support X11 yet and your X11 log mentions
-libglamoregl in the segfault stack trace.
-
-Apart from it bisect that Greg suggested you could also just try
-blacklisting either panfrost or vpu kernel modules
-/etc/udev/somewhere . This would prevent them from loading
-
-Hope that helps
-Heiko
-
-
+thanks for testing!
