@@ -2,99 +2,126 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D6AC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 20:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF2C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 20:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4AE2063F
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 20:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="ZqKaTXZX"
+	by mail.kernel.org (Postfix) with ESMTP id C14912063F
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 20:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbfGMUmX (ORCPT
+        id S1728061AbfGMUuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 16:42:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35929 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727961AbfGMUmX (ORCPT
+        Sat, 13 Jul 2019 16:50:18 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37739 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfGMUuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 16:42:23 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so12512771ljj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 13:42:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eng.ucsd.edu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CBzLom4tHppdt8DRCfwaeSYQ0/243oHzWemzH2okXPU=;
-        b=ZqKaTXZXSYSMiKlFHQWoafVOu+q6ZDnwt9605aN/LXlIXZdh2IWGEkgV7I3yGjVoUI
-         YHg5OaCIfN/8OJ1gzsa12opibzg7ITN/jLMRPdy4WYSQC8K7ZUiD/FkRAmHtq7Zovsmy
-         Zqk7QN3odknVmaXxxtCTlPmzvtZ/CKJQqpjlg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CBzLom4tHppdt8DRCfwaeSYQ0/243oHzWemzH2okXPU=;
-        b=GaXbEtPtA59tRkyQI03gnca3A5YNzzlW/dg413uXNLEWIsyHPZ0NRS7bnf2bxI6KNT
-         ltNKmYTezjU/MZnJKq3H/8+RlNFGpFID0AWT47yHfxNDgCUMYDH1QbzFDL7+E6t3Bllq
-         RlNFgdD+U9Ilv8lzREE0XYWL8u+KkEYoSwmxJ/lL59AzcpFOjuCaMjkztINaMXYx0fNk
-         vopqja7M9oTlkZykR5zOWJEmjXBgefcCiqmVx+AJqE3HvDIPjt600UjjI2dqz0kEuUvL
-         m2eF62s+F1Pkr/rJZ7NVs5pjxdU2RrDQighdTxDc1bVz0n7Qcw0g/8xH3C7ixmbSoe5t
-         7m0A==
-X-Gm-Message-State: APjAAAWOfBFofdCfe7+UFSObqeYyxHSeuNZQvUuSwbJmaDx8dNS5BBzG
-        RCydgYFlcwZYcBM2fX1CUJ5f/Q==
-X-Google-Smtp-Source: APXvYqxufQ2IsrzZK01WY6PdL0Oo61/AwZTGVPocchwV5K5Yie3XbNFCgm+NeT9JsvXikS8P61twsA==
-X-Received: by 2002:a05:651c:92:: with SMTP id 18mr782879ljq.35.1563050541671;
-        Sat, 13 Jul 2019 13:42:21 -0700 (PDT)
-Received: from luke-XPS-13 ([213.146.33.133])
-        by smtp.gmail.com with ESMTPSA id d7sm1597793lfa.86.2019.07.13.13.42.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 13 Jul 2019 13:42:21 -0700 (PDT)
-Date:   Sat, 13 Jul 2019 13:42:19 -0700
-From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
-Message-ID: <20190713204219.GC14762@luke-XPS-13>
-References: <20190712121628.731888964@linuxfoundation.org>
+        Sat, 13 Jul 2019 16:50:18 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 054D1C0006;
+        Sat, 13 Jul 2019 20:50:14 +0000 (UTC)
+Date:   Sat, 13 Jul 2019 22:50:14 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, userm57@yahoo.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
+ doesn't
+Message-ID: <20190713205014.GC4732@piout.net>
+References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
+ <20190624195705.GD5690@piout.net>
+ <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
+ <20190625092926.GE5690@piout.net>
+ <alpine.LNX.2.21.1906261428060.8@nippy.intranet>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LNX.2.21.1906261428060.8@nippy.intranet>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:17:44PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.18 release.
-> There are 138 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 26/06/2019 14:42:31+1000, Finn Thain wrote:
+> > Userspace is certainly adjusting the timezone after the kernel did. Can 
+> > you run the same commands without running your init?
+> > 
 > 
-> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
-> Anything received after that time might be too late.
+> Sure. I booted into /bin/sh instead of /sbin/init then mounted /proc and 
+> /dev, and got this:
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.18-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
+> # dmesg | grep rtc_cmos
+> [    0.544046] rtc_cmos 00:02: RTC can wake from S4
+> [    0.544246] rtc_cmos 00:02: rtc core: registered rtc_cmos as rtc0
+> [    0.544246] rtc_cmos 00:02: alarms up to one month, y3k, 114 bytes nvram, hpet irqs
+> [    0.545514] rtc_cmos 00:02: setting system clock to 2019-06-26 14:19:40 UTC (1561558780)
+> # grep . /etc/adjtime /etc/timezone
+> /etc/adjtime:0.000120 1550184138 0.000000
+> /etc/adjtime:1550184138
+> /etc/adjtime:LOCAL
+> /etc/timezone:Australia/Melbourne
+> # hwclock --show
+> 2019-06-26 14:22:25.437089+10:00
+> # date --iso-8601=s
+> 2019-06-27T00:22:45+10:00
 > 
-> thanks,
-> 
-> greg k-h
+> As expected, the kernel message still agrees with the output from hwclock.
 > 
 
-Compiled and booted on x86_64. No dmesg regressions.
+hwclock has the information that the RTC is in localtime but hctosys
+correctly set the system time to 2019-06-26T14:19:40+00:00, that is
+2019-06-27T00:19:40+10:00 so the kernel message is right and the system
+time is wrong, unless you invoke hwclock -s
 
-Thanks, 
+> > On stable, you have /etc/init.d/hwclock.sh that still runs and does the 
+> > correct thing. My understanding is that systemd also handles the TZ 
+> > properly after hctosys (see clock_is_localtime()).
+> > 
+> 
+> This was Gentoo/x86 with openrc. The Debian/powerpc problem is exactly the 
+> same: the kernel messages report local time whilst claiming that it's UTC.
+> 
 
-Luke
+That is not what it is reporting, it is reporting that it is setting the
+system time, thinking that the RTC is in UTC time. Your test shows that
+this is what happens on x86.
+
+> > Seriously, hctosys does a really bad job at setting the system time, it 
+> > is guaranteed to be always wrong on most platforms. My plan is still to 
+> > try to get distros to stop enabling it and do that properly in 
+> > userspace. This is already ok when using sysV but systemd would need a 
+> > few changes to stop relying on it when then is no hwclock initscript. 
+> > Unfortunately, I didn't have time to work on that yet.
+> > 
+> 
+> It doesn't help if you are able to change all of the future distros. If 
+> you remove hctosys you will break some distros which have already shipped.
+> 
+> For example, I've seen a Debian release that will force a fsck of the root 
+> filesystem without CONFIG_RTC_HCTOSYS. This is a temporary denial of 
+> service not a failure, but in general a backward jump by a few hours can 
+> have bad consequences, such as services that refuse to start.
+> 
+> Anyway, this bug is about a misleading printk, it isn't about removing 
+> functionality. Why conflate these two issues?
+
+Again, your test shows that I'm correct and hctosys is setting the
+system time using the RTC time as UTC time. This gets fixed later by
+userspace.
+
+PowerPC is the only different platform because it is able to set sys_tz.
+It is the only platform doing so. What you can do is check
+sys_tz.tz_minuteswest, keep UTC if it is 0 and print the timezone if it
+is not.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
