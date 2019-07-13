@@ -2,191 +2,126 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC7C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2548EC73C66
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B7920830
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05BF2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="devoeaMs"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="LlCGds8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfGMQld (ORCPT
+        id S1727964AbfGMQne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 12:41:33 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45571 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfGMQld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 12:41:33 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so12166049lje.12;
-        Sat, 13 Jul 2019 09:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sArqflmNJL+RuIvVxOB3J3vY2wGnGuNw/7ZgLpl13so=;
-        b=devoeaMsOdiMqtIGKbsamYRcofxr5w6ek26oEfoD77/0Bc1QktLVOhmIRyH/FU4lL0
-         UmSTKR3FhWr+piAfw7c8FVf4kL10PnB6GMdc6I3Ih4AvZR3i70OKX/I6HGAI7LSOv4kN
-         vFqZVQ7fJD4v/Hfwh2gy9dRjN1Y2xcrb6UjsTmunOmPsGmqtZxIpLMZVakc6ogGIpWjq
-         q13pGG5YpXYDSxHi7gBAvZ6u266k4VDU/S8B2X/fg/X5lCe4XNNP1GrsyYyAbwKKA+lr
-         hOd9FGBJv9YCzyYgHQoklmc8/d5pbZcxSif22u5rAKXGp9gugenwmFm0uXQPjv+jQ7yI
-         XHWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sArqflmNJL+RuIvVxOB3J3vY2wGnGuNw/7ZgLpl13so=;
-        b=ZIdi0EYIZvE2uZ6a4BLcRk8pTdYT9T72LzY0WkdEQssAlo3JNSBDrpFB/uiNrpvyH3
-         9BC1BCLYhxbrF/De+GkGZBd2Ru9LZpE/tsUOaGHVg8Y3s0UqVxXFDwKEeTEzTGtpexWC
-         jkWqydrw37AVkNlQn4CWbpoFRIzthYDghwCrCJkqkiKPhjw+DYVgB/yPqgzfcfOT+11d
-         NmJiRqeT3dBYRr/AdjpZDYW6cdrZ3HkVN9CyCjo3WL6GTzX/tRapdDlZpAkLD4Mm/jCK
-         4q9EoSsxt/sH638W+zGr9mjN6n28Ng1u58uRRiQdeTw0CMQVO3bCavv62gQsZzHC++5d
-         XkvQ==
-X-Gm-Message-State: APjAAAUeLTqWGJXpVGPco60ArbE9TVEp6BdxscGlbaJKfX1OCjlMiJT6
-        C4u/yLDQl4YiGIr8GTSlmQr+GM3t
-X-Google-Smtp-Source: APXvYqx8YN8a/gM70ryG83VKWW3fbsd0+C9KTsRG1W1isB+V4NfNP9ER91GQVjoHUyftaEEaOWJL3A==
-X-Received: by 2002:a2e:6348:: with SMTP id x69mr9311816ljb.186.1563036090359;
-        Sat, 13 Jul 2019 09:41:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id b17sm2061980ljf.34.2019.07.13.09.41.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Jul 2019 09:41:29 -0700 (PDT)
-Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
- <20190710130615.gvi2jwgr2cds66xr@flea>
- <75719cad-c65c-7ebc-3ea8-98134f86ddc3@gmail.com>
- <4a13f12f-05a7-473e-4e4e-7a7e32d09720@gmail.com>
- <20190710140504.t5lsk36gnn5cdn6b@flea>
- <e7d78307-4a48-45b1-ffbe-bc397fec0e40@gmail.com>
- <20190711090327.keuxt2ztfqecdbef@flea>
- <de21fe78-87a6-741f-caf7-2771f6468739@gmail.com>
- <20190712081027.arybdoxr6nzrmkxt@flea>
- <686a20ce-e09a-037c-a5db-bd1309790c3e@gmail.com>
- <20190712195336.zgn5mseyfba2lfu7@flea>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <523f1d21-333d-dd0f-c5fa-9a2a950d8bed@gmail.com>
-Date:   Sat, 13 Jul 2019 19:41:28 +0300
+        Sat, 13 Jul 2019 12:43:34 -0400
+Received: from mout.gmx.net ([212.227.15.19]:38105 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727656AbfGMQne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 12:43:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563036189;
+        bh=UwOTxlpedAtIJteQ+EbYcD45ermXVB3b8k/rX3ec3R0=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=LlCGds8tLFHkxQY4A8DYQ+UAbiJQU028pr6FQHzOsrURWh+QiN2Vv/OZvVfaqCol9
+         1VHWdYfibOHTQNvIEiNHVopZJLq4qxGM4dCAiDDsxdT21Nfpkxmmm93UsEFtrbH/qC
+         x6CfyMVaac32WKrRbDUyOB/9d8sbNsvqo4rDdK4s=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.43.148] ([188.29.165.74]) by mail.gmx.com (mrgmx003
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 0LwIuc-1iXL3y2psk-0185OJ; Sat, 13
+ Jul 2019 18:43:08 +0200
+Subject: Re: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux
+ v5.2 (was Asus C101P Chromeboot fails to boot with Linux 5.2)
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
+ <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
+ <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk> <2648434.ut0pN6mfR1@phil>
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+Message-ID: <2d52b787-187c-5638-660c-33d51a07770c@gmx.co.uk>
+Date:   Sat, 13 Jul 2019 17:43:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190712195336.zgn5mseyfba2lfu7@flea>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <2648434.ut0pN6mfR1@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JRa8kHbPxKGkpPygG10tX/aBQSMIisJJ9fXnJjgZuyZ1W7GC+Mp
+ UWk2xOEa+tqjn8j3Fydrl7wjTyNAo4dzQaHGBneHQwzWL8L0x29CRmeKCq0qpkFe7sy3UMj
+ VIrUk1ExlWOkyAkJxv3p7SybwDr98MbR7e2wtwG3O0iRaUKx9NI2fHU70L04yvE8Q9q3XyJ
+ sFEmN+nz9ndgdoGzIU24A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:w4DUqOcE0LY=:WP0Ayt3RvUP59J/j6MUqTK
+ 7pAH60CiZthm4S9UOwZO7na+vFNfY80H0SkBkOq/XAmsJawrqisvGG7o2u/laPEZyNQ80UQka
+ FU3JXw3Pkf+V+TVlOCTs+YK1jUMOG9O4gHwtTKMSChU/XDyWxje2DI597MkODMeojaWY3OF4S
+ vXLGo0JOViaf7RK3V13r7x11ac71ZRZDF7eEQknTQnG/rCkDki/Og/69f4T6RzDWbRJLf0B3V
+ B29gfO1H2T5z5e6iB+E2MZgEEAZXoWyUU1uzCqOCnK3dgCxUX77eV01dF55AJz2czL575PDLr
+ hOxNDEh9OLi7tctbmo7mF2AWX+oRWFcVlomcAlDnNFp7i+Sa6CUmREEOfodipidbiE3GCbZB2
+ hVw2Tx3scBApcn283GxyMBJvnzc3HfeAfl2sepC5w4lfXbS0nsdNtZgemPzFGiNlPLMtFuYUN
+ n/nJqiiD4DDfnpGKkpu1sTFcTIJDnTd0/XqE2zBoUsn0yMZlYz5ZUgJ48kKBEqULZGsVy1Izh
+ rDMCp74boOgMAAbl31ujlH9m55IR1DLbnQi9r/BRu1a/F/5BZhDvI49EpGKWlQIVtykpBAczX
+ Q8oBrsBIBR/0y13IVHu/LyI7OjtgivJSrgbv5rlyTUOgbVPJcuHgDETQ2kEyW3ncvhQw/UatF
+ BeH50lKO8E5CqNAjvv5v4P7o6hk1YElaDCM+/sS7vhIivxr5KCe8i0sAEHm9GQYQx9XBvplMW
+ qll72M8rekGmMla2b3pPnpDjlx4pEQ8KvONfjx7l9lnIFI8CRR6413j7CPpvDzQY+LrSBke1y
+ aqVySXnaQkgGzKsF1qgRyF8q71GsYroJe393asclnNW3IS5AuPLeGX5qxnfudHak+1Yevhwhs
+ 1QfqvCVUWh7ko6kW3RUGiGTpVCO+6k/n7nN6xeXcDSGfEu4KHE99UMMZ/+mnGFn1bnxViPU/F
+ 1OlK1xeq4RKkRby0B4Efnxwo1owMXBfmqVaBfBGwE+ZXpimyeqUcqDJ3QpzU0V/BWDWgQCgIs
+ 3GuD0tGmVpb9WwQxOkdh97NEenhL1ydmNVrLIg4JYKmurB2rXgT7KWj6tPwb+hCjy5gfYS5qd
+ JzejdaCIP1RedpkyvkYYSOiXsfBBom7EYgO
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.07.2019 22:53, Maxime Ripard пишет:
-> On Fri, Jul 12, 2019 at 11:30:01AM +0300, Dmitry Osipenko wrote:
->> 12.07.2019 11:10, Maxime Ripard пишет:
->>> On Thu, Jul 11, 2019 at 06:55:03PM +0300, Dmitry Osipenko wrote:
->>>> 11.07.2019 12:03, Maxime Ripard пишет:
->>>>> On Wed, Jul 10, 2019 at 06:05:18PM +0300, Dmitry Osipenko wrote:
->>>>>> 10.07.2019 17:05, Maxime Ripard пишет:
->>>>>>> On Wed, Jul 10, 2019 at 04:29:19PM +0300, Dmitry Osipenko wrote:
->>>>>>>> This works:
->>>>>>>>
->>>>>>>> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
->>>>>>>> index 56d36779d213..e5a2f9c8f404 100644
->>>>>>>> --- a/drivers/gpu/drm/drm_client_modeset.c
->>>>>>>> +++ b/drivers/gpu/drm/drm_client_modeset.c
->>>>>>>> @@ -182,6 +182,8 @@ drm_connector_pick_cmdline_mode(struct drm_connector *connector)
->>>>>>>>         mode = drm_mode_create_from_cmdline_mode(connector->dev, cmdline_mode);
->>>>>>>>         if (mode)
->>>>>>>>                 list_add(&mode->head, &connector->modes);
->>>>>>>> +       else
->>>>>>>> +               cmdline_mode->specified = false;
->>>>>>>
->>>>>>> Hmmm, it's not clear to me why that wouldn't be the case.
->>>>>>>
->>>>>>> If we come back to the beginning of that function, we retrieve the
->>>>>>> cmdline_mode buffer from the connector pointer, that will probably
->>>>>>> have been parsed a first time using drm_mode_create_from_cmdline_mode
->>>>>>> in drm_helper_probe_add_cmdline_mode.
->>>>>>>
->>>>>>> Now, I'm guessing that the issue is that in
->>>>>>> drm_mode_parse_command_line_for_connector, if we have a named mode, we
->>>>>>> just copy the mode over and set mode->specified.
->>>>>>>
->>>>>>> And we then move over to do other checks, and that's probably what
->>>>>>> fails and returns, but our drm_cmdline_mode will have been modified.
->>>>>>>
->>>>>>> I'm not entirely sure how to deal with that though.
->>>>>>>
->>>>>>> I guess we could allocate a drm_cmdline_mode structure on the stack,
->>>>>>> fill that, and if successful copy over its content to the one in
->>>>>>> drm_connector. That would allow us to only change the content on
->>>>>>> success, which is what I would expect from such a function?
->>>>>>>
->>>>>>> How does that sound?
->>>>>>
->>>>>> I now see that there is DRM_MODE_TYPE_USERDEF flag that is assigned only
->>>>>> for the "cmdline" mode and drm_client_rotation() is the only place in
->>>>>> DRM code that cares about whether mode is from cmdline, hence looks like
->>>>>> it will be more correct to do the following:
->>>>>
->>>>> I'm still under the impression that we're dealing with workarounds of
->>>>> a more central issue, which is that we shouldn't return a partially
->>>>> modified drm_cmdline_mode.
->>>>>
->>>>> You said it yourself, the breakage is in the commit changing the
->>>>> command line parsing logic, while you're fixing here some code that
->>>>> was introduced later on.
->>>>
->>>> The problem stems from assumption that *any* named mode is valid. It
->>>> looks to me that the ultimate solution would be to move the mode's name
->>>> comparison into the [1], if that's possible.
->>>>
->>>> [1] drm_mode_parse_command_line_for_connector()
->>>
->>> Well, one could argue that video=tegrafb is invalid and should be
->>> rejected as well, but we haven't cleared that up.
+On 13/07/2019 16:17, Heiko Stuebner wrote:
+> Hi,
+>
+> Am Samstag, 13. Juli 2019, 13:38:45 CEST schrieb Alex Dewar:
+>> I initially thought my machine was failing to boot entirely, but it
+>> turns out it was just failing to start the display manager. I managed t=
+o
+>> escape to a tty by hammering the keyboard a bit.
 >>
->> The video=tegrafb is invalid mode, there is nothing to argue here. And
->> the problem is that invalid modes and not rejected for the very beginning.
-> 
-> Yeah, I guess fb_get_options should also return an error in such a
-> case, but I'm a bit worried about the side effects here.
+>> I suspect the culprit is the rockchip_vpu driver (in staging/media),
+>> which has been renamed to hantro in this merge window. When I run start=
+x
+>> from a terminal, X fails to start and Xorg segfaults (log here:
+>> http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
+>> issues in v5.1.
+>
+> 5.2 also has support for Panfrost (Mali-Midgard GPUs) but I'm not
+> sure if it already can support X11 yet and your X11 log mentions
+> libglamoregl in the segfault stack trace.
+>
+> Apart from it bisect that Greg suggested you could also just try
+> blacklisting either panfrost or vpu kernel modules
+> /etc/udev/somewhere . This would prevent them from loading
+>
+> Hope that helps
+> Heiko
+>
+>
 
-At least the showstopper regression is fixed now. Everything else could
-be worked out later on.
+Hi Heiko,
 
->>>>> Can you try the followintg patch?
->>>>> http://code.bulix.org/8cwk4c-794565?raw
->>>>
->>>> This doesn't help because the problem with the rotation_reflection is
->>>> that it's 0 if "rotation" not present in the cmdline and then ilog2(0)
->>>> returns -1. So the patch "drm/modes: Don't apply cmdline's rotation if
->>>> it wasn't specified" should be correct in any case.
->>>
->>> So we would have the same issue with rotate=0 then?
->>
->> No, we won't. Rotation mode is parsed into the DRM_MODE bitmask and
->> rotate=0 corresponds to DRM_MODE_ROTATE_0, which is BIT(0) as you may
->> notice. Hence rotation_reflection=0 is always an invalid value, meaning
->> that "rotate" option does not present in the cmdline. Please consult the
->> code, in particular see drm_mode_parse_cmdline_options() which was
->> written by yourself ;)
-> 
-> Sigh... You're right :)
-> 
-> Sorry for that, I'll reply to the other patch
+Thanks for this. I blacklisted the panfrost driver and X magically
+started working again.
 
-Thank you very much.
+I'll try to do a bisect later to find the offending commit though.
+
+In related news, it also seems that the sound and wifi drivers aren't
+working either in 5.2 (although I need to do a bit more testing to
+confirm the latter).
+
+Best,
+Alex
