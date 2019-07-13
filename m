@@ -2,119 +2,95 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B148C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B743BC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AAF208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XODvCtOp"
+	by mail.kernel.org (Postfix) with ESMTP id 9A1FF208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfGMEHq (ORCPT
+        id S1726423AbfGMEMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 00:07:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42692 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfGMEHp (ORCPT
+        Sat, 13 Jul 2019 00:12:32 -0400
+Received: from nibbler.cm4all.net ([82.165.145.151]:37138 "EHLO
+        nibbler.cm4all.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfGMEMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 00:07:45 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6D46fqx094060;
-        Sat, 13 Jul 2019 04:07:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=vnKYntI7sF00JDhKZXOi05w0MftGqOYfOop5mleI+uI=;
- b=XODvCtOpjEKEpUeqfR2hWl41heoVpjOvtKyKkDEJyKdVQCbYvtrLk+NNn6oR0PJPMLtI
- 0E4QMiutlmIvp0BhdXLE6jOV66xWKgEXGayiztJP9ghuKMN8FxxtNMjwdBwuEvIBU1S0
- g5zrSFZVz4S2QdLgzBO5OO0unZLA8wc5Cp4BuDu2l9M2F80l0lBO+DpCcl8gxSY9UA6i
- 1015OSng4gFvNiC8Em5Fg8sjORbcgpvkJ6YYFyHNZmKhNsKV6JUBl41Pw7BrCpZ9FS4X
- DyI2KcHrb4rhq8CaHGfl6wqk1V0f93KMqFfWBTSVKVVacxSJk83lbHJspeVCjmcQm6GV bg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tq6qt835y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 04:07:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6D42XDV075742;
-        Sat, 13 Jul 2019 04:07:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2tq5bb1ng6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 04:07:34 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6D47UYA016736;
-        Sat, 13 Jul 2019 04:07:30 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 21:07:30 -0700
-Date:   Fri, 12 Jul 2019 21:07:28 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [GIT PULL] xfs: new features for 5.3
-Message-ID: <20190713040728.GB5347@magnolia>
-References: <20190712180205.GA5347@magnolia>
- <CAHk-=wiK8_nYEM2B8uvPELdUziFhp_+DqPN=cNSharQqpBZ6qg@mail.gmail.com>
+        Sat, 13 Jul 2019 00:12:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by nibbler.cm4all.net (Postfix) with ESMTP id 018C8C01CB
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 06:12:23 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at nibbler.cm4all.net
+Received: from nibbler.cm4all.net ([127.0.0.1])
+        by localhost (nibbler.cm4all.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id FIZKkwqtSxH3 for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jul 2019 06:12:22 +0200 (CEST)
+Received: from zero.intern.cm-ag (zero.intern.cm-ag [172.30.16.10])
+        by nibbler.cm4all.net (Postfix) with SMTP id D8372C01AA
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 06:12:22 +0200 (CEST)
+Received: (qmail 30916 invoked from network); 13 Jul 2019 06:44:00 +0200
+Received: from unknown (HELO rabbit.intern.cm-ag) (172.30.3.1)
+  by zero.intern.cm-ag with SMTP; 13 Jul 2019 06:44:00 +0200
+Received: by rabbit.intern.cm-ag (Postfix, from userid 1023)
+        id A2D3B460C4C; Sat, 13 Jul 2019 06:12:17 +0200 (CEST)
+From:   Max Kellermann <mk@cm4all.com>
+To:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        trond.myklebust@hammerspace.com, bfields@redhat.com, tytso@mit.edu,
+        adilger.kernel@dilger.ca, hughd@google.com,
+        anna.schumaker@netapp.com
+Cc:     linux-kernel@vger.kernel.org, Max Kellermann <mk@cm4all.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2 2/4] fs/ext4/acl: apply umask if ACL support is disabled
+Date:   Sat, 13 Jul 2019 06:11:58 +0200
+Message-Id: <20190713041200.18566-2-mk@cm4all.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190713041200.18566-1-mk@cm4all.com>
+References: <20190713041200.18566-1-mk@cm4all.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiK8_nYEM2B8uvPELdUziFhp_+DqPN=cNSharQqpBZ6qg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907130046
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907130046
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 05:27:15PM -0700, Linus Torvalds wrote:
-> On Fri, Jul 12, 2019 at 11:02 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> >
-> > The branch merges cleanly against this morning's HEAD and survived an
-> > overnight run of xfstests.  The merge was completely straightforward, so
-> > please let me know if you run into anything weird.
-> 
-> Hmm. I don't know what you merged against, but it got a (fairly
-> trivial) conflict for me due to
-> 
->   79d08f89bb1b ("block: fix .bi_size overflow")
-> 
-> from the block merge (from Tuesday) touching a line next to one changed by
-> 
->   a24737359667 ("xfs: simplify xfs_chain_bio")
-> 
-> from this pull.
-> 
-> So it wasn't an entirely clean merge for me.
-> 
-> Was it a complex merge conflict? No. I'm just confused by the "merges
-> cleanly against this morning's HEAD", which makes me wonder what you
-> tried to merge against..
+The function ext4_init_acl() calls posix_acl_create() which is
+responsible for applying the umask.  But without
+CONFIG_EXT4_FS_POSIX_ACL, ext4_init_acl() is an empty inline function,
+and nobody applies the umask.
 
-Doh, it turns out I was merging against the same HEAD as my last two
-pull requests because I forgot to re-pull.  Sorry about that.  It's been
-too long of a week. :/
+This fixes a bug which causes the umask to be ignored with O_TMPFILE
+on ext4:
 
---D
+ https://github.com/MusicPlayerDaemon/MPD/issues/558
+ https://bugs.gentoo.org/show_bug.cgi?id=686142#c3
+ https://bugzilla.kernel.org/show_bug.cgi?id=203625
 
->             Linus
+Signed-off-by: Max Kellermann <mk@cm4all.com>
+Cc: stable@vger.kernel.org
+---
+ fs/ext4/acl.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/ext4/acl.h b/fs/ext4/acl.h
+index 9b63f5416a2f..7f3b25b3fa6d 100644
+--- a/fs/ext4/acl.h
++++ b/fs/ext4/acl.h
+@@ -67,6 +67,11 @@ extern int ext4_init_acl(handle_t *, struct inode *, struct inode *);
+ static inline int
+ ext4_init_acl(handle_t *handle, struct inode *inode, struct inode *dir)
+ {
++	/* usually, the umask is applied by posix_acl_create(), but if
++	   ext4 ACL support is disabled at compile time, we need to do
++	   it here, because posix_acl_create() will never be called */
++	inode->i_mode &= ~current_umask();
++
+ 	return 0;
+ }
+ #endif  /* CONFIG_EXT4_FS_POSIX_ACL */
+-- 
+2.20.1
+
