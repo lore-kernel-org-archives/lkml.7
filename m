@@ -2,75 +2,153 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D039BC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BE3C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAEC20838
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F415E20989
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfGMPfr (ORCPT
+        id S1728063AbfGMPgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 11:35:47 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:47048 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfGMPfr (ORCPT
+        Sat, 13 Jul 2019 11:36:08 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:56807 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfGMPgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 11:35:47 -0400
-Received: by mail-qt1-f196.google.com with SMTP id h21so11327848qtn.13;
-        Sat, 13 Jul 2019 08:35:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/SFjgyvYpOtxlwc4ojENp06eD74+gSpEUYF2scggOfQ=;
-        b=BJKSuFuGQ1P4mDDRmhGmwHJszPzDGjdPANVTjmuVU6GxOJtwxtIviN6APNfDEqPVgu
-         z6gtwIiJE4fXvYcRTqx9slPn2jk7d++MudklG/RxjKSIMExLK6oB+mCp+3cBYtr/wwRT
-         wmr+IImr/NXnW95JFjhq8d98P75qO+JWkWNxlGlbzoBoUccte1EbimmVXofhZSqAMvF9
-         yxYOxAy1ASMEZybaj/wpjr5WWVI8vhxktrw30nhTrF5l+7eX846Oi9Pc2FerayHMmVlO
-         iNtZSY39U8Y3ytryY2ayFYDkFChTcsU+MeFOKeJsf4wtfRX8D2+9JZrvEBcpYtjfbRRm
-         FRZw==
-X-Gm-Message-State: APjAAAW+hJjsnUpu3pKueFjGex6frdJHFsfG6CDPFDntHdiaz0VexBnJ
-        Ml6UnN5AGLoCnRV9IrqosJrbJs3TkpiHio/iykmfLw/g
-X-Google-Smtp-Source: APXvYqyNL8VCWHu8hXjLdxyE0zt8XE/YBBnFh1YunfEwAEzy31sAhDj5qQ+vzJ5+HLnT5CPEKwJW9Rqccob0hz144sM=
-X-Received: by 2002:aed:33a4:: with SMTP id v33mr10880166qtd.18.1563032146072;
- Sat, 13 Jul 2019 08:35:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190712090700.317887-1-arnd@arndb.de> <20190712.153632.1007215196498198399.davem@davemloft.net>
- <82ccdd83d2a18912bb8cf75585e751c0bd39a215.camel@perches.com>
-In-Reply-To: <82ccdd83d2a18912bb8cf75585e751c0bd39a215.camel@perches.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 13 Jul 2019 17:35:29 +0200
-Message-ID: <CAK8P3a1eGXyZdXrkyhkXzvHt38J1wOzywU-+uxqnAYOnRVJtcA@mail.gmail.com>
-Subject: Re: [PATCH] [net-next] cxgb4: reduce kernel stack usage in cudbg_collect_mem_region()
-To:     Joe Perches <joe@perches.com>
-Cc:     David Miller <davem@davemloft.net>, vishal@chelsio.com,
-        rahul.lakkireddy@chelsio.com, ganeshgr@chelsio.com,
-        Alexios Zavras <alexios.zavras@intel.com>, arjun@chelsio.com,
-        surendra@chelsio.com, Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 13 Jul 2019 11:36:08 -0400
+X-Greylist: delayed 594 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Jul 2019 11:33:32 EDT
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5d29f76a5ff-3a720; Sat, 13 Jul 2019 23:23:22 +0800 (CST)
+X-RM-TRANSID: 2eeb5d29f76a5ff-3a720
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost (unknown[223.105.0.241])
+        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25d29f7698ba-83e2a;
+        Sat, 13 Jul 2019 23:23:22 +0800 (CST)
+X-RM-TRANSID: 2ee25d29f7698ba-83e2a
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Simon Horman <horms@verge.net.au>
+Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Subject: [net-next 1/2] ipvs: batch __ip_vs_cleanup
+Date:   Sat, 13 Jul 2019 23:19:45 +0800
+Message-Id: <1563031186-2101-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1563031186-2101-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+References: <1563031186-2101-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 2:14 AM Joe Perches <joe@perches.com> wrote:
->
-> On Fri, 2019-07-12 at 15:36 -0700, David Miller wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > Date: Fri, 12 Jul 2019 11:06:33 +0200
-> >
-> > > The cudbg_collect_mem_region() and cudbg_read_fw_mem() both use several
-> > > hundred kilobytes of kernel stack space.
->
-> Several hundred 'kilo' bytes?
-> I hope not.
+It's better to batch __ip_vs_cleanup to speedup ipvs
+connections dismantle.
 
-Right, my mistake.
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+---
+ include/net/ip_vs.h             |  2 +-
+ net/netfilter/ipvs/ip_vs_core.c | 29 +++++++++++++++++------------
+ net/netfilter/ipvs/ip_vs_ctl.c  | 13 ++++++++++---
+ 3 files changed, 28 insertions(+), 16 deletions(-)
 
-       Arnd
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index 3759167..93e7a25 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -1324,7 +1324,7 @@ static inline void ip_vs_control_del(struct ip_vs_conn *cp)
+ void ip_vs_control_net_cleanup(struct netns_ipvs *ipvs);
+ void ip_vs_estimator_net_cleanup(struct netns_ipvs *ipvs);
+ void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs);
+-void ip_vs_service_net_cleanup(struct netns_ipvs *ipvs);
++void ip_vs_service_nets_cleanup(struct list_head *net_list);
+ 
+ /* IPVS application functions
+  * (from ip_vs_app.c)
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index 46f06f9..b4d79b7 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2402,18 +2402,23 @@ static int __net_init __ip_vs_init(struct net *net)
+ 	return -ENOMEM;
+ }
+ 
+-static void __net_exit __ip_vs_cleanup(struct net *net)
++static void __net_exit __ip_vs_cleanup_batch(struct list_head *net_list)
+ {
+-	struct netns_ipvs *ipvs = net_ipvs(net);
+-
+-	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
+-	ip_vs_conn_net_cleanup(ipvs);
+-	ip_vs_app_net_cleanup(ipvs);
+-	ip_vs_protocol_net_cleanup(ipvs);
+-	ip_vs_control_net_cleanup(ipvs);
+-	ip_vs_estimator_net_cleanup(ipvs);
+-	IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
+-	net->ipvs = NULL;
++	struct netns_ipvs *ipvs;
++	struct net *net;
++	LIST_HEAD(list);
++
++	ip_vs_service_nets_cleanup(net_list);	/* ip_vs_flush() with locks */
++	list_for_each_entry(net, net_list, exit_list) {
++		ipvs = net_ipvs(net);
++		ip_vs_conn_net_cleanup(ipvs);
++		ip_vs_app_net_cleanup(ipvs);
++		ip_vs_protocol_net_cleanup(ipvs);
++		ip_vs_control_net_cleanup(ipvs);
++		ip_vs_estimator_net_cleanup(ipvs);
++		IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
++		net->ipvs = NULL;
++	}
+ }
+ 
+ static int __net_init __ip_vs_dev_init(struct net *net)
+@@ -2442,7 +2447,7 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
+ 
+ static struct pernet_operations ipvs_core_ops = {
+ 	.init = __ip_vs_init,
+-	.exit = __ip_vs_cleanup,
++	.exit_batch = __ip_vs_cleanup_batch,
+ 	.id   = &ip_vs_net_id,
+ 	.size = sizeof(struct netns_ipvs),
+ };
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 07e0967..c8e652b 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -1607,14 +1607,21 @@ static int ip_vs_flush(struct netns_ipvs *ipvs, bool cleanup)
+ 
+ /*
+  *	Delete service by {netns} in the service table.
+- *	Called by __ip_vs_cleanup()
++ *	Called by __ip_vs_batch_cleanup()
+  */
+-void ip_vs_service_net_cleanup(struct netns_ipvs *ipvs)
++void ip_vs_service_nets_cleanup(struct list_head *net_list)
+ {
++	struct netns_ipvs *ipvs;
++	struct net *net;
++	LIST_HEAD(list);
++
+ 	EnterFunction(2);
+ 	/* Check for "full" addressed entries */
+ 	mutex_lock(&__ip_vs_mutex);
+-	ip_vs_flush(ipvs, true);
++	list_for_each_entry(net, net_list, exit_list) {
++		ipvs = net_ipvs(net);
++		ip_vs_flush(ipvs, true);
++	}
+ 	mutex_unlock(&__ip_vs_mutex);
+ 	LeaveFunction(2);
+ }
+-- 
+1.8.3.1
+
+
+
