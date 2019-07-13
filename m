@@ -2,125 +2,97 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86466C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996BFC742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E51204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2F8208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm87kPHC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfGMGDp (ORCPT
+        id S1726699AbfGMGHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 02:03:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43184 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727580AbfGMGDo (ORCPT
+        Sat, 13 Jul 2019 02:07:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41689 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfGMGHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 02:03:44 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D5uQUO087423;
-        Sat, 13 Jul 2019 02:01:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tq3k2rpky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 13 Jul 2019 02:01:27 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6D5vA1T088448;
-        Sat, 13 Jul 2019 02:01:27 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tq3k2rpkk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 13 Jul 2019 02:01:27 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6D60957001006;
-        Sat, 13 Jul 2019 06:01:26 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 2tq6x68t9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 13 Jul 2019 06:01:26 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D61Oop49938878
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 06:01:24 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BDF3C6055;
-        Sat, 13 Jul 2019 06:01:24 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 511EAC6059;
-        Sat, 13 Jul 2019 06:01:21 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.85.135.203])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sat, 13 Jul 2019 06:01:20 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Ryan Grimm <grimm@linux.vnet.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v2 13/13] powerpc/configs: Enable secure guest support in pseries and ppc64 defconfigs
-Date:   Sat, 13 Jul 2019 03:00:23 -0300
-Message-Id: <20190713060023.8479-14-bauerman@linux.ibm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190713060023.8479-1-bauerman@linux.ibm.com>
-References: <20190713060023.8479-1-bauerman@linux.ibm.com>
+        Sat, 13 Jul 2019 02:07:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so8725605wrm.8;
+        Fri, 12 Jul 2019 23:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=On5iqD9AlcEVmas2/vt48n4oosNJbbs0cKQZBxzkZxY=;
+        b=Tm87kPHCKamfpAY6goULQAkKazqDEpnzeXlHR4JZBeJvv1GVGSAvFipNxGwE6bAEPk
+         r58xUmUnOTJR40dsa7Kl/laITKOpLUNFpHZdLjT+fRAQPGTUqKpEcw6PasDyvUd4c0bj
+         gY7QG99zvETFN1bxMACuiAGKCVkS9T8d1VpzqH3anIqZ8jErOwXL5DdIldckGfL12u8F
+         mkQXQpfAZFQMVVy8WlWfIPLIh6X7fq8x22ZYArtv64rpYTwQJ0jg39p7vjqfTW9x9hx6
+         S3rJyzld2Ajj+qg3gL7MI7r3HXxXa4yZbMk9QxZGNG9rJyXePvrv7j5KgwXK80I0iqEE
+         OdYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=On5iqD9AlcEVmas2/vt48n4oosNJbbs0cKQZBxzkZxY=;
+        b=k/xEIDSpKoYuhM41uHT5D0QMl5dl3aibj7GvaGrVHEEuvMZCxX/XbCNLZODNAuINQP
+         f/sUkouGVRXf6n7+l9vMno2GJqAlqGD5oLVT/KEYwtXfuZuEsX+oMKYlQDEph7L8Teff
+         VUI5xS0M0boO7H+RX063seheBTTJjkwkVo5LZ0n3FS240IoEo/LLAxXJKolQufKj+/0W
+         syuzXENMFE19HQDjUufInvf4Bc/1jFeu0/NWcJzsjUx/777B7djBkRlgh5MecGUkW1wm
+         /IExTZBLFuO3YGXwIU+YqSAA9fe9MNrhcAx0lF8a9cswShTiiomgOuYF9P2dXVTQSTF2
+         U+iA==
+X-Gm-Message-State: APjAAAXCXpJ5GWDI/aAxkC5DxWUDCyGPU63xUbsyJocIo8UGboaWkX9d
+        jJnEjc3C0BlYe50g3n4UR5A=
+X-Google-Smtp-Source: APXvYqwBRfMNXfHHzwLXmUW/368+gtKOyu7+kMHfTjBTiTaMHZ0RtPhgK75JRaQuQc6UvyRDl8Cy+A==
+X-Received: by 2002:a5d:4e08:: with SMTP id p8mr3281323wrt.20.1562998064324;
+        Fri, 12 Jul 2019 23:07:44 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id g131sm6963201wmf.37.2019.07.12.23.07.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 23:07:43 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 23:07:41 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] kbuild: add --hash-style= and --build-id unconditionally
+Message-ID: <20190713060741.GA76046@archlinux-threadripper>
+References: <20190713040110.18210-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907130070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713040110.18210-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Grimm <grimm@linux.vnet.ibm.com>
+On Sat, Jul 13, 2019 at 01:01:10PM +0900, Masahiro Yamada wrote:
+> As commit 1e0221374e30 ("mips: vdso: drop unnecessary cc-ldoption")
+> explained, these flags are supported by the minimal required version
+> of binutils.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Enables running as a secure guest in platforms with an Ultravisor.
+Also supported by ld.lld; I tested both arm and x86, the build ID shows
+up fine.
 
-Signed-off-by: Ryan Grimm <grimm@linux.vnet.ibm.com>
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- arch/powerpc/configs/ppc64_defconfig   | 1 +
- arch/powerpc/configs/pseries_defconfig | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
-index c63b019ba753..0b04c5ca9e13 100644
---- a/arch/powerpc/configs/ppc64_defconfig
-+++ b/arch/powerpc/configs/ppc64_defconfig
-@@ -31,6 +31,7 @@ CONFIG_DTL=y
- CONFIG_SCANLOG=m
- CONFIG_PPC_SMLPAR=y
- CONFIG_IBMEBUS=y
-+CONFIG_PPC_SVM=y
- CONFIG_PPC_MAPLE=y
- CONFIG_PPC_PASEMI=y
- CONFIG_PPC_PASEMI_IOMMU=y
-diff --git a/arch/powerpc/configs/pseries_defconfig b/arch/powerpc/configs/pseries_defconfig
-index 38abc9c1770a..26126b4d4de3 100644
---- a/arch/powerpc/configs/pseries_defconfig
-+++ b/arch/powerpc/configs/pseries_defconfig
-@@ -42,6 +42,7 @@ CONFIG_DTL=y
- CONFIG_SCANLOG=m
- CONFIG_PPC_SMLPAR=y
- CONFIG_IBMEBUS=y
-+CONFIG_PPC_SVM=y
- # CONFIG_PPC_PMAC is not set
- CONFIG_RTAS_FLASH=m
- CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
