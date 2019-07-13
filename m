@@ -7,72 +7,71 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C2C742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A8DC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B952083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5722083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Uz6WznF0"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OUo4XWUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfGMKy3 (ORCPT
+        id S1727767AbfGMKzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 06:54:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56857 "EHLO
+        Sat, 13 Jul 2019 06:55:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43455 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfGMKy2 (ORCPT
+        with ESMTP id S1726460AbfGMKzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 06:54:28 -0400
+        Sat, 13 Jul 2019 06:55:21 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DArqGN3837520
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DAsYMe3837823
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 03:53:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DArqGN3837520
+        Sat, 13 Jul 2019 03:54:35 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DAsYMe3837823
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563015233;
-        bh=brBw1TcqNDd2+ZyA8bk3dciFCBKSN99IkRUlTDmJYgQ=;
+        s=2019061801; t=1563015276;
+        bh=F5U8Yp4oUEP66inJtwpbu9ERHqdQCKl1kYd7mg4mMLc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Uz6WznF0u3VC4peo+u4edIawbxTyGcFB8ebeJOwHZ18kHH+cjMX0dh4oCy8FFMn1E
-         1jOZSPpRxNb64Hsorix+ftb2ac3AtZE+aqVX2gYAMHoGPd/6yyuYfmHBlyImQ39Mf0
-         zlAtImJwLOYelKvYiZNkfnhCxYdtscw2+FIy8rzhdmclGwwTMp5o4Qv5wUlXKHlTF1
-         z7DuOYbaEjO8FiXqG084znsQ7RM6GETmqlW16f3PU/4JOt1I/i1OjpgI5WGYJUrdos
-         Z06BLv1Ki7PZEWOJaL4gc48vFyexvjp1QVHBZPcyLXAt7uC9FWSr8N5vzJO3E3Fjqr
-         HbaPR0PCWEliA==
+        b=OUo4XWUdtuOe+RYDlse1HYJ3j6gm3EhAgN46mv1tJsNFZuSD3PNekbxPfFSszMtGm
+         c097KuW+pcaPnMxHehJ2J/DrLVWWVf7SzdhKkDp2zq7rBLZxlShcJMesN19Y1uCMNs
+         IBIqvq65OowlXJFFncwrW4+JgJDI4jydL4vExYq+gvHXT96PqnmK0ELDN1KLmFnL9d
+         iEbJFv16m8Q6ScZRYXbqXUZmqiVbC9h1PrJ1Oxuf5DvfEZVlPyIkWaQQovMasrwLb2
+         Dp1TNZ+n5Em4EGrOBym02Sgy/hc84dhCPPQ+DwFVAUIbDzLtaf/QaWQSmwU9KDNQXf
+         mVbL81UbIPK6Q==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DArpEa3837517;
-        Sat, 13 Jul 2019 03:53:51 -0700
-Date:   Sat, 13 Jul 2019 03:53:51 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DAsYMG3837820;
+        Sat, 13 Jul 2019 03:54:34 -0700
+Date:   Sat, 13 Jul 2019 03:54:34 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Leo Yan <tipbot@zytor.com>
-Message-ID: <tip-111442cfc8abdeaa7ec1407f07ef7b3e5f76654e@git.kernel.org>
-Cc:     songliubraving@fb.com, tmricht@linux.ibm.com, davem@davemloft.net,
-        linux@rasmusvillemoes.dk, alexander.shishkin@linux.intel.com,
-        leo.yan@linaro.org, ak@linux.intel.com,
-        alexey.budankov@linux.intel.com, changbin.du@intel.com,
-        acme@redhat.com, linux-kernel@vger.kernel.org,
-        yao.jin@linux.intel.com, mathieu.poirier@linaro.org,
-        namhyung@kernel.org, dave@stgolabs.net, adrian.hunter@intel.com,
-        alexios.zavras@intel.com, mingo@kernel.org,
-        eric.saint.etienne@oracle.com, peterz@infradead.org, hpa@zytor.com,
-        khlebnikov@yandex-team.ru, suzuki.poulose@arm.com,
-        tglx@linutronix.de, jolsa@kernel.org
-Reply-To: mathieu.poirier@linaro.org, yao.jin@linux.intel.com,
-          linux-kernel@vger.kernel.org, acme@redhat.com,
-          changbin.du@intel.com, alexey.budankov@linux.intel.com,
-          ak@linux.intel.com, leo.yan@linaro.org,
-          alexander.shishkin@linux.intel.com, linux@rasmusvillemoes.dk,
-          davem@davemloft.net, tmricht@linux.ibm.com,
-          songliubraving@fb.com, jolsa@kernel.org, tglx@linutronix.de,
-          suzuki.poulose@arm.com, khlebnikov@yandex-team.ru, hpa@zytor.com,
-          eric.saint.etienne@oracle.com, peterz@infradead.org,
-          mingo@kernel.org, alexios.zavras@intel.com,
-          adrian.hunter@intel.com, dave@stgolabs.net, namhyung@kernel.org
-In-Reply-To: <20190702103420.27540-4-leo.yan@linaro.org>
-References: <20190702103420.27540-4-leo.yan@linaro.org>
+Message-ID: <tip-600c787dbf6521d8d07ee717ab7606d5070103ea@git.kernel.org>
+Cc:     hpa@zytor.com, eric.saint.etienne@oracle.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        mathieu.poirier@linaro.org, songliubraving@fb.com,
+        dave@stgolabs.net, mingo@kernel.org, peterz@infradead.org,
+        suzuki.poulose@arm.com, leo.yan@linaro.org, acme@redhat.com,
+        adrian.hunter@intel.com, ak@linux.intel.com, tmricht@linux.ibm.com,
+        khlebnikov@yandex-team.ru, changbin.du@intel.com,
+        namhyung@kernel.org, jolsa@kernel.org, alexios.zavras@intel.com,
+        tglx@linutronix.de, alexey.budankov@linux.intel.com,
+        linux@rasmusvillemoes.dk, yao.jin@linux.intel.com
+Reply-To: alexey.budankov@linux.intel.com, linux@rasmusvillemoes.dk,
+          yao.jin@linux.intel.com, ak@linux.intel.com,
+          adrian.hunter@intel.com, tmricht@linux.ibm.com,
+          khlebnikov@yandex-team.ru, changbin.du@intel.com,
+          namhyung@kernel.org, jolsa@kernel.org, alexios.zavras@intel.com,
+          tglx@linutronix.de, mathieu.poirier@linaro.org,
+          songliubraving@fb.com, mingo@kernel.org, dave@stgolabs.net,
+          peterz@infradead.org, suzuki.poulose@arm.com, acme@redhat.com,
+          leo.yan@linaro.org, hpa@zytor.com, davem@davemloft.net,
+          eric.saint.etienne@oracle.com, linux-kernel@vger.kernel.org,
+          alexander.shishkin@linux.intel.com
+In-Reply-To: <20190702103420.27540-5-leo.yan@linaro.org>
+References: <20190702103420.27540-5-leo.yan@linaro.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf top: Fix potential NULL pointer dereference
- detected by the smatch tool
-Git-Commit-ID: 111442cfc8abdeaa7ec1407f07ef7b3e5f76654e
+Subject: [tip:perf/urgent] perf annotate: Fix dereferencing freed memory
+ found by the smatch tool
+Git-Commit-ID: 600c787dbf6521d8d07ee717ab7606d5070103ea
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -86,40 +85,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  111442cfc8abdeaa7ec1407f07ef7b3e5f76654e
-Gitweb:     https://git.kernel.org/tip/111442cfc8abdeaa7ec1407f07ef7b3e5f76654e
+Commit-ID:  600c787dbf6521d8d07ee717ab7606d5070103ea
+Gitweb:     https://git.kernel.org/tip/600c787dbf6521d8d07ee717ab7606d5070103ea
 Author:     Leo Yan <leo.yan@linaro.org>
-AuthorDate: Tue, 2 Jul 2019 18:34:12 +0800
+AuthorDate: Tue, 2 Jul 2019 18:34:13 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 9 Jul 2019 09:33:54 -0300
+CommitDate: Tue, 9 Jul 2019 09:33:55 -0300
 
-perf top: Fix potential NULL pointer dereference detected by the smatch tool
+perf annotate: Fix dereferencing freed memory found by the smatch tool
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+Based on the following report from Smatch, fix the potential
+dereferencing freed memory check.
 
-  tools/perf/builtin-top.c:109
-  perf_top__parse_source() warn: variable dereferenced before check 'he'
-  (see line 103)
+  tools/perf/util/annotate.c:1125
+  disasm_line__parse() error: dereferencing freed memory 'namep'
 
-  tools/perf/builtin-top.c:233
-  perf_top__show_details() warn: variable dereferenced before check 'he'
-  (see line 228)
+  tools/perf/util/annotate.c
+  1100 static int disasm_line__parse(char *line, const char **namep, char **rawp)
+  1101 {
+  1102         char tmp, *name = ltrim(line);
 
-  tools/perf/builtin-top.c
-  101 static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
-  102 {
-  103         struct perf_evsel *evsel = hists_to_evsel(he->hists);
-                                                        ^^^^
-  104         struct symbol *sym;
-  105         struct annotation *notes;
-  106         struct map *map;
-  107         int err = -1;
-  108
-  109         if (!he || !he->ms.sym)
-  110                 return -1;
+  [...]
 
-This patch moves the values assignment after validating pointer 'he'.
+  1114         *namep = strdup(name);
+  1115
+  1116         if (*namep == NULL)
+  1117                 goto out_free_name;
+
+  [...]
+
+  1124 out_free_name:
+  1125         free((void *)namep);
+                            ^^^^^
+  1126         *namep = NULL;
+               ^^^^^^
+  1127         return -1;
+  1128 }
+
+If strdup() fails to allocate memory space for *namep, we don't need to
+free memory with pointer 'namep', which is resident in data structure
+disasm_line::ins::name; and *namep is NULL pointer for this failure, so
+it's pointless to assign NULL to *namep again.
+
+Committer note:
+
+Freeing namep, which is the address of the first entry of the 'struct
+ins' that is the first member of struct disasm_line would in fact free
+that disasm_line instance, if it was allocated via malloc/calloc, which,
+later, would a dereference of freed memory.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -143,49 +156,32 @@ Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-4-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190702103420.27540-5-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/util/annotate.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 6d40a4ef58c5..b46b3c9f57a0 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -101,7 +101,7 @@ static void perf_top__resize(struct perf_top *top)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ec7aaf31c2b2..944a6507a5e3 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1119,16 +1119,14 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ 	*namep = strdup(name);
  
- static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- {
--	struct perf_evsel *evsel = hists_to_evsel(he->hists);
-+	struct perf_evsel *evsel;
- 	struct symbol *sym;
- 	struct annotation *notes;
- 	struct map *map;
-@@ -110,6 +110,8 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 	if (!he || !he->ms.sym)
- 		return -1;
+ 	if (*namep == NULL)
+-		goto out_free_name;
++		goto out;
  
-+	evsel = hists_to_evsel(he->hists);
-+
- 	sym = he->ms.sym;
- 	map = he->ms.map;
+ 	(*rawp)[0] = tmp;
+ 	*rawp = skip_spaces(*rawp);
  
-@@ -226,7 +228,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- static void perf_top__show_details(struct perf_top *top)
- {
- 	struct hist_entry *he = top->sym_filter_entry;
--	struct perf_evsel *evsel = hists_to_evsel(he->hists);
-+	struct perf_evsel *evsel;
- 	struct annotation *notes;
- 	struct symbol *symbol;
- 	int more;
-@@ -234,6 +236,8 @@ static void perf_top__show_details(struct perf_top *top)
- 	if (!he)
- 		return;
+ 	return 0;
  
-+	evsel = hists_to_evsel(he->hists);
-+
- 	symbol = he->ms.sym;
- 	notes = symbol__annotation(symbol);
+-out_free_name:
+-	free((void *)namep);
+-	*namep = NULL;
++out:
+ 	return -1;
+ }
  
