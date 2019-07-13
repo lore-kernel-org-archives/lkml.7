@@ -2,75 +2,98 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A02BC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 05:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185E5C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 05:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6D3208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 05:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F058C217D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 05:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfGMFDk (ORCPT
+        id S1726504AbfGMFJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 01:03:40 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:48170 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfGMFDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 01:03:39 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hmAC0-0006BY-Hm; Sat, 13 Jul 2019 13:03:28 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hmABt-0000yf-KY; Sat, 13 Jul 2019 13:03:21 +0800
-Date:   Sat, 13 Jul 2019 13:03:21 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
- padata jobs
-Message-ID: <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+        Sat, 13 Jul 2019 01:09:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28338 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726274AbfGMFJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 01:09:10 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D56f2d054008;
+        Sat, 13 Jul 2019 01:08:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq31aschb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 13 Jul 2019 01:08:43 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6D58gc7057730;
+        Sat, 13 Jul 2019 01:08:42 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq31ascgy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 13 Jul 2019 01:08:42 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6D56736025351;
+        Sat, 13 Jul 2019 05:08:41 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01dal.us.ibm.com with ESMTP id 2tq6x60k2u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 13 Jul 2019 05:08:41 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D58d5660031312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Jul 2019 05:08:39 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B29C6BE04F;
+        Sat, 13 Jul 2019 05:08:39 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0067CBE053;
+        Sat, 13 Jul 2019 05:08:34 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.135.203])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Sat, 13 Jul 2019 05:08:34 +0000 (GMT)
+References: <20190713044554.28719-1-bauerman@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     x86@kernel.org
+Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH 0/3] Remove x86-specific code from generic headers
+In-reply-to: <20190713044554.28719-1-bauerman@linux.ibm.com>
+Date:   Sat, 13 Jul 2019 02:08:30 -0300
+Message-ID: <87pnmefrn5.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=736 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907130060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 12:07:37PM -0400, Daniel Jordan wrote:
->
-> modprobe (CPU2)               kworker/21:1-293 (CPU21)                              kworker/5:2-276 (CPU5)
-> --------------------------    ------------------------                              ----------------------
-> <submit job, seq_nr=16581>
-> ...
->   padata_do_parallel
->     queue_work_on(21, ...)
-> <sleeps>
->                               padata_parallel_worker
->                                 pcrypt_aead_dec
->                                   padata_do_serial
->                                     padata_reorder
 
-This can't happen because if the job started on CPU2 then it must
-go back to CPU2 for completion.  IOW padata_do_serial should be
-punting this to a work queue for CPU2 rather than calling
-padata_reorder on CPU21.
+I forgot to mark this series as v2 when generating the patches.
+Sorry for the confusion.
 
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thiago Jung Bauermann
+IBM Linux Technology Center
