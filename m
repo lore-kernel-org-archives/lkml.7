@@ -2,126 +2,91 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3C8C742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E6DC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981F12083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9311F20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563029227;
+	bh=lW5bIDcvdJ3kwdWA9DCCLkrkL9b6UAoY77IbP2qzLaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j3B9l0a7Us+u5wkQmy4ZM3BVck0aUBUR+XzIcOs341CoAuzCoCBDw7Cp3BJaf3Njs
+	 1dzXCmbJVAn2xMos5tHkjpXoujCcFdxm2xbldPArLDMUFdNLwZWIvkb1kIxYUTZT0a
+	 TyKSGDeVMQP5SwSBRWh6DZUxslvgKjhoG6Xrp54Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfGMOpk (ORCPT
+        id S1727923AbfGMOrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 10:45:40 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:48037 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfGMOpj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 10:45:39 -0400
-Received: from [192.168.1.110] ([95.114.35.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mj8eB-1iQbog1GDt-00fDUT; Sat, 13 Jul 2019 16:44:15 +0200
-Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Cristina Moraru <cristina.moraru09@gmail.com>,
-        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
-        Valentin Rothberg <valentinrothberg@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <mmarek@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Bolle <pebolle@tiscali.nl>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Tejun Heo <tj@kernel.org>,
-        Jej B <James.Bottomley@hansenpartnership.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Daniel Jonsson <danijons@student.chalmers.se>,
-        Andrzej Wasowski <wasowski@itu.dk>
-References: <20160818175505.GM3296@wotan.suse.de>
- <20160825074313.GC18622@lst.de> <20160825201919.GE3296@wotan.suse.de>
- <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
- <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
- <20190627045052.GA7594@lst.de>
- <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
- <40f70582-c16a-7de0-cfd6-c7d5ff9ead71@metux.net>
- <20190703173555.GW19023@42.do-not-panic.com>
- <9a2ae341-9ea7-d4c6-7c3e-b12bb6515905@metux.net>
- <20190703224234.GY19023@42.do-not-panic.com>
- <CAFd5g454UVYqm+HgA1nXsy-cAg_3gvjvZ4KQmW4P5gqpDp1WMg@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <b0b572e3-5d08-2224-fd8b-07f6bcbed53e@metux.net>
-Date:   Sat, 13 Jul 2019 16:44:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Sat, 13 Jul 2019 10:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727504AbfGMOrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 10:47:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC2172083B;
+        Sat, 13 Jul 2019 14:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563029222;
+        bh=lW5bIDcvdJ3kwdWA9DCCLkrkL9b6UAoY77IbP2qzLaU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RtTVOCP4TbiLmdwovgel+a4gNqWIRDKhnUUJetX5R/JRAm2uTsZypdugPokrhP0xJ
+         JyPnfqpdk8cyYc3gwXdirU9A8iNM4TyCS6h6gE1kyF4xo0Hfb+tNJPEhkUrcGO5w46
+         XFl6Lc1g1LgWrWFF6V9LqwVF0PVoDZk4vuNEakOk=
+Date:   Sat, 13 Jul 2019 16:47:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: Re: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux
+ v5.2 (was Asus C101P Chromeboot fails to boot with Linux 5.2)
+Message-ID: <20190713144700.GF5982@kroah.com>
+References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
+ <CANBLGcyO5wAHgSVjYFB+hcp+SzaKY9d0QJm-hxqnSYbZ4Yv97g@mail.gmail.com>
+ <862e98f3-8a89-a05e-1e85-e6f6004da32b@gmx.co.uk>
+ <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
+ <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g454UVYqm+HgA1nXsy-cAg_3gvjvZ4KQmW4P5gqpDp1WMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:u6wYlfGnjnkR3Xeu+hRhHdqLjaS/GGfjUkpndOTSA1mBCdpVC73
- mRrCMUZUY9C2Z6J1WvARitz5E8/iLDCz+LzA8ElU/xka1lOGVj7wzLSjwkcJLD45BP+T7WP
- S2YnelCyiDSj3ThDJ3MUb4E2gWNWEfM0UudkWLkh3mpqja+Oc27rFfl/SdScv7OljX1q8dg
- ZJmHp6hl89LqXZNBAZ3YA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TYXxZbEE+oA=:ZH+2P0kZStamGcfTyjisxE
- bVMF5lqguB3ar4woifb+YE7ZDexRVVzccIW+cza/359VRzVUTcrRY9GEO6iLxZxlEU7BfDZEI
- BZfUpNGniUDgC8bbm32Ro05TjLGH6hkDpKD7VDAEHuARguTgtEKahw2GNKlXeqbW1RBxMILVb
- nLqFDzI6f6PU+b8861kR+ZTKqlPoJyVeNCHWN8Q+l/pRykVFzyaBnzUYT12Txh+MV8HstY2NC
- A/6KbrBl63Eq+qKcCys9B+lWp0emkdfAGkZ8GEimEu6KJpG068w7ePCCKcY0raxHoRh2XcKXR
- Oecai/zitwl81GBSPCWUURSIrBWf0uUHHLeo2koeVbOxmZpgfh8Rv4m65RC7Fp7er8n/3T09H
- j+RzObrlWfX6t++MfZC5Y1XQFmaiaRrNlhy7XTNm7oVYbZeTb5/jHKSZJzQGtpbmpmn2/whF1
- S3JL8RSVjz2fQYoG9jO1PUFZQO8sq/Q74aa8XXbRRac4tRf3mSe9FZZKUfUPzNSwQGld9uGQp
- iWI4+aFi7CER9tUHcKD6JLPZ1gSXnn2lzdZ/1OnmvuwXRl3BR9CBMMmT59AW3psa33mDm0zhK
- mcXUrEcsoaYUqmhRSi5rhc2BtgG2hb4Iwnc8v9N19PoxKa6Keb2tamYXsCIUQIfFGUVt1+mQ+
- Cu7j7VIpq9RFfoXyzSHEHkMFMSZjmWMaXysqYTu2ujdY9RPM5F/wZZuYfMF3w7FdSfLGxCKAS
- 62X0jJrPsCKMcTfNBiF+Oz43SkuMC6oy1mme2Ic5XKY/RVz40nmZDEOgRps=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.07.19 01:27, Brendan Higgins wrote:
+On Sat, Jul 13, 2019 at 12:38:45PM +0100, Alex Dewar wrote:
+> Hi all,
+> 
+> I initially thought my machine was failing to boot entirely, but it
+> turns out it was just failing to start the display manager. I managed to
+> escape to a tty by hammering the keyboard a bit.
+> 
+> I suspect the culprit is the rockchip_vpu driver (in staging/media),
+> which has been renamed to hantro in this merge window. When I run startx
+> from a terminal, X fails to start and Xorg segfaults (log here:
+> http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
+> issues in v5.1.
+> 
+> I've also tried running trace on the Xorg process, but the output was
+> pretty verbose. I can share if that would be helpful though.
 
-> Enrico, want me to CC you on that> and we can continue this discussion there?
-Yes. But I'd prefer having an own list for it - better for sorting and
-archiving ;-)
+Can you run 'git bisect' to find the offending commit?
 
-> I wonder if that would work for the testing scenario? I don't think it> is unreasonable for a test owner to provide a defconfig that makes it>
-possible to run their test. We could then merge these together to>
-create a kconfig to run all desired tests. Doesn't address all the>
-issues I mentioned here, but it's a start.
-defconfig is a different thing - my idea (that I've dropped) was
-actually introducing new config options per board (and sub options
-for board features) which switch on all the neccessary things.
+thanks,
 
-The defconfigs are nice thing for starting off with some board, but
-they're basically examples, not production configurations. Yet another
-point why I've decided to cope all of this in a separate tool.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+greg k-h
