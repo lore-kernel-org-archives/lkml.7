@@ -2,102 +2,182 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB506C742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42370C742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA55020989
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE2020989
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfGMElt (ORCPT
+        id S1726414AbfGMEqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 00:41:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42974 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725916AbfGMElt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 00:41:49 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5150C65E17EAE6E29EF6;
-        Sat, 13 Jul 2019 12:41:46 +0800 (CST)
-Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 13 Jul 2019 12:41:39 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <marc.zyngier@arm.com>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-CC:     <james.morse@arm.com>, <julien.thierry@arm.com>,
-        <suzuki.poulose@arm.com>, <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>, <amit.kachhap@arm.com>,
-        <Dave.Martin@arm.com>, <wanghaibin.wang@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH] KVM: arm64: Update kvm_arm_exception_class and esr_class_str for new EC
-Date:   Sat, 13 Jul 2019 04:40:54 +0000
-Message-ID: <1562992854-972-1-git-send-email-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
+        Sat, 13 Jul 2019 00:46:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725936AbfGMEqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 00:46:17 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D4fWIX026708
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 00:46:15 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq50q5a7y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 00:46:15 -0400
+Received: from localhost
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Sat, 13 Jul 2019 05:46:14 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 13 Jul 2019 05:46:09 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D4k80Q56164730
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Jul 2019 04:46:08 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F21D0BE051;
+        Sat, 13 Jul 2019 04:46:07 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B303BE04F;
+        Sat, 13 Jul 2019 04:46:03 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.135.203])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sat, 13 Jul 2019 04:46:03 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     x86@kernel.org
+Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH 0/3] Remove x86-specific code from generic headers
+Date:   Sat, 13 Jul 2019 01:45:51 -0300
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071304-0012-0000-0000-0000174F2918
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011418; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01231409; UDB=6.00648690; IPR=6.01012701;
+ MB=3.00027699; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-13 04:46:14
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071304-0013-0000-0000-0000580BA0F3
+Message-Id: <20190713044554.28719-1-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907130055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've added two ESR exception classes for new ARM hardware extensions:
-ESR_ELx_EC_PAC and ESR_ELx_EC_SVE.
+Hello,
 
-This patch updates "kvm_arm_exception_class" for these two EC, which the
-new EC will be parsed in kvm_exit trace events (for guest's usage of
-Pointer Authentication and Scalable Vector Extension).  The same updates
-to "esr_class_str" for ESR_ELx_EC_PAC, by which we can get more accurate
-debug info.  Trivial changes, update them in one go.
+This version mostly changes patch 2/3, removing dma_check_mask() from
+kernel/dma/mapping.c as suggested by Christoph Hellwig, and also adapting
+s390's <asm/mem_encrypt.h>. There's also a small change in patch 1/3 as
+mentioned in the changelog below.
 
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
- arch/arm64/include/asm/kvm_arm.h | 7 ++++---
- arch/arm64/kernel/traps.c        | 1 +
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Patch 3/3 may or may not need to change s390 code depending on how Tom
+Lendacky's patch is fixed to avoid breaking that architecture, so I haven't
+made any changes for now.
 
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index a8b205e..ddf9d76 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -316,9 +316,10 @@
- 
- #define kvm_arm_exception_class \
- 	ECN(UNKNOWN), ECN(WFx), ECN(CP15_32), ECN(CP15_64), ECN(CP14_MR), \
--	ECN(CP14_LS), ECN(FP_ASIMD), ECN(CP10_ID), ECN(CP14_64), ECN(SVC64), \
--	ECN(HVC64), ECN(SMC64), ECN(SYS64), ECN(IMP_DEF), ECN(IABT_LOW), \
--	ECN(IABT_CUR), ECN(PC_ALIGN), ECN(DABT_LOW), ECN(DABT_CUR), \
-+	ECN(CP14_LS), ECN(FP_ASIMD), ECN(CP10_ID), ECN(PAC), ECN(CP14_64), \
-+	ECN(SVC64), ECN(HVC64), ECN(SMC64), ECN(SYS64), ECN(SVE), \
-+	ECN(IMP_DEF), ECN(IABT_LOW), ECN(IABT_CUR), \
-+	ECN(PC_ALIGN), ECN(DABT_LOW), ECN(DABT_CUR), \
- 	ECN(SP_ALIGN), ECN(FP_EXC32), ECN(FP_EXC64), ECN(SERROR), \
- 	ECN(BREAKPT_LOW), ECN(BREAKPT_CUR), ECN(SOFTSTP_LOW), \
- 	ECN(SOFTSTP_CUR), ECN(WATCHPT_LOW), ECN(WATCHPT_CUR), \
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 8c03456..969e156 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -734,6 +734,7 @@ asmlinkage void __exception do_sysinstr(unsigned int esr, struct pt_regs *regs)
- 	[ESR_ELx_EC_CP14_LS]		= "CP14 LDC/STC",
- 	[ESR_ELx_EC_FP_ASIMD]		= "ASIMD",
- 	[ESR_ELx_EC_CP10_ID]		= "CP10 MRC/VMRS",
-+	[ESR_ELx_EC_PAC]		= "PAC",
- 	[ESR_ELx_EC_CP14_64]		= "CP14 MCRR/MRRC",
- 	[ESR_ELx_EC_ILL]		= "PSTATE.IL",
- 	[ESR_ELx_EC_SVC32]		= "SVC (AArch32)",
+These patches are applied on top of today's master which at the time was at
+commit 9787aed57dd3 ("coresight: Make the coresight_device_fwnode_match
+declaration's fwnode parameter const"), plus a cherry-pick of commit
+e67a5ed1f86f ("dma-direct: Force unencrypted DMA under SME for certain DMA
+masks"), which is in dma-mapping/for-next and comes from this patch:
+
+https://lore.kernel.org/linux-iommu/10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com/
+
+I don't have a way to test SME, SEV, nor s390's PEF so the patches have only
+been build tested.
+
+Original cover letter below:
+
+Both powerpc¹ and s390² are adding <asm/mem_encrypt.h> headers. Currently,
+they have to supply definitions for functions and macros which only have a
+meaning on x86: sme_me_mask, sme_active() and sev_active().
+
+Christoph Hellwig made a suggestion to "clean up the Kconfig and generic
+headers bits for memory encryption so that we don't need all this
+boilerplate code", and this is what this patch does.
+
+After this patch set, this is powerpc's <asm/mem_encrypt.h>:
+
+    #ifndef _ASM_POWERPC_MEM_ENCRYPT_H
+    #define _ASM_POWERPC_MEM_ENCRYPT_H
+
+    #include <asm/svm.h>
+
+    static inline bool mem_encrypt_active(void)
+    {
+	    return is_secure_guest();
+    }
+
+    static inline bool force_dma_unencrypted(struct device *dev)
+    {
+	    return is_secure_guest();
+    }
+
+    int set_memory_encrypted(unsigned long addr, int numpages);
+    int set_memory_decrypted(unsigned long addr, int numpages);
+
+    #endif /* _ASM_POWERPC_MEM_ENCRYPT_H */
+
+Changelog
+
+Since v1:
+
+- Patch "x86,s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig"
+  - Remove definition of ARCH_HAS_MEM_ENCRYPT from s390/Kconfig as well.
+  - Reworded patch title and message a little bit.
+
+- Patch "DMA mapping: Move SME handling to x86-specific files"
+  - Adapt s390's <asm/mem_encrypt.h> as well.
+  - Remove dma_check_mask() from kernel/dma/mapping.c. Suggested by
+    Christoph Hellwig.
+
 -- 
-1.8.3.1
 
+¹ https://lore.kernel.org/linuxppc-dev/20190521044912.1375-12-bauerman@linux.ibm.com/
+² https://lore.kernel.org/kvm/20190612111236.99538-2-pasic@linux.ibm.com/
+
+Thiago Jung Bauermann (3):
+  x86,s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig
+  DMA mapping: Move SME handling to x86-specific files
+  fs/core/vmcore: Move sev_active() reference to x86 arch code
+
+ arch/Kconfig                        |  3 +++
+ arch/s390/Kconfig                   |  3 ---
+ arch/s390/include/asm/mem_encrypt.h |  4 +---
+ arch/x86/Kconfig                    |  4 +---
+ arch/x86/include/asm/mem_encrypt.h  | 10 ++++++++++
+ arch/x86/kernel/crash_dump_64.c     |  5 +++++
+ fs/proc/vmcore.c                    |  8 ++++----
+ include/linux/crash_dump.h          | 14 ++++++++++++++
+ include/linux/mem_encrypt.h         | 15 +--------------
+ kernel/dma/mapping.c                |  8 --------
+ kernel/dma/swiotlb.c                |  3 +--
+ 11 files changed, 40 insertions(+), 37 deletions(-)
 
