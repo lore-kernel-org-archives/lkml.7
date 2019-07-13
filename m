@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7C0C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30762C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A046820850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F67B217D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfGMGBQ (ORCPT
+        id S1727727AbfGMGBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 02:01:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44742 "EHLO
+        Sat, 13 Jul 2019 02:01:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10230 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727681AbfGMGBN (ORCPT
+        by vger.kernel.org with ESMTP id S1726274AbfGMGBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 02:01:13 -0400
+        Sat, 13 Jul 2019 02:01:20 -0400
 Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D5uN0N133930
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:01:12 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq87uaatm-1
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D5uTTJ134084
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:01:18 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq87uaawu-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:01:12 -0400
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:01:18 -0400
 Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Sat, 13 Jul 2019 07:01:11 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Sat, 13 Jul 2019 07:01:17 +0100
+Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 13 Jul 2019 07:01:08 +0100
+        Sat, 13 Jul 2019 07:01:15 +0100
 Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D616Ju38600968
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D61ElN15532312
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 06:01:06 GMT
+        Sat, 13 Jul 2019 06:01:14 GMT
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2AEAC605A;
-        Sat, 13 Jul 2019 06:01:06 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D326DC6059;
+        Sat, 13 Jul 2019 06:01:13 +0000 (GMT)
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C908AC6065;
-        Sat, 13 Jul 2019 06:01:03 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C0F0DC6061;
+        Sat, 13 Jul 2019 06:01:10 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.135.203])
         by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sat, 13 Jul 2019 06:01:03 +0000 (GMT)
+        Sat, 13 Jul 2019 06:01:10 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -59,107 +59,84 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Paul Mackerras <paulus@samba.org>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v2 08/13] powerpc/pseries/svm: Unshare all pages before kexecing a new kernel
-Date:   Sat, 13 Jul 2019 03:00:18 -0300
+Subject: [PATCH v2 10/13] powerpc/pseries/svm: Disable doorbells in SVM guests
+Date:   Sat, 13 Jul 2019 03:00:20 -0300
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190713060023.8479-1-bauerman@linux.ibm.com>
 References: <20190713060023.8479-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19071306-0004-0000-0000-00001526F198
+x-cbid: 19071306-8235-0000-0000-00000EB55D3F
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011419; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231433; UDB=6.00648705; IPR=6.01012726;
- MB=3.00027699; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-13 06:01:10
+ PH=3.00000004; SC=3.00000286; SDB=6.01231434; UDB=6.00648705; IPR=6.01012726;
+ MB=3.00027699; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-13 06:01:17
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071306-0005-0000-0000-00008C6EF538
-Message-Id: <20190713060023.8479-9-bauerman@linux.ibm.com>
+x-cbparentid: 19071306-8236-0000-0000-0000465F36A8
+Message-Id: <20190713060023.8479-11-bauerman@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=948 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1907130070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
 
-A new kernel deserves a clean slate. Any pages shared with the hypervisor
-is unshared before invoking the new kernel. However there are exceptions.
-If the new kernel is invoked to dump the current kernel, or if there is a
-explicit request to preserve the state of the current kernel, unsharing
-of pages is skipped.
+Normally, the HV emulates some instructions like MSGSNDP, MSGCLRP
+from a KVM guest. To emulate the instructions, it must first read
+the instruction from the guest's memory and decode its parameters.
 
-NOTE: While testing crashkernel, make sure at least 256M is reserved for
-crashkernel. Otherwise SWIOTLB allocation will fail and crash kernel will
-fail to boot.
+However for a secure guest (aka SVM), the page containing the
+instruction is in secure memory and the HV cannot access directly.
+It would need the Ultravisor (UV) to facilitate accessing the
+instruction and parameters but the UV currently does not have
+the support for such accesses.
 
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+Until the UV has such support, disable doorbells in SVMs. This might
+incur a performance hit but that is yet to be quantified.
+
+With this patch applied (needed only in SVMs not needed for HV) we
+are able to launch SVM guests with multi-core support. Eg:
+
+	qemu -smp sockets=2,cores=2,threads=2.
+
+Fix suggested by Benjamin Herrenschmidt. Thanks to input from
+Paul Mackerras, Ram Pai and Michael Anderson.
+
+Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- arch/powerpc/include/asm/ultravisor-api.h | 1 +
- arch/powerpc/include/asm/ultravisor.h     | 6 ++++++
- arch/powerpc/kernel/machine_kexec_64.c    | 8 ++++++++
- 3 files changed, 15 insertions(+)
+ arch/powerpc/platforms/pseries/smp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
-index c7513bbadf57..ab4f756cb91c 100644
---- a/arch/powerpc/include/asm/ultravisor-api.h
-+++ b/arch/powerpc/include/asm/ultravisor-api.h
-@@ -29,5 +29,6 @@
- #define UV_UNSHARE_PAGE			0xF134
- #define UV_PAGE_INVAL			0xF138
- #define UV_SVM_TERMINATE		0xF13C
-+#define UV_UNSHARE_ALL_PAGES		0xF140
+diff --git a/arch/powerpc/platforms/pseries/smp.c b/arch/powerpc/platforms/pseries/smp.c
+index 3df46123cce3..95a5c24a1544 100644
+--- a/arch/powerpc/platforms/pseries/smp.c
++++ b/arch/powerpc/platforms/pseries/smp.c
+@@ -45,6 +45,7 @@
+ #include <asm/dbell.h>
+ #include <asm/plpar_wrappers.h>
+ #include <asm/code-patching.h>
++#include <asm/svm.h>
  
- #endif /* _ASM_POWERPC_ULTRAVISOR_API_H */
-diff --git a/arch/powerpc/include/asm/ultravisor.h b/arch/powerpc/include/asm/ultravisor.h
-index f7418b663a0e..80d4beaf61b8 100644
---- a/arch/powerpc/include/asm/ultravisor.h
-+++ b/arch/powerpc/include/asm/ultravisor.h
-@@ -106,6 +106,12 @@ static inline int uv_unshare_page(u64 pfn, u64 npages)
- 	return ucall(UV_UNSHARE_PAGE, retbuf, pfn, npages);
- }
- 
-+static inline int uv_unshare_all_pages(void)
-+{
-+	unsigned long retbuf[UCALL_BUFSIZE];
-+
-+	return ucall(UV_UNSHARE_ALL_PAGES, retbuf);
-+}
- #endif /* !__ASSEMBLY__ */
- 
- #endif	/* _ASM_POWERPC_ULTRAVISOR_H */
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 75692c327ba0..b3d87d32e8f7 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -31,6 +31,7 @@
- #include <asm/smp.h>
- #include <asm/hw_breakpoint.h>
- #include <asm/asm-prototypes.h>
-+#include <asm/ultravisor.h>
- 
- int default_machine_kexec_prepare(struct kimage *image)
+ #include "pseries.h"
+ #include "offline_states.h"
+@@ -225,7 +226,7 @@ static __init void pSeries_smp_probe_xics(void)
  {
-@@ -329,6 +330,13 @@ void default_machine_kexec(struct kimage *image)
- #ifdef CONFIG_PPC_PSERIES
- 	kexec_paca.lppaca_ptr = NULL;
- #endif
-+
-+	if (is_secure_guest() && !(image->preserve_context ||
-+				   image->type == KEXEC_TYPE_CRASH)) {
-+		uv_unshare_all_pages();
-+		printk("kexec: Unshared all shared pages.\n");
-+	}
-+
- 	paca_ptrs[kexec_paca.paca_index] = &kexec_paca;
+ 	xics_smp_probe();
  
- 	setup_paca(&kexec_paca);
+-	if (cpu_has_feature(CPU_FTR_DBELL))
++	if (cpu_has_feature(CPU_FTR_DBELL) && !is_secure_guest())
+ 		smp_ops->cause_ipi = smp_pseries_cause_ipi;
+ 	else
+ 		smp_ops->cause_ipi = icp_ops->cause_ipi;
 
