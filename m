@@ -2,113 +2,102 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED77FC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2102CC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0219208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81A6217D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562991460;
+	bh=ph3XGw6zau8X7bpAQOSEspvlOSAR6gSBpgZlxzoeHtg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=lNN0WQ8C+ZOP3JXwlzTpS4MzaGlTVAzcZoAXTM1XmyPKqhu+imRV/G97BYVlXkivM
+	 8wztR6hxFIcaSzjGEKDbM4siU4w3pMa32hGws7123FjjWfiO+DrQoUtLejJauBKCds
+	 pwiILDjaKWhEiRlUPjrJHe/QGu7g7d/7htc8D7HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfGMEMh (ORCPT
+        id S1726397AbfGMERi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 00:12:37 -0400
-Received: from nibbler.cm4all.net ([82.165.145.151]:37138 "EHLO
-        nibbler.cm4all.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfGMEMf (ORCPT
+        Sat, 13 Jul 2019 00:17:38 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41081 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfGMERi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 00:12:35 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by nibbler.cm4all.net (Postfix) with ESMTP id 6A4FAC0206
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 06:12:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at nibbler.cm4all.net
-Received: from nibbler.cm4all.net ([127.0.0.1])
-        by localhost (nibbler.cm4all.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id pmqkweByr_Ff for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jul 2019 06:12:24 +0200 (CEST)
-Received: from zero.intern.cm-ag (zero.intern.cm-ag [172.30.16.10])
-        by nibbler.cm4all.net (Postfix) with SMTP id 43005C01DD
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 06:12:24 +0200 (CEST)
-Received: (qmail 30950 invoked from network); 13 Jul 2019 06:44:01 +0200
-Received: from unknown (HELO rabbit.intern.cm-ag) (172.30.3.1)
-  by zero.intern.cm-ag with SMTP; 13 Jul 2019 06:44:01 +0200
-Received: by rabbit.intern.cm-ag (Postfix, from userid 1023)
-        id EAD4F460C4C; Sat, 13 Jul 2019 06:12:18 +0200 (CEST)
-From:   Max Kellermann <mk@cm4all.com>
-To:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com, bfields@redhat.com, tytso@mit.edu,
-        adilger.kernel@dilger.ca, hughd@google.com,
-        anna.schumaker@netapp.com
-Cc:     linux-kernel@vger.kernel.org, Max Kellermann <mk@cm4all.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2 4/4] nfs/super: check NFS_CAP_ACLS instead of the NFS version
-Date:   Sat, 13 Jul 2019 06:12:00 +0200
-Message-Id: <20190713041200.18566-4-mk@cm4all.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190713041200.18566-1-mk@cm4all.com>
-References: <20190713041200.18566-1-mk@cm4all.com>
+        Sat, 13 Jul 2019 00:17:38 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d17so10346588qtj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 21:17:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=IZTj4o3sxVMCsyfX3m8CbohJzz9KCaUXTlmAkCHs5I0=;
+        b=jvyVLePiuMQFoAVCJhpzWHI3T8BlMnqFfvxpbke/BKgcOKsBG9DJHuDx6dwAjr09XA
+         nVQJq9UpAwIkw5IKP/YIytnyJtNjNawJg4oh1CBKMicnld8XDZkXSWS4Zg6cEW4//vK7
+         997SUPAlD5N5ZrMNa4alYRlm9sSR/BqJNilcnRJyhCQQh3JxXbrS9iqmmEdeecw0rzFz
+         51GJDsdDz3x+rN5uNJreSwCnEhPZVyy7/EAlXEx/5iWLpHqyYjSr0IC3ePEMzO2mqfKA
+         RhO3HbtQGxLsNACHcktxbegm+E4ayvmQGT+PhmG7MbP1DfwY57xUddoezCGWW5lFCyWH
+         mX/w==
+X-Gm-Message-State: APjAAAUmEUmqvOOWI3yx1Fl/XbggmDSHuQWAInE6XN16n7cgtSW6ntup
+        WoVub2rW4NiOobPCpE3uZ1M=
+X-Google-Smtp-Source: APXvYqxF1eYLVsY7QeuSzeHGr+KUu5nGWsxiirKYW9tnKHKk/OymrIHBXCN1OjwFRiJwthcJobLE3Q==
+X-Received: by 2002:ac8:27db:: with SMTP id x27mr9635952qtx.4.1562991457525;
+        Fri, 12 Jul 2019 21:17:37 -0700 (PDT)
+Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:480::da5d])
+        by smtp.gmail.com with ESMTPSA id n18sm4379525qtr.28.2019.07.12.21.17.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jul 2019 21:17:36 -0700 (PDT)
+Date:   Sat, 13 Jul 2019 00:17:33 -0400
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] percpu changes for v5.3-rc1
+Message-ID: <20190713041733.GA80860@dennisz-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sets MS_POSIXACL only if ACL support is really enabled, instead
-of always setting MS_POSIXACL if the NFS protocol version
-theoretically supports ACL.
+Hi Linus,
 
-The code comment says "We will [apply the umask] ourselves", but that
-happens in posix_acl_create() only if the kernel has POSIX ACL
-support.  Without it, posix_acl_create() is an empty dummy function.
+This pull request includes changes to let percpu_ref release the backing
+percpu memory earlier after it has been switched to atomic in cases
+where the percpu ref is not revived. This will help recycle percpu
+memory earlier in cases where the refcounts are pinned for prolonged
+periods of time.
 
-So let's not pretend we will apply the umask if we can already know
-that we will never.
+Thanks,
+Dennis
 
-This fixes a problem where the umask is always ignored in the NFS
-client when compiled without CONFIG_FS_POSIX_ACL.  This is a 4 year
-old regression caused by commit 013cdf1088d723 which itself was not
-completely wrong, but failed to consider all the side effects by
-misdesigned VFS code.
+The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
 
-Signed-off-by: Max Kellermann <mk@cm4all.com>
-Cc: stable@vger.kernel.org
----
- fs/nfs/super.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+  Linux 5.1 (2019-05-05 17:42:58 -0700)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index f88ddac2dcdf..886ad89af676 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2353,11 +2353,14 @@ void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
- 	if (data && data->bsize)
- 		sb->s_blocksize = nfs_block_size(data->bsize, &sb->s_blocksize_bits);
- 
--	if (server->nfs_client->rpc_ops->version != 2) {
-+	if (NFS_SB(sb)->caps & NFS_CAP_ACLS) {
- 		/* The VFS shouldn't apply the umask to mode bits. We will do
- 		 * so ourselves when necessary.
- 		 */
- 		sb->s_flags |= SB_POSIXACL;
-+	}
-+
-+	if (server->nfs_client->rpc_ops->version != 2) {
- 		sb->s_time_gran = 1;
- 		sb->s_export_op = &nfs_export_ops;
- 	}
-@@ -2383,7 +2386,7 @@ static void nfs_clone_super(struct super_block *sb,
- 	sb->s_time_gran = 1;
- 	sb->s_export_op = old_sb->s_export_op;
- 
--	if (server->nfs_client->rpc_ops->version != 2) {
-+	if (NFS_SB(sb)->caps & NFS_CAP_ACLS) {
- 		/* The VFS shouldn't apply the umask to mode bits. We will do
- 		 * so ourselves when necessary.
- 		 */
--- 
-2.20.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.3
+
+for you to fetch changes up to 7d9ab9b6adffd9c474c1274acb5f6208f9a09cf3:
+
+  percpu_ref: release percpu memory early without PERCPU_REF_ALLOW_REINIT (2019-05-09 10:51:06 -0700)
+
+----------------------------------------------------------------
+Roman Gushchin (4):
+      percpu_ref: introduce PERCPU_REF_ALLOW_REINIT flag
+      io_uring: initialize percpu refcounters using PERCU_REF_ALLOW_REINIT
+      md: initialize percpu refcounters using PERCU_REF_ALLOW_REINIT
+      percpu_ref: release percpu memory early without PERCPU_REF_ALLOW_REINIT
+
+ drivers/md/md.c                 |  3 ++-
+ fs/io_uring.c                   |  3 ++-
+ include/linux/percpu-refcount.h | 10 +++++++++-
+ lib/percpu-refcount.c           | 13 +++++++++++--
+ 4 files changed, 24 insertions(+), 5 deletions(-)
