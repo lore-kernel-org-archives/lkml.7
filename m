@@ -2,106 +2,174 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706D0C742D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 00:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37012C742D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B8820863
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 00:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD2F208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gregn.net header.i=@gregn.net header.b="VgxNgp8T"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PLGES2Yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfGMAxF (ORCPT
+        id S1727676AbfGMBLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 20:53:05 -0400
-Received: from vserver.gregn.net ([174.136.110.154]:46576 "EHLO
-        vserver.gregn.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfGMAxF (ORCPT
+        Fri, 12 Jul 2019 21:11:48 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49794 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbfGMBLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 20:53:05 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jul 2019 20:53:05 EDT
-Received: from vbox.gregn.net (unknown [IPv6:2001:470:d:6c5:1c66:a9af:c229:a6c8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by vserver.gregn.net (Postfix) with ESMTPSA id 4CF4A29AF;
-        Fri, 12 Jul 2019 17:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=gregn.net; s=default;
-        t=1562978903; bh=W1cDxqPtwaYUSqAPJJNEkGyGvwtv7TWpa9b1CyQ5Qfo=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=VgxNgp8TpKiCwy+Rt52B2M5V5Ze5WsvyewxpEBKeMWWH5AstiAXDgsfwHG9Ey+HyV
-         gJvLwz3Nr4SHm4iLaUhsvHaIUP5dtWPcERiKA87dapqVX8AunH2Yr9jvo2FFj2rNz/
-         JTqbJAeSW1OrUNMLRw/xJCWTmscpegDuCQviArk8ka26qYmPXICtA/G38TQ3NzgNXj
-         iEY+b1itQ3ztZ0WT5gP0ZwfH9s/IzI1fDqd02KjjWFxS6QyecBHkCWe8qPqKmxQp9p
-         c0Oh8w+iRnpMah3PKuS/DH6ubSs9bcT6UnzbuDub8Sdbyalqeik0ZlMy19yE4zm4nc
-         UfOTw2hZt6fqA==
-Received: from greg by vbox.gregn.net with local (Exim 4.84_2)
-        (envelope-from <greg@gregn.net>)
-        id 1hm6BD-0002cY-QK; Fri, 12 Jul 2019 17:46:23 -0700
-Date:   Fri, 12 Jul 2019 17:46:23 -0700
-From:   Gregory Nowak <greg@gregn.net>
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        speakup@linux-speakup.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Okash Khawaja <okash.khawaja@gmail.com>,
-        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
-        Simon Dickson <simonhdickson@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Christopher Brannon <chris@the-brannons.com>
-Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
- speakup
-Message-ID: <20190713004623.GA9159@gregn.net>
-References: <20190315130035.6a8f16e9@narunkot>
- <20190316031831.GA2499@kroah.com>
- <20190706200857.22918345@narunkot>
- <20190707065710.GA5560@kroah.com>
- <20190712083819.GA8862@kroah.com>
- <20190712092319.wmke4i7zqzr26tly@function>
+        Fri, 12 Jul 2019 21:11:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6D0sfpc178083;
+        Sat, 13 Jul 2019 01:11:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=jUTho8nKW5hjHRWxClJOHdo4lCalGSvqrppSqDi2e5U=;
+ b=PLGES2Ytpe4W9BYJworC8/e6RLJhW9Y5+9Q84yHoqn10S/+dE9MrFf0Ozd+EI0g+qgwC
+ qno4eLFWqNf3h4lT23a3YFdmNObgU5rz/Cn2p1mTgGDJyoOTs2iQT9PUXmFmXk+HcfAK
+ V2LKG297dptF4PzytZdGwItMYsqyDThxvhmEkgYEH2nPittyADiKNtYTjYRK1etvtE3O
+ V9nM+tkWyHJW47ZzqMPJuIpdIppSFOjNl8eRooKwaDVLkCsMvyEzH86JYvKGGc4mJGNI
+ FwAc2H9Y5DfDJKv75flo7uBhHMn9s3sl3Dv7PaajqZbkD2FafIBDsnG/pv4JO9p/jDa5 OA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tjk2u855c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Jul 2019 01:11:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6D16BUx181034;
+        Sat, 13 Jul 2019 01:11:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2tq5bb01pg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Jul 2019 01:11:34 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6D1BVaG001148;
+        Sat, 13 Jul 2019 01:11:32 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Jul 2019 18:11:31 -0700
+Subject: Re: [Question] Should direct reclaim time be bounded?
+To:     Hillf Danton <hdanton@sina.com>, Mel Gorman <mgorman@suse.de>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <20190712054732.7264-1-hdanton@sina.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <c39e7cb3-204c-c4e3-fb43-7a37d91c0ccb@oracle.com>
+Date:   Fri, 12 Jul 2019 18:11:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712092319.wmke4i7zqzr26tly@function>
-X-PGP-Key: http://www.gregn.net/pubkey.asc
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Virus-Scanned: clamav-milter 0.100.3 at vserver
-X-Virus-Status: Clean
+In-Reply-To: <20190712054732.7264-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907130007
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907130007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:23:19AM +0200, Samuel Thibault wrote:
-> Hello,
+On 7/11/19 10:47 PM, Hillf Danton wrote:
 > 
-> To readers of the linux-speakup: could you help on this so we can get
-> Speakup in mainline?  Neither Okash or I completely know what user
-> consequences the files in /sys/accessibility/speakup/ have, so could
-> people give brief explanations for each file (something like 3-6 lines
-> of explanation)?
+> On Thu, 11 Jul 2019 02:42:56 +0800 Mike Kravetz wrote:
+>>
+>> It is quite easy to hit the condition where:
+>> nr_reclaimed == 0  && nr_scanned == 0 is true, but we skip the previous test
+>>
+> Then skipping check of __GFP_RETRY_MAYFAIL makes no sense in your case.
+> It is restored in respin below.
+> 
+>> and the compaction check:
+>> sc->nr_reclaimed < pages_for_compaction &&
+>> 	inactive_lru_pages > pages_for_compaction
+>> is true, so we return true before the below check of costly_fg_reclaim
+>>
+> This check is placed after COMPACT_SUCCESS; the latter is used to
+> replace sc->nr_reclaimed < pages_for_compaction.
+> 
+> And dryrun detection is added based on the result of last round of
+> shrinking of inactive pages, particularly when their number is large
+> enough.
+> 
 
-I have a recollection of documenting most of this on the speakup list
-in response to a similar query a number of years ago. Unfortunately,
-the speakup mailing list archives aren't easily searchable, and I
-don't have a local copy of that mail.
+Thanks Hillf.
 
-Kirk, doing grep with a few of the file names in
-/sys/accessibility/speakup against the list's mbox file archive should
-find that message if it's in fact there. If you can please find it,
-and post the date when it was sent, we can provide a URL to that
-thread as a starting point. If my recollection is wrong, and such a
-message isn't in the archives, I'll write up what I know about.
+This change does appear to eliminate the issue with stalls by
+should_continue_reclaim returning true too often.  I need to think
+some more about exactly what is impacted with the change.
 
-Greg
+With this change, the problem moves to compaction with should_compact_retry
+returning true too often.  It is the same behavior seem when I simply removed
+the __GFP_RETRY_MAYFAIL special casing in should_continue_reclaim.
 
+At Mel's suggestion I removed the compaction_zonelist_suitable() call
+from should_compact_retry.  This eliminated the compaction stalls.  Thanks
+Mel.
 
+With both changes, stalls appear to be eliminated.  This is promising.
+I'll try to refine these approaches and continue testing.
 -- 
-web site: http://www.gregn.net
-gpg public key: http://www.gregn.net/pubkey.asc
-skype: gregn1
-(authorization required, add me to your contacts list first)
-If we haven't been in touch before, e-mail me before adding me to your contacts.
+Mike Kravetz
 
---
-Free domains: http://www.eu.org/ or mail dns-manager@EU.org
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2571,18 +2571,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+>  			return false;
+>  	}
+> 
+> -	/*
+> -	 * If we have not reclaimed enough pages for compaction and the
+> -	 * inactive lists are large enough, continue reclaiming
+> -	 */
+> -	pages_for_compaction = compact_gap(sc->order);
+> -	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
+> -	if (get_nr_swap_pages() > 0)
+> -		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
+> -	if (sc->nr_reclaimed < pages_for_compaction &&
+> -			inactive_lru_pages > pages_for_compaction)
+> -		return true;
+> -
+>  	/* If compaction would go ahead or the allocation would succeed, stop */
+>  	for (z = 0; z <= sc->reclaim_idx; z++) {
+>  		struct zone *zone = &pgdat->node_zones[z];
+> @@ -2598,7 +2586,21 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+>  			;
+>  		}
+>  	}
+> -	return true;
+> +
+> +	/*
+> +	 * If we have not reclaimed enough pages for compaction and the
+> +	 * inactive lists are large enough, continue reclaiming
+> +	 */
+> +	pages_for_compaction = compact_gap(sc->order);
+> +	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
+> +	if (get_nr_swap_pages() > 0)
+> +		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
+> +
+> +	return inactive_lru_pages > pages_for_compaction &&
+> +		/*
+> +		 * avoid dryrun with plenty of inactive pages
+> +		 */
+> +		nr_scanned && nr_reclaimed;
+>  }
+> 
+>  static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
+> --
+> 
