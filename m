@@ -2,82 +2,74 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA58C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEEBC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29682084B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB0A20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfGMPPd (ORCPT
+        id S1728010AbfGMPRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 11:15:33 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43230 "EHLO mga12.intel.com"
+        Sat, 13 Jul 2019 11:17:17 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:49290 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfGMPPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 11:15:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jul 2019 08:15:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,486,1557212400"; 
-   d="scan'208";a="318271993"
-Received: from hbriegel-mobl.ger.corp.intel.com ([10.252.50.48])
-  by orsmga004.jf.intel.com with ESMTP; 13 Jul 2019 08:15:27 -0700
-Message-ID: <8bf125023ad2e99a8620112a393ca95f9939f4fd.camel@linux.intel.com>
-Subject: Re: [RFC PATCH v4 1/3] selftests/x86/sgx: Fix Makefile for SGX
- selftest
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Cedric Xing <cedric.xing@intel.com>, linux-kernel@vger.kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        kai.svahn@intel.com, kai.huang@intel.com
-Date:   Sat, 13 Jul 2019 18:15:26 +0300
-In-Reply-To: <c6a99c107c1e6b814c1968146c87291c3e84aa2f.camel@linux.intel.com>
-References: <cover.1563000446.git.cedric.xing@intel.com>
-         <757d44a0e67bfa09d97eea918bc0d20383b5e80e.1563000446.git.cedric.xing@intel.com>
-         <c6a99c107c1e6b814c1968146c87291c3e84aa2f.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1727626AbfGMPRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 11:17:17 -0400
+Received: from p508fcc68.dip0.t-ipconnect.de ([80.143.204.104] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hmJlt-0006eI-7X; Sat, 13 Jul 2019 17:17:09 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: Re: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux v5.2 (was Asus C101P Chromeboot fails to boot with Linux 5.2)
+Date:   Sat, 13 Jul 2019 17:17:08 +0200
+Message-ID: <2648434.ut0pN6mfR1@phil>
+In-Reply-To: <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
+References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk> <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk> <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-07-13 at 18:10 +0300, Jarkko Sakkinen wrote:
-> On Fri, 2019-07-12 at 23:51 -0700, Cedric Xing wrote:
-> > The original x86/sgx/Makefile didn't work when "x86/sgx" was specified as the
-> > test target, nor did it work with "run_tests" as the make target. Yet another
-> > problem was that it breaks 32-bit only build. This patch fixes those problems,
-> > along with adjustments to compiler/linker options and simplifications to the
-> > build rules.
-> > 
-> > Signed-off-by: Cedric Xing <cedric.xing@intel.com>
-> 
-> You must split this in quite a few separate patches:
-> 
-> 1. One for each fix.
-> 2. At least one patch for each change in compiler and linker options with a
->    commit message clearly expalaining why the change was made.
-> 3. One for each simplification.
-> 
-> We don't support 32-bit build:
-> 
-> config INTEL_SGX
-> 	bool "Intel SGX core functionality"
-> 	depends on X86_64 && CPU_SUP_INTEL
+Hi,
 
-This is not to say that changes suck. This just in "unreviewable" state as far
-as the kernel processes go...
+Am Samstag, 13. Juli 2019, 13:38:45 CEST schrieb Alex Dewar:
+> I initially thought my machine was failing to boot entirely, but it
+> turns out it was just failing to start the display manager. I managed to
+> escape to a tty by hammering the keyboard a bit.
+> 
+> I suspect the culprit is the rockchip_vpu driver (in staging/media),
+> which has been renamed to hantro in this merge window. When I run startx
+> from a terminal, X fails to start and Xorg segfaults (log here:
+> http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
+> issues in v5.1.
 
-/Jarkko
+5.2 also has support for Panfrost (Mali-Midgard GPUs) but I'm not
+sure if it already can support X11 yet and your X11 log mentions
+libglamoregl in the segfault stack trace.
+
+Apart from it bisect that Greg suggested you could also just try
+blacklisting either panfrost or vpu kernel modules
+/etc/udev/somewhere . This would prevent them from loading
+
+Hope that helps
+Heiko
+
 
