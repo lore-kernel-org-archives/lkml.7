@@ -2,76 +2,96 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05106C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3214DC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC00820850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563031413;
-	bh=3yUUiXWyEH3+u7g2EzA96kovIvW9lH64zCa2zJ1DuwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C+CEGsJ+f1qbN8VX5+nCvjDqFJ0ZD0CmKR7eZZt3iZ2xzwtztaB+FqwsT79tjmcXB
-	 Q70qPWLmPebIKaGmSqkyW5RMe9pHvBq97OZiP85i8rHstOQmvt5fza8WqexzWs4qrr
-	 TPz5IHJaMERZRomauCz0OvXA5Ut66IiADltLeWHA=
+	by mail.kernel.org (Postfix) with ESMTP id 0AEA620838
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfGMPXc (ORCPT
+        id S1727959AbfGMPfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 11:23:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfGMPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 11:23:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC6B120838;
-        Sat, 13 Jul 2019 15:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563031411;
-        bh=3yUUiXWyEH3+u7g2EzA96kovIvW9lH64zCa2zJ1DuwM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RICAk2OC01mAfI1oKPWZ2ELtKibQfP00fYE6gye1Ni3N8yTpzUeqCc/GrkVr37OEg
-         T4qoYBI2/mHgEC2F5KGBcIw+6R/TQgAK6vGHV9yFqgI3BGXwfPogNbUeBg2D+Z2zvR
-         zuAadUd3VZObKMpODfZLvFwDnz+KytECD610xLMw=
-Date:   Sat, 13 Jul 2019 17:23:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [GIT PULL] Driver core patches for 5.3-rc1
-Message-ID: <20190713152328.GC10284@kroah.com>
-References: <20190712073623.GA16253@kroah.com>
- <20190712074023.GD16253@kroah.com>
- <20190712210922.GA102096@archlinux-threadripper>
- <CAHk-=wh0XHkcLYh+pMPJrf8WmD6zOgXfq7HuLi7gmzb8aPEOvQ@mail.gmail.com>
- <CAHk-=wimmESHGRKNnZV0TfNStqNrruxzXaT_S=8g6K4G84p54w@mail.gmail.com>
+        Sat, 13 Jul 2019 11:35:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46960 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfGMPfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 11:35:02 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so11326583qtn.13;
+        Sat, 13 Jul 2019 08:35:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/VYOF52fJvexeKbOu9BKHZH1XPWQ9fg20nK1W0PVBPU=;
+        b=N6ZDCY84nmzm9o9fc7+bE+lRW3ZudNjOdihqZm35ZDybQ2EK7Uw+a5GsYJII3bHlrU
+         EsfdA3RToVDtZqZbfMEcpsSVGZGv3CFPjk5YjDp13LsuKbz9eemIVTH6NKm4i8kmKHPZ
+         aLrdI0Pnl71pTcafFbqwq+CpgyDNsglyHeIoPkfhPWe8QVxQwc1XXvC4fc/aUJcfQ7we
+         mIWm0vTPRSfRxvCOtxr+MlZUmokd8d48ZeY9KeN74APgzxN38aNcVdFAYeY8ANyj/V/F
+         wO2RLlZIzC499COdaI9tI+cLPuTOsZ3ZR/q/ejSog28ZoUGuPfvy/EADynjoElSFbeEG
+         iOfA==
+X-Gm-Message-State: APjAAAVONo95XOuRy1gfwTtFQVEPStdc49UQMkHJQWFN0KwKpVxjKHXY
+        v7KzCqCvVOORi14AwRJmfGgnW6xn4HyY/b9lJ44=
+X-Google-Smtp-Source: APXvYqx27JWKTE5WBop/U7bMtyQP/Kzr2bIFkryE+f5lOFq7JP5QSUbQfKs8QOW9ZjZHS4O4f+3uLloLQ3C7fGXHhRU=
+X-Received: by 2002:a0c:b88e:: with SMTP id y14mr11211808qvf.93.1563032100815;
+ Sat, 13 Jul 2019 08:35:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wimmESHGRKNnZV0TfNStqNrruxzXaT_S=8g6K4G84p54w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190712085437.4007720-1-arnd@arndb.de> <fb36b507-e637-e4d9-fdd4-2947eb7faf14@metux.net>
+In-Reply-To: <fb36b507-e637-e4d9-fdd4-2947eb7faf14@metux.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 13 Jul 2019 17:34:44 +0200
+Message-ID: <CAK8P3a3SPpQAbXu5+rHjEaF-MSVxVmG9sWy9hxu844HKn8JgLg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: pcengines-apu2 needs gpiolib
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:43:28PM -0700, Linus Torvalds wrote:
-> On Fri, Jul 12, 2019 at 2:37 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > My bad. Will apply the fix properly.
-> 
-> Ok, _now_ your fix is finally in my tree. D'oh.
+On Sat, Jul 13, 2019 at 4:36 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+> On 12.07.19 10:54, Arnd Bergmann wrote:
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index e869a5c760b6..cf48b9068843 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -1324,8 +1324,8 @@ config PCENGINES_APU2
+> >       tristate "PC Engines APUv2/3 front button and LEDs driver"
+> >       depends on INPUT && INPUT_KEYBOARD
+> >       depends on LEDS_CLASS
+> > -     select GPIO_AMD_FCH
+> > -     select KEYBOARD_GPIO_POLLED
+> > +     select GPIO_AMD_FCH if GPIOLIB
+> > +     select KEYBOARD_GPIO_POLLED if GPIOLIB
+> >       select LEDS_GPIO
+> >       help
+> >         This driver provides support for the front button and LEDs on
+>
+> That might compile but the driver won't work, if KEYBOARD_GPIO_POLLED
+> or GPIO_AMD_FCH isn't there.
 
-Thanks for fixing this up, sorry for the pain, this was a tough merge
-for some reason...
+Right, I agree it's a bit inconsistent. A better way would probably
+be to turn all of the 'select' statements into 'depends on' here, or
+possibly just remove them and document in the help text what others
+are required.
 
-greg k-h
+Generally using 'select' in order to save users from thinking causes
+more problems than it helps, as the build problems in this driver
+have already illustrated.
+
+      Arnd
