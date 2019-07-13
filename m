@@ -2,90 +2,79 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E6DC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F12C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9311F20863
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DA32083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563029227;
-	bh=lW5bIDcvdJ3kwdWA9DCCLkrkL9b6UAoY77IbP2qzLaU=;
+	s=default; t=1563029365;
+	bh=dCrj2GS0SLzN9WlYGL04tx3Iwc2UkR/AntdrCG5hqbY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j3B9l0a7Us+u5wkQmy4ZM3BVck0aUBUR+XzIcOs341CoAuzCoCBDw7Cp3BJaf3Njs
-	 1dzXCmbJVAn2xMos5tHkjpXoujCcFdxm2xbldPArLDMUFdNLwZWIvkb1kIxYUTZT0a
-	 TyKSGDeVMQP5SwSBRWh6DZUxslvgKjhoG6Xrp54Y=
+	b=MaGQ3gb4rY6Ob4aYrZbT98M6tdlYbok3QwrWuoasVAuzjwasZ/PbxqNfeLUlhrnu3
+	 lIcer/VXVfTGR7g95Z4kZqNJuvAAhNu2t795ZTNy3Qxrep643NTnzxFFEeAiRlL/df
+	 SYkRBzSLV6DEpAwLpoBJv16YCNbiyb1qpfDd2lU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfGMOrE (ORCPT
+        id S1727864AbfGMOtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 10:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Sat, 13 Jul 2019 10:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbfGMOrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 10:47:03 -0400
+        id S1727504AbfGMOtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 10:49:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC2172083B;
-        Sat, 13 Jul 2019 14:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2DA2083B;
+        Sat, 13 Jul 2019 14:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563029222;
-        bh=lW5bIDcvdJ3kwdWA9DCCLkrkL9b6UAoY77IbP2qzLaU=;
+        s=default; t=1563029362;
+        bh=dCrj2GS0SLzN9WlYGL04tx3Iwc2UkR/AntdrCG5hqbY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RtTVOCP4TbiLmdwovgel+a4gNqWIRDKhnUUJetX5R/JRAm2uTsZypdugPokrhP0xJ
-         JyPnfqpdk8cyYc3gwXdirU9A8iNM4TyCS6h6gE1kyF4xo0Hfb+tNJPEhkUrcGO5w46
-         XFl6Lc1g1LgWrWFF6V9LqwVF0PVoDZk4vuNEakOk=
-Date:   Sat, 13 Jul 2019 16:47:00 +0200
+        b=08T5Hp48Aj2QWyucRtaOOTVrl2ssUZqHGGWVaXKHg09dSdIaaKi852ImtvhaaUpEW
+         xoZrohZm98OhqRkYnRAX82TXs9UGWtezgN5tqtSfFFeL4U0svyPHnBwQvHwyF7Q8Z+
+         DyeWCBqRJDbaJvutYX6U9Pv41eb7d23scSQqMOdk=
+Date:   Sat, 13 Jul 2019 16:49:20 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: Re: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux
- v5.2 (was Asus C101P Chromeboot fails to boot with Linux 5.2)
-Message-ID: <20190713144700.GF5982@kroah.com>
-References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
- <CANBLGcyO5wAHgSVjYFB+hcp+SzaKY9d0QJm-hxqnSYbZ4Yv97g@mail.gmail.com>
- <862e98f3-8a89-a05e-1e85-e6f6004da32b@gmx.co.uk>
- <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
- <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vmw_balloon: Remove Julien from the maintainers list
+Message-ID: <20190713144920.GA7495@kroah.com>
+References: <20190702100519.7464-1-namit@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
+In-Reply-To: <20190702100519.7464-1-namit@vmware.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 12:38:45PM +0100, Alex Dewar wrote:
-> Hi all,
+On Tue, Jul 02, 2019 at 03:05:19AM -0700, Nadav Amit wrote:
+> Julien will not be a maintainer anymore.
 > 
-> I initially thought my machine was failing to boot entirely, but it
-> turns out it was just failing to start the display manager. I managed to
-> escape to a tty by hammering the keyboard a bit.
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> ---
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> I suspect the culprit is the rockchip_vpu driver (in staging/media),
-> which has been renamed to hantro in this merge window. When I run startx
-> from a terminal, X fails to start and Xorg segfaults (log here:
-> http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
-> issues in v5.1.
-> 
-> I've also tried running trace on the Xorg process, but the output was
-> pretty verbose. I can share if that would be helpful though.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 01a52fc964da..f85874b1e653 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16886,7 +16886,6 @@ F:	drivers/vme/
+>  F:	include/linux/vme*
+>  
+>  VMWARE BALLOON DRIVER
+> -M:	Julien Freche <jfreche@vmware.com>
 
-Can you run 'git bisect' to find the offending commit?
+I need an ack/something from Julien please.
 
 thanks,
 
