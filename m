@@ -2,132 +2,123 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFCFC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B11C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848702084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563027909;
-	bh=E1+vjFTZH5P9sUtne9fNDAYR51eeWGKXVWRlwo0DwYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f7q7rIZbqrN4jGXRx9c9CPr8vMr2LSutgGnPNB51BUw3Un8J0jT2g/xalBUxW0lCL
-	 B+/JS03kUX10BaiHkQvFxuo4h7bU6nz3+2J2MbPQPqOHTTKpXaJLjePMKp0zlNUm0u
-	 saE4d/zQeHosVSGWtVmoblzUF05GzObQU6U+Osvs=
+	by mail.kernel.org (Postfix) with ESMTP id EF83F20838
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:31:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="mfq2GQ/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfGMOZI (ORCPT
+        id S1727887AbfGMObG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 10:25:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
+        Sat, 13 Jul 2019 10:31:06 -0400
+Received: from onstation.org ([52.200.56.107]:44382 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbfGMOZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 10:25:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727504AbfGMObG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 10:31:06 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21BCD20838;
-        Sat, 13 Jul 2019 14:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563027906;
-        bh=E1+vjFTZH5P9sUtne9fNDAYR51eeWGKXVWRlwo0DwYQ=;
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 473DB3E838;
+        Sat, 13 Jul 2019 14:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1563028265;
+        bh=P3vNE5lNg+thFcJrJjk1r54W7S8rVsGTSQRhlpcn7lc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m05xDgbzQw9hWaWXG1nlzHVPsAkzl9mv6CrEQzZzZCvpMxIPxK2sfmna8NwIuu7hW
-         6YiT62v1nqDf39V2WhGvN4tk+lAR7XcnlWoBVp6DxzoBrj6CaWzT8HR3gWRHFLioG6
-         jfLFWJlQqtAGPy4RL4yhUpHsLmBX/5HklY7umdcE=
-Date:   Sat, 13 Jul 2019 16:25:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>,
-        j-keerthy@ti.com
-Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
-Message-ID: <20190713142504.GA7695@kroah.com>
-References: <20190712121628.731888964@linuxfoundation.org>
- <4dae64c8-046e-3647-52d6-43362e986d21@nvidia.com>
- <20190712153035.GC13940@kroah.com>
- <20190712202141.GA18698@roeck-us.net>
- <20190713082233.GA28657@kroah.com>
- <9871ef1a-ea5d-e9cb-2eff-a0a1a93ad44f@roeck-us.net>
+        b=mfq2GQ/Uy1dSl+lMhqUTDuwoomzGMJmUBucRgJO9OrIqTDUkBCvvXswxW5Ra0EvSt
+         5abCXCAuBQ0K0wB3LuuTfTSqNS8Qj5AGmeI6Aj40/sgUfn3BXgY9yIJyb7XmouZo/x
+         p3DqIpjDUz12tdHr8ReQnBscfzdApA8Rml3AusO0=
+Date:   Sat, 13 Jul 2019 10:31:04 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-arm-msm@vger.kernel.org,
+        ~martijnbraam/pmos-upstream@lists.sr.ht,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: msm8974-FP2: add reboot-mode node
+Message-ID: <20190713143104.GA11154@onstation.org>
+References: <20190620225824.2845-1-luca@z3ntu.xyz>
+ <4607058.UzJteFJyig@g550jk>
+ <20190622014302.GA20947@onstation.org>
+ <3733253.hEy9q5iLy3@g550jk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9871ef1a-ea5d-e9cb-2eff-a0a1a93ad44f@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <3733253.hEy9q5iLy3@g550jk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 06:16:56AM -0700, Guenter Roeck wrote:
-> On 7/13/19 1:22 AM, Greg Kroah-Hartman wrote:
-> > On Fri, Jul 12, 2019 at 01:21:41PM -0700, Guenter Roeck wrote:
-> > > On Fri, Jul 12, 2019 at 05:30:35PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Fri, Jul 12, 2019 at 02:26:57PM +0100, Jon Hunter wrote:
-> > > > > Hi Greg,
-> > > > > 
-> > > > > On 12/07/2019 13:17, Greg Kroah-Hartman wrote:
-> > > > > > This is the start of the stable review cycle for the 5.1.18 release.
-> > > > > > There are 138 patches in this series, all will be posted as a response
-> > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > let me know.
-> > > > > > 
-> > > > > > Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
-> > > > > > Anything received after that time might be too late.
-> > > > > > 
-> > > > > > The whole patch series can be found in one patch at:
-> > > > > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.18-rc1.gz
-> > > > > > or in the git tree and branch at:
-> > > > > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > > > > > and the diffstat can be found below.
-> > > > > > 
-> > > > > > thanks,
-> > > > > > 
-> > > > > > greg k-h
-> > > > > > 
-> > > > > > -------------
-> > > > > > Pseudo-Shortlog of commits:
-> > > > > 
-> > > > Both are now dropped, thanks.  I'll push out a -rc2 with that changed.
-> > > > 
-> > > 
-> > > Can you push that update into the git repository ?
-> > > v5.1.17-137-gde182b90f76d still has the problem.
-> > 
-> > Odd, I thought I did this.  Pushed out again just to be sure.
-> > 
-> Problem is still seen in -rc2.
-
-Ugh, I dropped one, but not the other, now both gone.  I'll push out
-updates in a bit.
-
-> > > Also:
-> > > 
-> > > Building powerpc:ppc6xx_defconfig ... failed
-> > > 
-> > > drivers/crypto/talitos.c: In function ‘get_request_hdr’:
-> > > include/linux/kernel.h:979:51: error:
-> > > 	dereferencing pointer to incomplete type ‘struct talitos_edesc’
-> > > 
-> > > Seen with both v4.19.58-92-gd66f8e7 and v5.1.17-137-gde182b90f76d.
-> > > 
-> > > This problem is caused by "crypto: talitos - fix hash on SEC1.", which will
-> > > need a proper backport - struct talitos_edesc is declared later in the
-> > > source file.
-> > 
-> > Ick, let me go drop this one after breakfast...
-> > 
+On Sat, Jul 13, 2019 at 01:26:45PM +0200, Luca Weiss wrote:
+> Hi Brian,
+> how about something like that (formatting is surely broken because I'm not 
+> sending this with git-send-email^^)?
 > 
-> Turns out this affects all three branches (v4.19. v5.1, and v5.2).
+> I'd says this should be work fine with all devices as all modes are defined in 
+> the device-specific dts but the reg and offset values are in the board dts. 
+> Should I also add a status = "disabled" to the reboot-mode node in the board 
+> dts?
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts b/arch/arm/boot/
+> dts/qcom-msm8974-fairphone-fp2.dts
+> index 643c57f84818..ff4a3e0aa746 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
+> @@ -338,6 +338,16 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	imem@fe805000 {
+> +		status = "okay";
+> +
+> +		reboot-mode {
+> +			mode-normal	= <0x77665501>;
+> +			mode-bootloader	= <0x77665500>;
+> +			mode-recovery	= <0x77665502>;
+> +		};
+> +	};
+>  };
+>  
+>  &spmi_bus {
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-
+> msm8974.dtsi
+> index 45b5c8ef0374..1927430bded7 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -1085,6 +1085,17 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		imem@fe805000 {
+> +			status = "disabled";
+> +			compatible = "syscon", "simple-mfd";
+> +			reg = <0xfe805000 0x1000>;
+> +
+> +			reboot-mode {
+> +				compatible = "syscon-reboot-mode";
+> +				offset = <0x65c>;
+> +			};
+> +		};
+>  	};
+>  
+>  	smd {
 
-Ok, dropping it now (sorry, longer than just breakfast...)
+I think this sounds reasonable. 
 
-greg k-h
+Reviewed-by: Brian Masney <masneyb@onstation.org>
+
+You should resend this out with git send-email and see what Bjorn says.
+
+Brian
