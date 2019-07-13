@@ -2,105 +2,176 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F68C742D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CEEC742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA3520863
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8F420863
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K8AtATm5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEbPmXsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfGMBqt (ORCPT
+        id S1727787AbfGMBuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 21:46:49 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:32847 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfGMBqs (ORCPT
+        Fri, 12 Jul 2019 21:50:51 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33194 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfGMBuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 21:46:48 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so11022536ljg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 18:46:47 -0700 (PDT)
+        Fri, 12 Jul 2019 21:50:50 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x3so7664846lfc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 18:50:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YpQBVIzXh6maHmnk6CkzSIf8JtAzl5sL2cPmtNRfmXk=;
-        b=K8AtATm5+VzKcjCh1t23FiisxnQ59lcDmayDKPzNLSACmY2usb4c4BiBeo+WS4EL/u
-         6ymFl96lKJSvZK4VnUvz6ftqiORSOFYBPH+iqvhueUX2d7+6oUY2iYIvP51yPPPJ4KCp
-         JxrjT03/3RhJisxpkJPXnyPccXkRiV7XpOTcc=
+         :cc:content-transfer-encoding;
+        bh=cwnrf/9byyflIo6YMGxfrqoYzi06WQZC+mSq1JMXN7U=;
+        b=EEbPmXsva9SynhXoxLOdGglpkM0S2fpSA/VKwy7pPmpfSD/eWTKeMfqKdouV0yKk28
+         1Muvy+e3ZkqaX66fXU+08yWT7jQ9O79DRJjNGVvdlUIbisQthtE0fn88mUE6M0DHXFcL
+         i37Qrl5EMIQy+P7Wwti5bLfncvna/LHStbN5hhi8JICY9fpzhnBtBXtDFN/npPFSnhlR
+         7KP9+XOTfJgi7jYZFS//Asz/Gr0/xN8riEv51CUTztnlN4X/9mbvpInQwEbs3A9qvLsf
+         39pUwLOjBWlgcfyPJEX+cqyKeLG0UOWgiFDF2Z1lzfihWsa2I4xg8FSaibgWVHa/UX0D
+         9e7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YpQBVIzXh6maHmnk6CkzSIf8JtAzl5sL2cPmtNRfmXk=;
-        b=cmJTPqHaanTeVGYwb/yPR3yJVVwTmkYkXq0XJOG027y0EplyGuadp+aNJWECUxz+2I
-         F/FDFXF0ChsItUrw3XBXrWny9c4XUyAO5viTOoj4bwCIwf5c4HMH6KgiHkRNqqYCqOwJ
-         MVQJ2PoxO/cXrDS2HYlp5gOnTMKCr8xs/LIrg+vJ1y7bLiRDmCYLKg8Yy1tlYg8Q2QXb
-         bbVf0WrAUyIrBdO32HxVj5UW0UYEzuGIy1b2PuTNcNsvMmJZEoRf/W7SZ4aDDjaRtPvn
-         4PGR8VwCTjIRICIjSHx9wr1OTOtyRv8W2/uij/sWQN+xNIsif7J6LqZno2UTd2TK+bs1
-         gF6A==
-X-Gm-Message-State: APjAAAUJS6Xp0DL/Jws872tF6AxAZweKvY3k7dRKgXBeC0WmviwNkt2V
-        fp402J87UiLonjY0nrlGqDM4jTFIceM=
-X-Google-Smtp-Source: APXvYqwzVuEGKWMZJJeZfpuSyfPYyxz53oT8/7bI/S4ovvXMOkFkNtUNud9f4osufSLFtWCBhdGTsw==
-X-Received: by 2002:a2e:b4e4:: with SMTP id s4mr6601315ljm.207.1562982405949;
-        Fri, 12 Jul 2019 18:46:45 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id v14sm1728145ljh.51.2019.07.12.18.46.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jul 2019 18:46:43 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id k18so11011214ljc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 18:46:43 -0700 (PDT)
-X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr7313053ljl.18.1562982402950;
- Fri, 12 Jul 2019 18:46:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cwnrf/9byyflIo6YMGxfrqoYzi06WQZC+mSq1JMXN7U=;
+        b=tHYiGwNbXkLyQNn7RBHg/FSG5GFwEaNnbu/BehIoq8VkNxmSQZP11jhE2uetIKorwb
+         VtaYZdWjzzN656SEN8ZtPsGjwEWnZr7x8dFc+esGBhyYxODbPCL1fwlxAuw5GnyLFMo4
+         2Km5Z4czivd/UcWX9Y2Xdd+iFhB4XMpVzEiL78/ZwhoQh7Va2B0rERwQ0QkgxktjJ6qK
+         A4v/EgaeWOKLv0wFqvWaxLr2ZjgYgfUNN+Qw51Db/Nks+fGF5NyYCu5nKZz5Aurqrn7U
+         qiSxBRkZGLGUvwIAV8OKkgSC9giYWg2N/E96EY9MIH1RlnpN5tw+kf9PUR7WcPCQjlbW
+         pXuQ==
+X-Gm-Message-State: APjAAAWvbxUefr+5wvpz71nkYxTOBhDXYYxyS5//5O8nREKLCRHWVZeO
+        vic3oEiZnAZccWVKCnqijcg7dv5+OqD0pcexcjVsdu1Ku6A=
+X-Google-Smtp-Source: APXvYqy/sldFP0VPKayiwbjPgTv09+NhoWb/JNuDib//V9JJ9SXm5o3dnvWrsKkV29xTsBc0TVBnuImfn2wzEseGt4M=
+X-Received: by 2002:a19:8c57:: with SMTP id i23mr6036401lfj.192.1562982648223;
+ Fri, 12 Jul 2019 18:50:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190712010556.248319-1-briannorris@chromium.org>
- <CAK7LNARGNVfxexE616cQDs1fK7SzToKwHxO_T69+RShL6QVTCQ@mail.gmail.com>
- <CA+ASDXNGqYkBjMsjcRKAit+0cd0n7dwxKhezyYCXSh_HjucvQw@mail.gmail.com> <CAK7LNARJ=aAf-iG7RVDp=bs7DTScJ1GBpEpkqtKDFDJYHEekUA@mail.gmail.com>
-In-Reply-To: <CAK7LNARJ=aAf-iG7RVDp=bs7DTScJ1GBpEpkqtKDFDJYHEekUA@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Fri, 12 Jul 2019 18:46:31 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOOyd4-thctnHG06GXnouf6EuJ4QV5QM+3iNBYQF499uA@mail.gmail.com>
-Message-ID: <CA+ASDXOOyd4-thctnHG06GXnouf6EuJ4QV5QM+3iNBYQF499uA@mail.gmail.com>
-Subject: Re: [RFC PATCH] bug: always show source-tree-relative paths in WARN()/BUG()
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
+References: <20190712121621.422224300@linuxfoundation.org>
+In-Reply-To: <20190712121621.422224300@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 13 Jul 2019 07:20:36 +0530
+Message-ID: <CA+G9fYtTVpCcnH6Hrz9ZpLUYdzP+Q9A+h86HLbn+Re5JqD=H7Q@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/91] 4.19.59-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Michal Marek <michal.lkml@markovi.net>
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 6:50 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> GCC 8 added this flag.
-> So, it will be eventually all solved in the GCC world.
+On Fri, 12 Jul 2019 at 17:52, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.59 release.
+> There are 91 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.59-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Ack.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> Clang has not supported it yet...
+Summary
+------------------------------------------------------------------------
 
-That's what it appeared like. I've bugged our Clang-loving toolchain
-folks to see if we can get parity.
+kernel: 4.19.59-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: d66f8e7f112fefe0c1d2a0f77da022a56ccde6dc
+git describe: v4.19.58-92-gd66f8e7f112f
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.58-92-gd66f8e7f112f
 
-> Trimming absolute path at run-time
-> is no help for reducing the kernel image.
+No regressions (compared to build v4.19.58)
 
-Sure, but that's not my stated goal. It would indeed be nicer though.
-I guess if no one else speaks up with a favorable word toward my RFC,
-I'll just see what I can do on the toolchain side.
+No fixes (compared to build v4.19.58)
 
-Thanks for the help,
-Brian
+Ran 25278 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
