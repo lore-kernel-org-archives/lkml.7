@@ -2,194 +2,93 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624F4C742D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5D7C742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26CEB217D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66D3208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 03:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lOqMuQRe"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="H+3dgelz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfGMDKM (ORCPT
+        id S1727544AbfGMDWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 23:10:12 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33269 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbfGMDKL (ORCPT
+        Fri, 12 Jul 2019 23:22:47 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:52676 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbfGMDWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 23:10:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so5654890plo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2019 20:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Yj0KzWPPj2wTNOobGgks3QqTli1sq+vFUwn/IZyvMdc=;
-        b=lOqMuQRexi/hVxa/4p77SbaQvlMGoDh5aaBC9i1MTtOwCN7njvsbB5lQDbBmriZ1WA
-         FWWHLnYwSi1u/Badms6e151ITEB+l7THYTAcQrSxD3Gt/lUVga9IZ5YlpJa+tNPnpYnH
-         zxZrbWgIwEXHbV94dqGpKtSAH3ynqx9mn/E50=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yj0KzWPPj2wTNOobGgks3QqTli1sq+vFUwn/IZyvMdc=;
-        b=Don+A37G6xScNcQnilqP0l6OnaA8p7TDC/e1qO/XUryOa7/blmKVdO3uBQgotRlXkw
-         XP9BUwmKGIsjJSNbvjEg4NqFGQmn95iKFGFpwg1saecrCqjkOWOPJqGe1P3/Gy5EuGib
-         /0vBYw1cWKYSJOztEqFqkBslCuNa5dYeQd6RfxWujBiKcsxVcoikMnw9XU28GHM0HHo2
-         inZP67JGlJtG5wB8IJzO+hrM8uTezTROz6kjAD0O+72/U2liLrAeYDHIFFCwP6Env4Ik
-         /tVrNjxKaxooH5uAKESHHRdPitHGcXas+Ztfa2NA9BD1T2DCjGIdoBHV6NhpcUu6jxI2
-         BN9g==
-X-Gm-Message-State: APjAAAW+BgArgg0G9+wOOROfPgQnHlZ2uACCHiuqXYo+8TLmXQFP4Nkd
-        /Pojb92CBI7I3RzWJULATziCeK6T
-X-Google-Smtp-Source: APXvYqzYmXDx79APPhOf6U2U81XcESDp7O9GeiDZBYQYdv6r3PCBBKB8Rg1+OBGlaGf1FYhUnpz+lQ==
-X-Received: by 2002:a17:902:704a:: with SMTP id h10mr15163948plt.337.1562987410632;
-        Fri, 12 Jul 2019 20:10:10 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id m31sm10466015pjb.6.2019.07.12.20.10.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Jul 2019 20:10:09 -0700 (PDT)
-Date:   Fri, 12 Jul 2019 23:10:08 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190713031008.GA248225@google.com>
-References: <20190712170024.111093-1-joel@joelfernandes.org>
- <20190712170024.111093-4-joel@joelfernandes.org>
- <20190712213559.GA175138@google.com>
- <20190712233206.GZ26519@linux.ibm.com>
- <20190713030150.GA246587@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713030150.GA246587@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 12 Jul 2019 23:22:46 -0400
+Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6D3LCS2001105;
+        Sat, 13 Jul 2019 12:21:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6D3LCS2001105
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562988073;
+        bh=1IdPDx4QX0euUr4uIRn/uQ11mnE9aURyo1Zm0ZEzzSs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H+3dgelzRhySedQpLwoncmnFJlhOAC6smKw42tgxGW66g4TX+fG+zinNh4AGqdkBV
+         sDGCcJP/3jlpIUG+9H4jbL5ashVrZTqBN9PoDIP1bG9kY/0MaTaWYJ4vBpWTxX4Omf
+         RqW5HPyA59GEjvtFZ1wcuentYVv5NNZkFEWlYZ9ZehokwLXXZUshr7g+PqbMuvcy50
+         SzPi5sTmajRUbguE4yWfcNru+V6pjhCXQaux7lpKlKU9UnUp/SKGF9Fj6AQYfpeOG8
+         YIUYRITsvVlb8B8NQYEZJcn7roPqrgX41eu2sOvXQ7hqe6g0yNBm2702TTuTtq5KU+
+         bWX8tcpizGxbg==
+X-Nifty-SrcIP: [126.26.94.249]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
+Date:   Sat, 13 Jul 2019 12:21:06 +0900
+Message-Id: <20190713032106.8509-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 11:01:50PM -0400, Joel Fernandes wrote:
-> On Fri, Jul 12, 2019 at 04:32:06PM -0700, Paul E. McKenney wrote:
-> > On Fri, Jul 12, 2019 at 05:35:59PM -0400, Joel Fernandes wrote:
-> > > On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
-> > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > this series, this is no longer need. We can just use the generic helper
-> > > > and it results in a nice cleanup.
-> > > > 
-> > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > 
-> > > Hi Oleg,
-> > > Slightly unrelated to the patch,
-> > > I tried hard to understand this comment below in percpu_down_read() but no dice.
-> > > 
-> > > I do understand how rcu sync and percpu rwsem works, however the comment
-> > > below didn't make much sense to me. For one, there's no readers_fast anymore
-> > > so I did not follow what readers_fast means. Could the comment be updated to
-> > > reflect latest changes?
-> > > Also could you help understand how is a writer not able to change
-> > > sem->state and count the per-cpu read counters at the same time as the
-> > > comment tries to say?
-> > > 
-> > > 	/*
-> > > 	 * We are in an RCU-sched read-side critical section, so the writer
-> > > 	 * cannot both change sem->state from readers_fast and start checking
-> > > 	 * counters while we are here. So if we see !sem->state, we know that
-> > > 	 * the writer won't be checking until we're past the preempt_enable()
-> > > 	 * and that once the synchronize_rcu() is done, the writer will see
-> > > 	 * anything we did within this RCU-sched read-size critical section.
-> > > 	 */
-> > > 
-> > > Also,
-> > > I guess we could get rid of all of the gp_ops struct stuff now that since all
-> > > the callbacks are the same now. I will post that as a follow-up patch to this
-> > > series.
-> > 
-> > Hello, Joel,
-> > 
-> > Oleg has a set of patches updating this code that just hit mainline
-> > this week.  These patches get rid of the code that previously handled
-> > RCU's multiple flavors.  Or are you looking at current mainline and
-> > me just missing your point?
-> > 
-> 
-> Hi Paul,
-> You are right on point. I have a bad habit of not rebasing my trees. In this
-> case the feature branch of mine in concern was based on v5.1. Needless to
-> say, I need to rebase my tree.
-> 
-> Yes, this sync clean up patch does conflict when I rebase, but other patches
-> rebase just fine.
-> 
-> The 2 options I see are:
-> 1. Let us drop this patch for now and I resend it later.
-> 2. I resend all patches based on Linus's master branch.
+The KBUILD_ARFLAGS addition in arch/powerpc/Makefile has never worked
+in a useful way because it is always overridden by the following code
+in the top Makefile:
 
-Below is the updated patch based on Linus master branch:
+  # use the deterministic mode of AR if available
+  KBUILD_ARFLAGS := $(call ar-option,D)
 
----8<-----------------------
+The code in the top Makefile was added in 2011, by commit 40df759e2b9e
+("kbuild: Fix build with binutils <= 2.19").
 
-From 5f40c9a07fcf3d6dafc2189599d0ba9443097d0f Mon Sep 17 00:00:00 2001
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Date: Fri, 12 Jul 2019 12:13:27 -0400
-Subject: [PATCH v2.1 3/9] rcu/sync: Remove custom check for reader-section
+The KBUILD_ARFLAGS addition for ppc has always been dead code from the
+beginning.
 
-The rcu/sync code was doing its own check whether we are in a reader
-section. With RCU consolidating flavors and the generic helper added in
-this series, this is no longer need. We can just use the generic helper
-and it results in a nice cleanup.
+Nobody has reported a problem since 43c9127d94d6 ("powerpc: Add option
+to use thin archives"), so this code was unneeded.
 
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- include/linux/rcu_sync.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-index 9b83865d24f9..0027d4c8087c 100644
---- a/include/linux/rcu_sync.h
-+++ b/include/linux/rcu_sync.h
-@@ -31,9 +31,7 @@ struct rcu_sync {
-  */
- static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
- {
--	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
--			 !rcu_read_lock_bh_held() &&
--			 !rcu_read_lock_sched_held(),
-+	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
- 			 "suspicious rcu_sync_is_idle() usage");
- 	return !READ_ONCE(rsp->gp_state); /* GP_IDLE */
- }
+ arch/powerpc/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index c345b79414a9..46ed198a3aa3 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -112,7 +112,6 @@ ifeq ($(HAS_BIARCH),y)
+ KBUILD_CFLAGS	+= -m$(BITS)
+ KBUILD_AFLAGS	+= -m$(BITS) -Wl,-a$(BITS)
+ KBUILD_LDFLAGS	+= -m elf$(BITS)$(LDEMULATION)
+-KBUILD_ARFLAGS	+= --target=elf$(BITS)-$(GNUTARGET)
+ endif
+ 
+ cflags-$(CONFIG_STACKPROTECTOR)	+= -mstack-protector-guard=tls
 -- 
-2.22.0.510.g264f2c817a-goog
+2.17.1
 
