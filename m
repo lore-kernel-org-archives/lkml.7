@@ -5,64 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234BBC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD2C742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9AB20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB5E20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uC5zEyNe"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SHIMaZ1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfGMLK6 (ORCPT
+        id S1727904AbfGMLLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 07:10:58 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60799 "EHLO
+        Sat, 13 Jul 2019 07:11:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55395 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfGMLK5 (ORCPT
+        with ESMTP id S1726755AbfGMLLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 07:10:57 -0400
+        Sat, 13 Jul 2019 07:11:44 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB8jK73841284
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DBAqfV3841685
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 04:08:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB8jK73841284
+        Sat, 13 Jul 2019 04:10:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DBAqfV3841685
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563016126;
-        bh=z78sEZTdWtdDJhzAlgXWC5a3IveziytmFKX+TQMy1Sw=;
+        s=2019061801; t=1563016254;
+        bh=3xEz6p5aOvGBZ2JJ/xzY6MXlyxphrTDLkgi2kX1X6GU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=uC5zEyNeJP5FzV0WEyxL03z1Gf6fAGSXx9Xe09jwNa6LhCPypva+J7UGlBo1tpqsq
-         GvCQxdHkmd4rQO7DvquoZRliZ6IDTAYG6QGJyCHAhuvTqZjK6PPvprlEMspQcfclmK
-         /hTURvLq2DSAfAaS/MGlDEQUg1/TYmZAi5F9qVnzBwNVclGhvyWwJpDDufE3Pts/ig
-         AMXAJvlopcc5YKnjytvsI2hjIc4ED6SCe99ARaIu8PyoD793TqzScMwUyUb0EMyZir
-         JtxfrUu8UOvTseL7RwUD3KOr5zm/+tKusmI0F2rgN4Ykv/T6PcgAY9NATUbTsq7wvS
-         86b+Zf9H3nfew==
+        b=SHIMaZ1CVqGWON1Sc+lWdEKCZaoBxpYwUSQjLHoQQR1zkO1QlWezX2SyYKOGVxLXa
+         zHUhmoPOkk7gWLj7njfSv8UbnvP7fCLx0fwC1UvqdKS1iuASXgtrwicYkXcKPBYuZL
+         HiTnBzzbIoNRUrOYvsKAyQmETPEHRwa2xvCdSDYehYjJAvmIpLwy+FBkpHFP5xw7RO
+         pGv45CLhIVcVC56sWm2DwIpXt794JBprpXUB59s8pFrONKiHUUqNOIJ7o68ZGmfWLP
+         V6vkQJSFEyuRNNCqHfeLIjQgTsGiIGo5EX8aq2m63qt2curdsUtMjljnTKXEkj5WFP
+         g3ehsHGJc4XLA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB8iYx3841280;
-        Sat, 13 Jul 2019 04:08:44 -0700
-Date:   Sat, 13 Jul 2019 04:08:44 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DBApYL3841681;
+        Sat, 13 Jul 2019 04:10:51 -0700
+Date:   Sat, 13 Jul 2019 04:10:51 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Leo Yan <tipbot@zytor.com>
-Message-ID: <tip-1d481458816d9424c8a05833ce0ebe72194a350e@git.kernel.org>
-Cc:     tglx@linutronix.de, mingo@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, leo.yan@linaro.org, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        acme@redhat.com, suzuki.poulose@arm.com, hpa@zytor.com,
-        adrian.hunter@intel.com
-Reply-To: mingo@kernel.org, tglx@linutronix.de,
-          alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-          namhyung@kernel.org, leo.yan@linaro.org,
-          linux-kernel@vger.kernel.org, ak@linux.intel.com,
-          acme@redhat.com, mathieu.poirier@linaro.org,
-          adrian.hunter@intel.com, hpa@zytor.com, suzuki.poulose@arm.com
-In-Reply-To: <20190708143937.7722-3-leo.yan@linaro.org>
-References: <20190708143937.7722-3-leo.yan@linaro.org>
+From:   tip-bot for Kim Phillips <tipbot@zytor.com>
+Message-ID: <tip-16f4641166b10e199f0d7b68c2c5f004fef0bda3@git.kernel.org>
+Cc:     stable@vger.kernel.org, mliska@suse.cz, puwen@hygon.cn,
+        linux-kernel@vger.kernel.org, vincent.weaver@maine.edu,
+        namhyung@kernel.org, mingo@kernel.org, Gary.Hook@amd.com,
+        tglx@linutronix.de, alexander.shishkin@linux.intel.com,
+        peterz@infradead.org, eranian@google.com, acme@redhat.com,
+        Janakarajan.Natarajan@amd.com, kim.phillips@amd.com,
+        Suravee.Suthikulpanit@amd.com, jolsa@redhat.com,
+        torvalds@linux-foundation.org, hpa@zytor.com, bp@alien8.de
+Reply-To: acme@redhat.com, eranian@google.com, kim.phillips@amd.com,
+          Janakarajan.Natarajan@amd.com, jolsa@redhat.com,
+          Suravee.Suthikulpanit@amd.com, torvalds@linux-foundation.org,
+          hpa@zytor.com, bp@alien8.de, stable@vger.kernel.org,
+          puwen@hygon.cn, linux-kernel@vger.kernel.org, mliska@suse.cz,
+          vincent.weaver@maine.edu, namhyung@kernel.org, Gary.Hook@amd.com,
+          mingo@kernel.org, tglx@linutronix.de, peterz@infradead.org,
+          alexander.shishkin@linux.intel.com
+In-Reply-To: <20190628215906.4276-1-kim.phillips@amd.com>
+References: <20190628215906.4276-1-kim.phillips@amd.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf intel-bts: Fix potential NULL pointer
- dereference found by the smatch tool
-Git-Commit-ID: 1d481458816d9424c8a05833ce0ebe72194a350e
+Subject: [tip:perf/urgent] perf/x86/amd/uncore: Do not set 'ThreadMask' and
+ 'SliceMask' for non-L3 PMCs
+Git-Commit-ID: 16f4641166b10e199f0d7b68c2c5f004fef0bda3
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -76,75 +80,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1d481458816d9424c8a05833ce0ebe72194a350e
-Gitweb:     https://git.kernel.org/tip/1d481458816d9424c8a05833ce0ebe72194a350e
-Author:     Leo Yan <leo.yan@linaro.org>
-AuthorDate: Mon, 8 Jul 2019 22:39:35 +0800
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 9 Jul 2019 10:13:28 -0300
+Commit-ID:  16f4641166b10e199f0d7b68c2c5f004fef0bda3
+Gitweb:     https://git.kernel.org/tip/16f4641166b10e199f0d7b68c2c5f004fef0bda3
+Author:     Kim Phillips <kim.phillips@amd.com>
+AuthorDate: Fri, 28 Jun 2019 21:59:20 +0000
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Sat, 13 Jul 2019 11:21:26 +0200
 
-perf intel-bts: Fix potential NULL pointer dereference found by the smatch tool
+perf/x86/amd/uncore: Do not set 'ThreadMask' and 'SliceMask' for non-L3 PMCs
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+The following commit:
 
-  tools/perf/util/intel-bts.c:898
-  intel_bts_process_auxtrace_info() error: we previously assumed
-  'session->itrace_synth_opts' could be null (see line 894)
+  d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events")
 
-  tools/perf/util/intel-bts.c:899
-  intel_bts_process_auxtrace_info() warn: variable dereferenced before
-  check 'session->itrace_synth_opts' (see line 898)
+enables L3 PMC events for all threads and slices by writing 1's in
+'ChL3PmcCfg' (L3 PMC PERF_CTL) register fields.
 
-  tools/perf/util/intel-bts.c
-  894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-  895                 bts->synth_opts = *session->itrace_synth_opts;
-  896         } else {
-  897                 itrace_synth_opts__set_default(&bts->synth_opts,
-  898                                 session->itrace_synth_opts->default_no_sample);
-                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  899                 if (session->itrace_synth_opts)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  900                         bts->synth_opts.thread_stack =
-  901                                 session->itrace_synth_opts->thread_stack;
-  902         }
+Those bitfields overlap with high order event select bits in the Data
+Fabric PMC control register, however.
 
-'session->itrace_synth_opts' is impossible to be a NULL pointer in
-intel_bts_process_auxtrace_info(), thus this patch removes the NULL test
-for 'session->itrace_synth_opts'.
+So when a user requests raw Data Fabric events (-e amd_df/event=0xYYY/),
+the two highest order bits get inadvertently set, changing the counter
+select to events that don't exist, and for which no counts are read.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+This patch changes the logic to write the L3 masks only when dealing
+with L3 PMC counters.
+
+AMD Family 16h and below Northbridge (NB) counters were not affected.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Gary Hook <Gary.Hook@amd.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liska <mliska@suse.cz>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190708143937.7722-3-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events")
+Link: https://lkml.kernel.org/r/20190628215906.4276-1-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/perf/util/intel-bts.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/events/amd/uncore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 5a21bcdb8ef7..5560e95afdda 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -891,13 +891,12 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 	if (dump_trace)
- 		return 0;
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 85e6984c560b..c2c4ae5fbbfc 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -206,7 +206,7 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 	 * SliceMask and ThreadMask need to be set for certain L3 events in
+ 	 * Family 17h. For other events, the two fields do not affect the count.
+ 	 */
+-	if (l3_mask)
++	if (l3_mask && is_llc_event(event))
+ 		hwc->config |= (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
  
--	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-+	if (session->itrace_synth_opts->set) {
- 		bts->synth_opts = *session->itrace_synth_opts;
- 	} else {
- 		itrace_synth_opts__set_default(&bts->synth_opts,
- 				session->itrace_synth_opts->default_no_sample);
--		if (session->itrace_synth_opts)
--			bts->synth_opts.thread_stack =
-+		bts->synth_opts.thread_stack =
- 				session->itrace_synth_opts->thread_stack;
- 	}
- 
+ 	if (event->cpu < 0)
