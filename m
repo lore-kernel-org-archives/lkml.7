@@ -2,174 +2,106 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37012C742D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0451CC742DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD2F208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13F8217D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 01:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PLGES2Yt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmshNrSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfGMBLs (ORCPT
+        id S1727649AbfGMBqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jul 2019 21:11:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49794 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfGMBLr (ORCPT
+        Fri, 12 Jul 2019 21:46:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45949 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbfGMBqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jul 2019 21:11:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6D0sfpc178083;
-        Sat, 13 Jul 2019 01:11:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=jUTho8nKW5hjHRWxClJOHdo4lCalGSvqrppSqDi2e5U=;
- b=PLGES2Ytpe4W9BYJworC8/e6RLJhW9Y5+9Q84yHoqn10S/+dE9MrFf0Ozd+EI0g+qgwC
- qno4eLFWqNf3h4lT23a3YFdmNObgU5rz/Cn2p1mTgGDJyoOTs2iQT9PUXmFmXk+HcfAK
- V2LKG297dptF4PzytZdGwItMYsqyDThxvhmEkgYEH2nPittyADiKNtYTjYRK1etvtE3O
- V9nM+tkWyHJW47ZzqMPJuIpdIppSFOjNl8eRooKwaDVLkCsMvyEzH86JYvKGGc4mJGNI
- FwAc2H9Y5DfDJKv75flo7uBhHMn9s3sl3Dv7PaajqZbkD2FafIBDsnG/pv4JO9p/jDa5 OA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tjk2u855c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 01:11:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6D16BUx181034;
-        Sat, 13 Jul 2019 01:11:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2tq5bb01pg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 01:11:34 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6D1BVaG001148;
-        Sat, 13 Jul 2019 01:11:32 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 12 Jul 2019 18:11:31 -0700
-Subject: Re: [Question] Should direct reclaim time be bounded?
-To:     Hillf Danton <hdanton@sina.com>, Mel Gorman <mgorman@suse.de>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <20190712054732.7264-1-hdanton@sina.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <c39e7cb3-204c-c4e3-fb43-7a37d91c0ccb@oracle.com>
-Date:   Fri, 12 Jul 2019 18:11:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 12 Jul 2019 21:46:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x21so11243888otq.12;
+        Fri, 12 Jul 2019 18:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RJggIoi1WuUJiWJbJhM4FX0KGoxeELa70x1WQjNhHL4=;
+        b=LmshNrSKmoo+LJuiEF3vWYXLEuy4d/RvWUI1HEE8vlBFNWDM1e3+JvPOhqxu43p88W
+         tHFP18wkBUqfz2hFEYWmM1RMDGmVKrkTBKcs0SL8hzZj9YLi4i9dE+w40ctSQIFbOfk9
+         l8NJYQKtuJeLVvJjtOZV788QBU5IdgjCSWPmErY6lZxeW6N/QARvWl01nGVApC/pgdgF
+         REy+UDYdH7rZ6Am5fPolzO0GMr64NHdbdgyRHIj7fEBk7cpoa8MSoHgHe8qebO5spvVf
+         dMCkTLzfWxn8vE/pLm6IEh89T/NC2jhnm3FtyaURBje3czNAg8fipUz5dWAblz+ikKxV
+         7e9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RJggIoi1WuUJiWJbJhM4FX0KGoxeELa70x1WQjNhHL4=;
+        b=BMn4awOPwGKsGVttti9Z3EcNUVhnHzSnzWaZ29SKCZ5SVUhI0iEtcC+AJ9ojUG2gv4
+         zQFLfT/i9gTnZzgptCYuSBvvRmza89fqaDRiqNQGdsNm0LDE7gdjvKHHQKPz83t1gzSq
+         KPyqYIUHlekbmZu7BboiD5AhEvu9XgDNksjW7X31a+Al3r0Lkksv4R4uAQXPubVIWJYu
+         AFtnc4R+fPq8g4tJicK2ufOp7aDKrDXACdWBoi1cJdxCelmwzx0LGToPayvYWTEMxdEi
+         0S4N+aQhhru/q9rdsTQUW1q+139VrgHrFxD/Rk0898vtq9hXGbhmM4WNNtcmShvKFaWi
+         eCpA==
+X-Gm-Message-State: APjAAAUsr/EATgD2IuahYodq8y6RUZpx3vmSJHUK0T0aKRnV3QVSXsMR
+        k1pKf/f4eQgldGz7YUpl1CA=
+X-Google-Smtp-Source: APXvYqzancg/wWyb2ElQ0BIGXapMi4huf2UzabvWjv7xebotAe2UpT5vui/aF619ph4geW0j9sWUKQ==
+X-Received: by 2002:a9d:5c11:: with SMTP id o17mr10308522otk.107.1562982376655;
+        Fri, 12 Jul 2019 18:46:16 -0700 (PDT)
+Received: from rYz3n ([2600:1700:210:3790::40])
+        by smtp.gmail.com with ESMTPSA id q20sm3525559otm.32.2019.07.12.18.46.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 18:46:16 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 20:46:15 -0500
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
+Message-ID: <20190713014614.xfvf2q2bt6n5bhui@rYz3n>
+References: <20190712121628.731888964@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190712054732.7264-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907130007
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9316 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907130007
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/11/19 10:47 PM, Hillf Danton wrote:
+On Fri, Jul 12, 2019 at 02:17:44PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.18 release.
+> There are 138 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Thu, 11 Jul 2019 02:42:56 +0800 Mike Kravetz wrote:
->>
->> It is quite easy to hit the condition where:
->> nr_reclaimed == 0  && nr_scanned == 0 is true, but we skip the previous test
->>
-> Then skipping check of __GFP_RETRY_MAYFAIL makes no sense in your case.
-> It is restored in respin below.
+> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> Anything received after that time might be too late.
 > 
->> and the compaction check:
->> sc->nr_reclaimed < pages_for_compaction &&
->> 	inactive_lru_pages > pages_for_compaction
->> is true, so we return true before the below check of costly_fg_reclaim
->>
-> This check is placed after COMPACT_SUCCESS; the latter is used to
-> replace sc->nr_reclaimed < pages_for_compaction.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.18-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
 > 
-> And dryrun detection is added based on the result of last round of
-> shrinking of inactive pages, particularly when their number is large
-> enough.
+> thanks,
 > 
+> greg k-h
+> 
+> -------------
 
-Thanks Hillf.
+Hello,
 
-This change does appear to eliminate the issue with stalls by
-should_continue_reclaim returning true too often.  I need to think
-some more about exactly what is impacted with the change.
+Compiled and booted fine.  No regressions on x86_64.
 
-With this change, the problem moves to compaction with should_compact_retry
-returning true too often.  It is the same behavior seem when I simply removed
-the __GFP_RETRY_MAYFAIL special casing in should_continue_reclaim.
+THX,
 
-At Mel's suggestion I removed the compaction_zonelist_suitable() call
-from should_compact_retry.  This eliminated the compaction stalls.  Thanks
-Mel.
-
-With both changes, stalls appear to be eliminated.  This is promising.
-I'll try to refine these approaches and continue testing.
--- 
-Mike Kravetz
-
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2571,18 +2571,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
->  			return false;
->  	}
-> 
-> -	/*
-> -	 * If we have not reclaimed enough pages for compaction and the
-> -	 * inactive lists are large enough, continue reclaiming
-> -	 */
-> -	pages_for_compaction = compact_gap(sc->order);
-> -	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> -	if (get_nr_swap_pages() > 0)
-> -		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> -	if (sc->nr_reclaimed < pages_for_compaction &&
-> -			inactive_lru_pages > pages_for_compaction)
-> -		return true;
-> -
->  	/* If compaction would go ahead or the allocation would succeed, stop */
->  	for (z = 0; z <= sc->reclaim_idx; z++) {
->  		struct zone *zone = &pgdat->node_zones[z];
-> @@ -2598,7 +2586,21 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
->  			;
->  		}
->  	}
-> -	return true;
-> +
-> +	/*
-> +	 * If we have not reclaimed enough pages for compaction and the
-> +	 * inactive lists are large enough, continue reclaiming
-> +	 */
-> +	pages_for_compaction = compact_gap(sc->order);
-> +	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> +	if (get_nr_swap_pages() > 0)
-> +		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> +
-> +	return inactive_lru_pages > pages_for_compaction &&
-> +		/*
-> +		 * avoid dryrun with plenty of inactive pages
-> +		 */
-> +		nr_scanned && nr_reclaimed;
->  }
-> 
->  static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
-> --
-> 
+Jiunn
