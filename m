@@ -2,103 +2,94 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E5FC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42F5C742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A95E2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:39:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="l0bP+nVq"
+	by mail.kernel.org (Postfix) with ESMTP id A4F3620830
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563018802;
+	bh=yo0fpe53lTSVUSUfCCBqvEoLN/F30wiRkOyCxYTUHNA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GpcLdzGJIoR3oPldq79+xYfn9DDr9N3GEgZ/UJlAhi/ve/lXg4nGFlJIinLLbTVJE
+	 z8oco7ukPWiXTkOlFqZFPkmw5lfKMinJ8Qp9Vm4ZLfBLrcp7kqOSUCgy3TlLcEtpgE
+	 l0tto0o9ZHTYBcRHWqaKSflqkiFfw1bIs60SudNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfGMLjP (ORCPT
+        id S1727737AbfGMLxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 07:39:15 -0400
-Received: from mout.gmx.net ([212.227.15.18]:47861 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbfGMLjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 07:39:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1563017934;
-        bh=BWWyqYc0Q9lHRlufOjwlKzREgcGCirILPkFoZng2iMw=;
-        h=X-UI-Sender-Class:Subject:From:Cc:References:To:Date:In-Reply-To;
-        b=l0bP+nVq4Z/ym5mL673tifm3R/v/AN0xnxmc1JYY10LUxZ3WuGZ55pdJQC9bwHMNL
-         l1ooHC6BxBuuT/OHSV5dck2DI9VztTOLJ0zzQumDVRtaVN/2kiwXQQyEQrwfJkafLx
-         kAz8lu5VMpuvk50bYQZw4tKiRVyKQLqb+gNuTR4E=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.43.122] ([92.40.248.250]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MGyxN-1hiBm21fEp-00E2qN; Sat, 13
- Jul 2019 13:38:54 +0200
-Subject: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux v5.2
- (was Asus C101P Chromeboot fails to boot with Linux 5.2)
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
-References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
- <CANBLGcyO5wAHgSVjYFB+hcp+SzaKY9d0QJm-hxqnSYbZ4Yv97g@mail.gmail.com>
- <862e98f3-8a89-a05e-1e85-e6f6004da32b@gmx.co.uk>
- <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sat, 13 Jul 2019 07:53:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55806 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbfGMLxV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 07:53:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LzOyEr1Ny2JAYClBzrrrts+SqH5tDtJ4DDhzxaujHkw=; b=R5Of6EyEW/DGcceMnnaKAERF0
+        26hwrfljUB/6/sCF8YujxCSKCLG1hNM32LbBVtmWPLDAwF9Mq3S7QWX3O6Vvgk1CQnffjmsTA6YAS
+        2fl2afNuglEcnahE7oGQUnFKGlJ/OtocHOpmDejiXGHEqJxHy5sG4iAqlX6leZaRqr9HwAQiGALWj
+        X3YlgmgHbBwQVbd0tIpbJaIAJqIpW+1PhiQ0gcxqeNp26j+W6GVasx/X9de6rj5HRYTWmzhEeHFVW
+        kPRL377/Y323KCdl6s02apct/18aaqdZ4OayhIzJ4sf+IETFgpv0+S+aEETMFrBGBnjSPA+EPLnQN
+        xIH6fgm6A==;
+Received: from 201.86.163.160.dynamic.adsl.gvt.net.br ([201.86.163.160] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hmGad-0004Y9-VR; Sat, 13 Jul 2019 11:53:19 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hmGab-0001ZC-RX; Sat, 13 Jul 2019 08:53:17 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Message-ID: <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
-Date:   Sat, 13 Jul 2019 12:38:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] scripts/sphinx-pre-install: fix script for RHEL/CentOS
+Date:   Sat, 13 Jul 2019 08:53:17 -0300
+Message-Id: <bd1bfef9b85c995e70a4ee5cd65f054010936d6c.1563018793.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:LbPaPzVSq7PJlnapOmV+BlI1ChwWNYoa0SaFu0C21B84M97YvV7
- 85RffBT6jaGa40g+bVMVtOXftprToNyjJMhZ21zY+IwVtRgW6GMAs+zzSL7CbLyh+DcuWbv
- Gc+je70JuDlPCVNZZpllDXJ7wB/EiAjB7ad7ycDyadGdxCqNbl33o80PMLvk321yAP8t/E3
- zta3oivBwYDmHGCSViX/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zRO9TRRdg4Q=:OTrf3LHKXJB0WL90b8u/YF
- WpIex8PeEtoGFs631qIMrNBEK8Fb8vjim+Y0TmYya94HQsEJbHlkyPnn3xE/k/IJZVFnHRaxp
- 1EagelV6OS8zlcViSPsuljs7/OKHU4f48Ogd/4KXNJaFFj5adg9YAYi0osg4m+Bk4e3uMvazn
- /fAtprsvifQwZM8Vk7bsGXYuCezEDDF17AbaFO7p13oaFNYhA+T52VstQr+9gZftY0GcBfph+
- K6B+FBi7JGyXglL7RdQna2Kf/U+VlKHz/YgkQEawnT84LBu21KKNOtOuAbLP0IsE9jN8iWETw
- 47Shx5L2rJCD/05K981Hm35Mw4xft/gRpuCzKpsVG1Rkc6yzq1bxaZ7j1musUBC6gUzaHeBi9
- 0BtIWbJn0u630XsvVU/6E3VRDX9qnuAu8pestYlV8oAzXzaAUG+9MmO86DK4fc31olRyn1WTs
- mpZzd/xZ9rX1cWZb0FBPDzXD/GiCiM/eJ/ifGjJokKnrVK9sfcIp8HiFNDNUgc77Et0LfC/jN
- GvMaiVRMH7eBTsy/ZLDegArWn4S/bsazA75tQtchmx1+X0/ymqkrYENO63CGVBpz/OSbhM4oP
- wX7gmS9mgp3dxVBRdpNQd3mWSIpUHiJMcQJVWyJEzTdqMhZmWtGr5M0TydHmIcG3OIKixSk6u
- b8HXYPPML0ugB+F4rmSP/hvSReKr/6r40xaNHaAR5JM3vbTSlU09tdkle60bkiKEQh+uXDLxo
- YzLc2ciQn8om5Tg0ro+4cTaj3h1I3HQ7BHqle0Xmj3AbK8nFXZmjYuf1GSp5tm30ogK4TAtME
- PN1433KPbgvUNTDzostkGze0dyaPqVND116h7oysndGY8oTQUUeS39qsMc0fAwGDmnHujKOiL
- GjA7veBdsXC0EgdgjniItnk7JRPMJEziFINoz0DGfvtJXEvlwPl/pAMe+eEDHrz92NQPP+SJn
- RwK+Sso8zaB+seDgnl5safxDVdgtjnmZysM5qQswcZuI0HYWCgL9GKBmmb44niMoZbcdxM6Xk
- 2M1Nv3wyETg9T2xVXZmwFka3LMN8dnFfnl2Gzq15Cc96cVfzMIF+PkXrw1UTqTTPigDUx6dA5
- syw/bFdIZskDDZ9egAc79E5s/r1mYt2cc93
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+There's a missing parenthesis at the script, with causes it to
+fail to detect non-Fedora releases (e. g. RHEL/CentOS).
 
-I initially thought my machine was failing to boot entirely, but it
-turns out it was just failing to start the display manager. I managed to
-escape to a tty by hammering the keyboard a bit.
+Tested with Centos 7.6.1810.
 
-I suspect the culprit is the rockchip_vpu driver (in staging/media),
-which has been renamed to hantro in this merge window. When I run startx
-from a terminal, X fails to start and Xorg segfaults (log here:
-http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
-issues in v5.1.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ scripts/sphinx-pre-install | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've also tried running trace on the Xorg process, but the output was
-pretty verbose. I can share if that would be helpful though.
-
-Best,
-Alex
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index cbe3d2bb659d..c3e36b867be7 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -376,7 +376,7 @@ sub give_redhat_hints()
+ 	#
+ 	# Checks valid for RHEL/CentOS version 7.x.
+ 	#
+-	if (! $system_release =~ /Fedora/) {
++	if (!($system_release =~ /Fedora/)) {
+ 		$map{"virtualenv"} = "python-virtualenv";
+ 	}
+ 
+-- 
+2.21.0
 
