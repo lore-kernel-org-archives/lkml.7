@@ -2,73 +2,76 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C63C31E40
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 21:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B6DC73C66
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 22:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99890205ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 21:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E175E20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 22:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GBKoJIbD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJ8EJiGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfGMVxc (ORCPT
+        id S1728083AbfGMWDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 17:53:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46826 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbfGMVxc (ORCPT
+        Sat, 13 Jul 2019 18:03:35 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37666 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727968AbfGMWDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 17:53:32 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so6413645plz.13
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 14:53:32 -0700 (PDT)
+        Sat, 13 Jul 2019 18:03:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so6451216plr.4;
+        Sat, 13 Jul 2019 15:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b7knXnl2++CFgl1JI0y7AdoYd0cxeaaz3u9LcN6Nzc0=;
-        b=GBKoJIbDYL40ytBfLjjdyrhV6Xa17aiOXF67nY5wZGnfJ36o0brcuBzdRHb48joauj
-         hsoENFwjmNy9W5NUlp7Bzljv5zQ3xRVgF9erHRUUoVJvvPELOK3qW0Q2BYNVWFs7b43i
-         nQz5V2q7t/+u4b15AqHufZ3QrZOfJwX3PY47fYbuq+bmJz2LJGIJW0cGX0lDX5f5WJ1f
-         +TCsGPV/gnprSXVI/j2ybfZgZm5cEhBxITQUHigpN8bq29ww8d0yoCPXOfpANPUmHbFZ
-         egb699NxOku++AH5+aKv66wZ2F1+reJwKuByTEsNWV1KrFNZKeRjEggiF6SuHRhYj+ne
-         o3Gw==
+        bh=5w54gVlwlcQ2bynC44gyRnaULScT04VVjWvEfAe5cPw=;
+        b=XJ8EJiGFJQykC0NGGlUACEnLvAin6s72tUzIu31fgFBrQojgiaD8eT6TU7LBgFkhGK
+         Y94xUp0xtmSIflbwjhAVhWSpawVrtIaeVvuUfwAFriJksb3cmiXjkPT69vqnirCWuSoS
+         iqRUJIuWQ5w1WiISqcECwPVLla3WCHcK+mKtTmlqfVtgZ7ktBsn37PHssRW6k5cA63vG
+         8UXpPRaIROzskDEl1Pl7jaUakvPG+xN/jFdbC9ngQtbREJw2q8tq49avIDimtJH6/1tu
+         4akvDvq4YOjYsdgK/x+B91M5M3qhhZsehLnvJgJC+r2jysmyoogQs3VmHnYLcp4rnTUG
+         51FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=b7knXnl2++CFgl1JI0y7AdoYd0cxeaaz3u9LcN6Nzc0=;
-        b=pcu8eQsYoWn141usd7BzSr6ZRhf2RpqFojEOaQ2knTvlS+OMNO/pTBX5y4Kciir3Gr
-         LVMrhFbYREsa3rK8wdQmyLLhXcj3Wrk8rt+z3/IidqRwvVh2+rBeTubfuFECWYRV0IyM
-         f1xPekxmi8nZsj99WRrbqg3Vnzg6V56842BBC44nIonRq6ti6p+d62fXVQyi1vgQ3gz0
-         Y7ZRPddbYdQH3HKsCEkul8khJ6NtndhIfFEUhjkZ4A8HJ/ZFY/2sSRYlJKqaVRscj4Kv
-         CbuBX7u0lyP8Jd2yfXGNbAB4h/QrxlMnHEbQbAoffsVMRmXr7xvmuk3OtyXNTjruDINl
-         Zi8w==
-X-Gm-Message-State: APjAAAXodvQx6X7nwnxIqCfA9vk557UFqx3JbvKDhNOxdC1ibQwIh2UV
-        AioKY8QDAZBMcTFbJ/Jt8v0=
-X-Google-Smtp-Source: APXvYqx02JUB1gQ7VYbzSEBNpDUTlbVYzD3L8YrvaiHHDUeAEyQQnYdrydPsxOKGRUV4Lyy9Gx0vDA==
-X-Received: by 2002:a17:902:8547:: with SMTP id d7mr20064189plo.171.1563054811664;
-        Sat, 13 Jul 2019 14:53:31 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id d14sm17326936pfo.154.2019.07.13.14.53.29
+        bh=5w54gVlwlcQ2bynC44gyRnaULScT04VVjWvEfAe5cPw=;
+        b=jDgDBBkTBIdq3fXiVrVNPvnhsYSI257gJLi8VkFtYuwXRniHS1mz28RX3kSOixyMFR
+         mACSyh4d2IWbTmGIQp7NJmWxHTLbTc2IYmL8hxtAnsvIiClrUYDKy4fIqBv7270NtNyI
+         0xn9gxfSU//OpRw5JVTsPMIu1BJnl3CWGEAdaUNwglSOb4o0V5teWsMj9k5WeoceA3aJ
+         jgZjATTqFauY3QMTXoi1M6yb7fjZXUNTuNLhahIB2lkGxE8GZ4UTEl9Qfe44UiyGG+oF
+         VNW5CulBgVWVLIrf2QDfHWHo4lVx256PQiAD/eb9RWKDoK3716NJ0/o5dpOb28b11jIC
+         QLyA==
+X-Gm-Message-State: APjAAAUERc+ORla7xyuRMApHLc8omkB2FyRL2DHxTqYFC9snTQzOj7QW
+        ee29KNVcQIo9d9po3V2TW+RTBCG2
+X-Google-Smtp-Source: APXvYqyz40vUjl2K6LvlfysI+xNzCPhx+mw8uDN4SNQQWw2FZ0AXSyN5zz3ZUnPizy3zihmIxEILYw==
+X-Received: by 2002:a17:902:8c98:: with SMTP id t24mr20265659plo.320.1563055413757;
+        Sat, 13 Jul 2019 15:03:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y22sm15105759pfo.39.2019.07.13.15.03.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Jul 2019 14:53:30 -0700 (PDT)
-Subject: Re: [PATCH] block: elevator.c: Check elevator kernel argument again
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Sat, 13 Jul 2019 15:03:32 -0700 (PDT)
+Subject: Re: [PATCH 5.1 000/138] 5.1.18-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Cc:     "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-References: <20190713035221.31508-1-marcos.souza.org@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <75c5681a-389f-cfaf-7f3f-31a2daec9da4@kernel.dk>
-Date:   Sat, 13 Jul 2019 15:53:28 -0600
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190712121628.731888964@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <cc4c0a5b-0aae-431b-4ee7-dc267c5310ed@roeck-us.net>
+Date:   Sat, 13 Jul 2019 15:03:30 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190713035221.31508-1-marcos.souza.org@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190712121628.731888964@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,33 +79,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/19 9:52 PM, Marcos Paulo de Souza wrote:
-> Since the inclusion of blk-mq, elevator= kernel argument was not being
-> considered anymore, making it impossible to specify a specific elevator
-> at boot time as it was used before.
+On 7/12/19 5:17 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.18 release.
+> There are 138 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> This is done by checking chosen_elevator global variable, which is
-> populated once elevator= kernel argument is passed. Without this patch,
-> mq-deadline is the only elevator that is can be used at boot time.
+> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> ---
-> 
->   I found this issue while inspecting why noop scheduler was gone, and
->   so I found that was now impossible to use a scheduler different from
->   mq-deadeline.
-> 
->   Am I missing something? Is this a desirable behavior?
 
-Just google, I'm sure 2-3 discussions on this topic will come up.
+For v5.1.17-134-gd68c746af314:
 
-tldr is that the original parameter was a mistake and doesn't work at
-all for multiple devices. Today it's even worse, as we have device
-types that won't even work properly with any scheduler, liked the
-zoned devices. The parameter was never enabled for blk-mq because of
-that, and hence died when the legacy IO path was scrapped. It's not
-coming back.
+Build results:
+	total: 159 pass: 159 fail: 0
+Qemu test results:
+	total: 364 pass: 364 fail: 0
 
--- 
-Jens Axboe
-
+Guenter
