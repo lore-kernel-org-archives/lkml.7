@@ -2,119 +2,165 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E159BC742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A316C742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F842083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:03:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGvGQHsj"
+	by mail.kernel.org (Postfix) with ESMTP id 5F3092084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfGMOD0 (ORCPT
+        id S1727781AbfGMOJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 10:03:26 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46563 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfGMOD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 10:03:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so26461000iol.13
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 07:03:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2cKNodCrmuMmW2mUrlymHEAfLAQF1HAbPtJIM1Tnsg4=;
-        b=OGvGQHsjyDk8f4XWoqQq+WuQIzCyoBTMYUoyqlvoCDyR1S+Lf/Lho3AoQWVhXqGALm
-         yMkGgS6re0yU+GCMPBZm3KEhbI9BPUTgbZZlj2pfxoFJb/L0i6Es2coDKCGIkTOy2EIt
-         o5mF7e/yEuncIly4dYAMfKP90WxKQrAled7GW///w9kqYgR3K3mUnkv5LOFKxe894W1i
-         WJWS+eHiKrayx2x/tX+lGP6L3f9WSzcWYeI4ApY2vhihIk0lUxtKq1klzxT2+Z5nN4jd
-         9ZGkDpLVXVqJtM52Gwb+LYdGVZ4L1DyneN/CQE/H8pnvakyjmfLPuxLe5b/jJUAppVv1
-         Dc8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2cKNodCrmuMmW2mUrlymHEAfLAQF1HAbPtJIM1Tnsg4=;
-        b=iiEkS7ohVwl9uubWZg7qK0YP8byeKLUOaU7FiaMSLrpyMmSPKH8bW2kD31vskOUlDI
-         gmaL77G+NpfVgTaikvIJvKiQRTUkgM73WXjqljONEnlKbCFTP1JPp2v0bJvV1DWp8r3g
-         cIxmdGr9/xWbHl38RPANa9tU377R9BeEEVxjRZtJONBd0nV16DaepzcMiUuOAwDJivDG
-         C7T4fu1ipypwKgcjB6JZEWuPMkxPPEhToGD+fVecFkvKUlkceRJrpvbWuiOHuWvZmkjb
-         TUuWZwvJebKnw5TDJ2Rgp/V8Ol+JhTYskZ5WfkCTrfQyPLdXp+rSFs95RUZRYR5APmDc
-         zWMg==
-X-Gm-Message-State: APjAAAU7wi7TOCkeBoQcuM/EUjfzQjGoQuP5hKOgoimZzfOUCL2h7f1W
-        8qB8pzwv308Bp6k0obkbGTDmOOxzgte2ZBibyPA=
-X-Google-Smtp-Source: APXvYqyVyWO314FGp8+WdjoeD7BtY0AQa3FQpiJALcvRUnD5hZTpVwa6/LQjv+WrtbnD9rAjFhkTL/4M1o5puBS7kTA=
-X-Received: by 2002:a02:1948:: with SMTP id b69mr17622056jab.55.1563026605670;
- Sat, 13 Jul 2019 07:03:25 -0700 (PDT)
+        Sat, 13 Jul 2019 10:09:30 -0400
+Received: from bran.ispras.ru ([83.149.199.196]:31577 "EHLO smtp.ispras.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727504AbfGMOJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 10:09:29 -0400
+Received: from [10.10.3.112] (starling.intra.ispras.ru [10.10.3.112])
+        by smtp.ispras.ru (Postfix) with ESMTP id 05CFE201D0;
+        Sat, 13 Jul 2019 17:09:28 +0300 (MSK)
+Subject: Re: [PATCH] proc: Fix uninitialized byte read in get_mm_cmdline()
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, security@kernel.org
+References: <20190712160913.17727-1-izbyshev@ispras.ru>
+ <20190712163625.GF21989@redhat.com> <20190712174632.GA3175@avx2>
+ <3de2d71b-37be-6238-7fd8-0a40c9b94a98@ispras.ru>
+ <20190713072606.GA23167@avx2>
+From:   Alexey Izbyshev <izbyshev@ispras.ru>
+Message-ID: <2cba2f3d-4a7c-ddeb-fbd7-e2aafb728493@ispras.ru>
+Date:   Sat, 13 Jul 2019 17:09:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <156294329676.1745.2620297516210526183.stgit@buzz>
- <20190713060929.GB1038@tigerII.localdomain> <CALYGNiPedT3wyZ3CrvJra=382g6ETUvrhirHJMb29XkBA3uMyg@mail.gmail.com>
- <20190713131947.GA4464@tigerII.localdomain>
-In-Reply-To: <20190713131947.GA4464@tigerII.localdomain>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Sat, 13 Jul 2019 17:03:14 +0300
-Message-ID: <CALYGNiPp8546yGcC-TYSVq5X9tnPmrQsDecZxZ2smex9zKB5wg@mail.gmail.com>
-Subject: Re: [PATCH] kernel/printk: prevent deadlock at calling kmsg_dump from
- NMI context
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190713072606.GA23167@avx2>
+Content-Type: multipart/mixed;
+ boundary="------------C43CA79F4814729DBF8EE52C"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 4:20 PM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> On (07/13/19 09:46), Konstantin Khlebnikov wrote:
-> > > On (07/12/19 17:54), Konstantin Khlebnikov wrote:
-> >
-> > Yep printk() can deal with NMI, but kmsg_dump() is a different beast.
-> > It reads printk buffer and saves content into persistent storage like ACPI ERST.
->
-> Ah, sorry! I misread your patch. Yeah, I see what you are doing.
->
-> OK. So, I guess that for kmsg_dump(KMSG_DUMP_PANIC) we should be
-> fine in general.
->
-> We call kmsg_dump(KMSG_DUMP_PANIC) after smp_send_stop() and after
-> printk_safe_flush_on_panic(). printk_safe_flush_on_panic() resets
-> the state of logbuf_lock, so logbuf_lock, in general case, should
-> be unlocked by the time we call kmsg_dump(KMSG_DUMP_PANIC).
-> Even for nested contexts.
->
->         CPU0
->         printk()
->          logbuf_lock_irqsave(flags)
->           -> NMI
->            panic()
->             smp_send_stop()
->              printk_safe_flush_on_panic()
->               raw_spin_lock_init(&logbuf_lock) << reinit >>
->             kmsg_dump(KMSG_DUMP_PANIC)
->              logbuf_lock_irqsave(flags)        << expected to be OK >>
->
-> So do we have strong reasons to disable NMI->panic->kmsg_dump(DUMP_PANIC)?
->
-> Other kmsg_dump(), maybe, can experience some troubles sometimes,
-> need to check that.
+This is a multi-part message in MIME format.
+--------------C43CA79F4814729DBF8EE52C
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Indeed, panic is especially handled and looks fine.
+On 7/13/19 10:26 AM, Alexey Dobriyan wrote:
+> On Fri, Jul 12, 2019 at 09:43:03PM +0300, Alexey Izbyshev wrote:
+>> On 7/12/19 8:46 PM, Alexey Dobriyan wrote:
+>>> The proper fix to all /proc/*/cmdline problems is to revert
+>>>
+>>> 	f5b65348fd77839b50e79bc0a5e536832ea52d8d
+>>> 	proc: fix missing final NUL in get_mm_cmdline() rewrite
+>>>
+>>> 	5ab8271899658042fabc5ae7e6a99066a210bc0e
+>>> 	fs/proc: simplify and clarify get_mm_cmdline() function
+>>>
+>> Should this be interpreted as an actual suggestion to revert the patches,
+>> fix the conflicts, test and submit them, or is this more like thinking out
+>> loud?
+> 
+> Of course! Do you have a reproducer?
+> 
+Attached.
 
-Sanity check in my patch could be relaxed:
+Alexey
 
-       if (WARN_ON_ONCE(reason != KMSG_DUMP_PANIC && in_nmi()))
-               return;
+--------------C43CA79F4814729DBF8EE52C
+Content-Type: text/x-csrc;
+ name="dump-page.c"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="dump-page.c"
 
->
->         -ss
+#include <fcntl.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+#define PAGE_SIZE 4096
+
+#define CHECK(expr) \
+  ({ \
+    long r = (expr); \
+    if (r < 0) { \
+      perror(#expr); \
+      exit(1); \
+    } \
+    r; \
+  })
+
+static void dump(unsigned char *page, size_t ind) {
+    char fname[30];
+    sprintf(fname, "page%zu", ind);
+    printf("dumping %s\n", fname);
+    int fd = CHECK(open(fname, O_CREAT|O_TRUNC|O_WRONLY, 0666));
+    CHECK(write(fd, page, PAGE_SIZE));
+    close(fd);
+}
+
+int main(int argc, char *argv[], char *envp[]) {
+    char *last_arg_nul = argv[argc - 1] + strlen(argv[argc - 1]);
+    printf("last arg end: %p\n", last_arg_nul);
+    size_t argv_size = last_arg_nul - argv[0] + 1;
+    size_t page_offset = (uintptr_t)last_arg_nul & (PAGE_SIZE - 1);
+    if (page_offset != PAGE_SIZE - 1 || argv_size < PAGE_SIZE - 1) {
+        printf("will re-exec to arrange argv\n");
+        if (page_offset != PAGE_SIZE - 1) {
+            /* Pad env block so that the last byte of arg block is also
+             * the last byte of its page. */
+            size_t env0_size = page_offset + 1 + strlen(envp[0]) + 1;
+            char *new_env = malloc(env0_size);
+            memset(new_env, 'Z', env0_size - 1);
+            new_env[env0_size - 1] = '\0';
+            envp[0] = new_env;
+        }
+        char *path = argv[0];
+        if (argv_size < PAGE_SIZE) {
+          /* Also make sure that arg block is not shorter than a page. */
+          argv[0] = (char[]){[0 ... PAGE_SIZE - 1] = 'Z', '\0'};
+        }
+        execve(path, argv, envp);
+        perror("execve");
+        return 127;
+    }
+
+    *last_arg_nul = 'Z';
+    /* Make sure the kernel can't read past arg_end. */
+    CHECK(mprotect(last_arg_nul + 1, PAGE_SIZE, PROT_NONE));
+
+    char buf[PAGE_SIZE];
+    unsigned char leaked[PAGE_SIZE] = {'U'};
+    unsigned num_good = 0;
+    int fd = CHECK(open("/proc/self/cmdline", O_RDONLY));
+    while (1) {
+        int found_good = 0;
+        for (size_t off = 1; off < PAGE_SIZE; ++off) {
+            CHECK(lseek(fd, argv_size - off, SEEK_SET));
+            ssize_t got = CHECK(read(fd, buf, sizeof buf));
+            if (got <= off) {
+                printf("no leak: kernel seems to be fixed\n");
+                return 1;
+            }
+            unsigned char leaked_byte = buf[got - 1];
+            found_good |= (leaked_byte && leaked_byte != 'Z');
+            leaked[off] = leaked_byte;
+        }
+        if (found_good)
+            dump(leaked, num_good++);
+        sleep(1);
+    }
+
+    close(fd);
+    return 0;
+}
+
+--------------C43CA79F4814729DBF8EE52C--
