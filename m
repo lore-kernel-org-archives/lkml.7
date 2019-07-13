@@ -7,71 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EF1C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235F7C742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD872083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA742083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 10:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="niQRyIm/"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SUITRGJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfGMK4g (ORCPT
+        id S1727806AbfGMK4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 06:56:36 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40123 "EHLO
+        Sat, 13 Jul 2019 06:56:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55567 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfGMK4g (ORCPT
+        with ESMTP id S1726460AbfGMK4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 06:56:36 -0400
+        Sat, 13 Jul 2019 06:56:51 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DAtx6j3837931
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DAugcv3837980
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 03:55:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DAtx6j3837931
+        Sat, 13 Jul 2019 03:56:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DAugcv3837980
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563015360;
-        bh=gkADcFmjjy6O5zsmAnxX8oLg+s5gfY2W+IkKz4WWCFk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=niQRyIm/Xvo6Y7VjzBcJoUf/gN9hnfUT9hBFnBf0fPJt/62zXKB7uAaLXD44c3bqH
-         xXbXYdTx+iPBd36QNCAhivl5r0u6fpWuuFTGGvwLBIBdcW6zx97yaiMkdLNb9dNslT
-         BZYC+5ZUH3aoyoPcZeW6Lhp7Xp1ReYC/9UERLfimuYNhvp/n7II8XDWmlQzxVmNKuO
-         QvQcRsrazLaWzvobu1VLr7XvWjj7PxzREoRO/XtOKpSfarNLSmpm+ofNUXqYjUj88a
-         NldNfdsdBoBof9tp1brgTGBd0gfc8QRqKMLCp6r/OnjVWkKCXNb26VXT2406r+5Zop
-         hTt+YHV3tcEoA==
+        s=2019061801; t=1563015402;
+        bh=oqD7Zy5Kc1UyPtvkgt9bJ8ZUgA6N0u40gnlH7Jj048o=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=SUITRGJR/yZjfM9+Ix6vNLxiAr+cA/P1g2j0lGkxF5UJZgFAosuQBW3VR5oKeeo0I
+         JuTPgShS5M9XVsdrBRZF0e7JCJhAa5c1SjMbrJ2k9y/WYdEeGM5p8YtElyEEvfqi0n
+         bTP9C8sc8ldO/mv1F8+HqHotv8kBSPX4ZNe68EseVAHVxW3+KRhjvOicgWBIUx5Lcy
+         Mf+N0LqksLusxihHIzWPxV9aLyUePeJYHPyc5deuKdWad0dFZoySrPTmfqbeWFcpWG
+         xTQLUp0hSIKlwFrcczb5aTIUjaOTUkJCSNUsulnsUsE0lBilUZguUWRT01JnP/TXtx
+         QTaaTVSiygCZg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DAtxpb3837927;
-        Sat, 13 Jul 2019 03:55:59 -0700
-Date:   Sat, 13 Jul 2019 03:55:59 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DAufHH3837977;
+        Sat, 13 Jul 2019 03:56:41 -0700
+Date:   Sat, 13 Jul 2019 03:56:41 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Leo Yan <tipbot@zytor.com>
-Message-ID: <tip-363bbaef63ffebcc745239fe80a953ebb5ac9ec9@git.kernel.org>
-Cc:     yao.jin@linux.intel.com, tmricht@linux.ibm.com,
-        linux@rasmusvillemoes.dk, khlebnikov@yandex-team.ru,
-        alexander.shishkin@linux.intel.com, acme@redhat.com,
-        suzuki.poulose@arm.com, peterz@infradead.org,
-        adrian.hunter@intel.com, davem@davemloft.net, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, alexey.budankov@linux.intel.com,
-        changbin.du@intel.com, jolsa@kernel.org, ak@linux.intel.com,
-        mathieu.poirier@linaro.org, namhyung@kernel.org,
-        alexios.zavras@intel.com, mingo@kernel.org, songliubraving@fb.com,
-        tglx@linutronix.de, leo.yan@linaro.org, dave@stgolabs.net,
-        eric.saint.etienne@oracle.com
-Reply-To: tmricht@linux.ibm.com, yao.jin@linux.intel.com,
-          linux@rasmusvillemoes.dk, khlebnikov@yandex-team.ru,
-          alexander.shishkin@linux.intel.com, suzuki.poulose@arm.com,
-          acme@redhat.com, peterz@infradead.org, adrian.hunter@intel.com,
-          davem@davemloft.net, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          changbin.du@intel.com, alexey.budankov@linux.intel.com,
-          jolsa@kernel.org, ak@linux.intel.com, mathieu.poirier@linaro.org,
-          namhyung@kernel.org, alexios.zavras@intel.com, mingo@kernel.org,
-          songliubraving@fb.com, tglx@linutronix.de, dave@stgolabs.net,
-          leo.yan@linaro.org, eric.saint.etienne@oracle.com
-In-Reply-To: <20190702103420.27540-8-leo.yan@linaro.org>
-References: <20190702103420.27540-8-leo.yan@linaro.org>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-muvb8xqyh0gysgfjfq35w642@git.kernel.org>
+Cc:     tglx@linutronix.de, jolsa@kernel.org, namhyung@kernel.org,
+        acme@redhat.com, leo.yan@linaro.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        adrian.hunter@intel.com
+Reply-To: adrian.hunter@intel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, jolsa@kernel.org,
+          tglx@linutronix.de, acme@redhat.com, leo.yan@linaro.org,
+          namhyung@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf map: Fix potential NULL pointer dereference
- found by smatch tool
-Git-Commit-ID: 363bbaef63ffebcc745239fe80a953ebb5ac9ec9
+Subject: [tip:perf/urgent] perf inject: The tool->read() call may pass a
+ NULL evsel, handle it
+Git-Commit-ID: 40978e9bf2137223993e70921de2731201788049
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -85,88 +70,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  363bbaef63ffebcc745239fe80a953ebb5ac9ec9
-Gitweb:     https://git.kernel.org/tip/363bbaef63ffebcc745239fe80a953ebb5ac9ec9
-Author:     Leo Yan <leo.yan@linaro.org>
-AuthorDate: Tue, 2 Jul 2019 18:34:16 +0800
+Commit-ID:  40978e9bf2137223993e70921de2731201788049
+Gitweb:     https://git.kernel.org/tip/40978e9bf2137223993e70921de2731201788049
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Wed, 3 Jul 2019 16:02:09 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 9 Jul 2019 09:33:55 -0300
 
-perf map: Fix potential NULL pointer dereference found by smatch tool
+perf inject: The tool->read() call may pass a NULL evsel, handle it
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+Check first, as machines__deliver_event() may have
+perf_evlist__id2evsel() returning NULL.
 
-  tools/perf/util/map.c:479
-  map__fprintf_srccode() error: we previously assumed 'state' could be
-  null (see line 466)
+This was found while checking a report from Leo Yan that used the smatch
+tool to find places where a pointer is checked before use and then,
+later in the same function gets used without checking.
 
-  tools/perf/util/map.c
-  465         /* Avoid redundant printing */
-  466         if (state &&
-  467             state->srcfile &&
-  468             !strcmp(state->srcfile, srcfile) &&
-  469             state->line == line) {
-  470                 free(srcfile);
-  471                 return 0;
-  472         }
-  473
-  474         srccode = find_sourceline(srcfile, line, &len);
-  475         if (!srccode)
-  476                 goto out_free_line;
-  477
-  478         ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
-  479         state->srcfile = srcfile;
-              ^^^^^^^
-  480         state->line = line;
-              ^^^^^^^
-
-This patch validates 'state' pointer before access its elements.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Fixes: dd2e18e9ac20 ("perf tools: Support 'srccode' output")
-Link: http://lkml.kernel.org/r/20190702103420.27540-8-leo.yan@linaro.org
+Link: https://lkml.kernel.org/n/tip-muvb8xqyh0gysgfjfq35w642@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/builtin-inject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 6fce983c6115..5f87975d2562 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -476,8 +476,11 @@ int map__fprintf_srccode(struct map *map, u64 addr,
- 		goto out_free_line;
- 
- 	ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
--	state->srcfile = srcfile;
--	state->line = line;
-+
-+	if (state) {
-+		state->srcfile = srcfile;
-+		state->line = line;
-+	}
- 	return ret;
- 
- out_free_line:
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 8e0e06d3edfc..f4591a1438b4 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -224,7 +224,7 @@ static int perf_event__repipe_sample(struct perf_tool *tool,
+ 				     struct perf_evsel *evsel,
+ 				     struct machine *machine)
+ {
+-	if (evsel->handler) {
++	if (evsel && evsel->handler) {
+ 		inject_handler f = evsel->handler;
+ 		return f(tool, event, sample, evsel, machine);
+ 	}
