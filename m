@@ -2,136 +2,78 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E06AC31E40
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 18:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2391C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 18:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8EA21841
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 18:02:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8/xfNKH"
+	by mail.kernel.org (Postfix) with ESMTP id A813A2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 18:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfGMSC0 (ORCPT
+        id S1727950AbfGMSyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 14:02:26 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41166 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727766AbfGMSC0 (ORCPT
+        Sat, 13 Jul 2019 14:54:53 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:37568 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbfGMSyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 14:02:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o101so12680989ota.8;
-        Sat, 13 Jul 2019 11:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ZP/voUQ+Ch7jvDhff/3yc73Q7YGKXw7YDhL153Ao2E=;
-        b=b8/xfNKHuNqMcqJ4EyGHcHDYmM+zN6nVT7x//oevUF4FbXx91wi9j00N6ceIa8Rl/b
-         EWTldZb8VXxoLMGdQ/jX9GhU9FkvuZVvXYMStADoUM56a6Ao8VljLH9YGj4om4qyZlHK
-         guTTMvmbnMRk8fXgVct4OjpXOGLeqKYUwdzSwAWLaJyJkOj5qUUBWPo/w3tPJUJ6nDNN
-         QyCrKo0KX9LlpnLy3HJMroREcBHtTpd/1FRymXULMs0ImnZYirfGH8QSwhLGK2VZpODY
-         0oH0K3X6QcMqg9JS7+QwoIzt5VGsca4BUNCU45R/r+xmzf8tVoXlupCWcfN8h88MaV/o
-         WjHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ZP/voUQ+Ch7jvDhff/3yc73Q7YGKXw7YDhL153Ao2E=;
-        b=WH1W97UGFUNmdh9IF+COeZ12btnJdLX4fl+9Iw0bym01rvhahdKpWKcGlIeANA7oXe
-         gxy/L6jpP9QrLct1To5E4aq31PlmpGfwydIZR0QhtNhYSI1e91q98E8Jz3JDfu2Dr2V6
-         WvLVJBjHJXwSJfz2rjN3VK7aosA/86n6mY8nd8w5mjRdidHU8vCC+opGcNfq+pjwkcPE
-         aoSWhwPmIyHyH31zXzBysq+a8swRjqQOhyCvzxIoLIglLyupKw9c20WOLAsQw+AVJlBo
-         KULyn4xCjkKfkWQTe1J8WaAF9kmnV5qDKDIc+2Q3h5tCbHs8E3mIefaVFmoHOfiShUZe
-         E7Ng==
-X-Gm-Message-State: APjAAAWZ9ifugcXc7rPrlYOo/aKrCyDXc7kSlxZxx5EOe0RuRJzDBgJA
-        bXmqiSrxgYVwV5u/YMaZTWsKVi9Dg8xzc+H78fE=
-X-Google-Smtp-Source: APXvYqzRubs7sRxl+oVCUfIW4EL3ndy9n7fDLykWAxtEagG7ww8vQ2yqiVZLk0pBacfN9B23mEk41XjLSvO9HJUoEFY=
-X-Received: by 2002:a9d:6742:: with SMTP id w2mr4128114otm.371.1563040944838;
- Sat, 13 Jul 2019 11:02:24 -0700 (PDT)
+        Sat, 13 Jul 2019 14:54:53 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 4758280478; Sat, 13 Jul 2019 20:54:40 +0200 (CEST)
+Date:   Sat, 13 Jul 2019 20:54:50 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     kernel list <linux-kernel@vger.kernel.org>, dzu@member.fsf.org,
+        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
+        s.trumtrar@pengutronix.de, marex@denx.de, stefan@agner.ch
+Subject: USB on EBV Socrates
+Message-ID: <20190713185450.GA2877@amd>
 MIME-Version: 1.0
-References: <20190623164206.7467-1-tiny.windzz@gmail.com> <CA+E=qVfhDEQER2UTj65hR9erzej9Ey2FrUa9GV=iCFYsWZ2ztw@mail.gmail.com>
-In-Reply-To: <CA+E=qVfhDEQER2UTj65hR9erzej9Ey2FrUa9GV=iCFYsWZ2ztw@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Sat, 13 Jul 2019 11:01:58 -0700
-Message-ID: <CA+E=qVdAUFJM27cNL6WRkk5moX=mEk7WUs6UBoX58Y7ove40oQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] add thermal driver for h6
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 4:09 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Sun, Jun 23, 2019 at 9:42 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> >
-> > This patchset add support for H3 and H6 thermal sensor.
-> >
-> > BTY, do a cleanup in thermal makfile.
-> >
-> > Yangtao Li (11):
-> >   thermal: sun8i: add thermal driver for h6
-> >   dt-bindings: thermal: add binding document for h6 thermal controller
-> >   thermal: fix indentation in makefile
-> >   thermal: sun8i: get ths sensor number from device compatible
-> >   thermal: sun8i: rework for sun8i_ths_get_temp()
-> >   thermal: sun8i: get ths init func from device compatible
-> >   thermal: sun8i: rework for ths irq handler func
-> >   thermal: sun8i: support ahb clocks
-> >   thermal: sun8i: rework for ths calibrate func
-> >   dt-bindings: thermal: add binding document for h3 thermal controller
-> >   thermal: sun8i: add thermal driver for h3
->
-> It would be nice to add dts changes to this series. It's unlikely that
-> you'll get any "Tested-by" otherwise.
 
-I added A64 support on top of this series, see
-https://github.com/anarsoul/linux-2.6/tree/v5.2-thermal
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Branch also contains patches to enable DVFS on A64, feel free to
-cherry pick only those related to thermal driver if you want to
-include A64 support into v5 series.
+Hi!
 
->
-> >  .../bindings/thermal/sun8i-thermal.yaml       |  94 +++
-> >  MAINTAINERS                                   |   7 +
-> >  drivers/thermal/Kconfig                       |  14 +
-> >  drivers/thermal/Makefile                      |   9 +-
-> >  drivers/thermal/sun8i_thermal.c               | 534 ++++++++++++++++++
-> >  5 files changed, 654 insertions(+), 4 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> >  create mode 100644 drivers/thermal/sun8i_thermal.c
-> >
-> > ---
-> > v4:
-> > -add h3 support
-> > -fix yaml file
-> > ---
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+(First, I'd like to thank Detlev for fpgasoc-quickstart, it made
+getting Socrates to run way easier. I used some older version... so I
+had to delete your public key from it. If there's more than one, I'd
+like to know :-) ).
+
+Now, I'd like to get USB host to work; I don't have cable with right
+pullups, so host-only would be nice, but I noticed USB is not enabled
+at all in arch/arm/boot/dts/socfpga_cyclone5_socrates.dts . I tried
+enabling it but could not get it to work. Perhaps someone knows what
+is going on there?
+
+Thanks,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0qKPoACgkQMOfwapXb+vJjdgCgwWmUWNr1GJLVw8/b6Lja+40J
+UowAmQFrnvf9zradQj4FcDTf6qsrI20f
+=Bohi
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
