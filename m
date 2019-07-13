@@ -2,158 +2,103 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515ACC742A7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E5FC742D7
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2661B2083B
+	by mail.kernel.org (Postfix) with ESMTP id 8A95E2083B
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="l0bP+nVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfGMLhK (ORCPT
+        id S1727757AbfGMLjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 07:37:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:36286 "EHLO foss.arm.com"
+        Sat, 13 Jul 2019 07:39:15 -0400
+Received: from mout.gmx.net ([212.227.15.18]:47861 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbfGMLhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 07:37:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A961A28;
-        Sat, 13 Jul 2019 04:37:09 -0700 (PDT)
-Received: from why (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAADD3F59C;
-        Sat, 13 Jul 2019 04:37:08 -0700 (PDT)
-Date:   Sat, 13 Jul 2019 12:37:04 +0100
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Guoheyi <guoheyi@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
-        kvmarm <kvmarm@lists.cs.columbia.edu>
-Subject: Re: ARM/gic-v4: deadlock occurred
-Message-ID: <20190713123704.2d8a308c@why>
-In-Reply-To: <dbbf516d-3326-a948-8617-db6b6ec0ceed@huawei.com>
-References: <9efe0260-4a84-7489-ecdd-2e9561599320@huawei.com>
-        <86lfzl9ofe.wl-marc.zyngier@arm.com>
-        <0b413592-7d98-ebe8-35c5-da330f800326@huawei.com>
-        <86a7fx9lg8.wl-marc.zyngier@arm.com>
-        <4d60d130-b7ce-96cb-5f8a-11e83329601a@huawei.com>
-        <868svg9igl.wl-marc.zyngier@arm.com>
-        <dbbf516d-3326-a948-8617-db6b6ec0ceed@huawei.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726474AbfGMLjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 07:39:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563017934;
+        bh=BWWyqYc0Q9lHRlufOjwlKzREgcGCirILPkFoZng2iMw=;
+        h=X-UI-Sender-Class:Subject:From:Cc:References:To:Date:In-Reply-To;
+        b=l0bP+nVq4Z/ym5mL673tifm3R/v/AN0xnxmc1JYY10LUxZ3WuGZ55pdJQC9bwHMNL
+         l1ooHC6BxBuuT/OHSV5dck2DI9VztTOLJ0zzQumDVRtaVN/2kiwXQQyEQrwfJkafLx
+         kAz8lu5VMpuvk50bYQZw4tKiRVyKQLqb+gNuTR4E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.43.122] ([92.40.248.250]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MGyxN-1hiBm21fEp-00E2qN; Sat, 13
+ Jul 2019 13:38:54 +0200
+Subject: [REGRESSION] Xorg segfaults on Asus Chromebook CP101 with Linux v5.2
+ (was Asus C101P Chromeboot fails to boot with Linux 5.2)
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+References: <59042b09-7651-be1d-347f-0dc4aa02a91b@gmx.co.uk>
+ <CANBLGcyO5wAHgSVjYFB+hcp+SzaKY9d0QJm-hxqnSYbZ4Yv97g@mail.gmail.com>
+ <862e98f3-8a89-a05e-1e85-e6f6004da32b@gmx.co.uk>
+ <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Message-ID: <f47f8759-8113-812a-b17a-4be09665369e@gmx.co.uk>
+Date:   Sat, 13 Jul 2019 12:38:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <5fe66d5d-0624-323f-3bf8-56134ca85eca@gmx.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:LbPaPzVSq7PJlnapOmV+BlI1ChwWNYoa0SaFu0C21B84M97YvV7
+ 85RffBT6jaGa40g+bVMVtOXftprToNyjJMhZ21zY+IwVtRgW6GMAs+zzSL7CbLyh+DcuWbv
+ Gc+je70JuDlPCVNZZpllDXJ7wB/EiAjB7ad7ycDyadGdxCqNbl33o80PMLvk321yAP8t/E3
+ zta3oivBwYDmHGCSViX/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zRO9TRRdg4Q=:OTrf3LHKXJB0WL90b8u/YF
+ WpIex8PeEtoGFs631qIMrNBEK8Fb8vjim+Y0TmYya94HQsEJbHlkyPnn3xE/k/IJZVFnHRaxp
+ 1EagelV6OS8zlcViSPsuljs7/OKHU4f48Ogd/4KXNJaFFj5adg9YAYi0osg4m+Bk4e3uMvazn
+ /fAtprsvifQwZM8Vk7bsGXYuCezEDDF17AbaFO7p13oaFNYhA+T52VstQr+9gZftY0GcBfph+
+ K6B+FBi7JGyXglL7RdQna2Kf/U+VlKHz/YgkQEawnT84LBu21KKNOtOuAbLP0IsE9jN8iWETw
+ 47Shx5L2rJCD/05K981Hm35Mw4xft/gRpuCzKpsVG1Rkc6yzq1bxaZ7j1musUBC6gUzaHeBi9
+ 0BtIWbJn0u630XsvVU/6E3VRDX9qnuAu8pestYlV8oAzXzaAUG+9MmO86DK4fc31olRyn1WTs
+ mpZzd/xZ9rX1cWZb0FBPDzXD/GiCiM/eJ/ifGjJokKnrVK9sfcIp8HiFNDNUgc77Et0LfC/jN
+ GvMaiVRMH7eBTsy/ZLDegArWn4S/bsazA75tQtchmx1+X0/ymqkrYENO63CGVBpz/OSbhM4oP
+ wX7gmS9mgp3dxVBRdpNQd3mWSIpUHiJMcQJVWyJEzTdqMhZmWtGr5M0TydHmIcG3OIKixSk6u
+ b8HXYPPML0ugB+F4rmSP/hvSReKr/6r40xaNHaAR5JM3vbTSlU09tdkle60bkiKEQh+uXDLxo
+ YzLc2ciQn8om5Tg0ro+4cTaj3h1I3HQ7BHqle0Xmj3AbK8nFXZmjYuf1GSp5tm30ogK4TAtME
+ PN1433KPbgvUNTDzostkGze0dyaPqVND116h7oysndGY8oTQUUeS39qsMc0fAwGDmnHujKOiL
+ GjA7veBdsXC0EgdgjniItnk7JRPMJEziFINoz0DGfvtJXEvlwPl/pAMe+eEDHrz92NQPP+SJn
+ RwK+Sso8zaB+seDgnl5safxDVdgtjnmZysM5qQswcZuI0HYWCgL9GKBmmb44niMoZbcdxM6Xk
+ 2M1Nv3wyETg9T2xVXZmwFka3LMN8dnFfnl2Gzq15Cc96cVfzMIF+PkXrw1UTqTTPigDUx6dA5
+ syw/bFdIZskDDZ9egAc79E5s/r1mYt2cc93
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jul 2019 19:08:57 +0800
-Guoheyi <guoheyi@huawei.com> wrote:
+Hi all,
 
-Hi Heyi,
+I initially thought my machine was failing to boot entirely, but it
+turns out it was just failing to start the display manager. I managed to
+escape to a tty by hammering the keyboard a bit.
 
-> Hi Marc,
-> 
-> Really sorry for the delay of testing the rework patches. I picked up
-> the work these days and applied the patches to our 4.19.36 stable
-> branch. However, I got below panic during the boot process of host
-> (not yet to boot guests).
-> 
-> I supposed the result was not related with my testing kernel version,
-> for we don't have many differences in ITS driver; I can test against
-> mainline if you think it is necessary.
+I suspect the culprit is the rockchip_vpu driver (in staging/media),
+which has been renamed to hantro in this merge window. When I run startx
+from a terminal, X fails to start and Xorg segfaults (log here:
+http://users.sussex.ac.uk/~ad374/xorg.log). X seems to work without any
+issues in v5.1.
 
-In general, please report bugs against mainline. There isn't much I can
-do about your private tree...
+I've also tried running trace on the Xorg process, but the output was
+pretty verbose. I can share if that would be helpful though.
 
-That being said, a couple of comments below.
+Best,
+Alex
 
-> Thanks,
-> 
-> Heyi
-> 
-> 
-> [   16.990413] iommu: Adding device 0000:00:00.0 to group 6
-> [   17.000691] pcieport 0000:00:00.0: Signaling PME with IRQ 133
-> [   17.006456] pcieport 0000:00:00.0: AER enabled with IRQ 134
-> [   17.012151] iommu: Adding device 0000:00:08.0 to group 7
-> [   17.018575] Unable to handle kernel paging request at virtual address 00686361635f746f
-> [   17.026467] Mem abort info:
-> [   17.029251]   ESR = 0x96000004
-> [   17.032313]   Exception class = DABT (current EL), IL = 32 bits
-> [   17.038207]   SET = 0, FnV = 0
-> [   17.041258]   EA = 0, S1PTW = 0
-> [   17.044391] Data abort info:
-> [   17.047260]   ISV = 0, ISS = 0x00000004
-> [   17.051081]   CM = 0, WnR = 0
-> [   17.054035] [00686361635f746f] address between user and kernel address ranges
-> [   17.061140] Internal error: Oops: 96000004 [#1] SMP
-> [   17.065997] Process kworker/0:4 (pid: 889, stack limit = 0x(____ptrval____))
-> [   17.073013] CPU: 0 PID: 889 Comm: kworker/0:4 Not tainted 4.19.36+ #8
-> [   17.079422] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 0.52 06/20/2019
-> [   17.086788] Workqueue: events work_for_cpu_fn
-> [   17.091126] pstate: 20c00009 (nzCv daif +PAN +UAO)
-> [   17.095895] pc : __kmalloc_track_caller+0xb0/0x2a0
-> [   17.100662] lr : __kmalloc_track_caller+0x64/0x2a0
-> [   17.105429] sp : ffff00002920ba00
-> [   17.108728] x29: ffff00002920ba00 x28: ffff802cb6792780
-> [   17.114015] x27: 00000000006080c0 x26: 00000000006000c0
-> [   17.119302] x25: ffff0000084c8a00 x24: ffff802cbfc0fc00
-> [   17.124588] x23: ffff802cbfc0fc00 x22: ffff0000084c8a00
-> [   17.129875] x21: 0000000000000004 x20: 00000000006000c0
-> [   17.135161] x19: 65686361635f746f x18: ffffffffffffffff
-> [   17.140448] x17: 000000000000000e x16: 0000000000000007
-> [   17.145734] x15: ffff000009119708 x14: 0000000000000000
-> [   17.151021] x13: 0000000000000003 x12: 0000000000000000
-> [   17.156307] x11: 0000000005f5e0ff x10: ffff00002920bb80
-> [   17.161594] x9 : 00000000ffffffd0 x8 : 0000000000000098
-> [   17.166880] x7 : ffff00002920bb80 x6 : ffff000008a8cb98
-> [   17.172167] x5 : 000000000000a705 x4 : ffff803f802d22e0
-> [   17.177453] x3 : ffff00002920b990 x2 : ffff7e00b2dafd00
-> [   17.182740] x1 : 0000803f77476000 x0 : 0000000000000000
-> [   17.188027] Call trace:
-> [   17.190461]  __kmalloc_track_caller+0xb0/0x2a0
-> [   17.194886]  kvasprintf+0x7c/0x108
-> [   17.198271]  kasprintf+0x60/0x80
-> [   17.201488]  populate_msi_sysfs+0xe4/0x250
-> [   17.205564]  __pci_enable_msi_range+0x278/0x450
-> [   17.210073]  pci_alloc_irq_vectors_affinity+0xd4/0x110
-> [   17.215188]  pcie_port_device_register+0x134/0x558
-> [   17.219955]  pcie_portdrv_probe+0x3c/0xf0
-> [   17.223947]  local_pci_probe+0x44/0xa8
-> [   17.227679]  work_for_cpu_fn+0x20/0x30
-> [   17.231411]  process_one_work+0x1b4/0x3f8
-> [   17.235401]  worker_thread+0x210/0x470
-> [   17.239134]  kthread+0x134/0x138
-> [   17.242348]  ret_from_fork+0x10/0x18
-> [   17.245907] Code: f100005f fa401a64 54000bc0 b9402300 (f8606a66)
-> [   17.251970] kernel fault(0x1) notification starting on CPU 0
-> [   17.257602] kernel fault(0x1) notification finished on CPU 0
-> [   17.263234] Modules linked in:
-> [   17.266277] ---[ end trace 023e6b19cb68b94f ]---
-
-What in this trace makes you think that this has anything to do with an
-ITS change? The system crashes in a completely unrelated piece of code.
-Also, if you look at the VA that indicates the crash, it should be
-obvious that this isn't a kernel address. Worse, this is a piece of
-ASCII text:
-
-$ echo 00686361635f746f | xxd -r -p
-hcac_to
-
-This tends to indicate some memory form of corruption ("hcac_to" looks
-like the begining of a symbol), and I'm not sure how the ITS would be
-involved in this... Furthermore, this happens on the host at boot time,
-while the patch you suspect only affects VMs...
-
-I think you need to spend more time analysing this issue.
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
