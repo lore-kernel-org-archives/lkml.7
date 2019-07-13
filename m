@@ -2,77 +2,96 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AAC742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A06C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF3420850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D2020838
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563030663;
+	bh=kE7m9cGprI//uvkO6ecB5iEt1Q6DfXVSibQcRX0j3EM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b0g4LVwyDsa/L+XDuaeSCsZ0z2WFxur3njUKYto+bQkyi7pwLeWg02I1MWj+fJQRF
+	 99travqINkmWXo/o2/fh9bFzkGyYGv72VS+52mXFpcrV/w2sKK4QdTaWWZXXdweXUY
+	 FzyvN6sts61IEytUm9rnqGUYu0jHU1E47jvsdpJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfGMPKc (ORCPT
+        id S1728008AbfGMPLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 11:10:32 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15017 "EHLO mga05.intel.com"
+        Sat, 13 Jul 2019 11:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfGMPKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 11:10:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jul 2019 08:10:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,486,1557212400"; 
-   d="scan'208";a="318271489"
-Received: from hbriegel-mobl.ger.corp.intel.com ([10.252.50.48])
-  by orsmga004.jf.intel.com with ESMTP; 13 Jul 2019 08:10:26 -0700
-Message-ID: <c6a99c107c1e6b814c1968146c87291c3e84aa2f.camel@linux.intel.com>
-Subject: Re: [RFC PATCH v4 1/3] selftests/x86/sgx: Fix Makefile for SGX
- selftest
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Cedric Xing <cedric.xing@intel.com>, linux-kernel@vger.kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        kai.svahn@intel.com, kai.huang@intel.com
-Date:   Sat, 13 Jul 2019 18:10:25 +0300
-In-Reply-To: <757d44a0e67bfa09d97eea918bc0d20383b5e80e.1563000446.git.cedric.xing@intel.com>
-References: <cover.1563000446.git.cedric.xing@intel.com>
-         <757d44a0e67bfa09d97eea918bc0d20383b5e80e.1563000446.git.cedric.xing@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1727656AbfGMPLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 11:11:01 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253AD20838;
+        Sat, 13 Jul 2019 15:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563030660;
+        bh=kE7m9cGprI//uvkO6ecB5iEt1Q6DfXVSibQcRX0j3EM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=psrHfeGU2v9zEcMUhCgl8Sct2dyMyH8o+Kp0lXmkTYGVoQHKsBRM5DakR9oTnmdCK
+         QsAZPgIvfhwrnBefDtqkmGRyyLAOXnR/6O34qU86VhkBUSCNtBwjrXpnQsinqyi+tf
+         dxT9GMZN+6Wh4YDV/UrTu2JgZsEcD3dzyEYCg5tc=
+Date:   Sat, 13 Jul 2019 11:10:59 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Peter Huewe <peterhuewe@gmx.de>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fTPM: fix PTR_ERR() usage
+Message-ID: <20190713151059.GG10104@sasha-vm>
+References: <20190712114951.912328-1-arnd@arndb.de>
+ <730715760b20d9a76aa93c3ebc39a62045c9ee34.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <730715760b20d9a76aa93c3ebc39a62045c9ee34.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-12 at 23:51 -0700, Cedric Xing wrote:
-> The original x86/sgx/Makefile didn't work when "x86/sgx" was specified as the
-> test target, nor did it work with "run_tests" as the make target. Yet another
-> problem was that it breaks 32-bit only build. This patch fixes those problems,
-> along with adjustments to compiler/linker options and simplifications to the
-> build rules.
-> 
-> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+On Fri, Jul 12, 2019 at 06:34:24PM +0300, Jarkko Sakkinen wrote:
+>On Fri, 2019-07-12 at 13:49 +0200, Arnd Bergmann wrote:
+>> A last minute change must have confused PTR_ERR() and ERR_PTR():
+>>
+>> drivers/char/tpm/tpm_ftpm_tee.c:236:15: error: incompatible pointer to integer
+>> conversion passing 'struct tee_context *' to parameter of type 'long' [-
+>> Werror,-Wint-conversion]
+>>                 if (ERR_PTR(pvt_data->ctx) == -ENOENT)
+>> drivers/char/tpm/tpm_ftpm_tee.c:239:18: error: incompatible pointer to integer
+>> conversion passing 'struct tee_context *' to parameter of type 'long' [-
+>> Werror,-Wint-conversion]
+>>                 return ERR_PTR(pvt_data->ctx);
+>>
+>> Fixes: c975c3911cc2 ("fTPM: firmware TPM running in TEE")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+>Arnd, thanks.
+>
+>I squashed this to the associated commit.
+>
+>I also fine-tuned the commit messages a bit (tag, imperative form).
 
-You must split this in quite a few separate patches:
+Yes, thank you!
 
-1. One for each fix.
-2. At least one patch for each change in compiler and linker options with a
-   commit message clearly expalaining why the change was made.
-3. One for each simplification.
+>Started also wondering tha tpm_ftpm_tee is a too generic name given that
+>this is for ARM TZ only. Would it make sense to rename it as something
+>like tpm_ftpm_tee_arm? Other proposals are welcome. Just made something
+>up.
 
-We don't support 32-bit build:
+Hm, isn't the _tee part enough?
 
-config INTEL_SGX
-	bool "Intel SGX core functionality"
-	depends on X86_64 && CPU_SUP_INTEL
-	
-/Jarkko
-
+--
+Thanks,
+Sasha
