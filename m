@@ -2,276 +2,286 @@ Return-Path: <SRS0=v0Gj=WB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_96_XX,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE73C0650F
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA83C0650F
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DE721738
-	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565010328;
-	bh=1KhugDbYUY1S51uwi69yCtGXNjuJxQjnkDZDsrv/bog=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=X3nsd/1CJ2BZV0Z6Rp9zhDeE1KECEXxEYCMYOSWWBhtBv1EShmQ+0F0/Y1Lk+Sa0T
-	 8D10aJdx4NR4sToxGsZTQcpAYix1q+e/i3yIir4vIF9KSyIqGP62N1AUCAiTWzv/k0
-	 cBWxa8nP4e9B/pWiMQ2XMm4B0CWvVVoSlHFt5acs=
+	by mail.kernel.org (Postfix) with ESMTP id 94A092087B
+	for <linux-kernel@archiver.kernel.org>; Mon,  5 Aug 2019 13:05:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y2CBe7wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbfHENF0 (ORCPT
+        id S1729352AbfHENFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 09:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729274AbfHENFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 09:05:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8775206C1;
-        Mon,  5 Aug 2019 13:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565010320;
-        bh=1KhugDbYUY1S51uwi69yCtGXNjuJxQjnkDZDsrv/bog=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AaSLtXmPuBM6yfIsa5l5YBVwdtQFIfo1GVFN0hTNBdBRY4KlLILp65RtIN18tX6XO
-         AUbRTePlNny/RtRl6gvKHErL4HrdnP9d+13LW0X5qBGCvYJing2T8W0ZDNPgr3oB7v
-         ubOToXLVW+z3rCU09xUTZl3Xgpp0S8hGghQSEL20=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/42] 4.9.188-stable review
-Date:   Mon,  5 Aug 2019 15:02:26 +0200
-Message-Id: <20190805124924.788666484@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.188-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.188-rc1
-X-KernelTest-Deadline: 2019-08-07T12:49+00:00
-Content-Transfer-Encoding: 8bit
+        Mon, 5 Aug 2019 09:05:36 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:29894 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729305AbfHENF3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 09:05:29 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190805130527epoutp012951590e4ac281e33e405a85b91e60aa~4CJnDdWsT1531215312epoutp01A
+        for <linux-kernel@vger.kernel.org>; Mon,  5 Aug 2019 13:05:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190805130527epoutp012951590e4ac281e33e405a85b91e60aa~4CJnDdWsT1531215312epoutp01A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565010327;
+        bh=FP8ux3OTkd8fvlaQBEXL6CEm156hOz8+Jh5icRMsf2w=;
+        h=From:To:Subject:Date:References:From;
+        b=Y2CBe7wx7zFATsaDqua9S3ytj3SsP/DTKMdF6XrpY8R369Ygc3mlfgBXhr0Uyp61I
+         3b0brzSLX/M6fDIScU8cwz8q7uGfS9/zUXSziqAT1KSOj2AwyceEFwGF4cQ6/W+G/Q
+         qf3kfpOKepke2rNIJVntlUWv0QZAIDambNqPvyUc=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190805130526epcas1p13714bd330f18070470fd72da935125e3~4CJmfFlAc0752407524epcas1p1v;
+        Mon,  5 Aug 2019 13:05:26 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 462J0P2j3GzMqYkc; Mon,  5 Aug
+        2019 13:05:25 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        25.35.04075.599284D5; Mon,  5 Aug 2019 22:05:25 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f~4CJk_2iBo2928429284epcas1p2p;
+        Mon,  5 Aug 2019 13:05:24 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190805130524epsmtrp191fef8ddceb5d0a126efa4e56f69aa57~4CJk_KbVS1992919929epsmtrp1N;
+        Mon,  5 Aug 2019 13:05:24 +0000 (GMT)
+X-AuditID: b6c32a36-b49ff70000000feb-d5-5d482995ff7c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5B.F5.03706.499284D5; Mon,  5 Aug 2019 22:05:24 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.100.192]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190805130524epsmtip1bad200ba0aa478eb9d18115bdd9e2181~4CJkz3cfV2632326323epsmtip1y;
+        Mon,  5 Aug 2019 13:05:24 +0000 (GMT)
+From:   Jungseung Lee <js07.lee@samsung.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
+        infrastructure)), linux-kernel@vger.kernel.org (open list),
+        js07.lee@gmail.com, js07.lee@samsung.com
+Subject: [PATCH] fs/binfmt_elf.c: remove unnecessary white space.
+Date:   Sun, 14 Jul 2019 08:53:44 +0900
+Message-Id: <20190713235344.24683-1-js07.lee@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHKsWRmVeSWpSXmKPExsWy7bCmvu5UTY9Yg5ftghZz1q9hs/g75x2T
+        xaObv1kt9uw9yWJxedccNovzf4+zOrB57Jx1l93jxIzfLB59W1YxenzeJOex6clbpgDWqByb
+        jNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKALlBTKEnNK
+        gUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFhgYFesWJucWleel6yfm5VoYGBkamQJUJORl3
+        jixgKXitXfGo/z5LA+N5pS5GTg4JAROJC2+XMYHYQgI7GCW23xbrYuQCsj8xSuxb1cIM4Xxj
+        lHizbQsjTMfrAx+hEnsZJRreT2SEcD4zSvz+8YANpIpNQEvixu9NrCAJEYFGJonvm7aCLREW
+        cJTY9nYpC4jNIqAqseveITCbV8BS4t31N1Ar5CVWbzgAtkJC4COrxP6d75kgEi4S71p3skLY
+        whKvjm9hh7ClJF72t0HZxRI7V05kh2huYZR4tHwJVMJY4t3btUBTOTiYBTQl1u/ShwgrSuz8
+        PRdsMbMAn8S7rz2sICUSArwSHW1CECVKEm8etLBA2BISFx73Qp3gIXF10iJmSODFSrxqfMA4
+        gVFmFsKCBYyMqxjFUguKc9NTiw0LjJCjZhMjOC1pme1gXHTO5xCjAAejEg+vgqx7rBBrYllx
+        Ze4hRgkOZiUR3kJmoBBvSmJlVWpRfnxRaU5q8SFGU2DoTWSWEk3OB6bMvJJ4Q1MjY2NjCxMz
+        czNTYyVx3oU/LGKFBNITS1KzU1MLUotg+pg4OKUaGDmjGuYV7nStObD87kKHm2u1ih03v3lm
+        7it1+qSb+n1esdrX8R/u1zmvtNhf9c1IqeLqSaaA6C+imknbWW5tiC6btZU5f+ZKtaSEez2b
+        hbOm7TpYfPf7JifHNTfavKZfWx178/KjnL1pdZdd31yP1jpbc4Jx8Zodh9zubdfznRqs+WHN
+        nVlCT4qVWIozEg21mIuKEwFDNReFYQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNJMWRmVeSWpSXmKPExsWy7bCSnO4UTY9Yg3MftC3mrF/DZvF3zjsm
+        i0c3f7Na7Nl7ksXi8q45bBbn/x5ndWDz2DnrLrvHiRm/WTz6tqxi9Pi8Sc5j05O3TAGsUVw2
+        Kak5mWWpRfp2CVwZd44sYCl4rV3xqP8+SwPjeaUuRk4OCQETidcHPjJ3MXJxCAnsZpSY+ecI
+        M0RCQuLRzi8sXYwcQLawxOHDxRA1Hxklfv05xAJSwyagJXHj9yZWkISIQCuTRPPmo0wgCWEB
+        R4ltb5eCFbEIqErsugfRwCtgKfHu+htGiAXyEqs3HGCewMi9gJFhFaNkakFxbnpusWGBYV5q
+        uV5xYm5xaV66XnJ+7iZGcJBoae5gvLwk/hCjAAejEg/vCSn3WCHWxLLiytxDjBIczEoivIXM
+        QCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoYZ3Ev13Lb
+        2fFhqnac23K2LQbrfims+Wy7cZrCo5jvdgcE/2r4pza6s7C3l8ScymePfveU8R/LqcInv3Yt
+        P7zZ7H+GKLevZKP4wWPzBSaxM3WuV9pz7bxf+EvPadnXvWJMri9qYtyuJ3b7m790cb5s37Jv
+        poW2ykr/lSTKtBJ37Nqoa/acP7NZiaU4I9FQi7moOBEAtHRDiQ4CAAA=
+X-CMS-MailID: 20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f
+References: <CGME20190805130524epcas1p27a4845fccaf66da2eb0b391bfe4da75f@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.188 release.
-There are 42 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+ - spaces before tabs,
+ - spaces at the end of lines,
+ - multiple blank lines,
+ - redundant blank lines,
+ fix it.
 
-Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-Anything received after that time might be too late.
+Signed-off-by: Jungseung Lee <js07.lee@samsung.com>
+---
+ fs/binfmt_elf.c | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.188-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.188-rc1
-
-Vlastimil Babka <vbabka@suse.cz>
-    x86, mm, gup: prevent get_page() race with munmap in paravirt guest
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    objtool: Support GCC 9 cold subfunction naming scheme
-
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-    include/linux/module.h: copy __init/__exit attrs to init/cleanup_module
-
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-    Backport minimal compiler_attributes.h to support GCC 9
-
-Jean Delvare <jdelvare@suse.de>
-    eeprom: at24: make spd world-readable again
-
-Andrea Arcangeli <aarcange@redhat.com>
-    coredump: fix race condition between collapse_huge_page() and core dumping
-
-Ajay Kaher <akaher@vmware.com>
-    infiniband: fix race condition between infiniband mlx4, mlx5 driver and core dumping
-
-Andrea Arcangeli <aarcange@redhat.com>
-    coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping
-
-Yishai Hadas <yishaih@mellanox.com>
-    IB/mlx5: Fix RSS Toeplitz setup to be aligned with the HW specification
-
-Juergen Gross <jgross@suse.com>
-    xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
-
-Will Deacon <will@kernel.org>
-    drivers/perf: arm_pmu: Fix failure path in PM notifier
-
-Stefan Haberland <sth@linux.ibm.com>
-    s390/dasd: fix endless loop after read unit address configuration
-
-Ondrej Mosnacek <omosnace@redhat.com>
-    selinux: fix memory leak in policydb_init()
-
-Michael Wu <michael.wu@vatics.com>
-    gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-
-Douglas Anderson <dianders@chromium.org>
-    mmc: dw_mmc: Fix occasional hang after tuning on eMMC
-
-Filipe Manana <fdmanana@suse.com>
-    Btrfs: fix incremental send failure after deduplication
-
-Masahiro Yamada <yamada.masahiro@socionext.com>
-    kbuild: initialize CLANG_FLAGS correctly in the top Makefile
-
-Zhenzhong Duan <zhenzhong.duan@oracle.com>
-    x86, boot: Remove multiple copy of static function sanitize_boot_params()
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/kvm: Don't call kvm_spurious_fault() from .fixup
-
-Kees Cook <keescook@chromium.org>
-    ipc/mqueue.c: only perform resource calculation if user valid
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    drivers/rapidio/devices/rio_mport_cdev.c: NUL terminate some strings
-
-Mikko Rapeli <mikko.rapeli@iki.fi>
-    uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
-
-Sam Protsenko <semen.protsenko@linaro.org>
-    coda: fix build using bare-metal toolchain
-
-Zhouyang Jia <jiazhouyang09@gmail.com>
-    coda: add error handling for fget
-
-Doug Berger <opendmb@gmail.com>
-    mm/cma.c: fail if fixed declaration can't be honored
-
-Arnd Bergmann <arnd@arndb.de>
-    x86: math-emu: Hide clang warnings for 16-bit overflow
-
-Qian Cai <cai@lca.pw>
-    x86/apic: Silence -Wtype-limits compiler warnings
-
-Benjamin Poirier <bpoirier@suse.com>
-    be2net: Signal that the device cannot transmit during reconfiguration
-
-Arnd Bergmann <arnd@arndb.de>
-    ACPI: fix false-positive -Wuninitialized warning
-
-Benjamin Block <bblock@linux.ibm.com>
-    scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-
-Jeff Layton <jlayton@kernel.org>
-    ceph: return -ERANGE if virtual xattr value didn't fit in buffer
-
-Andrea Parri <andrea.parri@amarulasolutions.com>
-    ceph: fix improper use of smp_mb__before_atomic()
-
-David Sterba <dsterba@suse.com>
-    btrfs: fix minimum number of chunk errors for DUP
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    fs/adfs: super: fix use-after-free bug
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    dmaengine: rcar-dmac: Reject zero-length slave DMA requests
-
-Petr Cvek <petrcvekcz@gmail.com>
-    MIPS: lantiq: Fix bitfield masking
-
-Prarit Bhargava <prarit@redhat.com>
-    kernel/module.c: Only return -EEXIST for modules that have finished loading
-
-Cheng Jian <cj.chengjian@huawei.com>
-    ftrace: Enable trampoline when rec count returns back to one
-
-Douglas Anderson <dianders@chromium.org>
-    ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
-
-Douglas Anderson <dianders@chromium.org>
-    ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
-
-Douglas Anderson <dianders@chromium.org>
-    ARM: dts: rockchip: Make rk3288-veyron-minnie run at hs200
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    ARM: riscpc: fix DMA
-
-
--------------
-
-Diffstat:
-
- Makefile                                    |  7 +--
- arch/arm/boot/dts/rk3288-veyron-mickey.dts  |  4 --
- arch/arm/boot/dts/rk3288-veyron-minnie.dts  |  4 --
- arch/arm/boot/dts/rk3288.dtsi               |  1 +
- arch/arm/mach-rpc/dma.c                     |  5 +-
- arch/mips/lantiq/irq.c                      |  5 +-
- arch/x86/boot/compressed/misc.c             |  1 +
- arch/x86/boot/compressed/misc.h             |  1 -
- arch/x86/include/asm/apic.h                 |  2 +-
- arch/x86/include/asm/kvm_host.h             | 34 +++++++------
- arch/x86/kernel/apic/apic.c                 |  2 +-
- arch/x86/math-emu/fpu_emu.h                 |  2 +-
- arch/x86/math-emu/reg_constant.c            |  2 +-
- arch/x86/mm/gup.c                           | 32 +++++++++++-
- drivers/android/binder.c                    |  6 +++
- drivers/dma/sh/rcar-dmac.c                  |  2 +-
- drivers/gpio/gpiolib.c                      |  6 ++-
- drivers/infiniband/hw/mlx4/main.c           |  4 +-
- drivers/infiniband/hw/mlx5/main.c           |  3 ++
- drivers/infiniband/hw/mlx5/qp.c             |  1 -
- drivers/misc/eeprom/at24.c                  |  2 +-
- drivers/mmc/host/dw_mmc.c                   |  3 +-
- drivers/net/ethernet/emulex/benet/be_main.c |  6 ++-
- drivers/perf/arm_pmu.c                      |  2 +-
- drivers/rapidio/devices/rio_mport_cdev.c    |  2 +
- drivers/s390/block/dasd_alias.c             | 22 ++++++---
- drivers/s390/scsi/zfcp_erp.c                |  7 +++
- drivers/xen/swiotlb-xen.c                   |  4 +-
- fs/adfs/super.c                             |  5 +-
- fs/btrfs/send.c                             | 77 ++++++-----------------------
- fs/btrfs/volumes.c                          |  3 +-
- fs/ceph/super.h                             |  7 ++-
- fs/ceph/xattr.c                             | 14 +++---
- fs/coda/psdev.c                             |  5 +-
- fs/proc/task_mmu.c                          | 18 +++++++
- fs/userfaultfd.c                            |  9 ++++
- include/linux/acpi.h                        |  5 +-
- include/linux/coda.h                        |  3 +-
- include/linux/coda_psdev.h                  | 11 +++++
- include/linux/compiler.h                    | 16 ++++++
- include/linux/mm.h                          | 24 +++++++++
- include/linux/module.h                      |  4 +-
- include/uapi/linux/coda_psdev.h             | 13 -----
- ipc/mqueue.c                                | 19 +++----
- kernel/module.c                             |  6 +--
- kernel/trace/ftrace.c                       | 28 ++++++-----
- mm/cma.c                                    | 13 +++++
- mm/khugepaged.c                             |  3 ++
- mm/mmap.c                                   |  6 ++-
- security/selinux/ss/policydb.c              |  6 ++-
- tools/objtool/elf.c                         |  2 +-
- 51 files changed, 294 insertions(+), 175 deletions(-)
-
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index cec3b4146440..5ba1944e3ce1 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -235,7 +235,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+ 	} while (0)
+ 
+ #ifdef ARCH_DLINFO
+-	/* 
++	/*
+ 	 * ARCH_DLINFO must come first so PPC can do its special alignment of
+ 	 * AUXV.
+ 	 * update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT() in
+@@ -294,7 +294,6 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+ 	sp = (elf_addr_t __user *)bprm->p;
+ #endif
+ 
+-
+ 	/*
+ 	 * Grow the stack manually; some architectures have a limit on how
+ 	 * far ahead a user-space access may be in order to grow the stack.
+@@ -344,7 +343,6 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+ }
+ 
+ #ifndef elf_map
+-
+ static unsigned long elf_map(struct file *filep, unsigned long addr,
+ 		const struct elf_phdr *eppnt, int prot, int type,
+ 		unsigned long total_size)
+@@ -383,7 +381,6 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
+ 
+ 	return(map_addr);
+ }
+-
+ #endif /* !elf_map */
+ 
+ static unsigned long total_mapping_size(const struct elf_phdr *cmds, int nr)
+@@ -456,7 +453,6 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
+ }
+ 
+ #ifndef CONFIG_ARCH_BINFMT_ELF_STATE
+-
+ /**
+  * struct arch_elf_state - arch-specific ELF loading state
+  *
+@@ -522,7 +518,6 @@ static inline int arch_check_elf(struct elfhdr *ehdr, bool has_interp,
+ 	/* Dummy implementation, always proceed */
+ 	return 0;
+ }
+-
+ #endif /* !CONFIG_ARCH_BINFMT_ELF_STATE */
+ 
+ static inline int make_prot(u32 p_flags)
+@@ -542,7 +537,6 @@ static inline int make_prot(u32 p_flags)
+    so we keep this separate.  Technically the library read function
+    is only provided so that we can read a.out libraries that have
+    an ELF header */
+-
+ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 		struct file *interpreter, unsigned long *interp_map_addr,
+ 		unsigned long no_base, struct elf_phdr *interp_elf_phdata)
+@@ -669,7 +663,6 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+  * These are the functions used to load ELF style executables and shared
+  * libraries.  There is no binary dependent code anywhere else.
+  */
+-
+ static int load_elf_binary(struct linux_binprm *bprm)
+ {
+ 	struct file *interpreter = NULL; /* to shut gcc up */
+@@ -697,7 +690,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		retval = -ENOMEM;
+ 		goto out_ret;
+ 	}
+-	
++
+ 	/* Get the exec-header */
+ 	loc->elf_ex = *((struct elfhdr *)bprm->buf);
+ 
+@@ -866,7 +859,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 				 executable_stack);
+ 	if (retval < 0)
+ 		goto out_free_dentry;
+-	
++
+ 	elf_bss = 0;
+ 	elf_brk = 0;
+ 
+@@ -888,7 +881,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 
+ 		if (unlikely (elf_brk > elf_bss)) {
+ 			unsigned long nbyte;
+-	            
++
+ 			/* There was a PT_LOAD segment with p_memsz > p_filesz
+ 			   before this one. Map anonymous pages, if needed,
+ 			   and clear the area.  */
+@@ -1462,7 +1455,7 @@ static void fill_elf_note_phdr(struct elf_phdr *phdr, int sz, loff_t offset)
+ 	phdr->p_align = 0;
+ }
+ 
+-static void fill_note(struct memelfnote *note, const char *name, int type, 
++static void fill_note(struct memelfnote *note, const char *name, int type,
+ 		unsigned int sz, void *data)
+ {
+ 	note->name = name;
+@@ -1514,7 +1507,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
+ {
+ 	const struct cred *cred;
+ 	unsigned int i, len;
+-	
++
+ 	/* first copy the parameters from user space */
+ 	memset(psinfo, 0, sizeof(struct elf_prpsinfo));
+ 
+@@ -1548,7 +1541,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
+ 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
+ 	rcu_read_unlock();
+ 	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
+-	
++
+ 	return 0;
+ }
+ 
+@@ -1945,8 +1938,8 @@ static int elf_dump_thread_status(long signr, struct elf_thread_status *t)
+ 	t->num_notes = 0;
+ 
+ 	fill_prstatus(&t->prstatus, p, signr);
+-	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);	
+-	
++	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);
++
+ 	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
+ 		  &(t->prstatus));
+ 	t->num_notes++;
+@@ -1967,7 +1960,7 @@ static int elf_dump_thread_status(long signr, struct elf_thread_status *t)
+ 		t->num_notes++;
+ 		sz += notesize(&t->notes[2]);
+ 	}
+-#endif	
++#endif
+ 	return sz;
+ }
+ 
+@@ -2205,7 +2198,7 @@ static int elf_core_dump(struct coredump_params *cprm)
+ 
+ 	/*
+ 	 * We no longer stop all VM operations.
+-	 * 
++	 *
+ 	 * This is because those proceses that could possibly change map_count
+ 	 * or the mmap / vma pages are now blocked in do_exit on current
+ 	 * finishing this core dump.
+@@ -2214,7 +2207,7 @@ static int elf_core_dump(struct coredump_params *cprm)
+ 	 * the map_count or the pages allocated. So no possibility of crashing
+ 	 * exists while dumping the mm->vm_next areas to the core file.
+ 	 */
+-  
++
+ 	/* alloc memory for large data structures: too large to be on stack */
+ 	elf = kmalloc(sizeof(*elf), GFP_KERNEL);
+ 	if (!elf)
+-- 
+2.17.1
 
