@@ -2,52 +2,52 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE18C742A7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621F4C742D7
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ABA20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AAF20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 06:00:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfGMGAr (ORCPT
+        id S1727496AbfGMGAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 02:00:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48732 "EHLO
+        Sat, 13 Jul 2019 02:00:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7654 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726274AbfGMGAq (ORCPT
+        by vger.kernel.org with ESMTP id S1726274AbfGMGAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 02:00:46 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D5uLJs137977
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:00:45 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq8wxh28v-1
+        Sat, 13 Jul 2019 02:00:53 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6D5uMws140079
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:00:51 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq8vhs3kj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:00:45 -0400
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 02:00:51 -0400
 Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Sat, 13 Jul 2019 07:00:44 +0100
+        Sat, 13 Jul 2019 07:00:50 +0100
 Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 13 Jul 2019 07:00:41 +0100
+        Sat, 13 Jul 2019 07:00:47 +0100
 Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D60dJ763832414
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6D60jC253543246
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jul 2019 06:00:39 GMT
+        Sat, 13 Jul 2019 06:00:45 GMT
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30F6CC6063;
-        Sat, 13 Jul 2019 06:00:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A63EDC6059;
+        Sat, 13 Jul 2019 06:00:45 +0000 (GMT)
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2599FC6057;
-        Sat, 13 Jul 2019 06:00:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E3EFAC605B;
+        Sat, 13 Jul 2019 06:00:42 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.135.203])
         by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sat, 13 Jul 2019 06:00:35 +0000 (GMT)
+        Sat, 13 Jul 2019 06:00:42 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -60,24 +60,26 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v2 00/13] Secure Virtual Machine Enablement
-Date:   Sat, 13 Jul 2019 03:00:10 -0300
+Subject: [RFC PATCH v2 02/13] powerpc: Add support for adding an ESM blob to the zImage wrapper
+Date:   Sat, 13 Jul 2019 03:00:12 -0300
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190713060023.8479-1-bauerman@linux.ibm.com>
+References: <20190713060023.8479-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19071306-0004-0000-0000-00001526F175
+x-cbid: 19071306-0012-0000-0000-0000174F2C8A
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011419; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231433; UDB=6.00648705; IPR=6.01012726;
- MB=3.00027699; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-13 06:00:43
+ PH=3.00000004; SC=3.00000286; SDB=6.01231434; UDB=6.00648705; IPR=6.01012726;
+ MB=3.00027699; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-13 06:00:49
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071306-0005-0000-0000-00008C6EF4A1
-Message-Id: <20190713060023.8479-1-bauerman@linux.ibm.com>
+x-cbparentid: 19071306-0013-0000-0000-0000580BC6AC
+Message-Id: <20190713060023.8479-3-bauerman@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1907130070
@@ -86,222 +88,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-The main change in this version was to rebase on top of <asm/mem_encrypt.h>
-cleanup series I just posted:
+For secure VMs, the signing tool will create a ticket called the "ESM blob"
+for the Enter Secure Mode ultravisor call with the signatures of the kernel
+and initrd among other things.
 
-https://lore.kernel.org/linuxppc-dev/20190713044554.28719-1-bauerman@linux.ibm.com/
+This adds support to the wrapper script for adding that blob via the "-e"
+option to the zImage.pseries.
 
-In addition to the patches above, this patch series applies on top of v4 of
-Claudio Carvalho's "kvmppc: Paravirtualize KVM to support ultravisor"
-series:
+It also adds code to the zImage wrapper itself to retrieve and if necessary
+relocate the blob, and pass its address to Linux via the device-tree, to be
+later consumed by prom_init.
 
-https://lore.kernel.org/linuxppc-dev/20190628200825.31049-1-cclaudio@linux.ibm.com/
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+[ bauerman: Minor adjustments to some comments. ]
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+---
+ arch/powerpc/boot/main.c       | 41 ++++++++++++++++++++++++++++++++++
+ arch/powerpc/boot/ops.h        |  2 ++
+ arch/powerpc/boot/wrapper      | 24 +++++++++++++++++---
+ arch/powerpc/boot/zImage.lds.S |  8 +++++++
+ 4 files changed, 72 insertions(+), 3 deletions(-)
 
-I only actually need the following two patches from his series:
-
-[PATCH v4 1/8] KVM: PPC: Ultravisor: Introduce the MSR_S bit
-[PATCH v4 3/8] KVM: PPC: Ultravisor: Add generic ultravisor call handler
-
-Everything is available in branch ultravisor-secure-vm at this repo:
-
-https://github.com/bauermann/linux.git
-
-Original cover letter below, and changelog at the bottom:
-
-This series enables Secure Virtual Machines (SVMs) on powerpc. SVMs use the
-Protected Execution Facility (PEF) and request to be migrated to secure
-memory during prom_init() so by default all of their memory is inaccessible
-to the hypervisor. There is an Ultravisor call that the VM can use to
-request certain pages to be made accessible to (or shared with) the
-hypervisor.
-
-The objective of these patches is to have the guest perform this request
-for buffers that need to be accessed by the hypervisor such as the LPPACAs,
-the SWIOTLB memory and the Debug Trace Log.
-
-Patch 2 ("powerpc: Add support for adding an ESM blob to the zImage
-wrapper") is posted as RFC because we are still finalizing the details on
-how the ESM blob will be passed along with the kernel. All other patches are
-(hopefully) in upstreamable shape and don't depend on this patch.
-
-Unfortunately this series still doesn't enable the use of virtio devices in
-the secure guest. This support depends on a discussion that is currently
-ongoing with the virtio community:
-
-https://lore.kernel.org/linuxppc-dev/87womn8inf.fsf@morokweng.localdomain/
-
-I was able to test it using Claudio's patches in the host kernel, booting
-normally using an initramfs for the root filesystem.
-
-This is the command used to start up the guest with QEMU 4.0:
-
-qemu-system-ppc64				\
-	-nodefaults				\
-	-cpu host				\
-	-machine pseries,accel=kvm,kvm-type=HV,cap-htm=off,cap-cfpc=broken,cap-sbbc=broken,cap-ibs=broken \
-	-display none				\
-	-serial mon:stdio			\
-	-smp 1					\
-	-m 4G					\
-	-kernel /root/bauermann/vmlinux		\
-	-initrd /root/bauermann/fs_small.cpio	\
-	-append 'debug'
-
-Changelog
-
-Since v1:
-
-- Patch "powerpc/pseries: Introduce option to build secure virtual machines"
-  - Dropped redundant "default n" from CONFIG_PPC_SVM. Suggested by Christoph
-    Hellwig.
-
-- Patch "powerpc: Add support for adding an ESM blob to the zImage wrapper"
-  - Renamed prom_rtas_os_term_hcall() to prom_rtas_hcall(). Suggested by Alexey
-    Kardashevskiy.
-  - In prom_rtas_hcall(), changed prom_printf() calls to prom_debug(), and
-    use H_RTAS constant instead of raw value.
-  - Changed enter_secure_mode() to new ABI passing ucall number in r3.
-    Also changed it to accept kbase argument instead of ESM blob address.
-  - Changed setup_secure_guest() to only make the ESM ultracall if svm=1 was
-    passed on the kernel command line.
-
-- Patch "powerpc/pseries/svm: Unshare all pages before kexecing a new kernel"
-  - New patch from Ram Pai.
-
-- Patch "powerpc/pseries/svm: Force SWIOTLB for secure guests"
-  - No need to define sme_me_mask, sme_active() and sev_active() anymore.
-  - Add definitions for mem_encrypt_active() and force_dma_unencrypted().
-  - Select ARCH_HAS_FORCE_DMA_UNENCRYPTED in CONFIG_PPC_SVM.
-
-Since the RFC from August:
-
-- Patch "powerpc/pseries: Introduce option to build secure virtual machines"
-  - New patch.
-
-- Patch "powerpc: Add support for adding an ESM blob to the zImage wrapper"
-  - Patch from Benjamin Herrenschmidt, first posted here:
-    https://lore.kernel.org/linuxppc-dev/20180531043417.25073-1-benh@kernel.crashing.org/
-  - Made minor adjustments to some comments. Code is unchanged.
-
-- Patch "powerpc/prom_init: Add the ESM call to prom_init"
-  - New patch from Ram Pai and Michael Anderson.
-
-- Patch "powerpc/pseries/svm: Add helpers for UV_SHARE_PAGE and UV_UNSHARE_PAGE"
-  - New patch from Ram Pai.
-
-- Patch "powerpc/pseries: Add and use LPPACA_SIZE constant"
-  - Moved LPPACA_SIZE macro inside the CONFIG_PPC_PSERIES #ifdef.
-  - Put sizeof() operand left of comparison operator in BUILD_BUG_ON()
-    macro to appease a checkpatch warning.
-
-- Patch "powerpc/pseries/svm: Use shared memory for LPPACA structures"
-  - Moved definition of is_secure_guest() helper to this patch.
-  - Changed shared_lppaca and shared_lppaca_size from globals to static
-    variables inside alloc_shared_lppaca().
-  - Changed shared_lppaca to hold virtual address instead of physical
-    address.
-
-- Patch "powerpc/pseries/svm: Use shared memory for Debug Trace Log (DTL)"
-  - Add get_dtl_cache_ctor() macro. Suggested by Ram Pai.
-
-- Patch "powerpc/pseries/svm: Export guest SVM status to user space via sysfs"
-  - New patch from Ryan Grimm.
-
-- Patch "powerpc/pseries/svm: Disable doorbells in SVM guests"
-  - New patch from Sukadev Bhattiprolu.
-
-- Patch "powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests"
-  - New patch.
-
-- Patch "powerpc/pseries/svm: Force SWIOTLB for secure guests"
-  - New patch with code that was previously in other patches.
-
-- Patch "powerpc/configs: Enable secure guest support in pseries and ppc64 defconfigs"
-  - New patch from Ryan Grimm.
-
-- Patch "powerpc/pseries/svm: Detect Secure Virtual Machine (SVM) platform"
-  - Dropped this patch by moving its code to other patches.
-
-- Patch "powerpc/svm: Select CONFIG_DMA_DIRECT_OPS and CONFIG_SWIOTLB"
-  - No need to select CONFIG_DMA_DIRECT_OPS anymore. The CONFIG_SWIOTLB
-    change was moved to another patch and this patch was dropped.
-
-- Patch "powerpc/pseries/svm: Add memory conversion (shared/secure) helper functions"
-  - Dropped patch since the helper functions were unnecessary wrappers
-    around uv_share_page() and uv_unshare_page().
-
-- Patch "powerpc/svm: Convert SWIOTLB buffers to shared memory"
-  - Squashed into patch "powerpc/pseries/svm: Force SWIOTLB for secure
-    guests"
-
-- Patch "powerpc/svm: Don't release SWIOTLB buffers on secure guests"
-  - Squashed into patch "powerpc/pseries/svm: Force SWIOTLB for secure
-    guests"
-
-- Patch "powerpc/svm: Use SWIOTLB DMA API for all virtio devices"
-  - Dropped patch. Enablement of virtio will use a difference approach.
-
-- Patch "powerpc/svm: Force the use of bounce buffers"
-  - Squashed into patch "powerpc/pseries/svm: Force SWIOTLB for secure
-    guests"
-  - Added comment explaining why it's necessary.to force use of SWIOTLB.
-    Suggested by Christoph Hellwig.
-
-- Patch "powerpc/svm: Increase SWIOTLB buffer size"
-  - Dropped patch.
-
-Anshuman Khandual (3):
-  powerpc/pseries/svm: Use shared memory for LPPACA structures
-  powerpc/pseries/svm: Use shared memory for Debug Trace Log (DTL)
-  powerpc/pseries/svm: Force SWIOTLB for secure guests
-
-Benjamin Herrenschmidt (1):
-  powerpc: Add support for adding an ESM blob to the zImage wrapper
-
-Ram Pai (3):
-  powerpc/prom_init: Add the ESM call to prom_init
-  powerpc/pseries/svm: Add helpers for UV_SHARE_PAGE and UV_UNSHARE_PAGE
-  powerpc/pseries/svm: Unshare all pages before kexecing a new kernel
-
-Ryan Grimm (2):
-  powerpc/pseries/svm: Export guest SVM status to user space via sysfs
-  powerpc/configs: Enable secure guest support in pseries and ppc64
-    defconfigs
-
-Sukadev Bhattiprolu (1):
-  powerpc/pseries/svm: Disable doorbells in SVM guests
-
-Thiago Jung Bauermann (3):
-  powerpc/pseries: Introduce option to build secure virtual machines
-  powerpc/pseries: Add and use LPPACA_SIZE constant
-  powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests
-
- .../admin-guide/kernel-parameters.txt         |  5 +
- arch/powerpc/boot/main.c                      | 41 ++++++++
- arch/powerpc/boot/ops.h                       |  2 +
- arch/powerpc/boot/wrapper                     | 24 ++++-
- arch/powerpc/boot/zImage.lds.S                |  8 ++
- arch/powerpc/configs/ppc64_defconfig          |  1 +
- arch/powerpc/configs/pseries_defconfig        |  1 +
- arch/powerpc/include/asm/mem_encrypt.h        | 26 +++++
- arch/powerpc/include/asm/svm.h                | 31 ++++++
- arch/powerpc/include/asm/ultravisor-api.h     |  4 +
- arch/powerpc/include/asm/ultravisor.h         | 23 ++++-
- arch/powerpc/kernel/Makefile                  |  4 +-
- arch/powerpc/kernel/machine_kexec_64.c        |  8 ++
- arch/powerpc/kernel/paca.c                    | 52 +++++++++-
- arch/powerpc/kernel/prom_init.c               | 99 +++++++++++++++++++
- arch/powerpc/kernel/sysfs.c                   | 29 ++++++
- arch/powerpc/platforms/pseries/Kconfig        | 14 +++
- arch/powerpc/platforms/pseries/Makefile       |  1 +
- arch/powerpc/platforms/pseries/iommu.c        |  6 +-
- arch/powerpc/platforms/pseries/setup.c        |  5 +-
- arch/powerpc/platforms/pseries/smp.c          |  3 +-
- arch/powerpc/platforms/pseries/svm.c          | 85 ++++++++++++++++
- 22 files changed, 459 insertions(+), 13 deletions(-)
- create mode 100644 arch/powerpc/include/asm/mem_encrypt.h
- create mode 100644 arch/powerpc/include/asm/svm.h
- create mode 100644 arch/powerpc/platforms/pseries/svm.c
+diff --git a/arch/powerpc/boot/main.c b/arch/powerpc/boot/main.c
+index 78aaf4ffd7ab..ca612efd3e81 100644
+--- a/arch/powerpc/boot/main.c
++++ b/arch/powerpc/boot/main.c
+@@ -150,6 +150,46 @@ static struct addr_range prep_initrd(struct addr_range vmlinux, void *chosen,
+ 	return (struct addr_range){(void *)initrd_addr, initrd_size};
+ }
+ 
++#ifdef __powerpc64__
++static void prep_esm_blob(struct addr_range vmlinux, void *chosen)
++{
++	unsigned long esm_blob_addr, esm_blob_size;
++
++	/* Do we have an ESM (Enter Secure Mode) blob? */
++	if (_esm_blob_end <= _esm_blob_start)
++		return;
++
++	printf("Attached ESM blob at 0x%p-0x%p\n\r",
++	       _esm_blob_start, _esm_blob_end);
++	esm_blob_addr = (unsigned long)_esm_blob_start;
++	esm_blob_size = _esm_blob_end - _esm_blob_start;
++
++	/*
++	 * If the ESM blob is too low it will be clobbered when the
++	 * kernel relocates to its final location.  In this case,
++	 * allocate a safer place and move it.
++	 */
++	if (esm_blob_addr < vmlinux.size) {
++		void *old_addr = (void *)esm_blob_addr;
++
++		printf("Allocating 0x%lx bytes for esm_blob ...\n\r",
++		       esm_blob_size);
++		esm_blob_addr = (unsigned long)malloc(esm_blob_size);
++		if (!esm_blob_addr)
++			fatal("Can't allocate memory for ESM blob !\n\r");
++		printf("Relocating ESM blob 0x%lx <- 0x%p (0x%lx bytes)\n\r",
++		       esm_blob_addr, old_addr, esm_blob_size);
++		memmove((void *)esm_blob_addr, old_addr, esm_blob_size);
++	}
++
++	/* Tell the kernel ESM blob address via device tree. */
++	setprop_val(chosen, "linux,esm-blob-start", (u32)(esm_blob_addr));
++	setprop_val(chosen, "linux,esm-blob-end", (u32)(esm_blob_addr + esm_blob_size));
++}
++#else
++static inline void prep_esm_blob(struct addr_range vmlinux, void *chosen) { }
++#endif
++
+ /* A buffer that may be edited by tools operating on a zImage binary so as to
+  * edit the command line passed to vmlinux (by setting /chosen/bootargs).
+  * The buffer is put in it's own section so that tools may locate it easier.
+@@ -218,6 +258,7 @@ void start(void)
+ 	vmlinux = prep_kernel();
+ 	initrd = prep_initrd(vmlinux, chosen,
+ 			     loader_info.initrd_addr, loader_info.initrd_size);
++	prep_esm_blob(vmlinux, chosen);
+ 	prep_cmdline(chosen);
+ 
+ 	printf("Finalizing device tree...");
+diff --git a/arch/powerpc/boot/ops.h b/arch/powerpc/boot/ops.h
+index cd043726ed88..e0606766480f 100644
+--- a/arch/powerpc/boot/ops.h
++++ b/arch/powerpc/boot/ops.h
+@@ -251,6 +251,8 @@ extern char _initrd_start[];
+ extern char _initrd_end[];
+ extern char _dtb_start[];
+ extern char _dtb_end[];
++extern char _esm_blob_start[];
++extern char _esm_blob_end[];
+ 
+ static inline __attribute__((const))
+ int __ilog2_u32(u32 n)
+diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+index 4ed18d63d892..ddb62b5b5b7a 100755
+--- a/arch/powerpc/boot/wrapper
++++ b/arch/powerpc/boot/wrapper
+@@ -14,6 +14,7 @@
+ # -i initrd	specify initrd file
+ # -d devtree	specify device-tree blob
+ # -s tree.dts	specify device-tree source file (needs dtc installed)
++# -e esm_blob   specify ESM blob for secure images
+ # -c		cache $kernel.strip.gz (use if present & newer, else make)
+ # -C prefix	specify command prefix for cross-building tools
+ #		(strip, objcopy, ld)
+@@ -38,6 +39,7 @@ platform=of
+ initrd=
+ dtb=
+ dts=
++esm_blob=
+ cacheit=
+ binary=
+ compression=.gz
+@@ -61,9 +63,9 @@ tmpdir=.
+ 
+ usage() {
+     echo 'Usage: wrapper [-o output] [-p platform] [-i initrd]' >&2
+-    echo '       [-d devtree] [-s tree.dts] [-c] [-C cross-prefix]' >&2
+-    echo '       [-D datadir] [-W workingdir] [-Z (gz|xz|none)]' >&2
+-    echo '       [--no-compression] [vmlinux]' >&2
++    echo '       [-d devtree] [-s tree.dts] [-e esm_blob]' >&2
++    echo '       [-c] [-C cross-prefix] [-D datadir] [-W workingdir]' >&2
++    echo '       [-Z (gz|xz|none)] [--no-compression] [vmlinux]' >&2
+     exit 1
+ }
+ 
+@@ -106,6 +108,11 @@ while [ "$#" -gt 0 ]; do
+ 	[ "$#" -gt 0 ] || usage
+ 	dtb="$1"
+ 	;;
++    -e)
++	shift
++	[ "$#" -gt 0 ] || usage
++	esm_blob="$1"
++	;;
+     -s)
+ 	shift
+ 	[ "$#" -gt 0 ] || usage
+@@ -219,9 +226,16 @@ objflags=-S
+ tmp=$tmpdir/zImage.$$.o
+ ksection=.kernel:vmlinux.strip
+ isection=.kernel:initrd
++esection=.kernel:esm_blob
+ link_address='0x400000'
+ make_space=y
+ 
++
++if [ -n "$esm_blob" -a "$platform" != "pseries" ]; then
++    echo "ESM blob not support on non-pseries platforms" >&2
++    exit 1
++fi
++
+ case "$platform" in
+ of)
+     platformo="$object/of.o $object/epapr.o"
+@@ -478,6 +492,10 @@ if [ -n "$dtb" ]; then
+     fi
+ fi
+ 
++if [ -n "$esm_blob" ]; then
++    addsec $tmp "$esm_blob" $esection
++fi
++
+ if [ "$platform" != "miboot" ]; then
+     if [ -n "$link_address" ] ; then
+         text_start="-Ttext $link_address"
+diff --git a/arch/powerpc/boot/zImage.lds.S b/arch/powerpc/boot/zImage.lds.S
+index 4ac1e36edfe7..a21f3a76e06f 100644
+--- a/arch/powerpc/boot/zImage.lds.S
++++ b/arch/powerpc/boot/zImage.lds.S
+@@ -68,6 +68,14 @@ SECTIONS
+     _initrd_end =  .;
+   }
+ 
++  . = ALIGN(4096);
++  .kernel:esm_blob :
++  {
++    _esm_blob_start =  .;
++    *(.kernel:esm_blob)
++    _esm_blob_end =  .;
++  }
++
+ #ifdef CONFIG_PPC64_BOOT_WRAPPER
+   . = ALIGN(256);
+   .got :
 
