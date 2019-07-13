@@ -2,607 +2,575 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD24C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BCAC742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B3A20830
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADAC20989
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 04:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfGME2Q convert rfc822-to-8bit (ORCPT
+        id S1726386AbfGMElH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 00:28:16 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58585 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfGME2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 00:28:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45lxc20mhDz9sNT;
-        Sat, 13 Jul 2019 14:28:02 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aik@ozlabs.ru, ajd@linux.ibm.com, alastair@d-silva.org,
-        andrew.donnellan@au1.ibm.com, aneesh.kumar@linux.ibm.com,
-        anju@linux.vnet.ibm.com, anton@ozlabs.org,
-        atrajeev@linux.vnet.ibm.com, blackgod016574@gmail.com, cai@lca.pw,
-        christophe.leroy@c-s.fr, chunkeey@gmail.com, dja@axtens.net,
-        efremov@linux.com, fbarrat@linux.ibm.com, geert+renesas@glider.be,
-        geliangtang@gmail.com, gregkh@linuxfoundation.org,
-        gromero@linux.vnet.ibm.com, groug@kaod.org, hch@lst.de,
-        info@metux.net, krzk@kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, malat@debian.org, mikey@neuling.org,
-        nathanl@linux.ibm.com, naveen.n.rao@linux.vnet.ibm.com,
-        nishadkamdar@gmail.com, npiggin@gmail.com, oohall@gmail.com,
-        ravi.bangoria@linux.ibm.com, rostedt@goodmis.org,
-        ruscur@russell.cc, sathnaga@linux.vnet.ibm.com,
-        schwab@linux-m68k.org, sjitindarsingh@gmail.com,
-        stewart@linux.ibm.com, yamada.masahiro@socionext.com,
-        yuehaibing@huawei.com, zhangshaokun@hisilicon.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.3-1 tag
-Date:   Sat, 13 Jul 2019 14:28:00 +1000
-Message-ID: <87ims6eey7.fsf@concordia.ellerman.id.au>
+        Sat, 13 Jul 2019 00:41:07 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:24865 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725916AbfGMElH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 00:41:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TWlBeLN_1562992861;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TWlBeLN_1562992861)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 13 Jul 2019 12:41:03 +0800
+Subject: Re: list corruption in deferred_split_scan()
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1562795006.8510.19.camel@lca.pw>
+ <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
+ <1562879229.8510.24.camel@lca.pw>
+ <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
+Message-ID: <66ce325b-0b02-3ac0-009b-4e24ef6114c3@linux.alibaba.com>
+Date:   Fri, 12 Jul 2019 21:41:01 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-Hi Linus,
-
-Please pull powerpc updates for 5.3.
-
-A bit of a small batch for us, just due to me not getting the time to review
-things. Only one conflict that I'm aware of, in our pgtable.h, resolution is
-simply to take both sides.
-
-cheers
 
 
-The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+On 7/12/19 12:12 PM, Yang Shi wrote:
+>
+>
+> On 7/11/19 2:07 PM, Qian Cai wrote:
+>> On Wed, 2019-07-10 at 17:16 -0700, Yang Shi wrote:
+>>> Hi Qian,
+>>>
+>>>
+>>> Thanks for reporting the issue. But, I can't reproduce it on my 
+>>> machine.
+>>> Could you please share more details about your test? How often did you
+>>> run into this problem?
+>> I can almost reproduce it every time on a HPE ProLiant DL385 Gen10 
+>> server. Here
+>> is some more information.
+>>
+>> # cat .config
+>>
+>> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+>
+> I tried your kernel config, but I still can't reproduce it. My 
+> compiler doesn't have retpoline support, so CONFIG_RETPOLINE is 
+> disabled in my test, but I don't think this would make any difference 
+> for this case.
+>
+> According to the bug call trace in the earlier email, it looks 
+> deferred _split_scan lost race with put_compound_page. The 
+> put_compound_page would call free_transhuge_page() which delete the 
+> page from the deferred split queue, but it may still appear on the 
+> deferred list due to some reason.
+>
+> Would you please try the below patch?
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index b7f709d..66bd9db 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2765,7 +2765,7 @@ int split_huge_page_to_list(struct page *page, 
+> struct list_head *list)
+>         if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
+>                 if (!list_empty(page_deferred_list(head))) {
+>                         ds_queue->split_queue_len--;
+> -                       list_del(page_deferred_list(head));
+> +                       list_del_init(page_deferred_list(head));
 
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+This line should not be changed. Please just apply the below part.
 
-are available in the git repository at:
+> }
+>                 if (mapping)
+>                         __dec_node_page_state(page, NR_SHMEM_THPS);
+> @@ -2814,7 +2814,7 @@ void free_transhuge_page(struct page *page)
+>         spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+>         if (!list_empty(page_deferred_list(page))) {
+>                 ds_queue->split_queue_len--;
+> -               list_del(page_deferred_list(page));
+> +               list_del_init(page_deferred_list(page));
+>         }
+>         spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+>         free_compound_page(page);
+>
+>>
+>> # numactl -H
+>> available: 8 nodes (0-7)
+>> node 0 cpus: 0 1 2 3 4 5 6 7 64 65 66 67 68 69 70 71
+>> node 0 size: 19984 MB
+>> node 0 free: 7251 MB
+>> node 1 cpus: 8 9 10 11 12 13 14 15 72 73 74 75 76 77 78 79
+>> node 1 size: 0 MB
+>> node 1 free: 0 MB
+>> node 2 cpus: 16 17 18 19 20 21 22 23 80 81 82 83 84 85 86 87
+>> node 2 size: 0 MB
+>> node 2 free: 0 MB
+>> node 3 cpus: 24 25 26 27 28 29 30 31 88 89 90 91 92 93 94 95
+>> node 3 size: 0 MB
+>> node 3 free: 0 MB
+>> node 4 cpus: 32 33 34 35 36 37 38 39 96 97 98 99 100 101 102 103
+>> node 4 size: 31524 MB
+>> node 4 free: 25165 MB
+>> node 5 cpus: 40 41 42 43 44 45 46 47 104 105 106 107 108 109 110 111
+>> node 5 size: 0 MB
+>> node 5 free: 0 MB
+>> node 6 cpus: 48 49 50 51 52 53 54 55 112 113 114 115 116 117 118 119
+>> node 6 size: 0 MB
+>> node 6 free: 0 MB
+>> node 7 cpus: 56 57 58 59 60 61 62 63 120 121 122 123 124 125 126 127
+>> node 7 size: 0 MB
+>> node 7 free: 0 MB
+>> node distances:
+>> node   0   1   2   3   4   5   6   7
+>>    0:  10  16  16  16  32  32  32  32
+>>    1:  16  10  16  16  32  32  32  32
+>>    2:  16  16  10  16  32  32  32  32
+>>    3:  16  16  16  10  32  32  32  32
+>>    4:  32  32  32  32  10  16  16  16
+>>    5:  32  32  32  32  16  10  16  16
+>>    6:  32  32  32  32  16  16  10  16
+>>    7:  32  32  32  32  16  16  16  10
+>>
+>> # lscpu
+>> Architecture:        x86_64
+>> CPU op-mode(s):      32-bit, 64-bit
+>> Byte Order:          Little Endian
+>> CPU(s):              128
+>> On-line CPU(s) list: 0-127
+>> Thread(s) per core:  2
+>> Core(s) per socket:  32
+>> Socket(s):           2
+>> NUMA node(s):        8
+>> Vendor ID:           AuthenticAMD
+>> CPU family:          23
+>> Model:               1
+>> Model name:          AMD EPYC 7601 32-Core Processor
+>> Stepping:            2
+>> CPU MHz:             2713.551
+>> BogoMIPS:            4391.39
+>> Virtualization:      AMD-V
+>> L1d cache:           32K
+>> L1i cache:           64K
+>> L2 cache:            512K
+>> L3 cache:            8192K
+>> NUMA node0 CPU(s):   0-7,64-71
+>> NUMA node1 CPU(s):   8-15,72-79
+>> NUMA node2 CPU(s):   16-23,80-87
+>> NUMA node3 CPU(s):   24-31,88-95
+>> NUMA node4 CPU(s):   32-39,96-103
+>> NUMA node5 CPU(s):   40-47,104-111
+>> NUMA node6 CPU(s):   48-55,112-119
+>> NUMA node7 CPU(s):   56-63,120-127
+>>
+>> Another possible lead is that without reverting the those commits 
+>> below, kdump
+>> kernel would always also crash in shrink_slab_memcg() at this line,
+>>
+>> map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map, 
+>> true);
+>
+> This looks a little bit weird. It seems nodeinfo[nid] is NULL? I 
+> didn't think of where nodeinfo was freed but memcg was still online. 
+> Maybe a check is needed:
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index a0301ed..bacda49 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -602,6 +602,9 @@ static unsigned long shrink_slab_memcg(gfp_t 
+> gfp_mask, int nid,
+>         if (!mem_cgroup_online(memcg))
+>                 return 0;
+>
+> +       if (!memcg->nodeinfo[nid])
+> +               return 0;
+> +
+>         if (!down_read_trylock(&shrinker_rwsem))
+>                 return 0;
+>
+>>
+>> [    9.072036][    T1] BUG: KASAN: null-ptr-deref in 
+>> shrink_slab+0x111/0x440
+>> [    9.072036][    T1] Read of size 8 at addr 0000000000000dc8 by task
+>> swapper/0/1
+>> [    9.072036][    T1]
+>> [    9.072036][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 
+>> 5.2.0-next-
+>> 20190711+ #10
+>> [    9.072036][    T1] Hardware name: HPE ProLiant DL385 
+>> Gen10/ProLiant DL385
+>> Gen10, BIOS A40 01/25/2019
+>> [    9.072036][    T1] Call Trace:
+>> [    9.072036][    T1]  dump_stack+0x62/0x9a
+>> [    9.072036][    T1]  __kasan_report.cold.4+0xb0/0xb4
+>> [    9.072036][    T1]  ? unwind_get_return_address+0x40/0x50
+>> [    9.072036][    T1]  ? shrink_slab+0x111/0x440
+>> [    9.072036][    T1]  kasan_report+0xc/0xe
+>> [    9.072036][    T1]  __asan_load8+0x71/0xa0
+>> [    9.072036][    T1]  shrink_slab+0x111/0x440
+>> [    9.072036][    T1]  ? mem_cgroup_iter+0x98/0x840
+>> [    9.072036][    T1]  ? unregister_shrinker+0x110/0x110
+>> [    9.072036][    T1]  ? kasan_check_read+0x11/0x20
+>> [    9.072036][    T1]  ? mem_cgroup_protected+0x39/0x260
+>> [    9.072036][    T1]  shrink_node+0x31e/0xa30
+>> [    9.072036][    T1]  ? shrink_node_memcg+0x1560/0x1560
+>> [    9.072036][    T1]  ? ktime_get+0x93/0x110
+>> [    9.072036][    T1]  do_try_to_free_pages+0x22f/0x820
+>> [    9.072036][    T1]  ? shrink_node+0xa30/0xa30
+>> [    9.072036][    T1]  ? kasan_check_read+0x11/0x20
+>> [    9.072036][    T1]  ? check_chain_key+0x1df/0x2e0
+>> [    9.072036][    T1]  try_to_free_pages+0x242/0x4d0
+>> [    9.072036][    T1]  ? do_try_to_free_pages+0x820/0x820
+>> [    9.072036][    T1]  __alloc_pages_nodemask+0x9ce/0x1bc0
+>> [    9.072036][    T1]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
+>> [    9.072036][    T1]  ? unwind_dump+0x260/0x260
+>> [    9.072036][    T1]  ? kernel_text_address+0x33/0xc0
+>> [    9.072036][    T1]  ? arch_stack_walk+0x8f/0xf0
+>> [    9.072036][    T1]  ? ret_from_fork+0x22/0x40
+>> [    9.072036][    T1]  alloc_page_interleave+0x18/0x130
+>> [    9.072036][    T1]  alloc_pages_current+0xf6/0x110
+>> [    9.072036][    T1]  allocate_slab+0x600/0x11f0
+>> [    9.072036][    T1]  new_slab+0x46/0x70
+>> [    9.072036][    T1]  ___slab_alloc+0x5d4/0x9c0
+>> [    9.072036][    T1]  ? create_object+0x3a/0x3e0
+>> [    9.072036][    T1]  ? fs_reclaim_acquire.part.15+0x5/0x30
+>> [    9.072036][    T1]  ? ___might_sleep+0xab/0xc0
+>> [    9.072036][    T1]  ? create_object+0x3a/0x3e0
+>> [    9.072036][    T1]  __slab_alloc+0x12/0x20
+>> [    9.072036][    T1]  ? __slab_alloc+0x12/0x20
+>> [    9.072036][    T1]  kmem_cache_alloc+0x32a/0x400
+>> [    9.072036][    T1]  create_object+0x3a/0x3e0
+>> [    9.072036][    T1]  kmemleak_alloc+0x71/0xa0
+>> [    9.072036][    T1]  kmem_cache_alloc+0x272/0x400
+>> [    9.072036][    T1]  ? kasan_check_read+0x11/0x20
+>> [    9.072036][    T1]  ? do_raw_spin_unlock+0xa8/0x140
+>> [    9.072036][    T1]  acpi_ps_alloc_op+0x76/0x122
+>> [    9.072036][    T1]  acpi_ds_execute_arguments+0x2f/0x18d
+>> [    9.072036][    T1]  acpi_ds_get_package_arguments+0x7d/0x84
+>> [    9.072036][    T1]  acpi_ns_init_one_package+0x33/0x61
+>> [    9.072036][    T1]  acpi_ns_init_one_object+0xfc/0x189
+>> [    9.072036][    T1]  acpi_ns_walk_namespace+0x114/0x1f2
+>> [    9.072036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
+>> [    9.072036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
+>> [    9.072036][    T1]  acpi_walk_namespace+0x9e/0xcb
+>> [    9.072036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
+>> [    9.072036][    T1]  acpi_ns_initialize_objects+0x99/0xed
+>> [    9.072036][    T1]  ? acpi_ns_find_ini_methods+0xa2/0xa2
+>> [    9.072036][    T1]  ? acpi_tb_load_namespace+0x2dc/0x2eb
+>> [    9.072036][    T1]  acpi_load_tables+0x61/0x80
+>> [    9.072036][    T1]  acpi_init+0x10d/0x44b
+>> [    9.072036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
+>> [    9.072036][    T1]  ? bus_uevent_filter+0x16/0x30
+>> [    9.072036][    T1]  ? kobject_uevent_env+0x109/0x980
+>> [    9.072036][    T1]  ? kernfs_get+0x13/0x20
+>> [    9.072036][    T1]  ? kobject_uevent+0xb/0x10
+>> [    9.072036][    T1]  ? kset_register+0x31/0x50
+>> [    9.072036][    T1]  ? kset_create_and_add+0x9f/0xd0
+>> [    9.072036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
+>> [    9.072036][    T1]  do_one_initcall+0xfe/0x45a
+>> [    9.072036][    T1]  ? initcall_blacklisted+0x150/0x150
+>> [    9.072036][    T1]  ? rwsem_down_read_slowpath+0x930/0x930
+>> [    9.072036][    T1]  ? kasan_check_write+0x14/0x20
+>> [    9.072036][    T1]  ? up_write+0x6b/0x190
+>> [    9.072036][    T1]  kernel_init_freeable+0x614/0x6a7
+>> [    9.072036][    T1]  ? rest_init+0x188/0x188
+>> [    9.072036][    T1]  kernel_init+0x11/0x138
+>> [    9.072036][    T1]  ? rest_init+0x188/0x188
+>> [    9.072036][    T1]  ret_from_fork+0x22/0x40
+>> [    9.072036][    T1]
+>> ==================================================================
+>> [    9.072036][    T1] Disabling lock debugging due to kernel taint
+>> [    9.145712][    T1] BUG: kernel NULL pointer dereference, address:
+>> 0000000000000dc8
+>> [    9.152036][    T1] #PF: supervisor read access in kernel mode
+>> [    9.152036][    T1] #PF: error_code(0x0000) - not-present page
+>> [    9.152036][    T1] PGD 0 P4D 0
+>> [    9.152036][    T1] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN NOPTI
+>> [    9.152036][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted:
+>> G    B             5.2.0-next-20190711+ #10
+>> [    9.152036][    T1] Hardware name: HPE ProLiant DL385 
+>> Gen10/ProLiant DL385
+>> Gen10, BIOS A40 01/25/2019
+>> [    9.152036][    T1] RIP: 0010:shrink_slab+0x111/0x440
+>> [    9.152036][    T1] Code: c7 20 8d 44 82 e8 7f 8b e8 ff 85 c0 0f 
+>> 84 e2 02 00
+>> 00 4c 63 a5 4c ff ff ff 49 81 c4 b8 01 00 00 4b 8d 7c e6 08 e8 3f 07 
+>> 0e 00 <4f>
+>> 8b 64 e6 08 49 8d bc 24 20 03 00 00 e8 2d 07 0e 00 49 8b 84 24
+>> [    9.152036][    T1] RSP: 0018:ffff88905757f100 EFLAGS: 00010282
+>> [    9.152036][    T1] RAX: 0000000000000000 RBX: ffff88905757f1b0 RCX:
+>> ffffffff8112f288
+>> [    9.152036][    T1] RDX: 1ffffffff049c088 RSI: dffffc0000000000 RDI:
+>> ffffffff824e0440
+>> [    9.152036][    T1] RBP: ffff88905757f1d8 R08: fffffbfff049c089 R09:
+>> fffffbfff049c088
+>> [    9.152036][    T1] R10: fffffbfff049c088 R11: ffffffff824e0443 R12:
+>> 00000000000001b8
+>> [    9.152036][    T1] R13: 0000000000000000 R14: 0000000000000000 R15:
+>> ffff88905757f440
+>> [    9.152036][    T1] FS:  0000000000000000(0000) 
+>> GS:ffff889062800000(0000)
+>> knlGS:0000000000000000
+>> [    9.152036][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [    9.152036][    T1] CR2: 0000000000000dc8 CR3: 0000001070212000 CR4:
+>> 00000000001406b0
+>> [    9.152036][    T1] Call Trace:
+>> [    9.152036][    T1]  ? mem_cgroup_iter+0x98/0x840
+>> [    9.152036][    T1]  ? unregister_shrinker+0x110/0x110
+>> [    9.152036][    T1]  ? kasan_check_read+0x11/0x20
+>> [    9.152036][    T1]  ? mem_cgroup_protected+0x39/0x260
+>> [    9.152036][    T1]  shrink_node+0x31e/0xa30
+>> [    9.152036][    T1]  ? shrink_node_memcg+0x1560/0x1560
+>> [    9.152036][    T1]  ? ktime_get+0x93/0x110
+>> [    9.152036][    T1]  do_try_to_free_pages+0x22f/0x820
+>> [    9.152036][    T1]  ? shrink_node+0xa30/0xa30
+>> [    9.152036][    T1]  ? kasan_check_read+0x11/0x20
+>> [    9.152036][    T1]  ? check_chain_key+0x1df/0x2e0
+>> [    9.152036][    T1]  try_to_free_pages+0x242/0x4d0
+>> [    9.152036][    T1]  ? do_try_to_free_pages+0x820/0x820
+>> [    9.152036][    T1]  __alloc_pages_nodemask+0x9ce/0x1bc0
+>> [    9.152036][    T1]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
+>> [    9.152036][    T1]  ? unwind_dump+0x260/0x260
+>> [    9.152036][    T1]  ? kernel_text_address+0x33/0xc0
+>> [    9.152036][    T1]  ? arch_stack_walk+0x8f/0xf0
+>> [    9.152036][    T1]  ? ret_from_fork+0x22/0x40
+>> [    9.152036][    T1]  alloc_page_interleave+0x18/0x130
+>> [    9.152036][    T1]  alloc_pages_current+0xf6/0x110
+>> [    9.152036][    T1]  allocate_slab+0x600/0x11f0
+>> [    9.152036][    T1]  new_slab+0x46/0x70
+>> [    9.152036][    T1]  ___slab_alloc+0x5d4/0x9c0
+>> [    9.152036][    T1]  ? create_object+0x3a/0x3e0
+>> [    9.152036][    T1]  ? fs_reclaim_acquire.part.15+0x5/0x30
+>> [    9.152036][    T1]  ? ___might_sleep+0xab/0xc0
+>> [    9.152036][    T1]  ? create_object+0x3a/0x3e0
+>> [    9.152036][    T1]  __slab_alloc+0x12/0x20
+>> [    9.152036][    T1]  ? __slab_alloc+0x12/0x20
+>> [    9.152036][    T1]  kmem_cache_alloc+0x32a/0x400
+>> [    9.152036][    T1]  create_object+0x3a/0x3e0
+>> [    9.152036][    T1]  kmemleak_alloc+0x71/0xa0
+>> [    9.152036][    T1]  kmem_cache_alloc+0x272/0x400
+>> [    9.152036][    T1]  ? kasan_check_read+0x11/0x20
+>> [    9.152036][    T1]  ? do_raw_spin_unlock+0xa8/0x140
+>> [    9.152036][    T1]  acpi_ps_alloc_op+0x76/0x122
+>> [    9.152036][    T1]  acpi_ds_execute_arguments+0x2f/0x18d
+>> [    9.152036][    T1]  acpi_ds_get_package_arguments+0x7d/0x84
+>> [    9.152036][    T1]  acpi_ns_init_one_package+0x33/0x61
+>> [    9.152036][    T1]  acpi_ns_init_one_object+0xfc/0x189
+>> [    9.152036][    T1]  acpi_ns_walk_namespace+0x114/0x1f2
+>> [    9.152036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
+>> [    9.152036][    T1]  ? acpi_ns_init_one_package+0x61/0x61
+>> [    9.152036][    T1]  acpi_walk_namespace+0x9e/0xcb
+>> [    9.152036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
+>> [    9.152036][    T1]  acpi_ns_initialize_objects+0x99/0xed
+>> [    9.152036][    T1]  ? acpi_ns_find_ini_methods+0xa2/0xa2
+>> [    9.152036][    T1]  ? acpi_tb_load_namespace+0x2dc/0x2eb
+>> [    9.152036][    T1]  acpi_load_tables+0x61/0x80
+>> [    9.152036][    T1]  acpi_init+0x10d/0x44b
+>> [    9.152036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
+>> [    9.152036][    T1]  ? bus_uevent_filter+0x16/0x30
+>> [    9.152036][    T1]  ? kobject_uevent_env+0x109/0x980
+>> [    9.152036][    T1]  ? kernfs_get+0x13/0x20
+>> [    9.152036][    T1]  ? kobject_uevent+0xb/0x10
+>> [    9.152036][    T1]  ? kset_register+0x31/0x50
+>> [    9.152036][    T1]  ? kset_create_and_add+0x9f/0xd0
+>> [    9.152036][    T1]  ? acpi_sleep_proc_init+0x36/0x36
+>> [    9.152036][    T1]  do_one_initcall+0xfe/0x45a
+>> [    9.152036][    T1]  ? initcall_blacklisted+0x150/0x150
+>> [    9.152036][    T1]  ? rwsem_down_read_slowpath+0x930/0x930
+>> [    9.152036][    T1]  ? kasan_check_write+0x14/0x20
+>> [    9.152036][    T1]  ? up_write+0x6b/0x190
+>> [    9.152036][    T1]  kernel_init_freeable+0x614/0x6a7
+>> [    9.152036][    T1]  ? rest_init+0x188/0x188
+>> [    9.152036][    T1]  kernel_init+0x11/0x138
+>> [    9.152036][    T1]  ? rest_init+0x188/0x188
+>> [    9.152036][    T1]  ret_from_fork+0x22/0x40
+>> [    9.152036][    T1] Modules linked in:
+>> [    9.152036][    T1] CR2: 0000000000000dc8
+>> [    9.152036][    T1] ---[ end trace 568acce4eca01945 ]---
+>> [    9.152036][    T1] RIP: 0010:shrink_slab+0x111/0x440
+>> [    9.152036][    T1] Code: c7 20 8d 44 82 e8 7f 8b e8 ff 85 c0 0f 
+>> 84 e2 02 00
+>> 00 4c 63 a5 4c ff ff ff 49 81 c4 b8 01 00 00 4b 8d 7c e6 08 e8 3f 07 
+>> 0e 00 <4f>
+>> 8b 64 e6 08 49 8d bc 24 20 03 00 00 e8 2d 07 0e 00 49 8b 84 24
+>> [    9.152036][    T1] RSP: 0018:ffff88905757f100 EFLAGS: 00010282
+>> [    9.152036][    T1] RAX: 0000000000000000 RBX: ffff88905757f1b0 RCX:
+>> ffffffff8112f288
+>> [    9.152036][    T1] RDX: 1ffffffff049c088 RSI: dffffc0000000000 RDI:
+>> ffffffff824e0440
+>> [    9.152036][    T1] RBP: ffff88905757f1d8 R08: fffffbfff049c089 R09:
+>> fffffbfff049c088
+>> [    9.152036][    T1] R10: fffffbfff049c088 R11: ffffffff824e0443 R12:
+>> 00000000000001b8
+>> [    9.152036][    T1] R13: 0000000000000000 R14: 0000000000000000 R15:
+>> ffff88905757f440
+>> [    9.152036][    T1] FS:  0000000000000000(0000) 
+>> GS:ffff889062800000(0000)
+>> knlGS:00000000
+>>
+>>>
+>>> Regards,
+>>>
+>>> Yang
+>>>
+>>>
+>>>
+>>> On 7/10/19 2:43 PM, Qian Cai wrote:
+>>>> Running LTP oom01 test case with swap triggers a crash below. 
+>>>> Revert the
+>>>> series
+>>>> "Make deferred split shrinker memcg aware" [1] seems fix the issue.
+>>>>
+>>>> aefde94195ca mm: thp: make deferred split shrinker memcg aware
+>>>> cf402211cacc 
+>>>> mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix-2-fix
+>>>> ca37e9e5f18d mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix-2
+>>>> 5f419d89cab4 mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix
+>>>> c9d49e69e887 mm: shrinker: make shrinker not depend on memcg kmem
+>>>> 1c0af4b86bcf mm: move mem_cgroup_uncharge out of 
+>>>> __page_cache_release()
+>>>> 4e050f2df876 mm: thp: extract split_queue_* into a struct
+>>>>
+>>>> [1] 
+>>>> https://lore.kernel.org/linux-mm/1561507361-59349-1-git-send-email-yang. 
+>>>>
+>>>> shi@
+>>>> linux.alibaba.com/
+>>>>
+>>>> [ 1145.730682][ T5764] list_del corruption, ffffea00251c8098->next is
+>>>> LIST_POISON1 (dead000000000100)
+>>>> [ 1145.739763][ T5764] ------------[ cut here ]------------
+>>>> [ 1145.745126][ T5764] kernel BUG at lib/list_debug.c:47!
+>>>> [ 1145.750320][ T5764] invalid opcode: 0000 [#1] SMP 
+>>>> DEBUG_PAGEALLOC KASAN
+>>>> NOPTI
+>>>> [ 1145.757513][ T5764] CPU: 1 PID: 5764 Comm: oom01 Tainted:
+>>>> G        W         5.2.0-next-20190710+ #7
+>>>> [ 1145.766709][ T5764] Hardware name: HPE ProLiant DL385 
+>>>> Gen10/ProLiant
+>>>> DL385
+>>>> Gen10, BIOS A40 01/25/2019
+>>>> [ 1145.776000][ T5764] RIP: 
+>>>> 0010:__list_del_entry_valid.cold.0+0x12/0x4a
+>>>> [ 1145.782491][ T5764] Code: c7 40 5a 33 af e8 ac fe bc ff 0f 0b 48 
+>>>> c7 c7 80
+>>>> 9e
+>>>> a1 af e8 f6 4c 01 00 4c 89 ea 48 89 de 48 c7 c7 20 59 33 af e8 8c 
+>>>> fe bc ff
+>>>> <0f>
+>>>> 0b 48 c7 c7 40 9f a1 af e8 d6 4c 01 00 4c 89 e2 48 89 de 48 c7
+>>>> [ 1145.802078][ T5764] RSP: 0018:ffff888514d773c0 EFLAGS: 00010082
+>>>> [ 1145.808042][ T5764] RAX: 000000000000004e RBX: ffffea00251c8098 
+>>>> RCX:
+>>>> ffffffffae95d318
+>>>> [ 1145.815923][ T5764] RDX: 0000000000000000 RSI: 0000000000000008 
+>>>> RDI:
+>>>> ffff8888440bd380
+>>>> [ 1145.823806][ T5764] RBP: ffff888514d773d8 R08: ffffed1108817a71 
+>>>> R09:
+>>>> ffffed1108817a70
+>>>> [ 1145.831689][ T5764] R10: ffffed1108817a70 R11: ffff8888440bd387 
+>>>> R12:
+>>>> dead000000000122
+>>>> [ 1145.839571][ T5764] R13: dead000000000100 R14: ffffea00251c8034 
+>>>> R15:
+>>>> dead000000000100
+>>>> [ 1145.847455][ T5764] FS:  00007f765ad4d700(0000) 
+>>>> GS:ffff888844080000(0000)
+>>>> knlGS:0000000000000000
+>>>> [ 1145.856299][ T5764] CS:  0010 DS: 0000 ES: 0000 CR0: 
+>>>> 0000000080050033
+>>>> [ 1145.862784][ T5764] CR2: 00007f8cebec7000 CR3: 0000000459338000 
+>>>> CR4:
+>>>> 00000000001406a0
+>>>> [ 1145.870664][ T5764] Call Trace:
+>>>> [ 1145.873835][ T5764]  deferred_split_scan+0x337/0x740
+>>>> [ 1145.878835][ T5764]  ? split_huge_page_to_list+0xe30/0xe30
+>>>> [ 1145.884364][ T5764]  ? __radix_tree_lookup+0x12d/0x1e0
+>>>> [ 1145.889539][ T5764]  ? node_tag_get.part.0.constprop.6+0x40/0x40
+>>>> [ 1145.895592][ T5764]  do_shrink_slab+0x244/0x5a0
+>>>> [ 1145.900159][ T5764]  shrink_slab+0x253/0x440
+>>>> [ 1145.904462][ T5764]  ? unregister_shrinker+0x110/0x110
+>>>> [ 1145.909641][ T5764]  ? kasan_check_read+0x11/0x20
+>>>> [ 1145.914383][ T5764]  ? mem_cgroup_protected+0x20f/0x260
+>>>> [ 1145.919645][ T5764]  shrink_node+0x31e/0xa30
+>>>> [ 1145.923949][ T5764]  ? shrink_node_memcg+0x1560/0x1560
+>>>> [ 1145.929126][ T5764]  ? ktime_get+0x93/0x110
+>>>> [ 1145.933340][ T5764]  do_try_to_free_pages+0x22f/0x820
+>>>> [ 1145.938429][ T5764]  ? shrink_node+0xa30/0xa30
+>>>> [ 1145.942906][ T5764]  ? kasan_check_read+0x11/0x20
+>>>> [ 1145.947647][ T5764]  ? check_chain_key+0x1df/0x2e0
+>>>> [ 1145.952474][ T5764]  try_to_free_pages+0x242/0x4d0
+>>>> [ 1145.957299][ T5764]  ? do_try_to_free_pages+0x820/0x820
+>>>> [ 1145.962566][ T5764]  __alloc_pages_nodemask+0x9ce/0x1bc0
+>>>> [ 1145.967917][ T5764]  ? kasan_check_read+0x11/0x20
+>>>> [ 1145.972657][ T5764]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
+>>>> [ 1145.977920][ T5764]  ? kasan_check_read+0x11/0x20
+>>>> [ 1145.982659][ T5764]  ? check_chain_key+0x1df/0x2e0
+>>>> [ 1145.987487][ T5764]  ? do_anonymous_page+0x343/0xe30
+>>>> [ 1145.992489][ T5764]  ? lock_downgrade+0x390/0x390
+>>>> [ 1145.997230][ T5764]  ? __count_memcg_events+0x8b/0x1c0
+>>>> [ 1146.002404][ T5764]  ? kasan_check_read+0x11/0x20
+>>>> [ 1146.007145][ T5764]  ? __lru_cache_add+0x122/0x160
+>>>> [ 1146.011974][ T5764]  alloc_pages_vma+0x89/0x2c0
+>>>> [ 1146.016538][ T5764]  do_anonymous_page+0x3e1/0xe30
+>>>> [ 1146.021367][ T5764]  ? __update_load_avg_cfs_rq+0x2c/0x490
+>>>> [ 1146.026893][ T5764]  ? finish_fault+0x120/0x120
+>>>> [ 1146.031461][ T5764]  ? call_function_interrupt+0xa/0x20
+>>>> [ 1146.036724][ T5764]  handle_pte_fault+0x457/0x12c0
+>>>> [ 1146.041552][ T5764]  __handle_mm_fault+0x79a/0xa50
+>>>> [ 1146.046378][ T5764]  ? vmf_insert_mixed_mkwrite+0x20/0x20
+>>>> [ 1146.051817][ T5764]  ? kasan_check_read+0x11/0x20
+>>>> [ 1146.056557][ T5764]  ? __count_memcg_events+0x8b/0x1c0
+>>>> [ 1146.061732][ T5764]  handle_mm_fault+0x17f/0x370
+>>>> [ 1146.066386][ T5764]  __do_page_fault+0x25b/0x5d0
+>>>> [ 1146.071037][ T5764]  do_page_fault+0x4c/0x2cf
+>>>> [ 1146.075426][ T5764]  ? page_fault+0x5/0x20
+>>>> [ 1146.079553][ T5764]  page_fault+0x1b/0x20
+>>>> [ 1146.083594][ T5764] RIP: 0033:0x410be0
+>>>> [ 1146.087373][ T5764] Code: 89 de e8 e3 23 ff ff 48 83 f8 ff 0f 84 
+>>>> 86 00 00
+>>>> 00
+>>>> 48 89 c5 41 83 fc 02 74 28 41 83 fc 03 74 62 e8 95 29 ff ff 31 d2 
+>>>> 48 98 90
+>>>> <c6>
+>>>> 44 15 00 07 48 01 c2 48 39 d3 7f f3 31 c0 5b 5d 41 5c c3 0f 1f
+>>>> [ 1146.106959][ T5764] RSP: 002b:00007f765ad4cec0 EFLAGS: 00010206
+>>>> [ 1146.112921][ T5764] RAX: 0000000000001000 RBX: 00000000c0000000 
+>>>> RCX:
+>>>> 00007f98f2674497
+>>>> [ 1146.120804][ T5764] RDX: 0000000001d95000 RSI: 00000000c0000000 
+>>>> RDI:
+>>>> 0000000000000000
+>>>> [ 1146.128687][ T5764] RBP: 00007f74d9d4c000 R08: 00000000ffffffff 
+>>>> R09:
+>>>> 0000000000000000
+>>>> [ 1146.136569][ T5764] R10: 0000000000000022 R11: 000000000[ 
+>>>> 1147.588181][
+>>>> T5764] Shutting down cpus with NMI
+>>>> [ 1147.592756][ T5764] Kernel Offset: 0x2d400000 from 
+>>>> 0xffffffff81000000
+>>>> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+>>>> [ 1147.604414][ T5764] ---[ end Kernel panic - not syncing: Fatal 
+>>>> exception
+>>>> ]---
+>>>
+>
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.3-1
-
-for you to fetch changes up to f5a9e488d62360c91c5770bd55a0b40e419a71ce:
-
-  powerpc/powernv/idle: Fix restore of SPRN_LDBAR for POWER9 stop state. (2019-07-12 22:25:26 +1000)
-
-- ------------------------------------------------------------------
-powerpc updates for 5.3
-
-Notable changes:
-
- - Removal of the NPU DMA code, used by the out-of-tree Nvidia driver, as well
-   as some other functions only used by drivers that haven't (yet?) made it
-   upstream.
-
- - A fix for a bug in our handling of hardware watchpoints (eg. perf record -e
-   mem: ...) which could lead to register corruption and kernel crashes.
-
- - Enable HAVE_ARCH_HUGE_VMAP, which allows us to use large pages for vmalloc
-   when using the Radix MMU.
-
- - A large but incremental rewrite of our exception handling code to use gas
-   macros rather than multiple levels of nested CPP macros.
-
-And the usual small fixes, cleanups and improvements.
-
-Thanks to:
-  Alastair D'Silva, Alexey Kardashevskiy, Andreas Schwab, Aneesh Kumar K.V, Anju
-  T Sudhakar, Anton Blanchard, Arnd Bergmann, Athira Rajeev, Cédric Le Goater,
-  Christian Lamparter, Christophe Leroy, Christophe Lombard, Christoph Hellwig,
-  Daniel Axtens, Denis Efremov, Enrico Weigelt, Frederic Barrat, Gautham R.
-  Shenoy, Geert Uytterhoeven, Geliang Tang, Gen Zhang, Greg Kroah-Hartman, Greg
-  Kurz, Gustavo Romero, Krzysztof Kozlowski, Madhavan Srinivasan, Masahiro
-  Yamada, Mathieu Malaterre, Michael Neuling, Nathan Lynch, Naveen N. Rao,
-  Nicholas Piggin, Nishad Kamdar, Oliver O'Halloran, Qian Cai, Ravi Bangoria,
-  Sachin Sant, Sam Bobroff, Satheesh Rajendran, Segher Boessenkool, Shaokun
-  Zhang, Shawn Anastasio, Stewart Smith, Suraj Jitindar Singh, Thiago Jung
-  Bauermann, YueHaibing.
-
-- ------------------------------------------------------------------
-Alastair D'Silva (1):
-      ocxl: Update for AFU descriptor template version 1.1
-
-Alexey Kardashevskiy (5):
-      powerpc/pci/of: Fix OF flags parsing for 64bit BARs
-      powerpc/pseries/dma: Allow SWIOTLB
-      powerpc/pseries/dma: Enable SWIOTLB
-      powerpc/pci/of: Parse unassigned resources
-      powerpc/powernv: Fix stale iommu table base after VFIO
-
-Andreas Schwab (1):
-      powerpc/mm/32s: fix condition that is always true
-
-Aneesh Kumar K.V (16):
-      powerpc/mm: Remove unused variable declaration
-      powerpc/mm/hash/4k: Don't use 64K page size for vmemmap with 4K pagesize
-      powerpc/mm/radix: Use the right page size for vmemmap mapping
-      powerpc/mm/drconf: Use NUMA_NO_NODE on failures instead of node 0
-      powerpc/mm: Fix node look up with numa=off boot
-      powerpc/mm: Consolidate numa_enable check and min_common_depth check
-      powerpc/mm/nvdimm: Add an informative message if we fail to allocate altmap block
-      powerpc/pseries/scm: Mark the region volatile if cache flush not required
-      powerpc/nvdimm: Add support for multibyte read/write for metadata
-      powerpc/pseries/scm: Use a specific endian format for storing uuid from the device tree
-      powerpc/book3s: Use config independent helpers for page table walk
-      powerpc/mm: pmd_devmap implies pmd_large().
-      powerpc/mm: Remove radix dependency on HugeTLB page
-      powerpc/mm: Handle page table allocation failures
-      powerpc/mm/hugetlb: Fix kernel crash if we fail to allocate page table caches
-      powerpc/mm/hugetlb: Don't enable HugeTLB if we don't have a page table cache
-
-Anju T Sudhakar (1):
-      powerpc/perf: Use cpumask_last() to determine the designated cpu for nest/core units.
-
-Anton Blanchard (1):
-      powerpc/configs: Disable latencytop
-
-Athira Rajeev (1):
-      powerpc/powernv/idle: Fix restore of SPRN_LDBAR for POWER9 stop state.
-
-Christian Lamparter (1):
-      powerpc/4xx/uic: clear pending interrupt after irq type/pol change
-
-Christoph Hellwig (5):
-      powerpc/powernv: remove the unused pnv_pci_set_p2p function
-      powerpc/powernv: remove the unused tunneling exports
-      powerpc/powernv: remove unused NPU DMA code
-      powerpc/powernv: remove the unused vas_win_paste_addr and vas_win_id functions
-      powerpc: remove device_to_mask()
-
-Christophe Leroy (25):
-      powerpc/lib: fix redundant inclusion of quad.o
-      powerpc/lib: only build ldstfp.o when CONFIG_PPC_FPU is set
-      powerpc/64: mark start_here_multiplatform as __ref
-      powerpc/32s: fix suspend/resume when IBATs 4-7 are used
-      powerpc/ftrace: Enable C Version of recordmcount
-      powerpc: slightly improve cache helpers
-      powerpc/64: flush_inval_dcache_range() becomes flush_dcache_range()
-      powerpc/32: define helpers to get L1 cache sizes.
-      powerpc/64: reuse PPC32 static inline flush_dcache_range()
-      powerpc/8xx: move CPM1 related files from sysdev/ to platforms/8xx
-      powerpc/8xx: drop verify_patch()
-      powerpc/8xx: compact microcode arrays
-      powerpc/8xx: refactor writing of CPM microcode arrays
-      powerpc/8xx: Refactor microcode write
-      powerpc/8xx: refactor printing of microcode patch name.
-      powerpc/8xx: refactor programming of microcode CPM params.
-      powerpc/8xx: replace #ifdefs by IS_ENABLED() in microcode.c
-      powerpc/8xx: Use IO accessors in microcode programming.
-      powerpc/8xx: Add microcode patch to move SMC parameter RAM.
-      powerpc/boot: don't force gzipped uImage
-      powerpc/boot: Add lzma support for uImage
-      powerpc/boot: Add lzo support for uImage
-      powerpc: Move PPC_HA() PPC_HI() and PPC_LO() to ppc-opcode.h
-      powerpc/module32: Use symbolic instructions names.
-      powerpc/module64: Use symbolic instructions names.
-
-Daniel Axtens (1):
-      powerpc/pseries/hvconsole: Fix stack overread via udbg
-
-Denis Efremov (1):
-      selftests/powerpc: ppc_asm.h: typo in the header guard
-
-Enrico Weigelt, metux IT consult (1):
-      powerpc/Kconfig: Clean up formatting
-
-Frederic Barrat (1):
-      powerpc/powernv: Show checkstop reason for NPU2 HMIs
-
-Geert Uytterhoeven (2):
-      powerpc/ps3: Use [] to denote a flexible array member
-      selftests/powerpc: Add missing newline at end of file
-
-Geliang Tang (2):
-      powerpc/perf/24x7: use rb_entry
-      powerpc/cell: set no_llseek in spufs_cntl_fops
-
-Gen Zhang (1):
-      powerpc/pseries/dlpar: Fix a missing check in dlpar_parse_cc_property()
-
-Greg Kroah-Hartman (1):
-      cxl: no need to check return value of debugfs_create functions
-
-Greg Kurz (2):
-      powerpc/powernv/npu: Fix reference leak
-      powerpc/pseries: Fix xive=off command line
-
-Gustavo Romero (1):
-      selftests/powerpc: Fix earlyclobber in tm-vmxcopy
-
-Krzysztof Kozlowski (1):
-      powerpc/configs: Remove useless UEVENT_HELPER_PATH
-
-Masahiro Yamada (4):
-      ocxl: do not use C++ style comments in uapi header
-      powerpc/mm: mark more tlb functions as __always_inline
-      powerpc/boot: add {get, put}_unaligned_be32 to xz_config.h
-      powerpc/boot: pass CONFIG options in a simpler and more robust way
-
-Mathieu Malaterre (2):
-      powerpc: Remove variable ‘path’ since not used
-      powerpc: silence a -Wcast-function-type warning in dawr_write_file_bool
-
-Michael Ellerman (5):
-      Merge tag 'powerpc-5.2-6' into fixes
-      Merge branch 'fixes' into next
-      powerpc/64s/exception: Remove unused SOFTEN_VALUE_0x980
-      powerpc/module64: Fix comment in R_PPC64_ENTRY handling
-      powerpc/irq: Don't WARN continuously in arch_local_irq_restore()
-
-Michael Neuling (3):
-      powerpc: Document xive=off option
-      powerpc: Fix compile issue with force DAWR
-      KVM: PPC: Book3S HV: Fix CR0 setting in TM emulation
-
-Nathan Lynch (6):
-      powerpc/pseries: Fix oops in hotplug memory notifier
-      powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
-      powerpc/pseries/mobility: prevent cpu hotplug during DT update
-      powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
-      powerpc/pseries: avoid blocking in irq when queuing hotplug events
-      powerpc/rtas: retry when cpu offline races with suspend/migration
-
-Naveen N. Rao (11):
-      recordmcount: Fix spurious mcount entries on powerpc
-      powerpc/xmon: Fix disabling tracing while in xmon
-      powerpc/pseries: Use macros for referring to the DTL enable mask
-      powerpc/pseries: Do not save the previous DTL mask value
-      powerpc/pseries: Factor out DTL buffer allocation and registration routines
-      powerpc/pseries: Introduce rwlock to gatekeep DTLB usage
-      powerpc/pseries: Generalize hcall_vphn()
-      powerpc/pseries: Move mm/book3s64/vphn.c under platforms/pseries/
-      powerpc/pseries: Provide vcpu dispatch statistics
-      powerpc/pseries: Protect against hogging the cpu while setting up the stats
-      powerpc/pseries: Add documentation for vcpudispatch_stats
-
-Nicholas Piggin (49):
-      powerpc/64: __ioremap_at clean up in the error case
-      powerpc/64s/radix: ioremap use ioremap_page_range
-      powerpc/64s/radix: Enable HAVE_ARCH_HUGE_VMAP
-      powerpc/64s/exception: fix line wrap and semicolon inconsistencies in macros
-      powerpc/64s/exception: remove H concatenation for EXC_HV variants
-      powerpc/64s/exception: consolidate EXCEPTION_PROLOG_2 with _NORI variant
-      powerpc/64s/exception: move and tidy EXCEPTION_PROLOG_2 variants
-      powerpc/64s/exception: fix sreset KVM test code
-      powerpc/64s/exception: remove the "extra" macro parameter
-      powerpc/64s/exception: consolidate maskable and non-maskable prologs
-      powerpc/64s/exception: merge KVM handler and skip variants
-      powerpc/64s/exception: KVM handler can set the HSRR trap bit
-      powerpc/64s/exception: Make EXCEPTION_PROLOG_0 a gas macro for consistency with others
-      powerpc/64s/exception: Move EXCEPTION_COMMON handler and return branches into callers
-      powerpc/64s/exception: Move EXCEPTION_COMMON additions into callers
-      powerpc/64s/exception: unwind exception-64s.h macros
-      powerpc/64s/exception: improve 0x500 handler code
-      powerpc/64s/exception: move EXCEPTION_PROLOG_2* to a more logical place
-      powerpc/64s/exception: remove STD_EXCEPTION_COMMON variants
-      powerpc/64s/exception: move KVM related code together
-      powerpc/64s/exception: move exception-64s.h code to exception-64s.S where it is used
-      powerpc/64s/exception: move head-64.h code to exception-64s.S where it is used
-      powerpc/64s/exception: remove __BRANCH_TO_KVM
-      powerpc/64s/exception: remove unused BRANCH_TO_COMMON
-      powerpc/64s/exception: use a gas macro for system call handler code
-      powerpc/64s/exception: fix indenting irregularities
-      powerpc/64s/exception: generate regs clear instructions using .rept
-      powerpc/64s/exception: remove pointless EXCEPTION_PROLOG macro indirection
-      powerpc/64s/exception: move paca save area offsets into exception-64s.S
-      powerpc/64s/exception: clean up system call entry
-      powerpc/64s/exception: avoid SPR RAW scoreboard stall in real mode entry
-      powerpc/64s/exception: mtmsrd L=1 cleanup
-      powerpc/64s/exception: windup use r9 consistently to restore SPRs
-      powerpc/64s/exception: move machine check windup in_mce handling
-      powerpc/64s/exception: simplify hmi windup code
-      powerpc/64s/exception: shuffle windup code around
-      powerpc/64s/exception: use common macro for windup
-      powerpc/64s/exception: add dar and dsisr options to exception macro
-      powerpc/64s/exception: machine check use standard macros to save dar/dsisr
-      powerpc/64s/exception: denorm handler use standard scratch save macro
-      powerpc/64s/exception: move SET_SCRATCH0 into EXCEPTION_PROLOG_0
-      powerpc/tm: update comment about interrupt re-entrancy
-      powerpc/64s/exception: remove bad stack branch
-      powerpc/64s/exception: optimise system_reset for idle, clean up non-idle case
-      powerpc/64s/exception: sreset move trampoline ahead of common code
-      powerpc/64s/exception: hmi remove special case macro
-      powerpc/64s/exception: simplify hmi control flow
-      powerpc/64s: Rename PPC_INVALIDATE_ERAT to PPC_ISA_3_0_INVALIDATE_ERAT
-      powerpc/64s/radix: keep kernel ERAT over local process/guest invalidates
-
-Nishad Kamdar (1):
-      powerpc: Use the correct style for SPDX License Identifier
-
-Oliver O'Halloran (1):
-      powerpc/eeh: Handle hugepages in ioremap space
-
-Qian Cai (2):
-      powerpc/eeh_cache: fix a W=1 kernel-doc warning
-      powerpc/cacheflush: fix variable set but not used
-
-Ravi Bangoria (1):
-      powerpc/watchpoint: Restore NV GPRs while returning from exception
-
-Satheesh Rajendran (1):
-      powerpc: Enable CONFIG_IPV6 in ppc64_defconfig
-
-Shaokun Zhang (1):
-      powerpc/64s: Fix misleading SPR and timebase information
-
-Stewart Smith (2):
-      powerpc/powernv: Update firmware archaeology around OPAL_HANDLE_HMI
-      powerpc/powernv-eeh: Consisely desribe what this file does
-
-Suraj Jitindar Singh (3):
-      KVM: PPC: Book3S HV: Signed extend decrementer value if not using large decrementer
-      KVM: PPC: Book3S HV: Clear pending decrementer exceptions on nested guest entry
-      powerpc: Add barrier_nospec to raw_copy_in_user()
-
-YueHaibing (2):
-      powerpc/mm: Make some symbols static that can be
-      ocxl: Make ocxl_remove() static
-
-
- Documentation/admin-guide/kernel-parameters.txt    |   11 +-
- Documentation/powerpc/vcpudispatch_stats.txt       |   68 +
- arch/powerpc/Kconfig                               |   48 +-
- arch/powerpc/boot/.gitignore                       |    2 -
- arch/powerpc/boot/Makefile                         |   16 +-
- arch/powerpc/boot/serial.c                         |    1 -
- arch/powerpc/boot/wrapper                          |   19 +-
- arch/powerpc/boot/xz_config.h                      |   20 +
- arch/powerpc/configs/40x/acadia_defconfig          |    1 -
- arch/powerpc/configs/40x/ep405_defconfig           |    1 -
- arch/powerpc/configs/40x/kilauea_defconfig         |    1 -
- arch/powerpc/configs/40x/klondike_defconfig        |    1 -
- arch/powerpc/configs/40x/makalu_defconfig          |    1 -
- arch/powerpc/configs/40x/obs600_defconfig          |    1 -
- arch/powerpc/configs/40x/virtex_defconfig          |    1 -
- arch/powerpc/configs/40x/walnut_defconfig          |    1 -
- arch/powerpc/configs/44x/akebono_defconfig         |    1 -
- arch/powerpc/configs/44x/arches_defconfig          |    1 -
- arch/powerpc/configs/44x/bamboo_defconfig          |    1 -
- arch/powerpc/configs/44x/bluestone_defconfig       |    1 -
- arch/powerpc/configs/44x/canyonlands_defconfig     |    1 -
- arch/powerpc/configs/44x/currituck_defconfig       |    1 -
- arch/powerpc/configs/44x/ebony_defconfig           |    1 -
- arch/powerpc/configs/44x/eiger_defconfig           |    1 -
- arch/powerpc/configs/44x/fsp2_defconfig            |    1 -
- arch/powerpc/configs/44x/icon_defconfig            |    1 -
- arch/powerpc/configs/44x/iss476-smp_defconfig      |    1 -
- arch/powerpc/configs/44x/katmai_defconfig          |    1 -
- arch/powerpc/configs/44x/rainier_defconfig         |    1 -
- arch/powerpc/configs/44x/redwood_defconfig         |    1 -
- arch/powerpc/configs/44x/sam440ep_defconfig        |    1 -
- arch/powerpc/configs/44x/sequoia_defconfig         |    1 -
- arch/powerpc/configs/44x/taishan_defconfig         |    1 -
- arch/powerpc/configs/44x/virtex5_defconfig         |    1 -
- arch/powerpc/configs/44x/warp_defconfig            |    1 -
- arch/powerpc/configs/52xx/cm5200_defconfig         |    1 -
- arch/powerpc/configs/52xx/lite5200b_defconfig      |    1 -
- arch/powerpc/configs/52xx/motionpro_defconfig      |    1 -
- arch/powerpc/configs/52xx/pcm030_defconfig         |    1 -
- arch/powerpc/configs/52xx/tqm5200_defconfig        |    1 -
- arch/powerpc/configs/83xx/asp8347_defconfig        |    1 -
- arch/powerpc/configs/83xx/mpc8313_rdb_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc8315_rdb_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc832x_mds_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc832x_rdb_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc834x_itx_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc834x_itxgp_defconfig  |    1 -
- arch/powerpc/configs/83xx/mpc834x_mds_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc836x_mds_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc836x_rdk_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc837x_mds_defconfig    |    1 -
- arch/powerpc/configs/83xx/mpc837x_rdb_defconfig    |    1 -
- arch/powerpc/configs/85xx/ge_imp3a_defconfig       |    1 -
- arch/powerpc/configs/85xx/ksi8560_defconfig        |    1 -
- arch/powerpc/configs/85xx/mpc8540_ads_defconfig    |    1 -
- arch/powerpc/configs/85xx/mpc8560_ads_defconfig    |    1 -
- arch/powerpc/configs/85xx/mpc85xx_cds_defconfig    |    1 -
- arch/powerpc/configs/85xx/sbc8548_defconfig        |    1 -
- arch/powerpc/configs/85xx/stx_gp3_defconfig        |    1 -
- arch/powerpc/configs/85xx/tqm8548_defconfig        |    1 -
- arch/powerpc/configs/85xx/xes_mpc85xx_defconfig    |    1 -
- arch/powerpc/configs/adder875_defconfig            |    1 -
- arch/powerpc/configs/amigaone_defconfig            |    1 -
- arch/powerpc/configs/cell_defconfig                |    1 -
- arch/powerpc/configs/chrp32_defconfig              |    1 -
- arch/powerpc/configs/ep8248e_defconfig             |    1 -
- arch/powerpc/configs/ep88xc_defconfig              |    1 -
- arch/powerpc/configs/fsl-emb-nonhw.config          |    1 -
- arch/powerpc/configs/g5_defconfig                  |    2 -
- arch/powerpc/configs/gamecube_defconfig            |    2 -
- arch/powerpc/configs/holly_defconfig               |    1 -
- arch/powerpc/configs/linkstation_defconfig         |    1 -
- arch/powerpc/configs/maple_defconfig               |    2 -
- arch/powerpc/configs/mgcoge_defconfig              |    1 -
- arch/powerpc/configs/mpc512x_defconfig             |    1 -
- arch/powerpc/configs/mpc5200_defconfig             |    1 -
- arch/powerpc/configs/mpc7448_hpc2_defconfig        |    1 -
- arch/powerpc/configs/mpc8272_ads_defconfig         |    1 -
- arch/powerpc/configs/mpc83xx_defconfig             |    1 -
- arch/powerpc/configs/mpc885_ads_defconfig          |    1 -
- arch/powerpc/configs/mvme5100_defconfig            |    1 -
- arch/powerpc/configs/pasemi_defconfig              |    1 -
- arch/powerpc/configs/pmac32_defconfig              |    2 -
- arch/powerpc/configs/powernv_defconfig             |    2 -
- arch/powerpc/configs/ppc40x_defconfig              |    1 -
- arch/powerpc/configs/ppc44x_defconfig              |    1 -
- arch/powerpc/configs/ppc64_defconfig               |    4 +-
- arch/powerpc/configs/ppc64e_defconfig              |    2 -
- arch/powerpc/configs/ppc6xx_defconfig              |    2 -
- arch/powerpc/configs/pq2fads_defconfig             |    1 -
- arch/powerpc/configs/ps3_defconfig                 |    1 -
- arch/powerpc/configs/pseries_defconfig             |    2 -
- arch/powerpc/configs/skiroot_defconfig             |    1 -
- arch/powerpc/configs/storcenter_defconfig          |    1 -
- arch/powerpc/configs/tqm8xx_defconfig              |    1 -
- arch/powerpc/configs/wii_defconfig                 |    2 -
- arch/powerpc/include/asm/book3s/64/mmu.h           |    2 -
- arch/powerpc/include/asm/book3s/64/pgtable.h       |   30 +-
- arch/powerpc/include/asm/book3s/64/radix.h         |    3 +
- arch/powerpc/include/asm/cache.h                   |   34 +-
- arch/powerpc/include/asm/cacheflush.h              |   46 +-
- arch/powerpc/include/asm/exception-64s.h           |  609 +--------
- arch/powerpc/include/asm/head-64.h                 |  204 +--
- arch/powerpc/include/asm/hw_breakpoint.h           |   21 +-
- arch/powerpc/include/asm/iommu.h                   |    8 -
- arch/powerpc/include/asm/lppaca.h                  |   40 +
- arch/powerpc/include/asm/opal-api.h                |    1 +
- arch/powerpc/include/asm/opal.h                    |    2 -
- arch/powerpc/include/asm/paca.h                    |    2 +
- arch/powerpc/include/asm/pgtable.h                 |   24 +
- arch/powerpc/include/asm/pnv-ocxl.h                |    2 +-
- arch/powerpc/include/asm/pnv-pci.h                 |    6 -
- arch/powerpc/include/asm/powernv.h                 |   22 -
- arch/powerpc/include/asm/ppc-opcode.h              |   20 +-
- arch/powerpc/include/asm/ps3stor.h                 |    2 +-
- arch/powerpc/include/asm/pte-walk.h                |   28 +-
- arch/powerpc/include/asm/topology.h                |    6 +
- arch/powerpc/include/asm/uaccess.h                 |    1 +
- arch/powerpc/include/asm/vas.h                     |   10 -
- arch/powerpc/kernel/Makefile                       |    1 +
- arch/powerpc/kernel/asm-offsets.c                  |    2 +
- arch/powerpc/kernel/cacheinfo.c                    |   21 +
- arch/powerpc/kernel/cacheinfo.h                    |    4 +
- arch/powerpc/kernel/dawr.c                         |  101 ++
- arch/powerpc/kernel/dma-iommu.c                    |   40 +-
- arch/powerpc/kernel/eeh.c                          |   15 +-
- arch/powerpc/kernel/eeh_cache.c                    |    3 +
- arch/powerpc/kernel/exceptions-64s.S               | 1437 ++++++++++++++------
- arch/powerpc/kernel/head_64.S                      |    2 +
- arch/powerpc/kernel/hw_breakpoint.c                |   56 -
- arch/powerpc/kernel/irq.c                          |    6 +-
- arch/powerpc/kernel/mce_power.c                    |    3 +-
- arch/powerpc/kernel/misc_64.S                      |   52 -
- arch/powerpc/kernel/module_32.c                    |   24 +-
- arch/powerpc/kernel/module_64.c                    |   62 +-
- arch/powerpc/kernel/pci_of_scan.c                  |   14 +-
- arch/powerpc/kernel/process.c                      |   28 -
- arch/powerpc/kernel/prom_init.c                    |   29 +-
- arch/powerpc/kernel/rtas.c                         |    7 +-
- arch/powerpc/kernel/swsusp_32.S                    |   73 +-
- arch/powerpc/kernel/tm.S                           |    4 +-
- arch/powerpc/kernel/trace/ftrace.c                 |    4 -
- arch/powerpc/kvm/Kconfig                           |    7 +-
- arch/powerpc/kvm/book3s_64_mmu_radix.c             |   12 +-
- arch/powerpc/kvm/book3s_hv.c                       |   13 +-
- arch/powerpc/kvm/book3s_hv_builtin.c               |    6 +-
- arch/powerpc/kvm/book3s_hv_tm.c                    |    6 +-
- arch/powerpc/lib/Makefile                          |    3 +-
- arch/powerpc/lib/ldstfp.S                          |    4 -
- arch/powerpc/lib/pmem.c                            |    8 +-
- arch/powerpc/mm/book3s64/Makefile                  |    1 -
- arch/powerpc/mm/book3s64/hash_native.c             |    6 +-
- arch/powerpc/mm/book3s64/hash_utils.c              |    6 +-
- arch/powerpc/mm/book3s64/mmu_context.c             |    1 -
- arch/powerpc/mm/book3s64/pgtable.c                 |   23 +-
- arch/powerpc/mm/book3s64/radix_pgtable.c           |  149 +-
- arch/powerpc/mm/book3s64/radix_tlb.c               |   40 +-
- arch/powerpc/mm/book3s64/vphn.h                    |   16 -
- arch/powerpc/mm/hugetlbpage.c                      |   25 +-
- arch/powerpc/mm/init_64.c                          |    5 +-
- arch/powerpc/mm/mem.c                              |    4 +-
- arch/powerpc/mm/numa.c                             |   61 +-
- arch/powerpc/mm/pgtable.c                          |   16 +-
- arch/powerpc/mm/pgtable_32.c                       |    2 +-
- arch/powerpc/mm/pgtable_64.c                       |   39 +-
- arch/powerpc/mm/ptdump/ptdump.c                    |    6 +-
- arch/powerpc/perf/hv-24x7.c                        |    2 +-
- arch/powerpc/perf/imc-pmu.c                        |   14 +-
- arch/powerpc/platforms/40x/Kconfig                 |    7 +-
- arch/powerpc/platforms/44x/Kconfig                 |   10 +-
- arch/powerpc/platforms/4xx/uic.c                   |    1 +
- arch/powerpc/platforms/85xx/Kconfig                |    8 +-
- arch/powerpc/platforms/86xx/Kconfig                |    6 +-
- arch/powerpc/platforms/8xx/Kconfig                 |    7 +
- arch/powerpc/platforms/8xx/Makefile                |    2 +
- arch/powerpc/{sysdev => platforms/8xx}/cpm1.c      |   24 +-
- arch/powerpc/platforms/8xx/micropatch.c            |  378 +++++
- arch/powerpc/platforms/Kconfig.cputype             |    2 +-
- arch/powerpc/platforms/cell/spufs/file.c           |    2 +-
- arch/powerpc/platforms/maple/Kconfig               |    2 +-
- arch/powerpc/platforms/powermac/sleep.S            |   68 +-
- arch/powerpc/platforms/powernv/eeh-powernv.c       |    4 +-
- arch/powerpc/platforms/powernv/idle.c              |    8 +-
- arch/powerpc/platforms/powernv/npu-dma.c           |  571 +-------
- arch/powerpc/platforms/powernv/opal-call.c         |    1 -
- arch/powerpc/platforms/powernv/opal-hmi.c          |   40 +
- arch/powerpc/platforms/powernv/opal.c              |   23 +-
- arch/powerpc/platforms/powernv/pci-ioda.c          |   14 +-
- arch/powerpc/platforms/powernv/pci.c               |  145 --
- arch/powerpc/platforms/powernv/pci.h               |    6 -
- arch/powerpc/platforms/powernv/vas-window.c        |   19 -
- arch/powerpc/platforms/powernv/vas.h               |   20 -
- arch/powerpc/platforms/pseries/Kconfig             |   19 +-
- arch/powerpc/platforms/pseries/Makefile            |    1 +
- arch/powerpc/platforms/pseries/dlpar.c             |   12 +-
- arch/powerpc/platforms/pseries/dtl.c               |   23 +-
- arch/powerpc/platforms/pseries/hotplug-memory.c    |    3 +
- arch/powerpc/platforms/pseries/hvconsole.c         |    2 +-
- arch/powerpc/platforms/pseries/lpar.c              |  603 +++++++-
- arch/powerpc/platforms/pseries/mobility.c          |   19 +
- arch/powerpc/platforms/pseries/papr_scm.c          |  123 +-
- arch/powerpc/platforms/pseries/setup.c             |   39 +-
- arch/powerpc/platforms/pseries/vio.c               |    4 +-
- .../{mm/book3s64 => platforms/pseries}/vphn.c      |   20 +-
- arch/powerpc/sysdev/Makefile                       |    2 -
- arch/powerpc/sysdev/dart_iommu.c                   |    2 +-
- arch/powerpc/sysdev/micropatch.c                   |  749 ----------
- arch/powerpc/sysdev/xics/Kconfig                   |   13 +-
- arch/powerpc/sysdev/xive/spapr.c                   |   52 +-
- arch/powerpc/xmon/xmon.c                           |   14 +-
- drivers/macintosh/smu.c                            |    4 +-
- drivers/misc/ocxl/config.c                         |  181 ++-
- drivers/misc/ocxl/pci.c                            |    2 +-
- drivers/tty/hvc/hvc_vio.c                          |   16 +-
- include/misc/ocxl.h                                |    5 +-
- include/uapi/misc/ocxl.h                           |   14 +-
- scripts/recordmcount.h                             |    3 +-
- tools/testing/selftests/powerpc/mm/.gitignore      |    2 +-
- .../selftests/powerpc/stringloops/asm/ppc_asm.h    |    2 +-
- tools/testing/selftests/powerpc/tm/tm-vmxcopy.c    |    2 +-
- tools/testing/selftests/powerpc/vphn/Makefile      |    2 +-
- tools/testing/selftests/powerpc/vphn/asm/lppaca.h  |    1 +
- tools/testing/selftests/powerpc/vphn/vphn.c        |    2 +-
- tools/testing/selftests/powerpc/vphn/vphn.h        |    1 -
- 224 files changed, 3638 insertions(+), 3538 deletions(-)
- create mode 100644 Documentation/powerpc/vcpudispatch_stats.txt
- create mode 100644 arch/powerpc/kernel/dawr.c
- delete mode 100644 arch/powerpc/mm/book3s64/vphn.h
- rename arch/powerpc/{sysdev => platforms/8xx}/cpm1.c (97%)
- create mode 100644 arch/powerpc/platforms/8xx/micropatch.c
- rename arch/powerpc/{mm/book3s64 => platforms/pseries}/vphn.c (80%)
- delete mode 100644 arch/powerpc/sysdev/micropatch.c
- create mode 120000 tools/testing/selftests/powerpc/vphn/asm/lppaca.h
- delete mode 120000 tools/testing/selftests/powerpc/vphn/vphn.h
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJdKV2kAAoJEFHr6jzI4aWAP20QALg3fgST74OyQlYvHsTGEF7l
-g8HHDqTqWTbp/et8rBXvdloqEzhNQtuxvI3zU57Tk3IFus0t9ZgiRR2o1OmtzVFj
-m7SE3NMl7ZilQQjAUQzzcXQqi6nBgyabZKXAp3XTYfIL84/2Lx/suHeKVgmUOM13
-L3smL581NQCuqCUUJhZo2p8rS3Sy/t6YNbh+abMrG9cyK2mLOWQy48ndlxsF9YVv
-GEYQ5ehRO57aIiiOWAMxAiPUJvzq+um0q/lWu+WC7wd0zXbZnxASLKiJc+C7QkLm
-e+0xQWvzpSQs/qgcvAFlnyDPXCDAi3GpAIMN6DCK46IsoTTW0Zlsjs9BvMNKa95x
-N2FXmGr4vm2xmhuT9rkRQp5KfqKbNpmCyCQc7PqA+rvTO3D3LaHXSr+ECICYQdOV
-xNnybbY0DYFO5h+7Vr9qsS/vo0zNW1j0Q0lIiPhRPGqoSUrxUoJf52VfsARYJcaz
-BsEZkPSNQpo27m205Cs6I9Qx5rbYTKyVqGuVPh1VQmy6IPfMzkLtlgvI1yIJw91a
-qs2NYuMvS6VmTjHnu4ILkfyAsAPWnXJpPTGuoNhOBl62WjMG/RsJkzEv/FDidf1e
-SHJbpM/MxxXWGKUClEFNjff1Oy8wU8CYFZm8Rwx4ZN/WSVRy4wGU1iqvl99rPxqi
-ZhIuXGxiiyWSWJ6H10s7
-=6P25
------END PGP SIGNATURE-----
