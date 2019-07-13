@@ -2,238 +2,191 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5FDC742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC7C31E40
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEFC20651
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B7920830
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 16:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="IbD7TNzU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="devoeaMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfGMQNU (ORCPT
+        id S1727938AbfGMQld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 12:13:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38926 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727706AbfGMQNT (ORCPT
+        Sat, 13 Jul 2019 12:41:33 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45571 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfGMQld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 12:13:19 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b7so6234425pls.6
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 09:13:19 -0700 (PDT)
+        Sat, 13 Jul 2019 12:41:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so12166049lje.12;
+        Sat, 13 Jul 2019 09:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P5pOxQ/9cE4E0rEdYSNFXC/ccfck6yCVHmggZDiN1+4=;
-        b=IbD7TNzULkRDZ4vtMV1A2y75Z9Px4ISXgzResob5aggpyTamvUzCbH4iSLQb1wwmOh
-         OoXTyjSUraQlHRlg89uD2xOvXr3zH4xzsSV6GnqMKMc0mr8El6KM+ouahQt0bfXlhguU
-         aMudMnehVdSsV+XHeqvRoPP7hgbcfILo9hfaY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sArqflmNJL+RuIvVxOB3J3vY2wGnGuNw/7ZgLpl13so=;
+        b=devoeaMsOdiMqtIGKbsamYRcofxr5w6ek26oEfoD77/0Bc1QktLVOhmIRyH/FU4lL0
+         UmSTKR3FhWr+piAfw7c8FVf4kL10PnB6GMdc6I3Ih4AvZR3i70OKX/I6HGAI7LSOv4kN
+         vFqZVQ7fJD4v/Hfwh2gy9dRjN1Y2xcrb6UjsTmunOmPsGmqtZxIpLMZVakc6ogGIpWjq
+         q13pGG5YpXYDSxHi7gBAvZ6u266k4VDU/S8B2X/fg/X5lCe4XNNP1GrsyYyAbwKKA+lr
+         hOd9FGBJv9YCzyYgHQoklmc8/d5pbZcxSif22u5rAKXGp9gugenwmFm0uXQPjv+jQ7yI
+         XHWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P5pOxQ/9cE4E0rEdYSNFXC/ccfck6yCVHmggZDiN1+4=;
-        b=p50ZoTdVRj2sf76VbHNh86Pq4Jbj48TMpIsA1nB+MuBFHjM2viumzrqgOUNzSnv140
-         vCz+70COUSJWuJckptW7oASQbBsCmrDagk6JlVXtiUzulOHg4skhL8etpDXEhiuXX4JY
-         wjMCTt6z26eVy8JEPaUwLk9G+vMEwzh+fTf+pDE+lrT+NER0prRqea9Bz8Cmj4RCUtSI
-         906z+db5gMesWeejNvQNJiB0OSSbA7tu129JFc/Hnruof5TZe0ZbY1h4UMM3mOxRdLHU
-         ZM/XtXG15f3NBbY8k6kpkFXXYQ3cbfZ95Bk9VB1l5sUBmO44pEVrRmqlTbq5ZhHqWeVI
-         K7pA==
-X-Gm-Message-State: APjAAAVOpaMX7jEwO3V+CXTt8IKKSz/YFlEPE7/ohq6RuJVBsyuQV5es
-        1DjsQHxD5WbWqwkAeyXsFnY=
-X-Google-Smtp-Source: APXvYqwFMp6BrQzYRwJK/zz2CZpCvsW0ckooTHNgOUC4Xyk+0Y0gaziATIzVhXmqxPvOg6Gj2sbbFw==
-X-Received: by 2002:a17:902:7407:: with SMTP id g7mr18660945pll.214.1563034398495;
-        Sat, 13 Jul 2019 09:13:18 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w1sm10171343pjt.30.2019.07.13.09.13.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 13 Jul 2019 09:13:17 -0700 (PDT)
-Date:   Sat, 13 Jul 2019 12:13:16 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190713161316.GA39321@google.com>
-References: <20190712170024.111093-4-joel@joelfernandes.org>
- <20190712213559.GA175138@google.com>
- <20190712233206.GZ26519@linux.ibm.com>
- <20190713030150.GA246587@google.com>
- <20190713031008.GA248225@google.com>
- <20190713082114.GA26519@linux.ibm.com>
- <20190713133049.GA133650@google.com>
- <20190713144108.GD26519@linux.ibm.com>
- <20190713153606.GD133650@google.com>
- <20190713155010.GF26519@linux.ibm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sArqflmNJL+RuIvVxOB3J3vY2wGnGuNw/7ZgLpl13so=;
+        b=ZIdi0EYIZvE2uZ6a4BLcRk8pTdYT9T72LzY0WkdEQssAlo3JNSBDrpFB/uiNrpvyH3
+         9BC1BCLYhxbrF/De+GkGZBd2Ru9LZpE/tsUOaGHVg8Y3s0UqVxXFDwKEeTEzTGtpexWC
+         jkWqydrw37AVkNlQn4CWbpoFRIzthYDghwCrCJkqkiKPhjw+DYVgB/yPqgzfcfOT+11d
+         NmJiRqeT3dBYRr/AdjpZDYW6cdrZ3HkVN9CyCjo3WL6GTzX/tRapdDlZpAkLD4Mm/jCK
+         4q9EoSsxt/sH638W+zGr9mjN6n28Ng1u58uRRiQdeTw0CMQVO3bCavv62gQsZzHC++5d
+         XkvQ==
+X-Gm-Message-State: APjAAAUeLTqWGJXpVGPco60ArbE9TVEp6BdxscGlbaJKfX1OCjlMiJT6
+        C4u/yLDQl4YiGIr8GTSlmQr+GM3t
+X-Google-Smtp-Source: APXvYqx8YN8a/gM70ryG83VKWW3fbsd0+C9KTsRG1W1isB+V4NfNP9ER91GQVjoHUyftaEEaOWJL3A==
+X-Received: by 2002:a2e:6348:: with SMTP id x69mr9311816ljb.186.1563036090359;
+        Sat, 13 Jul 2019 09:41:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id b17sm2061980ljf.34.2019.07.13.09.41.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Jul 2019 09:41:29 -0700 (PDT)
+Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
+ <20190710130615.gvi2jwgr2cds66xr@flea>
+ <75719cad-c65c-7ebc-3ea8-98134f86ddc3@gmail.com>
+ <4a13f12f-05a7-473e-4e4e-7a7e32d09720@gmail.com>
+ <20190710140504.t5lsk36gnn5cdn6b@flea>
+ <e7d78307-4a48-45b1-ffbe-bc397fec0e40@gmail.com>
+ <20190711090327.keuxt2ztfqecdbef@flea>
+ <de21fe78-87a6-741f-caf7-2771f6468739@gmail.com>
+ <20190712081027.arybdoxr6nzrmkxt@flea>
+ <686a20ce-e09a-037c-a5db-bd1309790c3e@gmail.com>
+ <20190712195336.zgn5mseyfba2lfu7@flea>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <523f1d21-333d-dd0f-c5fa-9a2a950d8bed@gmail.com>
+Date:   Sat, 13 Jul 2019 19:41:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713155010.GF26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190712195336.zgn5mseyfba2lfu7@flea>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 08:50:10AM -0700, Paul E. McKenney wrote:
-> On Sat, Jul 13, 2019 at 11:36:06AM -0400, Joel Fernandes wrote:
-> > On Sat, Jul 13, 2019 at 07:41:08AM -0700, Paul E. McKenney wrote:
-> > > On Sat, Jul 13, 2019 at 09:30:49AM -0400, Joel Fernandes wrote:
-> > > > On Sat, Jul 13, 2019 at 01:21:14AM -0700, Paul E. McKenney wrote:
-> > > > > On Fri, Jul 12, 2019 at 11:10:08PM -0400, Joel Fernandes wrote:
-> > > > > > On Fri, Jul 12, 2019 at 11:01:50PM -0400, Joel Fernandes wrote:
-> > > > > > > On Fri, Jul 12, 2019 at 04:32:06PM -0700, Paul E. McKenney wrote:
-> > > > > > > > On Fri, Jul 12, 2019 at 05:35:59PM -0400, Joel Fernandes wrote:
-> > > > > > > > > On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
-> > > > > > > > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > > > > > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > > > > > > > this series, this is no longer need. We can just use the generic helper
-> > > > > > > > > > and it results in a nice cleanup.
-> > > > > > > > > > 
-> > > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > > > 
-> > > > > > > > > Hi Oleg,
-> > > > > > > > > Slightly unrelated to the patch,
-> > > > > > > > > I tried hard to understand this comment below in percpu_down_read() but no dice.
-> > > > > > > > > 
-> > > > > > > > > I do understand how rcu sync and percpu rwsem works, however the comment
-> > > > > > > > > below didn't make much sense to me. For one, there's no readers_fast anymore
-> > > > > > > > > so I did not follow what readers_fast means. Could the comment be updated to
-> > > > > > > > > reflect latest changes?
-> > > > > > > > > Also could you help understand how is a writer not able to change
-> > > > > > > > > sem->state and count the per-cpu read counters at the same time as the
-> > > > > > > > > comment tries to say?
-> > > > > > > > > 
-> > > > > > > > > 	/*
-> > > > > > > > > 	 * We are in an RCU-sched read-side critical section, so the writer
-> > > > > > > > > 	 * cannot both change sem->state from readers_fast and start checking
-> > > > > > > > > 	 * counters while we are here. So if we see !sem->state, we know that
-> > > > > > > > > 	 * the writer won't be checking until we're past the preempt_enable()
-> > > > > > > > > 	 * and that once the synchronize_rcu() is done, the writer will see
-> > > > > > > > > 	 * anything we did within this RCU-sched read-size critical section.
-> > > > > > > > > 	 */
-> > > > > > > > > 
-> > > > > > > > > Also,
-> > > > > > > > > I guess we could get rid of all of the gp_ops struct stuff now that since all
-> > > > > > > > > the callbacks are the same now. I will post that as a follow-up patch to this
-> > > > > > > > > series.
-> > > > > > > > 
-> > > > > > > > Hello, Joel,
-> > > > > > > > 
-> > > > > > > > Oleg has a set of patches updating this code that just hit mainline
-> > > > > > > > this week.  These patches get rid of the code that previously handled
-> > > > > > > > RCU's multiple flavors.  Or are you looking at current mainline and
-> > > > > > > > me just missing your point?
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Hi Paul,
-> > > > > > > You are right on point. I have a bad habit of not rebasing my trees. In this
-> > > > > > > case the feature branch of mine in concern was based on v5.1. Needless to
-> > > > > > > say, I need to rebase my tree.
-> > > > > > > 
-> > > > > > > Yes, this sync clean up patch does conflict when I rebase, but other patches
-> > > > > > > rebase just fine.
-> > > > > > > 
-> > > > > > > The 2 options I see are:
-> > > > > > > 1. Let us drop this patch for now and I resend it later.
-> > > > > > > 2. I resend all patches based on Linus's master branch.
-> > > > > > 
-> > > > > > Below is the updated patch based on Linus master branch:
-> > > > > > 
-> > > > > > ---8<-----------------------
-> > > > > > 
-> > > > > > >From 5f40c9a07fcf3d6dafc2189599d0ba9443097d0f Mon Sep 17 00:00:00 2001
-> > > > > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > > > > > Date: Fri, 12 Jul 2019 12:13:27 -0400
-> > > > > > Subject: [PATCH v2.1 3/9] rcu/sync: Remove custom check for reader-section
-> > > > > > 
-> > > > > > The rcu/sync code was doing its own check whether we are in a reader
-> > > > > > section. With RCU consolidating flavors and the generic helper added in
-> > > > > > this series, this is no longer need. We can just use the generic helper
-> > > > > > and it results in a nice cleanup.
-> > > > > > 
-> > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > ---
-> > > > > >  include/linux/rcu_sync.h | 4 +---
-> > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> > > > > > index 9b83865d24f9..0027d4c8087c 100644
-> > > > > > --- a/include/linux/rcu_sync.h
-> > > > > > +++ b/include/linux/rcu_sync.h
-> > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
-> > > > > >   */
-> > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
-> > > > > >  {
-> > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
-> > > > > > -			 !rcu_read_lock_bh_held() &&
-> > > > > > -			 !rcu_read_lock_sched_held(),
-> > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
-> > > > > 
-> > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
-> > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
-> > > > > If you have not already done so, could you please give it a try?
-> > > > 
-> > > > Hi Paul,
-> > > > I don't think it will cause splats for !CONFIG_PREEMPT.
-> > > > 
-> > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
-> > > > !preemptible(). This means that:
-> > > > 
-> > > > The following expression above:
-> > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
-> > > > 
-> > > > Becomes:
-> > > > RCU_LOCKDEP_WARN(preemptible(), ...)
-> > > > 
-> > > > For, CONFIG_PREEMPT=n kernels, this means:
-> > > > RCU_LOCKDEP_WARN(0, ...)
-> > > > 
-> > > > Which would mean no splats. Or, did I miss the point?
-> > > 
-> > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
-> > 
-> > Sure, will do, sorry did not try it out yet because was busy with weekend
-> > chores but will do soon, thanks!
+12.07.2019 22:53, Maxime Ripard пишет:
+> On Fri, Jul 12, 2019 at 11:30:01AM +0300, Dmitry Osipenko wrote:
+>> 12.07.2019 11:10, Maxime Ripard пишет:
+>>> On Thu, Jul 11, 2019 at 06:55:03PM +0300, Dmitry Osipenko wrote:
+>>>> 11.07.2019 12:03, Maxime Ripard пишет:
+>>>>> On Wed, Jul 10, 2019 at 06:05:18PM +0300, Dmitry Osipenko wrote:
+>>>>>> 10.07.2019 17:05, Maxime Ripard пишет:
+>>>>>>> On Wed, Jul 10, 2019 at 04:29:19PM +0300, Dmitry Osipenko wrote:
+>>>>>>>> This works:
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+>>>>>>>> index 56d36779d213..e5a2f9c8f404 100644
+>>>>>>>> --- a/drivers/gpu/drm/drm_client_modeset.c
+>>>>>>>> +++ b/drivers/gpu/drm/drm_client_modeset.c
+>>>>>>>> @@ -182,6 +182,8 @@ drm_connector_pick_cmdline_mode(struct drm_connector *connector)
+>>>>>>>>         mode = drm_mode_create_from_cmdline_mode(connector->dev, cmdline_mode);
+>>>>>>>>         if (mode)
+>>>>>>>>                 list_add(&mode->head, &connector->modes);
+>>>>>>>> +       else
+>>>>>>>> +               cmdline_mode->specified = false;
+>>>>>>>
+>>>>>>> Hmmm, it's not clear to me why that wouldn't be the case.
+>>>>>>>
+>>>>>>> If we come back to the beginning of that function, we retrieve the
+>>>>>>> cmdline_mode buffer from the connector pointer, that will probably
+>>>>>>> have been parsed a first time using drm_mode_create_from_cmdline_mode
+>>>>>>> in drm_helper_probe_add_cmdline_mode.
+>>>>>>>
+>>>>>>> Now, I'm guessing that the issue is that in
+>>>>>>> drm_mode_parse_command_line_for_connector, if we have a named mode, we
+>>>>>>> just copy the mode over and set mode->specified.
+>>>>>>>
+>>>>>>> And we then move over to do other checks, and that's probably what
+>>>>>>> fails and returns, but our drm_cmdline_mode will have been modified.
+>>>>>>>
+>>>>>>> I'm not entirely sure how to deal with that though.
+>>>>>>>
+>>>>>>> I guess we could allocate a drm_cmdline_mode structure on the stack,
+>>>>>>> fill that, and if successful copy over its content to the one in
+>>>>>>> drm_connector. That would allow us to only change the content on
+>>>>>>> success, which is what I would expect from such a function?
+>>>>>>>
+>>>>>>> How does that sound?
+>>>>>>
+>>>>>> I now see that there is DRM_MODE_TYPE_USERDEF flag that is assigned only
+>>>>>> for the "cmdline" mode and drm_client_rotation() is the only place in
+>>>>>> DRM code that cares about whether mode is from cmdline, hence looks like
+>>>>>> it will be more correct to do the following:
+>>>>>
+>>>>> I'm still under the impression that we're dealing with workarounds of
+>>>>> a more central issue, which is that we shouldn't return a partially
+>>>>> modified drm_cmdline_mode.
+>>>>>
+>>>>> You said it yourself, the breakage is in the commit changing the
+>>>>> command line parsing logic, while you're fixing here some code that
+>>>>> was introduced later on.
+>>>>
+>>>> The problem stems from assumption that *any* named mode is valid. It
+>>>> looks to me that the ultimate solution would be to move the mode's name
+>>>> comparison into the [1], if that's possible.
+>>>>
+>>>> [1] drm_mode_parse_command_line_for_connector()
+>>>
+>>> Well, one could argue that video=tegrafb is invalid and should be
+>>> rejected as well, but we haven't cleared that up.
+>>
+>> The video=tegrafb is invalid mode, there is nothing to argue here. And
+>> the problem is that invalid modes and not rejected for the very beginning.
 > 
-> I am not faulting you for taking the weekend off, actually.  ;-)
+> Yeah, I guess fb_get_options should also return an error in such a
+> case, but I'm a bit worried about the side effects here.
 
-;-) 
+At least the showstopper regression is fixed now. Everything else could
+be worked out later on.
 
-I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
-don't get any splats. I also disassembled the code and it seems to me
-RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
+>>>>> Can you try the followintg patch?
+>>>>> http://code.bulix.org/8cwk4c-794565?raw
+>>>>
+>>>> This doesn't help because the problem with the rotation_reflection is
+>>>> that it's 0 if "rotation" not present in the cmdline and then ilog2(0)
+>>>> returns -1. So the patch "drm/modes: Don't apply cmdline's rotation if
+>>>> it wasn't specified" should be correct in any case.
+>>>
+>>> So we would have the same issue with rotate=0 then?
+>>
+>> No, we won't. Rotation mode is parsed into the DRM_MODE bitmask and
+>> rotate=0 corresponds to DRM_MODE_ROTATE_0, which is BIT(0) as you may
+>> notice. Hence rotation_reflection=0 is always an invalid value, meaning
+>> that "rotate" option does not present in the cmdline. Please consult the
+>> code, in particular see drm_mode_parse_cmdline_options() which was
+>> written by yourself ;)
+> 
+> Sigh... You're right :)
+> 
+> Sorry for that, I'll reply to the other patch
 
-thanks,
-
- - Joel
-
+Thank you very much.
