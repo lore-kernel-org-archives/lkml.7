@@ -2,105 +2,232 @@ Return-Path: <SRS0=/nvU=VK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5036AC742A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC75AC742A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2332F20830
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 14:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="1yJBr/Tl"
+	by mail.kernel.org (Postfix) with ESMTP id 94E1120830
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 15:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfGMO7h (ORCPT
+        id S1727955AbfGMPA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 10:59:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46444 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfGMO7g (ORCPT
+        Sat, 13 Jul 2019 11:00:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21128 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727626AbfGMPAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 10:59:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so12697547wru.13
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 07:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xmdUDnhWJVovmByVoh8W0nHbRzDTU6bE3u0Nvyxwtbo=;
-        b=1yJBr/TlTwB1USdmoac+6WLgPef4V0EyO1yqmAUzf/v6NSbsTlyC8AxCM3llEYRMoZ
-         cQt0gZkJ6hA97c3/Wi1y+hol4ja7bQ2t4/Apc51k+HrF5GZyzsBaDDo6TgBOiuK5LTnS
-         2dqayVAQyc36Y6vrjUuNsuWUthwoOr9uhffFyUXdXjYKV4m2+2rmrM+7c2DUGfJhJdjz
-         XJHt2wima4MV/K/KIR+tfOZvtvSmnVyxaMAZRVbtaNQFY2eLaXuAeNM7+ipwaBcsSWrx
-         zOkE345L/fPOGwZ3EmdFKTszdW0Qis/Q4B3b/lRlcBzFe/80asztlmnA2C92QovMTGys
-         PnsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xmdUDnhWJVovmByVoh8W0nHbRzDTU6bE3u0Nvyxwtbo=;
-        b=N14U2eYBfvwrFR/vo+o0UKjgd21dB+mLeuPAFETsat8a72wFaG9SXTWczppYDS6WfP
-         NGwAhCgqvpC3D64T2jbHlMJ9jMo3bewHoJOoJlDmV8lDJcRMueZHaVpcW3n3qwpPPcun
-         pNfFUehcPdymPtZeVV+4YN43ux7ZSFKtpI/Q6zR+Nmlv3YFh4MNRL2TFu9qHAr9feNEU
-         Ib9Yx6DbCwOtiLbnyZT9NutqJcMK2ff+UVI5Q7ZpQjR+zoLjuQjUyHErXU5b5YcbiFaQ
-         ReAKfBtoBk+SjLrL9tVrc/wIF6Tc0T5I8C5ocwDRotkuJ8vo2LJfX+lc3bgLfqk4Dhtp
-         GlSQ==
-X-Gm-Message-State: APjAAAXfSRGBo2EzxxSnTQ5Ipgi6nBBZx5LZFg63KF72JYBKSiwX+XyT
-        jgHRCmczQTbi3mG+rG7xKMqW2T6tnqM=
-X-Google-Smtp-Source: APXvYqyuOTqDDaoRk/O+sKZuJHRXrxGoEJ+hMe/XYFAiQn+mjCGhYrKXmOxmEzJnevFQQufSIxqIGA==
-X-Received: by 2002:a5d:42c5:: with SMTP id t5mr17378161wrr.5.1563029973866;
-        Sat, 13 Jul 2019 07:59:33 -0700 (PDT)
-Received: from axion.fireburn.co.uk ([2a01:4b00:f40e:900::64c])
-        by smtp.gmail.com with ESMTPSA id g12sm16148820wrv.9.2019.07.13.07.59.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 13 Jul 2019 07:59:33 -0700 (PDT)
-From:   Mike Lothian <mike@fireburn.co.uk>
-To:     thomas.lendacky@amd.com
-Cc:     bhe@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        lijiang@redhat.com, linux-kernel@vger.kernel.org, luto@kernel.org,
-        mingo@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        x86@kernel.org
-Subject: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be reserved
-Date:   Sat, 13 Jul 2019 15:59:08 +0100
-Message-Id: <20190713145909.30749-1-mike@fireburn.co.uk>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com>
-References: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com>
+        Sat, 13 Jul 2019 11:00:25 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6DEapDJ060379;
+        Sat, 13 Jul 2019 10:41:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tqbfw8dra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 13 Jul 2019 10:41:11 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6DEapYu060372;
+        Sat, 13 Jul 2019 10:41:11 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tqbfw8dr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 13 Jul 2019 10:41:11 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6DEdSUm023483;
+        Sat, 13 Jul 2019 14:41:10 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma03dal.us.ibm.com with ESMTP id 2tq6x6jyah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 13 Jul 2019 14:41:10 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6DEf9sa32833960
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Jul 2019 14:41:09 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C980B205F;
+        Sat, 13 Jul 2019 14:41:09 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 263C6B2064;
+        Sat, 13 Jul 2019 14:41:09 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.158.189])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 13 Jul 2019 14:41:09 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id B5EBF16C8E80; Sat, 13 Jul 2019 07:41:08 -0700 (PDT)
+Date:   Sat, 13 Jul 2019 07:41:08 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
+Message-ID: <20190713144108.GD26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190712170024.111093-1-joel@joelfernandes.org>
+ <20190712170024.111093-4-joel@joelfernandes.org>
+ <20190712213559.GA175138@google.com>
+ <20190712233206.GZ26519@linux.ibm.com>
+ <20190713030150.GA246587@google.com>
+ <20190713031008.GA248225@google.com>
+ <20190713082114.GA26519@linux.ibm.com>
+ <20190713133049.GA133650@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713133049.GA133650@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-13_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907130180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Sat, Jul 13, 2019 at 09:30:49AM -0400, Joel Fernandes wrote:
+> On Sat, Jul 13, 2019 at 01:21:14AM -0700, Paul E. McKenney wrote:
+> > On Fri, Jul 12, 2019 at 11:10:08PM -0400, Joel Fernandes wrote:
+> > > On Fri, Jul 12, 2019 at 11:01:50PM -0400, Joel Fernandes wrote:
+> > > > On Fri, Jul 12, 2019 at 04:32:06PM -0700, Paul E. McKenney wrote:
+> > > > > On Fri, Jul 12, 2019 at 05:35:59PM -0400, Joel Fernandes wrote:
+> > > > > > On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
+> > > > > > > The rcu/sync code was doing its own check whether we are in a reader
+> > > > > > > section. With RCU consolidating flavors and the generic helper added in
+> > > > > > > this series, this is no longer need. We can just use the generic helper
+> > > > > > > and it results in a nice cleanup.
+> > > > > > > 
+> > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > > 
+> > > > > > Hi Oleg,
+> > > > > > Slightly unrelated to the patch,
+> > > > > > I tried hard to understand this comment below in percpu_down_read() but no dice.
+> > > > > > 
+> > > > > > I do understand how rcu sync and percpu rwsem works, however the comment
+> > > > > > below didn't make much sense to me. For one, there's no readers_fast anymore
+> > > > > > so I did not follow what readers_fast means. Could the comment be updated to
+> > > > > > reflect latest changes?
+> > > > > > Also could you help understand how is a writer not able to change
+> > > > > > sem->state and count the per-cpu read counters at the same time as the
+> > > > > > comment tries to say?
+> > > > > > 
+> > > > > > 	/*
+> > > > > > 	 * We are in an RCU-sched read-side critical section, so the writer
+> > > > > > 	 * cannot both change sem->state from readers_fast and start checking
+> > > > > > 	 * counters while we are here. So if we see !sem->state, we know that
+> > > > > > 	 * the writer won't be checking until we're past the preempt_enable()
+> > > > > > 	 * and that once the synchronize_rcu() is done, the writer will see
+> > > > > > 	 * anything we did within this RCU-sched read-size critical section.
+> > > > > > 	 */
+> > > > > > 
+> > > > > > Also,
+> > > > > > I guess we could get rid of all of the gp_ops struct stuff now that since all
+> > > > > > the callbacks are the same now. I will post that as a follow-up patch to this
+> > > > > > series.
+> > > > > 
+> > > > > Hello, Joel,
+> > > > > 
+> > > > > Oleg has a set of patches updating this code that just hit mainline
+> > > > > this week.  These patches get rid of the code that previously handled
+> > > > > RCU's multiple flavors.  Or are you looking at current mainline and
+> > > > > me just missing your point?
+> > > > > 
+> > > > 
+> > > > Hi Paul,
+> > > > You are right on point. I have a bad habit of not rebasing my trees. In this
+> > > > case the feature branch of mine in concern was based on v5.1. Needless to
+> > > > say, I need to rebase my tree.
+> > > > 
+> > > > Yes, this sync clean up patch does conflict when I rebase, but other patches
+> > > > rebase just fine.
+> > > > 
+> > > > The 2 options I see are:
+> > > > 1. Let us drop this patch for now and I resend it later.
+> > > > 2. I resend all patches based on Linus's master branch.
+> > > 
+> > > Below is the updated patch based on Linus master branch:
+> > > 
+> > > ---8<-----------------------
+> > > 
+> > > >From 5f40c9a07fcf3d6dafc2189599d0ba9443097d0f Mon Sep 17 00:00:00 2001
+> > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > > Date: Fri, 12 Jul 2019 12:13:27 -0400
+> > > Subject: [PATCH v2.1 3/9] rcu/sync: Remove custom check for reader-section
+> > > 
+> > > The rcu/sync code was doing its own check whether we are in a reader
+> > > section. With RCU consolidating flavors and the generic helper added in
+> > > this series, this is no longer need. We can just use the generic helper
+> > > and it results in a nice cleanup.
+> > > 
+> > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  include/linux/rcu_sync.h | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > > 
+> > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> > > index 9b83865d24f9..0027d4c8087c 100644
+> > > --- a/include/linux/rcu_sync.h
+> > > +++ b/include/linux/rcu_sync.h
+> > > @@ -31,9 +31,7 @@ struct rcu_sync {
+> > >   */
+> > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+> > >  {
+> > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
+> > > -			 !rcu_read_lock_bh_held() &&
+> > > -			 !rcu_read_lock_sched_held(),
+> > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+> > 
+> > I believe that replacing rcu_read_lock_sched_held() with preemptible()
+> > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
+> > If you have not already done so, could you please give it a try?
+> 
+> Hi Paul,
+> I don't think it will cause splats for !CONFIG_PREEMPT.
+> 
+> Currently, rcu_read_lock_any_held() introduced in this patch returns true if
+> !preemptible(). This means that:
+> 
+> The following expression above:
+> RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
+> 
+> Becomes:
+> RCU_LOCKDEP_WARN(preemptible(), ...)
+> 
+> For, CONFIG_PREEMPT=n kernels, this means:
+> RCU_LOCKDEP_WARN(0, ...)
+> 
+> Which would mean no splats. Or, did I miss the point?
 
-This appears to be causing issues with gold again:
+I suggest trying it out on a CONFIG_PREEMPT=n kernel.
 
-axion /usr/src/linux # make
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-  CHK     include/generated/compile.h
-  VDSOCHK arch/x86/entry/vdso/vdso64.so.dbg
-  VDSOCHK arch/x86/entry/vdso/vdso32.so.dbg
-  CHK     kernel/kheaders_data.tar.xz
-  CC      arch/x86/boot/compressed/misc.o
-  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
-Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-make[2]: *** [arch/x86/boot/compressed/Makefile:130: arch/x86/boot/compressed/vmlinux.relocs] Error 1
-make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
-make[1]: *** [arch/x86/boot/Makefile:112: arch/x86/boot/compressed/vmlinux] Error 2
-make: *** [arch/x86/Makefile:316: bzImage] Error 2
-
-Here's the version I'm running:
-
-sys-devel/gcc-9.1.0-r1 
-sys-libs/glibc-2.29-r2 
-sys-devel/binutils-2.32-r1
-
-Cheers
-
-Mike
-
+							Thanx, Paul
