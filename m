@@ -7,56 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A96C742D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB292C742D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCBB2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6B32083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jul 2019 11:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="paZd7erJ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="p2butWx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfGMLDU (ORCPT
+        id S1727875AbfGMLEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 07:03:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34529 "EHLO
+        Sat, 13 Jul 2019 07:04:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48835 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfGMLDT (ORCPT
+        with ESMTP id S1727418AbfGMLEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 07:03:19 -0400
+        Sat, 13 Jul 2019 07:04:08 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB3Aoj3839074
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6DB3pjn3839117
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Jul 2019 04:03:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB3Aoj3839074
+        Sat, 13 Jul 2019 04:03:51 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6DB3pjn3839117
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563015791;
-        bh=3xOcDZE4Dn3I3GEUK1XwtHkmYbrhnwlVEsFY+1Bxv/Q=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=paZd7erJjb5q+ZrNsIqZcSh0Hn0L/h0GyAhU86VzkxhbqA0BNWUa/2gGVr+vXaaCU
-         KBVN7TepaxB8yf0h+XlN1gXYbnjql/dRM7CZRsiVJq9fWGhTuj5NmSXp2G2qYxHNK+
-         xcTok/pdg54L7vE+nuIpf8rCYjjfiem4ZVZQrK6rKG6fyNRdHvpCcpMMRhnCIuCdyf
-         6TBB5ccC2Kii7jaOJiMOD+io6z+KNGbuSHQvmOJ9JjqliYErWKlXeT6hkPXVVHRT/1
-         zC4YRvMXjhDZlb5gEDNFrSkSshinMdvGOkyiFNwUgxc+dAUXnDwClyy8ohW2nQcaob
-         eAjtwHMMLlQwA==
+        s=2019061801; t=1563015832;
+        bh=l7YBeiil97fJnQYrMWgIoLrmOJa7C1+dhW8EvzR9Bbc=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=p2butWx9snMnubMkovim5lI8uMp89v8St+jXgQTYXAc5r5vW5kd74A/rOCE3cXbFz
+         kVc3IxpBvINGx7T5xu+Irx2IRwc5PtRvpAokjmzNynX2kRctYA1uHLab9o2Rty3gIN
+         9TJb44HKcNuxQF5s4CZE5dYY/B2evCrjPMsqQDlwH5ClQ6DSER8ZCeaJYV4DHxOpWc
+         XzzDLF5/WYQVFh3RKpT3qjoAe1FEObDbttzhGSQCWZ5ZLIC+XS0vqc4aMV0bqdYLw6
+         Aav93al17r+z6s6no8gZsMgfL4hDpYZloWOos9gvb2OG+Ir4U4zQmVW37K3Xf4Q5dR
+         YyKVKXYoMlYDA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB39aS3839071;
-        Sat, 13 Jul 2019 04:03:09 -0700
-Date:   Sat, 13 Jul 2019 04:03:09 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6DB3oBs3839114;
+        Sat, 13 Jul 2019 04:03:50 -0700
+Date:   Sat, 13 Jul 2019 04:03:50 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-dxzj1ah350fy9ec0xbhb15b6@git.kernel.org>
-Cc:     jolsa@kernel.org, mingo@kernel.org, hpa@zytor.com,
-        tglx@linutronix.de, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        acme@redhat.com, ak@linux.intel.com
-Reply-To: mingo@kernel.org, jolsa@kernel.org, hpa@zytor.com,
-          tglx@linutronix.de, namhyung@kernel.org,
-          linux-kernel@vger.kernel.org, acme@redhat.com,
-          ak@linux.intel.com, adrian.hunter@intel.com
+From:   tip-bot for Luke Mujica <tipbot@zytor.com>
+Message-ID: <tip-34c9af571e51466fbcc423fb955277c82f03ce92@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, lukemujica@google.com,
+        eranian@google.com, mingo@kernel.org, tglx@linutronix.de,
+        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+        acme@redhat.com, peterz@infradead.org, irogers@google.com,
+        jolsa@redhat.com, hpa@zytor.com
+Reply-To: mingo@kernel.org, eranian@google.com, lukemujica@google.com,
+          linux-kernel@vger.kernel.org, jolsa@redhat.com, hpa@zytor.com,
+          peterz@infradead.org, irogers@google.com,
+          alexander.shishkin@linux.intel.com, acme@redhat.com,
+          namhyung@kernel.org, tglx@linutronix.de
+In-Reply-To: <20190703222509.109616-1-lukemujica@google.com>
+References: <20190703222509.109616-1-lukemujica@google.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf metricgroup: Add missing list_del_init()
- when flushing egroups list
-Git-Commit-ID: acc7bfb3db9744c4a18c96fd6536069e8647cb11
+Subject: [tip:perf/urgent] perf parse-events: Remove unused variable 'i'
+Git-Commit-ID: 34c9af571e51466fbcc423fb955277c82f03ce92
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,37 +73,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  acc7bfb3db9744c4a18c96fd6536069e8647cb11
-Gitweb:     https://git.kernel.org/tip/acc7bfb3db9744c4a18c96fd6536069e8647cb11
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 4 Jul 2019 12:20:21 -0300
+Commit-ID:  34c9af571e51466fbcc423fb955277c82f03ce92
+Gitweb:     https://git.kernel.org/tip/34c9af571e51466fbcc423fb955277c82f03ce92
+Author:     Luke Mujica <lukemujica@google.com>
+AuthorDate: Wed, 3 Jul 2019 15:25:08 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 9 Jul 2019 10:13:27 -0300
 
-perf metricgroup: Add missing list_del_init() when flushing egroups list
+perf parse-events: Remove unused variable 'i'
 
-So that at the end each of the entries have its list node struct cleared
-and the egroup list head ends emptied.
+Remove the 'int i' because it is declared but not used in parse-events.y
+or in the generated parse-events.c.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Luke Mujica <lukemujica@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-dxzj1ah350fy9ec0xbhb15b6@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190703222509.109616-1-lukemujica@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/metricgroup.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/parse-events.y | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 0d8c840f88c0..416a9015405e 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -492,6 +492,7 @@ static void metricgroup__free_egroups(struct list_head *group_list)
- 		for (i = 0; i < eg->idnum; i++)
- 			zfree(&eg->ids[i]);
- 		zfree(&eg->ids);
-+		list_del_init(&eg->nd);
- 		free(eg);
- 	}
- }
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 6ad8d4914969..172dbb73941f 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -626,7 +626,6 @@ PE_TERM
+ PE_NAME array '=' PE_NAME
+ {
+ 	struct parse_events_term *term;
+-	int i;
+ 
+ 	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
+ 					$1, $4, &@1, &@4));
