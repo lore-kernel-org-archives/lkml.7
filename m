@@ -2,138 +2,109 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636D3C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F3CC742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B0E2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Mx8nG9+a"
+	by mail.kernel.org (Postfix) with ESMTP id 0A8A82064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfGNMR3 (ORCPT
+        id S1728401AbfGNMTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 08:17:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39880 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbfGNMR3 (ORCPT
+        Sun, 14 Jul 2019 08:19:37 -0400
+Received: from smtprelay0118.hostedemail.com ([216.40.44.118]:41370 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728302AbfGNMTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 08:17:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so14218144wrt.6
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 05:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cgVbuOUK5IMb2mJob8Vu/i3xaHtmEbyWrqBO0QT7Vjk=;
-        b=Mx8nG9+a22gVxyMb7SZmw7vgw+HQJBRI5ZISTOezzTrWlcNuyrgbXc6mOKUReNJRIy
-         CSUF1YVm5uOsU55Qi8QxsE6gkoZ/pO+aOhKkMiUwNaRBIdZklMUuDmelSPbH60rwv10W
-         PFD3/mT6fwxrDW0vKkkn9evEgTQKetfzSj/T4eGB8LX9iyn5MzjgTiHwSFsbZODjfN6Z
-         TCJCAyIz0GyMLwjA9o+OESsGLxf26d04rYxsq8PgxTUDv84HRFEKki06vZv2OlsCRDSR
-         fdLX+fJ2hFELH8EPmVDc6yLyiGs2oKwA2tr+O9iRy+Xfa2UNV3wbGCTmXKKnSqlH77yB
-         hrNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cgVbuOUK5IMb2mJob8Vu/i3xaHtmEbyWrqBO0QT7Vjk=;
-        b=sCtC0x3pCwkvwfqLrFlmQjBr4DKeMcRW8aqYJV6Qi0c+1Ox29hSW7dz1oFTmcL0dbV
-         iQSQuhJyvNJcSyojdZwZc2O8DRfoY3KHieLf29lhpK/mTm8VB3tHtKBujLn+R4kIOkla
-         m07hzrGcU0le7DEHe7vRLFwMSg146tF3MUt9H4pdK4MLLXc1Lke5ybWXlXiVfSRShERZ
-         czAzgwQtDecTPCG4Ce4rYcmfxtsTryE63XLsfu+e7mCsQ5E0AtFke1b15DbBVyl6h1Ji
-         a9rcOfgqs7ENfW4Uum7gmxsqX63Y5pVK0YKoBU3pkdsO1rkViGE/aqV1nq6c5nrcngdM
-         /hkQ==
-X-Gm-Message-State: APjAAAUXXOcZ7gTq5qI1JJ2FRml29Sz1CJ/wtXOQ41Wg/gncqNFVp/OY
-        m6rVq8C6/1uUySFl8eM444Y=
-X-Google-Smtp-Source: APXvYqwfXjWyk5yDIfDYAnmx5Ltu/cOupXAttx/p6URfj3CXD0K9tlc2bbaoJH6IKF7mfpd1y8YY9w==
-X-Received: by 2002:adf:ed11:: with SMTP id a17mr23399272wro.112.1563106646996;
-        Sun, 14 Jul 2019 05:17:26 -0700 (PDT)
-Received: from brauner.io ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id l8sm25318829wrg.40.2019.07.14.05.17.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 05:17:26 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 14:17:25 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Anatoly Pugachev <matorola@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clone: fix CLONE_PIDFD support
-Message-ID: <20190714121724.mwg2t3di6goha7yq@brauner.io>
-References: <20190714120206.GC6773@altlinux.org>
+        Sun, 14 Jul 2019 08:19:37 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 07B6A100E86C5;
+        Sun, 14 Jul 2019 12:19:36 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: chair55_70b4cd25bb85f
+X-Filterd-Recvd-Size: 2713
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 14 Jul 2019 12:19:34 +0000 (UTC)
+Message-ID: <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
+Subject: Re: [PATCH 04/12] iio: adc: max9611: Fix misuse of GENMASK macro
+From:   Joe Perches <joe@perches.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Date:   Sun, 14 Jul 2019 05:19:32 -0700
+In-Reply-To: <20190714125403.0789dc9e@archlinux>
+References: <cover.1562734889.git.joe@perches.com>
+         <2929234bd4ecec41c0d012edc52416ef80f3e368.1562734889.git.joe@perches.com>
+         <20190714125403.0789dc9e@archlinux>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190714120206.GC6773@altlinux.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 03:02:06PM +0300, Dmitry V. Levin wrote:
-> The introduction of clone3 syscall accidentally broke CLONE_PIDFD
-> support in traditional clone syscall on compat x86 and those
-> architectures that use do_fork to implement clone syscall.
+On Sun, 2019-07-14 at 12:54 +0100, Jonathan Cameron wrote:
+> On Tue,  9 Jul 2019 22:04:17 -0700
+> Joe Perches <joe@perches.com> wrote:
 > 
-> This bug was found by strace test suite.
+> > Arguments are supposed to be ordered high then low.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
 > 
-> Link: https://strace.io/logs/strace/2019-07-12
-> Fixes: 7f192e3cd316 ("fork: add clone3")
-> Bisected-and-tested-by: Anatoly Pugachev <matorola@gmail.com>
-> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> Applied to the fixes-togreg branch of iio.git and marked for
+> stable etc.
 
-Good catch! Thank you Dmitry.
+This mask is used in an init function called from a probe.
 
-One change request below.
+I don't have this hardware but it looks as if it could
+never have worked so I doubt the driver and the hardware
+have ever been tested.
 
-> ---
->  arch/x86/ia32/sys_ia32.c | 1 +
->  kernel/fork.c            | 1 +
->  2 files changed, 2 insertions(+)
+Does anyone have this device in actual use?
+
+
+	regval = ret & MAX9611_TEMP_MASK;
+
+	if ((regval > MAX9611_TEMP_MAX_POS &&
+	     regval < MAX9611_TEMP_MIN_NEG) ||
+	     regval > MAX9611_TEMP_MAX_NEG) {
+		dev_err(max9611->dev,
+			"Invalid value received from ADC 0x%4x: aborting\n",
+			regval);
+		return -EIO;
+	}
+
+
+> Thanks,
 > 
-> diff --git a/arch/x86/ia32/sys_ia32.c b/arch/x86/ia32/sys_ia32.c
-> index 64a6c952091e..98754baf411a 100644
-> --- a/arch/x86/ia32/sys_ia32.c
-> +++ b/arch/x86/ia32/sys_ia32.c
-> @@ -239,6 +239,7 @@ COMPAT_SYSCALL_DEFINE5(x86_clone, unsigned long, clone_flags,
->  {
->  	struct kernel_clone_args args = {
->  		.flags		= (clone_flags & ~CSIGNAL),
-> +		.pidfd		= parent_tidptr,
->  		.child_tid	= child_tidptr,
->  		.parent_tid	= parent_tidptr,
->  		.exit_signal	= (clone_flags & CSIGNAL),
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 8f3e2d97d771..2c3cbad807b6 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2417,6 +2417,7 @@ long do_fork(unsigned long clone_flags,
->  {
->  	struct kernel_clone_args args = {
->  		.flags		= (clone_flags & ~CSIGNAL),
-> +		.pidfd		= parent_tidptr,
->  		.child_tid	= child_tidptr,
->  		.parent_tid	= parent_tidptr,
->  		.exit_signal	= (clone_flags & CSIGNAL),
-> -- 
+> Jonathan
+> 
+> > ---
+> >  drivers/iio/adc/max9611.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> > index 917223d5ff5b..0e3c6529fc4c 100644
+> > --- a/drivers/iio/adc/max9611.c
+> > +++ b/drivers/iio/adc/max9611.c
+> > @@ -83,7 +83,7 @@
+> >  #define MAX9611_TEMP_MAX_POS		0x7f80
+> >  #define MAX9611_TEMP_MAX_NEG		0xff80
+> >  #define MAX9611_TEMP_MIN_NEG		0xd980
+> > -#define MAX9611_TEMP_MASK		GENMASK(7, 15)
+> > +#define MAX9611_TEMP_MASK		GENMASK(15, 7)
+> >  #define MAX9611_TEMP_SHIFT		0x07
+> >  #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
+> >  #define MAX9611_TEMP_SCALE_NUM		1000000
 
-Both of these legacy clone helpers need to make CLONE_PIDFD and
-CLONE_PARENT_SETTID incompatible, i.e. could you please add a helper to
-kernel/fork.c:
-
-bool legacy_clone_args_valid(const struct kernel_clone_args *kargs)
-{
-	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
-	if ((kargs->flags & CLONE_PIDFD) && (kargs->flags & CLONE_PARENT_SETTID))
-		return false;
-}
-
-and export it and use it in ia32 too?
-
-Then resend and I'll put it into my tree that already has a few other
-fixes about to be sent.
-
-Christian
