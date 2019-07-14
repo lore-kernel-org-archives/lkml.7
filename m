@@ -2,142 +2,222 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800CCC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C3AC74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43311205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69317205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="r0z7sEYy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDfJqkhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfGNOnC (ORCPT
+        id S1728457AbfGNOsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 10:43:02 -0400
-Received: from mout.web.de ([217.72.192.78]:43695 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbfGNOnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 10:43:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1563115336;
-        bh=QlWBoDSI8w5rtSGM2FONMF9eDoomMwZOKM0CWt7f9Qs=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=r0z7sEYyYdbxwwk81BJrfa/s+1tIzSHkt5mRPLBGsHJXONHdlMd+T+Jy+JyA5QXdr
-         0f/znLHpsSaiad9gV2ngh5mLE0YkJ5n1b/ZZSqZLV6f9NqIxVvnVDFcDFLTfJFV+/0
-         J+vWoEEVXnaaeO5X6gHDwqSHdP9kLll5xJQuXkls=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.159.144]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MgfFr-1i8zNv1GCt-00Nwyg; Sun, 14
- Jul 2019 16:42:16 +0200
-To:     Keyur Patel <iamkeyur96@gmail.com>, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org
-Cc:     Christian Gromm <christian.gromm@microchip.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        linux-kernel@vger.kernel.org
-References: <20190711175055.25157-1-iamkeyur96@gmail.com>
-Subject: Re: [v3] staging: most: remove redundant print statement when
- kfifo_alloc fails
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <27df9bec-dbd5-8267-8df2-4948ca14e6d4@web.de>
-Date:   Sun, 14 Jul 2019 16:42:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 14 Jul 2019 10:48:15 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38845 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbfGNOsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 10:48:15 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so13075115edo.5
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 07:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hy169g8Lox0WjwNa4b+zp9/64BOx2Hykf6MoysyzbyM=;
+        b=qDfJqkhv+PeM8i4Vhi7D1ipptr7S663xKsAmSBA2CKg+Umsac68Z3LKvOc1LthziJt
+         uac1l65OCcZ/uWWwlX9T1JniSL3EiC06GffOb+e3uoOYGnBoxgoiFzRCeUWwSAv2Yvnf
+         SYQEmCuGl2CenAC532BSRLxUEFwpatlHTBg59D9oAeN/Xm5pAwlimQ4/7kZ2qxBEhBLZ
+         nW8poMpnV5QeFH4z5bPprqef+T4CBVanBUrmXIT2Od34P3knxOpdjOQwHBoXvicz1rLu
+         oSgQoEaKpLEyD6k0b2iLzQSpUlgto57fqDJ/BmOOq89dWz1swDNTFhlzqr1XI/SNso42
+         A/Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hy169g8Lox0WjwNa4b+zp9/64BOx2Hykf6MoysyzbyM=;
+        b=EC8MR7veNXp3hLcadjwT3LOAIdvJKwl3kzLm4pt2XeKSQ+KSa33tpNn55BSPJLx0/o
+         3/ASz5Y+ETvpA2DGIP7JbormlmB1PTJHlNkpKKhmfgINolKPGLZjLdlFki6HFpe5+1au
+         /awJcFQ6ON237vmicvQeW9qB1bc8lEee9KclzxWLCsIemwyPSPon/R22i4wGXSL/YuAp
+         EAPC6XFCrfLC9Lr4DPhG6/OlAchVc3KqW9YitQYRX2i0hPw3c1HZ6D9zzrZq/2CbZ1dn
+         8E2npicjumtpVaGwizuG0UOj/7RarEWuI4MdvKv5BSzJc0HM6rtzyAYDC3QGR9wBpqLi
+         HhHA==
+X-Gm-Message-State: APjAAAWmnqavmFL6AwK7KxsyGH4fQTepV5NbgqGk2t5qh/u4ozeO9xGI
+        wGNfYszMy5iwQBQKTHYCkdCb35bbNIq/aT4F8dmNFg==
+X-Google-Smtp-Source: APXvYqwu8FY6LIl+s3s47q2KUxAhOGJHQqSYTQTDa938MOOpf93YR+WR/jyjgM1fffyG1L7qU0vEITvwu0QhD5js5qc=
+X-Received: by 2002:a17:906:644c:: with SMTP id l12mr15866907ejn.142.1563115692435;
+ Sun, 14 Jul 2019 07:48:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190711175055.25157-1-iamkeyur96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CILvNAgH4j/r/l0QeYLmySGJW4sotrIMHgtT/QGXKCwPtVGyNgC
- muc6v29BhaDY3CHud/zwI9Z2nfF8Wjgnap0gwlIL5AVU+Xq3ctJtXaVSIBicpvz2qPXh7q4
- QghdYOMuy8pEHg9/rK9sL2XPGWaa83MEybvEV2S1Q02fAtC1S4kQA0BJYagSPZZne/z650Z
- ztxpHCZqqQegUx3GN+tgg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2BFl/3eKXy4=:SMmoK8HZlreXscIRauN/Pi
- TVzsrtOnLBzXUAVSopc3EZXGlALNbouN+hzzLn06AjxGhwXRfs3lZXZKSBo7uHbN/mmYnUAfb
- flVsnPvpxqAyPr7Y9E/dU6MdwQsz5G7HStt/Ox7kuvwz2qPw1scWKQ3X3DOJrghFjhTrtO43u
- /iHitrBZyBAX6FCxW9fzqoOLWrs73Ll2EGUyCIDccITD2BK0Bgs4d2BQoYTX2TgLGFBiaznQx
- dim962G9rsoMr/A5mpGTMcbz4y2VZ4gkdN6VhpPkz56b7n7+EhhlDXmuYkf6w6LezkK5hiFNc
- QPhRqY2kBkkPc6oKQj+GGbme2lUixl5mPRmvHevQ1SPV+XNDXyHh4foBMgzw2/pYy2W/KIaTL
- XeK4GP9+zgxAwmlDSNfF20DoH52SBJs8Paehx/hpEXtn7azJguqoX7yCNRbBI1oMmS069SNni
- rKp7aMfh9uV4io2L+KAU1Jzm1FRM75JEuFNjLod1SESLipKGISD62ZTPHz4PvpYxJauhMO19T
- CjzQrCa3237c5i2oImMvPEZ5UcXOAIiuQzifg0OdY0IGvEATjIgo6cjgpESeuYvUKX0+sPvkz
- Yt+ZZv82eqiJpur8XIUnqfA7GKomiZRTyeQiJafDhfnsq1O0kL6n3s2s3H4FYGllp2vZIWID0
- e6/gDc+ulBoycIqnNaXbckQWI4uJjoP/CEsOX09WaSF9jxGx5FTT0Xbfs/u/5sV9YiL8sVi6f
- qH6W/79Guh/DYYIZe2OKqKj0a8Stou+5V0GeMwXMZ/bg04v+Y7R4nFuY85p8tGOWNfBcfnsru
- PW2IGNHwihu/vTTg9xnvYLC1NVpFmOcQ0UIMb+r3HFJ5B0Qikj1MfMPC24657rtcxAFocUVuB
- JNxVUBfv6EBkXIE6EezEpzqCCy7t9G47L3/yRjQe+/oSIlYP281E7A/jVFJ2/MHbhpHlBebBD
- XlcgjAKlVaaAdN1XjL2w8+tXwPHpkmB3IcmR9LOeufAQuKGhpXNoHK3eD8ta6dRCHhmnaFaiu
- AgQCq06a+0ePV+NWe7js56Jk2Aab73rEvSLUJz0GHl4/2RXKrESrijJbqfYGhu1Kq+/7OvXVl
- ENwFQ5EXd046qv5nRuqUnocj1wXSouL0ll4
+References: <20190626210351.GF3116@mit.edu> <20190626224709.GH3116@mit.edu>
+ <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
+ <20190705151658.GP26519@linux.ibm.com> <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com> <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com> <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com> <20190707011655.GA22081@linux.ibm.com>
+In-Reply-To: <20190707011655.GA22081@linux.ibm.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sun, 14 Jul 2019 17:48:00 +0300
+Message-ID: <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This print statement is redundant as kfifo_alloc just calls kmalloc_arra=
-y
-> and without the __GFP_NOWARN flag, already does a dump_stack().
+On Sun, Jul 7, 2019 at 4:17 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > > > I suppose RCU could take the dueling-banjos approach and use increasingly
+> > > > aggressive scheduler policies itself, up to and including SCHED_DEADLINE,
+> > > > until it started getting decent forward progress.  However, that
+> > > > sounds like the something that just might have unintended consequences,
+> > > > particularly if other kernel subsystems were to also play similar
+> > > > games of dueling banjos.
+> > >
+> > > So long as the RCU threads are well-behaved, using SCHED_DEADLINE
+> > > shouldn't have much of an impact on the system --- and the scheduling
+> > > parameters that you can specify on SCHED_DEADLINE allows you to
+> > > specify the worst-case impact on the system while also guaranteeing
+> > > that the SCHED_DEADLINE tasks will urn in the first place.  After all,
+> > > that's the whole point of SCHED_DEADLINE.
+> > >
+> > > So I wonder if the right approach is during the the first userspace
+> > > system call to shced_setattr to enable a (any) real-time priority
+> > > scheduler (SCHED_DEADLINE, SCHED_FIFO or SCHED_RR) on a userspace
+> > > thread, before that's allowed to proceed, the RCU kernel threads are
+> > > promoted to be SCHED_DEADLINE with appropriately set deadline
+> > > parameters.  That way, a root user won't be able to shoot the system
+> > > in the foot, and since the vast majority of the time, there shouldn't
+> > > be any processes running with real-time priorities, we won't be
+> > > changing the behavior of a normal server system.
+> >
+> > It might well be.  However, running the RCU kthreads at real-time
+> > priority does not come for free.  For example, it tends to crank up the
+> > context-switch rate.
+> >
+> > Plus I have taken several runs at computing SCHED_DEADLINE parameters,
+> > but things like the rcuo callback-offload threads have computational
+> > requirements that are controlled not by RCU, and not just by the rest of
+> > the kernel, but also by userspace (keeping in mind the example of opening
+> > and closing a file in a tight loop, each pass of which queues a callback).
+> > I suspect that RCU is not the only kernel subsystem whose computational
+> > requirements are set not by the subsystem, but rather by external code.
+> >
+> > OK, OK, I suppose I could just set insanely large SCHED_DEADLINE
+> > parameters, following syzkaller's example, and then trust my ability to
+> > keep the RCU code from abusing the resulting awesome power.  But wouldn't
+> > a much nicer approach be to put SCHED_DEADLINE between SCHED_RR/SCHED_FIFO
+> > priorities 98 and 99 or some such?  Then the same (admittedly somewhat
+> > scary) result could be obtained much more simply via SCHED_FIFO or
+> > SCHED_RR priority 99.
+> >
+> > Some might argue that this is one of those situations where simplicity
+> > is not necessarily an advantage, but then again, you can find someone
+> > who will complain about almost anything.  ;-)
+> >
+> > > (I suspect there might be some audio applications that might try to
+> > > set real-time priorities, but for desktop systems, it's probably more
+> > > important that the system not tie its self into knots since the
+> > > average desktop user isn't going to be well equipped to debug the
+> > > problem.)
+> >
+> > Not only that, but if core counts continue to increase, and if reliance
+> > on cloud computing continues to grow, there are going to be an increasing
+> > variety of mixed workloads in increasingly less-controlled environments.
+> >
+> > So, yes, it would be good to solve this problem in some reasonable way.
+> >
+> > I don't see this as urgent just yet, but I am sure you all will let
+> > me know if I am mistaken on that point.
+> >
+> > > > Alternatively, is it possible to provide stricter admission control?
+> > >
+> > > I think that's an orthogonal issue; better admission control would be
+> > > nice, but it looks to me that it's going to be fundamentally an issue
+> > > of tweaking hueristics, and a fool-proof solution that will protect
+> > > against all malicious userspace applications (including syzkaller) is
+> > > going to require solving the halting problem.  So while it would be
+> > > nice to improve the admission control, I don't think that's a going to
+> > > be a general solution.
+> >
+> > Agreed, and my earlier point about the need to trust the coding abilities
+> > of those writing ultimate-priority code is all too consistent with your
+> > point about needing to solve the halting problem.  Nevertheless,  I believe
+> > that we could make something that worked reasonably well in practice.
+> >
+> > Here are a few components of a possible solution, in practice, but
+> > of course not in theory:
+> >
+> > 1.    We set limits to SCHED_DEADLINE parameters, perhaps novel ones.
+> >       For one example, insist on (say) 10 milliseconds of idle time
+> >       every second on each CPU.  Yes, you can configure beyond that
+> >       given sufficient permissions, but if you do so, you just voided
+> >       your warranty.
+> >
+> > 2.    Only allow SCHED_DEADLINE on nohz_full CPUs.  (Partial solution,
+> >       given that such a CPU might be running in the kernel or have
+> >       more than one runnable task.  Just for fun, I will suggest the
+> >       option of disabling SCHED_DEADLINE during such times.)
+> >
+> > 3.    RCU detects slowdowns, and does something TBD to increase its
+> >       priority, but only while the slowdown persists.  This likely
+> >       relies on scheduling-clock interrupts to detect the slowdowns,
+> >       so there might be additional challenges on a fully nohz_full
+> >       system.
+>
+> 4.      SCHED_DEADLINE treats the other three scheduling classes as each
+>         having a period, deadline, and a modest CPU consumption budget
+>         for the members of the class in aggregate.  But this has to have
+>         been discussed before.  How did that go?
+>
+> > 5.    Your idea here.
 
-I suggest to omit the word =E2=80=9Cand=E2=80=9D from this sentence.
-Will any further wording adjustments become helpful for commit description=
-s?
+Trying to digest this thread.
 
+Do I understand correctly that setting rcutree.kthread_prio=99 won't
+help because the deadline priority is higher?
+And there are no other existing mechanisms to either fix the stalls
+nor make kernel reject the non well-behaving parameters? Kernel tries
+to filter out non well-behaving parameters, but the check detects only
+obvious misconfigurations, right?
+This reminds of priority inversion/inheritance problem. I wonder if
+there are other kernel subsystems that suffer from the same problem.
+E.g. the background kernel thread that destroys net namespaces and any
+other type of async work. A high prio user process can overload the
+queue and make kernel eat all memory. May be relatively easy to do
+even unintentionally. I suspect the problem is not specific to rcu and
+plumbing just rcu may just make the next problem pop up.
+Should user be able to starve basic kernel services? User should be
+able to prioritize across user processes (potentially in radical
+ways), but perhaps it should not be able to badly starve kernel
+functions that just happened to be asynchronous? I guess it's not as
+simple as setting the highest prio for all kernel threads because in
+normal case we want to reduce latency of user work by making the work
+async. But user must not be able to starve kernel threads
+infinitely... sounds like something similar to the deadline scheduling
+-- kernel threads need to get at least some time slice per unit of
+time.
 
-> Changes in v3:
-> - fix checkpatch warrning
-> ---
-
-Please move such version information below the triple dashes without a typ=
-o.
-
-Regards,
-Markus
+But short term I don't see any other solution than stop testing
+sched_setattr because it does not check arguments enough to prevent
+system misbehavior. Which is a pity because syzkaller has found some
+bad misconfigurations that were oversight on checking side.
+Any other suggestions?
