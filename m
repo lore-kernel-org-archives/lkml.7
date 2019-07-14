@@ -6,86 +6,75 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1B8C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F983C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D7A2063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E39204EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfGNOg4 (ORCPT
+        id S1728552AbfGNOh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 10:36:56 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:42092 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbfGNOgy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 10:36:54 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hmfbz-00010j-Kc; Sun, 14 Jul 2019 14:36:23 +0000
-Date:   Sun, 14 Jul 2019 15:36:23 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190714143623.GR17978@ZenIV.linux.org.uk>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
- <20190712125552.GL17978@ZenIV.linux.org.uk>
- <20190712132553.GN17978@ZenIV.linux.org.uk>
- <20190712150026.GO17978@ZenIV.linux.org.uk>
- <20190713024153.GA3817@ZenIV.linux.org.uk>
- <20190714070029.m53etvm3y4etidxt@yavin>
+        Sun, 14 Jul 2019 10:37:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58007 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728146AbfGNOh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 10:37:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jul 2019 07:37:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,490,1557212400"; 
+   d="scan'208";a="172004767"
+Received: from hgenzken-mobl.ger.corp.intel.com (HELO localhost) ([10.249.35.131])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2019 07:36:54 -0700
+Date:   Sun, 14 Jul 2019 17:36:53 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v21 00/28] Intel SGX foundations
+Message-ID: <20190714143653.ziwgmtgysknxfgnl@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190714070029.m53etvm3y4etidxt@yavin>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 05:00:29PM +1000, Aleksa Sarai wrote:
+On Sat, Jul 13, 2019 at 08:07:36PM +0300, Jarkko Sakkinen wrote:
+> v21:
+> * Check on mmap() that the VMA does cover an area that does not have
+>   enclave pages. Only mapping with PROT_NONE can do that to reserve
+>   initial address space for an enclave.
+> * Check om mmap() and mprotect() that the VMA permissions do not
+>   surpass the enclave permissions.
+> * Remove two refcounts from vma_close(): mm_list and encl->refcount.
+>   Enclave refcount is only need for swapper/enclave sync and we can
+>   remove mm_list refcount by destroying mm_struct when the process
+>   is closed. By not having vm_close() the Linux MM can merge VMAs.
+> * Do not naturally align MAP_FIXED address.
+> * Numerous small fixes and clean ups.
+> * Use SRCU for synchronizing the list of mm_struct's.
+> * Move to stack based call convention in the vDSO.
 
-> The basic property being guaranteed by LOOKUP_IN_ROOT is that it will
-> not result in resolution of a path component which was not inside the
-> root of the dirfd tree at some point during resolution (and that all
-> absolute symlink and ".." resolution will be done relative to the
-> dirfd). This may smell slightly of chroot(2), because unfortunately it
-> is a similar concept -- the reason for this is to allow for a more
-> efficient way to safely resolve paths inside a rootfs than spawning a
-> separate process to then pass back the fd to the caller.
+I forgot something:
 
-IDGI...  If attacker can modify your subtree, you have already lost -
-after all, they can make anything appear inside that tree just before
-your syscall is made and bring it back out immediately afterwards.
-And if they can't, what is the race you are trying to protect against?
-Confused...
+* CONFIG_INTEL_SGX_DRIVER is not bistate i.e. no more LKM support. It is
+  still useful to have the compile-time option because VM host does not
+  need to have it enabled. Now sgx_init() calls explicitly sgx_drv_init().
+  In addition, platform driver has been ripped a way because we no
+  longer need ACPI hotplug. In effect, the device is now parentless.
