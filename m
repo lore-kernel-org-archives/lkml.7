@@ -2,161 +2,115 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F6C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DE2C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D10F20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563127999;
-	bh=ad4zsG4mgnfX2Gqru9GGR3aSg2jN8d8xkesMAkiflKk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M6IltekbC3FVLVg6WWjiHfvtb5UKft7joxgaXly7nGTiSBkmyNeE/4bid/2IeO8h3
-	 h/cok+l9mgGULuroLhP11Vh3v4sFlX/tdbC2s433pNJE7OLgjaRwy36RfTCejGdgIV
-	 Z2cYRQuaUnumJ5QI6VfGV+6XzFA3ZpsKimMlTRGk=
+	by mail.kernel.org (Postfix) with ESMTP id 24DB520644
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:16:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EzYn0T6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfGNSNR (ORCPT
+        id S1728671AbfGNSQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 14:13:17 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40777 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728218AbfGNSNR (ORCPT
+        Sun, 14 Jul 2019 14:16:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48096 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfGNSQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 14:13:17 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b17so9486268lff.7
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 11:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nr5TLKMCpyeVVqScbE1i8kC2438X/aWPB/b+xLbsqcM=;
-        b=GuNHLnEM1Cbw5cSbt/4qPWUCWsHjSuo+xOAAuQnqZuLEbABT3lU5GbOKGB8QvMjX0z
-         gOyOTF2SfJK3maXH8nc8MjOmKkLR7/lszvGFgKKlOGecYNtZZQqPZh/LTi6ygwVAT+rr
-         7jmKtZgz37JEYFIzo/leQkjA78AqcSi4k4Tgk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nr5TLKMCpyeVVqScbE1i8kC2438X/aWPB/b+xLbsqcM=;
-        b=D/5cYU2wAeuFQlEx8kUHrhppnddglj8Sc4Rzzy2L/v4Qy9rfHNGBrVo6lB+fhX0T4u
-         rJBxHQGEflBVYLV3XdqKCxjfrlo+ZyC3aSgVbqlqmQu97nM1PwuC4u145vaPmVcso11/
-         xZ1I6OJQACkJrj0DWe7Z0ZZyNaZBbS3vPf7fpFJ4MGAVxGAD6tQ/2AcMwbRn10Jg/9Fw
-         ApLWYNwWJ+hAbxEXGL8WCWz742GMxnSzWUsIakAU21numQX7+MD5hBh+UNjPKq7u2bvl
-         5QFaSaZ7gQ0D/Q3GQHMYkmKsyyYrc7hvNSaTfrrIBu+ixSqOM0aEyToaB6q0V19+0K8d
-         reVw==
-X-Gm-Message-State: APjAAAX9wTZ/jDFYPCu01/lW0PU6Uel98l0C2aPnLm5bBZdrvz3oH87I
-        jhUThGXJ762SQba+CsCbPWiA92Vg238=
-X-Google-Smtp-Source: APXvYqyqaTHNg9oFs88jS/zmIxC09tE8URaLX5xSTXDx74+B8GffbhAUWGkg3yJNyb9C8oV9hwv+UA==
-X-Received: by 2002:a05:6512:244:: with SMTP id b4mr9985112lfo.114.1563127993807;
-        Sun, 14 Jul 2019 11:13:13 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id e62sm2665897ljf.82.2019.07.14.11.13.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 11:13:12 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id i21so13925472ljj.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 11:13:12 -0700 (PDT)
-X-Received: by 2002:a2e:9b83:: with SMTP id z3mr11234478lji.84.1563127991687;
- Sun, 14 Jul 2019 11:13:11 -0700 (PDT)
+        Sun, 14 Jul 2019 14:16:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zu9VDO3r7C4z6bPiJPIw5Tkj2wZpny80iXDdtymKYFo=; b=EzYn0T6mC7FKpTJ8RU1irxwHC
+        abpmpCrn+ITOcYgj8BJxZSu6aQ8Ii0YPXkA/exU0YQAy7O0m7+zOGJ3xNtG1HVipow4mEY+2R1QFW
+        yUWv1Dom4OKQzrTOt/MbgsA7dNej/caTkqZhPY4jTEfuejInIA0Otu3kOtE0Y3OFmGhYzyRNA53ot
+        8i1Xw/ye+rilRjaF2MiA8RFIjxQIlV1yRtosHFLPp461r/jWR4weAEdfgWYgXPKwsg7h9oaNby5Uw
+        Fhn/WXJUh22ci0+2oOYbAzeIHC8bxLEX5nMuy4O4wttLhW0+1HBbETWT8w+KVWUyajs2GLcky3C/l
+        obC02yThg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hmj3K-000704-J9; Sun, 14 Jul 2019 18:16:50 +0000
+Subject: Re: [PATCH, RFC 57/62] x86/mktme: Overview of Multi-Key Total Memory
+ Encryption
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a2d2ac19-1dfe-6f85-df83-d72de4d5fcbf@infradead.org>
+Date:   Sun, 14 Jul 2019 11:16:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190713072855.GB23167@avx2> <CAHk-=wj_mrNnM-q_z95GcNB=Ab4LaUC6Bi6Q-+3Q9u9NC=3iDA@mail.gmail.com>
- <20190714095157.GA2276@avx2>
-In-Reply-To: <20190714095157.GA2276@avx2>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 14 Jul 2019 11:12:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgyV8TxUKGSUaSe1toZumq5OOz90W7XQB3QDSdTuE+YAw@mail.gmail.com>
-Message-ID: <CAHk-=wgyV8TxUKGSUaSe1toZumq5OOz90W7XQB3QDSdTuE+YAw@mail.gmail.com>
-Subject: Re: [PATCH] proc: revert /proc/*/cmdline rewrite
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Izbyshev <izbyshev@ispras.ru>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Michal Kubecek <mkubecek@suse.cz>, shasta@toxcorp.com,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Security Officers <security@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 2:52 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
->
-> The problem is that I can't even drag this trivia in out of _fear_ that
-> it is userspace observable:
->
->         https://marc.info/?t=155863429700002&r=1&w=4
->         [PATCH] elf: fix "start_code" evaluation
+On 5/8/19 7:44 AM, Kirill A. Shutemov wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> Provide an overview of MKTME on Intel Platforms.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  Documentation/x86/mktme/index.rst          |  8 +++
+>  Documentation/x86/mktme/mktme_overview.rst | 57 ++++++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 Documentation/x86/mktme/index.rst
+>  create mode 100644 Documentation/x86/mktme/mktme_overview.rst
 
-Oh, we should do things like this all the time.
 
-"Observable" isn't a problem per se. It only turns into a problem when
-it actually breaks things.
+> diff --git a/Documentation/x86/mktme/mktme_overview.rst b/Documentation/x86/mktme/mktme_overview.rst
+> new file mode 100644
+> index 000000000000..59c023965554
+> --- /dev/null
+> +++ b/Documentation/x86/mktme/mktme_overview.rst
+> @@ -0,0 +1,57 @@
+> +Overview
+> +=========
+...
+> +--
+> +1. https://software.intel.com/sites/default/files/managed/a5/16/Multi-Key-Total-Memory-Encryption-Spec.pdf
+> +2. The MKTME architecture supports up to 16 bits of KeyIDs, so a
+> +   maximum of 65535 keys on top of the “TME key” at KeyID-0.  The
+> +   first implementation is expected to support 5 bits, making 63
 
-We should always strive for understandable - and maintainable - code.
+Hi,
+How do 5 bits make 63 keys available?
 
-"Make it as simple as possible, but no simpler".
+> +   keys available to applications.  However, this is not guaranteed.
+> +   The number of available keys could be reduced if, for instance,
+> +   additional physical address space is desired over additional
+> +   KeyIDs.
 
-Of course, if you can prove that some change isn't observable, then
-that is always the safer change.
 
-Because any observable change _can_ (and admittedly surprisingly
-often) does end up showing that yes, somebody out there depended on
-some particularly subtle observable detail.
-
-But often "observable" doesn't mean "breakage", and it's not that
-uncommon that we do things that have slightly different semantics in
-order to clean stuff up (or fix actual bugs that cause problems).
-
-The important thing when something observable _does_ cause actual
-breakage is that it gets fixed, and that people don't try to make
-excuses for it. In particular the "but I fixed a bug" is _not_ an
-excuse for causing some user load to break, because that was just
-another bug.
-
-Of course, it's also perfectly valid to say "ok, this could be
-improved, but changing it changes observable behavior, and it's not
-worth my time to worry about whether something can break".
-
-So there should certainly be a *worry* about breakage (and the pain
-that breakage can cause) when making cleanups etc. But as long as you
-stand behind your cleanup and know that you may have to fix it up if
-somebody reports an issue with it, it's all good.
-
-IOW, it's a balancing thing. Do you think the cleanup is worth the
-"this may come back to bite me" problem?
-
-> and yet the patch which did a regression and an infoleak continues
-> to be papered over and for which the only justification was
-> "simplify and clarify".
-
-See above. "Simplify and clarify" is a good excuse in general.
-
-What is *not* a good excuse is then if somebody doesn't stand up and
-say "oh, my bad, I screwed up, and here's the fix for the breakage".
-
-In this case it took a year for people to report problems, which shows
-that at least the breakage wasn't obvious.
-
-And I'd rather fix it by cleaning up *more* and making the rules
-simpler and easier to understand.
-
-Don't get me wrong - reverting is often a good strategy too.
-
-I will revert very aggressively when close to a release, for example,
-when we just don't have time to try to figure things out. Or if the
-breakage is large enough that it hinders people from testing and
-working on other things.
-
-Or if the original developer is not responsive and there isn't
-somebody around that goes "ok, that can be fixed by xyz.."
-
-Then "let's just revert" is the right thing to do. It can be the
-simplest thing, when you just don't have the resources to do anything
-else, or it's not just worth it.
-
-                     Linus
+thanks.
+-- 
+~Randy
