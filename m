@@ -2,121 +2,158 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACB5C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52951C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B042063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356802063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfGNOfo (ORCPT
+        id S1728481AbfGNOgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 10:35:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6342 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728146AbfGNOfo (ORCPT
+        Sun, 14 Jul 2019 10:36:48 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:59963 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbfGNOgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 10:35:44 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6EEWdKC185230
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:35:42 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tqvnpqpw0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:35:42 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Sun, 14 Jul 2019 15:35:40 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 14 Jul 2019 15:35:37 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6EEZaQ035389884
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Jul 2019 14:35:36 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2AF71AE04D;
-        Sun, 14 Jul 2019 14:35:36 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C0E6AE045;
-        Sun, 14 Jul 2019 14:35:35 +0000 (GMT)
-Received: from localhost (unknown [9.145.65.183])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun, 14 Jul 2019 14:35:35 +0000 (GMT)
-Date:   Sun, 14 Jul 2019 16:35:33 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Petr Tesarik <ptesarik@suse.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] s390: add Linux banner to the compressed image
-References: <cover.1562950641.git.ptesarik@suse.com>
- <aa477dd145aa2beb37fe813619b0723744a22a0a.1562950641.git.ptesarik@suse.com>
+        Sun, 14 Jul 2019 10:36:48 -0400
+X-Originating-IP: 126.159.224.182
+Received: from uno.localdomain (softbank126159224182.bbtec.net [126.159.224.182])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 5ACC81BF206;
+        Sun, 14 Jul 2019 14:36:40 +0000 (UTC)
+Date:   Sun, 14 Jul 2019 16:37:56 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 04/12] iio: adc: max9611: Fix misuse of GENMASK macro
+Message-ID: <20190714143756.2hqmncnbx7nftj7w@uno.localdomain>
+References: <cover.1562734889.git.joe@perches.com>
+ <2929234bd4ecec41c0d012edc52416ef80f3e368.1562734889.git.joe@perches.com>
+ <20190714125403.0789dc9e@archlinux>
+ <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e2dafb6smz57535e"
 Content-Disposition: inline
-In-Reply-To: <aa477dd145aa2beb37fe813619b0723744a22a0a.1562950641.git.ptesarik@suse.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19071414-0020-0000-0000-000003537F01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071414-0021-0000-0000-000021A741FD
-Message-Id: <your-ad-here.call-01563114933-ext-9422@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-14_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907140180
+In-Reply-To: <b3744e64b22de98bfe8885f76811d4fc7e41b8eb.camel@perches.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 07:21:01PM +0200, Petr Tesarik wrote:
-> Various tools determine the kernel version from a given binary by
-> scanning for the Linux banner string. This does not work if the
-> banner string is compressed, but we can link it once more into the
-> uncompressed portion of bzImage.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  arch/s390/boot/compressed/Makefile | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/s390/boot/compressed/Makefile b/arch/s390/boot/compressed/Makefile
-> index fa529c5b4486..9bc4685477c5 100644
-> --- a/arch/s390/boot/compressed/Makefile
-> +++ b/arch/s390/boot/compressed/Makefile
-> @@ -11,6 +11,7 @@ UBSAN_SANITIZE := n
->  KASAN_SANITIZE := n
->  
->  obj-y	:= $(if $(CONFIG_KERNEL_UNCOMPRESSED),,decompressor.o) piggy.o info.o
-> +obj-y   += ../../../../init/banner.o
 
-We don't reuse objects from another build stage, we rebuild them with
-distinct decompressor's build flags.
-$ git grep "ctype.[oc]" -- arch/s390/boot
-arch/s390/boot/Makefile:obj-y   += ctype.o text_dma.o
-arch/s390/boot/ctype.c:#include "../../../lib/ctype.c"
+--e2dafb6smz57535e
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Besides that, there is a special CONFIG_KERNEL_UNCOMPRESSED mode, with
-which "strings vmlinuz | grep 'Linux version'" I assume you are using
-would still yield result. Adding the second version of banner would
-produce duplicated result in this case.
+Hi Joe, Jonathan,
 
-But even before discussing solutions I would like to understand the
-problem first. Which specific tools are you referring to? What are they
-good for? And how do they get the kernel version from other architectures
-compressed images?
+On Sun, Jul 14, 2019 at 05:19:32AM -0700, Joe Perches wrote:
+> On Sun, 2019-07-14 at 12:54 +0100, Jonathan Cameron wrote:
+> > On Tue,  9 Jul 2019 22:04:17 -0700
+> > Joe Perches <joe@perches.com> wrote:
+> >
+> > > Arguments are supposed to be ordered high then low.
+> > >
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> >
+> > Applied to the fixes-togreg branch of iio.git and marked for
+> > stable etc.
+>
+> This mask is used in an init function called from a probe.
+>
+> I don't have this hardware but it looks as if it could
+> never have worked so I doubt the driver and the hardware
+> have ever been tested.
+>
 
+Ups, this is embarassing! Thanks for noticing
+
+I actually tested the device before sending the driver of course
+
+> Does anyone have this device in actual use?
+>
+
+The driver is currently in use in Renesas Gen3 Salvator boards:
+arch/arm64/boot/dts/renesas/salvator-common.dtsi:466
+
+I might need some time before I can actually test and tell what's
+happening though. It might work by pure chance. Fortunately the mask
+is only used for validation of the temperature reading at probe time,
+and I can tell this passes (we would have noticed otherwise, Salvator
+is one of the reference Gen3 platforms for upstream development).
+
+As said I might need some time before I can test this, but the change
+is indeed correct.
+
+Thanks
+   j
+
+>
+> 	regval = ret & MAX9611_TEMP_MASK;
+>
+> 	if ((regval > MAX9611_TEMP_MAX_POS &&
+> 	     regval < MAX9611_TEMP_MIN_NEG) ||
+> 	     regval > MAX9611_TEMP_MAX_NEG) {
+> 		dev_err(max9611->dev,
+> 			"Invalid value received from ADC 0x%4x: aborting\n",
+> 			regval);
+> 		return -EIO;
+> 	}
+>
+>
+> > Thanks,
+> >
+> > Jonathan
+> >
+> > > ---
+> > >  drivers/iio/adc/max9611.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> > > index 917223d5ff5b..0e3c6529fc4c 100644
+> > > --- a/drivers/iio/adc/max9611.c
+> > > +++ b/drivers/iio/adc/max9611.c
+> > > @@ -83,7 +83,7 @@
+> > >  #define MAX9611_TEMP_MAX_POS		0x7f80
+> > >  #define MAX9611_TEMP_MAX_NEG		0xff80
+> > >  #define MAX9611_TEMP_MIN_NEG		0xd980
+> > > -#define MAX9611_TEMP_MASK		GENMASK(7, 15)
+> > > +#define MAX9611_TEMP_MASK		GENMASK(15, 7)
+> > >  #define MAX9611_TEMP_SHIFT		0x07
+> > >  #define MAX9611_TEMP_RAW(_r)		((_r) >> MAX9611_TEMP_SHIFT)
+> > >  #define MAX9611_TEMP_SCALE_NUM		1000000
+>
+
+--e2dafb6smz57535e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0rPkQACgkQcjQGjxah
+Vjx/tg/+Na7MQuV44rg4baxabcBZgnsryXWGW3tX+2T0nGYUopagAj+md9VGP2hq
+bK476Vtnqk+x2vFyzZpuB2UlWzOqR25lxnQX9zD+7VxbqmugTtPhKDuE5W4uUMjz
+RX62qX4bSKqQ3roiGpPrOWsKbjVj083AVVovUMbHGnnnAd0WWuefyzolZF0SU5YC
+FniBmRsug+8e7pOYP22Ni5Cet9X05QuQaTrrc2OxTdNruDNcFGVUYt/b4kl2ExC+
+HiO+eoDcBkmgr0WYzGFcpQ07gGz7KEOebYI1k/yrI1deyIlflFL8fJejDcuzpgrA
+13Hpdq1RFlqI5eE3bP76AQlbWtCbwreXvMAzte4pPzv0JtZ3EnbAiWE1m8PrzspU
+76utkkJIr7jpSI14KflN11FgRMCfw2onknsRl2pZDHdPcCCrbKE7i/9T2znveLo/
+LF3sUHcncbV5WtioP8vZQOvpgU0HwG+qFV43sYXFlOCnCQPO55EukvNX6BEaCMjr
+zBCMCqn7X6fw4jh8ubP9Xw4ZNqHDR39fH5Y2k4cSs85WZA6SqDJAzWKtjDTEu4ht
+8Jwvtq9ZN3vrj/mgqO0Njuip3dboEMw7xfGbZ7RwSOg6WraQ70AS0WmrMOZNaPjb
+2iyftvch5psoWYG7c0ZCfzm1Lq1uxZLeSt8RqtaqkFrB6flWT1I=
+=TLNj
+-----END PGP SIGNATURE-----
+
+--e2dafb6smz57535e--
