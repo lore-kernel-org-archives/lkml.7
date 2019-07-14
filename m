@@ -4,56 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8A1C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3CCC742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F932063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF662063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563117029;
-	bh=HyKYM+r7yUpbpcUOySqaHKygJYkjn/zb3p4TBPwzwps=;
+	s=default; t=1563117033;
+	bh=bSSrU6dU3r3lwmo73wM/Cp6y1FcE1bQgwzAta+XJW38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkoGHLt4l9cAQSx6Jr3lhpJePaMJjOFNt1Cp5Ol6hZqdmJ1v5NskbSZ2Pe95sDTq3
-	 UBYpEMic1zqhghxnPXhetb0vDTIOU2qxvhR46BCZM96dEJKhWza0qnG7Ya1g4ARGqb
-	 3Zjcx8F6bOT69IGhzbAtYECWkdtsjlNlhzUepQXI=
+	b=XZdPwMnCSQzjvYNOvlBTH+rm/wjrZ8bEyKW3uOY2jjznmT/HnWWChzRDqycd4i0xI
+	 9rZXjKBuA8mXXj4/uEhVZXVZCjyFEHmOF0zA3BwcTX7LSyTZL+7Yb+3rTuevFLDO21
+	 S02eP8yswd6CZZKhqH0UdTKz5HxkNJeCcUGvKHHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbfGNPK2 (ORCPT
+        id S1728821AbfGNPKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:10:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45554 "EHLO
+        Sun, 14 Jul 2019 11:10:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45584 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbfGNPKT (ORCPT
+        with ESMTP id S1728686AbfGNPKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:10:19 -0400
+        Sun, 14 Jul 2019 11:10:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=i7MBSJrUNlhCKGjlZAmu2GT/MGdBqxk/UuCTvQRDuxQ=; b=JNPq9ico7L8KiU5UqAETPbsGnU
-        ougBb/OW6NNY9e3xSHCVE5/mhUfl9KVTXb8rvvchWHf975JR+0QePn5S/MO9U/okeiY/PyWMEkqRw
-        O6F4KGXuqtbBJezJ9yhFGiiEoKTijn3Gi2vgBlGtX9pcGkuH86S9ehpBUfnxTSJvoSYJ8Y/cfXzve
-        xpOobJsLpOOh2K5hxyUDV+kB/tElh8EumMj4uZM8OmPCFVgiPQ9m3AjCnOoZBV+KuNSYz9xujMb7s
-        UXEaDzwaC6AMt7Ei3REncbzlrB2hGRazcPXnSFDu2a/yywBx4sSRic3IFYo2LZn1MuoWP1N+Yeny8
-        FxZsy5lw==;
+        bh=OuafK/TTQcFkrbP+suIfTDa/h6nPmDJ0gGHTBNIInGY=; b=jjROjiZP+3rwyeSYZ6JEiszuF8
+        5aEsyAB6fuiTSYLDPcKQcpfhT0IFhoL4uP1dD9Sd/Clwo54TJ5f5IoHgrykOHLeHHj3PNj1p2wxWY
+        VKHRrD+HVGaWoVQG0aCpMj/VrzIwImUUrNaDfGl0kOTnAMKfDyHmf1czNfJPz60cdHS9oxjD6wPVC
+        4M/OC1Hv+smewROLfFszjHNXAJY4VGS9iy7xV/bdXElszIZLt01N8tXkZuBZBK8nhJMzxaefGTWIK
+        SpLRtegO4RjZ8X8bNrCBl2wPPmSQPwVucShppOwUeR+M1aCc3phOQMjZzHmUSnijU2c6CiSs3X8pu
+        Y3OA2A/A==;
 Received: from 201.86.163.160.dynamic.adsl.gvt.net.br ([201.86.163.160] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hmg8o-0004f2-Da; Sun, 14 Jul 2019 15:10:18 +0000
+        id 1hmg8o-0004f8-Dm; Sun, 14 Jul 2019 15:10:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hmg8l-0007T8-0O; Sun, 14 Jul 2019 12:10:15 -0300
+        id 1hmg8l-0007TS-4k; Sun, 14 Jul 2019 12:10:15 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 3/8] scripts/sphinx-pre-install: don't use LaTeX with CentOS 7
-Date:   Sun, 14 Jul 2019 12:10:08 -0300
-Message-Id: <29c0462ebb1c563cefcdb7eb502eebbc6642f2d4.1563115732.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org,
+        linux-sh@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: [PATCH 8/8] docs: remove extra conf.py files
+Date:   Sun, 14 Jul 2019 12:10:13 -0300
+Message-Id: <12a160afc9e70156f671010bd4ccff9311acdc5e.1563115732.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1563115732.git.mchehab+samsung@kernel.org>
 References: <cover.1563115732.git.mchehab+samsung@kernel.org>
@@ -64,162 +82,393 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There aren't enough texlive packages for LaTeX-based builds
-to work on CentOS/RHEL <= 7.
+Now that the latex_documents are handled automatically, we can
+remove those extra conf.py files.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/sphinx-pre-install | 68 ++++++++++++++++++++++++++++----------
- 1 file changed, 50 insertions(+), 18 deletions(-)
+ Documentation/admin-guide/conf.py      | 10 ----------
+ Documentation/core-api/conf.py         | 10 ----------
+ Documentation/crypto/conf.py           | 10 ----------
+ Documentation/dev-tools/conf.py        | 10 ----------
+ Documentation/doc-guide/conf.py        | 10 ----------
+ Documentation/driver-api/80211/conf.py | 10 ----------
+ Documentation/driver-api/conf.py       | 10 ----------
+ Documentation/driver-api/pm/conf.py    | 10 ----------
+ Documentation/filesystems/conf.py      | 10 ----------
+ Documentation/gpu/conf.py              | 10 ----------
+ Documentation/input/conf.py            | 10 ----------
+ Documentation/kernel-hacking/conf.py   | 10 ----------
+ Documentation/maintainer/conf.py       | 10 ----------
+ Documentation/media/conf.py            | 12 ------------
+ Documentation/networking/conf.py       | 10 ----------
+ Documentation/process/conf.py          | 10 ----------
+ Documentation/sh/conf.py               | 10 ----------
+ Documentation/sound/conf.py            | 10 ----------
+ Documentation/userspace-api/conf.py    | 10 ----------
+ Documentation/vm/conf.py               | 10 ----------
+ Documentation/x86/conf.py              | 10 ----------
+ 21 files changed, 212 deletions(-)
+ delete mode 100644 Documentation/admin-guide/conf.py
+ delete mode 100644 Documentation/core-api/conf.py
+ delete mode 100644 Documentation/crypto/conf.py
+ delete mode 100644 Documentation/dev-tools/conf.py
+ delete mode 100644 Documentation/doc-guide/conf.py
+ delete mode 100644 Documentation/driver-api/80211/conf.py
+ delete mode 100644 Documentation/driver-api/conf.py
+ delete mode 100644 Documentation/driver-api/pm/conf.py
+ delete mode 100644 Documentation/filesystems/conf.py
+ delete mode 100644 Documentation/gpu/conf.py
+ delete mode 100644 Documentation/input/conf.py
+ delete mode 100644 Documentation/kernel-hacking/conf.py
+ delete mode 100644 Documentation/maintainer/conf.py
+ delete mode 100644 Documentation/media/conf.py
+ delete mode 100644 Documentation/networking/conf.py
+ delete mode 100644 Documentation/process/conf.py
+ delete mode 100644 Documentation/sh/conf.py
+ delete mode 100644 Documentation/sound/conf.py
+ delete mode 100644 Documentation/userspace-api/conf.py
+ delete mode 100644 Documentation/vm/conf.py
+ delete mode 100644 Documentation/x86/conf.py
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 101ddd00bf02..33efadd6c0b6 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -83,6 +83,17 @@ sub check_missing(%)
- 	foreach my $prog (sort keys %missing) {
- 		my $is_optional = $missing{$prog};
- 
-+		# At least on some LTS distros like CentOS 7, texlive doesn't
-+		# provide all packages we need. When such distros are
-+		# detected, we have to disable PDF output.
-+		#
-+		# So, we need to ignore the packages that distros would
-+		# need for LaTeX to work
-+		if ($is_optional == 2 && !$pdf) {
-+			$optional--;
-+			next;
-+		}
-+
- 		if ($is_optional) {
- 			print "Warning: better to also install \"$prog\".\n";
- 		} else {
-@@ -333,10 +344,10 @@ sub give_debian_hints()
- 
- 	if ($pdf) {
- 		check_missing_file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
--				   "fonts-dejavu", 1);
-+				   "fonts-dejavu", 2);
- 	}
- 
--	check_program("dvipng", 1) if ($pdf);
-+	check_program("dvipng", 2) if ($pdf);
- 	check_missing(\%map);
- 
- 	return if (!$need && !$optional);
-@@ -371,22 +382,40 @@ sub give_redhat_hints()
- 	#
- 	# Checks valid for RHEL/CentOS version 7.x.
- 	#
-+	my $old = 0;
-+	my $rel;
-+	$rel = $1 if ($system_release =~ /release\s+(\d+)/);
-+
- 	if (!($system_release =~ /Fedora/)) {
- 		$map{"virtualenv"} = "python-virtualenv";
--	}
- 
--	my $release;
-+		if ($rel && $rel < 8) {
-+			$old = 1;
-+			$pdf = 0;
- 
--	$release = $1 if ($system_release =~ /Fedora\s+release\s+(\d+)/);
-+			printf("Note: texlive packages on RHEL/CENTOS <= 7 are incomplete. Can't support PDF output\n");
-+			printf("If you want to build PDF, please read:\n");
-+			printf("\thttps://www.systutorials.com/241660/how-to-install-tex-live-on-centos-7-linux/\n");
-+		}
-+	} else {
-+		if ($rel && $rel < 26) {
-+			$old = 1;
-+		}
-+	}
-+	if (!$rel) {
-+		printf("Couldn't identify release number\n");
-+		$old = 1;
-+		$pdf = 0;
-+	}
- 
--	check_rpm_missing(\@fedora26_opt_pkgs, 1) if ($pdf && $release >= 26);
--	check_rpm_missing(\@fedora_tex_pkgs, 1) if ($pdf);
--	check_missing_tex(1) if ($pdf);
-+	check_rpm_missing(\@fedora26_opt_pkgs, 2) if ($pdf && !$old);
-+	check_rpm_missing(\@fedora_tex_pkgs, 2) if ($pdf);
-+	check_missing_tex(2) if ($pdf);
- 	check_missing(\%map);
- 
- 	return if (!$need && !$optional);
- 
--	if ($release >= 18) {
-+	if (!$old) {
- 		# dnf, for Fedora 18+
- 		printf("You should run:\n\n\tsudo dnf install -y $install\n");
- 	} else {
-@@ -425,8 +454,8 @@ sub give_opensuse_hints()
- 		"texlive-zapfding",
- 	);
- 
--	check_rpm_missing(\@suse_tex_pkgs, 1) if ($pdf);
--	check_missing_tex(1) if ($pdf);
-+	check_rpm_missing(\@suse_tex_pkgs, 2) if ($pdf);
-+	check_missing_tex(2) if ($pdf);
- 	check_missing(\%map);
- 
- 	return if (!$need && !$optional);
-@@ -450,7 +479,7 @@ sub give_mageia_hints()
- 		"texlive-fontsextra",
- 	);
- 
--	check_rpm_missing(\@tex_pkgs, 1) if ($pdf);
-+	check_rpm_missing(\@tex_pkgs, 2) if ($pdf);
- 	check_missing(\%map);
- 
- 	return if (!$need && !$optional);
-@@ -473,7 +502,8 @@ sub give_arch_linux_hints()
- 		"texlive-latexextra",
- 		"ttf-dejavu",
- 	);
--	check_pacman_missing(\@archlinux_tex_pkgs, 1) if ($pdf);
-+	check_pacman_missing(\@archlinux_tex_pkgs, 2) if ($pdf);
-+
- 	check_missing(\%map);
- 
- 	return if (!$need && !$optional);
-@@ -492,7 +522,7 @@ sub give_gentoo_hints()
- 	);
- 
- 	check_missing_file("/usr/share/fonts/dejavu/DejaVuSans.ttf",
--			   "media-fonts/dejavu", 1) if ($pdf);
-+			   "media-fonts/dejavu", 2) if ($pdf);
- 
- 	check_missing(\%map);
- 
-@@ -560,7 +590,7 @@ sub check_distros()
- 	my %map = (
- 		"sphinx-build" => "sphinx"
- 	);
--	check_missing_tex(1) if ($pdf);
-+	check_missing_tex(2) if ($pdf);
- 	check_missing(\%map);
- 	print "I don't know distro $system_release.\n";
- 	print "So, I can't provide you a hint with the install procedure.\n";
-@@ -589,11 +619,13 @@ sub check_needs()
- 	check_program("make", 0);
- 	check_program("gcc", 0);
- 	check_python_module("sphinx_rtd_theme", 1) if (!$virtualenv);
--	check_program("xelatex", 1) if ($pdf);
- 	check_program("dot", 1);
- 	check_program("convert", 1);
--	check_program("rsvg-convert", 1) if ($pdf);
--	check_program("latexmk", 1) if ($pdf);
-+
-+	# Extra PDF files - should use 2 for is_optional
-+	check_program("xelatex", 2) if ($pdf);
-+	check_program("rsvg-convert", 2) if ($pdf);
-+	check_program("latexmk", 2) if ($pdf);
- 
- 	check_distros();
- 
+diff --git a/Documentation/admin-guide/conf.py b/Documentation/admin-guide/conf.py
+deleted file mode 100644
+index 86f738953799..000000000000
+--- a/Documentation/admin-guide/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = 'Linux Kernel User Documentation'
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'linux-user.tex', 'Linux Kernel User Documentation',
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/core-api/conf.py b/Documentation/core-api/conf.py
+deleted file mode 100644
+index db1f7659f3da..000000000000
+--- a/Documentation/core-api/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Core-API Documentation"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'core-api.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/crypto/conf.py b/Documentation/crypto/conf.py
+deleted file mode 100644
+index 4335d251ddf3..000000000000
+--- a/Documentation/crypto/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = 'Linux Kernel Crypto API'
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'crypto-api.tex', 'Linux Kernel Crypto API manual',
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/dev-tools/conf.py b/Documentation/dev-tools/conf.py
+deleted file mode 100644
+index 7faafa3f7888..000000000000
+--- a/Documentation/dev-tools/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Development tools for the kernel"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'dev-tools.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/doc-guide/conf.py b/Documentation/doc-guide/conf.py
+deleted file mode 100644
+index fd3731182d5a..000000000000
+--- a/Documentation/doc-guide/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = 'Linux Kernel Documentation Guide'
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'kernel-doc-guide.tex', 'Linux Kernel Documentation Guide',
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/driver-api/80211/conf.py b/Documentation/driver-api/80211/conf.py
+deleted file mode 100644
+index 4424b4b0b9c3..000000000000
+--- a/Documentation/driver-api/80211/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Linux 802.11 Driver Developer's Guide"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', '80211.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/driver-api/conf.py b/Documentation/driver-api/conf.py
+deleted file mode 100644
+index 202726d20088..000000000000
+--- a/Documentation/driver-api/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "The Linux driver implementer's API guide"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'driver-api.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/driver-api/pm/conf.py b/Documentation/driver-api/pm/conf.py
+deleted file mode 100644
+index a89fac11272f..000000000000
+--- a/Documentation/driver-api/pm/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Device Power Management"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'pm.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/filesystems/conf.py b/Documentation/filesystems/conf.py
+deleted file mode 100644
+index ea44172af5c4..000000000000
+--- a/Documentation/filesystems/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Linux Filesystems API"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'filesystems.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/gpu/conf.py b/Documentation/gpu/conf.py
+deleted file mode 100644
+index 1757b040fb32..000000000000
+--- a/Documentation/gpu/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Linux GPU Driver Developer's Guide"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'gpu.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/input/conf.py b/Documentation/input/conf.py
+deleted file mode 100644
+index d2352fdc92ed..000000000000
+--- a/Documentation/input/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "The Linux input driver subsystem"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'linux-input.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/kernel-hacking/conf.py b/Documentation/kernel-hacking/conf.py
+deleted file mode 100644
+index 3d8acf0f33ad..000000000000
+--- a/Documentation/kernel-hacking/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Kernel Hacking Guides"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'kernel-hacking.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/maintainer/conf.py b/Documentation/maintainer/conf.py
+deleted file mode 100644
+index 81e9eb7a7884..000000000000
+--- a/Documentation/maintainer/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = 'Linux Kernel Development Documentation'
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'maintainer.tex', 'Linux Kernel Development Documentation',
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/media/conf.py b/Documentation/media/conf.py
+deleted file mode 100644
+index 1f194fcd2cae..000000000000
+--- a/Documentation/media/conf.py
++++ /dev/null
+@@ -1,12 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-# SPDX-License-Identifier: GPL-2.0
+-
+-project = 'Linux Media Subsystem Documentation'
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'media.tex', 'Linux Media Subsystem Documentation',
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/networking/conf.py b/Documentation/networking/conf.py
+deleted file mode 100644
+index 40f69e67a883..000000000000
+--- a/Documentation/networking/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Linux Networking Documentation"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'networking.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/process/conf.py b/Documentation/process/conf.py
+deleted file mode 100644
+index 1b01a80ad9ce..000000000000
+--- a/Documentation/process/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = 'Linux Kernel Development Documentation'
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'process.tex', 'Linux Kernel Development Documentation',
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/sh/conf.py b/Documentation/sh/conf.py
+deleted file mode 100644
+index 1eb684a13ac8..000000000000
+--- a/Documentation/sh/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "SuperH architecture implementation manual"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'sh.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/sound/conf.py b/Documentation/sound/conf.py
+deleted file mode 100644
+index 3f1fc5e74e7b..000000000000
+--- a/Documentation/sound/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Linux Sound Subsystem Documentation"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'sound.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/userspace-api/conf.py b/Documentation/userspace-api/conf.py
+deleted file mode 100644
+index 2eaf59f844e5..000000000000
+--- a/Documentation/userspace-api/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "The Linux kernel user-space API guide"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'userspace-api.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/vm/conf.py b/Documentation/vm/conf.py
+deleted file mode 100644
+index 3b0b601af558..000000000000
+--- a/Documentation/vm/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "Linux Memory Management Documentation"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'memory-management.tex', project,
+-     'The kernel development community', 'manual'),
+-]
+diff --git a/Documentation/x86/conf.py b/Documentation/x86/conf.py
+deleted file mode 100644
+index 33c5c3142e20..000000000000
+--- a/Documentation/x86/conf.py
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- coding: utf-8; mode: python -*-
+-
+-project = "X86 architecture specific documentation"
+-
+-tags.add("subproject")
+-
+-latex_documents = [
+-    ('index', 'x86.tex', project,
+-     'The kernel development community', 'manual'),
+-]
 -- 
 2.21.0
 
