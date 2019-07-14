@@ -2,150 +2,167 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE71BC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 02:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A172FC742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 03:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E7320848
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 02:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1D320896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 03:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AlNDBD8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfGNCpu (ORCPT
+        id S1728196AbfGNDoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 22:45:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56550 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727918AbfGNCpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 22:45:49 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 12EC11D3CA4F278F5E32;
-        Sun, 14 Jul 2019 10:45:46 +0800 (CST)
-Received: from [127.0.0.1] (10.57.88.168) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 14 Jul 2019
- 10:45:40 +0800
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     Vasily Averin <vvs@virtuozzo.com>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
+        Sat, 13 Jul 2019 23:44:22 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:24686 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbfGNDoW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 23:44:22 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190714034419epoutp03d3dae3cbdca18d385c1e98c229b611e6~xKTaCgnWr3269632696epoutp03F
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 03:44:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190714034419epoutp03d3dae3cbdca18d385c1e98c229b611e6~xKTaCgnWr3269632696epoutp03F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563075859;
+        bh=51EVK/VVBV4bQIfR6AA8vvn+T0TomM5j6lduh/y2oCw=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=AlNDBD8FvU1mxLfDaE9+r3JpY6VmURlTK2kgKGc1qDhTK7W0mFnYt1ECJhS2j6xuW
+         HnyPkuEU6p6pkKL7ZdzZW7hCwidGUNA7AKHY1FbsfSBf2yg8mPM3epHximEshpDSLt
+         JJwKhTB6hp6M/O72g7QjpWjjYXWr0PmHQ3+B0jdk=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20190714034418epcas2p3296a1f5033d55ce2d383b28d29f0db61~xKTY0R_Qe3243732437epcas2p3_;
+        Sun, 14 Jul 2019 03:44:18 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.186]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 45mXb440DBzMqYll; Sun, 14 Jul
+        2019 03:44:16 +0000 (GMT)
+X-AuditID: b6c32a45-ddfff7000000103c-19-5d2aa510dce2
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        48.9B.04156.015AA2D5; Sun, 14 Jul 2019 12:44:16 +0900 (KST)
+Mime-Version: 1.0
+Subject: [PATCH V2] mpt3sas: support target smid for [abort|query] task
+Reply-To: minwoo.im@samsung.com
+From:   Minwoo Im <minwoo.im@samsung.com>
+To:     "sreekanth.reddy@broadcom.com" <sreekanth.reddy@broadcom.com>,
+        "sathya.prakash@broadcom.com" <sathya.prakash@broadcom.com>,
+        "suganath-prabu.subramani@broadcom.com" 
+        <suganath-prabu.subramani@broadcom.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     Minwoo Im <minwoo.im@samsung.com>,
+        "MPT-FusionLinux.pdl@broadcom.com" <MPT-FusionLinux.pdl@broadcom.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
- <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
- <20190712140729.GA11583@kroah.com>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
-Date:   Sun, 14 Jul 2019 10:45:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190712140729.GA11583@kroah.com>
-Content-Type: text/plain; charset="gbk"
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Euihyeok Kwon <eh81.kwon@samsung.com>,
+        Sarah Cho <sohyeon.jo@samsung.com>,
+        Sanggwan Lee <sanggwan.lee@samsung.com>,
+        Gyeongmin Nam <gm.nam@samsung.com>,
+        Sungjun Park <sj1228.park@samsung.com>,
+        "minwoo.im.dev@gmail.com" <minwoo.im.dev@gmail.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2>
+Date:   Sun, 14 Jul 2019 12:44:15 +0900
+X-CMS-MailID: 20190714034415epcms2p25f9787cb71993a30f58524d2f355b543
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.88.168]
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMJsWRmVeSWpSXmKPExsWy7bCmqa7AUq1Yg6UbxS0+rtjFbvHwnbPF
+        ohvbmCz23tK2uLxrDptF9/UdbBbLj/9jsvjVyW3x7PQBZou5rxuYLBZtfc9qsWHeLRaL7pMe
+        FusPTWCzmPn1KbvFszMxDgIes+6fZfPYOesuu8eERQcYPT4+vcXi0bdlFaPH501yAWxROTYZ
+        qYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QDcrKZQl5pQC
+        hQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgoMDQv0ihNzi0vz0vWS83OtDA0MjEyBKhNyMn63
+        zmItmChU8WZrB3sD422+LkZODgkBE4mTbX/Yuhi5OIQEdjBKnFz6kKWLkYODV0BQ4u8OYZAa
+        YQF3iQufdrGChIUE5CV+vDKACGtKvNt9hhXEZhNQl2iY+ooFZIyIwH4miY0fN7CAJJgFlrFI
+        3O8ygNjFKzGj/SkLhC0tsX35VkYIW1Ti5uq37DD2+2PzoeIiEq33zjJD2IISD37uZgS5QUJA
+        QuLeOzsIs15iywoLkLUSAi2MEjferIVq1ZdofP4RbBWvgK/EgWWz2EBsFgFVieWPO5kgalwk
+        HkxoZIQ4U15i+9s5zCAzmYH+Wr9LH2K8ssSRW1CP8El0HP7LDvPIjnlPoKYoS3w8dAjqSEmJ
+        5Zdes0HYHhLzOxaB2UICgRIPv/xnm8AoPwsRtLOQ7J2FsHcBI/MqRrHUguLc9NRiowJD5Njc
+        xAhOsFquOxhnnPM5xCjAwajEw7uDWytWiDWxrLgy9xCjBAezkgjvqv/qsUK8KYmVValF+fFF
+        pTmpxYcYTYHen8gsJZqcD0z+eSXxhqZGZmYGlqYWpmZGFkrivJu5b8YICaQnlqRmp6YWpBbB
+        9DFxcEo1MF6RWjc1ZMnmr0/nu7nPaNypkXHS6Y+E7HW1yykXAqenxR77pL2291QW7/P0Y1sv
+        KP9Uq0xrv9gxee/eWGal5IVqVZOZbsxemZB3OmKt55X67cdaJq5X9t98PuGT9vX6NXNEtY8/
+        fOJhqWF6Re6zbOb3Fzujuq4mcbi3Flzf8yzI4XKCaKbOnwtKLMUZiYZazEXFiQCrMirrxgMA
+        AA==
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190714034415epcms2p25f9787cb71993a30f58524d2f355b543
+References: <CGME20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
-> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
->> On 2019/7/11 21:57, Vasily Averin wrote:
->>> On 7/11/19 4:55 AM, Nixiaoming wrote:
->>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>>>>> Registering the same notifier to a hook repeatedly can cause the hook
->>>>>> list to form a ring or lose other members of the list.
->>>>>
->>>>> I think is not enough to _prevent_ 2nd register attempt,
->>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
->>>>>
->>>>
->>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
->>>>
->>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
->>>>
->>>> Duplicate registration was checked in notifier_chain_register() but only 
->>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
->>>> ("kernel/notifier.c: double register detection")
->>>>
->>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->>>>  which triggers an alarm and exits when a duplicate registration is detected.
->>>>
->>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->>>>> and it can lead to host crash in any time: 
->>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
->>>>> on the other hand you can never call 2nd unregister at all.
->>>>
->>>> Since the member was not added to the linked list at the time of the second registration, 
->>>> no linked list ring was formed. 
->>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
->>>> After patching, the fault has been alleviated
->>>
->>> You are wrong here.
->>> 2nd notifier's registration is a pure bug, this should never happen.
->>> If you know the way to reproduce this situation -- you need to fix it. 
->>>
->>> 2nd registration can happen in 2 cases:
->>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
->>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
->>> 2) some subsystem is registered twice, for example from  different namespaces.
->>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
->>> in second namespace, it also can lead to unexpacted behaviour.
->>>
->> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
->> But why does current notifier_chain_register() just trigger WARN() without exiting ?
->> notifier_chain_cond_register() direct exit without triggering WARN() ?
-> 
-> It should recover from this, if it can be detected.  The main point is
-> that not all apis have to be this "robust" when used within the kernel
-> as we do allow for the callers to know what they are doing :)
-> 
-In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
- We can intercept this situation and avoid forming a linked list ring to make the API more rob
+We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MGMT)
+to /dev/mpt3ctl.  If the given task_type is either abort task or query
+task, it may need a field named "Initiator Port Transfer Tag to Manage"
+in the IU.
 
-> If this does not cause any additional problems or slow downs, it's
-> probably fine to add.
-> 
-Notifier_chain_register() is not a system hotspot function.
-At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
-It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
-At the same time, avoiding the formation of a link ring can make the system more robust.
+Current code does not support to check target IPTT tag from the
+tm_request.  This patch introduces to check TaskMID given from the
+userspace as a target tag.  We have a rule of relationship between
+(struct request *req->tag) and smid in mpt3sas_base.c:
 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
-Thanks
+3318 u16
+3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_idx,
+3320         struct scsi_cmnd *scmd)
+3321 {
+3322         struct scsiio_tracker *request = scsi_cmd_priv(scmd);
+3323         unsigned int tag = scmd->request->tag;
+3324         u16 smid;
+3325
+3326         smid = tag + 1;
 
-Xiaoming Ni
+So if we want to abort a request tagged #X, then we can pass (X + 1) to
+this IOCTL handler.  Otherwise, user space just can pass 0 TaskMID to
+abort the first outstanding smid which is legacy behaviour.
 
+Cc: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+Cc: Sathya Prakash <sathya.prakash@broadcom.com>
+Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: MPT-FusionLinux.pdl@broadcom.com
+Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
+---
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index b2bb47c14d35..f6b8fd90610a 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -596,8 +596,16 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
+ 		if (priv_data->sas_target->handle != handle)
+ 			continue;
+ 		st = scsi_cmd_priv(scmd);
+-		tm_request->TaskMID = cpu_to_le16(st->smid);
+-		found = 1;
++
++		/*
++		 * If the given TaskMID from the user space is zero, then the
++		 * first outstanding smid will be picked up.  Otherwise,
++		 * targeted smid will be the one.
++		 */
++		if (!tm_request->TaskMID || tm_request->TaskMID == st->smid) {
++			tm_request->TaskMID = cpu_to_le16(st->smid);
++			found = 1;
++		}
+ 	}
+ 
+ 	if (!found) {
+-- 
+2.16.1
 
