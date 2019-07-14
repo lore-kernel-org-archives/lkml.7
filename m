@@ -2,113 +2,340 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC7CC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 23:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AF6C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 23:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5571320C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 23:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD97214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 23:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYOz8mdI"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r1gPsCog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfGNX27 (ORCPT
+        id S1728941AbfGNXdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 19:28:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39008 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbfGNX26 (ORCPT
+        Sun, 14 Jul 2019 19:33:50 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:11460 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728851AbfGNXdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 19:28:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id f17so2565763pfn.6;
-        Sun, 14 Jul 2019 16:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B6KAVR1F7/0ozIyc//7JULJry/rfgfUfBuLa6gXIeNo=;
-        b=jYOz8mdI16SkYEivjvTXT1h2jm17+C4ILDda+i7O+9hQNFPYBZ5bGuKuvPqnfxo4+5
-         FIvDIxoZ9jX2cWxsVjzGFZ48z6/z1E03Fqadv2+8OIxEMQmKpFsMByv7iHOdata3kSwq
-         Yan5LV1G6E/NlS9Wc6Um9IENeyNMQw42fWOPIsjjifQCvn2ttBQF1lOJL1VNvf124Fug
-         YnCmXoq3EXDn+st/6xapH0M9Zb962mfSQOQV7onKb7MEp/BLs9M9+rQCLzH9NizuuBqp
-         3inP06YXzAYR5OCaUzUqqPKR6HC3fh+cMdki6PERShnZ8GdylOJo4T8HUrl2XLSSxyl7
-         beHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B6KAVR1F7/0ozIyc//7JULJry/rfgfUfBuLa6gXIeNo=;
-        b=ABsjpZeuypJ0Lbw65a+8BIzQ5mC4VTM+U1AvHGzi/7ntuMQtCIsefqXQ7/txBfYMz2
-         sQKf47sZ9R11NUqM1+WACccTAVv5KJsgwUnayvKMzYlMtkBnPMiA3DkOWtM0/+hPeRMu
-         H0stPMjR0CoJPAFdsnBMlh9lFPzza2mPma0R9GfuncsP/zb4Qid/e1q0BzXqEeh7RoWw
-         tp0cvQwaQyp+/ldiE/CGhqNkiKm7w7I7nwgzu6mHogW5gpL8XIrt87SdXXC/2purTQGZ
-         A6A2oazlSN1xnWOUe7kPe6enAQ/q4JQ2tR29moRCaTMJRp3AO+0dGUDQm1w6IApq2NwS
-         tA0w==
-X-Gm-Message-State: APjAAAWMBH19WsCG4xoVC4lwi/W97Kyc0uzo3faDuYNgAFDymUiPZm6D
-        7AUghtWM+KR2QNbxxU49TUjqgzzUxXQ=
-X-Google-Smtp-Source: APXvYqzLX4e3PLlnd1x9G6Rbsj7ZjEgR4c3ntliAFe++AmMMcc/LOic+IYSaBEvXxnIcvdMMguTwsg==
-X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr25118731pjt.108.1563146937584;
-        Sun, 14 Jul 2019 16:28:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h26sm15781173pfq.64.2019.07.14.16.28.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 16:28:56 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 16:28:54 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>
-Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] Input: hv: Remove dependencies on PAGE_SIZE for
- ring buffer
-Message-ID: <20190714232854.GA41479@dtor-ws>
-References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
- <5af419d636506d9d87ab7d2650fa800ead91a29a.1562916939.git.m.maya.nakamura@gmail.com>
+        Sun, 14 Jul 2019 19:33:50 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2bbbde0000>; Sun, 14 Jul 2019 16:33:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 14 Jul 2019 16:33:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 14 Jul 2019 16:33:44 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 14 Jul
+ 2019 23:33:43 +0000
+Subject: Re: [PATCH] mm/gup: Use put_user_page*() instead of put_page*()
+To:     Bharath Vedartham <linux.bhar@gmail.com>,
+        <akpm@linux-foundation.org>, <ira.weiny@intel.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Matt Sickler <Matt.Sickler@daktronics.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <xdp-newbies@vger.kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <deea584f-2da2-8e1f-5a07-e97bf32c63bb@nvidia.com>
+Date:   Sun, 14 Jul 2019 16:33:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5af419d636506d9d87ab7d2650fa800ead91a29a.1562916939.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563147230; bh=sUtQbAVHKMUq6RFPtKou/JVDvKaLNXmga3Yy3wKxfoA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=r1gPsCog8Wy8uxXR6oPi9CZ88dx7g7L7elOSl44oNIP1rI4/lkKGF9dnlvvfdYA/b
+         O8GUFPF84ojdVeX8QMV3hJ8+zgk4tR88myJZyetUbYd9bq60hfbfXeF0iJlYAVkubx
+         JOoXVe/7uD2/55/W/MIxdUvILTPB1/5/S5oSyd5brPO5Z4/Keu0Xvr8jrmH/IiEYoP
+         +AIIsSoV1pBraQcZgi5+ULXONecHESIQmh/9tZbs/C10RJWwUL5/YKXsdU8Sk8oBdA
+         NOeOi2iHzHVNK0AKkN3agfSzKCXeIFIHG7vkyBUlPLmDEWfEvazCokcgH4rg3HIpDk
+         byWb1Hr99HYHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 08:30:27AM +0000, Maya Nakamura wrote:
-> Define the ring buffer size as a constant expression because it should
-> not depend on the guest page size.
-> 
-> Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On 7/14/19 12:08 PM, Bharath Vedartham wrote:
+> This patch converts all call sites of get_user_pages
+> to use put_user_page*() instead of put_page*() functions to
+> release reference to gup pinned pages.
 
-Applied, thank you.
+Hi Bharath,
 
-> ---
->  drivers/input/serio/hyperv-keyboard.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-> index 8e457e50f837..88ae7c2ac3c8 100644
-> --- a/drivers/input/serio/hyperv-keyboard.c
-> +++ b/drivers/input/serio/hyperv-keyboard.c
-> @@ -75,8 +75,8 @@ struct synth_kbd_keystroke {
->  
->  #define HK_MAXIMUM_MESSAGE_SIZE 256
->  
-> -#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
-> -#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
-> +#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
-> +#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
->  
->  #define XTKBD_EMUL0     0xe0
->  #define XTKBD_EMUL1     0xe1
-> -- 
-> 2.17.1
-> 
+Thanks for jumping in to help, and welcome to the party!
 
+You've caught everyone in the middle of a merge window, btw.  As a
+result, I'm busy rebasing and reworking the get_user_pages call sites, 
+and gup tracking, in the wake of some semi-traumatic changes to bio 
+and gup and such. I plan to re-post right after 5.3-rc1 shows up, from 
+here:
+
+    https://github.com/johnhubbard/linux/commits/gup_dma_core
+
+...which you'll find already covers the changes you've posted, except for:
+
+    drivers/misc/sgi-gru/grufault.c
+    drivers/staging/kpc2000/kpc_dma/fileops.c
+
+...and this one, which is undergoing to larger local changes, due to
+bvec, so let's leave it out of the choices:
+
+    fs/io_uring.c
+
+Therefore, until -rc1, if you'd like to help, I'd recommend one or more
+of the following ideas:
+
+1. Pull down https://github.com/johnhubbard/linux/commits/gup_dma_core
+and find missing conversions: look for any additional missing 
+get_user_pages/put_page conversions. You've already found a couple missing 
+ones. I haven't re-run a search in a long time, so there's probably even more.
+
+	a) And find more, after I rebase to 5.3-rc1: people probably are adding
+	get_user_pages() calls as we speak. :)
+
+2. Patches: Focus on just one subsystem at a time, and perfect the patch for
+it. For example, I think this the staging driver would be perfect to start with:
+
+    drivers/staging/kpc2000/kpc_dma/fileops.c
+
+	a) verify that you've really, corrected converted the whole
+	driver. (Hint: I think you might be overlooking a put_page call.)
+
+	b) Attempt to test it if you can (I'm being hypocritical in
+	the extreme here, but one of my problems is that testing
+	has been light, so any help is very valuable). qemu...?
+	OTOH, maybe even qemu cannot easily test a kpc2000, but
+	perhaps `git blame` and talking to the authors would help
+	figure out a way to validate the changes.
+
+	Thinking about whether you can run a test that would prove or
+	disprove my claim in (a), above, could be useful in coming up
+	with tests to run.
+
+In other words, a few very high quality conversions (even just one) that
+we can really put our faith in, is what I value most here. Tested patches
+are awesome.
+
+3. Once I re-post, turn on the new CONFIG_DEBUG_GET_USER_PAGES_REFERENCES
+and run things such as xfstest/fstest. (Again, doing so would be going
+further than I have yet--very helpful). Help clarify what conversions have
+actually been tested and work, and which ones remain unvalidated.
+
+Other: Please note that this:
+
+    https://github.com/johnhubbard/linux/commits/gup_dma_core
+
+    a) gets rebased often, and
+
+    b) has a bunch of commits (iov_iter and related) that conflict
+       with the latest linux.git,
+
+    c) has some bugs in the bio area, that I'm fixing, so I don't trust
+       that's it's safely runnable, for a few more days.
+
+One note below, for the future:
+
+> 
+> This is a bunch of trivial conversions which is a part of an effort
+> by John Hubbard to solve issues with gup pinned pages and 
+> filesystem writeback.
+> 
+> The issue is more clearly described in John Hubbard's patch[1] where
+> put_user_page*() functions are introduced.
+> 
+> Currently put_user_page*() simply does put_page but future implementations
+> look to change that once treewide change of put_page callsites to 
+> put_user_page*() is finished.
+> 
+> The lwn article describing the issue with gup pinned pages and filesystem 
+> writeback [2].
+> 
+> This patch has been tested by building and booting the kernel as I don't
+> have the required hardware to test the device drivers.
+> 
+> I did not modify gpu/drm drivers which use release_pages instead of
+> put_page() to release reference of gup pinned pages as I am not clear
+> whether release_pages and put_page are interchangable. 
+> 
+> [1] https://lkml.org/lkml/2019/3/26/1396
+
+When referring to patches in a commit description, please use the 
+commit hash, not an external link. See Submitting Patches [1] for details.
+
+Also, once you figure out the right maintainers and other involved people,
+putting Cc: in the commit description is common practice, too.
+
+[1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+thanks,
 -- 
-Dmitry
+John Hubbard
+NVIDIA
+
+> 
+> [2] https://lwn.net/Articles/784574/
+> 
+> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> ---
+>  drivers/media/v4l2-core/videobuf-dma-sg.c | 3 +--
+>  drivers/misc/sgi-gru/grufault.c           | 2 +-
+>  drivers/staging/kpc2000/kpc_dma/fileops.c | 4 +---
+>  drivers/vfio/vfio_iommu_type1.c           | 2 +-
+>  fs/io_uring.c                             | 7 +++----
+>  mm/gup_benchmark.c                        | 6 +-----
+>  net/xdp/xdp_umem.c                        | 7 +------
+>  7 files changed, 9 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
+> index 66a6c6c..d6eeb43 100644
+> --- a/drivers/media/v4l2-core/videobuf-dma-sg.c
+> +++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+> @@ -349,8 +349,7 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
+>  	BUG_ON(dma->sglen);
+>  
+>  	if (dma->pages) {
+> -		for (i = 0; i < dma->nr_pages; i++)
+> -			put_page(dma->pages[i]);
+> +		put_user_pages(dma->pages, dma->nr_pages);
+>  		kfree(dma->pages);
+>  		dma->pages = NULL;
+>  	}
+> diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
+> index 4b713a8..61b3447 100644
+> --- a/drivers/misc/sgi-gru/grufault.c
+> +++ b/drivers/misc/sgi-gru/grufault.c
+> @@ -188,7 +188,7 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
+>  	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
+>  		return -EFAULT;
+>  	*paddr = page_to_phys(page);
+> -	put_page(page);
+> +	put_user_page(page);
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> index 6166587..26dceed 100644
+> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> @@ -198,9 +198,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
+>  	sg_free_table(&acd->sgt);
+>   err_dma_map_sg:
+>   err_alloc_sg_table:
+> -	for (i = 0 ; i < acd->page_count ; i++){
+> -		put_page(acd->user_pages[i]);
+> -	}
+> +	put_user_pages(acd->user_pages, acd->page_count);
+>   err_get_user_pages:
+>  	kfree(acd->user_pages);
+>   err_alloc_userpages:
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index add34ad..c491524 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -369,7 +369,7 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  		 */
+>  		if (ret > 0 && vma_is_fsdax(vmas[0])) {
+>  			ret = -EOPNOTSUPP;
+> -			put_page(page[0]);
+> +			put_user_page(page[0]);
+>  		}
+>  	}
+>  	up_read(&mm->mmap_sem);
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 4ef62a4..b4a4549 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2694,10 +2694,9 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+>  			 * if we did partial map, or found file backed vmas,
+>  			 * release any pages we did get
+>  			 */
+> -			if (pret > 0) {
+> -				for (j = 0; j < pret; j++)
+> -					put_page(pages[j]);
+> -			}
+> +			if (pret > 0)
+> +				put_user_pages(pages, pret);
+> +
+>  			if (ctx->account_mem)
+>  				io_unaccount_mem(ctx->user, nr_pages);
+>  			kvfree(imu->bvec);
+> diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+> index 7dd602d..15fc7a2 100644
+> --- a/mm/gup_benchmark.c
+> +++ b/mm/gup_benchmark.c
+> @@ -76,11 +76,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+>  	gup->size = addr - gup->addr;
+>  
+>  	start_time = ktime_get();
+> -	for (i = 0; i < nr_pages; i++) {
+> -		if (!pages[i])
+> -			break;
+> -		put_page(pages[i]);
+> -	}
+> +	put_user_pages(pages, nr_pages);
+>  	end_time = ktime_get();
+>  	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
+>  
+> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+> index 9c6de4f..6103e19 100644
+> --- a/net/xdp/xdp_umem.c
+> +++ b/net/xdp/xdp_umem.c
+> @@ -173,12 +173,7 @@ static void xdp_umem_unpin_pages(struct xdp_umem *umem)
+>  {
+>  	unsigned int i;
+>  
+> -	for (i = 0; i < umem->npgs; i++) {
+> -		struct page *page = umem->pgs[i];
+> -
+> -		set_page_dirty_lock(page);
+> -		put_page(page);
+> -	}
+> +	put_user_pages_dirty_lock(umem->pgs, umem->npgs);
+>  
+>  	kfree(umem->pgs);
+>  	umem->pgs = NULL;
+> 
