@@ -2,209 +2,158 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61772C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD28C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFB8205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08DA205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="wmLdsAkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfGNRRt (ORCPT
+        id S1728642AbfGNRVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 13:17:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27362 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728065AbfGNRRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 13:17:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jul 2019 10:17:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,491,1557212400"; 
-   d="scan'208";a="172027150"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.4.28]) ([10.252.4.28])
-  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2019 10:17:45 -0700
-Subject: Re: [PATCH v3 6/6] ASoC: sgtl5000: Improve VAG power and mute control
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-References: <20190712145550.27500-1-oleksandr.suvorov@toradex.com>
- <20190712145550.27500-7-oleksandr.suvorov@toradex.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <e9f0f7c7-4c11-36ad-679c-503f6160b83f@intel.com>
-Date:   Sun, 14 Jul 2019 19:17:43 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190712145550.27500-7-oleksandr.suvorov@toradex.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sun, 14 Jul 2019 13:21:24 -0400
+Received: from mail-eopbgr680084.outbound.protection.outlook.com ([40.107.68.84]:36516
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728297AbfGNRVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 13:21:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hRGeO15FcxuEoJZYUApq9OLjqdh+sIHkvd4AkDAHdWbd8ch8Vvy6NtObSg7THiZfbGWkD6WWVSlAmiY+4qITt8VQdd1LrSq70rBW3Sk9QxgKLcB3WiO4BZJjzKx8J5Ex3LvVx7fvulJJ/ONZ9Bc2Azuo7UKzso5Y9BM16D3bbRvoH5kH+hpfo4oapPE4fTj7jGXE5EIMIAGSxPt55l1xRwQXT/t3g2EgzfAY8Ft7y9uqandtAeu2AoWI66JXKhaePvjyn6+1imHv5Q8kCU76tZ0q/7BzzduWq54obNxk9q7ipXP/7fFH1yrBa5B1Gr/v33KdIN/upkhTvLxRsRsz1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rwaVWg1GM6HK4HTzHPzW+lD0NEQTf+/yOwf9h870GfA=;
+ b=O10LS/RmDhSrmb166X4So5k3bd9dEq0q+5f0vq4P8zgflcIbVQkcAstw9c5g0A+zdZ+FTPJuk8t54qPzoAmufm55dz+FW9mByXw5q/hug5rZQc5FuSKdGPL/eMAHqgxwqYikdAhUb1424yxgBxXP65zgEz+zGpMvBkQo6GodSQH9Y0czOjp3/Cy0XdAK8cOp4zhxiMgewyRv6+WYE7rKA0G9bus4a/LeGOUkTR6DsIyjBSi733bYuQOIeKG5994xYdEwX5WiPqR5D2DUyKaC6a/Bru0nximTHqA/sb9Xk7SkO608jN++FYX0TXVZq7+99Dp5rvhlJLxf0St/BlFtyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rwaVWg1GM6HK4HTzHPzW+lD0NEQTf+/yOwf9h870GfA=;
+ b=wmLdsAkZ506JsY5E0bPNSQl+k2nFEcQby/7MGvVMEDZdqh658c7pfyXiP2cKu+L+Wh89TKcHi8JIuoxz1HCcYlZydE06fMLmcam66qfGl/kMRUL61ZELjoaGxxLZVW+N+2M+4q4uBJA2dB5UZT9pDFrI8RvBeGGccvsnaOfDrdQ=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4631.namprd05.prod.outlook.com (52.135.233.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.8; Sun, 14 Jul 2019 17:21:20 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2073.012; Sun, 14 Jul 2019
+ 17:21:19 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH] x86/apic: Initialize TPR to block interrupts 16-31
+Thread-Topic: [PATCH] x86/apic: Initialize TPR to block interrupts 16-31
+Thread-Index: AQHVOliSQEatmYzQkESWBh33bdcvFqbKXGiA
+Date:   Sun, 14 Jul 2019 17:21:19 +0000
+Message-ID: <D7C365E9-0DAD-46B9-95C9-B3475879F813@vmware.com>
+References: <dc04a9f8b234d7b0956a8d2560b8945bcd9c4bf7.1563117760.git.luto@kernel.org>
+In-Reply-To: <dc04a9f8b234d7b0956a8d2560b8945bcd9c4bf7.1563117760.git.luto@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [2601:647:4580:b719:3413:f6ce:116f:839c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47ae56fe-bfce-4a25-e0d2-08d7087fafcc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4631;
+x-ms-traffictypediagnostic: BYAPR05MB4631:
+x-microsoft-antispam-prvs: <BYAPR05MB4631CDFD5880F615ACCE4C63D0CC0@BYAPR05MB4631.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0098BA6C6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(39860400002)(346002)(189003)(199004)(71190400001)(71200400001)(46003)(66556008)(66946007)(76116006)(76176011)(66446008)(64756008)(186003)(478600001)(486006)(229853002)(305945005)(36756003)(66476007)(7736002)(53546011)(102836004)(6116002)(14454004)(6246003)(54906003)(4326008)(8936002)(11346002)(53936002)(81156014)(14444005)(81166006)(6436002)(6486002)(86362001)(2616005)(476003)(6506007)(5660300002)(2906002)(33656002)(446003)(68736007)(316002)(6916009)(256004)(99286004)(8676002)(25786009)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4631;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xKodSpgmzEMhjgoA7OulD7yJewHhd8ASa85zjhJhk2hag2A59ppVoo4znxdLR99tZKPCrGSe9HLNh7+1MNM1UpoSN8mdC+1qS464YvB+qxYD55Ok9WzY0tifypFWcKYh0LJtmqo1SQ0M6x9ClkTwnCEc8qALUxiftTKwGjQccsGn0UQoY6mp+PpcOqCaMbkVLqq1Z82ybRC0CQDfiSTAQ/c9+0MugFpGY7uZNRYkUW/pJDbAN/UruY5Kdzx7u1xp04DlU8pIfZeg7EifW4WS4ETFvrzc2AGpjwLkS2aT2g6hnjmTIWTGkx4Szzztqoaz/dxYbHa4BdvaLL27/RXGuumV81wTTkW2/mrvIJYIVuTtb5oify7RYUySXohXxHu/h4qzypzztNwTKzuhMboVA9QPCr1CgLtmzdxtBa64KoQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E0460F700268A2409E411A9F98948096@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47ae56fe-bfce-4a25-e0d2-08d7087fafcc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2019 17:21:19.8123
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4631
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-12 16:56, Oleksandr Suvorov wrote:
->   
-> +enum {
-> +	HP_POWER_EVENT,
-> +	DAC_POWER_EVENT,
-> +	ADC_POWER_EVENT
-> +};
-> +
-> +struct sgtl5000_mute_state {
-> +	u16 hp_event;
-> +	u16 dac_event;
-> +	u16 adc_event;
-> +};
-> +
->   /* sgtl5000 private structure in codec */
->   struct sgtl5000_priv {
->   	int sysclk;	/* sysclk rate */
-> @@ -137,8 +156,109 @@ struct sgtl5000_priv {
->   	u8 micbias_voltage;
->   	u8 lrclk_strength;
->   	u8 sclk_strength;
-> +	struct sgtl5000_mute_state mute_state;
+> On Jul 14, 2019, at 8:23 AM, Andy Lutomirski <luto@kernel.org> wrote:
+>=20
+> The APIC, per spec, is fundamentally confused and thinks that
+> interrupt vectors 16-31 are valid.  This makes no sense -- the CPU
+> reserves vectors 0-31 for exceptions (faults, traps, etc).
+> Obviously, no device should actually produce an interrupt with
+> vector 16-31, but we can improve robustness by setting the APIC TPR
+> class to 1, which will prevent delivery of an interrupt with a
+> vector below 32.
+>=20
+> Note: this is *not* intended as a security measure against attackers
+> who control malicious hardware.  Any PCI or similar hardware that
+> can be controlled by an attacker MUST be behind a functional IOMMU
+> that remaps interrupts.  The purpose of this patch is to reduce the
+> chance that a certain class of device malfunctions crashes the
+> kernel in hard-to-debug ways.
+>=20
+> Cc: Nadav Amit <namit@vmware.com>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: Feng Tang <feng.tang@intel.com>
+> Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> ---
+> arch/x86/kernel/apic/apic.c | 7 +++++--
+> 1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+> index 177aa8ef2afa..ff31322f8839 100644
+> --- a/arch/x86/kernel/apic/apic.c
+> +++ b/arch/x86/kernel/apic/apic.c
+> @@ -1531,11 +1531,14 @@ static void setup_local_APIC(void)
+> #endif
+>=20
+> 	/*
+> -	 * Set Task Priority to 'accept all'. We never change this
+> -	 * later on.
+> +	 * Set Task Priority to 'accept all except vectors 0-31'.  An APIC
+> +	 * vector in the 16-31 range could be delivered if TPR =3D=3D 0, but we
+> +	 * would think it's an exception and terrible things will happen.  We
+> +	 * never change this later on.
+> 	 */
+> 	value =3D apic_read(APIC_TASKPRI);
+> 	value &=3D ~APIC_TPRI_MASK;
+> +	value |=3D 0x10;
+> 	apic_write(APIC_TASKPRI, value);
+>=20
+> 	apic_pending_intr_clear();
 
-Why not array instead?
-u16 mute_state[ADC_POWER_EVENT+1];
--or-
-u16 mute_state[LAST_POWER_EVENT+1]; (if you choose to add explicit LAST 
-enum constant).
+It looks fine, and indeed it seems that writes to APIC_TASKPRI and CR8 are
+not overwriting this value.
 
-Enables simplification, see below.
+Yet, the fact that if someone overwrites with zero (or does not restore) th=
+e
+TPR will not produce any warning is not that great. Not that I know what th=
+e
+right course of action is (adding checks in write_cr8()? but then what abou=
+t
+if APIC_TASKPRI is not restored after some APIC reset?)
 
-> @@ -170,40 +290,79 @@ static int mic_bias_event(struct snd_soc_dapm_widget *w,
->   	return 0;
->   }
->   
-> -/*
-> - * As manual described, ADC/DAC only works when VAG powerup,
-> - * So enabled VAG before ADC/DAC up.
-> - * In power down case, we need wait 400ms when vag fully ramped down.
-> - */
-> -static int power_vag_event(struct snd_soc_dapm_widget *w,
-> -	struct snd_kcontrol *kcontrol, int event)
-> +static void vag_and_mute_control(struct snd_soc_component *component,
-> +				 int event, int event_source,
-> +				 u16 mute_mask, u16 *mute_reg)
->   {
-> -	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-> -	const u32 mask = SGTL5000_DAC_POWERUP | SGTL5000_ADC_POWERUP;
-> -
->   	switch (event) {
-> -	case SND_SOC_DAPM_POST_PMU:
-> -		snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_POWER,
-> -			SGTL5000_VAG_POWERUP, SGTL5000_VAG_POWERUP);
-> -		msleep(400);
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		*mute_reg = mute_output(component, mute_mask);
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		vag_power_on(component, event_source);
-> +		restore_output(component, mute_mask, *mute_reg);
->   		break;
-> -
->   	case SND_SOC_DAPM_PRE_PMD:
-> -		/*
-> -		 * Don't clear VAG_POWERUP, when both DAC and ADC are
-> -		 * operational to prevent inadvertently starving the
-> -		 * other one of them.
-> -		 */
-> -		if ((snd_soc_component_read32(component, SGTL5000_CHIP_ANA_POWER) &
-> -				mask) != mask) {
-> -			snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_POWER,
-> -				SGTL5000_VAG_POWERUP, 0);
-> -			msleep(400);
-> -		}
-> +		*mute_reg = mute_output(component, mute_mask);
-> +		vag_power_off(component, event_source);
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		restore_output(component, mute_mask, *mute_reg);
->   		break;
->   	default:
->   		break;
->   	}
-> +}
-> +
-> +/*
-> + * Mute Headphone when power it up/down.
-> + * Control VAG power on HP power path.
-> + */
-> +static int headphone_pga_event(struct snd_soc_dapm_widget *w,
-> +	struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_component *component =
-> +		snd_soc_dapm_to_component(w->dapm);
-> +	struct sgtl5000_priv *sgtl5000 =
-> +		snd_soc_component_get_drvdata(component);
-> +
-> +	vag_and_mute_control(component, event, HP_POWER_EVENT,
-> +			     SGTL5000_HP_MUTE,
-> +			     &sgtl5000->mute_state.hp_event);
-> +
-> +	return 0;
-> +}
-> +
-> +/* As manual describes, ADC/DAC powering up/down requires
-> + * to mute outputs to avoid pops.
-> + * Control VAG power on ADC/DAC power path.
-> + */
-> +static int adc_updown_depop(struct snd_soc_dapm_widget *w,
-> +	struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_component *component =
-> +		snd_soc_dapm_to_component(w->dapm);
-> +	struct sgtl5000_priv *sgtl5000 =
-> +		snd_soc_component_get_drvdata(component);
-> +
-> +	vag_and_mute_control(component, event, ADC_POWER_EVENT,
-> +			     SGTL5000_OUTPUTS_MUTE,
-> +			     &sgtl5000->mute_state.adc_event);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dac_updown_depop(struct snd_soc_dapm_widget *w,
-> +	struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_component *component =
-> +		snd_soc_dapm_to_component(w->dapm);
-> +	struct sgtl5000_priv *sgtl5000 =
-> +		snd_soc_component_get_drvdata(component);
-> +
-> +	vag_and_mute_control(component, event, DAC_POWER_EVENT,
-> +			     SGTL5000_OUTPUTS_MUTE,
-> +			     &sgtl5000->mute_state.dac_event);
->   
->   	return 0;
->   }
-
-With array approach you can simplify these 3 callbacks:
-- remove local declaration of sgtl5000
-- remove the need for "u16 *mute_reg" param for vag_and_mute_control
-(you always provide the xxx_event field of mute_state corresponding to 
-given XXX_POWER_EVENT anyway)
-
-The sgtl5000 local ptr would be declared within common handler, which 
-vag_and_mute_control clearly is. Said handler declaration could be 
-updated to again require widget rather than component.
-
-Cherry on top: relocation of "return 0;" directly to 
-vag_and_mute_control. Leaving it void (as it is), however, might also be 
-appropriate (explicit).
-
-Czarek
