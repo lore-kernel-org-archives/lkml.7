@@ -2,120 +2,84 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B1C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 13:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A09C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 13:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EBC20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 13:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AFF20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 13:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfGNNXa (ORCPT
+        id S1728426AbfGNNdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 09:23:30 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34241 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfGNNX3 (ORCPT
+        Sun, 14 Jul 2019 09:33:01 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:2374 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbfGNNdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 09:23:29 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so14166118otk.1;
-        Sun, 14 Jul 2019 06:23:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZSnuIbnL9robRqYPslX/WkILKl8Emm0qTv8sVRwQJNo=;
-        b=mbYaOKeZdsAkOYwhbkmny5LfqQGVwFNKfSmYrpi27BJmFhwNWYg1MV8GY4LTbNPAxa
-         x6fdvguEs43z1UL3/mwSYma41zhMLKBT2Nzj9ZQk0Pq5EluZ7eX+HU0CrOrDlhdRsL5q
-         nD44cBEAXPZtcNKvGwYsbZXW4UxKjtHsslI6nujKdDFveuJUIy3/A0DFbCl5JOzyfrH7
-         PhcdMb71uIqMAEeVitZvGrS8ZTEQJ3GeNgEJXpIRKAN/8iZi9BV8Ig8VteULl4yh3hPC
-         FSSY8vgyK5DQO+Vdi6ru+ToHTLIqNPltliLit2DaqLYW+ECbwNvyHW6DFiqwRx8p5vgw
-         I8Uw==
-X-Gm-Message-State: APjAAAXxOpVu9zC7SlxUBk/1bqJTJXoUaXGvljZmCedAzjxiggB5T3ne
-        KKqmlVKfV1YLh1KG8CBVBUU88uF8+y7BpjuPLO4=
-X-Google-Smtp-Source: APXvYqwFx+Jrzpgx7oPlw1HEwo5L2RSfdH21hnvMQghrJjMCltBpiONvTQkyb7pVY7ForFo8gLplR1da0iQNXieayHg=
-X-Received: by 2002:a9d:7a90:: with SMTP id l16mr16547981otn.297.1563110608697;
- Sun, 14 Jul 2019 06:23:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <c5713aa4-d290-0f7d-7de8-82bcdf74ee95@web.de> <alpine.LNX.2.21.1907060951060.67@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.21.1907060951060.67@nippy.intranet>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 14 Jul 2019 15:23:17 +0200
-Message-ID: <CAMuHMdWd31ch+eSje4ww=_JFSZgnxRAUAvS0TCHXq0nzLeVfgg@mail.gmail.com>
-Subject: Re: [PATCH] m68k: One function call less in cf_tlb_miss()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 14 Jul 2019 09:33:00 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65d2b2ecb0c4-4529b; Sun, 14 Jul 2019 21:31:56 +0800 (CST)
+X-RM-TRANSID: 2ee65d2b2ecb0c4-4529b
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost (unknown[223.105.0.241])
+        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55d2b2eca11a-b5f09;
+        Sun, 14 Jul 2019 21:31:56 +0800 (CST)
+X-RM-TRANSID: 2ee55d2b2eca11a-b5f09
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Subject: [PATCH] sit: use dst_cache in ipip6_tunnel_xmit
+Date:   Sun, 14 Jul 2019 21:31:22 +0800
+Message-Id: <1563111082-10721-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+Same as other ip tunnel, use dst_cache in xmit action to avoid
+unnecessary fib lookups.
 
-On Sat, Jul 6, 2019 at 1:57 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> On Fri, 5 Jul 2019, Markus Elfring wrote:
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Fri, 5 Jul 2019 17:11:37 +0200
-> >
-> > Avoid an extra function call
-> > by using a ternary operator instead of a conditional statement for a
-> > setting selection.
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+---
+ net/ipv6/sit.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Have you looked at the actual assembler output generated by the compiler?
-
-> > This issue was detected by using the Coccinelle software.
-> >
-> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> > ---
-> >  arch/m68k/mm/mcfmmu.c | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
-> > index 6cb1e41d58d0..02fc0778028e 100644
-> > --- a/arch/m68k/mm/mcfmmu.c
-> > +++ b/arch/m68k/mm/mcfmmu.c
-> > @@ -146,12 +146,10 @@ int cf_tlb_miss(struct pt_regs *regs, int write, int dtlb, int extension_word)
-> >
-> >       mmu_write(MMUDR, (pte_val(*pte) & PAGE_MASK) |
-> >               ((pte->pte) & CF_PAGE_MMUDR_MASK) | MMUDR_SZ_8KB | MMUDR_X);
-> > -
-> > -     if (dtlb)
-> > -             mmu_write(MMUOR, MMUOR_ACC | MMUOR_UAA);
-> > -     else
-> > -             mmu_write(MMUOR, MMUOR_ITLB | MMUOR_ACC | MMUOR_UAA);
-> > -
-> > +     mmu_write(MMUOR,
-> > +               dtlb
-> > +               ? MMUOR_ACC | MMUOR_UAA
-> > +               : MMUOR_ITLB | MMUOR_ACC | MMUOR_UAA);
-
-While the ternary operator can be useful for short expressions, it can
-also lead to hard-to-read code.  IMHO the latter is the case here
-(hint: the expression needs 3 lines).
-
-> If you are trying to avoid redundancy, why not finish the job?
->
-> +     mmu_write(MMUOR, (dtlb ? 0 : MMUOR_ITLB) | MMUOR_ACC | MMUOR_UAA);
-
-Thanks Finn, much better!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index 8061089..b2ccbc4 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -900,12 +900,17 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
+ 			   RT_TOS(tos), RT_SCOPE_UNIVERSE, IPPROTO_IPV6,
+ 			   0, dst, tiph->saddr, 0, 0,
+ 			   sock_net_uid(tunnel->net, NULL));
+-	rt = ip_route_output_flow(tunnel->net, &fl4, NULL);
+ 
+-	if (IS_ERR(rt)) {
+-		dev->stats.tx_carrier_errors++;
+-		goto tx_error_icmp;
++	rt = dst_cache_get_ip4(&tunnel->dst_cache, &fl4.saddr);
++	if (!rt) {
++		rt = ip_route_output_flow(tunnel->net, &fl4, NULL);
++		if (IS_ERR(rt)) {
++			dev->stats.tx_carrier_errors++;
++			goto tx_error_icmp;
++		}
++		dst_cache_set_ip4(&tunnel->dst_cache, &rt->dst, fl4.saddr);
+ 	}
++
+ 	if (rt->rt_type != RTN_UNICAST) {
+ 		ip_rt_put(rt);
+ 		dev->stats.tx_carrier_errors++;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.8.3.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
