@@ -2,148 +2,134 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF232C742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2799C74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2942063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3C920C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6KCcs9s"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Zc/ih5Zn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfGNVmC (ORCPT
+        id S1728878AbfGNVzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 17:42:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45631 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfGNVmB (ORCPT
+        Sun, 14 Jul 2019 17:55:15 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49126 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfGNVzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 17:42:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so14112568lje.12;
-        Sun, 14 Jul 2019 14:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A3OYivNwUGHYOSxix42WhhjLsPNywH0YEPeMJekZJ6E=;
-        b=g6KCcs9sN6lkHPEl+C6SGXrUseBxjgYpoKWZGD8zFz8jRohfB4D8n2ctU/wJY51H5q
-         uQibLj0cGWeUPl98B7JKR4CztJwwuDyE9tsHq7XDawzsZ+dSJHiXTJQJN5N0Lq+oloT5
-         KUL7XijFK785yi9gbhAXmuge9bwO+BflbYNOcOY1MNTFiyv5YQp2LfHBOCgDZxzTHPn/
-         xpbA/3hX7xJQQblD1saufJhh0s6j1JhAmeil6nHC5BYjCiopmArM+0/becVm3p7Y2ILq
-         U3ZXMk/lNAjkvTAxN312yHUvD6Ztjwkw+IXFDzna9jSkJLXOYOAv7uTo+v+S5/ZcX+NQ
-         q5dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A3OYivNwUGHYOSxix42WhhjLsPNywH0YEPeMJekZJ6E=;
-        b=n4AT9UnzlMAqGeILfd0PUWSKwG/kTqidvMBA0SPWef6LC+CBsQ6OtC55bQ9yNxp+jF
-         vbkIy7ruBU7iL0cRU9HGhk/MdtDzVL+4GnEecowVtwfLki9uU1VNfb+iCCJTfhGv649y
-         Mko6Na65dojI6yuxCo7Yo0O3XEK64hwR0HL43hZQGJNu871Vmfh9nlTtL/al7BeiuBIy
-         UjbYtm9nFP08yjcYbvBZrazPRU7YMjB2wAYFOaFWr6opG2XdsubHbrAVmtQQGUgZdipg
-         YQ1i6+eGzfT42bo27EaW4u9PT/P2ViEAo7w11ajkEwkuN/q0Erj4aOsXfzYw8zOz7qEH
-         Pn8Q==
-X-Gm-Message-State: APjAAAWuGslfD9vZ/V4Ni6h8RphegeoF6Qm0ddgpwkqeJdWE1xD1GFMB
-        LFj23UDaFDFY4w31ns4b6PHaf0TV
-X-Google-Smtp-Source: APXvYqzxHKe/eVV/wzCEUknf2UJgEROtblGr1hgbk1WhEjuuEfCTVKoQIiLXy9ri1qWdjAYtkZv5gQ==
-X-Received: by 2002:a2e:9643:: with SMTP id z3mr12289841ljh.43.1563140519056;
-        Sun, 14 Jul 2019 14:41:59 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id b192sm2025060lfg.75.2019.07.14.14.41.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 14:41:58 -0700 (PDT)
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
- <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
- <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
- <66b5e81b-d468-e2aa-7336-3d4854c234ab@gmail.com>
- <db7ac8e6-bfad-bc60-b46e-d886025872e4@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <23f10791-3fff-0e94-2798-6f38a27745d1@gmail.com>
-Date:   Mon, 15 Jul 2019 00:41:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 14 Jul 2019 17:55:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563141313; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=6UJuUeCfvEq3MBZzbHN53eBeuNrdTvzgI5WTeKesFo8=;
+        b=Zc/ih5ZnKomKG0ja5TK4unkUcOeT411cvXIfL9xqmu1s/vVGn1kWrIv43sLCYzuLb9tUlr
+        vp/x0+KpETJk5xA4jrDON6y+aeu0kiVSbhxBzPOp1huYDimgL0IuPkpaFrxZaGTd5rpNFt
+        iNBdfawgw8B+Ch7TjTrgknyutXC1FXY=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, od@zcrc.me,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2] dmaengine: dma-jz4780: Break descriptor chains on JZ4740
+Date:   Sun, 14 Jul 2019 17:55:04 -0400
+Message-Id: <20190714215504.10877-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <db7ac8e6-bfad-bc60-b46e-d886025872e4@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.07.2019 8:31, Sowjanya Komatineni пишет:
-> 
-> On 7/4/19 3:40 AM, Dmitry Osipenko wrote:
->> 04.07.2019 10:31, Linus Walleij пишет:
->>> On Sat, Jun 29, 2019 at 5:58 PM Dmitry Osipenko <digetx@gmail.com>
->>> wrote:
->>>
->>>> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it
->>>> okay that pinctrl
->>>> will be resumed after GPIO? Shouldn't a proper pin-muxing be
->>>> selected at first?
->>> Thierry sent some initial patches about this I think. We need to use
->>> device links for this to work properly so he adds support for
->>> linking the pinctrl and GPIO devices through the ranges.
->>>
->>> For links between pin control handles and their consumers, see also:
->>> 036f394dd77f pinctrl: Enable device link creation for pin control
->>> c6045b4e3cad pinctrl: stmfx: enable links creations
->>> 489b64d66325 pinctrl: stm32: Add links to consumers
->>>
->>> I am using STM32 as guinea pig for this, consider adding links also
->>> from the Tegra pinctrl. I might simply make these pinctrl consumer
->>> to producer links default because I think it makes a lot sense.
->> IIUC, currently the plan is to resume pinctrl *after* GPIO for
->> Tegra210 [1]. But this
->> contradicts to what was traditionally done for older Tegras where
->> pinctrl was always
->> resumed first and apparently it won't work well for the GPIO ranges as
->> well. I think this
->> and the other patchsets related to suspend-resume still need some more
->> thought.
->>
->> [1] https://patchwork.kernel.org/patch/11012077/
-> 
-> Park bit was introduced from Tegra210 onwards and during suspend/resume,
-> requirement of gpio restore prior to pinctrl restore is not required for
-> prior Tegra210.
-> 
-> Also currently pinctrl suspend/resume implementation for prior Tegra210
-> is not yet upstreamed but having gpio restore prior to pinmux during
-> suspend/resume should not cause any issue for prior tegra's as well as
-> gpio resume restores pins back to same gpio config as they were during
-> suspend entry.
-> 
+The current driver works perfectly fine on every generation of the
+JZ47xx SoCs, except on the JZ4740.
 
-Okay!
+There, when hardware descriptors are chained together (with the LINK
+bit set), the next descriptor isn't automatically fetched as it should -
+instead, an interrupt is raised, even if the TIE bit (Transfer Interrupt
+Enable) bit is cleared. When it happens, the DMA transfer seems to be
+stopped (it doesn't chain), and it's uncertain how many bytes have
+actually been transferred.
+
+Until somebody smarter than me can figure out how to make chained
+descriptors work on the JZ4740, we now disable chained descriptors on
+that particular SoC.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+
+Notes:
+    v2: Add fix for other (non JZ4740) SoCs.
+
+ drivers/dma/dma-jz4780.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 6b8c4c458e8a..3fd91e665a52 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -92,6 +92,7 @@
+ #define JZ_SOC_DATA_PROGRAMMABLE_DMA	BIT(1)
+ #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
+ #define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
++#define JZ_SOC_DATA_BREAK_LINKS		BIT(4)
+ 
+ /**
+  * struct jz4780_dma_hwdesc - descriptor structure read by the DMA controller.
+@@ -356,6 +357,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
+ 	void *context)
+ {
+ 	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
++	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
+ 	struct jz4780_dma_desc *desc;
+ 	unsigned int i;
+ 	int err;
+@@ -376,7 +378,8 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
+ 
+ 		desc->desc[i].dcm |= JZ_DMA_DCM_TIE;
+ 
+-		if (i != (sg_len - 1)) {
++		if (i != (sg_len - 1) &&
++		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
+ 			/* Automatically proceeed to the next descriptor. */
+ 			desc->desc[i].dcm |= JZ_DMA_DCM_LINK;
+ 
+@@ -665,6 +668,8 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
+ 				struct jz4780_dma_chan *jzchan)
+ {
++	const unsigned int soc_flags = jzdma->soc_data->flags;
++	struct jz4780_dma_desc *desc = jzchan->desc;
+ 	uint32_t dcs;
+ 	bool ack = true;
+ 
+@@ -692,8 +697,11 @@ static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
+ 
+ 				jz4780_dma_begin(jzchan);
+ 			} else if (dcs & JZ_DMA_DCS_TT) {
+-				vchan_cookie_complete(&jzchan->desc->vdesc);
+-				jzchan->desc = NULL;
++				if (!(soc_flags & JZ_SOC_DATA_BREAK_LINKS) ||
++				    (jzchan->curr_hwdesc + 1 == desc->count)) {
++					vchan_cookie_complete(&desc->vdesc);
++					jzchan->desc = NULL;
++				}
+ 
+ 				jz4780_dma_begin(jzchan);
+ 			} else {
+@@ -995,6 +1003,7 @@ static int jz4780_dma_remove(struct platform_device *pdev)
+ static const struct jz4780_dma_soc_data jz4740_dma_soc_data = {
+ 	.nb_channels = 6,
+ 	.transfer_ord_max = 5,
++	.flags = JZ_SOC_DATA_BREAK_LINKS,
+ };
+ 
+ static const struct jz4780_dma_soc_data jz4725b_dma_soc_data = {
+-- 
+2.21.0.593.g511ec345e18
+
