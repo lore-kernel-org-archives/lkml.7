@@ -2,114 +2,133 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DF3C742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F175C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF978214AE
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41794214AE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfGNTCM (ORCPT
+        id S1728808AbfGNTF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 15:02:12 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:33094 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728125AbfGNTCM (ORCPT
+        Sun, 14 Jul 2019 15:05:57 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52524 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728297AbfGNTF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 15:02:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 3545A6074CD5;
-        Sun, 14 Jul 2019 21:02:10 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 0CY1gMs9aDPi; Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id E126A6074CF8;
-        Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4uf6qr9J4IfK; Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id BE16E6074CD5;
-        Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
-Date:   Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Message-ID: <1267151613.38686.1563130929727.JavaMail.zimbra@nod.at>
-Subject: [GIT PULL] UBIFS changes for 5.3-rc1
+        Sun, 14 Jul 2019 15:05:57 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x6EJ5MVD000308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 Jul 2019 15:05:23 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 804A3420036; Sun, 14 Jul 2019 15:05:22 -0400 (EDT)
+Date:   Sun, 14 Jul 2019 15:05:22 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190714190522.GA24049@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>, linux-ext4@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
+ <20190705151658.GP26519@linux.ibm.com>
+ <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com>
+ <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Index: lukcal4QcUCgWCO+vvtjPRX4XXI9kw==
-Thread-Topic: UBIFS changes for 5.3-rc1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
+> But short term I don't see any other solution than stop testing
+> sched_setattr because it does not check arguments enough to prevent
+> system misbehavior. Which is a pity because syzkaller has found some
+> bad misconfigurations that were oversight on checking side.
+> Any other suggestions?
 
-The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
+Or maybe syzkaller can put its own limitations on what parameters are
+sent to sched_setattr?  In practice, there are any number of ways a
+root user can shoot themselves in the foot when using sched_setattr or
+sched_setaffinity, for that matter.  I imagine there must be some such
+constraints already --- or else syzkaller might have set a kernel
+thread to run with priority SCHED_BATCH, with similar catastrophic
+effects --- or do similar configurations to make system threads
+completely unschedulable.
 
-  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
+Real time administrators who know what they are doing --- and who know
+that their real-time threads are well behaved --- will always want to
+be able to do things that will be catastrophic if the real-time thread
+is *not* well behaved.  I don't it is possible to add safety checks
+which would allow the kernel to automatically detect and reject unsafe
+configurations.
 
-are available in the Git repository at:
+An apt analogy might be civilian versus military aircraft.  Most
+airplanes are designed to be "inherently stable"; that way, modulo
+buggy/insane control systems like on the 737 Max, the airplane will
+automatically return to straight and level flight.  On the other hand,
+some military planes (for example, the F-16, F-22, F-36, the
+Eurofighter, etc.) are sometimes designed to be unstable, since that
+way they can be more maneuverable.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/upstream-5.3-rc1
+There are use cases for real-time Linux where this flexibility/power
+vs. stability tradeoff is going to argue for giving root the
+flexibility to crash the system.  Some of these systems might
+literally involve using real-time Linux in military applications,
+something for which Paul and I have had some experience.  :-)
 
-for you to fetch changes up to 8009ce956c3d28022af6b122e50213ad830fc902:
+Speaking of sched_setaffinity, one thing which we can do is have
+syzkaller move all of the system threads to they run on the "system
+CPU's", and then move the syzkaller processes which are testing the
+kernel to be on the "system under test CPU's".  Then regardless of
+what priority the syzkaller test programs try to run themselves at,
+they can't crash the system.
 
-  ubifs: Don't leak orphans on memory during commit (2019-07-08 20:01:34 +0200)
+Some real-time systems do actually run this way, and it's a
+recommended configuration which is much safer than letting the
+real-time threads take over the whole system:
 
-Please note there is a merge conflict between commits
-334d581528b9 ("vfs: Convert ubifs to use the new mount API") and
-eeabb9866e4c ("ubifs: Add support for zstd compression.")
+http://linuxrealtime.org/index.php/Improving_the_Real-Time_Properties#Isolating_the_Application
 
-For zstd we add a new mount parameter.
-In case of doubt I'll happily review your merge resolution.
+					- Ted
 
-----------------------------------------------------------------
-This pull request contains the following changes for UBIFS
-
-- Support for zstd compression
-- Support for offline signed filesystems
-- Various fixes for regressions
-
-----------------------------------------------------------------
-Liu Song (3):
-      ubifs: Simplify redundant code
-      ubifs: Fix typo of output in get_cs_sqnum
-      ubifs: remove unnecessary check in ubifs_log_start_commit
-
-Michele Dionisio (1):
-      ubifs: Add support for zstd compression.
-
-Richard Weinberger (3):
-      ubifs: Correctly use tnc_next() in search_dh_cookie()
-      ubifs: Check link count of inodes when killing orphans.
-      ubifs: Don't leak orphans on memory during commit
-
-Sascha Hauer (1):
-      ubifs: support offline signed images
-
- fs/ubifs/Kconfig       | 13 ++++++-
- fs/ubifs/auth.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++
- fs/ubifs/compress.c    | 27 ++++++++++++++-
- fs/ubifs/log.c         |  5 +--
- fs/ubifs/master.c      | 53 ++++++++++++++++++++++++----
- fs/ubifs/orphan.c      | 94 +++++++++++++++++++++++++++++++-------------------
- fs/ubifs/recovery.c    |  2 +-
- fs/ubifs/sb.c          | 52 ++++++++++++++--------------
- fs/ubifs/super.c       | 46 ++++++++++++++++++------
- fs/ubifs/tnc.c         | 16 ++++++---
- fs/ubifs/ubifs-media.h | 30 +++++++++++++++-
- fs/ubifs/ubifs.h       |  6 ++--
- 12 files changed, 338 insertions(+), 92 deletions(-)
