@@ -2,121 +2,175 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D56C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2F6C74A4B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7332064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:18:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="mvN0i43t"
+	by mail.kernel.org (Postfix) with ESMTP id A0D972064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfGNGSO (ORCPT
+        id S1728180AbfGNHBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 02:18:14 -0400
-Received: from mail-eopbgr690046.outbound.protection.outlook.com ([40.107.69.46]:19035
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726017AbfGNGSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 02:18:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d/sXfHUWVHPCK1XQWImSi7DguQw1tzDydvLBPCUfkMOFS5CiICkJBrRVBPfihjsPLs1dEGH5bl75ILBfFu6x5zuemmaFRcxFrqMwwy8vOS0E2xVXusxaU6K1l0BW50CQaFYR4eJW59uF2Qoy02twz7QjoL3ReCt+58/p9p4v61zsGlsEMN82pygAgm7iqwrG71Lr78AQA4xKfn7i4kFU8/DTGFXZtdhayRCfR2tiLYD4EeD36lad53YuhEtd7W5eG99F/Fw4cDWDlEy5tTMDM4kAc+nync+SbG2XUImJAWZWAfR57HH53s1jfEawiYHMv/0r8i6R2SWLxx1ARpmQfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gSUfX3PBid/14xFSIzXf+EReEjy75c+f7SpOMPpWhTQ=;
- b=b3OzSsxm9Y1XKceyr9pmHeNwO3et5kto2lCug8aM6NWqEwNYhhKZeTBUhUQxjMn4pd6Qfuh9aL/efXz8hLg6NurllokjEVrmlw1zpaD4LYJmjKWH8A12hgzU3Q5oQG5Vgv+o51dlp2ZhDoWn0pqsWw7Y665Xx9lp1zrFSAO50gIOi6TVHdOtERgFmGlBp5cmewDu6mXJNy/nKT5fW3YlG1iRxiY24Ix4jAR46WMagFZ3uZMrDJIz1p9cFS5fixbh1zW1cVKsX4ATmFH98vwA89WcLfH8TJImQL8/h6++chMy4TavEoIPe0vLYtPKo/wRWMSceYq50o+2USNx+rKnFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=vmware.com;dmarc=pass action=none
- header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gSUfX3PBid/14xFSIzXf+EReEjy75c+f7SpOMPpWhTQ=;
- b=mvN0i43t6wmYtzMjTzmuRI9ivMj4vX1z3xAzZwCknw8PqMJdq3ybBm2V+RSkTh38sG9NNUzM8GubrNidvkYgCIDYtBgBoMUMlO/O3CkzMiQVgkjkgZLJINpO0BtPcFWmo1mVx51Ri3pWnx/5CBDIOqCLPvUPEyecb6vU8BUeDoc=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4055.namprd05.prod.outlook.com (52.135.199.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.9; Sun, 14 Jul 2019 06:18:07 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2073.012; Sun, 14 Jul 2019
- 06:18:07 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Julien Freche <julienfreche@icloud.com>
-CC:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] vmw_balloon: Remove Julien from the maintainers list
-Thread-Topic: [PATCH] vmw_balloon: Remove Julien from the maintainers list
-Thread-Index: AQHVMPt0L6ZZyVuj50Kj0VV7uF8wRqbIslcAgAEDfYA=
-Date:   Sun, 14 Jul 2019 06:18:06 +0000
-Message-ID: <AF1518AA-309B-466F-ACD2-1CAD04A72716@vmware.com>
-References: <20190702100519.7464-1-namit@vmware.com>
- <20190713144920.GA7495@kroah.com>
-In-Reply-To: <20190713144920.GA7495@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [2601:647:4580:b719:e4b7:ae28:b76b:fe24]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ddafbebc-8e22-42d4-8504-08d70823095f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4055;
-x-ms-traffictypediagnostic: BYAPR05MB4055:
-x-microsoft-antispam-prvs: <BYAPR05MB4055E47F9199E91042FC20F2D0CC0@BYAPR05MB4055.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:534;
-x-forefront-prvs: 0098BA6C6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(189003)(199004)(36756003)(14444005)(486006)(53546011)(6116002)(102836004)(76176011)(4744005)(2906002)(99286004)(6506007)(71200400001)(71190400001)(316002)(54906003)(2616005)(11346002)(446003)(476003)(186003)(46003)(256004)(66446008)(64756008)(66476007)(66556008)(66946007)(91956017)(4326008)(76116006)(68736007)(5660300002)(305945005)(7736002)(8676002)(81156014)(81166006)(14454004)(229853002)(6436002)(86362001)(33656002)(6916009)(6486002)(478600001)(25786009)(53936002)(6246003)(8936002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4055;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5l8sHLrnyPwxX2/FUvmccl+dMdn1kK5AGuN5vibCIOkMPTHJaceab5s4I14FYIjoYGBkgi1AejWQndLFmD7YrQT9msJgKs0b3STPT9UCdCRgyH1gFYVoSp6AAet6oswR3MdKk0SLZm1WTSsN4EeCPE/+IdsbSCdohOj4vUMXwDbTvRLvBZu+FtBdvSVxQizy+ISrWJnVCVRM6F0CstJjMpHjyqFgINC48MBYJF0YL0aAHe3YtH4kSaE1eA1o0IhFLaYBtGo4soveIkUgdqrqTohgb46/ed30zwEL/BYy3oxaa5KvemUwEKq80Hud5cb+12Em94vht5MYFINHOoUfl2FOqTWPJNTvszms83FyN+1ZLrsJzhgL6EKfLMO+4pBLf+9O8wpy7F8L04QBp3UGfFmHi1kPSpaOsZL6jWHwoAo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F14C170831E01A4F84A6E68E2E86FF55@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 14 Jul 2019 03:01:35 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:35424 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbfGNHBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 03:01:34 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id DAD124EEE5;
+        Sun, 14 Jul 2019 09:01:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id 83Wg7f6TIzf1; Sun, 14 Jul 2019 09:01:20 +0200 (CEST)
+Date:   Sun, 14 Jul 2019 17:00:29 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190714070029.m53etvm3y4etidxt@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
+ <20190712125552.GL17978@ZenIV.linux.org.uk>
+ <20190712132553.GN17978@ZenIV.linux.org.uk>
+ <20190712150026.GO17978@ZenIV.linux.org.uk>
+ <20190713024153.GA3817@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddafbebc-8e22-42d4-8504-08d70823095f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2019 06:18:06.5569
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4055
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="33fhorotybcq4qkp"
+Content-Disposition: inline
+In-Reply-To: <20190713024153.GA3817@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jul 13, 2019, at 7:49 AM, Greg Kroah-Hartman <gregkh@linuxfoundation.o=
-rg> wrote:
->=20
-> On Tue, Jul 02, 2019 at 03:05:19AM -0700, Nadav Amit wrote:
->> Julien will not be a maintainer anymore.
->>=20
->> Signed-off-by: Nadav Amit <namit@vmware.com>
->> ---
->> MAINTAINERS | 1 -
->> 1 file changed, 1 deletion(-)
->>=20
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 01a52fc964da..f85874b1e653 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -16886,7 +16886,6 @@ F:	drivers/vme/
->> F:	include/linux/vme*
->>=20
->> VMWARE BALLOON DRIVER
->> -M:	Julien Freche <jfreche@vmware.com>
->=20
-> I need an ack/something from Julien please.
 
-Julien, can I please have you Acked-by?
+--33fhorotybcq4qkp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On 2019-07-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Fri, Jul 12, 2019 at 04:00:26PM +0100, Al Viro wrote:
+> > On Fri, Jul 12, 2019 at 02:25:53PM +0100, Al Viro wrote:
+> >=20
+> > > 	if (flags & LOOKUP_BENEATH) {
+> > > 		nd->root =3D nd->path;
+> > > 		if (!(flags & LOOKUP_RCU))
+> > > 			path_get(&nd->root);
+> > > 		else
+> > > 			nd->root_seq =3D nd->seq;
+> >=20
+> > BTW, this assignment is needed for LOOKUP_RCU case.  Without it
+> > you are pretty much guaranteed that lazy pathwalk will fail,
+> > when it comes to complete_walk().
+> >=20
+> > Speaking of which, what would happen if LOOKUP_ROOT/LOOKUP_BENEATH
+> > combination would someday get passed?
+>=20
+> I don't understand what's going on with ->r_seq in there - your
+> call of path_is_under() is after having (re-)sampled rename_lock,
+> but if that was the only .. in there, who's going to recheck
+> the value?  For that matter, what's to guarantee that the thing
+> won't get moved just as you are returning from handle_dots()?
+>=20
+> IOW, what does LOOKUP_IN_ROOT guarantee for caller (openat2())?
+
+I tried to explain this in the commit message for "namei: aggressively
+check for nd->root escape on ".." resolution", but I probably could've
+explained it better.
+
+The basic property being guaranteed by LOOKUP_IN_ROOT is that it will
+not result in resolution of a path component which was not inside the
+root of the dirfd tree at some point during resolution (and that all
+absolute symlink and ".." resolution will be done relative to the
+dirfd). This may smell slightly of chroot(2), because unfortunately it
+is a similar concept -- the reason for this is to allow for a more
+efficient way to safely resolve paths inside a rootfs than spawning a
+separate process to then pass back the fd to the caller.
+
+We don't want to do a path_is_under() check for every ".." (otherwise
+lookups have a quadratic slowdown when doing many ".."s), so I instead
+only do a check after a rename or a mount (which are the only operations
+which could change what ".." points to). And since we do the
+path_is_under() check if m_seq or r_seq need a retry, we can re-take
+them[+].
+
+The main reason why I don't re-check path_is_under() after handle_dots()
+is that there is no way to be sure that a racing rename didn't happen
+after your last path_is_under() check. The rename could happen after the
+syscall returns, after all.
+
+So, the main purpose of the check is to make sure that a ".."s after a
+rename doesn't result in an escape. If the rename happens after we've
+traversed through a ".." that means that the ".." was inside the root in
+the first place (a root ".." is handled by follow_dotdot). If the rename
+happens after we've gone through handle_dots() and there is no
+subsequent ".." then to userspace it looks identical to the rename
+occurring after the syscall has returned. If there is a subsequent ".."
+after a racing rename then we may have moved into a path that wasn't
+path_is_under() and so we have to check it.
+
+The only way I could see you could solve the race completely is if you
+had a way for userspace to lock things from being able to be renamed (or
+MS_MOVE'd). And that feels like a really bad idea to me.
+
+[+]: You asked why don't I re-take m_seq. The reason is that I don't
+	 fully understand all the other m_seq checks being done during
+	 resolution, and we aren't definitely doing them all in
+	 handle_dots(). So I assumed re-taking it could result in me
+	 breaking RCU-walk which obviously would be bad. Since I am the only
+	 thing using nd->r_seq, I can re-take it without issue.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--33fhorotybcq4qkp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSrTCAAKCRCdlLljIbnQ
+EpwpAQD9KgKhzC1YZRQyynlFOIyKp8VXEUfhiNokL0RBBx4G5AD7BovFdb8KzxSf
+QrrP/0Vq6p6AFs4sMQbjc9M6I/5gzQ8=
+=fUib
+-----END PGP SIGNATURE-----
+
+--33fhorotybcq4qkp--
