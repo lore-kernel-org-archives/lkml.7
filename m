@@ -2,90 +2,105 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8DFC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB278C74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D982063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C137220896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563117718;
+	bh=ILrUsZZP1jcAU1UmSStKRc3zHCaHr61V33dU0wu2u8Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LjLVR+G7NscVt8JUcXi3saQwUQ7EpetiLld4vpCVxIpToaXdQtIS1TgXaEm133TyZ
+	 LSl8jPaama+UgcYjdlYSs0Lo6K/iaU4gpNuETJMBdfG+KOVSxaXcc01Ai9x8FKim6P
+	 7/n1rMBLhS+TQd0WSBHAD4vqL7ZEzCzG02cO3Mt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfGNPVJ (ORCPT
+        id S1728536AbfGNPV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:21:09 -0400
-Received: from out4437.biz.mail.alibaba.com ([47.88.44.37]:40350 "EHLO
-        out4437.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726403AbfGNPVJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:21:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TWrpoRa_1563117663;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TWrpoRa_1563117663)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 14 Jul 2019 23:21:03 +0800
-Subject: Re: [PATCH 01/12] Documentation: move architectures together
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-sh@vger.kernel.org
-References: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
- <20190712113427.62fa7ffc@lwn.net>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <36c522c5-975e-e38e-daad-0f3d9f93b186@linux.alibaba.com>
-Date:   Sun, 14 Jul 2019 23:21:03 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Sun, 14 Jul 2019 11:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726799AbfGNPV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 11:21:57 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C93F2063F;
+        Sun, 14 Jul 2019 15:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563117716;
+        bh=ILrUsZZP1jcAU1UmSStKRc3zHCaHr61V33dU0wu2u8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WI+2np0eZhQ7uKg5kcXd/SUVeEvT0wz8jf0mBT80mUYkqUEpGRBa8AhdiQBxi9w6o
+         w7NaKeT9w/TfiTFfSfbYOObFaq+jZ4itPvoljpZjLZYpNMF/1CmatDJHfHtIPUR9bO
+         LC4BOM4bGcUwBeGEKVxahBjcb6GYcTZw3CJrKbRQ=
+Date:   Sun, 14 Jul 2019 16:21:49 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Luca Weiss <luca@z3ntu.xyz>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Hannes Schmelzer <hannes.schmelzer@br-automation.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Martijn Braam <martijn@brixit.nl>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ~martijnbraam/pmos-upstream@lists.sr.ht
+Subject: Re: [PATCH 2/3] dt-bindings: iio: light: add stk33xx
+Message-ID: <20190714162149.0812b187@archlinux>
+In-Reply-To: <CAL_JsqJU5nBf+tzudpXVseeb8FMoJUK3ANJs3btb=6gbcG41EA@mail.gmail.com>
+References: <20190703180604.9840-1-luca@z3ntu.xyz>
+        <20190703180604.9840-2-luca@z3ntu.xyz>
+        <CAL_JsqJU5nBf+tzudpXVseeb8FMoJUK3ANJs3btb=6gbcG41EA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190712113427.62fa7ffc@lwn.net>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon,
+On Fri, 5 Jul 2019 10:23:11 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-Thanks for quick response!
-
-ÔÚ 2019/7/13 ÉÏÎç1:34, Jonathan Corbet Ð´µÀ:
-> On Fri, 12 Jul 2019 10:20:07 +0800
-> Alex Shi <alex.shi@linux.alibaba.com> wrote:
+> On Wed, Jul 3, 2019 at 12:06 PM Luca Weiss <luca@z3ntu.xyz> wrote:
+> >
+> > Add binding documentation for the stk33xx family of ambient light
+> > sensors.
+> >
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> >  .../bindings/iio/light/stk33xx.yaml           | 49 +++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/light/stk33xx.yaml  
 > 
->> There are many different archs in Documentation/ dir, it's better to
->> move them together in 'Documentation/arch' which follows from kernel source.
-> 
-> So this seems certain to collide badly with Mauro's RST-conversion monster
-> patch set.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-I don't mean that, sorry, and we can figure out if both of them are worthy to be picked up.
+Hmm. Not totally sure it makes sense to list me as the maintainer,
+but I don't suppose it really matters as I think the author has moved
+onto other things and it'll fall back on me.
 
-> 
-> More to the point, though...if we are going to thrash up things this
-> badly, we want to be sure that we're doing it right so we don't end up
-> renaming everything again.  Grouping stuff into a new arch/ subdirectory
-> adds a bit of order, but it doesn't do much toward trying to organize our
-> documentation for its readers, and it doesn't help us to modernize the
-> docs and get rid of the old, useless stuff.  A quick check shows that many
-> of these files have seen no changes other than typo fixes since the
-> beginning of the Git era.
+Anyone who wants to pick up this one is most welcome!
 
-Right, there is some docs which need to be update or even drop, and a reorder would be a timing to push each of arch maintainer to do something, isn't it? Anyway, reordering  documents like kernel source dir could be one of choices. :)
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-> 
-> So, in my mind, this needs some thought.  Maybe we want a
-> Documentation/arch in the end, but I'm not convinced that we should just
-> create it and fill it with a snow shovel.  This might be a good thing to
-> discuss at the kernel summit in September.
+Thanks,
 
-Thanks for considering, anyway, it could be a good start to get hands dirty whether the arch dir is needed. 
-
-Thanks
-Alex
+Jonathan
