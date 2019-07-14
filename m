@@ -2,111 +2,108 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9D7C742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1292DC742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CF52089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D894020896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563117774;
-	bh=raB9vkEEe7qFQ9TRMUvaSV5zb0Fq4CC95+AbgJOEm6s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cdS/HPbyS/sTatHpjbZNQAPam8J7Ctrtuj72mqvsAWfIl3R3RmGHlRZYyEWY4sD7Q
-	 CltHflKC3puawUV7n5PF5ROxgDfDKDiQhyWQWwRzCTyhi35YAz6Q4ZK2ZPKz5Qv0K0
-	 FTPG5w2YIAxHCWQcYDnOLESJd/uW/rDep7irfDXs=
+	s=default; t=1563117798;
+	bh=vKxZjK6XQ4xFvpdZPzxOyvZtQo9jmMou4Hq4FfVgY1Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IaXKoSx7vLNl9leT/q6KRxQ9079zxxkrAIBUCN9RKFFqW5MhZObyvAuVDGvm8qq6o
+	 boPZXnpXajB/TNQfJ1K3HBTe5ELAJw4tHsm5RBy64oqPHbjpdiJqab4bBwu2meGZ/G
+	 rWAG5v+PcT/m1cj2YPYZsLD3F7o/ZPj00yjORSQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfGNPWx (ORCPT
+        id S1728581AbfGNPXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:22:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
+        Sun, 14 Jul 2019 11:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbfGNPWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:22:53 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726783AbfGNPXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 11:23:17 -0400
+Received: from localhost (d192-24-91-215.try.wideopenwest.com [24.192.215.91])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B4F205F4;
-        Sun, 14 Jul 2019 15:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20557205F4;
+        Sun, 14 Jul 2019 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563117772;
-        bh=raB9vkEEe7qFQ9TRMUvaSV5zb0Fq4CC95+AbgJOEm6s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uPNWjp79LbcSMSwtaZg0xJpGhHkb2UzgB+Yw0T26r2qtSlp21AKcSR1L4/lVclFB4
-         O/93c1kguc+pJmqHaEcbe62wp0upDsdwUxe4yYLbzzq37uxt/+QkDxRdvXLsTF4y7s
-         DZo3z69rkcrNOI9pgYzURfcTzZaLtkuu+3hYkNG8=
-Date:   Sun, 14 Jul 2019 16:22:31 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Hannes Schmelzer <hannes.schmelzer@br-automation.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Martijn Braam <martijn@brixit.nl>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~martijnbraam/pmos-upstream@lists.sr.ht,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Michael Tretter <m.tretter@pengutronix.de>
-Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for sensortek
-Message-ID: <20190714162231.2b5c94bb@archlinux>
-In-Reply-To: <20190703180604.9840-1-luca@z3ntu.xyz>
-References: <20190703180604.9840-1-luca@z3ntu.xyz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1563117796;
+        bh=vKxZjK6XQ4xFvpdZPzxOyvZtQo9jmMou4Hq4FfVgY1Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0Cu3LLMyoHyzBiqSyU1BUzfK5WiotNftdNq4m8I3eGu/DDa2y4+56JasrHSWg1s1p
+         FUb9RmJnvG6gb6kPD20EDQZyqMPdCglHJQ8VQ0bS+V8r/fsi4Iyi1GYY8eVEUFpEf1
+         wpWx5n7QetKx9NbrtUttYx1W2TUMHDX6Pe2JRc6o=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH] x86/apic: Initialize TPR to block interrupts 16-31
+Date:   Sun, 14 Jul 2019 08:23:14 -0700
+Message-Id: <dc04a9f8b234d7b0956a8d2560b8945bcd9c4bf7.1563117760.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  3 Jul 2019 20:05:57 +0200
-Luca Weiss <luca@z3ntu.xyz> wrote:
+The APIC, per spec, is fundamentally confused and thinks that
+interrupt vectors 16-31 are valid.  This makes no sense -- the CPU
+reserves vectors 0-31 for exceptions (faults, traps, etc).
+Obviously, no device should actually produce an interrupt with
+vector 16-31, but we can improve robustness by setting the APIC TPR
+class to 1, which will prevent delivery of an interrupt with a
+vector below 32.
 
-> Sensortek Technology Corp. produces Proximity Sensors with ALS and
-> Accelerometers.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+Note: this is *not* intended as a security measure against attackers
+who control malicious hardware.  Any PCI or similar hardware that
+can be controlled by an attacker MUST be behind a functional IOMMU
+that remaps interrupts.  The purpose of this patch is to reduce the
+chance that a certain class of device malfunctions crashes the
+kernel in hard-to-debug ways.
 
-Thanks,
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/kernel/apic/apic.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Jonathan
-
-> ---
-> This patch series depends on "iio: light: stk3310: Add support for
-> stk3335", that's curerntly in linux-next.
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 342bb23e0a73..d197c9609ea7 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -813,6 +813,8 @@ patternProperties:
->      description: Semtech Corporation
->    "^sensirion,.*":
->      description: Sensirion AG
-> +  "^sensortek,.*":
-> +    description: Sensortek Technology Corporation
->    "^sff,.*":
->      description: Small Form Factor Committee
->    "^sgd,.*":
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 177aa8ef2afa..ff31322f8839 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1531,11 +1531,14 @@ static void setup_local_APIC(void)
+ #endif
+ 
+ 	/*
+-	 * Set Task Priority to 'accept all'. We never change this
+-	 * later on.
++	 * Set Task Priority to 'accept all except vectors 0-31'.  An APIC
++	 * vector in the 16-31 range could be delivered if TPR == 0, but we
++	 * would think it's an exception and terrible things will happen.  We
++	 * never change this later on.
+ 	 */
+ 	value = apic_read(APIC_TASKPRI);
+ 	value &= ~APIC_TPRI_MASK;
++	value |= 0x10;
+ 	apic_write(APIC_TASKPRI, value);
+ 
+ 	apic_pending_intr_clear();
+-- 
+2.21.0
 
