@@ -2,113 +2,107 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39B0C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD81C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7322063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463AB2089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dr3arrr2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsyK6x4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfGNR1P (ORCPT
+        id S1728705AbfGNR2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 13:27:15 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35312 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbfGNR1P (ORCPT
+        Sun, 14 Jul 2019 13:28:33 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39850 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbfGNR2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 13:27:15 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so13376982qto.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:27:14 -0700 (PDT)
+        Sun, 14 Jul 2019 13:28:32 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f17so2373211pfn.6
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:28:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XZMU82wNnKmKEZ0XxgcXJZsoyOLcOo4xlcTKRS8FhBc=;
-        b=Dr3arrr2Pf8i39snL2FYw0NKg65N4FJTIH5KT3NN75mEX4YXnkGXkCcbuIjDeLWrY7
-         zuoOV0EEo8NSoJ0Taxfz1V73Cx+L+So7W45uXMBgnhRBEKx3AAkfSbFth7OavjQ6QKWT
-         3cxOATI3H8gqfwZ0V6nyH1SN13v/6JCnpyCsuuMwdslkF/h6fmVZW30TAl8nWgpWDsob
-         UA2houJ565w726xZqph76sIPRMrbf9ITfznB1rg/Nkj8aq52LPvOQopNpqg9FWY5WYUZ
-         XDlEDmjOfE4t4KcGDByWAvnKvktgsDM4/scz7qA3KijtT3ikFZkaeETMHuqDJyFlnVn7
-         2R3A==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Eg/DP7K1WzO3LKkPNWtjmpuyH7UktmZHkdh6/bI4Cu0=;
+        b=JsyK6x4IIiDh+I9mbXhj+rgYkW2WSYpo3quaqhQlZPNey6c5ioCyqypxTQuADUSkAC
+         zVOaXrA6raVvlGhbcqSojvguzmYgV0ESFwq6QSaj7lAEiAKVrOmKPpuTGtBCtJ3Y5Zsg
+         4aeCK4XSqgqk98qNcA+w8b2jbg0XCyxbyn5dtpcG7alAkSMi9pVCR/hUtEuJx1FsIg4T
+         spxPSj+fgkkZfbN9YaB4/eOhiGyelLe//Sb/328jP96r/gFDoE2Lh6P0KZEy9CayY4OP
+         VFrKhgDFXijPWU+0n5psEwDq9UWuPkD1Mg44feFq0V2SkzyzVhFzBjtwEux5H2ghzqep
+         S8GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XZMU82wNnKmKEZ0XxgcXJZsoyOLcOo4xlcTKRS8FhBc=;
-        b=ay04lUssIuo9Pr7BHP+kvRz29DZaa5Mw2tSzYERbnDO9PN89zukhtkdjnKNXpmBOea
-         kXFjdVbnJECcoQ8yxEptI8qLhbZK3MS252vfSVooeyhE/fYV/0SxWet80abWZsUD/jpA
-         TQPAtjxPZ+w0ldGA02GHwFCITegN/FJoHWVMC4dMldSA/vT/6qpHNQREQHlvXSP95O03
-         vQsvwJmd7Mdo8KGUfUOoHxsLSVjvBVAcIltCtK5+JWGhrOsjI/BxLjD8TiLfyjwvV5UW
-         E9539wIoue4lKRkTIrWeGUkSBMFYxXBMhZ/iNRLkrVmrKQrZZPdVYj2Ntd8Sqo1Fz6Ud
-         Lcqg==
-X-Gm-Message-State: APjAAAVMT/ERVbhwy6k/QvhC20DSlnT3TSsri4Pc1u+nSkj5x+RVrl1E
-        QEYzbnYfSLgxz1rBUwSgZw==
-X-Google-Smtp-Source: APXvYqxWIYI5kvypURV1il95tMRAkixqH5KL20pUR/4A1XY/9aDFQeiVy4dPTEVaqXGp7NWBGAaKVQ==
-X-Received: by 2002:ac8:341d:: with SMTP id u29mr14117813qtb.320.1563125234391;
-        Sun, 14 Jul 2019 10:27:14 -0700 (PDT)
-Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
-        by smtp.googlemail.com with ESMTPSA id z19sm7266767qtu.43.2019.07.14.10.27.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 10:27:13 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     markus.elfring@web.de, Keyur Patel <iamkeyur96@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Gromm <christian.gromm@microchip.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5] staging: most: Delete an error message for a failed memory allocation
-Date:   Sun, 14 Jul 2019 13:27:06 -0400
-Message-Id: <20190714172708.5067-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190714164126.3159-1-iamkeyur96@gmail.com>
-References: <20190714164126.3159-1-iamkeyur96@gmail.com>
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Eg/DP7K1WzO3LKkPNWtjmpuyH7UktmZHkdh6/bI4Cu0=;
+        b=A2ut2dhg7qWHqEZYCayBYR/4ES6IEz/93qZ+nKPH0C7/wgdXm9o3KaHi1In3R89j+i
+         3BOZzu7G0goZ6CjMHgd9vfZGKJVIKmVZazQAzyQLzztyKbs/40rF+hdQK72ldrYvcn3H
+         3tdFZb3PWsqA9d4NHk1p6TuRjT7qelQhlJQA4/SYV1xqnoPcXYxdX1MwpM4U9+EzHL/+
+         EWn1V/OCf6Fmoi44ZimsusWdID8Qledvpm3nuamZc6vAyhjXjtGANx0/auc4zgCVMlcm
+         GDbC2l9Oi8Z+G7bQptrKajZ9/hFNDguCGBBYqX7NODFkiFO7aOn0pC4e+I2fDEnLJovv
+         RdNw==
+X-Gm-Message-State: APjAAAVEaItSe7d0Wi7000XoO4ZIlOy27mB+uLMn/C5IccoXuw/edKyv
+        yfGcL8edas3wTfyoejt/UZE=
+X-Google-Smtp-Source: APXvYqyxA1WfTxRlxIFCPjpD2t2gTPEmD3S2Oie4bywlLZUETO7LwfA9DHzey256spKkh5OV166VIw==
+X-Received: by 2002:a63:fb14:: with SMTP id o20mr11837553pgh.136.1563125312117;
+        Sun, 14 Jul 2019 10:28:32 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id u1sm12971306pgi.28.2019.07.14.10.28.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jul 2019 10:28:31 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 22:58:26 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vatsala Narang <vatsalanarang@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, Larry.Finger@lwfinger.net
+Subject: [PATCH] staging: rtl8723bs: core: Remove code valid only for 5GHz
+Message-ID: <20190714172826.GA6950@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kfifo_alloc() failure generates enough information and doesn't need 
-to be accompanied by another error statement.
+As per TODO ,remove code valid only for 5 GHz(channel > 14).
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
-Changes in v5:
-- change subject line
-- simplify commit description
-- fix checkpatch warning
-- removed braces around if
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
- drivers/staging/most/cdev/cdev.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
-index d0cc0b746107..724d098aeef0 100644
---- a/drivers/staging/most/cdev/cdev.c
-+++ b/drivers/staging/most/cdev/cdev.c
-@@ -463,10 +463,8 @@ static int comp_probe(struct most_interface *iface, int channel_id,
- 	spin_lock_init(&c->unlink);
- 	INIT_KFIFO(c->fifo);
- 	retval = kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);
--	if (retval) {
--		pr_info("failed to alloc channel kfifo");
-+	if (retval)
- 		goto err_del_cdev_and_free_channel;
--	}
- 	init_waitqueue_head(&c->wq);
- 	mutex_init(&c->io_mutex);
- 	spin_lock_irqsave(&ch_list_lock, cl_flags);
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index 4285844..967da71 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -295,11 +295,7 @@ static void init_mlme_ext_priv_value(struct adapter *padapter)
+ 
+ 	init_mlme_default_rate_set(padapter);
+ 
+-	if (pmlmeext->cur_channel > 14)
+-		pmlmeext->tx_rate = IEEE80211_OFDM_RATE_6MB;
+-	else
+-		pmlmeext->tx_rate = IEEE80211_CCK_RATE_1MB;
+-
++	pmlmeext->tx_rate = IEEE80211_CCK_RATE_1MB;
+ 	pmlmeext->sitesurvey_res.state = SCAN_DISABLE;
+ 	pmlmeext->sitesurvey_res.channel_idx = 0;
+ 	pmlmeext->sitesurvey_res.bss_cnt = 0;
 -- 
-2.22.0
+2.7.4
 
