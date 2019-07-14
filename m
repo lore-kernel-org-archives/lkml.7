@@ -2,107 +2,271 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD81C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8049C74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463AB2089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsyK6x4I"
+	by mail.kernel.org (Postfix) with ESMTP id AB3522089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563125492;
+	bh=HuB3BVI2g5z3r2wDBCVyjNx6fegiGzsieOeh83ziyF8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=B3FFGZy9AP7yAqc7NuxAJ2m2rZEI170dyiQOmurC/oLkzU0h+vOUsb0BU7wDY08AZ
+	 bNfOyyf6oTVoGNihv4L1i3gylraHCW1EVGMeyI1fuAaxsgcEwXYfh2wmw6d9eql4fO
+	 5kRB0NkYO2Q9t4QOjfewy9NLpUf57bgJ8qzLkAmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfGNR2d (ORCPT
+        id S1728694AbfGNRbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 13:28:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39850 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbfGNR2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 13:28:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so2373211pfn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Eg/DP7K1WzO3LKkPNWtjmpuyH7UktmZHkdh6/bI4Cu0=;
-        b=JsyK6x4IIiDh+I9mbXhj+rgYkW2WSYpo3quaqhQlZPNey6c5ioCyqypxTQuADUSkAC
-         zVOaXrA6raVvlGhbcqSojvguzmYgV0ESFwq6QSaj7lAEiAKVrOmKPpuTGtBCtJ3Y5Zsg
-         4aeCK4XSqgqk98qNcA+w8b2jbg0XCyxbyn5dtpcG7alAkSMi9pVCR/hUtEuJx1FsIg4T
-         spxPSj+fgkkZfbN9YaB4/eOhiGyelLe//Sb/328jP96r/gFDoE2Lh6P0KZEy9CayY4OP
-         VFrKhgDFXijPWU+0n5psEwDq9UWuPkD1Mg44feFq0V2SkzyzVhFzBjtwEux5H2ghzqep
-         S8GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Eg/DP7K1WzO3LKkPNWtjmpuyH7UktmZHkdh6/bI4Cu0=;
-        b=A2ut2dhg7qWHqEZYCayBYR/4ES6IEz/93qZ+nKPH0C7/wgdXm9o3KaHi1In3R89j+i
-         3BOZzu7G0goZ6CjMHgd9vfZGKJVIKmVZazQAzyQLzztyKbs/40rF+hdQK72ldrYvcn3H
-         3tdFZb3PWsqA9d4NHk1p6TuRjT7qelQhlJQA4/SYV1xqnoPcXYxdX1MwpM4U9+EzHL/+
-         EWn1V/OCf6Fmoi44ZimsusWdID8Qledvpm3nuamZc6vAyhjXjtGANx0/auc4zgCVMlcm
-         GDbC2l9Oi8Z+G7bQptrKajZ9/hFNDguCGBBYqX7NODFkiFO7aOn0pC4e+I2fDEnLJovv
-         RdNw==
-X-Gm-Message-State: APjAAAVEaItSe7d0Wi7000XoO4ZIlOy27mB+uLMn/C5IccoXuw/edKyv
-        yfGcL8edas3wTfyoejt/UZE=
-X-Google-Smtp-Source: APXvYqyxA1WfTxRlxIFCPjpD2t2gTPEmD3S2Oie4bywlLZUETO7LwfA9DHzey256spKkh5OV166VIw==
-X-Received: by 2002:a63:fb14:: with SMTP id o20mr11837553pgh.136.1563125312117;
-        Sun, 14 Jul 2019 10:28:32 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id u1sm12971306pgi.28.2019.07.14.10.28.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 10:28:31 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 22:58:26 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vatsala Narang <vatsalanarang@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, Larry.Finger@lwfinger.net
-Subject: [PATCH] staging: rtl8723bs: core: Remove code valid only for 5GHz
-Message-ID: <20190714172826.GA6950@hari-Inspiron-1545>
+        Sun, 14 Jul 2019 13:31:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728164AbfGNRbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 13:31:31 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2214D20644;
+        Sun, 14 Jul 2019 17:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563125490;
+        bh=HuB3BVI2g5z3r2wDBCVyjNx6fegiGzsieOeh83ziyF8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I2hXLTGtBpcjXymMBR4WJM/Qtp2KwdzKVLeogoDAJQJTKVRIMK+szk2iWoC7imrvp
+         2JJSVuFuZZcgiB6Safmci47VTG9jM0ehXmkuzA6LP/ctwSizWY1zRiY/dF27022WxH
+         N76rsezdyH3Kt6m7ex4TyJX0fh6nfXZqnXfo6XM8=
+Date:   Sun, 14 Jul 2019 18:31:23 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] iio: common: cros_ec_sensors: Expose
+ cros_ec_sensors frequency range via iio sysfs
+Message-ID: <20190714183123.40855630@archlinux>
+In-Reply-To: <27edd1c47f6d741ee2bfa9ad86c45345e1878ff5.1562672771.git.fabien.lahoudere@collabora.com>
+References: <cover.1562672771.git.fabien.lahoudere@collabora.com>
+        <27edd1c47f6d741ee2bfa9ad86c45345e1878ff5.1562672771.git.fabien.lahoudere@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per TODO ,remove code valid only for 5 GHz(channel > 14).
+On Tue,  9 Jul 2019 13:53:45 +0200
+Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+> Embedded controller return minimum and maximum frequencies, unfortunately
+> we have no way to know the step for all available frequencies.
+> Even if not complete, we can return a list of known values using the
+> standard read_avail callback (IIO_CHAN_INFO_SAMP_FREQ) to provide them to
+> userland.
+> 
+> Now cros_ec_* sensors provides frequencies values in sysfs like this:
+> "0 min max". 0 is always true to disable the sensor.
+> 
+> Default frequencies are provided for earlier protocol.
+> 
+> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+There is some trailing whitespace in here, and with the high level
+of other work going on in this driver a lot of fuzz.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 4285844..967da71 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -295,11 +295,7 @@ static void init_mlme_ext_priv_value(struct adapter *padapter)
- 
- 	init_mlme_default_rate_set(padapter);
- 
--	if (pmlmeext->cur_channel > 14)
--		pmlmeext->tx_rate = IEEE80211_OFDM_RATE_6MB;
--	else
--		pmlmeext->tx_rate = IEEE80211_CCK_RATE_1MB;
--
-+	pmlmeext->tx_rate = IEEE80211_CCK_RATE_1MB;
- 	pmlmeext->sitesurvey_res.state = SCAN_DISABLE;
- 	pmlmeext->sitesurvey_res.channel_idx = 0;
- 	pmlmeext->sitesurvey_res.bss_cnt = 0;
--- 
-2.7.4
+So with the whitespace fixed,
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  3 +
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 65 +++++++++++++++++++
+>  drivers/iio/light/cros_ec_light_prox.c        |  3 +
+>  .../linux/iio/common/cros_ec_sensors_core.h   | 21 ++++++
+>  4 files changed, 92 insertions(+)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> index 17af4e0fd5f8..2f1b6d8d617b 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> @@ -175,6 +175,7 @@ static int cros_ec_sensors_write(struct iio_dev *indio_dev,
+>  static const struct iio_info ec_sensors_info = {
+>  	.read_raw = &cros_ec_sensors_read,
+>  	.write_raw = &cros_ec_sensors_write,
+> +	.read_avail = &cros_ec_sensors_core_read_avail,
+>  };
+>  
+>  static int cros_ec_sensors_probe(struct platform_device *pdev)
+> @@ -211,6 +212,8 @@ static int cros_ec_sensors_probe(struct platform_device *pdev)
+>  			BIT(IIO_CHAN_INFO_SCALE) |
+>  			BIT(IIO_CHAN_INFO_FREQUENCY) |
+>  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> +		channel->info_mask_shared_by_all_available = 
+> +			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  		channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+>  		channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+>  		channel->scan_index = i;
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 81111af8a167..805652250960 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -50,6 +50,37 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>  	return ret;
+>  }
+>  
+> +static void get_default_min_max_freq(enum motionsensor_type type,
+> +				     u32 *min_freq,
+> +				     u32 *max_freq)
+> +{
+> +	switch (type) {
+> +	case MOTIONSENSE_TYPE_ACCEL:
+> +	case MOTIONSENSE_TYPE_GYRO:
+> +		*min_freq = 12500;
+> +		*max_freq = 100000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_MAG:
+> +		*min_freq = 5000;
+> +		*max_freq = 25000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_PROX:
+> +	case MOTIONSENSE_TYPE_LIGHT:
+> +		*min_freq = 100;
+> +		*max_freq = 50000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_BARO:
+> +		*min_freq = 250;
+> +		*max_freq = 20000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_ACTIVITY:
+> +	default:
+> +		*min_freq = 0;
+> +		*max_freq = 0;
+> +		break;
+> +	}
+> +}
+> +
+>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  			      struct iio_dev *indio_dev,
+>  			      bool physical_device)
+> @@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  		}
+>  		state->type = state->resp->info.type;
+>  		state->loc = state->resp->info.location;
+> +
+> +		/* 0 is a correct value used to stop the device */
+> +		state->frequencies[0] = 0;
+> +		if (state->msg->version < 3) {
+> +			get_default_min_max_freq(state->resp->info.type,
+> +						 &state->frequencies[1],
+> +						 &state->frequencies[2]);
+> +		} else {
+> +			state->frequencies[1] =
+> +			    state->resp->info_3.min_frequency;
+> +			state->frequencies[2] =
+> +			    state->resp->info_3.max_frequency;
+> +		}
+>  	}
+>  
+>  	return 0;
+> @@ -461,6 +505,27 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>  }
+>  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
+>  
+> +int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+> +				    struct iio_chan_spec const *chan,
+> +				    const int **vals,
+> +				    int *type,
+> +				    int *length,
+> +				    long mask)
+> +{
+> +	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*length = ARRAY_SIZE(state->frequencies);
+> +		*vals = (const int *)&state->frequencies;
+> +		*type = IIO_VAL_INT;
+> +		return IIO_AVAIL_LIST;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
+> +
+>  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+>  			       struct iio_chan_spec const *chan,
+>  			       int val, int val2, long mask)
+> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+> index 308ee6ff2e22..c62cb022b6bc 100644
+> --- a/drivers/iio/light/cros_ec_light_prox.c
+> +++ b/drivers/iio/light/cros_ec_light_prox.c
+> @@ -164,6 +164,7 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
+>  static const struct iio_info cros_ec_light_prox_info = {
+>  	.read_raw = &cros_ec_light_prox_read,
+>  	.write_raw = &cros_ec_light_prox_write,
+> +	.read_avail = &cros_ec_sensors_core_read_avail,
+>  };
+>  
+>  static int cros_ec_light_prox_probe(struct platform_device *pdev)
+> @@ -198,6 +199,8 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
+>  	channel->info_mask_shared_by_all =
+>  		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+>  		BIT(IIO_CHAN_INFO_FREQUENCY);
+> +	channel->info_mask_shared_by_all_available = 
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+>  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+>  	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+>  	channel->scan_type.shift = 0;
+> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> index 0c636b9fe8d7..a9623111f7c9 100644
+> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> @@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
+>  				    unsigned long scan_mask, s16 *data);
+>  
+>  	int curr_sampl_freq;
+> +
+> +	/* Table of known available frequencies : 0, Min and Max in mHz */
+> +	int frequencies[3];
+>  };
+>  
+>  /**
+> @@ -150,6 +153,24 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
+>  			      struct iio_chan_spec const *chan,
+>  			      int *val, int *val2, long mask);
+>  
+> +/**
+> + * cros_ec_sensors_core_read_avail() - get available values
+> + * @indio_dev:		pointer to state information for device
+> + * @chan:	channel specification structure table
+> + * @vals:	list of available values
+> + * @type:	type of data returned
+> + * @length:	number of data returned in the array
+> + * @mask:	specifies which values to be requested
+> + *
+> + * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
+> + */
+> +int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+> +				    struct iio_chan_spec const *chan,
+> +				    const int **vals,
+> +				    int *type,
+> +				    int *length,
+> +				    long mask);
+> +
+>  /**
+>   * cros_ec_sensors_core_write() - function to write a value to the sensor
+>   * @st:		pointer to state information for device
 
