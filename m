@@ -2,460 +2,766 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEABC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E44DC74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476D720896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D742A20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 13:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6MTh72C"
+	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="SrHMRmSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfGNM7A (ORCPT
+        id S1728413AbfGNNQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 08:59:00 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46300 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfGNM7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 08:59:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so14255836wru.13;
-        Sun, 14 Jul 2019 05:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=6sdYGedIRUVQVE3wRYCsjYoZgI0CWb7YK/4EmIjw5n0=;
-        b=O6MTh72CydHm8Tp/F0gLwOmRCAVrM+ZuPWQjZJitMFIjakZcsjyzKcpN/g72xiiQEg
-         /C08Mibq5VO/VypIpY8z4wr8bvmDbeB5y+e2+x2JZzqShSAh+Pdsd4JQ8rtEJU2caN2n
-         1XofIYR6hlt3heNXq3fMH97u6QmdfDSIaAOCwX0XiVtfisq37BSxaEOVGUdWcDphHR9h
-         Kr/EQPqbpjw3qaSRk73ItkZQm30imprcz+qGZs4bg7J/hwTIM2FHLitQBnXzHuwsYF5e
-         H1zMNAVwAi5XJEEOBWRQQoXicuJ3lbyM4NEqWGW1jKNVvIH8sF/6u2c9S8Vu/d2WaQAI
-         9oQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=6sdYGedIRUVQVE3wRYCsjYoZgI0CWb7YK/4EmIjw5n0=;
-        b=A1erP/v3Z6j5HyrKAWP7g8FOW0XgnYT3XRjhM/xIfDWXLPcSaIpnCi22liRcGXBjsf
-         dXc9jUy3s8MQpA/YSN40K83+94Vav+ZlMkcLJyLiEpkYLjDwi9HY5gRih/rynRbosEap
-         xLHTnWuX9ju1MHXdm3I+uxRgoAnq/i6cFLHP9SJsJR9tdybOcjhZ4s5uZ92nfC/F+ceS
-         n5J1Mv9t+j5SPT10swfwwHqrm/AWenoSdLC8iamAVrnuxJmvBIr43A/zFV1QyPvMpdVG
-         Zgw97XxbiwfDsXjaU/QjNRccwRiWqDP5x6IIqbvITLUNTCNxywMb99um7QrWjrf6thhv
-         tURw==
-X-Gm-Message-State: APjAAAVuEDX5h/YFfKWI5nhBIO10emz08sa9MhH062V9WoJNt+j+AAKK
-        CKqhaJZDb7//LomG8DPnlHYSOr7Z
-X-Google-Smtp-Source: APXvYqy0SnoxLbmLhI+l+W+Fi+pSk5jahgG9GS5wq66P8x4bVzQuUOskyiixsUW7girzH04IITll6g==
-X-Received: by 2002:a5d:5647:: with SMTP id j7mr22929598wrw.191.1563109135481;
-        Sun, 14 Jul 2019 05:58:55 -0700 (PDT)
-Received: from localhost ([41.220.75.172])
-        by smtp.gmail.com with ESMTPSA id o185sm13238127wmo.45.2019.07.14.05.58.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 05:58:54 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 13:58:31 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        sheriffesseson@gmail.com
-Subject: Re: [PATCH v8] Documentation: filesystem: Convert xfs.txt to ReST
-Message-ID: <20190714125831.GA19200@localhost>
+        Sun, 14 Jul 2019 09:16:47 -0400
+Received: from ns.pmeerw.net ([84.19.176.117]:45252 "EHLO ns.pmeerw.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728316AbfGNNQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 09:16:47 -0400
+X-Greylist: delayed 420 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jul 2019 09:16:45 EDT
+Received: by ns.pmeerw.net (Postfix, from userid 1000)
+        id BCE67E0376; Sun, 14 Jul 2019 15:09:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
+        t=1563109783; bh=JQbcTpEAC+VUyLY1ldi1aeC5H8d8I/i/5L25iI6dTZ0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=SrHMRmSy3HlQ5/DLBD3IFshoXz6KKr/T6n0H/jUXZJRDp+ZqNXB8CVHnVo0hXYPfL
+         ET5+SWdpiD4izMPIYRjGc5NSfI40Whb5AfFRHU33EbWGFAyP/5ODqzEVf9k1uTy028
+         KidhubGN+tOCx/DLcf1R+Jso303LJ+MWVOrMwzPI=
+Received: from localhost (localhost [127.0.0.1])
+        by ns.pmeerw.net (Postfix) with ESMTP id A3E59E00E1;
+        Sun, 14 Jul 2019 15:09:43 +0200 (CEST)
+Date:   Sun, 14 Jul 2019 15:09:43 +0200 (CEST)
+From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+cc:     jic23@kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, baylibre-upstreaming@groups.io
+Subject: Re: [PATCH v4 3/3] iio: Add PAT9125 optical tracker sensor
+In-Reply-To: <20190713080455.17513-4-amergnat@baylibre.com>
+Message-ID: <alpine.DEB.2.21.1907141441300.16024@vps.pmeerw.net>
+References: <20190713080455.17513-1-amergnat@baylibre.com> <20190713080455.17513-4-amergnat@baylibre.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/mixed; boundary="324302256-1915913582-1563109783=:16024"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move xfs.txt to admin-guide, convert xfs.txt to ReST and broken references
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
+--324302256-1915913582-1563109783=:16024
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-changes in v8:
-	- fix table of Deprecated and Removed options.
+On Sat, 13 Jul 2019, Alexandre Mergnat wrote:
 
- Documentation/admin-guide/index.rst           |   1 +
- .../xfs.txt => admin-guide/xfs.rst}           | 132 +++++++++---------
- Documentation/filesystems/dax.txt             |   2 +-
- MAINTAINERS                                   |   2 +-
- 4 files changed, 67 insertions(+), 70 deletions(-)
- rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (80%)
+some comments below inline
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 24fbe0568eff..0615ea3a744c 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
-    ras
-    bcache
-    ext4
-+   xfs
-    binderfs
-    pm/index
-    thunderbolt
-diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.rst
-similarity index 80%
-rename from Documentation/filesystems/xfs.txt
-rename to Documentation/admin-guide/xfs.rst
-index a5cbb5e0e3db..e76665a8f2f2 100644
---- a/Documentation/filesystems/xfs.txt
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -1,4 +1,6 @@
-+.. SPDX-License-Identifier: GPL-2.0
+> This adds support for PixArt Imaging’s miniature low power optical
+> navigation chip using LASER light source enabling digital surface tracking.
+> 
+> Features and datasheet: [0]
+> 
+> This IIO driver allows to read relative position from where the system
+> started on X and Y axis through two way:
+>   - Punctual "read_raw" which will issue a read in the device registers to
+>   get the delta between last/current read and return the addition of all
+>   the deltas.
+>   - Buffer read. Data can be retrieved using triggered buffer subscription
+>   (i.e. iio_readdev). The buffer payload is:
+>     |32 bits delta X|32 bits delta Y|timestamp|.
+
+32 bits are not actually needed, 16 bits would be enough
  
-+======================
- The SGI XFS Filesystem
- ======================
- 
-@@ -18,8 +20,6 @@ Mount Options
- =============
- 
- When mounting an XFS filesystem, the following options are accepted.
--For boolean mount options, the names with the (*) suffix is the
--default behaviour.
- 
-   allocsize=size
- 	Sets the buffered I/O end-of-file preallocation size when
-@@ -31,46 +31,43 @@ default behaviour.
- 	preallocation size, which uses a set of heuristics to
- 	optimise the preallocation size based on the current
- 	allocation patterns within the file and the access patterns
--	to the file. Specifying a fixed allocsize value turns off
-+	to the file. Specifying a fixed ``allocsize`` value turns off
- 	the dynamic behaviour.
- 
--  attr2
--  noattr2
-+  attr2 or noattr2
- 	The options enable/disable an "opportunistic" improvement to
- 	be made in the way inline extended attributes are stored
- 	on-disk.  When the new form is used for the first time when
--	attr2 is selected (either when setting or removing extended
-+	``attr2`` is selected (either when setting or removing extended
- 	attributes) the on-disk superblock feature bit field will be
- 	updated to reflect this format being in use.
- 
- 	The default behaviour is determined by the on-disk feature
--	bit indicating that attr2 behaviour is active. If either
--	mount option it set, then that becomes the new default used
-+	bit indicating that ``attr2`` behaviour is active. If either
-+	mount option is set, then that becomes the new default used
- 	by the filesystem.
- 
--	CRC enabled filesystems always use the attr2 format, and so
--	will reject the noattr2 mount option if it is set.
-+	CRC enabled filesystems always use the ``attr2`` format, and so
-+	will reject the ``noattr2`` mount option if it is set.
- 
--  discard
--  nodiscard (*)
-+  discard or nodiscard (default)
- 	Enable/disable the issuing of commands to let the block
- 	device reclaim space freed by the filesystem.  This is
- 	useful for SSD devices, thinly provisioned LUNs and virtual
- 	machine images, but may have a performance impact.
- 
--	Note: It is currently recommended that you use the fstrim
--	application to discard unused blocks rather than the discard
-+	Note: It is currently recommended that you use the ``fstrim``
-+	application to ``discard`` unused blocks rather than the ``discard``
- 	mount option because the performance impact of this option
- 	is quite severe.
- 
--  grpid/bsdgroups
--  nogrpid/sysvgroups (*)
-+  grpid/bsdgroups or nogrpid/sysvgroups (default)
- 	These options define what group ID a newly created file
--	gets.  When grpid is set, it takes the group ID of the
-+	gets.  When ``grpid`` is set, it takes the group ID of the
- 	directory in which it is created; otherwise it takes the
--	fsgid of the current process, unless the directory has the
--	setgid bit set, in which case it takes the gid from the
--	parent directory, and also gets the setgid bit set if it is
-+	``fsgid`` of the current process, unless the directory has the
-+	``setgid`` bit set, in which case it takes the ``gid`` from the
-+	parent directory, and also gets the ``setgid`` bit set if it is
- 	a directory itself.
- 
-   filestreams
-@@ -78,46 +75,42 @@ default behaviour.
- 	across the entire filesystem rather than just on directories
- 	configured to use it.
- 
--  ikeep
--  noikeep (*)
--	When ikeep is specified, XFS does not delete empty inode
--	clusters and keeps them around on disk.  When noikeep is
-+  ikeep or noikeep (default)
-+	When ``ikeep`` is specified, XFS does not delete empty inode
-+	clusters and keeps them around on disk.  When ``noikeep`` is
- 	specified, empty inode clusters are returned to the free
- 	space pool.
- 
--  inode32
--  inode64 (*)
--	When inode32 is specified, it indicates that XFS limits
-+  inode32 or inode64 (default)
-+	When ``inode32`` is specified, it indicates that XFS limits
- 	inode creation to locations which will not result in inode
- 	numbers with more than 32 bits of significance.
- 
--	When inode64 is specified, it indicates that XFS is allowed
-+	When ``inode64`` is specified, it indicates that XFS is allowed
- 	to create inodes at any location in the filesystem,
- 	including those which will result in inode numbers occupying
--	more than 32 bits of significance. 
-+	more than 32 bits of significance.
- 
--	inode32 is provided for backwards compatibility with older
-+	``inode32`` is provided for backwards compatibility with older
- 	systems and applications, since 64 bits inode numbers might
- 	cause problems for some applications that cannot handle
- 	large inode numbers.  If applications are in use which do
--	not handle inode numbers bigger than 32 bits, the inode32
-+	not handle inode numbers bigger than 32 bits, the ``inode32``
- 	option should be specified.
- 
--
--  largeio
--  nolargeio (*)
--	If "nolargeio" is specified, the optimal I/O reported in
--	st_blksize by stat(2) will be as small as possible to allow
-+  largeio or nolargeio (default)
-+	If ``nolargeio`` is specified, the optimal I/O reported in
-+	``st_blksize`` by **stat(2)** will be as small as possible to allow
- 	user applications to avoid inefficient read/modify/write
- 	I/O.  This is typically the page size of the machine, as
- 	this is the granularity of the page cache.
- 
--	If "largeio" specified, a filesystem that was created with a
--	"swidth" specified will return the "swidth" value (in bytes)
--	in st_blksize. If the filesystem does not have a "swidth"
--	specified but does specify an "allocsize" then "allocsize"
-+	If ``largeio`` is specified, a filesystem that was created with a
-+	``swidth`` specified will return the ``swidth`` value (in bytes)
-+	in ``st_blksize``. If the filesystem does not have a ``swidth``
-+	specified but does specify an ``allocsize`` then ``allocsize``
- 	(in bytes) will be returned instead. Otherwise the behaviour
--	is the same as if "nolargeio" was specified.
-+	is the same as if ``nolargeio`` was specified.
- 
-   logbufs=value
- 	Set the number of in-memory log buffers.  Valid numbers
-@@ -127,7 +120,7 @@ default behaviour.
- 
- 	If the memory cost of 8 log buffers is too high on small
- 	systems, then it may be reduced at some cost to performance
--	on metadata intensive workloads. The logbsize option below
-+	on metadata intensive workloads. The ``logbsize`` option below
- 	controls the size of each buffer and so is also relevant to
- 	this case.
- 
-@@ -138,7 +131,7 @@ default behaviour.
- 	and 32768 (32k).  Valid sizes for version 2 logs also
- 	include 65536 (64k), 131072 (128k) and 262144 (256k). The
- 	logbsize must be an integer multiple of the log
--	stripe unit configured at mkfs time.
-+	stripe unit configured at **mkfs(8)** time.
- 
- 	The default value for for version 1 logs is 32768, while the
- 	default value for version 2 logs is MAX(32768, log_sunit).
-@@ -153,21 +146,21 @@ default behaviour.
-   noalign
- 	Data allocations will not be aligned at stripe unit
- 	boundaries. This is only relevant to filesystems created
--	with non-zero data alignment parameters (sunit, swidth) by
--	mkfs.
-+	with non-zero data alignment parameters (``sunit``, ``swidth``) by
-+	**mkfs(8)**.
- 
-   norecovery
- 	The filesystem will be mounted without running log recovery.
- 	If the filesystem was not cleanly unmounted, it is likely to
--	be inconsistent when mounted in "norecovery" mode.
-+	be inconsistent when mounted in ``norecovery`` mode.
- 	Some files or directories may not be accessible because of this.
--	Filesystems mounted "norecovery" must be mounted read-only or
-+	Filesystems mounted ``norecovery`` must be mounted read-only or
- 	the mount will fail.
- 
-   nouuid
- 	Don't check for double mounted file systems using the file
--	system uuid.  This is useful to mount LVM snapshot volumes,
--	and often used in combination with "norecovery" for mounting
-+	system ``uuid``.  This is useful to mount LVM snapshot volumes,
-+	and often used in combination with ``norecovery`` for mounting
- 	read-only snapshots.
- 
-   noquota
-@@ -176,15 +169,15 @@ default behaviour.
- 
-   uquota/usrquota/uqnoenforce/quota
- 	User disk quota accounting enabled, and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   gquota/grpquota/gqnoenforce
- 	Group disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   pquota/prjquota/pqnoenforce
- 	Project disk quota accounting enabled and limits (optionally)
--	enforced.  Refer to xfs_quota(8) for further details.
-+	enforced.  Refer to **xfs_quota(8)** for further details.
- 
-   sunit=value and swidth=value
- 	Used to specify the stripe unit and width for a RAID device
-@@ -192,11 +185,11 @@ default behaviour.
- 	block units. These options are only relevant to filesystems
- 	that were created with non-zero data alignment parameters.
- 
--	The sunit and swidth parameters specified must be compatible
-+	The ``sunit`` and ``swidth`` parameters specified must be compatible
- 	with the existing filesystem alignment characteristics.  In
--	general, that means the only valid changes to sunit are
--	increasing it by a power-of-2 multiple. Valid swidth values
--	are any integer multiple of a valid sunit value.
-+	general, that means the only valid changes to ``sunit`` are
-+	increasing it by a power-of-2 multiple. Valid ``swidth`` values
-+	are any integer multiple of a valid ``sunit`` value.
- 
- 	Typically the only time these mount options are necessary if
- 	after an underlying RAID device has had it's geometry
-@@ -221,22 +214,25 @@ default behaviour.
- Deprecated Mount Options
- ========================
- 
-+===========================     ================
-   Name				Removal Schedule
--  ----				----------------
-+===========================     ================
-+===========================     ================
- 
- 
- Removed Mount Options
- =====================
- 
-+===========================     =======
-   Name				Removed
--  ----				-------
-+===========================	=======
-   delaylog/nodelaylog		v4.0
-   ihashsize			v4.0
-   irixsgid			v4.0
-   osyncisdsync/osyncisosync	v4.0
-   barrier			v4.19
-   nobarrier			v4.19
--
-+===========================     =======
- 
- sysctls
- =======
-@@ -302,27 +298,27 @@ The following sysctls are available for the XFS filesystem:
- 
-   fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "sync" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nodump" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "noatime" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nosymlinks" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
- 	Setting this to "1" will cause the "nodefrag" flag set
--	by the xfs_io(8) chattr command on a directory to be
-+	by the **xfs_io(8)** chattr command on a directory to be
- 	inherited by files in that directory.
- 
-   fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
-@@ -368,7 +364,7 @@ handler:
-  -error handlers:
- 	Defines the behavior for a specific error.
- 
--The filesystem behavior during an error can be set via sysfs files. Each
-+The filesystem behavior during an error can be set via ``sysfs`` files. Each
- error handler works independently - the first condition met by an error handler
- for a specific class will cause the error to be propagated rather than reset and
- retried.
-@@ -419,7 +415,7 @@ level directory:
- 	handler configurations.
- 
- 	Note: there is no guarantee that fail_at_unmount can be set while an
--	unmount is in progress. It is possible that the sysfs entries are
-+	unmount is in progress. It is possible that the ``sysfs`` entries are
- 	removed by the unmounting filesystem before a "retry forever" error
- 	handler configuration causes unmount to hang, and hence the filesystem
- 	must be configured appropriately before unmount begins to prevent
-@@ -428,7 +424,7 @@ level directory:
- Each filesystem has specific error class handlers that define the error
- propagation behaviour for specific errors. There is also a "default" error
- handler defined, which defines the behaviour for all errors that don't have
--specific handlers defined. Where multiple retry constraints are configuredi for
-+specific handlers defined. Where multiple retry constraints are configured for
- a single error, the first retry configuration that expires will cause the error
- to be propagated. The handler configurations are found in the directory:
- 
-@@ -463,7 +459,7 @@ to be propagated. The handler configurations are found in the directory:
- 	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
- 	operation for up to "N" seconds before propagating the error.
- 
--Note: The default behaviour for a specific error handler is dependent on both
-+**Note:** The default behaviour for a specific error handler is dependent on both
- the class and error context. For example, the default values for
- "metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
- to "fail immediately" behaviour. This is done because ENODEV is a fatal,
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 6d2c0d340dea..679729442fd2 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
- These filesystems may be used for inspiration:
- - ext2: see Documentation/filesystems/ext2.txt
- - ext4: see Documentation/filesystems/ext4/
--- xfs:  see Documentation/filesystems/xfs.txt
-+- xfs:  see Documentation/admin-guide/xfs.rst
- 
- 
- Handling Media Errors
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43ca94856944..3b6e0b6d8cbd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17453,7 +17453,7 @@ L:	linux-xfs@vger.kernel.org
- W:	http://xfs.org/
- T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- S:	Supported
--F:	Documentation/filesystems/xfs.txt
-+F:	Documentation/admin-guide/xfs.rst
- F:	fs/xfs/
- 
- XILINX AXI ETHERNET DRIVER
+> The possible I2C addresses are 0x73, 0x75 and 0x79.
+> 
+> X and Y axis CPI resolution can be get/set independently through IIO_SCALE.
+> The range value is 0-255 which means:
+>   - 0 to ~1,275 Counts Per Inch on flat surface.
+>   - 0 to ~630 Counts Per Rev on 1.0mm diameter STS shaft at 1.0mm distance.
+
+is there IIO documentation that distance_scale is in CPI?
+_scale should not be just a byte, but have some unit if possible
+
+> More details on the datasheet.
+> 
+> The "position" directory is added to contain drivers which can provide
+> position data.
+> 
+> [0]: http://www.pixart.com/products-detail/72/PAT9125EL-TKIT___TKMT
+> 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>  drivers/iio/Kconfig            |   1 +
+>  drivers/iio/Makefile           |   1 +
+>  drivers/iio/position/Kconfig   |  18 ++
+>  drivers/iio/position/Makefile  |   6 +
+>  drivers/iio/position/pat9125.c | 506 +++++++++++++++++++++++++++++++++
+>  5 files changed, 532 insertions(+)
+>  create mode 100644 drivers/iio/position/Kconfig
+>  create mode 100644 drivers/iio/position/Makefile
+>  create mode 100644 drivers/iio/position/pat9125.c
+> 
+> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+> index 5bd51853b15e..aca6fcbceeab 100644
+> --- a/drivers/iio/Kconfig
+> +++ b/drivers/iio/Kconfig
+> @@ -85,6 +85,7 @@ source "drivers/iio/light/Kconfig"
+>  source "drivers/iio/magnetometer/Kconfig"
+>  source "drivers/iio/multiplexer/Kconfig"
+>  source "drivers/iio/orientation/Kconfig"
+> +source "drivers/iio/position/Kconfig"
+>  if IIO_TRIGGER
+>     source "drivers/iio/trigger/Kconfig"
+>  endif #IIO_TRIGGER
+> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+> index bff682ad1cfb..1712011c0f4a 100644
+> --- a/drivers/iio/Makefile
+> +++ b/drivers/iio/Makefile
+> @@ -31,6 +31,7 @@ obj-y += light/
+>  obj-y += magnetometer/
+>  obj-y += multiplexer/
+>  obj-y += orientation/
+> +obj-y += position/
+>  obj-y += potentiometer/
+>  obj-y += potentiostat/
+>  obj-y += pressure/
+> diff --git a/drivers/iio/position/Kconfig b/drivers/iio/position/Kconfig
+> new file mode 100644
+> index 000000000000..1cf28896511c
+> --- /dev/null
+> +++ b/drivers/iio/position/Kconfig
+> @@ -0,0 +1,18 @@
+> +#
+> +# Optical tracker sensors
+> +#
+> +# When adding new entries keep the list in alphabetical order
+> +
+> +menu "Optical tracker sensors"
+> +
+> +config PAT9125
+> +	tristate "Optical tracker PAT9125 I2C driver"
+> +	depends on I2C
+> +	select IIO_BUFFER
+> +	help
+> +	  Say yes here to build support for PAT9125 optical tracker
+> +	  sensors.
+> +
+> +          To compile this driver as a module, say M here: the module will
+> +          be called pat9125.
+> +endmenu
+> diff --git a/drivers/iio/position/Makefile b/drivers/iio/position/Makefile
+> new file mode 100644
+> index 000000000000..cf294917ae2c
+> --- /dev/null
+> +++ b/drivers/iio/position/Makefile
+> @@ -0,0 +1,6 @@
+> +#
+> +# Makefile for industrial I/O Optical tracker sensor drivers
+> +#
+> +
+> +# When adding new entries keep the list in alphabetical order
+> +obj-$(CONFIG_PAT9125) += pat9125.o
+> diff --git a/drivers/iio/position/pat9125.c b/drivers/iio/position/pat9125.c
+> new file mode 100644
+> index 000000000000..2f04777e0790
+> --- /dev/null
+> +++ b/drivers/iio/position/pat9125.c
+> @@ -0,0 +1,506 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+> +/*
+> + * Copyright (C) 2019 BayLibre, SAS
+> + * Author: Alexandre Mergnat <amergnat@baylibre.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/kfifo_buf.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +/* I2C Address function to ID pin*/
+
+add space before */
+
+> +#define PAT9125_I2C_ADDR_HI		0x73
+> +#define PAT9125_I2C_ADDR_LO		0x75
+> +#define PAT9125_I2C_ADDR_NC		0x79
+> +
+> +/* Registers */
+> +#define PAT9125_PRD_ID1_REG		0x00
+> +#define PAT9125_PRD_ID2_REG		0x01
+> +#define PAT9125_MOTION_STATUS_REG	0x02
+> +#define PAT9125_DELTA_X_LO_REG		0x03
+> +#define PAT9125_DELTA_Y_LO_REG		0x04
+> +#define PAT9125_OP_MODE_REG		0x05
+> +#define PAT9125_CONFIG_REG		0x06
+> +#define PAT9125_WRITE_PROTEC_REG	0x09
+
+PROTEC_T_ maybe
+
+> +#define PAT9125_SLEEP1_REG		0x0A
+> +#define PAT9125_SLEEP2_REG		0x0B
+> +#define PAT9125_RES_X_REG		0x0D
+> +#define PAT9125_RES_Y_REG		0x0E
+> +#define PAT9125_DELTA_XY_HI_REG		0x12
+> +#define PAT9125_SHUTER_REG		0x14
+
+SHUT_T_ER  maybe
+
+> +#define PAT9125_FRAME_AVG_REG		0x17
+> +#define PAT9125_ORIENTATION_REG		0x19
+> +
+> +/* Bits */
+> +#define PAT9125_VALID_MOTION_DATA_BIT	BIT(7)
+> +#define PAT9125_RESET_BIT		BIT(7)
+> +
+> +/* Registers' values */
+> +#define PAT9125_SENSOR_ID_VAL			0x31
+> +#define PAT9125_DISABLE_WRITE_PROTECT_VAL	0x5A
+> +#define PAT9125_ENABLE_WRITE_PROTECT_VAL	0x00
+> +
+> +/* Default Value of sampled value size */
+
+value lowercase
+
+> +#define PAT9125_SAMPLED_VAL_BIT_SIZE		12
+> +
+> +struct pat9125_data {
+> +	struct regmap *regmap;
+> +	struct iio_trigger *indio_trig;	/* Motion detection */
+> +	s32 position_x;
+> +	s32 position_y;
+> +	bool sampling;
+> +};
+> +
+> +static const struct iio_chan_spec pat9125_channels[] = {
+> +	{
+> +		.type = IIO_DISTANCE,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_X,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +			BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 32,
+> +			.storagebits = 32,
+> +			.endianness = IIO_CPU,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_DISTANCE,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Y,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +			BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = 1,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 32,
+> +			.storagebits = 32,
+> +			.endianness = IIO_CPU,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(2),
+> +};
+> +
+> +/**
+> + * pat9125_write_pretected_reg() - Write value in protected register.
+
+protected
+
+> + *
+> + * @regmap: Pointer to I2C register map.
+
+the first argument is indio_dev, not regmap
+
+> + * @reg_addr: Register address.
+> + * @reg_value: Value to be write in register.
+
+written
+
+> + *
+> + * A value of zero will be returned on success, a negative errno will
+
+errno has a particular meaning in C runtime, maybe 'negative value' (here 
+and elsewhere)
+
+> + * be returned in error cases.
+> + */
+> +static int pat9125_write_pretected_reg(struct iio_dev *indio_dev,
+
+protected
+
+> +	u8 reg_addr, u8 reg_value)
+> +{
+> +	struct pat9125_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = regmap_write(data->regmap,
+> +		PAT9125_WRITE_PROTEC_REG,
+> +		PAT9125_DISABLE_WRITE_PROTECT_VAL);
+> +
+> +	if (!ret)
+> +		ret = regmap_write(data->regmap, reg_addr, reg_value);
+> +
+> +	/* Try to put back write protection everytime */
+> +	ret |= regmap_write(data->regmap,
+> +		PAT9125_WRITE_PROTEC_REG,
+> +		PAT9125_ENABLE_WRITE_PROTECT_VAL);
+> +
+> +	return ret;
+> +}
+> +/**
+> + * pat9125_read_delta() - Read delta value, update delta & position data.
+> + *
+> + * @data: Driver's data structure.
+> + *
+> + * A value of zero will be returned on success, a negative errno will
+> + * be returned in error cases.
+> + */
+> +static int pat9125_read_delta(struct pat9125_data *data)
+> +{
+> +	struct regmap *regmap = data->regmap;
+> +	int status = 0;
+> +	int val_x = 0;
+> +	int val_y = 0;
+
+I'd rather use s32 type for val_x and val_y due to sign_extend32()
+
+> +	int val_high_nibbles = 0;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap, PAT9125_MOTION_STATUS_REG, &status);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Check if motion is detected */
+> +	if (status & PAT9125_VALID_MOTION_DATA_BIT) {
+> +		ret = regmap_read(regmap, PAT9125_DELTA_X_LO_REG, &val_x);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = regmap_read(regmap, PAT9125_DELTA_Y_LO_REG, &val_y);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = regmap_read(regmap, PAT9125_DELTA_XY_HI_REG,
+> +			&val_high_nibbles);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		val_x |= (val_high_nibbles << 4) & 0xF00;
+> +		val_y |= (val_high_nibbles << 8) & 0xF00;
+> +		val_x = sign_extend32(val_x,
+> +			PAT9125_SAMPLED_VAL_BIT_SIZE - 1);
+> +		val_y = sign_extend32(val_y,
+> +			PAT9125_SAMPLED_VAL_BIT_SIZE - 1);
+> +		data->position_x += val_x;
+> +		data->position_y += val_y;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pat9125_read_raw() - Sample and return the value(s)
+> + * function to the associated channel info enum.
+> + *
+> + * @indio_dev:	Industrial I/O device.
+> + * @chan:	Specification of a single channel.
+> + * @val:	Contain the elements making up the returned value.
+
+Contains
+
+> + * @val2:	Not used.
+> + * @mask:	(enum iio_chan_info_enum) Type of the info attribute.
+> + *
+> + * Zero will be returned on success, negative value otherwise.
+> + **/
+> +static int pat9125_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long mask)
+> +{
+> +	struct pat9125_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = pat9125_read_delta(data);
+> +		if (ret)
+> +			return ret;
+> +		switch (chan->channel2) {
+> +		case IIO_MOD_X:
+> +			*val = data->position_x;
+> +			return IIO_VAL_INT;
+> +		case IIO_MOD_Y:
+> +			*val = data->position_y;
+> +			return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->channel2) {
+> +		case IIO_MOD_X:
+> +			ret = regmap_read(data->regmap, PAT9125_RES_X_REG, val);
+> +			if (ret)
+> +				return ret;
+> +			else
+
+maybe no 'else', just return (feel free to ignore)
+
+> +				return IIO_VAL_INT;
+> +		case IIO_MOD_Y:
+> +			ret = regmap_read(data->regmap, PAT9125_RES_Y_REG, val);
+> +			if (ret)
+> +				return ret;
+> +			else
+> +				return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +/**
+> + * pat9125_write_raw() - Write the value(s)
+> + * function to the associated channel info enum.
+> + *
+> + * @indio_dev:	Industrial I/O device.
+> + * @chan:	Specification of a single channel.
+> + * @val:	Value write in the channel.
+> + * @val2:	Not used.
+> + * @mask:	(enum iio_chan_info_enum) Type of the info attribute.
+> + *
+> + * Zero will be returned on success, negative value otherwise.
+> + **/
+> +static int pat9125_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan, int val,
+> +			     int val2, long mask)
+> +{
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->channel2) {
+> +		case IIO_MOD_X:
+> +			ret = pat9125_write_pretected_reg(indio_dev,
+> +				PAT9125_RES_X_REG, val);
+
+just return, no need for ret temporary variable
+
+> +			return ret;
+> +		case IIO_MOD_Y:
+> +			ret = pat9125_write_pretected_reg(indio_dev,
+> +				PAT9125_RES_Y_REG, val);
+> +			return ret;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static irqreturn_t pat9125_threaded_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct pat9125_data *data = iio_priv(indio_dev);
+> +	u8 buf[16]; /* Payload: Pos_X (4) | Pos_Y (4) | Timestamp (8) */
+
+maybe define buf as 
+s32 buf[4];
+then ...
+
+> +	int ret;
+> +	s64 timestamp;
+> +
+> +	data->sampling = true;
+> +	ret = pat9125_read_delta(data);
+> +	if (ret) {
+> +		dev_err(indio_dev->dev.parent, "Read delta failed %d\n", ret);
+> +		return IRQ_NONE;
+> +	}
+> +	timestamp = iio_get_time_ns(indio_dev);
+> +	*((s32 *)&buf[0]) = data->position_x;
+> +	*((s32 *)&buf[sizeof(s32)]) = data->position_y;
+
+... can simple say
+buf[0] = data->position_x;
+buf[1] = ...
+
+> +	iio_push_to_buffers_with_timestamp(indio_dev, buf, timestamp);
+> +	iio_trigger_notify_done(indio_dev->trig);
+
+newline missing for readability
+
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * pat9125_threaded_event_handler() - Threaded motion detection event handler
+> + * @irq: The irq being handled.
+> + * @private: struct iio_device pointer for the device.
+> + */
+> +static irqreturn_t pat9125_threaded_event_handler(int irq, void *private)
+> +{
+> +	struct iio_dev *indio_dev = private;
+> +	struct pat9125_data *data = iio_priv(indio_dev);
+> +
+> +	iio_trigger_poll_chained(data->indio_trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * pat9125_buffer_postenable() - Buffer post enable actions
+> + *
+> + * @indio_dev:	Industrial I/O device.
+> + */
+> +static int pat9125_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct pat9125_data *data = iio_priv(indio_dev);
+> +	int ret = 0;
+
+no need for initialization
+
+> +
+> +	ret = iio_triggered_buffer_postenable(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Release interrupt pin on the device */
+> +	ret = pat9125_read_delta(data);
+> +
+> +	/* iio_trigger_detach_poll_func isn't reachable, so use this function */
+> +	if (ret)
+> +		ret = iio_triggered_buffer_predisable(indio_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops pat9125_buffer_ops = {
+> +	.postenable = pat9125_buffer_postenable,
+> +};
+> +
+> +static const struct regmap_config pat9125_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+> +static const struct iio_info pat9125_info = {
+> +	.read_raw = pat9125_read_raw,
+> +	.write_raw = pat9125_write_raw,
+> +};
+> +
+> +/*
+> + * To detect if a new value is available, register status is checked. This
+> + * method is safer than using a flag on GPIO IRQ to track event while sampling
+> + * because falling edge is missed when device trig just after a read reg value
+> + * (that happen for fast motions or high CPI setting).
+> + *
+> + * Note: To avoid infinite loop in "iio_trigger_notify_done" when it is not in
+> + * buffer mode and kernel warning due to nested IRQ thread,
+> + * this function must return 0.
+> + */
+> +static int pat9125_trig_try_reenable(struct iio_trigger *trig)
+> +{
+> +	struct pat9125_data *data = iio_trigger_get_drvdata(trig);
+> +	struct regmap *regmap = data->regmap;
+> +	int status = 0;
+> +
+> +	if (data->sampling) {
+> +		regmap_read(regmap, PAT9125_MOTION_STATUS_REG, &status);
+
+what if regmap_read() fails?
+error handling missing
+
+> +		if (status & PAT9125_VALID_MOTION_DATA_BIT) {
+> +			data->sampling = false;
+
+data->sampling = false;
+could be set before the status check, it is set in all cases
+
+> +			iio_trigger_poll_chained(data->indio_trig);
+> +			return 0;
+> +		}
+> +	}
+> +	data->sampling = false;
+
+newline missing
+
+> +	return 0;
+> +}
+> +
+> +static const struct iio_trigger_ops pat9125_trigger_ops = {
+> +	.try_reenable = pat9125_trig_try_reenable,
+> +};
+> +
+> +static int pat9125_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+> +	struct pat9125_data *data;
+> +	struct iio_dev *indio_dev;
+> +	int ret, sensor_pid;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev) {
+> +		dev_err(&client->dev, "IIO device allocation failed\n");
+
+probably not worth having that the error message
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data = iio_priv(indio_dev);
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->name = id->name;
+> +	indio_dev->channels = pat9125_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(pat9125_channels);
+> +	indio_dev->info = &pat9125_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
+> +		pat9125_threaded_trigger_handler, &pat9125_buffer_ops);
+> +	if (ret) {
+> +		dev_err(&client->dev, "unable to setup triggered buffer\n");
+> +		return ret;
+> +	}
+> +
+> +	data->indio_trig = devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
+> +		indio_dev->name, indio_dev->id);
+> +	if (!data->indio_trig)
+> +		return -ENOMEM;
+> +	data->indio_trig->dev.parent = &client->dev;
+> +	data->indio_trig->ops = &pat9125_trigger_ops;
+> +	iio_trigger_set_drvdata(data->indio_trig, data);
+> +	ret = devm_iio_trigger_register(&client->dev, data->indio_trig);
+> +	if (ret) {
+> +		dev_err(&client->dev, "unable to register trigger\n");
+> +		return ret;
+> +	}
+> +
+> +	data->regmap = devm_regmap_init_i2c(client, &pat9125_regmap_config);
+> +	if (IS_ERR(data->regmap)) {
+> +		dev_err(&client->dev, "regmap init failed %ld\n",
+> +			PTR_ERR(data->regmap));
+> +		return PTR_ERR(data->regmap);
+> +	}
+> +
+> +	/* Check device ID */
+> +	ret = regmap_read(data->regmap, PAT9125_PRD_ID1_REG, &sensor_pid);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "register 0x%x access failed %d\n",
+> +			PAT9125_PRD_ID1_REG, ret);
+> +		return ret;
+> +	}
+> +	if (sensor_pid != PAT9125_SENSOR_ID_VAL)
+
+I'd rather put some logging here; what is the actual value obtained?
+
+> +		return -ENODEV;
+> +
+> +	/* Switch to bank0 (Magic number)*/
+> +	ret = regmap_write(data->regmap, 0x7F, 0x00);
+
+maybe a #define for 0x7f, PAT9125_BANK_SWITCH_REG
+
+> +	if (ret < 0) {
+> +		dev_err(indio_dev->dev.parent, "register 0x%x access failed %d\n",
+> +			0x7F, ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Software reset */
+> +	ret = regmap_write_bits(data->regmap,
+> +			      PAT9125_CONFIG_REG,
+> +			      PAT9125_RESET_BIT,
+> +			      1);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "register 0x%x access failed %d\n",
+> +			PAT9125_CONFIG_REG, ret);
+> +		return ret;
+> +	}
+> +
+> +	msleep(20);
+> +
+> +	/* Init GPIO IRQ */
+> +	if (client->irq) {
+> +		ret = devm_request_threaded_irq(&client->dev,
+> +			client->irq,
+> +			NULL,
+> +			pat9125_threaded_event_handler,
+> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +			"pat9125",
+> +			indio_dev);
+> +		if (ret) {
+> +			dev_err(&client->dev, "GPIO IRQ init failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = devm_iio_device_register(&client->dev, indio_dev);
+> +	if (ret) {
+> +		dev_err(&client->dev, "IIO device register failed\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id pat9125_id[] = {
+> +	{ "pat9125", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pat9125_id);
+> +
+> +static const unsigned short normal_i2c[] = {
+
+pat9125_ prefix please
+
+> +	PAT9125_I2C_ADDR_HI,
+> +	PAT9125_I2C_ADDR_LO,
+> +	PAT9125_I2C_ADDR_NC,
+> +	I2C_CLIENT_END
+> +};
+> +
+> +static struct i2c_driver pat9125_driver = {
+> +	.driver = {
+> +		.name = "pat9125",
+> +	},
+> +	.probe = pat9125_probe,
+> +	.address_list = normal_i2c,
+> +	.id_table = pat9125_id,
+> +};
+> +
+> +module_i2c_driver(pat9125_driver);
+> +
+> +MODULE_AUTHOR("Alexandre Mergnat <amergnat@baylibre.com>");
+> +MODULE_DESCRIPTION("Optical Tracking sensor");
+> +MODULE_LICENSE("GPL");
+> 
+
 -- 
-2.22.0
 
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
+--324302256-1915913582-1563109783=:16024--
