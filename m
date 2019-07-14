@@ -2,126 +2,121 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EECC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D56C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DECA2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7332064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="jN/bI1bI"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="mvN0i43t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfGNGLy (ORCPT
+        id S1726778AbfGNGSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 02:11:54 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:57538 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfGNGLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 02:11:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 3FF62B4F
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 06:11:52 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rEwsikVFp1Zs for <linux-kernel@vger.kernel.org>;
-        Sun, 14 Jul 2019 01:11:52 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 1E76FAF9
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 01:11:52 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id z19so16145174ioi.15
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2019 23:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=abpklZSBAfOlfsssLozmiWnThFIhDBs68Sr5R6i8zgQ=;
-        b=jN/bI1bI6xTmwDyipxMxz/+vydprSdp+731cfgIZ3E4TrNh/wc3iqzg01cgpNl+rtU
-         PIAaMwgc10K/7ZSWBwXQ8358tEi2J4gjiRqH+uQChhph+18e7U0u6JCxX0zr9wV42BlL
-         VZq/GKExo1/jc7ECpFVB1clWuwwCHdxB9iPAdhTjs/4QtXQtSDx0zZoIa9CP59AfnJoB
-         04QjtoKc69p97oLPt2r/ch0HmOrQ1cmqLrK4buAO9qe+egjyfgJT5eqD6QIwCULlOFoO
-         rpsQje2CT1jVm+bzpUFECnQGgzDU/bI1KEP06M0ukqCZSaHlCKCsDDLUtdbPnukSZHnY
-         r8iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=abpklZSBAfOlfsssLozmiWnThFIhDBs68Sr5R6i8zgQ=;
-        b=Lwh3XT1C7Rpun2LmlYlQBub9krxRWpw+mLWFF0bqX+wuZtRX799CI3fEORpOtGETqL
-         b/dsR7hkAIA2I2QaaBZ3cJ1LrLSW8wAM8leT7mQD/qfdd4enE7FOYYDFs/xAGqdqAxYR
-         Rx1NbVWVZetQkTq3QHZVEpJpy2PcUwGW6YdQUkNupENLHt5eT0RHVfXBXhYtTzcjT7yp
-         yyL3jS0yeueIWIe6tjDUvDFy3gFwo61p6bncJGuT7MJnIJ76P/AiGJAjxEyIpqBZHVPQ
-         E4ottCxxekZQtvIuKMCaP17LL+1pDeJHeShPt7xxV0Ax1c+yEigA06O+/fbxcIYJ9Luf
-         /g0Q==
-X-Gm-Message-State: APjAAAX+N1Ns68enaMYwltJQ6z23toYfukZZHOV8O4Mcr1KsZ7d3Vp5T
-        yIAyraXmRPEv7C8OzIQqz9dOQ9oKGa9qBn+hHNwxqKMAgq1eNU1hdy8IlTdmJAC5VH22pkU8LrY
-        vOSBXtDMroHK8xXR2Q1n02jtlxITH
-X-Received: by 2002:a5d:964d:: with SMTP id d13mr6785445ios.224.1563084711816;
-        Sat, 13 Jul 2019 23:11:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyEqKAHBewvhUurGCo8HKrL1xmimR0mO4aQ450XDds19Izi7vlroJwNJbusVoJxukPsZtoECg==
-X-Received: by 2002:a5d:964d:: with SMTP id d13mr6785429ios.224.1563084711624;
-        Sat, 13 Jul 2019 23:11:51 -0700 (PDT)
-Received: from BlueSky.hsd1.mn.comcast.net (c-66-41-25-226.hsd1.mn.comcast.net. [66.41.25.226])
-        by smtp.gmail.com with ESMTPSA id s4sm19014746iop.25.2019.07.13.23.11.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Jul 2019 23:11:50 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] test_firmware: fix a memory leak bug
-Date:   Sun, 14 Jul 2019 01:11:35 -0500
-Message-Id: <1563084696-6865-1-git-send-email-wang6495@umn.edu>
-X-Mailer: git-send-email 2.7.4
+        Sun, 14 Jul 2019 02:18:14 -0400
+Received: from mail-eopbgr690046.outbound.protection.outlook.com ([40.107.69.46]:19035
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726017AbfGNGSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 02:18:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d/sXfHUWVHPCK1XQWImSi7DguQw1tzDydvLBPCUfkMOFS5CiICkJBrRVBPfihjsPLs1dEGH5bl75ILBfFu6x5zuemmaFRcxFrqMwwy8vOS0E2xVXusxaU6K1l0BW50CQaFYR4eJW59uF2Qoy02twz7QjoL3ReCt+58/p9p4v61zsGlsEMN82pygAgm7iqwrG71Lr78AQA4xKfn7i4kFU8/DTGFXZtdhayRCfR2tiLYD4EeD36lad53YuhEtd7W5eG99F/Fw4cDWDlEy5tTMDM4kAc+nync+SbG2XUImJAWZWAfR57HH53s1jfEawiYHMv/0r8i6R2SWLxx1ARpmQfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gSUfX3PBid/14xFSIzXf+EReEjy75c+f7SpOMPpWhTQ=;
+ b=b3OzSsxm9Y1XKceyr9pmHeNwO3et5kto2lCug8aM6NWqEwNYhhKZeTBUhUQxjMn4pd6Qfuh9aL/efXz8hLg6NurllokjEVrmlw1zpaD4LYJmjKWH8A12hgzU3Q5oQG5Vgv+o51dlp2ZhDoWn0pqsWw7Y665Xx9lp1zrFSAO50gIOi6TVHdOtERgFmGlBp5cmewDu6mXJNy/nKT5fW3YlG1iRxiY24Ix4jAR46WMagFZ3uZMrDJIz1p9cFS5fixbh1zW1cVKsX4ATmFH98vwA89WcLfH8TJImQL8/h6++chMy4TavEoIPe0vLYtPKo/wRWMSceYq50o+2USNx+rKnFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gSUfX3PBid/14xFSIzXf+EReEjy75c+f7SpOMPpWhTQ=;
+ b=mvN0i43t6wmYtzMjTzmuRI9ivMj4vX1z3xAzZwCknw8PqMJdq3ybBm2V+RSkTh38sG9NNUzM8GubrNidvkYgCIDYtBgBoMUMlO/O3CkzMiQVgkjkgZLJINpO0BtPcFWmo1mVx51Ri3pWnx/5CBDIOqCLPvUPEyecb6vU8BUeDoc=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4055.namprd05.prod.outlook.com (52.135.199.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.9; Sun, 14 Jul 2019 06:18:07 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2073.012; Sun, 14 Jul 2019
+ 06:18:07 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Julien Freche <julienfreche@icloud.com>
+CC:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] vmw_balloon: Remove Julien from the maintainers list
+Thread-Topic: [PATCH] vmw_balloon: Remove Julien from the maintainers list
+Thread-Index: AQHVMPt0L6ZZyVuj50Kj0VV7uF8wRqbIslcAgAEDfYA=
+Date:   Sun, 14 Jul 2019 06:18:06 +0000
+Message-ID: <AF1518AA-309B-466F-ACD2-1CAD04A72716@vmware.com>
+References: <20190702100519.7464-1-namit@vmware.com>
+ <20190713144920.GA7495@kroah.com>
+In-Reply-To: <20190713144920.GA7495@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [2601:647:4580:b719:e4b7:ae28:b76b:fe24]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ddafbebc-8e22-42d4-8504-08d70823095f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4055;
+x-ms-traffictypediagnostic: BYAPR05MB4055:
+x-microsoft-antispam-prvs: <BYAPR05MB4055E47F9199E91042FC20F2D0CC0@BYAPR05MB4055.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:534;
+x-forefront-prvs: 0098BA6C6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(189003)(199004)(36756003)(14444005)(486006)(53546011)(6116002)(102836004)(76176011)(4744005)(2906002)(99286004)(6506007)(71200400001)(71190400001)(316002)(54906003)(2616005)(11346002)(446003)(476003)(186003)(46003)(256004)(66446008)(64756008)(66476007)(66556008)(66946007)(91956017)(4326008)(76116006)(68736007)(5660300002)(305945005)(7736002)(8676002)(81156014)(81166006)(14454004)(229853002)(6436002)(86362001)(33656002)(6916009)(6486002)(478600001)(25786009)(53936002)(6246003)(8936002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4055;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5l8sHLrnyPwxX2/FUvmccl+dMdn1kK5AGuN5vibCIOkMPTHJaceab5s4I14FYIjoYGBkgi1AejWQndLFmD7YrQT9msJgKs0b3STPT9UCdCRgyH1gFYVoSp6AAet6oswR3MdKk0SLZm1WTSsN4EeCPE/+IdsbSCdohOj4vUMXwDbTvRLvBZu+FtBdvSVxQizy+ISrWJnVCVRM6F0CstJjMpHjyqFgINC48MBYJF0YL0aAHe3YtH4kSaE1eA1o0IhFLaYBtGo4soveIkUgdqrqTohgb46/ed30zwEL/BYy3oxaa5KvemUwEKq80Hud5cb+12Em94vht5MYFINHOoUfl2FOqTWPJNTvszms83FyN+1ZLrsJzhgL6EKfLMO+4pBLf+9O8wpy7F8L04QBp3UGfFmHi1kPSpaOsZL6jWHwoAo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F14C170831E01A4F84A6E68E2E86FF55@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddafbebc-8e22-42d4-8504-08d70823095f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2019 06:18:06.5569
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+> On Jul 13, 2019, at 7:49 AM, Greg Kroah-Hartman <gregkh@linuxfoundation.o=
+rg> wrote:
+>=20
+> On Tue, Jul 02, 2019 at 03:05:19AM -0700, Nadav Amit wrote:
+>> Julien will not be a maintainer anymore.
+>>=20
+>> Signed-off-by: Nadav Amit <namit@vmware.com>
+>> ---
+>> MAINTAINERS | 1 -
+>> 1 file changed, 1 deletion(-)
+>>=20
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 01a52fc964da..f85874b1e653 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -16886,7 +16886,6 @@ F:	drivers/vme/
+>> F:	include/linux/vme*
+>>=20
+>> VMWARE BALLOON DRIVER
+>> -M:	Julien Freche <jfreche@vmware.com>
+>=20
+> I need an ack/something from Julien please.
 
-In test_firmware_init(), the buffer pointed to by the global pointer
-'test_fw_config' is allocated through kzalloc(). Then, the buffer is
-initialized in __test_firmware_config_init(). In the case that the
-initialization fails, the following execution in test_firmware_init() needs
-to be terminated with an error code returned to indicate this failure.
-However, the allocated buffer is not freed on this execution path, leading
-to a memory leak bug.
-
-To fix the above issue, free the allocated buffer before returning from
-test_firmware_init().
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- lib/test_firmware.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-index 83ea6c4..6ca97a6 100644
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -886,8 +886,11 @@ static int __init test_firmware_init(void)
- 		return -ENOMEM;
- 
- 	rc = __test_firmware_config_init();
--	if (rc)
-+	if (rc) {
-+		kfree(test_fw_config);
-+		pr_err("could not init firmware test config: %d\n", rc);
- 		return rc;
-+	}
- 
- 	rc = misc_register(&test_fw_misc_device);
- 	if (rc) {
--- 
-2.7.4
+Julien, can I please have you Acked-by?
 
