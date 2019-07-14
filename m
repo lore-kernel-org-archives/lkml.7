@@ -2,175 +2,142 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2F6C74A4B
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC57C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D972064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1C620896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:03:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="dacmDKB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfGNHBf (ORCPT
+        id S1728210AbfGNHDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 03:01:35 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:35424 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfGNHBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 03:01:34 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Sun, 14 Jul 2019 03:03:38 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:56512 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfGNHDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 03:03:37 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 850159DD
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 07:03:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RJX41XTxhUI6 for <linux-kernel@vger.kernel.org>;
+        Sun, 14 Jul 2019 02:03:36 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id DAD124EEE5;
-        Sun, 14 Jul 2019 09:01:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id 83Wg7f6TIzf1; Sun, 14 Jul 2019 09:01:20 +0200 (CEST)
-Date:   Sun, 14 Jul 2019 17:00:29 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190714070029.m53etvm3y4etidxt@yavin>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
- <20190712125552.GL17978@ZenIV.linux.org.uk>
- <20190712132553.GN17978@ZenIV.linux.org.uk>
- <20190712150026.GO17978@ZenIV.linux.org.uk>
- <20190713024153.GA3817@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="33fhorotybcq4qkp"
-Content-Disposition: inline
-In-Reply-To: <20190713024153.GA3817@ZenIV.linux.org.uk>
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 5C56A9B5
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 02:03:36 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id u25so16045914iol.23
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 00:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=HL1tb3nWXpE1nr/GaJWSi0TY+hGUkBRMlwJLK9dRztA=;
+        b=dacmDKB+kPg8zQQC9ynkU4Vk3b0jnWW/3qs8oPKrB6WYik6A+ehewXUcltY+XJlEan
+         GKLBaU2SWy7irZnmhP18uh9tOEvqIes/CFVSgSIMWQMM5NThJbBFO55wKqiK6Qz1a4oH
+         6eSGmxNbnK4NGgiKeXWAuu3yl5MoznyktQ/N9rLlPovp84RxX5Oyms0vK3Y9yDKCL19u
+         0fXqHKOtQ95YC9bRlJMJrFQU8VdgxdnWk/5pD7DVeXWTKoUoJoBtGaOD8JJrqA880cJ4
+         PLa0LL9GWYVHo/dh6DurhpaaCz1Swp+e9h1PdH/ZNENBllcB658r2T2uCZ0uhn6NQUhg
+         czrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HL1tb3nWXpE1nr/GaJWSi0TY+hGUkBRMlwJLK9dRztA=;
+        b=DF01JiU5Naqpnp4dSG552NQQ7o1I4DrHzQxbgyu5lxSFczsVoV++/xazIO0LUUg+gv
+         3iQgdHNFA/SVRS3P3U6uIozGrnKYqCeQNN9vPFK22VAGWW8v7NSfXRAP98IDOSZu522t
+         7q9ct44So/JJgUbQpGHI3FICZgF6yoTa3EOqkoDo/HmuI6ifOD+YR8r/JtNjq9atC6We
+         L9ynjs2CTZmpTmsz7B+ElnlAgDDI/I3kJYrdJK6ihGkp3Zc6r25OodyE+e67m4zZ8+qL
+         uclmf9W8opc6BbV14+L0jTSGl4XUtj5BZm2s+X7QU3anum2q0/ba+1x5v+EQ6OxSv79h
+         Kasw==
+X-Gm-Message-State: APjAAAXLYQ+qn8d/UfSFdp6yz8eqIkvipb8bxipHXY3ozz5CRAZJEfrb
+        YYPEQMWrI33EdzO3XzKtpzcTKZRflqlzmmL0T7I1BbIWcj8a3Hkfsr27OtOSNJMeu52HOv/mKim
+        vdTWSimCLJr0eMbxQ0HL9x47QxBHm
+X-Received: by 2002:a02:aa1d:: with SMTP id r29mr21615003jam.127.1563087816045;
+        Sun, 14 Jul 2019 00:03:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzxmmd0HxGJ+bFEBUuSrY4h1AHCB8b5x9/IESgLwYmr0HBCKuXHhGJBJGNbAn3N0di/WlWfEw==
+X-Received: by 2002:a02:aa1d:: with SMTP id r29mr21614992jam.127.1563087815885;
+        Sun, 14 Jul 2019 00:03:35 -0700 (PDT)
+Received: from BlueSky.hsd1.mn.comcast.net (c-66-41-25-226.hsd1.mn.comcast.net. [66.41.25.226])
+        by smtp.gmail.com with ESMTPSA id c14sm10814570ioa.22.2019.07.14.00.03.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 14 Jul 2019 00:03:35 -0700 (PDT)
+From:   Wenwen Wang <wang6495@umn.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] blk-mq: fix a memory leak bug
+Date:   Sun, 14 Jul 2019 02:03:21 -0500
+Message-Id: <1563087801-7373-1-git-send-email-wang6495@umn.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
---33fhorotybcq4qkp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In blk_mq_init_allocated_queue(), a kernel buffer is allocated through
+kcalloc_node() to hold hardware dispatch queues in the request queue 'q',
+i.e., 'q->queue_hw_ctx'.  Later on, if the blk-mq device has no scheduler
+set, a scheduler will be initialized through elevator_init_mq(). If this
+initialization fails, blk_mq_init_allocated_queue() needs to be terminated
+with an error code returned to indicate this failure. However, the
+allocated buffer is not freed on this execution path, leading to a memory
+leak bug. Moreover, the required cleanup work is also missed on this path.
 
-On 2019-07-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Fri, Jul 12, 2019 at 04:00:26PM +0100, Al Viro wrote:
-> > On Fri, Jul 12, 2019 at 02:25:53PM +0100, Al Viro wrote:
-> >=20
-> > > 	if (flags & LOOKUP_BENEATH) {
-> > > 		nd->root =3D nd->path;
-> > > 		if (!(flags & LOOKUP_RCU))
-> > > 			path_get(&nd->root);
-> > > 		else
-> > > 			nd->root_seq =3D nd->seq;
-> >=20
-> > BTW, this assignment is needed for LOOKUP_RCU case.  Without it
-> > you are pretty much guaranteed that lazy pathwalk will fail,
-> > when it comes to complete_walk().
-> >=20
-> > Speaking of which, what would happen if LOOKUP_ROOT/LOOKUP_BENEATH
-> > combination would someday get passed?
->=20
-> I don't understand what's going on with ->r_seq in there - your
-> call of path_is_under() is after having (re-)sampled rename_lock,
-> but if that was the only .. in there, who's going to recheck
-> the value?  For that matter, what's to guarantee that the thing
-> won't get moved just as you are returning from handle_dots()?
->=20
-> IOW, what does LOOKUP_IN_ROOT guarantee for caller (openat2())?
+To fix the above issues, free the allocated buffer and invoke the cleanup
+functions.
 
-I tried to explain this in the commit message for "namei: aggressively
-check for nd->root escape on ".." resolution", but I probably could've
-explained it better.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ block/blk-mq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-The basic property being guaranteed by LOOKUP_IN_ROOT is that it will
-not result in resolution of a path component which was not inside the
-root of the dirfd tree at some point during resolution (and that all
-absolute symlink and ".." resolution will be done relative to the
-dirfd). This may smell slightly of chroot(2), because unfortunately it
-is a similar concept -- the reason for this is to allow for a more
-efficient way to safely resolve paths inside a rootfs than spawning a
-separate process to then pass back the fd to the caller.
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index e5ef40c..04fe077 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2845,6 +2845,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
+ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 						  struct request_queue *q)
+ {
++	int ret = -ENOMEM;
++
+ 	/* mark the queue as mq asap */
+ 	q->mq_ops = set->ops;
+ 
+@@ -2906,11 +2908,9 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 	blk_mq_map_swqueue(q);
+ 
+ 	if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
+-		int ret;
+-
+ 		ret = elevator_init_mq(q);
+ 		if (ret)
+-			return ERR_PTR(ret);
++			goto err_hctxs;
+ 	}
+ 
+ 	return q;
+@@ -2924,7 +2924,7 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 	q->poll_cb = NULL;
+ err_exit:
+ 	q->mq_ops = NULL;
+-	return ERR_PTR(-ENOMEM);
++	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL(blk_mq_init_allocated_queue);
+ 
+-- 
+2.7.4
 
-We don't want to do a path_is_under() check for every ".." (otherwise
-lookups have a quadratic slowdown when doing many ".."s), so I instead
-only do a check after a rename or a mount (which are the only operations
-which could change what ".." points to). And since we do the
-path_is_under() check if m_seq or r_seq need a retry, we can re-take
-them[+].
-
-The main reason why I don't re-check path_is_under() after handle_dots()
-is that there is no way to be sure that a racing rename didn't happen
-after your last path_is_under() check. The rename could happen after the
-syscall returns, after all.
-
-So, the main purpose of the check is to make sure that a ".."s after a
-rename doesn't result in an escape. If the rename happens after we've
-traversed through a ".." that means that the ".." was inside the root in
-the first place (a root ".." is handled by follow_dotdot). If the rename
-happens after we've gone through handle_dots() and there is no
-subsequent ".." then to userspace it looks identical to the rename
-occurring after the syscall has returned. If there is a subsequent ".."
-after a racing rename then we may have moved into a path that wasn't
-path_is_under() and so we have to check it.
-
-The only way I could see you could solve the race completely is if you
-had a way for userspace to lock things from being able to be renamed (or
-MS_MOVE'd). And that feels like a really bad idea to me.
-
-[+]: You asked why don't I re-take m_seq. The reason is that I don't
-	 fully understand all the other m_seq checks being done during
-	 resolution, and we aren't definitely doing them all in
-	 handle_dots(). So I assumed re-taking it could result in me
-	 breaking RCU-walk which obviously would be bad. Since I am the only
-	 thing using nd->r_seq, I can re-take it without issue.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---33fhorotybcq4qkp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSrTCAAKCRCdlLljIbnQ
-EpwpAQD9KgKhzC1YZRQyynlFOIyKp8VXEUfhiNokL0RBBx4G5AD7BovFdb8KzxSf
-QrrP/0Vq6p6AFs4sMQbjc9M6I/5gzQ8=
-=fUib
------END PGP SIGNATURE-----
-
---33fhorotybcq4qkp--
