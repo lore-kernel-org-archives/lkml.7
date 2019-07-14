@@ -2,184 +2,380 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E7CC742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF96C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF3A52063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="uvIXjc6R"
+	by mail.kernel.org (Postfix) with ESMTP id C3E5F20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563129624;
+	bh=4cC/psUPLSa8NDtn69TlwYJldJ6DoDSFZq5TD8BqOnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=enW8billF/sFQ5i8GEb9mwrIX2wnRuRgwyfgy93346uQ7e3bou4jNKsX3vbt1cBT7
+	 TAJxta/UDdmG14pMb+nLWiXW0ueVDYgysygxOUFQUUxgy6eKykIyLVLtJyKCLobwsf
+	 55vlNfgU6uWEusK4Iyttj1D0UTiikKftdEHtBhbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfGNSiZ (ORCPT
+        id S1728760AbfGNSkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 14:38:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40639 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbfGNSiY (ORCPT
+        Sun, 14 Jul 2019 14:40:23 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34512 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728125AbfGNSkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 14:38:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so6398126pfp.7
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 11:38:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sox1qbAuMnPUwD0CgD0KdMKVv1SxdSpzlx78UgprX+8=;
-        b=uvIXjc6RpIBKGJKLMswZL0zKOIbGCOqwZVMZfzv8f0e56iW5Xw+d175Iewh7O0m4QG
-         PTQTK9CSolsfpH5eZHkNSyajv9VLH/1qzdWEVarVoP4ce8ZjKCT1LdIuWT1W9Ypl4naJ
-         p98jtynPImVVZsE4/RPF3Jp7vxXCaWrM0dr5E=
+        Sun, 14 Jul 2019 14:40:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id i2so7192918plt.1;
+        Sun, 14 Jul 2019 11:40:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sox1qbAuMnPUwD0CgD0KdMKVv1SxdSpzlx78UgprX+8=;
-        b=VuJCPCF36I3IodiLJzNNB6joPB4Juw6MwM4F56tjr7wZ5SaaisYx7WS1MfLjbqKwLB
-         UcnnAeZMpwBg1wZPRKBfaKVpeaEekL5R0DwSj5KfiMGcNC+6scZ/OBuafHUhsSbundc+
-         pLW+9VhuNdPbE5z0U8b6iNMB/u2pXZOngX3Y8oO63IFYv9mmVHFPb3Vw7O/1+K9uBJ9j
-         XEbg/w2TtNTauirDhIUoTxXrxiLrIbjfpeGg/qWKJUg717Jfvd6PIYgWfGJePFiveGgo
-         NaYlCH485Pa5MGjwjFv2CU1cbTnFY3v8NixFA8GjKky6aObOc7KXGnBTLYxsXidycT0R
-         QLAw==
-X-Gm-Message-State: APjAAAXylGr47jEi2izmu3OqqbujOqqtb252LbZ72GAuq4Y2ZmkHgp5c
-        FZNGWywI7egC7ZHGfBWpO+I=
-X-Google-Smtp-Source: APXvYqzbkYP46GwBSD0mDA1ULApcyNEVrg5o30ItZY+eSVKxrnZ68GFxhMKl90asFkD9mHvD6qzZOw==
-X-Received: by 2002:a65:4507:: with SMTP id n7mr21968240pgq.86.1563129503349;
-        Sun, 14 Jul 2019 11:38:23 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g2sm22630976pfq.88.2019.07.14.11.38.21
+        bh=3QvkgyeZBwQAFK6xEzLnSHFLAtsVg3BWcWG42Z3ly8c=;
+        b=Ce6cP/XIVMuSrX1pb59J1RrqbhTpGSTZWZRB65Stk85b5akkzsPJIjveVSH40TiCZp
+         lzp0KdJNByt+UJsRUOdwb+tL5FaS2F23TKd9fDE/ETuf9fwPwRMQpvzRBhefTdDYJeby
+         SaQTJSsuazNspV4iWSmlq75nzGwecbne2tSO6WYZhKSVfYvmyHnowyk3ZPBjuNS7TyDP
+         l37yY7kVX+kQrwhVZkRUKLnyZMzUX0CbEwIHt3/sqOh9bEa0fXXosMNuwECnWIBmJXoB
+         +NVYeLPC4DeYrbiHj53bnxfnrT8mCCOj9yArl3VQooYJg6sgE8Dplk9qRkmVrF6BOQHA
+         f8Ng==
+X-Gm-Message-State: APjAAAWkrkKaLCpejVYjRWlkcSJXLCNIWtXoW4CNlTTvOT6BdcnjdqOo
+        2zoBFaAJ0TCIJny4axtNpkc=
+X-Google-Smtp-Source: APXvYqw7/OXuCgKL70cz/PefTE85jMyChYFO/b3I22EMic9qj54l6el1V5x/FCwGBWz1b/S0awkFNw==
+X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr24415803pll.238.1563129622039;
+        Sun, 14 Jul 2019 11:40:22 -0700 (PDT)
+Received: from localhost (c-73-15-170-202.hsd1.ca.comcast.net. [73.15.170.202])
+        by smtp.gmail.com with ESMTPSA id h1sm18256148pfg.55.2019.07.14.11.40.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 11:38:22 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 14:38:20 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Message-ID: <20190714183820.GD34501@google.com>
-References: <20190713030150.GA246587@google.com>
- <20190713031008.GA248225@google.com>
- <20190713082114.GA26519@linux.ibm.com>
- <20190713133049.GA133650@google.com>
- <20190713144108.GD26519@linux.ibm.com>
- <20190713153606.GD133650@google.com>
- <20190713155010.GF26519@linux.ibm.com>
- <20190713161316.GA39321@google.com>
- <20190713212812.GH26519@linux.ibm.com>
- <20190714181053.GB34501@google.com>
+        Sun, 14 Jul 2019 11:40:21 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 11:40:19 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     thor.thayer@linux.intel.com
+Cc:     mdf@kernel.org, richard.gong@intel.com, agust@denx.de,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] fpga: altera-cvp: Discover Vendor Specific offset
+Message-ID: <20190714184019.GA9048@archbook>
+References: <1562877170-23931-1-git-send-email-thor.thayer@linux.intel.com>
+ <1562877170-23931-2-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190714181053.GB34501@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1562877170-23931-2-git-send-email-thor.thayer@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 02:10:53PM -0400, Joel Fernandes wrote:
-> On Sat, Jul 13, 2019 at 02:28:12PM -0700, Paul E. McKenney wrote:
-[snip]
-> > > > > > > > > 
-> > > > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > > > > > ---
-> > > > > > > > >  include/linux/rcu_sync.h | 4 +---
-> > > > > > > > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > > > > > > > 
-> > > > > > > > > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> > > > > > > > > index 9b83865d24f9..0027d4c8087c 100644
-> > > > > > > > > --- a/include/linux/rcu_sync.h
-> > > > > > > > > +++ b/include/linux/rcu_sync.h
-> > > > > > > > > @@ -31,9 +31,7 @@ struct rcu_sync {
-> > > > > > > > >   */
-> > > > > > > > >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
-> > > > > > > > >  {
-> > > > > > > > > -	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
-> > > > > > > > > -			 !rcu_read_lock_bh_held() &&
-> > > > > > > > > -			 !rcu_read_lock_sched_held(),
-> > > > > > > > > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
-> > > > > > > > 
-> > > > > > > > I believe that replacing rcu_read_lock_sched_held() with preemptible()
-> > > > > > > > in a CONFIG_PREEMPT=n kernel will give you false-positive splats here.
-> > > > > > > > If you have not already done so, could you please give it a try?
-> > > > > > > 
-> > > > > > > Hi Paul,
-> > > > > > > I don't think it will cause splats for !CONFIG_PREEMPT.
-> > > > > > > 
-> > > > > > > Currently, rcu_read_lock_any_held() introduced in this patch returns true if
-> > > > > > > !preemptible(). This means that:
-> > > > > > > 
-> > > > > > > The following expression above:
-> > > > > > > RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),...)
-> > > > > > > 
-> > > > > > > Becomes:
-> > > > > > > RCU_LOCKDEP_WARN(preemptible(), ...)
-> > > > > > > 
-> > > > > > > For, CONFIG_PREEMPT=n kernels, this means:
-> > > > > > > RCU_LOCKDEP_WARN(0, ...)
-> > > > > > > 
-> > > > > > > Which would mean no splats. Or, did I miss the point?
-> > > > > > 
-> > > > > > I suggest trying it out on a CONFIG_PREEMPT=n kernel.
-> > > > > 
-> > > > > Sure, will do, sorry did not try it out yet because was busy with weekend
-> > > > > chores but will do soon, thanks!
-> > > > 
-> > > > I am not faulting you for taking the weekend off, actually.  ;-)
-> > > 
-> > > ;-) 
-> > > 
-> > > I tried doing RCU_LOCKDEP_WARN(preemptible(), ...) in this code path and I
-> > > don't get any splats. I also disassembled the code and it seems to me
-> > > RCU_LOCKDEP_WARN() becomes a NOOP which also the above reasoning confirms.
-> > 
-> > OK, very good.  Could you do the same thing for the RCU_LOCKDEP_WARN()
-> > in synchronize_rcu()?  Why or why not?
-> > 
+On Thu, Jul 11, 2019 at 03:32:48PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Hi Paul,
+> Newer Intel FPGAs have different Vendor Specific offsets than
+> legacy parts. Use PCI discovery to find the CvP registers.
+> Since the register positions remain the same, change the hard
+> coded address to a more flexible way of indexing registers
+> from the offset.
+> Adding new PCI read and write abstraction functions to
+> handle the offset (altera_read_config_dword() and
+> altera_write_config_dword()).
 > 
-> Yes synchronize_rcu() can also make use of this technique since it is
-> strictly illegal to call synchronize_rcu() within a reader section.
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>  drivers/fpga/altera-cvp.c | 91 +++++++++++++++++++++++++++++------------------
+>  1 file changed, 56 insertions(+), 35 deletions(-)
 > 
-> I will add this to the set of my patches as well and send them all out next
-> week, along with the rcu-sync and bh clean ups we discussed.
+> diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+> index 770915fb97f9..04f2b2a072a7 100644
+> --- a/drivers/fpga/altera-cvp.c
+> +++ b/drivers/fpga/altera-cvp.c
+> @@ -22,10 +22,10 @@
+>  #define TIMEOUT_US	2000	/* CVP STATUS timeout for USERMODE polling */
+>  
+>  /* Vendor Specific Extended Capability Registers */
+> -#define VSE_PCIE_EXT_CAP_ID		0x200
+> +#define VSE_PCIE_EXT_CAP_ID		0x0
+>  #define VSE_PCIE_EXT_CAP_ID_VAL		0x000b	/* 16bit */
+>  
+> -#define VSE_CVP_STATUS			0x21c	/* 32bit */
+> +#define VSE_CVP_STATUS			0x1c	/* 32bit */
+>  #define VSE_CVP_STATUS_CFG_RDY		BIT(18)	/* CVP_CONFIG_READY */
+>  #define VSE_CVP_STATUS_CFG_ERR		BIT(19)	/* CVP_CONFIG_ERROR */
+>  #define VSE_CVP_STATUS_CVP_EN		BIT(20)	/* ctrl block is enabling CVP */
+> @@ -33,18 +33,18 @@
+>  #define VSE_CVP_STATUS_CFG_DONE		BIT(23)	/* CVP_CONFIG_DONE */
+>  #define VSE_CVP_STATUS_PLD_CLK_IN_USE	BIT(24)	/* PLD_CLK_IN_USE */
+>  
+> -#define VSE_CVP_MODE_CTRL		0x220	/* 32bit */
+> +#define VSE_CVP_MODE_CTRL		0x20	/* 32bit */
+>  #define VSE_CVP_MODE_CTRL_CVP_MODE	BIT(0)	/* CVP (1) or normal mode (0) */
+>  #define VSE_CVP_MODE_CTRL_HIP_CLK_SEL	BIT(1) /* PMA (1) or fabric clock (0) */
+>  #define VSE_CVP_MODE_CTRL_NUMCLKS_OFF	8	/* NUMCLKS bits offset */
+>  #define VSE_CVP_MODE_CTRL_NUMCLKS_MASK	GENMASK(15, 8)
+>  
+> -#define VSE_CVP_DATA			0x228	/* 32bit */
+> -#define VSE_CVP_PROG_CTRL		0x22c	/* 32bit */
+> +#define VSE_CVP_DATA			0x28	/* 32bit */
+> +#define VSE_CVP_PROG_CTRL		0x2c	/* 32bit */
+>  #define VSE_CVP_PROG_CTRL_CONFIG	BIT(0)
+>  #define VSE_CVP_PROG_CTRL_START_XFER	BIT(1)
+>  
+> -#define VSE_UNCOR_ERR_STATUS		0x234	/* 32bit */
+> +#define VSE_UNCOR_ERR_STATUS		0x34	/* 32bit */
+>  #define VSE_UNCOR_ERR_CVP_CFG_ERR	BIT(5)	/* CVP_CONFIG_ERROR_LATCHED */
+>  
+>  #define DRV_NAME		"altera-cvp"
+> @@ -60,14 +60,27 @@ struct altera_cvp_conf {
+>  	void			(*write_data)(struct altera_cvp_conf *, u32);
+>  	char			mgr_name[64];
+>  	u8			numclks;
+> +	u32			vsec_offset;
+>  };
+>  
+> +static inline void altera_read_config_dword(struct altera_cvp_conf *conf,
+> +					    int where, u32 *val)
+> +{
+> +	pci_read_config_dword(conf->pci_dev, conf->vsec_offset + where, val);
+> +}
 
-After sending this email, it occurs to me it wont work in synchronize_rcu()
-for !CONFIG_PREEMPT kernels. This is because in a !CONFIG_PREEMPT kernel,
-executing in kernel mode itself looks like being in an RCU reader. So we
-should leave that as is. However it will work fine for rcu_sync_is_idle (for
-CONFIG_PREEMPT=n kernels) as I mentioned earlier.
+I think the compiler would inline those anyway.
+> +
+> +static inline void altera_write_config_dword(struct altera_cvp_conf *conf,
+> +					     int where, u32 val)
+> +{
+> +	pci_write_config_dword(conf->pci_dev, conf->vsec_offset + where, val);
+> +}
 
-Were trying to throw me a Quick-Quiz ? ;-) In that case, hope I passed!
+I think the compiler would inline those anyway.
+> +
+>  static enum fpga_mgr_states altera_cvp_state(struct fpga_manager *mgr)
+>  {
+>  	struct altera_cvp_conf *conf = mgr->priv;
+>  	u32 status;
+>  
+> -	pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &status);
+> +	altera_read_config_dword(conf, VSE_CVP_STATUS, &status);
+>  
+>  	if (status & VSE_CVP_STATUS_CFG_DONE)
+>  		return FPGA_MGR_STATE_OPERATING;
+> @@ -85,7 +98,8 @@ static void altera_cvp_write_data_iomem(struct altera_cvp_conf *conf, u32 val)
+>  
+>  static void altera_cvp_write_data_config(struct altera_cvp_conf *conf, u32 val)
+>  {
+> -	pci_write_config_dword(conf->pci_dev, VSE_CVP_DATA, val);
+> +	pci_write_config_dword(conf->pci_dev, conf->vsec_offset + VSE_CVP_DATA,
+> +			       val);
+>  }
+>  
+>  /* switches between CvP clock and internal clock */
+> @@ -95,10 +109,10 @@ static void altera_cvp_dummy_write(struct altera_cvp_conf *conf)
+>  	u32 val;
+>  
+>  	/* set 1 CVP clock cycle for every CVP Data Register Write */
+> -	pci_read_config_dword(conf->pci_dev, VSE_CVP_MODE_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
+>  	val &= ~VSE_CVP_MODE_CTRL_NUMCLKS_MASK;
+>  	val |= 1 << VSE_CVP_MODE_CTRL_NUMCLKS_OFF;
+> -	pci_write_config_dword(conf->pci_dev, VSE_CVP_MODE_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
+>  
+>  	for (i = 0; i < CVP_DUMMY_WR; i++)
+>  		conf->write_data(conf, 0); /* dummy data, could be any value */
+> @@ -115,7 +129,7 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
+>  		retries++;
+>  
+>  	do {
+> -		pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &val);
+> +		altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>  		if ((val & status_mask) == status_val)
+>  			return 0;
+>  
+> @@ -130,18 +144,17 @@ static int altera_cvp_teardown(struct fpga_manager *mgr,
+>  			       struct fpga_image_info *info)
+>  {
+>  	struct altera_cvp_conf *conf = mgr->priv;
+> -	struct pci_dev *pdev = conf->pci_dev;
+>  	int ret;
+>  	u32 val;
+>  
+>  	/* STEP 12 - reset START_XFER bit */
+> -	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
+>  	val &= ~VSE_CVP_PROG_CTRL_START_XFER;
+> -	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
+>  
+>  	/* STEP 13 - reset CVP_CONFIG bit */
+>  	val &= ~VSE_CVP_PROG_CTRL_CONFIG;
+> -	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
+>  
+>  	/*
+>  	 * STEP 14
+> @@ -163,7 +176,6 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>  				 const char *buf, size_t count)
+>  {
+>  	struct altera_cvp_conf *conf = mgr->priv;
+> -	struct pci_dev *pdev = conf->pci_dev;
+>  	u32 iflags, val;
+>  	int ret;
+>  
+> @@ -183,7 +195,7 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>  		conf->numclks = 1; /* for uncompressed and unencrypted images */
+>  
+>  	/* STEP 1 - read CVP status and check CVP_EN flag */
+> -	pci_read_config_dword(pdev, VSE_CVP_STATUS, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>  	if (!(val & VSE_CVP_STATUS_CVP_EN)) {
+>  		dev_err(&mgr->dev, "CVP mode off: 0x%04x\n", val);
+>  		return -ENODEV;
+> @@ -201,14 +213,14 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>  	 * - set HIP_CLK_SEL and CVP_MODE (must be set in the order mentioned)
+>  	 */
+>  	/* switch from fabric to PMA clock */
+> -	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
+>  	val |= VSE_CVP_MODE_CTRL_HIP_CLK_SEL;
+> -	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
+>  
+>  	/* set CVP mode */
+> -	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
+>  	val |= VSE_CVP_MODE_CTRL_CVP_MODE;
+> -	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
+>  
+>  	/*
+>  	 * STEP 3
+> @@ -217,10 +229,10 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>  	altera_cvp_dummy_write(conf);
+>  
+>  	/* STEP 4 - set CVP_CONFIG bit */
+> -	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
+>  	/* request control block to begin transfer using CVP */
+>  	val |= VSE_CVP_PROG_CTRL_CONFIG;
+> -	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
+>  
+>  	/* STEP 5 - poll CVP_CONFIG READY for 1 with 10us timeout */
+>  	ret = altera_cvp_wait_status(conf, VSE_CVP_STATUS_CFG_RDY,
+> @@ -237,15 +249,15 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>  	altera_cvp_dummy_write(conf);
+>  
+>  	/* STEP 7 - set START_XFER */
+> -	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
+>  	val |= VSE_CVP_PROG_CTRL_START_XFER;
+> -	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
+>  
+>  	/* STEP 8 - start transfer (set CVP_NUMCLKS for bitstream) */
+> -	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
+>  	val &= ~VSE_CVP_MODE_CTRL_NUMCLKS_MASK;
+>  	val |= conf->numclks << VSE_CVP_MODE_CTRL_NUMCLKS_OFF;
+> -	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
+>  
+>  	return 0;
+>  }
+> @@ -256,7 +268,7 @@ static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+>  	u32 val;
+>  
+>  	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+> -	pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>  	if (val & VSE_CVP_STATUS_CFG_ERR) {
+>  		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+>  			bytes);
+> @@ -315,7 +327,6 @@ static int altera_cvp_write_complete(struct fpga_manager *mgr,
+>  				     struct fpga_image_info *info)
+>  {
+>  	struct altera_cvp_conf *conf = mgr->priv;
+> -	struct pci_dev *pdev = conf->pci_dev;
+>  	int ret;
+>  	u32 mask;
+>  	u32 val;
+> @@ -325,17 +336,17 @@ static int altera_cvp_write_complete(struct fpga_manager *mgr,
+>  		return ret;
+>  
+>  	/* STEP 16 - check CVP_CONFIG_ERROR_LATCHED bit */
+> -	pci_read_config_dword(pdev, VSE_UNCOR_ERR_STATUS, &val);
+> +	altera_read_config_dword(conf, VSE_UNCOR_ERR_STATUS, &val);
+>  	if (val & VSE_UNCOR_ERR_CVP_CFG_ERR) {
+>  		dev_err(&mgr->dev, "detected CVP_CONFIG_ERROR_LATCHED!\n");
+>  		return -EPROTO;
+>  	}
+>  
+>  	/* STEP 17 - reset CVP_MODE and HIP_CLK_SEL bit */
+> -	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
+> +	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
+>  	val &= ~VSE_CVP_MODE_CTRL_HIP_CLK_SEL;
+>  	val &= ~VSE_CVP_MODE_CTRL_CVP_MODE;
+> -	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
+> +	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
+>  
+>  	/* STEP 18 - poll PLD_CLK_IN_USE and USER_MODE bits */
+>  	mask = VSE_CVP_STATUS_PLD_CLK_IN_USE | VSE_CVP_STATUS_USERMODE;
+> @@ -396,20 +407,27 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+>  	struct fpga_manager *mgr;
+>  	u16 cmd, val;
+>  	u32 regval;
+> -	int ret;
+> +	int ret, offset;
 
-thanks,
+Reverse tree, please:
+  	struct fpga_manager *mgr;
+ +	int ret, offset;
+  	u16 cmd, val;
+  	u32 regval;
+ -	int ret;
 
- - Joel
+> +
+> +	/* Discover the Vendor Specific Offset for this device */
+> +	offset = pci_find_next_ext_capability(pdev, 0, PCI_EXT_CAP_ID_VNDR);
+> +	if (!offset) {
+> +		dev_err(&pdev->dev, "No Vendor Specific Offset.\n");
+> +		return -ENODEV;
+> +	}
+>  
+>  	/*
+>  	 * First check if this is the expected FPGA device. PCI config
+>  	 * space access works without enabling the PCI device, memory
+>  	 * space access is enabled further down.
+>  	 */
+> -	pci_read_config_word(pdev, VSE_PCIE_EXT_CAP_ID, &val);
+> +	pci_read_config_word(pdev, offset + VSE_PCIE_EXT_CAP_ID, &val);
+>  	if (val != VSE_PCIE_EXT_CAP_ID_VAL) {
+>  		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value 0x%x\n", val);
+>  		return -ENODEV;
+>  	}
+>  
+> -	pci_read_config_dword(pdev, VSE_CVP_STATUS, &regval);
+> +	pci_read_config_dword(pdev, offset + VSE_CVP_STATUS, &regval);
+>  	if (!(regval & VSE_CVP_STATUS_CVP_EN)) {
+>  		dev_err(&pdev->dev,
+>  			"CVP is disabled for this device: CVP_STATUS Reg 0x%x\n",
+> @@ -421,6 +439,9 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+>  	if (!conf)
+>  		return -ENOMEM;
+>  
+> +	conf->vsec_offset = offset;
 
+If you'd swap the order you could use your new helper earlier, right?
+not sure if that saves you some code. Your call.
+
+> +	dev_dbg(&pdev->dev, "Vendor Specific Data Offset at 0x%x\n", offset);
+> +
+>  	/*
+>  	 * Enable memory BAR access. We cannot use pci_enable_device() here
+>  	 * because it will make the driver unusable with FPGA devices that
+> -- 
+> 2.7.4
+> 
+
+Thanks,
+Moritz
