@@ -2,473 +2,147 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0356C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8CAC73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7555F20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E71D20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X5Al4uIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfGNMrT (ORCPT
+        id S1728423AbfGNMr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 08:47:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54293 "EHLO mga07.intel.com"
+        Sun, 14 Jul 2019 08:47:57 -0400
+Received: from mout.web.de ([212.227.17.12]:60511 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728351AbfGNMrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 08:47:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jul 2019 05:46:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,490,1557212400"; 
-   d="scan'208";a="157573247"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 14 Jul 2019 05:46:50 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hmdtx-0008u5-If; Sun, 14 Jul 2019 20:46:49 +0800
-Date:   Sun, 14 Jul 2019 20:45:55 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Zeng Tao <prime.zeng@hisilicon.com>
-Cc:     kbuild-all@01.org, prime.zeng@hisilicon.com, kishon@ti.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] phy: Change the configuration interface param to void*
- to make it more general
-Message-ID: <201907142048.z6j6ntlc%lkp@intel.com>
-References: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
+        id S1728351AbfGNMr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 08:47:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563108442;
+        bh=Bv58aXwasISoukBgAwwIyQdm3DHnY22HSUajDGxRpUE=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=X5Al4uIle2ec6UTEliCb2RHjk1L7MXUIa8nKA7OJApxzBthvWfdBl2tQ2ktVYZM63
+         ZYOw2tAW9qDolDVyH3qHYhVvqSbZhY3twptIOUIkyWVC4xEsIxNhQ7Kx7OS+N5hnwd
+         pjKqmVwCVfpW5hBQAbj94loVCe1ejBalR+Uc14q8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.159.144]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LpNwf-1iRDWG3tJt-00fEQC; Sun, 14
+ Jul 2019 14:47:22 +0200
+Cc:     kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn>
+Subject: Re: [2/2] ASoC: samsung: odroid: fix a double-free issue for cpu_dai
+To:     Wen Yang <wen.yang99@zte.com.cn>, alsa-devel@alsa-project.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <4545ce50-493c-8faa-fdcd-5aee3ca30792@web.de>
+Date:   Sun, 14 Jul 2019 14:47:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=unknown-8bit
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:ARMVCvM4n0fZixFkmnwA6Q1ueCcqChHYMLocwTvLTJOsT4zwMJv
+ ZZnCMfu1tzzrYiauyKZXsAacRmYKQrienBCc8fSAk+ek+GEVJRon6ZzOKulL4F+hs5/WgWn
+ IGpm/iS5E1T2oXDEeVpKgGYeuEcd7r4FWdca3cG44QQJthjHf3b8uOtYeddG6S3kNPE11BN
+ a3GAoxdoqlR76h4N0fm6A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:X0JgI81HCiQ=:b1AbNe+rg82E6KQX5t8E79
+ 5zSJdOfuTQlVmM8AmskRMNiGnlJpg51hawdwWrK5Mcb/+KqAuIMXd194W7On4vkzDWgxChWQ9
+ k63b9nSnQow/m/HqAVtwWDTnyTUWBrYyogk/8tNZMgNZ//NTBtAwVzrq2PUlQeUfPrTEPBzCQ
+ ae6Y1ATsZWCC+JrhhAA+Ut8++VXTI3natF4PzcRzEKEyJ2SkmO1cagrhpR1EsloXg0x8xaJAM
+ vn32F0GavgMGVEMmgCvGaMHvm4Hnjy0nzda7N46OdTKz6o9r1yvvh3H0fbpu8U/RIqjhpyFos
+ MEM6M6rztpLUi4CoHoFeHOIssSRB6xcAsTPGBC2u78QjyJC6ZC6yQXLd+7LJWNuLsyk68NDtz
+ dR8tF0wnbehTigWQPRwOEMbFWCEUDrZRd1AoCvg5kYH9Xy0zfoxklXChLSiYwHa923oNAIGvz
+ +949uvZzuBDGMB9f6NjLR3BM1QnRSeb4hYx1kAQgoRMl97igVnXX0uAIcVv060aoWcGCLejZn
+ TcrzN3W67SF5R2iw9ynfzopzE8oA9DhVjAZvAFb8tG+up6zpZUhKVMqWPgyoJ82bbIAJIGEWQ
+ QxcRrSPo97ESH7ZhboGtPbjok1yhD8vKhFpecXw2ItkhcZhzMjzUgzo+XtKYzw7NVnGthBCcC
+ 9+I9zgo1LpiAZbpQx6yNyXX7x8YFXzsaJBb47vZTv7puDZn05ZIxWB5PICWDHIpiS4kDfgaEv
+ /Mvmf0/UDUVLB+xoZu6MxMPl4VR4BbxxFIPkwOH+BGwRkTNjOBDelvnzJ50p5BBmHdq53pYsQ
+ P/el6xziXo8Ab6qUhPGC7iJXU7zBm2x64svx93///tIy3O+8flX9p3YkkQ60Y+sIenZLjOTXH
+ ER3o/otiiyNxo8qmnb/HxEVeJU9DLHWhMEUm4sM9PRds+ocv0Ppvt0FGxe5lU9kVwfHPGjaXC
+ ZAENQi/u0vNkEwS+ha1JHZwpVGOrdKoFJH8ih2+wjIv0QvV/E9TROHcfmvv0RZOn8uXby/6H5
+ RB6xCrHce52snfMCUmgXaILzPgNyVV1XV9WDtnGr6dZ4RrjhYD2op0XhehWLcYeztajYKxiOp
+ BL5iaH3cFCQUndxf5CG71+G09lc4dBI3AaG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zeng,
+> The cpu_dai variable is still being used after the of_node_put() call,
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[cannot apply to v5.2 next-20190712]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Zeng-Tao/phy-Change-the-configuration-interface-param-to-void-to-make-it-more-general/20190713-213420
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Such an implementation detail is questionable.
+https://wiki.sei.cmu.edu/confluence/display/c/MEM30-C.+Do+not+access+freed+memory
 
 
-sparse warnings: (new ones prefixed by >>)
+> which may result in double-free:
 
-   include/linux/sched.h:609:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:609:73: sparse: sparse: invalid named zero-width bitfield `value'
-   include/linux/sched.h:610:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:610:67: sparse: sparse: invalid named zero-width bitfield `bucket_id'
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:165:22: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:169:30: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:173:17: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:200:17: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:206:9: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:211:9: sparse: sparse: using member 'lp_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:216:9: sparse: sparse: using member 'lp_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:220:26: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:221:17: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:227:22: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:230:37: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:237:26: sparse: sparse: using member 'clk_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:238:17: sparse: sparse: using member 'clk_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:244:43: sparse: sparse: using member 'clk_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:247:30: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:251:29: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:255:30: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:264:22: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:266:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:268:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:270:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:272:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:274:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
->> drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:326:53: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:356:54: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
---
-   include/linux/sched.h:609:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:609:73: sparse: sparse: invalid named zero-width bitfield `value'
-   include/linux/sched.h:610:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:610:67: sparse: sparse: invalid named zero-width bitfield `bucket_id'
->> drivers/gpu/drm/bridge/cdns-dsi.c:609:73: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
-   drivers/gpu/drm/bridge/cdns-dsi.c:784:73: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
+This consequence is also undesirable.
+https://cwe.mitre.org/data/definitions/415.html
 
-vim +/mipi_dphy +326 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
 
-f4c8116e294b12c Guido Günther 2019-06-20  153  
-f4c8116e294b12c Guido Günther 2019-06-20  154  static int mixel_dphy_config_from_opts(struct phy *phy,
-f4c8116e294b12c Guido Günther 2019-06-20  155  	       struct phy_configure_opts_mipi_dphy *dphy_opts,
-f4c8116e294b12c Guido Günther 2019-06-20  156  	       struct mixel_dphy_cfg *cfg)
-f4c8116e294b12c Guido Günther 2019-06-20  157  {
-f4c8116e294b12c Guido Günther 2019-06-20  158  	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
-f4c8116e294b12c Guido Günther 2019-06-20  159  	unsigned long ref_clk = clk_get_rate(priv->phy_ref_clk);
-f4c8116e294b12c Guido Günther 2019-06-20  160  	u32 lp_t, numerator, denominator;
-f4c8116e294b12c Guido Günther 2019-06-20  161  	unsigned long long tmp;
-f4c8116e294b12c Guido Günther 2019-06-20  162  	u32 n;
-f4c8116e294b12c Guido Günther 2019-06-20  163  	int i;
-f4c8116e294b12c Guido Günther 2019-06-20  164  
-f4c8116e294b12c Guido Günther 2019-06-20  165  	if (dphy_opts->hs_clk_rate > DATA_RATE_MAX_SPEED ||
-f4c8116e294b12c Guido Günther 2019-06-20  166  	    dphy_opts->hs_clk_rate < DATA_RATE_MIN_SPEED)
-f4c8116e294b12c Guido Günther 2019-06-20  167  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  168  
-f4c8116e294b12c Guido Günther 2019-06-20  169  	numerator = dphy_opts->hs_clk_rate;
-f4c8116e294b12c Guido Günther 2019-06-20  170  	denominator = ref_clk;
-f4c8116e294b12c Guido Günther 2019-06-20  171  	get_best_ratio(&numerator, &denominator, 255, 256);
-f4c8116e294b12c Guido Günther 2019-06-20  172  	if (!numerator || !denominator) {
-f4c8116e294b12c Guido Günther 2019-06-20  173  		dev_err(&phy->dev, "Invalid %d/%d for %ld/%ld\n",
-f4c8116e294b12c Guido Günther 2019-06-20  174  			numerator, denominator,
-f4c8116e294b12c Guido Günther 2019-06-20  175  			dphy_opts->hs_clk_rate, ref_clk);
-f4c8116e294b12c Guido Günther 2019-06-20  176  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  177  	}
-f4c8116e294b12c Guido Günther 2019-06-20  178  
-f4c8116e294b12c Guido Günther 2019-06-20  179  	while ((numerator < 16) && (denominator <= 128)) {
-f4c8116e294b12c Guido Günther 2019-06-20  180  		numerator <<= 1;
-f4c8116e294b12c Guido Günther 2019-06-20  181  		denominator <<= 1;
-f4c8116e294b12c Guido Günther 2019-06-20  182  	}
-f4c8116e294b12c Guido Günther 2019-06-20  183  	/*
-f4c8116e294b12c Guido Günther 2019-06-20  184  	 * CM ranges between 16 and 255
-f4c8116e294b12c Guido Günther 2019-06-20  185  	 * CN ranges between 1 and 32
-f4c8116e294b12c Guido Günther 2019-06-20  186  	 * CO is power of 2: 1, 2, 4, 8
-f4c8116e294b12c Guido Günther 2019-06-20  187  	 */
-f4c8116e294b12c Guido Günther 2019-06-20  188  	i = __ffs(denominator);
-f4c8116e294b12c Guido Günther 2019-06-20  189  	if (i > 3)
-f4c8116e294b12c Guido Günther 2019-06-20  190  		i = 3;
-f4c8116e294b12c Guido Günther 2019-06-20  191  	cfg->cn = denominator >> i;
-f4c8116e294b12c Guido Günther 2019-06-20  192  	cfg->co = 1 << i;
-f4c8116e294b12c Guido Günther 2019-06-20  193  	cfg->cm = numerator;
-f4c8116e294b12c Guido Günther 2019-06-20  194  
-f4c8116e294b12c Guido Günther 2019-06-20  195  	if (cfg->cm < 16 || cfg->cm > 255 ||
-f4c8116e294b12c Guido Günther 2019-06-20  196  	    cfg->cn < 1 || cfg->cn > 32 ||
-f4c8116e294b12c Guido Günther 2019-06-20  197  	    cfg->co < 1 || cfg->co > 8) {
-f4c8116e294b12c Guido Günther 2019-06-20  198  		dev_err(&phy->dev, "Invalid CM/CN/CO values: %u/%u/%u\n",
-f4c8116e294b12c Guido Günther 2019-06-20  199  			cfg->cm, cfg->cn, cfg->co);
-f4c8116e294b12c Guido Günther 2019-06-20  200  		dev_err(&phy->dev, "for hs_clk/ref_clk=%ld/%ld ~ %d/%d\n",
-f4c8116e294b12c Guido Günther 2019-06-20  201  			dphy_opts->hs_clk_rate, ref_clk,
-f4c8116e294b12c Guido Günther 2019-06-20  202  			numerator, denominator);
-f4c8116e294b12c Guido Günther 2019-06-20  203  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  204  	}
-f4c8116e294b12c Guido Günther 2019-06-20  205  
-f4c8116e294b12c Guido Günther 2019-06-20  206  	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ~ %d/%d\n",
-f4c8116e294b12c Guido Günther 2019-06-20  207  		dphy_opts->hs_clk_rate, ref_clk, numerator, denominator);
-f4c8116e294b12c Guido Günther 2019-06-20  208  
-f4c8116e294b12c Guido Günther 2019-06-20  209  	/* LP clock period */
-f4c8116e294b12c Guido Günther 2019-06-20  210  	tmp = 1000000000000LL;
-f4c8116e294b12c Guido Günther 2019-06-20  211  	do_div(tmp, dphy_opts->lp_clk_rate); /* ps */
-f4c8116e294b12c Guido Günther 2019-06-20  212  	if (tmp > ULONG_MAX)
-f4c8116e294b12c Guido Günther 2019-06-20  213  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  214  
-f4c8116e294b12c Guido Günther 2019-06-20  215  	lp_t = tmp;
-f4c8116e294b12c Guido Günther 2019-06-20  216  	dev_dbg(&phy->dev, "LP clock %lu, period: %u ps\n",
-f4c8116e294b12c Guido Günther 2019-06-20  217  		dphy_opts->lp_clk_rate, lp_t);
-f4c8116e294b12c Guido Günther 2019-06-20  218  
-f4c8116e294b12c Guido Günther 2019-06-20  219  	/* hs_prepare: in lp clock periods */
-f4c8116e294b12c Guido Günther 2019-06-20  220  	if (2 * dphy_opts->hs_prepare > 5 * lp_t) {
-f4c8116e294b12c Guido Günther 2019-06-20  221  		dev_err(&phy->dev,
-f4c8116e294b12c Guido Günther 2019-06-20  222  			"hs_prepare (%u) > 2.5 * lp clock period (%u)\n",
-f4c8116e294b12c Guido Günther 2019-06-20  223  			dphy_opts->hs_prepare, lp_t);
-f4c8116e294b12c Guido Günther 2019-06-20  224  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  225  	}
-f4c8116e294b12c Guido Günther 2019-06-20  226  	/* 00: lp_t, 01: 1.5 * lp_t, 10: 2 * lp_t, 11: 2.5 * lp_t */
-f4c8116e294b12c Guido Günther 2019-06-20  227  	if (dphy_opts->hs_prepare < lp_t) {
-f4c8116e294b12c Guido Günther 2019-06-20  228  		n = 0;
-f4c8116e294b12c Guido Günther 2019-06-20  229  	} else {
-f4c8116e294b12c Guido Günther 2019-06-20  230  		tmp = 2 * (dphy_opts->hs_prepare - lp_t);
-f4c8116e294b12c Guido Günther 2019-06-20  231  		do_div(tmp, lp_t);
-f4c8116e294b12c Guido Günther 2019-06-20  232  		n = tmp;
-f4c8116e294b12c Guido Günther 2019-06-20  233  	}
-f4c8116e294b12c Guido Günther 2019-06-20  234  	cfg->m_prg_hs_prepare = n;
-f4c8116e294b12c Guido Günther 2019-06-20  235  
-f4c8116e294b12c Guido Günther 2019-06-20  236  	/* clk_prepare: in lp clock periods */
-f4c8116e294b12c Guido Günther 2019-06-20  237  	if (2 * dphy_opts->clk_prepare > 3 * lp_t) {
-f4c8116e294b12c Guido Günther 2019-06-20  238  		dev_err(&phy->dev,
-f4c8116e294b12c Guido Günther 2019-06-20  239  			"clk_prepare (%u) > 1.5 * lp clock period (%u)\n",
-f4c8116e294b12c Guido Günther 2019-06-20  240  			dphy_opts->clk_prepare, lp_t);
-f4c8116e294b12c Guido Günther 2019-06-20  241  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  242  	}
-f4c8116e294b12c Guido Günther 2019-06-20  243  	/* 00: lp_t, 01: 1.5 * lp_t */
-f4c8116e294b12c Guido Günther 2019-06-20  244  	cfg->mc_prg_hs_prepare = dphy_opts->clk_prepare > lp_t ? 1 : 0;
-f4c8116e294b12c Guido Günther 2019-06-20  245  
-f4c8116e294b12c Guido Günther 2019-06-20  246  	/* hs_zero: formula from NXP BSP */
-f4c8116e294b12c Guido Günther 2019-06-20 @247  	n = (144 * (dphy_opts->hs_clk_rate / 1000000) - 47500) / 10000;
-f4c8116e294b12c Guido Günther 2019-06-20  248  	cfg->m_prg_hs_zero = n < 1 ? 1 : n;
-f4c8116e294b12c Guido Günther 2019-06-20  249  
-f4c8116e294b12c Guido Günther 2019-06-20  250  	/* clk_zero: formula from NXP BSP */
-f4c8116e294b12c Guido Günther 2019-06-20  251  	n = (34 * (dphy_opts->hs_clk_rate / 1000000) - 2500) / 1000;
-f4c8116e294b12c Guido Günther 2019-06-20  252  	cfg->mc_prg_hs_zero = n < 1 ? 1 : n;
-f4c8116e294b12c Guido Günther 2019-06-20  253  
-f4c8116e294b12c Guido Günther 2019-06-20  254  	/* clk_trail, hs_trail: formula from NXP BSP */
-f4c8116e294b12c Guido Günther 2019-06-20  255  	n = (103 * (dphy_opts->hs_clk_rate / 1000000) + 10000) / 10000;
-f4c8116e294b12c Guido Günther 2019-06-20  256  	if (n > 15)
-f4c8116e294b12c Guido Günther 2019-06-20  257  		n = 15;
-f4c8116e294b12c Guido Günther 2019-06-20  258  	if (n < 1)
-f4c8116e294b12c Guido Günther 2019-06-20  259  		n = 1;
-f4c8116e294b12c Guido Günther 2019-06-20  260  	cfg->m_prg_hs_trail = n;
-f4c8116e294b12c Guido Günther 2019-06-20  261  	cfg->mc_prg_hs_trail = n;
-f4c8116e294b12c Guido Günther 2019-06-20  262  
-f4c8116e294b12c Guido Günther 2019-06-20  263  	/* rxhs_settle: formula from NXP BSP */
-f4c8116e294b12c Guido Günther 2019-06-20  264  	if (dphy_opts->hs_clk_rate < MBPS(80))
-f4c8116e294b12c Guido Günther 2019-06-20  265  		cfg->rxhs_settle = 0x0d;
-f4c8116e294b12c Guido Günther 2019-06-20  266  	else if (dphy_opts->hs_clk_rate < MBPS(90))
-f4c8116e294b12c Guido Günther 2019-06-20  267  		cfg->rxhs_settle = 0x0c;
-f4c8116e294b12c Guido Günther 2019-06-20  268  	else if (dphy_opts->hs_clk_rate < MBPS(125))
-f4c8116e294b12c Guido Günther 2019-06-20  269  		cfg->rxhs_settle = 0x0b;
-f4c8116e294b12c Guido Günther 2019-06-20  270  	else if (dphy_opts->hs_clk_rate < MBPS(150))
-f4c8116e294b12c Guido Günther 2019-06-20  271  		cfg->rxhs_settle = 0x0a;
-f4c8116e294b12c Guido Günther 2019-06-20  272  	else if (dphy_opts->hs_clk_rate < MBPS(225))
-f4c8116e294b12c Guido Günther 2019-06-20  273  		cfg->rxhs_settle = 0x09;
-f4c8116e294b12c Guido Günther 2019-06-20  274  	else if (dphy_opts->hs_clk_rate < MBPS(500))
-f4c8116e294b12c Guido Günther 2019-06-20  275  		cfg->rxhs_settle = 0x08;
-f4c8116e294b12c Guido Günther 2019-06-20  276  	else
-f4c8116e294b12c Guido Günther 2019-06-20  277  		cfg->rxhs_settle = 0x07;
-f4c8116e294b12c Guido Günther 2019-06-20  278  
-f4c8116e294b12c Guido Günther 2019-06-20  279  	dev_dbg(&phy->dev, "phy_config: %u %u %u %u %u %u %u\n",
-f4c8116e294b12c Guido Günther 2019-06-20  280  		cfg->m_prg_hs_prepare, cfg->mc_prg_hs_prepare,
-f4c8116e294b12c Guido Günther 2019-06-20  281  		cfg->m_prg_hs_zero, cfg->mc_prg_hs_zero,
-f4c8116e294b12c Guido Günther 2019-06-20  282  		cfg->m_prg_hs_trail, cfg->mc_prg_hs_trail,
-f4c8116e294b12c Guido Günther 2019-06-20  283  		cfg->rxhs_settle);
-f4c8116e294b12c Guido Günther 2019-06-20  284  
-f4c8116e294b12c Guido Günther 2019-06-20  285  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  286  }
-f4c8116e294b12c Guido Günther 2019-06-20  287  
-f4c8116e294b12c Guido Günther 2019-06-20  288  static void mixel_phy_set_hs_timings(struct phy *phy)
-f4c8116e294b12c Guido Günther 2019-06-20  289  {
-f4c8116e294b12c Guido Günther 2019-06-20  290  	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  291  
-f4c8116e294b12c Guido Günther 2019-06-20  292  	phy_write(phy, priv->cfg.m_prg_hs_prepare, DPHY_M_PRG_HS_PREPARE);
-f4c8116e294b12c Guido Günther 2019-06-20  293  	phy_write(phy, priv->cfg.mc_prg_hs_prepare, DPHY_MC_PRG_HS_PREPARE);
-f4c8116e294b12c Guido Günther 2019-06-20  294  	phy_write(phy, priv->cfg.m_prg_hs_zero, DPHY_M_PRG_HS_ZERO);
-f4c8116e294b12c Guido Günther 2019-06-20  295  	phy_write(phy, priv->cfg.mc_prg_hs_zero, DPHY_MC_PRG_HS_ZERO);
-f4c8116e294b12c Guido Günther 2019-06-20  296  	phy_write(phy, priv->cfg.m_prg_hs_trail, DPHY_M_PRG_HS_TRAIL);
-f4c8116e294b12c Guido Günther 2019-06-20  297  	phy_write(phy, priv->cfg.mc_prg_hs_trail, DPHY_MC_PRG_HS_TRAIL);
-f4c8116e294b12c Guido Günther 2019-06-20  298  	phy_write(phy, priv->cfg.rxhs_settle, priv->devdata->reg_rxhs_settle);
-f4c8116e294b12c Guido Günther 2019-06-20  299  }
-f4c8116e294b12c Guido Günther 2019-06-20  300  
-f4c8116e294b12c Guido Günther 2019-06-20  301  static int mixel_dphy_set_pll_params(struct phy *phy)
-f4c8116e294b12c Guido Günther 2019-06-20  302  {
-f4c8116e294b12c Guido Günther 2019-06-20  303  	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
-f4c8116e294b12c Guido Günther 2019-06-20  304  
-f4c8116e294b12c Guido Günther 2019-06-20  305  	if (priv->cfg.cm < 16 || priv->cfg.cm > 255 ||
-f4c8116e294b12c Guido Günther 2019-06-20  306  	    priv->cfg.cn < 1 || priv->cfg.cn > 32 ||
-f4c8116e294b12c Guido Günther 2019-06-20  307  	    priv->cfg.co < 1 || priv->cfg.co > 8) {
-f4c8116e294b12c Guido Günther 2019-06-20  308  		dev_err(&phy->dev, "Invalid CM/CN/CO values! (%u/%u/%u)\n",
-f4c8116e294b12c Guido Günther 2019-06-20  309  			priv->cfg.cm, priv->cfg.cn, priv->cfg.co);
-f4c8116e294b12c Guido Günther 2019-06-20  310  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  311  	}
-f4c8116e294b12c Guido Günther 2019-06-20  312  	dev_dbg(&phy->dev, "Using CM:%u CN:%u CO:%u\n",
-f4c8116e294b12c Guido Günther 2019-06-20  313  		priv->cfg.cm, priv->cfg.cn, priv->cfg.co);
-f4c8116e294b12c Guido Günther 2019-06-20  314  	phy_write(phy, CM(priv->cfg.cm), DPHY_CM);
-f4c8116e294b12c Guido Günther 2019-06-20  315  	phy_write(phy, CN(priv->cfg.cn), DPHY_CN);
-f4c8116e294b12c Guido Günther 2019-06-20  316  	phy_write(phy, CO(priv->cfg.co), DPHY_CO);
-f4c8116e294b12c Guido Günther 2019-06-20  317  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  318  }
-f4c8116e294b12c Guido Günther 2019-06-20  319  
-f4c8116e294b12c Guido Günther 2019-06-20  320  static int mixel_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-f4c8116e294b12c Guido Günther 2019-06-20  321  {
-f4c8116e294b12c Guido Günther 2019-06-20  322  	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  323  	struct mixel_dphy_cfg cfg = { 0 };
-f4c8116e294b12c Guido Günther 2019-06-20  324  	int ret;
-f4c8116e294b12c Guido Günther 2019-06-20  325  
-f4c8116e294b12c Guido Günther 2019-06-20 @326  	ret = mixel_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-f4c8116e294b12c Guido Günther 2019-06-20  327  	if (ret)
-f4c8116e294b12c Guido Günther 2019-06-20  328  		return ret;
-f4c8116e294b12c Guido Günther 2019-06-20  329  
-f4c8116e294b12c Guido Günther 2019-06-20  330  	/* Update the configuration */
-f4c8116e294b12c Guido Günther 2019-06-20  331  	memcpy(&priv->cfg, &cfg, sizeof(struct mixel_dphy_cfg));
-f4c8116e294b12c Guido Günther 2019-06-20  332  
-f4c8116e294b12c Guido Günther 2019-06-20  333  	phy_write(phy, 0x00, DPHY_LOCK_BYP);
-f4c8116e294b12c Guido Günther 2019-06-20  334  	phy_write(phy, 0x01, priv->devdata->reg_tx_rcal);
-f4c8116e294b12c Guido Günther 2019-06-20  335  	phy_write(phy, 0x00, priv->devdata->reg_auto_pd_en);
-f4c8116e294b12c Guido Günther 2019-06-20  336  	phy_write(phy, 0x02, priv->devdata->reg_rxlprp);
-f4c8116e294b12c Guido Günther 2019-06-20  337  	phy_write(phy, 0x02, priv->devdata->reg_rxcdrp);
-f4c8116e294b12c Guido Günther 2019-06-20  338  	phy_write(phy, 0x25, DPHY_TST);
-f4c8116e294b12c Guido Günther 2019-06-20  339  
-f4c8116e294b12c Guido Günther 2019-06-20  340  	mixel_phy_set_hs_timings(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  341  	ret = mixel_dphy_set_pll_params(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  342  	if (ret < 0)
-f4c8116e294b12c Guido Günther 2019-06-20  343  		return ret;
-f4c8116e294b12c Guido Günther 2019-06-20  344  
-f4c8116e294b12c Guido Günther 2019-06-20  345  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  346  }
-f4c8116e294b12c Guido Günther 2019-06-20  347  
-f4c8116e294b12c Guido Günther 2019-06-20  348  static int mixel_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
-f4c8116e294b12c Guido Günther 2019-06-20  349  			       union phy_configure_opts *opts)
-f4c8116e294b12c Guido Günther 2019-06-20  350  {
-f4c8116e294b12c Guido Günther 2019-06-20  351  	struct mixel_dphy_cfg cfg = { 0 };
-f4c8116e294b12c Guido Günther 2019-06-20  352  
-f4c8116e294b12c Guido Günther 2019-06-20  353  	if (mode != PHY_MODE_MIPI_DPHY)
-f4c8116e294b12c Guido Günther 2019-06-20  354  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  355  
-f4c8116e294b12c Guido Günther 2019-06-20  356  	return mixel_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-f4c8116e294b12c Guido Günther 2019-06-20  357  }
-f4c8116e294b12c Guido Günther 2019-06-20  358  
-f4c8116e294b12c Guido Günther 2019-06-20  359  static int mixel_dphy_init(struct phy *phy)
-f4c8116e294b12c Guido Günther 2019-06-20  360  {
-f4c8116e294b12c Guido Günther 2019-06-20  361  	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
-f4c8116e294b12c Guido Günther 2019-06-20  362  	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
-f4c8116e294b12c Guido Günther 2019-06-20  363  
-f4c8116e294b12c Guido Günther 2019-06-20  364  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  365  }
-f4c8116e294b12c Guido Günther 2019-06-20  366  
-f4c8116e294b12c Guido Günther 2019-06-20  367  static int mixel_dphy_exit(struct phy *phy)
-f4c8116e294b12c Guido Günther 2019-06-20  368  {
-f4c8116e294b12c Guido Günther 2019-06-20  369  	phy_write(phy, 0, DPHY_CM);
-f4c8116e294b12c Guido Günther 2019-06-20  370  	phy_write(phy, 0, DPHY_CN);
-f4c8116e294b12c Guido Günther 2019-06-20  371  	phy_write(phy, 0, DPHY_CO);
-f4c8116e294b12c Guido Günther 2019-06-20  372  
-f4c8116e294b12c Guido Günther 2019-06-20  373  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  374  }
-f4c8116e294b12c Guido Günther 2019-06-20  375  
-f4c8116e294b12c Guido Günther 2019-06-20  376  static int mixel_dphy_power_on(struct phy *phy)
-f4c8116e294b12c Guido Günther 2019-06-20  377  {
-f4c8116e294b12c Guido Günther 2019-06-20  378  	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  379  	u32 locked;
-f4c8116e294b12c Guido Günther 2019-06-20  380  	int ret;
-f4c8116e294b12c Guido Günther 2019-06-20  381  
-f4c8116e294b12c Guido Günther 2019-06-20  382  	ret = clk_prepare_enable(priv->phy_ref_clk);
-f4c8116e294b12c Guido Günther 2019-06-20  383  	if (ret < 0)
-f4c8116e294b12c Guido Günther 2019-06-20  384  		return ret;
-f4c8116e294b12c Guido Günther 2019-06-20  385  
-f4c8116e294b12c Guido Günther 2019-06-20  386  	phy_write(phy, PWR_ON, DPHY_PD_PLL);
-f4c8116e294b12c Guido Günther 2019-06-20  387  	ret = regmap_read_poll_timeout(priv->regmap, DPHY_LOCK, locked,
-f4c8116e294b12c Guido Günther 2019-06-20  388  				       locked, PLL_LOCK_SLEEP,
-f4c8116e294b12c Guido Günther 2019-06-20  389  				       PLL_LOCK_TIMEOUT);
-f4c8116e294b12c Guido Günther 2019-06-20  390  	if (ret < 0) {
-f4c8116e294b12c Guido Günther 2019-06-20  391  		dev_err(&phy->dev, "Could not get DPHY lock (%d)!\n", ret);
-f4c8116e294b12c Guido Günther 2019-06-20  392  		goto clock_disable;
-f4c8116e294b12c Guido Günther 2019-06-20  393  	}
-f4c8116e294b12c Guido Günther 2019-06-20  394  	phy_write(phy, PWR_ON, DPHY_PD_DPHY);
-f4c8116e294b12c Guido Günther 2019-06-20  395  
-f4c8116e294b12c Guido Günther 2019-06-20  396  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  397  clock_disable:
-f4c8116e294b12c Guido Günther 2019-06-20  398  	clk_disable_unprepare(priv->phy_ref_clk);
-f4c8116e294b12c Guido Günther 2019-06-20  399  	return ret;
-f4c8116e294b12c Guido Günther 2019-06-20  400  }
-f4c8116e294b12c Guido Günther 2019-06-20  401  
-f4c8116e294b12c Guido Günther 2019-06-20  402  static int mixel_dphy_power_off(struct phy *phy)
-f4c8116e294b12c Guido Günther 2019-06-20  403  {
-f4c8116e294b12c Guido Günther 2019-06-20  404  	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  405  
-f4c8116e294b12c Guido Günther 2019-06-20  406  	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
-f4c8116e294b12c Guido Günther 2019-06-20  407  	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
-f4c8116e294b12c Guido Günther 2019-06-20  408  
-f4c8116e294b12c Guido Günther 2019-06-20  409  	clk_disable_unprepare(priv->phy_ref_clk);
-f4c8116e294b12c Guido Günther 2019-06-20  410  
-f4c8116e294b12c Guido Günther 2019-06-20  411  	return 0;
-f4c8116e294b12c Guido Günther 2019-06-20  412  }
-f4c8116e294b12c Guido Günther 2019-06-20  413  
-f4c8116e294b12c Guido Günther 2019-06-20  414  static const struct phy_ops mixel_dphy_phy_ops = {
-f4c8116e294b12c Guido Günther 2019-06-20  415  	.init = mixel_dphy_init,
-f4c8116e294b12c Guido Günther 2019-06-20  416  	.exit = mixel_dphy_exit,
-f4c8116e294b12c Guido Günther 2019-06-20  417  	.power_on = mixel_dphy_power_on,
-f4c8116e294b12c Guido Günther 2019-06-20  418  	.power_off = mixel_dphy_power_off,
-f4c8116e294b12c Guido Günther 2019-06-20  419  	.configure = mixel_dphy_configure,
-f4c8116e294b12c Guido Günther 2019-06-20  420  	.validate = mixel_dphy_validate,
-f4c8116e294b12c Guido Günther 2019-06-20  421  	.owner = THIS_MODULE,
-f4c8116e294b12c Guido Günther 2019-06-20  422  };
-f4c8116e294b12c Guido Günther 2019-06-20  423  
-f4c8116e294b12c Guido Günther 2019-06-20  424  static const struct of_device_id mixel_dphy_of_match[] = {
-f4c8116e294b12c Guido Günther 2019-06-20  425  	{ .compatible = "fsl,imx8mq-mipi-dphy",
-f4c8116e294b12c Guido Günther 2019-06-20  426  	  .data = &mixel_dphy_devdata[MIXEL_IMX8MQ] },
-f4c8116e294b12c Guido Günther 2019-06-20  427  	{ /* sentinel */ },
-f4c8116e294b12c Guido Günther 2019-06-20  428  };
-f4c8116e294b12c Guido Günther 2019-06-20  429  MODULE_DEVICE_TABLE(of, mixel_dphy_of_match);
-f4c8116e294b12c Guido Günther 2019-06-20  430  
-f4c8116e294b12c Guido Günther 2019-06-20  431  static int mixel_dphy_probe(struct platform_device *pdev)
-f4c8116e294b12c Guido Günther 2019-06-20  432  {
-f4c8116e294b12c Guido Günther 2019-06-20  433  	struct device *dev = &pdev->dev;
-f4c8116e294b12c Guido Günther 2019-06-20  434  	struct device_node *np = dev->of_node;
-f4c8116e294b12c Guido Günther 2019-06-20  435  	struct phy_provider *phy_provider;
-f4c8116e294b12c Guido Günther 2019-06-20  436  	struct mixel_dphy_priv *priv;
-f4c8116e294b12c Guido Günther 2019-06-20  437  	struct resource *res;
-f4c8116e294b12c Guido Günther 2019-06-20  438  	struct phy *phy;
-f4c8116e294b12c Guido Günther 2019-06-20  439  	void __iomem *base;
-f4c8116e294b12c Guido Günther 2019-06-20  440  
-f4c8116e294b12c Guido Günther 2019-06-20  441  	if (!np)
-f4c8116e294b12c Guido Günther 2019-06-20  442  		return -ENODEV;
-f4c8116e294b12c Guido Günther 2019-06-20  443  
-f4c8116e294b12c Guido Günther 2019-06-20  444  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-f4c8116e294b12c Guido Günther 2019-06-20  445  	if (!priv)
-f4c8116e294b12c Guido Günther 2019-06-20  446  		return -ENOMEM;
-f4c8116e294b12c Guido Günther 2019-06-20  447  
-f4c8116e294b12c Guido Günther 2019-06-20  448  	priv->devdata = of_device_get_match_data(&pdev->dev);
-f4c8116e294b12c Guido Günther 2019-06-20  449  	if (!priv->devdata)
-f4c8116e294b12c Guido Günther 2019-06-20  450  		return -EINVAL;
-f4c8116e294b12c Guido Günther 2019-06-20  451  
-f4c8116e294b12c Guido Günther 2019-06-20  452  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-f4c8116e294b12c Guido Günther 2019-06-20  453  	base = devm_ioremap_resource(dev, res);
-f4c8116e294b12c Guido Günther 2019-06-20  454  	if (IS_ERR(base))
-f4c8116e294b12c Guido Günther 2019-06-20  455  		return PTR_ERR(base);
-f4c8116e294b12c Guido Günther 2019-06-20  456  
-f4c8116e294b12c Guido Günther 2019-06-20  457  	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-f4c8116e294b12c Guido Günther 2019-06-20  458  					     &mixel_dphy_regmap_config);
-f4c8116e294b12c Guido Günther 2019-06-20  459  	if (IS_ERR(priv->regmap)) {
-f4c8116e294b12c Guido Günther 2019-06-20  460  		dev_err(dev, "Couldn't create the DPHY regmap\n");
-f4c8116e294b12c Guido Günther 2019-06-20  461  		return PTR_ERR(priv->regmap);
-f4c8116e294b12c Guido Günther 2019-06-20  462  	}
-f4c8116e294b12c Guido Günther 2019-06-20  463  
-f4c8116e294b12c Guido Günther 2019-06-20  464  	priv->phy_ref_clk = devm_clk_get(&pdev->dev, "phy_ref");
-f4c8116e294b12c Guido Günther 2019-06-20  465  	if (IS_ERR(priv->phy_ref_clk)) {
-f4c8116e294b12c Guido Günther 2019-06-20  466  		dev_err(dev, "No phy_ref clock found\n");
-f4c8116e294b12c Guido Günther 2019-06-20  467  		return PTR_ERR(priv->phy_ref_clk);
-f4c8116e294b12c Guido Günther 2019-06-20  468  	}
-f4c8116e294b12c Guido Günther 2019-06-20  469  	dev_dbg(dev, "phy_ref clock rate: %lu\n",
-f4c8116e294b12c Guido Günther 2019-06-20  470  		clk_get_rate(priv->phy_ref_clk));
-f4c8116e294b12c Guido Günther 2019-06-20  471  
-f4c8116e294b12c Guido Günther 2019-06-20  472  	dev_set_drvdata(dev, priv);
-f4c8116e294b12c Guido Günther 2019-06-20  473  
-f4c8116e294b12c Guido Günther 2019-06-20  474  	phy = devm_phy_create(dev, np, &mixel_dphy_phy_ops);
-f4c8116e294b12c Guido Günther 2019-06-20  475  	if (IS_ERR(phy)) {
-f4c8116e294b12c Guido Günther 2019-06-20  476  		dev_err(dev, "Failed to create phy %ld\n", PTR_ERR(phy));
-f4c8116e294b12c Guido Günther 2019-06-20  477  		return PTR_ERR(phy);
-f4c8116e294b12c Guido Günther 2019-06-20  478  	}
-f4c8116e294b12c Guido Günther 2019-06-20  479  	phy_set_drvdata(phy, priv);
-f4c8116e294b12c Guido Günther 2019-06-20  480  
-f4c8116e294b12c Guido Günther 2019-06-20  481  	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-f4c8116e294b12c Guido Günther 2019-06-20  482  
-f4c8116e294b12c Guido Günther 2019-06-20  483  	return PTR_ERR_OR_ZERO(phy_provider);
-f4c8116e294b12c Guido Günther 2019-06-20  484  }
-f4c8116e294b12c Guido Günther 2019-06-20  485  
-f4c8116e294b12c Guido Günther 2019-06-20  486  static struct platform_driver mixel_dphy_driver = {
-f4c8116e294b12c Guido Günther 2019-06-20  487  	.probe	= mixel_dphy_probe,
-f4c8116e294b12c Guido Günther 2019-06-20  488  	.driver = {
-f4c8116e294b12c Guido Günther 2019-06-20  489  		.name = "mixel-mipi-dphy",
-f4c8116e294b12c Guido Günther 2019-06-20  490  		.of_match_table	= mixel_dphy_of_match,
-f4c8116e294b12c Guido Günther 2019-06-20  491  	}
-f4c8116e294b12c Guido Günther 2019-06-20  492  };
-f4c8116e294b12c Guido Günther 2019-06-20  493  module_platform_driver(mixel_dphy_driver);
-f4c8116e294b12c Guido Günther 2019-06-20  494  
-f4c8116e294b12c Guido Günther 2019-06-20  495  MODULE_AUTHOR("NXP Semiconductor");
-f4c8116e294b12c Guido Günther 2019-06-20  496  MODULE_DESCRIPTION("Mixel MIPI-DSI PHY driver");
-f4c8116e294b12c Guido Günther 2019-06-20  497  MODULE_LICENSE("GPL");
+Now I wonder if two update steps are really appropriate as a fix
+instead of using a single update step for the desired correction
+in this software module.
+Should a commit (including previous ones) usually be correct by itself?
 
-:::::: The code at line 326 was first introduced by commit
-:::::: f4c8116e294b12c360b724173f4b79f232573fb1 phy: Add driver for mixel mipi dphy found on NXP's i.MX8 SoCs
-
-:::::: TO: Guido Günther <agx@sigxcpu.org>
-:::::: CC: Kishon Vijay Abraham I <kishon@ti.com>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Regards,
+Markus
