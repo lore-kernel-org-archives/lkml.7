@@ -2,105 +2,161 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723ECC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F6C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0CE20644
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D10F20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563127999;
+	bh=ad4zsG4mgnfX2Gqru9GGR3aSg2jN8d8xkesMAkiflKk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M6IltekbC3FVLVg6WWjiHfvtb5UKft7joxgaXly7nGTiSBkmyNeE/4bid/2IeO8h3
+	 h/cok+l9mgGULuroLhP11Vh3v4sFlX/tdbC2s433pNJE7OLgjaRwy36RfTCejGdgIV
+	 Z2cYRQuaUnumJ5QI6VfGV+6XzFA3ZpsKimMlTRGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfGNSMn (ORCPT
+        id S1728739AbfGNSNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 14:12:43 -0400
-Received: from mother.openwall.net ([195.42.179.200]:33777 "HELO
-        mother.openwall.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728218AbfGNSMn (ORCPT
+        Sun, 14 Jul 2019 14:13:17 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40777 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728218AbfGNSNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 14:12:43 -0400
-Received: (qmail 28208 invoked from network); 14 Jul 2019 18:06:01 -0000
-Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
-  by localhost with SMTP; 14 Jul 2019 18:06:01 -0000
-Received: by pvt.openwall.com (Postfix, from userid 503)
-        id 5AED8AB5B3; Sun, 14 Jul 2019 20:05:55 +0200 (CEST)
-Date:   Sun, 14 Jul 2019 20:05:55 +0200
-From:   Solar Designer <solar@openwall.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, corbet@lwn.net,
-        keescook@chromium.org, peterz@infradead.org, tyhicks@canonical.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation/security-bugs: provide more information about linux-distros
-Message-ID: <20190714180555.GA8536@openwall.com>
-References: <20190711163637.30327-1-sashal@kernel.org> <20190711170732.GB7544@kroah.com> <20190711170921.ywi43n262s3ckxpi@willie-the-truck> <20190711203500.GB10104@sasha-vm>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711203500.GB10104@sasha-vm>
-User-Agent: Mutt/1.4.2.3i
+        Sun, 14 Jul 2019 14:13:17 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b17so9486268lff.7
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 11:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nr5TLKMCpyeVVqScbE1i8kC2438X/aWPB/b+xLbsqcM=;
+        b=GuNHLnEM1Cbw5cSbt/4qPWUCWsHjSuo+xOAAuQnqZuLEbABT3lU5GbOKGB8QvMjX0z
+         gOyOTF2SfJK3maXH8nc8MjOmKkLR7/lszvGFgKKlOGecYNtZZQqPZh/LTi6ygwVAT+rr
+         7jmKtZgz37JEYFIzo/leQkjA78AqcSi4k4Tgk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nr5TLKMCpyeVVqScbE1i8kC2438X/aWPB/b+xLbsqcM=;
+        b=D/5cYU2wAeuFQlEx8kUHrhppnddglj8Sc4Rzzy2L/v4Qy9rfHNGBrVo6lB+fhX0T4u
+         rJBxHQGEflBVYLV3XdqKCxjfrlo+ZyC3aSgVbqlqmQu97nM1PwuC4u145vaPmVcso11/
+         xZ1I6OJQACkJrj0DWe7Z0ZZyNaZBbS3vPf7fpFJ4MGAVxGAD6tQ/2AcMwbRn10Jg/9Fw
+         ApLWYNwWJ+hAbxEXGL8WCWz742GMxnSzWUsIakAU21numQX7+MD5hBh+UNjPKq7u2bvl
+         5QFaSaZ7gQ0D/Q3GQHMYkmKsyyYrc7hvNSaTfrrIBu+ixSqOM0aEyToaB6q0V19+0K8d
+         reVw==
+X-Gm-Message-State: APjAAAX9wTZ/jDFYPCu01/lW0PU6Uel98l0C2aPnLm5bBZdrvz3oH87I
+        jhUThGXJ762SQba+CsCbPWiA92Vg238=
+X-Google-Smtp-Source: APXvYqyqaTHNg9oFs88jS/zmIxC09tE8URaLX5xSTXDx74+B8GffbhAUWGkg3yJNyb9C8oV9hwv+UA==
+X-Received: by 2002:a05:6512:244:: with SMTP id b4mr9985112lfo.114.1563127993807;
+        Sun, 14 Jul 2019 11:13:13 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id e62sm2665897ljf.82.2019.07.14.11.13.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jul 2019 11:13:12 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id i21so13925472ljj.3
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 11:13:12 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr11234478lji.84.1563127991687;
+ Sun, 14 Jul 2019 11:13:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190713072855.GB23167@avx2> <CAHk-=wj_mrNnM-q_z95GcNB=Ab4LaUC6Bi6Q-+3Q9u9NC=3iDA@mail.gmail.com>
+ <20190714095157.GA2276@avx2>
+In-Reply-To: <20190714095157.GA2276@avx2>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 14 Jul 2019 11:12:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgyV8TxUKGSUaSe1toZumq5OOz90W7XQB3QDSdTuE+YAw@mail.gmail.com>
+Message-ID: <CAHk-=wgyV8TxUKGSUaSe1toZumq5OOz90W7XQB3QDSdTuE+YAw@mail.gmail.com>
+Subject: Re: [PATCH] proc: revert /proc/*/cmdline rewrite
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Izbyshev <izbyshev@ispras.ru>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michal Kubecek <mkubecek@suse.cz>, shasta@toxcorp.com,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Security Officers <security@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 04:35:00PM -0400, Sasha Levin wrote:
-> On Thu, Jul 11, 2019 at 06:09:21PM +0100, Will Deacon wrote:
-> >On Thu, Jul 11, 2019 at 07:07:32PM +0200, Greg KH wrote:
-> >>On Thu, Jul 11, 2019 at 12:36:37PM -0400, Sasha Levin wrote:
-> >>> Provide more information about how to interact with the linux-distros
-> >>> mailing list for disclosing security bugs.
-> >>>
-> >>> First, clarify that the reporter must read and accept the linux-distros
-> >>> policies prior to sending a report.
-> >>>
-> >>> Second, clarify that the reported must provide a tentative public
-> >>> disclosure date and time in his first contact with linux-distros.
-> >>>
-> >>> Suggested-by: Solar Designer <solar@openwall.com>
-> >>> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >>> ---
-> >>>  Documentation/admin-guide/security-bugs.rst | 21 +++++++++++++--------
-> >>>  1 file changed, 13 insertions(+), 8 deletions(-)
+On Sun, Jul 14, 2019 at 2:52 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>
+> The problem is that I can't even drag this trivia in out of _fear_ that
+> it is userspace observable:
+>
+>         https://marc.info/?t=155863429700002&r=1&w=4
+>         [PATCH] elf: fix "start_code" evaluation
 
-Thanks.  Sasha's proposed changes do address the two issues I pointed
-out, so are an improvement.  However:
+Oh, we should do things like this all the time.
 
-> >>Do we really need to describe all of the information on how to use the
-> >>distro list here?  That's why we included the link, as it has all of
-> >>this well spelled out and described.  If anything, I would say we should
-> >>say less in this document about what linux-distros do, as that is
-> >>independent of the Linux security team.
-> >
-> >Agreed, and it also means that any changes linux-distros make to their
-> >policy won't be reflecting in the numerous kernel trees out there, so a
-> >link is much better imo.
+"Observable" isn't a problem per se. It only turns into a problem when
+it actually breaks things.
 
-I also agree with this.
+We should always strive for understandable - and maintainable - code.
 
-> I agree that the 2nd part about embargo timelines is redundant, but I
-> only addressed it because the document was already addressing embargos.
-> 
-> I only now realized that the link we had there was just going to the
-> main wiki page by mistake: the tag it was trying to point to was removed
-> from the wiki page. We should probably update that too.
-> 
-> With regards to the explicit instruction to agree with policies, I think
-> we do need it there. Right now this section reads as "for embargoes work
-> with linux-distros@vs.openwall.org, and btw they have a wiki which you
-> may or may not need to read".
+"Make it as simple as possible, but no simpler".
 
-Yes, we should update the link, but maybe we should also drop the
-posting e-mail address, which will ensure someone will have to check out
-the link before they're able to post.  This should allow us to drop the
-summary of linux-distros policy and posting instructions, although maybe
-they're beneficial to keep if we're confident we'd be maintaining this
-summary to reflect possible changes on the linked page.
+Of course, if you can prove that some change isn't observable, then
+that is always the safer change.
 
-> We probably do need to stress here that linux-distros has different
-> policies than security@kernel.org.
+Because any observable change _can_ (and admittedly surprisingly
+often) does end up showing that yes, somebody out there depended on
+some particularly subtle observable detail.
 
-OK.
+But often "observable" doesn't mean "breakage", and it's not that
+uncommon that we do things that have slightly different semantics in
+order to clean stuff up (or fix actual bugs that cause problems).
 
-Alexander
+The important thing when something observable _does_ cause actual
+breakage is that it gets fixed, and that people don't try to make
+excuses for it. In particular the "but I fixed a bug" is _not_ an
+excuse for causing some user load to break, because that was just
+another bug.
+
+Of course, it's also perfectly valid to say "ok, this could be
+improved, but changing it changes observable behavior, and it's not
+worth my time to worry about whether something can break".
+
+So there should certainly be a *worry* about breakage (and the pain
+that breakage can cause) when making cleanups etc. But as long as you
+stand behind your cleanup and know that you may have to fix it up if
+somebody reports an issue with it, it's all good.
+
+IOW, it's a balancing thing. Do you think the cleanup is worth the
+"this may come back to bite me" problem?
+
+> and yet the patch which did a regression and an infoleak continues
+> to be papered over and for which the only justification was
+> "simplify and clarify".
+
+See above. "Simplify and clarify" is a good excuse in general.
+
+What is *not* a good excuse is then if somebody doesn't stand up and
+say "oh, my bad, I screwed up, and here's the fix for the breakage".
+
+In this case it took a year for people to report problems, which shows
+that at least the breakage wasn't obvious.
+
+And I'd rather fix it by cleaning up *more* and making the rules
+simpler and easier to understand.
+
+Don't get me wrong - reverting is often a good strategy too.
+
+I will revert very aggressively when close to a release, for example,
+when we just don't have time to try to figure things out. Or if the
+breakage is large enough that it hinders people from testing and
+working on other things.
+
+Or if the original developer is not responsive and there isn't
+somebody around that goes "ok, that can be fixed by xyz.."
+
+Then "let's just revert" is the right thing to do. It can be the
+simplest thing, when you just don't have the resources to do anything
+else, or it's not just worth it.
+
+                     Linus
