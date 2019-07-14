@@ -2,132 +2,94 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D35C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94A5C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415F52063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:08:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dcedo0iW"
+	by mail.kernel.org (Postfix) with ESMTP id B826020896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563116975;
+	bh=bm9pEoqApX+qfkcBW1EqbTeake3cpyojbVnypkCIZzs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HKwi0UPnjNJmARn7d2j4McsGspbl7A2sOCTMj3QB1hLOn5GjtWWoTw9xvFwbpK8t/
+	 L33cafQD6aEpPJa4Jbca9QYaJzVEnTRyafcMqA9fACJYYsrrYNHfuGI4gwjFYagt8M
+	 HxnqtjXtgpwekVOktNNm8DC7nRz6eq1m1TEy42yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfGNPI3 (ORCPT
+        id S1728577AbfGNPJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:08:29 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:12986 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbfGNPI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:08:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1563116907; x=1594652907;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=u6QzrCtsIwWSt8LZhYRbUNeXSOKPqeoxvtTBsx/mueQ=;
-  b=dcedo0iWhwcig3QJucvXC9LLZ6Vdh3O3XbPwhXNCWHfwI52IfssE5ptP
-   haJKdfyGWSWEXTu4lGArzn7w9QtowZIihiUP58evuQirKz9i4tBg4Am96
-   iFuV6kwxR9BhD0OXy+9fVH+o5JHJqeN08zPeCvkAt7/UWfhn3fTDPFpZa
-   A=;
-X-IronPort-AV: E=Sophos;i="5.62,490,1554768000"; 
-   d="scan'208";a="816070802"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 14 Jul 2019 15:08:25 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 40584A04FA;
-        Sun, 14 Jul 2019 15:08:25 +0000 (UTC)
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 14 Jul 2019 15:08:24 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 14 Jul 2019 15:08:24 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Sun, 14 Jul 2019 15:08:24 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH 3/8] PCI/VPD: Add VPD release quirk for Amazon Annapurna
- Labs host bridge
-Thread-Topic: [PATCH 3/8] PCI/VPD: Add VPD release quirk for Amazon Annapurna
- Labs host bridge
-Thread-Index: AQHVNz7nhVFJDLb7z0OhdNISDg4h16bG98QAgANFs4A=
-Date:   Sun, 14 Jul 2019 15:08:24 +0000
-Message-ID: <233cb293d7bc572bee5c206732a6f374daa9609e.camel@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
-         <20190710164519.17883-4-jonnyc@amazon.com>
-         <20190712131008.GC46935@google.com>
-In-Reply-To: <20190712131008.GC46935@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.115]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A137BBB720212B4694F0CA46235CC196@amazon.com>
-Content-Transfer-Encoding: base64
+        Sun, 14 Jul 2019 11:09:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728380AbfGNPJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 11:09:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F2B92063F;
+        Sun, 14 Jul 2019 15:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563116973;
+        bh=bm9pEoqApX+qfkcBW1EqbTeake3cpyojbVnypkCIZzs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0eRUwZBYgVu2OLCbOTDh1MKwciFyHBtd8VCxW9LyL5hX9zdTvY4irReOkutgYDqGN
+         jx2VGZACcSHrdEXXR4stGZTF2JkMoo4ULRTqQa9nxifkdWViBF3u77WAFTD3AkW4vC
+         +94C+s3kNUg7ipIqG68DRzw76ooNnXv7Lv3nHex4=
+Date:   Sun, 14 Jul 2019 16:09:08 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>, stable <stable@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: gyroadc: fix uninitialized return code
+Message-ID: <20190714160908.7443eca6@archlinux>
+In-Reply-To: <20190704195557.GA1338@kunai>
+References: <20190704113800.3299636-1-arnd@arndb.de>
+        <20190704120756.GA1582@kunai>
+        <CAMuHMdXDN60WWFerok1h05COdNNPZTMDCgKXejmQZMj9B6y5Cw@mail.gmail.com>
+        <fc3b8b4e-fe0e-9573-124d-4b41efa409e4@gmail.com>
+        <20190704195557.GA1338@kunai>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTEyIGF0IDA4OjEwIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBUaHUsIEp1bCAxMSwgMjAxOSBhdCAwNTo1NTo1NlBNICswMzAwLCBKb25hdGhhbiBDaG9j
-cm9uIHdyb3RlOg0KPiA+IFRoZSBBbWF6b24gQW5uYXB1cm5hIExhYnMgcGNpZSBob3N0IGJyaWRn
-ZSBleHBvc2VzIHRoZSBWUEQNCj4gPiBjYXBhYmlsaXR5LA0KPiA+IGJ1dCB0aGVyZSBpcyBubyBh
-Y3R1YWwgc3VwcG9ydCBmb3IgaXQuDQo+IA0KPiBzL3BjaWUvUENJZS8NCj4gcy9ob3N0IGJyaWRn
-ZS9Sb290IFBvcnQvDQpBY2suDQoNCj4gDQo+ID4gVGhlIHJlYXNvbiBmb3Igbm90IHVzaW5nIHRo
-ZSBhbHJlYWR5IGV4aXN0aW5nIHF1aXJrX2JsYWNrbGlzdF92cGQoKQ0KPiA+IGlzIHRoYXQsIGFs
-dGhvdWdoIHRoaXMgZmFpbHMgcGNpX3ZwZF9yZWFkL3dyaXRlLCB0aGUgJ3ZwZCcgc3lzZnMNCj4g
-PiBlbnRyeSBzdGlsbCBleGlzdHMuIFdoZW4gcnVubmluZyBsc3BjaSAtdnYsIGZvciBleGFtcGxl
-LCB0aGlzDQo+ID4gcmVzdWx0cyBpbiB0aGUgZm9sbG93aW5nIGVycm9yOg0KPiA+IA0KPiA+IHBj
-aWxpYjogc3lzZnNfcmVhZF92cGQ6IHJlYWQgZmFpbGVkOiBJbnB1dC9vdXRwdXQgZXJyb3INCj4g
-PiANCj4gPiBUaGlzIHF1aXJrIHJlbW92ZXMgdGhlIHN5c2ZzIGVudHJ5LCB3aGljaCBhdm9pZHMg
-dGhlIGVycm9yIHByaW50Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Ny
-b24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS92cGQuYyB8
-IDEyICsrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0K
-PiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS92cGQuYyBiL2RyaXZlcnMvcGNpL3Zw
-ZC5jDQo+ID4gaW5kZXggNDk2M2MyZTJiZDRjLi5iNTk0YjI4OTVmZmUgMTAwNjQ0DQo+ID4gLS0t
-IGEvZHJpdmVycy9wY2kvdnBkLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS92cGQuYw0KPiA+IEBA
-IC02NDQsNCArNjQ0LDE2IEBAIHN0YXRpYyB2b2lkIHF1aXJrX2NoZWxzaW9fZXh0ZW5kX3ZwZChz
-dHJ1Y3QNCj4gPiBwY2lfZGV2ICpkZXYpDQo+ID4gIERFQ0xBUkVfUENJX0ZJWFVQX0ZJTkFMKFBD
-SV9WRU5ET1JfSURfQ0hFTFNJTywgUENJX0FOWV9JRCwNCj4gPiAgCQkJcXVpcmtfY2hlbHNpb19l
-eHRlbmRfdnBkKTsNCj4gPiAgDQo+ID4gK3N0YXRpYyB2b2lkIHF1aXJrX2FsX3ZwZF9yZWxlYXNl
-KHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArCWlmIChkZXYtPnZwZCkgew0KPiA+
-ICsJCXBjaV92cGRfcmVsZWFzZShkZXYpOw0KPiA+ICsJCWRldi0+dnBkID0gTlVMTDsNCj4gPiAr
-CQlwY2lfd2FybihkZXYsIEZXX0JVRyAiQW5uYXB1cm5hIExhYnMgcGNpZSBxdWlyayAtDQo+ID4g
-UmVsZWFzaW5nIFZQRCBjYXBhYmlsaXR5IChObyBzdXBwb3J0IGZvciBWUEQgcmVhZC93cml0ZQ0K
-PiA+IHRyYW5zYWN0aW9ucylcbiIpOw0KPiANCj4gVGhlICJBbm5hcHVybmEgTGFicyBwY2llIHF1
-aXJrIiB0ZXh0IGlzIHN1cGVyZmx1b3VzLg0KPiANCkFjay4NCg0KPiA+ICsJfQ0KPiA+ICt9DQo+
-ID4gKw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9DTEFTU19GSU5BTChQQ0lfVkVORE9SX0lEX0FN
-QVpPTl9BTk5BUFVSTkFfTEFCUywNCj4gPiAweDAwMzEsDQo+ID4gKwkJCSAgICAgIFBDSV9DTEFT
-U19CUklER0VfUENJLCA4LA0KPiA+IHF1aXJrX2FsX3ZwZF9yZWxlYXNlKTsNCj4gDQo+IFdoeSBE
-RUNMQVJFX1BDSV9GSVhVUF9DTEFTU19GSU5BTCgpPyAgU2VlIGNvbW1lbnRzIG9uIHRoZSBNU0kt
-WCBxdWlyaw0KPiBwYXRjaC4NCj4gDQpSZXNwb25kZWQgaW4gdGhlIE1TSS14IHF1aXJrIHBhdGNo
-LCBidXQgaW4gc2hvcnQsIGluZGVlZCB0aGUgMHgwMDMxDQpkZXYtaWQgaXMgcmUtdXNlZCBmb3Ig
-YSBub24taG9zdCBicmlkZ2UgZGV2aWNlIDooDQoNCj4gPiArDQo+ID4gICNlbmRpZg0KPiA+IC0t
-IA0KPiA+IDIuMTcuMQ0KPiA+IA0KPiA+IA0K
+On Thu, 4 Jul 2019 21:55:58 +0200
+Wolfram Sang <wsa@the-dreams.de> wrote:
+
+> > >> This is correct but missing that the above 'return ret' is broken, too.
+> > >> ret is initialized but 0 in that case.  
+> > > 
+> > > Nice catch! Oh well, given enough eyeballs, ...  
+> > 
+> > I don't think ret is initialized, reg is, not ret .  
+> 
+> It is initialized for the broken 'return ret' *above* the one which gets
+> rightfully fixed in this patch.
+> 
+
+Agreed, 2 broken cases and this is only fixing the second one.
+I'm expecting a v2 of this patch which fixes them both, so 
+won't apply this v1.
+
+Thanks,
+
+Jonathan
