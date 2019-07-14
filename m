@@ -2,101 +2,90 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864B8C742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8DFC73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA0F2063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563117053;
-	bh=sBypuAJi6kEuyyku6OpJYtrbttxjH65kc59FF8PE9Ro=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DreCtB2PDzaYL/yow2e87+x0IH/oZxykSZ37iTfK68qko144owmlAo/ix+PTl+Two
-	 1EJMvfB7TFn8qSETCTcTYWLZSfh9tCauaJmgiZCkq63RI51ms7lz/+Hv4CLQpgqLVi
-	 OfVThQYrVu79ilhb8o6z0l6nZ3efmvJHpBxdPRCI=
+	by mail.kernel.org (Postfix) with ESMTP id 62D982063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbfGNPKU (ORCPT
+        id S1728412AbfGNPVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:10:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45532 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbfGNPKT (ORCPT
+        Sun, 14 Jul 2019 11:21:09 -0400
+Received: from out4437.biz.mail.alibaba.com ([47.88.44.37]:40350 "EHLO
+        out4437.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726403AbfGNPVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:10:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=x2yqbL/GCB4qt/1ZOmXmAZs70DddLHNZ+/ZNEpgEx/U=; b=FsVGN6Oby94ZVdAmwEOW5NJHmX
-        wSGT9S/Ngc7Cu26u0qYTBp1ItI9feJztRlK1e3TZV6gcx0XryoQzJXiHqWwuYyoIyIZuGDXoRrtu4
-        Er6XuU1NZrP3WO+Q3PX1stuAdPN6MmeIT/lMBGSeKJ+94kaluEdm0bFhOzLTD2BlA07qWxUNNREwP
-        YcU4k1w3JvdoqKeAahJCnGSdzg6yd8P4+7275BDLPzu3r5ncDnhAgDbLMiL2tPq1ohnnBKhY5TzYT
-        rKz+zcJQ+Dk94CznKtQZZ8gzJjy+5K+6aoVmUUNMWcGFe5SvNqO/g9XMLdcuy/E28wEcodICO5p3a
-        j+bIWJPg==;
-Received: from 201.86.163.160.dynamic.adsl.gvt.net.br ([201.86.163.160] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hmg8o-0004f4-ED; Sun, 14 Jul 2019 15:10:18 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hmg8l-0007TC-1A; Sun, 14 Jul 2019 12:10:15 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4/8] scripts/sphinx-pre-install: fix latexmk dependencies
-Date:   Sun, 14 Jul 2019 12:10:09 -0300
-Message-Id: <8cdc11a350ea524574ef472d082b6339410c27ea.1563115732.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1563115732.git.mchehab+samsung@kernel.org>
-References: <cover.1563115732.git.mchehab+samsung@kernel.org>
+        Sun, 14 Jul 2019 11:21:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TWrpoRa_1563117663;
+Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TWrpoRa_1563117663)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 14 Jul 2019 23:21:03 +0800
+Subject: Re: [PATCH 01/12] Documentation: move architectures together
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-sh@vger.kernel.org
+References: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
+ <20190712113427.62fa7ffc@lwn.net>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <36c522c5-975e-e38e-daad-0f3d9f93b186@linux.alibaba.com>
+Date:   Sun, 14 Jul 2019 23:21:03 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190712113427.62fa7ffc@lwn.net>
+Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The name of the package with carries latexmk is different
-on two distros:
+Hi Jon,
 
-- On OpenSUSE, latexmk is packaged as "texlive-latexmk-bin"
-- On Mageia, latexmk is packaged at "texlive-collection-basic"
+Thanks for quick response!
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- scripts/sphinx-pre-install | 4 ++++
- 1 file changed, 4 insertions(+)
+ÔÚ 2019/7/13 ÉÏÎç1:34, Jonathan Corbet Ð´µÀ:
+> On Fri, 12 Jul 2019 10:20:07 +0800
+> Alex Shi <alex.shi@linux.alibaba.com> wrote:
+> 
+>> There are many different archs in Documentation/ dir, it's better to
+>> move them together in 'Documentation/arch' which follows from kernel source.
+> 
+> So this seems certain to collide badly with Mauro's RST-conversion monster
+> patch set.
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 33efadd6c0b6..8dc13fe95ffe 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -454,6 +454,8 @@ sub give_opensuse_hints()
- 		"texlive-zapfding",
- 	);
- 
-+	$map{"latexmk"} = "texlive-latexmk-bin";
-+
- 	check_rpm_missing(\@suse_tex_pkgs, 2) if ($pdf);
- 	check_missing_tex(2) if ($pdf);
- 	check_missing(\%map);
-@@ -479,6 +481,8 @@ sub give_mageia_hints()
- 		"texlive-fontsextra",
- 	);
- 
-+	$map{"latexmk"} = "texlive-collection-basic";
-+
- 	check_rpm_missing(\@tex_pkgs, 2) if ($pdf);
- 	check_missing(\%map);
- 
--- 
-2.21.0
+I don't mean that, sorry, and we can figure out if both of them are worthy to be picked up.
 
+> 
+> More to the point, though...if we are going to thrash up things this
+> badly, we want to be sure that we're doing it right so we don't end up
+> renaming everything again.  Grouping stuff into a new arch/ subdirectory
+> adds a bit of order, but it doesn't do much toward trying to organize our
+> documentation for its readers, and it doesn't help us to modernize the
+> docs and get rid of the old, useless stuff.  A quick check shows that many
+> of these files have seen no changes other than typo fixes since the
+> beginning of the Git era.
+
+Right, there is some docs which need to be update or even drop, and a reorder would be a timing to push each of arch maintainer to do something, isn't it? Anyway, reordering  documents like kernel source dir could be one of choices. :)
+
+> 
+> So, in my mind, this needs some thought.  Maybe we want a
+> Documentation/arch in the end, but I'm not convinced that we should just
+> create it and fill it with a snow shovel.  This might be a good thing to
+> discuss at the kernel summit in September.
+
+Thanks for considering, anyway, it could be a good start to get hands dirty whether the arch dir is needed. 
+
+Thanks
+Alex
