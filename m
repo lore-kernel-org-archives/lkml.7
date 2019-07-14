@@ -2,114 +2,130 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0938C742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159BEC74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA0A214AE
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563121858;
-	bh=3B4TvzJE5x1tLkpsdLUDGRNudIhb22g/3330h2LrM6U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gDdhlOFDmu2jY3Lxj5sPZvps6c7zXVEwjCXji6Z2YxPjXxxHprJPgH1I2od61kL/u
-	 KmuZW73IL5cd3cdzvaGOQROHVUwVpCkZ03aRYCrxn8nl4oQXYJvZhgE8GOAFI+6WAa
-	 mU/ZgYfV8RF9UpxpzePjlN/DcRHKU+/K80fvrP+4=
+	by mail.kernel.org (Postfix) with ESMTP id E384E2063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIk6+R6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfGNQa5 (ORCPT
+        id S1728589AbfGNQlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 12:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728106AbfGNQa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 12:30:57 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB7C2089C;
-        Sun, 14 Jul 2019 16:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563121856;
-        bh=3B4TvzJE5x1tLkpsdLUDGRNudIhb22g/3330h2LrM6U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pnAf4ftXKOZDLj0MwK503NBE0xySOj4mlmEX4S8nMUlEc4IJoWT85vnYIBFJDwTQZ
-         64YZq3/3zv2IHDirEgmXq+SZnDKSN3wdO//6OBj0tm9gKnfYXnlpiJP5CDaiMzh/HD
-         OUVT07tcoup6GIIFGHW5ccE+2AWdVaMkMWbBBUpE=
-Date:   Sun, 14 Jul 2019 17:30:50 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?QsOhcmJhcmE=?= Fernandes <barbara.fernandes@usp.br>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, Wilson Sales <spoonm@spoonm.org>
-Subject: Re: [PATCH v2] staging: iio: ad7192: create of_device_id array
-Message-ID: <20190714173050.2b6306a0@archlinux>
-In-Reply-To: <20190628194922.13277-1-barbara.fernandes@usp.br>
-References: <20190628194922.13277-1-barbara.fernandes@usp.br>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jul 2019 12:41:37 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33742 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfGNQlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 12:41:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so7081369plo.0;
+        Sun, 14 Jul 2019 09:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3tsgI+YnFBKPFTQcdJwOqGeZBvFRLcOBoUybbZFi6xE=;
+        b=sIk6+R6AqIL9yxIMC9QTUhR4s8lNAczsIDjB+X5Mw0QyAmIRs2oQBlGGKjYwslUtl7
+         YHP+wR55Ilh2IXFfpCJLHhd99xDrVjP1GuSDfXqQTUonlNf+Ho82VbfS+P1szVqR0nVq
+         iVHy5pS9J2Nu8DCdEwWBW1IJ57oCcu0sLliq0MuO36fja5z5a5dTixoAQT+3bEJWkSoY
+         lnSc8NIHLm1xda2MWt7KCcwBNJRbq9ml+7mRmT85JsnfA4a+YGoAxmEQqFa20S59TBMc
+         CywQL6UosZvWfUwIn/IIGEwBmsvoBGYpkS0YRlg2q8CJClTmkZpzpoHNbNVWVrVlbR+e
+         Xgbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3tsgI+YnFBKPFTQcdJwOqGeZBvFRLcOBoUybbZFi6xE=;
+        b=Q8k2PchNiJY36wYiyOLvpkg5WjAiHlre+Xn05zTrRnZzzCKnQaOeU9NiUzTtpXOpGh
+         o88qFOJCsJjUk0OP7QijHw32pcrq1TiXLBfsJpT4vaKGnZ2sAJ3EdPXgCxnSfHZIxGs8
+         /6wuQl5bXqIJ3xpm62Rev5zujyjNdeOSavVsQi579cGRX8aepVbrlJbbz3vCPSa4ywVS
+         8SyzXlZk42kU8KhwSsw4O7AO/xqmPtP7a5Y6JeGFmWaYFBSVCweEJOSN1h25by+9Euew
+         Z1inStfUl7j5FmKmTIMmKNTbjPGzxHpz1mvT52LcvEBekKPnfbWv/kdKE10CextkTXs5
+         Ku/g==
+X-Gm-Message-State: APjAAAULhsaTTMpsgSypVXDAMdTtlh+Otwv3ZrQtSdahnOnJiZTa7Ikl
+        BxF8QqwxIXDp8FMMg4MAIxLJsUzeYq8JpCiO+FU=
+X-Google-Smtp-Source: APXvYqx02xvUcnfyIvid7VBxGy85lExJKLWKmAhi3Cyh9/8zlXcpy0UrEUyGDqNsCITVR6cT+uSNJP8aXpGGsN6T9Gw=
+X-Received: by 2002:a17:902:934a:: with SMTP id g10mr24051874plp.18.1563122495946;
+ Sun, 14 Jul 2019 09:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190712085437.4007720-1-arnd@arndb.de>
+In-Reply-To: <20190712085437.4007720-1-arnd@arndb.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 14 Jul 2019 19:41:25 +0300
+Message-ID: <CAHp75VfGs9v_YoAfFcsQphqfR3-i+vb_2aS5GijJ8PgG5W0CWg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: pcengines-apu2 needs gpiolib
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 16:49:22 -0300
-B=C3=A1rbara Fernandes <barbara.fernandes@usp.br> wrote:
+On Fri, Jul 12, 2019 at 11:54 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> I ran into another build issue in randconfig testing for this driver,
+> when CONFIG_GPIOLIB is not set:
+>
+> WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
+>   Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
+>   Selected by [y]:
+>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+>
+> WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
+>   Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
+>   Selected by [y]:
+>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+>
+> Make the 'select' statements conditional on that so we don't have to
+> introduce another 'select'.
+>
 
-> Create list of compatible device ids to be matched with those stated in
-> the device tree.
->=20
-> Signed-off-by: B=C3=A1rbara Fernandes <barbara.fernandes@usp.br>
-> Signed-off-by: Wilson Sales <spoonm@spoonm.org>
-> Co-developed by: Wilson Sales <spoonm@spoonm.org>
+Thanks, I have applied the fix from YueHaibing, the idea is to depened
+on GPIOLIB.
+
+
+> Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+> Fixes: a422bf11bdb4 ("platform/x86: fix PCENGINES_APU2 Kconfig warning")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-Patch is fine and applied to the togreg branch of iio.git.
+>  drivers/platform/x86/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index e869a5c760b6..cf48b9068843 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1324,8 +1324,8 @@ config PCENGINES_APU2
+>         tristate "PC Engines APUv2/3 front button and LEDs driver"
+>         depends on INPUT && INPUT_KEYBOARD
+>         depends on LEDS_CLASS
+> -       select GPIO_AMD_FCH
+> -       select KEYBOARD_GPIO_POLLED
+> +       select GPIO_AMD_FCH if GPIOLIB
+> +       select KEYBOARD_GPIO_POLLED if GPIOLIB
+>         select LEDS_GPIO
+>         help
+>           This driver provides support for the front button and LEDs on
+> --
+> 2.20.0
+>
 
-Only thing to note is that reviewers and maintainers often have
-poor memories (or are jet lagged which is my excuse today!)
-so it helps to put a change log here under the ---
 
-Thanks,
-
-Jonathan
-
->  drivers/staging/iio/adc/ad7192.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/a=
-d7192.c
-> index 3d74da9d37e7..70118db98d94 100644
-> --- a/drivers/staging/iio/adc/ad7192.c
-> +++ b/drivers/staging/iio/adc/ad7192.c
-> @@ -810,11 +810,23 @@ static const struct spi_device_id ad7192_id[] =3D {
->  	{"ad7195", ID_AD7195},
->  	{}
->  };
-> +
->  MODULE_DEVICE_TABLE(spi, ad7192_id);
-> =20
-> +static const struct of_device_id ad7192_of_match[] =3D {
-> +	{ .compatible =3D "adi,ad7190" },
-> +	{ .compatible =3D "adi,ad7192" },
-> +	{ .compatible =3D "adi,ad7193" },
-> +	{ .compatible =3D "adi,ad7195" },
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, ad7192_of_match);
-> +
->  static struct spi_driver ad7192_driver =3D {
->  	.driver =3D {
->  		.name	=3D "ad7192",
-> +		.of_match_table =3D ad7192_of_match,
->  	},
->  	.probe		=3D ad7192_probe,
->  	.remove		=3D ad7192_remove,
-
+-- 
+With Best Regards,
+Andy Shevchenko
