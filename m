@@ -2,155 +2,76 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8ACC71142
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E4C31E40
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1892084B
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LEjRHErO"
+	by mail.kernel.org (Postfix) with ESMTP id 3523A20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfGNBSK (ORCPT
+        id S1728163AbfGNBjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 21:18:10 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35154 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbfGNBSJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 21:18:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6E1EoEl079200;
-        Sun, 14 Jul 2019 01:16:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=gnStV7SBtyBELVgdhWru5ZF/zwLQRRjtxakJR6QK8O4=;
- b=LEjRHErOUwlLHTSiY35a9/RWgVlntWcQEXHjz41W6JsOj1fltQqrqIidgrzVOp4pHh+6
- oJu2jP99ATK1ItUm55tSIWIDhSwIHgyzB4bxR/Zc/4n+rKDgdQuhBLFUY/r5dXvReqwO
- nN7pTUZnim4bbV2ABiPjxnAcdiy/GJiEAGM2Ex0a7BhIrXp0T1dhvQGKBaJbrCYfEeP0
- cVsN29inpLK7+vPi/6/hm3e9V6fbHTFnga8rFqbvjw5JfWd/MlGFE0pZujhYy2RgoyYq
- aSCy24tFdUiGBZN8lzBaCN5NcOhfcfj3PorxoraCvWgelXEsOHh0kvu9Unsu9BOq4sz2 yQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tq7xqhu07-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Jul 2019 01:16:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6E1EJt4138593;
-        Sun, 14 Jul 2019 01:16:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tq4dstp55-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Jul 2019 01:16:18 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6E1GAde016937;
-        Sun, 14 Jul 2019 01:16:10 GMT
-Received: from Subhras-MacBook-Pro.local (/103.87.143.145)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 13 Jul 2019 18:16:10 -0700
-Subject: Re: [PATCH v3 5/7] sched: SIS_CORE to disable idle core search
-To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net
-References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
- <20190627012919.4341-6-subhra.mazumdar@oracle.com>
- <0e0f3347-c262-2917-76d7-88dddf4e9122@linux.ibm.com>
- <59ab08d5-8b7c-00b9-230b-7c0b307a675f@oracle.com>
- <be91602a-0243-e094-8c8f-ceed314d10ce@linux.ibm.com>
- <12402fea-7b87-8c4d-9485-53f973c38654@oracle.com>
- <aac9f826-ab73-2754-4a7b-7d948f1edf92@linux.ibm.com>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <b3c238bc-c094-bbdf-5273-0de9e55f7a15@oracle.com>
-Date:   Sun, 14 Jul 2019 06:46:01 +0530
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Sat, 13 Jul 2019 21:39:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7026 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727983AbfGNBjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jul 2019 21:39:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jul 2019 18:38:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,488,1557212400"; 
+   d="scan'208";a="160755606"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 13 Jul 2019 18:38:58 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hmTTd-000Hn6-Jc; Sun, 14 Jul 2019 09:38:57 +0800
+Date:   Sun, 14 Jul 2019 09:38:28 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: net/netfilter/nf_tables_offload.c:135:24: sparse: sparse: incorrect
+ type in initializer (different base types)
+Message-ID: <201907140924.FU3ZJx4p%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <aac9f826-ab73-2754-4a7b-7d948f1edf92@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9317 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907140013
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9317 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907140014
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a2d79c7174aeb43b13020dd53d85a7aefdd9f3e5
+commit: c9626a2cbdb20e26587b3fad99960520a023432b netfilter: nf_tables: add hardware offload support
+date:   4 days ago
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        git checkout c9626a2cbdb20e26587b3fad99960520a023432b
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-On 7/4/19 6:04 PM, Parth Shah wrote:
-> Same experiment with hackbench and with perf analysis shows increase in L1
-> cache miss rate with these patches
-> (Lower is better)
->                            Baseline(%)   Patch(%)
->   ----------------------- ------------- -----------
->    Total Cache miss rate         17.01   19(-11%)
->    L1 icache miss rate            5.45   6.7(-22%)
->
->
->
-> So is is possible for idle_cpu search to try checking target_cpu first and
-> then goto sliding window if not found.
-> Below diff works as expected in IBM POWER9 system and resolves the problem
-> of far wakeup upto large extent.
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index ff2e9b5c3ac5..fae035ce1162 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6161,6 +6161,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->          u64 time, cost;
->          s64 delta;
->          int cpu, limit, floor, target_tmp, nr = INT_MAX;
-> +       struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
->   
->          this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
->          if (!this_sd)
-> @@ -6198,16 +6199,22 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->   
->          time = local_clock();
->   
-> -       for_each_cpu_wrap(cpu, sched_domain_span(sd), target_tmp) {
-> +       cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
-> +       for_each_cpu_wrap(cpu, cpu_smt_mask(target), target) {
-> +               __cpumask_clear_cpu(cpu, cpus);
-> +               if (available_idle_cpu(cpu))
-> +                       goto idle_cpu_exit;
-> +       }
-> +
-> +       for_each_cpu_wrap(cpu, cpus, target_tmp) {
->                  per_cpu(next_cpu, target) = cpu;
->                  if (!--nr)
->                          return -1;
-> -               if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
-> -                       continue;
->                  if (available_idle_cpu(cpu))
->                          break;
->          }
->   
-> +idle_cpu_exit:
->          time = local_clock() - time;
->          cost = this_sd->avg_scan_cost;
->          delta = (s64)(time - cost) / 8;
->
->
->
-> Best,
-> Parth
-How about calling select_idle_smt before select_idle_cpu from
-select_idle_sibling? That should have the same effect.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> net/netfilter/nf_tables_offload.c:135:24: sparse: sparse: incorrect type in initializer (different base types) @@    expected restricted __be16 [usertype] proto @@    got e] proto @@
+>> net/netfilter/nf_tables_offload.c:135:24: sparse:    expected restricted __be16 [usertype] proto
+>> net/netfilter/nf_tables_offload.c:135:24: sparse:    got int
+
+vim +135 net/netfilter/nf_tables_offload.c
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
