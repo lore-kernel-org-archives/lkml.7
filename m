@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.8 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021B5C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DF3C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2E920C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF978214AE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfGNTCD (ORCPT
+        id S1728844AbfGNTCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 15:02:03 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:33058 "EHLO
+        Sun, 14 Jul 2019 15:02:12 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:33094 "EHLO
         lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728125AbfGNTCD (ORCPT
+        with ESMTP id S1728125AbfGNTCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 15:02:03 -0400
+        Sun, 14 Jul 2019 15:02:12 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 2AA0D6058369;
-        Sun, 14 Jul 2019 21:02:01 +0200 (CEST)
+        by lithops.sigma-star.at (Postfix) with ESMTP id 3545A6074CD5;
+        Sun, 14 Jul 2019 21:02:10 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id cFwaXX4j7aim; Sun, 14 Jul 2019 21:02:00 +0200 (CEST)
+        with ESMTP id 0CY1gMs9aDPi; Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id D01A5608311E;
-        Sun, 14 Jul 2019 21:02:00 +0200 (CEST)
+        by lithops.sigma-star.at (Postfix) with ESMTP id E126A6074CF8;
+        Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id fMomH4AhTAp7; Sun, 14 Jul 2019 21:02:00 +0200 (CEST)
+        with ESMTP id 4uf6qr9J4IfK; Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id AF16C6083266;
-        Sun, 14 Jul 2019 21:02:00 +0200 (CEST)
-Date:   Sun, 14 Jul 2019 21:02:00 +0200 (CEST)
+        by lithops.sigma-star.at (Postfix) with ESMTP id BE16E6074CD5;
+        Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
+Date:   Sun, 14 Jul 2019 21:02:09 +0200 (CEST)
 From:   Richard Weinberger <richard@nod.at>
 To:     torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>
-Message-ID: <1979519421.38685.1563130920671.JavaMail.zimbra@nod.at>
-Subject: [GIT PULL] UML changes for 5.3-rc1
+        linux-mtd <linux-mtd@lists.infradead.org>
+Message-ID: <1267151613.38686.1563130929727.JavaMail.zimbra@nod.at>
+Subject: [GIT PULL] UBIFS changes for 5.3-rc1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [195.201.40.130]
 X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Index: 7lfOxEzdE9qGSepyNCpNJsgfjzn/vg==
-Thread-Topic: UML changes for 5.3-rc1
+Thread-Index: lukcal4QcUCgWCO+vvtjPRX4XXI9kw==
+Thread-Topic: UBIFS changes for 5.3-rc1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,60 +57,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
+The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
 
-  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
+  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.3-rc1
+  git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/upstream-5.3-rc1
 
-for you to fetch changes up to b482e48d29f1461fd0d059a17f32bcfa274127b3:
+for you to fetch changes up to 8009ce956c3d28022af6b122e50213ad830fc902:
 
-  um: fix build without CONFIG_UML_TIME_TRAVEL_SUPPORT (2019-07-04 09:52:18 +0200)
+  ubifs: Don't leak orphans on memory during commit (2019-07-08 20:01:34 +0200)
+
+Please note there is a merge conflict between commits
+334d581528b9 ("vfs: Convert ubifs to use the new mount API") and
+eeabb9866e4c ("ubifs: Add support for zstd compression.")
+
+For zstd we add a new mount parameter.
+In case of doubt I'll happily review your merge resolution.
 
 ----------------------------------------------------------------
-This pull request contains the following changes for UML:
+This pull request contains the following changes for UBIFS
 
-- A new timer mode, time travel, for testing with UML
-- Many bugfixes/improvements for the serial line driver
-- Various bugfixes
+- Support for zstd compression
+- Support for offline signed filesystems
+- Various fixes for regressions
 
 ----------------------------------------------------------------
-Johannes Berg (9):
-      um: fix os_timer_one_shot()
-      um: Timer code cleanup
-      um: Remove locking in deactivate_all_fds()
-      um: Silence lockdep complaint about mmap_sem
-      um: Don't garbage collect in deactivate_all_fds()
-      um: Remove drivers/ssl.h
-      um: Pass nsecs to os timer functions
-      um: Support time travel mode
-      um: fix build without CONFIG_UML_TIME_TRAVEL_SUPPORT
+Liu Song (3):
+      ubifs: Simplify redundant code
+      ubifs: Fix typo of output in get_cs_sqnum
+      ubifs: remove unnecessary check in ubifs_log_start_commit
 
-Jouni Malinen (1):
-      um: Fix IRQ controller regression on console read
+Michele Dionisio (1):
+      ubifs: Add support for zstd compression.
 
-Krzysztof Kozlowski (1):
-      um: configs: Remove useless UEVENT_HELPER_PATH
+Richard Weinberger (3):
+      ubifs: Correctly use tnc_next() in search_dh_cookie()
+      ubifs: Check link count of inodes when killing orphans.
+      ubifs: Don't leak orphans on memory during commit
 
-Marek Majkowski (1):
-      um: Fix kcov crash during startup
+Sascha Hauer (1):
+      ubifs: support offline signed images
 
- arch/um/Kconfig                         |  12 +++
- arch/um/configs/i386_defconfig          |   1 -
- arch/um/configs/x86_64_defconfig        |   1 -
- arch/um/drivers/chan_kern.c             |  52 +++++++++++--
- arch/um/drivers/ssl.c                   |   1 -
- arch/um/drivers/ssl.h                   |  13 ----
- arch/um/include/asm/mmu_context.h       |   2 +-
- arch/um/include/shared/os.h             |  10 +--
- arch/um/include/shared/timer-internal.h |  48 ++++++++++++
- arch/um/kernel/irq.c                    |   9 ++-
- arch/um/kernel/process.c                |  42 +++++++++-
- arch/um/kernel/skas/Makefile            |   2 +
- arch/um/kernel/skas/syscall.c           |  11 +++
- arch/um/kernel/time.c                   | 131 ++++++++++++++++++++++++++++++--
- arch/um/os-Linux/time.c                 | 127 +++++++------------------------
- 15 files changed, 320 insertions(+), 142 deletions(-)
- delete mode 100644 arch/um/drivers/ssl.h
+ fs/ubifs/Kconfig       | 13 ++++++-
+ fs/ubifs/auth.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/ubifs/compress.c    | 27 ++++++++++++++-
+ fs/ubifs/log.c         |  5 +--
+ fs/ubifs/master.c      | 53 ++++++++++++++++++++++++----
+ fs/ubifs/orphan.c      | 94 +++++++++++++++++++++++++++++++-------------------
+ fs/ubifs/recovery.c    |  2 +-
+ fs/ubifs/sb.c          | 52 ++++++++++++++--------------
+ fs/ubifs/super.c       | 46 ++++++++++++++++++------
+ fs/ubifs/tnc.c         | 16 ++++++---
+ fs/ubifs/ubifs-media.h | 30 +++++++++++++++-
+ fs/ubifs/ubifs.h       |  6 ++--
+ 12 files changed, 338 insertions(+), 92 deletions(-)
