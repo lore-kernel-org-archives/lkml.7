@@ -2,109 +2,109 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F291CC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB34C74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D8A205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:29:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cR4haE3K"
+	by mail.kernel.org (Postfix) with ESMTP id 4866F205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 18:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfGNS3b (ORCPT
+        id S1728727AbfGNSbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 14:29:31 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38229 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfGNS3b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 14:29:31 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z75so6650723pgz.5;
-        Sun, 14 Jul 2019 11:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pvN3czcomFmymVDK1Avc83sBlfQuMl7UAtMrvJZX+YU=;
-        b=cR4haE3KZrhdCSpClpCYsq1Melf5HK6v1crTOU0GH7qoVyxzRg9ZZRYVOGnGn2CULc
-         x6ikV8qiL0FTI5tB9zcwgsLq1LYOAQFFyDEV0odIrVTnOzTEv9GFw+eOVnAwEa98Sqkr
-         jN0FcIdrAXtGbn1QsYfMyoB/JtOA4Qb0+ttjIoCl8TRve7icXijXai3v+EB/bsMCBaHR
-         2tkgM4GGQXc6ZYinQ5aaquLbhPBdDEg2gNU6qBRDTxqv7IxI/qchB97d4azi5UNIQ0A0
-         3/2ogV5ZHTIcXy3I/XBAEKJK7LZMGaExhuz4dWYgBacCd4cYyicjuuC5vWotF/YsnDYj
-         G/bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pvN3czcomFmymVDK1Avc83sBlfQuMl7UAtMrvJZX+YU=;
-        b=oI0/DOSyYCphXg/mNQV6N507JPAi+BDgtQs64YCniK8DfcIiaiuwGV6zMqlWA+MfxT
-         y34o3uu1qHf9UKUtsPP68ogtNWyHciA5h9ilNBls+kJLJTQbGNcdgxm5yj93zzyh8TKm
-         ehahY6We9p4bRVYcu/4oWnXuuKisUqpnofxng9NalCAbZZ+/sm0ytr6XbH74JtkrAFnL
-         3ewtNaD57FpUAEHHiPnGdbr350wxEVxLcVyXr+RzExoadD/m4T7eKJDNGa947l9CGLfc
-         7i6V7N4NS3RrncUjnQJYeRDWulv1EEJAEYxTmi8Ph/PYbEBt+MRsVKv6wIO7ai6oTZfx
-         8oJw==
-X-Gm-Message-State: APjAAAXQwOGCxQ/tACQoej8zyG5jU+N27WOs34cErSYpNJ1JFQGnJoJ1
-        pMg6tGmv8Gg0jTY4L3wGMZo=
-X-Google-Smtp-Source: APXvYqzCzGXg+mTL+dOqiWBRGk0YTacnCLB4ynl9TJ2W5Z8LiMmBlyOj4FMi2tXn6lbcNSPzFZlDlw==
-X-Received: by 2002:a63:e14d:: with SMTP id h13mr22807314pgk.431.1563128969674;
-        Sun, 14 Jul 2019 11:29:29 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id m31sm16099199pjb.6.2019.07.14.11.29.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 11:29:29 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 11:29:27 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH 1/8] Input: synaptics: Fix misuse of strlcpy
-Message-ID: <20190714182927.GB190835@dtor-ws>
-References: <cover.1562283944.git.joe@perches.com>
- <070330472a7314a21d85c42dd66cdd43222559c3.1562283944.git.joe@perches.com>
+        Sun, 14 Jul 2019 14:31:18 -0400
+Received: from smtp.gentoo.org ([140.211.166.183]:48000 "EHLO smtp.gentoo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728218AbfGNSbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 14:31:18 -0400
+Received: from [IPv6:2001:a62:1aa0:1f01:8bef:1c55:1564:aa8] (unknown [IPv6:2001:a62:1aa0:1f01:8bef:1c55:1564:aa8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zzam)
+        by smtp.gentoo.org (Postfix) with ESMTPSA id DEB7A347B24;
+        Sun, 14 Jul 2019 18:31:15 +0000 (UTC)
+Subject: Re: [PATCH v3] media: si2168: Refactor command setup code
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Brad Love <brad@nextdimension.cc>, Antti Palosaari <crope@iki.fi>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
+ <bde6e367-61a4-7501-2459-eecad5db1d1b@nextdimension.cc>
+ <20190712144537.2bad2482@coco.lan>
+ <10f064c5-1634-c9f9-fcc9-6ab51b7f8f0b@free.fr>
+ <20190713070256.3495de51@coco.lan>
+From:   Matthias Schwarzott <zzam@gentoo.org>
+Message-ID: <13f74614-69b8-00e1-2072-ba390d5aa2cb@gentoo.org>
+Date:   Sun, 14 Jul 2019 20:31:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <070330472a7314a21d85c42dd66cdd43222559c3.1562283944.git.joe@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190713070256.3495de51@coco.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 04:57:41PM -0700, Joe Perches wrote:
-> Probable cut&paste typo - use the correct field size.
-
-Applied, thank you.
-
-Luckily both sizes (name and phys) are the same, so we need not to have
-this in any of the stables.
-
+Am 13.07.19 um 12:02 schrieb Mauro Carvalho Chehab:
+> Em Sat, 13 Jul 2019 00:11:12 +0200
+> Marc Gonzalez <marc.w.gonzalez@free.fr> escreveu:
 > 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/input/mouse/synaptics.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> On 12/07/2019 19:45, Mauro Carvalho Chehab wrote:
+>>
+>>> Brad Love <brad@nextdimension.cc> escreveu:
+>>>   
+>>> IMHO, using sizeof() here is a very bad idea.  
+>>
+>> You may have a point...
+>> (Though I'm not proposing a kernel API function, merely code
+>> refactoring for a single file that's unlikely to change going
+>> forward.)
 > 
-> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> index 1080c0c49815..00a0cf14f27f 100644
-> --- a/drivers/input/mouse/synaptics.c
-> +++ b/drivers/input/mouse/synaptics.c
-> @@ -705,7 +705,7 @@ static void synaptics_pt_create(struct psmouse *psmouse)
->  
->  	serio->id.type = SERIO_PS_PSTHRU;
->  	strlcpy(serio->name, "Synaptics pass-through", sizeof(serio->name));
-> -	strlcpy(serio->phys, "synaptics-pt/serio0", sizeof(serio->name));
-> +	strlcpy(serio->phys, "synaptics-pt/serio0", sizeof(serio->phys));
->  	serio->write = synaptics_pt_write;
->  	serio->start = synaptics_pt_start;
->  	serio->stop = synaptics_pt_stop;
-> -- 
-> 2.15.0
+> Yes, I know, but we had already some bugs due to the usage of
+> sizeof() on similar macros at drivers in the past.
 > 
+>> It's also bad form to repeat the cmd size (twice) when the compiler
+>> can figure it out automatically for string literals (which is 95%
+>> of the use-cases).
+>>
+>> I can drop the macro, and just use the helper...
+> 
+> The helper function sounds fine.
+> 
+>>
+>> Or maybe there's a GCC extension to test that an argument is a
+>> string literal...
+> 
+> If this could be evaluated by some advanced macro logic that
+> would work not only with gcc but also with clang, then a
+> macro that does what you proposed could be useful.
+> 
+> There are some ways to check the type of a macro argument, but I'm
+> not sure if are there any way for it to distinguish between a
+> string constant from a char * array.
+> 
+Maybe something like this will prevent compilation if the argument is no
+string literal:
 
--- 
-Dmitry
+#define CMD_SETUP(cmd, args, rlen) \
+	cmd_setup(cmd, args "", sizeof(args) - 1, rlen)
+
+Another idea is a check like:
+
+#define CMD_SETUP(cmd, args, rlen) \
+	do { \
+		BUILD_BUG_ON(#args[0] != "\""); \
+		cmd_setup(cmd, args "", sizeof(args) - 1, rlen) \
+	} while(0)
+
+Regards
+Matthias
