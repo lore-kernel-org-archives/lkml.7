@@ -2,124 +2,181 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F71C742A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A11DC73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CB320820
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:11:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="Uduj8Tqh"
+	by mail.kernel.org (Postfix) with ESMTP id 4170D20896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfGNHLp (ORCPT
+        id S1728319AbfGNHLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 03:11:45 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25558 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbfGNHLp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 03:11:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1563087394; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=BCpHCA5wo5z5nzUNp9SGvMTYO48B6vv4zvpjYqyywOgT7hGylaq9jF7hxblQqNhzSQ6BOeIXdUvUTNPeDpsr1QfRdmsMUuUT6kBb+PA2C50bOYavarQazvOqDwnqBTIpcCi7uqM8sEZszscwqdtNEiQygd50q5bVrLM1WiMDgwc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1563087394; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=iiMvhbTTX9+gS3xxepq+r5OQUY/fuvtJIF+KG5TROMc=; 
-        b=ARkBgkG6J1BFSpnEWFlYy9J+B93js6uataGq0jpsf203I2faFUibzRMv6Mo9+GNrDd6GeD6VTCWWnktjTpqiCSWULIsBfqb7h6NozYl8pe2r/CIi8w2NWKeo+T/xKLGemvW9yJmlp6S4QMFjuNx22dGlF0T47q4hk77g/rD+SZM=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=B2vSbOKrnXPfdkzQ+Px1psIq1t5rE70gUas1N5Q+O4fTODIcz1mhXV3MJUaoyorlLigQ5BzwTnWR
-    arn1Aj7Tov5vm1PJ05X5zhAsnrURI0Ujl5Zu7lVRPiUF6uDQpBaH  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1563087394;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2456; bh=iiMvhbTTX9+gS3xxepq+r5OQUY/fuvtJIF+KG5TROMc=;
-        b=Uduj8TqhQK6hHx6iaYgEv39PWzWSCadM6MQG/MOb6ul3JTGA0v2XvUoTSj63RQET
-        bbQ+WAnoILwCEWihMSrfNwl8F0JupnfnW0L04Cg/cGIxAq6HvX72Mx+qhgdloSEVD31
-        EIEunJ478TrecmEeiy9RcGBWzD2nlEuxVlF/bVtQ=
-Received: from zhouyanjie-virtual-machine.localdomain (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
-        with SMTPS id 1563087394688413.43827450011634; Sat, 13 Jul 2019 23:56:34 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, paul.burton@mips.com,
-        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: [PATCH 3/6] dt-bindings: pinctrl: Add X1000 and X1000E bindings.
-Date:   Sun, 14 Jul 2019 11:53:53 +0800
-Message-Id: <1563076436-5338-4-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
-References: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Sun, 14 Jul 2019 03:11:50 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:26500 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728164AbfGNHLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 03:11:47 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id E49974EC6D;
+        Sun, 14 Jul 2019 09:11:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id so9n73IONPC7; Sun, 14 Jul 2019 09:11:17 +0200 (CEST)
+Date:   Sun, 14 Jul 2019 17:11:02 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 01/10] namei: obey trailing magic-link DAC permissions
+Message-ID: <20190714071102.gsc3kqpakz7chqt6@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-2-cyphar@cyphar.com>
+ <20190712041454.GG17978@ZenIV.linux.org.uk>
+ <20190712122017.xkowq2cjreylpotm@yavin>
+ <20190712131005.GM17978@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gghwwblfl4frle37"
+Content-Disposition: inline
+In-Reply-To: <20190712131005.GM17978@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the pinctrl bindings for the X1000 Soc and
-the X1000E Soc from Ingenic.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- .../devicetree/bindings/pinctrl/ingenic,pinctrl.txt         | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+--gghwwblfl4frle37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-index a80ff68..7e2ee46 100644
---- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-@@ -1,18 +1,18 @@
--Ingenic jz47xx pin controller
-+Ingenic XBurst pin controller
- 
- Please refer to pinctrl-bindings.txt in this directory for details of the
- common pinctrl bindings used by client devices, including the meaning of the
- phrase "pin configuration node".
- 
--For the jz47xx SoCs, pin control is tightly bound with GPIO ports. All pins may
-+For the XBurst SoCs, pin control is tightly bound with GPIO ports. All pins may
- be used as GPIOs, multiplexed device functions are configured within the
- GPIO port configuration registers and it is typical to refer to pins using the
- naming scheme "PxN" where x is a character identifying the GPIO port with
- which the pin is associated and N is an integer from 0 to 31 identifying the
- pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
--PB31 is the last pin in GPIO port B. The jz4740 contains 4 GPIO ports, PA to
--PD, for a total of 128 pins. The jz4760, the jz4770 and the jz4780 contains 6
--GPIO ports, PA to PF, for a total of 192 pins.
-+PB31 is the last pin in GPIO port B. The jz4740 and the x1000 contains 4 GPIO
-+ports, PA to PD, for a total of 128 pins. The jz4760, the jz4770 and the jz4780
-+contains 6 GPIO ports, PA to PF, for a total of 192 pins.
- 
- 
- Required properties:
-@@ -25,6 +25,8 @@ Required properties:
-     - "ingenic,jz4760b-pinctrl"
-     - "ingenic,jz4770-pinctrl"
-     - "ingenic,jz4780-pinctrl"
-+    - "ingenic,x1000-pinctrl"
-+    - "ingenic,x1000e-pinctrl"
-  - reg: Address range of the pinctrl registers.
- 
- 
-@@ -36,6 +38,7 @@ Required properties for sub-nodes (GPIO chips):
-     - "ingenic,jz4760-gpio"
-     - "ingenic,jz4770-gpio"
-     - "ingenic,jz4780-gpio"
-+    - "ingenic,x1000-gpio"
-  - reg: The GPIO bank number.
-  - interrupt-controller: Marks the device node as an interrupt controller.
-  - interrupts: Interrupt specifier for the controllers interrupt.
--- 
-2.7.4
+On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Fri, Jul 12, 2019 at 10:20:17PM +1000, Aleksa Sarai wrote:
+> > On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > > On Sun, Jul 07, 2019 at 12:57:28AM +1000, Aleksa Sarai wrote:
+> > > > @@ -514,7 +516,14 @@ static void set_nameidata(struct nameidata *p,=
+ int dfd, struct filename *name)
+> > > >  	p->stack =3D p->internal;
+> > > >  	p->dfd =3D dfd;
+> > > >  	p->name =3D name;
+> > > > -	p->total_link_count =3D old ? old->total_link_count : 0;
+> > > > +	p->total_link_count =3D 0;
+> > > > +	p->acc_mode =3D 0;
+> > > > +	p->opath_mask =3D FMODE_PATH_READ | FMODE_PATH_WRITE;
+> > > > +	if (old) {
+> > > > +		p->total_link_count =3D old->total_link_count;
+> > > > +		p->acc_mode =3D old->acc_mode;
+> > > > +		p->opath_mask =3D old->opath_mask;
+> > > > +	}
+> > >=20
+> > > Huh?  Could somebody explain why traversals of NFS4 referrals should =
+inherit
+> > > ->acc_mode and ->opath_mask?
+> >=20
+> > I'll be honest -- I don't understand what set_nameidata() did so I just
+> > did what I thought would be an obvious change (to just copy the
+> > contents). I thought it was related to some aspect of the symlink stack
+> > handling.
+>=20
+> No.  It's handling of (very rare) nested pathwalk.  The only case I can t=
+hink
+> of is handling of NFS4 referrals - they are triggered by ->d_automount()
+> and include NFS4 mount.  Which does internal pathwalk of its own, to get
+> to the root of subtree being automounted.
+>=20
+> NFS has its own recursion protection on that path (no deeper nesting than
+> one level of referral traversals), but there some nesting is inevitable;
+> we do get another nameidata instance on stack.  And for nd_jump_link() we
+> need to keep track of the innermost one.
+>=20
+> For symlinks nothing of that sort happens - they are dealt with on the sa=
+me
+> struct nameidata.  ->total_link_count copying is there for one reason onl=
+y -
+> we want the total amount of symlinks traversed during the pathwalk (inclu=
+ding
+> the referral processing, etc.) to count towards MAXSYMLINKS check.  It co=
+uld've
+> been moved from nameidata to task_struct, but it's cheaper to handle it t=
+hat
+> way.
+>=20
+> Again, nesting is *rare*.
 
+Thanks for the explanation, much appreciated. I will drop the old->...
+copying hunk.
 
+> > In that case, should they both be set to 0 on set_nameidata()? This will
+> > mean that fd re-opening (or magic-link opening) through a
+> > set_nameidata() would always fail.
+>=20
+> Huh?  set_nameidata() is done for *all* instances - it's pretty much the
+> constructor of that object (and restore_nameidata() - a destructor).
+> Everything goes through it.
+
+Sorry, I meant to drop the copy-from-old logic -- not set it to zero
+explicitly in set_nameidata().
+
+> And again, I'm not sure we want these fields in nameidata - IMO they belo=
+ng
+> in open_flags.  Things like e.g. stat() don't need them at all.
+
+Yup, I'll work up a version that does the consolidation you mentioned
+in your other mail.
+
+> Incidentally, O_PATH opening of symlinks combined with subsequent procfs
+> symlink traversals is worth testing - that's where the things get subtle
+> and that's where it's easy to get in trouble on modifications.
+
+I have some self-tests of a symlink-to-a-magic-link in the last patch of
+the series. Did you mean something even more chained like a symlink to a
+/proc/self/fd/$n of an O_NOFOLLOW|O_PATH of a symlink?
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--gghwwblfl4frle37
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSrVgAAKCRCdlLljIbnQ
+EupPAQDpi9m99/xBGy4or9AS/LoRkr4tSLDlWlOsdCn0tZ52WAEAqoZwgZWyT46F
+mjKoRQeNjgtDk5jRNWbrwkJAMPXy2AE=
+=GnH+
+-----END PGP SIGNATURE-----
+
+--gghwwblfl4frle37--
