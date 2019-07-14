@@ -2,149 +2,155 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0843FC742A7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8ACC71142
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5DF8206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1892084B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 01:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LEjRHErO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfGNBRw (ORCPT
+        id S1728192AbfGNBSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jul 2019 21:17:52 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:40646 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbfGNBRv (ORCPT
+        Sat, 13 Jul 2019 21:18:10 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35154 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbfGNBSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jul 2019 21:17:51 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 151C9299AD;
-        Sat, 13 Jul 2019 21:17:47 -0400 (EDT)
-Date:   Sun, 14 Jul 2019 11:17:47 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-cc:     Alessandro Zummo <a.zummo@towertech.it>, userm57@yahoo.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-In-Reply-To: <20190713205014.GC4732@piout.net>
-Message-ID: <alpine.LNX.2.21.1907141013360.8@nippy.intranet>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au> <20190624195705.GD5690@piout.net> <alpine.LNX.2.21.1906251043050.8@nippy.intranet> <20190625092926.GE5690@piout.net> <alpine.LNX.2.21.1906261428060.8@nippy.intranet>
- <20190713205014.GC4732@piout.net>
+        Sat, 13 Jul 2019 21:18:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6E1EoEl079200;
+        Sun, 14 Jul 2019 01:16:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=gnStV7SBtyBELVgdhWru5ZF/zwLQRRjtxakJR6QK8O4=;
+ b=LEjRHErOUwlLHTSiY35a9/RWgVlntWcQEXHjz41W6JsOj1fltQqrqIidgrzVOp4pHh+6
+ oJu2jP99ATK1ItUm55tSIWIDhSwIHgyzB4bxR/Zc/4n+rKDgdQuhBLFUY/r5dXvReqwO
+ nN7pTUZnim4bbV2ABiPjxnAcdiy/GJiEAGM2Ex0a7BhIrXp0T1dhvQGKBaJbrCYfEeP0
+ cVsN29inpLK7+vPi/6/hm3e9V6fbHTFnga8rFqbvjw5JfWd/MlGFE0pZujhYy2RgoyYq
+ aSCy24tFdUiGBZN8lzBaCN5NcOhfcfj3PorxoraCvWgelXEsOHh0kvu9Unsu9BOq4sz2 yQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2tq7xqhu07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 14 Jul 2019 01:16:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6E1EJt4138593;
+        Sun, 14 Jul 2019 01:16:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2tq4dstp55-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 14 Jul 2019 01:16:18 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6E1GAde016937;
+        Sun, 14 Jul 2019 01:16:10 GMT
+Received: from Subhras-MacBook-Pro.local (/103.87.143.145)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 13 Jul 2019 18:16:10 -0700
+Subject: Re: [PATCH v3 5/7] sched: SIS_CORE to disable idle core search
+To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190627012919.4341-6-subhra.mazumdar@oracle.com>
+ <0e0f3347-c262-2917-76d7-88dddf4e9122@linux.ibm.com>
+ <59ab08d5-8b7c-00b9-230b-7c0b307a675f@oracle.com>
+ <be91602a-0243-e094-8c8f-ceed314d10ce@linux.ibm.com>
+ <12402fea-7b87-8c4d-9485-53f973c38654@oracle.com>
+ <aac9f826-ab73-2754-4a7b-7d948f1edf92@linux.ibm.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <b3c238bc-c094-bbdf-5273-0de9e55f7a15@oracle.com>
+Date:   Sun, 14 Jul 2019 06:46:01 +0530
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <aac9f826-ab73-2754-4a7b-7d948f1edf92@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9317 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907140013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9317 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907140014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jul 2019, Alexandre Belloni wrote:
 
-> On 26/06/2019 14:42:31+1000, Finn Thain wrote:
-> > > Userspace is certainly adjusting the timezone after the kernel did. 
-> > > Can you run the same commands without running your init?
-> > > 
-> > 
-> > Sure. I booted into /bin/sh instead of /sbin/init then mounted /proc 
-> > and /dev, and got this:
-> > 
-> > # dmesg | grep rtc_cmos
-> > [    0.544046] rtc_cmos 00:02: RTC can wake from S4
-> > [    0.544246] rtc_cmos 00:02: rtc core: registered rtc_cmos as rtc0
-> > [    0.544246] rtc_cmos 00:02: alarms up to one month, y3k, 114 bytes nvram, hpet irqs
-> > [    0.545514] rtc_cmos 00:02: setting system clock to 2019-06-26 14:19:40 UTC (1561558780)
-> > # grep . /etc/adjtime /etc/timezone
-> > /etc/adjtime:0.000120 1550184138 0.000000
-> > /etc/adjtime:1550184138
-> > /etc/adjtime:LOCAL
-> > /etc/timezone:Australia/Melbourne
-> > # hwclock --show
-> > 2019-06-26 14:22:25.437089+10:00
-> > # date --iso-8601=s
-> > 2019-06-27T00:22:45+10:00
-> > 
-> > As expected, the kernel message still agrees with the output from 
-> > hwclock.
-> > 
-> 
-> hwclock has the information that the RTC is in localtime
-
-Right. From the man page:
-
-          The time shown is always in local time, even if you keep your 
-          Hardware Clock in UTC.
-
-The output from hwclock is fine, the output from the kernel is confusing.
-
-> but hctosys correctly set the system time to 2019-06-26T14:19:40+00:00, 
-> that is 2019-06-27T00:19:40+10:00 so the kernel message is right and the 
-> system time is wrong, unless you invoke hwclock -s
-> 
-
-I would not say, "correctly set". The system time is wrong here.
-
-> > > On stable, you have /etc/init.d/hwclock.sh that still runs and does 
-> > > the correct thing. My understanding is that systemd also handles the 
-> > > TZ properly after hctosys (see clock_is_localtime()).
-> > > 
-> > 
-> > This was Gentoo/x86 with openrc. The Debian/powerpc problem is exactly 
-> > the same: the kernel messages report local time whilst claiming that 
-> > it's UTC.
-> > 
-> 
-> That is not what it is reporting, it is reporting that it is setting the 
-> system time, thinking that the RTC is in UTC time. Your test shows that 
-> this is what happens on x86.
-> 
-
-Thanks for your explanation. Please disregard my patch. I see that the 
-printk is sensible (i.e. the system clock value is printed in UTC) even 
-though the system clock value itself is bogus (up until the init scripts 
-fix it).
-
-> > > Seriously, hctosys does a really bad job at setting the system time, 
-> > > it is guaranteed to be always wrong on most platforms. My plan is 
-> > > still to try to get distros to stop enabling it and do that properly 
-> > > in userspace. This is already ok when using sysV but systemd would 
-> > > need a few changes to stop relying on it when then is no hwclock 
-> > > initscript. Unfortunately, I didn't have time to work on that yet.
-> > > 
-> > 
-> > It doesn't help if you are able to change all of the future distros. 
-> > If you remove hctosys you will break some distros which have already 
-> > shipped.
-> > 
-> > For example, I've seen a Debian release that will force a fsck of the 
-> > root filesystem without CONFIG_RTC_HCTOSYS. This is a temporary denial 
-> > of service not a failure, but in general a backward jump by a few 
-> > hours can have bad consequences, such as services that refuse to 
-> > start.
-> > 
-> > Anyway, this bug is about a misleading printk, it isn't about removing 
-> > functionality. Why conflate these two issues?
-> 
-> Again, your test shows that I'm correct and hctosys is setting the 
-> system time using the RTC time as UTC time. This gets fixed later by 
-> userspace.
-> 
-> PowerPC is the only different platform because it is able to set sys_tz. 
-> It is the only platform doing so. What you can do is check 
-> sys_tz.tz_minuteswest, keep UTC if it is 0 and print the timezone if it 
-> is not.
-> 
-
-If userland is responsible for setting sys_tz.tz_minuteswest then we 
-probably should not rely on it here.
-
-PowerMacs may set sys_tz.tz_minuteswest because the NVRAM on that platform 
-contains the GMT Bias, thanks to Mac OS. Linux never sets this value in 
-NVRAM, AFAIK, and Windows doesn't make this value available either.
-
-On PowerMacs, this value already gets logged by the kernel. So I don't 
-think any logging change is needed here.
-
--- 
+On 7/4/19 6:04 PM, Parth Shah wrote:
+> Same experiment with hackbench and with perf analysis shows increase in L1
+> cache miss rate with these patches
+> (Lower is better)
+>                            Baseline(%)   Patch(%)
+>   ----------------------- ------------- -----------
+>    Total Cache miss rate         17.01   19(-11%)
+>    L1 icache miss rate            5.45   6.7(-22%)
+>
+>
+>
+> So is is possible for idle_cpu search to try checking target_cpu first and
+> then goto sliding window if not found.
+> Below diff works as expected in IBM POWER9 system and resolves the problem
+> of far wakeup upto large extent.
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index ff2e9b5c3ac5..fae035ce1162 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6161,6 +6161,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+>          u64 time, cost;
+>          s64 delta;
+>          int cpu, limit, floor, target_tmp, nr = INT_MAX;
+> +       struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+>   
+>          this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
+>          if (!this_sd)
+> @@ -6198,16 +6199,22 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+>   
+>          time = local_clock();
+>   
+> -       for_each_cpu_wrap(cpu, sched_domain_span(sd), target_tmp) {
+> +       cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
+> +       for_each_cpu_wrap(cpu, cpu_smt_mask(target), target) {
+> +               __cpumask_clear_cpu(cpu, cpus);
+> +               if (available_idle_cpu(cpu))
+> +                       goto idle_cpu_exit;
+> +       }
+> +
+> +       for_each_cpu_wrap(cpu, cpus, target_tmp) {
+>                  per_cpu(next_cpu, target) = cpu;
+>                  if (!--nr)
+>                          return -1;
+> -               if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
+> -                       continue;
+>                  if (available_idle_cpu(cpu))
+>                          break;
+>          }
+>   
+> +idle_cpu_exit:
+>          time = local_clock() - time;
+>          cost = this_sd->avg_scan_cost;
+>          delta = (s64)(time - cost) / 8;
+>
+>
+>
+> Best,
+> Parth
+How about calling select_idle_smt before select_idle_cpu from
+select_idle_sibling? That should have the same effect.
