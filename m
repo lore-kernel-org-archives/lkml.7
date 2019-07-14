@@ -2,101 +2,180 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7F3C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 10:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03E3C742A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 10:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C034205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 10:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="TPI177wC"
+	by mail.kernel.org (Postfix) with ESMTP id 91D7920820
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 10:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbfGNK2F (ORCPT
+        id S1728338AbfGNKbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 06:28:05 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33418 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbfGNK2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 06:28:05 -0400
-Received: by mail-qt1-f194.google.com with SMTP id r6so8576077qtt.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 03:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qSj3Bmi/w/1zN06nJGZLq87D/4DT1P43eX8reckzzS4=;
-        b=TPI177wCttmgzj2zjtm6ejQGE2hqJgzkft59BaitUc+pDhgLl67WUZ3HTPqkmBKwKT
-         HaKtzy3kfBLudvUGEVZmYnRb0cWL1GbRhUjQxTI6D6iT5At1QV6mQFcObNzatYIH+Use
-         z96hM91I6zGAWLSIN8jMnRSDFBNwP6B/jnZQmbpt3QHQpUuyxoiUCIFxL7pRlFFVITw1
-         Z5qySYIEh3FOUnN7pZG3DSHDofgQbNi/OEOcWMLOsSpfRPWFZtMdw1814uKIt84sVjDR
-         LWF6m7evbEOJJUKSKCINVv00WlKvcku43xeWmEBM8XJ/I9563k5bctS+Pm8Ddi6WzklS
-         Axdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qSj3Bmi/w/1zN06nJGZLq87D/4DT1P43eX8reckzzS4=;
-        b=BMIL8zd3CVMaSmFX8HT+Vw4ImKwz1WSlhrx7CnKysCp1jpbsXV89Ofs9u/3Q8bUXxc
-         V+64+LbLiuAW3JVv4tPUp52eQjcmLuKC2becGyxk2KnQPGOEtTmexV6tQrrdIQBYhYme
-         CPTRMj0/BLUOsXIMzP0ZDhaLIpbzBcQU0kWvGpGjXbV05R4yY0je1sdR5eORpY8dFbwB
-         eqaYM1R0i2a1lGG8wO1CnFv5Gu8Q8DhlJxL6YnCzzVIOE2RKJaEe1G9Z2RLBV7mp2JAd
-         v14XriKWlJIxdxQMR/NzbULBByVsHxXnyOr3vrL6cgXVmt70UeGu1iPb3nbnzHzbDNeX
-         T+YQ==
-X-Gm-Message-State: APjAAAW5C3/D/1RP1IvuCHUSC+2K3LxttRvK9e8p+qQ/tQsJ6qlKlxmx
-        XRXt94dX4mPVf9yPqLNDkRLpqZxFdRTPIQfU1cI=
-X-Google-Smtp-Source: APXvYqwW9r49ZNCDH5uR+fCTnodiMf8WsYqgNpD7aFNpy6/MLfLizZYiOESsdENMFNBbYJ51h6NGhEzzIqeVSJA7bnw=
-X-Received: by 2002:a0c:b010:: with SMTP id k16mr14512300qvc.170.1563100083935;
- Sun, 14 Jul 2019 03:28:03 -0700 (PDT)
+        Sun, 14 Jul 2019 06:31:31 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:28908 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728009AbfGNKba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 06:31:30 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 9FD654DF84;
+        Sun, 14 Jul 2019 12:31:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id JHLEpiHFM8dg; Sun, 14 Jul 2019 12:31:19 +0200 (CEST)
+Date:   Sun, 14 Jul 2019 20:31:04 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190714100825.umyql5op6cxhmpqa@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
+ <20190712125552.GL17978@ZenIV.linux.org.uk>
+ <20190712132553.GN17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com>
- <20190713145909.30749-1-mike@fireburn.co.uk> <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de>
-From:   Mike Lothian <mike@fireburn.co.uk>
-Date:   Sun, 14 Jul 2019 11:27:52 +0100
-Message-ID: <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be reserved
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     thomas.lendacky@amd.com, bhe@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        luto@kernel.org, mingo@redhat.com,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kaevdj3q3yxfna5u"
+Content-Disposition: inline
+In-Reply-To: <20190712132553.GN17978@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will the fix be in the next RC?
 
-On Sun, 14 Jul 2019 at 11:16, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sat, 13 Jul 2019, Mike Lothian wrote:
->
-> > This appears to be causing issues with gold again:
-> >
-> > axion /usr/src/linux # make
-> >   CALL    scripts/checksyscalls.sh
-> >   CALL    scripts/atomic/check-atomics.sh
-> >   DESCEND  objtool
-> >   CHK     include/generated/compile.h
-> >   VDSOCHK arch/x86/entry/vdso/vdso64.so.dbg
-> >   VDSOCHK arch/x86/entry/vdso/vdso32.so.dbg
-> >   CHK     kernel/kheaders_data.tar.xz
-> >   CC      arch/x86/boot/compressed/misc.o
-> >   RELOCS  arch/x86/boot/compressed/vmlinux.relocs
-> > Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-> > make[2]: *** [arch/x86/boot/compressed/Makefile:130: arch/x86/boot/compressed/vmlinux.relocs] Error 1
-> > make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
-> > make[1]: *** [arch/x86/boot/Makefile:112: arch/x86/boot/compressed/vmlinux] Error 2
-> > make: *** [arch/x86/Makefile:316: bzImage] Error 2
->
-> That's fixed upstream already.
->
-> Thanks,
->
->         tglx
+--kaevdj3q3yxfna5u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Fri, Jul 12, 2019 at 01:55:52PM +0100, Al Viro wrote:
+> > On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
+> > > On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
+> > >=20
+> > > > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct name=
+idata *nd, unsigned flags)
+> > > > > >  			s =3D ERR_PTR(error);
+> > > > > >  		return s;
+> > > > > >  	}
+> > > > > > -	error =3D dirfd_path_init(nd);
+> > > > > > -	if (unlikely(error))
+> > > > > > -		return ERR_PTR(error);
+> > > > > > +	if (likely(!nd->path.mnt)) {
+> > > > >=20
+> > > > > Is that a weird way of saying "if we hadn't already called dirfd_=
+path_init()"?
+> > > >=20
+> > > > Yes. I did it to be more consistent with the other "have we got the
+> > > > root" checks elsewhere. Is there another way you'd prefer I do it?
+> > >=20
+> > > "Have we got the root" checks are inevitable evil; here you are makin=
+g the
+> > > control flow in a single function hard to follow.
+> > >=20
+> > > I *think* what you are doing is
+> > > 	absolute pathname, no LOOKUP_BENEATH:
+> > > 		set_root
+> > > 		error =3D nd_jump_root(nd)
+> > > 	else
+> > > 		error =3D dirfd_path_init(nd)
+> > > 	return unlikely(error) ? ERR_PTR(error) : s;
+> > > which should be a lot easier to follow (not to mention shorter), but =
+I might
+> > > be missing something in all of that.
+> >=20
+> > PS: if that's what's going on, I would be tempted to turn the entire
+> > path_init() part into this:
+> > 	if (flags & LOOKUP_BENEATH)
+> > 		while (*s =3D=3D '/')
+> > 			s++;
+> > in the very beginning (plus the handling of nd_jump_root() prototype
+> > change, but that belongs with nd_jump_root() change itself, obviously).
+> > Again, I might be missing something here...
+>=20
+> Argh... I am, at that - you have setting path->root (and grabbing it)
+> in LOOKUP_BENEATH cases and you do it after dirfd_path_init().  So
+> how about
+> 	if (flags & LOOKUP_BENEATH)
+> 		while (*s =3D=3D '/')
+> 			s++;
+
+I can do this for LOOKUP_IN_ROOT, but currently the semantics for
+LOOKUP_BENEATH is that absolute paths will return -EXDEV
+indiscriminately (nd_jump_root() errors out with LOOKUP_BENEATH). To be
+honest, the check could actually just be:
+
+  if (flags & LOOKUP_BENEATH)
+    if (*s =3D=3D '/')
+	  return ERR_PTR(-EXDEV);
+
+(Though we'd still need -EXDEV in nd_jump_root() for obvious reasons.)
+
+The logic being that an absolute path means that the resolution starts
+out without being "beneath" the starting point -- thus violating the
+contract of LOOKUP_BENEATH. And since the "handle absolute paths like
+they're scoped to the root" is only implemented for LOOKUP_IN_ROOT, I'd
+think it's a bit odd to have LOOKUP_BENEATH do it too for absolute
+paths.
+
+I'll be honest, this patchset is more confusing to both of us because of
+LOOKUP_BENEATH -- I've only kept it since it was part of the original
+patchset (O_BENEATH). Personally I think more people will be far more
+interested in LOOKUP_IN_ROOT. Does anyone mind if I drop the
+LOOKUP_BENEATH parts of this series, and only keep LOOKUP_NO_* and
+LOOKUP_IN_ROOT?
+
+I make a change as you outlined for LOOKUP_IN_ROOT, though.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--kaevdj3q3yxfna5u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSsEZQAKCRCdlLljIbnQ
+EnUcAP0UIrWhoFUdmcGKVnbHflUGk+2uDxtG83hk6KmhY14aGgD/bIuyNZSByUo2
+62tn/pqpuWfU42XocRvuCvKllOoWpgc=
+=3x3j
+-----END PGP SIGNATURE-----
+
+--kaevdj3q3yxfna5u--
