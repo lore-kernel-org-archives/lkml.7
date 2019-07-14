@@ -7,104 +7,99 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE30C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3A6C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F2D20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF1E20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:04:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="VEq8SZAa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWHJnzpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfGNRBd (ORCPT
+        id S1728646AbfGNRE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 13:01:33 -0400
-Received: from forward101p.mail.yandex.net ([77.88.28.101]:50246 "EHLO
-        forward101p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728125AbfGNRBc (ORCPT
+        Sun, 14 Jul 2019 13:04:28 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34663 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfGNRE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 13:01:32 -0400
-X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jul 2019 13:01:30 EDT
-Received: from mxback5o.mail.yandex.net (mxback5o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::1f])
-        by forward101p.mail.yandex.net (Yandex) with ESMTP id 2F82A3280D8B
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 19:54:16 +0300 (MSK)
-Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
-        by mxback5o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 4BRNafBjMb-sGgm69dn;
-        Sun, 14 Jul 2019 19:54:16 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1563123256;
-        bh=e3qMdJIOrOmT55OEcJgtiuTqksffCaD+4hyyfkqsY38=;
-        h=Subject:To:From:Date:Message-ID;
-        b=VEq8SZAa0rmRhrFZewjwa/96nHx8t0l78gyG69RDafwAi+OJtFt2bpEDFp7cJ98ZX
-         lzZxzims06Y++U6F8roIKwL5VgxwzNUfMFYCHyb+VBc5zSxhNiNZRVwtv0JW4yHFXK
-         QM8QZWUgicUkYYXVL7k08fuKlieQ1V95w1UpG8i4=
-Authentication-Results: mxback5o.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id QY7EPq4G19-sF6KsX9Y;
-        Sun, 14 Jul 2019 19:54:15 +0300
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (Client certificate not present)
-Message-ID: <5D2B6126.7080700@yandex.ru>
-Date:   Sun, 14 Jul 2019 20:06:46 +0300
-From:   Nikolai Zhubr <n-a-zhubr@yandex.ru>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
+        Sun, 14 Jul 2019 13:04:28 -0400
+Received: by mail-qk1-f195.google.com with SMTP id t8so10011038qkt.1;
+        Sun, 14 Jul 2019 10:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fifFmsPpP77u9wn9Bi+cLuzl2ooK3wT2NlpPGgetbqQ=;
+        b=GWHJnzpPem/cjvGASatoRSaiAB9BBZFDIYvrmGgVj2u5IOKLS6oWeaISk08IcyXBqr
+         u+3X/iaGGriix4NneQL2oDn9JKSyTy15JV7A9NhDJKZ+oj67U/227zpPqvi+TXct1iIh
+         JFjt2dX7sHcmuYAaXIGD8TH6tLu/MQyfBjAocsUbLGTFuVpXZBCo+nPJTvqrJ7bzSgiO
+         dfYfixQcRyMWvp0Ka/SDYKi9lYzXIexKhqIBbfvvz3c6UWmC1zbm76ShVCLsTwojrlwR
+         3TXKawqgYJXO0PJzlFc2AvoMyLX0fmsopvn1ISzgRhZBOhW/BFFgMfdnpSHebLz1OPfh
+         Q9RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fifFmsPpP77u9wn9Bi+cLuzl2ooK3wT2NlpPGgetbqQ=;
+        b=Pusu7WrQ4K9nJR4ljncRbjnrue9FFpPNh+xJ2SDRPm4SSDwLQBdcNDHYOuh4GvZe89
+         opDOh1Bam5pYkfy9YmSbBoRIU/0tFUBCgqZery5EaSAaPdcqFX+0WOnQ6Zsl/WqZ8wpb
+         mu9AoVgOX9rO/beYX9KFE35DQRwVYAFUuQuvMqceqP5j8GlIWVBMRP2iaCaJV7uLnpU+
+         PWYIQG1/GqAFsxoxwVL25YOQXKSkJJNh+aRvrZvidoJBmT7Hf0+bCAYLS5TfnVep2CHh
+         ZdZ96s863vcrkUX3kpio0mg1/snvO0E1rDjU0SVcpHBsJ+WaH2qkANy+KV3nkAnCGcw5
+         rpQA==
+X-Gm-Message-State: APjAAAVTYHAFDiSLe8RxUbUCwRoE8iiGpvIN0MkvMRvD/pL9m2Z++vM/
+        PhbmZwZ1mKkFXbd9XuvJ/A==
+X-Google-Smtp-Source: APXvYqwRcksKUUflgv6z/92SVoaC+5Bz+I7zLvAWB4U35H7rkxhjCawisbZ7vv2azG2VmUgQ+kl/Ow==
+X-Received: by 2002:ae9:ed4b:: with SMTP id c72mr13633944qkg.400.1563123867212;
+        Sun, 14 Jul 2019 10:04:27 -0700 (PDT)
+Received: from keyur-pc (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
+        by smtp.gmail.com with ESMTPSA id c45sm8017047qte.70.2019.07.14.10.04.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 14 Jul 2019 10:04:26 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 13:04:24 -0400
+From:   Keyur Patel <iamkeyur96@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v4] staging: most: Delete an error message for a failed memory
+ allocation
+Message-ID: <20190714170424.GA3615@keyur-pc>
+References: <20190711175055.25157-1-iamkeyur96@gmail.com>
+ <20190714164126.3159-1-iamkeyur96@gmail.com>
+ <dd7867db-1089-7366-165f-6accba233c38@web.de>
 MIME-Version: 1.0
-To:     linux-kernel@vger.kernel.org
-Subject: Correct use of DMA api (Some newbie questions)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd7867db-1089-7366-165f-6accba233c38@web.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+I think commit message is clear enough to understand why this is needed.
+You can send me what should I include in commit description and I will
+add and send it again. Otherwise, Greg can comment on this.
 
-After reading some (apparently contradictory) revisions of DMA api 
-references in Documentation/DMA-*.txt, some (contradictory) discussions 
-thereof, and even digging through the in-tree drivers in search for a 
-good enlightening example, still I have to ask for advice.
+Thanks.
 
-I'm crafting a tiny driver (or rather, a kernel-mode helper) for a very 
-special PCIe device. And actually it does work already, but performs 
-differenly on different kernels. I'm targeting x86 (i686) only (although 
-preferrably the driver should stay platform-neutral) and I need to 
-support kernels 4.9+. Due to how the device is designed and used, very 
-little has to be done in kernel space. The device has large internal 
-memory, which accumulates some measurement data, and it is capable of 
-transferring it to the host using DMA (with at least 32-bit address 
-space available). Arranging memory for DMA is pretty much the only thing 
-that userspace can not reasonably do, so this needs to be in the driver. 
-So my currenly attempted layout is as follows:
 
-1. In the (kernel-mode) driver, allocate large contiguous block of 
-physical memory to do DMA into. It will be later reused several times. 
-This block does not need to have a kernel-mode virtual address because 
-it will never be accessed from the driver directly. The block size is 
-typically 128M and I use CMA=256M. Currently I use dma_alloc_coherent(), 
-but I'm not convinced it really needs to be a strictly coherent memory, 
-for performance reasons, see below. Also, AFAICS on x86 
-dma_alloc_coherent() always creates a kernel address mapping anyway, so 
-maybe I'd better simply kalloc() with subsequent dma_map_single()?
-
-2. Upon DMA completion (from device to host), some sort of 
-barrier/synchronization might be necessary (to be safe WRT speculative 
-loads, cache, etc), like dma_cache_sync() or dma_sync_single_for_cpu(), 
-however the latter looks like a nop for x86 AFAICS, and the former is 
-apparently flush_write_buffers() which is not very involved either (asm 
-lock; nop) and does not look usefull for my case. Currentlly, I do not 
-use any, and it seems like OK, maybe by pure luck. So, is it so 
-trivially simple on x86 or am I just missing something horribly big here?
-
-3. mmap this buffer for userspace. Reading from it should be as fast as 
-possible, therefore this block AFAICS should be cacheble (and 
-prefetchable and whatever else for better performance), at least from 
-userspace context. It is not quite clear if such properties would depend 
-on block allocation method (in step 1 above) or just on remapping 
-attributes only. Currently, for mmap I employ dma_mmap_coherent(), but 
-it seems also possible to use remap_pfn_range(), and also change 
-vm_page_prot somewhat. I've already found that e.g. pgprot_noncached 
-hurts performance quite a lot, but supposedly without it some DMA 
-barrier (step 2 above) seems still necessary?
-
-Any hints greatly appreciated,
-
-Regards,
-Nikolai
+On Sun, Jul 14, 2019 at 06:55:30PM +0200, Markus Elfring wrote:
+> > ---
+> > Changes in v4:
+> 
+> I find this change log still incomplete.
+> 
+> You have chosen to adjust the commit message once more.
+> (Some contributors might be also not satisfied with this variant.)
+> 
+> Such a change requires to increase the corresponding patch version number,
+> doesn't it?
+> 
+> Regards,
+> Markus
