@@ -2,117 +2,133 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CE8C74A44
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D839C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E54D20896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:23:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563117835;
-	bh=iEG5GUnMOj2lTxT3cH5J8+wWEV1D3nTI5obA2yehjR0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GfxLMZP+G8kNJQ3UL8jFxVyWI+WUp9/KKOVcdB6Xz62Q+crwg2zNBpCrP09XkDFUk
-	 lJoxlzN4KhN1z+Zb59qKRYXn8Qw2KmsTuPud3mFfmCFrb+omoA/9xtNcax/Re7qxY1
-	 jb+a+TTCu2G5DEn2CY9ZmwjknVg7fJIgEiylXm5I=
+	by mail.kernel.org (Postfix) with ESMTP id 3E9D1205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="tAZCrdwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfGNPXy (ORCPT
+        id S1728637AbfGNPYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:23:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
+        Sun, 14 Jul 2019 11:24:17 -0400
+Received: from mout.web.de ([212.227.17.12]:44951 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbfGNPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:23:54 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC238205F4;
-        Sun, 14 Jul 2019 15:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563117832;
-        bh=iEG5GUnMOj2lTxT3cH5J8+wWEV1D3nTI5obA2yehjR0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k9Rjj6lCSoW5bQLkrveeOvVl57G8AMdVPg9gDJtUMiAYl91u39QhDFSE8tDD/eTC9
-         fwQxETGNeOedj/fI6/3RyJZK+8VhE/9Clbow/gKQ2INdTI0tx0+kXUuSteXDLOcBDX
-         lv0ZSatScisnP7FC/Qb/f14rlG6TmMNfdwR4ZTLg=
-Date:   Sun, 14 Jul 2019 16:23:24 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Hannes Schmelzer <hannes.schmelzer@br-automation.com>,
+        id S1728095AbfGNPYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 11:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563117817;
+        bh=Sxi8KiZGOSqRDgHk13Cpjv8vrU1eOIJ4xxP749vOkH4=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=tAZCrdwcGB1wjJejrVSyEIBRRnBZ8Fn7rDd7k9URwJ5knh+qEdgow5cwM3UF5mlpX
+         QwXQf40X2QWuSITKclqRpY+2Q7/p5uG/QqsCzRoa4saRbkIQxy3ZamiyUEEOWYlqJ0
+         4DG2WRy3cKjcDH2RD+Z0d9PMwo/rYZXYu+YT78xw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.159.144]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9os0-1hbhyq3Ivg-00B5P2; Sun, 14
+ Jul 2019 17:23:36 +0200
+Cc:     Christian Gromm <christian.gromm@microchip.com>,
+        Colin Ian King <colin.king@canonical.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Martijn Braam <martijn@brixit.nl>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~martijnbraam/pmos-upstream@lists.sr.ht,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Subject: Re: [PATCH 3/3] iio: light: stk3310: Add device tree support
-Message-ID: <20190714162324.66af1b33@archlinux>
-In-Reply-To: <20190703180604.9840-3-luca@z3ntu.xyz>
-References: <20190703180604.9840-1-luca@z3ntu.xyz>
-        <20190703180604.9840-3-luca@z3ntu.xyz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        linux-kernel@vger.kernel.org
+References: <20190714150546.31836-1-iamkeyur96@gmail.com>
+Subject: Re: [v4] staging: most: remove redundant print statement when
+ kfifo_alloc fails
+To:     Keyur Patel <iamkeyur96@gmail.com>, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <06fc2495-dda5-61d2-17e8-0c385e02da1e@web.de>
+Date:   Sun, 14 Jul 2019 17:23:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190714150546.31836-1-iamkeyur96@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:xdFsAciHCdHDSvkGjoB4tSWln+ja+589cYB7nh1B1wrTUwU3tRw
+ x4rF+h361EpVOTO4NFnul29ks2SafX44LWMMfRNWAUC3zvEZLeUweeIE2mA6ZevDsKkhAH2
+ gfK8OcZjtpYXYbUPP2QrDlDy9uKGJSqqiE3IE4mT86YnzmPGkE72YCXrmEc/6JO3ij+lHgJ
+ JtzjR3g53GvL3pgFFkrWg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:v8mqMb1rIHo=:V+95470QiO/yhoFK5TpV64
+ a77b7aCqQyURzzUHAjmDdd/bfM08pfY9la2gNfartUv6URIeHNEpsBPvAPX0QN5mGYZRnTWTm
+ mk+Kp6fldNstT0+fdFhVR0IMO3xU5i4MTzAx9MVVvl/I67GnTtiEYbdSa0K0kT1tDQE8ggB2/
+ uWuON7Y9uFsOtP2q+1ihELmZ67nvB2dxjXLn4Q/yJeqCKzhVNWVcsJ26k5nIIu6EagZbqQCpg
+ qLQj4bFQqS+ofs3m0PmuV+qavUvUsR+Kz0PmRpaq9IIZIhz4hzXZarVlp3i/omQnDGOQvmnbg
+ m8oemOSQlvU9m7anazg7lefSzR3foNg6X73u3wHEOkfOoo16AokQul5LfmgW/y4enA6VPuvh4
+ PvLHHOCZk0VirbFuttEUjQlZZDG4URe+hex9PBNjAy607HpNq6Jv/m+AWyIsW1KSro56+RKQn
+ pYSCQN4fRyZWmdCnhJkDAU+X0hL+PgTcWmjKVdtvpNMtXYYY/brTuz6016d7LoaqlFYLf+O0I
+ Ccp4qDBfQMfH+bkqAfJAB/zAc8vjhUEd6AUgjQ9nxBDgsuO7ztQ0M4UGdt4K7JjZFPOD5CoMq
+ j1ZPiu8rLVaDoCb7d5laRUffuIMAE7h7gpSQJCo16r5R8LJGQq2RzKk1RWFGLMTCyrrXLBsuF
+ etUcofpXk8iRhNe0h2JdWp46vdwd6r0V9S49hdPRbB5b40SgijkZEMjKRJ9ATNHGyEeiONHaZ
+ Ng8rNb8XMuWRbkgmJa97I6JPWrWxBakLQZqXu5Eud+31AVdOoQ4l2sKQzf6YsAtdD1BokDd/N
+ qYU4QYFYyndpTpIxT5ssU0LfZ20eOmXD9yn+f1qobXzonl8LE9Wqde/lwSlck//NGaUYgJ54v
+ hbr0FPldpP3eF3mShkMuGccUJP/wGaYShxe9tPKY6es75Dtkdt3WMlfx79bieia7V3HMTMTQM
+ KGQaX/kb8edBAP8zg7/l6RpKPQ3wiRH68usHqTJM/6JTgn78CV44gz/H8GfAxEXrn7q+9k/IX
+ CJCgRFYn8Cxq2IuNtpEaeWDL3cyf1uohB5SadnsNzwiqf0Dilt4CsGOrCTcpX6t9vm/viUrJG
+ NZtELZrHKPeLt0G/2IrXQUJTNa/A2e+8pPo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  3 Jul 2019 20:05:59 +0200
-Luca Weiss <luca@z3ntu.xyz> wrote:
-
-> Add device tree support for the stk33xx family of ambient light sensors.
-> 
-> Tested-by: Martijn Braam <martijn@brixit.nl>
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Applied,
-
-Thanks,
-
-Jonathan
-
 > ---
->  drivers/iio/light/stk3310.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
-> index b955183edfe8..185c24a75ae6 100644
-> --- a/drivers/iio/light/stk3310.c
-> +++ b/drivers/iio/light/stk3310.c
-> @@ -679,9 +679,18 @@ static const struct acpi_device_id stk3310_acpi_id[] = {
->  
->  MODULE_DEVICE_TABLE(acpi, stk3310_acpi_id);
->  
-> +static const struct of_device_id stk3310_of_match[] = {
-> +	{ .compatible = "sensortek,stk3310", },
-> +	{ .compatible = "sensortek,stk3311", },
-> +	{ .compatible = "sensortek,stk3335", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, stk3310_of_match);
-> +
->  static struct i2c_driver stk3310_driver = {
->  	.driver = {
->  		.name = "stk3310",
-> +		.of_match_table = stk3310_of_match,
->  		.pm = STK3310_PM_OPS,
->  		.acpi_match_table = ACPI_PTR(stk3310_acpi_id),
->  	},
+> Changes in v3:
 
+Thanks for your quick response.
+
+I find the change log incomplete (even if corresponding information
+can be determined also from public message archives).
+
+Regards,
+Markus
