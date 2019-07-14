@@ -2,147 +2,438 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4BBC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2D0C74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BF7205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:13:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rJtWMpu/"
+	by mail.kernel.org (Postfix) with ESMTP id 6499D2089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563124477;
+	bh=M9BGjFEZHbJ2DxMD0K/QLdRqjF6rs+RkbEl1GoULyVs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y1V+bXHJ9Pg+Fv7/Hy5GM13npYlr/NHx4rIKQyIIJQU7p38X2QRFHSXCn496702cN
+	 YltU3JlilvxH8J8RhfI4ndQVA+JuBiQAkLr2p+0zkni89yq+KRd7WJltbxRZNw3H5j
+	 ZYR2xpAI6mnocLXLDZL823qkEqO1DVMtIzoEbuk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfGNRNC (ORCPT
+        id S1728689AbfGNROg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 13:13:02 -0400
-Received: from mout.web.de ([212.227.17.11]:55871 "EHLO mout.web.de"
+        Sun, 14 Jul 2019 13:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728065AbfGNRNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 13:13:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1563124348;
-        bh=ZwUVGTes67xwWLPiXZKdeb3x5yXkNmefiwWX7+ZjxNk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=rJtWMpu/vF2XCvYCrMDEN3/AWyZ5Og76b4Op4sJhUfAXI7m8XG0jQLxZBpZavyiIl
-         3lisLN0vi3nV/mpGPgpkCscijXsuGhi4JITuXyZsmto6lHuGstg4MCCQtRuQWslxcg
-         sIat+Dg9EMxPwj8RVbW19R38vdhCbCcegoAeLNqA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.159.144]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LcPSk-1iDlOM1GA2-00jte3; Sun, 14
- Jul 2019 19:12:28 +0200
-Subject: Re: [v4] staging: most: Delete an error message for a failed memory
- allocation
-To:     Keyur Patel <iamkeyur96@gmail.com>, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Gromm <christian.gromm@microchip.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-kernel@vger.kernel.org
-References: <20190711175055.25157-1-iamkeyur96@gmail.com>
- <20190714164126.3159-1-iamkeyur96@gmail.com>
- <dd7867db-1089-7366-165f-6accba233c38@web.de>
- <20190714170424.GA3615@keyur-pc>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <425b30ac-623c-065e-1a2f-fc131dee28d1@web.de>
-Date:   Sun, 14 Jul 2019 19:12:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728164AbfGNROf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 13:14:35 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0EA1205F4;
+        Sun, 14 Jul 2019 17:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563124473;
+        bh=M9BGjFEZHbJ2DxMD0K/QLdRqjF6rs+RkbEl1GoULyVs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Qyz+Wn04zwR3HZZXWU+QOARm1xK6WCUFesFCtr1gp8aPZ0QZjCFl8x5JPLEo0Bj5P
+         9wkJRIVQQZBUptDyLzT2Iql7McMJEKkhv+iFU4llIQDaJGTiuyQUTj2vp0QPfbTUJ3
+         jxo4Go8KMZz5Mnk3HA9JOSJZ+J8GsA/ldz1FLdJs=
+Date:   Sun, 14 Jul 2019 18:14:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@lists.collabora.co.uk, devicetree@vger.kernel.org,
+        Sergei M <fizik1@yandex.com>
+Subject: Re: [PATCH v2 2/2] iio: light: noa1305: Add support for NOA1305
+Message-ID: <20190714181428.5e6eb83c@archlinux>
+In-Reply-To: <20190628175713.14831-2-martyn.welch@collabora.com>
+References: <20190628175713.14831-1-martyn.welch@collabora.com>
+        <20190628175713.14831-2-martyn.welch@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190714170424.GA3615@keyur-pc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vLG0Znm3ELZXwizjRjiBtRsjf0xOwJiwg0fohJ84Uxzt8Nx2Kju
- Eii8mfqUOzaXHTgNoRH9gm4TqEgDtiyndhOJ4CKsyT9cXISAFnrssoVhg5qBco9gfZXhHDm
- pWerzPHJgaSPUKtCbtl0mCxRyjx5T/cfB29bEuGksx78kSQNIG6GTZSL2zA6Cb4kofylmf3
- ap4yuN8Se8CqVtWMQ25sQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6xZQFS62B/g=:QwYyOQcZfSeknepdLyC2WN
- xRK5c55ZEHEr0RfMZkb/hWTjUlmPrdgtTDTdh8j37phAOLv5fkHLugCrVl9DOoA/YGOuTf35F
- eqQyYzAHKkWQsm2JrQZeWx6qPHkzmXPCDE4W1dnkwOqV+uw5BoN8fDci1VFeK65OdYQj826sD
- UiNXD+ToE1vxzelF+ADvGLyb+fq/QaLu1UbBV+pGZuGW17NJLwJ2YxtIowXvWVpeHFGQ9dX1J
- v56XzdRFGLDHqGoPz+kxrcBtYg6gwjcBXjLXJVhXAJ0TGo5ARSrD6eqQc0N9TOrvCSVIHK1qy
- 8Vw277CGlrfzoXvzmogKSplbJMWdn8XQH05GBfWcYIhsZWSMh0A+ZfvgYiXK37XejKhxOwiLg
- oPvUW1H+QkzK+0BDdZ0A0ZNIkwCAJLcz3k9ffC93EZUc/Isag7Dz3NcYDWincNfleqW8/YdGT
- 3m03YMBynbkvZSYDJRyyIpmRgCSeVNGvL4dstjbLHN/kG97qQiV19iKhY+4qQL/yd0qt0ZNCt
- KGF0NxjgXbRUUY3XrEwjd7+G1s+imuqsfOlfxaoDh1HoUpXJJT3IDf64vpRSiyoC1H7tiUPQr
- zFfclnuQI3VmsS1gM0CKWsVk7TAddwwb1PLUAVLXpumzbOTSBKKUM21kri48NGVRzLmshEWdj
- XzMC5wBbWVFtMCfssBl/oggGi9ROz4CkYtsPZI/TeBNh8ao46dcmPznUeNwR4iTyfOVHFEPFL
- obObw59tJiTPMOYVMChWEauQ/1om5UlBrAbSsLRRmzcXgs6D/hxtC/pKzM65sCEPgQU8Js/AH
- O9vPE025xsgnFSODxM6LwYpg3jdBJUQTTObCllX4xb9hGQB/bjjRHnaVRT3wuo2WIU1bPVGqA
- CatFYUV0/uq2EXfkgOe+jW99NKw8uQWwuLOcpJmPMv4v15F3oUFpnCB6jko3zTZPMXEAZEVjk
- nz3tjHyeMhWJrb3bBkLUkgp4cjFNe3YJrEKOsM5MKyUc21nltcmDZvWze6++TpCHdoOQMk2fN
- 5eIP1WN1L/OyTddrFbF7ekcT3pCgo8Lpyuhh86hJ05nJIkYq1mDnnuQGaTdK8NxNc2O1ddkb9
- wQBJ+b6W922Jcb/7h1orO/atRgnHCdzz7Fi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I think commit message is clear enough to understand why this is needed.
+On Fri, 28 Jun 2019 18:57:13 +0100
+Martyn Welch <martyn.welch@collabora.com> wrote:
 
-There are differences to consider between the involved software developers=
-.
+> This driver adds the initial support for the ON Semiconductor
+> NOA1305 Ambient Light Sensor.
+>=20
+> Originally written by Sergei Miroshnichenko. Found here:
+>   https://github.com/EmcraftSystems/linux-upstream/commit/196d6cf897e632d=
+2cb82d45484bd7a1bfdd5b6d9
+>=20
+> Signed-off-by: Sergei M <fizik1@yandex.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
 
+A few minor things inline.
 
-> You can send me what should I include in commit description
+Thanks,
 
-The clarification should be continued with the number =E2=80=9Cv5=E2=80=9D
-in the message subject.
+Jonathan
 
+> ---
+>=20
+> Changes:
+> v2: Correcting authorship and SOB.
+>=20
+>  drivers/iio/light/Kconfig   |  10 ++
+>  drivers/iio/light/Makefile  |   1 +
+>  drivers/iio/light/noa1305.c | 247 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 258 insertions(+)
+>  create mode 100644 drivers/iio/light/noa1305.c
+>=20
+> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> index 954c958cfc43..d1db0ec0d0f5 100644
+> --- a/drivers/iio/light/Kconfig
+> +++ b/drivers/iio/light/Kconfig
+> @@ -309,6 +309,16 @@ config MAX44009
+>  	 To compile this driver as a module, choose M here:
+>  	 the module will be called max44009.
+> =20
+> +config NOA1305
+> +	tristate "ON Semiconductor NOA1305 ambient light sensor"
+> +	depends on I2C
+> +	help
+> +	 Say Y here if you want to build support for the ON Semiconductor
+> +	 NOA1305 ambient light sensor.
+> +
+> +	 To compile this driver as a module, choose M here:
+> +	 The module will be called noa1305.
+> +
+>  config OPT3001
+>  	tristate "Texas Instruments OPT3001 Light Sensor"
+>  	depends on I2C
+> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> index e40794fbb435..00d1f9b98f39 100644
+> --- a/drivers/iio/light/Makefile
+> +++ b/drivers/iio/light/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_LTR501)		+=3D ltr501.o
+>  obj-$(CONFIG_LV0104CS)		+=3D lv0104cs.o
+>  obj-$(CONFIG_MAX44000)		+=3D max44000.o
+>  obj-$(CONFIG_MAX44009)		+=3D max44009.o
+> +obj-$(CONFIG_NOA1305)		+=3D noa1305.o
+>  obj-$(CONFIG_OPT3001)		+=3D opt3001.o
+>  obj-$(CONFIG_PA12203001)	+=3D pa12203001.o
+>  obj-$(CONFIG_RPR0521)		+=3D rpr0521.o
+> diff --git a/drivers/iio/light/noa1305.c b/drivers/iio/light/noa1305.c
+> new file mode 100644
+> index 000000000000..2c65c5c2e09a
+> --- /dev/null
+> +++ b/drivers/iio/light/noa1305.c
+> @@ -0,0 +1,247 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Support for ON Semiconductor NOA1305 ambient light sensor
+> + *
+> + * Copyright (C) 2016 Emcraft Systems
+> + * Copyright (C) 2019 Collabora Ltd.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#define NOA1305_REG_POWER_CONTROL	0x0
+> +#define NOA1305_REG_RESET		0x1
+> +#define NOA1305_REG_INTEGRATION_TIME	0x2
+> +#define NOA1305_REG_INT_SELECT		0x3
+> +#define NOA1305_REG_INT_THRESH_LSB	0x4
+> +#define NOA1305_REG_INT_THRESH_MSB	0x5
+> +#define NOA1305_REG_ALS_DATA_LSB	0x6
+> +#define NOA1305_REG_ALS_DATA_MSB	0x7
+> +#define NOA1305_REG_DEVICE_ID_LSB	0x8
+> +#define NOA1305_REG_DEVICE_ID_MSB	0x9
+> +
+> +#define NOA1305_DEVICE_ID		0x0519
+> +
+> +#define NOA1305_POWER_ON		0x08
+> +#define NOA1305_POWER_DOWN		0x00
+> +#define NOA1305_RESET			0x10
+It would be good to name these in a fashion that made it
+obvious they were values to write to the power control register.
+NOA1305_POWER_CONTROL_ON
 
-> and I will add and send it again. Otherwise, Greg can comment on this.
+NOA1305_POWER_CONTROL_DOWN
+NOA1305_POWER_CONTROL_RESET
+perhaps?
 
-Would you like to recheck information sources for the safe description
-of the Linux allocation failure report?
+There are other conventions we tend to use in IIO such as
+#define NOA1305_POWER_CONTROL_REG         0x0
+#define   NOA1305_POWER_CONTROL_POWER_ON  0x08
+etc..
+=20
 
-Regards,
-Markus
+> +
+> +#define NOA1305_INT_ACTIVE_HIGH		0x01
+> +#define NOA1305_INT_ACTIVE_LOW		0x02
+> +#define NOA1305_INT_INACTIVE		0x03
+> +
+> +#define NOA1305_INTEGR_TIME_800MS	0x00
+> +#define NOA1305_INTEGR_TIME_400MS	0x01
+> +#define NOA1305_INTEGR_TIME_200MS	0x02
+> +#define NOA1305_INTEGR_TIME_100MS	0x03
+> +#define NOA1305_INTEGR_TIME_50MS	0x04
+> +#define NOA1305_INTEGR_TIME_25MS	0x05
+> +#define NOA1305_INTEGR_TIME_12_5MS	0x06
+> +#define NOA1305_INTEGR_TIME_6_25MS	0x07
+> +
+> +#define NOA1305_DRIVER_NAME	"noa1305"
+> +
+> +struct noa1305_priv {
+> +	struct i2c_client *client;
+> +	struct regmap *regmap;
+> +	struct regulator *vin_reg;
+> +};
+> +
+> +static int noa1305_measure(struct noa1305_priv *priv)
+> +{
+> +	u8 data[2];
+> +	int ret;
+> +
+> +	ret =3D regmap_bulk_read(priv->regmap, NOA1305_REG_ALS_DATA_LSB, data,
+> +			       2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return (data[1] << 8) | data[0];
+Make data an explicit __le16  and use an endian swap here as on
+little endian platforms it'll be free.
+
+> +}
+> +
+> +static const struct iio_chan_spec noa1305_channels[] =3D {
+> +	{
+> +		.type =3D IIO_LIGHT,
+> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
+> +	}
+> +};
+> +
+> +static int noa1305_read_raw(struct iio_dev *indio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int *val, int *val2, long mask)
+> +{
+> +	int ret =3D -EINVAL;
+> +	struct noa1305_priv *priv =3D iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		switch (chan->type) {
+> +		case IIO_LIGHT:
+> +			ret =3D noa1305_measure(priv);
+
+Hmm. So no information at all available on how this maps to
+illuminance?  If the mapping is something you were thinking
+of adding later we would end up having to support this old
+ABI as well as the _PROCESSED version and, whilst it's happened occasionall=
+y,
+it isn't something we encourage.
+
+Of course, if there is no documented conversion function then we=20
+can live with this interface!
+
+=46rom figure 6 in the datasheet it seems linear (unusual for a
+light sensor) so should be easy enough to do with offset and scale,
+in which case this is fine as it is.
+
+> +			if (ret < 0)
+> +				return ret;
+> +			*val =3D ret;
+> +			ret =3D IIO_VAL_INT;
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info noa1305_info =3D {
+> +	.read_raw =3D noa1305_read_raw,
+> +};
+> +
+> +static bool noa1305_writable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case NOA1305_REG_POWER_CONTROL:
+> +	case NOA1305_REG_RESET:
+> +	case NOA1305_REG_INTEGRATION_TIME:
+> +	case NOA1305_REG_INT_SELECT:
+> +	case NOA1305_REG_INT_THRESH_LSB:
+> +	case NOA1305_REG_INT_THRESH_MSB:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct regmap_config noa1305_regmap_config =3D {
+> +	.name =3D NOA1305_DRIVER_NAME,
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +	.max_register =3D NOA1305_REG_DEVICE_ID_MSB,
+> +	.writeable_reg =3D noa1305_writable_reg,
+> +};
+> +
+> +static int noa1305_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+> +	struct noa1305_priv *priv;
+> +	struct iio_dev *indio_dev;
+> +	struct regmap *regmap;
+> +	u8 data[2];
+> +	unsigned int dev_id =3D 0;
+
+Always set in any path where it is used, so don't do it here.
+
+> +	int ret;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(&client->dev, sizeof(*priv));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	regmap =3D devm_regmap_init_i2c(client, &noa1305_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&client->dev, "Regmap initialization failed.\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	priv =3D iio_priv(indio_dev);
+> +
+> +	priv->vin_reg =3D devm_regulator_get(&client->dev, "vin");
+> +	if (IS_ERR(priv->vin_reg)) {
+> +		dev_err(&client->dev, "get regulator vin failed\n");
+> +		return PTR_ERR(priv->vin_reg);
+> +	}
+> +
+> +	ret =3D regulator_enable(priv->vin_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "enable regulator vin failed\n");
+> +		return ret;
+> +	}
+> +
+> +	i2c_set_clientdata(client, indio_dev);
+> +	priv->client =3D client;
+> +	priv->regmap =3D regmap;
+> +
+> +	ret =3D regmap_bulk_read(regmap, NOA1305_REG_DEVICE_ID_LSB, data, 2);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "ID reading failed: %d\n", ret);
+> +		goto error_disable_reg;
+> +	}
+> +
+> +	dev_id =3D (data[1] << 8) | data[0];
+
+This is just unwinding endianness, use the __*e16_to_cpu function
+and an appropriate type instead of u8[2] for this.
+
+> +	if (dev_id !=3D NOA1305_DEVICE_ID) {
+> +		dev_err(&client->dev, "Unknown device ID: 0x%x\n", dev_id);
+> +		ret =3D -ENODEV;
+> +		goto error_disable_reg;
+> +	}
+> +
+> +	regmap_write(regmap, NOA1305_REG_POWER_CONTROL, NOA1305_POWER_ON);
+
+I2C buses aren't exactly the most reliable things out there, so I'd expect
+to see error handling on all these writes.
+
+> +	regmap_write(regmap, NOA1305_REG_RESET, NOA1305_RESET);
+> +	regmap_write(regmap, NOA1305_REG_INTEGRATION_TIME,
+> +		     NOA1305_INTEGR_TIME_800MS);
+> +	regmap_write(regmap, NOA1305_REG_INT_SELECT, NOA1305_INT_INACTIVE);
+> +
+> +	indio_dev->dev.parent =3D &client->dev;
+> +	indio_dev->info =3D &noa1305_info;
+> +	indio_dev->channels =3D noa1305_channels;
+> +	indio_dev->num_channels =3D ARRAY_SIZE(noa1305_channels);
+> +	indio_dev->name =3D NOA1305_DRIVER_NAME;
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +
+> +	ret =3D devm_iio_device_register(&client->dev, indio_dev);
+
+There is a race here because the regulator disable will happen in remove
+before we remove the userspace interfaces.  Hence it is possible
+to try to read from the device whilst it has no power.
+
+Two options.  Either stop using devm for everything after the
+regulator enable, or use a devm_add_action_or_reset to make
+the regulator disable occur in the devm managed sequence rather than
+in the manual remove funciton.
+
+> +	if (ret) {
+> +		dev_err(&client->dev, "registering device failed\n");
+> +		goto error_disable_reg;
+> +	}
+> +
+> +	return ret;
+> +
+> +error_disable_reg:
+> +	regulator_disable(priv->vin_reg);
+> +
+> +	return ret;
+> +}
+> +
+> +static int noa1305_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
+> +	struct noa1305_priv *priv =3D iio_priv(indio_dev);
+> +
+> +	regulator_disable(priv->vin_reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id noa1305_of_match[] =3D {
+> +	{ .compatible =3D "onnn,noa1305" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, noa1305_of_match);
+> +
+> +static const struct i2c_device_id noa1305_ids[] =3D {
+> +	{ "noa1305", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, noa1305_id);
+> +
+
+nitpick: One line is plenty.
+
+> +
+> +static struct i2c_driver noa1305_driver =3D {
+> +	.driver =3D {
+> +		.name		=3D NOA1305_DRIVER_NAME,
+> +		.of_match_table	=3D noa1305_of_match,
+> +	},
+> +	.probe		=3D noa1305_probe,
+> +	.remove		=3D noa1305_remove,
+> +	.id_table	=3D noa1305_ids,
+> +};
+> +
+> +module_i2c_driver(noa1305_driver);
+> +
+> +MODULE_AUTHOR("Sergei Miroshnichenko <sergeimir@emcraft.com>");
+> +MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.com");
+> +MODULE_DESCRIPTION("ON Semiconductor NOA1305 ambient light sensor");
+> +MODULE_LICENSE("GPL");
+
