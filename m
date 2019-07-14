@@ -2,99 +2,152 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0FC742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD38C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795772089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563120800;
-	bh=6mzIaXCVd2Suq63Kfrh4nwfSHOSzsx2csQwxz2Vm51g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PO6iHhJY1sCTOhnaIiuluYdKe4AUnscNlNTCsuhChfnUSGI5uhniinVdn4KxZ8bKI
-	 c1taELHM8gY2YSbhG5HTiOb2O2JeCK/cD409GPhkpTthftLXbFr5oAt636C/vul2oT
-	 VAR9MrQfGPIStpIFEXn95ReCpgBihN9/0t5HREbE=
+	by mail.kernel.org (Postfix) with ESMTP id B63BC205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfGNQNT (ORCPT
+        id S1728440AbfGNQOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 12:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbfGNQNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 12:13:18 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F0EF205F4;
-        Sun, 14 Jul 2019 16:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563120798;
-        bh=6mzIaXCVd2Suq63Kfrh4nwfSHOSzsx2csQwxz2Vm51g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1F2MgzaqnRI76BsCuiJVNGDb2ty0OrJ0yHX+MPGYLkxHAzhJl8ZABS4hI0pLpVGwv
-         xTfLoB+6CoVn5WlCpdf9+SGA5MsePgNHs4AqWnvBVOyIUiKtAV4B7zX7ARzEWc+LKX
-         9+C33CsAYxdj76tiQVovtN9QXczS8nZ9ak42rLvs=
-Date:   Sun, 14 Jul 2019 17:13:10 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: stm32: add syscfg to ADC on
- stm32mp157c
-Message-ID: <20190714171310.1816afe3@archlinux>
-In-Reply-To: <1562148496-26789-4-git-send-email-fabrice.gasnier@st.com>
-References: <1562148496-26789-1-git-send-email-fabrice.gasnier@st.com>
-        <1562148496-26789-4-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jul 2019 12:14:52 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:44804 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728106AbfGNQOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 12:14:52 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id E166C72CA65;
+        Sun, 14 Jul 2019 19:14:49 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id CFA887CCE3A; Sun, 14 Jul 2019 19:14:49 +0300 (MSK)
+Date:   Sun, 14 Jul 2019 19:14:49 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Anatoly Pugachev <matorola@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clone: fix CLONE_PIDFD support
+Message-ID: <20190714161449.GA10389@altlinux.org>
+References: <20190714120206.GC6773@altlinux.org>
+ <20190714121724.mwg2t3di6goha7yq@brauner.io>
+ <20190714141007.GA9131@altlinux.org>
+ <20190714142304.3uihy4vepmxgdqha@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Content-Disposition: inline
+In-Reply-To: <20190714142304.3uihy4vepmxgdqha@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jul 2019 12:08:16 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-> On stm32mp157c, the ADC inputs are multiplexed with analog switches which
-> have reduced performances when their supply is below 2.7V (vdda by
-> default).
-> Add syscfg registers that can be used on stm32mp157c, to get full ADC
-> analog performances.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-I've applied the patches using this on the assumption this will go via
-the usual SoC route.
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Sun, Jul 14, 2019 at 04:23:05PM +0200, Christian Brauner wrote:
+> On Sun, Jul 14, 2019 at 05:10:08PM +0300, Dmitry V. Levin wrote:
+> > On Sun, Jul 14, 2019 at 02:17:25PM +0200, Christian Brauner wrote:
+> > > On Sun, Jul 14, 2019 at 03:02:06PM +0300, Dmitry V. Levin wrote:
+> > > > The introduction of clone3 syscall accidentally broke CLONE_PIDFD
+> > > > support in traditional clone syscall on compat x86 and those
+> > > > architectures that use do_fork to implement clone syscall.
+> > > >=20
+> > > > This bug was found by strace test suite.
+> > > >=20
+> > > > Link: https://strace.io/logs/strace/2019-07-12
+> > > > Fixes: 7f192e3cd316 ("fork: add clone3")
+> > > > Bisected-and-tested-by: Anatoly Pugachev <matorola@gmail.com>
+> > > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> > >=20
+> > > Good catch! Thank you Dmitry.
+> > >=20
+> > > One change request below.
+> > >=20
+> > > > ---
+> > > >  arch/x86/ia32/sys_ia32.c | 1 +
+> > > >  kernel/fork.c            | 1 +
+> > > >  2 files changed, 2 insertions(+)
+> > > >=20
+> > > > diff --git a/arch/x86/ia32/sys_ia32.c b/arch/x86/ia32/sys_ia32.c
+> > > > index 64a6c952091e..98754baf411a 100644
+> > > > --- a/arch/x86/ia32/sys_ia32.c
+> > > > +++ b/arch/x86/ia32/sys_ia32.c
+> > > > @@ -239,6 +239,7 @@ COMPAT_SYSCALL_DEFINE5(x86_clone, unsigned long=
+, clone_flags,
+> > > >  {
+> > > >  	struct kernel_clone_args args =3D {
+> > > >  		.flags		=3D (clone_flags & ~CSIGNAL),
+> > > > +		.pidfd		=3D parent_tidptr,
+> > > >  		.child_tid	=3D child_tidptr,
+> > > >  		.parent_tid	=3D parent_tidptr,
+> > > >  		.exit_signal	=3D (clone_flags & CSIGNAL),
+> > > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > > index 8f3e2d97d771..2c3cbad807b6 100644
+> > > > --- a/kernel/fork.c
+> > > > +++ b/kernel/fork.c
+> > > > @@ -2417,6 +2417,7 @@ long do_fork(unsigned long clone_flags,
+> > > >  {
+> > > >  	struct kernel_clone_args args =3D {
+> > > >  		.flags		=3D (clone_flags & ~CSIGNAL),
+> > > > +		.pidfd		=3D parent_tidptr,
+> > > >  		.child_tid	=3D child_tidptr,
+> > > >  		.parent_tid	=3D parent_tidptr,
+> > > >  		.exit_signal	=3D (clone_flags & CSIGNAL),
+> > > > --=20
+> > >=20
+> > > Both of these legacy clone helpers need to make CLONE_PIDFD and
+> > > CLONE_PARENT_SETTID incompatible, i.e. could you please add a helper =
+to
+> > > kernel/fork.c:
+> > >=20
+> > > bool legacy_clone_args_valid(const struct kernel_clone_args *kargs)
+> > > {
+> > > 	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
+> > > 	if ((kargs->flags & CLONE_PIDFD) && (kargs->flags & CLONE_PARENT_SET=
+TID))
+> > > 		return false;
+> > > }
+> > >=20
+> > > and export it and use it in ia32 too?
+> >=20
+> > copy_process already performs the check, isn't this enough?
+>=20
+> No it doesn't anymore. clone3() allows CLONE_PIDFD + CLONE_PARENT_SETTID
+> since struct clone_args has a dedicated pidfd return argument.
 
-Jonathan
+Indeed, I must've missed it, thanks.
 
-> ---
->  arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index 2dd5162..b9a5b58 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -862,6 +862,7 @@
->  			clocks = <&rcc ADC12>, <&rcc ADC12_K>;
->  			clock-names = "bus", "adc";
->  			interrupt-controller;
-> +			st,syscfg = <&syscfg>;
->  			#interrupt-cells = <1>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
+OK, I'll send a new fix with legacy_clone_args_valid.
 
+
+--=20
+ldv
+
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJdK1T5AAoJEAVFT+BVnCUIQwsP/Rs4APu+XjpUaIOrgJ3dnqGA
+9XxwSZSGaPiZk/QCuyIwJ7SITNYbFklGDXDLP7jqBObpEObIKwCqnN6bzi7+MbRq
+TlRRFrY/PBrpTnnDXcFTAyv1Fno0m/S8giPA5QyeP/fEiIak5SRKyjb+Hg3x+7Lm
+ohm2GGkazv7Ul3PyPsasm1WQJIYgQWRI9SizzJ3ivwcdafsg/aNKUMhg3XHL1CXA
+vfwRBjU5k3Ho2WpUQyh9HieysCl/BBDWKBGkif0lEr+zN7UG6QYFkaymztAtdrOA
+xxBNjULIoRK88aTFKGh7oM+BIZpopNaiXmVDQSZLf5IKMmQEu3mmmO6X//YeKmHF
+toEL0QToOA+VHiFcq3LiIG3U145rbfyhNdF6O0tuUQAiYbkzwQAZcymHlkbY8fcw
+BRxkAnNH3imZVH1jWVsY1G5iDIOA/88RAb25/ipknSaqdfBtTDBwbWsraI4PZjwC
+ZxgxtP2bqoOx49xncqjILnHR/Z8EbZdj3c8i0KBkxJxQeEEyJK/YC77LpRYSA32h
+1BIdYUj6bMB5KVKGV8WO0p6mPXFm572jVG5oYsdUJxMWFhm+gHYdB0AVUczo+Poa
+891Wg3akxjKNlARO8oT+ZqljRP5Ri2PS9tACMXLfEAyNl+9cjE5wGn0bwMRqYbm9
+yOd0/155Ym+Xx8YjzNIm
+=oTW/
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
