@@ -2,192 +2,152 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE78FC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353FDC74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF99820838
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2C820838
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDB9Fcj2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Nd+R17dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfGNV3H (ORCPT
+        id S1728883AbfGNVdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 17:29:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44206 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfGNV3H (ORCPT
+        Sun, 14 Jul 2019 17:33:10 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:45192 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbfGNVdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 17:29:07 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so7258721plr.11;
-        Sun, 14 Jul 2019 14:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cyMKLu1P6Moxg7Bojo9R0LnJsppb6UJHhe/6KSFBtks=;
-        b=gDB9Fcj2hQInuPCt8opoHaiu1eicR4jGLimaP+Buvf2lxMDD0aYTDEAhvPoUCGef5Y
-         oZS0rpn73m+gLaDjBJRDGgGRw45krvlbid4OGTCmTVL8ybZVVBUMbfbIJTOR4keOJXKl
-         JD4sLuaw0iZVPWwZQK1ByGrk2K6TGHMu9L4jmA61PeBgVLap26BKdv5Ew/h/f7TUa2xH
-         ygQ/qYxd3d/joVOvpB5qrV+ZkD6LALnDOIJDPiHcWU/rebC5m236w0nENr+aFCOlvSde
-         7zcFkajMbV3cYXms62beZ581l/WF7bubMFH1397jQx112BMf4Saq6KDberLTQ0mCKMS8
-         bP0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cyMKLu1P6Moxg7Bojo9R0LnJsppb6UJHhe/6KSFBtks=;
-        b=JZ9C7zalHoMzjDfjds+5kPCAkb34G2EEJou/jgMDZGmnmaAEK9oEKOIZFy0+xxA47K
-         6U9Z9VnvSUhQHUIpvFzK6dGAN8Cx2FRZTO+tgI4oVw1JpbVpNDcpJq9VmW0wSYHkQ5Ty
-         FOteqpPXya70tdOwiiVpWpheiOJ9FQu0A37o8016BHmT3Kvt/jo0mD0/ajjcVbNt7cf0
-         RTXcs7Vc7ieh8a2Sjc/MGdzrBYPNztseETqarHd3Qr74Q4wccuqx9ALKfArHSWqaNiGd
-         HMJrNW79VoilNsd+QF/15a4M+Sn/WB3RCWym7WZh1TSBW1Vv61KvbrRftBxTdyNwuE8O
-         PBmw==
-X-Gm-Message-State: APjAAAWwS4WoONgrvr8p9B6lJTmkVz40vY20t7WgV6y5PEa6aXbj63ag
-        2Vxa959cBL3IHwgWGlguMOQ=
-X-Google-Smtp-Source: APXvYqxOUNUACxTAqIkDgQM/4kwq0YAAQFWTOLxjIEWBQk3hsO2vBtbFTRVofNKXxOpqv7S+mT7Y3w==
-X-Received: by 2002:a17:902:44e:: with SMTP id 72mr24563310ple.326.1563139745938;
-        Sun, 14 Jul 2019 14:29:05 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id x1sm13660394pjo.4.2019.07.14.14.29.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 14:29:05 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 14:29:03 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Tim Schumacher <timschumi@gmx.de>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de
-Subject: Re: [PATCH] Input: iforce - Remove empty multiline comments
-Message-ID: <20190714212903.GA232696@dtor-ws>
-References: <20190708025010.9318-1-timschumi@gmx.de>
+        Sun, 14 Jul 2019 17:33:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563139981; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1fCDRzN2PqCzptkf3km6xZGB3O3NlkMkWQ0uvt1B9gE=;
+        b=Nd+R17ddiGfZeX48ZASU5rPe8SKwGtKiChFnwGwebfHhV5U/ytRKLAAzYD8ef/FPQxWxrX
+        FgvYRe2peKPwAbwxu2XplAYtMU8cK7OSZuTCdKtAWZ0pveyqS+yqkUcsj6XQZpni7XTESo
+        w+t6xISIoWubA2arUzW3idJak57NrP4=
+Date:   Sun, 14 Jul 2019 17:32:47 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] dmaengine: dma-jz4780: Break descriptor chains on JZ4740
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, od@zcrc.me,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1563139967.2080.0@crapouillou.net>
+In-Reply-To: <20190630225249.27369-1-paul@crapouillou.net>
+References: <20190630225249.27369-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708025010.9318-1-timschumi@gmx.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 04:50:10AM +0200, Tim Schumacher wrote:
-> Those are remnants of the SPDX identifier migration, which haven't been
-> removed properly.
-> 
-> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+This patch makes the driver work on JZ4740 but fail on other SoCs.
+Please ignore this patch, I'll make a V2.
 
-Applied, thank you.
+Thanks,
+-Paul
 
+
+
+Le dim. 30 juin 2019 =E0 18:52, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> The current driver works perfectly fine on every generation of the
+> JZ47xx SoCs, except on the JZ4740.
+>=20
+> There, when hardware descriptors are chained together (with the LINK
+> bit set), the next descriptor isn't automatically fetched as it=20
+> should -
+> instead, an interrupt is raised, even if the TIE bit (Transfer=20
+> Interrupt
+> Enable) bit is cleared. When it happens, the DMA transfer seems to be
+> stopped (it doesn't chain), and it's uncertain how many bytes have
+> actually been transferred.
+>=20
+> Until somebody smarter than me can figure out how to make chained
+> descriptors work on the JZ4740, we now disable chained descriptors on
+> that particular SoC.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
-> This is probably the highest level of cosmetic-only that a patch
-> can achieve, sorry for the noise.
-> 
-> CCing Thomas Gleixner, since the tool (is it a tool?) that makes
-> those SPDX changes would have room for improvement in that regard.
-> It seems to expect that all of the license information is contained
-> within the same comment block, which wasn't the case for the iforce
-> driver.
-> ---
->  drivers/input/joystick/iforce/iforce-ff.c      | 3 ---
->  drivers/input/joystick/iforce/iforce-main.c    | 3 ---
->  drivers/input/joystick/iforce/iforce-packets.c | 3 ---
->  drivers/input/joystick/iforce/iforce-serio.c   | 3 ---
->  drivers/input/joystick/iforce/iforce-usb.c     | 3 ---
->  drivers/input/joystick/iforce/iforce.h         | 3 ---
->  6 files changed, 18 deletions(-)
-> 
-> diff --git a/drivers/input/joystick/iforce/iforce-ff.c b/drivers/input/joystick/iforce/iforce-ff.c
-> index 2ed7da7d1f3e..4350927f7781 100644
-> --- a/drivers/input/joystick/iforce/iforce-ff.c
-> +++ b/drivers/input/joystick/iforce/iforce-ff.c
-> @@ -6,9 +6,6 @@
->   *  USB/RS232 I-Force joysticks and wheels.
->   */
-> 
-> -/*
-> - */
-> -
->  #include "iforce.h"
-> 
->  /*
-> diff --git a/drivers/input/joystick/iforce/iforce-main.c b/drivers/input/joystick/iforce/iforce-main.c
-> index 55f5b7bb4cac..8c2ffa43ce89 100644
-> --- a/drivers/input/joystick/iforce/iforce-main.c
-> +++ b/drivers/input/joystick/iforce/iforce-main.c
-> @@ -6,9 +6,6 @@
->   *  USB/RS232 I-Force joysticks and wheels.
->   */
-> 
-> -/*
-> - */
-> -
->  #include "iforce.h"
-> 
->  MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>, Johann Deneux <johann.deneux@gmail.com>");
-> diff --git a/drivers/input/joystick/iforce/iforce-packets.c b/drivers/input/joystick/iforce/iforce-packets.c
-> index 42cd9730e4cc..677a7773059d 100644
-> --- a/drivers/input/joystick/iforce/iforce-packets.c
-> +++ b/drivers/input/joystick/iforce/iforce-packets.c
-> @@ -6,9 +6,6 @@
->   *  USB/RS232 I-Force joysticks and wheels.
->   */
-> 
-> -/*
-> - */
-> -
->  #include "iforce.h"
-> 
->  static struct {
-> diff --git a/drivers/input/joystick/iforce/iforce-serio.c b/drivers/input/joystick/iforce/iforce-serio.c
-> index 65a4fe26324f..b3fff64d92dd 100644
-> --- a/drivers/input/joystick/iforce/iforce-serio.c
-> +++ b/drivers/input/joystick/iforce/iforce-serio.c
-> @@ -6,9 +6,6 @@
->   *  USB/RS232 I-Force joysticks and wheels.
->   */
-> 
-> -/*
-> - */
-> -
->  #include "iforce.h"
-> 
->  void iforce_serial_xmit(struct iforce *iforce)
-> diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/joystick/iforce/iforce-usb.c
-> index f1569ae8381b..ec5058e05317 100644
-> --- a/drivers/input/joystick/iforce/iforce-usb.c
-> +++ b/drivers/input/joystick/iforce/iforce-usb.c
-> @@ -6,9 +6,6 @@
->   *  USB/RS232 I-Force joysticks and wheels.
->   */
-> 
-> -/*
-> - */
-> -
->  #include "iforce.h"
-> 
->  void iforce_usb_xmit(struct iforce *iforce)
-> diff --git a/drivers/input/joystick/iforce/iforce.h b/drivers/input/joystick/iforce/iforce.h
-> index f1681706f526..32e91baf63f5 100644
-> --- a/drivers/input/joystick/iforce/iforce.h
-> +++ b/drivers/input/joystick/iforce/iforce.h
-> @@ -6,9 +6,6 @@
->   *  USB/RS232 I-Force joysticks and wheels.
->   */
-> 
-> -/*
-> - */
-> -
->  #include <linux/kernel.h>
->  #include <linux/slab.h>
->  #include <linux/input.h>
+>  drivers/dma/dma-jz4780.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+> index 263bee76ef0d..aae83389cc10 100644
+> --- a/drivers/dma/dma-jz4780.c
+> +++ b/drivers/dma/dma-jz4780.c
+> @@ -92,6 +92,7 @@
+>  #define JZ_SOC_DATA_PROGRAMMABLE_DMA	BIT(1)
+>  #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
+>  #define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
+> +#define JZ_SOC_DATA_BREAK_LINKS		BIT(4)
+>=20
+>  /**
+>   * struct jz4780_dma_hwdesc - descriptor structure read by the DMA=20
+> controller.
+> @@ -356,6 +357,7 @@ static struct dma_async_tx_descriptor=20
+> *jz4780_dma_prep_slave_sg(
+>  	void *context)
+>  {
+>  	struct jz4780_dma_chan *jzchan =3D to_jz4780_dma_chan(chan);
+> +	struct jz4780_dma_dev *jzdma =3D jz4780_dma_chan_parent(jzchan);
+>  	struct jz4780_dma_desc *desc;
+>  	unsigned int i;
+>  	int err;
+> @@ -376,7 +378,8 @@ static struct dma_async_tx_descriptor=20
+> *jz4780_dma_prep_slave_sg(
+>=20
+>  		desc->desc[i].dcm |=3D JZ_DMA_DCM_TIE;
+>=20
+> -		if (i !=3D (sg_len - 1)) {
+> +		if (i !=3D (sg_len - 1) &&
+> +		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
+>  			/* Automatically proceeed to the next descriptor. */
+>  			desc->desc[i].dcm |=3D JZ_DMA_DCM_LINK;
+>=20
+> @@ -665,6 +668,7 @@ static enum dma_status=20
+> jz4780_dma_tx_status(struct dma_chan *chan,
+>  static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
+>  				struct jz4780_dma_chan *jzchan)
+>  {
+> +	struct jz4780_dma_desc *desc =3D jzchan->desc;
+>  	uint32_t dcs;
+>  	bool ack =3D true;
+>=20
+> @@ -692,8 +696,10 @@ static bool jz4780_dma_chan_irq(struct=20
+> jz4780_dma_dev *jzdma,
+>=20
+>  				jz4780_dma_begin(jzchan);
+>  			} else if (dcs & JZ_DMA_DCS_TT) {
+> -				vchan_cookie_complete(&jzchan->desc->vdesc);
+> -				jzchan->desc =3D NULL;
+> +				if (jzchan->curr_hwdesc + 1 =3D=3D desc->count) {
+> +					vchan_cookie_complete(&desc->vdesc);
+> +					jzchan->desc =3D NULL;
+> +				}
+>=20
+>  				jz4780_dma_begin(jzchan);
+>  			} else {
+> @@ -994,6 +1000,7 @@ static int jz4780_dma_remove(struct=20
+> platform_device *pdev)
+>  static const struct jz4780_dma_soc_data jz4740_dma_soc_data =3D {
+>  	.nb_channels =3D 6,
+>  	.transfer_ord_max =3D 5,
+> +	.flags =3D JZ_SOC_DATA_BREAK_LINKS,
+>  };
+>=20
+>  static const struct jz4780_dma_soc_data jz4725b_dma_soc_data =3D {
 > --
-> 2.22.0
-> 
+> 2.21.0.593.g511ec345e18
+>=20
 
--- 
-Dmitry
+=
+
