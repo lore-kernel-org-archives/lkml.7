@@ -2,157 +2,146 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB8AC74A44
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F40C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5CE214AE
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563121183;
-	bh=TVxBVjOA00hKVNaSlq096EK5GPPxbdmRVnbjXDeVNMY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=df7LcFI/cDQ/t8a4P3Eo7dZPhYj8Bef5OSZ9CUMh3ONXwirdkp/l7bNDNVVP8Qh2e
-	 eSU6IzQkK0yam2fU1BNx3J05dbX7ECzCjpEDlRXmBd2a1GmycR2l0tJTtiZgWXdH1Z
-	 jazxjbjipX5i2u8cYK5iROWqsRyYNPUkzxTVCHKA=
+	by mail.kernel.org (Postfix) with ESMTP id E61A320C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 16:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfGNQTm (ORCPT
+        id S1728561AbfGNQUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 12:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728106AbfGNQTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 12:19:42 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C9F20C01;
-        Sun, 14 Jul 2019 16:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563121180;
-        bh=TVxBVjOA00hKVNaSlq096EK5GPPxbdmRVnbjXDeVNMY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a4lyDsOcgUrk5m4ywtq75dKQlLM4Txs3PNUtH93f7vVqH1Gaj807jiz4oxH5cCwv7
-         LE30ZTsz/kaiqkANkKrddFXirvSf9pX5C9cIW8nY/GBcgGOXpP52Oz02uWa4cwcQ6a
-         YW7Kvup9f1Ic+Lho8yJhE2Qh8qlZeQZZLOkL9x5I=
-Date:   Sun, 14 Jul 2019 17:19:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] iio: common: cros_ec_sensors: determine protocol
- version
-Message-ID: <20190714171935.6a67cfb2@archlinux>
-In-Reply-To: <3fc3e1e606bc1e5478fca0888f9c005df6e52745.1562056868.git.fabien.lahoudere@collabora.com>
-References: <cover.1562056868.git.fabien.lahoudere@collabora.com>
-        <3fc3e1e606bc1e5478fca0888f9c005df6e52745.1562056868.git.fabien.lahoudere@collabora.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jul 2019 12:20:51 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:49318 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbfGNQUv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 12:20:51 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id D483072CA65;
+        Sun, 14 Jul 2019 19:20:47 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id A66A07CCE3A; Sun, 14 Jul 2019 19:20:47 +0300 (MSK)
+Date:   Sun, 14 Jul 2019 19:20:47 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Anatoly Pugachev <matorola@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clone: fix CLONE_PIDFD support
+Message-ID: <20190714162047.GB10389@altlinux.org>
+References: <20190714120206.GC6773@altlinux.org>
+ <20190714121724.mwg2t3di6goha7yq@brauner.io>
+ <20190714141007.GA9131@altlinux.org>
+ <20190714142304.3uihy4vepmxgdqha@brauner.io>
+ <20190714161449.GA10389@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190714161449.GA10389@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  2 Jul 2019 10:49:38 +0200
-Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+The introduction of clone3 syscall accidentally broke CLONE_PIDFD
+support in traditional clone syscall on compat x86 and those
+architectures that use do_fork to implement clone syscall.
 
-> This patch adds a function to determine which version of the
-> protocol is used to communicate with EC.
-> 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
-> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-There are so many different series flying around for this driver that
-I have given up trying to figure out if I should be picking some of
-them up.  I'll ack them on the assumption they'll all go together,
-but feel free to ping me if you want me to pick some of them up
-through IIO.
+This bug was found by strace test suite.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://strace.io/logs/strace/2019-07-12
+Fixes: 7f192e3cd316 ("fork: add clone3")
+Bisected-and-tested-by: Anatoly Pugachev <matorola@gmail.com>
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+---
+ arch/x86/ia32/sys_ia32.c   |  4 ++++
+ include/linux/sched/task.h |  1 +
+ kernel/fork.c              | 17 +++++++++++++++--
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-Thanks,
-
-Jonathan
-
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36 ++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 130362ca421b..81111af8a167 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
->  	[MOTIONSENSE_LOC_MAX] = "unknown",
->  };
->  
-> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> +					     u16 cmd_offset, u16 cmd, u32 *mask)
-> +{
-> +	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		union {
-> +			struct ec_params_get_cmd_versions params;
-> +			struct ec_response_get_cmd_versions resp;
-> +		};
-> +	} __packed buf = {
-> +		.msg = {
-> +			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> +			.insize = sizeof(struct ec_response_get_cmd_versions),
-> +			.outsize = sizeof(struct ec_params_get_cmd_versions)
-> +			},
-> +		.params = {.cmd = cmd}
-> +	};
-> +
-> +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> +	if (ret >= 0)
-> +		*mask = buf.resp.version_mask;
-> +	return ret;
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> +	u32 ver_mask;
-> +	int ret;
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
-> @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  
->  	mutex_init(&state->cmd_lock);
->  
-> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> +						ec->cmd_offset,
-> +						EC_CMD_MOTION_SENSE_CMD,
-> +						&ver_mask);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/* Set up the host command structure. */
-> -	state->msg->version = 2;
-> +	state->msg->version = fls(ver_mask) - 1;
->  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
->  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
->  
-
+diff --git a/arch/x86/ia32/sys_ia32.c b/arch/x86/ia32/sys_ia32.c
+index 64a6c952091e..21790307121e 100644
+--- a/arch/x86/ia32/sys_ia32.c
++++ b/arch/x86/ia32/sys_ia32.c
+@@ -239,6 +239,7 @@ COMPAT_SYSCALL_DEFINE5(x86_clone, unsigned long, clone_flags,
+ {
+ 	struct kernel_clone_args args = {
+ 		.flags		= (clone_flags & ~CSIGNAL),
++		.pidfd		= parent_tidptr,
+ 		.child_tid	= child_tidptr,
+ 		.parent_tid	= parent_tidptr,
+ 		.exit_signal	= (clone_flags & CSIGNAL),
+@@ -246,5 +247,8 @@ COMPAT_SYSCALL_DEFINE5(x86_clone, unsigned long, clone_flags,
+ 		.tls		= tls_val,
+ 	};
+ 
++	if (!legacy_clone_args_valid(&args))
++		return -EINVAL;
++
+ 	return _do_fork(&args);
+ }
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 109a0df5af39..0497091e40c1 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -89,6 +89,7 @@ extern void exit_files(struct task_struct *);
+ extern void exit_itimers(struct signal_struct *);
+ 
+ extern long _do_fork(struct kernel_clone_args *kargs);
++extern bool legacy_clone_args_valid(const struct kernel_clone_args *kargs);
+ extern long do_fork(unsigned long, unsigned long, unsigned long, int __user *, int __user *);
+ struct task_struct *fork_idle(int);
+ struct mm_struct *copy_init_mm(void);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 8f3e2d97d771..ef1e05a68827 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2406,6 +2406,16 @@ long _do_fork(struct kernel_clone_args *args)
+ 	return nr;
+ }
+ 
++bool legacy_clone_args_valid(const struct kernel_clone_args *kargs)
++{
++	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
++	if ((kargs->flags & CLONE_PIDFD) &&
++	    (kargs->flags & CLONE_PARENT_SETTID))
++		return false;
++
++	return true;
++}
++
+ #ifndef CONFIG_HAVE_COPY_THREAD_TLS
+ /* For compatibility with architectures that call do_fork directly rather than
+  * using the syscall entry points below. */
+@@ -2417,6 +2427,7 @@ long do_fork(unsigned long clone_flags,
+ {
+ 	struct kernel_clone_args args = {
+ 		.flags		= (clone_flags & ~CSIGNAL),
++		.pidfd		= parent_tidptr,
+ 		.child_tid	= child_tidptr,
+ 		.parent_tid	= parent_tidptr,
+ 		.exit_signal	= (clone_flags & CSIGNAL),
+@@ -2424,6 +2435,9 @@ long do_fork(unsigned long clone_flags,
+ 		.stack_size	= stack_size,
+ 	};
+ 
++	if (!legacy_clone_args_valid(&args))
++		return -EINVAL;
++
+ 	return _do_fork(&args);
+ }
+ #endif
+@@ -2505,8 +2519,7 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+ 		.tls		= tls,
+ 	};
+ 
+-	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
+-	if ((clone_flags & CLONE_PIDFD) && (clone_flags & CLONE_PARENT_SETTID))
++	if (!legacy_clone_args_valid(&args))
+ 		return -EINVAL;
+ 
+ 	return _do_fork(&args);
+-- 
+ldv
