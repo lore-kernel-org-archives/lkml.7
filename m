@@ -2,74 +2,110 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5E4C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F80FC73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2732620838
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F7F20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="sxa1IwEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfGNUHc (ORCPT
+        id S1728789AbfGNURk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 16:07:32 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43266 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbfGNUHc (ORCPT
+        Sun, 14 Jul 2019 16:17:40 -0400
+Received: from sonic304-23.consmr.mail.ir2.yahoo.com ([77.238.179.148]:46654
+        "EHLO sonic304-23.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728442AbfGNURj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 16:07:32 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m14so10122550qka.10
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 13:07:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bfoyMA7g1w51HUrGmtfSjBB3Vcx0aRvt9dP00QQ+dYc=;
-        b=i3J+8mdFZ9j6EbLkxEu6KBqgCTN+UthIteuAlaUxZA04Vg29ZAr0Cqv1dwCiP7MWGT
-         of8Zk4JmdGHkVtQGSl3GLwRedvHOzKjkyjrFREt6kwlJx1DOa9BCieIl2iqxHMt2L59K
-         sNLu/KKqEOZOtkaJt4FpzMbC9L1DNXmzaZEcSELpBf8jyYf8TjxnLhMQNrYC+P+ClQqw
-         VerdFId2fCKZxP2pFnZ2oG9EbI55NvetJxANYFicL+XexKKBU4nSkdoOZZkpHH6buoYj
-         Nabv4FvHTaHx1p5xn5UIq2AYXuy6dLW3FPIWYu7iTGfRWGVKpMa+spk6Y+0yQAvkQF4i
-         bttw==
-X-Gm-Message-State: APjAAAWoY3rc9InSxdPO2En/C7ukiJB2E9m/J4W6sSIRHXQvjbUJti1o
-        1VnM2B5J5oDeNtPOEOPTzAK9ikkGq8QBBp+EeljWMk74
-X-Google-Smtp-Source: APXvYqztFYGlPtgx/3yaV6VwqI4yJ+/27KE62Ixbn7Z/GwQptLKsYOUyyCWWSST0G5XJ6gVr/aK3aGSk0LOP1BfO/yM=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr13861509qkc.394.1563134851204;
- Sun, 14 Jul 2019 13:07:31 -0700 (PDT)
+        Sun, 14 Jul 2019 16:17:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563135457; bh=56HhVaYrGJR6MKwMAHA5oXMmLrE4kBnjCe5YrgJnE0Q=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=sxa1IwEU7eor3oDsNszfggOWP57K1Y0xmPk5qfjzHi2J4X6TpELj0cq88IIMlZeVVUHCnf3BuAynuKNX8OOBxmUu0e3myq7TnZG5w27KlpsxTqexu/fjrq4xfJI1Nvnzh8FQwaqpA2SGC02bR0KYlsu3s3QxVeY5OI/9A4o5lwN0YKxNlMziV/iDc1Om/+gsocNVcmdfInXhYce89EPd9DI8hy/ZJ9OSuSR61VJADAzb0Qwgix/N2Pxggl5aJ/KIhYZm/aRBDrFR4PXPT24eOjDuFwf/tdepbG4fg0+8k2xILzlsK5js6PxAKI8chFfus3Eq9sn38w4hVVY+EGpOig==
+X-YMail-OSG: 5f5JlG0VM1nEWdED4kc1O5vDYV1TBMbik3rr6xHjhcOE0YrkOxozeOqftS2pMA8
+ uw1GF3zBCAy3dSmGgFvmalRWSNS5ifsJZK0ahvVX1e2li8eSn.7_wP_iChD0o79Sc9BOw1jvBiBo
+ 3wrA4r70efi_UHxnQZEve68AyHtK349bIU875z9q.ssyngPfhfQNL7poB8814er2SE2dx793dddW
+ X5xSFSYDX72RUdAE5Iqz_bGbUUQOVgsbGugtpAMJIo0Fwy1vvX3sYPm3nc4M68.q.AV_IPIg9lil
+ QSSdvCmoZpMydj8N6VYq6Mfewly5EtIfNmMRBNW5AYzKtRED2s0lIruwoMoJQ1yo70ZrexRjJLwr
+ qEBiwPMwgVSxLte9u8INfUcaPyhBbCqNPGmpb9bQ52KSpXrYoEEGAJXbUxWvfK4A0rC48Kotvwv5
+ F8ci6VsS0qkJHLPsH9D1zK.LAQA63epbHgOzSAMa.ZmsI7Za.YYss_swumkilNXlvMyEh7pevYtW
+ eljhaJTLyIQhMBhU3sdSPe7KgYWx4o6JJKmG0wlS5Cj6RO6Hbz61oGi0VqJB2V1SYjjtsLQgooDV
+ RkGqrMpC9LD4jg7dt.KJqHw.r153K8GhRhbyC1ofu_wUqO4_mQvB8aCraTQoz7dVed4jqXel60N7
+ gY3fW_Lakfd4rPYvBoZHLN_8IAV6M9AnrpAa0Ay1vYZ7C37lGxhUmWsHhdtNd.0tk9pXWKf5aaQu
+ 5iACGLixi0Gd7zmgQnKmkMpHvkSyfyQFWbME9wKy0jJoQJMhbM1xafy9bmLUL8f.ZxXRNxHTS1Nf
+ _Evb4foUrDqJKca.Xccl9DX5vUKayfvhGfAxiMq.efxZGjw3XjGGgm8tHTKdsU_yIswx6M.ksTM3
+ UilyGVCJnnqd1oFZmSitLxLckDaSZ.iwcEXICBTTI_S5fsfcwpWQSxVJlVGaJ2OPVlJvoXQ97oIX
+ CM3fMzYb3q0iUSEzALZp33xpajR.gvJMEJhI99qLXcMClCRxtTjShcKiVSrgSdWOD_oDcNNb.G7n
+ 3IAovnPSWyOmtHeuGZ_28GXZhoRfmTrORKCT3Z89hJbGKcTc7sK0T2pVaDQiFFgjc66ssP1LrpoK
+ 2nQPbQo3h0LAvxdtMhMYRahH8dU9_6Odjjlhf8KjhYqOJEn5ifOdINwY.VndlIApGFPNsQcBb72h
+ vJ_f62vLvQ5tqOgG_JUBI9hMqlfBUcWKWGHOecLuIpwP9JUwPsLqMC4SWd4s-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ir2.yahoo.com with HTTP; Sun, 14 Jul 2019 20:17:37 +0000
+Received: by smtp403.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID a912500c5590c551bd3365812827a21d;
+          Sun, 14 Jul 2019 20:17:34 +0000 (UTC)
+Subject: Re: [PATCH v2 00/24] erofs: promote erofs from staging
+To:     Pavel Machek <pavel@ucw.cz>, Gao Xiang <gaoxiang25@huawei.com>
+Cc:     devel@driverdev.osuosl.org, Theodore Ts'o <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190711145755.33908-1-gaoxiang25@huawei.com>
+ <20190714104940.GA1282@xo-6d-61-c0.localdomain>
+From:   Gao Xiang <hsiangkao@aol.com>
+Message-ID: <63b9eaca-5d4b-0fe2-c861-7531977a5b48@aol.com>
+Date:   Mon, 15 Jul 2019 04:17:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190714192205.27190-1-christian@brauner.io>
-In-Reply-To: <20190714192205.27190-1-christian@brauner.io>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 14 Jul 2019 22:07:13 +0200
-Message-ID: <CAK8P3a23y0UFbu-po-Umh-=9DUTpRyzRkB=RxJd1A+YJVTTGrA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] clone3 fixes
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190714104940.GA1282@xo-6d-61-c0.localdomain>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 9:22 PM Christian Brauner <christian@brauner.io> wrote:
->
-> Hey everyone,
->
-> Here are two small fixes/improvements for the clone3 syscall that I plan
-> on sending soon.
->
-> The first patches reserves the clone3 syscalls number 435 across all
-> architectures by placing a commit in the corresponding syscall tables of
-> architectures that do not yet implement clone3. This is done to preserve
-> the identical numbering for all new syscalls that Arnd introduced.
->
-> The second patch dates back to a discussion with Arnd when I suggested
-> reserving the syscall number. Arnd suggested to ensure that we catch all
-> arches that do implement clone3 without explicitly setting
-> __ARCH_WANT_SYS_CLONE3.
+Hi Pavel,
 
-Both patches
+On 2019/7/14 18:49, Pavel Machek Wrote:
+> On Thu 2019-07-11 22:57:31, Gao Xiang wrote:
+>> Changelog from v1:
+>>  o resend the whole filesystem into a patchset suggested by Greg;
+>>  o code is more cleaner, especially for decompression frontend.
+>>
+>> --8<----------
+>>
+>> Hi,
+>>
+>> EROFS file system has been in Linux-staging for about a year.
+>> It has been proved to be stable enough to move out of staging
+>> by 10+ millions of HUAWEI Android mobile phones on the market
+>> from EMUI 9.0.1, and it was promoted as one of the key features
+>> of EMUI 9.1 [1], including P30(pro).
+> 
+> Ok, maybe it is ready to be moved to kernel proper, but as git can
+> do moves, would it be better to do it as one commit?
+> 
+> Separate patches are still better for review, I guess.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Thanks for you reply. Either form is OK for me... The first step could
+be that I hope someone could kindly take some time to look into these
+patches... :)
+
+The patch v2 is slightly different for the current code in the staging
+tree since I did some code cleanup these days (mainly renaming / moving,
+including rename unzip_vle.{c,h} to zdata.{c,h} and some confusing
+structure names and clean up internal.h...). No functional chance and I
+can submit cleanup patches to staging as well if doing moves by git...
+
+Thanks,
+Gao Xiang
+
+> 							Pavel
+> 
