@@ -7,69 +7,70 @@ X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C6C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 11:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1030C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 11:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CCA2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 11:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBD720896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 11:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563103939;
-	bh=ILa+enZxCECFhhAjhb/NpQyzROzddUs7s+7WaSWJfkE=;
+	s=default; t=1563104187;
+	bh=4l3uVT+ZIf17Tv+z3K6uY8G9BOWO9nEk+Xu/nPK1EZo=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Dephi2RHbhLPXaMA+b8horiYBM23p2iMGelosdjYNxcS99UEd0mTTLmEM079rbEy6
-	 TD0DKVpvQI6ezi/Jo/Y6mWhCplCeQQ53bCrfqQKyLS2Jd5FXfHj3YkQO6KyU0NLWzO
-	 lP33Vhez7hZvssiIKO6ChxegRgPvN4184o8oREBE=
+	b=l6Th1uh5adOUol4E4gAY/lL84lwQQ5u9QyAw+5F573OIHttwQigVA81C/54NQQgFN
+	 JrghwnFKKdN40skuUG+6L5YhpfMscVgzfG2FdrQPxtt/sjFjBZs6PAMvWSgKEf8Ubl
+	 EGE1kN1Zl8w4HuM2K36oq+Aspd4Ml0vj9GcSrWEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfGNLcR (ORCPT
+        id S1728360AbfGNLg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 07:32:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54621 "EHLO
+        Sun, 14 Jul 2019 07:36:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34240 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbfGNLcR (ORCPT
+        with ESMTP id S1728259AbfGNLgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 07:32:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so12497521wme.4
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 04:32:15 -0700 (PDT)
+        Sun, 14 Jul 2019 07:36:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id w9so12263184wmd.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 04:36:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=wLzcslB7WDh9RARnsnsgvEY4STxOiOIxJagEVenX2hQ=;
-        b=gPNuME1JMAXYQo140Tz1iapUkYeajD79ZrOl8VjeRz1Q/iD8xgVlBk2U8+ksMJckCs
-         +3KZFHdRqduuNHqiQovuHZXQMqeU2sQOAitgL7f21kg2KIy0neA8p/e246nq9VbzTdpS
-         FosKeC711Gn7yj9w7QqLAXiwj/VAMJJd5Mc6ro0bnvWB80rkr+vo2SqkrnHwaHpxpkto
-         LC842DcvrkDRzM9yz0y22tclHDRhKZ2e8REHPizoebil2Ls4fY7BI/TfwirRePurCSeX
-         a342J6/w3tJ9H8FG/hYd09IUrVP68ForBIoqBrdbk4xzYciENyTjnzlEon+EFGHbx0GX
-         WRIQ==
+        bh=rf5iSFO1KGeSGMDdAu8Z9f2JnlMejUYjd5sd/s9I7i4=;
+        b=DGY8fbzUy0ceXz4XK73bwycVAzWAWPdN1mB+qfycnoZlnXSM4VYoHUjkKsmgb9BAU0
+         7w+6EuZArdli3Hzt8t3Fhk2or1bUBGV/l0g61sGJg+AGRTGB1Qz5/tqWoaqEpLnXSqOi
+         /Q5qorJJ7cfVIBRhQHdCrVnueHPKrmlluXSENsPLR7BvQeYfrb67XZ3QWd+inufH90cf
+         S6fP8zDVJQutHRwowg1Lwg+5Z4zMSY0Pmg2qKOUv91xcxCGwhPCYPQ0pTI6zNgt96evf
+         9/Pk78c1yy3u2MineBNtR9TlxFst+Q/aavgyecWHucNEwFlIy8M89FkevAB0Jgp5OKDK
+         o8Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mime-version:content-disposition:user-agent;
-        bh=wLzcslB7WDh9RARnsnsgvEY4STxOiOIxJagEVenX2hQ=;
-        b=pzT5uf1lJ2Ajt/H00Axgvdq6qTtN8h2YqanScZy7r5hidK5ghw++lbB7ocDg2XAKXg
-         1x9F4tyqhJxfEMMvGweviffGmzlQZkQp4E5gILS7v/n34xiuWGJ8nuRCgxVlpgENUNYS
-         iCLwNzG7vUFyFJ5Q1dDP2FjtwLnLQoGHWhUGzYLAyazFXITTVah1erlM1CgDBJ1xkHHP
-         4GqDEtqGyco7y59fgCZISp8argyIpTRPh0XshKnm3gm0n/xPUD442Ena7M7s45gWMWNO
-         CmUFh1fVswE1y6JdnSM1bURxTbn+qQuamjbAT2Zjy+hSDEg0Vc5+cmUOvfsBdLx6EnWz
-         fyTw==
-X-Gm-Message-State: APjAAAVegwJuJF5se+shBVOqv51ooluVT0dXOiuzpiQKAh+aLEN0TqV9
-        lqnEKV5Ds9QV07zzv/P06GLNzOfn
-X-Google-Smtp-Source: APXvYqyeDJpikSpKjeCARz2+I8ovX4bVcNork/tkOPM4zRk9TJ07lylUFxsZyWdcPmoXtgPwQWzvbw==
-X-Received: by 2002:a7b:cf32:: with SMTP id m18mr19309008wmg.27.1563103935070;
-        Sun, 14 Jul 2019 04:32:15 -0700 (PDT)
+        bh=rf5iSFO1KGeSGMDdAu8Z9f2JnlMejUYjd5sd/s9I7i4=;
+        b=mIAdRS4PAWa793kHdVDvwDZ5XPPxJAa/hFQsqUd3VTfiQffzVzV38Y+bwo7yLIZLpH
+         Yj27glg7DaYR1oKXu+5K4Wxl5MRDqQtS8B4/+kgcriPqK4QbBEBynnVU8l0WzUwm/Bpw
+         8fGCCCIjn9N+8IxLnO6fVuuF6IE2ctJWMmbi6ppqrOzWdeqIRkgXuw+nV8ibbfeQVGmX
+         ssJbzdHpw2KUW0Mo1avXR9H3W5H5qnHn9MeOsKaWRDHrllylJ3y6doolXOZzskeLU8se
+         lxS8k3MYBvdxOmsjIJwaRqIVT1J+SgnU0AG2WULKkRTKIUHn38Ail4ui3KDZu8WNMbux
+         3c2g==
+X-Gm-Message-State: APjAAAU+FOPB+KIS5hpGhBvgMCwWSD/2Biwg29qY/4XSge3aOfvHz5bi
+        nSmv48stSkrK2cHzVpckh3NDggxz
+X-Google-Smtp-Source: APXvYqy1YSF6YX1xN0jOwfl3xGLGLJlTuYbveVkdggE2KWvRxbrxrwTQ2YFXAHjlH18LS2/ZAkQ06A==
+X-Received: by 2002:a1c:c545:: with SMTP id v66mr19624581wmf.51.1563104183620;
+        Sun, 14 Jul 2019 04:36:23 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id r123sm13363458wme.7.2019.07.14.04.32.12
+        by smtp.gmail.com with ESMTPSA id c1sm27693770wrh.1.2019.07.14.04.36.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 04:32:14 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 13:32:11 +0200
+        Sun, 14 Jul 2019 04:36:23 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 13:36:21 +0200
 From:   Ingo Molnar <mingo@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86 fix
-Message-ID: <20190714113211.GA11146@gmail.com>
+Subject: [GIT PULL] locking fix
+Message-ID: <20190714113621.GA58788@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -81,67 +82,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-Please pull the latest x86-urgent-for-linus git tree from:
+Please pull the latest locking-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-urgent-for-linus
 
-   # HEAD: e9a1379f9219be439f47a0f063431a92dc529eda x86/vdso: Fix flip/flop vdso build bug
+   # HEAD: 68d41d8c94a31dfb8233ab90b9baf41a2ed2da68 locking/lockdep: Fix lock used or unused stats error
 
-A single build system bugfix.
+A single fix for a locking statistics bug.
 
  Thanks,
 
 	Ingo
 
 ------------------>
-Naohiro Aota (1):
-      x86/vdso: Fix flip/flop vdso build bug
+Yuyang Du (1):
+      locking/lockdep: Fix lock used or unused stats error
 
 
- arch/x86/entry/vdso/Makefile | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/locking/lockdep_proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 39106111be86..34773395139a 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -56,8 +56,7 @@ VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
- 			-z max-page-size=4096
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 9c49ec645d8b..65b6a1600c8f 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -210,6 +210,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      nr_hardirq_read_safe = 0, nr_hardirq_read_unsafe = 0,
+ 		      sum_forward_deps = 0;
  
- $(obj)/vdso64.so.dbg: $(obj)/vdso.lds $(vobjs) FORCE
--	$(call if_changed,vdso)
--	$(call if_changed,vdso_check)
-+	$(call if_changed,vdso_and_check)
++#ifdef CONFIG_PROVE_LOCKING
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
  
- HOST_EXTRACFLAGS += -I$(srctree)/tools/include -I$(srctree)/include/uapi -I$(srctree)/arch/$(SUBARCH)/include/uapi
- hostprogs-y			+= vdso2c
-@@ -127,8 +126,7 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
- 	$(call if_changed,objcopy)
+ 		if (class->usage_mask == 0)
+@@ -241,12 +242,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		if (class->usage_mask & LOCKF_ENABLED_HARDIRQ_READ)
+ 			nr_hardirq_read_unsafe++;
  
- $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
--	$(call if_changed,vdso)
--	$(call if_changed,vdso_check)
-+	$(call if_changed,vdso_and_check)
- 
- CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
- VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
-@@ -167,8 +165,7 @@ $(obj)/vdso32.so.dbg: FORCE \
- 		      $(obj)/vdso32/note.o \
- 		      $(obj)/vdso32/system_call.o \
- 		      $(obj)/vdso32/sigreturn.o
--	$(call if_changed,vdso)
--	$(call if_changed,vdso_check)
-+	$(call if_changed,vdso_and_check)
- 
- #
- # The DSO images are built using a special linker script.
-@@ -184,6 +181,9 @@ VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
- 	-Bsymbolic
- GCOV_PROFILE := n
- 
-+quiet_cmd_vdso_and_check = VDSO    $@
-+      cmd_vdso_and_check = $(cmd_vdso); $(cmd_vdso_check)
+-#ifdef CONFIG_PROVE_LOCKING
+ 		sum_forward_deps += lockdep_count_forward_deps(class);
+-#endif
+ 	}
+ #ifdef CONFIG_DEBUG_LOCKDEP
+ 	DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused);
++#endif
 +
- #
- # Install the unstripped copies of vdso*.so.  If our toolchain supports
- # build-id, install .build-id links as well.
+ #endif
+ 	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
+ 			nr_lock_classes, MAX_LOCKDEP_KEYS);
