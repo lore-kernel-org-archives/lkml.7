@@ -2,97 +2,460 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3154C74A41
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEABC73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD022064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476D720896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 12:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jYOZqyfW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6MTh72C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfGNMzi (ORCPT
+        id S1728407AbfGNM7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 08:55:38 -0400
-Received: from ozlabs.org ([203.11.71.1]:60997 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbfGNMzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 08:55:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45mmqC09K3z9sN6;
-        Sun, 14 Jul 2019 22:55:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563108935;
-        bh=FyJ9ev1inMHsgGNdHri21RqevrCv+51et1dM/m8BvTU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jYOZqyfWdPzBN8Wsx/4zSOIZrjhp8MEJO2emLmQdjAocv3RBgPdB2iM7TsGgp3Eds
-         aRpEuSatytyjujoJU+ksnEaxs+MZVStks0x7qCfjm2xLFGkr7VGny25fsjtKnhKfj5
-         NKt34m15ZcYthR1cDzdW41PyZeEzLEe+uHrqM684f+2iYjjYVdrtAqEA5dPSTlXq4F
-         vT79YrM/WRCn2tm6dp5ebf0hNfozqabVB1+uRWTRWCwXPpzwOjQ+7jTw45BIAKGKTS
-         QRGi5keIZxYrwH/slC0VvffRjV87peaTOcZLU3K5okryNjl/3Q4iyp/Kj6y4f2ZK3T
-         I2ey2u6wMJxHg==
-Date:   Sun, 14 Jul 2019 22:55:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: linux-next: Fixes tag needs some work in the hyperv-fixes tree
-Message-ID: <20190714225534.1dc093ad@canb.auug.org.au>
+        Sun, 14 Jul 2019 08:59:00 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46300 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbfGNM7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 08:59:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so14255836wru.13;
+        Sun, 14 Jul 2019 05:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=6sdYGedIRUVQVE3wRYCsjYoZgI0CWb7YK/4EmIjw5n0=;
+        b=O6MTh72CydHm8Tp/F0gLwOmRCAVrM+ZuPWQjZJitMFIjakZcsjyzKcpN/g72xiiQEg
+         /C08Mibq5VO/VypIpY8z4wr8bvmDbeB5y+e2+x2JZzqShSAh+Pdsd4JQ8rtEJU2caN2n
+         1XofIYR6hlt3heNXq3fMH97u6QmdfDSIaAOCwX0XiVtfisq37BSxaEOVGUdWcDphHR9h
+         Kr/EQPqbpjw3qaSRk73ItkZQm30imprcz+qGZs4bg7J/hwTIM2FHLitQBnXzHuwsYF5e
+         H1zMNAVwAi5XJEEOBWRQQoXicuJ3lbyM4NEqWGW1jKNVvIH8sF/6u2c9S8Vu/d2WaQAI
+         9oQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=6sdYGedIRUVQVE3wRYCsjYoZgI0CWb7YK/4EmIjw5n0=;
+        b=A1erP/v3Z6j5HyrKAWP7g8FOW0XgnYT3XRjhM/xIfDWXLPcSaIpnCi22liRcGXBjsf
+         dXc9jUy3s8MQpA/YSN40K83+94Vav+ZlMkcLJyLiEpkYLjDwi9HY5gRih/rynRbosEap
+         xLHTnWuX9ju1MHXdm3I+uxRgoAnq/i6cFLHP9SJsJR9tdybOcjhZ4s5uZ92nfC/F+ceS
+         n5J1Mv9t+j5SPT10swfwwHqrm/AWenoSdLC8iamAVrnuxJmvBIr43A/zFV1QyPvMpdVG
+         Zgw97XxbiwfDsXjaU/QjNRccwRiWqDP5x6IIqbvITLUNTCNxywMb99um7QrWjrf6thhv
+         tURw==
+X-Gm-Message-State: APjAAAVuEDX5h/YFfKWI5nhBIO10emz08sa9MhH062V9WoJNt+j+AAKK
+        CKqhaJZDb7//LomG8DPnlHYSOr7Z
+X-Google-Smtp-Source: APXvYqy0SnoxLbmLhI+l+W+Fi+pSk5jahgG9GS5wq66P8x4bVzQuUOskyiixsUW7girzH04IITll6g==
+X-Received: by 2002:a5d:5647:: with SMTP id j7mr22929598wrw.191.1563109135481;
+        Sun, 14 Jul 2019 05:58:55 -0700 (PDT)
+Received: from localhost ([41.220.75.172])
+        by smtp.gmail.com with ESMTPSA id o185sm13238127wmo.45.2019.07.14.05.58.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 14 Jul 2019 05:58:54 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 13:58:31 +0100
+From:   Sheriff Esseson <sheriffesseson@gmail.com>
+To:     skhan@linuxfoundation.org
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        sheriffesseson@gmail.com
+Subject: Re: [PATCH v8] Documentation: filesystem: Convert xfs.txt to ReST
+Message-ID: <20190714125831.GA19200@localhost>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/nGgmlx7Hig0s5zQfq+ftQ.T"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nGgmlx7Hig0s5zQfq+ftQ.T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Move xfs.txt to admin-guide, convert xfs.txt to ReST and broken references
 
-Hi all,
+Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
+---
 
-In commit
+changes in v8:
+	- fix table of Deprecated and Removed options.
 
-  2e6d7851bdeb ("PCI: pci-hyperv: fix build errors on non-SYSFS config")
+ Documentation/admin-guide/index.rst           |   1 +
+ .../xfs.txt => admin-guide/xfs.rst}           | 132 +++++++++---------
+ Documentation/filesystems/dax.txt             |   2 +-
+ MAINTAINERS                                   |   2 +-
+ 4 files changed, 67 insertions(+), 70 deletions(-)
+ rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (80%)
 
-Fixes tag
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 24fbe0568eff..0615ea3a744c 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
+    ras
+    bcache
+    ext4
++   xfs
+    binderfs
+    pm/index
+    thunderbolt
+diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.rst
+similarity index 80%
+rename from Documentation/filesystems/xfs.txt
+rename to Documentation/admin-guide/xfs.rst
+index a5cbb5e0e3db..e76665a8f2f2 100644
+--- a/Documentation/filesystems/xfs.txt
++++ b/Documentation/admin-guide/xfs.rst
+@@ -1,4 +1,6 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
++======================
+ The SGI XFS Filesystem
+ ======================
+ 
+@@ -18,8 +20,6 @@ Mount Options
+ =============
+ 
+ When mounting an XFS filesystem, the following options are accepted.
+-For boolean mount options, the names with the (*) suffix is the
+-default behaviour.
+ 
+   allocsize=size
+ 	Sets the buffered I/O end-of-file preallocation size when
+@@ -31,46 +31,43 @@ default behaviour.
+ 	preallocation size, which uses a set of heuristics to
+ 	optimise the preallocation size based on the current
+ 	allocation patterns within the file and the access patterns
+-	to the file. Specifying a fixed allocsize value turns off
++	to the file. Specifying a fixed ``allocsize`` value turns off
+ 	the dynamic behaviour.
+ 
+-  attr2
+-  noattr2
++  attr2 or noattr2
+ 	The options enable/disable an "opportunistic" improvement to
+ 	be made in the way inline extended attributes are stored
+ 	on-disk.  When the new form is used for the first time when
+-	attr2 is selected (either when setting or removing extended
++	``attr2`` is selected (either when setting or removing extended
+ 	attributes) the on-disk superblock feature bit field will be
+ 	updated to reflect this format being in use.
+ 
+ 	The default behaviour is determined by the on-disk feature
+-	bit indicating that attr2 behaviour is active. If either
+-	mount option it set, then that becomes the new default used
++	bit indicating that ``attr2`` behaviour is active. If either
++	mount option is set, then that becomes the new default used
+ 	by the filesystem.
+ 
+-	CRC enabled filesystems always use the attr2 format, and so
+-	will reject the noattr2 mount option if it is set.
++	CRC enabled filesystems always use the ``attr2`` format, and so
++	will reject the ``noattr2`` mount option if it is set.
+ 
+-  discard
+-  nodiscard (*)
++  discard or nodiscard (default)
+ 	Enable/disable the issuing of commands to let the block
+ 	device reclaim space freed by the filesystem.  This is
+ 	useful for SSD devices, thinly provisioned LUNs and virtual
+ 	machine images, but may have a performance impact.
+ 
+-	Note: It is currently recommended that you use the fstrim
+-	application to discard unused blocks rather than the discard
++	Note: It is currently recommended that you use the ``fstrim``
++	application to ``discard`` unused blocks rather than the ``discard``
+ 	mount option because the performance impact of this option
+ 	is quite severe.
+ 
+-  grpid/bsdgroups
+-  nogrpid/sysvgroups (*)
++  grpid/bsdgroups or nogrpid/sysvgroups (default)
+ 	These options define what group ID a newly created file
+-	gets.  When grpid is set, it takes the group ID of the
++	gets.  When ``grpid`` is set, it takes the group ID of the
+ 	directory in which it is created; otherwise it takes the
+-	fsgid of the current process, unless the directory has the
+-	setgid bit set, in which case it takes the gid from the
+-	parent directory, and also gets the setgid bit set if it is
++	``fsgid`` of the current process, unless the directory has the
++	``setgid`` bit set, in which case it takes the ``gid`` from the
++	parent directory, and also gets the ``setgid`` bit set if it is
+ 	a directory itself.
+ 
+   filestreams
+@@ -78,46 +75,42 @@ default behaviour.
+ 	across the entire filesystem rather than just on directories
+ 	configured to use it.
+ 
+-  ikeep
+-  noikeep (*)
+-	When ikeep is specified, XFS does not delete empty inode
+-	clusters and keeps them around on disk.  When noikeep is
++  ikeep or noikeep (default)
++	When ``ikeep`` is specified, XFS does not delete empty inode
++	clusters and keeps them around on disk.  When ``noikeep`` is
+ 	specified, empty inode clusters are returned to the free
+ 	space pool.
+ 
+-  inode32
+-  inode64 (*)
+-	When inode32 is specified, it indicates that XFS limits
++  inode32 or inode64 (default)
++	When ``inode32`` is specified, it indicates that XFS limits
+ 	inode creation to locations which will not result in inode
+ 	numbers with more than 32 bits of significance.
+ 
+-	When inode64 is specified, it indicates that XFS is allowed
++	When ``inode64`` is specified, it indicates that XFS is allowed
+ 	to create inodes at any location in the filesystem,
+ 	including those which will result in inode numbers occupying
+-	more than 32 bits of significance. 
++	more than 32 bits of significance.
+ 
+-	inode32 is provided for backwards compatibility with older
++	``inode32`` is provided for backwards compatibility with older
+ 	systems and applications, since 64 bits inode numbers might
+ 	cause problems for some applications that cannot handle
+ 	large inode numbers.  If applications are in use which do
+-	not handle inode numbers bigger than 32 bits, the inode32
++	not handle inode numbers bigger than 32 bits, the ``inode32``
+ 	option should be specified.
+ 
+-
+-  largeio
+-  nolargeio (*)
+-	If "nolargeio" is specified, the optimal I/O reported in
+-	st_blksize by stat(2) will be as small as possible to allow
++  largeio or nolargeio (default)
++	If ``nolargeio`` is specified, the optimal I/O reported in
++	``st_blksize`` by **stat(2)** will be as small as possible to allow
+ 	user applications to avoid inefficient read/modify/write
+ 	I/O.  This is typically the page size of the machine, as
+ 	this is the granularity of the page cache.
+ 
+-	If "largeio" specified, a filesystem that was created with a
+-	"swidth" specified will return the "swidth" value (in bytes)
+-	in st_blksize. If the filesystem does not have a "swidth"
+-	specified but does specify an "allocsize" then "allocsize"
++	If ``largeio`` is specified, a filesystem that was created with a
++	``swidth`` specified will return the ``swidth`` value (in bytes)
++	in ``st_blksize``. If the filesystem does not have a ``swidth``
++	specified but does specify an ``allocsize`` then ``allocsize``
+ 	(in bytes) will be returned instead. Otherwise the behaviour
+-	is the same as if "nolargeio" was specified.
++	is the same as if ``nolargeio`` was specified.
+ 
+   logbufs=value
+ 	Set the number of in-memory log buffers.  Valid numbers
+@@ -127,7 +120,7 @@ default behaviour.
+ 
+ 	If the memory cost of 8 log buffers is too high on small
+ 	systems, then it may be reduced at some cost to performance
+-	on metadata intensive workloads. The logbsize option below
++	on metadata intensive workloads. The ``logbsize`` option below
+ 	controls the size of each buffer and so is also relevant to
+ 	this case.
+ 
+@@ -138,7 +131,7 @@ default behaviour.
+ 	and 32768 (32k).  Valid sizes for version 2 logs also
+ 	include 65536 (64k), 131072 (128k) and 262144 (256k). The
+ 	logbsize must be an integer multiple of the log
+-	stripe unit configured at mkfs time.
++	stripe unit configured at **mkfs(8)** time.
+ 
+ 	The default value for for version 1 logs is 32768, while the
+ 	default value for version 2 logs is MAX(32768, log_sunit).
+@@ -153,21 +146,21 @@ default behaviour.
+   noalign
+ 	Data allocations will not be aligned at stripe unit
+ 	boundaries. This is only relevant to filesystems created
+-	with non-zero data alignment parameters (sunit, swidth) by
+-	mkfs.
++	with non-zero data alignment parameters (``sunit``, ``swidth``) by
++	**mkfs(8)**.
+ 
+   norecovery
+ 	The filesystem will be mounted without running log recovery.
+ 	If the filesystem was not cleanly unmounted, it is likely to
+-	be inconsistent when mounted in "norecovery" mode.
++	be inconsistent when mounted in ``norecovery`` mode.
+ 	Some files or directories may not be accessible because of this.
+-	Filesystems mounted "norecovery" must be mounted read-only or
++	Filesystems mounted ``norecovery`` must be mounted read-only or
+ 	the mount will fail.
+ 
+   nouuid
+ 	Don't check for double mounted file systems using the file
+-	system uuid.  This is useful to mount LVM snapshot volumes,
+-	and often used in combination with "norecovery" for mounting
++	system ``uuid``.  This is useful to mount LVM snapshot volumes,
++	and often used in combination with ``norecovery`` for mounting
+ 	read-only snapshots.
+ 
+   noquota
+@@ -176,15 +169,15 @@ default behaviour.
+ 
+   uquota/usrquota/uqnoenforce/quota
+ 	User disk quota accounting enabled, and limits (optionally)
+-	enforced.  Refer to xfs_quota(8) for further details.
++	enforced.  Refer to **xfs_quota(8)** for further details.
+ 
+   gquota/grpquota/gqnoenforce
+ 	Group disk quota accounting enabled and limits (optionally)
+-	enforced.  Refer to xfs_quota(8) for further details.
++	enforced.  Refer to **xfs_quota(8)** for further details.
+ 
+   pquota/prjquota/pqnoenforce
+ 	Project disk quota accounting enabled and limits (optionally)
+-	enforced.  Refer to xfs_quota(8) for further details.
++	enforced.  Refer to **xfs_quota(8)** for further details.
+ 
+   sunit=value and swidth=value
+ 	Used to specify the stripe unit and width for a RAID device
+@@ -192,11 +185,11 @@ default behaviour.
+ 	block units. These options are only relevant to filesystems
+ 	that were created with non-zero data alignment parameters.
+ 
+-	The sunit and swidth parameters specified must be compatible
++	The ``sunit`` and ``swidth`` parameters specified must be compatible
+ 	with the existing filesystem alignment characteristics.  In
+-	general, that means the only valid changes to sunit are
+-	increasing it by a power-of-2 multiple. Valid swidth values
+-	are any integer multiple of a valid sunit value.
++	general, that means the only valid changes to ``sunit`` are
++	increasing it by a power-of-2 multiple. Valid ``swidth`` values
++	are any integer multiple of a valid ``sunit`` value.
+ 
+ 	Typically the only time these mount options are necessary if
+ 	after an underlying RAID device has had it's geometry
+@@ -221,22 +214,25 @@ default behaviour.
+ Deprecated Mount Options
+ ========================
+ 
++===========================     ================
+   Name				Removal Schedule
+-  ----				----------------
++===========================     ================
++===========================     ================
+ 
+ 
+ Removed Mount Options
+ =====================
+ 
++===========================     =======
+   Name				Removed
+-  ----				-------
++===========================	=======
+   delaylog/nodelaylog		v4.0
+   ihashsize			v4.0
+   irixsgid			v4.0
+   osyncisdsync/osyncisosync	v4.0
+   barrier			v4.19
+   nobarrier			v4.19
+-
++===========================     =======
+ 
+ sysctls
+ =======
+@@ -302,27 +298,27 @@ The following sysctls are available for the XFS filesystem:
+ 
+   fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "sync" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "nodump" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "noatime" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "nosymlinks" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
+ 	Setting this to "1" will cause the "nodefrag" flag set
+-	by the xfs_io(8) chattr command on a directory to be
++	by the **xfs_io(8)** chattr command on a directory to be
+ 	inherited by files in that directory.
+ 
+   fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
+@@ -368,7 +364,7 @@ handler:
+  -error handlers:
+ 	Defines the behavior for a specific error.
+ 
+-The filesystem behavior during an error can be set via sysfs files. Each
++The filesystem behavior during an error can be set via ``sysfs`` files. Each
+ error handler works independently - the first condition met by an error handler
+ for a specific class will cause the error to be propagated rather than reset and
+ retried.
+@@ -419,7 +415,7 @@ level directory:
+ 	handler configurations.
+ 
+ 	Note: there is no guarantee that fail_at_unmount can be set while an
+-	unmount is in progress. It is possible that the sysfs entries are
++	unmount is in progress. It is possible that the ``sysfs`` entries are
+ 	removed by the unmounting filesystem before a "retry forever" error
+ 	handler configuration causes unmount to hang, and hence the filesystem
+ 	must be configured appropriately before unmount begins to prevent
+@@ -428,7 +424,7 @@ level directory:
+ Each filesystem has specific error class handlers that define the error
+ propagation behaviour for specific errors. There is also a "default" error
+ handler defined, which defines the behaviour for all errors that don't have
+-specific handlers defined. Where multiple retry constraints are configuredi for
++specific handlers defined. Where multiple retry constraints are configured for
+ a single error, the first retry configuration that expires will cause the error
+ to be propagated. The handler configurations are found in the directory:
+ 
+@@ -463,7 +459,7 @@ to be propagated. The handler configurations are found in the directory:
+ 	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
+ 	operation for up to "N" seconds before propagating the error.
+ 
+-Note: The default behaviour for a specific error handler is dependent on both
++**Note:** The default behaviour for a specific error handler is dependent on both
+ the class and error context. For example, the default values for
+ "metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
+ to "fail immediately" behaviour. This is done because ENODEV is a fatal,
+diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+index 6d2c0d340dea..679729442fd2 100644
+--- a/Documentation/filesystems/dax.txt
++++ b/Documentation/filesystems/dax.txt
+@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
+ These filesystems may be used for inspiration:
+ - ext2: see Documentation/filesystems/ext2.txt
+ - ext4: see Documentation/filesystems/ext4/
+-- xfs:  see Documentation/filesystems/xfs.txt
++- xfs:  see Documentation/admin-guide/xfs.rst
+ 
+ 
+ Handling Media Errors
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 43ca94856944..3b6e0b6d8cbd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17453,7 +17453,7 @@ L:	linux-xfs@vger.kernel.org
+ W:	http://xfs.org/
+ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ S:	Supported
+-F:	Documentation/filesystems/xfs.txt
++F:	Documentation/admin-guide/xfs.rst
+ F:	fs/xfs/
+ 
+ XILINX AXI ETHERNET DRIVER
+-- 
+2.22.0
 
-  Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more than one line.  Also do not
-include blank lines among the tag lines.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/nGgmlx7Hig0s5zQfq+ftQ.T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0rJkYACgkQAVBC80lX
-0GyvEQf/bwoc6qihQRAQGjM7n5k5NKPD6USPio1qgiJy/foNeIOCyHEnMDLd6xjh
-HZp/w//0JSSJpwhTeoFROZequiEOIGYs4XDzMGe5F5RdlAjwkFn1R79msNMu/9fu
-iYEMNP092wIUgGK267hpKDlqL4FbU516omeG2eFrfCeIbnGkfSEx0KbDdj9F6U+I
-fv0Dzex7ZLxfu9sOaEZjfnan8aEPsMOhXhacCs3/eLMJbD3DNuwFvblaUXArnHob
-WC1lN8BP1pmBY9wTn3y24cpWctEtHu9NpiisRbGwhxDmiPCXVC8dGVD9rMS2huKk
-QTrtd7eePW3Vh7sLLWAnaywrm0MHQA==
-=ZxPM
------END PGP SIGNATURE-----
-
---Sig_/nGgmlx7Hig0s5zQfq+ftQ.T--
