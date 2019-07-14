@@ -2,142 +2,68 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC57C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9F7C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1C620896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D9A20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 07:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="dacmDKB+"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="GtVfNYa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfGNHDi (ORCPT
+        id S1728176AbfGNHKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 03:03:38 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:56512 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfGNHDh (ORCPT
+        Sun, 14 Jul 2019 03:10:25 -0400
+Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25442 "EHLO
+        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfGNHKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 03:03:37 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 850159DD
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 07:03:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RJX41XTxhUI6 for <linux-kernel@vger.kernel.org>;
-        Sun, 14 Jul 2019 02:03:36 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 5C56A9B5
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 02:03:36 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id u25so16045914iol.23
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 00:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=HL1tb3nWXpE1nr/GaJWSi0TY+hGUkBRMlwJLK9dRztA=;
-        b=dacmDKB+kPg8zQQC9ynkU4Vk3b0jnWW/3qs8oPKrB6WYik6A+ehewXUcltY+XJlEan
-         GKLBaU2SWy7irZnmhP18uh9tOEvqIes/CFVSgSIMWQMM5NThJbBFO55wKqiK6Qz1a4oH
-         6eSGmxNbnK4NGgiKeXWAuu3yl5MoznyktQ/N9rLlPovp84RxX5Oyms0vK3Y9yDKCL19u
-         0fXqHKOtQ95YC9bRlJMJrFQU8VdgxdnWk/5pD7DVeXWTKoUoJoBtGaOD8JJrqA880cJ4
-         PLa0LL9GWYVHo/dh6DurhpaaCz1Swp+e9h1PdH/ZNENBllcB658r2T2uCZ0uhn6NQUhg
-         czrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HL1tb3nWXpE1nr/GaJWSi0TY+hGUkBRMlwJLK9dRztA=;
-        b=DF01JiU5Naqpnp4dSG552NQQ7o1I4DrHzQxbgyu5lxSFczsVoV++/xazIO0LUUg+gv
-         3iQgdHNFA/SVRS3P3U6uIozGrnKYqCeQNN9vPFK22VAGWW8v7NSfXRAP98IDOSZu522t
-         7q9ct44So/JJgUbQpGHI3FICZgF6yoTa3EOqkoDo/HmuI6ifOD+YR8r/JtNjq9atC6We
-         L9ynjs2CTZmpTmsz7B+ElnlAgDDI/I3kJYrdJK6ihGkp3Zc6r25OodyE+e67m4zZ8+qL
-         uclmf9W8opc6BbV14+L0jTSGl4XUtj5BZm2s+X7QU3anum2q0/ba+1x5v+EQ6OxSv79h
-         Kasw==
-X-Gm-Message-State: APjAAAXLYQ+qn8d/UfSFdp6yz8eqIkvipb8bxipHXY3ozz5CRAZJEfrb
-        YYPEQMWrI33EdzO3XzKtpzcTKZRflqlzmmL0T7I1BbIWcj8a3Hkfsr27OtOSNJMeu52HOv/mKim
-        vdTWSimCLJr0eMbxQ0HL9x47QxBHm
-X-Received: by 2002:a02:aa1d:: with SMTP id r29mr21615003jam.127.1563087816045;
-        Sun, 14 Jul 2019 00:03:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzxmmd0HxGJ+bFEBUuSrY4h1AHCB8b5x9/IESgLwYmr0HBCKuXHhGJBJGNbAn3N0di/WlWfEw==
-X-Received: by 2002:a02:aa1d:: with SMTP id r29mr21614992jam.127.1563087815885;
-        Sun, 14 Jul 2019 00:03:35 -0700 (PDT)
-Received: from BlueSky.hsd1.mn.comcast.net (c-66-41-25-226.hsd1.mn.comcast.net. [66.41.25.226])
-        by smtp.gmail.com with ESMTPSA id c14sm10814570ioa.22.2019.07.14.00.03.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 14 Jul 2019 00:03:35 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] blk-mq: fix a memory leak bug
-Date:   Sun, 14 Jul 2019 02:03:21 -0500
-Message-Id: <1563087801-7373-1-git-send-email-wang6495@umn.edu>
+        Sun, 14 Jul 2019 03:10:24 -0400
+X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jul 2019 03:10:24 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1563087314; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=fq+RnDot6x5kJXPhtqdUrcmvpJi+rOmYHxMgw/GrGEvVUZyrNwS7eWiwOG5bFQ4opCwT8j3Xe3BMdxY8OiUkRk2HWh6g6nPF+NM42qJuzKX4zfGkVasBgu7GzjoiZEmXI2DQFVWd8YSeE56RHvueEGYV32DTyOuOKHNGJPfbyKA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1563087314; h=Cc:Date:From:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=dap8Y72S8MEX1dN70PilFr+OT6q7HUeUr6hJgltxjnI=; 
+        b=cGX7HXUguub9xmXQb0I8PCxPsAp8AEYsiYFKUSACtk6e2D9dUoecIJK20SbEAKnUBZMrcySRbMJCel1gP5J996wSQw2MIQrQVLBc4dJW9DL5O1tLYucXalBqjfChAHJgAQEm8VuWlNGxsgZGwSeQCP4+4jUNz5HLkfCVLOcHThQ=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=tegzVwXMLT0Z60NuO4b6/OXILmE/b2gFr0ahyExNkAudpwBbXUZI+hZK9WHnhukICoTkG0ze0kpi
+    FDtiYtxH4/WGuxKGHObqyKqvbYEiked9fEC+xCTOgVgA1uNqnvmI  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1563087314;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id; l=67;
+        bh=dap8Y72S8MEX1dN70PilFr+OT6q7HUeUr6hJgltxjnI=;
+        b=GtVfNYa10md6aikIV3Q9CqDtVxYHC1oysDRX7SOPuCkA9z3zwmqvPOhuMtyavo90
+        G0T6M5aVFPpKIKIJ0sE0fNN+55wBFlvZ58SnDO2eE03eKyMl7yPAUGzSzOTEIDxVMqg
+        9vNsw4dnEt+jw/mF6GDWpfz86Jjwef+0/OCac5IU=
+Received: from zhouyanjie-virtual-machine.localdomain (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
+        with SMTPS id 1563087313043102.86025457876679; Sat, 13 Jul 2019 23:55:13 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, paul.burton@mips.com,
+        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Ingenic pinctrl patchs.
+Date:   Sun, 14 Jul 2019 11:53:50 +0800
+Message-Id: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
 X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+Add support for Ingenic JZ4760, JZ4760B, X1000, X1000E and X1500.
 
-In blk_mq_init_allocated_queue(), a kernel buffer is allocated through
-kcalloc_node() to hold hardware dispatch queues in the request queue 'q',
-i.e., 'q->queue_hw_ctx'.  Later on, if the blk-mq device has no scheduler
-set, a scheduler will be initialized through elevator_init_mq(). If this
-initialization fails, blk_mq_init_allocated_queue() needs to be terminated
-with an error code returned to indicate this failure. However, the
-allocated buffer is not freed on this execution path, leading to a memory
-leak bug. Moreover, the required cleanup work is also missed on this path.
-
-To fix the above issues, free the allocated buffer and invoke the cleanup
-functions.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- block/blk-mq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e5ef40c..04fe077 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2845,6 +2845,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
- struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 						  struct request_queue *q)
- {
-+	int ret = -ENOMEM;
-+
- 	/* mark the queue as mq asap */
- 	q->mq_ops = set->ops;
- 
-@@ -2906,11 +2908,9 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 	blk_mq_map_swqueue(q);
- 
- 	if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
--		int ret;
--
- 		ret = elevator_init_mq(q);
- 		if (ret)
--			return ERR_PTR(ret);
-+			goto err_hctxs;
- 	}
- 
- 	return q;
-@@ -2924,7 +2924,7 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 	q->poll_cb = NULL;
- err_exit:
- 	q->mq_ops = NULL;
--	return ERR_PTR(-ENOMEM);
-+	return ERR_PTR(ret);
- }
- EXPORT_SYMBOL(blk_mq_init_allocated_queue);
- 
--- 
-2.7.4
 
