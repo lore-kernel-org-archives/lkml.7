@@ -2,199 +2,113 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4B4C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 04:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F0EC742A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 04:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92B720644
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 04:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F178020644
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 04:00:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bncUZlj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfGNEAb (ORCPT
+        id S1726399AbfGNEAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 00:00:31 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34994 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfGNEAa (ORCPT
+        Sun, 14 Jul 2019 00:00:48 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42171 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfGNEAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 00:00:30 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hmVej-000695-Co; Sun, 14 Jul 2019 03:58:41 +0000
-Date:   Sun, 14 Jul 2019 04:58:33 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org,
-        rgb@redhat.com, paul@paul-moore.com, raven@themaw.net,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190714035826.GQ17978@ZenIV.linux.org.uk>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
- <20190712125552.GL17978@ZenIV.linux.org.uk>
- <20190712132553.GN17978@ZenIV.linux.org.uk>
- <20190712150026.GO17978@ZenIV.linux.org.uk>
- <20190713024153.GA3817@ZenIV.linux.org.uk>
+        Sun, 14 Jul 2019 00:00:48 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so9301923qkm.9;
+        Sat, 13 Jul 2019 21:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C+RV+0t2aWNWIaDr884rCShvl4d1XlrRv+L4Pe0LIdg=;
+        b=bncUZlj2UwsnM4lg7q3q6DAcLq3rf5IA9Zt0r1AOGUzbgCRxhk/X5M/GraYxyZ3vY3
+         el+uVYCr42dlw2/qERTjY/gMAzybe3fRYSjvGLRh2EEPX65QiuNebhnyUlfJ0KZGeRYf
+         AkNrFquwBx2vyB6SGNxS5/eXGxLKh0wRHSNCHWF3JdKCTR7TegsDhCVt9Abq9AOpVUVa
+         hgkU6TJRgguqEm1hV1DYe051PZBZ3zyizFHPkHXdJqElTYFoz6koPOal65IuZj6vuwx1
+         uTO2AI9pIhTpuSNpwFrKwO0/Txb/GXXhEdk1aq9dklR+Rh8M5zAC2P4LII464cNMSi6v
+         0bbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C+RV+0t2aWNWIaDr884rCShvl4d1XlrRv+L4Pe0LIdg=;
+        b=NvWxGPHMe0XmaSQlXK3AtbFgkmUPlwR8IBwTFtgf018qJQxHcJQlXCxIWJDOXP2tU8
+         7aSWhkGd8a4WO18rbyMLnk3j64vMzOYsbebKPm9yv9iUJjY71Ek9ZSUqOhMGayiSGjn0
+         SKevMm5iNZN5wuoK9/n85is68PFsp/QFBPoLFJtqaiMuzhEjGR2GhCz6YeNaViQgOFx+
+         OrITBqiqeOeJ4A/BKXmDwnh3T3e1gyrFJI2VH2vod19MYe9hDp4duU0SFhuPEhaJ+Uhg
+         iWzmWKer6caDJEouH4KPyuJvbSK0jc2nWKM5S3ub5iqsnTgvoNXFrGbIrJ4W3oY8uvxr
+         bgUw==
+X-Gm-Message-State: APjAAAV4V8+/WQJNJxUk0f8K/7aW8IJ1JCCWM5gPvfsnXSYt2nJY5FDI
+        Fr5GTp8i5Et1BHqS/3NthyEhkMCnnkY=
+X-Google-Smtp-Source: APXvYqwR3zBitPfMP6j5VloXIL1iUifK5UJMmS24W2MbNT+arbkJg1XSP7j7UhqSmrUhabuH5MMFPw==
+X-Received: by 2002:a05:620a:1097:: with SMTP id g23mr11879799qkk.185.1563076847251;
+        Sat, 13 Jul 2019 21:00:47 -0700 (PDT)
+Received: from continental ([191.35.237.35])
+        by smtp.gmail.com with ESMTPSA id e8sm5792816qkn.95.2019.07.13.21.00.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 13 Jul 2019 21:00:46 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 01:01:18 -0300
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH] block: elevator.c: Check elevator kernel argument again
+Message-ID: <20190714040118.GA19237@continental>
+References: <20190713035221.31508-1-marcos.souza.org@gmail.com>
+ <75c5681a-389f-cfaf-7f3f-31a2daec9da4@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190713024153.GA3817@ZenIV.linux.org.uk>
+In-Reply-To: <75c5681a-389f-cfaf-7f3f-31a2daec9da4@kernel.dk>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 03:41:53AM +0100, Al Viro wrote:
-> On Fri, Jul 12, 2019 at 04:00:26PM +0100, Al Viro wrote:
-> > On Fri, Jul 12, 2019 at 02:25:53PM +0100, Al Viro wrote:
+On Sat, Jul 13, 2019 at 03:53:28PM -0600, Jens Axboe wrote:
+> On 7/12/19 9:52 PM, Marcos Paulo de Souza wrote:
+> > Since the inclusion of blk-mq, elevator= kernel argument was not being
+> > considered anymore, making it impossible to specify a specific elevator
+> > at boot time as it was used before.
 > > 
-> > > 	if (flags & LOOKUP_BENEATH) {
-> > > 		nd->root = nd->path;
-> > > 		if (!(flags & LOOKUP_RCU))
-> > > 			path_get(&nd->root);
-> > > 		else
-> > > 			nd->root_seq = nd->seq;
+> > This is done by checking chosen_elevator global variable, which is
+> > populated once elevator= kernel argument is passed. Without this patch,
+> > mq-deadline is the only elevator that is can be used at boot time.
 > > 
-> > BTW, this assignment is needed for LOOKUP_RCU case.  Without it
-> > you are pretty much guaranteed that lazy pathwalk will fail,
-> > when it comes to complete_walk().
+> > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> > ---
 > > 
-> > Speaking of which, what would happen if LOOKUP_ROOT/LOOKUP_BENEATH
-> > combination would someday get passed?
+> >   I found this issue while inspecting why noop scheduler was gone, and
+> >   so I found that was now impossible to use a scheduler different from
+> >   mq-deadeline.
+> > 
+> >   Am I missing something? Is this a desirable behavior?
 > 
-> I don't understand what's going on with ->r_seq in there - your
-> call of path_is_under() is after having (re-)sampled rename_lock,
-> but if that was the only .. in there, who's going to recheck
-> the value?  For that matter, what's to guarantee that the thing
-> won't get moved just as you are returning from handle_dots()?
+> Just google, I'm sure 2-3 discussions on this topic will come up.
 > 
-> IOW, what does LOOKUP_IN_ROOT guarantee for caller (openat2())?
+> tldr is that the original parameter was a mistake and doesn't work at
+> all for multiple devices. Today it's even worse, as we have device
+> types that won't even work properly with any scheduler, liked the
+> zoned devices. The parameter was never enabled for blk-mq because of
+> that, and hence died when the legacy IO path was scrapped. It's not
+> coming back.
 
-Sigh...  Usual effects of trying to document things:
+Thanks Jens. So it makes sense to remove all leftover code of elevator argument with
+some dead documentation about it, avoiding confusion about it in the future
+again. I will send some patches tomorrow.
 
-1) LOOKUP_NO_EVAL looks bogus.  It had been introduced by commit 57d4657716ac
-(audit: ignore fcaps on umount) and AFAICS it's crap.  It is set in
-ksys_umount() and nowhere else.  It's ignored by everything except
-filename_mountpoint().  The thing is, call graph for filename_mountpoint()
-is
-	filename_mountpoint()
-		<- user_path_mountpoint_at()
-			<- ksys_umount()
-		<- kern_path_mountpoint()
-			<- autofs_dev_ioctl_ismountpoint()
-			<- find_autofs_mount()
-				<- autofs_dev_ioctl_open_mountpoint()
-				<- autofs_dev_ioctl_requester()
-				<- autofs_dev_ioctl_ismountpoint()
-In other words, that flag is basically "was filename_mountpoint()
-been called by umount(2) or has it come from an autofs ioctl?".
-And looking at the rationale in that commit, autofs ioctls need
-it just as much as umount(2) does.  Why is it not set for those
-as well?  And why is it conditional at all?
-
-1b) ... because audit_inode() wants LOOKUP_... as the last argument,
-only to remap it into AUDIT_..., that's why.  So audit needs something
-guaranteed not to conflict with LOOKUP_PARENT (another flag getting
-remapped).  So why do we bother with remapping those, anyway?  Let's look
-at the callers:
-
-fs/namei.c:933: audit_inode(nd->name, nd->stack[0].link.dentry, 0);
-fs/namei.c:2353:                audit_inode(name, path->dentry, flags & LOOKUP_PARENT);
-fs/namei.c:2394:                audit_inode(name, parent->dentry, LOOKUP_PARENT);
-fs/namei.c:2721:                audit_inode(name, path->dentry, flags & LOOKUP_NO_EVAL);
-fs/namei.c:3302:                audit_inode(nd->name, dir, LOOKUP_PARENT);
-fs/namei.c:3336:                audit_inode(nd->name, file->f_path.dentry, 0);
-fs/namei.c:3371:        audit_inode(nd->name, path.dentry, 0);
-fs/namei.c:3389:        audit_inode(nd->name, nd->path.dentry, 0);
-fs/namei.c:3490:        audit_inode(nd->name, child, 0);
-fs/namei.c:3509:                audit_inode(nd->name, path.dentry, 0);
-ipc/mqueue.c:788:       audit_inode(name, dentry, 0);
-
-In all but two of those we have a nice constant value - 0 or AUDIT_INODE_PARENT.
-One of two exceptions is in filename_mountpoint(), and there we want
-unconditional AUDIT_INODE_NOEVAL (see above).  What of the other?  It's
-        if (likely(!retval))
-                audit_inode(name, path->dentry, flags & LOOKUP_PARENT);
-in filename_lookup().  And that is bogus as well.  filename_lookupat() would
-better *NOT* get LOOKUP_PARENT in flags.  And it doesn't - not since
-commit 8bcb77fabd7c (namei: split off filename_lookupat() with LOOKUP_PARENT)
-back in 2015.  In filename_parentat() introduced there we have
-                audit_inode(name, parent->dentry, LOOKUP_PARENT);
-and at the same point the call in filename_lookupat() should've become
-                audit_inode(name, path->dentry, 0);
-It hadn't; my fault.  And after fixing that everything becomes nice and
-unconditional - the last argument of audit_inode() is always an AUDIT_...
-constant or zero.  Moving AUDIT_... definitions outside of ifdef on
-CONFIG_AUDITSYSCALL, getting rid of remapping in audit_inode() and
-passing the right values in 3 callers that don't pass 0 and LOOKUP_NO_EVAL
-can go to hell.
-
-Any objections from audit folks?
-
-2) comment in namei.h is seriously out of sync with reality.  To quote:
- *  - follow links at the end
-OK, that's LOOKUP_FOLLOW (1)
- *  - require a directory
-... and LOOKUP_DIRECTORY (2)
- *  - ending slashes ok even for nonexistent files
-... used to be about LOOKUP_CONTINUE (eight years dead now)
- *  - internal "there are more path components" flag
-... LOOKUP_PARENT (16)
- *  - dentry cache is untrusted; force a real lookup
-... LOOKUP_REVAL (32)
- *  - suppress terminal automount
-... used to be LOOKUP_NO_AUTOMOUNT (128), except that it's been
-replaced with LOOKUP_AUTOMOUNT (at 4) almost eight years ago.  And
-the meaning of LOOKUP_AUTOMOUNT is opposite to the comment,
-of course.
- *  - skip revalidation
-... LOOKUP_NO_REVAL (128)
- *  - don't fetch xattrs on audit_inode
-... and that's about soon-to-be dead LOOKUP_NO_EVAL (256)
-
-Note that LOOKUP_RCU (at 64) is quietly skipped and so's the tail
-of the list.  If not for "suppress terminal automount" bit, I wouldn't
-really care, but that one makes for a really nasty trap for readers.
-I'm going to convert that to (accurate) comments next to actual defines...
-
-3) while looking through LOOKUP_AUTOMOUNT users,
-in aa_bind_mount() we have
-        error = kern_path(dev_name, LOOKUP_FOLLOW|LOOKUP_AUTOMOUNT, &old_path);
-matching do_loopback(), while tomoyo_mount_acl() has
-                if (!dev_name || kern_path(dev_name, LOOKUP_FOLLOW, &path)) {
-And yes, that *is* hit on mount --bind.  As well as on new mounts, where
-apparmor (and bdev_lookup()) has plain LOOKUP_FOLLOW.
-
-->sb_mount() is garbage by design (not the least because of the need to
-have pathname lookups in the first place, as well as having to duplicate the
-demultiplexing parts of do_mount() without fucking it up)...
+> 
+> -- 
+> Jens Axboe
+> 
