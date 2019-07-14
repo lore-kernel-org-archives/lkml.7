@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09BDC742A2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE21C742A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA3920896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCE820896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 06:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563084158;
-	bh=bzNPYjZiYP2C43roZZG0B6jvu1WA5UVesQC/XDKr7bE=;
+	s=default; t=1563084177;
+	bh=htRhERfDkx4c+j8dMC4UolcL5W5caQMiNY7CiT/tyhI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d24zEAMIMg+V+hswEBYFsP1/KQzfdPm0NPPXlg32PxeOCUhPlJNZcqleVJqauY/Qn
-	 Yb6rUgGBgEdKh+i15AiIAPgBfrEqg5X3Ztk1pUUO0FCyMYLwZlwCwwXKK+kiEFCLs1
-	 lZtWB+5vhnf/VBlfgU/V7HrSbZVejsH5mL/0RVOU=
+	b=Gycwp9OyhociyVF4eEhdo0lvlYpgHwUx7HlHiSKDmHtroMS0VRDBx/B3h0H7FmFMv
+	 Ur5wsE5tk1pVJg9Hwd9iPmazQ/PRJdx5m2WIBIPhfM1n0P/sxWnfN4SQPu60l/D3PF
+	 sovz+EoLe3MZnue21sAoC+UOa/pCJzXbSgfEu+yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfGNGCh (ORCPT
+        id S1728226AbfGNGC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 02:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50172 "EHLO mail.kernel.org"
+        Sun, 14 Jul 2019 02:02:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfGNGCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 02:02:37 -0400
+        id S1725958AbfGNGC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 02:02:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2984020838;
-        Sun, 14 Jul 2019 06:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D29E720838;
+        Sun, 14 Jul 2019 06:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563084156;
-        bh=bzNPYjZiYP2C43roZZG0B6jvu1WA5UVesQC/XDKr7bE=;
+        s=default; t=1563084175;
+        bh=htRhERfDkx4c+j8dMC4UolcL5W5caQMiNY7CiT/tyhI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xyWC/GWmlzyhYOdZt5cQ6h4AnttfjGpHELLYdmjlHz5C6QvtSB580Lu/cdqN4TUSB
-         tkK67TJMYa/CHe8XT0ciGUUB8tLWplvJaoZ0gOQ4zjEf5lyWMhSKHUelp3CVJssb2W
-         qfFqQ0suiCgm9ZEGA6107+VSqvvt+9kBTFlfUPy4=
-Date:   Sun, 14 Jul 2019 08:02:34 +0200
+        b=suh7ftrxMh30QpLBvZ2tP7YYhRx0MNak9RiHkzre+VH0oT2S1iVAfXuGzllI28hY4
+         IAW3n1ldkc6IOYKjg0+UK2q1ah7kb76MMV7cpgkDa7bjEax4zzWc+lK1x4cAGSmnkj
+         h391nXkodj1QgzmgxMV4cQwIRPuUk4nu/NkiWhHQ=
+Date:   Sun, 14 Jul 2019 08:02:52 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
         akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
         patches@kernelci.org, ben.hutchings@codethink.co.uk,
         lkft-triage@lists.linaro.org, stable@vger.kernel.org
 Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
-Message-ID: <20190714060234.GD8005@kroah.com>
+Message-ID: <20190714060252.GE8005@kroah.com>
 References: <20190712121620.632595223@linuxfoundation.org>
- <20190713203751.GA14762@luke-XPS-13>
+ <20190714053510.GC2385@JATN>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190713203751.GA14762@luke-XPS-13>
+In-Reply-To: <20190714053510.GC2385@JATN>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 01:37:51PM -0700, Luke Nowakowski-Krijger wrote:
+On Sat, Jul 13, 2019 at 11:35:10PM -0600, Kelsey Skunberg wrote:
 > On Fri, Jul 12, 2019 at 02:19:13PM +0200, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.2.1 release.
 > > There are 61 patches in this series, all will be posted as a response
@@ -79,10 +79,10 @@ On Sat, Jul 13, 2019 at 01:37:51PM -0700, Luke Nowakowski-Krijger wrote:
 > > thanks,
 > > 
 > > greg k-h
-> > 
 > 
-> Compiled and booted on my x86_64 system. No dmesg regressions. 
+> 
+> Compiled and booted with no regressions on my system.
 
-Thanks for testing all of these and letting me know.
+Thanks for testing these three and letting me know.
 
 greg k-h
