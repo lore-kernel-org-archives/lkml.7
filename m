@@ -2,110 +2,113 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F80FC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24815C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F7F20838
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:17:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="sxa1IwEU"
+	by mail.kernel.org (Postfix) with ESMTP id F129E20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 20:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbfGNURk (ORCPT
+        id S1728801AbfGNUog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 16:17:40 -0400
-Received: from sonic304-23.consmr.mail.ir2.yahoo.com ([77.238.179.148]:46654
-        "EHLO sonic304-23.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728442AbfGNURj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 16:17:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563135457; bh=56HhVaYrGJR6MKwMAHA5oXMmLrE4kBnjCe5YrgJnE0Q=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=sxa1IwEU7eor3oDsNszfggOWP57K1Y0xmPk5qfjzHi2J4X6TpELj0cq88IIMlZeVVUHCnf3BuAynuKNX8OOBxmUu0e3myq7TnZG5w27KlpsxTqexu/fjrq4xfJI1Nvnzh8FQwaqpA2SGC02bR0KYlsu3s3QxVeY5OI/9A4o5lwN0YKxNlMziV/iDc1Om/+gsocNVcmdfInXhYce89EPd9DI8hy/ZJ9OSuSR61VJADAzb0Qwgix/N2Pxggl5aJ/KIhYZm/aRBDrFR4PXPT24eOjDuFwf/tdepbG4fg0+8k2xILzlsK5js6PxAKI8chFfus3Eq9sn38w4hVVY+EGpOig==
-X-YMail-OSG: 5f5JlG0VM1nEWdED4kc1O5vDYV1TBMbik3rr6xHjhcOE0YrkOxozeOqftS2pMA8
- uw1GF3zBCAy3dSmGgFvmalRWSNS5ifsJZK0ahvVX1e2li8eSn.7_wP_iChD0o79Sc9BOw1jvBiBo
- 3wrA4r70efi_UHxnQZEve68AyHtK349bIU875z9q.ssyngPfhfQNL7poB8814er2SE2dx793dddW
- X5xSFSYDX72RUdAE5Iqz_bGbUUQOVgsbGugtpAMJIo0Fwy1vvX3sYPm3nc4M68.q.AV_IPIg9lil
- QSSdvCmoZpMydj8N6VYq6Mfewly5EtIfNmMRBNW5AYzKtRED2s0lIruwoMoJQ1yo70ZrexRjJLwr
- qEBiwPMwgVSxLte9u8INfUcaPyhBbCqNPGmpb9bQ52KSpXrYoEEGAJXbUxWvfK4A0rC48Kotvwv5
- F8ci6VsS0qkJHLPsH9D1zK.LAQA63epbHgOzSAMa.ZmsI7Za.YYss_swumkilNXlvMyEh7pevYtW
- eljhaJTLyIQhMBhU3sdSPe7KgYWx4o6JJKmG0wlS5Cj6RO6Hbz61oGi0VqJB2V1SYjjtsLQgooDV
- RkGqrMpC9LD4jg7dt.KJqHw.r153K8GhRhbyC1ofu_wUqO4_mQvB8aCraTQoz7dVed4jqXel60N7
- gY3fW_Lakfd4rPYvBoZHLN_8IAV6M9AnrpAa0Ay1vYZ7C37lGxhUmWsHhdtNd.0tk9pXWKf5aaQu
- 5iACGLixi0Gd7zmgQnKmkMpHvkSyfyQFWbME9wKy0jJoQJMhbM1xafy9bmLUL8f.ZxXRNxHTS1Nf
- _Evb4foUrDqJKca.Xccl9DX5vUKayfvhGfAxiMq.efxZGjw3XjGGgm8tHTKdsU_yIswx6M.ksTM3
- UilyGVCJnnqd1oFZmSitLxLckDaSZ.iwcEXICBTTI_S5fsfcwpWQSxVJlVGaJ2OPVlJvoXQ97oIX
- CM3fMzYb3q0iUSEzALZp33xpajR.gvJMEJhI99qLXcMClCRxtTjShcKiVSrgSdWOD_oDcNNb.G7n
- 3IAovnPSWyOmtHeuGZ_28GXZhoRfmTrORKCT3Z89hJbGKcTc7sK0T2pVaDQiFFgjc66ssP1LrpoK
- 2nQPbQo3h0LAvxdtMhMYRahH8dU9_6Odjjlhf8KjhYqOJEn5ifOdINwY.VndlIApGFPNsQcBb72h
- vJ_f62vLvQ5tqOgG_JUBI9hMqlfBUcWKWGHOecLuIpwP9JUwPsLqMC4SWd4s-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ir2.yahoo.com with HTTP; Sun, 14 Jul 2019 20:17:37 +0000
-Received: by smtp403.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID a912500c5590c551bd3365812827a21d;
-          Sun, 14 Jul 2019 20:17:34 +0000 (UTC)
-Subject: Re: [PATCH v2 00/24] erofs: promote erofs from staging
-To:     Pavel Machek <pavel@ucw.cz>, Gao Xiang <gaoxiang25@huawei.com>
-Cc:     devel@driverdev.osuosl.org, Theodore Ts'o <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190711145755.33908-1-gaoxiang25@huawei.com>
- <20190714104940.GA1282@xo-6d-61-c0.localdomain>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <63b9eaca-5d4b-0fe2-c861-7531977a5b48@aol.com>
-Date:   Mon, 15 Jul 2019 04:17:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 14 Jul 2019 16:44:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44194 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728371AbfGNUog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 16:44:36 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F3CB620260;
+        Sun, 14 Jul 2019 20:44:35 +0000 (UTC)
+Received: from krava (ovpn-204-23.brq.redhat.com [10.40.204.23])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A7792608C6;
+        Sun, 14 Jul 2019 20:44:33 +0000 (UTC)
+Date:   Sun, 14 Jul 2019 22:44:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Numfor Mbiziwo-Tiapo <nums@google.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        songliubraving@fb.com, mbd@fb.com, linux-kernel@vger.kernel.org,
+        irogers@google.com, eranian@google.com
+Subject: Re: [PATCH] Fix perf stat repeat segfault
+Message-ID: <20190714204432.GA8120@krava>
+References: <20190710204540.176495-1-nums@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190714104940.GA1282@xo-6d-61-c0.localdomain>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710204540.176495-1-nums@google.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sun, 14 Jul 2019 20:44:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-On 2019/7/14 18:49, Pavel Machek Wrote:
-> On Thu 2019-07-11 22:57:31, Gao Xiang wrote:
->> Changelog from v1:
->>  o resend the whole filesystem into a patchset suggested by Greg;
->>  o code is more cleaner, especially for decompression frontend.
->>
->> --8<----------
->>
->> Hi,
->>
->> EROFS file system has been in Linux-staging for about a year.
->> It has been proved to be stable enough to move out of staging
->> by 10+ millions of HUAWEI Android mobile phones on the market
->> from EMUI 9.0.1, and it was promoted as one of the key features
->> of EMUI 9.1 [1], including P30(pro).
+On Wed, Jul 10, 2019 at 01:45:40PM -0700, Numfor Mbiziwo-Tiapo wrote:
+> When perf stat is called with event groups and the repeat option,
+> a segfault occurs because the cpu ids are stored on each iteration
+> of the repeat, when they should only be stored on the first iteration,
+> which causes a buffer overflow.
 > 
-> Ok, maybe it is ready to be moved to kernel proper, but as git can
-> do moves, would it be better to do it as one commit?
+> This can be replicated by running (from the tip directory):
 > 
-> Separate patches are still better for review, I guess.
+> make -C tools/perf
+> 
+> then running:
+> 
+> tools/perf/perf stat -e '{cycles,instructions}' -r 10 ls
+> 
+> Since run_idx keeps track of the current iteration of the repeat,
+> only storing the cpu ids on the first iteration (when run_idx < 1)
+> fixes this issue.
+> 
+> Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+> ---
+>  tools/perf/builtin-stat.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 63a3afc7f32b..92d6694367e4 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -378,9 +378,10 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
+>  	workload_exec_errno = info->si_value.sival_int;
+>  }
+>  
+> -static bool perf_evsel__should_store_id(struct perf_evsel *counter)
+> +static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
+>  {
+> -	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
+> +	return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
+> +		&& run_idx < 1;
 
-Thanks for you reply. Either form is OK for me... The first step could
-be that I hope someone could kindly take some time to look into these
-patches... :)
+we create counters for every iteration, so this can't be
+based on iteration
 
-The patch v2 is slightly different for the current code in the staging
-tree since I did some code cleanup these days (mainly renaming / moving,
-including rename unzip_vle.{c,h} to zdata.{c,h} and some confusing
-structure names and clean up internal.h...). No functional chance and I
-can submit cleanup patches to staging as well if doing moves by git...
+I think that's just a workaround for memory corruption,
+that's happening for repeating groupped events stats,
+I'll check on this
 
-Thanks,
-Gao Xiang
+jirka
 
-> 							Pavel
+
+>  }
+>  
+>  static bool is_target_alive(struct target *_target,
+> @@ -503,7 +504,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  		if (l > stat_config.unit_width)
+>  			stat_config.unit_width = l;
+>  
+> -		if (perf_evsel__should_store_id(counter) &&
+> +		if (perf_evsel__should_store_id(counter, run_idx) &&
+>  		    perf_evsel__store_ids(counter, evsel_list))
+>  			return -1;
+>  	}
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
 > 
