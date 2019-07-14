@@ -2,152 +2,156 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353FDC74A44
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026D1C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2C820838
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9ADE20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Nd+R17dd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZFgb0hy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfGNVdK (ORCPT
+        id S1728880AbfGNVgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 17:33:10 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:45192 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfGNVdK (ORCPT
+        Sun, 14 Jul 2019 17:36:55 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39464 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbfGNVgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 17:33:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563139981; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1fCDRzN2PqCzptkf3km6xZGB3O3NlkMkWQ0uvt1B9gE=;
-        b=Nd+R17ddiGfZeX48ZASU5rPe8SKwGtKiChFnwGwebfHhV5U/ytRKLAAzYD8ef/FPQxWxrX
-        FgvYRe2peKPwAbwxu2XplAYtMU8cK7OSZuTCdKtAWZ0pveyqS+yqkUcsj6XQZpni7XTESo
-        w+t6xISIoWubA2arUzW3idJak57NrP4=
-Date:   Sun, 14 Jul 2019 17:32:47 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] dmaengine: dma-jz4780: Break descriptor chains on JZ4740
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Paul Burton <paul.burton@mips.com>, od@zcrc.me,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1563139967.2080.0@crapouillou.net>
-In-Reply-To: <20190630225249.27369-1-paul@crapouillou.net>
-References: <20190630225249.27369-1-paul@crapouillou.net>
+        Sun, 14 Jul 2019 17:36:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id f4so31101496ioh.6
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 14:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OqXaW1SBlO4ypk862puJP9ZlK8OkDZ0/srasv2LX6t0=;
+        b=ZFgb0hy1hkaeTSQUqs9lXyHsiFuWqx6gh5YP3fEJehzrLCR6MjEL8iwhOlwxoLXaEW
+         zxQbfSLsBgWNCahrjfC3wIHCFDCnl4R+uQ7MavD0QD7Oyc/9m/jm/me38n1Ax9ovZ3pj
+         WylOFqR/h9JbOmyLnIRleSRzv1sPFYbM/2iewLMAKddcxJtBv3cMZ7nORkUe+gBCqWpF
+         Kiq1w9gf07CjTuDJNycwdWQQzln/Hm+zy+cjiegwrUeyWIw8LbjCjGUdBSLaCAircNuP
+         PTvx9aJ+1CouE+xdDBk44bGi3UJwojeHFlBPLcXVzJJZBp8iRZAhYSV5CNtSH7iaPPKu
+         +X2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OqXaW1SBlO4ypk862puJP9ZlK8OkDZ0/srasv2LX6t0=;
+        b=AOBbDIYPONc3IYLM5QaLgMetbyoW9MevCH7LaUZCfYO5AxcV+U5fGJBhtH/DQnUAt+
+         XmsbifU0G5/knvMwSSOeN5Vn4/iepJCHbsj7Ioa2SvqDCwBaHT9p30Jp8TRV9wjMqlFE
+         2RrFQ/dNN0+rNF2pUtu6QO6SFwGq/l7eRlvlURRpN7YlSAbrN+qBShkQupqOiSvGvMdX
+         9KoTStt46qkpCbg2P3hPxkVoIe3DHfocLcEiTvoIjYAFr4Sz8kugNu4Ja2ydvVUjVaYK
+         51D7C5VICYG8ZQreZv4CjMYRBP07POsYgZS7wyzTA+qFkxMByzEj8BmcwnUYxMg1wqVB
+         7SRg==
+X-Gm-Message-State: APjAAAWGh8MiNIhssAl63tajfnXkNPiPNl35SMCMchFhkEey+17F/mlV
+        7KKH3hMteSm+j+qOFgs631tixg+QoA/uXFuYUDX+3g==
+X-Google-Smtp-Source: APXvYqweDmi/vA4Qumwgo7rXlvxPWGv67GIKW7GqKyLfWKUhYrE0W4xIUOUBsJ5DjH4hY6oiObgFBgBp/im9HrPTQco=
+X-Received: by 2002:a02:c646:: with SMTP id k6mr15220352jan.134.1563140213957;
+ Sun, 14 Jul 2019 14:36:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190710204540.176495-1-nums@google.com> <20190714204432.GA8120@krava>
+ <20190714205505.GB8120@krava>
+In-Reply-To: <20190714205505.GB8120@krava>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Sun, 14 Jul 2019 14:36:42 -0700
+Message-ID: <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
+Subject: Re: [PATCH] Fix perf stat repeat segfault
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, mbd@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes the driver work on JZ4740 but fail on other SoCs.
-Please ignore this patch, I'll make a V2.
+On Sun, Jul 14, 2019 at 1:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Sun, Jul 14, 2019 at 10:44:36PM +0200, Jiri Olsa wrote:
+> > On Wed, Jul 10, 2019 at 01:45:40PM -0700, Numfor Mbiziwo-Tiapo wrote:
+> > > When perf stat is called with event groups and the repeat option,
+> > > a segfault occurs because the cpu ids are stored on each iteration
+> > > of the repeat, when they should only be stored on the first iteration,
+> > > which causes a buffer overflow.
+> > >
+> > > This can be replicated by running (from the tip directory):
+> > >
+> > > make -C tools/perf
+> > >
+> > > then running:
+> > >
+> > > tools/perf/perf stat -e '{cycles,instructions}' -r 10 ls
+> > >
+> > > Since run_idx keeps track of the current iteration of the repeat,
+> > > only storing the cpu ids on the first iteration (when run_idx < 1)
+> > > fixes this issue.
+> > >
+> > > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+> > > ---
+> > >  tools/perf/builtin-stat.c | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > > index 63a3afc7f32b..92d6694367e4 100644
+> > > --- a/tools/perf/builtin-stat.c
+> > > +++ b/tools/perf/builtin-stat.c
+> > > @@ -378,9 +378,10 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
+> > >     workload_exec_errno = info->si_value.sival_int;
+> > >  }
+> > >
+> > > -static bool perf_evsel__should_store_id(struct perf_evsel *counter)
+> > > +static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
+> > >  {
+> > > -   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
+> > > +   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
+> > > +           && run_idx < 1;
+> >
+> > we create counters for every iteration, so this can't be
+> > based on iteration
+> >
+> > I think that's just a workaround for memory corruption,
+> > that's happening for repeating groupped events stats,
+> > I'll check on this
+>
+> how about something like this? we did not cleanup
+> ids on evlist close, so it kept on raising and
+> causing corruption in next iterations
+>
+not sure, that would realloc on each iteration of the repeats.
 
-Thanks,
--Paul
-
-
-
-Le dim. 30 juin 2019 =E0 18:52, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> The current driver works perfectly fine on every generation of the
-> JZ47xx SoCs, except on the JZ4740.
->=20
-> There, when hardware descriptors are chained together (with the LINK
-> bit set), the next descriptor isn't automatically fetched as it=20
-> should -
-> instead, an interrupt is raised, even if the TIE bit (Transfer=20
-> Interrupt
-> Enable) bit is cleared. When it happens, the DMA transfer seems to be
-> stopped (it doesn't chain), and it's uncertain how many bytes have
-> actually been transferred.
->=20
-> Until somebody smarter than me can figure out how to make chained
-> descriptors work on the JZ4740, we now disable chained descriptors on
-> that particular SoC.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>
+> jirka
+>
+>
 > ---
->  drivers/dma/dma-jz4780.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> index 263bee76ef0d..aae83389cc10 100644
-> --- a/drivers/dma/dma-jz4780.c
-> +++ b/drivers/dma/dma-jz4780.c
-> @@ -92,6 +92,7 @@
->  #define JZ_SOC_DATA_PROGRAMMABLE_DMA	BIT(1)
->  #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
->  #define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
-> +#define JZ_SOC_DATA_BREAK_LINKS		BIT(4)
->=20
->  /**
->   * struct jz4780_dma_hwdesc - descriptor structure read by the DMA=20
-> controller.
-> @@ -356,6 +357,7 @@ static struct dma_async_tx_descriptor=20
-> *jz4780_dma_prep_slave_sg(
->  	void *context)
->  {
->  	struct jz4780_dma_chan *jzchan =3D to_jz4780_dma_chan(chan);
-> +	struct jz4780_dma_dev *jzdma =3D jz4780_dma_chan_parent(jzchan);
->  	struct jz4780_dma_desc *desc;
->  	unsigned int i;
->  	int err;
-> @@ -376,7 +378,8 @@ static struct dma_async_tx_descriptor=20
-> *jz4780_dma_prep_slave_sg(
->=20
->  		desc->desc[i].dcm |=3D JZ_DMA_DCM_TIE;
->=20
-> -		if (i !=3D (sg_len - 1)) {
-> +		if (i !=3D (sg_len - 1) &&
-> +		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
->  			/* Automatically proceeed to the next descriptor. */
->  			desc->desc[i].dcm |=3D JZ_DMA_DCM_LINK;
->=20
-> @@ -665,6 +668,7 @@ static enum dma_status=20
-> jz4780_dma_tx_status(struct dma_chan *chan,
->  static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
->  				struct jz4780_dma_chan *jzchan)
->  {
-> +	struct jz4780_dma_desc *desc =3D jzchan->desc;
->  	uint32_t dcs;
->  	bool ack =3D true;
->=20
-> @@ -692,8 +696,10 @@ static bool jz4780_dma_chan_irq(struct=20
-> jz4780_dma_dev *jzdma,
->=20
->  				jz4780_dma_begin(jzchan);
->  			} else if (dcs & JZ_DMA_DCS_TT) {
-> -				vchan_cookie_complete(&jzchan->desc->vdesc);
-> -				jzchan->desc =3D NULL;
-> +				if (jzchan->curr_hwdesc + 1 =3D=3D desc->count) {
-> +					vchan_cookie_complete(&desc->vdesc);
-> +					jzchan->desc =3D NULL;
-> +				}
->=20
->  				jz4780_dma_begin(jzchan);
->  			} else {
-> @@ -994,6 +1000,7 @@ static int jz4780_dma_remove(struct=20
-> platform_device *pdev)
->  static const struct jz4780_dma_soc_data jz4740_dma_soc_data =3D {
->  	.nb_channels =3D 6,
->  	.transfer_ord_max =3D 5,
-> +	.flags =3D JZ_SOC_DATA_BREAK_LINKS,
->  };
->=20
->  static const struct jz4780_dma_soc_data jz4725b_dma_soc_data =3D {
-> --
-> 2.21.0.593.g511ec345e18
->=20
-
-=
-
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ebb46da4dfe5..52459dd5ad0c 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
+>         xyarray__delete(evsel->sample_id);
+>         evsel->sample_id = NULL;
+>         zfree(&evsel->id);
+> +       evsel->ids = 0;
+>  }
+>
+>  static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
+> @@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
+>
+>         perf_evsel__close_fd(evsel);
+>         perf_evsel__free_fd(evsel);
+> +       perf_evsel__free_id(evsel);
+>  }
+>
+>  int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
