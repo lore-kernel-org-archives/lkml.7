@@ -2,109 +2,163 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B807C74A44
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203C2C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED335214DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ve7HD8EA"
+	by mail.kernel.org (Postfix) with ESMTP id EAC7020838
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 19:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfGNTWy (ORCPT
+        id S1728823AbfGNTaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 15:22:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51591 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728125AbfGNTWw (ORCPT
+        Sun, 14 Jul 2019 15:30:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31824 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728673AbfGNTaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 15:22:52 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 207so13079502wma.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 12:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5TOBxcCB5CfbyU19IsOQqj/unz3pBQwhkjvYM4QBwvI=;
-        b=Ve7HD8EAgySgMHY76dTo8ImKMu88em783+DC1jRlNGpEbWzVY8izhhoEMLieCS50jJ
-         tW8XFqB6ZkRdP7AmmRQ89TTMYeLuQZGrfPyJ+7K1WxoM7YqHI53+8yIzGoTTmG4XXwNH
-         8Tnvde95HhzQA7MU9phA5TbOrQxYCLQa/fgv5H9N64wgp59hnk+CuI43sEfWp9y0lkVA
-         gzfgnOK4e49o5k1xYcvMWng9zj2kXJbz4Odmbmw2Iqf5fGw3YzLJ/kkpPHF8SEyC4sNp
-         kS5oLmFZ847PAdUVOVLI2pGRtH2niefOycwIYaZUn4T/izW0dtlp/GIQQnIP1HjHDPUN
-         e6Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5TOBxcCB5CfbyU19IsOQqj/unz3pBQwhkjvYM4QBwvI=;
-        b=uiiyYZNm4WDktSy/fWAOdIsX3AHf+iU7kTeRK+dxcI/CiegarYw3oQRBfFwqug9i55
-         RdtF2uQhoemcLsEHPiug+HtOkm+URMBHsZqWf5z15cnN4vGzMZhjZyF53NM9HDX2rVza
-         SK4WaDj8fiPHHZqKnyqQtgcxue1YMovqBUdyV92Rg87JSy1SEUK5WBuRzGY3WrfE55QC
-         L1ww3ouw5ULx019sR1EF+RbVJyTBQVNfrIrwLhm5iuL+HlEsxOGBA6f+q4Qn1WyTCmaK
-         sOfplrEX0SEfvN6El9eLN03YvuYa1mnn49EuWfbN4QTwn3r6avQs40XuQ7Z0cdPt/fCo
-         acxQ==
-X-Gm-Message-State: APjAAAUcnCbvgbYv91xDbrJ7oCV4nfML3SZPL/Tp2J5hkConrBNorXa9
-        ZVRlIQuSdpsX8f2B7NL/9xRTTiv8YbU=
-X-Google-Smtp-Source: APXvYqyzQ0gcWa61AoX1CO9Ux02D1Lg5fF4pwvRX1xYAX2T/XeDECuUqcGMUdMfiEpNnvxRMVT9JVA==
-X-Received: by 2002:a1c:a481:: with SMTP id n123mr18881972wme.123.1563132170402;
-        Sun, 14 Jul 2019 12:22:50 -0700 (PDT)
-Received: from localhost.localdomain ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id r12sm18142743wrt.95.2019.07.14.12.22.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 12:22:49 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     linux-kernel@vger.kernel.org
-Cc:     arnd@arndb.de, Christian Brauner <christian@brauner.io>
-Subject: [PATCH 2/2] unistd: protect clone3 via __ARCH_WANT_SYS_CLONE3
-Date:   Sun, 14 Jul 2019 21:22:05 +0200
-Message-Id: <20190714192205.27190-3-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190714192205.27190-1-christian@brauner.io>
-References: <20190714192205.27190-1-christian@brauner.io>
+        Sun, 14 Jul 2019 15:30:00 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6EJRcSX003220
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 15:29:59 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tqvdu72q5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 15:29:59 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sun, 14 Jul 2019 20:29:58 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 14 Jul 2019 20:29:53 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6EJTqVB27066838
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 14 Jul 2019 19:29:52 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0161BB2065;
+        Sun, 14 Jul 2019 19:29:52 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8E70B205F;
+        Sun, 14 Jul 2019 19:29:51 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.203.247])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 14 Jul 2019 19:29:51 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6F92F16C8FBA; Sun, 14 Jul 2019 12:29:51 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 12:29:51 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Reply-To: paulmck@linux.ibm.com
+References: <20190705151658.GP26519@linux.ibm.com>
+ <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com>
+ <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714190522.GA24049@mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190714190522.GA24049@mit.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19071419-0064-0000-0000-000003FB8FF5
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011428; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01232183; UDB=6.00649155; IPR=6.01013476;
+ MB=3.00027716; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-14 19:29:57
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071419-0065-0000-0000-00003E42BA00
+Message-Id: <20190714192951.GM26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907140243
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This lets us catch new architectures that implicitly make use of clone3
-without setting __ARCH_WANT_SYS_CLONE3.
-Failing on missing __ARCH_WANT_SYS_CLONE3 is a good indicator that they
-either did not really want this syscall or haven't really thought about
-whether it needs special treatment and just accidently included it in
-their entrypoints by e.g. generating their syscall table automatically
-via asm-generic/unistd.h
+On Sun, Jul 14, 2019 at 03:05:22PM -0400, Theodore Ts'o wrote:
+> On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
+> > But short term I don't see any other solution than stop testing
+> > sched_setattr because it does not check arguments enough to prevent
+> > system misbehavior. Which is a pity because syzkaller has found some
+> > bad misconfigurations that were oversight on checking side.
+> > Any other suggestions?
+> 
+> Or maybe syzkaller can put its own limitations on what parameters are
+> sent to sched_setattr?  In practice, there are any number of ways a
+> root user can shoot themselves in the foot when using sched_setattr or
+> sched_setaffinity, for that matter.  I imagine there must be some such
+> constraints already --- or else syzkaller might have set a kernel
+> thread to run with priority SCHED_BATCH, with similar catastrophic
+> effects --- or do similar configurations to make system threads
+> completely unschedulable.
+> 
+> Real time administrators who know what they are doing --- and who know
+> that their real-time threads are well behaved --- will always want to
+> be able to do things that will be catastrophic if the real-time thread
+> is *not* well behaved.  I don't it is possible to add safety checks
+> which would allow the kernel to automatically detect and reject unsafe
+> configurations.
+> 
+> An apt analogy might be civilian versus military aircraft.  Most
+> airplanes are designed to be "inherently stable"; that way, modulo
+> buggy/insane control systems like on the 737 Max, the airplane will
+> automatically return to straight and level flight.  On the other hand,
+> some military planes (for example, the F-16, F-22, F-36, the
+> Eurofighter, etc.) are sometimes designed to be unstable, since that
+> way they can be more maneuverable.
+> 
+> There are use cases for real-time Linux where this flexibility/power
+> vs. stability tradeoff is going to argue for giving root the
+> flexibility to crash the system.  Some of these systems might
+> literally involve using real-time Linux in military applications,
+> something for which Paul and I have had some experience.  :-)
+> 
+> Speaking of sched_setaffinity, one thing which we can do is have
+> syzkaller move all of the system threads to they run on the "system
+> CPU's", and then move the syzkaller processes which are testing the
+> kernel to be on the "system under test CPU's".  Then regardless of
+> what priority the syzkaller test programs try to run themselves at,
+> they can't crash the system.
+> 
+> Some real-time systems do actually run this way, and it's a
+> recommended configuration which is much safer than letting the
+> real-time threads take over the whole system:
+> 
+> http://linuxrealtime.org/index.php/Improving_the_Real-Time_Properties#Isolating_the_Application
 
-This patch has been compile-tested for the h8300 architecture which is
-one of the architectures that does not yet implement clone3 and
-generates its syscall table via asm-generic/unistd.h.
+Good point!  We might still have issues with some per-CPU kthreads,
+but perhaps use of nohz_full would help at least reduce these sorts
+of problems.  (There could still be issues on CPUs with more than
+one runnable threads.)
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
----
- include/uapi/asm-generic/unistd.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 9acfff0cd153..1be0e798e362 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -846,8 +846,10 @@ __SYSCALL(__NR_fsmount, sys_fsmount)
- __SYSCALL(__NR_fspick, sys_fspick)
- #define __NR_pidfd_open 434
- __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
-+#ifdef __ARCH_WANT_SYS_CLONE3
- #define __NR_clone3 435
- __SYSCALL(__NR_clone3, sys_clone3)
-+#endif
- 
- #undef __NR_syscalls
- #define __NR_syscalls 436
--- 
-2.22.0
+							Thanx, Paul
 
