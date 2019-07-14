@@ -2,112 +2,112 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD49C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28904C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CFC20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTWAvb0f"
+	by mail.kernel.org (Postfix) with ESMTP id EE61120C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563116791;
+	bh=9v0TSmLCn8TjvoXn1mqXdhjjoJsiEcxlv4LvLVZbR0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZEHJOj/pbR/X3n6NFd/9cQh4lQuAfhED9dJlEKmuH9EZe5eKrviWxu5pBnVwBLFOq
+	 AsTIGqTI5xKw0bHuuBBrL6+fY0LarrMFjk7dI6mBAwqbaLBPhpqrdoyjnosq8cdLep
+	 0HydxZ4jmGi78fan4H2DZ9aejZN2dBl5K/5Ce934=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfGNPF7 (ORCPT
+        id S1728556AbfGNPG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:05:59 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36795 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbfGNPF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:05:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z4so13164743qtc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 08:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GY7ijCnNWcBvJMmPhDv2XxWebBv+To4DFqmhVG/7aUM=;
-        b=jTWAvb0fl37zIZkVPv1RAR37KIV/mp/d6+o0pxsEi87doRmhLwRcCsDVYBrxcHIpGo
-         fNg19AmqP4Qr53oDVXkbQw5aTUfzm+2y+YGfGD2WIAIsOuex6Kxa7aGAkCLqP2wv/d1i
-         DcYGC9dhxirto1kBpmhE2jbBfYqayG5RgdhhITSXv1EsIJ2gLy+3PDHvvxVpUWCchFp0
-         Wwq2KuAdlc175fk+9yhVfnTtxiR6g1AwFbqr5gIIgFHLYmTr0i4Gg438f5wuTSCej7s+
-         cj6gTyotLJ6kuwqdZgT0fZtH4aGAfUt59OFTirl/UMZzMBD3XZI12c38esrAdKdbiwL4
-         do3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GY7ijCnNWcBvJMmPhDv2XxWebBv+To4DFqmhVG/7aUM=;
-        b=uHzrDnMPfR+Zsi1VCXjIPyWfrDWkVW2gXyc1mGPJ/pD1Si1ouB6UIxEt2QEXXAwdAa
-         sXJ3C4JdqtzeGbuq/6+6ntnJLDynbv19/oHlivdqNz2TxGc6WwXENWewNQY2UL5QLwWt
-         gaRmPGN+dl26FtX8BLO20Cq98VM93fAhpBFaJl+JMowsA8fWKk5YwHLp20KZiT7DTGay
-         hWu5SzBOcWnd6HIoYs9Su7uCm9nmTSQ4zo8BOl1LypHM4e+bvhi9LroTlAV5J20QEuUU
-         K5kfZTHjRZ26jKyyzG0jWgJ7GIkErVULni/cM2lgdw5iaNmZMregmiLyaIn7bSOjjEy8
-         eeuQ==
-X-Gm-Message-State: APjAAAV6Vqm39pAlTGojvpSLLnSCApDPK5Rru8r0XnzomTywitHyLeDI
-        PS4QMNF02c0wy/ATwe+QBA==
-X-Google-Smtp-Source: APXvYqysavumyVN2h4oAbEKhfcef9Kl5JjN5h4k30a9tgMEjAuaX67r3+aXdh2jYd7NuYskVJagNGA==
-X-Received: by 2002:a05:6214:185:: with SMTP id q5mr14837425qvr.213.1563116758160;
-        Sun, 14 Jul 2019 08:05:58 -0700 (PDT)
-Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
-        by smtp.googlemail.com with ESMTPSA id o18sm8973139qtb.53.2019.07.14.08.05.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 08:05:57 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     markus.elfring@web.de, Keyur Patel <iamkeyur96@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Gromm <christian.gromm@microchip.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] staging: most: remove redundant print statement when
- kfifo_alloc fails
-Date:   Sun, 14 Jul 2019 11:05:43 -0400
-Message-Id: <20190714150546.31836-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190711175055.25157-1-iamkeyur96@gmail.com>
-References: <20190711175055.25157-1-iamkeyur96@gmail.com>
+        Sun, 14 Jul 2019 11:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728146AbfGNPG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 11:06:29 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 348EE217D8
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 15:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563116788;
+        bh=9v0TSmLCn8TjvoXn1mqXdhjjoJsiEcxlv4LvLVZbR0I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=v0TmOJxy83Vs7zwskqPZknhJBHliByWQ9slt88eUlJmFucrdhem7QgBNJjIHsEncL
+         7r1MjLILZtAzjraM7v/6sOCnRImcX93hQrOaGfUCyDDn0RQY7log3hDh3/ibKrYXJj
+         SPkMGaiBSRrNaF/5iAD/xywYdZdj9CsvNJiGqkvg=
+Received: by mail-wm1-f48.google.com with SMTP id g67so8673571wme.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 08:06:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAUB6IhdKFvSLhtAnY6CWqENLtORMQSzxVc+U42eBU7471fBFeu1
+        Fj4+HcleCsifEQK4qA1TmFwb8hNRHlty77kdnIG2YQ==
+X-Google-Smtp-Source: APXvYqxduSTS2xAezjNhiFs/zv4vEOdtjl3od0VTpH2E1vVYA88Q+UFag4kZUKep/WXl0oYayxVpidWQx6QWYEWJtLo=
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr18654369wme.173.1563116786554;
+ Sun, 14 Jul 2019 08:06:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com> <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
+ <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com> <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de>
+ <3ca70237-bf8e-57d9-bed5-bc2329d17177@oracle.com> <20190712190620.GX3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190712190620.GX3419@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 14 Jul 2019 08:06:12 -0700
+X-Gmail-Original-Message-ID: <CALCETrWcnJhtUsJ2nrwAqqgdbRrZG6FNLKY_T-WTETL6-B-C1g@mail.gmail.com>
+Message-ID: <CALCETrWcnJhtUsJ2nrwAqqgdbRrZG6FNLKY_T-WTETL6-B-C1g@mail.gmail.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Alexander Graf <graf@amazon.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This print statement is redundant as kfifo_alloc just calls kmalloc_array=0D
-without the __GFP_NOWARN flag, already does a dump_stack().=0D
-=0D
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>=0D
----=0D
-Changes in v3:=0D
-- fix checkpatch warning=0D
-=0D
- drivers/staging/most/cdev/cdev.c | 4 +---=0D
- 1 file changed, 1 insertion(+), 3 deletions(-)=0D
-=0D
-diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/c=
-dev.c=0D
-index d0cc0b746107..724d098aeef0 100644=0D
---- a/drivers/staging/most/cdev/cdev.c=0D
-+++ b/drivers/staging/most/cdev/cdev.c=0D
-@@ -463,10 +463,8 @@ static int comp_probe(struct most_interface *iface, in=
-t channel_id,=0D
- 	spin_lock_init(&c->unlink);=0D
- 	INIT_KFIFO(c->fifo);=0D
- 	retval =3D kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);=0D
--	if (retval) {=0D
--		pr_info("failed to alloc channel kfifo");=0D
-+	if (retval)=0D
- 		goto err_del_cdev_and_free_channel;=0D
--	}=0D
- 	init_waitqueue_head(&c->wq);=0D
- 	mutex_init(&c->io_mutex);=0D
- 	spin_lock_irqsave(&ch_list_lock, cl_flags);=0D
--- =0D
-2.22.0=0D
-=0D
+On Fri, Jul 12, 2019 at 12:06 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jul 12, 2019 at 06:37:47PM +0200, Alexandre Chartre wrote:
+> > On 7/12/19 5:16 PM, Thomas Gleixner wrote:
+>
+> > > Right. If we decide to expose more parts of the kernel mappings then that's
+> > > just adding more stuff to the existing user (PTI) map mechanics.
+> >
+> > If we expose more parts of the kernel mapping by adding them to the existing
+> > user (PTI) map, then we only control the mapping of kernel sensitive data but
+> > we don't control user mapping (with ASI, we exclude all user mappings).
+> >
+> > How would you control the mapping of userland sensitive data and exclude them
+> > from the user map? Would you have the application explicitly identify sensitive
+> > data (like Andy suggested with a /dev/xpfo device)?
+>
+> To what purpose do you want to exclude userspace from the kernel
+> mapping; that is, what are you mitigating against with that?
+
+Mutually distrusting user/guest tenants.  Imagine an attack against a
+VM hosting provider (GCE, for example).  If the overall system is
+well-designed, the host kernel won't possess secrets that are
+important to the overall hosting network.  The interesting secrets are
+in the memory of other tenants running under the same host.  So, if we
+can mostly or completely avoid mapping one tenant's memory in the
+host, we reduce the amount of valuable information that could leak via
+a speculation (or wild read) attack to another tenant.
+
+The practicality of such a scheme is obviously an open question.
