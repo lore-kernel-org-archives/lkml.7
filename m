@@ -2,105 +2,113 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07412C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39B0C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06C92063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7322063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 17:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3FbQxlU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dr3arrr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfGNRY7 (ORCPT
+        id S1728643AbfGNR1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 13:24:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34105 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfGNRY6 (ORCPT
+        Sun, 14 Jul 2019 13:27:15 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35312 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbfGNR1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 13:24:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n9so391593pgc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:24:58 -0700 (PDT)
+        Sun, 14 Jul 2019 13:27:15 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so13376982qto.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 10:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2pbMNaC4Dad7U4b1ohLm6/S8pl6bc6ilVpOGqbkUqAU=;
-        b=L3FbQxlUt6QOMgJibrCgsFLEMZaCbxHxYOTNTouv4U83dvyhQXBwR5wKoArg5xPdk5
-         8oq8VgPUrj/guQV9+qVLGARPN7/eDjO5Yb6DLuJ7N0E4HvmHuyt/Z8AwbpUFyhGOYvn8
-         mLJlHyjLcQ0cbBzqeWg4U0OUxHwohTJj2DtxI7QB6jOiELCdt3SHrztCnBWUZoRkMXhv
-         FDJRexUpjWMzLxXN2bkAL2ogNWP7SNY4N1ZptSXImBTTZFLj74GHoyrFYxRx8bNVJLPz
-         NJa2zdh1uhx6yr2K4T6UJ1jCH3kuo6s0v72iaAsMRroTncW0+J1JgdVEzew7hfhCbiMb
-         AaVQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XZMU82wNnKmKEZ0XxgcXJZsoyOLcOo4xlcTKRS8FhBc=;
+        b=Dr3arrr2Pf8i39snL2FYw0NKg65N4FJTIH5KT3NN75mEX4YXnkGXkCcbuIjDeLWrY7
+         zuoOV0EEo8NSoJ0Taxfz1V73Cx+L+So7W45uXMBgnhRBEKx3AAkfSbFth7OavjQ6QKWT
+         3cxOATI3H8gqfwZ0V6nyH1SN13v/6JCnpyCsuuMwdslkF/h6fmVZW30TAl8nWgpWDsob
+         UA2houJ565w726xZqph76sIPRMrbf9ITfznB1rg/Nkj8aq52LPvOQopNpqg9FWY5WYUZ
+         XDlEDmjOfE4t4KcGDByWAvnKvktgsDM4/scz7qA3KijtT3ikFZkaeETMHuqDJyFlnVn7
+         2R3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2pbMNaC4Dad7U4b1ohLm6/S8pl6bc6ilVpOGqbkUqAU=;
-        b=ToWJxwi4L0wQuU85GblxHbAiFfH375p2afacV46X66k/nzrnXFjBf+cG0cEXRABVPo
-         UtIa2UZqrnunuPb0L1gtDICpXkm0onmCa37Z5yuo7qaUEVWcMgfHR3uohROQ+V8xTP3r
-         yaENOUzPtjcG3L6mOYTUIAEeXW9KhpqEPjsLIDkJOsmw8VZOVj1NgtEPwLKT14+42pup
-         uMiQFA4mVLBfowbHCAXEColQkoe8v93FJHhmZm1Kjl2hMNZJ8PGL66r3Yt3FBBoZiP1z
-         /9JrPe918AwK2lb740p7Xd4nT4EnpSZVCeewNMltEw7YxRpyjs+tS9j2nC18y7lJwrCK
-         Uaiw==
-X-Gm-Message-State: APjAAAVVZjBsHSkjvmbasX1Og+uJ2a5iroe86ZKA0y5Vm/LHdn+TMvgN
-        N0Tl7A32PTMCdr17fu9DklY=
-X-Google-Smtp-Source: APXvYqzCK6ajuqxRT2CT9FfwiHtOC2hGmLuxh2yCafolp/fS1quAbQAuUWDYfuhArNTT6pjxjvl+5A==
-X-Received: by 2002:a63:3d8f:: with SMTP id k137mr22863673pga.337.1563125098142;
-        Sun, 14 Jul 2019 10:24:58 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id c26sm14189820pfr.172.2019.07.14.10.24.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 10:24:57 -0700 (PDT)
-Date:   Sun, 14 Jul 2019 22:54:51 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XZMU82wNnKmKEZ0XxgcXJZsoyOLcOo4xlcTKRS8FhBc=;
+        b=ay04lUssIuo9Pr7BHP+kvRz29DZaa5Mw2tSzYERbnDO9PN89zukhtkdjnKNXpmBOea
+         kXFjdVbnJECcoQ8yxEptI8qLhbZK3MS252vfSVooeyhE/fYV/0SxWet80abWZsUD/jpA
+         TQPAtjxPZ+w0ldGA02GHwFCITegN/FJoHWVMC4dMldSA/vT/6qpHNQREQHlvXSP95O03
+         vQsvwJmd7Mdo8KGUfUOoHxsLSVjvBVAcIltCtK5+JWGhrOsjI/BxLjD8TiLfyjwvV5UW
+         E9539wIoue4lKRkTIrWeGUkSBMFYxXBMhZ/iNRLkrVmrKQrZZPdVYj2Ntd8Sqo1Fz6Ud
+         Lcqg==
+X-Gm-Message-State: APjAAAVMT/ERVbhwy6k/QvhC20DSlnT3TSsri4Pc1u+nSkj5x+RVrl1E
+        QEYzbnYfSLgxz1rBUwSgZw==
+X-Google-Smtp-Source: APXvYqxWIYI5kvypURV1il95tMRAkixqH5KL20pUR/4A1XY/9aDFQeiVy4dPTEVaqXGp7NWBGAaKVQ==
+X-Received: by 2002:ac8:341d:: with SMTP id u29mr14117813qtb.320.1563125234391;
+        Sun, 14 Jul 2019 10:27:14 -0700 (PDT)
+Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
+        by smtp.googlemail.com with ESMTPSA id z19sm7266767qtu.43.2019.07.14.10.27.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 14 Jul 2019 10:27:13 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     markus.elfring@web.de, Keyur Patel <iamkeyur96@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
         Colin Ian King <colin.king@canonical.com>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: hal: Remove code valid only for 5GHz
-Message-ID: <20190714172451.GA6779@hari-Inspiron-1545>
+Subject: [PATCH v5] staging: most: Delete an error message for a failed memory allocation
+Date:   Sun, 14 Jul 2019 13:27:06 -0400
+Message-Id: <20190714172708.5067-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190714164126.3159-1-iamkeyur96@gmail.com>
+References: <20190714164126.3159-1-iamkeyur96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per TODO ,remove code valid only for 5 GHz(channel > 14).
+The kfifo_alloc() failure generates enough information and doesn't need 
+to be accompanied by another error statement.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/hal_com.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Changes in v5:
+- change subject line
+- simplify commit description
+- fix checkpatch warning
+- removed braces around if
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_com.c b/drivers/staging/rtl8723bs/hal/hal_com.c
-index 638b12a..eddd56a 100644
---- a/drivers/staging/rtl8723bs/hal/hal_com.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_com.c
-@@ -152,10 +152,7 @@ bool HAL_IsLegalChannel(struct adapter *Adapter, u32 Channel)
- {
- 	bool bLegalChannel = true;
- 
--	if (Channel > 14) {
--		bLegalChannel = false;
--		DBG_871X("Channel > 14 but wireless_mode do not support 5G\n");
--	} else if ((Channel <= 14) && (Channel >= 1)) {
-+	if ((Channel <= 14) && (Channel >= 1)) {
- 		if (IsSupported24G(Adapter->registrypriv.wireless_mode) == false) {
- 			bLegalChannel = false;
- 			DBG_871X("(Channel <= 14) && (Channel >= 1) but wireless_mode do not support 2.4G\n");
+ drivers/staging/most/cdev/cdev.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
+index d0cc0b746107..724d098aeef0 100644
+--- a/drivers/staging/most/cdev/cdev.c
++++ b/drivers/staging/most/cdev/cdev.c
+@@ -463,10 +463,8 @@ static int comp_probe(struct most_interface *iface, int channel_id,
+ 	spin_lock_init(&c->unlink);
+ 	INIT_KFIFO(c->fifo);
+ 	retval = kfifo_alloc(&c->fifo, cfg->num_buffers, GFP_KERNEL);
+-	if (retval) {
+-		pr_info("failed to alloc channel kfifo");
++	if (retval)
+ 		goto err_del_cdev_and_free_channel;
+-	}
+ 	init_waitqueue_head(&c->wq);
+ 	mutex_init(&c->io_mutex);
+ 	spin_lock_irqsave(&ch_list_lock, cl_flags);
 -- 
-2.7.4
+2.22.0
 
