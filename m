@@ -2,222 +2,199 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C3AC74A44
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530E5C74A44
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69317205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:48:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDfJqkhv"
+	by mail.kernel.org (Postfix) with ESMTP id 2B72F2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 14:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563115860;
+	bh=8Vy3EmFWn6pgNPzexJDXyBDOHfyJgBlPGs3qDdxFGAc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=V5CuEG3pUwhvMeS8K/9jFpLG4jYNkiYqisdZ6toG/PxAKxCYmXz05XD6qFxdxrB1Q
+	 xOKGoSmrz30EsQrDSuYgJkF6S7YYuiHbGL1rHUCQHxm8c5IGU1PRFHzlCdsRorgHeE
+	 o8MhkDEohslYZsQykvhG09DRyVWS6TOxUqnkI7OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfGNOsP (ORCPT
+        id S1728492AbfGNOu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 10:48:15 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38845 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbfGNOsP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 10:48:15 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so13075115edo.5
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 07:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hy169g8Lox0WjwNa4b+zp9/64BOx2Hykf6MoysyzbyM=;
-        b=qDfJqkhv+PeM8i4Vhi7D1ipptr7S663xKsAmSBA2CKg+Umsac68Z3LKvOc1LthziJt
-         uac1l65OCcZ/uWWwlX9T1JniSL3EiC06GffOb+e3uoOYGnBoxgoiFzRCeUWwSAv2Yvnf
-         SYQEmCuGl2CenAC532BSRLxUEFwpatlHTBg59D9oAeN/Xm5pAwlimQ4/7kZ2qxBEhBLZ
-         nW8poMpnV5QeFH4z5bPprqef+T4CBVanBUrmXIT2Od34P3knxOpdjOQwHBoXvicz1rLu
-         oSgQoEaKpLEyD6k0b2iLzQSpUlgto57fqDJ/BmOOq89dWz1swDNTFhlzqr1XI/SNso42
-         A/Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hy169g8Lox0WjwNa4b+zp9/64BOx2Hykf6MoysyzbyM=;
-        b=EC8MR7veNXp3hLcadjwT3LOAIdvJKwl3kzLm4pt2XeKSQ+KSa33tpNn55BSPJLx0/o
-         3/ASz5Y+ETvpA2DGIP7JbormlmB1PTJHlNkpKKhmfgINolKPGLZjLdlFki6HFpe5+1au
-         /awJcFQ6ON237vmicvQeW9qB1bc8lEee9KclzxWLCsIemwyPSPon/R22i4wGXSL/YuAp
-         EAPC6XFCrfLC9Lr4DPhG6/OlAchVc3KqW9YitQYRX2i0hPw3c1HZ6D9zzrZq/2CbZ1dn
-         8E2npicjumtpVaGwizuG0UOj/7RarEWuI4MdvKv5BSzJc0HM6rtzyAYDC3QGR9wBpqLi
-         HhHA==
-X-Gm-Message-State: APjAAAWmnqavmFL6AwK7KxsyGH4fQTepV5NbgqGk2t5qh/u4ozeO9xGI
-        wGNfYszMy5iwQBQKTHYCkdCb35bbNIq/aT4F8dmNFg==
-X-Google-Smtp-Source: APXvYqwu8FY6LIl+s3s47q2KUxAhOGJHQqSYTQTDa938MOOpf93YR+WR/jyjgM1fffyG1L7qU0vEITvwu0QhD5js5qc=
-X-Received: by 2002:a17:906:644c:: with SMTP id l12mr15866907ejn.142.1563115692435;
- Sun, 14 Jul 2019 07:48:12 -0700 (PDT)
+        Sun, 14 Jul 2019 10:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728146AbfGNOu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 10:50:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4218E205F4;
+        Sun, 14 Jul 2019 14:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563115857;
+        bh=8Vy3EmFWn6pgNPzexJDXyBDOHfyJgBlPGs3qDdxFGAc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i70z4zNGWQIKn5nRY4VLY/cYdZX7zfBFYN3fmhD2poFWUxI7IRs1BNeWVyBMPNx0d
+         9Rg4tA5d8oa7TtW/dp4d5Yy4c7x3uZ5o4eMrY5OunrBi1AnqQgtIDUx8jJV47qio2d
+         hhsnjvkx2+Lc65S0/9Ht3B57S98aiDs61eRZ9xDc=
+Date:   Sun, 14 Jul 2019 15:50:52 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freeman.liu@spreadtrum.com
+Subject: Re: [PATCH 01/14] iio: adc: sc27xx: Introduce local variable
+ 'struct device *dev'
+Message-ID: <20190714155052.5092cf0d@archlinux>
+In-Reply-To: <20190708123221.11658-1-huangfq.daxian@gmail.com>
+References: <20190708123221.11658-1-huangfq.daxian@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190626210351.GF3116@mit.edu> <20190626224709.GH3116@mit.edu>
- <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
- <20190705151658.GP26519@linux.ibm.com> <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
- <20190705191055.GT26519@linux.ibm.com> <20190706042801.GD11665@mit.edu>
- <20190706061631.GV26519@linux.ibm.com> <20190706150226.GG11665@mit.edu>
- <20190706180311.GW26519@linux.ibm.com> <20190707011655.GA22081@linux.ibm.com>
-In-Reply-To: <20190707011655.GA22081@linux.ibm.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 14 Jul 2019 17:48:00 +0300
-Message-ID: <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 7, 2019 at 4:17 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > > > I suppose RCU could take the dueling-banjos approach and use increasingly
-> > > > aggressive scheduler policies itself, up to and including SCHED_DEADLINE,
-> > > > until it started getting decent forward progress.  However, that
-> > > > sounds like the something that just might have unintended consequences,
-> > > > particularly if other kernel subsystems were to also play similar
-> > > > games of dueling banjos.
-> > >
-> > > So long as the RCU threads are well-behaved, using SCHED_DEADLINE
-> > > shouldn't have much of an impact on the system --- and the scheduling
-> > > parameters that you can specify on SCHED_DEADLINE allows you to
-> > > specify the worst-case impact on the system while also guaranteeing
-> > > that the SCHED_DEADLINE tasks will urn in the first place.  After all,
-> > > that's the whole point of SCHED_DEADLINE.
-> > >
-> > > So I wonder if the right approach is during the the first userspace
-> > > system call to shced_setattr to enable a (any) real-time priority
-> > > scheduler (SCHED_DEADLINE, SCHED_FIFO or SCHED_RR) on a userspace
-> > > thread, before that's allowed to proceed, the RCU kernel threads are
-> > > promoted to be SCHED_DEADLINE with appropriately set deadline
-> > > parameters.  That way, a root user won't be able to shoot the system
-> > > in the foot, and since the vast majority of the time, there shouldn't
-> > > be any processes running with real-time priorities, we won't be
-> > > changing the behavior of a normal server system.
-> >
-> > It might well be.  However, running the RCU kthreads at real-time
-> > priority does not come for free.  For example, it tends to crank up the
-> > context-switch rate.
-> >
-> > Plus I have taken several runs at computing SCHED_DEADLINE parameters,
-> > but things like the rcuo callback-offload threads have computational
-> > requirements that are controlled not by RCU, and not just by the rest of
-> > the kernel, but also by userspace (keeping in mind the example of opening
-> > and closing a file in a tight loop, each pass of which queues a callback).
-> > I suspect that RCU is not the only kernel subsystem whose computational
-> > requirements are set not by the subsystem, but rather by external code.
-> >
-> > OK, OK, I suppose I could just set insanely large SCHED_DEADLINE
-> > parameters, following syzkaller's example, and then trust my ability to
-> > keep the RCU code from abusing the resulting awesome power.  But wouldn't
-> > a much nicer approach be to put SCHED_DEADLINE between SCHED_RR/SCHED_FIFO
-> > priorities 98 and 99 or some such?  Then the same (admittedly somewhat
-> > scary) result could be obtained much more simply via SCHED_FIFO or
-> > SCHED_RR priority 99.
-> >
-> > Some might argue that this is one of those situations where simplicity
-> > is not necessarily an advantage, but then again, you can find someone
-> > who will complain about almost anything.  ;-)
-> >
-> > > (I suspect there might be some audio applications that might try to
-> > > set real-time priorities, but for desktop systems, it's probably more
-> > > important that the system not tie its self into knots since the
-> > > average desktop user isn't going to be well equipped to debug the
-> > > problem.)
-> >
-> > Not only that, but if core counts continue to increase, and if reliance
-> > on cloud computing continues to grow, there are going to be an increasing
-> > variety of mixed workloads in increasingly less-controlled environments.
-> >
-> > So, yes, it would be good to solve this problem in some reasonable way.
-> >
-> > I don't see this as urgent just yet, but I am sure you all will let
-> > me know if I am mistaken on that point.
-> >
-> > > > Alternatively, is it possible to provide stricter admission control?
-> > >
-> > > I think that's an orthogonal issue; better admission control would be
-> > > nice, but it looks to me that it's going to be fundamentally an issue
-> > > of tweaking hueristics, and a fool-proof solution that will protect
-> > > against all malicious userspace applications (including syzkaller) is
-> > > going to require solving the halting problem.  So while it would be
-> > > nice to improve the admission control, I don't think that's a going to
-> > > be a general solution.
-> >
-> > Agreed, and my earlier point about the need to trust the coding abilities
-> > of those writing ultimate-priority code is all too consistent with your
-> > point about needing to solve the halting problem.  Nevertheless,  I believe
-> > that we could make something that worked reasonably well in practice.
-> >
-> > Here are a few components of a possible solution, in practice, but
-> > of course not in theory:
-> >
-> > 1.    We set limits to SCHED_DEADLINE parameters, perhaps novel ones.
-> >       For one example, insist on (say) 10 milliseconds of idle time
-> >       every second on each CPU.  Yes, you can configure beyond that
-> >       given sufficient permissions, but if you do so, you just voided
-> >       your warranty.
-> >
-> > 2.    Only allow SCHED_DEADLINE on nohz_full CPUs.  (Partial solution,
-> >       given that such a CPU might be running in the kernel or have
-> >       more than one runnable task.  Just for fun, I will suggest the
-> >       option of disabling SCHED_DEADLINE during such times.)
-> >
-> > 3.    RCU detects slowdowns, and does something TBD to increase its
-> >       priority, but only while the slowdown persists.  This likely
-> >       relies on scheduling-clock interrupts to detect the slowdowns,
-> >       so there might be additional challenges on a fully nohz_full
-> >       system.
->
-> 4.      SCHED_DEADLINE treats the other three scheduling classes as each
->         having a period, deadline, and a modest CPU consumption budget
->         for the members of the class in aggregate.  But this has to have
->         been discussed before.  How did that go?
->
-> > 5.    Your idea here.
+On Mon,  8 Jul 2019 20:32:21 +0800
+Fuqian Huang <huangfq.daxian@gmail.com> wrote:
 
-Trying to digest this thread.
+> Introduce local variable 'struct device *dev' and use it instead of
+> dereferencing it repeatly.
+> 
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-Do I understand correctly that setting rcutree.kthread_prio=99 won't
-help because the deadline priority is higher?
-And there are no other existing mechanisms to either fix the stalls
-nor make kernel reject the non well-behaving parameters? Kernel tries
-to filter out non well-behaving parameters, but the check detects only
-obvious misconfigurations, right?
-This reminds of priority inversion/inheritance problem. I wonder if
-there are other kernel subsystems that suffer from the same problem.
-E.g. the background kernel thread that destroys net namespaces and any
-other type of async work. A high prio user process can overload the
-queue and make kernel eat all memory. May be relatively easy to do
-even unintentionally. I suspect the problem is not specific to rcu and
-plumbing just rcu may just make the next problem pop up.
-Should user be able to starve basic kernel services? User should be
-able to prioritize across user processes (potentially in radical
-ways), but perhaps it should not be able to badly starve kernel
-functions that just happened to be asynchronous? I guess it's not as
-simple as setting the highest prio for all kernel threads because in
-normal case we want to reduce latency of user work by making the work
-async. But user must not be able to starve kernel threads
-infinitely... sounds like something similar to the deadline scheduling
--- kernel threads need to get at least some time slice per unit of
-time.
+Ok, this is a fair bit of churn but probably on balance a worthwhile
+little improvement.
 
-But short term I don't see any other solution than stop testing
-sched_setattr because it does not check arguments enough to prevent
-system misbehavior. Which is a pity because syzkaller has found some
-bad misconfigurations that were oversight on checking side.
-Any other suggestions?
+Applied to the togreg branch of iio.git and pushed out
+as testing to see if we missed anything.
+
++CC Freeman Liu as original author.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+>  drivers/iio/adc/sc27xx_adc.c | 41 +++++++++++++++++++++--------------------
+>  1 file changed, 21 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+> index f7f7a18904b4..ec86f640e963 100644
+> --- a/drivers/iio/adc/sc27xx_adc.c
+> +++ b/drivers/iio/adc/sc27xx_adc.c
+> @@ -504,88 +504,89 @@ static void sc27xx_adc_free_hwlock(void *_data)
+>  
+>  static int sc27xx_adc_probe(struct platform_device *pdev)
+>  {
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+>  	struct sc27xx_adc_data *sc27xx_data;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+>  
+> -	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*sc27xx_data));
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*sc27xx_data));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+>  	sc27xx_data = iio_priv(indio_dev);
+>  
+> -	sc27xx_data->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	sc27xx_data->regmap = dev_get_regmap(dev->parent, NULL);
+>  	if (!sc27xx_data->regmap) {
+> -		dev_err(&pdev->dev, "failed to get ADC regmap\n");
+> +		dev_err(dev, "failed to get ADC regmap\n");
+>  		return -ENODEV;
+>  	}
+>  
+>  	ret = of_property_read_u32(np, "reg", &sc27xx_data->base);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "failed to get ADC base address\n");
+> +		dev_err(dev, "failed to get ADC base address\n");
+>  		return ret;
+>  	}
+>  
+>  	sc27xx_data->irq = platform_get_irq(pdev, 0);
+>  	if (sc27xx_data->irq < 0) {
+> -		dev_err(&pdev->dev, "failed to get ADC irq number\n");
+> +		dev_err(dev, "failed to get ADC irq number\n");
+>  		return sc27xx_data->irq;
+>  	}
+>  
+>  	ret = of_hwspin_lock_get_id(np, 0);
+>  	if (ret < 0) {
+> -		dev_err(&pdev->dev, "failed to get hwspinlock id\n");
+> +		dev_err(dev, "failed to get hwspinlock id\n");
+>  		return ret;
+>  	}
+>  
+>  	sc27xx_data->hwlock = hwspin_lock_request_specific(ret);
+>  	if (!sc27xx_data->hwlock) {
+> -		dev_err(&pdev->dev, "failed to request hwspinlock\n");
+> +		dev_err(dev, "failed to request hwspinlock\n");
+>  		return -ENXIO;
+>  	}
+>  
+> -	ret = devm_add_action(&pdev->dev, sc27xx_adc_free_hwlock,
+> +	ret = devm_add_action(dev, sc27xx_adc_free_hwlock,
+>  			      sc27xx_data->hwlock);
+>  	if (ret) {
+>  		sc27xx_adc_free_hwlock(sc27xx_data->hwlock);
+> -		dev_err(&pdev->dev, "failed to add hwspinlock action\n");
+> +		dev_err(dev, "failed to add hwspinlock action\n");
+>  		return ret;
+>  	}
+>  
+>  	init_completion(&sc27xx_data->completion);
+> -	sc27xx_data->dev = &pdev->dev;
+> +	sc27xx_data->dev = dev;
+>  
+>  	ret = sc27xx_adc_enable(sc27xx_data);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "failed to enable ADC module\n");
+> +		dev_err(dev, "failed to enable ADC module\n");
+>  		return ret;
+>  	}
+>  
+> -	ret = devm_add_action(&pdev->dev, sc27xx_adc_disable, sc27xx_data);
+> +	ret = devm_add_action(dev, sc27xx_adc_disable, sc27xx_data);
+>  	if (ret) {
+>  		sc27xx_adc_disable(sc27xx_data);
+> -		dev_err(&pdev->dev, "failed to add ADC disable action\n");
+> +		dev_err(dev, "failed to add ADC disable action\n");
+>  		return ret;
+>  	}
+>  
+> -	ret = devm_request_threaded_irq(&pdev->dev, sc27xx_data->irq, NULL,
+> +	ret = devm_request_threaded_irq(dev, sc27xx_data->irq, NULL,
+>  					sc27xx_adc_isr, IRQF_ONESHOT,
+>  					pdev->name, sc27xx_data);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "failed to request ADC irq\n");
+> +		dev_err(dev, "failed to request ADC irq\n");
+>  		return ret;
+>  	}
+>  
+> -	indio_dev->dev.parent = &pdev->dev;
+> -	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->name = dev_name(dev);
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->info = &sc27xx_info;
+>  	indio_dev->channels = sc27xx_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(sc27xx_channels);
+> -	ret = devm_iio_device_register(&pdev->dev, indio_dev);
+> +	ret = devm_iio_device_register(dev, indio_dev);
+>  	if (ret)
+> -		dev_err(&pdev->dev, "could not register iio (ADC)");
+> +		dev_err(dev, "could not register iio (ADC)");
+>  
+>  	return ret;
+>  }
+
