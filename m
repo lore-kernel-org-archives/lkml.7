@@ -2,106 +2,81 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2F2C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 10:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CFC73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 11:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5797620838
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 10:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563101878;
-	bh=0m76HJOsBg14Tc7m46IhLWs8jfS+R/udjn8IIy6E7po=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Vr4w4lMCbRPdYZGmeYOr8u+wxDYPFBcu5qSFePU3bCD19jqAAGQ+NLMZ/lcpoo9he
-	 m74GkPRIHgcgPcWBm7HXCQHlQDfIMWXPjLfiH4TmCqK8iwm7yBn/PXQ0YocMEbGZD5
-	 kTrAP0VTkYdJ6cC/IbAKOt1TX3HjglbNvOV6SToA=
+	by mail.kernel.org (Postfix) with ESMTP id 3728D20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 11:07:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=devnull.tasossah.com header.i=@devnull.tasossah.com header.b="sgqBjlGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbfGNK55 (ORCPT
+        id S1728326AbfGNLHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 06:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbfGNK54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 06:57:56 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C239520838;
-        Sun, 14 Jul 2019 10:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563101875;
-        bh=0m76HJOsBg14Tc7m46IhLWs8jfS+R/udjn8IIy6E7po=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iUdA/GG3XGDCBM+czw+oPZkv9b4pbypQR4YU0NnVXTYtYlTgxbxK89s9G3syTSlZn
-         twSeR3xbMX37yvPWYveftDEvOt6bUW/4YaTAujvnNElYgX00tuGSWmJqtIkaM3HZ4v
-         Kmii7P8vR+y2BSwZNZv5SzdYDDHTw2zBWytbb1MM=
-Date:   Sun, 14 Jul 2019 11:57:50 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        baylibre-upstreaming@groups.io, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] dt-bindings: iio: position: Add docs pat9125
-Message-ID: <20190714115750.454f5ef0@archlinux>
-In-Reply-To: <20190713080455.17513-3-amergnat@baylibre.com>
-References: <20190713080455.17513-1-amergnat@baylibre.com>
-        <20190713080455.17513-3-amergnat@baylibre.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jul 2019 07:07:33 -0400
+Received: from devnull.tasossah.com ([107.6.175.157]:41876 "EHLO
+        devnull.tasossah.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728147AbfGNLHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 07:07:33 -0400
+X-Greylist: delayed 2100 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jul 2019 07:07:32 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=devnull.tasossah.com; s=vps;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Cc:To:Subject:From; bh=PK+4A6Djlm0HBD+oHjsKF9x5XtC7nuP1nhljNjNNhD4=;
+        b=sgqBjlGjHCRgMihFqvIT4YOeheSv3Pgrkl1fpgiIalzVVhurAj7NhEIgXPylLkhwxe8Iw+hp+cFCHhrpfr1gxWTEdIvqbBeJEg4jVN0ilX6pR8VOo89mfQSIu0IeE2cZrd15s4edXl+IPbMN4gK6QZhBWS/X739yXSax3NNY7DI=;
+Received: from 194.219.107.0.dsl.dyn.forthnet.gr ([194.219.107.0] helo=[192.168.1.3])
+        by devnull.tasossah.com with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <tasos@tasossah.com>)
+        id 1hmbmw-0000NR-5J; Sun, 14 Jul 2019 13:31:26 +0300
+From:   Tasos Sahanidis <tasos@tasossah.com>
+Subject: [PATCH] sky2: Disable MSI on P5W DH Deluxe
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
+        stephen@networkplumber.org, mlindner@marvell.com,
+        tasos@tasossah.com
+Message-ID: <14c872c3-09ac-7f51-dc3d-e68319459fcf@tasossah.com>
+Date:   Sun, 14 Jul 2019 13:31:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jul 2019 10:04:54 +0200
-Alexandre Mergnat <amergnat@baylibre.com> wrote:
+The onboard sky2 NICs send IRQs after S3, resulting in ethernet not
+working after resume.
+Maskable MSI and MSI-X are also not supported, so fall back to INTx.
 
-> Add documentation for the optical tracker PAT9125 and
-> "position" directory for chip which can provides position data.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-Whilst this one predates my statement that I wanted all bindings
-in YAML going forwards, it will want converting at some stage
-and if you have time now it would be great to do so!
+Signed-off-by: Tasos Sahanidis <tasos@tasossah.com>
+---
+ drivers/net/ethernet/marvell/sky2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks,
-
-Jonathan
-
-> ---
->  .../bindings/iio/position/pat9125.txt          | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/position/pat9125.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/position/pat9125.txt b/Documentation/devicetree/bindings/iio/position/pat9125.txt
-> new file mode 100644
-> index 000000000000..4028aeef9b42
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/position/pat9125.txt
-> @@ -0,0 +1,18 @@
-> +PixArt Imaging PAT9125 Optical Tracking Miniature Chip device driver
-> +
-> +Required properties:
-> +	- compatible: must be "pixart,pat9125"
-> +	- reg: i2c address where to find the device
-> +	- interrupts: the sole interrupt generated by the device
-> +
-> +	Refer to interrupt-controller/interrupts.txt for generic
-> +	interrupt client node bindings.
-> +
-> +Example:
-> +
-> +pat9125@75 {
-> +	compatible = "pixart,pat9125";
-> +	reg = <0x75>;
-> +	interrupt-parent = <&gpio3>;
-> +	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-> +};
-
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index fe518c854..f518312ff 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -4917,6 +4917,13 @@ static const struct dmi_system_id msi_blacklist[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
+ 		},
+ 	},
++	{
++		.ident = "ASUS P5W DH Deluxe",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTEK COMPUTER INC"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "P5W DH Deluxe"),
++		},
++	},
+ 	{}
+ };
+ 
+-- 
+2.17.1
