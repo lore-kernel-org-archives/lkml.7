@@ -2,133 +2,207 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D839C73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CE4C73C66
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9D1205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="tAZCrdwc"
+	by mail.kernel.org (Postfix) with ESMTP id 02715205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 15:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfGNPYR (ORCPT
+        id S1728345AbfGNP2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 11:24:17 -0400
-Received: from mout.web.de ([212.227.17.12]:44951 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbfGNPYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 11:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1563117817;
-        bh=Sxi8KiZGOSqRDgHk13Cpjv8vrU1eOIJ4xxP749vOkH4=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=tAZCrdwcGB1wjJejrVSyEIBRRnBZ8Fn7rDd7k9URwJ5knh+qEdgow5cwM3UF5mlpX
-         QwXQf40X2QWuSITKclqRpY+2Q7/p5uG/QqsCzRoa4saRbkIQxy3ZamiyUEEOWYlqJ0
-         4DG2WRy3cKjcDH2RD+Z0d9PMwo/rYZXYu+YT78xw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.159.144]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9os0-1hbhyq3Ivg-00B5P2; Sun, 14
- Jul 2019 17:23:36 +0200
-Cc:     Christian Gromm <christian.gromm@microchip.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        linux-kernel@vger.kernel.org
-References: <20190714150546.31836-1-iamkeyur96@gmail.com>
-Subject: Re: [v4] staging: most: remove redundant print statement when
- kfifo_alloc fails
-To:     Keyur Patel <iamkeyur96@gmail.com>, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <06fc2495-dda5-61d2-17e8-0c385e02da1e@web.de>
-Date:   Sun, 14 Jul 2019 17:23:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 14 Jul 2019 11:28:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45006 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfGNP23 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 11:28:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p17so14478781wrf.11;
+        Sun, 14 Jul 2019 08:28:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+L3gCIHx5QSGA5TZkqN231Uus0yuqleYr/9QpWKEyyk=;
+        b=q5OrpkcmMay2C2UrsqJPY+961rrwrKfB5q/Zrc7UFiTCacamt1WhaseT9l8E+gRchz
+         bqsM6aVsKuJ12KniNAE2+QJnpuebgAmwAw5lumcl+tiJQYjMTZTeyWB49QVmWDTYKWBR
+         bhD4D1VkF2SIUXOlAwaJoda3AUDHPSEswMiKoXe1i1VfWJSNnr8lnjl90guT/W+zk8eD
+         oMqJt9Gc+HWj0axwpcdiFlxLIhAQSSMjmLzwOqIUJ/yVcXKx2gq4E92/KI1hAx/kSOGb
+         3tSZEiGa+vDGjkybSqhFTSXI173EOuu64gCKljuIPEmtcQDBVUBnpJn6Rn9qMsQ7CHty
+         2lYQ==
+X-Gm-Message-State: APjAAAW5AdsWiIpo+zvkcHORT17M/VR2xrPCq8kd+K05NuJcdwbLhZy5
+        1ap0VtxohOj3lVdWZ9SDwZU=
+X-Google-Smtp-Source: APXvYqyWrYvavk3k2izd2KnljkEDCmQPkIDVsBUNkmmQx3UMsHoNBVmdsvVzNp/sLIOVy0qtoKCDog==
+X-Received: by 2002:adf:dcc2:: with SMTP id x2mr11403035wrm.55.1563118106361;
+        Sun, 14 Jul 2019 08:28:26 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id i18sm16399265wrp.91.2019.07.14.08.28.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jul 2019 08:28:25 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] modpost: check for static EXPORT_SYMBOL* functions
+Date:   Sun, 14 Jul 2019 18:28:17 +0300
+Message-Id: <20190714152817.24693-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190714150546.31836-1-iamkeyur96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:xdFsAciHCdHDSvkGjoB4tSWln+ja+589cYB7nh1B1wrTUwU3tRw
- x4rF+h361EpVOTO4NFnul29ks2SafX44LWMMfRNWAUC3zvEZLeUweeIE2mA6ZevDsKkhAH2
- gfK8OcZjtpYXYbUPP2QrDlDy9uKGJSqqiE3IE4mT86YnzmPGkE72YCXrmEc/6JO3ij+lHgJ
- JtzjR3g53GvL3pgFFkrWg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:v8mqMb1rIHo=:V+95470QiO/yhoFK5TpV64
- a77b7aCqQyURzzUHAjmDdd/bfM08pfY9la2gNfartUv6URIeHNEpsBPvAPX0QN5mGYZRnTWTm
- mk+Kp6fldNstT0+fdFhVR0IMO3xU5i4MTzAx9MVVvl/I67GnTtiEYbdSa0K0kT1tDQE8ggB2/
- uWuON7Y9uFsOtP2q+1ihELmZ67nvB2dxjXLn4Q/yJeqCKzhVNWVcsJ26k5nIIu6EagZbqQCpg
- qLQj4bFQqS+ofs3m0PmuV+qavUvUsR+Kz0PmRpaq9IIZIhz4hzXZarVlp3i/omQnDGOQvmnbg
- m8oemOSQlvU9m7anazg7lefSzR3foNg6X73u3wHEOkfOoo16AokQul5LfmgW/y4enA6VPuvh4
- PvLHHOCZk0VirbFuttEUjQlZZDG4URe+hex9PBNjAy607HpNq6Jv/m+AWyIsW1KSro56+RKQn
- pYSCQN4fRyZWmdCnhJkDAU+X0hL+PgTcWmjKVdtvpNMtXYYY/brTuz6016d7LoaqlFYLf+O0I
- Ccp4qDBfQMfH+bkqAfJAB/zAc8vjhUEd6AUgjQ9nxBDgsuO7ztQ0M4UGdt4K7JjZFPOD5CoMq
- j1ZPiu8rLVaDoCb7d5laRUffuIMAE7h7gpSQJCo16r5R8LJGQq2RzKk1RWFGLMTCyrrXLBsuF
- etUcofpXk8iRhNe0h2JdWp46vdwd6r0V9S49hdPRbB5b40SgijkZEMjKRJ9ATNHGyEeiONHaZ
- Ng8rNb8XMuWRbkgmJa97I6JPWrWxBakLQZqXu5Eud+31AVdOoQ4l2sKQzf6YsAtdD1BokDd/N
- qYU4QYFYyndpTpIxT5ssU0LfZ20eOmXD9yn+f1qobXzonl8LE9Wqde/lwSlck//NGaUYgJ54v
- hbr0FPldpP3eF3mShkMuGccUJP/wGaYShxe9tPKY6es75Dtkdt3WMlfx79bieia7V3HMTMTQM
- KGQaX/kb8edBAP8zg7/l6RpKPQ3wiRH68usHqTJM/6JTgn78CV44gz/H8GfAxEXrn7q+9k/IX
- CJCgRFYn8Cxq2IuNtpEaeWDL3cyf1uohB5SadnsNzwiqf0Dilt4CsGOrCTcpX6t9vm/viUrJG
- NZtELZrHKPeLt0G/2IrXQUJTNa/A2e+8pPo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> ---
-> Changes in v3:
+This patch adds a check to warn about static EXPORT_SYMBOL* functions
+during the modpost. In most of the cases, a static symbol marked for
+exporting is an odd combination that should be fixed either by deleting
+the exporting mark or by removing the static attribute and adding the
+appropriate declaration to headers.
 
-Thanks for your quick response.
+If this check will be considered useful, I will resend the patch with
+review fixes.
 
-I find the change log incomplete (even if corresponding information
-can be determined also from public message archives).
+Currently, this check emits the warnings on the following symbols, most
+of which are accepted to be fixed:
+1. "sas_wait_eh" [drivers/scsi/libsas/libsas]
+   Patch: https://lkml.org/lkml/2019/7/8/970 (accepted)
+2. "torture_onoff_cleanup" [kernel/torture]
+   "torture_shuffle_cleanup" [kernel/torture]
+   Patch: https://lkml.org/lkml/2019/7/4/411 (accepted)
+3. "LZ4HC_setExternalDict" [lib/lz4/lz4hc_compress]
+   Patch: https://lkml.org/lkml/2019/7/8/842
+4. "drm_client_close" [drivers/gpu/drm/drm]
+   Patch: https://lkml.org/lkml/2019/7/3/758 (accepted)
+5. "gve_probe" [drivers/net/ethernet/google/gve/gve]
+   Patch: https://lkml.org/lkml/2019/7/14/65
+6. "i2c_new_client_device" [vmlinux]
+   "i2c_new_dummy_device" [vmlinux]
+   Patch: https://lkml.org/lkml/2019/7/7/226 (fixed in a different patch)
+7. "ahci_em_messages" [drivers/ata/libahci]
+   Patch: https://lkml.org/lkml/2019/7/10/550 (reviwed)
+8. "ftrace_set_clr_event" [vmlinux]
+   Patch: https://lkml.org/lkml/2019/7/4/609 (reviwed)
+9. "rmi_2d_sensor_set_input_params" [drivers/input/rmi4/rmi_core]
+   Patch: https://lkml.org/lkml/2019/7/8/999
+10. "empty_zero_page" [vmlinux]
+11. "phys_base" [vmlinux]
+12. "hypercall_page" [vmlinux]
 
-Regards,
-Markus
+Similar commits:
+1. 54638c6eaf44 ("net: phy: make exported variables non-static")
+2. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+3. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+4. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+5. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
+
+Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+$ make mrproper; make allmodconfig; time make -j12; \
+  git checkout HEAD~1; \
+  make mrproper; make allmodconfig; time make -j12
+1.
+   (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+   (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+2.
+   (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+   (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+3.
+   (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+   (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
+
+Thus, the current implementation adds approx. 1 min for allmodconfig.
+However, it's possible to do the check in a more optimal way if it will
+be considered useful.
+
+Also, this kind of check could be implemented as a separate script instead.
+Here is the implementation:
+https://gist.github.com/evdenis/bf2322d094f0c02c0f60fe0a225848b2
+
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ scripts/mod/modpost.c | 35 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index f277e116e0eb..c51eef357721 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -169,6 +169,7 @@ struct symbol {
+ 	unsigned int kernel:1;     /* 1 if symbol is from kernel
+ 				    *  (only for external modules) **/
+ 	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
++	unsigned int is_static:1;  /* 1 if symbol is not global */
+ 	enum export  export;       /* Type of export */
+ 	char name[0];
+ };
+@@ -199,8 +200,9 @@ static struct symbol *alloc_symbol(const char *name, unsigned int weak,
+ 
+ 	memset(s, 0, sizeof(*s));
+ 	strcpy(s->name, name);
+-	s->weak = weak;
+-	s->next = next;
++	s->weak      = weak;
++	s->next      = next;
++	s->is_static = 1;
+ 	return s;
+ }
+ 
+@@ -1980,6 +1982,21 @@ static void read_symbols(const char *modname)
+ 		handle_modversions(mod, &info, sym, symname);
+ 		handle_moddevtable(mod, &info, sym, symname);
+ 	}
++
++	// check for static EXPORT_SYMBOL_* functions && global vars
++	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
++		unsigned char bind = ELF_ST_BIND(sym->st_info);
++		unsigned char type = ELF_ST_TYPE(sym->st_info);
++
++		if (type == STT_OBJECT || type == STT_FUNC) {
++			struct symbol *s =
++			    find_symbol(remove_dot(info.strtab + sym->st_name));
++
++			if (s && (bind == STB_GLOBAL || bind == STB_WEAK))
++				s->is_static = 0;
++		}
++	}
++
+ 	if (!is_vmlinux(modname) || vmlinux_section_warnings)
+ 		check_sec_ref(mod, modname, &info);
+ 
+@@ -2425,6 +2442,7 @@ int main(int argc, char **argv)
+ 	char *dump_write = NULL, *files_source = NULL;
+ 	int opt;
+ 	int err;
++	size_t n;
+ 	struct ext_sym_list *extsym_iter;
+ 	struct ext_sym_list *extsym_start = NULL;
+ 
+@@ -2520,6 +2538,19 @@ int main(int argc, char **argv)
+ 	if (sec_mismatch_count && sec_mismatch_fatal)
+ 		fatal("modpost: Section mismatches detected.\n"
+ 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
++	for (n = 0; n < SYMBOL_HASH_SIZE ; n++) {
++		struct symbol *s = symbolhash[n];
++
++		while (s) {
++			if (s->is_static)
++				warn("\"%s\" [%s] is a static %s symbol\n",
++					s->name, s->module->name,
++						export_str(s->export));
++
++			s = s->next;
++		}
++	}
++
+ 	free(buf.p);
+ 
+ 	return err;
+-- 
+2.21.0
+
