@@ -2,156 +2,333 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026D1C742D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26572C742D2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9ADE20838
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2652063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 21:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZFgb0hy1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoiYvjRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfGNVgz (ORCPT
+        id S1728896AbfGNVl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 17:36:55 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39464 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfGNVgz (ORCPT
+        Sun, 14 Jul 2019 17:41:56 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35613 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbfGNVlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 17:36:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id f4so31101496ioh.6
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 14:36:54 -0700 (PDT)
+        Sun, 14 Jul 2019 17:41:55 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so14190741ljh.2;
+        Sun, 14 Jul 2019 14:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OqXaW1SBlO4ypk862puJP9ZlK8OkDZ0/srasv2LX6t0=;
-        b=ZFgb0hy1hkaeTSQUqs9lXyHsiFuWqx6gh5YP3fEJehzrLCR6MjEL8iwhOlwxoLXaEW
-         zxQbfSLsBgWNCahrjfC3wIHCFDCnl4R+uQ7MavD0QD7Oyc/9m/jm/me38n1Ax9ovZ3pj
-         WylOFqR/h9JbOmyLnIRleSRzv1sPFYbM/2iewLMAKddcxJtBv3cMZ7nORkUe+gBCqWpF
-         Kiq1w9gf07CjTuDJNycwdWQQzln/Hm+zy+cjiegwrUeyWIw8LbjCjGUdBSLaCAircNuP
-         PTvx9aJ+1CouE+xdDBk44bGi3UJwojeHFlBPLcXVzJJZBp8iRZAhYSV5CNtSH7iaPPKu
-         +X2g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cIEQ6qUbBYbaFI1oi3xA+6E+D5AM61MUHFVcHBB4tUY=;
+        b=JoiYvjRIJDB4RcaHsKwmmTN3zEqn1iqktjNbLsfKeWr3/NVYaxqmS4vpKr9pv8s1aQ
+         n+CgucPyiIT70SGSCPiqhwymZEXatD3ZPyBSRq/aWKunMOfJojUKAVe9OSYsGwvJUz3D
+         JehSgwToBKZNZGe+RGqHoQSlS+bO/31nyfJV0SQXfGzkPgKQAcovCJOv/iNcrmNUxqIz
+         QA+yuhbVG8fdSB7WujntXnZo5WZPaF8dcg1DBdZl6IuiCovN5fvd8/nEjZDojaQjZfkr
+         RE0FJMXoYsaYlt80Fx5uf6Kvw9YBfx5sI0vu9kS/9BOklSi2OWZiK+UsS5cC1V26XFGC
+         Iusg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OqXaW1SBlO4ypk862puJP9ZlK8OkDZ0/srasv2LX6t0=;
-        b=AOBbDIYPONc3IYLM5QaLgMetbyoW9MevCH7LaUZCfYO5AxcV+U5fGJBhtH/DQnUAt+
-         XmsbifU0G5/knvMwSSOeN5Vn4/iepJCHbsj7Ioa2SvqDCwBaHT9p30Jp8TRV9wjMqlFE
-         2RrFQ/dNN0+rNF2pUtu6QO6SFwGq/l7eRlvlURRpN7YlSAbrN+qBShkQupqOiSvGvMdX
-         9KoTStt46qkpCbg2P3hPxkVoIe3DHfocLcEiTvoIjYAFr4Sz8kugNu4Ja2ydvVUjVaYK
-         51D7C5VICYG8ZQreZv4CjMYRBP07POsYgZS7wyzTA+qFkxMByzEj8BmcwnUYxMg1wqVB
-         7SRg==
-X-Gm-Message-State: APjAAAWGh8MiNIhssAl63tajfnXkNPiPNl35SMCMchFhkEey+17F/mlV
-        7KKH3hMteSm+j+qOFgs631tixg+QoA/uXFuYUDX+3g==
-X-Google-Smtp-Source: APXvYqweDmi/vA4Qumwgo7rXlvxPWGv67GIKW7GqKyLfWKUhYrE0W4xIUOUBsJ5DjH4hY6oiObgFBgBp/im9HrPTQco=
-X-Received: by 2002:a02:c646:: with SMTP id k6mr15220352jan.134.1563140213957;
- Sun, 14 Jul 2019 14:36:53 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cIEQ6qUbBYbaFI1oi3xA+6E+D5AM61MUHFVcHBB4tUY=;
+        b=jgQVguAEHxqhx//GsGzCjzMCQTL9/wdxtBMnEh3U71aPY6h5SEE404yVGDoAf2Sq2X
+         djpV274yz7LR7dvY6wRXCKj3MAKHDGvzZcNxLwD6sExjnb/80Q6M5Q/NXMTo/HrxlqPb
+         QxxDnq9SxVswijFT+zxDBwA3O2a4Oijd+wjSFLHy1Y0BT4pek6grteuOe16pdiAKgZn+
+         Alx7OAeuDbgjmDlLCH90u6XOZzh/8uHqqPDz31+wnwISibiNBtWM1rItf8eUUokP9rKZ
+         u27dsuu2Tlyb2JLt/QrVPVk3LcqcMfSyJxw22TSWYuidSBIWSwVytLsasSn7V2RPqjY8
+         4lYg==
+X-Gm-Message-State: APjAAAWOgo+9YQfuAaiocHxoprPriUiIyQbEhNWAT/OTdriKggHHfTxF
+        876vGKyuYHpUHIRfeeM5WXpMFGH2
+X-Google-Smtp-Source: APXvYqxbpmaSBvoP17UfbwKROnaPfOkSkP6so2aP1LRHDtW7Tl7PyY2BKiGXItX+g3ZGhIMjpo9zNQ==
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr12270743ljw.13.1563140511608;
+        Sun, 14 Jul 2019 14:41:51 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id v17sm3050949ljg.36.2019.07.14.14.41.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jul 2019 14:41:50 -0700 (PDT)
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+ <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
+Date:   Mon, 15 Jul 2019 00:41:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190710204540.176495-1-nums@google.com> <20190714204432.GA8120@krava>
- <20190714205505.GB8120@krava>
-In-Reply-To: <20190714205505.GB8120@krava>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Sun, 14 Jul 2019 14:36:42 -0700
-Message-ID: <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
-Subject: Re: [PATCH] Fix perf stat repeat segfault
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 1:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Sun, Jul 14, 2019 at 10:44:36PM +0200, Jiri Olsa wrote:
-> > On Wed, Jul 10, 2019 at 01:45:40PM -0700, Numfor Mbiziwo-Tiapo wrote:
-> > > When perf stat is called with event groups and the repeat option,
-> > > a segfault occurs because the cpu ids are stored on each iteration
-> > > of the repeat, when they should only be stored on the first iteration,
-> > > which causes a buffer overflow.
-> > >
-> > > This can be replicated by running (from the tip directory):
-> > >
-> > > make -C tools/perf
-> > >
-> > > then running:
-> > >
-> > > tools/perf/perf stat -e '{cycles,instructions}' -r 10 ls
-> > >
-> > > Since run_idx keeps track of the current iteration of the repeat,
-> > > only storing the cpu ids on the first iteration (when run_idx < 1)
-> > > fixes this issue.
-> > >
-> > > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> > > ---
-> > >  tools/perf/builtin-stat.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > index 63a3afc7f32b..92d6694367e4 100644
-> > > --- a/tools/perf/builtin-stat.c
-> > > +++ b/tools/perf/builtin-stat.c
-> > > @@ -378,9 +378,10 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
-> > >     workload_exec_errno = info->si_value.sival_int;
-> > >  }
-> > >
-> > > -static bool perf_evsel__should_store_id(struct perf_evsel *counter)
-> > > +static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
-> > >  {
-> > > -   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
-> > > +   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
-> > > +           && run_idx < 1;
-> >
-> > we create counters for every iteration, so this can't be
-> > based on iteration
-> >
-> > I think that's just a workaround for memory corruption,
-> > that's happening for repeating groupped events stats,
-> > I'll check on this
->
-> how about something like this? we did not cleanup
-> ids on evlist close, so it kept on raising and
-> causing corruption in next iterations
->
-not sure, that would realloc on each iteration of the repeats.
+13.07.2019 8:54, Sowjanya Komatineni пишет:
+> 
+> On 6/29/19 8:10 AM, Dmitry Osipenko wrote:
+>> 28.06.2019 5:12, Sowjanya Komatineni пишет:
+>>> This patch adds system suspend and resume support for Tegra210
+>>> clocks.
+>>>
+>>> All the CAR controller settings are lost on suspend when core power
+>>> goes off.
+>>>
+>>> This patch has implementation for saving and restoring all the PLLs
+>>> and clocks context during system suspend and resume to have the
+>>> clocks back to same state for normal operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/clk/tegra/clk-tegra210.c | 115
+>>> ++++++++++++++++++++++++++++++++++++++-
+>>>   drivers/clk/tegra/clk.c          |  14 +++++
+>>>   drivers/clk/tegra/clk.h          |   1 +
+>>>   3 files changed, 127 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
+>>> b/drivers/clk/tegra/clk-tegra210.c
+>>> index 1c08c53482a5..1b839544e086 100644
+>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>> @@ -9,10 +9,12 @@
+>>>   #include <linux/clkdev.h>
+>>>   #include <linux/of.h>
+>>>   #include <linux/of_address.h>
+>>> +#include <linux/of_platform.h>
+>>>   #include <linux/delay.h>
+>>>   #include <linux/export.h>
+>>>   #include <linux/mutex.h>
+>>>   #include <linux/clk/tegra.h>
+>>> +#include <linux/syscore_ops.h>
+>>>   #include <dt-bindings/clock/tegra210-car.h>
+>>>   #include <dt-bindings/reset/tegra210-car.h>
+>>>   #include <linux/iopoll.h>
+>>> @@ -20,6 +22,7 @@
+>>>   #include <soc/tegra/pmc.h>
+>>>     #include "clk.h"
+>>> +#include "clk-dfll.h"
+>>>   #include "clk-id.h"
+>>>     /*
+>>> @@ -225,6 +228,7 @@
+>>>     #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>     #define LVL2_CLK_GATE_OVRA 0xf8
+>>>   #define LVL2_CLK_GATE_OVRC 0x3a0
+>>> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
+>>>       struct tegra_clk_pll_freq_table *fentry;
+>>>       struct tegra_clk_pll pllu;
+>>>       u32 reg;
+>>> +    int ret;
+>>>         for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>>>           if (fentry->input_rate == pll_ref_freq)
+>>> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
+>>>       fence_udelay(1, clk_base);
+>>>       reg |= PLL_ENABLE;
+>>>       writel(reg, clk_base + PLLU_BASE);
+>>> +    fence_udelay(1, clk_base);
+>>>   -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
+>>> -    if (!(reg & PLL_BASE_LOCK)) {
+>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>>> +    if (ret) {
+>>>           pr_err("Timed out waiting for PLL_U to lock\n");
+>>>           return -ETIMEDOUT;
+>>>       }
+>>> @@ -3283,6 +3288,103 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>>>   }
+>>>     #ifdef CONFIG_PM_SLEEP
+>>> +static u32 cpu_softrst_ctx[3];
+>>> +static struct platform_device *dfll_pdev;
+>>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) +
+>>> ((_off) * 4))
+>>> +#define car_writel(_val, _base, _off) \
+>>> +        writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+>>> +
+>>> +static int tegra210_clk_suspend(void)
+>>> +{
+>>> +    unsigned int i;
+>>> +    struct device_node *node;
+>>> +
+>>> +    tegra_cclkg_burst_policy_save_context();
+>>> +
+>>> +    if (!dfll_pdev) {
+>>> +        node = of_find_compatible_node(NULL, NULL,
+>>> +                           "nvidia,tegra210-dfll");
+>>> +        if (node)
+>>> +            dfll_pdev = of_find_device_by_node(node);
+>>> +
+>>> +        of_node_put(node);
+>>> +        if (!dfll_pdev)
+>>> +            pr_err("dfll node not found. no suspend for dfll\n");
+>>> +    }
+>>> +
+>>> +    if (dfll_pdev)
+>>> +        tegra_dfll_suspend(dfll_pdev);
+>>> +
+>>> +    /* Enable PLLP_OUT_CPU after dfll suspend */
+>>> +    tegra_clk_set_pllp_out_cpu(true);
+>>> +
+>>> +    tegra_sclk_cclklp_burst_policy_save_context();
+>>> +
+>>> +    clk_save_context();
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>>> +        cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void tegra210_clk_resume(void)
+>>> +{
+>>> +    unsigned int i;
+>>> +    struct clk_hw *parent;
+>>> +    struct clk *clk;
+>>> +
+>>> +    /*
+>>> +     * clk_restore_context restores clocks as per the clock tree.
+>>> +     *
+>>> +     * dfllCPU_out is first in the clock tree to get restored and it
+>>> +     * involves programming DFLL controller along with restoring CPUG
+>>> +     * clock burst policy.
+>>> +     *
+>>> +     * DFLL programming needs dfll_ref and dfll_soc peripheral clocks
+>>> +     * to be restores which are part ofthe peripheral clocks.
 
->
-> jirka
->
->
-> ---
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ebb46da4dfe5..52459dd5ad0c 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
->         xyarray__delete(evsel->sample_id);
->         evsel->sample_id = NULL;
->         zfree(&evsel->id);
-> +       evsel->ids = 0;
->  }
->
->  static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
-> @@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
->
->         perf_evsel__close_fd(evsel);
->         perf_evsel__free_fd(evsel);
-> +       perf_evsel__free_id(evsel);
->  }
->
->  int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
+                                            ^ white-space
+
+Please use spellchecker to avoid typos.
+
+>>> +     * So, peripheral clocks restore should happen prior to dfll clock
+>>> +     * restore.
+>>> +     */
+>>> +
+>>> +    tegra_clk_osc_resume(clk_base);
+>>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>>> +        car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+>>> +
+>>> +    /* restore all plls and peripheral clocks */
+>>> +    tegra210_init_pllu();
+>>> +    clk_restore_context();
+>>> +
+>>> +    fence_udelay(5, clk_base);
+>>> +
+>>> +    /* resume SCLK and CPULP clocks */
+>>> +    tegra_sclk_cpulp_burst_policy_restore_context();
+>>> +
+>>> +    /*
+>>> +     * restore CPUG clocks:
+>>> +     * - enable DFLL in open loop mode
+>>> +     * - switch CPUG to DFLL clock source
+>>> +     * - close DFLL loop
+>>> +     * - sync PLLX state
+>>> +     */
+>>> +    if (dfll_pdev)
+>>> +        tegra_dfll_resume(dfll_pdev, false);
+>>> +
+>>> +    tegra_cclkg_burst_policy_restore_context();
+>>> +    fence_udelay(2, clk_base);
+>>> +
+>>> +    if (dfll_pdev)
+>>> +        tegra_dfll_resume(dfll_pdev, true);
+>>> +
+>>> +    parent =
+>>> clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
+>>> +    clk = clks[TEGRA210_CLK_PLL_X];
+>>> +    if (parent != __clk_get_hw(clk))
+>>> +        tegra_clk_sync_state_pll(__clk_get_hw(clk));
+>>> +
+>>> +    /* Disable PLL_OUT_CPU after DFLL resume */
+>>> +    tegra_clk_set_pllp_out_cpu(false);
+>>> +}
+>>> +
+>>>   static void tegra210_cpu_clock_suspend(void)
+>>>   {
+>>>       /* switch coresite to clk_m, save off original source */
+>>> @@ -3298,6 +3400,11 @@ static void tegra210_cpu_clock_resume(void)
+>>>   }
+>>>   #endif
+>>>   +static struct syscore_ops tegra_clk_syscore_ops = {
+>>> +    .suspend = tegra210_clk_suspend,
+>>> +    .resume = tegra210_clk_resume,
+>>> +};
+>>> +
+>>>   static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
+>>>       .wait_for_reset    = tegra210_wait_cpu_in_reset,
+>>>       .disable_clock    = tegra210_disable_cpu_clock,
+>>> @@ -3583,5 +3690,7 @@ static void __init tegra210_clock_init(struct
+>>> device_node *np)
+>>>       tegra210_mbist_clk_init();
+>>>         tegra_cpu_car_ops = &tegra210_cpu_car_ops;
+>>> +
+>>> +    register_syscore_ops(&tegra_clk_syscore_ops);
+>>>   }
+>> Is it really worthwhile to use syscore_ops for suspend/resume given
+>> that drivers for
+>> won't resume before the CLK driver anyway? Are there any other options
+>> for CLK
+>> suspend/resume?
+>>
+>> I'm also not sure whether PM runtime API could be used at all in the
+>> context of
+>> syscore_ops ..
+>>
+>> Secondly, what about to use generic clk_save_context() /
+>> clk_restore_context()
+>> helpers for the suspend-resume? It looks to me that some other
+>> essential (and proper)
+>> platform driver (soc/tegra/? PMC?) should suspend-resume the clocks
+>> using the generic
+>> CLK Framework API.
+> 
+> Clock resume should happen very early to restore peripheral and cpu
+> clocks very early than peripheral drivers resume happens.
+
+If all peripheral drivers properly requested all of the necessary clocks
+and CLK driver was a platform driver, then I guess the probe should have
+been naturally ordered. But that's not very achievable with the
+currently available infrastructure in the kernel, so I'm not arguing
+that the clocks should be explicitly resumed before the users.
+
+> this patch series uses clk_save_context and clk_restore_context for
+> corresponding divider, pll, pllout.. save and restore context.
+
+Now I see that indeed this API is utilized in this patch, thank you for
+the clarification.
+
+> But as there is dependency on dfll resume and cpu and pllx clocks
+> restore, couldnt use clk_save_context and clk_restore_context for dfll.
+> 
+> So implemented recommended dfll resume sequence in main Tegra210 clock
+> driver along with invoking clk_save_context/clk_restore_context where
+> all other clocks save/restore happens as per clock tree traversal.
+
+Could you please clarify what part of peripherals clocks is required for
+DFLL's restore? Couldn't DFLL driver be changed to avoid that quirkness
+and thus to make DFLL driver suspend/resume the clock?
