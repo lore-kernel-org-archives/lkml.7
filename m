@@ -2,117 +2,103 @@ Return-Path: <SRS0=2uMJ=VL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D549DC73C66
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 05:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36902C742A2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 05:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70DE2089C
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 05:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C74A2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jul 2019 05:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rc6j38WH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXKdJSIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfGNFed (ORCPT
+        id S1728263AbfGNFfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 01:34:33 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:47040 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbfGNFe2 (ORCPT
+        Sun, 14 Jul 2019 01:35:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41271 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfGNFfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 01:34:28 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h21so12380472qtn.13;
-        Sat, 13 Jul 2019 22:34:27 -0700 (PDT)
+        Sun, 14 Jul 2019 01:35:13 -0400
+Received: by mail-io1-f68.google.com with SMTP id j5so24654629ioj.8;
+        Sat, 13 Jul 2019 22:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3NuZBQYq6h4qssOwOc1GYw/bYwn0rg1ObW5YhftgdKo=;
-        b=Rc6j38WHmlwoJ6+nn1UzHs0z5kKcHeRTnkdMI1haEQYRiv68Jaxdt46vXIi+zBbbcr
-         SYAEWbGQQl4dHOdLj24edmB3gGykzrP1FMdZ9299TSoAufgb0mPy8x6aeCA2FO2IF8br
-         VLoJRc4GDq9T3sngTJ78jRNc7oMihS80+wnoHOJaNgg6Kdga/8GjEXgVBOstmnClq2OW
-         kcvi4xJiHhqb54UyagO2/g2/gx5wmNEZboIE31uf2ZQ5FXhXbOSyqba0PW5CXZvzSP/+
-         YJCbOvBE7R0ZBkC6MkThlyTYq7p+h1RLL7HPaf2WSSmWqitkGhxcSF6PtIRC/qyGr03r
-         i7Cw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9lj/erD8IpI0rjWR4phN2Ciw/3iidG1wDsFftGGugIk=;
+        b=TXKdJSIChpSuSQkpACXU1wLqz9LK4BBJ/33UWHGxvcRaY5g8CsVKfATMgFddLEixhv
+         XUbS7OEk+Il41/3tma5E4fJbqIx9yaCKkSlarcEttrpiZ9u83XjQAHk3NBOueXgxvizk
+         GyBgXQLFqP1/ksVV1KO31LSKOCOixDDlAHCQ0JM06Q6fz5J4TtuqM35/EvoJObcdlb+L
+         +HhjFHFzfBGtJcCl7G+EG8raJuQqvi7Dp26HOjdfBewAsvXKed72G3bmpiSm9wd8akl+
+         jARLhwg8OSPXFUbxoXJHr28OP09CSTxI7WoMxzlVc7D4S19R/60H/QOhyc2gjf0S0Ywh
+         v4Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3NuZBQYq6h4qssOwOc1GYw/bYwn0rg1ObW5YhftgdKo=;
-        b=clzJOehgLlNbJgxhmLIhQzIkN0zBYulLs1no/28W7R4GBYPeHI3ZdWlSiNvWLCtA9R
-         8SgI/AZ3k3hkgEXOmnGpmkOTkr2+mQbxPbUwPIN/FC4bh0ebYZtOXvzbiC6KzcS9RIfd
-         V/HqwiikeS9QCNvpi4t2ke5mOMOcHiMBVjxezf3bfjHnwje4dHh3YUHrXSxs2Z/obKFc
-         HNX4WOHKDEa6LkQZzzQC+Njkb7Jx/osO3jlQBahev3ZM9Z54NA4KvjwvZtoBrwib3tMx
-         hHwRY1j938FbOfxYBzVLCy8AWt9H6oAkw9HI3HReruCDgby2AFC28FlXbEqYOSO4nsWz
-         3H9w==
-X-Gm-Message-State: APjAAAU277LcOxufdM4WkDgQEs1++/sqLgd/E9VHyYOJqycQCdauSO7G
-        H0FCRsFDl0b5gIv6raBpEx/UqYn7eKE=
-X-Google-Smtp-Source: APXvYqzbKUt2+dUfTolXSJIoItXsrnwI/cMSGQLlpamlQPHK1Ih2v6SivMNd42MzAWpnIntXozHS3g==
-X-Received: by 2002:ac8:180e:: with SMTP id q14mr12664651qtj.327.1563082466762;
-        Sat, 13 Jul 2019 22:34:26 -0700 (PDT)
-Received: from localhost.localdomain ([191.35.237.35])
-        by smtp.gmail.com with ESMTPSA id f133sm6308808qke.62.2019.07.13.22.34.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9lj/erD8IpI0rjWR4phN2Ciw/3iidG1wDsFftGGugIk=;
+        b=e9bbvD9pm+IpOHxtzDWYZV5gI6GM275fasz8DI1hXqPc+P6E4UP9Jz6Q2LpNuRh02P
+         vtDg4aKgUusRZ1WEtuyi4U4wGO3t4r3om1zRlFyL6f91afet0wT3lP5BbVILhjAEOrbJ
+         lwTvcIYEGu3y65wN5+PUr1WT5t8rQlsPwflCWyo/evRR8IHAMgQfDSdbfLWQno7HYi5i
+         MxjvYRNfNDmCIcIqIKoxjp/X8q3tMa2mHUpiV6a3XGitOi0nA17NclGpm43jNgzYOzXP
+         CyY6U4HYeU0a8P9RUnNd+BM4xJbDpzgNFojipL0y1l9mOPE0V0HTV2aLaGIyGWUHSIfx
+         hr0w==
+X-Gm-Message-State: APjAAAUY9p8hXjTdCwoRYLb1LLQ3ararH6USsGhz/XyT1GJM1330UBjT
+        xx+POzJVnkbYiho631X1yD0=
+X-Google-Smtp-Source: APXvYqxJDsXSv+sUe5ZmDjErLKwFuFKorO+R9B0C1gunuhoUIQTxoBi4ozW5ocuqR2aqQSYyRv+q7Q==
+X-Received: by 2002:a5d:80cd:: with SMTP id h13mr19651694ior.259.1563082512570;
+        Sat, 13 Jul 2019 22:35:12 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id r24sm10158627ioc.76.2019.07.13.22.35.11
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 13 Jul 2019 22:34:26 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4/4] Documentation:kernel-per-CPU-kthreads.txt: Remove reference to elevator=
-Date:   Sun, 14 Jul 2019 02:34:53 -0300
-Message-Id: <20190714053453.1655-5-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190714053453.1655-1-marcos.souza.org@gmail.com>
-References: <20190714053453.1655-1-marcos.souza.org@gmail.com>
+        Sat, 13 Jul 2019 22:35:11 -0700 (PDT)
+Date:   Sat, 13 Jul 2019 23:35:10 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 00/61] 5.2.1-stable review
+Message-ID: <20190714053510.GC2385@JATN>
+References: <20190712121620.632595223@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712121620.632595223@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This argument was not being considered since blk-mq was set by default,
-so removed this documentation to avoid confusion.
+On Fri, Jul 12, 2019 at 02:19:13PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.1 release.
+> There are 61 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 14 Jul 2019 12:14:36 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
----
- Documentation/kernel-per-CPU-kthreads.txt | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/kernel-per-CPU-kthreads.txt b/Documentation/kernel-per-CPU-kthreads.txt
-index 5623b9916411..c68c6c8c26a4 100644
---- a/Documentation/kernel-per-CPU-kthreads.txt
-+++ b/Documentation/kernel-per-CPU-kthreads.txt
-@@ -274,9 +274,7 @@ To reduce its OS jitter, do any of the following:
- 		(based on an earlier one from Gilad Ben-Yossef) that
- 		reduces or even eliminates vmstat overhead for some
- 		workloads at https://lkml.org/lkml/2013/9/4/379.
--	e.	Boot with "elevator=noop" to avoid workqueue use by
--		the block layer.
--	f.	If running on high-end powerpc servers, build with
-+	e.	If running on high-end powerpc servers, build with
- 		CONFIG_PPC_RTAS_DAEMON=n.  This prevents the RTAS
- 		daemon from running on each CPU every second or so.
- 		(This will require editing Kconfig files and will defeat
-@@ -284,12 +282,12 @@ To reduce its OS jitter, do any of the following:
- 		due to the rtas_event_scan() function.
- 		WARNING:  Please check your CPU specifications to
- 		make sure that this is safe on your particular system.
--	g.	If running on Cell Processor, build your kernel with
-+	f.	If running on Cell Processor, build your kernel with
- 		CBE_CPUFREQ_SPU_GOVERNOR=n to avoid OS jitter from
- 		spu_gov_work().
- 		WARNING:  Please check your CPU specifications to
- 		make sure that this is safe on your particular system.
--	h.	If running on PowerMAC, build your kernel with
-+	g.	If running on PowerMAC, build your kernel with
- 		CONFIG_PMAC_RACKMETER=n to disable the CPU-meter,
- 		avoiding OS jitter from rackmeter_do_timer().
+Compiled and booted with no regressions on my system.
+
+Cheers,
+Kelsey
  
--- 
-2.22.0
-
