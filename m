@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16461C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3408C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F9A21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765AE21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563225174;
-	bh=OCKxl0xDpTjevvmq9JicqRJ/WvDx56jxS1/xx74xirg=;
+	s=default; t=1563225179;
+	bh=xQ17dzcn8z3NVFJMUJH+h00uR7WizII0rtS9Svk49kA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H6C4PnMQlsCyx2VQsq2/AZseIfsjHwElZQeb2EEnVqZLV0L9YcQN/+P231hBVg67q
-	 QysFgczRXrtvAg+p0TCQG+C3u3ZeFSPSCmiv3idaRWtRNdpo1l6d7c2fqS/uvrhTC2
-	 0ZfYNJ6e9y6v/xw4Fanynknt64MwOCYkieY2BT84=
+	b=JoJMz92X1+F8YlTsPXxSTpCAmDZdgM79qLNKcHmn329skDVWSktZzUhNSv1RwCS23
+	 Msqebaw9I4ROatGUq0GJJrMiEq3r3U5RQeuXbU5zazE8Vqq42Sk+mzdndSi70fKVEd
+	 Qfll0IinRHYvegQm7EJ9viJBIrwT2MlU1/roHSOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbfGOVMw (ORCPT
+        id S1733028AbfGOVM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43652 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 17:12:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730207AbfGOVMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:12:52 -0400
+        id S1730207AbfGOVM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:12:57 -0400
 Received: from quaco.ghostprotocols.net (179-240-129-12.3g.claro.net.br [179.240.129.12])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9829121721;
-        Mon, 15 Jul 2019 21:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3A22171F;
+        Mon, 15 Jul 2019 21:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563225171;
-        bh=OCKxl0xDpTjevvmq9JicqRJ/WvDx56jxS1/xx74xirg=;
+        s=default; t=1563225176;
+        bh=xQ17dzcn8z3NVFJMUJH+h00uR7WizII0rtS9Svk49kA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aftClrSXQmOwje1CciOYW0cw5y1d22bRgn7zi4ca4MSGdmqwlJmhx2S+PkZN7Ssye
-         7Ve0Z8eIDo2s5xn5aWXUv39hGUlc8w4QiHUEGG0qHKRtr4YHLemlsb7FvTr7ZdZ9ne
-         IF6bdMa06eFTiPb+hMce8LVtX6vmg2CLK74G53vc=
+        b=DDmP5DQIn/ItPsaQK+WYW00LqVcEhw0xBAAOMenbnRQMTulEDIZn49ecNcEYB/kPL
+         uftw/4JKLMNDuI/0NEpA12HZ07t2QAJR7oXIBNsdBKD+yraTZEeERmnbJYi+L4nUaT
+         InQtbs5tMs9t0QUb4lmG+kQrKqfBbTyuNeXkj1Sc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 07/28] perf db-export: Export main_thread in db_export__sample()
-Date:   Mon, 15 Jul 2019 18:11:39 -0300
-Message-Id: <20190715211200.10984-8-acme@kernel.org>
+Subject: [PATCH 08/28] perf db-export: Export comm before exporting thread
+Date:   Mon, 15 Jul 2019 18:11:40 -0300
+Message-Id: <20190715211200.10984-9-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190715211200.10984-1-acme@kernel.org>
 References: <20190715211200.10984-1-acme@kernel.org>
@@ -63,70 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Export main_thread in db_export__sample() because it makes the code
-easier to understand, and prepares db_export__thread() for further
-simplification.
+Export comm before exporting the non-main thread because
+db_export__thread() also exports the comm_thread.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-5-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190710085810.1650-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/db-export.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ tools/perf/util/db-export.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 14501236c046..63f9edf65eee 100644
+index 63f9edf65eee..99ad759561de 100644
 --- a/tools/perf/util/db-export.c
 +++ b/tools/perf/util/db-export.c
-@@ -71,16 +71,10 @@ int db_export__thread(struct db_export *dbe, struct thread *thread,
- 	thread->db_id = ++dbe->thread_last_db_id;
- 
- 	if (main_thread) {
--		if (main_thread != thread) {
--			err = db_export__thread(dbe, main_thread, machine,
--						comm, main_thread);
-+		if (main_thread != thread && comm) {
-+			err = db_export__comm_thread(dbe, comm, thread);
- 			if (err)
- 				return err;
--			if (comm) {
--				err = db_export__comm_thread(dbe, comm, thread);
--				if (err)
--					return err;
--			}
- 		}
- 		main_thread_db_id = main_thread->db_id;
+@@ -312,6 +312,12 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 					main_thread);
+ 		if (err)
+ 			goto out_put;
++		if (comm) {
++			err = db_export__exec_comm(dbe, comm, main_thread);
++			if (err)
++				goto out_put;
++			es.comm_db_id = comm->db_id;
++		}
  	}
-@@ -308,12 +302,24 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 		return err;
  
- 	main_thread = thread__main_thread(al->machine, thread);
--	if (main_thread)
-+	if (main_thread) {
- 		comm = machine__thread_exec_comm(al->machine, main_thread);
-+		/*
-+		 * A thread has a reference to the main thread, so export the
-+		 * main thread first.
-+		 */
-+		err = db_export__thread(dbe, main_thread, al->machine, comm,
-+					main_thread);
-+		if (err)
-+			goto out_put;
-+	}
+ 	if (thread != main_thread) {
+@@ -321,13 +327,6 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 			goto out_put;
+ 	}
  
--	err = db_export__thread(dbe, thread, al->machine, comm, main_thread);
--	if (err)
--		goto out_put;
-+	if (thread != main_thread) {
-+		err = db_export__thread(dbe, thread, al->machine, comm,
-+					main_thread);
-+		if (err)
-+			goto out_put;
-+	}
+-	if (comm) {
+-		err = db_export__exec_comm(dbe, comm, main_thread);
+-		if (err)
+-			goto out_put;
+-		es.comm_db_id = comm->db_id;
+-	}
+-
+ 	es.db_id = ++dbe->sample_last_db_id;
  
- 	if (comm) {
- 		err = db_export__exec_comm(dbe, comm, main_thread);
+ 	err = db_ids_from_al(dbe, al, &es.dso_db_id, &es.sym_db_id, &es.offset);
 -- 
 2.21.0
 
