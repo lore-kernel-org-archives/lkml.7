@@ -2,115 +2,122 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6650C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBBDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986322054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNM/YzFI"
+	by mail.kernel.org (Postfix) with ESMTP id AD4DE2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563203325;
+	bh=QD7LKwfQZbVaDxLlLsL5KEluEZnTM2NE88iU3wPFvj4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YTeCS4njN2jyb+xAjC0hNsvIyL8yk1d4FrB7YGSsUNP1KBt73XTUx6/nb1B05vr/c
+	 KLzrkm+0Cv+Nak7+cwaiBQpc99MxkYlzuLVeXK/ybiaJsfNDHsIrkDt254x1I6MBvQ
+	 ClK4WgQN+ZiTSrDOFvKrdpxRp1uJeRJwIRk8HITk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbfGOPIe (ORCPT
+        id S1733042AbfGON57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:08:34 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34044 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733203AbfGOPIb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:08:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so7559529pfo.1;
-        Mon, 15 Jul 2019 08:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HvGFiXKIMoJHRgRPv+CNGx82/V4N9NKuA2a2k2xvyEI=;
-        b=SNM/YzFIofldJvXGWAsN2gKzBBedbJuHXOK2bg8FuKyDmVMINV9tWuGaOU6IWVavL2
-         1UVVsFWjaS+FxTXEI/r2C81HaGqZApODK2QkrBTs2GFeADPqMO6XVJ390ilEF9fX9OwR
-         g0x6GT4nvvt5AQiiaFvEBDFSYIPQi2VWOVILJ6Irpc1NnuADpqMyO3tnYBIDwd4FIYon
-         WCE9046IBxjH3Uj+vy3olu6Zn66GP6E7Q26p1i7shDmBhnh9MoVoCcoXZgTVhqdgwcG5
-         fjqviZbtLeGPaQ/XbWVLvnQKR2S3qdg+Z2/X87fhnwaua/2+6k2ATsW09NjIV7guMQxh
-         GtGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HvGFiXKIMoJHRgRPv+CNGx82/V4N9NKuA2a2k2xvyEI=;
-        b=FDemJw+be0Kg65wU67pPs0ql0DbU44QqbGwJA+Zd5dMgMsSdvLMfEM2dCU8gmjo6dj
-         Y7oFyb4jxdNIyRZZJZLqFbdNtJWpmr29zBptDxwQ6dyb+xEegUOSYUkLMc1jSU3I8HVx
-         91LAg0+fJwI8ML5L8j/D2xxrzLKccfklqLIh/1HhrzNKA7+PiafJ1jP+AxvI+pD+Ad6c
-         0yby2OCKiGWNpxclOmGMh51EXzl1mV40x4tIZChnXljUTtCzQZusDggO6otOERIosASj
-         w/jfA73k1ae0CpKWKk7WznONN0TrRy3Q4+xZ8uO5npqZhp9TyErNaVcC8HILtnDL8d7E
-         Va0w==
-X-Gm-Message-State: APjAAAVwvc/LFbSbeH4gijGEeMah6EB0tnzP8Pb19fyJ1jXd9dg46w3E
-        wx9PFEaQMVs+YeUlYE9SN/c=
-X-Google-Smtp-Source: APXvYqwhh1jY/TQpZyLTr7OKyrCoZOc6rJCUkSPPoEOkGW73rwzgzUaZc6OeiL+iMEX9bVsQi8AIeA==
-X-Received: by 2002:a63:10a:: with SMTP id 10mr27855904pgb.281.1563203310244;
-        Mon, 15 Jul 2019 08:08:30 -0700 (PDT)
-Received: from debian.net.fpt ([2405:4800:58c7:392e:98e4:a492:ad40:d86e])
-        by smtp.gmail.com with ESMTPSA id b37sm33284969pjc.15.2019.07.15.08.08.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 08:08:29 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
-Cc:     isdn@linux-pingi.de, davem@davemloft.net,
-        gregkh@linuxfoundation.org, andreyknvl@google.com,
-        bigeasy@linutronix.de, gustavo@embeddedor.com, pakki001@umn.edu,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, netdev@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] ISDN: hfcsusb: checking idx of ep configuration
-Date:   Mon, 15 Jul 2019 22:08:14 +0700
-Message-Id: <20190715150814.20022-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <000000000000f2b23d05868310f9@google.com>
-References: <000000000000f2b23d05868310f9@google.com>
+        Mon, 15 Jul 2019 09:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731678AbfGON54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:56 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E27217D8;
+        Mon, 15 Jul 2019 13:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563199076;
+        bh=QD7LKwfQZbVaDxLlLsL5KEluEZnTM2NE88iU3wPFvj4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zSH8bMXV1Qepk1WfNYOo5WWl6NSERTtowJm02A5kPVDYx2Xd2uGGQde+OqVbm2oVX
+         EwGUwWL1fX3FZKQAEbWy9wzQEyZ/P4CKyJmJX4KM8tJhkIy4r4Xxgao9VBpKa8WkHS
+         Fv0d2vHA992Wwmu+eko2RhhQYZene2sg+AvXSdkk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 182/249] ixgbe: Check DDM existence in transceiver before access
+Date:   Mon, 15 Jul 2019 09:45:47 -0400
+Message-Id: <20190715134655.4076-182-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The syzbot test with random endpoint address which made the idx is
-overflow in the table of endpoint configuations.
+From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
 
-this adds the checking for fixing the error report from
-syzbot
+[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
 
-KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
-The patch tested by syzbot [2]
+Some transceivers may comply with SFF-8472 but not implement the Digital
+Diagnostic Monitoring (DDM) interface described in it. The existence of
+such area is specified by bit 6 of byte 92, set to 1 if implemented.
 
-Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
+Currently, due to not checking this bit ixgbe fails trying to read SFP
+module's eeprom with the follow message:
 
-[1]:
-https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
-[2]:
-https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
+ethtool -m enP51p1s0f0
+Cannot get Module EEPROM data: Input/output error
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Because it fails to read the additional 256 bytes in which it was assumed
+to exist the DDM data.
+
+This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
+data was confirmed by Mellanox as correct and present in other Passive
+DACs in from other manufacturers.
+
+Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
+Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 4c99739b937e..0e224232f746 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1955,6 +1955,9 @@ hfcsusb_probe(struct usb_interface *intf, const struct usb_device_id *id)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+index acba067cc15a..7c52ae8ac005 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+@@ -3226,7 +3226,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
+ 		page_swap = true;
+ 	}
  
- 				/* get endpoint base */
- 				idx = ((ep_addr & 0x7f) - 1) * 2;
-+				if (idx > 15)
-+					return -EIO;
-+
- 				if (ep_addr & 0x80)
- 					idx++;
- 				attr = ep->desc.bmAttributes;
+-	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
++	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
++	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
+ 		/* We have a SFP, but it does not support SFF-8472 */
+ 		modinfo->type = ETH_MODULE_SFF_8079;
+ 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
+index 214b01085718..6544c4539c0d 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
+@@ -45,6 +45,7 @@
+ #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
+ #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
+ #define IXGBE_SFF_ADDRESSING_MODE		0x4
++#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
+ #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
+ #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
+ #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
 -- 
-2.11.0
+2.20.1
 
