@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_RED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88045C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05542C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D8F20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBB820896
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202020;
-	bh=yY97Q8usz3MAv3QE6289ENyzAFPMNWWq3/ODOUam2bo=;
+	s=default; t=1563202024;
+	bh=BPdIgGT0tqYI+OlkuCcMDMThltNWKW+ecBhdrrOI6Ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjXfX24hB0LgB5s9fq4OdGXu1103tZuf/t+bpGkbx9UfoHkQM+V77LTzbYAviizhM
-	 fPko1KL0b00cvMGgEFjEUywxPUeP+C9ThHmvV+no/7r4MdNfXtNo5jdIHtrSBRgqWV
-	 NmcRUs8YXP76/3SgrOhPeZlnmjYEB2gSxEXlnygY=
+	b=cfqax4UpR3WCNaarsVoVbQ0adgqUVWuo51TETr+yMDKK/YJhUjWvSe4NJX8bRq46Y
+	 bqKvu44/jmqwi44z9qzwuxLe5PtCxRW6nOBALKrKZRVk9dx+CdHoGvJHR6awN4aoEz
+	 4tQJQ1RotiiVlbDcsp/poM5SwtlW3Oz6VQZOGny4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404482AbfGOOq7 (ORCPT
+        id S2404631AbfGOOrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39690 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730383AbfGOOqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:46:55 -0400
+        id S2405138AbfGOOq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:46:59 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2EF720861;
-        Mon, 15 Jul 2019 14:46:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82FD320896;
+        Mon, 15 Jul 2019 14:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202014;
-        bh=yY97Q8usz3MAv3QE6289ENyzAFPMNWWq3/ODOUam2bo=;
+        s=default; t=1563202019;
+        bh=BPdIgGT0tqYI+OlkuCcMDMThltNWKW+ecBhdrrOI6Ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i3c4UmDrgmlq5WCUNd33mcX/mrLag2leMvbScajjJeIwF41kLYL0G+3aK8U7F0Aft
-         MQFTuHsHqmbrXiI5aE/Bva/t/a95GrkZGo62n7HYQHXUz5DzNZuLtMvp3f/2SHAVuF
-         wmRgvA1irnIZ0+SaJjpNT1xDPjiqFWu194SOYgH0=
+        b=ykwnRmRjRAuFbpi/AD1nobVSAbDCoZEeTDzlNz9ItI7eFnU8ce6zQqjXRol/pNZGe
+         wS/pIOoETqms6yLWaN1XgpRqyK+BlOms9JVglAScar2MbiPU6zyCZz9jShAMG5iHer
+         p5FtjjomjknmQnl53HkFX658YjorsscJem5CS3Rc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        Thomas Renninger <trenn@suse.de>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/53] cpupower : frequency-set -r option misses the last cpu in related cpu list
-Date:   Mon, 15 Jul 2019 10:45:03 -0400
-Message-Id: <20190715144535.11636-21-sashal@kernel.org>
+Cc:     Robert Hancock <hancock@sedsystems.ca>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 23/53] net: axienet: Fix race condition causing TX hang
+Date:   Mon, 15 Jul 2019 10:45:05 -0400
+Message-Id: <20190715144535.11636-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -60,40 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+From: Robert Hancock <hancock@sedsystems.ca>
 
-[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
+[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
 
-To set frequency on specific cpus using cpupower, following syntax can
-be used :
-cpupower -c #i frequency-set -f #f -r
+It is possible that the interrupt handler fires and frees up space in
+the TX ring in between checking for sufficient TX ring space and
+stopping the TX queue in axienet_start_xmit. If this happens, the
+queue wake from the interrupt handler will occur before the queue is
+stopped, causing a lost wakeup and the adapter's transmit hanging.
 
-While setting frequency using cpupower frequency-set command, if we use
-'-r' option, it is expected to set frequency for all cpus related to
-cpu #i. But it is observed to be missing the last cpu in related cpu
-list. This patch fixes the problem.
+To avoid this, after stopping the queue, check again whether there is
+sufficient space in the TX ring. If so, wake up the queue again.
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Reviewed-by: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/cpufreq-set.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-index 0fbd1a22c0a9..2f86935094ca 100644
---- a/tools/power/cpupower/utils/cpufreq-set.c
-+++ b/tools/power/cpupower/utils/cpufreq-set.c
-@@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
- 				bitmask_setbit(cpus_chosen, cpus->cpu);
- 				cpus = cpus->next;
- 			}
-+			/* Set the last cpu in related cpus list */
-+			bitmask_setbit(cpus_chosen, cpus->cpu);
- 			cpufreq_put_related_cpus(cpus);
- 		}
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 58ba579793f8..f1e969128a4e 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -613,6 +613,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
+ 
+ 	ndev->stats.tx_packets += packets;
+ 	ndev->stats.tx_bytes += size;
++
++	/* Matches barrier in axienet_start_xmit */
++	smp_mb();
++
+ 	netif_wake_queue(ndev);
+ }
+ 
+@@ -667,9 +671,19 @@ static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 
+ 	if (axienet_check_tx_bd_space(lp, num_frag)) {
+-		if (!netif_queue_stopped(ndev))
+-			netif_stop_queue(ndev);
+-		return NETDEV_TX_BUSY;
++		if (netif_queue_stopped(ndev))
++			return NETDEV_TX_BUSY;
++
++		netif_stop_queue(ndev);
++
++		/* Matches barrier in axienet_start_xmit_done */
++		smp_mb();
++
++		/* Space might have just been freed - check again */
++		if (axienet_check_tx_bd_space(lp, num_frag))
++			return NETDEV_TX_BUSY;
++
++		netif_wake_queue(ndev);
  	}
+ 
+ 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
 -- 
 2.20.1
 
