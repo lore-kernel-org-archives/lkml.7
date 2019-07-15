@@ -2,150 +2,96 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638AEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E5EC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAEE2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA23E206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:12:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ap2JCWPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbfGOKLE (ORCPT
+        id S1729690AbfGOKMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:11:04 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:38479 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbfGOKLE (ORCPT
+        Mon, 15 Jul 2019 06:12:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46292 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbfGOKMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:11:04 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Jul 2019 06:11:02 EDT
-Received: from localhost.localdomain (10.28.8.29) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 15 Jul 2019
- 17:56:28 +0800
-From:   chunguo feng <chunguo.feng@amlogic.com>
-To:     <lgirdwood@gmail.com>
-CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <RyanS.Lee@maximintegrated.com>, <bleung@chromium.org>,
-        <pierre-louis.bossart@linux.intel.com>, <grundler@chromium.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <chunguo.feng@amlogic.com>
-Subject: [PATCH] ASoC: max98383: fix i2c probe failure
-Date:   Mon, 15 Jul 2019 17:55:56 +0800
-Message-ID: <20190715095556.1614-1-chunguo.feng@amlogic.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 15 Jul 2019 06:12:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kAcyOVm59qdRJtG2/iEIXHURMzlURvoUqEQmVMxznZ4=; b=Ap2JCWPd1ucMlufGhT5Kn+WD8
+        NGEchrdhHoT0rv3FQgahdfCU5u+mlZdnhiecpT2DXUVgHD026Zt0fFL/7HJxeMDq3DgEAF2IqU6Vi
+        M9eIcXeZZ44lBx+CP+WLs38XqzebI837RgLv8b/xUUAh4y1HjtSNJJBK9EgJ0YGdIpyGcYrFkLkeU
+        Nl8QbpfpLa9VtGMi38NFbTCv+lAN6gQOELjRljRtwokUIkJdA1WscK529Gx3PrSykBkdvdR4id8Pw
+        XmQ2z03V43Y0y8LrZEB4bKS3qXinAUKsvQg2/F/NUt0qN/VTAeoU74QfKQo50doaXXrDat7w8iYz3
+        FlWaJQA+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hmxyD-0006Hm-PE; Mon, 15 Jul 2019 10:12:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B542520B29100; Mon, 15 Jul 2019 12:12:31 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 12:12:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, rostedt@goodmis.org,
+        mingo@redhat.com, corbet@lwn.net, linux@armlinux.org.uk,
+        catalin.marinas@arm.com, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] tracing/fgraph: support recording function return values
+Message-ID: <20190715101231.GB3419@hirez.programming.kicks-ass.net>
+References: <20190713121026.11030-1-changbin.du@gmail.com>
+ <20190715082930.uyxn2kklgw4yri5l@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.29]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715082930.uyxn2kklgw4yri5l@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: fengchunguo <chunguo.feng@amlogic.com>
+On Mon, Jul 15, 2019 at 09:29:30AM +0100, Will Deacon wrote:
+> On Sat, Jul 13, 2019 at 08:10:26PM +0800, Changbin Du wrote:
+> > This patch adds a new trace option 'funcgraph-retval' and is disabled by
+> > default. When this option is enabled, fgraph tracer will show the return
+> > value of each function. This is useful to find/analyze a original error
+> > source in a call graph.
+> > 
+> > One limitation is that the kernel doesn't know the prototype of functions.
+> > So fgraph assumes all functions have a retvalue of type int. You must ignore
+> > the value of *void* function. And if the retvalue looks like an error code
+> > then both hexadecimal and decimal number are displayed.
+> 
+> This seems like quite a significant drawback and I think it could be pretty
+> confusing if you have to filter out bogus return values from the trace.
+> 
+> For example, in your snippet:
+> 
+> >  3)               |  kvm_vm_ioctl() {
+> >  3)               |    mutex_lock() {
+> >  3)               |      _cond_resched() {
+> >  3)   0.234 us    |        rcu_all_qs(); /* ret=0x80000000 */
+> >  3)   0.704 us    |      } /* ret=0x0 */
+> >  3)   1.226 us    |    } /* ret=0x0 */
+> >  3)   0.247 us    |    mutex_unlock(); /* ret=0xffff8880738ed040 */
+> 
+> mutex_unlock() is wrongly listed as returning something.
+> 
+> How much of this could be achieved from userspace by placing kretprobes on
+> non-void functions instead?
 
-Added reset_gpio configuration for i2c probe successfully.
-If not,i2c address can't be found rightly.
-
-Error information:
-max98373 3-0031: Failed to read: 0x21FF
-
-Fixed:
-[3.761299@3] max98373 3-0031: MAX98373 revisionID: 0x43
-[3.828911@3] asoc-aml-card auge_sound: max98373-aif1 <-> TDM-B mapping ok
-
-Signed-off-by: fengchunguo <chunguo.feng@amlogic.com>
----
- sound/soc/codecs/max98373.c | 34 ++++++++++++++++++++++++++++++----
- sound/soc/codecs/max98373.h |  1 +
- 2 files changed, 31 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/codecs/max98373.c b/sound/soc/codecs/max98373.c
-index 528695cd6a1c..9a1eb7222357 100644
---- a/sound/soc/codecs/max98373.c
-+++ b/sound/soc/codecs/max98373.c
-@@ -12,6 +12,7 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <linux/gpio.h>
-+#include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <sound/tlv.h>
- #include "max98373.h"
-@@ -895,6 +896,17 @@ static void max98373_slot_config(struct i2c_client *i2c,
- 	else
- 		max98373->i_slot = 1;
- 
-+	max98373->reset_gpio = of_get_named_gpio(dev->of_node,
-+						"maxim,reset-gpio", 0);
-+	if (!gpio_is_valid(max98373->reset_gpio)) {
-+		dev_err(dev, "Looking up %s property in node %s failed %d\n",
-+			"maxim,reset-gpio", dev->of_node->full_name,
-+			max98373->reset_gpio);
-+	} else {
-+		dev_dbg(dev, "maxim,reset-gpio=%d",
-+			max98373->reset_gpio);
-+	}
-+
- 	if (!device_property_read_u32(dev, "maxim,spkfb-slot-no", &value))
- 		max98373->spkfb_slot = value & 0xF;
- 	else
-@@ -923,7 +935,6 @@ static int max98373_i2c_probe(struct i2c_client *i2c,
- 	else
- 		max98373->interleave_mode = false;
- 
--
- 	/* regmap initialization */
- 	max98373->regmap
- 		= devm_regmap_init_i2c(i2c, &max98373_regmap);
-@@ -934,6 +945,24 @@ static int max98373_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	/* voltage/current slot & gpio configuration */
-+	max98373_slot_config(i2c, max98373);
-+
-+	/* Power on device */
-+	if (gpio_is_valid(max98373->reset_gpio)) {
-+		ret = gpio_request(max98373->reset_gpio, "MAX98373_RESET");
-+		if (ret) {
-+			dev_err(&i2c->dev, "%s: Failed to request gpio %d\n",
-+				__func__, max98373->reset_gpio);
-+			gpio_free(max98373->reset_gpio);
-+			return -EINVAL;
-+		}
-+		gpio_direction_output(max98373->reset_gpio, 0);
-+		msleep(50);
-+		gpio_direction_output(max98373->reset_gpio, 1);
-+		msleep(20);
-+	}
-+
- 	/* Check Revision ID */
- 	ret = regmap_read(max98373->regmap,
- 		MAX98373_R21FF_REV_ID, &reg);
-@@ -944,9 +973,6 @@ static int max98373_i2c_probe(struct i2c_client *i2c,
- 	}
- 	dev_info(&i2c->dev, "MAX98373 revisionID: 0x%02X\n", reg);
- 
--	/* voltage/current slot configuration */
--	max98373_slot_config(i2c, max98373);
--
- 	/* codec registeration */
- 	ret = devm_snd_soc_register_component(&i2c->dev, &soc_codec_dev_max98373,
- 		max98373_dai, ARRAY_SIZE(max98373_dai));
-diff --git a/sound/soc/codecs/max98373.h b/sound/soc/codecs/max98373.h
-index f6a37aa02f26..533d2053f608 100644
---- a/sound/soc/codecs/max98373.h
-+++ b/sound/soc/codecs/max98373.h
-@@ -203,6 +203,7 @@
- 
- struct max98373_priv {
- 	struct regmap *regmap;
-+	int reset_gpio;
- 	unsigned int v_slot;
- 	unsigned int i_slot;
- 	unsigned int spkfb_slot;
--- 
-2.18.0
+Alternatively, we can have recordmcount (or objtool) mark all functions
+with a return value when the build has DEBUG_INFO on. The dwarves know
+the function signature.
 
