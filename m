@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A732C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B519CC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244C82083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81143217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198649;
-	bh=9RWCdpj4FaAC0utpfRuO4Yp0UWaH+OBlUkFuQKg44D8=;
+	s=default; t=1563198651;
+	bh=bEJefS2tws+SL3mfnqp2N4aCqJvGJuT0J6mFt8zFPXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3DLnmHf1TxjPYWfhRu2HA9SYjmZa0K3RUvookbGAVx3SAPLyjMim65CSq48wzw07
-	 ikbTnW0+eHAW1LxhOaw95fygN4ArVsqsFRxLjiuy4Boj+/yUQjsJmkBLug7cyn+Mti
-	 rbqiOKnNHKN3hmOVnOaU/jrE6JMFcJcBVQHkTOZ8=
+	b=kZERSs/CIIXZYrEGD+5AFaAR4WDkIfMdiZF4DhPYaADF1ymTXNNtt5wSV/dCxbixL
+	 mBq9GdQ/5bWfSZrbzFKBrNogQCUFxYP0aMAmxz9kasloOkPiNhjKgmrQcIE9TY69Dy
+	 Fak0ZV1P4olFixro5u2va6uZohEh+3xhjoi+Ki48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732017AbfGONus (ORCPT
+        id S1731807AbfGONtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:49:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbfGONum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:50:42 -0400
+        id S1731167AbfGONtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:49:49 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1FFC2083D;
-        Mon, 15 Jul 2019 13:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08DCC2083D;
+        Mon, 15 Jul 2019 13:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198641;
-        bh=9RWCdpj4FaAC0utpfRuO4Yp0UWaH+OBlUkFuQKg44D8=;
+        s=default; t=1563198588;
+        bh=bEJefS2tws+SL3mfnqp2N4aCqJvGJuT0J6mFt8zFPXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6XUR3gc5Qada/QD19H9qJn4KCmHCMzXbpIjjeHiKs8vyEB38pQTsphYv66J0BOMw
-         nTGtXP+UDwP+E1uakAZIUHhuGZ+6n6qfG4XbHwXNvOx/Wi41BVMGkEmiiHKIvKQzxn
-         qyXdr+cIzwHDfMFG0UXeKgbJUufqV1rb80cuZRzo=
+        b=rZB9VNTBML6/Yo6ojw4UlZgi11CKia5hTI+ZgTQMTQ2jZdFTsIaMQhn+AEvyTCoRN
+         pnGehkIn5eYCSQU9aFCPPiQydWfq3PCpYYVN+H102tQPKNklpiNObervgysZThrftL
+         DmMsWbwyTnAZc1BvJomEj8kjgByR7ehNEU4IUDvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.2 068/249] media: imx7-mipi-csis: Propagate the error if clock enabling fails
-Date:   Mon, 15 Jul 2019 09:43:53 -0400
-Message-Id: <20190715134655.4076-68-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 052/249] ASoC: Intel: sof-rt5682: fix undefined references with Baytrail-only support
+Date:   Mon, 15 Jul 2019 09:43:37 -0400
+Message-Id: <20190715134655.4076-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -62,58 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 2b393f91c651c16d5c09f5c7aa689e58a79df34e ]
+[ Upstream commit 17fc24875da1bef4650cf007edae3b2e26d2fa4e ]
 
-Currently the return value from clk_bulk_prepare_enable() is checked,
-but it is not propagate it in the case of failure.
+The sof-rt5682 machine driver supports both legacy Baytrail devices
+and more recent ApolloLake/CometLake platforms. When only Baytrail is
+selected, the compilation fails with the following errors:
 
-Fix it and also move the error message to the caller of
-mipi_csis_clk_enable().
+ERROR: "hdac_hdmi_jack_port_init"
+[sound/soc/intel/boards/snd-soc-sof_rt5682.ko] undefined!
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+ERROR: "hdac_hdmi_jack_init"
+[sound/soc/intel/boards/snd-soc-sof_rt5682.ko] undefined!
+
+Fix by selecting SND_SOC_HDAC_HDMI unconditionally. The code for HDMI
+support is not reachable on Baytrail so this change has no functional
+impact.
+
+Fixes: f70abd75b7c6 ("ASoC: Intel: add sof-rt5682 machine driver")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-mipi-csis.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ sound/soc/intel/boards/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 19455f425416..7d7bdfdd852a 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -456,13 +456,9 @@ static void mipi_csis_set_params(struct csi_state *state)
- 			MIPI_CSIS_CMN_CTRL_UPDATE_SHADOW_CTRL);
- }
- 
--static void mipi_csis_clk_enable(struct csi_state *state)
-+static int mipi_csis_clk_enable(struct csi_state *state)
- {
--	int ret;
--
--	ret = clk_bulk_prepare_enable(state->num_clks, state->clks);
--	if (ret < 0)
--		dev_err(state->dev, "failed to enable clocks\n");
-+	return clk_bulk_prepare_enable(state->num_clks, state->clks);
- }
- 
- static void mipi_csis_clk_disable(struct csi_state *state)
-@@ -973,7 +969,11 @@ static int mipi_csis_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	mipi_csis_clk_enable(state);
-+	ret = mipi_csis_clk_enable(state);
-+	if (ret < 0) {
-+		dev_err(state->dev, "failed to enable clocks: %d\n", ret);
-+		return ret;
-+	}
- 
- 	ret = devm_request_irq(dev, state->irq, mipi_csis_irq_handler,
- 			       0, dev_name(dev), state);
+diff --git a/sound/soc/intel/boards/Kconfig b/sound/soc/intel/boards/Kconfig
+index 5407d217228e..c0aef45d335a 100644
+--- a/sound/soc/intel/boards/Kconfig
++++ b/sound/soc/intel/boards/Kconfig
+@@ -392,7 +392,7 @@ config SND_SOC_INTEL_SOF_RT5682_MACH
+ 		   (SND_SOC_SOF_BAYTRAIL && X86_INTEL_LPSS)
+ 	select SND_SOC_RT5682
+ 	select SND_SOC_DMIC
+-	select SND_SOC_HDAC_HDMI if SND_SOC_SOF_HDA_COMMON
++	select SND_SOC_HDAC_HDMI
+ 	help
+ 	   This adds support for ASoC machine driver for SOF platforms
+ 	   with rt5682 codec.
 -- 
 2.20.1
 
