@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34074C73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB42C73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13EE9214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F74214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfGOAiC (ORCPT
+        id S1729254AbfGOAiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 20:38:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52574 "EHLO mx1.redhat.com"
+        Sun, 14 Jul 2019 20:38:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34012 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbfGOAhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 20:37:54 -0400
+        id S1729205AbfGOAhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 20:37:55 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 352483082B07;
-        Mon, 15 Jul 2019 00:37:53 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8357B4E93D;
+        Mon, 15 Jul 2019 00:37:54 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 273405D9D2;
-        Mon, 15 Jul 2019 00:37:52 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63FD75D9D2;
+        Mon, 15 Jul 2019 00:37:53 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -35,103 +35,128 @@ Cc:     linux-kernel@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
         Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 20/22] objtool: Fix seg fault on bad switch table entry
-Date:   Sun, 14 Jul 2019 19:37:15 -0500
-Message-Id: <9f67aa11794e9eebe5a3249529d1ecf60abf370f.1563150885.git.jpoimboe@redhat.com>
+Subject: [PATCH 21/22] objtool: convert insn type to enum
+Date:   Sun, 14 Jul 2019 19:37:16 -0500
+Message-Id: <f42b9b00975a1503fc791c12af396262abf1e21d.1563150885.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1563150885.git.jpoimboe@redhat.com>
 References: <cover.1563150885.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 15 Jul 2019 00:37:53 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 15 Jul 2019 00:37:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In one rare case, Clang generated the following code:
+This makes it easier to add new instruction types.  Also it's hopefully
+more robust since the compiler should warn about out-of-range enums.
 
- 5ca:       83 e0 21                and    $0x21,%eax
- 5cd:       b9 04 00 00 00          mov    $0x4,%ecx
- 5d2:       ff 24 c5 00 00 00 00    jmpq   *0x0(,%rax,8)
-                    5d5: R_X86_64_32S       .rodata+0x38
-
-which uses the corresponding jump table relocations:
-
-  000000000038  000200000001 R_X86_64_64       0000000000000000 .text + 834
-  000000000040  000200000001 R_X86_64_64       0000000000000000 .text + 5d9
-  000000000048  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000050  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000058  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000060  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000068  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000070  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000078  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000080  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000088  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000090  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000098  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000a0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000a8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000b0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000b8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000c0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000c8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000d0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000d8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000e0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000e8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000f0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000f8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000100  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000108  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000110  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000118  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000120  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000128  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000130  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000138  000200000001 R_X86_64_64       0000000000000000 .text + 82f
-  000000000140  000200000001 R_X86_64_64       0000000000000000 .text + 828
-
-Since %eax was masked with 0x21, only the first two and the last two
-entries are possible.
-
-Objtool doesn't actually emulate all the code, so it isn't smart enough
-to know that all the middle entries aren't reachable.  They point to the
-NOP padding area after the end of the function, so objtool seg faulted
-when it tried to dereference a NULL insn->func.
-
-After this fix, objtool still gives an "unreachable" error because it
-stops reading the jump table when it encounters the bad addresses:
-
-  /home/jpoimboe/objtool-tests/adm1275.o: warning: objtool: adm1275_probe()+0x828: unreachable instruction
-
-While the above code is technically correct, it's very wasteful of
-memory -- it uses 34 jump table entries when only 4 are needed.  It's
-also not possible for objtool to validate this type of switch table
-because the unused entries point outside the function and objtool has no
-way of determining if that's intentional.  Hopefully the Clang folks can
-fix it.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/check.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/arch.h            | 35 +++++++++++++++++----------------
+ tools/objtool/arch/x86/decode.c |  2 +-
+ tools/objtool/check.c           |  7 -------
+ tools/objtool/check.h           |  2 +-
+ 4 files changed, 20 insertions(+), 26 deletions(-)
 
+diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+index 580e344db3dd..50448c0c4bca 100644
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -11,22 +11,23 @@
+ #include "elf.h"
+ #include "cfi.h"
+ 
+-#define INSN_JUMP_CONDITIONAL	1
+-#define INSN_JUMP_UNCONDITIONAL	2
+-#define INSN_JUMP_DYNAMIC	3
+-#define INSN_CALL		4
+-#define INSN_CALL_DYNAMIC	5
+-#define INSN_RETURN		6
+-#define INSN_CONTEXT_SWITCH	7
+-#define INSN_STACK		8
+-#define INSN_BUG		9
+-#define INSN_NOP		10
+-#define INSN_STAC		11
+-#define INSN_CLAC		12
+-#define INSN_STD		13
+-#define INSN_CLD		14
+-#define INSN_OTHER		15
+-#define INSN_LAST		INSN_OTHER
++enum insn_type {
++	INSN_JUMP_CONDITIONAL,
++	INSN_JUMP_UNCONDITIONAL,
++	INSN_JUMP_DYNAMIC,
++	INSN_CALL,
++	INSN_CALL_DYNAMIC,
++	INSN_RETURN,
++	INSN_CONTEXT_SWITCH,
++	INSN_STACK,
++	INSN_BUG,
++	INSN_NOP,
++	INSN_STAC,
++	INSN_CLAC,
++	INSN_STD,
++	INSN_CLD,
++	INSN_OTHER,
++};
+ 
+ enum op_dest_type {
+ 	OP_DEST_REG,
+@@ -68,7 +69,7 @@ void arch_initial_func_cfi_state(struct cfi_state *state);
+ 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+-			    unsigned int *len, unsigned char *type,
++			    unsigned int *len, enum insn_type *type,
+ 			    unsigned long *immediate, struct stack_op *op);
+ 
+ bool arch_callee_saved_reg(unsigned char reg);
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 584568f27a83..0567c47a91b1 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -68,7 +68,7 @@ bool arch_callee_saved_reg(unsigned char reg)
+ 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+-			    unsigned int *len, unsigned char *type,
++			    unsigned int *len, enum insn_type *type,
+ 			    unsigned long *immediate, struct stack_op *op)
+ {
+ 	struct insn insn;
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4ed7cb71a1d9..716fe87e2c7d 100644
+index 716fe87e2c7d..5a237fc05cdc 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -932,7 +932,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 			break;
+@@ -267,13 +267,6 @@ static int decode_instructions(struct objtool_file *file)
+ 			if (ret)
+ 				goto err;
  
- 		/* Make sure the destination is in the same function: */
--		if (dest_insn->func->pfunc != pfunc)
-+		if (!dest_insn->func || dest_insn->func->pfunc != pfunc)
- 			break;
- 
- 		alt = malloc(sizeof(*alt));
+-			if (!insn->type || insn->type > INSN_LAST) {
+-				WARN_FUNC("invalid instruction type %d",
+-					  insn->sec, insn->offset, insn->type);
+-				ret = -1;
+-				goto err;
+-			}
+-
+ 			hash_add(file->insn_hash, &insn->hash, insn->offset);
+ 			list_add_tail(&insn->list, &file->insn_list);
+ 		}
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index afa6a79e0715..b881fafcf55d 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -31,7 +31,7 @@ struct instruction {
+ 	struct section *sec;
+ 	unsigned long offset;
+ 	unsigned int len;
+-	unsigned char type;
++	enum insn_type type;
+ 	unsigned long immediate;
+ 	bool alt_group, visited, dead_end, ignore, hint, save, restore, ignore_alts;
+ 	bool retpoline_safe;
 -- 
 2.20.1
 
