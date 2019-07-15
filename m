@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F52FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCF82080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90452054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203071;
-	bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
+	s=default; t=1563203084;
+	bh=30dKIpQQ9J4K6lkH+R2f3ogA5+qrqCUc1vUYnXrZTuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YX0aARuLamNdRw0nlHNZbGlza9jk/zHhN1jgcyPTXmNUXGYg60emTXTM7qxAWXdZd
-	 8zJk5on+mkwzsv8oXj8oP3PCyDDz5OJNoA3EYcRIZLUGzjfjhybTh3Hlzf5iYiSU31
-	 QvdApm992+6dIapueuNwF2GPNp2YDo8OJlt8rBFY=
+	b=oPE+SrBTHNBq2OutnPLgHr2wfJDM4chAYEVka4NBoxYN/6F8g7XwKuimN82HNoIAc
+	 zn4/GJmfwmlzYSSZdRlAqCUmHkLdO2e7VquNn1jDj9iZCPvkJsy1kpwklKWn2FRjn4
+	 x+xIocwGHbKDwqWwNNsytzBQzlnXpEyGXEsi6a0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbfGOPEa (ORCPT
+        id S1731585AbfGOPEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388219AbfGOOHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:07:52 -0400
+        id S2388386AbfGOOHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:07:43 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A88D020868;
-        Mon, 15 Jul 2019 14:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F27D2081C;
+        Mon, 15 Jul 2019 14:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199671;
-        bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
+        s=default; t=1563199662;
+        bh=30dKIpQQ9J4K6lkH+R2f3ogA5+qrqCUc1vUYnXrZTuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tuoeG2Il32KuIThAUFzci446jxEmRqd+lxB1GhGq8r9KaaEBG/+94VwiRaOk1t49V
-         dLDK2AsNqUabELA5WTwbrcEATmtwVJcVRueklRiYzGEE/cdNqOzVCq9y6wvvbqbJOP
-         fxZ36kkfQUydIodiniFnhslmUU67NGQjna3Gt0iM=
+        b=D/KubWDh6A1tiuTY2CUSlAisFdFVcpc3J2PBDIfVpPu2NFEIjjhV5MoR9jk8eqq6M
+         lwzbyB7WvwT/3od4ioK7Gz4uXUL1vwbjRCZv6VZkvq7SUrdlWOHsB6xRJ0S0GorwTt
+         s0tP04pc/shCC4h5whx6XnhIXOKiK/3ptma6Kb6I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 068/219] RAS/CEC: Fix pfn insertion
-Date:   Mon, 15 Jul 2019 10:01:09 -0400
-Message-Id: <20190715140341.6443-68-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 065/219] net: fec: Do not use netdev messages too early
+Date:   Mon, 15 Jul 2019 10:01:06 -0400
+Message-Id: <20190715140341.6443-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,56 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
+[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
 
-When inserting random PFNs for debugging the CEC through
-(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
-multiple values get inserted per a single write.
+When a valid MAC address is not found the current messages
+are shown:
 
-That is because simple_attr_write() interprets a retval of 0 as
-success and claims the whole input. However, pfn_set() returns the
-cec_add_elem() value, which, if > 0 and smaller than the whole input
-length, makes glibc continue issuing the write syscall until there's
-input left:
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
 
-  pfn_set
-  simple_attr_write
-  debugfs_attr_write
-  full_proxy_write
-  vfs_write
-  ksys_write
-  do_syscall_64
-  entry_SYSCALL_64_after_hwframe
+Since the network device has not been registered at this point, it is better
+to use dev_err()/dev_info() instead, which will provide cleaner log
+messages like these:
 
-leading to those repeated calls.
+fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
 
-Return 0 to fix that.
+Tested on a imx6dl-pico-pi board.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fec_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index f85d6b7a1984..5d2b2c02cbbe 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -369,7 +369,9 @@ static int pfn_set(void *data, u64 val)
- {
- 	*(u64 *)data = val;
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 878ccce1dfcd..87a9c5716958 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1689,10 +1689,10 @@ static void fec_get_mac(struct net_device *ndev)
+ 	 */
+ 	if (!is_valid_ether_addr(iap)) {
+ 		/* Report it and use a random ethernet address instead */
+-		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
++		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
+ 		eth_hw_addr_random(ndev);
+-		netdev_info(ndev, "Using random MAC address: %pM\n",
+-			    ndev->dev_addr);
++		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
++			 ndev->dev_addr);
+ 		return;
+ 	}
  
--	return cec_add_elem(val);
-+	cec_add_elem(val);
-+
-+	return 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
 -- 
 2.20.1
 
