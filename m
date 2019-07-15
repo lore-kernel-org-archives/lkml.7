@@ -2,184 +2,82 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CCCC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06952C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3672080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OSUlOH6/"
+	by mail.kernel.org (Postfix) with ESMTP id D906B2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbfGOMP1 (ORCPT
+        id S1730055AbfGOMPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 08:15:27 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:19477 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729946AbfGOMP0 (ORCPT
+        Mon, 15 Jul 2019 08:15:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:33059 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729946AbfGOMPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 08:15:26 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x6FCF5C7012022;
-        Mon, 15 Jul 2019 21:15:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x6FCF5C7012022
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563192906;
-        bh=ZXLECSGCInnXXU0ujGIQpHqb198I/3hegfmoAjHhnCM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OSUlOH6/dWQmflPxC3CUAMNIO+3Dj8jjv7TnTOHdTXAzCtYtqpqdew6/ioz2zXvlI
-         FQszv1ux5UZFkcBtosvNoZsRaCZ1CeeSYuOYYHDcztoKUvWtzMNbDVUAU4U10THjb/
-         IrFBOxIdyX/WsFAWT8FZdmrcnmBU7XhsmhqfHVOoL3ct25sVTvEvL9QXVo+S5+PASw
-         wWJKex64/KHnkWIpy700jN3BuD5iwaxvFAn6MIe46Wk8gMKXkIdXHFEtfPXoIhCBXF
-         J+wC4ifFOwLKgpTIYTxtSSNPKSnFUWxPL0o/lUqBs/4tVPqlrfPCjFDfqBxTEVx3QN
-         AMtNnfOBQx1XQ==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id u124so11191309vsu.2;
-        Mon, 15 Jul 2019 05:15:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAU4UZQinAj6luda1pK4rpY/XYGsLOcxkz7GY+q3ovDq9f3R0VSb
-        CX82EbU+ZFWv5xuTXVW/1LAoTEQ3Ze6TK9fx+Uw=
-X-Google-Smtp-Source: APXvYqygQq9yRgYrckbp1UEQfPoO0pRpzqU0G9FXOj44UW2BgIJ0QxuwfbfddiNolLL2uNZo7L2irknOQp3akcOZ0Kg=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr16138374vsn.181.1563192905027;
- Mon, 15 Jul 2019 05:15:05 -0700 (PDT)
+        Mon, 15 Jul 2019 08:15:53 -0400
+Received: from [192.168.1.110] ([95.118.111.244]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mate1-1iKwry29lL-00cQf8; Mon, 15 Jul 2019 14:15:45 +0200
+Subject: Re: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio
+ export
+To:     Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com,
+        info@metux.net, dvhart@infradead.org, andy@infradead.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-2-fe@dev.tdt.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
+Date:   Mon, 15 Jul 2019 14:15:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190713040110.18210-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190713040110.18210-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 15 Jul 2019 21:14:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARGiW1BCf9-K1oWLWKvVNZU7rzsdeGKTuT-Q2yGApi7+A@mail.gmail.com>
-Message-ID: <CAK7LNARGiW1BCf9-K1oWLWKvVNZU7rzsdeGKTuT-Q2yGApi7+A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add --hash-style= and --build-id unconditionally
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        X86 ML <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190704090205.19400-2-fe@dev.tdt.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:S2oNFKep22pqWXKixHD14ji3HNkueaIFIPSI83rcVj1+S575yXx
+ AC3CMH/pQUf5GRoNq54vEe+p33e0Ob9sTeHWErNpQ00hZ01xwz1Kdu+PcBJuXGyQH5/udbG
+ cP+KNWQ4u4zaxALeI+jP0rkrESDWWEK7ZDxH93VzxqjndLpwNmXH6SbTY9ldvwHwoPGTliI
+ wamzl4qtERO/eomhnQkJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WP1wYsAWbI4=:Sbgx3DDxBqoDDN9KJtXCPH
+ 9c16Rj1sEH0FyLE16ELaKu9Prc0HMeGx3YjLSR03ZKvbFO5MFrmml1HfIMiGU15Q1U9yWzZP0
+ ZF8v9MJA1NxK1YrZS46IQ/9hJhSr/XWp4JHaBKIq/yb0r568eacpOLqISX3Oe/M7EbVMrjRVM
+ CtRX3BBGMQPyCqCKi0OYukzhu8h+KpJipMe694r++old0z+jxF+8Nub9Cst9Oa4g5HFIi5TEa
+ yCElbmsYhNhpXbgGxXx5/VK6kPmB/s573mD/lwMsinfBIKwNETdNXUOWjB5qd7MDH6qx+gQxo
+ n0dUE5XkyUJUgeLUcfoncvzeBN+XptN/BSMTC+w2P7srUxNwOcWKHLQWc+yRt0HmAZx3kwocA
+ rslPltB7jzO3jiCvEUSceweeh2siIWzdVWh1ZPq8QU/ZKq8u2po55LGSct75pycq2tY8K7TWF
+ QVwi1HP1fb8p7nCmSXBIp1NzL3590ln/v2nugxpr+vRYzx0WvSf99tOx7+tl5x7kQ0mLfGSEK
+ Ddem8fUMWvPxr+CYvVYdWS8pLvGGEPkIQup344Ynhbp7gyltTSZy7wXpa3iA9tN9vh3o1e06W
+ mmgmmiA0CGF0zqVsxrdKDfM2LVQyEGi7tv+GQMFFKKGbWzmP+tXpqd8skwRj4zoMhGp1kGZbF
+ PBdSb3DhUK7U62pWy1aDm8NEWNPMmGemPVl2+UvPtm3pSCFABiCFgX52mlckW/7wrlKraPZa5
+ vq70SsDBxoqrL0fgYj9RE1HQQacdZcO4JJx+ycDf0xLYR6XG2pOVSEIoLkw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 1:01 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On 04.07.19 11:02, Florian Eckert wrote:
+> On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to reset
+> the ports from the userspace, add the definition to this platform
+> device. The gpio can then be exported by the legancy gpio subsystem to
+> toggle the mpcie reset pin.
 >
-> As commit 1e0221374e30 ("mips: vdso: drop unnecessary cc-ldoption")
-> explained, these flags are supported by the minimal required version
-> of binutils.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
 
-Applied to linux-kbuild.
+Just tested your patch on an apu3. The driver itself seems to work,
+but the pins don't seem to actually do anything.
 
-
->
->  Makefile                          | 6 ++----
->  arch/arm/vdso/Makefile            | 3 +--
->  arch/arm64/kernel/vdso32/Makefile | 4 ++--
->  arch/sparc/vdso/Makefile          | 3 +--
->  arch/x86/entry/vdso/Makefile      | 5 ++---
->  5 files changed, 8 insertions(+), 13 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 2c5d00ba537e..969182105dbd 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -900,10 +900,8 @@ KBUILD_CPPFLAGS += $(ARCH_CPPFLAGS) $(KCPPFLAGS)
->  KBUILD_AFLAGS   += $(ARCH_AFLAGS)   $(KAFLAGS)
->  KBUILD_CFLAGS   += $(ARCH_CFLAGS)   $(KCFLAGS)
->
-> -# Use --build-id when available.
-> -LDFLAGS_BUILD_ID := $(call ld-option, --build-id)
-> -KBUILD_LDFLAGS_MODULE += $(LDFLAGS_BUILD_ID)
-> -LDFLAGS_vmlinux += $(LDFLAGS_BUILD_ID)
-> +KBUILD_LDFLAGS_MODULE += --build-id
-> +LDFLAGS_vmlinux += --build-id
->
->  ifeq ($(CONFIG_STRIP_ASM_SYMS),y)
->  LDFLAGS_vmlinux        += $(call ld-option, -X,)
-> diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
-> index ca85df247775..87b7769214e0 100644
-> --- a/arch/arm/vdso/Makefile
-> +++ b/arch/arm/vdso/Makefile
-> @@ -13,8 +13,7 @@ ccflags-y += -DDISABLE_BRANCH_PROFILING
->  ldflags-$(CONFIG_CPU_ENDIAN_BE8) := --be8
->  ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
->             -z max-page-size=4096 -nostdlib -shared $(ldflags-y) \
-> -           $(call ld-option, --hash-style=sysv) \
-> -           $(call ld-option, --build-id) \
-> +           --hash-style=sysv --build-id \
->             -T
->
->  obj-$(CONFIG_VDSO) += vdso.o
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-> index 288c14d30b45..60a4c6239712 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -96,8 +96,8 @@ VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
->  VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
->  VDSO_LDFLAGS += -Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096
->  VDSO_LDFLAGS += -nostdlib -shared -mfloat-abi=soft
-> -VDSO_LDFLAGS += $(call cc32-ldoption,-Wl$(comma)--hash-style=sysv)
-> -VDSO_LDFLAGS += $(call cc32-ldoption,-Wl$(comma)--build-id)
-> +VDSO_LDFLAGS += -Wl,--hash-style=sysv
-> +VDSO_LDFLAGS += -Wl,--build-id
->  VDSO_LDFLAGS += $(call cc32-ldoption,-fuse-ld=bfd)
->
->
-> diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> index 5a9e4e1f9f81..324a23947585 100644
-> --- a/arch/sparc/vdso/Makefile
-> +++ b/arch/sparc/vdso/Makefile
-> @@ -115,8 +115,7 @@ quiet_cmd_vdso = VDSO    $@
->                        -T $(filter %.lds,$^) $(filter %.o,$^) && \
->                 sh $(srctree)/$(src)/checkundef.sh '$(OBJDUMP)' '$@'
->
-> -VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
-> -       $(call ld-option, --build-id) -Bsymbolic
-> +VDSO_LDFLAGS = -shared --hash-style=both --build-id -Bsymbolic
->  GCOV_PROFILE := n
->
->  #
-> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> index 39106111be86..4c234a18638a 100644
-> --- a/arch/x86/entry/vdso/Makefile
-> +++ b/arch/x86/entry/vdso/Makefile
-> @@ -179,9 +179,8 @@ quiet_cmd_vdso = VDSO    $@
->                        -T $(filter %.lds,$^) $(filter %.o,$^) && \
->                  sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
->
-> -VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
-> -       $(call ld-option, --build-id) $(call ld-option, --eh-frame-hdr) \
-> -       -Bsymbolic
-> +VDSO_LDFLAGS = -shared --hash-style=both --build-id \
-> +       $(call ld-option, --eh-frame-hdr) -Bsymbolic
->  GCOV_PROFILE := n
->
->  #
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+How exactly did you test it ? Do you have some test case ?
 
 
+--mtx
 
 -- 
-Best Regards
-Masahiro Yamada
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
