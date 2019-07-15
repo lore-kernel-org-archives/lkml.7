@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EFFC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B6EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C312083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F889212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198829;
-	bh=xlxfzyPhI5vqM5ivAdtriyedX7X75KfABksDlvQ9qKI=;
+	s=default; t=1563198831;
+	bh=TIvqcs7USCrNd9umwv3wuYsdSSyO3IM5X9Qcp92S2b0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RKDLgLxmTytr6xSU0wHVj0OtLEB+XK6UPLjzbnzJXERFoT5hZDiePo2qiMqFzrbT8
-	 tfpNTVPTIqc0jNJ023+k6GKhS3h1VbJk5Vt1OrTxeirxnxq1t5EvDFF20lRfQt8zdR
-	 LRQ6a0xMLGzp7YFBU5s1emF7VRBcmjb/wz47+b8M=
+	b=XSmKDUpOh7qwtJphgL6ygcPIOxJ00SVHjuGZ8Ba9S4UGw+ACfeU1YnZQidXCvW+FT
+	 2aKq7QU67KaI8tJ2r99gzU5Z46MJhmfstsMtWqmvuq0QrL+XMkE2h0xjTUbkdBW6+a
+	 qxFKU/amY75o3G8PHN1OGd87cc1HKI8yQWQLJLeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732426AbfGONxr (ORCPT
+        id S1732417AbfGONxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52056 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:53:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730275AbfGONxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:53:45 -0400
+        id S1732355AbfGONxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:53:25 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 778822067C;
-        Mon, 15 Jul 2019 13:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B731521848;
+        Mon, 15 Jul 2019 13:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198824;
-        bh=xlxfzyPhI5vqM5ivAdtriyedX7X75KfABksDlvQ9qKI=;
+        s=default; t=1563198804;
+        bh=TIvqcs7USCrNd9umwv3wuYsdSSyO3IM5X9Qcp92S2b0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKGJbPgmyy/IzUehEOOQIHpxVZMuywe7G2RLVn/gvOxAvV8lqrW8rHQCpEE3oEdry
-         gYetJ78C1EjwOf2Da16VKr5IzfIYV8nwB9lZxdyweY8MRyVlwpTvlg7j6LCPSov2jG
-         oUpsC+yCaeMdMgf3stusdAMoj7//fFuTCKz/Gzmc=
+        b=o56eTWTwYWE6bX6TJ6V9pxDBoGa5lGLcIAem0BAoDs5Vd/VYbiISHecBeVBA6R7YZ
+         w8PVZOyTwf1o+Rn8yhTVqRqqM2fYz7wdBkA6e1ePVQYCWsgjLIMyEaXoHfbjPtvIiN
+         pmrvOu6zyLjxYkTDkQrlTvGhN8gQrwcmt5IovEhw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 113/249] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
-Date:   Mon, 15 Jul 2019 09:44:38 -0400
-Message-Id: <20190715134655.4076-113-sashal@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 109/249] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
+Date:   Mon, 15 Jul 2019 09:44:34 -0400
+Message-Id: <20190715134655.4076-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,64 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
+[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
 
-runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
-included in several other places because they need other macros all
-came from kernel/sched/sched-pelt.h which was generated by
-Documentation/scheduler/sched-pelt. As the result, it causes compilation
-a lot of warnings,
+wbc_account_io() collects information on cgroup ownership of writeback
+pages to determine which cgroup should own the inode.  Pages can stay
+associated with dead memcgs but we want to avoid attributing IOs to
+dead blkcgs as much as possible as the association is likely to be
+stale.  However, currently, pages associated with dead memcgs
+contribute to the accounting delaying and/or confusing the
+arbitration.
 
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  ...
+Fix it by ignoring pages associated with dead memcgs.
 
-Silence it by appending the __maybe_unused attribute for it, so all
-generated variables and macros can still be kept in the same file.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/scheduler/sched-pelt.c | 3 ++-
- kernel/sched/sched-pelt.h            | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ fs/fs-writeback.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
-index e4219139386a..7238b355919c 100644
---- a/Documentation/scheduler/sched-pelt.c
-+++ b/Documentation/scheduler/sched-pelt.c
-@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
- 	int i;
- 	unsigned int x;
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index e41cbe8e81b9..9ebfb1b28430 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -715,6 +715,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 		    size_t bytes)
+ {
++	struct cgroup_subsys_state *css;
+ 	int id;
  
--	printf("static const u32 runnable_avg_yN_inv[] = {");
-+	/* To silence -Wunused-but-set-variable warnings. */
-+	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
- 	for (i = 0; i < HALFLIFE; i++) {
- 		x = ((1UL<<32)-1)*pow(y, i);
+ 	/*
+@@ -726,7 +727,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 	if (!wbc->wb)
+ 		return;
  
-diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-index a26473674fb7..c529706bed11 100644
---- a/kernel/sched/sched-pelt.h
-+++ b/kernel/sched/sched-pelt.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+-	id = mem_cgroup_css_from_page(page)->id;
++	css = mem_cgroup_css_from_page(page);
++	/* dead cgroups shouldn't contribute to inode ownership arbitration */
++	if (!(css->flags & CSS_ONLINE))
++		return;
++
++	id = css->id;
  
--static const u32 runnable_avg_yN_inv[] = {
-+static const u32 runnable_avg_yN_inv[] __maybe_unused = {
- 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
- 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
- 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
 -- 
 2.20.1
 
