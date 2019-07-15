@@ -2,416 +2,167 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBBFC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AF1C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C4120665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECB720665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:10:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ObDf2nea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbfGOLJ2 (ORCPT
+        id S1729913AbfGOLKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 07:09:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15403 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbfGOLJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 07:09:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 04:09:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
-   d="p7s'?scan'208";a="342355820"
-Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
-  by orsmga005.jf.intel.com with ESMTP; 15 Jul 2019 04:09:25 -0700
-Received: from irsmsx105.ger.corp.intel.com ([169.254.7.164]) by
- irsmsx110.ger.corp.intel.com ([169.254.15.82]) with mapi id 14.03.0439.000;
- Mon, 15 Jul 2019 12:09:24 +0100
-From:   "Vasilev, Oleg" <oleg.vasilev@intel.com>
-To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "hamohammed.sa@gmail.com" <hamohammed.sa@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "rodrigosiqueiramelo@gmail.com" <rodrigosiqueiramelo@gmail.com>,
-        "contact@emersion.fr" <contact@emersion.fr>,
+        Mon, 15 Jul 2019 07:10:33 -0400
+Received: from mail-eopbgr50078.outbound.protection.outlook.com ([40.107.5.78]:32211
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729698AbfGOLKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 07:10:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tKziwcywrssm0dxIhnhfg0Y+NKkr3STw+WBNvsBQXrU=;
+ b=ObDf2neaJnDzWT18L61iZPsWfmQ7u7QKnMrtlC/39F71Y2nxUYAihCKVjcj/gZIH3kS04BpLDIi7WOjZ8CryqDLbEdaxxD927SI7Lvrll00nlGakYwICaLM9ewaQVIWqBFN8qH0J3Eyjv4O8YbWA7Uddt6WAyrjVNB1/Wh7lmTM=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB5041.eurprd04.prod.outlook.com (20.176.214.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Mon, 15 Jul 2019 11:10:28 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::a126:d121:200:367]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::a126:d121:200:367%7]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
+ 11:10:28 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] drm/vkms: Introduce basic support for configfs
-Thread-Topic: [PATCH 0/2] drm/vkms: Introduce basic support for configfs
-Thread-Index: AQHVL7x4YveMo9okKkWw2xwRMcGVLqbEEe8AgAI71oCABT2CgA==
-Date:   Mon, 15 Jul 2019 11:09:24 +0000
-Message-ID: <d7300673f3fbb10331080b751aa4e9a7ec8f56f8.camel@intel.com>
-References: <cover.1561950553.git.rodrigosiqueiramelo@gmail.com>
-         <20190710170116.GB15868@phenom.ffwll.local>
-         <20190712030757.a7sp5xmyzyt24i4e@smtp.gmail.com>
-In-Reply-To: <20190712030757.a7sp5xmyzyt24i4e@smtp.gmail.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mq: Add MIPI D-PHY
+Thread-Topic: [PATCH v2 1/2] arm64: dts: imx8mq: Add MIPI D-PHY
+Thread-Index: AQHVOvoZN2tyYFG00UaL7nctnpGXwabLhduA
+Date:   Mon, 15 Jul 2019 11:10:27 +0000
+Message-ID: <20190715111027.a4wlpzex3taxymyr@fsr-ub1664-175>
+References: <cover.1563187253.git.agx@sigxcpu.org>
+ <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
+In-Reply-To: <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
 Accept-Language: en-US
 Content-Language: en-US
-X-MS-Has-Attach: yes
+X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.237.66.161]
-Content-Type: multipart/signed; micalg=sha-1;
-        protocol="application/x-pkcs7-signature"; boundary="=-XsNIlUTdmdRPnnB0v0Ef"
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9fcaa730-9ccd-43b7-2ca3-08d709150b09
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5041;
+x-ms-traffictypediagnostic: AM0PR04MB5041:
+x-microsoft-antispam-prvs: <AM0PR04MB504107C66FCABA19235B61D4F6CF0@AM0PR04MB5041.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(189003)(199004)(76176011)(446003)(11346002)(25786009)(2906002)(476003)(91956017)(6506007)(102836004)(99286004)(76116006)(53546011)(6916009)(6116002)(6246003)(316002)(26005)(44832011)(64756008)(66446008)(33716001)(53936002)(66556008)(66946007)(66066001)(66476007)(6512007)(9686003)(486006)(54906003)(186003)(81156014)(81166006)(14444005)(6486002)(256004)(478600001)(68736007)(6436002)(8936002)(5660300002)(3846002)(7416002)(229853002)(66574012)(1076003)(71200400001)(8676002)(71190400001)(86362001)(4326008)(305945005)(7736002)(14454004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5041;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mMlL5jWwCBlVc3nPF0yXT4/UVIciINMhDa58/t71xSU/9GoLZdVpnxRWVd0CCSqvX6zMR3HO/hf2OrXVwyV5zsZxNI1k7bUP3RdgkjUyVa5s2hZQkD/cWjzYi/W1ochUbBRkVDSizZjgfwv6GP90M0rXJGNJs11biJq4nIEN1HLbKk9v9smpt+fYaz0Ug1QdW4vbvyibFuCmnp65SfhXAa+GlYjOKwJDLXgRMFf8p4p+WflBjq6T5rsSoD4dXShjWn8xjlH19FHwAsTfmilf8bZTY3dxruhPKbL6O6iDf96dBdWU6Lc9nPv+apI4fWEhT1O+lr7SWXKRfKa80HQzYF92WXWGv+3LJcH9USWlO5OU6QKB0FqEszz9aesPZmtGILMy8DRMt/8jSAM2NXUI6NtAGZwOpK13Ycw7UzjF6Vk=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <4AB6BC72093B9A4CBF3A5D208EC97346@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fcaa730-9ccd-43b7-2ca3-08d709150b09
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 11:10:27.8739
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: abel.vesa@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-XsNIlUTdmdRPnnB0v0Ef
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2019-07-12 at 00:07 -0300, Rodrigo Siqueira wrote:
-> On 07/10, Daniel Vetter wrote:
-> > On Mon, Jul 01, 2019 at 12:23:39AM -0300, Rodrigo Siqueira wrote:
-> > > This patchset introduces the support for configfs in vkms by
-> > > adding a
-> > > primary structure for handling the vkms subsystem and exposing
-> > > connectors as a use case.  This series allows enabling/disabling
-> > > virtual
-> > > and writeback connectors on the fly. The first patch of this
-> > > series
-> > > reworks the initialization and cleanup code of each type of
-> > > connector,
-> > > with this change, the second patch adds the configfs support for
-> > > vkms.
-> > > It is important to highlight that this patchset depends on
-> > > https://patchwork.freedesktop.org/series/61738/.
-> > >=20
-> > > After applying this series, the user can utilize these features
-> > > with the
-> > > following steps:
-> > >=20
-> > > 1. Load vkms without parameter
-> > >=20
-> > >   modprobe vkms
-> > >=20
-> > > 2. Mount a configfs filesystem
-> > >=20
-> > >   mount -t configfs none /mnt/
-> > >=20
-> > > After that, the vkms subsystem will look like this:
-> > >=20
-> > > vkms/
-> > >  |__connectors
-> > >     |__Virtual
-> > >         |__ enable
-> > >=20
-> > > The connectors directories have information related to
-> > > connectors, and
-> > > as can be seen, the virtual connector is enabled by default.
-> > > Inside a
-> > > connector directory (e.g., Virtual) has an attribute named
-> > > =E2=80=98enable=E2=80=99
-> > > which is used to enable and disable the target connector. For
-> > > example,
-> > > the Virtual connector has the enable attribute set to 1. If the
-> > > user
-> > > wants to enable the writeback connector it is required to use the
-> > > mkdir
-> > > command, as follows:
-> > >=20
-> > >   cd /mnt/vkms/connectors
-> > >   mkdir Writeback
-> > >=20
-> > > After the above command, the writeback connector will be enabled,
-> > > and
-> > > the user could see the following tree:
-> > >=20
-> > > vkms/
-> > >  |__connectors
-> > >     |__Virtual
-> > >     |   |__ enable
-> > >     |__Writeback
-> > >         |__ enable
-> > >=20
-> > > If the user wants to remove the writeback connector, it is
-> > > required to
-> > > use the command rmdir, for example
-> > >=20
-> > >   rmdir Writeback
-> > >=20
-> > > Another way to enable and disable a connector it is by using the
-> > > enable
-> > > attribute, for example, we can disable the Virtual connector
-> > > with:
-> > >=20
-> > >   echo 0 > /mnt/vkms/connectors/Virtual/enable
-> > >=20
-> > > And enable it again with:
-> > >=20
-> > >   echo 1 > /mnt/vkms/connectors/Virtual/enable
-> > >=20
-> > > It is important to highlight that configfs 'obey' the parameters
-> > > used
-> > > during the vkms load and does not allow users to remove a
-> > > connector
-> > > directory if it was load via module parameter. For example:
-> > >=20
-> > >   modprobe vkms enable_writeback=3D1
-> > >=20
-> > > vkms/
-> > >  |__connectors
-> > >     |__Virtual
-> > >     |   |__ enable
-> > >     |__Writeback
-> > >         |__ enable
-> > >=20
-> > > If the user tries to remove the Writeback connector with =E2=80=9Crmd=
-ir
-> > > Writeback=E2=80=9D, the operation will be not permitted because the
-> > > Writeback
-> > > connector was loaded with the modules. However, the user may
-> > > disable the
-> > > writeback connector with:
-> > >=20
-> > >   echo 0 > /mnt/vkms/connectors/Writeback/enable
+On 19-07-15 12:43:05, Guido G=FCnther wrote:
+> Add a node for the Mixel MIPI D-PHY, "disabled" by default.
 >=20
-> Thanks for detail this issue, I just have some few questions inline.
+> Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
+> Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
+dts/freescale/imx8mq.dtsi
+> index d09b808eff87..891ee7578c2d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -728,6 +728,19 @@
+>  				status =3D "disabled";
+>  			};
 > =20
-> > I guess I should have put a warning into that task that step one is
-> > designing the interface. Here's the fundamental thoughts:
-> >=20
-> > - The _only_ thing we can hotplug after drm_dev_register() is a
-> >   drm_connector. That's an interesting use-case, but atm not really
-> >   supported by the vkms codebase. So we can't just enable/disable
-> >   writeback like this. We also can't change _anything_ else in the
-> > drm
-> >   driver like this.
->=20
-> In the first patch of this series, I tried to decouple enable/disable
-> for virtual and writeback connectors; I tried to take advantage of
-> drm_connector_[register/unregister] in each connector. Can we use the
-> first patch or it doesn't make sense?
->=20
-> I did not understand why writeback connectors should not be
-> registered
-> and unregister by calling drm_connector_[register/unregister], is it
-> a
-> writeback or vkms limitation? Could you detail why we cannot change
-> connectors as I did?
+> +			dphy: dphy@30a00300 {
+> +				compatible =3D "fsl,imx8mq-mipi-dphy";
+> +				reg =3D <0x30a00300 0x100>;
+> +				clocks =3D <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +				clock-names =3D "phy_ref";
+> +				assigned-clocks =3D <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +				assigned-clock-parents =3D <&clk IMX8MQ_VIDEO_PLL1_OUT>;
+> +				assigned-clock-rates =3D <24000000>;
 
-Hi,
+We have the following in the clk-imx8mq in the vendor tree:
 
-I guess, some more stuff should happen during the hotplug, like
-drm_kms_helper_hotplug_event()?
+	clk_set_parent(clks[IMX8MQ_VIDEO_PLL1_BYPASS], clks[IMX8MQ_VIDEO_PLL1]);
 
->=20
-> Additionally, below you said "enable going from 1 -> 0, needs to be
-> treated like a physical hotunplug", do you mean that we first have to
-> add support for drm_dev_plug and drm_dev_unplug in vkms?
-> =20
-> > - The other bit we want is support multiple vkms instances, to
-> > simulate
-> >   multi-gpus and fun stuff like that.
->=20
-> Do you mean something like this:
->=20
-> configfs/vkms/instance1
-> > _enable_device=20
-> > _more_stuff
-> configfs/vkms/instance2
-> > _enable_device
-> > _more_stuff
-> configfs/vkms/instanceN
-> > _enable_device
-> > _more_stuff
+This unbypasses the video pll 1. And then we also have this:
 
-I think it would be a good idea. This way the creation of new device
-could look like this:
+	/* config video_pll1 clock */
+	clk_set_parent(clks[IMX8MQ_VIDEO_PLL1_REF_SEL], clks[IMX8MQ_CLK_27M]);
+	clk_set_rate(clks[IMX8MQ_VIDEO_PLL1], 593999999);
 
-mkdir -p instanceN/connector/virtual0
-echo "virtual" > instanceN/connector/virtual0/type
-echo 1 > instanceN/connector/virtual0/enable
-mkdir -p instanceN/crtc/crtc0
-...
-echo 1 > instanceN/enable
+But none of that is acceptable upstream since the clock provider should not
+use clock consumer API.
 
-Once the last command is executed, the whole instanceN/ becomes
-immutable, except for
- - instanceN/enable, so we can later disable it
- - instanceN/connector, where we can create new connectors, it would be
-treated as a hotplug.
+So please update the assigned-clock* properties to something like this:
+				assigned-clocks =3D <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
+						  <&clk IMX8MQ_VIDEO_PLL1_BYPASS>,
+						  <&clk IMX8MQ_CLK_DSI_PHY_REF>,
+						  <&clk IMX8MQ_VIDEO_PLL1>;
+				assigned-clock-parents =3D <&clk IMX8MQ_CLK_27M>,
+							 <&clk IMX8MQ_VIDEO_PLL1>,
+							 <&clk IMX8MQ_VIDEO_PLL1_OUT>
+							 <0>;
+				assigned-clock-rates =3D <0>,
+						       <0>,
+						       <24000000>,            =20
+						       <593999999>;
 
->=20
-> Will each instance work like a totally independent device? What is
-> the
-> main benefit of this? I can think about some use case for testing
-> prime, but I cannot see other things.
+I've written this without testing, so please do test it on your setup.
 
-We can test that userspace always select the right device to display.=20
-
-> =20
-> > - Therefore vkms configs should be at the drm_device level, so a
-> >   directory under configfs/vkms/ represents an entire device.
-> >=20
-> > - We need a special config item to control
-> >   drm_dev_register/drm_dev_unregister. While a drm_device is
-> > registers,
-> >   all other config items need to fail if userspace tries to change
-> > them.
-> >   Maybe this should be a top-level "enable" property.
-> >=20
-> > - Every time enable goes from 0 -> 1 we need to create a completely
-> > new
-> >   vkms instance. The old one might still be around, waiting for the
-> > last
-> >   few references to disappear.
-> >=20
-> > - enable going from 1 -> 0 needs to be treated like a physical
-> > hotunplug,
-> >   i.e. not drm_dev_unregister but drm_dev_unplug. We also need to
-> > annotate
-> >   all the vkms code with drm_dev_enter/exit() as the kerneldoc of
-> >   drm_dev_unplug explains.
-> >=20
-> > - rmdir should be treated like enable going from 1 -> 0. Or maybe
-> > we
-> >   should disable enable every going from 1 -> 0, would propably
-> > simplify
-> >   everything.
-> >=20
-> > - The initial instance created at module load also neeeds to be
-> > removable
-> >   like this.
-> >=20
-> > Once we have all this, then can we start to convert driver module
-> > options
-> > over to configs and add cool features. But lots of infrastructure
-> > needed
-> > first.
-> >=20
-> > Also, we probably want some nasty testcases which races an rmdir in
-> > configfs against userspace still doing ioctl calls against vkms.
-> > This is
-> > ideal for validation the hotunplug infrastructure we have in drm.
-> >=20
-> > An alternative is adding connector hotplugging. But I think before
-> > we do
-> > that we need to have support for more crtc and more connectors as
-> > static
-> > module options. So maybe not a good starting point for configfs.
->=20
-> So, probably the first set of tasks should be:
->=20
-> 1. Enable multiple CRTC via module parameters. For example:
->   modprobe vkms crtcs=3D13
-> 2. Enable multiple connectors via module parameters. For example:
->   modprobe vkms crtcs=3D3 connector=3D3 // 3 virtual connectors per crtc
-
-But do we want to have those parameters as module options, if we then
-plan to replace those with configfs? =20
-
->=20
-> Thanks again,
-> =20
-> > The above text should probably be added to the vkms.rst todo item
-> > ...
-> > -Daniel
-> >=20
-> > >=20
-> > > Rodrigo Siqueira (2):
-> > >   drm/vkms: Add enable/disable functions per connector
-> > >   drm/vkms: Introduce configfs for enabling/disabling connectors
-> > >=20
-> > >  drivers/gpu/drm/vkms/Makefile         |   3 +-
-> > >  drivers/gpu/drm/vkms/vkms_configfs.c  | 229
-> > > ++++++++++++++++++++++++++
-> > >  drivers/gpu/drm/vkms/vkms_drv.c       |   6 +
-> > >  drivers/gpu/drm/vkms/vkms_drv.h       |  17 ++
-> > >  drivers/gpu/drm/vkms/vkms_output.c    |  84 ++++++----
-> > >  drivers/gpu/drm/vkms/vkms_writeback.c |  31 +++-
-> > >  6 files changed, 332 insertions(+), 38 deletions(-)
-> > >  create mode 100644 drivers/gpu/drm/vkms/vkms_configfs.c
-> > >=20
-> > > --=20
-> > > 2.21.0
-> > >=20
-> > >=20
-> > > --=20
-> > > Rodrigo Siqueira
-> > > https://siqueira.tech
-> >=20
-> > --=20
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
---=20
-Oleg Vasilev <oleg.vasilev@intel.com>
-Intel Corporation
-
---=-XsNIlUTdmdRPnnB0v0Ef
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-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
-DdWSiLBgHgGaO0ThuDGV4bz316/+F4Vy7z9hcMbMJs41eGz9tueMREgDNywNIAdzWQIDAQABo4IC
-LjCCAiowHQYDVR0OBBYEFP8BYPvxsk8Ryh4Tt/ZBT5qIg2TiMB8GA1UdIwQYMBaAFB5pKrTcKP5H
-GE4hCz+8rBEv8Jj1MGUGA1UdHwReMFwwWqBYoFaGVGh0dHA6Ly93d3cuaW50ZWwuY29tL3JlcG9z
-aXRvcnkvQ1JML0ludGVsJTIwRXh0ZXJuYWwlMjBCYXNpYyUyMElzc3VpbmclMjBDQSUyMDRBLmNy
-bDCBngYIKwYBBQUHAQEEgZEwgY4waQYIKwYBBQUHMAKGXWh0dHA6Ly93d3cuaW50ZWwuY29tL3Jl
-cG9zaXRvcnkvY2VydGlmaWNhdGVzL0ludGVsJTIwRXh0ZXJuYWwlMjBCYXNpYyUyMElzc3Vpbmcl
-MjBDQSUyMDRBLmNydDAhBggrBgEFBQcwAYYVaHR0cDovL29jc3AuaW50ZWwuY29tMAsGA1UdDwQE
-AwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9TgpHACWeB3r05
-lfBDAgFkAgELMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsGAQQBgjcVCgQc
-MBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBJBgNVHREEQjBAoCYGCisGAQQBgjcUAgOgGAwW
-b2xlZy52YXNpbGV2QGludGVsLmNvbYEWb2xlZy52YXNpbGV2QGludGVsLmNvbTANBgkqhkiG9w0B
-AQUFAAOCAQEAffmCWGLFQzB82/D5fYYzYJ3/8uSfKWA4UPCKcqETG1Zb0vl2FPoCjNID1Bw2HNS7
-TxYcXvrVDul3vdCQfQhKonJi4ioJJXPPAQBDKKPkVoL9f/maehuXJYjFNsGmHNYADJL+4bDRJJcq
-wIQlFVGXvPJFuTSj9HjJAiwH4zehhiEuTTbDhbaaLVrDsEVKCFMj0nvxN4AsYfoBXbscUVLrZs8n
-ZIht2nPvz2NlWwxWgl/7+T42CcriuoeLOPWjmaMncOnXaIR/XNpzvCd6N8Xurg9NhzZaCUwLPAX1
-fyAyMXRsdpgqKqVNd+jLBGt87zB3FQQOh73i8+vBMqm1BfEoojGCAhcwggITAgEBMIGQMHkxCzAJ
-BgNVBAYTAlVTMQswCQYDVQQIEwJDQTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExGjAYBgNVBAoTEUlu
-dGVsIENvcnBvcmF0aW9uMSswKQYDVQQDEyJJbnRlbCBFeHRlcm5hbCBCYXNpYyBJc3N1aW5nIENB
-IDRBAhMzAADRf+xxDzfl4feqAAAAANF/MAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZI
-hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xOTA3MTUxMTA5MjNaMCMGCSqGSIb3DQEJBDEWBBT0Zrn8
-wZvssji9MS59TL82S2P7dzANBgkqhkiG9w0BAQEFAASCAQBC6GD9uzx6Huzknvr0HjUYSf6gRst7
-dz9rUV7GxCiBFehcaCUhnRCq6w0vsDl1/QUV9zTsKRIcHKHYgL5kUwohHQXZJ9dRknhZ495W873X
-QNeiNml9EAOd6NzEeNfqeCCMXFddaXx3Wa0n5G4SHAyUhJrRlwVcClX1GFyBjRaTrR0gCBenDc1U
-X0ta1Lk79IZXpZ3P7DpBOo+iVJX+nJcQlKZjjotl2pH3+FRT54Cbk9L3KXt6MsVApBvZXTO9Jc6I
-AYIl2ht8U9slFLG77LNSxeamnyRhDix10JHPg/UnC1ft+Axd/BkfKgPOKNIaVF72+2zPitsfO8dI
-ToMs2BU+AAAAAAAA
-
-
---=-XsNIlUTdmdRPnnB0v0Ef--
+> +				#phy-cells =3D <0>;
+> +				power-domains =3D <&pgc_mipi>;
+> +				status =3D "disabled";
+> +			};
+> +
+>  			i2c1: i2c@30a20000 {
+>  				compatible =3D "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+>  				reg =3D <0x30a20000 0x10000>;
+> --=20
+> 2.20.1
+> =
