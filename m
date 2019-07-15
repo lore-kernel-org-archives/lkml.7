@@ -2,53 +2,54 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2078FC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CDAC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E530721841
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9DD205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200366;
-	bh=OU8NVByJ0ln4t7F2DcfI/lh/52kOMBthEly44LH91No=;
+	s=default; t=1563200368;
+	bh=pg4WlU+3txAJbba2GoG2aTCtf742K7MnlsaLR4ncgVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B22WWp0NQOjs32GD06gJ+jbJ1EFFNfitevTd9YqVTX2scYIJUyPtw4EmkxG3Fe9N7
-	 lRwp2nT52fajRgqJEK2ADg/nsN+3u3/4dxYNXkcjdGmREo7J99f5XqsbioZ2myBRIp
-	 DR8soBTuvVCSMauaWUckCuHIvZfuGtbhaD8r00as=
+	b=fvTeEB51rKYE8FxoxriZfGDDBIBJO55PJT4D0sehvs7pAlI4YB3xGC3EHQeIntkx8
+	 maj5A46znmF0c1LPk9ME+ybKT9GusK4jPLJH/pdPl6Bk/fViZmcekkrhhItof656p9
+	 cKGjBnYPTq6uwhzrSC1q1y3f6QSjXw6sgnw6XY7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390097AbfGOOTY (ORCPT
+        id S2390103AbfGOOT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40706 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:19:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390068AbfGOOTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:19:19 -0400
+        id S2390095AbfGOOTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:19:24 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D95217D9;
-        Mon, 15 Jul 2019 14:19:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2254F20651;
+        Mon, 15 Jul 2019 14:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200358;
-        bh=OU8NVByJ0ln4t7F2DcfI/lh/52kOMBthEly44LH91No=;
+        s=default; t=1563200364;
+        bh=pg4WlU+3txAJbba2GoG2aTCtf742K7MnlsaLR4ncgVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MIyOg7/k44eCe0A9LNIAsc5RhMWr70cXna8kBQk5u90Bls1F06zYDlMK3wfpE8Rc
-         68P6xEdqtrccwtRyjZX0TrSbQBojLym5hdWwnS7cBcI4+F8S0/YIRDgMtywC8F5qE6
-         LrEqQdXu92ijdf9SfRtEdKa0puf918ztRZEbaIIw=
+        b=nbr8u71gKl86mQ5gw8zTq8HoGkIFClnlMQVH7+b9+aMOeaizxgBJGr7oKAIIRyUFC
+         WqIo9B0Bth8fOF0mTRgzom1dcp2Uzb6VkThW1lHdkJrzcT/5SXSYmumZ9y4NlggdXU
+         21iJ1ks1V0RYhMFrgEOI/Z+AXyapcZVf62OaesI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anirudh Gupta <anirudhrudr@gmail.com>,
-        Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/158] xfrm: Fix xfrm sel prefix length validation
-Date:   Mon, 15 Jul 2019 10:15:55 -0400
-Message-Id: <20190715141809.8445-24-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 026/158] perf annotate TUI browser: Do not use member from variable within its own initialization
+Date:   Mon, 15 Jul 2019 10:15:57 -0400
+Message-Id: <20190715141809.8445-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -61,56 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anirudh Gupta <anirudhrudr@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit b38ff4075a80b4da5cb2202d7965332ca0efb213 ]
+[ Upstream commit da2019633f0b5c105ce658aada333422d8cb28fe ]
 
-Family of src/dst can be different from family of selector src/dst.
-Use xfrm selector family to validate address prefix length,
-while verifying new sa from userspace.
+Some compilers will complain when using a member of a struct to
+initialize another member, in the same struct initialization.
 
-Validated patch with this command:
-ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-0x1111016400000000000000000000000044440001 128 \
-sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
+For instance:
 
-Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+
+Produce:
+
+  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+                                              (!ops.current_entry ||
+                                                ^~~
+  1 error generated.
+
+So use an extra variable, initialized just before that struct, to have
+the value used in the expressions used to init two of the struct
+members.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
+Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tools/perf/ui/browsers/annotate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 2122f89f6155..d80d54e663c0 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 
- 	err = -EINVAL;
- 	switch (p->family) {
-+	case AF_INET:
-+		break;
-+
-+	case AF_INET6:
-+#if IS_ENABLED(CONFIG_IPV6)
-+		break;
-+#else
-+		err = -EAFNOSUPPORT;
-+		goto out;
-+#endif
-+
-+	default:
-+		goto out;
-+	}
-+
-+	switch (p->sel.family) {
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 1d00e5ec7906..a3c255228d62 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -96,11 +96,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
+ 	struct annotation *notes = browser__annotation(browser);
+ 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
++	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
+ 	struct annotation_write_ops ops = {
+ 		.first_line		 = row == 0,
+-		.current_entry		 = ui_browser__is_current_entry(browser, row),
++		.current_entry		 = is_current_entry,
+ 		.change_color		 = (!notes->options->hide_src_code &&
+-					    (!ops.current_entry ||
++					    (!is_current_entry ||
+ 					     (browser->use_navkeypressed &&
+ 					      !browser->navkeypressed))),
+ 		.width			 = browser->width,
 -- 
 2.20.1
 
