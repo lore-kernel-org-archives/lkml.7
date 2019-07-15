@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAD2C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCCEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1FA206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E3C2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198778;
-	bh=5KpwBiolgatbtUkN/plbwqIBH7FRPYA+Rb8GfzJyAIY=;
+	s=default; t=1563198782;
+	bh=K6p7uPspMkLhTzpyhVEtNgFuB9A1jf4O97Vg3SfgP30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0j6VIWrPK0r4UpTFki6tDv5Lw5miuJu5xIHyJ+oiXUn/U8eEQlWBLXRUhq/BcmdUB
-	 pd0HQjJNSziAuYPulPtV8l1ISCiszeJBn4v8IBQdkIK1sW4iHJTfRKjLam33MqfHPK
-	 T2F1n1/6g4fAVgJdhXI5KCxYvClJUTrVaHde0Jmg=
+	b=LYTEuN1Q9L1wvAkkZHt0zHseG2yEG87KYqvHSZq1Vm/ShhoTrYwkj6QRir6S7Uwti
+	 IitvtuwbHRRfCZdJ6B9XKpRed2L+jJyRCKFwQF6axYR9quJQvsGQPdbeH9eVKSwSpw
+	 sSiPLVLnxE0wKKPiGA8HY9JbVxF8b96xLGowXfm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbfGONw4 (ORCPT
+        id S1732289AbfGONxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731663AbfGONwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:52:54 -0400
+        id S1731689AbfGONxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:53:00 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D700D20C01;
-        Mon, 15 Jul 2019 13:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 652682081C;
+        Mon, 15 Jul 2019 13:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198773;
-        bh=5KpwBiolgatbtUkN/plbwqIBH7FRPYA+Rb8GfzJyAIY=;
+        s=default; t=1563198779;
+        bh=K6p7uPspMkLhTzpyhVEtNgFuB9A1jf4O97Vg3SfgP30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xECng4V+92to5ok+j+lloneS3WFlnsTAICvVo5bvhLgIeifmi+fgd+1NK3ZfQwBT/
-         x5d6arlTjr7/5/PlFQRfaMzxAepw//JkM0jQAjNPbukxBz3c3CoG1IcIGxS1dJE51m
-         ZMPP4LXoHgOXny3AwgFxkcwDinC84QjHPj6K3AHs=
+        b=JRVNlnr0tm4ekbcSyUwhnx8MHyZo1Via0hGRBVFAkzNK0iYuL6gVB9vYgrzqVRPNH
+         WvgUgMkEWTXH9ySYXkq3lasulLxhsxrEsaCmrqXL3kQDoCCE7xoVlIWbTIDmAi2Xyc
+         xm7t5o7mCHEZsfhBOFg72YxMGDgtPlS+Y6UMndTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 100/249] ASoC: meson: axg-tdm: fix sample clock inversion
-Date:   Mon, 15 Jul 2019 09:44:25 -0400
-Message-Id: <20190715134655.4076-100-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 101/249] rcu: Force inlining of rcu_read_lock()
+Date:   Mon, 15 Jul 2019 09:44:26 -0400
+Message-Id: <20190715134655.4076-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,38 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit cb36ff785e868992e96e8b9e5a0c2822b680a9e2 ]
+[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
 
-The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
-so the test to check if the format is i2s is wrong. Because of this the
-clock setting may be wrong. For example, the sample clock gets inverted
-in DSP B mode, when it should not.
+When debugging options are turned on, the rcu_read_lock() function
+might not be inlined. This results in lockdep's print_lock() function
+printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
+For example:
 
-Fix the lrclk invert helper function
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
 
-Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+These "rcu_read_lock+0x0/0x70" strings are not providing any useful
+information.  This commit therefore forces inlining of the rcu_read_lock()
+function so that rcu_read_lock()'s caller is instead shown.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdm.h | 2 +-
+ include/linux/rcupdate.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
-index e578b6f40a07..5774ce0916d4 100644
---- a/sound/soc/meson/axg-tdm.h
-+++ b/sound/soc/meson/axg-tdm.h
-@@ -40,7 +40,7 @@ struct axg_tdm_iface {
- 
- static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index b25d20822e75..3508f4508a11 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -586,7 +586,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
  {
--	return (fmt & SND_SOC_DAIFMT_I2S) ^
-+	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
- 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
- }
- 
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
 -- 
 2.20.1
 
