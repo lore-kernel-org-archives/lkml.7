@@ -2,177 +2,161 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0746C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5044BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABC7205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F944205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2SLQDT1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SMvkglYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfGOS7L (ORCPT
+        id S1730266AbfGOS7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 14:59:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36276 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729237AbfGOS7K (ORCPT
+        Mon, 15 Jul 2019 14:59:37 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39400 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729237AbfGOS7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 14:59:10 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l21so8158928pgm.3;
-        Mon, 15 Jul 2019 11:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wV1tVFXp4Dk7551aJryL+rhxiRYGF53mCFjrqi8D++Y=;
-        b=h2SLQDT1wFXz44rIFDfbQvFcKkb4upCgqv88sm6e+FnD+DDZF+/OmKp/KKlbKRnoBB
-         tNINZSJ3lnHjJ/iYRfuG5zpbA0mH8n0Bm3gMy5l1tf3b39D72eSRxE1L64MG8RDvm755
-         r5KvK26ryaMG7xIn1+VcaKrs9WO4+f8u1Wp/3gh1i++zJU22dTmNMvFAbJPbqfNu6Efg
-         /V1KXp4qqsTGjA+ErnOlluMnKPqaLHDXo11qDieYPBq+A6xALgrQWFt5ZPW30CrCbHet
-         KVDCcWjcDbVPtbQCpyROdGbyiFuMrW2vfyA29Mj2Wi78PyBjNcmod7mDFsLCQa6CK15W
-         6/dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wV1tVFXp4Dk7551aJryL+rhxiRYGF53mCFjrqi8D++Y=;
-        b=dOpmxaew8Wmg3/jPWTPjsRtc596DI7xVIaE4l8Chy1ibiAyo5a7Lt0+Oix9wqQJ+zI
-         ieUhrFRNHaVB1rf5UtZIJwwLWtBjqcfWXOjm0TCjU86CM6GFadMwPxM2enKe78OeCYy+
-         IjkIkn1k2fF2w/CZKaMDnrar3gF2vGW+4VVayNDA5eGKt1yk/lhfPqXYE7oYDT6Wh0AW
-         QuzteNZb0vprX9WHVIFkgliqYvotHc/gjDEyCPO10Z1UyGiwn3p4r0qlYW9vCsYRa6Ju
-         pcIn8+hPUm5Wlg7ep6Dz2yZl6puFEfD/qmvM6UIRdTDcIM3JI54/p6lZF7Y7dixEgVer
-         6WBQ==
-X-Gm-Message-State: APjAAAVrb0R+6ZuijCXAAbx0ysGqhz3X3rDaBMEb+DmhJkJvM1KIQdlM
-        1L5lc9zCEyizlPQqEHekZWEQYMUsCfWSibu9fgpIrDA+ReA=
-X-Google-Smtp-Source: APXvYqwxVRz+kIkvMG7J0OELs3hTazVOrhRz8J56PbkcZ0aYpvLx67RGZ4nyusTrPkF6M3cYuWdNCgYXvO+MkimFsRk=
-X-Received: by 2002:a63:8a43:: with SMTP id y64mr28271790pgd.104.1563217149340;
- Mon, 15 Jul 2019 11:59:09 -0700 (PDT)
+        Mon, 15 Jul 2019 14:59:36 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6FIxSf4052471;
+        Mon, 15 Jul 2019 13:59:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563217168;
+        bh=N3fMjata3zL3geeXyrSCAk5wL3P5q8EO2OfKf0/Z79c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SMvkglYAenP3PtJS0uEm6spz+vd28Q4Eeo4ap+M3fAWNKgw9IDFAVuwpEuhZ2/Vmt
+         O2JREk6zIEJ98l5FPiM3J4l7CmSkWUeqkRkPR2Hzwg8SJx+Zfoqv7bKP8OMGt9E+Za
+         ts/7dt6TGwsqi0KAw/KN4XQHKLkVONXMtghvi8TM=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6FIxS7e083798
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Jul 2019 13:59:28 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
+ Jul 2019 13:59:28 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 15 Jul 2019 13:59:28 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6FIxRqk008774;
+        Mon, 15 Jul 2019 13:59:27 -0500
+Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190715155657.22976-1-jjhiblot@ti.com>
+ <20190715155657.22976-3-jjhiblot@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
+Date:   Mon, 15 Jul 2019 13:59:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <000000000000d018ea058d9c46e3@google.com> <be6c249e-3b99-8388-5b13-547645b2fac9@hartkopp.net>
-In-Reply-To: <be6c249e-3b99-8388-5b13-547645b2fac9@hartkopp.net>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 15 Jul 2019 11:58:57 -0700
-Message-ID: <CAM_iQpXDDyXPn8C6Z1R-GdcarFpiRd3-S_E6GQrEaVdvjFfxeA@mail.gmail.com>
-Subject: Re: INFO: task hung in unregister_netdevice_notifier (3)
-To:     Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     syzbot <syzbot+0f1827363a305f74996f@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190715155657.22976-3-jjhiblot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 10:23 AM Oliver Hartkopp <socketcan@hartkopp.net> wrote:
->
-> Hello all,
->
-> On 14.07.19 06:07, syzbot wrote:
-> > syzbot has found a reproducer for the following crash on:
->
-> the internal users of the CAN networking subsystem like CAN_BCM and
-> CAN_RAW hold a number of CAN identifier subscriptions ('filters') for
-> CAN netdevices (only type ARPHRD_CAN) in their socket data structures.
->
-> The per-socket netdevice notifier is used to manage the ad-hoc removal
-> of these filters at netdevice removal time.
->
-> What I can see in the console output at
->
-> https://syzkaller.appspot.com/x/log.txt?x=10e45f0fa00000
->
-> seems to be a race between an unknown register_netdevice_notifier() call
-> ("A") and the unregister_netdevice_notifier() ("B") likely invoked by
-> bcm_release() ("C"):
->
-> [ 1047.294207][ T1049]  schedule+0xa8/0x270
-> [ 1047.318401][ T1049]  rwsem_down_write_slowpath+0x70a/0xf70
-> [ 1047.324114][ T1049]  ? downgrade_write+0x3c0/0x3c0
-> [ 1047.438644][ T1049]  ? mark_held_locks+0xf0/0xf0
-> [ 1047.443483][ T1049]  ? lock_acquire+0x190/0x410
-> [ 1047.448191][ T1049]  ? unregister_netdevice_notifier+0x7e/0x390
-> [ 1047.547227][ T1049]  down_write+0x13c/0x150
-> [ 1047.579535][ T1049]  ? down_write+0x13c/0x150
-> [ 1047.584106][ T1049]  ? __down_timeout+0x2d0/0x2d0
-> [ 1047.635356][ T1049]  ? mark_held_locks+0xf0/0xf0
-> [ 1047.640721][ T1049]  unregister_netdevice_notifier+0x7e/0x390  <- "B"
-> [ 1047.646667][ T1049]  ? __sock_release+0x89/0x280
-> [ 1047.709126][ T1049]  ? register_netdevice_notifier+0x630/0x630 <- "A"
-> [ 1047.715203][ T1049]  ? __kasan_check_write+0x14/0x20
-> [ 1047.775138][ T1049]  bcm_release+0x93/0x5e0                    <- "C"
-> [ 1047.795337][ T1049]  __sock_release+0xce/0x280
-> [ 1047.829016][ T1049]  sock_close+0x1e/0x30
->
-> The question to me is now:
->
-> Is the problem located in an (un)register_netdevice_notifier race OR is
-> it generally a bad idea to call unregister_netdevice_notifier() in a
-> sock release?
+JJ
 
-To me it doesn't look like anything wrong in CAN. If you look at a few
-more reports from syzbot for the same bug, it actually indicates
-something else is holding the pernet_ops_rwsem which caused this
-hung task.
+On 7/15/19 10:56 AM, Jean-Jacques Hiblot wrote:
+> A LED is usually powered by a voltage/current regulator. Let the LED core
+> know about it. This allows the LED core to turn on or off the power supply
+> as needed.
 
-When NMI is kicked, it shows nf_ct_iterate_cleanup() was getting
-stuck:
+This allows the LED core to turn on or off managed power supplies.
 
 
-NMI backtrace for cpu 0
-CPU: 0 PID: 1044 Comm: khungtaskd Not tainted 5.2.0-rc5+ #42
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
- arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
- trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
- watchdog+0x9b7/0xec0 kernel/hung_task.c:289
- kthread+0x354/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 6877 Comm: kworker/u4:1 Not tainted 5.2.0-rc5+ #42
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:__sanitizer_cov_trace_pc+0x0/0x50 kernel/kcov.c:95
-Code: 89 25 e4 bc 15 09 41 bc f4 ff ff ff e8 6d 04 ea ff 48 c7 05 ce
-bc 15 09 00 00 00 00 e9 a4 e9 ff ff 90 90 90 90 90 90 90 90 90 <55> 48
-89 e5 48 8b 75 08 65 48 8b 04 25 c0 fd 01 00 65 8b 15 f0 3a
-RSP: 0018:ffff888088fe7ac0 EFLAGS: 00000046
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff817637c6
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: ffff888088fe7af8 R08: ffff888096406340 R09: fffffbfff118bda9
-R10: fffffbfff118bda8 R11: ffffffff88c5ed43 R12: ffffffff85b86d11
-R13: ffff888096406340 R14: 0000000000000001 R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 0000000099e59000 CR4: 00000000001406e0
-Call Trace:
- __local_bh_enable_ip+0x11a/0x270 kernel/softirq.c:171
- local_bh_enable include/linux/bottom_half.h:32 [inline]
- get_next_corpse net/netfilter/nf_conntrack_core.c:2015 [inline]
- nf_ct_iterate_cleanup+0x217/0x4e0 net/netfilter/nf_conntrack_core.c:2038
- nf_conntrack_cleanup_net_list+0x7a/0x240 net/netfilter/nf_conntrack_core.c:2225
- nf_conntrack_pernet_exit+0x159/0x1a0
-net/netfilter/nf_conntrack_standalone.c:1151
- ops_exit_list.isra.0+0xfc/0x150 net/core/net_namespace.c:168
- cleanup_net+0x4e2/0xa40 net/core/net_namespace.c:575
- process_one_work+0x989/0x1790 kernel/workqueue.c:2269
- worker_thread+0x98/0xe40 kernel/workqueue.c:2415
- kthread+0x354/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> ---
+>   drivers/leds/led-class.c | 15 ++++++++++++
+>   drivers/leds/led-core.c  | 50 +++++++++++++++++++++++++++++++++++++---
+>   drivers/leds/leds.h      |  1 +
+>   include/linux/leds.h     |  4 ++++
+>   4 files changed, 67 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 4793e77808e2..cadd43c30d50 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -253,6 +253,7 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>   {
+>   	char name[LED_MAX_NAME_SIZE];
+>   	int ret;
+> +	struct regulator *regulator;
+>   
+>   	ret = led_classdev_next_name(led_cdev->name, name, sizeof(name));
+>   	if (ret < 0)
+> @@ -272,6 +273,20 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
+>   				led_cdev->name, dev_name(led_cdev->dev));
+>   
+> +	regulator = devm_regulator_get_optional(led_cdev->dev, "power");
+Store the regulator in  led_cdev->regulator and drop the else case below.
+> +	if (IS_ERR(regulator)) {
+> +		if (PTR_ERR(regulator) != -ENODEV) {
+> +			dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
+> +				led_cdev->name);
+> +			device_unregister(led_cdev->dev);
+> +			mutex_unlock(&led_cdev->led_access);
+> +			return PTR_ERR(regulator);
+> +		}
+> +		led_cdev->regulator = NULL;
+> +	} else {
+> +		led_cdev->regulator = regulator;
+> +	}
+> +
+>   	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+>   		ret = led_add_brightness_hw_changed(led_cdev);
+>   		if (ret) {
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index 7107cd7e87cf..a12b880b0a2f 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+>   LIST_HEAD(leds_list);
+>   EXPORT_SYMBOL_GPL(leds_list);
+>   
+> +static bool __led_need_regulator_update(struct led_classdev *led_cdev,
+> +					int brightness)
+> +{
+> +	bool new_state = (brightness != LED_OFF);
+> +
+> +	return led_cdev->regulator && led_cdev->regulator_state != new_state;
+> +}
+> +
+> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+> +				int brightness)
+> +{
+> +	int rc;
+
+Should there be a check for the regulator pointer.
+
+If (!led_cdev->regulator)
+
+     return 0;
+
+
+Otherwise
+
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+
+<snip>
+
