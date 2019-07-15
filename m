@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C483CC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84301C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936BE217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A9020861
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201981;
-	bh=6Rs2bUuMQ6X18mGwmVtlA01sUvjxLpYWwmoOaCf8gv4=;
+	s=default; t=1563201985;
+	bh=xO49B92Nnsy0MycL2WimzZfV9qhlrsWZxM0Gd4LqXhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=em/523YBCRQkrdg2c+40sjHn3npUO9VKIyL9bl4hu5YoX6fQwVprSL2FdNqZhqQk3
-	 71gPgM3+kG5VvAPSGGIGjqyEvlwkTvRxhSc0bJLzbjNUS4I/zlAzDGtAeSVGNpkFQx
-	 xA/ZiNRh3eDq7sh46e/tEwCoy0OaXsZ1AbSEUIts=
+	b=iRIQ2mq3Fo9hQGJ65WgglM7j3e7myKJiDrcSl6vXkAvu83rj102ipJpChEfv7CZKJ
+	 skVK8NJhoBlbZwGEHxRdgmXvsiGXtGPtbBb6Lm5THQtqR9fe44T7v5iwlumHMH7MC7
+	 sACTzcyZxURSLDiktt5nC0XldTx6ojuZYAceMUZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404988AbfGOOqU (ORCPT
+        id S2404285AbfGOOqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404643AbfGOOqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:46:18 -0400
+        id S2404334AbfGOOqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:46:22 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7909E20651;
-        Mon, 15 Jul 2019 14:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BC08217D9;
+        Mon, 15 Jul 2019 14:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201977;
-        bh=6Rs2bUuMQ6X18mGwmVtlA01sUvjxLpYWwmoOaCf8gv4=;
+        s=default; t=1563201981;
+        bh=xO49B92Nnsy0MycL2WimzZfV9qhlrsWZxM0Gd4LqXhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2KvkK2teBoSK09KCy/JWJlTIuOykZsqp6D48Jazb6TAZILhDDur4QvXET7GzcND2L
-         br7rwcHgZIbN0eqKZr8CJLJBtUKZEtRn1KjUzGSIxEQpF6uY1IsyfaFdM/lblh1WWv
-         QQZlo8xICBby8cBZA/9wUidY4OHoqxdy/KrPV1zA=
+        b=OAPiH0Jtm0FoxIg5AmsoH4X90jfvSDtH+V5qDGSoPn6v9jTyf7/aZ27Ge9X7BJofJ
+         B7IGxnGWIE7txkPg+LSFH+Yi5Hxacq9SAiwRWNiRvLUtUv28AHBxw7PV9wOrYVswvg
+         R7utRNIRC/OVR42knlvkIKcwER1jSaSl1vxIybQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        Steve French <smfrench@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/53] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
-Date:   Mon, 15 Jul 2019 10:44:54 -0400
-Message-Id: <20190715144535.11636-12-sashal@kernel.org>
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 13/53] af_key: fix leaks in key_pol_get_resp and dump_sp.
+Date:   Mon, 15 Jul 2019 10:44:55 -0400
+Message-Id: <20190715144535.11636-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -61,51 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
+[ Upstream commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
+allocated sk_buff.  Free it on error.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
-
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
-
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Namjae Jeon <namjae.jeon@samsung.com>
-Cc: Jeff Layton <jlayton@primarydata.com>
-Cc: Steve French <smfrench@gmail.com>
-Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
-Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
+Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/key/af_key.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 9cb72fd40eff..bc7c287a2e17 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2246,7 +2246,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 3ba903ff2bb0..36db179d848e 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -2463,8 +2463,10 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
+ 		goto out;
+ 	}
+ 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+-	if (err < 0)
++	if (err < 0) {
++		kfree_skb(out_skb);
+ 		goto out;
++	}
  
- 	task = xchg(&server->tsk, NULL);
- 	if (task)
--		force_sig(SIGKILL, task);
-+		send_sig(SIGKILL, task, 1);
- }
+ 	out_hdr = (struct sadb_msg *) out_skb->data;
+ 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
+@@ -2717,8 +2719,10 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
+ 		return PTR_ERR(out_skb);
  
- static struct TCP_Server_Info *
+ 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+-	if (err < 0)
++	if (err < 0) {
++		kfree_skb(out_skb);
+ 		return err;
++	}
+ 
+ 	out_hdr = (struct sadb_msg *) out_skb->data;
+ 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
 -- 
 2.20.1
 
