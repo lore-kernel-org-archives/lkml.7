@@ -2,125 +2,109 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E40C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CBEC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F582081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D2D206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EcNZEZAI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5qlkCRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbfGOR4w (ORCPT
+        id S1732019AbfGOR5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:56:52 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:49401 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731078AbfGOR4w (ORCPT
+        Mon, 15 Jul 2019 13:57:06 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35834 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731078AbfGOR5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:56:52 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6FHuk49009352;
-        Tue, 16 Jul 2019 02:56:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6FHuk49009352
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563213407;
-        bh=9DNdwAOMrDNMDhRKaR9DRzklJ+6WxesMxATv1pupRXY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EcNZEZAI9Rws1hjnvr2rW+x4gunjiHVPkw6eIpV1JeJv3/M1US0vh157JziyNrTdB
-         LRl4f8fObAyYijVUasxdWUPMMS3PiysrZw+oqbas4N09O9O53MYnFbAaTedAjOwIJ6
-         7ZntQU4UJMr4qyp/VYhIOlHoEJvbnCTSKQDB+ae2RWIfg3I25ixgFQTK0N6MO9lP9u
-         OyO45kbhpkUxozHktKYjzTFyIx3Whqpph5SGxB0GEJQNKV24Mf8JuAq/phkkx8u6xo
-         WL0mKiEitoUPdrqgSVNmwyMIogql3qw6DkzPE0LNSDsmz6AQLT5YH0lZIgmEpP0sR1
-         qxdLVmCC4v6Bg==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id y16so11994093vsc.3;
-        Mon, 15 Jul 2019 10:56:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAXzGlfG6/dKR41YHZC9dYklF1ubuKwLnBPoAFk0U8tUR9bh5BNJ
-        g50otexA6is0IdWHimXPGgQZe23kRsjZelJAcF8=
-X-Google-Smtp-Source: APXvYqzjIu0ZLvWAf2ZU5pOylmcgyKILZfFZ//irLAErTz0kjJcm+rkHjWiOwvjlXfyDX9t3Pi5gvy0kXQ+8Zjk3Koc=
-X-Received: by 2002:a67:d46:: with SMTP id 67mr17319200vsn.181.1563213406027;
- Mon, 15 Jul 2019 10:56:46 -0700 (PDT)
+        Mon, 15 Jul 2019 13:57:06 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so35579225ioo.2;
+        Mon, 15 Jul 2019 10:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+7ww4nMe/nR0KgmrIwE3A+VEVsFzprY0gsLNuLUbtFM=;
+        b=O5qlkCRJ75FROVNu3ynQcg4VDkNxeJYe4oV+ylciJbdlnDecCDsfF8OrP/ZJNP6pK6
+         kEMvlZuC9C2owMdj4NQ0yGxtqqr5UOPGUsrZpSqN18m/KaBEtaXMKOvgtkW2Opl3sSIQ
+         yGYwAPKGVGcUZxmY5fsPbW21ndnXA8qJpHy/VFJ8mWrA5YJH6xj8H0TPmwiRO3rDgXpn
+         K1eDWEz5lhB8jqQMK/NpQGaCulP0boNs91zJOUBUMmjfWXpVJS4H7/dF6N5JFYZz9hVj
+         6/3gV/SksIp+ufE9MdBqJsPUdSX1/oGTWNhIkpHaUmKVG9Z0VRl/fuczo4p7gesZWvGp
+         9lxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+7ww4nMe/nR0KgmrIwE3A+VEVsFzprY0gsLNuLUbtFM=;
+        b=slSKXGj1N4yRAbkTmI5t4kbT/m/+3uWhJIA0WuB66WR79nssdaNo3eESMO6BJqoeY/
+         x/hC5SReckkLNPvUqQ2gZoEy3DST4S4mMQwMbnBWCd1JQsp6jkwmIuGznZK4WpwzfqwZ
+         MSmh8WsI4cLQxl9Z0XiIiLBIOzpuJkHaWB75CJPfEiX18BgHBgMWE7MhJ/LOooU6rCsw
+         UkeZuWGOQ9+5im/yQfMFFB1paW+sl0T7TORQGx6UEFChV/auDX2AI3AK7ijc6Zebn9F8
+         Kzc5IFmJBiI7l+yhH58TAeG3wfM72+BvmyTFi9rucMBtFVJicFAIEoVCJ5IMbX/3WdFT
+         LCUA==
+X-Gm-Message-State: APjAAAWPDduY7MCc3hEXAZriPgqfL3A00sqvoCFb5sqWIgwYXxQTo7fO
+        lu36XbFnRkg330rq2IDJdPg=
+X-Google-Smtp-Source: APXvYqx7N6klSty8AFFYMseUQFcGw1zU2wQ4tVi81SKmh3s1r4bP1ZjvRB516UIc8dlGXMhyYFd05g==
+X-Received: by 2002:a5d:9643:: with SMTP id d3mr27278555ios.227.1563213425343;
+        Mon, 15 Jul 2019 10:57:05 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id r7sm13808940ioa.71.2019.07.15.10.57.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 10:57:04 -0700 (PDT)
+From:   Kelsey <skunberg.kelsey@gmail.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skunberg.kelsey@gmail.com
+Subject: [PATCH] PCI: Remove functions not called in include/linux/pci.h
+Date:   Mon, 15 Jul 2019 11:56:58 -0600
+Message-Id: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190715144848.4cc41e07@canb.auug.org.au> <ccb5b818-c191-2d9e-311f-b2c79b7f6823@infradead.org>
- <CAF90-WirEMg7arNOTmo+tyJ20rt_zeN=nr0OO6Qk0Ss8J4QrUA@mail.gmail.com> <20190715173341.zth4na7zekjsesaa@salvia>
-In-Reply-To: <20190715173341.zth4na7zekjsesaa@salvia>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 16 Jul 2019 02:56:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS0rX_SRXqb=N=Td-DFNWd=PytDFje12gYh2pYNRBVAJA@mail.gmail.com>
-Message-ID: <CAK7LNAS0rX_SRXqb=N=Td-DFNWd=PytDFje12gYh2pYNRBVAJA@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jul 15 (HEADERS_TEST w/ netfilter tables offload)
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Laura Garcia <nevola@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Netfilter Development Mailing list 
-        <netfilter-devel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 2:33 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->
-> On Mon, Jul 15, 2019 at 07:28:04PM +0200, Laura Garcia wrote:
-> > CC'ing netfilter.
-> >
-> > On Mon, Jul 15, 2019 at 6:45 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > >
-> > > On 7/14/19 9:48 PM, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > >
-> > > > Please do not add v5.4 material to your linux-next included branches
-> > > > until after v5.3-rc1 has been released.
-> > > >
-> > > > Changes since 20190712:
-> > > >
-> > >
-> > > Hi,
-> > >
-> > > I am seeing these build errors from HEADERS_TEST (or KERNEL_HEADERS_TEST)
-> > > for include/net/netfilter/nf_tables_offload.h.s:
-> > >
-> > >   CC      include/net/netfilter/nf_tables_offload.h.s
-> [...]
-> > > Should this header file not be tested?
+Remove the following uncalled functions from include/linux/pci.h:
 
-This means you must endlessly exclude
-headers that include nf_tables.h
+	pci_block_cfg_access()
+	pci_block_cfg_access_in_atomic()
+	pci_unblock_cfg_access()
 
+Functions were added in patch fb51ccbf217c "PCI: Rework config space
+blocking services", though no callers were added. Code continues to be
+unused and should be removed.
 
-> Yes, it should indeed be added.
+Signed-off-by: Kelsey <skunberg.kelsey@gmail.com>
+---
+ include/linux/pci.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Adding 'header-test-' is the last resort.
-
-
-I had already queued a patch:
-
-git clone -b build-test
-git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-
-commit 9dae5c5fc798e0e970cca4cd1b224dece3ad4766
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon Jul 15 00:42:56 2019 +0900
-
-    netfilter: nf_tables: split local helpers out to nft_internals.h
-
-
-
-If it is OK, I will send it out.
-
-
-
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index cf380544c700..3c9ba6133bea 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
+ 
+ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ 
+-static inline void pci_block_cfg_access(struct pci_dev *dev) { }
+-static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
+-{ return 0; }
+-static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
+-
+ static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
+ { return NULL; }
+ static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
