@@ -2,92 +2,194 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5B4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C377C76192
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5F520868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9872067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbfGON0B (ORCPT
+        id S1730255AbfGON0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:26:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39272 "EHLO mx1.redhat.com"
+        Mon, 15 Jul 2019 09:26:10 -0400
+Received: from comms.puri.sm ([159.203.221.185]:53310 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbfGON0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:26:01 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C465630B9305;
-        Mon, 15 Jul 2019 13:26:00 +0000 (UTC)
-Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9482E5D9C6;
-        Mon, 15 Jul 2019 13:25:58 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 08:25:55 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH 04/22] x86/kvm: Don't call kvm_spurious_fault() from
- .fixup
-Message-ID: <20190715132555.3tz4ciogkv3xlkta@treble>
-References: <cover.1563150885.git.jpoimboe@redhat.com>
- <1f37a9e42732c224bc5299dbc827b4101c9deb22.1563150885.git.jpoimboe@redhat.com>
- <07b8513a-d8f7-f8cf-daf6-83a80ade987a@redhat.com>
- <20190715124025.prcetv24oyjnuvip@treble>
- <29d30d81-bcbe-5261-b34d-12bd62df9116@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <29d30d81-bcbe-5261-b34d-12bd62df9116@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 15 Jul 2019 13:26:00 +0000 (UTC)
+        id S1730124AbfGON0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:26:09 -0400
+X-Greylist: delayed 354 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Jul 2019 09:26:08 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 52D00E01EB;
+        Mon, 15 Jul 2019 06:20:14 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NX4mBcKjbY7F; Mon, 15 Jul 2019 06:20:13 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH 1/3] iio: imu: st_lsm6sdx: move some register definitions to sensor_settings struct
+Date:   Mon, 15 Jul 2019 15:19:17 +0200
+Message-Id: <20190715131919.31938-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:05:33PM +0200, Paolo Bonzini wrote:
-> On 15/07/19 14:40, Josh Poimboeuf wrote:
-> >>>   * Hardware virtualization extension instructions may fault if a
-> >>>   * reboot turns off virtualization while processes are running.
-> >>> - * Trap the fault and ignore the instruction if that happens.
-> >>> + * If that happens, trap the fault and panic (unless we're rebooting).
-> >> Not sure the comment is better than before, but apar from that
-> > The previous comment didn't seem to match the code, since we only ignore
-> > the instruction if we're rebooting.
-> > 
-> 
-> "If that happens" refers to "a reboot turns off virtualization while
-> processes are running".
+Move some register definitions to the per-device array of struct
+st_lsm6dsx_sensor_settings in order to simplify adding new sensor
+devices to the driver.
 
-Ah, makes sense now.  I was reading "if that happens" to mean the fault.
+Also, remove completely unused register definitions.
 
->  * Usually after catching the fault we just panic; during reboot
->  * instead the instruction is ignored.
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+---
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
+ 2 files changed, 28 insertions(+), 9 deletions(-)
 
-Yes, that's much clearer.  Assuming you meant to replace the entire
-comment.  I also moved it to directly above the macro it's describing:
-
-
-asmlinkage void __noreturn kvm_spurious_fault(void);
-
-/*
- * Usually after catching the fault we just panic; during reboot
- * instead the instruction is ignored.
- */
-#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
-
-
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index c14bf533b66b..f072ac14f213 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -196,6 +196,9 @@ struct st_lsm6dsx_ext_dev_settings {
+ /**
+  * struct st_lsm6dsx_settings - ST IMU sensor settings
+  * @wai: Sensor WhoAmI default value.
++ * @reg_int1_addr: Control Register address for INT1
++ * @reg_int2_addr: Control Register address for INT2
++ * @reg_reset_addr: register address for reset/reboot
+  * @max_fifo_size: Sensor max fifo length in FIFO words.
+  * @id: List of hw id/device name supported by the driver configuration.
+  * @decimator: List of decimator register info (addr + mask).
+@@ -206,6 +209,9 @@ struct st_lsm6dsx_ext_dev_settings {
+  */
+ struct st_lsm6dsx_settings {
+ 	u8 wai;
++	u8 reg_int1_addr;
++	u8 reg_int2_addr;
++	u8 reg_reset_addr;
+ 	u16 max_fifo_size;
+ 	struct {
+ 		enum st_lsm6dsx_hw_id hw_id;
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index a6702a74570e..7a4fe70a8f20 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -49,17 +49,12 @@
+ 
+ #include "st_lsm6dsx.h"
+ 
+-#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+-#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+ #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+ #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+-#define ST_LSM6DSX_REG_RESET_ADDR		0x12
+ #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
+ #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
+ #define ST_LSM6DSX_REG_BDU_ADDR			0x12
+ #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
+ 
+ #define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
+ #define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
+@@ -122,6 +117,9 @@ static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
+ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	{
+ 		.wai = 0x69,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 1365,
+ 		.id = {
+ 			{
+@@ -172,6 +170,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x69,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -222,6 +223,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6a,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -278,6 +282,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6c,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -349,6 +356,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -391,6 +401,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -873,10 +886,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+ 
+ 	switch (drdy_pin) {
+ 	case 1:
+-		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
++		*drdy_reg = hw->settings->reg_int1_addr;
+ 		break;
+ 	case 2:
+-		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
++		*drdy_reg = hw->settings->reg_int2_addr;
+ 		break;
+ 	default:
+ 		dev_err(hw->dev, "unsupported data ready pin\n");
+@@ -976,7 +989,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	int err;
+ 
+ 	/* device sw reset */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reg_reset_addr,
+ 				 ST_LSM6DSX_REG_RESET_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+ 	if (err < 0)
+@@ -985,7 +998,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	msleep(50);
+ 
+ 	/* reload trimming parameter */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reg_reset_addr,
+ 				 ST_LSM6DSX_REG_BOOT_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+ 	if (err < 0)
 -- 
-Josh
+2.20.1
+
