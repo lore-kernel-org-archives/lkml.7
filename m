@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE42C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B204C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481DD2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B182054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203593;
-	bh=tylYfJ8qe9eWn4vawkymXaytyEEvLSMul1aeM0MOwh4=;
+	s=default; t=1563203601;
+	bh=cjpjSj3AzXuiVMQMLaBnrsknvjiXP7O8xE/5/piMkb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i73yZ8HptJJf2JDXOd81l3I0QoLlGE/lH24nISRZBTaZ3OWOcq+dS+UdN8HMTOYLS
-	 /zpfipXGY4ndZxM3tuMdw9n/wa3NuF15odpiav7qLtmExQqUMoTcqMRSaFDZZptYw4
-	 FbhzFGsFPrjSp6WGh2ZWfwGcLsoLYglUcvV94ioc=
+	b=vvXYZPK64+/J19aRBlZBiur962j7ma4BgdT/cBMuDss1GSunZ8gk5aPHHvZhZc+Py
+	 hLDUqLQ4iokSCzqtmy5Yrarb0G3TCLFWPp+hanwj1ZTcU+cIYSacMtR3lg84UDTg4h
+	 7XfGqhzyvYzgFWWay7gtKsBld6eQTXHjOuUtFgH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfGONug (ORCPT
+        id S1731043AbfGONu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40576 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731005AbfGONub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:50:31 -0400
+        id S1731499AbfGONuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:50:15 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F4020896;
-        Mon, 15 Jul 2019 13:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2180F20651;
+        Mon, 15 Jul 2019 13:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198630;
-        bh=tylYfJ8qe9eWn4vawkymXaytyEEvLSMul1aeM0MOwh4=;
+        s=default; t=1563198615;
+        bh=cjpjSj3AzXuiVMQMLaBnrsknvjiXP7O8xE/5/piMkb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixZSPSSU8dfT9/2xIBBP//M9m3VP7q37d1Gv8xPj0soojIpj7UNM3qmzXJmITl20F
-         /n0WoAqRLK4Fy3ucYFYleeFaL+U+3PRE4SKOMCjjjliDYq4N+wASpZBH/uWM53shnP
-         7zkNbf7rBmWjpQtbqwffIS3mPMwvaFuK/TtOemuk=
+        b=dcjEKe6qWdHDEveonRouRlsAiHT6sW/8rUDCSoubzfqwZMeNANOdfCOn2eo6z1AGB
+         FaQ8DALNE4UMiuQM3bVqsLor9LFW22f4AfUTH7f6bGJpaUwRjWzXfmxLj2l4EoltGs
+         lqoB8rVmJaaSjMOSONci73qr2Wsdt9mSyMlITzR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 065/249] net: hns3: set ops to null when unregister ad_dev
-Date:   Mon, 15 Jul 2019 09:43:50 -0400
-Message-Id: <20190715134655.4076-65-sashal@kernel.org>
+Cc:     Imre Deak <imre.deak@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        ville.syrjala@linux.intel.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 060/249] locking/lockdep: Fix OOO unlock when hlocks need merging
+Date:   Mon, 15 Jul 2019 09:43:45 -0400
+Message-Id: <20190715134655.4076-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,44 +63,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+From: Imre Deak <imre.deak@intel.com>
 
-[ Upstream commit 594a81b39525f0a17e92c2e0b167ae1400650380 ]
+[ Upstream commit 8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a ]
 
-The hclge/hclgevf and hns3 module can be unloaded independently,
-when hclge/hclgevf unloaded firstly, the ops of ae_dev should
-be set to NULL, otherwise it will cause an use-after-free problem.
+The sequence
 
-Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	static DEFINE_WW_CLASS(test_ww_class);
+
+	struct ww_acquire_ctx ww_ctx;
+	struct ww_mutex ww_lock_a;
+	struct ww_mutex ww_lock_b;
+	struct mutex lock_c;
+	struct mutex lock_d;
+
+	ww_acquire_init(&ww_ctx, &test_ww_class);
+
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+
+	mutex_init(&lock_c);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+
+	mutex_unlock(&lock_c);		(*)
+
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	ww_acquire_fini(&ww_ctx);
+
+triggers the following WARN in __lock_release() when doing the unlock at *:
+
+	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - 1);
+
+The problem is that the WARN check doesn't take into account the merging
+of ww_lock_a and ww_lock_b which results in decreasing curr->lockdep_depth
+by 2 not only 1.
+
+Note that the following sequence doesn't trigger the WARN, since there
+won't be any hlock merging.
+
+	ww_acquire_init(&ww_ctx, &test_ww_class);
+
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+
+	mutex_init(&lock_c);
+	mutex_init(&lock_d);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+	mutex_lock(&lock_d);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+
+	mutex_unlock(&lock_d);
+
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	mutex_unlock(&lock_c);
+
+	ww_acquire_fini(&ww_ctx);
+
+In general both of the above two sequences are valid and shouldn't
+trigger any lockdep warning.
+
+Fix this by taking the decrement due to the hlock merging into account
+during lock release and hlock class re-setting. Merging can't happen
+during lock downgrading since there won't be a new possibility to merge
+hlocks in that case, so add a WARN if merging still happens then.
+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: ville.syrjala@linux.intel.com
+Link: https://lkml.kernel.org/r/20190524201509.9199-1-imre.deak@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/locking/lockdep.c | 41 ++++++++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-index fa8b8506b120..738e01393b68 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-@@ -251,6 +251,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index c47788fa85f9..82361e1bce0f 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3715,7 +3715,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 				hlock->references = 2;
+ 			}
  
- 		ae_algo->ops->uninit_ae_dev(ae_dev);
- 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
-+		ae_dev->ops = NULL;
+-			return 1;
++			return 2;
+ 		}
  	}
  
- 	list_del(&ae_algo->node);
-@@ -351,6 +352,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
+@@ -3921,22 +3921,33 @@ static struct held_lock *find_held_lock(struct task_struct *curr,
+ }
  
- 		ae_algo->ops->uninit_ae_dev(ae_dev);
- 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
-+		ae_dev->ops = NULL;
+ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
+-			      int idx)
++				int idx, unsigned int *merged)
+ {
+ 	struct held_lock *hlock;
++	int first_idx = idx;
+ 
+ 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
+ 		return 0;
+ 
+ 	for (hlock = curr->held_locks + idx; idx < depth; idx++, hlock++) {
+-		if (!__lock_acquire(hlock->instance,
++		switch (__lock_acquire(hlock->instance,
+ 				    hlock_class(hlock)->subclass,
+ 				    hlock->trylock,
+ 				    hlock->read, hlock->check,
+ 				    hlock->hardirqs_off,
+ 				    hlock->nest_lock, hlock->acquire_ip,
+-				    hlock->references, hlock->pin_count))
++				    hlock->references, hlock->pin_count)) {
++		case 0:
+ 			return 1;
++		case 1:
++			break;
++		case 2:
++			*merged += (idx == first_idx);
++			break;
++		default:
++			WARN_ON(1);
++			return 0;
++		}
  	}
+ 	return 0;
+ }
+@@ -3947,9 +3958,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 		 unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 0;
+ 	struct held_lock *hlock;
+ 	struct lock_class *class;
+-	unsigned int depth;
+ 	int i;
  
- 	list_del(&ae_dev->node);
+ 	if (unlikely(!debug_locks))
+@@ -3974,14 +3985,14 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 	curr->lockdep_depth = i;
+ 	curr->curr_chain_key = hlock->prev_chain_key;
+ 
+-	if (reacquire_held_locks(curr, depth, i))
++	if (reacquire_held_locks(curr, depth, i, &merged))
+ 		return 0;
+ 
+ 	/*
+ 	 * I took it apart and put it back together again, except now I have
+ 	 * these 'spare' parts.. where shall I put them.
+ 	 */
+-	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
++	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged))
+ 		return 0;
+ 	return 1;
+ }
+@@ -3989,8 +4000,8 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 0;
+ 	struct held_lock *hlock;
+-	unsigned int depth;
+ 	int i;
+ 
+ 	if (unlikely(!debug_locks))
+@@ -4015,7 +4026,11 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ 	hlock->read = 1;
+ 	hlock->acquire_ip = ip;
+ 
+-	if (reacquire_held_locks(curr, depth, i))
++	if (reacquire_held_locks(curr, depth, i, &merged))
++		return 0;
++
++	/* Merging can't happen with unchanged classes.. */
++	if (DEBUG_LOCKS_WARN_ON(merged))
+ 		return 0;
+ 
+ 	/*
+@@ -4024,6 +4039,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ 	 */
+ 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
+ 		return 0;
++
+ 	return 1;
+ }
+ 
+@@ -4038,8 +4054,8 @@ static int
+ __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 1;
+ 	struct held_lock *hlock;
+-	unsigned int depth;
+ 	int i;
+ 
+ 	if (unlikely(!debug_locks))
+@@ -4094,14 +4110,15 @@ __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
+ 	if (i == depth-1)
+ 		return 1;
+ 
+-	if (reacquire_held_locks(curr, depth, i + 1))
++	if (reacquire_held_locks(curr, depth, i + 1, &merged))
+ 		return 0;
+ 
+ 	/*
+ 	 * We had N bottles of beer on the wall, we drank one, but now
+ 	 * there's not N-1 bottles of beer left on the wall...
++	 * Pouring two of the bottles together is acceptable.
+ 	 */
+-	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth-1);
++	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged);
+ 
+ 	/*
+ 	 * Since reacquire_held_locks() would have called check_chain_key()
 -- 
 2.20.1
 
