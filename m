@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85247C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3410AC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517C0217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0158521872
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201444;
-	bh=CrjBV49IGhU+4qNoawhl4ZxsHGG8qL2L8GJ2OBQdp0Y=;
+	s=default; t=1563201451;
+	bh=xO49B92Nnsy0MycL2WimzZfV9qhlrsWZxM0Gd4LqXhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=krw91KxMkLgepSHCRcM+aLMl9W5OUI4+5qkvMGZa7Pv2aZb7PfA7EtaSXIz8/BJOa
-	 Fr/YpYeBvMeeYo30qh18XxuHDDNoxj/KtrR03HowJnlOD259Ffu2G+L7/C/trp8aOt
-	 3bU8pdZaNj28rcXLA84yjShqO/RE37RwlqOgmGJo=
+	b=aTQZcsk2JzZTZ/ASkPOlmIUDKO+cJuHPjBj00WqpgqU/pQ2odRbXC26WUIkarbWXy
+	 j+n2mdCrXG4KfbVDzjDilUPlg/3V0/7nGM/QLv23mH8+x/Lxx1DuDYOEMdG/g28QEC
+	 q/KuI/6x2uCZMY6Yl0f2T2c/d2RKXwTLdcADSO8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404486AbfGOOhW (ORCPT
+        id S2404655AbfGOOha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:37:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404253AbfGOOhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:08 -0400
+        id S2390202AbfGOOhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:37:25 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46976217F4;
-        Mon, 15 Jul 2019 14:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D75E2182B;
+        Mon, 15 Jul 2019 14:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201427;
-        bh=CrjBV49IGhU+4qNoawhl4ZxsHGG8qL2L8GJ2OBQdp0Y=;
+        s=default; t=1563201444;
+        bh=xO49B92Nnsy0MycL2WimzZfV9qhlrsWZxM0Gd4LqXhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwc1fLaqLJfQe9Cw70M9i6kTffaLztq+Bg96A1Uv79++W4L0IQFUlEPPR0NBQ/ncP
-         xXI0KvZ8T/G3LSy0yjhY5dorKHEbiGUrynWgRp76QUJ0jFxSAkDqJ64bhVRfGhyWwt
-         8URkGukCRO+D8JhcnWApWaX6ypNY0EkRT2Aqz7MQ=
+        b=rhVyoWjaedG9creH9SmvtTF5QVU40M2a9h82t4mXcbI6Iv0bdfalJpd3nWmTNMha2
+         v7S54dWnpwRez1wWNel7v0poH2cUzldltCcGn6rcAK1AS/hzDkYf9dWwUkpEPbdt9P
+         KPdXvFUukaw25Z2W4qoG2sUt2Oud2dqMTTXWhXn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jungo Lin <jungo.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/73] media: media_device_enum_links32: clean a reserved field
-Date:   Mon, 15 Jul 2019 10:35:26 -0400
-Message-Id: <20190715143629.10893-10-sashal@kernel.org>
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/73] af_key: fix leaks in key_pol_get_resp and dump_sp.
+Date:   Mon, 15 Jul 2019 10:35:31 -0400
+Message-Id: <20190715143629.10893-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -59,55 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jungo Lin <jungo.lin@mediatek.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
+[ Upstream commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 ]
 
-In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
-will check whether reserved field of media_links_enum filled
-with zero.
+In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
+allocated sk_buff.  Free it on error.
 
-However, for 32 bit program, the reserved field is missing
-copy from kernel space to user space in media_device_enum_links32
-function.
-
-This patch adds the cleaning a reserved field logic in
-media_device_enum_links32 function.
-
-Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
+Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/media-device.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/key/af_key.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index 6f46c59415fe..6062c0cfa632 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -474,6 +474,7 @@ static long media_device_enum_links32(struct media_device *mdev,
- {
- 	struct media_links_enum links;
- 	compat_uptr_t pads_ptr, links_ptr;
-+	int ret;
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 3ba903ff2bb0..36db179d848e 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -2463,8 +2463,10 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
+ 		goto out;
+ 	}
+ 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+-	if (err < 0)
++	if (err < 0) {
++		kfree_skb(out_skb);
+ 		goto out;
++	}
  
- 	memset(&links, 0, sizeof(links));
+ 	out_hdr = (struct sadb_msg *) out_skb->data;
+ 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
+@@ -2717,8 +2719,10 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
+ 		return PTR_ERR(out_skb);
  
-@@ -485,7 +486,13 @@ static long media_device_enum_links32(struct media_device *mdev,
- 	links.pads = compat_ptr(pads_ptr);
- 	links.links = compat_ptr(links_ptr);
+ 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+-	if (err < 0)
++	if (err < 0) {
++		kfree_skb(out_skb);
+ 		return err;
++	}
  
--	return media_device_enum_links(mdev, &links);
-+	ret = media_device_enum_links(mdev, &links);
-+	if (ret)
-+		return ret;
-+
-+	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
-+
-+	return 0;
- }
- 
- #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
+ 	out_hdr = (struct sadb_msg *) out_skb->data;
+ 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
 -- 
 2.20.1
 
