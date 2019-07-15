@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B50C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3620C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC73217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3357217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198543;
-	bh=8ztBK9MmwzRIvCHgF4cZ6rrpf2E54JGcacFu2g+TI6k=;
+	s=default; t=1563198546;
+	bh=lT0m+6YkUaJnRaAWgKHm1Wigj1LyTbsKhv/EqJgvKi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCKZmkvDpT/zZ7rkIaoFMt0DP8wGZo1vt51M0EH7pwJe8iSUKAsDCAbzv8fn0tzOP
-	 48H/QIl5kozipJDj2sRPWKicG6ygiMrKfNc1P5fzuLBaYsLMCASVTZ3UBeDi0j32yZ
-	 SHRksONtnmM9Wxaw12FOWqPrzf66F01fkCe+b0/I=
+	b=axcGWJiNfkcy4CCpWN+3oom2lTUcCfolEe9SWz98AATkSDtzrNtc84cKLHAkswJ10
+	 Xa0+2VDdWe8yfeKGLiO+SP3cswf5YapF4vMV+vl2L2pv+8gaDSomrH0a3W4Dk4v34L
+	 Qk67g4N3myZzn0dmSlVRq5l1NhMs3ApwXDKabmUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbfGONtC (ORCPT
+        id S1731658AbfGONtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60148 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731610AbfGONs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:48:59 -0400
+        id S1731633AbfGONtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:49:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73CC2067C;
-        Mon, 15 Jul 2019 13:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6170C2083D;
+        Mon, 15 Jul 2019 13:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198538;
-        bh=8ztBK9MmwzRIvCHgF4cZ6rrpf2E54JGcacFu2g+TI6k=;
+        s=default; t=1563198540;
+        bh=lT0m+6YkUaJnRaAWgKHm1Wigj1LyTbsKhv/EqJgvKi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/HCRrdDn6RLgZjs3HEJ/1cmP3lIDiln+bQHkaoQ7w2WK5rdk9oHYi5d58eWjn7RQ
-         AMGVtqz6rgVpJpsHZ3AMnuV4s43KYyz18CMqe2zftWnI2wnbZ7M0vrf7pTMcKs1HkM
-         yJhwhXxY0HKkbeqvHxzbMMnCrp2DrlKgLeexn63w=
+        b=NlL5nyjuJT6kCAHqPS6mY2Z105/xi/OhL7OrEPnNycZAXQmE+f67RIGbpq06tNG+0
+         SDJuhzv1WFmH6ArhGsG7tL/4z7yHIq2+ftGmXdmJ1XZRKcRQZLdKf6RyaYvzFPSNub
+         yVcNiW5S61RO3QwMzXq+sfQXEhhhgopq8ElCFBC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Daniel Lezcano <daniel.lezcano@free.fr>,
-        Serge Hallyn <serge@hallyn.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 038/249] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
-Date:   Mon, 15 Jul 2019 09:43:23 -0400
-Message-Id: <20190715134655.4076-38-sashal@kernel.org>
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        Steve French <smfrench@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
+Date:   Mon, 15 Jul 2019 09:43:24 -0400
+Message-Id: <20190715134655.4076-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
+[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
 
 The locking in force_sig_info is not prepared to deal with a task that
 exits or execs (as sighand may change).  The is not a locking problem
@@ -82,29 +82,30 @@ and pointless.
 Because it won't impact the sending of the signal and and because
 using force_sig is wrong, replace force_sig with send_sig.
 
-Cc: Daniel Lezcano <daniel.lezcano@free.fr>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Jeff Layton <jlayton@primarydata.com>
+Cc: Steve French <smfrench@gmail.com>
+Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/pid_namespace.c | 2 +-
+ fs/cifs/connect.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index f54bc7cb6c2d..6d726cef241c 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -326,7 +326,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
- 	}
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 8dd6637a3cbb..714a359c7c8d 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2631,7 +2631,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
  
- 	read_lock(&tasklist_lock);
--	force_sig(SIGKILL, pid_ns->child_reaper);
-+	send_sig(SIGKILL, pid_ns->child_reaper, 1);
- 	read_unlock(&tasklist_lock);
+ 	task = xchg(&server->tsk, NULL);
+ 	if (task)
+-		force_sig(SIGKILL, task);
++		send_sig(SIGKILL, task, 1);
+ }
  
- 	do_exit(0);
+ static struct TCP_Server_Info *
 -- 
 2.20.1
 
