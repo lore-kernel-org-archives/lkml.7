@@ -2,90 +2,145 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C154C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC3BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B3B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6358216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563201535;
+	bh=8LJGaQcquEdVsFoeWyXpkqumTYbSPSrrFcy3rBx4mx8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CzbSI11Lsun28Ry7O7pvHRb7U4hjJu7amzbJ1Q7U/dYi8vq4so+vZU5Cffqi64wMW
+	 hME8uUJEMwk3YtNMNeNFEPKhZV8Y9GzAomgEHwBrCGGC3KE6pSFfqyA5m5rx90RC0n
+	 jgvvec20yYea9OPVLfFkW4CEPQ5QTPkP4+ksCGhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392200AbfGOOiu (ORCPT
+        id S1730993AbfGOOix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:38:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:51010 "EHLO foss.arm.com"
+        Mon, 15 Jul 2019 10:38:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392113AbfGOOiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C80BF28;
-        Mon, 15 Jul 2019 07:38:44 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1A613F59C;
-        Mon, 15 Jul 2019 07:38:43 -0700 (PDT)
-Subject: Re: [RFC v2 12/14] arm64/lib: asid: Allow user to update the context
- under the lock
-To:     James Morse <james.morse@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, marc.zyngier@arm.com,
-        julien.thierry@arm.com, suzuki.poulose@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com
-References: <20190620130608.17230-1-julien.grall@arm.com>
- <20190620130608.17230-13-julien.grall@arm.com>
- <c5d1257c-b522-152f-cb2f-d23fd8110609@arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <446cfa1a-71be-3ae2-4107-02dd0f164843@arm.com>
-Date:   Mon, 15 Jul 2019 15:38:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S2392182AbfGOOis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:38:48 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31ECE20651;
+        Mon, 15 Jul 2019 14:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201527;
+        bh=8LJGaQcquEdVsFoeWyXpkqumTYbSPSrrFcy3rBx4mx8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FfclDnrT7H+YsmFsABJBWVTAW73vgNEqC+BQFsmwl0e/kvgihDJBTIFd01Ogttynj
+         TgzPZDDybF9++dcCtC19iEAlOWCu70A9xI6M5Eh0rSSD9CWe4cJwiX9hryNjnzFMxw
+         yRXFn/1OttDrzChsFtrZebm5sWufPk+xqitxPKzw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 34/73] gpio: omap: ensure irq is enabled before wakeup
+Date:   Mon, 15 Jul 2019 10:35:50 -0400
+Message-Id: <20190715143629.10893-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
+References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c5d1257c-b522-152f-cb2f-d23fd8110609@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
+[ Upstream commit c859e0d479b3b4f6132fc12637c51e01492f31f6 ]
 
-On 03/07/2019 18:35, James Morse wrote:
-> Hi Julien,
+Documentation states:
 
-Hi James,
+  NOTE: There must be a correlation between the wake-up enable and
+  interrupt-enable registers. If a GPIO pin has a wake-up configured
+  on it, it must also have the corresponding interrupt enabled (on
+  one of the two interrupt lines).
 
-> On 20/06/2019 14:06, Julien Grall wrote:
->> Some users of the ASID allocator (e.g VMID) will require to update the
->> context when a new ASID is generated. This has to be protected by a lock
->> to prevent concurrent modification.
->>
->> Rather than introducing yet another lock, it is possible to re-use the
->> allocator lock for that purpose. This patch introduces a new callback
->> that will be call when updating the context.
-> 
-> You're using this later in the series to mask out the generation from the atomic64 to
-> leave just the vmid.
+Ensure that this condition is always satisfied by enabling the detection
+events after enabling the interrupt, and disabling the detection before
+disabling the interrupt.  This ensures interrupt/wakeup events can not
+happen until both the wakeup and interrupt enables correlate.
 
-You are right.
+If we do any clearing, clear between the interrupt enable/disable and
+trigger setting.
 
-> 
-> Where does this concurrent modification happen? The value is only written if we have a
-> rollover, and while its active the only bits that could change are the generation.
-> (subsequent vCPUs that take the slow path for the same VM will see the updated generation
-> and skip the new_context call)
-> 
-> If we did the generation filtering in update_vmid() after the call to
-> asid_check_context(), what would go wrong?
-> It happens more often than is necessary and would need a WRITE_ONCE(), but the vmid can't
-> change until we become preemptible and another vCPU gets a chance to make its vmid active.
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpio-omap.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-I think I was over cautious. Pre-filtering after asid_check_context() is equally 
-fine as long as update_vttbr() is called from preemptible context.
-
-Cheers,
-
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index bd12b433f964..fc841ce24db7 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -786,9 +786,9 @@ static void omap_gpio_irq_shutdown(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+ 	bank->irq_usage &= ~(BIT(offset));
+-	omap_set_gpio_irqenable(bank, offset, 0);
+-	omap_clear_gpio_irqstatus(bank, offset);
+ 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
++	omap_clear_gpio_irqstatus(bank, offset);
++	omap_set_gpio_irqenable(bank, offset, 0);
+ 	if (!LINE_USED(bank->mod_usage, offset))
+ 		omap_clear_gpio_debounce(bank, offset);
+ 	omap_disable_gpio_module(bank, offset);
+@@ -830,8 +830,8 @@ static void omap_gpio_mask_irq(struct irq_data *d)
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+-	omap_set_gpio_irqenable(bank, offset, 0);
+ 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
++	omap_set_gpio_irqenable(bank, offset, 0);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
+@@ -843,9 +843,6 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+-	if (trigger)
+-		omap_set_gpio_triggering(bank, offset, trigger);
+-
+ 	omap_set_gpio_irqenable(bank, offset, 1);
+ 
+ 	/*
+@@ -853,9 +850,13 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	 * is cleared, thus after the handler has run. OMAP4 needs this done
+ 	 * after enabing the interrupt to clear the wakeup status.
+ 	 */
+-	if (bank->level_mask & BIT(offset))
++	if (bank->regs->leveldetect0 && bank->regs->wkup_en &&
++	    trigger & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+ 
++	if (trigger)
++		omap_set_gpio_triggering(bank, offset, trigger);
++
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
 -- 
-Julien Grall
+2.20.1
+
