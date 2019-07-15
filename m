@@ -2,120 +2,139 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF71C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4032C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762D72081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C454B2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QAHGs5pU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1qTWOmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfGOPnT (ORCPT
+        id S1730891AbfGOPnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:43:19 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10979 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfGOPnT (ORCPT
+        Mon, 15 Jul 2019 11:43:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46243 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730317AbfGOPnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:43:19 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2c9f140000>; Mon, 15 Jul 2019 08:43:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 15 Jul 2019 08:43:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 15 Jul 2019 08:43:18 -0700
-Received: from [10.25.75.158] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 15 Jul
- 2019 15:43:15 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
-References: <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
- <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
-Message-ID: <1ba33e86-5c4d-7bce-5643-c0fca2cf8101@nvidia.com>
-Date:   Mon, 15 Jul 2019 21:12:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 15 Jul 2019 11:43:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id i10so34741078iol.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 08:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2ux4r2/PNo8POgrTWBBb9IwIfMsL91QvApA0a47O8zQ=;
+        b=U1qTWOmNtX6PNvymsBLNcI7hc6yrlxBO4qqxO7yZStMeLK1saH667xnPH3p3Q8H3Fo
+         qY/2p0TyE18U5+WG+fwMapRAZ/ULPxOhndS9KfZd1oyNwAoKnOqU5CsbZaM/FWHFZywN
+         ZhhLbxF2XNtZfxeX+NqD1ODiLuqF66ek0PtiC/03BgNqIqWOmDdH3eI/D2ib3QVHwCf4
+         pZ3yLIqHreKDMAwOOKLyxleDUKRpemewDRU+ycAmOuHaLdgSxZ+nH++1VibBSPqAxGwQ
+         GjzG1egRLI19c0ECiqcOguG09ZfZPXX5kcQgh4PW8mXNWdW/QocunocZPd7WKLtj0G6J
+         tBuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2ux4r2/PNo8POgrTWBBb9IwIfMsL91QvApA0a47O8zQ=;
+        b=FQsKFeAXpid4mGQbgKtJgjgEzu1qd/DtGWxc1E/+108vzTClqjYRHHkwPfibM15lVx
+         IelFvUH7EKXvC+jnpHtmgA001e50R/7EPHIJtxJidjIa6Xnri/j+MgVo9yegvTQOP30K
+         2F0ChSlsajq97uqjBupDOEoSJXAp0DkvGu7/sOiWQSlsukVCKUwYHj9POq42aGYgsyq/
+         k9RIHF+4rGEqgQtiKHA7xICG4TD7Xcx5k6alBzz08n82sCLXupWarmVXLhSjqjmV+2iA
+         Gyk0GV33CzNS0It6udylXYjI/m0jDHK6SoKJzqMYJrXxg7iQ22dGf9p1rxIaHLQI1pUZ
+         jp7A==
+X-Gm-Message-State: APjAAAXFqTWZ26NlAxRl4BRT934WW4/Hr1XoTBmYufWrn8At3z73wLaU
+        pzGcp78rKH9gkirVzGrp+WkFHG6C7pjAu+REZw==
+X-Google-Smtp-Source: APXvYqzUvnC3d2mQv2FQYTr+0Qc6tfJdHOGsUKJd6KbPMqOD4BSCg93CCwy6F2lvkLet3DUSvZS5iv1emwrtu0a/Pq0=
+X-Received: by 2002:a5e:a712:: with SMTP id b18mr25011425iod.220.1563205426117;
+ Mon, 15 Jul 2019 08:43:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563205396; bh=b6MucdzZMF78Ie3I9PWKZ0HNIZR7xt7xMQPTn+iKXQY=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=QAHGs5pUGMKAjhmaqwqHXf7/jIUlwGS2q+9eKrVcGfLan1zbdmIic1ngMIVFWreTS
-         2+WwDy241YJSIxAdgKlDo5DHIdG4TtsqD/NK1WNLTBesnoAIbLijK9CkpuZRwhE9+E
-         yJn20tY4ygs9W7rUGftrC5DbX39g18MGKzhYtra5F/kbvgDag3p8shSX4c/3TcQW83
-         CVjfO3KdJmR9w7hH7aslfR0mxgAP7jD+CHqVmaFMzg7y1sjvhbxCj4DPYyinBFGtWz
-         QfaT24NaMjUxF4bP0JhzIDg9tME62b6w54ai9p+IzqtO0y2gBgQ7EYVhyDTWrKt/rY
-         mhbOmLZmBBkog==
+References: <CAKKbWA6S7KotAFtLO=ow=XYnLL2Ny5Mz2kcgM1cs+j=5mHQNmw@mail.gmail.com>
+ <CAKKbWA5nwsa5kcZ8GCuC3WKJptb6RtZ65izFphd=KaALqeg+BA@mail.gmail.com>
+In-Reply-To: <CAKKbWA5nwsa5kcZ8GCuC3WKJptb6RtZ65izFphd=KaALqeg+BA@mail.gmail.com>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Mon, 15 Jul 2019 18:42:58 +0300
+Message-ID: <CAKKbWA5AuDRDuczTd+tonhc7hi3L=nKX5MCjbspOvAPNR9odyg@mail.gmail.com>
+Subject: [PATCH] [v3] clocksource/drivers/npcm: fix GENMASK and timer operation
+To:     Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Avi Fishman <avifishman70@gmail.com>
+Cc:     OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+clocksource/drivers/npcm: fix GENMASK and timer operation
 
-Sorry for writing again.
-Can we please conclude on this?
+NPCM7XX_Tx_OPER GENMASK() changed from (27, 3) to (28, 27)
+Since NPCM7XX_REG_TICR0 register reset value of those bits was 0,
+it did not cause an issue
 
-Thanks,
-Sameer.
+in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
+read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
+take effect.
 
-On 7/5/2019 11:45 AM, Sameer Pujar wrote:
-> Hi Vinod,
->
-> What are your final thoughts regarding this?
->
-> Thanks,
-> Sameer.
->
->>> Where does ADMAIF driver reside in kernel, who configures it for normal
->>> dma txns..?
->> Not yet, we are in the process of upstreaming ADMAIF driver.
->> To describe briefly, audio subsystem is using ALSA SoC(ASoC) layer. 
->> ADMAIF is
->> registered as platform driver and exports DMA functionality. It 
->> registers PCM
->> devices for each Rx/Tx ADMAIF channel. During PCM playback/capture 
->> operations,
->> ALSA callbacks configure DMA channel using API dmaengine_slave_config().
->> RFC patch proposed, is to help populate FIFO_SIZE value as well 
->> during above
->> call, since ADMA requires it.
->>>
->>> Also it wold have helped the long discussion if that part was made 
->>> clear
->>> rather than talking about peripheral all this time :(
->> Thought it was clear, though should have avoided using 'peripheral' 
->> in the
->> discussions. Sorry for the confusion.
->
+npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR0
+in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
+confusing.
+
+Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+---
+ drivers/clocksource/timer-npcm7xx.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clocksource/timer-npcm7xx.c
+b/drivers/clocksource/timer-npcm7xx.c
+index 8a30da7f083b..9780ffd8010e 100644
+--- a/drivers/clocksource/timer-npcm7xx.c
++++ b/drivers/clocksource/timer-npcm7xx.c
+@@ -32,7 +32,7 @@
+ #define NPCM7XX_Tx_INTEN               BIT(29)
+ #define NPCM7XX_Tx_COUNTEN             BIT(30)
+ #define NPCM7XX_Tx_ONESHOT             0x0
+-#define NPCM7XX_Tx_OPER                        GENMASK(27, 3)
++#define NPCM7XX_Tx_OPER                        GENMASK(28, 27)
+ #define NPCM7XX_Tx_MIN_PRESCALE                0x1
+ #define NPCM7XX_Tx_TDR_MASK_BITS       24
+ #define NPCM7XX_Tx_MAX_CNT             0xFFFFFF
+@@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct
+clock_event_device *evt)
+
+        val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+        val &= ~NPCM7XX_Tx_OPER;
+-
+-       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+        val |= NPCM7XX_START_ONESHOT_Tx;
+        writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
+
+@@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct
+clock_event_device *evt)
+        struct timer_of *to = to_timer_of(evt);
+        u32 val;
+
++       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
++
+        val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+        val &= ~NPCM7XX_Tx_OPER;
+-
+-       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
+        val |= NPCM7XX_START_PERIODIC_Tx;
+-
+        writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
+
+        return 0;
+
+-- 
+2.18.0
