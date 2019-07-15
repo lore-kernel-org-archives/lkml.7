@@ -4,60 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D6BC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A24C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A900220651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D595020651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200427;
-	bh=wDeNG5VABQuwqt/RTOYlIeKFpshLA0M6Wo9911yh2Ww=;
+	s=default; t=1563200430;
+	bh=ode6917U6GR0FYujY7U8gRtJst3Lbg8ZlGUdNqat0m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kaG9vq0/zXHX3DAXvCTOhUiK6G8MWeQEQknyq6wfC80AxBZBYQT/78cGTA8roLt02
-	 DrGaYJN2XjoVpa2GE0XBrVd3g6Dx14nlrUnVgRgiD/ZIJRXXJFiKQA7m+YHUqp8Jbj
-	 LEhiR5EAmaAvKJvcGIYLjetnpCtZgEV5SmELglkg=
+	b=RRv6Fb6c6a4vVXW88idbRhoqPVYIaAv4SGUo0R4OXCsu4gylbPeIzkSdrEbT5SSN8
+	 jfXTooPEDcs1rU8dAxTc6QXBdiDqwBv8MJEug/cJ7Nxb9yDaZzMlkNEhbKyMzry0jL
+	 OSx/n8XaC9mwsTWlAQCoPU5X7egwfhoFtrtL0WDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390443AbfGOOU0 (ORCPT
+        id S2390228AbfGOOU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:20:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43786 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390425AbfGOOUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:20:23 -0400
+        id S2390442AbfGOOU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:27 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1581820651;
-        Mon, 15 Jul 2019 14:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D4BB21530;
+        Mon, 15 Jul 2019 14:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200422;
-        bh=wDeNG5VABQuwqt/RTOYlIeKFpshLA0M6Wo9911yh2Ww=;
+        s=default; t=1563200426;
+        bh=ode6917U6GR0FYujY7U8gRtJst3Lbg8ZlGUdNqat0m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyov/HIgAx6lBSZhmCWVfYNtx+RN1YH/vqDj5HdEBPgky8c/oN54Nq7GNj7AiKZOY
-         oLeI/O/vk4SwXZzQTfxtEMs7JA+n6lOvVNY8DlzrYx2/a7+m+pdB8aGD4WYpltpBGH
-         NjgD42IG9uFcOaGiuSl+rzrItBlcHvGK2hwDU9gg=
+        b=Fg4boiUDWUhMRPsPE+66bOW7t7PevO2eBPhn3Z+Hv0WDMLaYB6FGIarJRRli0DeYx
+         J8cT0jEHhc2OcLpWm5ekXV+Ou5ypY7OGGwgRVsNaPMSQrfxdowsdpMXva5EoY6agd+
+         e+RCY9+iRhn5WNR15k+J5Q+VMKJq1rabdvON8yBo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ben Gainey <ben.gainey@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 042/158] perf jvmti: Address gcc string overflow warning for strncpy()
-Date:   Mon, 15 Jul 2019 10:16:13 -0400
-Message-Id: <20190715141809.8445-42-sashal@kernel.org>
+Cc:     Biao Huang <biao.huang@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 044/158] net: stmmac: modify default value of tx-frames
+Date:   Mon, 15 Jul 2019 10:16:15 -0400
+Message-Id: <20190715141809.8445-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,64 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit 279ab04dbea1370d2eac0f854270369ccaef8a44 ]
+[ Upstream commit d2facb4b3983425f6776c24dd678a82dbe673773 ]
 
-We are getting false positive gcc warning when we compile with gcc9 (9.1.1):
+the default value of tx-frames is 25, it's too late when
+passing tstamp to stack, then the ptp4l will fail:
 
-     CC       jvmti/libjvmti.o
-   In file included from /usr/include/string.h:494,
-                    from jvmti/libjvmti.c:5:
-   In function ‘strncpy’,
-       inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
-   /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
-     106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
-   jvmti/libjvmti.c:165:26: note: length computed here
-     165 |   size_t file_name_len = strlen(file_name);
-         |                          ^~~~~~~~~~~~~~~~~
-   cc1: all warnings being treated as errors
+ptp4l -i eth0 -f gPTP.cfg -m
+ptp4l: selected /dev/ptp0 as PTP clock
+ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
+ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
+ptp4l: port 1: link up
+ptp4l: timed out while polling for tx timestamp
+ptp4l: increasing tx_timestamp_timeout may correct this issue,
+       but it is likely caused by a driver bug
+ptp4l: port 1: send peer delay response failed
+ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
 
-As per Arnaldo's suggestion use strlcpy(), which does the same thing and keeps
-gcc silent.
+ptp4l tests pass when changing the tx-frames from 25 to 1 with
+ethtool -C option.
+It should be fine to set tx-frames default value to 1, so ptp4l will pass
+by default.
 
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ben Gainey <ben.gainey@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190531131321.GB1281@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/jvmti/libjvmti.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-index 6add3e982614..3361d98a4edd 100644
---- a/tools/perf/jvmti/libjvmti.c
-+++ b/tools/perf/jvmti/libjvmti.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
-+#include <linux/string.h>
- #include <sys/types.h>
- #include <stdio.h>
- #include <string.h>
-@@ -150,8 +151,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
- 		result[i] = '\0';
- 	} else {
- 		/* fallback case */
--		size_t file_name_len = strlen(file_name);
--		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
-+		strlcpy(result, file_name, max_length);
- 	}
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 272b9ca66314..b069b3a2453b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -261,7 +261,7 @@ struct stmmac_safety_stats {
+ #define STMMAC_COAL_TX_TIMER	1000
+ #define STMMAC_MAX_COAL_TX_TICK	100000
+ #define STMMAC_TX_MAX_FRAMES	256
+-#define STMMAC_TX_FRAMES	25
++#define STMMAC_TX_FRAMES	1
  
+ /* Packets types */
+ enum packets_types {
 -- 
 2.20.1
 
