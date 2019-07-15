@@ -2,196 +2,130 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F006C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96600C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084252171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563223035;
-	bh=f6vha8teZ7Sy/LhmbX8Bp2eqOvg07oKQIDJMB60rAoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EnQO8ZPBDUf6+B3bm8Sh2zBorx7kGNPcScHzqSCnzg9scMSBCXPet+ITAVEVxQoul
-	 Z2B1d+DqM9uk2q9BLO5CMIGKsFHATuq7Fjg3/wzi2APmLzZmrekWlsuT+4uqx3L922
-	 RQvglDqGZDsdsRvFBzy+i0B6UmAKuZASqdPjtLeg=
+	by mail.kernel.org (Postfix) with ESMTP id 6C5762145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:38:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="b5eOePLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbfGOUhN (ORCPT
+        id S1732394AbfGOUij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729505AbfGOUhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:37:13 -0400
-Received: from localhost (unknown [88.128.80.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F39A2145D;
-        Mon, 15 Jul 2019 20:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563223032;
-        bh=f6vha8teZ7Sy/LhmbX8Bp2eqOvg07oKQIDJMB60rAoE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OpE0NTgYLB+9Yhlw2OTVeb/KKRgaAT0OZR8zmLJDkIjYW8vhFWb9D92fkh37F0r23
-         62YYv/t32JesZf4+BoabX8nvU8CtjvDGmARuIOYUP2601S+j3n8GmORpzU4lExoVf2
-         W4GyZ1tFIG2+U6fTJ9kfQtdMmAytXDZoQ85tpNXU=
-Date:   Mon, 15 Jul 2019 22:36:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tri Vo <trong@android.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, rafael@kernel.org,
-        hridya@google.com, sspatil@google.com, kaleshsingh@google.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v3] PM / wakeup: show wakeup sources stats in sysfs
-Message-ID: <20190715203651.GA7513@kroah.com>
-References: <CANA+-vAxU5jp6PQ26NU+UMc6iyw6KkBS9nbd6wj0qqkO-1WhYg@mail.gmail.com>
- <20190715201116.221078-1-trong@android.com>
+        Mon, 15 Jul 2019 16:38:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33532 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731449AbfGOUii (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 16:38:38 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so17644214ljg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SPYn0kigh/YyOOP3JdYIDFFrsPtkvgbvu1zMyQDVf3M=;
+        b=b5eOePLKODPIzr8swDyYF4AgFldz7V2YABrA3742nAOHLzAo2/ozBZ0RJ8D5vddpk3
+         sARlE/+axrtAh0KzWih8Ly0xxU5yIYpkYX1vuY4Ipmgobv3qAB/1jGKDo3KylvK7eHSd
+         4sJcUaNpn2Mo0wTr/tITuzI5VkAFW1+L/TggkgJyTaDX57KahSyYfLsipraO3VrBagKt
+         5af5hO2j+xukaou6B0ox1R1O0J8iM7BVCBnKA5cz6PdIvdxQIVHl7YCSpLQAA4Z6I3Z2
+         jiNXl2hfASd4OE8vuNF//VDxwoQHOiejs0XJsKihnYXyCJwArlLVd3jylh7ferlCZnUf
+         1LIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SPYn0kigh/YyOOP3JdYIDFFrsPtkvgbvu1zMyQDVf3M=;
+        b=EHY3n/E0lYhgrjXeJZP5u3r/r/MPJ8HIm21dFcs+91ydGBWk+pP9F7EDBixIOazulL
+         AaLuTEjoh/fhlaj+rJn1ir+70XbAH2nvf+4ojSkIjrvvXODch+BaX2c2O2wDxcjaCM07
+         m5dl82GLH9e/gMZXonNHyzYcZfS9yfDJbaPLi4Q5k7jrrnniunbfqlNE8zaLe3o5MMEh
+         Obwna90sjtkInsoc2iiNYeTqzchMx+PuB21YLiXjKJTUYsgnHhjhB+anJMVjmvnubB8X
+         nKTPGI8uPkQQiyeYXv5Y+FrabhRCxOdgewA3mZbpzLWNnbwxpbzSqIlaGXCy2af9tB5K
+         wfuA==
+X-Gm-Message-State: APjAAAVR6d8lEpN4wt65A2U1r4GwWiLZSh0FB3I7RoP1S/O45M1faEZA
+        nxcX4Ts9lYoG6lz/wzrTmUqW57fAtXVbqCYEgA==
+X-Google-Smtp-Source: APXvYqy7ph4w7wyU2yk8+QNPGuKGKilYKae2+aEm11FJ7Oxrse5chHU3V+2dKv4MLJ5f+7kkorTp67H+wXIXoLMuFPs=
+X-Received: by 2002:a2e:3604:: with SMTP id d4mr15091488lja.85.1563223116334;
+ Mon, 15 Jul 2019 13:38:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715201116.221078-1-trong@android.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <cover.1554732921.git.rgb@redhat.com> <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
+ <20190529145742.GA8959@cisco> <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
+ <20190708175105.7zb6mikjw2wmnwln@madcap2.tricolour.ca>
+In-Reply-To: <20190708175105.7zb6mikjw2wmnwln@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 15 Jul 2019 16:38:25 -0400
+Message-ID: <CAHC9VhRFeCFSCn=m6wgDK2tXBN1euc2+bw8o=CfNwptk8t=j7A@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Tycho Andersen <tycho@tycho.ws>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 01:11:16PM -0700, Tri Vo wrote:
-> Userspace can use wakeup_sources debugfs node to plot history of suspend
-> blocking wakeup sources over device's boot cycle. This information can
-> then be used (1) for power-specific bug reporting and (2) towards
-> attributing battery consumption to specific processes over a period of
-> time.
-> 
-> However, debugfs doesn't have stable ABI. For this reason, create a
-> 'struct device' to expose wakeup sources statistics in sysfs under
-> /sys/class/wakeup/<name>/.
-> 
-> Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
-> source statistics in sysfs.
-> 
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Tri Vo <trong@android.com>
-> Tested-by: Tri Vo <trong@android.com>
+On Mon, Jul 8, 2019 at 1:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-05-29 11:29, Paul Moore wrote:
 
-Co-Developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-perhaps given that I rewrote the whole file last time?  :)
+...
 
+> > The idea is that only container orchestrators should be able to
+> > set/modify the audit container ID, and since setting the audit
+> > container ID can have a significant effect on the records captured
+> > (and their routing to multiple daemons when we get there) modifying
+> > the audit container ID is akin to modifying the audit configuration
+> > which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
+> > is that you would only change the audit container ID from one
+> > set/inherited value to another if you were nesting containers, in
+> > which case the nested container orchestrator would need to be granted
+> > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
+> > compromise).  We did consider allowing for a chain of nested audit
+> > container IDs, but the implications of doing so are significant
+> > (implementation mess, runtime cost, etc.) so we are leaving that out
+> > of this effort.
+>
+> We had previously discussed the idea of restricting
+> orchestrators/engines from only being able to set the audit container
+> identifier on their own descendants, but it was discarded.  I've added a
+> check to ensure this is now enforced.
 
-> ---
->  Documentation/ABI/testing/sysfs-power |  73 ++++++++++++-
->  drivers/base/power/Makefile           |   1 +
->  drivers/base/power/wakeup.c           |  12 ++-
->  drivers/base/power/wakeup_stats.c     | 148 ++++++++++++++++++++++++++
->  include/linux/pm_wakeup.h             |  19 ++++
->  kernel/power/Kconfig                  |  10 ++
->  kernel/power/wakelock.c               |  10 ++
->  7 files changed, 270 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/base/power/wakeup_stats.c
+When we weren't allowing nested orchestrators it wasn't necessary, but
+with the move to support nesting I believe this will be a requirement.
+We might also need/want to restrict audit container ID changes if a
+descendant is acting as a container orchestrator and managing one or
+more audit container IDs; although I'm less certain of the need for
+this.
 
-What changed from v2?  :)
+> I've also added a check to ensure that a process can't set its own audit
+> container identifier ...
 
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-> index 18b7dc929234..ef92628e6fc3 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -300,4 +300,75 @@ Description:
->  		attempt.
->  
->  		Using this sysfs file will override any values that were
-> -		set using the kernel command line for disk offset.
-> \ No newline at end of file
-> +		set using the kernel command line for disk offset.
-> +
-> +What:		/sys/class/wakeup/
+What does this protect against, or what problem does this solve?
+Considering how easy it is to fork/exec, it seems like this could be
+trivially bypassed.
 
-My fault, this should be a new ABI/testing file, don't use sysfs-power
-as it does not make any sense now, right?
+> ... and that if the identifier is already set, then the
+> orchestrator/engine must be in a descendant user namespace from the
+> orchestrator that set the previously inherited audit container
+> identifier.
 
-> --- /dev/null
-> +++ b/drivers/base/power/wakeup_stats.c
-> @@ -0,0 +1,148 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Wakeup statistics in sysfs
-> + *
-> + * Copyright (c) 2019 Linux Foundation <gregkh@linuxfoundation.org>
+You lost me here ... although I don't like the idea of relying on X
+namespace inheritance for a hard coded policy on setting the audit
+container ID; we've worked hard to keep this independent of any
+definition of a "container" and it would sadden me greatly if we had
+to go back on that.
 
-My fault on the original here, this line should be 2 lines:
-
-> + * Copyright (c) 2019 Linux Foundation
-> + * Copyright (c) 2019 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-as those are two different entities that have copyright here on this
-file.
-
-> +config PM_SLEEP_STATS
-> +	bool "Wakeup sources statistics"
-> +	depends on PM_SLEEP
-> +	help
-> +	  Expose wakeup sources statistics to user space via sysfs. Collected
-> +	  statistics are located under /sys/power/wakeup_sources. For more
-> +	  information, read <file:Documentation/ABI/testing/sysfs-power>.
-
-Filename should be changed.
-
-
-> +
-> +	  If in doubt, say N.
-> +
->  config DPM_WATCHDOG
->  	bool "Device suspend/resume watchdog"
->  	depends on PM_DEBUG && PSTORE && EXPERT
-> diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
-> index 4210152e56f0..32726da3d6e6 100644
-> --- a/kernel/power/wakelock.c
-> +++ b/kernel/power/wakelock.c
-> @@ -122,6 +122,7 @@ static void __wakelocks_gc(struct work_struct *work)
->  
->  		if (!active) {
->  			wakeup_source_remove(&wl->ws);
-> +			wakeup_source_sysfs_remove(&wl->ws);
->  			rb_erase(&wl->node, &wakelocks_tree);
->  			list_del(&wl->lru);
->  			kfree(wl->name);
-> @@ -153,6 +154,7 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
->  	struct rb_node **node = &wakelocks_tree.rb_node;
->  	struct rb_node *parent = *node;
->  	struct wakelock *wl;
-> +	int ret;
->  
->  	while (*node) {
->  		int diff;
-> @@ -189,6 +191,14 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
->  	}
->  	wl->ws.name = wl->name;
->  	wl->ws.last_time = ktime_get();
-> +
-> +	ret = wakeup_source_sysfs_add(&wl->ws);
-> +	if (ret) {
-> +		kfree(wl->name);
-> +		kfree(wl);
-> +		return ERR_PTR(ret);
-> +	}
-> +
->  	wakeup_source_add(&wl->ws);
->  	rb_link_node(&wl->node, parent, node);
->  	rb_insert_color(&wl->node, &wakelocks_tree);
-
-Nice, you got rid of the extra change in this file, making this much
-simpler.
-
-Can you make these minor tweaks?  If so, I'll be glad to queue this up
-after 5.3-rc1 is out.
-
-And I am guessing that you actually tested this all out, and it works
-for you?  Have you changed Android userspace to use the new api with no
-problems?
-
-thanks,
-
-greg k-h
+-- 
+paul moore
+www.paul-moore.com
