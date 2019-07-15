@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AEEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D819AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33772081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5362081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199659;
-	bh=dMS4IlMtitQta4w5eymfq+mTgMKszYDZ+A8Kxy3G5DA=;
+	s=default; t=1563199667;
+	bh=PEeVZIvmnUKPYl4Xamol5A8GV2YbgU4bwaeAHC+GqtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o07lOyGr3OZSAXuIMTmb5pear07Hx1rFNOeFluHkn1Xh2sJ2SCyS3MEPT13pcd65p
-	 /Pi310tXZev0D2WBHQ8OGmmcnoLwJLXOQBM9g0btrmbsvfjKvK5FxM8+wAxF9WM/vk
-	 CjKE2fROjsiXjf78Gt4cnHoJjk6Pfh/sNVHAHFWc=
+	b=rysEe1tcWTiCJtMAouR80vJW6NbeQ8duqQuMoRnrap4Z6noNvb+uoRxgvRaWJ+BMa
+	 p9mLhiWXgj734YSNNY3LcSwzFkKHS7/4Rke77CuMUrdJPtxygGK/yVF5FETuCFfySr
+	 5uJVLJ7s27fY1s/3qNm2Mc2ywNs2tv7LsDK60z50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388376AbfGOOHi (ORCPT
+        id S2388402AbfGOOHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388364AbfGOOHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:07:36 -0400
+        id S1731723AbfGOOHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:07:41 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 533F121873;
-        Mon, 15 Jul 2019 14:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E12D206B8;
+        Mon, 15 Jul 2019 14:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199654;
-        bh=dMS4IlMtitQta4w5eymfq+mTgMKszYDZ+A8Kxy3G5DA=;
+        s=default; t=1563199660;
+        bh=PEeVZIvmnUKPYl4Xamol5A8GV2YbgU4bwaeAHC+GqtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPKABndB5XQUsXEQtdaeI4TemBYsXhJfoziaitVS8B8JfTuMvLVK89Oj7rzFNhmr9
-         wXLJLpRFnmwSgfVT+E21+ImAyGvDnB/Jd2cCo6Xe7BEGM8cAi74jSVa453Rcx5WmvY
-         C9BqYn1pFJIIJkrhnQc7/0IAUjKv3KxLysT9jc6A=
+        b=sp2cWuycFrzMajDPni1Zqkr0I/Q08tM9I9ZNwC9sGJ33hgH+OV26hNq2VTYd3ZpXy
+         eMjpQV2/BSwSFFobRy0FgNyJ4kk9bF3T61yKOlN6Hpe2IP/WVn/LEMI7byFFxdx1B4
+         swTW+IsGJfJuOKsdsHYXboGk5kXSgtxA2nh6ElsI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biao Huang <biao.huang@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 062/219] net: stmmac: dwmac4: fix flow control issue
-Date:   Mon, 15 Jul 2019 10:01:03 -0400
-Message-Id: <20190715140341.6443-62-sashal@kernel.org>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 064/219] crypto: inside-secure - do not rely on the hardware last bit for result descriptors
+Date:   Mon, 15 Jul 2019 10:01:05 -0400
+Message-Id: <20190715140341.6443-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,55 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit ee326fd01e79dfa42014d55931260b68b9fa3273 ]
+[ Upstream commit 89332590427235680236b9470e851afc49b3caa1 ]
 
-Current dwmac4_flow_ctrl will not clear
-GMAC_RX_FLOW_CTRL_RFE/GMAC_RX_FLOW_CTRL_RFE bits,
-so MAC hw will keep flow control on although expecting
-flow control off by ethtool. Add codes to fix it.
+When performing a transformation the hardware is given result
+descriptors to save the result data. Those result descriptors are
+batched using a 'first' and a 'last' bit. There are cases were more
+descriptors than needed are given to the engine, leading to the engine
+only using some of them, and not setting the last bit on the last
+descriptor we gave. This causes issues were the driver and the hardware
+aren't in sync anymore about the number of result descriptors given (as
+the driver do not give a pool of descriptor to use for any
+transformation, but a pool of descriptors to use *per* transformation).
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch fixes it by attaching the number of given result descriptors
+to the requests, and by using this number instead of the 'last' bit
+found on the descriptors to process them.
+
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../crypto/inside-secure/safexcel_cipher.c    | 24 ++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index a2f3db39221e..d0e6e1503581 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -475,8 +475,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
- 	if (fc & FLOW_RX) {
- 		pr_debug("\tReceive Flow-Control ON\n");
- 		flow |= GMAC_RX_FLOW_CTRL_RFE;
--		writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
- 	}
-+	writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
+diff --git a/drivers/crypto/inside-secure/safexcel_cipher.c b/drivers/crypto/inside-secure/safexcel_cipher.c
+index 7ef30a98cb24..23fb85f4b3cc 100644
+--- a/drivers/crypto/inside-secure/safexcel_cipher.c
++++ b/drivers/crypto/inside-secure/safexcel_cipher.c
+@@ -51,6 +51,8 @@ struct safexcel_cipher_ctx {
+ 
+ struct safexcel_cipher_req {
+ 	enum safexcel_cipher_direction direction;
++	/* Number of result descriptors associated to the request */
++	unsigned int rdescs;
+ 	bool needs_inv;
+ };
+ 
+@@ -333,7 +335,10 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
+ 
+ 	*ret = 0;
+ 
+-	do {
++	if (unlikely(!sreq->rdescs))
++		return 0;
 +
- 	if (fc & FLOW_TX) {
- 		pr_debug("\tTransmit Flow-Control ON\n");
++	while (sreq->rdescs--) {
+ 		rdesc = safexcel_ring_next_rptr(priv, &priv->ring[ring].rdr);
+ 		if (IS_ERR(rdesc)) {
+ 			dev_err(priv->dev,
+@@ -346,7 +351,7 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
+ 			*ret = safexcel_rdesc_check_errors(priv, rdesc);
  
-@@ -484,7 +485,7 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
- 			pr_debug("\tduplex mode: PAUSE %d\n", pause_time);
+ 		ndesc++;
+-	} while (!rdesc->last_seg);
++	}
  
- 		for (queue = 0; queue < tx_cnt; queue++) {
--			flow |= GMAC_TX_FLOW_CTRL_TFE;
-+			flow = GMAC_TX_FLOW_CTRL_TFE;
+ 	safexcel_complete(priv, ring);
  
- 			if (duplex)
- 				flow |=
-@@ -492,6 +493,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+@@ -501,6 +506,7 @@ static int safexcel_send_req(struct crypto_async_request *base, int ring,
+ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 				      int ring,
+ 				      struct crypto_async_request *base,
++				      struct safexcel_cipher_req *sreq,
+ 				      bool *should_complete, int *ret)
+ {
+ 	struct safexcel_cipher_ctx *ctx = crypto_tfm_ctx(base->tfm);
+@@ -509,7 +515,10 @@ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
  
- 			writel(flow, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
- 		}
-+	} else {
-+		for (queue = 0; queue < tx_cnt; queue++)
-+			writel(0, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
- 	}
+ 	*ret = 0;
+ 
+-	do {
++	if (unlikely(!sreq->rdescs))
++		return 0;
++
++	while (sreq->rdescs--) {
+ 		rdesc = safexcel_ring_next_rptr(priv, &priv->ring[ring].rdr);
+ 		if (IS_ERR(rdesc)) {
+ 			dev_err(priv->dev,
+@@ -522,7 +531,7 @@ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 			*ret = safexcel_rdesc_check_errors(priv, rdesc);
+ 
+ 		ndesc++;
+-	} while (!rdesc->last_seg);
++	}
+ 
+ 	safexcel_complete(priv, ring);
+ 
+@@ -564,7 +573,7 @@ static int safexcel_skcipher_handle_result(struct safexcel_crypto_priv *priv,
+ 
+ 	if (sreq->needs_inv) {
+ 		sreq->needs_inv = false;
+-		err = safexcel_handle_inv_result(priv, ring, async,
++		err = safexcel_handle_inv_result(priv, ring, async, sreq,
+ 						 should_complete, ret);
+ 	} else {
+ 		err = safexcel_handle_req_result(priv, ring, async, req->src,
+@@ -587,7 +596,7 @@ static int safexcel_aead_handle_result(struct safexcel_crypto_priv *priv,
+ 
+ 	if (sreq->needs_inv) {
+ 		sreq->needs_inv = false;
+-		err = safexcel_handle_inv_result(priv, ring, async,
++		err = safexcel_handle_inv_result(priv, ring, async, sreq,
+ 						 should_complete, ret);
+ 	} else {
+ 		err = safexcel_handle_req_result(priv, ring, async, req->src,
+@@ -633,6 +642,8 @@ static int safexcel_skcipher_send(struct crypto_async_request *async, int ring,
+ 		ret = safexcel_send_req(async, ring, sreq, req->src,
+ 					req->dst, req->cryptlen, 0, 0, req->iv,
+ 					commands, results);
++
++	sreq->rdescs = *results;
+ 	return ret;
+ }
+ 
+@@ -655,6 +666,7 @@ static int safexcel_aead_send(struct crypto_async_request *async, int ring,
+ 					req->cryptlen, req->assoclen,
+ 					crypto_aead_authsize(tfm), req->iv,
+ 					commands, results);
++	sreq->rdescs = *results;
+ 	return ret;
  }
  
 -- 
