@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862EEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54736C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF0F2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2469E206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199853;
-	bh=k/xVOyM0I0xVwuzQ+tzfU7zBmoYP57drWfdquu2hkQU=;
+	s=default; t=1563199860;
+	bh=27+fkck8RvRlwgSnIlrM1SjnoQ9LSZnfru2P0EIgqow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x1UrBh+ADet5X+DktgwBQAfqqjewj/EbwR39ble2XfrMo64JD0yxXPy5vXHVdSQIe
-	 jwupaRVu24ibsUBzlcCK/5iTwHBtUYrWraCrcO1PYPhpUTm4Cn4ZTSiDX7zF7Ava9R
-	 f2aQLm9U4zVAwkO7uv0/OnfjTmaOV0tEEnFAqCoQ=
+	b=iMFp0flQunLlno5FjqFxvfUDIiE+4yt6I0JMVjI0H/iCZw0jCvTPSE8nHLk6O0Nde
+	 MXQP4ulSXyZcBgQo5L2LC6IpbZBe0gVofroWGOQpdJpFIMrBtURXCfkEsleIVV77T0
+	 IwuAAUgZ4ob9SEXAHRjpGkjKfgxYjTRpki7klk30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388449AbfGOOKw (ORCPT
+        id S2388700AbfGOOK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:10:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41682 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731456AbfGOOKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:10:48 -0400
+        id S2388790AbfGOOJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:58 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E9C21530;
-        Mon, 15 Jul 2019 14:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0492081C;
+        Mon, 15 Jul 2019 14:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199847;
-        bh=k/xVOyM0I0xVwuzQ+tzfU7zBmoYP57drWfdquu2hkQU=;
+        s=default; t=1563199797;
+        bh=27+fkck8RvRlwgSnIlrM1SjnoQ9LSZnfru2P0EIgqow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nffz52FeHCmmZEGJUmVn0BkjZPjMYKYtb+VPNwgo8H8cZ9H8GzTU6syt+k8BJHKWm
-         0E2y70V4gsTkWK6XsH0RhTIN8ezJAvkv6tqZgVbMnxfqmya86lfSNUvnInMaEdlw0R
-         zw58VP2bqHWmLEqf2vv8xF4yfFn/D9w8yddI3Sng=
+        b=hc4ZfLNmfKxYVNXNYraI4A/QfmKMMkFYeIiG1qgvs4IKYrvHIJ/mvjbUx/DWiqrT7
+         daibrLdqFLc1Dz/jPDc+uROpg+OYUCYjh5YqDk+jqP9hogswLcxv/h2hhnHUrmsMpF
+         D2cf7OK2dwSB45eAKtEa0WbETxl1j+X4hzxguIfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 124/219] ipsec: select crypto ciphers for xfrm_algo
-Date:   Mon, 15 Jul 2019 10:02:05 -0400
-Message-Id: <20190715140341.6443-124-sashal@kernel.org>
+Cc:     Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 108/219] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
+Date:   Mon, 15 Jul 2019 10:01:49 -0400
+Message-Id: <20190715140341.6443-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,43 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
 
-[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
+[ Upstream commit ac28ec07ae1c5c1e18ed6855eb105a328418da88 ]
 
-kernelci.org reports failed builds on arc because of what looks
-like an old missed 'select' statement:
+commit c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
+introduces rsnd_ctu_id which calcualates and gives
+the main Device id of the CTU by dividing the id by 4.
+rsnd_mod_id uses this interface to get the CTU main
+Device id. But this commit forgets to revert the main
+Device id calcution previously done in rsnd_ctu_probe_
+which also divides the id by 4. This path corrects the
+same to get the correct main Device id.
 
-net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
-xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
+The issue is observered when rsnd_ctu_probe_ is done for CTU1
 
-I don't see this in randconfig builds on other architectures, but
-it's fairly clear we want to select the hash code for it, like we
-do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
-is also required even though it has not popped up in build tests.
+Fixes: c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
 
-Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/sh/rcar/ctu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
-index 5d43aaa17027..831668ee8229 100644
---- a/net/xfrm/Kconfig
-+++ b/net/xfrm/Kconfig
-@@ -14,6 +14,8 @@ config XFRM_ALGO
- 	tristate
- 	select XFRM
- 	select CRYPTO
-+	select CRYPTO_HASH
-+	select CRYPTO_BLKCIPHER
+diff --git a/sound/soc/sh/rcar/ctu.c b/sound/soc/sh/rcar/ctu.c
+index 8cb06dab234e..7647b3d4c0ba 100644
+--- a/sound/soc/sh/rcar/ctu.c
++++ b/sound/soc/sh/rcar/ctu.c
+@@ -108,7 +108,7 @@ static int rsnd_ctu_probe_(struct rsnd_mod *mod,
+ 			   struct rsnd_dai_stream *io,
+ 			   struct rsnd_priv *priv)
+ {
+-	return rsnd_cmd_attach(io, rsnd_mod_id(mod) / 4);
++	return rsnd_cmd_attach(io, rsnd_mod_id(mod));
+ }
  
- config XFRM_USER
- 	tristate "Transformation user configuration interface"
+ static void rsnd_ctu_value_init(struct rsnd_dai_stream *io,
 -- 
 2.20.1
 
