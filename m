@@ -2,109 +2,86 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEB5C73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A477C73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE5D214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BCD20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfGOAhg (ORCPT
+        id S1728988AbfGOBIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 20:37:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43676 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbfGOAha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 20:37:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 74AE9308FC4B;
-        Mon, 15 Jul 2019 00:37:30 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 358105D9D2;
-        Mon, 15 Jul 2019 00:37:29 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH 03/22] x86/kvm: Fix frame pointer usage in vmx_vmenter()
-Date:   Sun, 14 Jul 2019 19:36:58 -0500
-Message-Id: <299fe4adb78cff0a182f8376c23a445b94d7c782.1563150885.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1563150885.git.jpoimboe@redhat.com>
-References: <cover.1563150885.git.jpoimboe@redhat.com>
+        Sun, 14 Jul 2019 21:08:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59744 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfGOBIr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 21:08:47 -0400
+Received: from 2.general.tyhicks.us.vpn ([10.172.64.53] helo=sec)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hmpTx-00013t-W9; Mon, 15 Jul 2019 01:08:46 +0000
+Date:   Mon, 15 Jul 2019 01:08:43 +0000
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org
+Subject: [GIT PULL] eCryptfs fixes for 5.3-rc1
+Message-ID: <20190715010612.GA13363@sec>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 15 Jul 2019 00:37:30 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_FRAME_POINTER, vmx_vmenter() needs to do frame pointer setup
-before calling kvm_spurious_fault().
+Hi Linus,
 
-Fixes the following warning:
+The following changes since commit 5ded5871030eb75017639148da0a58931dfbfc25:
 
-  arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
+  Merge tag 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi (2019-02-15 13:36:43 -0800)
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
----
- arch/x86/kvm/vmx/vmenter.S | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+are available in the git repository at:
 
-diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-index d4cb1945b2e3..a2fabe3aaf9c 100644
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -4,6 +4,7 @@
- #include <asm/bitsperlong.h>
- #include <asm/kvm_vcpu_regs.h>
- #include <asm/nospec-branch.h>
-+#include <asm/frame.h>
- 
- #define WORD_SIZE (BITS_PER_LONG / 8)
- 
-@@ -44,19 +45,22 @@
-  * to vmx_vmexit.
-  */
- ENTRY(vmx_vmenter)
-+	FRAME_BEGIN
- 	/* EFLAGS.ZF is set if VMCS.LAUNCHED == 0 */
- 	je 2f
- 
- 1:	vmresume
--	ret
-+	jmp 4f
- 
- 2:	vmlaunch
--	ret
-+	jmp 4f
- 
- 3:	cmpb $0, kvm_rebooting
- 	jne 4f
- 	call kvm_spurious_fault
--4:	ret
-+
-+4:	FRAME_END
-+	ret
- 
- 	.pushsection .fixup, "ax"
- 5:	jmp 3b
--- 
-2.20.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/ecryptfs.git tags/ecryptfs-5.3-rc1-fixes
 
+for you to fetch changes up to 7451c54abc9139585492605d9e91dec2d26c6457:
+
+  ecryptfs: Change return type of ecryptfs_process_flags (2019-07-02 19:28:02 +0000)
+
+----------------------------------------------------------------
+- Fix error handling when ecryptfs_read_lower() encounters an error
+- Fix read-only file creation when the eCryptfs mount is configured to
+  store metadata in xattrs
+- Minor code cleanups
+
+----------------------------------------------------------------
+Dan Carpenter (2):
+      eCryptfs: fix a couple type promotion bugs
+      ecryptfs: re-order a condition for static checkers
+
+Hariprasad Kelam (1):
+      ecryptfs: Change return type of ecryptfs_process_flags
+
+Robbie Ko (1):
+      eCryptfs: fix permission denied with ecryptfs_xattr mount option when create readonly file
+
+Sascha Hauer (1):
+      ecryptfs: use print_hex_dump_bytes for hexdump
+
+YueHaibing (2):
+      ecryptfs: remove unnessesary null check in ecryptfs_keyring_auth_tok_for_sig
+      ecryptfs: Make ecryptfs_xattr_handler static
+
+ fs/ecryptfs/crypto.c   | 42 +++++++++++++++++++++++++-----------------
+ fs/ecryptfs/debug.c    | 22 +++-------------------
+ fs/ecryptfs/inode.c    |  2 +-
+ fs/ecryptfs/keystore.c |  9 +++++----
+ 4 files changed, 34 insertions(+), 41 deletions(-)
