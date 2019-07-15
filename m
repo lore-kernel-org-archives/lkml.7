@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A5BC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD015C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB3F20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D8A20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KrfyfL7s"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iK3uUaP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbfGOT1Q (ORCPT
+        id S1730763AbfGOT1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:27:16 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49204 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730322AbfGOT1M (ORCPT
+        Mon, 15 Jul 2019 15:27:20 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38650 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730584AbfGOT1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:27:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJP3SU107276;
-        Mon, 15 Jul 2019 19:26:01 GMT
+        Mon, 15 Jul 2019 15:27:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJOAcp018340;
+        Mon, 15 Jul 2019 19:26:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=7F+Rx8LNf0wBjAbBG8cbbgL6UUfScXRntxKBK6+mpR4=;
- b=KrfyfL7sYWL62GWK7TzzvUuYHknnkhhWMH3xvBbathLSj+tEwec4Z0DIVMs0HgDQ8P/Y
- k8JldnJhYWQUYgio0iS+Cnc84TCgLjeBOMwDEcex0SZiJSjGUX1fX799weN59qCbTCX4
- aUGolZbxVU49RxUUT1bhUObTV06Eh9QQqw9JdmE/9z0Ap9e+QAKE3dlGjP53JVZYF5sA
- Hysb5fVjUhc+lK8BmxutyLyE60u/AWlCWExiuHxRobFWdHsuguJj0L1wi1DHuyOpyVbe
- c6bN3qsqSDmob7jxtQdhNYbuyRA1kJsalvQ+37pTvI/LlhjGcqSROKcu3Q/dnfMRe0n9 jg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2tq78pgecs-1
+ bh=3eVuBt9o65dPhmPiMWn6lk9FzUIcXbbNKM5BCFCplCY=;
+ b=iK3uUaP12YpqPpt8uouhFcoO5w01/8gINdUTpWhwVQ2rcwq9VZOxHEIs3tJ0MpZ5klNk
+ mAhk8dwEbBmomAdnucYeGDZtxJ/m8YJIeUPv01VRXqhziWap/+pYRKomIq1THSz9eKmE
+ ZoBnET3deAPH0Yczr++qyGAIpNECIh+GjbhORYQesj/A6EjUcm99cMqNbxtAVVukSRQD
+ r31TyY/ipeYboGLuSwoHF+6aFskBrtirnDgogD3MbF5V3lY+tflz0eO0dxDPiHpSerQS
+ GVqvnqs9lnEgmbx9J6MnWwf8bI9k07i1Xnzdaa5x1CVym0akLx5Ppjt9cBUQSQI3RxPA Zw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtghyn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 15 Jul 2019 19:26:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJMdSn056313;
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJMkk5185803;
         Mon, 15 Jul 2019 19:26:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2tq742prtj-1
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2tq4dtg9hy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 15 Jul 2019 19:26:01 +0000
 Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6FJPrkx007773;
-        Mon, 15 Jul 2019 19:25:53 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6FJPvpB031345;
+        Mon, 15 Jul 2019 19:25:57 GMT
 Received: from ol-bur-x5-4.us.oracle.com (/10.152.128.37)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jul 2019 12:25:52 -0700
+        with ESMTP ; Mon, 15 Jul 2019 12:25:56 -0700
 From:   Alex Kogan <alex.kogan@oracle.com>
 To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
         will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
@@ -61,9 +61,9 @@ To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
 Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
         alex.kogan@oracle.com, dave.dice@oracle.com,
         rahul.x.yadav@oracle.com
-Subject: [PATCH v3 1/5] locking/qspinlock: Make arch_mcs_spin_unlock_contended more generic
-Date:   Mon, 15 Jul 2019 15:25:32 -0400
-Message-Id: <20190715192536.104548-2-alex.kogan@oracle.com>
+Subject: [PATCH v3 4/5] locking/qspinlock: Introduce starvation avoidance into CNA
+Date:   Mon, 15 Jul 2019 15:25:35 -0400
+Message-Id: <20190715192536.104548-5-alex.kogan@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190715192536.104548-1-alex.kogan@oracle.com>
 References: <20190715192536.104548-1-alex.kogan@oracle.com>
@@ -83,71 +83,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arch_mcs_spin_unlock_contended macro should accept the value to be
-stored into the lock argument as another argument. This allows using the
-same macro in cases where the value to be stored is different from 1.
+Choose the next lock holder among spinning threads running on the same
+node with high probability rather than always. With small probability,
+hand the lock to the first thread in the secondary queue or, if that
+queue is empty, to the immediate successor of the current lock holder
+in the main queue.  Thus, assuming no failures while threads hold the
+lock, every thread would be able to acquire the lock after a bounded
+number of lock transitions, with high probability.
 
 Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
 Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
 ---
- arch/arm/include/asm/mcs_spinlock.h | 4 ++--
- kernel/locking/mcs_spinlock.h       | 6 +++---
- kernel/locking/qspinlock.c          | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/locking/qspinlock_cna.h | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/asm/mcs_spinlock.h b/arch/arm/include/asm/mcs_spinlock.h
-index 529d2cf4d06f..ae6d763477f4 100644
---- a/arch/arm/include/asm/mcs_spinlock.h
-+++ b/arch/arm/include/asm/mcs_spinlock.h
-@@ -14,9 +14,9 @@ do {									\
- 		wfe();							\
- } while (0)								\
- 
--#define arch_mcs_spin_unlock_contended(lock)				\
-+#define arch_mcs_spin_unlock_contended(lock, val)			\
- do {									\
--	smp_store_release(lock, 1);					\
-+	smp_store_release(lock, (val));					\
- 	dsb_sev();							\
- } while (0)
- 
-diff --git a/kernel/locking/mcs_spinlock.h b/kernel/locking/mcs_spinlock.h
-index 5e10153b4d3c..bc6d3244e1af 100644
---- a/kernel/locking/mcs_spinlock.h
-+++ b/kernel/locking/mcs_spinlock.h
-@@ -41,8 +41,8 @@ do {									\
-  * operations in the critical section has been completed before
-  * unlocking.
-  */
--#define arch_mcs_spin_unlock_contended(l)				\
--	smp_store_release((l), 1)
-+#define arch_mcs_spin_unlock_contended(l, val)				\
-+	smp_store_release((l), (val))
+diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
+index efb9b12b2f9b..3de5be813a46 100644
+--- a/kernel/locking/qspinlock_cna.h
++++ b/kernel/locking/qspinlock_cna.h
+@@ -4,6 +4,7 @@
  #endif
  
+ #include <linux/topology.h>
++#include <linux/random.h>
+ 
  /*
-@@ -115,7 +115,7 @@ void mcs_spin_unlock(struct mcs_spinlock **lock, struct mcs_spinlock *node)
- 	}
+  * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
+@@ -36,6 +37,33 @@ struct cna_node {
  
- 	/* Pass lock to next waiter. */
--	arch_mcs_spin_unlock_contended(&next->locked);
-+	arch_mcs_spin_unlock_contended(&next->locked, 1);
- }
+ #define CNA_NODE(ptr) ((struct cna_node *)(ptr))
  
- #endif /* __LINUX_MCS_SPINLOCK_H */
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index e14b32c69639..961781624638 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -558,7 +558,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	if (!next)
- 		next = smp_cond_load_relaxed(&node->next, (VAL));
++/* Per-CPU pseudo-random number seed */
++static DEFINE_PER_CPU(u32, seed);
++
++/*
++ * Controls the probability for intra-node lock hand-off. It can be
++ * tuned and depend, e.g., on the number of CPUs per node. For now,
++ * choose a value that provides reasonable long-term fairness without
++ * sacrificing performance compared to a version that does not have any
++ * fairness guarantees.
++ */
++#define INTRA_NODE_HANDOFF_PROB_ARG 0x10000
++
++/*
++ * Return false with probability 1 / @range.
++ * @range must be a power of 2.
++ */
++static bool probably(unsigned int range)
++{
++	u32 s;
++
++	s = this_cpu_read(seed);
++	s = next_pseudo_random32(s);
++	this_cpu_write(seed, s);
++
++	return s & (range - 1);
++}
++
+ static void cna_init_node(struct mcs_spinlock *node)
+ {
+ 	struct cna_node *cn = CNA_NODE(node);
+@@ -140,7 +168,13 @@ static inline void cna_pass_mcs_lock(struct mcs_spinlock *node,
+ 	u64 *var = &next->locked;
+ 	u64 val = 1;
  
--	arch_mcs_spin_unlock_contended(&next->locked);
-+	arch_mcs_spin_unlock_contended(&next->locked, 1);
- 	pv_kick_node(lock, next);
+-	succ = find_successor(node);
++	/*
++	 * Try to pass the lock to a thread running on the same node.
++	 * For long-term fairness, search for such a thread with high
++	 * probability rather than always.
++	 */
++	if (probably(INTRA_NODE_HANDOFF_PROB_ARG))
++		succ = find_successor(node);
  
- release:
+ 	if (succ) {
+ 		var = &succ->mcs.locked;
 -- 
 2.11.0 (Apple Git-81)
 
