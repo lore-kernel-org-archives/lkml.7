@@ -2,104 +2,91 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE274C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21712C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798FC21537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC564206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200799;
-	bh=TQbRXzfc5WhIRgOGMu7vtqmyzHneb22EBvCzCpUcghY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O+tgmh2lbBRm2jTXszmG7SVE+fsVDQVx5qOHofSPhMg0qruCO4yDR0Oqsr0PcOPcc
-	 3IbVBsjXtzMRz5PX1MSQWaRtl8t9RvGTlsKfE0Wt6LQTi2lAd7auVwacnmnFX/zjPq
-	 HH/LiUv8ovDU9o63GQ59CqKXqN4eoMvYVDitHisQ=
+	s=default; t=1563200804;
+	bh=DNqlzREK4dV/aPzROroMGAgiODE6UVu/9+MH9locEQ4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cYJUGZvngeD0BW/nUmjlM/99sBawgpdzhXH4fnZgwVetWVmrzgAKiX4tTvThPEHuJ
+	 EDj22XjJG51uSwDxFPEvZ6NzBbOHS11R+CDFWWLhtxon1SGCFA1owFugLeCOtvBC+V
+	 rFvzzP8t7jCUBF03Mb3jGzw3x1iRi4OdoAxPMUh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391299AbfGOO0i (ORCPT
+        id S2390771AbfGOO0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:26:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390462AbfGOO0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:26:36 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        id S2390462AbfGOO0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:26:39 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E4B217F4;
-        Mon, 15 Jul 2019 14:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E1C021897
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200796;
-        bh=TQbRXzfc5WhIRgOGMu7vtqmyzHneb22EBvCzCpUcghY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J52NX4ulU0Mkd2DKOTClavrfMeLOeIeItULsF9GDBi49w6hO0flleSTBFGo5i+UuO
-         S2j7KwZhPodxwTOaMnJxAhy3IzN4AA39VEcqhtcbMV5wvGHKRA+kJX1WH2cZTSBXva
-         TYj4PxYRsQQrs6yL98j7B3Y7EUZAEn9xbfFbOjls=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Alan Winkowski <walan@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 132/158] net: mvpp2: prs: Don't override the sign bit in SRAM parser shift
-Date:   Mon, 15 Jul 2019 10:17:43 -0400
-Message-Id: <20190715141809.8445-132-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+        s=default; t=1563200798;
+        bh=DNqlzREK4dV/aPzROroMGAgiODE6UVu/9+MH9locEQ4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SabY96C/POfFbxV/Umsy2WGXdijJG7KF8f3Ysqqdifd7WqBbEJx+xG8P7Mmx5WDBz
+         q3jA6uUizcJUa+q10TuC7UrMWVr4NRyvH6PaW3VSAzRFj033Puah609iqGVB5ULYFh
+         WWDH1OLKrjzSjdlcJvmRoz/+0x0+44lupFxtDxGM=
+Received: by mail-wr1-f41.google.com with SMTP id p17so17309328wrf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:26:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAUmT7CkchuRovuWrwd0s4r31JPTt3bNV/jt7JQDcIToouuGDwfq
+        xLPG+TVxXXUB8QciTIo458bgOVDQrishDYyZrqrRow==
+X-Google-Smtp-Source: APXvYqww0AN3+Pb54VR+Bz/+6fgGsdMSZEJs1XScvHSY8TTgNMqkXTS8y1miAw5Idq1Dc5EeFC1Tkcu7M/Wx0leEMSw=
+X-Received: by 2002:adf:dd0f:: with SMTP id a15mr27817870wrm.265.1563200796986;
+ Mon, 15 Jul 2019 07:26:36 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190715130056.10627-1-andrew.cooper3@citrix.com> <a04918d1-975e-5869-1ecd-c9df4ae5b1c1@suse.com>
+In-Reply-To: <a04918d1-975e-5869-1ecd-c9df4ae5b1c1@suse.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 15 Jul 2019 07:26:25 -0700
+X-Gmail-Original-Message-ID: <CALCETrX0T=vzyN8gqoBmA72xwzS45d5bDTfcZQJayht9n9ijPA@mail.gmail.com>
+Message-ID: <CALCETrX0T=vzyN8gqoBmA72xwzS45d5bDTfcZQJayht9n9ijPA@mail.gmail.com>
+Subject: Re: [PATCH] x86/paravirt: Drop {read,write}_cr8() hooks
+To:     Juergen Gross <jgross@suse.com>
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        FengTang <feng.tang@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alok Kataria <akataria@vmware.com>,
+        Nadav Amit <namit@vmware.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+On Mon, Jul 15, 2019 at 6:23 AM Juergen Gross <jgross@suse.com> wrote:
+>
+> On 15.07.19 15:00, Andrew Cooper wrote:
+> > There is a lot of infrastructure for functionality which is used
+> > exclusively in __{save,restore}_processor_state() on the suspend/resume
+> > path.
+> >
+> > cr8 is an alias of APIC_TASKPRI, and APIC_TASKPRI is saved/restored
+> > independently by lapic_{suspend,resume}().
+>
+> Aren't those called only with CONFIG_PM set?
+>
 
-[ Upstream commit 8ec3ede559956f8ad58db7b57d25ac724bab69e9 ]
 
-The Header Parser allows identifying various fields in the packet
-headers, used for various kind of filtering and classification
-steps.
-
-This is a re-entrant process, where the offset in the packet header
-depends on the previous lookup results. This offset is represented in
-the SRAM results of the TCAM, as a shift to be operated.
-
-This shift can be negative in some cases, such as in IPv6 parsing.
-
-This commit prevents overriding the sign bit when setting the shift
-value, which could cause instabilities when parsing IPv6 flows.
-
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Suggested-by: Alan Winkowski <walan@marvell.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-index ae2240074d8e..5692c6087bbb 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-@@ -312,7 +312,8 @@ static void mvpp2_prs_sram_shift_set(struct mvpp2_prs_entry *pe, int shift,
- 	}
- 
- 	/* Set value */
--	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] = shift & MVPP2_PRS_SRAM_SHIFT_MASK;
-+	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] |=
-+		shift & MVPP2_PRS_SRAM_SHIFT_MASK;
- 
- 	/* Reset and set operation */
- 	mvpp2_prs_sram_bits_clear(pe, MVPP2_PRS_SRAM_OP_SEL_SHIFT_OFFS,
--- 
-2.20.1
-
+Unless I'm missing something, we only build any of the restore code
+(including the write_cr8() call) if CONFIG_PM_SLEEP is set, and that
+selects CONFIG_PM, so we should be fine, I think.
