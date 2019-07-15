@@ -2,137 +2,206 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD4EC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35A9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6722A2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7902083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfGOJZr (ORCPT
+        id S1729653AbfGOJ02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:25:47 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40888 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729394AbfGOJZq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:25:46 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s145so11046293qke.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 02:25:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rPkUhtxg4MFrjNr+Dr5xrJl5bg2MfLxjRYrMvZrd2ec=;
-        b=gP7sh1dNi+v9wtb47wHxlGhwMMdYRbmdbnQeqiu2B0LNj4+FOncY/hWbvCfQiayCSp
-         dT2V/gVMT0ZPWxCFIbjOw+FGF7a6RJIbbvnAeO9HVCHVO21TYl32Q7LE76OrylmhX22m
-         9TdpvTL8t3N25WkU9MxWO5woO0MKbciGjFn1Zki5C+HEt3kWmjaCV0rZmU2WmR5LZzgy
-         2Vr+NC5Ih7+dBsBAb+TN2IwziABnV9SXXjRaHE5IFT55tc3Am/9lc2UJSm5czq2yF0QE
-         WEPxgXGTFpcK8hJ7sDaTackqhdOoQwFMS0h5uVEBCxvaMCxYcxMD1hofBZXghqmrlvy4
-         Rdkg==
-X-Gm-Message-State: APjAAAX+jnBAv625A4OCxQSDcFLrkWfUxnBlnFKRx6ZQlnsrjTBOXPbB
-        +fuSGSBMWDGOyXCtyC6Gq6PgB4QZq/g3a1ax/0o=
-X-Google-Smtp-Source: APXvYqx2eckByQGU+dfHfehnNGjeOF0hufPzEc5ZbZv1szybdVE20KchvrVMo/4bumusNmT5/oravdpEMduU41KKuic=
-X-Received: by 2002:a37:5f45:: with SMTP id t66mr15941069qkb.286.1563182746083;
- Mon, 15 Jul 2019 02:25:46 -0700 (PDT)
+        Mon, 15 Jul 2019 05:26:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58356 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729487AbfGOJ02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 05:26:28 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 36EF687629;
+        Mon, 15 Jul 2019 09:26:27 +0000 (UTC)
+Received: from [10.36.117.137] (ovpn-117-137.ams2.redhat.com [10.36.117.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C63F245D3;
+        Mon, 15 Jul 2019 09:26:14 +0000 (UTC)
+Subject: Re: [RFC][Patch v11 1/2] mm: page_hinting: core infrastructure
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
+        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
+        mst@redhat.com, dodgen@google.com, konrad.wilk@oracle.com,
+        dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com, john.starks@microsoft.com,
+        mhocko@suse.com
+References: <20190710195158.19640-1-nitesh@redhat.com>
+ <20190710195158.19640-2-nitesh@redhat.com>
+ <3f9a7e7b-c026-3530-e985-804fc7f1ec31@intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <0a89271f-c80b-9314-f6bb-8fdf0d714431@redhat.com>
+Date:   Mon, 15 Jul 2019 11:26:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190704055217.45860-1-natechancellor@gmail.com> <20190704055217.45860-7-natechancellor@gmail.com>
-In-Reply-To: <20190704055217.45860-7-natechancellor@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 15 Jul 2019 11:25:29 +0200
-Message-ID: <CAK8P3a1e4xKTZc1Fcd9KLwaGG_wpcAnSNu7mrB6zw+aBJ0e0CA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] drm/amd/powerplay: Use proper enums in vega20_print_clk_levels
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        Evan Quan <evan.quan@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kevin Wang <kevin1.wang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3f9a7e7b-c026-3530-e985-804fc7f1ec31@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 15 Jul 2019 09:26:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 7:52 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> clang warns:
->
-> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:995:39: warning:
-> implicit conversion from enumeration type 'PPCLK_e' to different
-> enumeration type 'enum smu_clk_type' [-Wenum-conversion]
->                 ret = smu_get_current_clk_freq(smu, PPCLK_SOCCLK, &now);
->                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:1016:39: warning:
-> implicit conversion from enumeration type 'PPCLK_e' to different
-> enumeration type 'enum smu_clk_type' [-Wenum-conversion]
->                 ret = smu_get_current_clk_freq(smu, PPCLK_FCLK, &now);
->                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:1031:39: warning:
-> implicit conversion from enumeration type 'PPCLK_e' to different
-> enumeration type 'enum smu_clk_type' [-Wenum-conversion]
->                 ret = smu_get_current_clk_freq(smu, PPCLK_DCEFCLK, &now);
->                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
->
-> The values are mapped one to one in vega20_get_smu_clk_index so just use
-> the proper enums here.
->
-> Fixes: 096761014227 ("drm/amd/powerplay: support sysfs to get socclk, fclk, dcefclk")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/587
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+On 10.07.19 22:45, Dave Hansen wrote:
+> On 7/10/19 12:51 PM, Nitesh Narayan Lal wrote:
+>> +struct zone_free_area {
+>> +	unsigned long *bitmap;
+>> +	unsigned long base_pfn;
+>> +	unsigned long end_pfn;
+>> +	atomic_t free_pages;
+>> +	unsigned long nbits;
+>> +} free_area[MAX_NR_ZONES];
+> 
+> Why do we need an extra data structure.  What's wrong with putting
+> per-zone data in ... 'struct zone'?  The cover letter claims that it
+> doesn't touch core-mm infrastructure, but if it depends on mechanisms
+> like this, I think that's a very bad thing.
+> 
+> To be honest, I'm not sure this series is worth reviewing at this point.
+>  It's horribly lightly commented and full of kernel antipatterns lik
+> 
+> void func()
+> {
+> 	if () {
+> 		... indent entire logic
+> 		... of function
+> 	}
+> }
 
-Adding Kevin Wang for further review, as he sent a related patch in
-d36893362d22 ("drm/amd/powerplay: fix smu clock type change miss error")
+"full of". Hmm.
 
-I assume this one is still required as it triggers the same warning.
-Kevin, can you have a look?
+> 
+> It has big "TODO"s.  It's virtually comment-free.  I'm shocked it's at
+> the 11th version and still looking like this.
+> 
+>> +
+>> +		for (zone_idx = 0; zone_idx < MAX_NR_ZONES; zone_idx++) {
+>> +			unsigned long pages = free_area[zone_idx].end_pfn -
+>> +					free_area[zone_idx].base_pfn;
+>> +			bitmap_size = (pages >> PAGE_HINTING_MIN_ORDER) + 1;
+>> +			if (!bitmap_size)
+>> +				continue;
+>> +			free_area[zone_idx].bitmap = bitmap_zalloc(bitmap_size,
+>> +								   GFP_KERNEL);
+> 
+> This doesn't support sparse zones.  We can have zones with massive
+> spanned page sizes, but very few present pages.  On those zones, this
+> will exhaust memory for no good reason.
 
-      Arnd
+Yes, AFAIKS, sparse zones are problematic when we have NORMAL/MOVABLE mixed.
 
->  drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-> index 0f14fe14ecd8..e62dd6919b24 100644
-> --- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-> +++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-> @@ -992,7 +992,7 @@ static int vega20_print_clk_levels(struct smu_context *smu,
->                 break;
->
->         case SMU_SOCCLK:
-> -               ret = smu_get_current_clk_freq(smu, PPCLK_SOCCLK, &now);
-> +               ret = smu_get_current_clk_freq(smu, SMU_SOCCLK, &now);
->                 if (ret) {
->                         pr_err("Attempt to get current socclk Failed!");
->                         return ret;
-> @@ -1013,7 +1013,7 @@ static int vega20_print_clk_levels(struct smu_context *smu,
->                 break;
->
->         case SMU_FCLK:
-> -               ret = smu_get_current_clk_freq(smu, PPCLK_FCLK, &now);
-> +               ret = smu_get_current_clk_freq(smu, SMU_FCLK, &now);
->                 if (ret) {
->                         pr_err("Attempt to get current fclk Failed!");
->                         return ret;
-> @@ -1028,7 +1028,7 @@ static int vega20_print_clk_levels(struct smu_context *smu,
->                 break;
->
->         case SMU_DCEFCLK:
-> -               ret = smu_get_current_clk_freq(smu, PPCLK_DCEFCLK, &now);
-> +               ret = smu_get_current_clk_freq(smu, SMU_DCEFCLK, &now);
->                 if (ret) {
->                         pr_err("Attempt to get current dcefclk Failed!");
->                         return ret;
+1 bit for 2MB, 1 byte for 16MB, 64 bytes for 1GB
+
+IOW, this isn't optimal but only really problematic for big systems /
+very huge sparse zones.
+
+> 
+> Comparing this to Alex's patch set, it's of much lower quality and at a
+> much earlier stage of development.  The two sets are not really even
+> comparable right now.  This certainly doesn't sell me on (or even really
+
+To be honest, I find this statement quite harsh. Nitesh's hard work in
+the previous RFC's and many discussions with Alex essentially resulted
+in the two approaches we have right now. Alex's approach would not look
+the way it looks today without Nitesh's RFCs.
+
+So much to that.
+
+> enumerate the deltas in) this approach vs. Alex's.
+
+I am aware that memory hotplug is not properly supported yet (future
+work). Sparse zones work but eventually waste a handful of pages (!) -
+future work. Anything else you are aware of that is missing?
+
+My opinion:
+
+1. Alex' solution is clearly beneficial, as we don't need to manage/scan
+a bitmap. *however* we were concerned right from the beginning if
+core-buddy modifications will be accepted upstream for a purely
+virtualization-specific (as of now!) feature. If we can get it upstream,
+perfect. Back when we discussed the idea with Alex I was skeptical - I
+was expecting way more core modifications.
+
+2. We were looking for an alternative solution that doesn't require to
+modify the buddy. We have that now - yes, some things have to be worked
+out and cleaned up, not arguing against that. A cleaned-up version of
+this RFC with some fixes and enhancements should be ready to be used in
+*many* (not all) setups. Which is perfectly fine.
+
+So in summary, I think we should try our best to get Alex's series into
+shape and accepted upstream. However, if we get upstream resistance or
+it will take ages to get it in, I think we can start with this series
+here (which requires no major buddy modifications as of now) and the
+slowly see if we can convert it into Alex approach.
+
+The important part for me is that the core<->driver interface and the
+virtio interface is in a clean shape, so we can essentially swap out the
+implementation specific parts in the core.
+
+Cheers.
+
+-- 
+
+Thanks,
+
+David / dhildenb
