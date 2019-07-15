@@ -2,145 +2,511 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4DEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15760C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54882086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=daktronics.com header.i=@daktronics.com header.b="mjQTlKo2"
+	by mail.kernel.org (Postfix) with ESMTP id C6FF02086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563227322;
+	bh=MEhXgUJBvq5ZwqCh/csSmCHOAVmy/iuCVieOBLScO2A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lP7g6Pk62CAscoNc4BgH7jG0wtTdpYPv5yI3tnbG9ng3P0YuVJsvfu5BfjyCB5eNv
+	 NlxuwD7mwCJITehJMDe4Vb/FclsAW8vk8iQATSnmgLVAdFbVuuIlFVfo8X7K8fBGcE
+	 ffFW/FK5f8tcQH35xRZse5A8oHwpX6DwAYFuby9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732692AbfGOVs3 (ORCPT
+        id S1732863AbfGOVsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:48:29 -0400
-Received: from mail-eopbgr740080.outbound.protection.outlook.com ([40.107.74.80]:27119
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730984AbfGOVs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:48:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=daktronics.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+QEEByh4lS/gSMRbtZUtuN5W91MwldMSc83SzKGqWs0=;
- b=mjQTlKo2t5HI1bSImm8F0DSw/qEwYMVOXHw99bsMHvkXmHx+XQJoc+cREq7DLtHUofyhyjkkp/sqUErraTo4mSdRpbjgPCs/22rosWK+GOHIyUSBROJyvcacwW5qc8PrcRm+jJea47cBpmPO1h7f8qoGIEE91kxCm4ftoUJDTjI=
-Received: from SN6PR02MB4016.namprd02.prod.outlook.com (52.135.69.145) by
- SN6PR02MB4943.namprd02.prod.outlook.com (52.135.116.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Mon, 15 Jul 2019 21:47:45 +0000
-Received: from SN6PR02MB4016.namprd02.prod.outlook.com
- ([fe80::3dba:454:9025:c1d0]) by SN6PR02MB4016.namprd02.prod.outlook.com
- ([fe80::3dba:454:9025:c1d0%7]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
- 21:47:45 +0000
-From:   Matt Sickler <Matt.Sickler@daktronics.com>
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Bharath Vedartham <linux.bhar@gmail.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] staging: kpc2000: Convert put_page() to put_user_page*()
-Thread-Topic: [PATCH] staging: kpc2000: Convert put_page() to put_user_page*()
-Thread-Index: AQHVO0bnrb019gUuHEupUjqic0YUcabMHS+AgAAWgjA=
-Date:   Mon, 15 Jul 2019 21:47:45 +0000
-Message-ID: <SN6PR02MB4016687B605E3D97D699956EEECF0@SN6PR02MB4016.namprd02.prod.outlook.com>
-References: <20190715195248.GA22495@bharath12345-Inspiron-5559>
- <2604fcd1-4829-d77e-9f7c-d4b731782ff9@nvidia.com>
-In-Reply-To: <2604fcd1-4829-d77e-9f7c-d4b731782ff9@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Matt.Sickler@daktronics.com; 
-x-originating-ip: [2620:9b:8000:6046:9335:3b1c:cd5f:f1d3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4f9dbea-40c0-4a6d-52f3-08d7096e1288
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR02MB4943;
-x-ms-traffictypediagnostic: SN6PR02MB4943:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN6PR02MB4943530D267C230C0674C110EECF0@SN6PR02MB4943.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00997889E7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(376002)(136003)(366004)(396003)(346002)(189003)(199004)(76116006)(64756008)(66446008)(966005)(66556008)(66476007)(66946007)(81166006)(476003)(81156014)(8676002)(486006)(256004)(46003)(229853002)(11346002)(8936002)(446003)(478600001)(102836004)(6246003)(5660300002)(7696005)(316002)(53936002)(6436002)(55016002)(6506007)(54906003)(110136005)(9686003)(76176011)(6306002)(33656002)(68736007)(186003)(52536014)(45080400002)(6116002)(4326008)(99286004)(25786009)(71190400001)(305945005)(71200400001)(86362001)(2201001)(2501003)(14454004)(74316002)(7736002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4943;H:SN6PR02MB4016.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: daktronics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ndV78HoM98QrUbiI2IIUjvNf0Ml6CDjQzZlkM8Cz6qaxr+hIuZmjt4aqwHKJymy7XXpa0ohPL1ScA2m4C9BQmRxhL0tnI569YO0C2O9gLciEZZSl635Qxl26FN/XmpQv2YEsZW2Pedqp7ENNWSn7fyIt3JvPKIEAZYgBOwVm5rJ7BjmpaIRr4KwyKxUafKImG1ebYm53XkQc6QGl0GtBk5Fc1uF2l+WJOqERkrsYh95tpqddps6cf4f9A8psRwf6u9sLRxIH5A77rwwdsPjzDv3FaiDf4o5SLBF1iT9/+xiyQH5tWCBT3TVkmguFcqgTpXwcAJCVbYUU1dGLu8uKfXED1+y+QwyK/3J7Dt/c6gbRYnTMnPZQTIQa4bkYmthTKOiAah1JoQXWSnIeY357KIoCL2RtcsBG/qiOQskjo6o=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 15 Jul 2019 17:48:42 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34254 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730984AbfGOVsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:48:41 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l12so13925612oil.1;
+        Mon, 15 Jul 2019 14:48:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=thge4lAfWLVlF+efN7sXKAd1L8zk2D5WDEt6/zrCN6I=;
+        b=DCYXfll845hK8vAssrMGKK4vdukNsvDqjm5Dx0zC2Jui03OKmJGl55KHOxRj6N9ve/
+         lskpIkWpBWCNPbfs+DkZxiq15F0mAiVeqZ2GJJNT/UOTCs6sC3BO8RKImmggqi1JWyU/
+         voldqFkb0/i/RjrhB0N9U1s+KUyPy7xAX3hO4BQFV/p24B6pnJjHTfpML4Pt7mh+FMUE
+         gitk3ZBUoaqfcW418WBubrMs4GYXOK/PW56WAyzkEBlun5Fx7xPefHb91OLa5lPn8QEY
+         ZZlhwT3eOyiw0K0DfCRLgN3vdttSDH2w6wo6Z2KMH9JjeaiMR20SKGchy0d8oQ/yrzHg
+         d4ZA==
+X-Gm-Message-State: APjAAAUg8TCcn2UuWXIpHWDdfyFOG60XFkHZ2en1MaA7E7y9hqHuCb9H
+        P0Pey+PYQ0iKHZ8A2k4MlG0MWli8ljIBLCLeLg4=
+X-Google-Smtp-Source: APXvYqzO3sHrLWBWLn/CdmbBZfDMn2sfRaD9MLGoJHaY2rJD/p4751CSMgsD0/J96NcWhvB/uP+kkgsDrkni/39U8QU=
+X-Received: by 2002:aca:edc8:: with SMTP id l191mr14249176oih.103.1563227319625;
+ Mon, 15 Jul 2019 14:48:39 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: daktronics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4f9dbea-40c0-4a6d-52f3-08d7096e1288
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 21:47:45.7821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: be88af81-0945-42aa-a3d2-b122777351a2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: matt.sickler@daktronics.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4943
+References: <20190715203651.GA7513@kroah.com> <20190715214348.81865-1-trong@android.com>
+In-Reply-To: <20190715214348.81865-1-trong@android.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 15 Jul 2019 23:48:27 +0200
+Message-ID: <CAJZ5v0gEzZkbeLFtW5yadwxBryvL3vWcUoQTkUy3VkxiTV+UrA@mail.gmail.com>
+Subject: Re: [PATCH v4] PM / wakeup: show wakeup sources stats in sysfs
+To:     Tri Vo <trong@android.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>, sspatil@google.com,
+        kaleshsingh@google.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SXQgbG9va3MgbGlrZSBPdXRsb29rIGlzIGdvaW5nIHRvIGFic29sdXRlbHkgdHJhc2ggdGhpcyBl
-bWFpbC4gIEhvcGVmdWxseSBpdCBjb21lcyB0aHJvdWdoIG9rYXkuDQoNCj4+IFRoZXJlIGhhdmUg
-YmVlbiBpc3N1ZXMgd2l0aCBnZXRfdXNlcl9wYWdlcyBhbmQgZmlsZXN5c3RlbSB3cml0ZWJhY2su
-DQo+PiBUaGUgaXNzdWVzIGFyZSBiZXR0ZXIgZGVzY3JpYmVkIGluIFsxXS4NCj4+DQo+PiBUaGUg
-c29sdXRpb24gYmVpbmcgcHJvcG9zZWQgd2FudHMgdG8ga2VlcCB0cmFjayBvZiBndXBfcGlubmVk
-IHBhZ2VzDQo+d2hpY2ggd2lsbCBhbGxvdyB0byB0YWtlIGZ1cnRodXIgc3RlcHMgdG8gY29vcmRp
-bmF0ZSBiZXR3ZWVuIHN1YnN5c3RlbXMNCj51c2luZyBndXAuDQo+Pg0KPj4gcHV0X3VzZXJfcGFn
-ZSgpIHNpbXBseSBjYWxscyBwdXRfcGFnZSBpbnNpZGUgZm9yIG5vdy4gQnV0IHRoZQ0KPmltcGxl
-bWVudGF0aW9uIHdpbGwgY2hhbmdlIG9uY2UgYWxsIGNhbGwgc2l0ZXMgb2YgcHV0X3BhZ2UoKSBh
-cmUgY29udmVydGVkLg0KPj4NCj4+IEkgY3VycmVudGx5IGRvIG5vdCBoYXZlIHRoZSBkcml2ZXIg
-dG8gdGVzdC4gQ291bGQgSSBoYXZlIHNvbWUgc3VnZ2VzdGlvbnMgdG8NCj50ZXN0IHRoaXMgY29k
-ZT8gVGhlIHNvbHV0aW9uIGlzIGN1cnJlbnRseSBpbXBsZW1lbnRlZCBpbiBbMl0gYW5kDQo+PiBp
-dCB3b3VsZCBiZSBncmVhdCBpZiB3ZSBjb3VsZCBhcHBseSB0aGUgcGF0Y2ggb24gdG9wIG9mIFsy
-XSBhbmQgcnVuIHNvbWUNCj50ZXN0cyB0byBjaGVjayBpZiBhbnkgcmVncmVzc2lvbnMgb2NjdXIu
-DQo+DQo+QmVjYXVzZSB0aGlzIGlzIGEgY29tbW9uIHBhdHRlcm4sIGFuZCBiZWNhdXNlIHRoZSBj
-b2RlIGhlcmUgZG9lc24ndCBsaWtlbHkNCj5uZWVkIHRvIHNldCBwYWdlIGRpcnR5IGJlZm9yZSB0
-aGUgZG1hX3VubWFwX3NnIGNhbGwsIEkgdGhpbmsgdGhlIGZvbGxvd2luZw0KPndvdWxkIGJlIGJl
-dHRlciAoaXQncyB1bnRlc3RlZCksIGluc3RlYWQgb2YgdGhlIGFib3ZlIGRpZmYgaHVuazoNCj4N
-Cj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2twYzIwMDAva3BjX2RtYS9maWxlb3BzLmMN
-Cj5iL2RyaXZlcnMvc3RhZ2luZy9rcGMyMDAwL2twY19kbWEvZmlsZW9wcy5jDQo+aW5kZXggNDhj
-YTg4YmM2YjBiLi5kNDg2Zjk4NjY0NDkgMTAwNjQ0DQo+LS0tIGEvZHJpdmVycy9zdGFnaW5nL2tw
-YzIwMDAva3BjX2RtYS9maWxlb3BzLmMNCj4rKysgYi9kcml2ZXJzL3N0YWdpbmcva3BjMjAwMC9r
-cGNfZG1hL2ZpbGVvcHMuYw0KPkBAIC0yMTEsMTYgKzIxMSwxMyBAQCB2b2lkICB0cmFuc2Zlcl9j
-b21wbGV0ZV9jYihzdHJ1Y3QgYWlvX2NiX2RhdGENCj4qYWNkLCBzaXplX3QgeGZyX2NvdW50LCB1
-MzIgZmxhZ3MpDQo+ICAgICAgICBCVUdfT04oYWNkLT5sZGV2ID09IE5VTEwpOw0KPiAgICAgICAg
-QlVHX09OKGFjZC0+bGRldi0+cGxkZXYgPT0gTlVMTCk7DQo+DQo+LSAgICAgICBmb3IgKGkgPSAw
-IDsgaSA8IGFjZC0+cGFnZV9jb3VudCA7IGkrKykgew0KPi0gICAgICAgICAgICAgICBpZiAoIVBh
-Z2VSZXNlcnZlZChhY2QtPnVzZXJfcGFnZXNbaV0pKSB7DQo+LSAgICAgICAgICAgICAgICAgICAg
-ICAgc2V0X3BhZ2VfZGlydHkoYWNkLT51c2VyX3BhZ2VzW2ldKTsNCj4tICAgICAgICAgICAgICAg
-fQ0KPi0gICAgICAgfQ0KPi0NCj4gICAgICAgIGRtYV91bm1hcF9zZygmYWNkLT5sZGV2LT5wbGRl
-di0+ZGV2LCBhY2QtPnNndC5zZ2wsIGFjZC0+c2d0Lm5lbnRzLCBhY2QtPmxkZXYtPmRpcik7DQo+
-DQo+ICAgICAgICBmb3IgKGkgPSAwIDsgaSA8IGFjZC0+cGFnZV9jb3VudCA7IGkrKykgew0KPi0g
-ICAgICAgICAgICAgICBwdXRfcGFnZShhY2QtPnVzZXJfcGFnZXNbaV0pOw0KPisgICAgICAgICAg
-ICAgICBpZiAoIVBhZ2VSZXNlcnZlZChhY2QtPnVzZXJfcGFnZXNbaV0pKSB7DQo+KyAgICAgICAg
-ICAgICAgICAgICAgICAgcHV0X3VzZXJfcGFnZXNfZGlydHkoJmFjZC0+dXNlcl9wYWdlc1tpXSwg
-MSk7DQo+KyAgICAgICAgICAgICAgIGVsc2UNCj4rICAgICAgICAgICAgICAgICAgICAgICBwdXRf
-dXNlcl9wYWdlKGFjZC0+dXNlcl9wYWdlc1tpXSk7DQo+ICAgICAgICB9DQo+DQo+ICAgICAgICBz
-Z19mcmVlX3RhYmxlKCZhY2QtPnNndCk7DQoNCkkgZG9uJ3QgdGhpbmsgSSBldmVyIHJlYWxseSBr
-bmV3IHRoZSByaWdodCB3YXkgdG8gZG8gdGhpcy4gDQoNClRoZSBjaGFuZ2VzIEJoYXJhdGggc3Vn
-Z2VzdGVkIGxvb2sgb2theSB0byBtZS4gIEknbSBub3Qgc3VyZSBhYm91dCB0aGUgY2hlY2sgZm9y
-IFBhZ2VSZXNlcnZlZCgpLCB0aG91Z2guICBBdCBmaXJzdCBnbGFuY2UgaXQgYXBwZWFycyB0byBi
-ZSBlcXVpdmFsZW50IHRvIHdoYXQgd2FzIHRoZXJlIGJlZm9yZSwgYnV0IG1heWJlIEkgc2hvdWxk
-IGxlYXJuIHdoYXQgdGhhdCBSZXNlcnZlZCBwYWdlIGZsYWcgcmVhbGx5IG1lYW5zLg0KRnJvbSBb
-MV0sIHRoZSBvbmx5IGNvbW1lbnQgdGhhdCBzZWVtcyBhcHBsaWNhYmxlIGlzDQoqIC0gTU1JTy9E
-TUEgcGFnZXMuIFNvbWUgYXJjaGl0ZWN0dXJlcyBkb24ndCBhbGxvdyB0byBpb3JlbWFwIHBhZ2Vz
-IHRoYXQgYXJlDQogKiAgIG5vdCBtYXJrZWQgUEdfcmVzZXJ2ZWQgKGFzIHRoZXkgbWlnaHQgYmUg
-aW4gdXNlIGJ5IHNvbWVib2R5IGVsc2Ugd2hvIGRvZXMNCiAqICAgbm90IHJlc3BlY3QgdGhlIGNh
-Y2hpbmcgc3RyYXRlZ3kpLg0KDQpUaGVzZSBwYWdlcyBzaG91bGQgYmUgY29taW5nIGZyb20gYW5v
-bnltb3VzIChSQU0sIG5vdCBmaWxlIGJhY2tlZCkgbWVtb3J5IGluIHVzZXJzcGFjZS4gIFNvbWV0
-aW1lcyBpdCBjb21lcyBmcm9tIGh1Z2VwYWdlIGJhY2tlZCBtZW1vcnksIHRob3VnaCBJIGRvbid0
-IHRoaW5rIHRoYXQgbWFrZXMgYSBkaWZmZXJlbmNlLiAgSSBzaG91bGQgbm90ZSB0aGF0IHRyYW5z
-ZmVyX2NvbXBsZXRlX2NiIGhhbmRsZXMgYm90aCBSQU0gdG8gZGV2aWNlIGFuZCBkZXZpY2UgdG8g
-UkFNIERNQXMsIGlmIHRoYXQgbWF0dGVycy4NCg0KWzFdIGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4u
-Y29tL2xpbnV4L3Y1LjIvc291cmNlL2luY2x1ZGUvbGludXgvcGFnZS1mbGFncy5oI0wxNw0K
+On Mon, Jul 15, 2019 at 11:44 PM Tri Vo <trong@android.com> wrote:
+>
+> Userspace can use wakeup_sources debugfs node to plot history of suspend
+> blocking wakeup sources over device's boot cycle. This information can
+> then be used (1) for power-specific bug reporting and (2) towards
+> attributing battery consumption to specific processes over a period of
+> time.
+>
+> However, debugfs doesn't have stable ABI. For this reason, create a
+> 'struct device' to expose wakeup sources statistics in sysfs under
+> /sys/class/wakeup/<name>/.
+>
+> Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> source statistics in sysfs.
+
+I'm not sure if this is really needed, but I'll let Greg decide.
+
+Apart from this
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+>
+> Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Tri Vo <trong@android.com>
+> Tested-by: Tri Vo <trong@android.com>
+> Tested-by: Kalesh Singh <kaleshsingh@google.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-wakeup |  70 +++++++++
+>  drivers/base/power/Makefile                  |   1 +
+>  drivers/base/power/wakeup.c                  |  12 +-
+>  drivers/base/power/wakeup_stats.c            | 149 +++++++++++++++++++
+>  include/linux/pm_wakeup.h                    |  19 +++
+>  kernel/power/Kconfig                         |  10 ++
+>  kernel/power/wakelock.c                      |  10 ++
+>  7 files changed, 269 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-wakeup
+>  create mode 100644 drivers/base/power/wakeup_stats.c
+>
+> v2:
+> - Updated Documentation/ABI/, as per Greg.
+> - Removed locks in attribute functions, as per Greg.
+> - Lifetimes of struct wakelock and struck wakeup_source are now different due to
+>   the latter embedding a refcounted kobject. Changed it so that struct wakelock
+>   only has a pointer to struct wakeup_source, instead of embedding it.
+> - Added CONFIG_PM_SLEEP_STATS that enables/disables wakeup source statistics in
+>   sysfs.
+>
+> v3:
+> Changes by Greg:
+> - Reworked code to use 'struct device' instead of raw kobjects.
+> - Updated documentation file.
+> - Only link wakeup_stats.o when CONFIG_PM_SLEEP_STATS is enabled.
+> Changes by Tri:
+> - Reverted changes to kernel/power/wakelock.c. 'struct device' hides kobject
+>   operations. So no need to handle lifetimes in wakelock.c
+>
+> v4:
+> - Added 'Co-developed-by:' and 'Tested-by:' fields to commit message.
+> - Moved new documentation to a separate file
+>   Documentation/ABI/testing/sysfs-class-wakeup, as per Greg.
+> - Fixed copyright header in drivers/base/power/wakeup_stats.c, as per Greg.
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-wakeup b/Documentation/ABI/testing/sysfs-class-wakeup
+> new file mode 100644
+> index 000000000000..30fb23eb9112
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-wakeup
+> @@ -0,0 +1,70 @@
+> +What:          /sys/class/wakeup/
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               The /sys/class/wakeup/ directory contains pointers to all
+> +               wakeup sources in the kernel at that moment in time.
+> +
+> +What:          /sys/class/wakeup/.../active_count
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the number of times the wakeup source was
+> +               activated.
+> +
+> +What:          /sys/class/wakeup/.../event_count
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the number of signaled wakeup events
+> +               associated with the wakeup source.
+> +
+> +What:          /sys/class/wakeup/.../wakeup_count
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the number of times the wakeup source might
+> +               abort suspend.
+> +
+> +What:          /sys/class/wakeup/.../expire_count
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the number of times the wakeup source's
+> +               timeout has expired.
+> +
+> +What:          /sys/class/wakeup/.../active_time_ms
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the amount of time the wakeup source has
+> +               been continuously active, in milliseconds.  If the wakeup
+> +               source is not active, this file contains '0'.
+> +
+> +What:          /sys/class/wakeup/.../total_time_ms
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the total amount of time this wakeup source
+> +               has been active, in milliseconds.
+> +
+> +What:          /sys/class/wakeup/.../max_time_ms
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the maximum amount of time this wakeup
+> +               source has been continuously active, in milliseconds.
+> +
+> +What:          /sys/class/wakeup/.../last_change_ms
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               This file contains the monotonic clock time when the wakeup
+> +               source was touched last time, in milliseconds.
+> +
+> +What:          /sys/class/wakeup/.../prevent_suspend_time_ms
+> +Date:          June 2019
+> +Contact:       Tri Vo <trong@android.com>
+> +Description:
+> +               The file contains the total amount of time this wakeup source
+> +               has been preventing autosleep, in milliseconds.
+> diff --git a/drivers/base/power/Makefile b/drivers/base/power/Makefile
+> index e1bb691cf8f1..1963f53d9982 100644
+> --- a/drivers/base/power/Makefile
+> +++ b/drivers/base/power/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_PM)       += sysfs.o generic_ops.o common.o qos.o runtime.o wakeirq.o
+>  obj-$(CONFIG_PM_SLEEP) += main.o wakeup.o
+> +obj-$(CONFIG_PM_SLEEP_STATS)   += wakeup_stats.o
+>  obj-$(CONFIG_PM_TRACE_RTC)     += trace.o
+>  obj-$(CONFIG_PM_GENERIC_DOMAINS)       +=  domain.o domain_governor.o
+>  obj-$(CONFIG_HAVE_CLK) += clock_ops.o
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5b2b6a05a4f3..fd48e78c06b9 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -205,11 +205,18 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
+>  struct wakeup_source *wakeup_source_register(const char *name)
+>  {
+>         struct wakeup_source *ws;
+> +       int ret;
+>
+>         ws = wakeup_source_create(name);
+> -       if (ws)
+> +       if (ws) {
+> +               ret = wakeup_source_sysfs_add(ws);
+> +               if (ret) {
+> +                       kfree_const(ws->name);
+> +                       kfree(ws);
+> +                       return NULL;
+> +               }
+>                 wakeup_source_add(ws);
+> -
+> +       }
+>         return ws;
+>  }
+>  EXPORT_SYMBOL_GPL(wakeup_source_register);
+> @@ -222,6 +229,7 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  {
+>         if (ws) {
+>                 wakeup_source_remove(ws);
+> +               wakeup_source_sysfs_remove(ws);
+>                 wakeup_source_destroy(ws);
+>         }
+>  }
+> diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_stats.c
+> new file mode 100644
+> index 000000000000..45e15856105b
+> --- /dev/null
+> +++ b/drivers/base/power/wakeup_stats.c
+> @@ -0,0 +1,149 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Wakeup statistics in sysfs
+> + *
+> + * Copyright (c) 2019 Linux Foundation
+> + * Copyright (c) 2019 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> + * Copyright (c) 2019 Google Inc.
+> + */
+> +
+> +#include <linux/slab.h>
+> +#include <linux/kdev_t.h>
+> +
+> +#include "power.h"
+> +
+> +static struct class *wakeup_class;
+> +
+> +#define wakeup_attr(_name)                                             \
+> +static ssize_t _name##_show(struct device *dev,                                \
+> +                           struct device_attribute *attr, char *buf)   \
+> +{                                                                      \
+> +       struct wakeup_source *ws = dev_get_drvdata(dev);                \
+> +                                                                       \
+> +       return sprintf(buf, "%lu\n", ws->_name);                        \
+> +}                                                                      \
+> +static DEVICE_ATTR_RO(_name)
+> +
+> +wakeup_attr(active_count);
+> +wakeup_attr(event_count);
+> +wakeup_attr(wakeup_count);
+> +wakeup_attr(expire_count);
+> +
+> +static ssize_t active_time_ms_show(struct device *dev,
+> +                                  struct device_attribute *attr, char *buf)
+> +{
+> +       struct wakeup_source *ws = dev_get_drvdata(dev);
+> +       ktime_t active_time =
+> +               ws->active ? ktime_sub(ktime_get(), ws->last_time) : 0;
+> +
+> +       return sprintf(buf, "%lld\n", ktime_to_ms(active_time));
+> +}
+> +static DEVICE_ATTR_RO(active_time_ms);
+> +
+> +static ssize_t total_time_ms_show(struct device *dev,
+> +                                 struct device_attribute *attr, char *buf)
+> +{
+> +       struct wakeup_source *ws = dev_get_drvdata(dev);
+> +       ktime_t active_time;
+> +       ktime_t total_time = ws->total_time;
+> +
+> +       if (ws->active) {
+> +               active_time = ktime_sub(ktime_get(), ws->last_time);
+> +               total_time = ktime_add(total_time, active_time);
+> +       }
+> +       return sprintf(buf, "%lld\n", ktime_to_ms(total_time));
+> +}
+> +static DEVICE_ATTR_RO(total_time_ms);
+> +
+> +static ssize_t max_time_ms_show(struct device *dev,
+> +                               struct device_attribute *attr, char *buf)
+> +{
+> +       struct wakeup_source *ws = dev_get_drvdata(dev);
+> +       ktime_t active_time;
+> +       ktime_t max_time = ws->max_time;
+> +
+> +       if (ws->active) {
+> +               active_time = ktime_sub(ktime_get(), ws->last_time);
+> +               if (active_time > max_time)
+> +                       max_time = active_time;
+> +       }
+> +       return sprintf(buf, "%lld\n", ktime_to_ms(max_time));
+> +}
+> +static DEVICE_ATTR_RO(max_time_ms);
+> +
+> +static ssize_t last_change_ms_show(struct device *dev,
+> +                                  struct device_attribute *attr, char *buf)
+> +{
+> +       struct wakeup_source *ws = dev_get_drvdata(dev);
+> +
+> +       return sprintf(buf, "%lld\n", ktime_to_ms(ws->last_time));
+> +}
+> +static DEVICE_ATTR_RO(last_change_ms);
+> +
+> +static ssize_t prevent_suspend_time_ms_show(struct device *dev,
+> +                                           struct device_attribute *attr,
+> +                                           char *buf)
+> +{
+> +       struct wakeup_source *ws = dev_get_drvdata(dev);
+> +       ktime_t prevent_sleep_time = ws->prevent_sleep_time;
+> +
+> +       if (ws->active && ws->autosleep_enabled) {
+> +               prevent_sleep_time = ktime_add(prevent_sleep_time,
+> +                       ktime_sub(ktime_get(), ws->start_prevent_time));
+> +       }
+> +       return sprintf(buf, "%lld\n", ktime_to_ms(prevent_sleep_time));
+> +}
+> +static DEVICE_ATTR_RO(prevent_suspend_time_ms);
+> +
+> +static struct attribute *wakeup_source_attrs[] = {
+> +       &dev_attr_active_count.attr,
+> +       &dev_attr_event_count.attr,
+> +       &dev_attr_wakeup_count.attr,
+> +       &dev_attr_expire_count.attr,
+> +       &dev_attr_active_time_ms.attr,
+> +       &dev_attr_total_time_ms.attr,
+> +       &dev_attr_max_time_ms.attr,
+> +       &dev_attr_last_change_ms.attr,
+> +       &dev_attr_prevent_suspend_time_ms.attr,
+> +       NULL,
+> +};
+> +ATTRIBUTE_GROUPS(wakeup_source);
+> +
+> +/**
+> + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
+> + * @ws: Wakeup source to be added in sysfs.
+> + */
+> +int wakeup_source_sysfs_add(struct wakeup_source *ws)
+> +{
+> +       struct device *dev;
+> +
+> +       dev = device_create_with_groups(wakeup_class, NULL, MKDEV(0, 0), ws,
+> +                                       wakeup_source_groups, "%s", ws->name);
+> +       if (IS_ERR(dev))
+> +               return PTR_ERR(dev);
+> +
+> +       ws->dev = dev;
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
+> +
+> +/**
+> + * wakeup_source_sysfs_remove - Remove wakeup_source attributes from sysfs.
+> + * @ws: Wakeup source to be removed from sysfs.
+> + */
+> +void wakeup_source_sysfs_remove(struct wakeup_source *ws)
+> +{
+> +       device_unregister(ws->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_remove);
+> +
+> +static int __init wakeup_sources_sysfs_init(void)
+> +{
+> +       wakeup_class = class_create(THIS_MODULE, "wakeup");
+> +       if (IS_ERR(wakeup_class))
+> +               return PTR_ERR(wakeup_class);
+> +
+> +       return 0;
+> +}
+> +
+> +postcore_initcall(wakeup_sources_sysfs_init);
+> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+> index ce57771fab9b..734141869c17 100644
+> --- a/include/linux/pm_wakeup.h
+> +++ b/include/linux/pm_wakeup.h
+> @@ -35,6 +35,7 @@ struct wake_irq;
+>   * @relax_count: Number of times the wakeup source was deactivated.
+>   * @expire_count: Number of times the wakeup source's timeout has expired.
+>   * @wakeup_count: Number of times the wakeup source might abort suspend.
+> + * @dev: Struct device for sysfs statistics about the wakeup source.
+>   * @active: Status of the wakeup source.
+>   * @has_timeout: The wakeup source has been activated with a timeout.
+>   */
+> @@ -55,6 +56,7 @@ struct wakeup_source {
+>         unsigned long           relax_count;
+>         unsigned long           expire_count;
+>         unsigned long           wakeup_count;
+> +       struct device           *dev;
+>         bool                    active:1;
+>         bool                    autosleep_enabled:1;
+>  };
+> @@ -181,6 +183,23 @@ static inline void pm_wakeup_dev_event(struct device *dev, unsigned int msec,
+>
+>  #endif /* !CONFIG_PM_SLEEP */
+>
+> +#ifdef CONFIG_PM_SLEEP_STATS
+> +
+> +/* drivers/base/power/wakeup_stats.c */
+> +int wakeup_source_sysfs_add(struct wakeup_source *ws);
+> +void wakeup_source_sysfs_remove(struct wakeup_source *ws);
+> +
+> +#else /* !CONFIG_PM_SLEEP_STATS */
+> +
+> +static inline int wakeup_source_sysfs_add(struct wakeup_source *ws)
+> +{
+> +       return 0;
+> +}
+> +static inline void wakeup_source_sysfs_remove(struct wakeup_source *ws)
+> +{ }
+> +
+> +#endif /* !CONFIG_PM_SLEEP_STATS */
+> +
+>  static inline void wakeup_source_init(struct wakeup_source *ws,
+>                                       const char *name)
+>  {
+> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+> index ff8592ddedee..604e1f087f14 100644
+> --- a/kernel/power/Kconfig
+> +++ b/kernel/power/Kconfig
+> @@ -195,6 +195,16 @@ config PM_SLEEP_DEBUG
+>         def_bool y
+>         depends on PM_DEBUG && PM_SLEEP
+>
+> +config PM_SLEEP_STATS
+> +       bool "Wakeup sources statistics"
+> +       depends on PM_SLEEP
+> +       help
+> +         Expose wakeup sources statistics to user space via sysfs. Collected
+> +         statistics are located under /sys/power/wakeup_sources. For more
+> +         information, read <file:Documentation/ABI/testing/sysfs-class-wakeup>.
+> +
+> +         If in doubt, say N.
+> +
+>  config DPM_WATCHDOG
+>         bool "Device suspend/resume watchdog"
+>         depends on PM_DEBUG && PSTORE && EXPERT
+> diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
+> index 4210152e56f0..32726da3d6e6 100644
+> --- a/kernel/power/wakelock.c
+> +++ b/kernel/power/wakelock.c
+> @@ -122,6 +122,7 @@ static void __wakelocks_gc(struct work_struct *work)
+>
+>                 if (!active) {
+>                         wakeup_source_remove(&wl->ws);
+> +                       wakeup_source_sysfs_remove(&wl->ws);
+>                         rb_erase(&wl->node, &wakelocks_tree);
+>                         list_del(&wl->lru);
+>                         kfree(wl->name);
+> @@ -153,6 +154,7 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
+>         struct rb_node **node = &wakelocks_tree.rb_node;
+>         struct rb_node *parent = *node;
+>         struct wakelock *wl;
+> +       int ret;
+>
+>         while (*node) {
+>                 int diff;
+> @@ -189,6 +191,14 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
+>         }
+>         wl->ws.name = wl->name;
+>         wl->ws.last_time = ktime_get();
+> +
+> +       ret = wakeup_source_sysfs_add(&wl->ws);
+> +       if (ret) {
+> +               kfree(wl->name);
+> +               kfree(wl);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+>         wakeup_source_add(&wl->ws);
+>         rb_link_node(&wl->node, parent, node);
+>         rb_insert_color(&wl->node, &wakelocks_tree);
+> --
+> 2.22.0.510.g264f2c817a-goog
+>
