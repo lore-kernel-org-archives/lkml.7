@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7033CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A732C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444C92083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244C82083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198646;
-	bh=0au5ae7E7NVFXR/5oKLst3xyiAEMPwz/x8tkCq2OdRs=;
+	s=default; t=1563198649;
+	bh=9RWCdpj4FaAC0utpfRuO4Yp0UWaH+OBlUkFuQKg44D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpfblyUls4wImQ87hRqpTp31+J6tJcBMGNtS6toFOYAPfZ2AWolfnMIyDfMSXe8Ay
-	 k6unlrtiM6xj+whZg/ycjNATlko1oMYEKhhE41/35h2PKj60CHXy/rwSPTtALXzblt
-	 n+xl+YFpXur+tC8WY3Wt/K0/9GZo1vHgC4AnGlek=
+	b=c3DLnmHf1TxjPYWfhRu2HA9SYjmZa0K3RUvookbGAVx3SAPLyjMim65CSq48wzw07
+	 ikbTnW0+eHAW1LxhOaw95fygN4ArVsqsFRxLjiuy4Boj+/yUQjsJmkBLug7cyn+Mti
+	 rbqiOKnNHKN3hmOVnOaU/jrE6JMFcJcBVQHkTOZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbfGONup (ORCPT
+        id S1732017AbfGONus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:50:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40806 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731993AbfGONuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:50:40 -0400
+        id S1730286AbfGONum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:50:42 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCF020651;
-        Mon, 15 Jul 2019 13:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1FFC2083D;
+        Mon, 15 Jul 2019 13:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198639;
-        bh=0au5ae7E7NVFXR/5oKLst3xyiAEMPwz/x8tkCq2OdRs=;
+        s=default; t=1563198641;
+        bh=9RWCdpj4FaAC0utpfRuO4Yp0UWaH+OBlUkFuQKg44D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pm2pqPm9929UwUPhRKQHzwxiCDRkgYOHz11bAObQs9gONr2jo77a0Ge0DtMWqkVfo
-         hEyV3hnc54TReYCPYTQomx+G9MKPZxtlMzmpINEEcn4jUBItFbOG4Rn177BOX4UOCm
-         RrgUQpO9uAdbQCThEQMknKtQ5GQFI9g7kRvjWscs=
+        b=N6XUR3gc5Qada/QD19H9qJn4KCmHCMzXbpIjjeHiKs8vyEB38pQTsphYv66J0BOMw
+         nTGtXP+UDwP+E1uakAZIUHhuGZ+6n6qfG4XbHwXNvOx/Wi41BVMGkEmiiHKIvKQzxn
+         qyXdr+cIzwHDfMFG0UXeKgbJUufqV1rb80cuZRzo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miles Chen <miles.chen@mediatek.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 067/249] arm64: mm: make CONFIG_ZONE_DMA32 configurable
-Date:   Mon, 15 Jul 2019 09:43:52 -0400
-Message-Id: <20190715134655.4076-67-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.2 068/249] media: imx7-mipi-csis: Propagate the error if clock enabling fails
+Date:   Mon, 15 Jul 2019 09:43:53 -0400
+Message-Id: <20190715134655.4076-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,66 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 0c1f14ed12262f45a3af1d588e4d7bd12438b8f5 ]
+[ Upstream commit 2b393f91c651c16d5c09f5c7aa689e58a79df34e ]
 
-This change makes CONFIG_ZONE_DMA32 defuly y and allows users
-to overwrite it only when CONFIG_EXPERT=y.
+Currently the return value from clk_bulk_prepare_enable() is checked,
+but it is not propagate it in the case of failure.
 
-For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
-first step to manage all available memory by a single
-zone(normal zone) to reduce the overhead of multiple zones.
+Fix it and also move the error message to the caller of
+mipi_csis_clk_enable().
 
-The change also fixes a build error when CONFIG_NUMA=y and
-CONFIG_ZONE_DMA32=n.
-
-arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
-                max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-
-Change since v1:
-1. only expose CONFIG_ZONE_DMA32 when CONFIG_EXPERT=y
-2. remove redundant IS_ENABLED(CONFIG_ZONE_DMA32)
-
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Kconfig   | 3 ++-
- arch/arm64/mm/init.c | 5 +++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/staging/media/imx/imx7-mipi-csis.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 697ea0510729..cf5f1dafcf74 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -260,7 +260,8 @@ config GENERIC_CALIBRATE_DELAY
- 	def_bool y
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index 19455f425416..7d7bdfdd852a 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -456,13 +456,9 @@ static void mipi_csis_set_params(struct csi_state *state)
+ 			MIPI_CSIS_CMN_CTRL_UPDATE_SHADOW_CTRL);
+ }
  
- config ZONE_DMA32
--	def_bool y
-+	bool "Support DMA32 zone" if EXPERT
-+	default y
- 
- config HAVE_GENERIC_GUP
- 	def_bool y
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 749c9b269f08..f3c795278def 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -180,8 +180,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+-static void mipi_csis_clk_enable(struct csi_state *state)
++static int mipi_csis_clk_enable(struct csi_state *state)
  {
- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
+-	int ret;
+-
+-	ret = clk_bulk_prepare_enable(state->num_clks, state->clks);
+-	if (ret < 0)
+-		dev_err(state->dev, "failed to enable clocks\n");
++	return clk_bulk_prepare_enable(state->num_clks, state->clks);
+ }
  
--	if (IS_ENABLED(CONFIG_ZONE_DMA32))
--		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-+#ifdef CONFIG_ZONE_DMA32
-+	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-+#endif
- 	max_zone_pfns[ZONE_NORMAL] = max;
+ static void mipi_csis_clk_disable(struct csi_state *state)
+@@ -973,7 +969,11 @@ static int mipi_csis_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
  
- 	free_area_init_nodes(max_zone_pfns);
+-	mipi_csis_clk_enable(state);
++	ret = mipi_csis_clk_enable(state);
++	if (ret < 0) {
++		dev_err(state->dev, "failed to enable clocks: %d\n", ret);
++		return ret;
++	}
+ 
+ 	ret = devm_request_irq(dev, state->irq, mipi_csis_irq_handler,
+ 			       0, dev_name(dev), state);
 -- 
 2.20.1
 
