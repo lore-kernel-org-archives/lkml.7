@@ -2,197 +2,191 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BB4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB4C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96625212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EE82083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lJZIlXky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbfGOKIz (ORCPT
+        id S1729702AbfGOKKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:08:55 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:5743 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbfGOKIz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:08:55 -0400
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: vf0TS8brxPg6yQ9/ypXeP+lUogYWU2PI36PXrTN20HLfvdTVmSgQ6lTpKaZEHUP91EIDdB4JgI
- 7oXWx40UocYS8MGhxSMDybWJsYu9Eoyop5SVkabn0kX1hxVP1Jdv79cBb9GPhcVn2inKQktu8z
- qWSOCaZSnRwugkR0HUrR/b6PpIPvu+NuN7xrEvaxZ0QKbchFa2wKh5hwdHoe1r15LbraHK6lnX
- 6MY9E69N0CNtOsKSr45Wv/5Ip1gjGVN7cZDq89dvZfDLRJLLQDp8o16VBBhElHKOKjbqg7N4US
- 3IU=
-X-SBRS: 2.7
-X-MesageID: 2990353
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.63,493,1557201600"; 
-   d="scan'208";a="2990353"
-Subject: Re: [PATCH] x86/apic: Initialize TPR to block interrupts 16-31
-To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>
-References: <dc04a9f8b234d7b0956a8d2560b8945bcd9c4bf7.1563117760.git.luto@kernel.org>
- <D7C365E9-0DAD-46B9-95C9-B3475879F813@vmware.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
- 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
- 6+ahAA==
-Message-ID: <0ec26b57-6f98-ba22-3f95-dcaeb2cca4d5@citrix.com>
-Date:   Mon, 15 Jul 2019 11:08:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 06:10:10 -0400
+Received: from mail-eopbgr140084.outbound.protection.outlook.com ([40.107.14.84]:55363
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729541AbfGOKKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:10:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QizfqdUWTlFVbkPi4YC6cXBScDE6hbAtonTMz6PsFgxGqC9dH9vwIc9Lf6KdsHVVL1Vf64aPTOlusciyGigCFzhaO5JzDbHtV9icg8/JJgvxxD+cF4F1HoflST8ZL7KWTjtdGmMJ5mFF8sZz0RjWglTAsgvmPTM9mWdVV2cR0em/ANvBgim1ZIj3V7fPiItULtCqM+MPahZKuQ6/aXD4XDqN10HlxADqGVo0i0AEuJKf4svG1r51FciZapyXclMPOU5Hfw+78Meti548Jl6eYQ31Ko/DHFCiVGOBZPclhXTgWRxo3c26fzTE6+UNM4Vi3CnfvCa/4m8SXuq0bWNk9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j7KECzzuyvjcIXRCXV1nmTw+D+j/QlfhVsSEjV6lGJA=;
+ b=g8tJy8Iwj4N9dkXwA7i78igBPGqpbjXULcZgKOedPVYqjX0YKWsUFyJ386uH+qmQxUGPADHWAbSaVG6vFJDY9WejvFmnCEEhxQojg9bF6SB57cPriJqDxCXRxe1IahXditNjm0NxJE45KjSS863Hqxqu3ubGEkw3SR/EIkjYvaFJpu8oXzDruUyWlswpihQIkwghiE+mCbJpw3jKHAdMAenKSJFKxLhbpbNN/yExT9Qh23j/xIGaGqAAQUaCFQUsFtGQuA8arwi25a4zSTfFwvA8O39Dc3Nl9/fjo1JrcAX2ZyeTsZZ1hTUMkWs2wLOoQdNYixrmqPkVjVG/0tCgPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j7KECzzuyvjcIXRCXV1nmTw+D+j/QlfhVsSEjV6lGJA=;
+ b=lJZIlXky83CJIOU5eAy5+mbnPt5YC8RxmEa52oZYGWyzrRFHGBGoP9VEsMr+ibBO9SGPJHza08ZwbVWMTZg9SktMxzx4C/VLl89hvCsS4htkHdmtKGVpLXVZS0Kf+SGNlOwWiL0TX+UZ47JFe6K/Cr4NdvZAAUgMwdkQpeBwBwY=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4356.eurprd04.prod.outlook.com (52.134.93.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Mon, 15 Jul 2019 10:10:06 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::2023:c0e5:8a63:2e47]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::2023:c0e5:8a63:2e47%5]) with mapi id 15.20.2052.020; Mon, 15 Jul 2019
+ 10:10:06 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH v3 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Topic: [PATCH v3 0/2] mailbox: arm: introduce smc triggered mailbox
+Thread-Index: AQHVOvV5QOhgWrlDMUC6J9nMDn5GdA==
+Date:   Mon, 15 Jul 2019 10:10:06 +0000
+Message-ID: <1563184103-8493-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0024.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::36) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8f00829b-6c70-4bc9-d54e-08d7090c9c48
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4356;
+x-ms-traffictypediagnostic: AM0PR04MB4356:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <AM0PR04MB435699A7A6B4B417FCE4E7D888CF0@AM0PR04MB4356.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(199004)(189003)(66066001)(68736007)(2501003)(7736002)(305945005)(110136005)(316002)(99286004)(54906003)(50226002)(8936002)(52116002)(386003)(44832011)(8676002)(186003)(102836004)(2616005)(26005)(14454004)(486006)(66446008)(64756008)(66556008)(66476007)(66946007)(81156014)(81166006)(6306002)(25786009)(2906002)(3846002)(6116002)(2201001)(15650500001)(6486002)(478600001)(86362001)(6436002)(14444005)(966005)(256004)(6506007)(5660300002)(71190400001)(476003)(71200400001)(36756003)(6512007)(53936002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4356;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: R/lZlKCHXeVY4dvyZsLM+SKMP9+wuxukCU8v19eYfFc0MIFjaUPWxCZl9kbVfvWVPpj7lU39ZxAgLJVei01hQ/dPgkhbEtoAmS6hxwcMoDjQExXPZ3Pr9mMwMD32k6sCsvDdji1kibLpHTCft4QTSuW2G3R7QD5sQCdPsOamHsAnlSMOqeF/xyNU0nLexnOVEHix63jh8u81JIg5sCZoIUYNUh3dfEuXE0dqokIf7c5CxfiunCTDUaUi93LhQI/ldQKR6ChSqcD1c1nfKN4/oQz+6MwpJdsi5AyicxjwlnLLjNBMAbZKBcZ7AkXtj4boLvvXggrcRxWdWynExc7vgleHuJucsAafUj/c5HDx5hEAjIReII4iaNidqmXwlmQz0aSN/ni9JhVzFUxzbaeZRAQ/1n9FeQ/8tJ8yJv14HpY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <D7C365E9-0DAD-46B9-95C9-B3475879F813@vmware.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f00829b-6c70-4bc9-d54e-08d7090c9c48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 10:10:06.5089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4356
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/07/2019 18:21, Nadav Amit wrote:
->> On Jul 14, 2019, at 8:23 AM, Andy Lutomirski <luto@kernel.org> wrote:
->>
->> The APIC, per spec, is fundamentally confused and thinks that
->> interrupt vectors 16-31 are valid.  This makes no sense -- the CPU
->> reserves vectors 0-31 for exceptions (faults, traps, etc).
->> Obviously, no device should actually produce an interrupt with
->> vector 16-31, but we can improve robustness by setting the APIC TPR
->> class to 1, which will prevent delivery of an interrupt with a
->> vector below 32.
->>
->> Note: this is *not* intended as a security measure against attackers
->> who control malicious hardware.  Any PCI or similar hardware that
->> can be controlled by an attacker MUST be behind a functional IOMMU
->> that remaps interrupts.  The purpose of this patch is to reduce the
->> chance that a certain class of device malfunctions crashes the
->> kernel in hard-to-debug ways.
->>
->> Cc: Nadav Amit <namit@vmware.com>
->> Cc: Stephane Eranian <eranian@google.com>
->> Cc: Feng Tang <feng.tang@intel.com>
->> Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
->> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> ---
->> arch/x86/kernel/apic/apic.c | 7 +++++--
->> 1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
->> index 177aa8ef2afa..ff31322f8839 100644
->> --- a/arch/x86/kernel/apic/apic.c
->> +++ b/arch/x86/kernel/apic/apic.c
->> @@ -1531,11 +1531,14 @@ static void setup_local_APIC(void)
->> #endif
->>
->> 	/*
->> -	 * Set Task Priority to 'accept all'. We never change this
->> -	 * later on.
->> +	 * Set Task Priority to 'accept all except vectors 0-31'.  An APIC
->> +	 * vector in the 16-31 range could be delivered if TPR == 0, but we
->> +	 * would think it's an exception and terrible things will happen.  We
->> +	 * never change this later on.
->> 	 */
->> 	value = apic_read(APIC_TASKPRI);
->> 	value &= ~APIC_TPRI_MASK;
->> +	value |= 0x10;
->> 	apic_write(APIC_TASKPRI, value);
->>
->> 	apic_pending_intr_clear();
-> It looks fine, and indeed it seems that writes to APIC_TASKPRI and CR8 are
-> not overwriting this value.
+From: Peng Fan <peng.fan@nxp.com>
 
-Writes to these two registers should overwrite this value.
+V3:
+Drop interrupt
+Introduce transports for mem/reg usage
+Add chan-id for mem usage
+Convert to yaml format
+=20
+V2:
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
 
-> Yet, the fact that if someone overwrites with zero (or does not restore) the
-> TPR will not produce any warning is not that great. Not that I know what the
-> right course of action is (adding checks in write_cr8()? but then what about
-> if APIC_TASKPRI is not restored after some APIC reset?)
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
 
-TPR is only written during boot and resume.
+The traditional Linux mailbox mechanism uses some kind of dedicated hardwar=
+e
+IP to signal a condition to some other processing unit, typically a dedicat=
+ed
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
 
-cr8 is only read and written during suspend/resume, which is redundant
-with the TPR save/restore.  Dropping that would drop two PVops, and the
-final trace of the kernel using cr8 itself.
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
 
-All cr8 and TPR accesses in KVM look to be on virtual state, rather than
-the real registers (as expected).
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI request=
+s.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced =
+via
+this new driver.
 
-~Andrew
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hyperviso=
+rs
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
+
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used genericall=
+y
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+
+Peng Fan (2):
+  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+  mailbox: introduce ARM SMC based mailbox
+
+ .../devicetree/bindings/mailbox/arm-smc.yaml       | 124 ++++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 215 +++++++++++++++++=
+++++
+ 4 files changed, 348 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+
+--=20
+2.16.4
+
