@@ -2,108 +2,96 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F6EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386BDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BE520868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027382083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563197756;
+	bh=NZraKEDuaB6vwvz8xVUkIR+7IQqLDfLfw8tb08+gex4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=z88QgJqcqGL6jKhiW82/2kunbWPxbc0YzAaCQeB1sze28oTv+02s40n+QQbBCRyVA
+	 +cSqsKmqfxlxgLN9T333rYFZHY8Dg6d3crxYuWZN+kDC62C/0qjTsbCVnRvXYkEVP5
+	 TcEaduKz/oN22JgJLfsyAa/EJduh1Y/wRZnrGHvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfGONfg (ORCPT
+        id S1730377AbfGONfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:35:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:22039 "EHLO mx1.redhat.com"
+        Mon, 15 Jul 2019 09:35:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730172AbfGONfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:35:36 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730012AbfGONfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:35:54 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EF02F85546;
-        Mon, 15 Jul 2019 13:35:35 +0000 (UTC)
-Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D28C47E23;
-        Mon, 15 Jul 2019 13:35:32 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 08:35:25 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH 03/22] x86/kvm: Fix frame pointer usage in vmx_vmenter()
-Message-ID: <20190715133525.gr4wvnd4kxwtv63o@treble>
-References: <cover.1563150885.git.jpoimboe@redhat.com>
- <299fe4adb78cff0a182f8376c23a445b94d7c782.1563150885.git.jpoimboe@redhat.com>
- <0b37031b-1043-8274-a086-2b5d0b02b5ef@redhat.com>
- <20190715123704.oke4pd4wguj5a7i3@treble>
- <2172ac52-899b-a32a-cba7-c2e5f2bb784e@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EA9D2067C;
+        Mon, 15 Jul 2019 13:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563197753;
+        bh=NZraKEDuaB6vwvz8xVUkIR+7IQqLDfLfw8tb08+gex4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sA/q7qK/JT7OgOyOo3n+66mDEh2siS8VOyCKvH1uB8PDNL+AREhnM+nQDeoS+0kK1
+         fhZX+ICWXsUTDKRY2KMI8kOCMBwp1xDlcb61/NLOZrcZonQy/MdxlcA82sSqdImDv+
+         HxJqb7yymYjOdKfJbFYTtbS8SlyjONsHmU3JAH0w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yingying Tang <yintang@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 001/249] ath10k: Check tx_stats before use it
+Date:   Mon, 15 Jul 2019 09:31:42 -0400
+Message-Id: <20190715133550.1772-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2172ac52-899b-a32a-cba7-c2e5f2bb784e@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 15 Jul 2019 13:35:36 +0000 (UTC)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:03:23PM +0200, Paolo Bonzini wrote:
-> On 15/07/19 14:37, Josh Poimboeuf wrote:
-> > On Mon, Jul 15, 2019 at 11:04:03AM +0200, Paolo Bonzini wrote:
-> >> On 15/07/19 02:36, Josh Poimboeuf wrote:
-> >>> With CONFIG_FRAME_POINTER, vmx_vmenter() needs to do frame pointer setup
-> >>> before calling kvm_spurious_fault().
-> >>>
-> >>> Fixes the following warning:
-> >>>
-> >>>   arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
-> >>>
-> >>> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> >>
-> >> This is not enough, because the RSP value must match what is computed at
-> >> this place:
-> >>
-> >>         /* Adjust RSP to account for the CALL to vmx_vmenter(). */
-> >>         lea -WORD_SIZE(%_ASM_SP), %_ASM_ARG2
-> >>         call vmx_update_host_rsp
-> > 
-> > Ah, that is surprising :-)
-> > 
-> > And then there's this, which overwrites the frame pointer anyway:
-> > 
-> > 	mov VCPU_RBP(%_ASM_AX), %_ASM_BP
-> > 
-> > Would it make sense to remove the call to vmx_vmenter() altogether, and
-> > just either embed it in __vmx_vcpu_run(), or jmp back and forth to it
-> > from __vmx_vcpu_run()?
-> 
-> Unfortunately there's another use of it in nested_vmx_check_vmentry_hw.
+From: Yingying Tang <yintang@codeaurora.org>
 
-Ah, I missed that too (failed by cscope).  Is this ok?
+[ Upstream commit 9e7251fa38978b85108c44743e1436d48e8d0d76 ]
 
-diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-index d4cb1945b2e3..4010d519eb8c 100644
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
- 	ret
+tx_stats will be freed and set to NULL before debugfs_sta node is
+removed in station disconnetion process. So if read the debugfs_sta
+node there may be NULL pointer error. Add check for tx_stats before
+use it to resove this issue.
+
+Signed-off-by: Yingying Tang <yintang@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath10k/debugfs_sta.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath10k/debugfs_sta.c b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
+index c704ae371c4d..42931a669b02 100644
+--- a/drivers/net/wireless/ath/ath10k/debugfs_sta.c
++++ b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
+@@ -663,6 +663,13 @@ static ssize_t ath10k_dbg_sta_dump_tx_stats(struct file *file,
  
- 3:	cmpb $0, kvm_rebooting
--	jne 4f
--	call kvm_spurious_fault
--4:	ret
-+	je 4f
-+	ret
-+4:	ud2
+ 	mutex_lock(&ar->conf_mutex);
  
- 	.pushsection .fixup, "ax"
- 5:	jmp 3b
++	if (!arsta->tx_stats) {
++		ath10k_warn(ar, "failed to get tx stats");
++		mutex_unlock(&ar->conf_mutex);
++		kfree(buf);
++		return 0;
++	}
++
+ 	spin_lock_bh(&ar->data_lock);
+ 	for (k = 0; k < ATH10K_STATS_TYPE_MAX; k++) {
+ 		for (j = 0; j < ATH10K_COUNTER_TYPE_MAX; j++) {
+-- 
+2.20.1
+
