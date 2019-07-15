@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85621C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E5EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C58221530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6D82086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201148;
-	bh=lhZzJcCEH0V9b3I3vyainX16hYYmsA9u6FbKISAcqrM=;
+	s=default; t=1563201153;
+	bh=pRhDeat4zw9jfAxwNw37ZtSkB3Tf6+ZDXqinS59mRQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kk5X8Lin+4oMOu09gZ3piCzL+IBU9PrN/O3cVI+3If5OCepxtD7JNaDyeo4bHsGiC
-	 vpX9ql1tClvNEISZDc/T6VpdjQkJCu4qHyeA2jitpWy+iPea8/ldR4KQoB5Pql8iLS
-	 gcYiRzFqEdsWpUzbHxqip7UgwKkjsp+XEpJlcklo=
+	b=MatSOm4tcoihX1uAxCMzwxZhRDoaumLovRH88K2XOhmcPyW2ZUS6TnUO5lNcCqHsg
+	 K/8MNtVB6/zixvFJnf0mITgD29bidDH4C52Nza8c5hnfkqYas7a1yEU9oxysq4Kxl/
+	 yjbdpHgy7ovz6MGxUfmkwvEmNhiYJOdFEEd7Md5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391871AbfGOOc1 (ORCPT
+        id S2391878AbfGOOcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390314AbfGOOcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:32:25 -0400
+        id S2389756AbfGOOc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:32:29 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69BDD2086C;
-        Mon, 15 Jul 2019 14:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C6D217D9;
+        Mon, 15 Jul 2019 14:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201144;
-        bh=lhZzJcCEH0V9b3I3vyainX16hYYmsA9u6FbKISAcqrM=;
+        s=default; t=1563201148;
+        bh=pRhDeat4zw9jfAxwNw37ZtSkB3Tf6+ZDXqinS59mRQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2t1OuCqf5y9Tiar3/6IicvSqqgRcS6uKXy1u3C5NrCEgfrL6bTX0tz1tvBf/2QLz
-         KwKdHudcDfIc9PoAgKEnj/UIVStBxxbyP37DAKYS9bRwq2WG2WaTPzyEAl6oRMcfbr
-         EMELXoKqqjPvLAo8o9PwgfwXEHatu1c76Wnw6GyA=
+        b=NAPgEqPkHPYsU08idzSXZe8j1gr1H2NA/h1wt7UggiYs+3NbxLKbJmwuaox9qirDH
+         urscmUQXs55qV2/v04OHEttKnqh/9cnuaOsOHN3+Y1PmNfODsq7heL/RtHR/6AikYB
+         3imCS/dw+IzUIT1+SaJvqXszG6Q9zzJLbf0tnKKQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 062/105] media: i2c: fix warning same module names
-Date:   Mon, 15 Jul 2019 10:27:56 -0400
-Message-Id: <20190715142839.9896-62-sashal@kernel.org>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Weikang shi <swkhack@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 063/105] ntp: Limit TAI-UTC offset
+Date:   Mon, 15 Jul 2019 10:27:57 -0400
+Message-Id: <20190715142839.9896-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,60 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit b2ce5617dad254230551feda3599f2cc68e53ad8 ]
+[ Upstream commit d897a4ab11dc8a9fda50d2eccc081a96a6385998 ]
 
-When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
-enabled as loadable modules, we see the following warning:
+Don't allow the TAI-UTC offset of the system clock to be set by adjtimex()
+to a value larger than 100000 seconds.
 
-  drivers/gpu/drm/bridge/adv7511/adv7511.ko
-  drivers/media/i2c/adv7511.ko
+This prevents an overflow in the conversion to int, prevents the CLOCK_TAI
+clock from getting too far ahead of the CLOCK_REALTIME clock, and it is
+still large enough to allow leap seconds to be inserted at the maximum rate
+currently supported by the kernel (once per day) for the next ~270 years,
+however unlikely it is that someone can survive a catastrophic event which
+slowed down the rotation of the Earth so much.
 
-Rework so that the file is named adv7511-v4l2.c.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Weikang shi <swkhack@gmail.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190618154713.20929-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/Makefile                      | 2 +-
- drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
- rename drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} (99%)
+ kernel/time/ntp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index f104650d6000..0f5c5a3cdca3 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -33,7 +33,7 @@ obj-$(CONFIG_VIDEO_ADV748X) += adv748x/
- obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
- obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
- obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
--obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
-+obj-$(CONFIG_VIDEO_ADV7511) += adv7511-v4l2.o
- obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
- obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
- obj-$(CONFIG_VIDEO_BT819) += bt819.o
-diff --git a/drivers/media/i2c/adv7511.c b/drivers/media/i2c/adv7511-v4l2.c
-similarity index 99%
-rename from drivers/media/i2c/adv7511.c
-rename to drivers/media/i2c/adv7511-v4l2.c
-index 80c20404334a..ef1144668809 100644
---- a/drivers/media/i2c/adv7511.c
-+++ b/drivers/media/i2c/adv7511-v4l2.c
-@@ -17,6 +17,11 @@
-  * SOFTWARE.
-  */
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 4bb9b66338be..9288532f73c8 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -43,6 +43,7 @@ static u64			tick_length_base;
+ #define MAX_TICKADJ		500LL		/* usecs */
+ #define MAX_TICKADJ_SCALED \
+ 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
++#define MAX_TAI_OFFSET		100000
  
-+/*
-+ * This file is named adv7511-v4l2.c so it doesn't conflict with the Analog
-+ * Device ADV7511 (config fragment CONFIG_DRM_I2C_ADV7511).
-+ */
-+
+ /*
+  * phase-lock loop variables
+@@ -640,7 +641,8 @@ static inline void process_adjtimex_modes(struct timex *txc,
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
- #include <linux/kernel.h>
- #include <linux/module.h>
+-	if (txc->modes & ADJ_TAI && txc->constant >= 0)
++	if (txc->modes & ADJ_TAI &&
++			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
