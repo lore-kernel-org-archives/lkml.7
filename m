@@ -2,120 +2,272 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07148C73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A7C742D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D055120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8895E20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vm2aqd5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfGOBLg (ORCPT
+        id S1729045AbfGOBLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 21:11:36 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47392 "EHLO mga04.intel.com"
+        Sun, 14 Jul 2019 21:11:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60189 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbfGOBLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 21:11:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jul 2019 18:11:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,492,1557212400"; 
-   d="scan'208";a="160944974"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.203]) ([10.239.196.203])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jul 2019 18:11:32 -0700
-Subject: Re: [PATCH v7 1/3] KVM: x86: add support for user wait instructions
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-2-tao3.xu@intel.com>
- <20190712151300.GB29659@linux.intel.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <72e39861-7af4-057c-f879-4cc5a363e3e4@intel.com>
-Date:   Mon, 15 Jul 2019 09:11:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729023AbfGOBLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 21:11:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45n58c4JyTz9sDQ;
+        Mon, 15 Jul 2019 11:11:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563153106;
+        bh=+EFxW7lfuaRKJ9IfT8iLFDOaEU0DyeJaAtDegePrkmo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Vm2aqd5ZbAQFzUP8J7NhirTVo8416jy46FXq+iofZyI1eDIWzM54/OnF0lsCvFtXD
+         zL4BQuKj5gOxTYQ77k0JEobmEyD5Jje9qGw5HPDfZZk1Jb7ptxvOj52sIIVSapEFK0
+         qbomVdnJ0p5NNMlQF8pwcHdB0rjUeWsUM5QaQQ0YfBppLQwZC2khAWT5YWqKAX0KKL
+         L3fF0grYi5uTkGGJP3QPMOtf80udfqHQGfXV3sezjfP2Y+IXDy21rochviK3dN/N9+
+         4rXJNrOhuy79e+1IwJSWSOBzoqn43zsNLGFygyBQx81urnntbc/xRUU1iOKdGNV4vQ
+         gxUNwitdpGw/Q==
+Date:   Mon, 15 Jul 2019 11:11:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the drm
+ tree
+Message-ID: <20190715111144.24d303df@canb.auug.org.au>
+In-Reply-To: <20190709100645.5302a5c9@canb.auug.org.au>
+References: <20190624204908.64a33862@canb.auug.org.au>
+        <20190624210659.152a20bb@canb.auug.org.au>
+        <20190709100645.5302a5c9@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190712151300.GB29659@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/KRQeiCZ1x+C30jKBozlhXat"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/2019 11:13 PM, Sean Christopherson wrote:
-> On Fri, Jul 12, 2019 at 04:29:05PM +0800, Tao Xu wrote:
->> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> index 46af3a5e9209..a4d5da34b306 100644
->> --- a/arch/x86/kvm/vmx/nested.c
->> +++ b/arch/x86/kvm/vmx/nested.c
->> @@ -2048,6 +2048,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->>   				  SECONDARY_EXEC_ENABLE_INVPCID |
->>   				  SECONDARY_EXEC_RDTSCP |
->>   				  SECONDARY_EXEC_XSAVES |
->> +				  SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->>   				  SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY |
->>   				  SECONDARY_EXEC_APIC_REGISTER_VIRT |
->>   				  SECONDARY_EXEC_ENABLE_VMFUNC);
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index d98eac371c0a..f411c9ae5589 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -2247,6 +2247,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->>   			SECONDARY_EXEC_RDRAND_EXITING |
->>   			SECONDARY_EXEC_ENABLE_PML |
->>   			SECONDARY_EXEC_TSC_SCALING |
->> +			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->>   			SECONDARY_EXEC_PT_USE_GPA |
->>   			SECONDARY_EXEC_PT_CONCEAL_VMX |
->>   			SECONDARY_EXEC_ENABLE_VMFUNC |
->> @@ -3984,6 +3985,25 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
->>   		}
->>   	}
->>   
->> +	if (vmcs_config.cpu_based_2nd_exec_ctrl &
->> +		SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE) {
-> 
-> This should be aligned with the beginning of the conditional.
-> Alternatively, add a vmx_waitpkg_supported() helper, which is fairly
-> ubiquitous even when there is only a single call site.
-> 
+--Sig_/KRQeiCZ1x+C30jKBozlhXat
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-OK, Thank you for your suggestion.
->> +		/* Exposing WAITPKG only when WAITPKG is exposed */
-> No need for this comment.  It's also oddly worded, e.g. the second
-> "exposed" should probably be "enabled"?
-> 
->> +		bool waitpkg_enabled =
->> +			guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG);
->> +
->> +		if (!waitpkg_enabled)
->> +			exec_control &= ~SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
->> +
->> +		if (nested) {
->> +			if (waitpkg_enabled)
->> +				vmx->nested.msrs.secondary_ctls_high |=
->> +					SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
->> +			else
->> +				vmx->nested.msrs.secondary_ctls_high &=
->> +					~SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
->> +		}
->> +	}
->> +
->>   	vmx->secondary_exec_control = exec_control;
->>   }
->>   
->> -- 
->> 2.20.1
->>
+Hi all,
 
+On Tue, 9 Jul 2019 10:06:45 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> On Mon, 24 Jun 2019 21:06:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > On Mon, 24 Jun 2019 20:49:08 +1000 Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote: =20
+> > >
+> > > Today's linux-next merge of the akpm-current tree got a conflict in:
+> > >=20
+> > >   mm/memory.c
+> > >=20
+> > > between commit:
+> > >=20
+> > >   29875a52915e ("mm: Add an apply_to_pfn_range interface")
+> > >=20
+> > > from the drm tree and commit:
+> > >=20
+> > >   e972cea08fb3 ("mm/pgtable: drop pgtable_t variable from pte_fn_t fu=
+nctions")
+> > >=20
+> > > from the akpm-current tree.
+> > >=20
+> > > I fixed it up (see below my signature, then added the following merge
+> > > resolution patch as well) and can carry the fix as necessary. This
+> > > is now fixed as far as linux-next is concerned, but any non trivial
+> > > conflicts should be mentioned to your upstream maintainer when your t=
+ree
+> > > is submitted for merging.  You may also want to consider cooperating
+> > > with the maintainer of the conflicting tree to minimise any particula=
+rly
+> > > complex conflicts.
+> > >=20
+> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Date: Mon, 24 Jun 2019 20:40:46 +1000
+> > > Subject: [PATCH] merge fixup for "mm: Add an apply_to_pfn_range inter=
+face"
+> > >=20
+> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > ---
+> > >  include/linux/mm.h    | 2 +-
+> > >  mm/as_dirty_helpers.c | 8 ++------
+> > >  2 files changed, 3 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > index 87d53de3dee4..4404e18443ef 100644
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -2673,7 +2673,7 @@ extern int apply_to_page_range(struct mm_struct=
+ *mm, unsigned long address,
+> > >  			       unsigned long size, pte_fn_t fn, void *data);
+> > > =20
+> > >  struct pfn_range_apply;
+> > > -typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long =
+addr,
+> > > +typedef int (*pter_fn_t)(pte_t *pte, unsigned long addr,
+> > >  			 struct pfn_range_apply *closure);
+> > >  struct pfn_range_apply {
+> > >  	struct mm_struct *mm;
+> > > diff --git a/mm/as_dirty_helpers.c b/mm/as_dirty_helpers.c
+> > > index f600e31534fb..7c863626c2a4 100644
+> > > --- a/mm/as_dirty_helpers.c
+> > > +++ b/mm/as_dirty_helpers.c
+> > > @@ -26,7 +26,6 @@ struct apply_as {
+> > >  /**
+> > >   * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
+> > >   * @pte: Pointer to the pte
+> > > - * @token: Page table token, see apply_to_pfn_range()
+> > >   * @addr: The virtual page address
+> > >   * @closure: Pointer to a struct pfn_range_apply embedded in a
+> > >   * struct apply_as
+> > > @@ -36,8 +35,7 @@ struct apply_as {
+> > >   *
+> > >   * Return: Always zero.
+> > >   */
+> > > -static int apply_pt_wrprotect(pte_t *pte, pgtable_t token,
+> > > -			      unsigned long addr,
+> > > +static int apply_pt_wrprotect(pte_t *pte, unsigned long addr,
+> > >  			      struct pfn_range_apply *closure)
+> > >  {
+> > >  	struct apply_as *aas =3D container_of(closure, typeof(*aas), base);
+> > > @@ -78,7 +76,6 @@ struct apply_as_clean {
+> > >  /**
+> > >   * apply_pt_clean - Leaf pte callback to clean a pte
+> > >   * @pte: Pointer to the pte
+> > > - * @token: Page table token, see apply_to_pfn_range()
+> > >   * @addr: The virtual page address
+> > >   * @closure: Pointer to a struct pfn_range_apply embedded in a
+> > >   * struct apply_as_clean
+> > > @@ -91,8 +88,7 @@ struct apply_as_clean {
+> > >   *
+> > >   * Return: Always zero.
+> > >   */
+> > > -static int apply_pt_clean(pte_t *pte, pgtable_t token,
+> > > -			  unsigned long addr,
+> > > +static int apply_pt_clean(pte_t *pte, unsigned long addr,
+> > >  			  struct pfn_range_apply *closure)
+> > >  {
+> > >  	struct apply_as *aas =3D container_of(closure, typeof(*aas), base);
+> > > --=20
+> > > 2.20.1
+> > >=20
+> > > --=20
+> > > Cheers,
+> > > Stephen Rothwell
+> > >=20
+> > > diff --cc mm/memory.c
+> > > index 462aa47f8878,f8a75528658a..e7e37fcbd687
+> > > --- a/mm/memory.c
+> > > +++ b/mm/memory.c
+> > > @@@ -2037,12 -2036,11 +2035,11 @@@ static int apply_to_pte_range(stru=
+ct pf
+> > >   {
+> > >   	pte_t *pte;
+> > >   	int err;
+> > > - 	pgtable_t token;
+> > >   	spinlock_t *uninitialized_var(ptl);
+> > >  =20
+> > >  -	pte =3D (mm =3D=3D &init_mm) ?
+> > >  +	pte =3D (closure->mm =3D=3D &init_mm) ?
+> > >   		pte_alloc_kernel(pmd, addr) :
+> > >  -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> > >  +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
+> > >   	if (!pte)
+> > >   		return -ENOMEM;
+> > >  =20
+> > > @@@ -2050,10 -2048,8 +2047,8 @@@
+> > >  =20
+> > >   	arch_enter_lazy_mmu_mode();
+> > >  =20
+> > > - 	token =3D pmd_pgtable(*pmd);
+> > > -=20
+> > >   	do {
+> > > - 		err =3D closure->ptefn(pte++, token, addr, closure);
+> > >  -		err =3D fn(pte++, addr, data);
+> > > ++		err =3D closure->ptefn(pte++, addr, closure);
+> > >   		if (err)
+> > >   			break;
+> > >   	} while (addr +=3D PAGE_SIZE, addr !=3D end);   =20
+> >=20
+> > I also needed this:
+> >=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, 24 Jun 2019 21:04:14 +1000
+> > Subject: [PATCH] another fixup for "mm: Add an apply_to_pfn_range inter=
+face"
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  mm/memory.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index e7e37fcbd687..81d71fbfca5a 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -2189,14 +2189,13 @@ struct page_range_apply {
+> >   * Callback wrapper to enable use of apply_to_pfn_range for
+> >   * the apply_to_page_range interface
+> >   */
+> > -static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
+> > -				       unsigned long addr,
+> > +static int apply_to_page_range_wrapper(pte_t *pte, unsigned long addr,
+> >  				       struct pfn_range_apply *pter)
+> >  {
+> >  	struct page_range_apply *pra =3D
+> >  		container_of(pter, typeof(*pra), pter);
+> > =20
+> > -	return pra->fn(pte, token, addr, pra->data);
+> > +	return pra->fn(pte, addr, pra->data);
+> >  }
+> > =20
+> >  /*
+> > --=20
+> > 2.20.1 =20
+>=20
+> I am still getting this conflict (the commit ids may have changed).
+> Just a reminder in case you think Linus may need to know.
+>=20
+
+These fix ups are now needed when merging the drm tree into Linus' tree.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/KRQeiCZ1x+C30jKBozlhXat
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0r0tAACgkQAVBC80lX
+0GzzHQf+O4zxvTgB10N5ktRcxSE7/iq5c8Ax5VPj7Ipdslj4Tm76ou2vXNfK0am9
+PnDLzpRRIxp5t5sDEdYcZRdQZXYL5BVCeLRM7FDozj3HwORK8oVPYpvwgz7A0uKT
+c3qeRwi5yRjJdOuRdf1UFmyh4/AG4BN4+H2GkHKsau1FPr/4De7TsqBxovZVi7aC
+HFDz6Sl0zCT0U2iCbcM+8BDa71NA+ls/LeAWi7ZEoHZxXxbC/zVV7iZZ753yBg/o
+jexNlkl5aFA8pYVsiDclDso5mEWtPTi6SHckLJ9/O0bJChrEbDcyUy9SWCKUXpTP
+Ecmj/O1JR00qH16IXXdEw+gmYhCR7A==
+=F+tm
+-----END PGP SIGNATURE-----
+
+--Sig_/KRQeiCZ1x+C30jKBozlhXat--
