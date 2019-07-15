@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E133C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C29FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D96321530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D702221537
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199732;
-	bh=w5v7sWLAcSUnhsaiQsTidlDrLl91cqg976ss1tbUK9M=;
+	s=default; t=1563199736;
+	bh=5KpwBiolgatbtUkN/plbwqIBH7FRPYA+Rb8GfzJyAIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Agjfr++lECqRIWerrEI+di8CrjIlWPXwq9dB0qfgs9f4/wk5zJFdiLJn8h40oT5LQ
-	 rqFwtdU3bw1iJiOHQLZvC+tteU8rSUTkEV+GZRE/bNlTZTPkTiSkv72vjjuDkL5fNZ
-	 aWJP4IKRYMzKrhXOP7CpzJm5heNC5kwCajB41OoM=
+	b=yjPm2VMPMBDBAXwDcswrfGMY90LjKsm0k5oRkfG0BFqiHW9p2EzxLugef8RxvLmRV
+	 XRr1IQG3tscwB7YuFcvsQVsderZswJVbaRkNXwe4p7Y7TDk0VIwxBJA6Cp68Y2UISH
+	 g/VPIKhbJ4leJ+bGzd4rOqt/S6nklyhxG4zx7uHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388597AbfGOOIv (ORCPT
+        id S2388622AbfGOOIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59384 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388577AbfGOOIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:08:44 -0400
+        id S2388601AbfGOOIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:08:53 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9514C20C01;
-        Mon, 15 Jul 2019 14:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB4A206B8;
+        Mon, 15 Jul 2019 14:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199723;
-        bh=w5v7sWLAcSUnhsaiQsTidlDrLl91cqg976ss1tbUK9M=;
+        s=default; t=1563199733;
+        bh=5KpwBiolgatbtUkN/plbwqIBH7FRPYA+Rb8GfzJyAIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OWkM9gRjavzej2RGTNA3ISY2sK5DSLNEWI1Yi83iRI0ipP5O5XEf5sZ+1HP+gsqg5
-         pGBz6AjPf4U7UhpmxC/PUez9SZ2keE6DE2n55iSYdP752OLDj4PaYiSl7XXxvDe1mu
-         c4gVV/hcRunfcTvoLahb8NF+OTBoyd/K2Rd8iYpY=
+        b=J6jKx/McLJmqFNphOt07cZg3HGaldw4lawm+uK0UEF/kjB4sdAQCJbqwMeZIhcuF+
+         mUkgXRjzjNgYbNZvAeUBca6JYi2BqVzPbYT0B7dPgt3rzKOBf+bokP5r6wG0AhuWK6
+         fPL78CeHPc3sInJXY6pDTUqPfql01PKcZTu9K4EQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Kir Kolyshkin <kir@sacred.ru>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 085/219] selinux: fix empty write to keycreate file
-Date:   Mon, 15 Jul 2019 10:01:26 -0400
-Message-Id: <20190715140341.6443-85-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 088/219] ASoC: meson: axg-tdm: fix sample clock inversion
+Date:   Mon, 15 Jul 2019 10:01:29 -0400
+Message-Id: <20190715140341.6443-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,53 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Mosnacek <omosnace@redhat.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 464c258aa45b09f16aa0f05847ed8895873262d9 ]
+[ Upstream commit cb36ff785e868992e96e8b9e5a0c2822b680a9e2 ]
 
-When sid == 0 (we are resetting keycreate_sid to the default value), we
-should skip the KEY__CREATE check.
+The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
+so the test to check if the format is i2s is wrong. Because of this the
+clock setting may be wrong. For example, the sample clock gets inverted
+in DSP B mode, when it should not.
 
-Before this patch, doing a zero-sized write to /proc/self/keycreate
-would check if the current task can create unlabeled keys (which would
-usually fail with -EACCESS and generate an AVC). Now it skips the check
-and correctly sets the task's keycreate_sid to 0.
+Fix the lrclk invert helper function
 
-Bug report: https://bugzilla.redhat.com/show_bug.cgi?id=1719067
-
-Tested using the reproducer from the report above.
-
-Fixes: 4eb582cf1fbd ("[PATCH] keys: add a way to store the appropriate context for newly-created keys")
-Reported-by: Kir Kolyshkin <kir@sacred.ru>
-Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ sound/soc/meson/axg-tdm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 614bc753822c..bf37bdce9918 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -6269,11 +6269,12 @@ static int selinux_setprocattr(const char *name, void *value, size_t size)
- 	} else if (!strcmp(name, "fscreate")) {
- 		tsec->create_sid = sid;
- 	} else if (!strcmp(name, "keycreate")) {
--		error = avc_has_perm(&selinux_state,
--				     mysid, sid, SECCLASS_KEY, KEY__CREATE,
--				     NULL);
--		if (error)
--			goto abort_change;
-+		if (sid) {
-+			error = avc_has_perm(&selinux_state, mysid, sid,
-+					     SECCLASS_KEY, KEY__CREATE, NULL);
-+			if (error)
-+				goto abort_change;
-+		}
- 		tsec->keycreate_sid = sid;
- 	} else if (!strcmp(name, "sockcreate")) {
- 		tsec->sockcreate_sid = sid;
+diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
+index e578b6f40a07..5774ce0916d4 100644
+--- a/sound/soc/meson/axg-tdm.h
++++ b/sound/soc/meson/axg-tdm.h
+@@ -40,7 +40,7 @@ struct axg_tdm_iface {
+ 
+ static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
+ {
+-	return (fmt & SND_SOC_DAIFMT_I2S) ^
++	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
+ 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
+ }
+ 
 -- 
 2.20.1
 
