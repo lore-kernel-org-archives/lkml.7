@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D4AC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269B9C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9514B21530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E1620C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198803;
-	bh=164KRFcO42x8dUfykfin0mHWtFAIhxAYO1STNINMKck=;
+	s=default; t=1563198806;
+	bh=2ptnSZEzqcxgEzPkv3LIHR5g4hcTzweuTSPoTUNENZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jcixajb49P1BkCIeTRTSpNc4+JQA/3lBbhly7imDAuttJnpQ+PIkW/YxrDki0zcHL
-	 /Nj87pbezrIt0CHxT1aoiVs/HhifKdS8lI/EqqqimwKAXZKCUjQkYDLhlCASR3sK7I
-	 GPESV3t2TvYjt+1BNCej1DvX7LTv7R0MY4oNfDK8=
+	b=TITgly17fG/mOnM4qejsPEbBtJBQ91wfEEVsVqneD5jFYedUKBorrjl8lCuZGE7fD
+	 pPk3ecYLxImWuLnJBgQryN5J8sPy2SJcdHd3JlRn3LW2M/v9xezr3DUKKm5bd+oAPR
+	 nYuKv2wtr8TbllZdGqUt9jOprwZED2zAEaK6BCak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbfGONxW (ORCPT
+        id S1732375AbfGONxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731655AbfGONxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:53:19 -0400
+        id S1732355AbfGONxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:53:22 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030F720C01;
-        Mon, 15 Jul 2019 13:53:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470EF2081C;
+        Mon, 15 Jul 2019 13:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198798;
-        bh=164KRFcO42x8dUfykfin0mHWtFAIhxAYO1STNINMKck=;
+        s=default; t=1563198801;
+        bh=2ptnSZEzqcxgEzPkv3LIHR5g4hcTzweuTSPoTUNENZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlvZZ223nF9jHY47EvTLsZ+2QgB+h+RH5BtkF3UpfTiBkoHMRpQbzbvSD0cpaWn1y
-         bXwjGLtzxUKjxq+0dSjXN/w6V5tRT8VS1K21MVr/jZ7grwKyIIjabRypOSwCTb1VT5
-         1DzVaSddu3VNUftWbf4w8ahxgv/1htEWFPHHhszk=
+        b=hUXDYyYdUJvg00RD9o7w9LganHyW0lUDUGe7PSHnDrc6tYbYT78JH2OjxoOygAKs0
+         5Ed4DhZpZmDtB5iN4aLTw85MmbU8AK7Ogi/M3sc/HQFiECanraE9y4qQ84iSHsJwDI
+         7dViUaWLli74lbeq2ff0L8QYjhYaqsR3h61SACGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
@@ -46,9 +46,9 @@ Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 106/249] net: hns3: fix for skb leak when doing selftest
-Date:   Mon, 15 Jul 2019 09:44:31 -0400
-Message-Id: <20190715134655.4076-106-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 107/249] net: hns3: delay ring buffer clearing during reset
+Date:   Mon, 15 Jul 2019 09:44:32 -0400
+Message-Id: <20190715134655.4076-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -63,46 +63,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit 8f9eed1a8791b83eb1c54c261d68424717e4111e ]
+[ Upstream commit 3a30964a2eef6aabd3ab18b979ea0eacf1147731 ]
 
-If hns3_nic_net_xmit does not return NETDEV_TX_BUSY when doing
-a loopback selftest, the skb is not freed in hns3_clean_tx_ring
-or hns3_nic_net_xmit, which causes skb not freed problem.
+The driver may not be able to disable the ring through firmware
+when downing the netdev during reset process, which may cause
+hardware accessing freed buffer problem.
 
-This patch fixes it by freeing skb when hns3_nic_net_xmit does
-not return NETDEV_TX_OK.
+This patch delays the ring buffer clearing to reset uninit
+process because hardware will not access the ring buffer after
+hardware reset is completed.
 
-Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
-
+Fixes: bb6b94a896d4 ("net: hns3: Add reset interface implementation in client")
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index d1588ea6132c..24fce343e7fc 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -243,11 +243,13 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index d18ad7b48a31..e0d3e2f9801d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -28,7 +28,7 @@
+ #define hns3_tx_bd_count(S)	DIV_ROUND_UP(S, HNS3_MAX_BD_SIZE)
  
- 		skb_get(skb);
- 		tx_ret = hns3_nic_net_xmit(skb, ndev);
--		if (tx_ret == NETDEV_TX_OK)
-+		if (tx_ret == NETDEV_TX_OK) {
- 			good_cnt++;
--		else
-+		} else {
-+			kfree_skb(skb);
- 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
- 				   tx_ret);
-+		}
+ static void hns3_clear_all_ring(struct hnae3_handle *h);
+-static void hns3_force_clear_all_rx_ring(struct hnae3_handle *h);
++static void hns3_force_clear_all_ring(struct hnae3_handle *h);
+ static void hns3_remove_hw_addr(struct net_device *netdev);
+ 
+ static const char hns3_driver_name[] = "hns3";
+@@ -491,7 +491,12 @@ static void hns3_nic_net_down(struct net_device *netdev)
+ 	/* free irq resources */
+ 	hns3_nic_uninit_irq(priv);
+ 
+-	hns3_clear_all_ring(priv->ae_handle);
++	/* delay ring buffer clearing to hns3_reset_notify_uninit_enet
++	 * during reset process, because driver may not be able
++	 * to disable the ring through firmware when downing the netdev.
++	 */
++	if (!hns3_nic_resetting(netdev))
++		hns3_clear_all_ring(priv->ae_handle);
+ }
+ 
+ static int hns3_nic_net_stop(struct net_device *netdev)
+@@ -3883,7 +3888,7 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+ 
+ 	hns3_del_all_fd_rules(netdev, true);
+ 
+-	hns3_force_clear_all_rx_ring(handle);
++	hns3_force_clear_all_ring(handle);
+ 
+ 	hns3_uninit_phy(netdev);
+ 
+@@ -4055,7 +4060,7 @@ static void hns3_force_clear_rx_ring(struct hns3_enet_ring *ring)
  	}
- 	if (good_cnt != HNS3_NIC_LB_TEST_PKT_NUM) {
- 		ret_val = HNS3_NIC_LB_TEST_TX_CNT_ERR;
+ }
+ 
+-static void hns3_force_clear_all_rx_ring(struct hnae3_handle *h)
++static void hns3_force_clear_all_ring(struct hnae3_handle *h)
+ {
+ 	struct net_device *ndev = h->kinfo.netdev;
+ 	struct hns3_nic_priv *priv = netdev_priv(ndev);
+@@ -4063,6 +4068,9 @@ static void hns3_force_clear_all_rx_ring(struct hnae3_handle *h)
+ 	u32 i;
+ 
+ 	for (i = 0; i < h->kinfo.num_tqps; i++) {
++		ring = priv->ring_data[i].ring;
++		hns3_clear_tx_ring(ring);
++
+ 		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+ 		hns3_force_clear_rx_ring(ring);
+ 	}
+@@ -4297,7 +4305,8 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
+ 		return 0;
+ 	}
+ 
+-	hns3_force_clear_all_rx_ring(handle);
++	hns3_clear_all_ring(handle);
++	hns3_force_clear_all_ring(handle);
+ 
+ 	hns3_nic_uninit_vector_data(priv);
+ 
 -- 
 2.20.1
 
