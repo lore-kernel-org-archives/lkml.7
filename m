@@ -2,112 +2,108 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B181C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F6EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F94A2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L0rWdGhf"
+	by mail.kernel.org (Postfix) with ESMTP id 03BE520868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbfGONde (ORCPT
+        id S1730285AbfGONfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:33:34 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34786 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730219AbfGONd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:33:26 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so15534943edb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 06:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zV3/vbwe0/Qeasu0YBAGg2gUXm0o6TWO07FywBLuSLQ=;
-        b=L0rWdGhfirmWchYFN/Q49dCPtNkTSUF3ESjkzSzpadWF5LFHu4NvYRUuhk+wNwHj3D
-         mv/14J1m7xMRKxXNODwINfKzMhNmgo1C9L1BadzLgwBfp/t+zEe37+/YvPAyllAg1dX/
-         bvYMmwDngb7snArunyuOmk242XB7+Alu5rmPDBDT7Xb5qOZS3D2AcJ+ZLT4MIX4pYNiI
-         pRzhrQ0esLbdO4/EFBbPcX4u9puEdb+OX1NjQTvGCOChvfXte34esi7oseASPbcHYMHq
-         eRam9KQbFBBkUyF2ZDX8gZmem8guJOs+oiK7kcbT+RXbL024SPqXfMXOfEtMRucPhzPd
-         AA5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zV3/vbwe0/Qeasu0YBAGg2gUXm0o6TWO07FywBLuSLQ=;
-        b=jQtoCT1EKHlh2lsa35BbCcIEXvlz+gWX+fUEGgdPOIzYsGlZGORQaD3ZLSe+R2fomu
-         rC7c8v8+1R26CoJxRUjAp/i6Cns0UtLG0Frx7KuZvpHDJmIf/jqdsVyqEbeWAlA+c1jH
-         4TMQk1zfg6IDuQLAikq00vcG6i7s8SJula1FbwdWDsxE5PfG7jznsqfAprVaHDjXpCV1
-         hf+mzf5QA2iWIZ7PieNvBZB0wnHMrfVoN96fh0pW6SDUKIqHArmGTXlhzcmBpAWPnOS1
-         tT6d5+gw9VH7zUpCN0zSRPMGWShtU0GB9uFVr14VZUPhgFE3KOWRZucplgyPQgUyIu9d
-         a/0w==
-X-Gm-Message-State: APjAAAW2lQY9UfJQ5mCkFhjW6NKm7xyvo24ySr3TFOqM+YheghcGrFRD
-        tlJ1LF7V8Qz73ZWDuX/TrRDC0H0J3yT7eo7/R7MD6w==
-X-Google-Smtp-Source: APXvYqxiyIGV3CkBm6teN0cFq4U4X8od+WIc9m+37oG40chmdHcr6+lg/DGbEVZHpjhTDNKzo6KAT/7YUwUuInGxIX4=
-X-Received: by 2002:a17:906:6dd4:: with SMTP id j20mr20664132ejt.173.1563197603166;
- Mon, 15 Jul 2019 06:33:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190705151658.GP26519@linux.ibm.com> <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
- <20190705191055.GT26519@linux.ibm.com> <20190706042801.GD11665@mit.edu>
- <20190706061631.GV26519@linux.ibm.com> <20190706150226.GG11665@mit.edu>
- <20190706180311.GW26519@linux.ibm.com> <20190707011655.GA22081@linux.ibm.com>
- <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
- <20190714184915.GK26519@linux.ibm.com> <20190715132911.GG3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190715132911.GG3419@hirez.programming.kicks-ass.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 15 Jul 2019 15:33:11 +0200
-Message-ID: <CACT4Y+bmgdOExBHnLJ+jgWKWQzNK9CFT6_eTxFE3hoK=0YresQ@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Mon, 15 Jul 2019 09:35:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:22039 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730172AbfGONfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:35:36 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EF02F85546;
+        Mon, 15 Jul 2019 13:35:35 +0000 (UTC)
+Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D28C47E23;
+        Mon, 15 Jul 2019 13:35:32 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 08:35:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH 03/22] x86/kvm: Fix frame pointer usage in vmx_vmenter()
+Message-ID: <20190715133525.gr4wvnd4kxwtv63o@treble>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
+ <299fe4adb78cff0a182f8376c23a445b94d7c782.1563150885.git.jpoimboe@redhat.com>
+ <0b37031b-1043-8274-a086-2b5d0b02b5ef@redhat.com>
+ <20190715123704.oke4pd4wguj5a7i3@treble>
+ <2172ac52-899b-a32a-cba7-c2e5f2bb784e@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2172ac52-899b-a32a-cba7-c2e5f2bb784e@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 15 Jul 2019 13:35:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Sun, Jul 14, 2019 at 11:49:15AM -0700, Paul E. McKenney wrote:
-> > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
-> > > But short term I don't see any other solution than stop testing
-> > > sched_setattr because it does not check arguments enough to prevent
-> > > system misbehavior. Which is a pity because syzkaller has found some
-> > > bad misconfigurations that were oversight on checking side.
-> > > Any other suggestions?
-> >
-> > Keep the times down to a few seconds?  Of course, that might also
-> > fail to find interesting bugs.
->
-> Right, if syzcaller can put a limit on the period/deadline parameters
-> (and make sure to not write "-1" to
-> /proc/sys/kernel/sched_rt_runtime_us) then per the in-kernel
-> access-control should not allow these things to happen.
+On Mon, Jul 15, 2019 at 03:03:23PM +0200, Paolo Bonzini wrote:
+> On 15/07/19 14:37, Josh Poimboeuf wrote:
+> > On Mon, Jul 15, 2019 at 11:04:03AM +0200, Paolo Bonzini wrote:
+> >> On 15/07/19 02:36, Josh Poimboeuf wrote:
+> >>> With CONFIG_FRAME_POINTER, vmx_vmenter() needs to do frame pointer setup
+> >>> before calling kvm_spurious_fault().
+> >>>
+> >>> Fixes the following warning:
+> >>>
+> >>>   arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
+> >>>
+> >>> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> >>
+> >> This is not enough, because the RSP value must match what is computed at
+> >> this place:
+> >>
+> >>         /* Adjust RSP to account for the CALL to vmx_vmenter(). */
+> >>         lea -WORD_SIZE(%_ASM_SP), %_ASM_ARG2
+> >>         call vmx_update_host_rsp
+> > 
+> > Ah, that is surprising :-)
+> > 
+> > And then there's this, which overwrites the frame pointer anyway:
+> > 
+> > 	mov VCPU_RBP(%_ASM_AX), %_ASM_BP
+> > 
+> > Would it make sense to remove the call to vmx_vmenter() altogether, and
+> > just either embed it in __vmx_vcpu_run(), or jmp back and forth to it
+> > from __vmx_vcpu_run()?
+> 
+> Unfortunately there's another use of it in nested_vmx_check_vmentry_hw.
 
-Since we are racing with emails, could you suggest a 100% safe
-parameters? Because I only hear people saying "safe", "sane",
-"well-behaving" :)
-If we move the check to user-space, it does not mean that we can get
-away without actually defining what that means.
+Ah, I missed that too (failed by cscope).  Is this ok?
 
-Now thinking of this, if we come up with some simple criteria, could
-we have something like a sysctl that would allow only really "safe"
-parameters?
+diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+index d4cb1945b2e3..4010d519eb8c 100644
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
+ 	ret
+ 
+ 3:	cmpb $0, kvm_rebooting
+-	jne 4f
+-	call kvm_spurious_fault
+-4:	ret
++	je 4f
++	ret
++4:	ud2
+ 
+ 	.pushsection .fixup, "ax"
+ 5:	jmp 3b
