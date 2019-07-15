@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1A6C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77049C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CCB21849
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4969E20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200415;
-	bh=RYrGBCO24OZWvrQxwop4I/ta7IVGY9R0HWwt9l2BfBE=;
+	s=default; t=1563200416;
+	bh=rE8nMy7/vOHU+or2H8AqaI7hPew1k1Ln1/KnOmdeNQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JDpji+SQmYVriqF0p8LRwD2XtmlzvZ+qriAFxTpx5LCCLI6hfVQdcUHYhLHw+mM/6
-	 xIJBmAJ1LsB5/8Xt7oN4NqUgTlwimjjFwqEz8d83gMDiqT4dG10SbLIrxt2DAE/NG1
-	 DSEbDKveLr1ttHZ0KK/tbfEHDouJctn6i5xBVeok=
+	b=uI/Wk3/4IeFTcYiH0Qp3iGZBb+WU3qGApUBgZgI4Cjpes6y1ojfLz4zYnDJVtIn9K
+	 X5+tPiTobw2XvP7YYDg3MHvzEFthsAFVkI6zLT29fXltxABb6eQLRwNARu1Wvu+Kvw
+	 KdTxHL9caqnzslful6eXqlmLaCJow1zXjG3zrFiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390396AbfGOOUL (ORCPT
+        id S2390410AbfGOOUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41986 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390169AbfGOOTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:19:44 -0400
+        id S2390392AbfGOOUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:11 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB5D206B8;
-        Mon, 15 Jul 2019 14:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B8F221530;
+        Mon, 15 Jul 2019 14:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200383;
-        bh=RYrGBCO24OZWvrQxwop4I/ta7IVGY9R0HWwt9l2BfBE=;
+        s=default; t=1563200406;
+        bh=rE8nMy7/vOHU+or2H8AqaI7hPew1k1Ln1/KnOmdeNQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=le5b0LKqVK/7WMaFvpZh2oCD9EPBRCWN/WIiOj/xCXcaresfMPy/6qKMZWxX6Gm3f
-         Mux5pZRVNbPjtA7Ut6LYquB/np5Kzu7DDTfD4i8/cPmPyM4XTZMHAV+GQSqWep/82a
-         /cHagP8jMK+aj/gLtoNzqSIGpObitzrPHygfkRs0=
+        b=W/D8SilwHvqbEuXU7iCf+tN7HXvZB0+LWqqNTYtKnLg9/5VAtqyE2JFJlMnk43kgd
+         KvoAB/DAExSbaYYR2EbhysCCytSRjJTXIzXHPK4zLXDqALUrTXs1S/UuuUtonLccmk
+         Nia9oGFkVpRIPmzbNliTYVQzKQRTkTiW1RTR5EtU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 032/158] net: phy: Check against net_device being NULL
-Date:   Mon, 15 Jul 2019 10:16:03 -0400
-Message-Id: <20190715141809.8445-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 039/158] net: hns3: set ops to null when unregister ad_dev
+Date:   Mon, 15 Jul 2019 10:16:10 -0400
+Message-Id: <20190715141809.8445-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -61,48 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
+From: Weihang Li <liweihang@hisilicon.com>
 
-[ Upstream commit 82c76aca81187b3d28a6fb3062f6916450ce955e ]
+[ Upstream commit 594a81b39525f0a17e92c2e0b167ae1400650380 ]
 
-In general, we don't want MAC drivers calling phy_attach_direct with the
-net_device being NULL. Add checks against this in all the functions
-calling it: phy_attach() and phy_connect_direct().
+The hclge/hclgevf and hns3 module can be unloaded independently,
+when hclge/hclgevf unloaded firstly, the ops of ae_dev should
+be set to NULL, otherwise it will cause an use-after-free problem.
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 8a96d985a52f..6144146aec29 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -757,6 +757,9 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
- {
- 	int rc;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index fff5be8078ac..0594a6c3dccd 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -229,6 +229,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
  
-+	if (!dev)
-+		return -EINVAL;
-+
- 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
- 	if (rc)
- 		return rc;
-@@ -1098,6 +1101,9 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
- 	struct device *d;
- 	int rc;
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
+ 	}
  
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
-+
- 	/* Search the list of PHY devices on the mdio bus for the
- 	 * PHY with the requested name
- 	 */
+ 	list_del(&ae_algo->node);
+@@ -316,6 +317,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
+ 	}
+ 
+ 	list_del(&ae_dev->node);
 -- 
 2.20.1
 
