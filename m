@@ -4,135 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADABC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BDCC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EE720896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079B120896
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200523;
-	bh=8aMhZObp+OV6R+0Pf2IC4tAtq3tomyGvUrXruWhPUoI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iv5tQZqPfwR6uZISLQEq7h5Hs+IGFs2PTmjCuL8r3N9Ms6aByZVgNsaf3+tKC7fn6
-	 n4fyGZrnA8fkAAIu5n6+flvF4ayVhaDxSiGHuGxHD8jj0JL5OOA1Nq4vfFWNNN+5nS
-	 OnMzyNcgY2Yp66+nvspZMQZxdcYLTd0qEGFoD9dE=
+	s=default; t=1563200526;
+	bh=mS+GSMyRgwLANrflyg+Ir/2KP1M3YToZ2JpBjRRDu1o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tANNUafC70lOUWCCZZsPvS8vbLa+B/Rwn28OKIQS5i0bAbcoFJMqgol9uaw6x0B60
+	 5kmIyHqgEfALqFxds5j1imoF8LbSsBnxZuN6/ZDWAhbsIzoBeQmbU0MgiovPc8hZ2M
+	 FRd4uI6BLyj0x3ut1y+i1AsGfqFgAsjXCRfj1RCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390127AbfGOOV5 (ORCPT
+        id S2388839AbfGOOVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48476 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390004AbfGOOVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:21:51 -0400
-Received: from localhost (d192-24-91-215.try.wideopenwest.com [24.192.215.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731163AbfGOOVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:21:48 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D342184C;
-        Mon, 15 Jul 2019 14:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EABD21537;
+        Mon, 15 Jul 2019 14:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200510;
-        bh=8aMhZObp+OV6R+0Pf2IC4tAtq3tomyGvUrXruWhPUoI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CHG6tDR6ScJFj8bAHpOx7eMShmwPYizVnXpdP8cPQMLJgnbg+mW0KuTbNiAWfnT4D
-         ypqe+rM31ZHkrPTu5UGXO42Ag5E2swcKWLFQ4/gguFge9pwJ8TGdHCEfZ40jFmPore
-         8RXk3um9of4WsBsU6mrxx7af7igpveBwmmqRQaag=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] Revert "x86/ptrace: Prevent ptrace from clearing the FS/GS selector" and fix the test
-Date:   Mon, 15 Jul 2019 07:21:44 -0700
-Message-Id: <fca39c478ea7fb15bc76fe8a36bd180810a067f6.1563200250.git.luto@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        s=default; t=1563200507;
+        bh=mS+GSMyRgwLANrflyg+Ir/2KP1M3YToZ2JpBjRRDu1o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dQ7aoVQ/Y09tY5ZIyCVhK3QRUyZodP2GPyAaS5OMAeX/is2da7Uv+uWnyKf6Um1fd
+         gkQtnPKcbI71QMmzVwTcne3c/jHFaNLtUwe0VAyOu/DfFK2N526rYa6iOBWlbymMSh
+         iptDpF6iuuZUoDj3DAfSxq65xom7fkSiLbz2bUms=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 065/158] x86/cpu: Add Ice Lake NNPI to Intel family
+Date:   Mon, 15 Jul 2019 10:16:36 -0400
+Message-Id: <20190715141809.8445-65-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 48f5e52e916b55fb73754833efbacc7f8081a159.
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-The ptrace ABI change was a prerequisite to the proposed design for
-FSGSBASE.  Since FSGSBASE support has been reverted, and since I'm
-not convinced that the ABI was ever adequately tested, revert the
-ABI change as well.
+[ Upstream commit e32d045cd4ba06b59878323e434bad010e78e658 ]
 
-This also modifies the test case so that it tests the preexisting
-behavior.
+Add the CPUID model number of Ice Lake Neural Network Processor for Deep
+Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
+model number 0x9D and this will be documented in a future version of Intel
+Software Development Manual.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@suse.de
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c               | 14 ++++++++++++--
- tools/testing/selftests/x86/fsgsbase.c | 22 ++++------------------
- 2 files changed, 16 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/intel-family.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 3108cdc00b29..a166c960bc9e 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -397,12 +397,22 @@ static int putreg(struct task_struct *child,
- 	case offsetof(struct user_regs_struct,fs_base):
- 		if (value >= TASK_SIZE_MAX)
- 			return -EIO;
--		x86_fsbase_write_task(child, value);
-+		/*
-+		 * When changing the FS base, use do_arch_prctl_64()
-+		 * to set the index to zero and to set the base
-+		 * as requested.
-+		 */
-+		if (child->thread.fsbase != value)
-+			return do_arch_prctl_64(child, ARCH_SET_FS, value);
- 		return 0;
- 	case offsetof(struct user_regs_struct,gs_base):
-+		/*
-+		 * Exactly the same here as the %fs handling above.
-+		 */
- 		if (value >= TASK_SIZE_MAX)
- 			return -EIO;
--		x86_gsbase_write_task(child, value);
-+		if (child->thread.gsbase != value)
-+			return do_arch_prctl_64(child, ARCH_SET_GS, value);
- 		return 0;
- #endif
- 	}
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 5ab4c60c100e..15a329da59fa 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -489,25 +489,11 @@ static void test_ptrace_write_gsbase(void)
- 		 * selector value is changed or not by the GSBASE write in
- 		 * a ptracer.
- 		 */
--		if (gs != *shared_scratch) {
--			nerrs++;
--			printf("[FAIL]\tGS changed to %lx\n", gs);
--
--			/*
--			 * On older kernels, poking a nonzero value into the
--			 * base would zero the selector.  On newer kernels,
--			 * this behavior has changed -- poking the base
--			 * changes only the base and, if FSGSBASE is not
--			 * available, this may have no effect.
--			 */
--			if (gs == 0)
--				printf("\tNote: this is expected behavior on older kernels.\n");
--		} else if (have_fsgsbase && (base != 0xFF)) {
--			nerrs++;
--			printf("[FAIL]\tGSBASE changed to %lx\n", base);
-+		if (gs == 0 && base == 0xFF) {
-+			printf("[OK]\tGS was reset as expected\n");
- 		} else {
--			printf("[OK]\tGS remained 0x%hx%s", *shared_scratch, have_fsgsbase ? " and GSBASE changed to 0xFF" : "");
--			printf("\n");
-+			nerrs++;
-+			printf("[FAIL]\tGS=0x%lx, GSBASE=0x%lx (should be 0, 0xFF)\n", gs, base);
- 		}
- 	}
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 2e38fb82b91d..aebedbaf5260 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -56,6 +56,7 @@
+ #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
+ #define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
+ /* "Small Core" Processors (Atom) */
  
 -- 
-2.21.0
+2.20.1
 
