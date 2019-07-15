@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C821C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83A3C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE3D2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24BC2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202134;
-	bh=k3vcteP0xrQrR/GyC8cg3tZoGi+Qo1JFJf7nsk1pg5U=;
+	s=default; t=1563202154;
+	bh=texjwhagjJKgmcWlrkN9L0Kx+13gOpeUUo3QW/83Z7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUoR7UgqrPrmURpHr6MROofYEPLyNZAfE0V8Aau7DHfIeGucWw/Jjh94YMwPW8NJB
-	 5zOifByuvSd+SDjFJTmbTKqFs9EUsrPCBCnN+rl2v6GvBDcxJgQA14GjmRlypRZKuJ
-	 1QnUS0083fQCKdMac582I71bctFzg2BvFkXb2GWo=
+	b=mzhnx9pmGfTX5aHGmQ7CO+l2BHJWyULTuQdnXzjv8g8LkCiZXl456Amss/s33ZzHZ
+	 wyY7BpsgZre+BwdVCETJDNUg9mJCDqRUrIT/7YnaUY/LUS/t1Uc4BzNjzRVtWkXoYQ
+	 3nKR5/Co2tJjvmhucnnQYdYmIW1lXRfSneHv7vAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404724AbfGOOsw (ORCPT
+        id S2404730AbfGOOtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404671AbfGOOss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:48:48 -0400
+        id S1733276AbfGOOse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:48:34 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20082067C;
-        Mon, 15 Jul 2019 14:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 301182086C;
+        Mon, 15 Jul 2019 14:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202126;
-        bh=k3vcteP0xrQrR/GyC8cg3tZoGi+Qo1JFJf7nsk1pg5U=;
+        s=default; t=1563202113;
+        bh=texjwhagjJKgmcWlrkN9L0Kx+13gOpeUUo3QW/83Z7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPPeRPNoBgD0Prqv2NzL0QMmh3c/Qcx+crakRQlubYdWBQBSLkh4WqWIou7pUkdnL
-         unRm77wOiamnXfPe94C8+7HC+HASeC+H77h7OeQ0wtnWoZVi1dvQv5aB3yhmHDZUZd
-         ARifpmdJXOWRWnHvo6PcwcTrXB+zfk01ptGEKMa8=
+        b=KxjwsRReYLdp2bEyeqPDjo/IFmxUbi9oOOs8aWEkYuAoSlJd9s7NaucnBtQ/7NcLV
+         73C4Q2OVRvSCkd9sWZKz2IY/JoE7CMaA3qO8+k3RA+Z6VDEJL6PQsxd8+FQ+MSqNDq
+         wp0mwy+FJBd3GjXvomLB/kcNhLojqeurW51YvDNs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     csonsino <csonsino@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 53/53] Bluetooth: validate BLE connection interval updates
-Date:   Mon, 15 Jul 2019 10:45:35 -0400
-Message-Id: <20190715144535.11636-53-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 49/53] bcache: check c->gc_thread by IS_ERR_OR_NULL in cache_set_flush()
+Date:   Mon, 15 Jul 2019 10:45:31 -0400
+Message-Id: <20190715144535.11636-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -60,92 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: csonsino <csonsino@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit c49a8682fc5d298d44e8d911f4fa14690ea9485e ]
+[ Upstream commit b387e9b58679c60f5b1e4313939bd4878204fc37 ]
 
-Problem: The Linux Bluetooth stack yields complete control over the BLE
-connection interval to the remote device.
+When system memory is in heavy pressure, bch_gc_thread_start() from
+run_cache_set() may fail due to out of memory. In such condition,
+c->gc_thread is assigned to -ENOMEM, not NULL pointer. Then in following
+failure code path bch_cache_set_error(), when cache_set_flush() gets
+called, the code piece to stop c->gc_thread is broken,
+         if (!IS_ERR_OR_NULL(c->gc_thread))
+                 kthread_stop(c->gc_thread);
 
-The Linux Bluetooth stack provides access to the BLE connection interval
-min and max values through /sys/kernel/debug/bluetooth/hci0/
-conn_min_interval and /sys/kernel/debug/bluetooth/hci0/conn_max_interval.
-These values are used for initial BLE connections, but the remote device
-has the ability to request a connection parameter update. In the event
-that the remote side requests to change the connection interval, the Linux
-kernel currently only validates that the desired value is within the
-acceptable range in the Bluetooth specification (6 - 3200, corresponding to
-7.5ms - 4000ms). There is currently no validation that the desired value
-requested by the remote device is within the min/max limits specified in
-the conn_min_interval/conn_max_interval configurations. This essentially
-leads to Linux yielding complete control over the connection interval to
-the remote device.
+And KASAN catches such NULL pointer deference problem, with the warning
+information:
 
-The proposed patch adds a verification step to the connection parameter
-update mechanism, ensuring that the desired value is within the min/max
-bounds of the current connection. If the desired value is outside of the
-current connection min/max values, then the connection parameter update
-request is rejected and the negative response is returned to the remote
-device. Recall that the initial connection is established using the local
-conn_min_interval/conn_max_interval values, so this allows the Linux
-administrator to retain control over the BLE connection interval.
+[  561.207881] ==================================================================
+[  561.207900] BUG: KASAN: null-ptr-deref in kthread_stop+0x3b/0x440
+[  561.207904] Write of size 4 at addr 000000000000001c by task kworker/15:1/313
 
-The one downside that I see is that the current default Linux values for
-conn_min_interval and conn_max_interval typically correspond to 30ms and
-50ms respectively. If this change were accepted, then it is feasible that
-some devices would no longer be able to negotiate to their desired
-connection interval values. This might be remedied by setting the default
-Linux conn_min_interval and conn_max_interval values to the widest
-supported range (6 - 3200 / 7.5ms - 4000ms). This could lead to the same
-behavior as the current implementation, where the remote device could
-request to change the connection interval value to any value that is
-permitted by the Bluetooth specification, and Linux would accept the
-desired value.
+[  561.207913] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G        W         5.0.0-vanilla+ #3
+[  561.207916] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
+[  561.207935] Workqueue: events cache_set_flush [bcache]
+[  561.207940] Call Trace:
+[  561.207948]  dump_stack+0x9a/0xeb
+[  561.207955]  ? kthread_stop+0x3b/0x440
+[  561.207960]  ? kthread_stop+0x3b/0x440
+[  561.207965]  kasan_report+0x176/0x192
+[  561.207973]  ? kthread_stop+0x3b/0x440
+[  561.207981]  kthread_stop+0x3b/0x440
+[  561.207995]  cache_set_flush+0xd4/0x6d0 [bcache]
+[  561.208008]  process_one_work+0x856/0x1620
+[  561.208015]  ? find_held_lock+0x39/0x1d0
+[  561.208028]  ? drain_workqueue+0x380/0x380
+[  561.208048]  worker_thread+0x87/0xb80
+[  561.208058]  ? __kthread_parkme+0xb6/0x180
+[  561.208067]  ? process_one_work+0x1620/0x1620
+[  561.208072]  kthread+0x326/0x3e0
+[  561.208079]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  561.208090]  ret_from_fork+0x3a/0x50
+[  561.208110] ==================================================================
+[  561.208113] Disabling lock debugging due to kernel taint
+[  561.208115] irq event stamp: 11800231
+[  561.208126] hardirqs last  enabled at (11800231): [<ffffffff83008538>] do_syscall_64+0x18/0x410
+[  561.208127] BUG: unable to handle kernel NULL pointer dereference at 000000000000001c
+[  561.208129] #PF error: [WRITE]
+[  561.312253] hardirqs last disabled at (11800230): [<ffffffff830052ff>] trace_hardirqs_off_thunk+0x1a/0x1c
+[  561.312259] softirqs last  enabled at (11799832): [<ffffffff850005c7>] __do_softirq+0x5c7/0x8c3
+[  561.405975] PGD 0 P4D 0
+[  561.442494] softirqs last disabled at (11799821): [<ffffffff831add2c>] irq_exit+0x1ac/0x1e0
+[  561.791359] Oops: 0002 [#1] SMP KASAN NOPTI
+[  561.791362] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G    B   W         5.0.0-vanilla+ #3
+[  561.791363] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
+[  561.791371] Workqueue: events cache_set_flush [bcache]
+[  561.791374] RIP: 0010:kthread_stop+0x3b/0x440
+[  561.791376] Code: 00 00 65 8b 05 26 d5 e0 7c 89 c0 48 0f a3 05 ec aa df 02 0f 82 dc 02 00 00 4c 8d 63 20 be 04 00 00 00 4c 89 e7 e8 65 c5 53 00 <f0> ff 43 20 48 8d 7b 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+[  561.791377] RSP: 0018:ffff88872fc8fd10 EFLAGS: 00010286
+[  561.838895] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838916] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838934] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838948] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838966] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838979] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838996] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  563.067028] RAX: 0000000000000000 RBX: fffffffffffffffc RCX: ffffffff832dd314
+[  563.067030] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000297
+[  563.067032] RBP: ffff88872fc8fe88 R08: fffffbfff0b8213d R09: fffffbfff0b8213d
+[  563.067034] R10: 0000000000000001 R11: fffffbfff0b8213c R12: 000000000000001c
+[  563.408618] R13: ffff88dc61cc0f68 R14: ffff888102b94900 R15: ffff88dc61cc0f68
+[  563.408620] FS:  0000000000000000(0000) GS:ffff888f7dc00000(0000) knlGS:0000000000000000
+[  563.408622] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  563.408623] CR2: 000000000000001c CR3: 0000000f48a1a004 CR4: 00000000007606e0
+[  563.408625] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  563.408627] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  563.904795] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  563.915796] PKRU: 55555554
+[  563.915797] Call Trace:
+[  563.915807]  cache_set_flush+0xd4/0x6d0 [bcache]
+[  563.915812]  process_one_work+0x856/0x1620
+[  564.001226] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.033563]  ? find_held_lock+0x39/0x1d0
+[  564.033567]  ? drain_workqueue+0x380/0x380
+[  564.033574]  worker_thread+0x87/0xb80
+[  564.062823] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.118042]  ? __kthread_parkme+0xb6/0x180
+[  564.118046]  ? process_one_work+0x1620/0x1620
+[  564.118048]  kthread+0x326/0x3e0
+[  564.118050]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  564.167066] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.252441]  ret_from_fork+0x3a/0x50
+[  564.252447] Modules linked in: msr rpcrdma sunrpc rdma_ucm ib_iser ib_umad rdma_cm ib_ipoib i40iw configfs iw_cm ib_cm libiscsi scsi_transport_iscsi mlx4_ib ib_uverbs mlx4_en ib_core nls_iso8859_1 nls_cp437 vfat fat intel_rapl skx_edac x86_pkg_temp_thermal coretemp iTCO_wdt iTCO_vendor_support crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ses raid0 aesni_intel cdc_ether enclosure usbnet ipmi_ssif joydev aes_x86_64 i40e scsi_transport_sas mii bcache md_mod crypto_simd mei_me ioatdma crc64 ptp cryptd pcspkr i2c_i801 mlx4_core glue_helper pps_core mei lpc_ich dca wmi ipmi_si ipmi_devintf nd_pmem dax_pmem nd_btt ipmi_msghandler device_dax pcc_cpufreq button hid_generic usbhid mgag200 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect xhci_pci sysimgblt fb_sys_fops xhci_hcd ttm megaraid_sas drm usbcore nfit libnvdimm sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua efivarfs
+[  564.299390] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.348360] CR2: 000000000000001c
+[  564.348362] ---[ end trace b7f0e5cc7b2103b0 ]---
 
-Signed-off-by: Carey Sonsino <csonsino@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Therefore, it is not enough to only check whether c->gc_thread is NULL,
+we should use IS_ERR_OR_NULL() to check both NULL pointer and error
+value.
+
+This patch changes the above buggy code piece in this way,
+         if (!IS_ERR_OR_NULL(c->gc_thread))
+                 kthread_stop(c->gc_thread);
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c  | 5 +++++
- net/bluetooth/l2cap_core.c | 9 ++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 37fe2b158c2a..c4e94f34d048 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5062,6 +5062,11 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_UNKNOWN_CONN_ID);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 02757b90e402..e42092146083 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1403,7 +1403,7 @@ static void cache_set_flush(struct closure *cl)
+ 	kobject_put(&c->internal);
+ 	kobject_del(&c->kobj);
  
-+	if (min < hcon->le_conn_min_interval ||
-+	    max > hcon->le_conn_max_interval)
-+		return send_conn_param_neg_reply(hdev, handle,
-+						 HCI_ERROR_INVALID_LL_PARAMS);
-+
- 	if (hci_check_conn_params(min, max, latency, timeout))
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_INVALID_LL_PARAMS);
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index c25f1e4846cd..8cfba78d26f6 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -5266,7 +5266,14 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
+-	if (c->gc_thread)
++	if (!IS_ERR_OR_NULL(c->gc_thread))
+ 		kthread_stop(c->gc_thread);
  
- 	memset(&rsp, 0, sizeof(rsp));
- 
--	err = hci_check_conn_params(min, max, latency, to_multiplier);
-+	if (min < hcon->le_conn_min_interval ||
-+	    max > hcon->le_conn_max_interval) {
-+		BT_DBG("requested connection interval exceeds current bounds.");
-+		err = -EINVAL;
-+	} else {
-+		err = hci_check_conn_params(min, max, latency, to_multiplier);
-+	}
-+
- 	if (err)
- 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
- 	else
+ 	if (!IS_ERR_OR_NULL(c->root))
 -- 
 2.20.1
 
