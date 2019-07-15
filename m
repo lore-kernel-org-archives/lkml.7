@@ -2,98 +2,95 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D20C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4EC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE498206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H7jvnJXU"
+	by mail.kernel.org (Postfix) with ESMTP id 742EB20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731700AbfGORdj (ORCPT
+        id S1731801AbfGORdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:33:39 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37574 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731574AbfGORdj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:33:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FHXN4s121134;
-        Mon, 15 Jul 2019 17:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=gexxm3URun3t6lGz43qhoYeB1J6VhTPrI1NDhmfisns=;
- b=H7jvnJXUCnBQ32KffKAvXVMToEYJwjQAZixNdxTyXrDMOihdVbRb+DCoVORek7Rj3PC6
- 2a2O65v8hb1g6t90c5HrTn4e3nkm3sp597K55lcbE0uoP+BoQrXg0W0/WX9nrhvtwhLj
- 2MvO/N7DBu+HzmwwZi7owCKRPHuPrgAVvaOOoMLD6UE7sup5T4lbJoMVnxTVWmWpj94X
- Y4CDslnc3t2B2KkoR2A1H/99fLCNBUb2e5sz7H45KvT0RTZ8uLLcZbW0CxmtLI1rcrSO
- rxJ1hKdelcuXw7h/yNWeCBqhjU/3zcCuJ/q7uJ59n6L1BElAT62+sbYySFSC6lPx+s+p fw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tq6qtg0hh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 17:33:23 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FHSSqb120414;
-        Mon, 15 Jul 2019 17:33:20 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tq4dten0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 17:33:19 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6FHXEOP025118;
-        Mon, 15 Jul 2019 17:33:14 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jul 2019 10:33:14 -0700
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: properly communicate queue limits to the DMA layer v2
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190617122000.22181-1-hch@lst.de>
-        <20190715165823.GA10029@lst.de>
-Date:   Mon, 15 Jul 2019 13:33:11 -0400
-In-Reply-To: <20190715165823.GA10029@lst.de> (Christoph Hellwig's message of
-        "Mon, 15 Jul 2019 18:58:23 +0200")
-Message-ID: <yq1tvbn2ofc.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 15 Jul 2019 13:33:49 -0400
+Received: from mail.us.es ([193.147.175.20]:58632 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731729AbfGORds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 13:33:48 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 937EA6230F
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 19:33:44 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 84CF81150D8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 19:33:44 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 7F5251150B9; Mon, 15 Jul 2019 19:33:44 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 585CB6DA95;
+        Mon, 15 Jul 2019 19:33:42 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Mon, 15 Jul 2019 19:33:42 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 29EFB4265A31;
+        Mon, 15 Jul 2019 19:33:42 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 19:33:41 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Laura Garcia <nevola@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Netfilter Development Mailing list 
+        <netfilter-devel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jul 15 (HEADERS_TEST w/ netfilter tables
+ offload)
+Message-ID: <20190715173341.zth4na7zekjsesaa@salvia>
+References: <20190715144848.4cc41e07@canb.auug.org.au>
+ <ccb5b818-c191-2d9e-311f-b2c79b7f6823@infradead.org>
+ <CAF90-WirEMg7arNOTmo+tyJ20rt_zeN=nr0OO6Qk0Ss8J4QrUA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=619
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907150204
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=686 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907150204
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF90-WirEMg7arNOTmo+tyJ20rt_zeN=nr0OO6Qk0Ss8J4QrUA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 15, 2019 at 07:28:04PM +0200, Laura Garcia wrote:
+> CC'ing netfilter.
+> 
+> On Mon, Jul 15, 2019 at 6:45 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > On 7/14/19 9:48 PM, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > Please do not add v5.4 material to your linux-next included branches
+> > > until after v5.3-rc1 has been released.
+> > >
+> > > Changes since 20190712:
+> > >
+> >
+> > Hi,
+> >
+> > I am seeing these build errors from HEADERS_TEST (or KERNEL_HEADERS_TEST)
+> > for include/net/netfilter/nf_tables_offload.h.s:
+> >
+> >   CC      include/net/netfilter/nf_tables_offload.h.s
+[...]
+> > Should this header file not be tested?
 
-Christoph,
-
-> Ping?  What happened to this set of bug fixes?
-
-I thought they depended on Jens' tree?
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Yes, it should indeed be added.
