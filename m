@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92968C76192
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85E5C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6FD2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3ADC2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197823;
-	bh=26J0cNgRs2gDrMoGxYgt4ejtXtTwNyGDi1cQ8KooqFk=;
+	s=default; t=1563197833;
+	bh=4EzUqz8VEanhcqiMXOvPEr7zr+gp3i1tR7nSD7Be9rQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AuBkjU4lFYILOeGBLQ0eg/R+O+OXevGPQAMwqTQp9WAumTTIDF5ePvopQZFwiVYcF
-	 KbJGeDOD5ssPCXwJZMhtsNkhHu2bJQ9HuGNXL3nVA1GCmIULZYKRaUZc8aSHeHZYe6
-	 txf24ClG53Hfn4ZIBDHAtlsKolE5ypuIIAOdMqyo=
+	b=e5aWOfN7A+70ng2qJCJ4edWQxKGk2LhE/OiCEGJeJf/2W/fieD9WKFJkUx9er/6d9
+	 WxyV1piHtGE+rbHBIzp7z/4Im8Goe13FY5R7o+b9z4WJwZFxww33lhDy5jI6BhvMHQ
+	 0p/KnHtQInblxdxIiT8QqLi75vnRDcbdZxuYzOvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbfGONgD (ORCPT
+        id S1730771AbfGONhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59366 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:37:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730224AbfGONf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:35:59 -0400
+        id S1730744AbfGONhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:37:09 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A472067C;
-        Mon, 15 Jul 2019 13:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B54312083D;
+        Mon, 15 Jul 2019 13:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197758;
-        bh=26J0cNgRs2gDrMoGxYgt4ejtXtTwNyGDi1cQ8KooqFk=;
+        s=default; t=1563197827;
+        bh=4EzUqz8VEanhcqiMXOvPEr7zr+gp3i1tR7nSD7Be9rQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1G+maYsFeT4cOAV7jrydo+FavZd3ohLh+HkClXJOfPDTVCNHZKCE4i3PPky7dzHYg
-         K8Xjqmvpt1tX0jeYIjVYfDNei4WMe1oFkVyaur9iZmAMAzaSwcvx1sZHhLC95zJKcE
-         R0UJvOc5pyrOIU8Usj5aLpdbk960r5IWFB00E/mc=
+        b=iUAq/O/+2bIlAoDd0fPKBOrbBaV3T6vklv1Xvf/tnOQ8GL9zQ8Q0V9C3CrAt6BzGr
+         /RPWXkKx9SjweJqMMXpEWQP5ixOoP3+QFG8U5QcOXlzCYQtnkUQjOhqbkoqFV+Rxp+
+         FGQC5fJpc9QpGR2HCHbUOw9h1+LqOC9CWJGmRB2Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pradeep kumar Chitrapu <pradeepc@codeaurora.org>,
-        Zhi Chen <zhichen@codeaurora.org>,
-        Sven Eckelmann <sven@narfation.org>,
+Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
+        Tamizh chelvam <tamizhr@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 003/249] ath10k: fix incorrect multicast/broadcast rate setting
-Date:   Mon, 15 Jul 2019 09:31:44 -0400
-Message-Id: <20190715133550.1772-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 015/249] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
+Date:   Mon, 15 Jul 2019 09:31:56 -0400
+Message-Id: <20190715133550.1772-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133550.1772-1-sashal@kernel.org>
 References: <20190715133550.1772-1-sashal@kernel.org>
@@ -62,58 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep kumar Chitrapu <pradeepc@codeaurora.org>
+From: Anilkumar Kolli <akolli@codeaurora.org>
 
-[ Upstream commit 93ee3d108fc77e19efeac3ec5aa7d5886711bfef ]
+[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
 
-Invalid rate code is sent to firmware when multicast rate value of 0 is
-sent to driver indicating disabled case, causing broken mesh path.
-so fix that.
+Increase pulse width range from 1-2usec to 0-4usec.
+During data traffic HW occasionally fails detecting radar pulses,
+so that SW cannot get enough radar reports to achieve the success rate.
 
-Tested on QCA9984 with firmware 10.4-3.6.1-00827
+Tested ath10k hw and fw:
+	* QCA9888(10.4-3.5.1-00052)
+	* QCA4019(10.4-3.2.1.1-00017)
+	* QCA9984(10.4-3.6-00104)
+	* QCA988X(10.2.4-1.0-00041)
 
-Sven tested on IPQ4019 with 10.4-3.5.3-00057 and QCA9888 with 10.4-3.5.3-00053
-(ath10k-firmware) and 10.4-3.6-00140 (linux-firmware 2018-12-16-211de167).
+Tested ath9k hw: AR9300
 
-Fixes: cd93b83ad92 ("ath10k: support for multicast rate control")
-Co-developed-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Tested-by: Sven Eckelmann <sven@narfation.org>
+Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 9c703d287333..e8997e22ceec 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -5588,8 +5588,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 	struct cfg80211_chan_def def;
- 	u32 vdev_param, pdev_param, slottime, preamble;
- 	u16 bitrate, hw_value;
--	u8 rate, basic_rate_idx;
--	int rateidx, ret = 0, hw_rate_code;
-+	u8 rate, basic_rate_idx, rateidx;
-+	int ret = 0, hw_rate_code, mcast_rate;
- 	enum nl80211_band band;
- 	const struct ieee80211_supported_band *sband;
- 
-@@ -5776,7 +5776,11 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 	if (changed & BSS_CHANGED_MCAST_RATE &&
- 	    !ath10k_mac_vif_chan(arvif->vif, &def)) {
- 		band = def.chan->band;
--		rateidx = vif->bss_conf.mcast_rate[band] - 1;
-+		mcast_rate = vif->bss_conf.mcast_rate[band];
-+		if (mcast_rate > 0)
-+			rateidx = mcast_rate - 1;
-+		else
-+			rateidx = ffs(vif->bss_conf.basic_rates) - 1;
- 
- 		if (ar->phy_capability & WHAL_WLAN_11A_CAPABILITY)
- 			rateidx += ATH10K_MAC_FIRST_OFDM_RATE_IDX;
+diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
+index d52b31b45df7..a274eb0d1968 100644
+--- a/drivers/net/wireless/ath/dfs_pattern_detector.c
++++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
+@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
+ 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
+ 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
+ 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
+-	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
++	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
+ 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
+ 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
+ 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
 -- 
 2.20.1
 
