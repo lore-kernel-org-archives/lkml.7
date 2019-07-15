@@ -5,64 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA568C74A4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68425C74A4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D60020C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414D520C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQsP0UhT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyizgDvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbfGODRQ (ORCPT
+        id S1729086AbfGODRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 23:17:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38487 "EHLO
+        Sun, 14 Jul 2019 23:17:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35483 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfGODRQ (ORCPT
+        with ESMTP id S1726074AbfGODRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 23:17:16 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z75so6997285pgz.5;
-        Sun, 14 Jul 2019 20:17:15 -0700 (PDT)
+        Sun, 14 Jul 2019 23:17:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so688682pgr.2;
+        Sun, 14 Jul 2019 20:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=xRxgUpoXT1ALTuAFgtLyhDcF8m82X8iHnPfbbq6cJwI=;
-        b=XQsP0UhTK95J3drCisIJub8Z1FnSqDJIQ3kJVeHWEm7AHnj1XQs1Jbk5+ooMiMtar/
-         oxyS46/miDf4LsBUMgSVXaGNd3K13pVltIsGDP1MHL2Z8BqD3QTTbFjyWzw6AeVVHl5z
-         9pGQG8XAFTT4GR2m4Vhr2C326bjw+PAbfe3Zz/pQNejecghSwoT3G/KPxJNVK7E6d5m5
-         d9lb3P72OFariR5DoUu/s80NTQkUaBcpnZmFEJ0CJhNK+qrN3LMIlt8L4BnLZYnhb1Oh
-         A5iTwT3cR62j9gUAGxsJNpbSRQZOo23Di3J2HxN37bz6TlTqzcgENy7kVq9w8K9TjPvm
-         kS5Q==
+        bh=kb+x/QfQL3MhHmQt7WtgTjEDw3oPpOHTLxeQqt85Sps=;
+        b=FyizgDvESf0WxQAwT0SmLWw0LWmQhG/GqMsWQbLcchozulcZDeW8RA646zEZU/iBe1
+         FvEPS84PQqkYYTQHzFA6nqMqQYL1K0VT9Cu4ymMkQAgEnXgg+4aKO8wZ+QSc6Wbwiuj6
+         fj898vDRCSR6rWtvaKmLXD8+9VGWXrVaGh5mGtkvNCAiDevV0YNRB91r+mOJONBdL5Iu
+         R0go95hfRJSrk3iAmNQYQP/bteZP5Uzbwh6R/sGJB6HP2lARLbRiHJyZ4AGVLCD1fzSd
+         OkUVmmKxpRsAUbzu1NOJUkqd6/11nkXA/0caghE2Bx/9xAHYXlCxQNp1HYPVln8u+C+C
+         ytzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xRxgUpoXT1ALTuAFgtLyhDcF8m82X8iHnPfbbq6cJwI=;
-        b=RnWfReDElYhXb9n1nMqLWJe6Qtus1JBuhtoC4Iue502PMhhyv8okflKanweOaZHzaA
-         LM5Yo814t2E3OqdmVzRMHFMYxiEpJIWZOPrUO5vBhW3LoIrNTMOnA5vLiTpNUIP3y62l
-         rXZHwhJx5hYR7MF0QsR/kj6gwz47KR2098BmSq1iDpbJMw7W2nczjpcXfjeGjtjxwAkv
-         kpZS+MtvItEZrJQhwxco6hL6ohX84ICM0uFug3m9Jke8uWGIeGtLWvtQaR5Ekg5uXuvw
-         NG2O3dLp8g8dsAUkokmk2f849zscsX0pIafg+k6bA31zQXTohIENYr0hB5sIC9H9hFcY
-         8F7w==
-X-Gm-Message-State: APjAAAX3gW5ePHIwfBYpCTS6pxQJxUqn0RuKlzMq/v0tEMafeyp96sYg
-        +cxuL68ykFsTBJrC3wxB1i6M9lkmg+s=
-X-Google-Smtp-Source: APXvYqyl9iJNy+EquyV6FN3HUvjsvHV1hbzYGFiMGUozuYlf+RuEMmbi/EM8W7GE/ZCu8ciRLlBrxA==
-X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr27643098pjr.113.1563160635536;
-        Sun, 14 Jul 2019 20:17:15 -0700 (PDT)
+        bh=kb+x/QfQL3MhHmQt7WtgTjEDw3oPpOHTLxeQqt85Sps=;
+        b=h4sNo+SZPBNTj45HdB3FBuP8YZz3tMggzid+5MXKHPqe8nrbD27zSaLWQcQ0wOgvAC
+         QTeYkqOdzSBPWE/vig3O4wk8OiREsD+3xxeHRZhxsFAYmnzoRHn51UPZmA5W9Z8g2daj
+         4TPyXGZ+qzEckzU3FOFmwJf+NMJUWqOlbSGkY/kQTTjHmVREYr7258jsypnuVh6Fvw6b
+         RB/g5+u7Yadi2/q03HF6CPPCL1fBqboW3DyJmsPWaErOydUCK9a5R5AKfFZOYdelxywJ
+         Bi+y9BvjU3obA/eNhuTzznyQwdHizXIQHDnoneGDaambLSRVxXLkLzvRGCFah9rxc0ZR
+         mZsw==
+X-Gm-Message-State: APjAAAUxu99VwZ7irt851aJmbVAcaedHWsx1KVi3AsMn/ToG4U5TlofF
+        8sRo8RiRr+ddIN0aAcdN7SAvXDBaX3c=
+X-Google-Smtp-Source: APXvYqz6wZgg8ErMw/22BWmPi/6AZiUkRYU00MUkLmykKZJoUOrdWhNoxhMCglQZxUTYlB3JBQU/Mw==
+X-Received: by 2002:a65:6081:: with SMTP id t1mr24882534pgu.9.1563160642510;
+        Sun, 14 Jul 2019 20:17:22 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id n89sm25453288pjc.0.2019.07.14.20.17.13
+        by smtp.googlemail.com with ESMTPSA id r9sm21256921pjq.3.2019.07.14.20.17.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 20:17:15 -0700 (PDT)
+        Sun, 14 Jul 2019 20:17:22 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+Cc:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v3 02/24] atm: idt77252: Remove call to memset after dma_alloc_coherent
-Date:   Mon, 15 Jul 2019 11:17:09 +0800
-Message-Id: <20190715031709.6281-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v3 03/24] dmaengine: imx-sdma: Remove call to memset after dma_alloc_coherent
+Date:   Mon, 15 Jul 2019 11:17:16 +0800
+Message-Id: <20190715031716.6328-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,21 +81,24 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v3:
   - Use actual commit rather than the merge commit in the commit message
 
- drivers/atm/idt77252.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/dma/imx-sdma.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
-index 43a14579e80e..df51680e8931 100644
---- a/drivers/atm/idt77252.c
-+++ b/drivers/atm/idt77252.c
-@@ -1379,7 +1379,6 @@ init_tsq(struct idt77252_dev *card)
- 		printk("%s: can't allocate TSQ.\n", card->name);
- 		return -1;
- 	}
--	memset(card->tsq.base, 0, TSQSIZE);
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 4ec84a633bd3..decfb9e9648a 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1886,10 +1886,6 @@ static int sdma_init(struct sdma_engine *sdma)
+ 	sdma->context_phys = ccb_phys +
+ 		MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control);
  
- 	card->tsq.last = card->tsq.base + TSQ_NUM_ENTRIES - 1;
- 	card->tsq.next = card->tsq.last;
+-	/* Zero-out the CCB structures array just allocated */
+-	memset(sdma->channel_control, 0,
+-			MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control));
+-
+ 	/* disable all channels */
+ 	for (i = 0; i < sdma->drvdata->num_events; i++)
+ 		writel_relaxed(0, sdma->regs + chnenbl_ofs(sdma, i));
 -- 
 2.11.0
 
