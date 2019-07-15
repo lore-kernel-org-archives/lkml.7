@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F77C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945EAC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB392054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD482054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203023;
-	bh=CFGl4+O3ZTYIhz4Kf84ckCwmTrKaCP86jowfIG1yew8=;
+	s=default; t=1563203039;
+	bh=aI4TlpQf3gNjCRK+KshtpcJSU85X20kTXRGcmVMJzkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWT1COoc3djtk2xqJ+KDvU5M79XTsrmDD/ELSy5hlZaVg5Du29IiuzMlUcqi2+c5d
-	 AAjlu2rZGZPGs7vf8TKHdplL8AfwpZuT9WyEkFHTpiwrQEh6DVfsurXG53rDBWVbrb
-	 H3UVAJVW0aDz0tRFXS4cNCT/2iT7gkINsh/T79FA=
+	b=ysdAHkIGezn2bgNzQDB3A3um8dcui4Y54qmxO5oQtvTqIKJDE7hQOa6IYwD+o2SwA
+	 ux8HBxtpCBwzWhbLgZfsc/r1QwrQIrzI9hG3czfGqlbMTHrHjq4YMkgMfmIFltnZfj
+	 /pJk+a8KuHEmwE/l5i2f6WwPtFf66kew0T0euMHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389584AbfGOPDm (ORCPT
+        id S2388557AbfGOOIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:08:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbfGOOJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:06 -0400
+        id S2388545AbfGOOIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:08:37 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87E1221537;
-        Mon, 15 Jul 2019 14:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5F40206B8;
+        Mon, 15 Jul 2019 14:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199745;
-        bh=CFGl4+O3ZTYIhz4Kf84ckCwmTrKaCP86jowfIG1yew8=;
+        s=default; t=1563199716;
+        bh=aI4TlpQf3gNjCRK+KshtpcJSU85X20kTXRGcmVMJzkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6j20K+BmowJWQ/lGPGsKQsntcsRHfkZCrIh8m49pikCq5QTSrD26RrK5I5esGgI2
-         E8M/hyANxcFKrcMaw7Sfge1G0h3YkrXXvDp3wG9jPrEcTa2Ae6KCfdqdFz9oZeVVWb
-         oHrXD3MhiM8X5+N5GB8vA0C+CZYoxeI7ELfu7tnI=
+        b=lQ1nmviYWQG9xvkQELrQFMq14fR4gJA/nGl0Z45gXgbw+nPe/F3XRVjVV12RJnJtL
+         x+8GmKvLNWvS6caBIBdpxcmZb1nQFM3kxMRSzCH4I/PvJualBcJT32tJYwdYlEKKw2
+         +vHo8sEVTtW7MFFZ4JQJvQYdMQ8f0gKdhJMFnxnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 092/219] net: hns3: fix for dereferencing before null checking
-Date:   Mon, 15 Jul 2019 10:01:33 -0400
-Message-Id: <20190715140341.6443-92-sashal@kernel.org>
+Cc:     Young Xiao <92siuyang@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 082/219] media: davinci: vpif_capture: fix memory leak in vpif_probe()
+Date:   Mon, 15 Jul 2019 10:01:23 -0400
+Message-Id: <20190715140341.6443-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,55 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit 757188005f905664b0186b88cf26a7e844190a63 ]
+[ Upstream commit 64f883cd98c6d43013fb0cea788b63e50ebc068c ]
 
-The netdev is dereferenced before null checking in the function
-hns3_setup_tc.
+If vpif_probe() fails on v4l2_device_register() and vpif_probe_complete(),
+then memory allocated at initialize_vpif() for global vpif_obj.dev[i]
+become unreleased.
 
-This patch moves the dereferencing after the null checking.
+The patch adds deallocation of vpif_obj.dev[i] on the error path.
 
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/media/platform/davinci/vpif_capture.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index cac17152157d..6afdd376bc03 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1497,12 +1497,12 @@ static void hns3_nic_get_stats64(struct net_device *netdev,
- static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- {
- 	struct tc_mqprio_qopt_offload *mqprio_qopt = type_data;
--	struct hnae3_handle *h = hns3_get_handle(netdev);
--	struct hnae3_knic_private_info *kinfo = &h->kinfo;
- 	u8 *prio_tc = mqprio_qopt->qopt.prio_tc_map;
-+	struct hnae3_knic_private_info *kinfo;
- 	u8 tc = mqprio_qopt->qopt.num_tc;
- 	u16 mode = mqprio_qopt->mode;
- 	u8 hw = mqprio_qopt->qopt.hw;
-+	struct hnae3_handle *h;
- 
- 	if (!((hw == TC_MQPRIO_HW_OFFLOAD_TCS &&
- 	       mode == TC_MQPRIO_MODE_CHANNEL) || (!hw && tc == 0)))
-@@ -1514,6 +1514,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- 	if (!netdev)
- 		return -EINVAL;
- 
-+	h = hns3_get_handle(netdev);
-+	kinfo = &h->kinfo;
-+
- 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
- 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index 6216b7ac6875..a20cb6fff2ec 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1384,6 +1384,14 @@ static int initialize_vpif(void)
+ 	return err;
  }
+ 
++static inline void free_vpif_objs(void)
++{
++	int i;
++
++	for (i = 0; i < VPIF_CAPTURE_MAX_DEVICES; i++)
++		kfree(vpif_obj.dev[i]);
++}
++
+ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
+ 			    struct v4l2_subdev *subdev,
+ 			    struct v4l2_async_subdev *asd)
+@@ -1653,7 +1661,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	err = v4l2_device_register(vpif_dev, &vpif_obj.v4l2_dev);
+ 	if (err) {
+ 		v4l2_err(vpif_dev->driver, "Error registering v4l2 device\n");
+-		goto cleanup;
++		goto vpif_free;
+ 	}
+ 
+ 	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, res_idx))) {
+@@ -1700,7 +1708,9 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 				  "registered sub device %s\n",
+ 				   subdevdata->name);
+ 		}
+-		vpif_probe_complete();
++		err = vpif_probe_complete();
++		if (err)
++			goto probe_subdev_out;
+ 	} else {
+ 		vpif_obj.notifier.ops = &vpif_async_ops;
+ 		err = v4l2_async_notifier_register(&vpif_obj.v4l2_dev,
+@@ -1719,6 +1729,8 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	kfree(vpif_obj.sd);
+ vpif_unregister:
+ 	v4l2_device_unregister(&vpif_obj.v4l2_dev);
++vpif_free:
++	free_vpif_objs();
+ cleanup:
+ 	v4l2_async_notifier_cleanup(&vpif_obj.notifier);
+ 
 -- 
 2.20.1
 
