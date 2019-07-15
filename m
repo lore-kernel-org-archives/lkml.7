@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1149BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21F4C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34A4212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B0D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202281;
-	bh=XekN5yNdI6d8WL9nQDronZerRlpkwx+eGTn6Je99fWg=;
+	s=default; t=1563202288;
+	bh=9lc8j5QVDjBfoE8U8BFU3txQEVnOlrgYDXwLo3Izoa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJUd2Ps/vKFG1ys0fcY3p4+BVg5Il4l0h8QRNT2vHAXmFEnDEUyBrPl0gf3FKnQrB
-	 FfIxG2pSZq1XcJ3T1id42mT41JdOBUye0vxCQmZu4+X/JJxb+fF7qMLkb2wQRblD0k
-	 hICC4CQqi9qEPYL+2EBWAK6+HMBAZoIbTTak5eQo=
+	b=bC1qSYxt6Sk3F/9SrrVTvTt/v3DIZ4j5OkWETL0r4LvrfvaWAiIo52Epn0RMJuVoW
+	 DDViYxwnRK6BmOAFCPDXNSXwxob7A8Ea07v48UMv/+jhaWDr+9YlGd7qJebHIq5Pgb
+	 l5HYlep7Z2GIKDiI0EY2JS4ctelHXm+1v54KRbHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404150AbfGOOg7 (ORCPT
+        id S2404716AbfGOOv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:36:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57820 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404007AbfGOOgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:36:55 -0400
+        id S2403765AbfGOOgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:36:41 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB435217D8;
-        Mon, 15 Jul 2019 14:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C05C0217D8;
+        Mon, 15 Jul 2019 14:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201414;
-        bh=XekN5yNdI6d8WL9nQDronZerRlpkwx+eGTn6Je99fWg=;
+        s=default; t=1563201401;
+        bh=9lc8j5QVDjBfoE8U8BFU3txQEVnOlrgYDXwLo3Izoa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=isaQ8TKPobDvF/PmX/7MgYC6Yr/YlS00C4gYO79QYQtOBz1pT4Z/Bwl1faRmyy7wD
-         KieTA13E/Wuv288YVt8XphCB29anE30m9XylEpkq6epPBO2konI5ihFY68xdtZIKfX
-         iSYPUnhvCSOiWOmaFS6ciGwnkcCrsliRd1SAbbwo=
+        b=xBk+rwzysNB/o3E3aItAl9WB2W54pcrKE3fTwojBl2sZroEvxqwNWrzBRShAV4RcI
+         1R6hmtBzPmoELEWUWSbB0Jfk2RCJApRHFZXvMjN+MHLWI7NiZzhkVyTBi4GgNyr+Oy
+         n05CnbLdcoPQ77VrqFq05JsbAhQO/ARuBMioIUnY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/73] media: dvb: usb: fix use after free in dvb_usb_device_exit
-Date:   Mon, 15 Jul 2019 10:35:22 -0400
-Message-Id: <20190715143629.10893-6-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/73] ath6kl: add some bounds checking
+Date:   Mon, 15 Jul 2019 10:35:19 -0400
+Message-Id: <20190715143629.10893-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -61,44 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 6cf97230cd5f36b7665099083272595c55d72be7 ]
+[ Upstream commit 5d6751eaff672ea77642e74e92e6c0ac7f9709ab ]
 
-dvb_usb_device_exit() frees and uses the device name in that order.
-Fix by storing the name in a buffer before freeing it.
+The "ev->traffic_class" and "reply->ac" variables come from the network
+and they're used as an offset into the wmi->stream_exist_for_ac[] array.
+Those variables are u8 so they can be 0-255 but the stream_exist_for_ac[]
+array only has WMM_NUM_AC (4) elements.  We need to add a couple bounds
+checks to prevent array overflows.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+I also modified one existing check from "if (traffic_class > 3) {" to
+"if (traffic_class >= WMM_NUM_AC) {" just to make them all consistent.
+
+Fixes: bdcd81707973 (" Add ath6kl cleaned up driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath6kl/wmi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-index 84308569e7dc..b3413404f91a 100644
---- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
-+++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-@@ -287,12 +287,15 @@ EXPORT_SYMBOL(dvb_usb_device_init);
- void dvb_usb_device_exit(struct usb_interface *intf)
- {
- 	struct dvb_usb_device *d = usb_get_intfdata(intf);
--	const char *name = "generic DVB-USB module";
-+	const char *default_name = "generic DVB-USB module";
-+	char name[40];
+diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+index 3fd1cc98fd2f..55609fc4e50e 100644
+--- a/drivers/net/wireless/ath/ath6kl/wmi.c
++++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+@@ -1178,6 +1178,10 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
+ 		return -EINVAL;
  
- 	usb_set_intfdata(intf, NULL);
- 	if (d != NULL && d->desc != NULL) {
--		name = d->desc->name;
-+		strscpy(name, d->desc->name, sizeof(name));
- 		dvb_usb_exit(d);
-+	} else {
-+		strscpy(name, default_name, sizeof(name));
+ 	ev = (struct wmi_pstream_timeout_event *) datap;
++	if (ev->traffic_class >= WMM_NUM_AC) {
++		ath6kl_err("invalid traffic class: %d\n", ev->traffic_class);
++		return -EINVAL;
++	}
+ 
+ 	/*
+ 	 * When the pstream (fat pipe == AC) timesout, it means there were
+@@ -1519,6 +1523,10 @@ static int ath6kl_wmi_cac_event_rx(struct wmi *wmi, u8 *datap, int len,
+ 		return -EINVAL;
+ 
+ 	reply = (struct wmi_cac_event *) datap;
++	if (reply->ac >= WMM_NUM_AC) {
++		ath6kl_err("invalid AC: %d\n", reply->ac);
++		return -EINVAL;
++	}
+ 
+ 	if ((reply->cac_indication == CAC_INDICATION_ADMISSION_RESP) &&
+ 	    (reply->status_code != IEEE80211_TSPEC_STATUS_ADMISS_ACCEPTED)) {
+@@ -2635,7 +2643,7 @@ int ath6kl_wmi_delete_pstream_cmd(struct wmi *wmi, u8 if_idx, u8 traffic_class,
+ 	u16 active_tsids = 0;
+ 	int ret;
+ 
+-	if (traffic_class > 3) {
++	if (traffic_class >= WMM_NUM_AC) {
+ 		ath6kl_err("invalid traffic class: %d\n", traffic_class);
+ 		return -EINVAL;
  	}
- 	info("%s successfully deinitialized and disconnected.", name);
- 
 -- 
 2.20.1
 
