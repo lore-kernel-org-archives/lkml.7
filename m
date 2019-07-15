@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54736C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB286C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2469E206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94030217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199860;
-	bh=27+fkck8RvRlwgSnIlrM1SjnoQ9LSZnfru2P0EIgqow=;
+	s=default; t=1563199863;
+	bh=e6jWqEeEv1aQrTQ5oESajo6naB0+APSVXMatpHaJegg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMFp0flQunLlno5FjqFxvfUDIiE+4yt6I0JMVjI0H/iCZw0jCvTPSE8nHLk6O0Nde
-	 MXQP4ulSXyZcBgQo5L2LC6IpbZBe0gVofroWGOQpdJpFIMrBtURXCfkEsleIVV77T0
-	 IwuAAUgZ4ob9SEXAHRjpGkjKfgxYjTRpki7klk30=
+	b=qErKZKyuH53qoIXt1t5ajMOvPgse4n3hnAh8wIDJaDNb3Ms73D+aGD9y00CcfPRDV
+	 6l1McYdU1DPA/dJGzNL3A6iIEGUEdb2CfO3S7oFO2n9iVBU/rWvGqqvvV3jq4RNlqv
+	 7xAfsxHmGYYYSP/Udar981IY9+qOR3CqiK5CuwPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388700AbfGOOK6 (ORCPT
+        id S2388949AbfGOOLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388790AbfGOOJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:58 -0400
+        id S2388774AbfGOOJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:53 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0492081C;
-        Mon, 15 Jul 2019 14:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6054A20868;
+        Mon, 15 Jul 2019 14:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199797;
-        bh=27+fkck8RvRlwgSnIlrM1SjnoQ9LSZnfru2P0EIgqow=;
+        s=default; t=1563199793;
+        bh=e6jWqEeEv1aQrTQ5oESajo6naB0+APSVXMatpHaJegg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hc4ZfLNmfKxYVNXNYraI4A/QfmKMMkFYeIiG1qgvs4IKYrvHIJ/mvjbUx/DWiqrT7
-         daibrLdqFLc1Dz/jPDc+uROpg+OYUCYjh5YqDk+jqP9hogswLcxv/h2hhnHUrmsMpF
-         D2cf7OK2dwSB45eAKtEa0WbETxl1j+X4hzxguIfY=
+        b=QDwliex7Ga8dmGpGzIqCkmH/hu/VFkKzvKz3ua19lcO/MexSBY/cGsiy7ZC15LtNa
+         PG1Nd6/cBOeSi/mn9wyiGL9kSBInsCAWsk8XVOSxPPRdsl6Cy8ErVoR2nKlPNYmmCL
+         XWB6LHt1sSGifZ4JiYPkCCZvMZ1qNeZo7s+0CF60=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 108/219] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
-Date:   Mon, 15 Jul 2019 10:01:49 -0400
-Message-Id: <20190715140341.6443-108-sashal@kernel.org>
+Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 107/219] ipoib: correcly show a VF hardware address
+Date:   Mon, 15 Jul 2019 10:01:48 -0400
+Message-Id: <20190715140341.6443-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -62,46 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+From: Denis Kirjanov <kda@linux-powerpc.org>
 
-[ Upstream commit ac28ec07ae1c5c1e18ed6855eb105a328418da88 ]
+[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
 
-commit c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
-introduces rsnd_ctu_id which calcualates and gives
-the main Device id of the CTU by dividing the id by 4.
-rsnd_mod_id uses this interface to get the CTU main
-Device id. But this commit forgets to revert the main
-Device id calcution previously done in rsnd_ctu_probe_
-which also divides the id by 4. This path corrects the
-same to get the correct main Device id.
+in the case of IPoIB with SRIOV enabled hardware
+ip link show command incorrecly prints
+0 instead of a VF hardware address.
 
-The issue is observered when rsnd_ctu_probe_ is done for CTU1
+Before:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
+trust off, query_rss off
+...
+After:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0     link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
+checking off, link-state disable, trust off, query_rss off
 
-Fixes: c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
+v1->v2: just copy an address without modifing ifla_vf_mac
+v2->v3: update the changelog
 
-Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Acked-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ctu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/sh/rcar/ctu.c b/sound/soc/sh/rcar/ctu.c
-index 8cb06dab234e..7647b3d4c0ba 100644
---- a/sound/soc/sh/rcar/ctu.c
-+++ b/sound/soc/sh/rcar/ctu.c
-@@ -108,7 +108,7 @@ static int rsnd_ctu_probe_(struct rsnd_mod *mod,
- 			   struct rsnd_dai_stream *io,
- 			   struct rsnd_priv *priv)
- {
--	return rsnd_cmd_attach(io, rsnd_mod_id(mod) / 4);
-+	return rsnd_cmd_attach(io, rsnd_mod_id(mod));
- }
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index 9b5e11d3fb85..04ea7db08e87 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -1998,6 +1998,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
+ 		return err;
  
- static void rsnd_ctu_value_init(struct rsnd_dai_stream *io,
+ 	ivf->vf = vf;
++	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
