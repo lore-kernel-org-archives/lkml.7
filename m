@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C16DC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FE3C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3137E2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7FA217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199427;
-	bh=Z0zRo28KwF3jK1AkBvhn0A1rq9ZFKDK1TveTqJPEWJM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WWFMuj2pBsnIGOt3k4DIJOpZRZ7sW+tmeHOVo0DiYTHkV1XYnaAaVKSjr+vCuyQGw
-	 ni3gWjWgZVQb4KOIYiGit4fvJXnOJyZTebXnSaMgiYNPfk1hVoD+PN47c+wqy0Ukwc
-	 mPaoIVdtrEXzz5IujTCUe3OBo8gvAcG1d64fMVXQ=
+	s=default; t=1563199431;
+	bh=NZraKEDuaB6vwvz8xVUkIR+7IQqLDfLfw8tb08+gex4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y4FPq86DsYl3SzCUcrnn88GBpB1cXB4asILphhyRyrDEctsm0b31XHnNY7CoqDmpq
+	 THuvvPEEZxtSP5rU7RYuehzFspmaJD530yy8x0T71c7dTceZkfzfoZHmhe/KEazA4d
+	 pIDU/shzGwZhJxHXkX0vCwgr9TcLouxFG0GFzRPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387639AbfGOODp (ORCPT
+        id S2387788AbfGOODu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387600AbfGOOCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:02:18 -0400
+        id S2387600AbfGOODs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:03:48 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 107FB212F5;
-        Mon, 15 Jul 2019 14:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8FA2081C;
+        Mon, 15 Jul 2019 14:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199337;
-        bh=Z0zRo28KwF3jK1AkBvhn0A1rq9ZFKDK1TveTqJPEWJM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVjDXBQWmYtj9GEsln//1h+7I4J6Z8eCvJTQ+eWDTwMkCqABayJloTa5EWSp3PctS
-         MhfYfW+wlNfWMerCCn5FN4lYgmwORKq88l5V0w6WUDnThk7ny/6CyWMbrgvSe9TxJG
-         MWsDrzpg1kNUh7Ptj1mErrrnSf5KQg7oKrH3qA9g=
+        s=default; t=1563199427;
+        bh=NZraKEDuaB6vwvz8xVUkIR+7IQqLDfLfw8tb08+gex4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=crLtqMU/SPWApDjDQGlAEY27a2D8ztc7CXDkqzOCao4i8MEWIiKRkn9pOdqToArXt
+         6P8EyvyiYnZCnNqi9bwk1poWVpXNNRM11oueXI42H/d7596hCMoUAQ13rZAfUXZC/r
+         1k5Gcb5gGlhiXH+XlHHfu2eUMbAKj0sp2+CA/PBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shijith Thotton <sthotton@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 238/249] genirq: Update irq stats from NMI handlers
-Date:   Mon, 15 Jul 2019 09:46:43 -0400
-Message-Id: <20190715134655.4076-238-sashal@kernel.org>
+Cc:     Yingying Tang <yintang@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 001/219] ath10k: Check tx_stats before use it
+Date:   Mon, 15 Jul 2019 10:00:02 -0400
+Message-Id: <20190715140341.6443-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,78 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shijith Thotton <sthotton@marvell.com>
+From: Yingying Tang <yintang@codeaurora.org>
 
-[ Upstream commit c09cb1293523dd786ae54a12fd88001542cba2f6 ]
+[ Upstream commit 9e7251fa38978b85108c44743e1436d48e8d0d76 ]
 
-The NMI handlers handle_percpu_devid_fasteoi_nmi() and handle_fasteoi_nmi()
-do not update the interrupt counts. Due to that the NMI interrupt count
-does not show up correctly in /proc/interrupts.
+tx_stats will be freed and set to NULL before debugfs_sta node is
+removed in station disconnetion process. So if read the debugfs_sta
+node there may be NULL pointer error. Add check for tx_stats before
+use it to resove this issue.
 
-Add the statistics and treat the NMI handlers in the same way as per cpu
-interrupts and prevent them from updating irq_desc::tot_count as this might
-be corrupted due to concurrency.
-
-[ tglx: Massaged changelog ]
-
-Fixes: 2dcf1fbcad35 ("genirq: Provide NMI handlers")
-Signed-off-by: Shijith Thotton <sthotton@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1562313336-11888-1-git-send-email-sthotton@marvell.com
+Signed-off-by: Yingying Tang <yintang@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/chip.c    | 4 ++++
- kernel/irq/irqdesc.c | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/debugfs_sta.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 29d6c7d070b4..04c850fb70cb 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -748,6 +748,8 @@ void handle_fasteoi_nmi(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
+diff --git a/drivers/net/wireless/ath/ath10k/debugfs_sta.c b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
+index c704ae371c4d..42931a669b02 100644
+--- a/drivers/net/wireless/ath/ath10k/debugfs_sta.c
++++ b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
+@@ -663,6 +663,13 @@ static ssize_t ath10k_dbg_sta_dump_tx_stats(struct file *file,
  
-+	__kstat_incr_irqs_this_cpu(desc);
+ 	mutex_lock(&ar->conf_mutex);
+ 
++	if (!arsta->tx_stats) {
++		ath10k_warn(ar, "failed to get tx stats");
++		mutex_unlock(&ar->conf_mutex);
++		kfree(buf);
++		return 0;
++	}
 +
- 	trace_irq_handler_entry(irq, action);
- 	/*
- 	 * NMIs cannot be shared, there is only one action.
-@@ -962,6 +964,8 @@ void handle_percpu_devid_fasteoi_nmi(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
-+	__kstat_incr_irqs_this_cpu(desc);
-+
- 	trace_irq_handler_entry(irq, action);
- 	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
- 	trace_irq_handler_exit(irq, action, res);
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index c52b737ab8e3..9149dde5a7b0 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -946,6 +946,11 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
- 			*per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
- }
- 
-+static bool irq_is_nmi(struct irq_desc *desc)
-+{
-+	return desc->istate & IRQS_NMI;
-+}
-+
- /**
-  * kstat_irqs - Get the statistics for an interrupt
-  * @irq:	The interrupt number
-@@ -963,7 +968,8 @@ unsigned int kstat_irqs(unsigned int irq)
- 	if (!desc || !desc->kstat_irqs)
- 		return 0;
- 	if (!irq_settings_is_per_cpu_devid(desc) &&
--	    !irq_settings_is_per_cpu(desc))
-+	    !irq_settings_is_per_cpu(desc) &&
-+	    !irq_is_nmi(desc))
- 	    return desc->tot_count;
- 
- 	for_each_possible_cpu(cpu)
+ 	spin_lock_bh(&ar->data_lock);
+ 	for (k = 0; k < ATH10K_STATS_TYPE_MAX; k++) {
+ 		for (j = 0; j < ATH10K_COUNTER_TYPE_MAX; j++) {
 -- 
 2.20.1
 
