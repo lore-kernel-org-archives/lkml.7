@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2133BC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F64BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B202067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4820020868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201970;
-	bh=w2c9BXZmSW7V2md9maWmGard3o02db6IsynKA2OL1NQ=;
+	s=default; t=1563201971;
+	bh=srTrjVb/NproGDBZrf7xjQbLlk9QFUoeK/lvEq8QG9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NVxeCkBi4HVcVq9KqQWkSu09PEe3qELZuYc6Z4clzKm+etmnD08HecLqMMF8efWNV
-	 GhLOXOyxFK1TxGzs6r42OtX/1UmLpKC+yb16zOXGYZKBj9FeZDY20bImigBMC/UqyU
-	 dkTBxtk6uNP7PAaObxQ6KVpv6mgEr9var1bwSyG0=
+	b=JYMQsoRkvVJOfj3HaXSues57+wgSjVobgDvzb6eIRsJNsf/GouXuVKsMLO4WWPeEz
+	 iF/E2uj04m/LVrvl0+pTHcP4bfan+kcbTOCKJMcc9bbu9K4R24jyaZxk7xyTO+wtvY
+	 dMKsoLBE0UsU3sVHVTTfisZFFkKXlN3EYNXTQZfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbfGOOqI (ORCPT
+        id S2404806AbfGOOqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34746 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404788AbfGOOqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:46:04 -0400
+        id S2391958AbfGOOp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:45:59 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 574C220651;
-        Mon, 15 Jul 2019 14:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 067D72067C;
+        Mon, 15 Jul 2019 14:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201963;
-        bh=w2c9BXZmSW7V2md9maWmGard3o02db6IsynKA2OL1NQ=;
+        s=default; t=1563201958;
+        bh=srTrjVb/NproGDBZrf7xjQbLlk9QFUoeK/lvEq8QG9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RK2/fkYbKxutXAXK1RAoI+W5Rf9/+hLumRa3GxaGMdRqht5a6yBJdAcjdpGNYzfjA
-         3r6h1NWnX5QNDcrua0P+vnPOxcNr4YL2dk02v8Ll3LzKD7RYEANuvb3md2yA4pIrhT
-         02n2ZzqgL4uHtYgbMp5WRacGwlNAKnxuPQJsB6ik=
+        b=np2FQ6MigVgReInjJ5374MSIA+XbA5l0llDNcDgjaJG0VZxXVok8JC/iYkctimQYL
+         fObFvoiHtwh7AzDUjkiA17n0HwTt+hwx0Bc52G7gHRPNHPH7W8rB5I41os7UiOc5J6
+         V8baNULCLaezAgdrzrUkAswiSDkBq9XMI0nheW5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/53] media: marvell-ccic: fix DMA s/g desc number calculation
-Date:   Mon, 15 Jul 2019 10:44:50 -0400
-Message-Id: <20190715144535.11636-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 06/53] media: dvb: usb: fix use after free in dvb_usb_device_exit
+Date:   Mon, 15 Jul 2019 10:44:48 -0400
+Message-Id: <20190715144535.11636-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -60,64 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
+[ Upstream commit 6cf97230cd5f36b7665099083272595c55d72be7 ]
 
-The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-left dma_desc_nent unset. It previously contained the number of DMA
-descriptors as returned from dma_map_sg().
+dvb_usb_device_exit() frees and uses the device name in that order.
+Fix by storing the name in a buffer before freeing it.
 
-We can now (since the commit referred to above) obtain the same value from
-the sg_table and drop dma_desc_nent altogether.
-
-Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
-driver, since that one doesn't do DMA.
-
-[mchehab+samsung@kernel.org: fix a checkpatch warning]
-
-Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index aa2b44041d3f..22fe771d4dd2 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -209,7 +209,6 @@ struct mcam_vb_buffer {
- 	struct list_head queue;
- 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
- 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
--	int dma_desc_nent;		/* Number of mapped descriptors */
- };
- 
- static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
-@@ -616,9 +615,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
- static void mcam_sg_next_buffer(struct mcam_camera *cam)
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index 1adf325012f7..97a89ef7e4c1 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -286,12 +286,15 @@ EXPORT_SYMBOL(dvb_usb_device_init);
+ void dvb_usb_device_exit(struct usb_interface *intf)
  {
- 	struct mcam_vb_buffer *buf;
-+	struct sg_table *sg_table;
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+-	const char *name = "generic DVB-USB module";
++	const char *default_name = "generic DVB-USB module";
++	char name[40];
  
- 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
- 	list_del_init(&buf->queue);
-+	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
- 	/*
- 	 * Very Bad Not Good Things happen if you don't clear
- 	 * C1_DESC_ENA before making any descriptor changes.
-@@ -626,7 +627,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
- 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
- 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
- 	mcam_reg_write(cam, REG_DESC_LEN_Y,
--			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
-+			sg_table->nents * sizeof(struct mcam_dma_desc));
- 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
- 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
- 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	usb_set_intfdata(intf, NULL);
+ 	if (d != NULL && d->desc != NULL) {
+-		name = d->desc->name;
++		strscpy(name, d->desc->name, sizeof(name));
+ 		dvb_usb_exit(d);
++	} else {
++		strscpy(name, default_name, sizeof(name));
+ 	}
+ 	info("%s successfully deinitialized and disconnected.", name);
+ 
 -- 
 2.20.1
 
