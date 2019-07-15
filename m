@@ -2,118 +2,120 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF16C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08254C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A0220896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198433;
-	bh=26J0cNgRs2gDrMoGxYgt4ejtXtTwNyGDi1cQ8KooqFk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSbjvkinTWa+0Ngpg6SNAA5/cYvMRuIr++CRao+t5imIhxe0ZF9rQz6UMCF9NixkV
-	 Fo2YJZCl5aNqE79KH9Zh/ZaS3mYob8+1whflnlasgmT4y2ITWL2MnKLEtP6W0Ga0/g
-	 ISK+XdF1tpEndf6CDzTbaKG7Gppv9qRKrcVG7xvM=
+	by mail.kernel.org (Postfix) with ESMTP id C935D212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jZsVdfxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730730AbfGONrM (ORCPT
+        id S1730789AbfGONrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 15 Jul 2019 09:47:14 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47044 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730713AbfGONrM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 09:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbfGONrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:47:10 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488852067C;
-        Mon, 15 Jul 2019 13:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198429;
-        bh=26J0cNgRs2gDrMoGxYgt4ejtXtTwNyGDi1cQ8KooqFk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZDwaVrmVc4bFUEGT4txqw0kLmD7x5RqbUWrR37BdypYD43jyu6BzrkG95F1K6yR8
-         +LnuuGhjJNPdHma5fhwohlGU49BqH1F6TECFCEwlc2jr3j0o+uLJ/5F2tUgwJiw83P
-         6EXzComnQPhhar5N0EAwgRV1EF/5GYbA1UDHwGYk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pradeep kumar Chitrapu <pradeepc@codeaurora.org>,
-        Zhi Chen <zhichen@codeaurora.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 003/249] ath10k: fix incorrect multicast/broadcast rate setting
-Date:   Mon, 15 Jul 2019 09:42:48 -0400
-Message-Id: <20190715134655.4076-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jlRSv6D32c5vRgHqG1BblcMnQppOzwlRdfFs2cDSlTY=; b=jZsVdfxZVvLDnNWNxhTCEYX97
+        b+vx/mwLNqKzRu3S3A5Q4kkc1PBiOknjKNykafyh5/2DyNfYagltlpWR+G9n1XYEDOfUvJp9XUxin
+        kKL2IrJkvoSwIn3O8KW5/gXdqxPrZTAPeyzXSPglSLNvdZsNRW/kOomMzWD/urwiVWkWeX5HxCTLS
+        D6Wutv/X76bDSV7LcDjtc2PDs/Gw2OnB2asCrtEKNUDRWgQqmLDRNkNC7tYs8ye156KQOa1iZD0FF
+        I2TPDeYtmFEzGboruzQ0raXHJyx3VzrslVevbVONRkhjFibG6BQqiKLu8GQsZEDGkj8bc/bvdwCw+
+        pd9YAeHow==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hn1Jc-00036x-Ty; Mon, 15 Jul 2019 13:46:53 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 975A72013A7FA; Mon, 15 Jul 2019 15:46:51 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 15:46:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190715134651.GI3419@hirez.programming.kicks-ass.net>
+References: <20190705191055.GT26519@linux.ibm.com>
+ <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714184915.GK26519@linux.ibm.com>
+ <20190715132911.GG3419@hirez.programming.kicks-ass.net>
+ <CACT4Y+bmgdOExBHnLJ+jgWKWQzNK9CFT6_eTxFE3hoK=0YresQ@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+bmgdOExBHnLJ+jgWKWQzNK9CFT6_eTxFE3hoK=0YresQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep kumar Chitrapu <pradeepc@codeaurora.org>
+On Mon, Jul 15, 2019 at 03:33:11PM +0200, Dmitry Vyukov wrote:
+> On Mon, Jul 15, 2019 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Sun, Jul 14, 2019 at 11:49:15AM -0700, Paul E. McKenney wrote:
+> > > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
+> > > > But short term I don't see any other solution than stop testing
+> > > > sched_setattr because it does not check arguments enough to prevent
+> > > > system misbehavior. Which is a pity because syzkaller has found some
+> > > > bad misconfigurations that were oversight on checking side.
+> > > > Any other suggestions?
+> > >
+> > > Keep the times down to a few seconds?  Of course, that might also
+> > > fail to find interesting bugs.
+> >
+> > Right, if syzcaller can put a limit on the period/deadline parameters
+> > (and make sure to not write "-1" to
+> > /proc/sys/kernel/sched_rt_runtime_us) then per the in-kernel
+> > access-control should not allow these things to happen.
+> 
+> Since we are racing with emails, could you suggest a 100% safe
+> parameters? Because I only hear people saying "safe", "sane",
+> "well-behaving" :)
+> If we move the check to user-space, it does not mean that we can get
+> away without actually defining what that means.
 
-[ Upstream commit 93ee3d108fc77e19efeac3ec5aa7d5886711bfef ]
+Right, well, that's part of the problem. I think Paul just did the
+reverse math and figured that 95% of X must not be larger than my
+watchdog timeout and landed on 14 seconds.
 
-Invalid rate code is sent to firmware when multicast rate value of 0 is
-sent to driver indicating disabled case, causing broken mesh path.
-so fix that.
+I'm thinking 4 seconds (or rather 4.294967296) would be a very nice
+number.
 
-Tested on QCA9984 with firmware 10.4-3.6.1-00827
+> Now thinking of this, if we come up with some simple criteria, could
+> we have something like a sysctl that would allow only really "safe"
+> parameters?
 
-Sven tested on IPQ4019 with 10.4-3.5.3-00057 and QCA9888 with 10.4-3.5.3-00053
-(ath10k-firmware) and 10.4-3.6-00140 (linux-firmware 2018-12-16-211de167).
+I suppose we could do that, something like:
+sysctl_deadline_period_{min,max}. I'll have to dig back a bit on where
+we last talked about that and what the problems where.
 
-Fixes: cd93b83ad92 ("ath10k: support for multicast rate control")
-Co-developed-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Tested-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/mac.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 9c703d287333..e8997e22ceec 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -5588,8 +5588,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 	struct cfg80211_chan_def def;
- 	u32 vdev_param, pdev_param, slottime, preamble;
- 	u16 bitrate, hw_value;
--	u8 rate, basic_rate_idx;
--	int rateidx, ret = 0, hw_rate_code;
-+	u8 rate, basic_rate_idx, rateidx;
-+	int ret = 0, hw_rate_code, mcast_rate;
- 	enum nl80211_band band;
- 	const struct ieee80211_supported_band *sband;
- 
-@@ -5776,7 +5776,11 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 	if (changed & BSS_CHANGED_MCAST_RATE &&
- 	    !ath10k_mac_vif_chan(arvif->vif, &def)) {
- 		band = def.chan->band;
--		rateidx = vif->bss_conf.mcast_rate[band] - 1;
-+		mcast_rate = vif->bss_conf.mcast_rate[band];
-+		if (mcast_rate > 0)
-+			rateidx = mcast_rate - 1;
-+		else
-+			rateidx = ffs(vif->bss_conf.basic_rates) - 1;
- 
- 		if (ar->phy_capability & WHAL_WLAN_11A_CAPABILITY)
- 			rateidx += ATH10K_MAC_FIRST_OFDM_RATE_IDX;
--- 
-2.20.1
-
+For one, setting the min is a lot harder, but I suppose we can start at
+TICK_NSEC or something.
