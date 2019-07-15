@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A231C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD22C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3488205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE51205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202569;
-	bh=qo2IJ9hAA6ifUIf1VzlEPtdMaecSdMeCUOTPV2OFIPc=;
+	s=default; t=1563202593;
+	bh=pmy5RsvSnntt88as8HVTsqIhOyEpxosL3yqLQzs25Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALjP7559P2xZwsdpZhbQR6Cf9gEa1Fl7qdC2OzadMZXZkpIXQmc6GdsGjgZue1xIq
-	 NbSK/X9gadCP9FGeItcZs1wuhMO1oD10fdI13X+ZSCmh8JutJ0r1z5dgA3OTAhdFvo
-	 3HWzhJ+YdfTYSuzNW3Qk/B81HlZNItT4oRV6pcX0=
+	b=SdY5yb08MSA9kzIkxffhY9s2yoPZRM5Qa35/QDnJTR/grkkhvYwIT5wtiKSszTqrC
+	 UVVMzdORaB8uffPXfMl3JRf04MalUxukSjXWpRMUQteKSf72apM6+WqQWzENSGx/b5
+	 liRcW70akDnfZVh+FivOW/aqKpN2sjPqIv+fpsvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391066AbfGOO4H (ORCPT
+        id S2390584AbfGOOWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:56:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55238 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390759AbfGOOXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:23:33 -0400
+        id S2389980AbfGOOWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:22:14 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6F1E206B8;
-        Mon, 15 Jul 2019 14:23:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC13721537;
+        Mon, 15 Jul 2019 14:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200613;
-        bh=qo2IJ9hAA6ifUIf1VzlEPtdMaecSdMeCUOTPV2OFIPc=;
+        s=default; t=1563200533;
+        bh=pmy5RsvSnntt88as8HVTsqIhOyEpxosL3yqLQzs25Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3HZmh90BGudFJU1Q73P/GIswZHhJYDbiop2oII14Csat/AH935ys9HNCE9V2O5AV
-         ZtVP3poyxAlyd5Ozf0UdLRofykJV8sBaCpX69HoK5K1t/7DE20AKop+qjmuIPWc2Xm
-         oMbev1+d7WuEnKOcDUoYmtBOy0/kLMYfiAxUdz0k=
+        b=saB9OzN12PJNfF6PbM2bwnFgSsNNki1RMYVznlWUsbSaP/xzDicFWEyHIStK0SdSo
+         6/3Hs+3R0Qb65uZL/+xm8+Sj+44KVpE2E2/0ulWn8EjBDjzhYrBI35i5QIjRV2Ufsl
+         RTm1nlDN7A5qJOx1UDxC7QHncQDvwunYvNvD7ID4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 092/158] media: s5p-mfc: Make additional clocks optional
-Date:   Mon, 15 Jul 2019 10:17:03 -0400
-Message-Id: <20190715141809.8445-92-sashal@kernel.org>
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 069/158] qed: iWARP - Fix tc for MPA ll2 connection
+Date:   Mon, 15 Jul 2019 10:16:40 -0400
+Message-Id: <20190715141809.8445-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -61,44 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit e08efef8fe7db87206314c19b341612c719f891a ]
+[ Upstream commit cb94d52b93c74fe1f2595734fabeda9f8ae891ee ]
 
-Since the beginning the second clock ('special', 'sclk') was optional and
-it is not available on some variants of Exynos SoCs (i.e. Exynos5420 with
-v7 of MFC hardware).
+The driver needs to assign a lossless traffic class for the MPA ll2
+connection to ensure no packets are dropped when returning from the
+driver as they will never be re-transmitted by the peer.
 
-However commit 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
-made handling of all specified clocks mandatory. This patch restores
-original behavior of the driver and fixes its operation on
-Exynos5420 SoCs.
-
-Fixes: 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: ae3488ff37dc ("qed: Add ll2 connection for processing unaligned MPA packets")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-mfc/s5p_mfc_pm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
-index eb85cedc5ef3..5e080f32b0e8 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
-@@ -38,6 +38,11 @@ int s5p_mfc_init_pm(struct s5p_mfc_dev *dev)
- 	for (i = 0; i < pm->num_clocks; i++) {
- 		pm->clocks[i] = devm_clk_get(pm->device, pm->clk_names[i]);
- 		if (IS_ERR(pm->clocks[i])) {
-+			/* additional clocks are optional */
-+			if (i && PTR_ERR(pm->clocks[i]) == -ENOENT) {
-+				pm->clocks[i] = NULL;
-+				continue;
-+			}
- 			mfc_err("Failed to get clock: %s\n",
- 				pm->clk_names[i]);
- 			return PTR_ERR(pm->clocks[i]);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index b7471e48db7b..7002a660b6b4 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -2709,6 +2709,8 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+ 	data.input.rx_num_desc = n_ooo_bufs * 2;
+ 	data.input.tx_num_desc = data.input.rx_num_desc;
+ 	data.input.tx_max_bds_per_packet = QED_IWARP_MAX_BDS_PER_FPDU;
++	data.input.tx_tc = PKT_LB_TC;
++	data.input.tx_dest = QED_LL2_TX_DEST_LB;
+ 	data.p_connection_handle = &iwarp_info->ll2_mpa_handle;
+ 	data.input.secondary_queue = true;
+ 	data.cbs = &cbs;
 -- 
 2.20.1
 
