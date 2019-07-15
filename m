@@ -2,113 +2,214 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A6C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6FEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B83820665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563212298;
-	bh=Yu3Ac70/VGgiljrcu0iSXBljEQMCtbZ+fpbxDwdwAb4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TcWT+GKk32UmqMiG0EN85W253uIUJE5ia1dLIlFtlR9uxmwY89y+8PidrgBV+NUBH
-	 Zg7aCDo7221FsoRFpECI/2OviRJ3JpEEaugKaRDNW4OeRBxlgkz+5o59eja69iwV/C
-	 2DqTVnaDnnjuw/V+x+T8loPkO7dXlV/zA5dNYiR0=
+	by mail.kernel.org (Postfix) with ESMTP id 5C94720665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfGORiR (ORCPT
+        id S1731856AbfGORi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:38:17 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:36677 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731574AbfGORiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:38:16 -0400
-Received: by mail-lj1-f173.google.com with SMTP id i21so17128360ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H6yNHPalLHo3z6IzaHCO2qZtNfkK2KJ2qqTjNmniu54=;
-        b=BMTEzJWxu5YNZrJEeeLrPq3cQEjHlHqr5u1wTXl6opOudhFi4mrDX8+E2dclQMKPL7
-         VnVp9+95dZdzFQPT/3ycgygH4u55U41uLPhkUO4rag68ecl9FwOHBK5kttZVDCz/dO+V
-         GjZwH8J5cuRxjRMcDIk3PXkECfVKdthlQme/A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H6yNHPalLHo3z6IzaHCO2qZtNfkK2KJ2qqTjNmniu54=;
-        b=QjHQtf58Ho/BX7Y+NpHh/DBLHXV+xq4dwqIXvj8x0MivBoLBXt7xfi4JP0iE8ocazg
-         g/yUVuKPV7geg6uxg+Z+q0xojVCRZxOgJ7c9v/+BUfldImrlCGvpJivHxuhy8Sh8U2gp
-         xWmdkQ7bxROdKDQXUPyOuqW3dDdbdYlZyHDVEwlfSjpAP+VwzOICksoCpu1EcozkuO9R
-         8vhdQ3evBYG6ypfVJMF5nY99VOcznTSZAXRlbOOIpXINxiylsUZbW3IYq3wLmwDDJJ1l
-         GvozbRE5bBouN6DJW/X0Ds+Mfo0+acwq27bdS8vKPBWNJwAgIyTR3w9XkC6e/I2gGNLA
-         kx1Q==
-X-Gm-Message-State: APjAAAWRrJvUaP28QQCovUS5cV94T4s4IvmrqfyV0pyphlNPqRmRgseb
-        ZA+09CeY0XrQwb33ZP7VajHY4wiwOas=
-X-Google-Smtp-Source: APXvYqzCD4HcaERDWg1ekYGk3rtg8BNRieWqv1VMGooWdlSOOn8SeY/gH6zWwEG70eXHG1YrZ751PA==
-X-Received: by 2002:a2e:2993:: with SMTP id p19mr14359446ljp.202.1563212293722;
-        Mon, 15 Jul 2019 10:38:13 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id v4sm3247705lji.103.2019.07.15.10.38.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 10:38:12 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id h10so17130135ljg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:38:12 -0700 (PDT)
-X-Received: by 2002:a2e:9192:: with SMTP id f18mr14594812ljg.52.1563212292312;
- Mon, 15 Jul 2019 10:38:12 -0700 (PDT)
+        Mon, 15 Jul 2019 13:38:56 -0400
+Received: from mga06.intel.com ([134.134.136.31]:20476 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731574AbfGORiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 13:38:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 10:38:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
+   d="scan'208";a="178284835"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2019 10:38:54 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH 2/3] fpga: altera-cvp: Preparation for V2 parts.
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     richard.gong@intel.com, agust@denx.de, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1562877170-23931-1-git-send-email-thor.thayer@linux.intel.com>
+ <1562877170-23931-3-git-send-email-thor.thayer@linux.intel.com>
+ <20190714184617.GB9048@archbook>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <81045d02-7020-f6e1-f1d3-75bbeccd3dde@linux.intel.com>
+Date:   Mon, 15 Jul 2019 12:40:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
- <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
-In-Reply-To: <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 15 Jul 2019 10:37:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
-Message-ID: <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
-Subject: Re: drm pull for v5.3-rc1
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190714184617.GB9048@archbook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 12:08 AM Dave Airlie <airlied@gmail.com> wrote:
->
-> VMware had some mm helpers go in via my tree (looking back I'm not
-> sure Thomas really secured enough acks on these, but I'm going with it
-> for now until I get push back).
+On 7/14/19 1:46 PM, Moritz Fischer wrote:
+> Hi Thor,
+> 
+> On Thu, Jul 11, 2019 at 03:32:49PM -0500, thor.thayer@linux.intel.com wrote:
+>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>
+>> In preparation for adding newer V2 parts that use a FIFO,
+>> reorganize altera_cvp_chk_error() and change the write
+>> function to block based.
+>> V2 parts have a block size matching the FIFO while older
+>> V1 parts write a 32 bit word at a time.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>> ---
+>>   drivers/fpga/altera-cvp.c | 72 ++++++++++++++++++++++++++++++-----------------
+>>   1 file changed, 46 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+>> index 04f2b2a072a7..59835f6f9b2d 100644
+>> --- a/drivers/fpga/altera-cvp.c
+>> +++ b/drivers/fpga/altera-cvp.c
+>> @@ -140,6 +140,41 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
+>>   	return -ETIMEDOUT;
+>>   }
+>>   
+>> +static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+> 
+> Please drop the inline here.
 
-Yeah, this is the kind of completely unacceptable stuff that I was
-_afraid_ I'd get from the hmm tree, but didn't.
+OK. Thanks.
 
-It's not just "mm helpers". It's core changes like changing how
-do_page_mkwrite() works. With not a single ack or review from any of
-the VM people.
+>> +{
+>> +	struct altera_cvp_conf *conf = mgr->priv;
+>> +	u32 val;
+>> +
+>> +	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+>> +	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>> +	if (val & VSE_CVP_STATUS_CFG_ERR) {
+>> +		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+>> +			bytes);
+>> +		return -EPROTO;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>> +static int altera_cvp_send_block(struct altera_cvp_conf *conf,
+>> +				 const u32 *data, size_t len)
+>> +{
+>> +	int i, remainder;
+>> +	u32 mask, words = len / sizeof(u32);
+> Reverse xmas-tree, please.
 
-Maybe that commit is fine. But there's a whole slew of questionable
-core VM changes there, and absolutely none of them look obvious, and
-none of them hack acks from any of the VM people.
+OK. I'm new to the reverse xmas-tree but if I read [0] correctly, it 
+isn't the size of the variable that is important but the length of the 
+declaration.
 
-The hmm tree looked like good cleanups that largely removed broken code.
+>> +
+>> +	for (i = 0; i < words; i++)
+>> +		conf->write_data(conf, *data++);
+>> +
+>> +	/* write up to 3 trailing bytes, if any */
+>> +	remainder = len % sizeof(u32);
+>> +	if (remainder) {
+>> +		mask = BIT(remainder * 8) - 1;
+>> +		if (mask)
+>> +			conf->write_data(conf, *data & mask);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int altera_cvp_teardown(struct fpga_manager *mgr,
+>>   			       struct fpga_image_info *info)
+>>   {
+>> @@ -262,39 +297,29 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>>   	return 0;
+>>   }
+>>   
+>> -static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+>> -{
+>> -	struct altera_cvp_conf *conf = mgr->priv;
+>> -	u32 val;
+>> -
+>> -	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+>> -	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>> -	if (val & VSE_CVP_STATUS_CFG_ERR) {
+>> -		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+>> -			bytes);
+>> -		return -EPROTO;
+>> -	}
+>> -	return 0;
+>> -}
+>> -
+>>   static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+>>   			    size_t count)
+>>   {
+>>   	struct altera_cvp_conf *conf = mgr->priv;
+>>   	const u32 *data;
+>> -	size_t done, remaining;
+>> +	size_t done, remaining, len;
+> 
+> Reverse xmas-tree please.
 
-This looks like it *adds* broken code, or at least adds code that had
-absolutely no real review outside of vmware.
+OK.
 
-I'm not pulling this. Why did you merge it into your tree, when
-apparently you were aware of how questionable it is judging by the drm
-pull request.
+>>   	int status = 0;
+>> -	u32 mask;
+>>   
+>>   	/* STEP 9 - write 32-bit data from RBF file to CVP data register */
+>>   	data = (u32 *)buf;
+> 
+> Are there endianness concerns with this?
 
-                 Linus
+No, this maintains the previous big endian byte handling for 
+Cyclone5/Arria10. The Stratix10 bitstream is generated in 4KB chunks.
+
+>>   	remaining = count;
+>>   	done = 0;
+>>   
+>> -	while (remaining >= 4) {
+>> -		conf->write_data(conf, *data++);
+>> -		done += 4;
+>> -		remaining -= 4;
+>> +	while (remaining) {
+>> +		if (remaining >= sizeof(u32))
+>> +			len = sizeof(u32);
+>> +		else
+>> +			len = remaining;
+>> +
+>> +		altera_cvp_send_block(conf, data, len);
+>> +		data++;
+>> +		done += len;
+>> +		remaining -= len;
+>>   
+>>   		/*
+>>   		 * STEP 10 (optional) and STEP 11
+>> @@ -312,11 +337,6 @@ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+>>   		}
+>>   	}
+>>   
+>> -	/* write up to 3 trailing bytes, if any */
+>> -	mask = BIT(remaining * 8) - 1;
+>> -	if (mask)
+>> -		conf->write_data(conf, *data & mask);
+>> -
+>>   	if (altera_cvp_chkcfg)
+>>   		status = altera_cvp_chk_error(mgr, count);
+>>   
+>> -- 
+>> 2.7.4
+>>
+> 
+> Thanks,
+> Moritz
+> 
+
+I wasn't sure if you preferred this as a separate patch or squashed into 
+patch #3. Having a separate patch makes the migration a little clearer.
+
+Thanks for reviewing!
+
+[0] https://www.spinics.net/lists/netdev/msg402833.html
