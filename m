@@ -2,175 +2,87 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E176C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B79C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206D420693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C2B2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563232252;
+	bh=A+H7lExhC1UuXWzvoUebhOsOihZ7vut0x21xHCfor1Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wXnKHZLBC8cOMBdFJPAcAuKhDZS2v7VEl8E636t5m61mrUBGZREDUoDO8DYl5+Akv
+	 pwTyn09D/xklvbWWLwN0How1OQd0MhaBFMQehwpdLlzjCsyQ0KqK4cLu3vRvFgyXni
+	 EimcUgM2LLZH0dSbNrYmvX67R7pOInZ61saepU9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732532AbfGOXFa (ORCPT
+        id S1731925AbfGOXKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:05:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2450 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731690AbfGOXFa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:05:30 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FN2614049876
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 19:05:29 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tryv7xmw1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 19:05:29 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 16 Jul 2019 00:05:28 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Jul 2019 00:05:25 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FN5Ods53936622
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 23:05:24 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09124112064;
-        Mon, 15 Jul 2019 23:05:24 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1EA1B112061;
-        Mon, 15 Jul 2019 23:05:16 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.238.93])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Mon, 15 Jul 2019 23:05:15 +0000 (GMT)
-References: <20190520090939-mutt-send-email-mst@kernel.org> <877ea26tk8.fsf@morokweng.localdomain> <20190603211528-mutt-send-email-mst@kernel.org> <877e96qxm7.fsf@morokweng.localdomain> <20190701092212-mutt-send-email-mst@kernel.org> <87d0id9nah.fsf@morokweng.localdomain> <20190715103411-mutt-send-email-mst@kernel.org> <874l3nnist.fsf@morokweng.localdomain> <20190715163453-mutt-send-email-mst@kernel.org> <8736j7neg8.fsf@morokweng.localdomain> <20190715181449-mutt-send-email-mst@kernel.org>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-In-reply-to: <20190715181449-mutt-send-email-mst@kernel.org>
-Date:   Mon, 15 Jul 2019 20:05:08 -0300
+        Mon, 15 Jul 2019 19:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731058AbfGOXKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 19:10:50 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A64C2171F
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 23:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563232249;
+        bh=A+H7lExhC1UuXWzvoUebhOsOihZ7vut0x21xHCfor1Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MWf47KVYSWEMLAqUy9+8NVn3HRFGZK4boSzehs34yzz8vxourGXzSU8VIJ/m6SxvB
+         WtV2njNLyp9vGHT2p9ncIYonkltuEPA2U/YGYM+5ypb/lTCHquWnVapKLxWJev1rcx
+         HK78JoGxMyGiVOE0W81Tgi11uYJUsq4ZTh/PYbuE=
+Received: by mail-wr1-f42.google.com with SMTP id c2so15625035wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:10:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/rRMF7f9qOnbuUQ8QEw0x+CgJ0DZrddpW6f8jXhdJgh+YSVcI
+        ICcwG5EN0QPu1U3UobWBoZHixhOyOdZn977cmJlIXw==
+X-Google-Smtp-Source: APXvYqxCv8C//vKUVgWzdGEyB9tyC3FWvOUP2DifxOfUNwVxuehWOQoZR6tJHcs4CJYlWjdIjtp2sBtl8Vrq6OrGeN4=
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr29401659wrj.47.1563232248100;
+ Mon, 15 Jul 2019 16:10:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071523-0064-0000-0000-000003FBF5F2
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011435; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01232726; UDB=6.00649485; IPR=6.01014027;
- MB=3.00027731; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-15 23:05:27
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071523-0065-0000-0000-00003E466205
-Message-Id: <871ryqoq57.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907150257
+References: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
+ <8736j7gsza.fsf@linux.intel.com> <alpine.DEB.2.21.1907152033020.1767@nanos.tec.linutronix.de>
+ <CAFULd4bcB8tsgZuxZJm_ksp5zyDQXjO=v_Ov622Bmhx=fr7KuA@mail.gmail.com>
+ <alpine.DEB.2.21.1907152129350.1767@nanos.tec.linutronix.de>
+ <20190715193836.GF32439@tassilo.jf.intel.com> <CALCETrVonxn6tDkxZnbetM9W4Uxxm7-M-tv1e7YsieX3U5OBKA@mail.gmail.com>
+ <20190715225305.GI32439@tassilo.jf.intel.com>
+In-Reply-To: <20190715225305.GI32439@tassilo.jf.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 15 Jul 2019 16:10:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrW8yTRyP3qnOv04B2XvR5ZHDUky15CCBR2gtNVG3bea-Q@mail.gmail.com>
+Message-ID: <CALCETrW8yTRyP3qnOv04B2XvR5ZHDUky15CCBR2gtNVG3bea-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop targets
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Michael S. Tsirkin <mst@redhat.com> writes:
-
-> On Mon, Jul 15, 2019 at 07:03:03PM -0300, Thiago Jung Bauermann wrote:
->> 
->> Michael S. Tsirkin <mst@redhat.com> writes:
->> 
->> > On Mon, Jul 15, 2019 at 05:29:06PM -0300, Thiago Jung Bauermann wrote:
->> >>
->> >> Michael S. Tsirkin <mst@redhat.com> writes:
->> >>
->> >> > On Sun, Jul 14, 2019 at 02:51:18AM -0300, Thiago Jung Bauermann wrote:
->> >> >>
->> >> >>
->> >> >> Michael S. Tsirkin <mst@redhat.com> writes:
->> >> >>
->> >> >> > So this is what I would call this option:
->> >> >> >
->> >> >> > VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS
->> >> >> >
->> >> >> > and the explanation should state that all device
->> >> >> > addresses are translated by the platform to identical
->> >> >> > addresses.
->> >> >> >
->> >> >> > In fact this option then becomes more, not less restrictive
->> >> >> > than VIRTIO_F_ACCESS_PLATFORM - it's a promise
->> >> >> > by guest to only create identity mappings,
->> >> >> > and only before driver_ok is set.
->> >> >> > This option then would always be negotiated together with
->> >> >> > VIRTIO_F_ACCESS_PLATFORM.
->> >> >> >
->> >> >> > Host then must verify that
->> >> >> > 1. full 1:1 mappings are created before driver_ok
->> >> >> >     or can we make sure this happens before features_ok?
->> >> >> >     that would be ideal as we could require that features_ok fails
->> >> >> > 2. mappings are not modified between driver_ok and reset
->> >> >> >     i guess attempts to change them will fail -
->> >> >> >     possibly by causing a guest crash
->> >> >> >     or some other kind of platform-specific error
->> >> >>
->> >> >> I think VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS is good, but requiring
->> >> >> it to be accompanied by ACCESS_PLATFORM can be a problem. One reason is
->> >> >> SLOF as I mentioned above, another is that we would be requiring all
->> >> >> guests running on the machine (secure guests or not, since we would use
->> >> >> the same configuration for all guests) to support it. But
->> >> >> ACCESS_PLATFORM is relatively recent so it's a bit early for that. For
->> >> >> instance, Ubuntu 16.04 LTS (which is still supported) doesn't know about
->> >> >> it and wouldn't be able to use the device.
->> >> >
->> >> > OK and your target is to enable use with kernel drivers within
->> >> > guests, right?
->> >>
->> >> Right.
->> >>
->> >> > My question is, we are defining a new flag here, I guess old guests
->> >> > then do not set it. How does it help old guests? Or maybe it's
->> >> > not designed to ...
->> >>
->> >> Indeed. The idea is that QEMU can offer the flag, old guests can reject
->> >> it (or even new guests can reject it, if they decide not to convert into
->> >> secure VMs) and the feature negotiation will succeed with the flag
->> >> unset.
->> >
->> > OK. And then what does QEMU do? Assume guest is not encrypted I guess?
->> 
->> There's nothing different that QEMU needs to do, with or without the
->> flag. the perspective of the host, a secure guest and a regular guest
->> work the same way with respect to virtio.
+On Mon, Jul 15, 2019 at 3:53 PM Andi Kleen <ak@linux.intel.com> wrote:
 >
-> OK. So now let's get back to implementation. What will
-> Linux guest driver do? It can't activate DMA API blindly since that
-> will assume translation also works, right?
+> > I haven't tested on a real kernel with i915.  Does i915 really hit
+> > this code path?  Does it happen more than once or twice at boot?
+>
+> Yes some workloads allocate/free a lot of write combined memory
+> for graphics objects.
+>
 
-It can on pseries, because we always have a 1:1 window mapping the whole
-guest memory.
+But where does that memory come from?  If it's from device memory
+(i.e. memory that's not in the kernel direct map), then, unless I
+missed something, we're never changing the cache mode per se -- we're
+just ioremap_wc-ing it, which doesn't require a flush.
 
-> Or do we somehow limit it to just a specific platform?
-
-Yes, we want to accept the new flag only on secure pseries guests.
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+IOW I'm wondering if there's any workload where this patch makes a difference.
