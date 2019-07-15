@@ -2,139 +2,127 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F7DC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ED6C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B386E20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JL9pwKdR"
+	by mail.kernel.org (Postfix) with ESMTP id 37F8320C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563219890;
+	bh=oQj6Q2Yz9cXpmNLaOyHdKv66gt1/MQq7sOD0zHWZ/W4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NynvavzF+O90FCFAhgfVzsN1SecIyS2B86IeC07OEXvHzt3mW1iE10+odljxu/izX
+	 P4B59YzLyH6qaV2WpGaRjrnmjRbItVF8mJzWu1TxoQoIzj4VrUKwYaaalxe6Up+w/r
+	 dqt946ROrIX4mE2vSaDaO2Hbd6RdNz6chXaUqY/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbfGOTm7 (ORCPT
+        id S1731039AbfGOTot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:42:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43493 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfGOTm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:42:59 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so18338735wru.10;
-        Mon, 15 Jul 2019 12:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ivvcy3jSvKNh7AY9v8j4FaWyMteFu4efIhrDaMrTgs0=;
-        b=JL9pwKdRfzEgQuz6M6l0NwkbxKsmHvoTFiGXAoBw5hEY/u/A2CWfoFq4gSYEBLld9g
-         q3soQgGUYTyf1DraKl/IE5xRYQDP1TM4ILvxl/QLYJlsqshYqTPe4LwIYeK/zOUoPf3T
-         brFPEi/dN9AwVD16cam4NX6uSaA+amRANhulK4YLsyrl3Nfi72K/MAWB9QLpcG6/5BdV
-         C8MdsU7YlJRANavLjtdxRK1P6SSoylaq3Pn2ta6g04BIlUQLXHEWNVTUYpV5jch7FXqP
-         dvJzPPAqH/CL1THPIXbAstmhpppc4BhBtb68CwOpD5Iw1dqccwKrREre8FnPNMgxEerw
-         jyHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ivvcy3jSvKNh7AY9v8j4FaWyMteFu4efIhrDaMrTgs0=;
-        b=QdxgFJU56+JMymZd9PFSIFNUNS+wVH9qCoA3VYGPo6s7vpeo7BxVGFGTiSObLG+Do7
-         sj7mgTc+wrA9nIYExO2jDGVUTD6XkqJMa98tlMl9X677cMsgZWq32ncOrxQLwMCzuDrC
-         tZezbHYYcR2GSrE84K+7ru0JgOWIU2+bU2ikh5SZ4LOL6EX8f0546HbYfWcoSKdd+raL
-         9oZqAwfI8NlZbpGXs2m4n24nAoj3clwDNELwEgC09yzarigEUjCVed6vA/H8D2wovO0+
-         k9e/Nj8ZafZWMYybXDyBTZ7v3lKaeybTGNgXk7ALtDWaWKhNFqPnBbL3xCHrCtTbOVrF
-         RpPQ==
-X-Gm-Message-State: APjAAAUUDMzWmfwA1HbtW+rF0tPUQbfzCMYV34mTuE0Gt1J/0AQQNS4U
-        GhffK7D80A2LAN25NK6rgWI=
-X-Google-Smtp-Source: APXvYqyEqpA1gOpTfq3syYAte0jdi7inc52XAxENBCxOvBZo2HSaroz6fSIklIcvS96/1smIuGr9tw==
-X-Received: by 2002:adf:efc8:: with SMTP id i8mr721555wrp.220.1563219776662;
-        Mon, 15 Jul 2019 12:42:56 -0700 (PDT)
-Received: from felia ([2001:16b8:2dc5:2000:cd36:d602:4f2d:7917])
-        by smtp.gmail.com with ESMTPSA id y1sm15121414wma.32.2019.07.15.12.42.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 12:42:55 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Mon, 15 Jul 2019 21:42:47 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
- called in include/linux/pci.h
-In-Reply-To: <20190715181312.31403-1-skunberg.kelsey@gmail.com>
-Message-ID: <alpine.DEB.2.21.1907152138120.2564@felia>
-References: <20190715175658.29605-1-skunberg.kelsey@gmail.com> <20190715181312.31403-1-skunberg.kelsey@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 15 Jul 2019 15:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729598AbfGOTos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 15:44:48 -0400
+Received: from localhost (unknown [88.128.80.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B1D520659;
+        Mon, 15 Jul 2019 19:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563219887;
+        bh=oQj6Q2Yz9cXpmNLaOyHdKv66gt1/MQq7sOD0zHWZ/W4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hKwDwB7SbQEXh2CssSpDmxo/fQYxnXFtKXqdkf5B5vQKo5TfBSrcwvciknaszoTal
+         HAKUOvAQ8yJMFljsBENv6+pwHubByMlh4WtqjFjRoeKlDxR6r9dmaChxOYhzUZN45S
+         HmWqKH1zt7Puxk4qZ6s/m2+rfBUd0803N6TRojMI=
+Date:   Mon, 15 Jul 2019 21:19:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        tglx@linutronix.de
+Subject: Re: [PATCH 4/7] staging: most: Use spinlock_t instead of struct
+ spinlock
+Message-ID: <20190715191933.GA10934@kroah.com>
+References: <20190704153803.12739-1-bigeasy@linutronix.de>
+ <20190704153803.12739-5-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704153803.12739-5-bigeasy@linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
-
-> Remove the following uncalled functions from include/linux/pci.h:
+On Thu, Jul 04, 2019 at 05:38:00PM +0200, Sebastian Andrzej Siewior wrote:
+> For spinlocks the type spinlock_t should be used instead of "struct
+> spinlock".
 > 
->         pci_block_cfg_access()
->         pci_block_cfg_access_in_atomic()
->         pci_unblock_cfg_access()
+> Use spinlock_t for spinlock's definition.
 > 
-> Functions were added in patch fb51ccbf217c "PCI: Rework config space
-> blocking services", though no callers were added. Code continues to be
-> unused and should be removed.
-> 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Christian Gromm <christian.gromm@microchip.com>
+> Cc: devel@driverdev.osuosl.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
+>  drivers/staging/most/net/net.c     | 3 +--
+>  drivers/staging/most/video/video.c | 3 +--
+>  2 files changed, 2 insertions(+), 4 deletions(-)
 > 
-
-Nice finding. How did you discover this issue? Did you use a tool to find 
-this ununsed code or stumble over it during your code review?
-
-Also note that commits are referred to with this format:
-
-commit <12-character sha prefix> ("<commit message>")
-
-So, you need to change patch to commit and include brackets around your
-quoted commit message.
-
-Lukas
-
-> Changes since v1:
->   - Fixed Signed-off-by line to show full name
-> 
->  include/linux/pci.h | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cf380544c700..3c9ba6133bea 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
+> diff --git a/drivers/staging/most/net/net.c b/drivers/staging/most/net/net.c
+> index c8a64e2090273..09b604df45e63 100644
+> --- a/drivers/staging/most/net/net.c
+> +++ b/drivers/staging/most/net/net.c
+> @@ -69,7 +69,7 @@ struct net_dev_context {
 >  
->  static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+>  static struct list_head net_devices = LIST_HEAD_INIT(net_devices);
+>  static struct mutex probe_disc_mt; /* ch->linked = true, most_nd_open */
+> -static struct spinlock list_lock; /* list_head, ch->linked = false, dev_hold */
+> +static DEFINE_SPINLOCK(list_lock); /* list_head, ch->linked = false, dev_hold */
+>  static struct core_component comp;
 >  
-> -static inline void pci_block_cfg_access(struct pci_dev *dev) { }
-> -static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
-> -{ return 0; }
-> -static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
-> -
->  static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
->  { return NULL; }
->  static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
-> 
+>  static int skb_to_mamac(const struct sk_buff *skb, struct mbo *mbo)
+> @@ -507,7 +507,6 @@ static struct core_component comp = {
+>  
+>  static int __init most_net_init(void)
+>  {
+> -	spin_lock_init(&list_lock);
+>  	mutex_init(&probe_disc_mt);
+>  	return most_register_component(&comp);
+>  }
+> diff --git a/drivers/staging/most/video/video.c b/drivers/staging/most/video/video.c
+> index adca250062e1b..fcd9e111e8bd0 100644
+> --- a/drivers/staging/most/video/video.c
+> +++ b/drivers/staging/most/video/video.c
+> @@ -54,7 +54,7 @@ struct comp_fh {
+>  };
+>  
+>  static struct list_head video_devices = LIST_HEAD_INIT(video_devices);
+> -static struct spinlock list_lock;
+> +static DEFINE_SPINLOCK(list_lock);
+>  
+>  static inline bool data_ready(struct most_video_dev *mdev)
+>  {
+> @@ -540,7 +540,6 @@ static struct core_component comp = {
+>  
+>  static int __init comp_init(void)
+>  {
+> -	spin_lock_init(&list_lock);
+>  	return most_register_component(&comp);
+>  }
+>  
+
+Does not apply on top of Linus's tree right now :(
+
+Can you rebase and resend once 5.3-rc1 is out?
+
+thanks,
+
+greg k-h
