@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5214BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9DEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274A9212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D5D217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199044;
-	bh=EvFcO/rzO9xfa64Gyrk/idXLQuQAM8q73KDNVZupXzc=;
+	s=default; t=1563199046;
+	bh=tTta1BWjUTdGT2Co5I0+LQJ9ME+Vzdj5DIveTseWO8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcZy0Zg5/DeOxcGsnZM6AHLKrxjUGrLvdwkvpQtJDBchhclUW4V6Olcj3wL98J1bB
-	 0ec3SrWeCiKpBMalfQY013uNScwFc05pcEUhlzWuv7NT6u8B5922cmbDZSN5ItrgfS
-	 QJMl+85nrpNyQckPJH+VYutwMcCx3hKpIXPIlqvY=
+	b=RwiWxEClKEl0Tg0aT1oQMwfk5Cw3c6N70CajjzuHj4mzrcDMtdPUtZKPghQ/F3oGu
+	 PMCY7sSphQv4UXUOlSHmfBuYsgeyiCiapbbEX72r9BagKLvlx+uDQ/hW42OYWCqSn3
+	 dfrLlG9ySzRNk/QuZJw2wj6i7NQRmTI6hk+t7SqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732467AbfGON5V (ORCPT
+        id S1732686AbfGON5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:57:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732304AbfGON5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:17 -0400
+        id S1732571AbfGON5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:19 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5451D21530;
-        Mon, 15 Jul 2019 13:57:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2195E20C01;
+        Mon, 15 Jul 2019 13:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199036;
-        bh=EvFcO/rzO9xfa64Gyrk/idXLQuQAM8q73KDNVZupXzc=;
+        s=default; t=1563199039;
+        bh=tTta1BWjUTdGT2Co5I0+LQJ9ME+Vzdj5DIveTseWO8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmXHgHvD5JYXFIMgTV4ga/GJW4IWJc6wBxfSIluLx3XxbUJ+wR0ieLt4NgTIlaOZz
-         bKwTI+4/5sGsUTXvsNREjOBzzBZTAu1eTasjcrFac/sMwAjj0J+pL7xNd3soWECZoh
-         6swV6oZsme9WaRghPFCvf2mU8163f29FQwve9fAc=
+        b=AMpj0RjV9jCdLAJ1AF0MfjQQHz6t8UED1sTSDzSxK+aCOeE9NQWH2efSuD9Tp6crz
+         ROJDygnz23sUUkP/PNCHVYSrttf1exgrnTUdVOrHMLFA3G6qehc44eGB9N41s0TnNP
+         3EcWDyeM6sKfQUmrTBMD/DDCMqJ1H+mIdoQ4r9KA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Hannes Reinecke <hare@suse.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 171/249] libata: don't request sense data on !ZAC ATA devices
-Date:   Mon, 15 Jul 2019 09:45:36 -0400
-Message-Id: <20190715134655.4076-171-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 172/249] clocksource/drivers/tegra: Restore base address before cleanup
+Date:   Mon, 15 Jul 2019 09:45:37 -0400
+Message-Id: <20190715134655.4076-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,68 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
+[ Upstream commit fc9babc2574691d3bbf0428f007b22261fed55c6 ]
 
-ZAC support added sense data requesting on error for both ZAC and ATA
-devices. This seems to cause erratic error handling behaviors on some
-SSDs where the device reports sense data availability and then
-delivers the wrong content making EH take the wrong actions.  The
-failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
-reproduced.
+We're adjusting the timer's base for each per-CPU timer to point to the
+actual start of the timer since device-tree defines a compound registers
+range that includes all of the timers. In this case the original base
+need to be restore before calling iounmap to unmap the proper address.
 
-There is no value in requesting sense data from non-ZAC ATA devices
-while there's a significant risk of introducing EH misbehaviors which
-are difficult to reproduce and fix.  Let's do the sense data dancing
-only for ZAC devices.
-
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-eh.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/clocksource/timer-tegra20.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-index 9d687e1d4325..3bfd9da58473 100644
---- a/drivers/ata/libata-eh.c
-+++ b/drivers/ata/libata-eh.c
-@@ -1469,7 +1469,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
- 	tf->hob_lbah = buf[10];
- 	tf->nsect = buf[12];
- 	tf->hob_nsect = buf[13];
--	if (ata_id_has_ncq_autosense(dev->id))
-+	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
- 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
- 
- 	return 0;
-@@ -1716,7 +1716,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
- 	memcpy(&qc->result_tf, &tf, sizeof(tf));
- 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
- 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
--	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
-+	if (dev->class == ATA_DEV_ZAC &&
-+	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
- 		char sense_key, asc, ascq;
- 
- 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
-@@ -1770,10 +1771,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
+diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
+index fe5cc0963ac9..462be34b41c4 100644
+--- a/drivers/clocksource/timer-tegra20.c
++++ b/drivers/clocksource/timer-tegra20.c
+@@ -319,6 +319,8 @@ static int __init tegra_init_timer(struct device_node *np)
+ 			irq_dispose_mapping(cpu_to->clkevt.irq);
+ 		}
  	}
- 
- 	switch (qc->dev->class) {
--	case ATA_DEV_ATA:
- 	case ATA_DEV_ZAC:
- 		if (stat & ATA_SENSE)
- 			ata_eh_request_sense(qc, qc->scsicmd);
-+		/* fall through */
-+	case ATA_DEV_ATA:
- 		if (err & ATA_ICRC)
- 			qc->err_mask |= AC_ERR_ATA_BUS;
- 		if (err & (ATA_UNC | ATA_AMNF))
++
++	to->of_base.base = timer_reg_base;
+ out:
+ 	timer_of_cleanup(to);
+ 	return ret;
 -- 
 2.20.1
 
