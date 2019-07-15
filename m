@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A12C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01212C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8F621530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD0421530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201070;
-	bh=VOBSJ1uNNJG3mp1CY87BEfJ7dkUZJqtc+vf/SOG6L04=;
+	s=default; t=1563201077;
+	bh=Ikp9Z7o6849kEBCtpfBb3J6wCZpMPCOBu9zCpU4cQ2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3aIj5EVCsCIUb1sEjQUUyIdtxcb7q3XvhTH8+Dx5sObTQm+Yz44QmvVSGCbqO0vM
-	 Vag86mM85qMTwfqDpsm9CRA+Yb2D01u5NEgkenpFVuVKvlE6ye0cw035lqUJGhOlXm
-	 Ev+kDjR4rXe+TzeaUVI294Lh6ta4pNXmbmxmzSlM=
+	b=qhRpjlazqntldR19XKMJ2KMqafuJO0QZD88WH0V6rEeafXLo32RTxPTgPwaHQKNkz
+	 BJM6HHcy6+zxvvwvXn5dc/j2YlcHdzBi8eSJwbHFaHezAVtBSZzj2w2YKU2yIrJmKJ
+	 BVP71Tlb0YZSyer+tJjmomXEav4hjdlIm4gOxX9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403869AbfGOObJ (ORCPT
+        id S2390939AbfGOObR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44600 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731947AbfGOObI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:31:08 -0400
+        id S1731947AbfGOObL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:31:11 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B423212F5;
-        Mon, 15 Jul 2019 14:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B89220896;
+        Mon, 15 Jul 2019 14:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201067;
-        bh=VOBSJ1uNNJG3mp1CY87BEfJ7dkUZJqtc+vf/SOG6L04=;
+        s=default; t=1563201070;
+        bh=Ikp9Z7o6849kEBCtpfBb3J6wCZpMPCOBu9zCpU4cQ2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S0tSyRPueo2lHjYaVKhc9RFHh2DhWsQFaC58KMGiufY7Q3hLltOi0e7Og5Gk8ugmu
-         Mytm/z+rEviSuueu+thZVvFsWn5ar6zy3N7cILGW5Jh+kvP1BGz9cnmm9NDAwRg0Df
-         lYTqrxjx3SVE/JkrL6zGiG0dtYTxVjwbN4yjyxps=
+        b=aLpiG4TWu3f77BmZDuFR29XrtrLhgvYCh17o08xtW7tNqUExifXo8/pzqHnUTeeWs
+         rQ0SRLh2C/HoD8/P69CuAWDuSJc4pRcL5N3W9TWwtp+GcQ/XIdeFt2IxjOuOOMv/eX
+         9B1AXE4w05dxWiVXjax3JxELAb+SfmgFKfd7VmKE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 041/105] perf test 6: Fix missing kvm module load for s390
-Date:   Mon, 15 Jul 2019 10:27:35 -0400
-Message-Id: <20190715142839.9896-41-sashal@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/105] media: fdp1: Support M3N and E3 platforms
+Date:   Mon, 15 Jul 2019 10:27:36 -0400
+Message-Id: <20190715142839.9896-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -62,87 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-[ Upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff ]
+[ Upstream commit 4e8c120de9268fc26f583268b9d22e7d37c4595f ]
 
-Command
+New Gen3 R-Car platforms incorporate the FDP1 with an updated version
+register. No code change is required to support these targets, but they
+will currently report an error stating that the device can not be
+identified.
 
-   # perf test -Fv 6
+Update the driver to match against the new device types.
 
-fails with error
-
-   running test 100 'kvm-s390:kvm_s390_create_vm' failed to parse
-    event 'kvm-s390:kvm_s390_create_vm', err -1, str 'unknown tracepoint'
-    event syntax error: 'kvm-s390:kvm_s390_create_vm'
-                         \___ unknown tracepoint
-
-when the kvm module is not loaded or not built in.
-
-Fix this by adding a valid function which tests if the module
-is loaded. Loaded modules (or builtin KVM support) have a
-directory named
-  /sys/kernel/debug/tracing/events/kvm-s390
-for this tracepoint.
-
-Check for existence of this directory.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190604053504.43073-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/parse-events.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/media/platform/rcar_fdp1.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index f0679613bd18..424b82a7d078 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -19,6 +19,32 @@
- #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
- 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
+diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
+index 3245bc45f4a0..a889332d5d30 100644
+--- a/drivers/media/platform/rcar_fdp1.c
++++ b/drivers/media/platform/rcar_fdp1.c
+@@ -261,6 +261,8 @@ MODULE_PARM_DESC(debug, "activate debug info");
+ #define FD1_IP_H3_ES1			0x02010101
+ #define FD1_IP_M3W			0x02010202
+ #define FD1_IP_H3			0x02010203
++#define FD1_IP_M3N			0x02010204
++#define FD1_IP_E3			0x02010205
  
-+#if defined(__s390x__)
-+/* Return true if kvm module is available and loaded. Test this
-+ * and retun success when trace point kvm_s390_create_vm
-+ * exists. Otherwise this test always fails.
-+ */
-+static bool kvm_s390_create_vm_valid(void)
-+{
-+	char *eventfile;
-+	bool rc = false;
-+
-+	eventfile = get_events_file("kvm-s390");
-+
-+	if (eventfile) {
-+		DIR *mydir = opendir(eventfile);
-+
-+		if (mydir) {
-+			rc = true;
-+			closedir(mydir);
-+		}
-+		put_events_file(eventfile);
-+	}
-+
-+	return rc;
-+}
-+#endif
-+
- static int test__checkevent_tracepoint(struct perf_evlist *evlist)
- {
- 	struct perf_evsel *evsel = perf_evlist__first(evlist);
-@@ -1600,6 +1626,7 @@ static struct evlist_test test__events[] = {
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-+		.valid = kvm_s390_create_vm_valid,
- 		.id    = 100,
- 	},
- #endif
+ /* LUTs */
+ #define FD1_LUT_DIF_ADJ			0x1000
+@@ -2369,6 +2371,12 @@ static int fdp1_probe(struct platform_device *pdev)
+ 	case FD1_IP_H3:
+ 		dprintk(fdp1, "FDP1 Version R-Car H3\n");
+ 		break;
++	case FD1_IP_M3N:
++		dprintk(fdp1, "FDP1 Version R-Car M3N\n");
++		break;
++	case FD1_IP_E3:
++		dprintk(fdp1, "FDP1 Version R-Car E3\n");
++		break;
+ 	default:
+ 		dev_err(fdp1->dev, "FDP1 Unidentifiable (0x%08x)\n",
+ 				hw_version);
 -- 
 2.20.1
 
