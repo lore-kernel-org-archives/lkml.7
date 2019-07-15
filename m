@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D1EC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801E2C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED902171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B2020665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563225200;
-	bh=vMxHkTu7SqiZCuDVCVcVHodwhNDfiIZ00hYVteqMzNo=;
+	s=default; t=1563225207;
+	bh=JL+0xxUE5xqlOgbbiBRpbkuQeR13jNCadwYOjk+KVPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yO/gCf7c0iCFXkWnJt5UinNHHycjaIqgTLX7BnRGHpdUpfxVB4lnmTIQHfS6n5/uR
-	 2UKKUo+ai4isKRZS/63xdzn8Cas1T3JeSWJma8Nl5UuC0Om6A/Li3q+tejGCerS1iM
-	 V7qlP1+yYDJ66Vu9awyZ6seGdnmFo7a9nqx2VlJY=
+	b=QycM6eKY1tcno7Wa6RojtzlPpxS/WW+mIubzELQk/zSpJayn3YYvrYQGeaCjnIpCZ
+	 HDcY4YYPrY98uHxM7kX9RlJMO6B4SKgOdxs0s+ivETpFgzZHBOF8dviNfK4a6bs4o+
+	 ik4jOUwgVYzmX4oG9M9dNmwBNA5yAUudPA0KiAyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733119AbfGOVNT (ORCPT
+        id S1733150AbfGOVN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44132 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 17:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730207AbfGOVNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:13:15 -0400
+        id S1733121AbfGOVNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:13:20 -0400
 Received: from quaco.ghostprotocols.net (179-240-129-12.3g.claro.net.br [179.240.129.12])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F58B20449;
-        Mon, 15 Jul 2019 21:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FD4A20665;
+        Mon, 15 Jul 2019 21:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563225194;
-        bh=vMxHkTu7SqiZCuDVCVcVHodwhNDfiIZ00hYVteqMzNo=;
+        s=default; t=1563225199;
+        bh=JL+0xxUE5xqlOgbbiBRpbkuQeR13jNCadwYOjk+KVPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jP4WNrLq7bjVjAXjZbJIjPwhOTWEs+VcskXGkofyXQAW6j+hYQRa8D6P7cF6SJeEO
-         q882slfbOZzIDNWPxESxDwMXfMitVnaYWUc1DGULI1TZPmMi8UjY3uZ8qA//BzCcl0
-         rp7mUvRJR5LADop/0hLsZdB2epHJEU+trVxBeVbs=
+        b=LWnyMOmiEKcrobeM9zebXm1qaPePB6KHnEzPA9Q9K5uikbCcvBGNIVOB/ScAyeSbS
+         EiwZEZX74F/9pKPOkOi5fjaDMoYHpM108g6/tsG5z1rzsSrmzCAMGxfL1skKvFeau6
+         HArNr2tKas3+i+Vbu7quZcKy78R52KZcg3fjyX3s=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 12/28] perf scripts python: export-to-sqlite.py: Export comm details
-Date:   Mon, 15 Jul 2019 18:11:44 -0300
-Message-Id: <20190715211200.10984-13-acme@kernel.org>
+Subject: [PATCH 13/28] perf scripts python: export-to-postgresql.py: Export comm details
+Date:   Mon, 15 Jul 2019 18:11:45 -0300
+Message-Id: <20190715211200.10984-14-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190715211200.10984-1-acme@kernel.org>
 References: <20190715211200.10984-1-acme@kernel.org>
@@ -67,38 +67,29 @@ Add table columns for thread id, comm start time and exec flag.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-10-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190710085810.1650-11-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-sqlite.py | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/perf/scripts/python/export-to-postgresql.py | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index 021326c46285..97aa66dd2fe1 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -177,7 +177,10 @@ do_query(query, 'CREATE TABLE threads ('
+diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+index 92713d93e956..01f37877f5bb 100644
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -353,7 +353,10 @@ do_query(query, 'CREATE TABLE threads ('
  		'tid		integer)')
  do_query(query, 'CREATE TABLE comms ('
- 		'id		integer		NOT NULL	PRIMARY KEY,'
+ 		'id		bigint		NOT NULL,'
 -		'comm		varchar(16))')
 +		'comm		varchar(16),'
 +		'c_thread_id	bigint,'
 +		'c_time		bigint,'
 +		'exec_flag	boolean)')
  do_query(query, 'CREATE TABLE comm_threads ('
- 		'id		integer		NOT NULL	PRIMARY KEY,'
+ 		'id		bigint		NOT NULL,'
  		'comm_id	bigint,'
-@@ -536,7 +539,7 @@ machine_query.prepare("INSERT INTO machines VALUES (?, ?, ?)")
- thread_query = QSqlQuery(db)
- thread_query.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)")
- comm_query = QSqlQuery(db)
--comm_query.prepare("INSERT INTO comms VALUES (?, ?)")
-+comm_query.prepare("INSERT INTO comms VALUES (?, ?, ?, ?, ?)")
- comm_thread_query = QSqlQuery(db)
- comm_thread_query.prepare("INSERT INTO comm_threads VALUES (?, ?, ?)")
- dso_query = QSqlQuery(db)
-@@ -576,7 +579,7 @@ def trace_begin():
+@@ -763,7 +766,7 @@ def trace_begin():
  	evsel_table(0, "unknown")
  	machine_table(0, 0, "unknown")
  	thread_table(0, 0, 0, -1, -1)
@@ -107,15 +98,30 @@ index 021326c46285..97aa66dd2fe1 100644
  	dso_table(0, 0, "unknown", "unknown", "")
  	symbol_table(0, 0, 0, 0, 0, "unknown")
  	sample_table(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-@@ -642,7 +645,7 @@ def thread_table(*x):
- 	bind_exec(thread_query, 5, x)
+@@ -851,6 +854,8 @@ def trace_end():
+ 	do_query(query, 'ALTER TABLE threads '
+ 					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
+ 					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
++	do_query(query, 'ALTER TABLE comms '
++					'ADD CONSTRAINT threadfk   FOREIGN KEY (c_thread_id)  REFERENCES threads    (id)')
+ 	do_query(query, 'ALTER TABLE comm_threads '
+ 					'ADD CONSTRAINT commfk     FOREIGN KEY (comm_id)      REFERENCES comms      (id),'
+ 					'ADD CONSTRAINT threadfk   FOREIGN KEY (thread_id)    REFERENCES threads    (id)')
+@@ -935,11 +940,11 @@ def thread_table(thread_id, machine_id, process_id, pid, tid, *x):
+ 	value = struct.pack("!hiqiqiqiiii", 5, 8, thread_id, 8, machine_id, 8, process_id, 4, pid, 4, tid)
+ 	thread_file.write(value)
  
- def comm_table(*x):
--	bind_exec(comm_query, 2, x)
-+	bind_exec(comm_query, 5, x)
+-def comm_table(comm_id, comm_str, *x):
++def comm_table(comm_id, comm_str, thread_id, time, exec_flag, *x):
+ 	comm_str = toserverstr(comm_str)
+ 	n = len(comm_str)
+-	fmt = "!hiqi" + str(n) + "s"
+-	value = struct.pack(fmt, 2, 8, comm_id, n, comm_str)
++	fmt = "!hiqi" + str(n) + "s" + "iqiqiB"
++	value = struct.pack(fmt, 5, 8, comm_id, n, comm_str, 8, thread_id, 8, time, 1, exec_flag)
+ 	comm_file.write(value)
  
- def comm_thread_table(*x):
- 	bind_exec(comm_thread_query, 3, x)
+ def comm_thread_table(comm_thread_id, comm_id, thread_id, *x):
 -- 
 2.21.0
 
