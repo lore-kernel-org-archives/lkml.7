@@ -2,71 +2,116 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D281C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C09AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D212054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5792054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563203303;
+	bh=oiFz2NTIZMbWcBgnnWQwMU4e1+RSkgJOnzytLtRJPzo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CdoXjSo7MIQMKDWuJibhj1dEIcdnep6EfUZS24qV+m9wx8my3ncvPyzXkzLPf5reI
+	 /nAOfJwwYX6b1XTV/uhpM0JanW2jHFmvBx/GKql1BvC8v54iYsCcK78nenatt+7IWE
+	 IxEMQJz6VNj/OYPWOELip+95AKobuYdS+71qcH/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388008AbfGOPIS (ORCPT
+        id S1733093AbfGON6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:08:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48165 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733095AbfGOPIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:08:15 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hn2aG-0006iR-Bm; Mon, 15 Jul 2019 17:08:08 +0200
-Date:   Mon, 15 Jul 2019 17:08:07 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Avi Fishman <avifishman70@gmail.com>
-cc:     Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] clocksource/drivers/npcm: fix GENMASK and timer
- operation
-In-Reply-To: <CAKKbWA4jBMG8v4unqWEpGWgRm9CH+EJvojsOwMWTvnQH15HWdQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907151707200.1722@nanos.tec.linutronix.de>
-References: <CAKKbWA6S7KotAFtLO=ow=XYnLL2Ny5Mz2kcgM1cs+j=5mHQNmw@mail.gmail.com> <alpine.DEB.2.21.1907151435080.1722@nanos.tec.linutronix.de> <CAKKbWA4jBMG8v4unqWEpGWgRm9CH+EJvojsOwMWTvnQH15HWdQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 15 Jul 2019 09:58:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732131AbfGON6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:58:06 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C5A20651;
+        Mon, 15 Jul 2019 13:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563199085;
+        bh=oiFz2NTIZMbWcBgnnWQwMU4e1+RSkgJOnzytLtRJPzo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GUPYduky1gIJ6EYhtmr0z9MfLm1Z6rYEnDwKIUQAFoLp/cM4JDrJWvzwa+yQ0FNiK
+         +O6t5CuAFS+S2Ju423n8fc/pDORgNoyHSMR30EauUcETNCsk+N2BPyXGHPD6F8iEq9
+         P+1Askpewg8NcoOK9c9QtFHXrQZcadI5BmEYST+M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zefir Kurtisi <zefir.kurtisi@neratec.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 186/249] ath9k: correctly handle short radar pulses
+Date:   Mon, 15 Jul 2019 09:45:51 -0400
+Message-Id: <20190715134655.4076-186-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avi,
+From: Zefir Kurtisi <zefir.kurtisi@neratec.com>
 
-On Mon, 15 Jul 2019, Avi Fishman wrote:
-> On Mon, Jul 15, 2019 at 3:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >   9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro")
-> 
-> The automatic fix changed from
-> GENMASK(3, 27) to
-> GENMASK(27, 3)
-> I reviewd again the code to check how it worked so far and saw that it
-> should have been
-> GENMASK(28, 27) - this is a different value than 9bdd7bb3a844
-> For our fortune this wrong value didn't effect the our final write to
-> the register.
-> But still this should be fixed.
+[ Upstream commit df5c4150501ee7e86383be88f6490d970adcf157 ]
 
-Fair enough. Please explain it proper in the changelog.
+In commit 3c0efb745a17 ("ath9k: discard undersized packets")
+the lower bound of RX packets was set to 10 (min ACK size) to
+filter those that would otherwise be treated as invalid at
+mac80211.
 
-Thanks,
+Alas, short radar pulses are reported as PHY_ERROR frames
+with length set to 3. Therefore their detection stopped
+working after that commit.
 
-	tglx
+NOTE: ath9k drivers built thereafter will not pass DFS
+certification.
+
+This extends the criteria for short packets to explicitly
+handle PHY_ERROR frames.
+
+Fixes: 3c0efb745a17 ("ath9k: discard undersized packets")
+Signed-off-by: Zefir Kurtisi <zefir.kurtisi@neratec.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath9k/recv.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath9k/recv.c b/drivers/net/wireless/ath/ath9k/recv.c
+index 4e97f7f3b2a3..06e660858766 100644
+--- a/drivers/net/wireless/ath/ath9k/recv.c
++++ b/drivers/net/wireless/ath/ath9k/recv.c
+@@ -815,6 +815,7 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
+ 	struct ath_common *common = ath9k_hw_common(ah);
+ 	struct ieee80211_hdr *hdr;
+ 	bool discard_current = sc->rx.discard_next;
++	bool is_phyerr;
+ 
+ 	/*
+ 	 * Discard corrupt descriptors which are marked in
+@@ -827,8 +828,11 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
+ 
+ 	/*
+ 	 * Discard zero-length packets and packets smaller than an ACK
++	 * which are not PHY_ERROR (short radar pulses have a length of 3)
+ 	 */
+-	if (rx_stats->rs_datalen < 10) {
++	is_phyerr = rx_stats->rs_status & ATH9K_RXERR_PHY;
++	if (!rx_stats->rs_datalen ||
++	    (rx_stats->rs_datalen < 10 && !is_phyerr)) {
+ 		RX_STAT_INC(sc, rx_len_err);
+ 		goto corrupt;
+ 	}
+-- 
+2.20.1
+
