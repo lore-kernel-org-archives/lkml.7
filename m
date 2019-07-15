@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1BFC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04423C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3935206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5B4206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201242;
-	bh=MdR5tsNN1koq0rMpbWOje/a5NBEkteuGSOnJsUhnn68=;
+	s=default; t=1563201246;
+	bh=X62JNFWY0bWmEh7vnpk+vTb8iLgZjaeB93vAZTguSDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+eZT1z+fLUeLCfHmGdLmLJGeuuB23aqrMorVoutD25NTibV2gHJ9/rIvbKaU9sdT
-	 Fc9ArOniXLLJQ70KhME+AwLokhjcCzR65wf3zFuKUUayawloW2HiVY+ChIkD/OudI7
-	 0wkz6c/1tKz6/bTe6dWELPz1iYNjoC+7NttCfZmY=
+	b=HRDZ0nLQRBRRoiPx4CIEyRoU/LM0xrueEsJaXiezFWhBMrVPh9e7RsTIv/fUugXia
+	 ipQYIkZAsPyW+IhQ3WjAT3P/cel4s68ZztTv8g0G1u88rCWrRxITapew1Lr9IgKddd
+	 K1tcG5jJHNIBCX9ZHY6tos7e/BkyZ6v84nYAc4qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391987AbfGOOeB (ORCPT
+        id S2391996AbfGOOeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391698AbfGOOdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:33:55 -0400
+        id S1731073AbfGOOeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:34:00 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C7B3206B8;
-        Mon, 15 Jul 2019 14:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8437E2184E;
+        Mon, 15 Jul 2019 14:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201234;
-        bh=MdR5tsNN1koq0rMpbWOje/a5NBEkteuGSOnJsUhnn68=;
+        s=default; t=1563201239;
+        bh=X62JNFWY0bWmEh7vnpk+vTb8iLgZjaeB93vAZTguSDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnxD2xWKjX7uFpkwecyU1w61fKW9niH6Ev/8Srab5Q4UM4zVEh1ukF78WLRLPnCg5
-         8in+nMhwiXaWKKYSm9MnrjE1U5ESbCakcipLcsXeFk5V889j9q6anIun5vaQ9D/Cn6
-         kdZyQT3sOKWNiCpDVHTPkH7R2gSie0aYcNRItTM8=
+        b=cB2GPdwZyIKs9geubRAWa1XBSlMFsS4ZMmmxwp84bMvsclumhOzCejOiBfaXl/R6Q
+         OgrM1gvm8TIAb7KC64R2vLvz0+unr3ChThbsLbUQrR+VYqDOL+hmsKtJB5F037XQtF
+         tXKe5GILBg80jDLqb+md3CcXNRfLVUg0ORp/umN4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 085/105] crypto: asymmetric_keys - select CRYPTO_HASH where needed
-Date:   Mon, 15 Jul 2019 10:28:19 -0400
-Message-Id: <20190715142839.9896-85-sashal@kernel.org>
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        James Morse <james.morse@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 087/105] EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec
+Date:   Mon, 15 Jul 2019 10:28:21 -0400
+Message-Id: <20190715142839.9896-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,60 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit 90acc0653d2bee203174e66d519fbaaa513502de ]
+[ Upstream commit d8655e7630dafa88bc37f101640e39c736399771 ]
 
-Build testing with some core crypto options disabled revealed
-a few modules that are missing CRYPTO_HASH:
+Commit 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2") assumes
+edac_mc_poll_msec to be unsigned long, but the type of the variable still
+remained as int. Setting edac_mc_poll_msec can trigger out-of-bounds
+write.
 
-crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
-x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
-x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
-crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
-pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
-pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
-pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
-pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
+Reproducer:
 
-This normally doesn't show up in randconfig tests because there is
-a large number of other options that select CRYPTO_HASH.
+  # echo 1001 > /sys/module/edac_core/parameters/edac_mc_poll_msec
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+KASAN report:
+
+  BUG: KASAN: global-out-of-bounds in edac_set_poll_msec+0x140/0x150
+  Write of size 8 at addr ffffffffb91b2d00 by task bash/1996
+
+  CPU: 1 PID: 1996 Comm: bash Not tainted 5.2.0-rc6+ #23
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+  Call Trace:
+   dump_stack+0xca/0x13e
+   print_address_description.cold+0x5/0x246
+   __kasan_report.cold+0x75/0x9a
+   ? edac_set_poll_msec+0x140/0x150
+   kasan_report+0xe/0x20
+   edac_set_poll_msec+0x140/0x150
+   ? dimmdev_location_show+0x30/0x30
+   ? vfs_lock_file+0xe0/0xe0
+   ? _raw_spin_lock+0x87/0xe0
+   param_attr_store+0x1b5/0x310
+   ? param_array_set+0x4f0/0x4f0
+   module_attr_store+0x58/0x80
+   ? module_attr_show+0x80/0x80
+   sysfs_kf_write+0x13d/0x1a0
+   kernfs_fop_write+0x2bc/0x460
+   ? sysfs_kf_bin_read+0x270/0x270
+   ? kernfs_notify+0x1f0/0x1f0
+   __vfs_write+0x81/0x100
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   ? __ia32_sys_read+0xb0/0xb0
+   ? do_syscall_64+0x1f/0x390
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7fa7caa5e970
+  Code: 73 01 c3 48 8b 0d 28 d5 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 99 2d 2c 00 00 75 10 b8 01 00 00 00 04
+  RSP: 002b:00007fff6acfdfe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa7caa5e970
+  RDX: 0000000000000005 RSI: 0000000000e95c08 RDI: 0000000000000001
+  RBP: 0000000000e95c08 R08: 00007fa7cad1e760 R09: 00007fa7cb36a700
+  R10: 0000000000000073 R11: 0000000000000246 R12: 0000000000000005
+  R13: 0000000000000001 R14: 00007fa7cad1d600 R15: 0000000000000005
+
+  The buggy address belongs to the variable:
+   edac_mc_poll_msec+0x0/0x40
+
+  Memory state around the buggy address:
+   ffffffffb91b2c00: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+   ffffffffb91b2c80: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+  >ffffffffb91b2d00: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+                     ^
+   ffffffffb91b2d80: 04 fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+   ffffffffb91b2e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Fix it by changing the type of edac_mc_poll_msec to unsigned int.
+The reason why this patch adopts unsigned int rather than unsigned long
+is msecs_to_jiffies() assumes arg to be unsigned int. We can avoid
+integer conversion bugs and unsigned int will be large enough for
+edac_mc_poll_msec.
+
+Reviewed-by: James Morse <james.morse@arm.com>
+Fixes: 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/asymmetric_keys/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/edac/edac_mc_sysfs.c | 16 ++++++++--------
+ drivers/edac/edac_module.h   |  2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
-index f3702e533ff4..d8a73d94bb30 100644
---- a/crypto/asymmetric_keys/Kconfig
-+++ b/crypto/asymmetric_keys/Kconfig
-@@ -15,6 +15,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
- 	select MPILIB
- 	select CRYPTO_HASH_INFO
- 	select CRYPTO_AKCIPHER
-+	select CRYPTO_HASH
- 	help
- 	  This option provides support for asymmetric public key type handling.
- 	  If signature generation and/or verification are to be used,
-@@ -34,6 +35,7 @@ config X509_CERTIFICATE_PARSER
- config PKCS7_MESSAGE_PARSER
- 	tristate "PKCS#7 message parser"
- 	depends on X509_CERTIFICATE_PARSER
-+	select CRYPTO_HASH
- 	select ASN1
- 	select OID_REGISTRY
- 	help
-@@ -56,6 +58,7 @@ config SIGNED_PE_FILE_VERIFICATION
- 	bool "Support for PE file signature verification"
- 	depends on PKCS7_MESSAGE_PARSER=y
- 	depends on SYSTEM_DATA_VERIFICATION
-+	select CRYPTO_HASH
- 	select ASN1
- 	select OID_REGISTRY
- 	help
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 148c4649b155..a4acfa81dfe0 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -26,7 +26,7 @@
+ static int edac_mc_log_ue = 1;
+ static int edac_mc_log_ce = 1;
+ static int edac_mc_panic_on_ue;
+-static int edac_mc_poll_msec = 1000;
++static unsigned int edac_mc_poll_msec = 1000;
+ 
+ /* Getter functions for above */
+ int edac_mc_get_log_ue(void)
+@@ -45,30 +45,30 @@ int edac_mc_get_panic_on_ue(void)
+ }
+ 
+ /* this is temporary */
+-int edac_mc_get_poll_msec(void)
++unsigned int edac_mc_get_poll_msec(void)
+ {
+ 	return edac_mc_poll_msec;
+ }
+ 
+ static int edac_set_poll_msec(const char *val, struct kernel_param *kp)
+ {
+-	unsigned long l;
++	unsigned int i;
+ 	int ret;
+ 
+ 	if (!val)
+ 		return -EINVAL;
+ 
+-	ret = kstrtoul(val, 0, &l);
++	ret = kstrtouint(val, 0, &i);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (l < 1000)
++	if (i < 1000)
+ 		return -EINVAL;
+ 
+-	*((unsigned long *)kp->arg) = l;
++	*((unsigned int *)kp->arg) = i;
+ 
+ 	/* notify edac_mc engine to reset the poll period */
+-	edac_mc_reset_delay_period(l);
++	edac_mc_reset_delay_period(i);
+ 
+ 	return 0;
+ }
+@@ -82,7 +82,7 @@ MODULE_PARM_DESC(edac_mc_log_ue,
+ module_param(edac_mc_log_ce, int, 0644);
+ MODULE_PARM_DESC(edac_mc_log_ce,
+ 		 "Log correctable error to console: 0=off 1=on");
+-module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_int,
++module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_uint,
+ 		  &edac_mc_poll_msec, 0644);
+ MODULE_PARM_DESC(edac_mc_poll_msec, "Polling period in milliseconds");
+ 
+diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
+index dec88dcea036..c9f0e73872a6 100644
+--- a/drivers/edac/edac_module.h
++++ b/drivers/edac/edac_module.h
+@@ -36,7 +36,7 @@ extern int edac_mc_get_log_ue(void);
+ extern int edac_mc_get_log_ce(void);
+ extern int edac_mc_get_panic_on_ue(void);
+ extern int edac_get_poll_msec(void);
+-extern int edac_mc_get_poll_msec(void);
++extern unsigned int edac_mc_get_poll_msec(void);
+ 
+ unsigned edac_dimm_info_location(struct dimm_info *dimm, char *buf,
+ 				 unsigned len);
 -- 
 2.20.1
 
