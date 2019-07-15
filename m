@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF40C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14F8C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD084205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF32205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202732;
-	bh=E5YlYlGiyPQNsE6g706UKT5/d8qnv9Gvp3MhPhRLIPU=;
+	s=default; t=1563202752;
+	bh=2NdhQFS1az4dd2S3kTrgJNxWZQrj5AM2wmdh1NW6SPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wUiYVGEt9Z4yIyJyYnRO6irgjj5Z7ykpNykYK6bcT7ox7SSzufYd40iNgWJN/gHYL
-	 9E5wtAPCmpbDQvAuJKgETWnV8Qwn8jbsXg293uhtaeQD2nWRFql5WTE4EePL/mnF6P
-	 mMFDHyVO28/ByAhaElnaHXEPXoIqnANEIFPoD6YM=
+	b=SwDpWgRRezSVgTSRTpdcocD+6yEOVNq3EGmO3jmEY5WKpytoM5oDSj+ty9rMLtIWr
+	 sl3jV/KfaUU8GndAQSxFp5IA+vBhN59hTb/9y0pPi+BY3++fvv9dhmzGdGHixhood9
+	 1RP/hrDRyMRu59clWgqtteWQlumyvvcnSiSv2pjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390153AbfGOOTl (ORCPT
+        id S2390290AbfGOO7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389373AbfGOOTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:19:37 -0400
+        id S2390075AbfGOOTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:19:20 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBDB1206B8;
-        Mon, 15 Jul 2019 14:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E85E320651;
+        Mon, 15 Jul 2019 14:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200376;
-        bh=E5YlYlGiyPQNsE6g706UKT5/d8qnv9Gvp3MhPhRLIPU=;
+        s=default; t=1563200360;
+        bh=2NdhQFS1az4dd2S3kTrgJNxWZQrj5AM2wmdh1NW6SPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqCRb/6ywC/FAG0mwqB6XwvgUDlGwNUm0gy6c5B6mOHTJkAZcIw+zkssmPb1EQ7wr
-         o1n4LKMyZ9I+YDFytQqoZO5ZF9Vts8KWYAhQv6VaAQFzYTKr9htZ62EQjv5lqnM5cd
-         r6HPEYmwoTwf3BE+uFs/+H5JQM3sAoWHgED8zRXw=
+        b=jRYZVgiq3U8CK3TNWZhiM7EDw4vy8Tmw/J1jIod6Vbi9if8TcLvrWyGMw857kuV5p
+         tpxyW0LGsrbHCsKhKUuiOtRSd2OAGsAByIVtIjU79ithfw2Kb7i4Y2WTxap2TCxVvo
+         X38eI4jcjxpPu+JK0KlLwmjOVw5MtgypBvhaLkr8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 030/158] media: saa7164: fix remove_proc_entry warning
-Date:   Mon, 15 Jul 2019 10:16:01 -0400
-Message-Id: <20190715141809.8445-30-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fscrypt@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 025/158] fscrypt: clean up some BUG_ON()s in block encryption/decryption
+Date:   Mon, 15 Jul 2019 10:15:56 -0400
+Message-Id: <20190715141809.8445-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -60,104 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 50710eeefbc1ed25375942aad0c4d1eb4af0f330 ]
+[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
 
-if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
+Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
+and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
+fscrypt_crypt_block() so that it's done for both encryption and
+decryption, not just encryption.
 
-name 'saa7164'
-WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
-  ? remove_proc_entry+0x1e8/0x3a0
-  ? try_stop_module+0x7b/0x240
-  ? proc_readdir+0x70/0x70
-  ? rcu_read_lock_sched_held+0xd7/0x100
-  saa7164_fini+0x13/0x1f [saa7164]
-  __x64_sys_delete_module+0x30c/0x480
-  ? __ia32_sys_delete_module+0x480/0x480
-  ? __x64_sys_clock_gettime+0x11e/0x1c0
-  ? __x64_sys_timer_create+0x1a0/0x1a0
-  ? trace_hardirqs_off_caller+0x40/0x180
-  ? do_syscall_64+0x18/0x450
-  do_syscall_64+0x9f/0x450
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix it by checking the return of proc_create_single() before
-calling remove_proc_entry().
-
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: use 0444 instead of S_IRUGO]
-[hverkuil-cisco@xs4all.nl: use pr_info instead of KERN_INFO]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ fs/crypto/crypto.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
-index d697e1ad929c..5102519df108 100644
---- a/drivers/media/pci/saa7164/saa7164-core.c
-+++ b/drivers/media/pci/saa7164/saa7164-core.c
-@@ -1122,16 +1122,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
- 	return 0;
- }
+diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+index 0f46cf550907..c83ddff3ff4a 100644
+--- a/fs/crypto/crypto.c
++++ b/fs/crypto/crypto.c
+@@ -149,7 +149,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
+ 	struct crypto_skcipher *tfm = ci->ci_ctfm;
+ 	int res = 0;
  
-+static struct proc_dir_entry *saa7164_pe;
-+
- static int saa7164_proc_create(void)
- {
--	struct proc_dir_entry *pe;
+-	BUG_ON(len == 0);
++	if (WARN_ON_ONCE(len <= 0))
++		return -EINVAL;
++	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
++		return -EINVAL;
+ 
+ 	BUILD_BUG_ON(sizeof(iv) != FS_IV_SIZE);
+ 	BUILD_BUG_ON(AES_BLOCK_SIZE != FS_IV_SIZE);
+@@ -241,8 +244,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 	struct page *ciphertext_page = page;
+ 	int err;
+ 
+-	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
 -
--	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
--	if (!pe)
-+	saa7164_pe = proc_create_single("saa7164", 0444, NULL, saa7164_proc_show);
-+	if (!saa7164_pe)
- 		return -ENOMEM;
+ 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
+ 		/* with inplace-encryption we just encrypt the page */
+ 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
+@@ -254,7 +255,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 		return ciphertext_page;
+ 	}
  
- 	return 0;
- }
-+
-+static void saa7164_proc_destroy(void)
-+{
-+	if (saa7164_pe)
-+		remove_proc_entry("saa7164", NULL);
-+}
-+#else
-+static int saa7164_proc_create(void) { return 0; }
-+static void saa7164_proc_destroy(void) {}
- #endif
+-	BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page)))
++		return ERR_PTR(-EINVAL);
  
- static int saa7164_thread_function(void *data)
-@@ -1503,19 +1512,21 @@ static struct pci_driver saa7164_pci_driver = {
- 
- static int __init saa7164_init(void)
+ 	ctx = fscrypt_get_ctx(inode, gfp_flags);
+ 	if (IS_ERR(ctx))
+@@ -302,8 +304,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
+ int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
+ 			unsigned int len, unsigned int offs, u64 lblk_num)
  {
--	printk(KERN_INFO "saa7164 driver loaded\n");
-+	int ret = pci_register_driver(&saa7164_pci_driver);
-+
-+	if (ret)
-+		return ret;
+-	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
+-		BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page) &&
++			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
++		return -EINVAL;
  
--#ifdef CONFIG_PROC_FS
- 	saa7164_proc_create();
--#endif
--	return pci_register_driver(&saa7164_pci_driver);
-+
-+	pr_info("saa7164 driver loaded\n");
-+
-+	return 0;
- }
- 
- static void __exit saa7164_fini(void)
- {
--#ifdef CONFIG_PROC_FS
--	remove_proc_entry("saa7164", NULL);
--#endif
-+	saa7164_proc_destroy();
- 	pci_unregister_driver(&saa7164_pci_driver);
- }
- 
+ 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
+ 				      len, offs, GFP_NOFS);
 -- 
 2.20.1
 
