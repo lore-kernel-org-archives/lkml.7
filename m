@@ -2,129 +2,132 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6156EC73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2709C74A41
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2633720C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA778214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYpuhAds"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QrISUnxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfGOCdn (ORCPT
+        id S1729028AbfGOCeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 22:33:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33578 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfGOCdn (ORCPT
+        Sun, 14 Jul 2019 22:34:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36756 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbfGOCeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 22:33:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so6705197pfq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 19:33:43 -0700 (PDT)
+        Sun, 14 Jul 2019 22:34:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so6697799pfl.3
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 19:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KjOgtmjAShvysCpnJPF+GHktVC67BkBC8WbgBwfjF9A=;
-        b=vYpuhAdsW6W+p45fSG94mKzFXf1BQLw9uNlLvr5fhEzMg5PPydZpFKzl1QwxIaayMF
-         yO5wntR7n78E6Ug4UnuR+rE6LCNUk9P5+A9kiUcYSSWml1haJ7IQUkrWNDkcPHEasdmW
-         bAwvu0pp+llO5zrDwYpHW2z3kHOfBZRGQSQ0FRVNVSk+wkGmbnd72nGMLzPeJ3tYrkvf
-         Oz3YdeYig6J3VRdep2Pn9jAc3OOaHEOG2v/Y8UtI6IMQLIjFzdQP2Xlr7N6e2Y97tHpo
-         z7iGUbonZdrLS8UsYl/LuheMCDDRqZL53UzDrfAY9Q3plb7sN29SwLb4dIYysYohw4uT
-         Vnxg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j1D3jAEemUPemgo3Jj5nb6GS6101sWhcpLMgfsoNq8g=;
+        b=QrISUnxCSscxlNiF2KqrOgYSELv84+I/OVPUsZDhEuEi4r7R8YUKcUPEfdayuPSfK0
+         wrQ3Q089jqbmouyR+NoH07yfRGBgepPs66CHFe5siqBvErBCrBMbICucDPWVzgWos38b
+         Wf2Rms1UOmhDfsHeziRBcVVeqhPowRnyQF6ZIirk9sqy61+7brb3XjH5WSXDOqEwMkq3
+         q0U1QstYRjrFeTUkIvslQ7dopjLzTMUk5/MTR7wo3HmTm88DIkL2jdeSCkahHTIsS0XU
+         2mC5wBJ5eaM50hskzzZTjH7Ed3Xloa++ONtGgIN+sj2f13lAUYZHfj/Zj0wydtFoffX+
+         bJXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KjOgtmjAShvysCpnJPF+GHktVC67BkBC8WbgBwfjF9A=;
-        b=d7Dko1QW345+j/eUonDqpd/3D/9hs4yx8/f7GwCRN5rfycDU4HHrblcSvSjoG+2K8o
-         Mk/MlcQK4cxAzEb6A20gKdeAmut2/0ke4GIfDz7vBTUET9yaNvGinAp1se3oXhsSCWr/
-         4vcC6bdA+7c1brFklL0qt31yTmKNCwfmZfqceV40Csij/Knji9b/iAecYiBqhnnjkZ57
-         fNB+juhEorc8/lSiHjoM2z58itarxOIkQ/To5JASRRBM8gCj5yowoDEFRb+Jsx0Vi5aF
-         Grc58JV8kH2HPMzflwLqS8+FPwr2TdLG7RSeDHnjegEuLxapy3DcSq6gxKu4CQrXqs6H
-         ZmDg==
-X-Gm-Message-State: APjAAAWM/nwUdlMknkSwtE1sFWTXb4mqV/f50IByGUTNK+plu3oViQhV
-        Cm63o1fnH6FaZjwb9uFwZ6Y=
-X-Google-Smtp-Source: APXvYqz3nVnYpZn7aGyfcOtT67ia8899EWaxY+MCycp7jxkqNSVbDSJvuqTtwiMYtfVCusiba0IpgA==
-X-Received: by 2002:a63:e24c:: with SMTP id y12mr23736283pgj.81.1563158022541;
-        Sun, 14 Jul 2019 19:33:42 -0700 (PDT)
-Received: from localhost ([39.7.59.60])
-        by smtp.gmail.com with ESMTPSA id d17sm1148446pgl.66.2019.07.14.19.33.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 19:33:41 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 11:33:38 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Konstantin Khlebnikov <koct9i@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] kernel/printk: prevent deadlock at calling kmsg_dump
- from NMI context
-Message-ID: <20190715023338.GB3653@jagdpanzerIV>
-References: <156294329676.1745.2620297516210526183.stgit@buzz>
- <20190713060929.GB1038@tigerII.localdomain>
- <CALYGNiPedT3wyZ3CrvJra=382g6ETUvrhirHJMb29XkBA3uMyg@mail.gmail.com>
- <20190713131947.GA4464@tigerII.localdomain>
- <CALYGNiPp8546yGcC-TYSVq5X9tnPmrQsDecZxZ2smex9zKB5wg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j1D3jAEemUPemgo3Jj5nb6GS6101sWhcpLMgfsoNq8g=;
+        b=oQtQyqKSSWxrweyPYW/8RSWmp+yGefdhVo8LS4csrztcc2g6/E8c6lVueozy9dCOL5
+         dMcFjQ5OR7tEfgWwLRzBfeM64Py0bjY85VUBbDL0bW3pO9nu5xEIcSZB4nWvUR/g/FLx
+         cAfwnMxtJ/w3alGttU+WKSsopmxzproXW6Fe/36RbQ3xCgPadoJWsotFa9Qq9IZcRpnW
+         45Xhsh0PzJVOM1MHtNloDOGM6MuIsxTpSxNA+5hWmK0gCidvNM/2YwqoOfa0sbKMLHb9
+         /Dr20TRg4ajqTFiiAqAZ7QMKiATQBguCmH90nshdAFph8np6xqEoKiodZfjbPRjuMmtZ
+         Seeg==
+X-Gm-Message-State: APjAAAXr7sOCUrp+OnSx42vQIx+WKI839GyKjTAoyZyaoXpX83AY2hiz
+        d+ZaCHh+6hzNHUTaTmXm8r4=
+X-Google-Smtp-Source: APXvYqwy96VWEm0MA4ILQTD2TtjFzmkAMeu1HQIcFyR05bl5hBBOCB7OmlKryt9SnBNgiGdMCiKl3g==
+X-Received: by 2002:a63:7a01:: with SMTP id v1mr25024594pgc.310.1563158042768;
+        Sun, 14 Jul 2019 19:34:02 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id d129sm16418490pfc.168.2019.07.14.19.33.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jul 2019 19:34:01 -0700 (PDT)
+Subject: Re: [PATCH] mm/gup: Use put_user_page*() instead of put_page*()
+To:     Bharath Vedartham <linux.bhar@gmail.com>,
+        akpm@linux-foundation.org, ira.weiny@intel.com, jhubbard@nvidia.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Matt Sickler <Matt.Sickler@daktronics.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org
+References: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <018ee3d1-e2f0-ca12-9f63-945056c09985@kernel.dk>
+Date:   Sun, 14 Jul 2019 20:33:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALYGNiPp8546yGcC-TYSVq5X9tnPmrQsDecZxZ2smex9zKB5wg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (07/13/19 17:03), Konstantin Khlebnikov wrote:
-> > We call kmsg_dump(KMSG_DUMP_PANIC) after smp_send_stop() and after
-> > printk_safe_flush_on_panic(). printk_safe_flush_on_panic() resets
-> > the state of logbuf_lock, so logbuf_lock, in general case, should
-> > be unlocked by the time we call kmsg_dump(KMSG_DUMP_PANIC).
-> > Even for nested contexts.
-> >
-> >         CPU0
-> >         printk()
-> >          logbuf_lock_irqsave(flags)
-> >           -> NMI
-> >            panic()
-> >             smp_send_stop()
-> >              printk_safe_flush_on_panic()
-> >               raw_spin_lock_init(&logbuf_lock) << reinit >>
-> >             kmsg_dump(KMSG_DUMP_PANIC)
-> >              logbuf_lock_irqsave(flags)        << expected to be OK >>
-> >
-> > So do we have strong reasons to disable NMI->panic->kmsg_dump(DUMP_PANIC)?
-> >
-> > Other kmsg_dump(), maybe, can experience some troubles sometimes,
-> > need to check that.
-> 
-> Indeed, panic is especially handled and looks fine.
-> 
-> Sanity check in my patch could be relaxed:
-> 
->        if (WARN_ON_ONCE(reason != KMSG_DUMP_PANIC && in_nmi()))
->                return;
+On 7/14/19 1:08 PM, Bharath Vedartham wrote:
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 4ef62a4..b4a4549 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2694,10 +2694,9 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+>   			 * if we did partial map, or found file backed vmas,
+>   			 * release any pages we did get
+>   			 */
+> -			if (pret > 0) {
+> -				for (j = 0; j < pret; j++)
+> -					put_page(pages[j]);
+> -			}
+> +			if (pret > 0)
+> +				put_user_pages(pages, pret);
+> +
+>   			if (ctx->account_mem)
+>   				io_unaccount_mem(ctx->user, nr_pages);
+>   			kvfree(imu->bvec);
 
-How critical kmsg_dump() is? We deadlock only if NMI->kmsg_dump()
-happens on the CPU which already holds the logbuf_lock; in any
-other case logbuf_lock is owned by another CPU which is expected
-to unlock it eventually. So it doesn't look like disabling all
-NMI->kmsg_dump() is the only way to fix it.
+You handled just the failure case of the buffer registration, but not
+the actual free in io_sqe_buffer_unregister().
 
-When we lock logbuf_lock we increment per-CPU printk_context
-(PRINTK_SAFE_CONTEXT_MASK bits); when we unlock logbuf_lock
-we decrement printk_context. Thus we always can tell if the
-logbuf_lock was locked on the very same CPU - this_cpu printk_context
-has PRINTK_SAFE_CONTEXT_MASK bits sets - and we are about to deadlock
-in a nested context (NMI), or the lock was locked on another CPU and
-it's "safe" to spin on logbuf_lock and wait for logbuf_lock to become
-available.
+-- 
+Jens Axboe
 
-	-ss
