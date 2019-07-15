@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47DEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E92C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6C720C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9846021530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199103;
-	bh=O/9F1nKaAdS8UIBnIyxQ35h9j/J09OumKIb29035rnQ=;
+	s=default; t=1563199106;
+	bh=HB0QchJTclaI1AaR+DYkMuk+3q8igeEzPd6lClLogWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCVBOu7l+fUxwo5P/lJ5tX/32sF3Qr/5o21uyTUir8xx9fUrjVakpMVSvmi2K7aHF
-	 OXZi+NpepaX0fLxmsQ7vQ9bSUpwIozqq92ROSSEds52AZEb7UJIXieyDzz7c2E42m6
-	 TLBrQfMb0oPF0RfCMGESKilpzqNGFakCDYsbEpCI=
+	b=gGBZqCCQ0chQ7VbE+blzWtcSiNGSvu/AMFhsk9rrp+3yu56HZIELkFknQxFoiJKxi
+	 YadJ1BhhqeKEl7lnB4Z2wkeVYNNxUwxdz586MNnsXtoRGn8pSj4VCEMPLsMeLf7n+E
+	 KGPchnKvZkkgfLppe1F5Q9S3CDZR7Q5/4VO/sso0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbfGON6W (ORCPT
+        id S1733146AbfGON6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733127AbfGON6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:58:20 -0400
+        id S1733136AbfGON6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:58:22 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EEF521530;
-        Mon, 15 Jul 2019 13:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8633217D9;
+        Mon, 15 Jul 2019 13:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199099;
-        bh=O/9F1nKaAdS8UIBnIyxQ35h9j/J09OumKIb29035rnQ=;
+        s=default; t=1563199101;
+        bh=HB0QchJTclaI1AaR+DYkMuk+3q8igeEzPd6lClLogWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mmzWr81uZn5u1l0DRxUov0lGUc/FUSXYhFW66mW12d8Q6uuWa3lefjZAm8Y8CIBf1
-         vKg3Bb2yYpsEcyq2uAZRZM/EcYtFg2zOWTbT4k+Lk/j8JF2z/6bcL+nbiM10g5i8la
-         js9IXvnwllJPU2B6XjSi2oXDzOihKgdrVKrQgvmo=
+        b=apBw2y6+tXST6+/HQ8Hba0INxUoelUUKlCduviOW5P/E0+KwBfIi6F4xmuHISgASb
+         iC9jdSQg4sY5iyPnjnSalKtGAm0tYCcBxqAx4h6iSs/4bK2qm32bB82f4C90Y9FG5a
+         VkrvL+I3gHo4UAveWKupDMjigBB/NWJ16dXKS7ro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 192/249] bcache: fix return value error in bch_journal_read()
-Date:   Mon, 15 Jul 2019 09:45:57 -0400
-Message-Id: <20190715134655.4076-192-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 193/249] bcache: check CACHE_SET_IO_DISABLE in allocator code
+Date:   Mon, 15 Jul 2019 09:45:58 -0400
+Message-Id: <20190715134655.4076-193-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,43 +60,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 0ae49cb7aa005ed18fe8f4d6ccf73019b78ac7b2 ]
+[ Upstream commit e775339e1ae1205b47d94881db124c11385e597c ]
 
-When everything is OK in bch_journal_read(), finally the return value
-is returned by,
-	return ret;
-which assumes ret will be 0 here. This assumption is wrong when all
-journal buckets as are full and filled with valid journal entries. In
-such cache the last location referencess read_bucket() sets 'ret' to
-1, which means new jset added into jset list. The jset list is list
-'journal' in caller run_cache_set().
+If CACHE_SET_IO_DISABLE of a cache set flag is set by too many I/O
+errors, currently allocator routines can still continue allocate
+space which may introduce inconsistent metadata state.
 
-Return 1 to run_cache_set() means something wrong and the cache set
-won't start, but indeed everything is OK.
-
-This patch changes the line at end of bch_journal_read() to directly
-return 0 since everything if verything is good. Then a bogus error
-is fixed.
+This patch checkes CACHE_SET_IO_DISABLE bit in following allocator
+routines,
+- bch_bucket_alloc()
+- __bch_bucket_alloc_set()
+Once CACHE_SET_IO_DISABLE is set on cache set, the allocator routines
+may reject allocation request earlier to avoid potential inconsistent
+metadata.
 
 Signed-off-by: Coly Li <colyli@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/alloc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 12dae9348147..4e5fc05720fc 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -268,7 +268,7 @@ int bch_journal_read(struct cache_set *c, struct list_head *list)
- 					    struct journal_replay,
- 					    list)->j.seq;
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index f8986effcb50..6f776823b9ba 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -393,6 +393,11 @@ long bch_bucket_alloc(struct cache *ca, unsigned int reserve, bool wait)
+ 	struct bucket *b;
+ 	long r;
  
--	return ret;
-+	return 0;
- #undef read_bucket
- }
++
++	/* No allocation if CACHE_SET_IO_DISABLE bit is set */
++	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &ca->set->flags)))
++		return -1;
++
+ 	/* fastpath */
+ 	if (fifo_pop(&ca->free[RESERVE_NONE], r) ||
+ 	    fifo_pop(&ca->free[reserve], r))
+@@ -484,6 +489,10 @@ int __bch_bucket_alloc_set(struct cache_set *c, unsigned int reserve,
+ {
+ 	int i;
+ 
++	/* No allocation if CACHE_SET_IO_DISABLE bit is set */
++	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &c->flags)))
++		return -1;
++
+ 	lockdep_assert_held(&c->bucket_lock);
+ 	BUG_ON(!n || n > c->caches_loaded || n > MAX_CACHES_PER_SET);
  
 -- 
 2.20.1
