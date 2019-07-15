@@ -2,155 +2,151 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6D1C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82977C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D4C20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54ABD2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="VCxYJEsn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouMD/x07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbfGOTgH (ORCPT
+        id S1731222AbfGOThA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:36:07 -0400
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:45406 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729948AbfGOTgG (ORCPT
+        Mon, 15 Jul 2019 15:37:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39260 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730997AbfGOTg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:36:06 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 7137B3F407;
-        Mon, 15 Jul 2019 21:35:58 +0200 (CEST)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=VCxYJEsn;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id A-dmPFBDnjrU; Mon, 15 Jul 2019 21:35:47 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 529403F21A;
-        Mon, 15 Jul 2019 21:35:46 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id B24A5360135;
-        Mon, 15 Jul 2019 21:35:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1563219345; bh=VuZsef8kEtw5XdYAWdiDMOKT/1YZxnwCnurJDOo/s/U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VCxYJEsnAvHrlrlOgHSCZdBAhXwpucfsMiLKp5FF6z/uAWF5vlAs7kG52g4HJQzzE
-         Dj7mVm88s8PLkQriDlsmox+NCU38ZIU+DUF7C5F20+Ez45FW7E0R1V8K70+lGx3mU1
-         1QsDX3sVv5G/MGN6hg3+eQM3B7UpBkGxNfnKAhgk=
-Subject: Re: drm pull for v5.3-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@gmail.com>
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
- <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
- <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
- <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <48890b55-afc5-ced8-5913-5a755ce6c1ab@shipmail.org>
-Date:   Mon, 15 Jul 2019 21:35:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Jul 2019 15:36:59 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so8812836pls.6;
+        Mon, 15 Jul 2019 12:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZMZFpCm9N/xOShc4hGeJhjqpU1dBVFQxn4gJ5Yr8VYU=;
+        b=ouMD/x07ooCJnj+NYt5TApE5G94vM5KbLQmbdXlQVy+akuMZEEpCrtND7YKQG5YUeA
+         SwDKVhCmMNrLmoEdYnhOUJT7p2Js7T5gKnlL5psag4uSjc/eacvG09R20QX9ob1r4KGQ
+         JPUttDZsH8R58YIqWxPGf4pAOehWEDqdzpRPAvVxKz6f5hK1dym19x1TE2jRz8hHVpx0
+         UqQueUQ86Wq4EhgMr8yelYxObVmxnTeT2kl+gzYOROR0JeUAJOE9lJYDracn4NTfoh3G
+         4sWnaSWux8Tb332IFGX3aPQu0kyiBn2izgQl68gsJm9ydw4yE3c+5dgMn2bBWXbyvUpu
+         ia4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZMZFpCm9N/xOShc4hGeJhjqpU1dBVFQxn4gJ5Yr8VYU=;
+        b=pjoc49IbJaKxLbKZHaDkuSsUjMEMsW2JWNGT5AaHLqMFSWOJOAq18yLvOkrKR1P+JH
+         kkwYYQlaf3z7N5v95S/GqjSofPmtWvf+v6DylRp9DQD6BmsU3XUsDVKeActTjeMq1FZy
+         TDrOCBE8xQRnEBGANGBKV5hldREo79BQ6BLNVqyzbHPqOnqv/M+VWLmpWEa2zi3RO1mS
+         PMG/PJpvPJcifrLcRoThHsDzhvE0uPZ105rBAG8UlmsWcOg67VPd5DaAGJn2fgDyViIs
+         UnDrd+vXZBgM9tsLNQ0ScptjZV4tUTaqHYprEIVkSZ3wl7s7ipkWtWiOwL/GUg8UL1mu
+         dMdQ==
+X-Gm-Message-State: APjAAAVGGjRN61LDLVDxX6DugNO8PAZ69Tjpvt8+V4ZctAMworLBQ4kI
+        aJkg+vg1LLpgDyUfVOdB3Ts=
+X-Google-Smtp-Source: APXvYqxiXiuWWcy55kFQPdkmhXEuhD4sgNJY5WWi5qbrL1Ybmgv+FOQ8bkjHLfFA1omJ8iRmDA1Qtg==
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr28971983pld.119.1563219418289;
+        Mon, 15 Jul 2019 12:36:58 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id n19sm18786840pfa.11.2019.07.15.12.36.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 12:36:57 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 01:06:38 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     akpm@linux-foundation.org, ira.weiny@intel.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Matt Sickler <Matt.Sickler@daktronics.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH] mm/gup: Use put_user_page*() instead of put_page*()
+Message-ID: <20190715193638.GC21161@bharath12345-Inspiron-5559>
+References: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
+ <deea584f-2da2-8e1f-5a07-e97bf32c63bb@nvidia.com>
+ <20190715065654.GA3716@bharath12345-Inspiron-5559>
+ <1aeb21d9-6dc6-c7d2-58b6-279b1dfc523b@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1aeb21d9-6dc6-c7d2-58b6-279b1dfc523b@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, All.
-
-On 7/15/19 8:00 PM, Linus Torvalds wrote:
-> On Mon, Jul 15, 2019 at 10:37 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->> I'm not pulling this. Why did you merge it into your tree, when
->> apparently you were aware of how questionable it is judging by the drm
->> pull request.
-> Looking at some of the fallout, I also see that you then added that
-> "adjust apply_to_pfn_range interface for dropped token" patch that
-> seems to be for easier merging of this all.
->
-> But you remove the 'token' entirely in one place, and in another you
-> keep it and just say "whatever, it's unused, pass in NULL". WHAA?
->
-> As part of looking at this all, I also note that some of this is also
-> very non-kernely.
->
-> The whole thing with trying to implement a "closure" in C is simply
-> not how we do things in the kernel (although I've admittedly seen
-> signs of it in some drivers).
->
-> If this should be done at all (and that's questionable), at least do
-> it in the canonical kernel way: pass in a separate "actor" function
-> pointer and an argument block, don't try to mix function pointers and
-> argument data and call it a "closure".
->
-> We try to keep data and functions separate. It's not even for security
-> concerns (although those have caused some splits in the past - avoid
-> putting function pointers in structures that you then can't mark
-> read-only!), it's a more generic issue of just keeping arguments as
-> arguments - even if you then make a structure of them in order to not
-> make the calling convention very complicated.
->
-> (Yes, we do have the pattern of sometimes mixing function pointers
-> with "describing data", ie the "struct file_operations" structure
-> isn't _just_ actual function pointers, it also contains the module
-> owner, for example. But those aren't about mixing function pointers
-> with their arguments, it's about basically "describing" an object
-> interface with more than just the operation pointers).
->
-> So some of this code is stuff that I would have let go if it was in
-> some individual driver ("Closures? C doesn't have closures! But
-> whatever - that driver writer came from some place that taught lamda
-> calculus before techning C").
->
-> But in the core mm code, I want reviews. And I want the code to follow
-> normal kernel conventions.
-
-Sorry for creating this mess, I guess I need to take another spin at 
-this, but first I'd like to straighten out a few details:
-
-- I've never had any kernel code more reviewed than this. It's been out 
-on LKML and mm-list and maintainers I think 8 times including the RFC. 
-The last time I was explicitly asking if anybody had any objections 
-because I wanted to get it merged. It's not an internally-reviewed-only 
-thing. There have been a number of people looking at the code and 
-leaving comments and requesting fixes including Ralph Campbell, Jerome 
-Glisse, Souptick Joarder, Nadav Amit and Christoph Hellwig. Perhaps I 
-should have been more explicit in requesting R-Bs after fixing up all 
-review comments, but I didn't. None of them had any issues similar to 
-the ones you describe above.
-
-- The combined callback / argument struct: It was strongly inspired by 
-the struct mm_walk (mm.h), the page walk code being quite similar in 
-functionality. "Closure" is perhaps a bad name. Originates in X server code.
-
-Thanks,
-Thomas
-
-
->                     Linus
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
+On Mon, Jul 15, 2019 at 11:10:20AM -0700, John Hubbard wrote:
+> On 7/14/19 11:56 PM, Bharath Vedartham wrote:
+> > On Sun, Jul 14, 2019 at 04:33:42PM -0700, John Hubbard wrote:
+> >> On 7/14/19 12:08 PM, Bharath Vedartham wrote:
+> [...]
+> >> 1. Pull down https://github.com/johnhubbard/linux/commits/gup_dma_core
+> >> and find missing conversions: look for any additional missing 
+> >> get_user_pages/put_page conversions. You've already found a couple missing 
+> >> ones. I haven't re-run a search in a long time, so there's probably even more.
+> >> 	a) And find more, after I rebase to 5.3-rc1: people probably are adding
+> >> 	get_user_pages() calls as we speak. :)
+> > Shouldn't this be documented then? I don't see any docs for using
+> > put_user_page*() in v5.2.1 in the memory management API section?
+> 
+> Yes, it needs documentation. My first try (which is still in the above git
+> repo) was reviewed and found badly wanting, so I'm going to rewrite it. Meanwhile,
+> I agree that an interim note would be helpful, let me put something together.
+> 
+> [...]
+> >>     https://github.com/johnhubbard/linux/commits/gup_dma_core
+> >>
+> >>     a) gets rebased often, and
+> >>
+> >>     b) has a bunch of commits (iov_iter and related) that conflict
+> >>        with the latest linux.git,
+> >>
+> >>     c) has some bugs in the bio area, that I'm fixing, so I don't trust
+> >>        that's it's safely runnable, for a few more days.
+> > I assume your repo contains only work related to fixing gup issues and
+> > not the main repo for gup development? i.e where gup changes are merged?
+> 
+> Correct, this is just a private tree, not a maintainer tree. But I'll try to
+> keep the gup_dma_core branch something that is usable by others, during the
+> transition over to put_user_page(), because the page-tracking patches are the
+> main way to test any put_user_page() conversions.
+> 
+> As Ira said, we're using linux-mm as the real (maintainer) tree.
+Thanks for the info! 
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
