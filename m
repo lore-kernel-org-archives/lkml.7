@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCCEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF6EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E3C2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428A2217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198782;
-	bh=K6p7uPspMkLhTzpyhVEtNgFuB9A1jf4O97Vg3SfgP30=;
+	s=default; t=1563198790;
+	bh=xreHO6Z6IC8Sp8Jv8DN16vrGkDA9QP35HThQbNuZKdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYTEuN1Q9L1wvAkkZHt0zHseG2yEG87KYqvHSZq1Vm/ShhoTrYwkj6QRir6S7Uwti
-	 IitvtuwbHRRfCZdJ6B9XKpRed2L+jJyRCKFwQF6axYR9quJQvsGQPdbeH9eVKSwSpw
-	 sSiPLVLnxE0wKKPiGA8HY9JbVxF8b96xLGowXfm0=
+	b=Lpaq7ZfXQu8cf5VXjXe/ak2owEoRrPUZToqLXYAvy+0DnraytgyWTtn/NaY1reJuF
+	 7vaMhQsbiwxOOtFqHzL6aVWz8bsnJ2zjfkM17miqu4HO4kqLb55aWWICt6e0J0Cg05
+	 CKZ5LBlVqL7HtxeKN74Aaj3MlojOU2QNYt/ZJbYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732289AbfGONxB (ORCPT
+        id S1732296AbfGONxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:53:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731689AbfGONxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:53:00 -0400
+        id S1731699AbfGONxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:53:03 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 652682081C;
-        Mon, 15 Jul 2019 13:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30882083D;
+        Mon, 15 Jul 2019 13:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198779;
-        bh=K6p7uPspMkLhTzpyhVEtNgFuB9A1jf4O97Vg3SfgP30=;
+        s=default; t=1563198783;
+        bh=xreHO6Z6IC8Sp8Jv8DN16vrGkDA9QP35HThQbNuZKdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRVNlnr0tm4ekbcSyUwhnx8MHyZo1Via0hGRBVFAkzNK0iYuL6gVB9vYgrzqVRPNH
-         WvgUgMkEWTXH9ySYXkq3lasulLxhsxrEsaCmrqXL3kQDoCCE7xoVlIWbTIDmAi2Xyc
-         xm7t5o7mCHEZsfhBOFg72YxMGDgtPlS+Y6UMndTw=
+        b=n3emwXzZO9+3XDljZFIV6JrWRTsYp40/bU1QHWDFaceWfRYHMrDvzGDdJaMnTozKB
+         KiHOP1cTLFnZpDcKkwd5FfdEwne04i3fRd1YLZeS7+qOfFpR6mbE2lII40B8WjgZkU
+         U6aR5AWBJXycBeTcfK2KwDuu0XDX3e7Pa2h0DVwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 101/249] rcu: Force inlining of rcu_read_lock()
-Date:   Mon, 15 Jul 2019 09:44:26 -0400
-Message-Id: <20190715134655.4076-101-sashal@kernel.org>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        alexander.shishkin@linux.intel.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 102/249] perf/x86: Add Intel Ice Lake NNPI uncore support
+Date:   Mon, 15 Jul 2019 09:44:27 -0400
+Message-Id: <20190715134655.4076-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,55 +69,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
+[ Upstream commit 5f4318c1b1d23a9290e4def78ee76017c288bf60 ]
 
-When debugging options are turned on, the rcu_read_lock() function
-might not be inlined. This results in lockdep's print_lock() function
-printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
-For example:
+Intel Ice Lake uncore support already included IMC PCI ID but ICL-NNPI
+CPUID is missing so add it to fix the probe function.
 
-[   10.579995] =============================
-[   10.584033] WARNING: suspicious RCU usage
-[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
-[   10.593162] -----------------------------
-[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
-RCU read-side critical section!
-[   10.606220]
-[   10.606220] other info that might help us debug this:
-[   10.606220]
-[   10.614280]
-[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
-[   10.620853] 3 locks held by systemd/1:
-[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
-[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-
-These "rcu_read_lock+0x0/0x70" strings are not providing any useful
-information.  This commit therefore forces inlining of the rcu_read_lock()
-function so that rcu_read_lock()'s caller is instead shown.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Fixes: e39875d15ad6 ("perf/x86: add Intel Icelake uncore support")
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: alexander.shishkin@linux.intel.com
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190614081701.13828-1-rajneesh.bhardwaj@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/uncore.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index b25d20822e75..3508f4508a11 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -586,7 +586,7 @@ static inline void rcu_preempt_sleep_check(void) { }
-  * read-side critical sections may be preempted and they may also block, but
-  * only when acquiring spinlocks that are subject to priority inheritance.
-  */
--static inline void rcu_read_lock(void)
-+static __always_inline void rcu_read_lock(void)
- {
- 	__rcu_read_lock();
- 	__acquire(RCU);
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 9e3fbd47cb56..089bfcdf2f7f 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1400,6 +1400,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI, icl_uncore_init),
+ 	{},
+ };
+ 
 -- 
 2.20.1
 
