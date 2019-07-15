@@ -2,101 +2,117 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B53FC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007F2C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C007F2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hzcxE2yV"
+	by mail.kernel.org (Postfix) with ESMTP id C425B2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563199341;
+	bh=eek9KecmG05ttWvtDl0cOtqaIreulOxait8vngiRMZM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iTAwVHdPKiWl7yDRCW7FvI3M5yIth4uINwTtYALNKth5Uvw5QnWasF9M/QoFmGNfP
+	 YvNK4usFqlcQ9GH8EBKAR3VdtAFzXbgzN6jcDjtm7ECltfw8GsdGS/q66OiAwq27VD
+	 D8OvkYFu+s/hUTLuvCtDrYd09E9cGfChX8iZj3h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387605AbfGOOCS (ORCPT
+        id S2387615AbfGOOCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:02:18 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:17722 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387569AbfGOOCO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:02:14 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x6FE1sEE026807;
-        Mon, 15 Jul 2019 23:01:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6FE1sEE026807
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563199314;
-        bh=MfHfQH0r0NYoAjaX8kb+7ydwqz5Gf3OCpDc6c++8CiE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hzcxE2yVBGbpeMy3C+mC8N6tlfde9HirP/3dGwgiXCIpWWzCkYRpdCB7QmHTn/+dY
-         I2DFew1zkFWiFSU8mFq+oTYOfIpygqBcaN4xAFT0n8gGoA+tD1kVB3tZE5TIQzRN7C
-         xrEErVAdEP6zvG6uecvhW+HVUOnT5RJcoRg1uM/WHyELvcY9/FuLYYIJXNG3wCg2jD
-         le99t3g53kROdYfN36lMyF2CrWZoIt6j9meH7ekt4YDwG6SAwfTmEDS07iLuOnc9sx
-         O9jaNwRH5Li9DOLng1v0T5esOh1w1JGOopESEcEKwa2zTppAml6a332e+gRXQCIFwK
-         HQyrMZgZGgqwg==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: remove tag files by distclean instead of mrproper
-Date:   Mon, 15 Jul 2019 23:01:49 +0900
-Message-Id: <20190715140149.21330-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Jul 2019 10:02:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387586AbfGOOCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:02:15 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D27D12083D;
+        Mon, 15 Jul 2019 14:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563199335;
+        bh=eek9KecmG05ttWvtDl0cOtqaIreulOxait8vngiRMZM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fL9a0Lq6/IqaB9Xo2ZuNFiDIXurzEa8aUJkQCTb6cZU9+h2hlysH7B+YRxOKRW7HB
+         sZfV1MxiG2HGM29rVOoHvHXA3KYgN4Bc82C26CGG1wvHafl5v++OkxFyX5SIXc/GgT
+         3toupBw4TZHeSwWHQuZrXAZGU+TKVi2AiAh5qUEY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Josua Mayer <josua.mayer@jm0.eu>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Michael Scott <mike@foundries.io>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 237/249] Bluetooth: 6lowpan: search for destination address in all peers
+Date:   Mon, 15 Jul 2019 09:46:42 -0400
+Message-Id: <20190715134655.4076-237-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It takes somewhat long time to generate these tag files.
-Keep such precious files until we run 'make distclean'.
+From: Josua Mayer <josua.mayer@jm0.eu>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+[ Upstream commit b188b03270b7f8568fc714101ce82fbf5e811c5a ]
+
+Handle overlooked case where the target address is assigned to a peer
+and neither route nor gateway exist.
+
+For one peer, no checks are performed to see if it is meant to receive
+packets for a given address.
+
+As soon as there is a second peer however, checks are performed
+to deal with routes and gateways for handling complex setups with
+multiple hops to a target address.
+This logic assumed that no route and no gateway imply that the
+destination address can not be reached, which is false in case of a
+direct peer.
+
+Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+Tested-by: Michael Scott <mike@foundries.io>
+Signed-off-by: Josua Mayer <josua.mayer@jm0.eu>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ net/bluetooth/6lowpan.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
- Makefile | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 2c5d00ba537e..2d8e45f2a8df 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1380,11 +1380,15 @@ CLEAN_FILES += modules.builtin.modinfo
- MRPROPER_DIRS  += include/config include/generated          \
- 		  arch/$(SRCARCH)/include/generated .tmp_objdiff
- MRPROPER_FILES += .config .config.old .version \
--		  Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS \
-+		  Module.symvers \
- 		  signing_key.pem signing_key.priv signing_key.x509	\
- 		  x509.genkey extra_certificates signing_key.x509.keyid	\
- 		  signing_key.x509.signer vmlinux-gdb.py
+diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+index 1555b0c6f7ec..9001bf331d56 100644
+--- a/net/bluetooth/6lowpan.c
++++ b/net/bluetooth/6lowpan.c
+@@ -180,10 +180,16 @@ static inline struct lowpan_peer *peer_lookup_dst(struct lowpan_btle_dev *dev,
+ 	}
  
-+# Directories & files removed with 'make distclean'
-+DISTCLEAN_DIRS  +=
-+DISTCLEAN_FILES += tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
-+
- # clean - Delete most, but leave enough to build external modules
- #
- clean: rm-dirs  := $(CLEAN_DIRS)
-@@ -1417,9 +1421,14 @@ mrproper: clean $(mrproper-dirs)
+ 	if (!rt) {
+-		nexthop = &lowpan_cb(skb)->gw;
+-
+-		if (ipv6_addr_any(nexthop))
+-			return NULL;
++		if (ipv6_addr_any(&lowpan_cb(skb)->gw)) {
++			/* There is neither route nor gateway,
++			 * probably the destination is a direct peer.
++			 */
++			nexthop = daddr;
++		} else {
++			/* There is a known gateway
++			 */
++			nexthop = &lowpan_cb(skb)->gw;
++		}
+ 	} else {
+ 		nexthop = rt6_nexthop(rt, daddr);
  
- # distclean
- #
-+distclean: rm-dirs  := $(wildcard $(DISTCLEAN_DIRS))
-+distclean: rm-files := $(wildcard $(DISTCLEAN_FILES))
-+
- PHONY += distclean
- 
- distclean: mrproper
-+	$(call cmd,rmdirs)
-+	$(call cmd,rmfiles)
- 	@find $(srctree) $(RCS_FIND_IGNORE) \
- 		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
- 		-o -name '*.bak' -o -name '#*#' -o -name '*%' \
 -- 
-2.17.1
+2.20.1
 
