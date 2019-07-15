@@ -2,118 +2,122 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C93EC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE36FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5164D2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wdPz0nFW"
+	by mail.kernel.org (Postfix) with ESMTP id A7E2B217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563198015;
+	bh=UYxKMhvfGLSY0hfGffk/Dyb5yL8ul92vQiafqi2EOTk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GT02yZZt4AvsTRHIE7QqBYfxR4uQnaP7tKPwA2py+VrBFSSchyBTkPQ37gxW/9+ti
+	 KTYRMrOpzLLXY+pYnelxhTB+z7TouHCTf28Jcv1exuD66ejiBTyrNEZgEHIbxO3cat
+	 0+L+vz8tCpGWL51977dLtaF+7xFCqxhbU1ncjb4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbfGONkJ (ORCPT
+        id S1731395AbfGONkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:40:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46682 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731357AbfGONkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:40:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ytg6+i9e5dgoe6MR6Oj4fa2L/XJB0F+/mAmTtnaWIkM=; b=wdPz0nFWIu3gfQDcxJ1flt2cp
-        Wn9EY0AsoO+Mhr4gfSyrIsO5aCd1zAktfoLbKwIt045y9e6UverXIHkQNTAO6BKlYhmnih1gtCyC+
-        JLVSiuIAIP4GReedDVtgun+I0UIkZqGqbfJ7wUWr4rz9eDsnSnZF2RQan8SaxAl4EZmpHjgyZTlw+
-        rRYPNYw+KQQ4GiCt7jsNmfdYdD/TJwd42xSNLp+OQC/dk52V9L/lZG/73A3YrmPQ9YZRhcPE9gy/H
-        V3+HvSstjFGLjre3GSqY5FbQtbr0IL5Ff6oIzob/U0oToHK+59TbkzWQ9MZ4mwbBapu5SC4sl2/o2
-        We/xY4X3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hn1Cg-0002wX-5K; Mon, 15 Jul 2019 13:39:42 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DEB4C2013A7F3; Mon, 15 Jul 2019 15:39:38 +0200 (CEST)
-Date:   Mon, 15 Jul 2019 15:39:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-Message-ID: <20190715133938.GH3419@hirez.programming.kicks-ass.net>
-References: <20190706042801.GD11665@mit.edu>
- <20190706061631.GV26519@linux.ibm.com>
- <20190706150226.GG11665@mit.edu>
- <20190706180311.GW26519@linux.ibm.com>
- <20190707011655.GA22081@linux.ibm.com>
- <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
- <20190714190522.GA24049@mit.edu>
- <20190714192951.GM26519@linux.ibm.com>
- <20190715031027.GA3336@linux.ibm.com>
- <20190715130101.GA5527@linux.ibm.com>
+        Mon, 15 Jul 2019 09:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731369AbfGONkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:40:06 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5EA217D9;
+        Mon, 15 Jul 2019 13:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563198006;
+        bh=UYxKMhvfGLSY0hfGffk/Dyb5yL8ul92vQiafqi2EOTk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y+Zn4TA5Auc6EneYlOiAXau5dhHlVfdv9ZvjJlTeW9HMUbdyoHgnDzLke/y0NDz48
+         IaXpr4yoB3yBuLerTMbDUj5BLg7sm2fh9G5uzitNoI1eFy9yhITxfDAX6c5xMnGDNA
+         ZD6YQe6Tvj4v8w+omcQ/nOgBYtsqm//6sgN7H8LU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 015/158] media: marvell-ccic: fix DMA s/g desc number calculation
+Date:   Mon, 15 Jul 2019 09:37:00 -0400
+Message-Id: <20190715133923.2890-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715133923.2890-1-sashal@kernel.org>
+References: <20190715133923.2890-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715130101.GA5527@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 06:01:01AM -0700, Paul E. McKenney wrote:
-> Title: Making SCHED_DEADLINE safe for kernel kthreads
-> 
-> Abstract:
-> 
-> Dmitry Vyukov's testing work identified some (ab)uses of sched_setattr()
-> that can result in SCHED_DEADLINE tasks starving RCU's kthreads for
-> extended time periods, not millisecond, not seconds, not minutes, not even
-> hours, but days. Given that RCU CPU stall warnings are issued whenever
-> an RCU grace period fails to complete within a few tens of seconds,
-> the system did not suffer silently. Although one could argue that people
-> should avoid abusing sched_setattr(), people are human and humans make
-> mistakes. Responding to simple mistakes with RCU CPU stall warnings is
-> all well and good, but a more severe case could OOM the system, which
-> is a particularly unhelpful error message.
-> 
-> It would be better if the system were capable of operating reasonably
-> despite such abuse. Several approaches have been suggested.
-> 
-> First, sched_setattr() could recognize parameter settings that put
-> kthreads at risk and refuse to honor those settings. This approach
-> of course requires that we identify precisely what combinations of
-> sched_setattr() parameters settings are risky, especially given that there
-> are likely to be parameter settings that are both risky and highly useful.
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-So we (the people poking at the DEADLINE code) are all aware of this,
-and on the TODO list for making DEADLINE available for !priv users is
-the item:
+[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
 
-  - put limits on deadline/period
+The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+left dma_desc_nent unset. It previously contained the number of DMA
+descriptors as returned from dma_map_sg().
 
-And note that that is both an upper and lower limit. The upper limit
-you've just found why we need it, the lower limit is required because
-you can DoS the hardware by causing deadlines/periods that are equal (or
-shorter) than the time it takes to program the hardware.
+We can now (since the commit referred to above) obtain the same value from
+the sg_table and drop dma_desc_nent altogether.
 
-There might have even been some patches that do some of this, but I've
-held off because we have bigger problems and they would've established
-an ABI while it wasn't clear it was sufficient or the right form.
+Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
+driver, since that one doesn't do DMA.
 
+[mchehab+samsung@kernel.org: fix a checkpatch warning]
+
+Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index dfdbd4354b74..eeee15ff007d 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -200,7 +200,6 @@ struct mcam_vb_buffer {
+ 	struct list_head queue;
+ 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
+ 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
+-	int dma_desc_nent;		/* Number of mapped descriptors */
+ };
+ 
+ static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
+@@ -608,9 +607,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
+ static void mcam_sg_next_buffer(struct mcam_camera *cam)
+ {
+ 	struct mcam_vb_buffer *buf;
++	struct sg_table *sg_table;
+ 
+ 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
+ 	list_del_init(&buf->queue);
++	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
+ 	/*
+ 	 * Very Bad Not Good Things happen if you don't clear
+ 	 * C1_DESC_ENA before making any descriptor changes.
+@@ -618,7 +619,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
+ 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
+ 	mcam_reg_write(cam, REG_DESC_LEN_Y,
+-			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
++			sg_table->nents * sizeof(struct mcam_dma_desc));
+ 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
+ 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
+ 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
+-- 
+2.20.1
 
