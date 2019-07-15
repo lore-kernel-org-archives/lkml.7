@@ -4,113 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0391FC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0832EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FA3217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D42205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201548;
-	bh=gMYCMlIE9JhAmkeJS4THrWdhMpnJObwv71M4jlxwzgo=;
+	s=default; t=1563201554;
+	bh=43mLy/FhIxwNRsZyZGCom5oJs3AcHLeg9Kd0gaNJZ/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0T+UiqgWxn6JTgpF5xh7Ws4kTF+FoGOY3xxOGUtZFH/uPgX2ZkGl/4PRFqdzS2nlO
-	 MOta2HXbfw69B28CqmOSkHFVquzuwO52fCcSHZDa4yhnqkgAnpdu4k3BaflRvgoH5J
-	 BaqT6RLGS3jDa3grByJRvzwSalYwer1BDGqZ8KvU=
+	b=sAvgNc7mBAFZifcTzGJp8zbmWJW6ytUVQjzotS25ns+1DBS171gg++5gCTl6bsBsX
+	 N7TE3uHPqnIsG9ykMl9fa0PePVnZ+0I7nX0PHqe6w0dhHtHE2iEMVbaF/W8uPIUmdG
+	 bUcCiujiagGPzZSA5SCjg5YqfO8LiHAnq+9Xhfq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404195AbfGOOjH (ORCPT
+        id S2392206AbfGOOjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:39:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37696 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392109AbfGOOiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:54 -0400
+        id S2392217AbfGOOi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:38:56 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A892086C;
-        Mon, 15 Jul 2019 14:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55BE4205ED;
+        Mon, 15 Jul 2019 14:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201533;
-        bh=gMYCMlIE9JhAmkeJS4THrWdhMpnJObwv71M4jlxwzgo=;
+        s=default; t=1563201536;
+        bh=43mLy/FhIxwNRsZyZGCom5oJs3AcHLeg9Kd0gaNJZ/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CnqwdXCsz3QjrP8XfVDrZcV90yUh4RGLO9ucpRh9FN0AQ3rpRjdhq/PhhHNFtSK4X
-         Z7yv2UYelcREXzaCe87cRzsKE9tyzsh6nupRFol1v6DRQvr7cLAvYHu/+YFxzJSMbi
-         A5fux5555aop6ituxdo3POfWxGIeG09WaEDAnljk=
+        b=cVquqlqoMOAydl7BxdBTSyYxllj6XGyYVDACj+O0awoIMzbtuNktfwsZXhx5K6BG0
+         9iegz6qh5BHPW/j5zmrsm+T29QvWG6nJiH2dIx90Tj1xUB4L38DEFYVgSFKQan3vgl
+         0M5m6tBjt8TV+eMfq8zwvLXI4uYZHorwEe4hOFxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 36/73] bpf: silence warning messages in core
-Date:   Mon, 15 Jul 2019 10:35:52 -0400
-Message-Id: <20190715143629.10893-36-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 37/73] rcu: Force inlining of rcu_read_lock()
+Date:   Mon, 15 Jul 2019 10:35:53 -0400
+Message-Id: <20190715143629.10893-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit aee450cbe482a8c2f6fa5b05b178ef8b8ff107ca ]
+[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
 
-Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
+When debugging options are turned on, the rcu_read_lock() function
+might not be inlined. This results in lockdep's print_lock() function
+printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
+For example:
 
-kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
-kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
 
-98 copies of the above.
+These "rcu_read_lock+0x0/0x70" strings are not providing any useful
+information.  This commit therefore forces inlining of the rcu_read_lock()
+function so that rcu_read_lock()'s caller is instead shown.
 
-The attached patch silences the warnings, because we *know* we're overwriting
-the default initializer. That leaves bpf/core.c with only 6 other warnings,
-which become more visible in comparison.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/rcupdate.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-index eed911d091da..5a590f22b4d4 100644
---- a/kernel/bpf/Makefile
-+++ b/kernel/bpf/Makefile
-@@ -1,4 +1,5 @@
- obj-y := core.o
-+CFLAGS_core.o += $(call cc-disable-warning, override-init)
- 
- obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o
- obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index aa2935779e43..96037ba940ee 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -866,7 +866,7 @@ static inline void rcu_preempt_sleep_check(void)
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
+ {
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
 -- 
 2.20.1
 
