@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD90C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE19C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93ACF2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC492054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203124;
-	bh=zFInjbow4awvTzD4uAikcRsrf4nCIxFXk5C0Gq0NVHc=;
+	s=default; t=1563203134;
+	bh=N84GnnQykMXoTnMe2UdZwzxicAlH+RnSUM4pN01k80A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XIonZrzOT56Mnk7HM9tNWUkXb/rpmzHBvzbmunO8u6rukRDgLfntDvVngQBVKNVHX
-	 EulW8amYz7wS8n7RY+6WLANuGyWGbenUxZD4XmT/IJv/gQIwryC4Ji6yj4z+eL5wTo
-	 kAWe0sikT2MmG0LG6oktXZBlXxUtOMzQNgFICobY=
+	b=qlQQoq8JxpkAy777YVTKZdGqrCs7j5lkhNcGaNFQNnSDaUstCCAIoY9qsOWUNrMaq
+	 S2a3jMc1+EiJtR0IYtkSjh1dYamd6Xq1QXDGfQC6akbxRXGrUUrMl40i4iUsX8M4tJ
+	 +nzpHeHvSuvjD9ZHi+GAGbze3TGeAdQiZ7ETdVrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388422AbfGOPFW (ORCPT
+        id S2388158AbfGOOFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387920AbfGOOFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:05:48 -0400
+        id S2388118AbfGOOF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:28 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D33C9206B8;
-        Mon, 15 Jul 2019 14:05:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D291E206B8;
+        Mon, 15 Jul 2019 14:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199548;
-        bh=zFInjbow4awvTzD4uAikcRsrf4nCIxFXk5C0Gq0NVHc=;
+        s=default; t=1563199527;
+        bh=N84GnnQykMXoTnMe2UdZwzxicAlH+RnSUM4pN01k80A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mg9Fau34i3Qdxoh4vGvA0lLePVXwFOTQAKMA9UEgdwnP+LtHKTsagay5XrF30yAyZ
-         cczR2OqfJQgDMCT/yONDV5/8irs5SoUV/3QvSrB/cCbtMlRaNiQ9WSPHZOVkgx/YHu
-         aA+jmKefMkFOctJ69/KVwCMQaBQGNnMTLxCtaKlw=
+        b=Ja675dbrP13iMXu6iKWXJT/sN4qt97Z+kYRlIzDP+IsrIzWPTHwW+zynkWxtLsyJ5
+         UbqH0g01HmjrvQIOzoccyLtmyyCRkxtg5WaC0jgcRM/5nDy4Pc2TfLL0ORZ6B0PBAS
+         wUSMtZGlALpYHWHkEzYPRzZYVIev4+XejzSoMWd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fscrypt@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 039/219] fscrypt: clean up some BUG_ON()s in block encryption/decryption
-Date:   Mon, 15 Jul 2019 10:00:40 -0400
-Message-Id: <20190715140341.6443-39-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Daniel Lezcano <daniel.lezcano@free.fr>,
+        Serge Hallyn <serge@hallyn.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 033/219] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+Date:   Mon, 15 Jul 2019 10:00:34 -0400
+Message-Id: <20190715140341.6443-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,69 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
+[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
 
-Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
-and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
-fscrypt_crypt_block() so that it's done for both encryption and
-decryption, not just encryption.
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
+
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
+
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
+
+Cc: Daniel Lezcano <daniel.lezcano@free.fr>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/crypto/crypto.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ kernel/pid_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-index fe38b5306045..5b3d525aa213 100644
---- a/fs/crypto/crypto.c
-+++ b/fs/crypto/crypto.c
-@@ -159,7 +159,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
- 	struct crypto_skcipher *tfm = ci->ci_ctfm;
- 	int res = 0;
- 
--	BUG_ON(len == 0);
-+	if (WARN_ON_ONCE(len <= 0))
-+		return -EINVAL;
-+	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
-+		return -EINVAL;
- 
- 	fscrypt_generate_iv(&iv, lblk_num, ci);
- 
-@@ -243,8 +246,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
- 	struct page *ciphertext_page = page;
- 	int err;
- 
--	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
--
- 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
- 		/* with inplace-encryption we just encrypt the page */
- 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
-@@ -256,7 +257,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
- 		return ciphertext_page;
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index aa6e72fb7c08..098233ebe589 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -325,7 +325,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
  	}
  
--	BUG_ON(!PageLocked(page));
-+	if (WARN_ON_ONCE(!PageLocked(page)))
-+		return ERR_PTR(-EINVAL);
+ 	read_lock(&tasklist_lock);
+-	force_sig(SIGKILL, pid_ns->child_reaper);
++	send_sig(SIGKILL, pid_ns->child_reaper, 1);
+ 	read_unlock(&tasklist_lock);
  
- 	ctx = fscrypt_get_ctx(inode, gfp_flags);
- 	if (IS_ERR(ctx))
-@@ -304,8 +306,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
- int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
- 			unsigned int len, unsigned int offs, u64 lblk_num)
- {
--	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
--		BUG_ON(!PageLocked(page));
-+	if (WARN_ON_ONCE(!PageLocked(page) &&
-+			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
-+		return -EINVAL;
- 
- 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
- 				      len, offs, GFP_NOFS);
+ 	do_exit(0);
 -- 
 2.20.1
 
