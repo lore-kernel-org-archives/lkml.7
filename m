@@ -2,94 +2,130 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0E9C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904D1C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4FD20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201916;
-	bh=394QZhcBDh/8/E31jIj293uxy+K5rhXIyIdJ1VMo2n8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ST5g121XlgiOADzg6i4UDdEw0exgn0pmFdZsvXEvl1CkJoaEt5YkDbRQaQzCd5TN3
-	 YRu2HF6tsGPgAQR/cOzz7ZMVg9Nqkn4pj4de6PMOZTENL8nnMGErOvInTgEuH3ay7z
-	 OK/z+CWwhZMAA9nGlAUnmHC7lkBZ6cS8qWiNN/8c=
+	by mail.kernel.org (Postfix) with ESMTP id 679BD20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QjihkdzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404411AbfGOOhT (ORCPT
+        id S2404829AbfGOOpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 15 Jul 2019 10:45:20 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45126 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404404AbfGOOhT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 10:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404036AbfGOOhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:04 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 349A5217D8;
-        Mon, 15 Jul 2019 14:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201424;
-        bh=394QZhcBDh/8/E31jIj293uxy+K5rhXIyIdJ1VMo2n8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HFaUnuHqSFQOJTNEiP2MhXCzUXQ8Ik9W0O+poSj2r3pGT1rto/klTPvH8DPCola5d
-         pdpD7M2HBXshWYtEyPHhQVfM8sbAr548yUcuAWRSno2v1gRFQis3YhpY8WneVlRjIJ
-         tRZl/voclFraxIV1b0vmP8pEaLcL7GIrqm/Gvyps=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Mukesh Ojha <mojha@codeaurora.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/73] media: vpss: fix a potential NULL pointer dereference
-Date:   Mon, 15 Jul 2019 10:35:25 -0400
-Message-Id: <20190715143629.10893-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
-References: <20190715143629.10893-1-sashal@kernel.org>
+Received: by mail-pg1-f193.google.com with SMTP id o13so7793780pgp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=peLCyvMnb6GAqXrVywa8AT70STEJ77uX6TkkVXJzQ/M=;
+        b=QjihkdzO56EyWdL1UBrowr4J0diPIpjeawlNo5eUXRlutEI+PMdDLg/2ovhGCm9dB1
+         am3dJfpAJ98Tx9IokTbTDJI/QLnhNHnLoi+VI/95oP5fp/RwwQCZGPG9aCEKUlUpO/1N
+         atHPVJ+wXVzYcfg26NNOs6IX7iznL6Gp2AAwA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=peLCyvMnb6GAqXrVywa8AT70STEJ77uX6TkkVXJzQ/M=;
+        b=epqv0GRZaPmMmVyAk2qsnaYKsKLSOWczSioRHR2RX8S0TEVUUytfawFV5RX5qA6m3v
+         4BENnWmU+040Eu7zm2zA/BeX/N7t4T2Zs8/EP9NrHzoDfaWFjq6bhrTd756Y1F5Jc9KD
+         YTHIU8Z3wNbOpALLgRvc17v1A/vvzTueUovvtGQCRD1dSqxC7Bic5yVuZNtY9hk81nve
+         LdZp5LaH05x1eUiSbaRcq0Hl9NjviZd8/d6XdEvXAa8FjcuCSAWhHEbztd7q9mO920kg
+         /grPBXlYiAnohMPSGZejoMOla3wdO/eTPAGDIIdojOSj9Cae/zeYMBQsOsjSMuOB5lDT
+         xj3w==
+X-Gm-Message-State: APjAAAWruHzZ8aPVMZpOiRN+rQm04oekrrB8i68EuomKflAiJxMUqJ5o
+        Y9V3jpdIqx80qjStN8+FDBwdcDGs
+X-Google-Smtp-Source: APXvYqzmK9tD8rYXtIru39NtpVyI6dVamC0JOl/Vm3L4KkimM24dL0CBqeO9C1zAEuPYG8wK9FgMFA==
+X-Received: by 2002:a65:6281:: with SMTP id f1mr25763664pgv.400.1563201437978;
+        Mon, 15 Jul 2019 07:37:17 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s66sm18381852pfs.8.2019.07.15.07.37.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 07:37:17 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH 1/9] rcu/update: Remove useless check for debug_locks (v1)
+Date:   Mon, 15 Jul 2019 10:36:57 -0400
+Message-Id: <20190715143705.117908-2-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+In-Reply-To: <20190715143705.117908-1-joel@joelfernandes.org>
+References: <20190715143705.117908-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+In rcu_read_lock_sched_held(), debug_locks can never be true at the
+point we check it because we already check debug_locks in
+debug_lockdep_rcu_enabled() in the beginning. Remove the check.
 
-[ Upstream commit e08f0761234def47961d3252eac09ccedfe4c6a0 ]
-
-In case ioremap fails, the fix returns -ENOMEM to avoid NULL
-pointer dereference.
-
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- drivers/media/platform/davinci/vpss.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/rcu/update.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
-index fce86f17dffc..c2c68988e38a 100644
---- a/drivers/media/platform/davinci/vpss.c
-+++ b/drivers/media/platform/davinci/vpss.c
-@@ -523,6 +523,11 @@ static int __init vpss_init(void)
- 		return -EBUSY;
- 
- 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
-+	if (unlikely(!oper_cfg.vpss_regs_base2)) {
-+		release_mem_region(VPSS_CLK_CTRL, 4);
-+		return -ENOMEM;
-+	}
-+
- 	writel(VPSS_CLK_CTRL_VENCCLKEN |
- 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
- 
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 61df2bf08563..9dd5aeef6e70 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -93,17 +93,13 @@ module_param(rcu_normal_after_boot, int, 0);
+  */
+ int rcu_read_lock_sched_held(void)
+ {
+-	int lockdep_opinion = 0;
+-
+ 	if (!debug_lockdep_rcu_enabled())
+ 		return 1;
+ 	if (!rcu_is_watching())
+ 		return 0;
+ 	if (!rcu_lockdep_current_cpu_online())
+ 		return 0;
+-	if (debug_locks)
+-		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
+-	return lockdep_opinion || !preemptible();
++	return lock_is_held(&rcu_sched_lock_map) || !preemptible();
+ }
+ EXPORT_SYMBOL(rcu_read_lock_sched_held);
+ #endif
 -- 
-2.20.1
+2.22.0.510.g264f2c817a-goog
 
