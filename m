@@ -2,114 +2,112 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBB0C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B181C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B440D2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F94A2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lDJpYRQK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L0rWdGhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfGONd2 (ORCPT
+        id S1730350AbfGONde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:33:28 -0400
-Received: from mout.web.de ([212.227.15.14]:34615 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730224AbfGONd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:33:34 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34786 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730219AbfGONd0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 09:33:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1563197593;
-        bh=NnJ/McBC1xY+rwzKCrlqJKC2Om2QgKLKoSPz2k86HZs=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=lDJpYRQKu5cnV6RPREucuIc2C+kjFqX+K/O7AUztCw1LIETvORDnda7OuCBA53W1/
-         fIZEwItysUbuafGbil2oGWZqhmOYyIfgWHMD1w3bzTh1l7+4rH9gw5qnS0qkTxSqzr
-         4QnZy/VjwM9ekhTelGt/gYpopGw88xEHvO/jTisI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.58.28] ([62.227.175.184]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lvf5Q-1iW6qK3s9E-017SQx; Mon, 15
- Jul 2019 15:33:13 +0200
-Subject: Re: [PATCH v2 1/2] rt2x00usb: fix rx queue hang
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Stanislaw Gruszka <sgruszka@redhat.com>, stable@vger.kernel.org,
-        Helmut Schaa <helmut.schaa@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190701105314.9707-1-smoch@web.de>
- <874l3nadjf.fsf@kamboji.qca.qualcomm.com>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <dd1caa78-182e-b0ce-c90c-9670f8455389@web.de>
-Date:   Mon, 15 Jul 2019 15:33:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: by mail-ed1-f66.google.com with SMTP id s49so15534943edb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 06:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zV3/vbwe0/Qeasu0YBAGg2gUXm0o6TWO07FywBLuSLQ=;
+        b=L0rWdGhfirmWchYFN/Q49dCPtNkTSUF3ESjkzSzpadWF5LFHu4NvYRUuhk+wNwHj3D
+         mv/14J1m7xMRKxXNODwINfKzMhNmgo1C9L1BadzLgwBfp/t+zEe37+/YvPAyllAg1dX/
+         bvYMmwDngb7snArunyuOmk242XB7+Alu5rmPDBDT7Xb5qOZS3D2AcJ+ZLT4MIX4pYNiI
+         pRzhrQ0esLbdO4/EFBbPcX4u9puEdb+OX1NjQTvGCOChvfXte34esi7oseASPbcHYMHq
+         eRam9KQbFBBkUyF2ZDX8gZmem8guJOs+oiK7kcbT+RXbL024SPqXfMXOfEtMRucPhzPd
+         AA5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zV3/vbwe0/Qeasu0YBAGg2gUXm0o6TWO07FywBLuSLQ=;
+        b=jQtoCT1EKHlh2lsa35BbCcIEXvlz+gWX+fUEGgdPOIzYsGlZGORQaD3ZLSe+R2fomu
+         rC7c8v8+1R26CoJxRUjAp/i6Cns0UtLG0Frx7KuZvpHDJmIf/jqdsVyqEbeWAlA+c1jH
+         4TMQk1zfg6IDuQLAikq00vcG6i7s8SJula1FbwdWDsxE5PfG7jznsqfAprVaHDjXpCV1
+         hf+mzf5QA2iWIZ7PieNvBZB0wnHMrfVoN96fh0pW6SDUKIqHArmGTXlhzcmBpAWPnOS1
+         tT6d5+gw9VH7zUpCN0zSRPMGWShtU0GB9uFVr14VZUPhgFE3KOWRZucplgyPQgUyIu9d
+         a/0w==
+X-Gm-Message-State: APjAAAW2lQY9UfJQ5mCkFhjW6NKm7xyvo24ySr3TFOqM+YheghcGrFRD
+        tlJ1LF7V8Qz73ZWDuX/TrRDC0H0J3yT7eo7/R7MD6w==
+X-Google-Smtp-Source: APXvYqxiyIGV3CkBm6teN0cFq4U4X8od+WIc9m+37oG40chmdHcr6+lg/DGbEVZHpjhTDNKzo6KAT/7YUwUuInGxIX4=
+X-Received: by 2002:a17:906:6dd4:: with SMTP id j20mr20664132ejt.173.1563197603166;
+ Mon, 15 Jul 2019 06:33:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <874l3nadjf.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:djE4WeLVs9SwBsKtd/iffOLzKtax0CXU3ew0/RjUPxtGqz5u7ox
- ADBvZQTsFuUUtFrSk57QUyzDEY/v+2aWt5NmmVAlnALwq42qsVbjjuCD2cN+MTSAbfgfdm9
- gEad7au1pRtSGxj6SaNYNEXbbSZfq7H5jp4qLTgeUN/aJy1Q9HnPRcuNyIeyGXMpRq8Uuqh
- Sg6JOso+O3hgaKDkXgZkw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:88IpjVHAKF4=:FAfP5y9ry6qRspW+01MVoY
- uTosMf6N4OodFVYQ/q+FFT31SDaWWH6OUBlHd5sG+hevUXouT6lfeH3iHPpfpoNbC4Op8CYzL
- /8SeazaalhETrwEzm+VmhlGxkrQbyybKgOL4PHdnlfOY2mOyZ9/3dhmsalUeccxUEoHkjFlzh
- B6LI8BTuocvgX0cn5XEHwol2d+pYbD+u5ICQjMvVfBdAN8LC1ihXaAQcNWdSu1EE2cMJ/WyLq
- SM1A53iiXVZsvbPHTQ7Jv406P3xsj4NDJrScAJIvHdUSIT7fPcCv1reK4S89LdL1kNnNW7wQ0
- FO+N0O6j9nD4eFHUAaBPc5FM78v590lAU7zmPyY1rzMzX6hmzLHmUy/bUI7XuvexKwa8c8XgW
- FvEM6b22G+uk9REz69S/N4hWASCYoaeFWEApTOBs1UhDniQyc17IWKGtHNUpqj6y/zD++YOrA
- vJmgILErvu+jSU8HaTcMmsP7cevw4TYiIf1FtCqolK1+wnBk/vkhZNh3kFFfnWe5Q3iFm3RRI
- fK2HWF/Fvb/r7LCV0FWEDZ8kq1+Deb+tY4Z2PF2KP5KuFBlfi9feKwvp3V3DGRe+ib1g6B2sr
- ClJYUFIG8wsTg9z87TcwoPhXH+whPHUs1UbbC6vwF0FoXg1SIqfERBruUJXvrl1UJLOcLqdqx
- IcArd6Qe0t89t4mBKmfxbRiWY6l5eIatU/wPrWAAYT0FhTqPyUEdorF8i2dTUdonQQpnZuuKK
- 8aCz/BDnfSWxcLYLVsDeJ+sCd7I8mM/TuckEbb/PjOXVAkoWLR1Nc40Q63sNloIkADl+/wZkA
- eYapr6XgtCdb4SGEg0G8UvH5qmlR1isUqlfLLr08nWu4y87Nx/F4SYpzR1Ci/tWdmlQ9LyF9/
- GdOhn/p//SCorO7Ykv5QWbymVmcZ0uW5qi/0fmdy9jcUIUZdWaMJ0YFX6+KYUrLc7Pry/rXS5
- cFiZlAPgaqLg6F5Qdch04z7jSYiZrrrWxFqRk5sUrIGJtkvNW8EuaKvABiOE4Vmbn8AfkmLQB
- llXXKDxW6ex9nQzD7qGmVXcGe19MAInvB+ez4fTmiEVuUzWpSDzecjNn4z1S7LnvA4MKHNR4n
- O+2GCnFLaFpztQ=
+References: <20190705151658.GP26519@linux.ibm.com> <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com> <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com> <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com> <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714184915.GK26519@linux.ibm.com> <20190715132911.GG3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190715132911.GG3419@hirez.programming.kicks-ass.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 15 Jul 2019 15:33:11 +0200
+Message-ID: <CACT4Y+bmgdOExBHnLJ+jgWKWQzNK9CFT6_eTxFE3hoK=0YresQ@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 15.07.19 10:48, Kalle Valo wrote:
-> Soeren Moch <smoch@web.de> writes:
+On Mon, Jul 15, 2019 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
->> Since commit ed194d136769 ("usb: core: remove local_irq_save() around
->>  ->complete() handler") the handler rt2x00usb_interrupt_rxdone() is
->> not running with interrupts disabled anymore. So this completion handler
->> is not guaranteed to run completely before workqueue processing starts
->> for the same queue entry.
->> Be sure to set all other flags in the entry correctly before marking
->> this entry ready for workqueue processing. This way we cannot miss error
->> conditions that need to be signalled from the completion handler to the
->> worker thread.
->> Note that rt2x00usb_work_rxdone() processes all available entries, not
->> only such for which queue_work() was called.
->>
->> This patch is similar to what commit df71c9cfceea ("rt2x00: fix order
->> of entry flags modification") did for TX processing.
->>
->> This fixes a regression on a RT5370 based wifi stick in AP mode, which
->> suddenly stopped data transmission after some period of heavy load. Also
->> stopping the hanging hostapd resulted in the error message "ieee80211
->> phy0: rt2x00queue_flush_queue: Warning - Queue 14 failed to flush".
->> Other operation modes are probably affected as well, this just was
->> the used testcase.
->>
->> Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete() handler")
->> Cc: stable@vger.kernel.org # 4.20+
->> Signed-off-by: Soeren Moch <smoch@web.de>
-> I'll queue this for v5.3.
+> On Sun, Jul 14, 2019 at 11:49:15AM -0700, Paul E. McKenney wrote:
+> > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
+> > > But short term I don't see any other solution than stop testing
+> > > sched_setattr because it does not check arguments enough to prevent
+> > > system misbehavior. Which is a pity because syzkaller has found some
+> > > bad misconfigurations that were oversight on checking side.
+> > > Any other suggestions?
+> >
+> > Keep the times down to a few seconds?  Of course, that might also
+> > fail to find interesting bugs.
 >
-OK, thanks,
-Soeren
+> Right, if syzcaller can put a limit on the period/deadline parameters
+> (and make sure to not write "-1" to
+> /proc/sys/kernel/sched_rt_runtime_us) then per the in-kernel
+> access-control should not allow these things to happen.
+
+Since we are racing with emails, could you suggest a 100% safe
+parameters? Because I only hear people saying "safe", "sane",
+"well-behaving" :)
+If we move the check to user-space, it does not mean that we can get
+away without actually defining what that means.
+
+Now thinking of this, if we come up with some simple criteria, could
+we have something like a sysctl that would allow only really "safe"
+parameters?
