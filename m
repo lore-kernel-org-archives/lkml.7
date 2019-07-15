@@ -2,87 +2,114 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6AFC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE44C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B5320665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A4420665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V5CMHU9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfGOKaA (ORCPT
+        id S1729736AbfGOKe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:30:00 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56018 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbfGOKaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:30:00 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hmyF1-0000zw-A2; Mon, 15 Jul 2019 13:29:55 +0300
-Subject: Re: [PATCH] generic arch_futex_atomic_op_inuser() cleanup
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Mon, 15 Jul 2019 06:34:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45504 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729530AbfGOKe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:34:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/tb2YFKotIun+RrxUFkUJ3SPYjEiIEB8yDIasy299tI=; b=V5CMHU9SdBHFe0JHCPJ/DfQ9M
+        whb9p82Se2ZevWYbvvkDuh9u+U8Uiaonxw43GBYwgQDNYEP3CSLvWClmBZIh3Lm+Ag21BXBcQk1Mb
+        tgDnaHbBDgvqR/pGJQkjgPMBi8ydXL5TMB2U0D5aL+V/dJu7peXHwVcCgDtxjqnZvWk5TdtQ3tgPx
+        IGTM4iWolBrZicJtBD0iROZpa0kB57IsFZqVCacCQtfX+9jji7DKttASvz4iWs+PWk4iVM7PXf/6Y
+        Had9FeMPHZ0ajhZ94uJ2xDAy1FsLZzeKnZY3WncpD74MtSscMFXyqrGpbZ1cwCRW0KIHhvnq6mOlo
+        gLv5bHwWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hmyIt-0001jj-LI; Mon, 15 Jul 2019 10:33:55 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 01F3E20B29100; Mon, 15 Jul 2019 12:33:53 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 12:33:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-References: <7b963f9a-21b1-4c6d-3ece-556d018508b4@virtuozzo.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <3d9eef14-4059-0f8a-e76f-a8a09d730913@virtuozzo.com>
-Date:   Mon, 15 Jul 2019 13:29:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Alexander Graf <graf@amazon.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+Message-ID: <20190715103353.GC3419@hirez.programming.kicks-ass.net>
+References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
+ <5cab2a0e-1034-8748-fcbe-a17cf4fa2cd4@intel.com>
+ <alpine.DEB.2.21.1907120911160.11639@nanos.tec.linutronix.de>
+ <61d5851e-a8bf-e25c-e673-b71c8b83042c@oracle.com>
+ <20190712125059.GP3419@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1907121459180.1788@nanos.tec.linutronix.de>
+ <3ca70237-bf8e-57d9-bed5-bc2329d17177@oracle.com>
+ <20190712190620.GX3419@hirez.programming.kicks-ass.net>
+ <CALCETrWcnJhtUsJ2nrwAqqgdbRrZG6FNLKY_T-WTETL6-B-C1g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7b963f9a-21b1-4c6d-3ece-556d018508b4@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWcnJhtUsJ2nrwAqqgdbRrZG6FNLKY_T-WTETL6-B-C1g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like this code is dead and therefore looks strange.
-I've found it during manual code review and decided to send patch
-to pay your attention to this problem.
-Probably it's better to remove this code at all?
+On Sun, Jul 14, 2019 at 08:06:12AM -0700, Andy Lutomirski wrote:
+> On Fri, Jul 12, 2019 at 12:06 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, Jul 12, 2019 at 06:37:47PM +0200, Alexandre Chartre wrote:
+> > > On 7/12/19 5:16 PM, Thomas Gleixner wrote:
+> >
+> > > > Right. If we decide to expose more parts of the kernel mappings then that's
+> > > > just adding more stuff to the existing user (PTI) map mechanics.
+> > >
+> > > If we expose more parts of the kernel mapping by adding them to the existing
+> > > user (PTI) map, then we only control the mapping of kernel sensitive data but
+> > > we don't control user mapping (with ASI, we exclude all user mappings).
+> > >
+> > > How would you control the mapping of userland sensitive data and exclude them
+> > > from the user map? Would you have the application explicitly identify sensitive
+> > > data (like Andy suggested with a /dev/xpfo device)?
+> >
+> > To what purpose do you want to exclude userspace from the kernel
+> > mapping; that is, what are you mitigating against with that?
+> 
+> Mutually distrusting user/guest tenants.  Imagine an attack against a
+> VM hosting provider (GCE, for example).  If the overall system is
+> well-designed, the host kernel won't possess secrets that are
+> important to the overall hosting network.  The interesting secrets are
+> in the memory of other tenants running under the same host.  So, if we
+> can mostly or completely avoid mapping one tenant's memory in the
+> host, we reduce the amount of valuable information that could leak via
+> a speculation (or wild read) attack to another tenant.
+> 
+> The practicality of such a scheme is obviously an open question.
 
-On 7/15/19 1:27 PM, Vasily Averin wrote:
-> Access to 'op' variable does not require pagefault_disable(),
-> 'ret' variable should be initialized before using,
-> 'oldval' variable can be replaced by constant.
-> 
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  include/asm-generic/futex.h | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/asm-generic/futex.h b/include/asm-generic/futex.h
-> index 8666fe7f35d7..e9a9655d786d 100644
-> --- a/include/asm-generic/futex.h
-> +++ b/include/asm-generic/futex.h
-> @@ -118,9 +118,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
->  static inline int
->  arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
->  {
-> -	int oldval = 0, ret;
-> -
-> -	pagefault_disable();
-> +	int ret = 0;
->  
->  	switch (op) {
->  	case FUTEX_OP_SET:
-> @@ -132,10 +130,8 @@ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
->  		ret = -ENOSYS;
->  	}
->  
-> -	pagefault_enable();
-> -
->  	if (!ret)
-> -		*oval = oldval;
-> +		*oval = 0;
->  
->  	return ret;
->  }
-> 
+Ah, ok. So it's some virt specific nonsense. I'll go on ignoring it then
+;-)
