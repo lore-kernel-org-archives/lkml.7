@@ -2,153 +2,273 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87E1C7618A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1735DC7618A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2682067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kBoG8XVv"
+	by mail.kernel.org (Postfix) with ESMTP id D691220C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563167478;
+	bh=selCjENc71nRH2XChEP9mH/5ybMV3GO3uOR2DbcAb3s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YZ3yFaPmIex8/fr6JnxbTKRXGgv3i6+hyYQ9QICiMR6FoSEuoIFFAa8WEefYu94Ae
+	 u8Gmwk4B4ullfWvA/j11kWODaUSSyp2J5pngGKSmc4wt2dsuz3ZWj4OUZdO6E6sSp6
+	 L5OW/1AEEndyNBWocXQoloqsHeKNjXuM6UCdRxbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfGOFGj (ORCPT
+        id S1726545AbfGOFLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 01:06:39 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47716 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfGOFGi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 01:06:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6F54etU079658;
-        Mon, 15 Jul 2019 05:05:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=2l/EtsL/XoHbgXHMaLYFldByJTczF6kBDhxbYvtpLPM=;
- b=kBoG8XVv42nEqXSF2HoXapvC9IDjC1xkeDPzSWf6XbriQVP6kHFRX7xEX2dnL7tvyWr7
- QL/qzlu1Kad1UFxq05tQWuCry+jCi4YTzLHOX/OqgPhpOjMwNOaY/XEUWu+xHJNqtR/w
- LiXFCapfyb67oFcmgI8vBk/y7FzC24Uvs5Pfdzko1p0tGYVnTAcNq+YkAw79yocN/dfM
- 9iIW/yZns16jWToOZM+zD6WhHIEPxUg6l6bqP3fwPGfoBW3vKrcAVl+Qy280ONL4rDFq
- QNZfq9c4gp8wpBBFnFGsCufqEh8vtDV4IRKZxKsD+bUHVir9AgWQoP93mJis3c2pJSG4 EA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tq6qtca54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 05:05:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6F536LJ132940;
-        Mon, 15 Jul 2019 05:05:26 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tq6mm30un-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 05:05:26 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6F55KrY025333;
-        Mon, 15 Jul 2019 05:05:23 GMT
-Received: from [192.168.0.8] (/116.136.20.190)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 14 Jul 2019 22:05:20 -0700
-Subject: Re: [Xen-devel] [PATCH v2] xen/pv: Fix a boot up hang revealed by
- int3 self test
-To:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        srinivas.eeda@oracle.com, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <1562832921-20831-1-git-send-email-zhenzhong.duan@oracle.com>
- <ebf9657b-7d97-87a0-e32e-af8453ee7bba@citrix.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b9702975-dd2d-cf0b-e47f-a1c4361db18f@oracle.com>
-Date:   Mon, 15 Jul 2019 13:05:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 15 Jul 2019 01:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfGOFLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 01:11:16 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D9EC20868;
+        Mon, 15 Jul 2019 05:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563167474;
+        bh=selCjENc71nRH2XChEP9mH/5ybMV3GO3uOR2DbcAb3s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2cebDNwsxh/f5Wq2z+jUtYslgOZnI8+rS8XmOFdsO5RPlhvCtD7UNHbN3oJw1Egep
+         RxKyYMJmqW5KIiltUeR3Akxj/YrT5k/e3GeLMJ/DnTEs+MBz6Lnct/WPHxFuWHrUkh
+         Rt4CbVcIoevW7S0T0s6NmdlC14zcCLSaJHCl2BEo=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Tim Bird <Tim.Bird@sony.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RFC PATCH v2 00/15] tracing: of: Boot time tracing using devicetree
+Date:   Mon, 15 Jul 2019 14:11:08 +0900
+Message-Id: <156316746861.23477.5815110570539190650.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <ebf9657b-7d97-87a0-e32e-af8453ee7bba@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9318 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907150059
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9318 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907150059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 2019/7/12 22:06, Andrew Cooper wrote:
-> On 11/07/2019 03:15, Zhenzhong Duan wrote:
->> Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
->> selftest") is used to ensure there is a gap setup in exception stack
->> which could be used for inserting call return address.
->>
->> This gap is missed in XEN PV int3 exception entry path, then below panic
->> triggered:
->>
->> [    0.772876] general protection fault: 0000 [#1] SMP NOPTI
->> [    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
->> [    0.772893] RIP: e030:int3_magic+0x0/0x7
->> [    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
->> [    0.773334] Call Trace:
->> [    0.773334]  alternative_instructions+0x3d/0x12e
->> [    0.773334]  check_bugs+0x7c9/0x887
->> [    0.773334]  ? __get_locked_pte+0x178/0x1f0
->> [    0.773334]  start_kernel+0x4ff/0x535
->> [    0.773334]  ? set_init_arg+0x55/0x55
->> [    0.773334]  xen_start_kernel+0x571/0x57a
->>
->> As xenint3 and int3 entry code are same except xenint3 doesn't generate
->> a gap, we can fix it by using int3 and drop useless xenint3.
-> For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
-> %rcx/%r11 on the stack.
->
-> To convert back to "normal" looking exceptions, the xen thunks do `pop
-> %rcx; pop %r11; jmp do_*`...
-I will add this to commit message.
->
->> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
->> index 0ea4831..35a66fc 100644
->> --- a/arch/x86/entry/entry_64.S
->> +++ b/arch/x86/entry/entry_64.S
->> @@ -1176,7 +1176,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
->>   #ifdef CONFIG_XEN_PV
->>   idtentry xennmi			do_nmi			has_error_code=0
->>   idtentry xendebug		do_debug		has_error_code=0
->> -idtentry xenint3		do_int3			has_error_code=0
->>   #endif
-> What is confusing is why there are 3 extra magic versions here.  At a
-> guess, I'd say something to do with IST settings (given the vectors),
-> but I don't see why #DB/#BP would need to be different in the first
-> place.  (NMI sure, but that is more to do with the crazy hoops needing
-> to be jumped through to keep native functioning safely.)
+Here is the 2nd version of RFC series to add boot-time tracing using
+devicetree. Previous thread is here.
 
-xenint3 will be removed in this patch safely as it don't use IST now.
+https://lkml.kernel.org/r/156113387975.28344.16009584175308192243.stgit@devnote2
 
-But debug and nmi need paranoid_entry which will read MSR_GS_BASE to 
-determine
+In this version, I moved the ftrace node under /chosen/linux,ftrace
+and remove compatible property, because it must be in fixed place.
+Also this version has following features;
 
-if swapgs is needed. I guess PV guesting running in ring3 will #GP with 
-swapgs?
+ - Introduce "instance" node, which can have events nodes for setting
+   events filters and actions for the trace instance.
+ - Introduce "cpumask" property
+ - Introduce "ftrace-filters" and "ftrace-notraces"
+ - Introduce "fgraph-filters", "fgraph-notraces" and "fgraph-max-depth"
+
+At this moment, this feature is only available on the architecutre which
+supports devicetree. For x86, we can use it on qemu with --dtb option,
+or apply below patch on grub to add devicetree support on grub-x86.
+
+https://github.com/mhiramat/grub/commit/644c35bfd2d18c772cc353b74215344f8264923a
+
+Note that the devicetree for x86 must contain the nodes only under
+/chosen/, or it may cause a problem if it conflicts with ACPI.
+(Maybe we need to disable the FDT nodes except for nodes under /chosen
+ on boot if ACPI exists.)
+
+This series can be applied on Steve's tracing tree (ftrace/core) or
+available on below
+
+https://github.com/mhiramat/linux.git ftrace-devicetree-v2
+
+Usage
+======
+With this series, we can setup new kprobe and synthetic events, more
+complicated event filters and trigger actions including histogram
+via devicetree.
+
+For example, following kernel parameters
+
+trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter="vfs*"
+
+it can be written in devicetree like below.
+
+/{
+chosen {
+	...
+	ftrace {
+		options = "sym-addr";
+		events = "initcall:*";
+		tp-printk;
+		buffer-size-kb = <0x400>;	// 1024KB == 1MB
+		ftrace-filters = "vfs*";
+	};
+
+Moreover, now we can expand it to add filters for events, kprobe events,
+and synthetic events with histogram like below.
+
+	ftrace {
+		...
+		event0 {
+			event = "task:task_newtask";
+			filter = "pid < 128";	// adding filters
+			enable;
+		};
+		event1 {
+			event = "kprobes:vfs_read";
+			probes = "vfs_read $arg1 $arg2"; // add kprobes
+			filter = "common_pid < 200";
+			enable;
+		};
+		event2 {
+			event = "initcall_latency";	// add synth event
+			fields = "unsigned long func", "u64 lat";
+			// with histogram
+			actions = "hist:keys=func.sym,lat:vals=lat:sort=lat";
+		};
+		// and synthetic event callers
+		event3 {
+			event = "initcall:initcall_start";
+			actions = "hist:keys=func:ts0=common_timestamp.usecs";
+		};
+		event4 {
+			event = "initcall:initcall_finish";
+			actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)";
+		};
+	};
+
+Also, this version supports "instance" node, which allows us to
+run several tracers for different purpose at once. For example,
+one tracer is for tracing functions in module alpha, and others
+tracing module beta, you can write followings.
+
+	ftrace {
+		instance0 {
+			instance = "foo";
+			tracer = "function";
+			ftrace-filters = "*:mod:alpha";
+		};
+		instance1 {
+			instance = "bar";
+			tracer = "function";
+			ftrace-filters = "*:mod:beta";
+			
+		};
+	};
+
+The instance node also accepts event nodes so that each instance
+can customize its event tracing.
+
+Discussion
+=====
+On the previous thread, we discussed that the this devicetree usage
+itself was acceptable or not. Fortunately, I had a chance to discuss
+it in a F2F meeting with Frank and Tim last week.
+
+I think the advantages of using devicetree are,
+
+- reuse devicetree's structured syntax for complicated tracefs settings
+- reuse OF-APIs in linux kernel to accept and parse it
+- reuse dtc complier to compile it and validate syntax. (with yaml schema,
+  we can enhance it)
+- reuse current bootloader (and qemu) to load it
+
+And we talked about some other ideas to avoid using devicetree.
+
+- expand kernel command line (ascii command strings)
+- expand kernel command line with base64 encoded comressed ascii command 
+   strings
+- load (compressed) ascii command strings to somewhere on memory and pass
+   the address via kernel cmdline
+- load (compressed) ascii command strings to somewhere on memory and pass
+   the address via /chosen node (as same as initrd)
+- load binary C data and point it from kernel cmdline
+- load binary C data and point it from /chosen node (as same as initrd)
+- load binary C data as a section of kernel image
+
+The first 2 ideas expand the kernel's cmdline to pass some "magic" command
+to setup ftrace. In both case, the problems are the maximal size of cmdline
+and the issues related to the complexity of commands.
+My example showed that the ftrace settings becomes long even if making one
+histogram, which can be longer than 256 bytes. The long and complex data
+can easily lead mis-typing, but cmdline has no syntax validator, it just
+ignores the mis-typed commands.
+(Of course even with the devicetree, it must be smaller than 2 pages)
+
+Next 2 ideas are similar, but load the commands on some other memory area
+and pass only address via cmdline. This solves the size limitation issue,
+but still no syntax validation. Of course we can make a new structured
+syntax validator similar to (or just forked from) dt-validate.
+The problem (or disadvantage) of these (and following) ideas, is to change
+the kernel and boot loaders to load another binary blobs on memory.
+
+Maybe if we introduce a generic structured kernel boot arguments, which is
+a kind of /chosen node of devicetree. (But if there is already such hook,
+why we make another one...?)
+Also, this "GSKBA" may introduce a parser and access APIs which will be
+very similar to OF-APIs. This also seems redundant to me.
+
+So the last 3 ideas will avoid introducing new parser and APIs, we just
+compile the data as C data and point it from cmdline or somewhere else.
+With these ideas, we still need to expand boot loaders to support
+loading new binary blobs. (And the last one requires to add elf header
+parser/modifier to boot loader too)
+
+>From the above reasons, I think using devicetree's /chosen node is 
+the least intrusive way to introduce this boot-time tracing feature.
+
+Any suggestions, thoughts?
+
+Thank you,
+
+---
+
+Masami Hiramatsu (15):
+      tracing: Apply soft-disabled and filter to tracepoints printk
+      tracing: kprobes: Output kprobe event to printk buffer
+      tracing: Expose EXPORT_SYMBOL_GPL symbol
+      tracing: kprobes: Register to dynevent earlier stage
+      tracing: Accept different type for synthetic event fields
+      tracing: Add NULL trace-array check in print_synth_event()
+      dt-bindings: tracing: Add ftrace binding document
+      tracing: of: Add setup tracing by devicetree support
+      tracing: of: Add trace event settings
+      tracing: of: Add kprobe event support
+      tracing: of: Add synthetic event support
+      tracing: of: Add instance node support
+      tracing: of: Add cpumask property support
+      tracing: of: Add function tracer filter properties
+      tracing: of: Add function-graph tracer option properties
 
 
-Zhenzhong
+ .../devicetree/bindings/chosen/linux,ftrace.yaml   |  306 ++++++++++++
+ include/linux/trace_events.h                       |    1 
+ kernel/trace/Kconfig                               |   10 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/ftrace.c                              |   85 ++-
+ kernel/trace/trace.c                               |   90 ++--
+ kernel/trace/trace_events.c                        |    3 
+ kernel/trace/trace_events_hist.c                   |   14 -
+ kernel/trace/trace_events_trigger.c                |    2 
+ kernel/trace/trace_kprobe.c                        |   81 ++-
+ kernel/trace/trace_of.c                            |  507 ++++++++++++++++++++
+ 11 files changed, 1004 insertions(+), 96 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/chosen/linux,ftrace.yaml
+ create mode 100644 kernel/trace/trace_of.c
 
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
