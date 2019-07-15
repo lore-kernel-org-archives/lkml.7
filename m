@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C9C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC2FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956522067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3587E2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202117;
-	bh=/1Dfhf2LlvlJfQWd1+qiSURUlxVSOx/QRmLrdfFzWh4=;
+	s=default; t=1563202123;
+	bh=a+HfDJiSfl1oFWBjdFBODf5YivhjMmBbKIqceSP04Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kmQ/DEKtor9tx6Ebgyv8LOot4HoFqN/OsT763cC+6JGO9sUJsXlSFwyaeoHnE9mwT
-	 I8LzONO/rcyqwT5vMl2zcWcOccg+EQlcqBbGUEXUix9x888D699oHG+e32kI6mj1ZK
-	 a2yioy3LDuGN0UZUc/8ozc4vPjqQXefadLmyR2lw=
+	b=iUtBrdfPA+M2yfI54lXi5JkTuyD03Flg7Jyvh6J5t3C5A9wANVFoDE5mtXCmb9OA0
+	 q1H+EzI7FHZK/eMuRT17NiedCCzmrROiFTaY7BTZm0MaUrpFkf9oQCN3V5pYTp20Dq
+	 pKG5Q4uSSoVjNVnA71M+FWTqRidzidbcpizJ5XnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404451AbfGOOsg (ORCPT
+        id S2404595AbfGOOsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45890 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404456AbfGOOs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:48:28 -0400
+        id S2404336AbfGOOsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:48:37 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ABFF21530;
-        Mon, 15 Jul 2019 14:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00BFA21537;
+        Mon, 15 Jul 2019 14:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202107;
-        bh=/1Dfhf2LlvlJfQWd1+qiSURUlxVSOx/QRmLrdfFzWh4=;
+        s=default; t=1563202117;
+        bh=a+HfDJiSfl1oFWBjdFBODf5YivhjMmBbKIqceSP04Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVc2eztva17zZ2U1ziZ3fo+D+FLr6ipUPzMu8dkT1lCUYf9KlaG59llVSu+PDAgRP
-         NYeW1odVdnywLf2pJ3wFFFArC2M1k/g8qU0bTJr6AQ/tYUquUpSCB+RAPDj/zGxvPF
-         ZPaliO8BZV0bX+SQsCKEjwL0dPdlyv3P498tAbJ8=
+        b=akMI+7dnCKx6TQIir1z/H0uTwTXgff1tQ+QIJUm+abDEAFe18C1QdRhdoE2tU+ChA
+         oZy3J8h2rbdo5axyzRHBnVVkDncpV6EMj8LZeEb3kM8F+VwBJuSbvHgbb7H4CjeNMa
+         HhwsnLH+p48AknJIavkLMdwih/c4IyG1mUsiiYnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 47/53] ixgbe: Check DDM existence in transceiver before access
-Date:   Mon, 15 Jul 2019 10:45:29 -0400
-Message-Id: <20190715144535.11636-47-sashal@kernel.org>
+Cc:     Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 50/53] Bluetooth: hci_bcsp: Fix memory leak in rx_skb
+Date:   Mon, 15 Jul 2019 10:45:32 -0400
+Message-Id: <20190715144535.11636-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -61,63 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
+[ Upstream commit 4ce9146e0370fcd573f0372d9b4e5a211112567c ]
 
-Some transceivers may comply with SFF-8472 but not implement the Digital
-Diagnostic Monitoring (DDM) interface described in it. The existence of
-such area is specified by bit 6 of byte 92, set to 1 if implemented.
+Syzkaller found that it is possible to provoke a memory leak by
+never freeing rx_skb in struct bcsp_struct.
 
-Currently, due to not checking this bit ixgbe fails trying to read SFP
-module's eeprom with the follow message:
+Fix by freeing in bcsp_close()
 
-ethtool -m enP51p1s0f0
-Cannot get Module EEPROM data: Input/output error
-
-Because it fails to read the additional 256 bytes in which it was assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
-data was confirmed by Mellanox as correct and present in other Passive
-DACs in from other manufacturers.
-
-Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_bcsp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index d681273bd39d..9d38634071a4 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -3133,7 +3133,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
- 		page_swap = true;
- 	}
+diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
+index d0b615a932d1..9833b53a8b50 100644
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -729,6 +729,11 @@ static int bcsp_close(struct hci_uart *hu)
+ 	skb_queue_purge(&bcsp->rel);
+ 	skb_queue_purge(&bcsp->unrel);
  
--	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
-+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
-+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
- 		/* We have a SFP, but it does not support SFF-8472 */
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-index 5abd66c84d00..7b7dc6d7d159 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-@@ -70,6 +70,7 @@
- #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
- #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
- #define IXGBE_SFF_ADDRESSING_MODE		0x4
-+#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
- #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
- #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
- #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
++	if (bcsp->rx_skb) {
++		kfree_skb(bcsp->rx_skb);
++		bcsp->rx_skb = NULL;
++	}
++
+ 	kfree(bcsp);
+ 	return 0;
+ }
 -- 
 2.20.1
 
