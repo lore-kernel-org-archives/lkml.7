@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA46C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E312AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD70020651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC66120868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199774;
-	bh=xlxfzyPhI5vqM5ivAdtriyedX7X75KfABksDlvQ9qKI=;
+	s=default; t=1563199778;
+	bh=aaL+fDx3mvmzz02gOWv+5HMD7+2Tvvl3SA8EehYyQec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZpQUEmW56mJXdS02lUVCPB35nMcJ/Sh/xzezOK6S02lslSfU8XPIjJoHl/QmBsPw
-	 YusV3KemtLyLaC3rn/hmst89GkfgOoaEXQNJXvXlwheJTVtOZgKYeOs9PzPWzWZyPZ
-	 FQSlN5OPBgWi/ew3jNLRZsDYzQYED+Zb6cU7dS40=
+	b=0zOz2oWoH+BgUq7Tug4QCrDZyXEXM2e9wdoL7zTdKgutRPQUmBu0/Ea8HvH+Agmcd
+	 4H9l48ZR8IqX0SkjX7UnyB4X7CnHVfu8+stx9piqaTFsdizYAyWFKbey91iOXLZU6i
+	 qEnawIRB0mIBo53E97yN/8ZaTKzCFbB8DhdcAcTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388708AbfGOOJ3 (ORCPT
+        id S2388724AbfGOOJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388278AbfGOOJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:24 -0400
+        id S2388705AbfGOOJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:29 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C730212F5;
-        Mon, 15 Jul 2019 14:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 175E8206B8;
+        Mon, 15 Jul 2019 14:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199763;
-        bh=xlxfzyPhI5vqM5ivAdtriyedX7X75KfABksDlvQ9qKI=;
+        s=default; t=1563199768;
+        bh=aaL+fDx3mvmzz02gOWv+5HMD7+2Tvvl3SA8EehYyQec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3sTML043+bNCtkehg1UI7uLPX0CW2qs1tL6bALPgywxEBIGUuUkxA4ud9us1Hp0e
-         fzy1YrdHG7ZvYSIy35Xzdsdi/3GhN6i3goQSFe/Epm6EoawYeEj5x131KBIpGFfhsg
-         ZYkafHcCyIkLwoLUi08LE7fxGdhFl6FhxLHbrecs=
+        b=eEK+whOXMiy1/bttZttvjvk6+etjeqj3YImP3ryxZpLGGLkz458Mw1F11gKNKeChx
+         GJPUal8xPy+NWkuBcqYLjD+nCcUza5U+TmGsd00wocswOvYC6sWIHHFMwrDQC/NQhx
+         dhTASHngnoKLwANn4fFaUPGLyo5nQihMnS/Rs5Lg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>,
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 099/219] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
-Date:   Mon, 15 Jul 2019 10:01:40 -0400
-Message-Id: <20190715140341.6443-99-sashal@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
+        eranian@google.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 101/219] perf/x86/intel/uncore: Handle invalid event coding for free-running counter
+Date:   Mon, 15 Jul 2019 10:01:42 -0400
+Message-Id: <20190715140341.6443-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,64 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
+[ Upstream commit 543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0 ]
 
-runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
-included in several other places because they need other macros all
-came from kernel/sched/sched-pelt.h which was generated by
-Documentation/scheduler/sched-pelt. As the result, it causes compilation
-a lot of warnings,
+Counting with invalid event coding for free-running counter may cause
+OOPs, e.g. uncore_iio_free_running_0/event=1/.
 
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  ...
+Current code only validate the event with free-running event format,
+event=0xff,umask=0xXY. Non-free-running event format never be checked
+for the PMU with free-running counters.
 
-Silence it by appending the __maybe_unused attribute for it, so all
-generated variables and macros can still be kept in the same file.
+Add generic hw_config() to check and reject the invalid event coding
+for free-running PMU.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
+Cc: acme@kernel.org
+Cc: eranian@google.com
+Fixes: 0f519f0352e3 ("perf/x86/intel/uncore: Support IIO free-running counters on SKX")
+Link: https://lkml.kernel.org/r/1556672028-119221-2-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/scheduler/sched-pelt.c | 3 ++-
- kernel/sched/sched-pelt.h            | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/uncore.h       | 10 ++++++++++
+ arch/x86/events/intel/uncore_snbep.c |  1 +
+ 2 files changed, 11 insertions(+)
 
-diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
-index e4219139386a..7238b355919c 100644
---- a/Documentation/scheduler/sched-pelt.c
-+++ b/Documentation/scheduler/sched-pelt.c
-@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
- 	int i;
- 	unsigned int x;
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 853a49a8ccf6..b24da63459c4 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -419,6 +419,16 @@ static inline bool is_freerunning_event(struct perf_event *event)
+ 	       (((cfg >> 8) & 0xff) >= UNCORE_FREERUNNING_UMASK_START);
+ }
  
--	printf("static const u32 runnable_avg_yN_inv[] = {");
-+	/* To silence -Wunused-but-set-variable warnings. */
-+	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
- 	for (i = 0; i < HALFLIFE; i++) {
- 		x = ((1UL<<32)-1)*pow(y, i);
++/* Check and reject invalid config */
++static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
++					       struct perf_event *event)
++{
++	if (is_freerunning_event(event))
++		return 0;
++
++	return -EINVAL;
++}
++
+ static inline void uncore_disable_box(struct intel_uncore_box *box)
+ {
+ 	if (box->pmu->type->ops->disable_box)
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index b10e04387f38..8e4e8e423839 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3585,6 +3585,7 @@ static struct uncore_event_desc skx_uncore_iio_freerunning_events[] = {
  
-diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-index a26473674fb7..c529706bed11 100644
---- a/kernel/sched/sched-pelt.h
-+++ b/kernel/sched/sched-pelt.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+ static struct intel_uncore_ops skx_uncore_iio_freerunning_ops = {
+ 	.read_counter		= uncore_msr_read_counter,
++	.hw_config		= uncore_freerunning_hw_config,
+ };
  
--static const u32 runnable_avg_yN_inv[] = {
-+static const u32 runnable_avg_yN_inv[] __maybe_unused = {
- 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
- 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
- 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
+ static struct attribute *skx_uncore_iio_freerunning_formats_attr[] = {
 -- 
 2.20.1
 
