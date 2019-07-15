@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C256DC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816E6C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F6C206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B506205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201061;
-	bh=sDmUSSz8ZTV+tBUjyQFQxP5poyM+OJUvThrnZApX6Eo=;
+	s=default; t=1563201064;
+	bh=VlBCB3cvj0pngMZ1/OmuZY11wGrcEs5NU2PFJGH1IN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjJf1ffV9nqxgn5VOIceUCy0K3meXIWpbgPbctaxFesgydNUhU2qqlqBEa/55NtKy
-	 4v8ef/uL4nFRfYLaSYLcbpXyM5QIrWJQJc9QnPmqfJ9xn//ajoirEFZZLZQa3m1g6l
-	 BaC9u/a/uCboRXZufH9WoNW3IUMc8bB0cKrKwkBc=
+	b=Zp+8iXoFZ1NQgYXyvJx7/hfR1ceTJjRM8zTabfK3fHg5ACUZYaajsjiRd4q8kYnRc
+	 Q/IJXpcNH6TszmGQZuP4zSu6ZxDSPXzARmp+AhPDsEyu37/r5WDXIJ+dc21EFrcIb8
+	 zxxDNVDx65eHu3ZAfPcY1pGErM7hYvUyQnnwxqD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403922AbfGOOa4 (ORCPT
+        id S2391780AbfGOObD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43990 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390949AbfGOOaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:30:52 -0400
+        id S1732124AbfGOObA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:31:00 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BDEE205ED;
-        Mon, 15 Jul 2019 14:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90CA9205ED;
+        Mon, 15 Jul 2019 14:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201050;
-        bh=sDmUSSz8ZTV+tBUjyQFQxP5poyM+OJUvThrnZApX6Eo=;
+        s=default; t=1563201059;
+        bh=VlBCB3cvj0pngMZ1/OmuZY11wGrcEs5NU2PFJGH1IN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFx7mK2LkUZr5DxcbfBberMD88nAAA9MQExIvr2ESWcRMuA1Zce/e3BsCSc8t/hlN
-         D6bOaz4H997aWs2IotGDjrtGT1wx0/q5de13D+FkrswE009cEFb2umpBUT4+1G8f+P
-         9DYQ5r9dljEbJSCMSdNxqX5GizPp2hXFSRhp7xQg=
+        b=STYP1YLkdfWWOxyts8aIp87unxmIKu2ETy2+CxfiZiDZ1bwINv+dg1SCXf3YJUrJz
+         HNHgp6KlJw/eNcY5OkkjnqWxT7HBc5UEySmlDrpbDDVhRv0xsJPXXNT9QtcX/jRDPR
+         p9lIsW6FLY/iOvH1XWle8MypHcAwM4AnrAsYbobA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 037/105] RAS/CEC: Fix pfn insertion
-Date:   Mon, 15 Jul 2019 10:27:31 -0400
-Message-Id: <20190715142839.9896-37-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        NOYB <JunkYardMail1@Frontier.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 039/105] ipset: Fix memory accounting for hash types on resize
+Date:   Mon, 15 Jul 2019 10:27:33 -0400
+Message-Id: <20190715142839.9896-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -59,56 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
+[ Upstream commit 11921796f4799ca9c61c4b22cc54d84aa69f8a35 ]
 
-When inserting random PFNs for debugging the CEC through
-(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
-multiple values get inserted per a single write.
+If a fresh array block is allocated during resize, the current in-memory
+set size should be increased by the size of the block, not replaced by it.
 
-That is because simple_attr_write() interprets a retval of 0 as
-success and claims the whole input. However, pfn_set() returns the
-cec_add_elem() value, which, if > 0 and smaller than the whole input
-length, makes glibc continue issuing the write syscall until there's
-input left:
+Before the fix, adding entries to a hash set type, leading to a table
+resize, caused an inconsistent memory size to be reported. This becomes
+more obvious when swapping sets with similar sizes:
 
-  pfn_set
-  simple_attr_write
-  debugfs_attr_write
-  full_proxy_write
-  vfs_write
-  ksys_write
-  do_syscall_64
-  entry_SYSCALL_64_after_hwframe
+  # cat hash_ip_size.sh
+  #!/bin/sh
+  FAIL_RETRIES=10
 
-leading to those repeated calls.
+  tries=0
+  while [ ${tries} -lt ${FAIL_RETRIES} ]; do
+  	ipset create t1 hash:ip
+  	for i in `seq 1 4345`; do
+  		ipset add t1 1.2.$((i / 255)).$((i % 255))
+  	done
+  	t1_init="$(ipset list t1|sed -n 's/Size in memory: \(.*\)/\1/p')"
 
-Return 0 to fix that.
+  	ipset create t2 hash:ip
+  	for i in `seq 1 4360`; do
+  		ipset add t2 1.2.$((i / 255)).$((i % 255))
+  	done
+  	t2_init="$(ipset list t2|sed -n 's/Size in memory: \(.*\)/\1/p')"
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
+  	ipset swap t1 t2
+  	t1_swap="$(ipset list t1|sed -n 's/Size in memory: \(.*\)/\1/p')"
+  	t2_swap="$(ipset list t2|sed -n 's/Size in memory: \(.*\)/\1/p')"
+
+  	ipset destroy t1
+  	ipset destroy t2
+  	tries=$((tries + 1))
+
+  	if [ ${t1_init} -lt 10000 ] || [ ${t2_init} -lt 10000 ]; then
+  		echo "FAIL after ${tries} tries:"
+  		echo "T1 size ${t1_init}, after swap ${t1_swap}"
+  		echo "T2 size ${t2_init}, after swap ${t2_swap}"
+  		exit 1
+  	fi
+  done
+  echo "PASS"
+  # echo -n 'func hash_ip4_resize +p' > /sys/kernel/debug/dynamic_debug/control
+  # ./hash_ip_size.sh
+  [ 2035.018673] attempt to resize set t1 from 10 to 11, t 00000000fe6551fa
+  [ 2035.078583] set t1 resized from 10 (00000000fe6551fa) to 11 (00000000172a0163)
+  [ 2035.080353] Table destroy by resize 00000000fe6551fa
+  FAIL after 4 tries:
+  T1 size 9064, after swap 71128
+  T2 size 71128, after swap 9064
+
+Reported-by: NOYB <JunkYardMail1@Frontier.com>
+Fixes: 9e41f26a505c ("netfilter: ipset: Count non-static extension memory for userspace")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_hash_gen.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index c7205cdcc11a..97cf40a522be 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -373,7 +373,9 @@ static int pfn_set(void *data, u64 val)
- {
- 	*(u64 *)data = val;
- 
--	return cec_add_elem(val);
-+	cec_add_elem(val);
-+
-+	return 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
+diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
+index dfd268166e42..42d9cd22447e 100644
+--- a/net/netfilter/ipset/ip_set_hash_gen.h
++++ b/net/netfilter/ipset/ip_set_hash_gen.h
+@@ -624,7 +624,7 @@ mtype_resize(struct ip_set *set, bool retried)
+ 					goto cleanup;
+ 				}
+ 				m->size = AHASH_INIT_SIZE;
+-				extsize = ext_size(AHASH_INIT_SIZE, dsize);
++				extsize += ext_size(AHASH_INIT_SIZE, dsize);
+ 				RCU_INIT_POINTER(hbucket(t, key), m);
+ 			} else if (m->pos >= m->size) {
+ 				struct hbucket *ht;
 -- 
 2.20.1
 
