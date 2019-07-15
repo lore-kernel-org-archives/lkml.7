@@ -2,196 +2,231 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC2BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D040FC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5167720838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZGLFovZP"
+	by mail.kernel.org (Postfix) with ESMTP id A832A20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfGOJM3 (ORCPT
+        id S1729577AbfGOJNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:12:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33634 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbfGOJM2 (ORCPT
+        Mon, 15 Jul 2019 05:13:44 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:57195 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbfGOJNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:12:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6F991ei076054;
-        Mon, 15 Jul 2019 09:11:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=z/YmuPr9JSWV/DypPBDpQvIz06xjsjRJ9H2PM05NQvs=;
- b=ZGLFovZPZ6uQQ5eC2fw1yn6EHcqLHh5YNaq+ye4mFA4NHLKwaYfz8XAHDy1VBR5o0fRI
- 76GJJZejiNCUzXievGiR2xJljuVEL9H7amPvwVvdrnc+0hzM6bKIJwCzbyeehMWXe/gc
- AKGd2/LRF8115jb0zBk523suvfoEy7FroY63NVTigkMZ+n5TxBiEdX8xB0OY/mtQ+Wvz
- sXJRqJIskTxKt5PJc05Qj9r60HF/7esHJwu3np7EkSVAQeg6Ldwdvz0t+7qkeQ0eU7uC
- T0G6gFeSMnNNkEPMcvzhIcQc8lUS3YfWfQ93C1UYKEIIDWn7wdR0Ptf+OY0j1PYZcDD8 Cg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tq6qtdbq2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 09:11:51 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6F97a4P048335;
-        Mon, 15 Jul 2019 09:11:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2tq5bbpp8w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 09:11:50 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6F9BmRB010318;
-        Mon, 15 Jul 2019 09:11:49 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jul 2019 02:11:48 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [Xen-devel][PATCH v3] xen/pv: Fix a boot up hang revealed by int3 self test
-Date:   Sun, 14 Jul 2019 17:15:32 +0800
-Message-Id: <1563095732-16700-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9318 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907150109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9318 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907150109
+        Mon, 15 Jul 2019 05:13:44 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45nHrj0mVxz1rbyD;
+        Mon, 15 Jul 2019 11:13:41 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45nHrh6wcCz1qqkc;
+        Mon, 15 Jul 2019 11:13:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id FJ6RBjVTpNF3; Mon, 15 Jul 2019 11:13:39 +0200 (CEST)
+X-Auth-Info: FwZsUrqVv8+7bIWHSpdIvI/SSDmGqrvHvUfoA/HylYA=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 15 Jul 2019 11:13:39 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 11:13:38 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] input: touchscreen mc13xxx: Add mc34708 support
+Message-ID: <20190715111338.3a985a4c@jawa>
+In-Reply-To: <20190715070702.GA153485@dtor-ws>
+References: <20190711222346.5245-1-lukma@denx.de>
+        <20190711222346.5245-4-lukma@denx.de>
+        <20190715070702.GA153485@dtor-ws>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/vvJ=aezb1tTRL8se99FcUFZ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-selftest") is used to ensure there is a gap setup in int3 exception stack
-which could be used for inserting call return address.
+--Sig_/vvJ=aezb1tTRL8se99FcUFZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This gap is missed in XEN PV int3 exception entry path, then below panic
-triggered:
+Hi Dmitry,
 
-[    0.772876] general protection fault: 0000 [#1] SMP NOPTI
-[    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
-[    0.772893] RIP: e030:int3_magic+0x0/0x7
-[    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
-[    0.773334] Call Trace:
-[    0.773334]  alternative_instructions+0x3d/0x12e
-[    0.773334]  check_bugs+0x7c9/0x887
-[    0.773334]  ? __get_locked_pte+0x178/0x1f0
-[    0.773334]  start_kernel+0x4ff/0x535
-[    0.773334]  ? set_init_arg+0x55/0x55
-[    0.773334]  xen_start_kernel+0x571/0x57a
+> Hi Lukasz,
+> =20
+> On Fri, Jul 12, 2019 at 12:23:46AM +0200, Lukasz Majewski wrote:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> >=20
+> > The mc34708 has a different bit to enable pen detection. This
+> > adds the driver data and devtype necessary to probe the device
+> > and to distinguish between the mc13783 and the mc34708.
+> >=20
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >=20
+> > ---
+> > Changes for v2:
+> > - Change nested if statements to a single one (with cr0 > ...)
+> > - Replace hardcoded max resistance value (4080) with a generic
+> > driver data value.
+> > - Introduce new include/linux/mfd/mc34708.h header file for mc34708
+> > specific defines
+> > - Define as driver data mask and value for accessing mc13xxx
+> > registers
+> >=20
+> > Changes from the original patch:
+> > - Simplify the mcXXXXX_set_pen_detection functions
+> > - Fix checkpatch warnings
+> > ---
+> >  drivers/input/touchscreen/mc13783_ts.c | 59
+> > +++++++++++++++++++++++++++++++--- 1 file changed, 55
+> > insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/input/touchscreen/mc13783_ts.c
+> > b/drivers/input/touchscreen/mc13783_ts.c index
+> > edd49e44e0c9..8fd3d0e47f57 100644 ---
+> > a/drivers/input/touchscreen/mc13783_ts.c +++
+> > b/drivers/input/touchscreen/mc13783_ts.c @@ -10,6 +10,7 @@
+> >   */
+> >  #include <linux/platform_device.h>
+> >  #include <linux/mfd/mc13783.h>
+> > +#include <linux/mfd/mc34708.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> >  #include <linux/input.h>
+> > @@ -30,6 +31,8 @@ MODULE_PARM_DESC(sample_tolerance,
+> >  		"is supposed to be wrong and is discarded.  Set to
+> > 0 to " "disable this check.");
+> > =20
+> > +struct mc13xxx_driver_data; =20
+>=20
+> Why don't you define the structure here instead of sing forward
+> declaration?=20
 
-For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
-%rcx/%r11 on the stack. To convert back to "normal" looking exceptions,
-the xen thunks do 'xen_*: pop %rcx; pop %r11; jmp *'.
+I will define the structure here.
 
-E.g. Extracting 'xen_pv_trap xenint3' we have:
-xen_xenint3:
- pop %rcx;
- pop %r11;
- jmp xenint3
+> The structure is also commonly called as xxx_chip, so
+> struct mc13xxx_chip {
+> 	...
+> };
 
-As xenint3 and int3 entry code are same except xenint3 doesn't generate
-a gap, we can fix it by using int3 and drop useless xenint3.
+Ok.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
----
- bootup test pass with PV guest.
+>=20
+> > +
+> >  struct mc13783_ts_priv {
+> >  	struct input_dev *idev;
+> >  	struct mc13xxx *mc13xxx;
+> > @@ -37,6 +40,33 @@ struct mc13783_ts_priv {
+> >  	unsigned int sample[4];
+> >  	u8 ato;
+> >  	bool atox;
+> > +	struct mc13xxx_driver_data *drvdata; =20
+>=20
+> const struct mc13xxx_chip *chip;
 
- v3: set ist_okay to false for int3 per PeterZ
-     add Andrew's comments to patch description
+Ok. I will adjust the name.
 
- v2: fix up description.
----
- arch/x86/entry/entry_64.S    | 1 -
- arch/x86/include/asm/traps.h | 2 +-
- arch/x86/xen/enlighten_pv.c  | 2 +-
- arch/x86/xen/xen-asm_64.S    | 1 -
- 4 files changed, 2 insertions(+), 4 deletions(-)
+>=20
+> > +};
+> > +
+> > +enum mc13xxx_type {
+> > +	MC13XXX_TYPE_MC13783,
+> > +	MC13XXX_TYPE_MC34708,
+> > +};
+> > +
+> > +struct mc13xxx_driver_data {
+> > +	enum mc13xxx_type type;
+> > +	int max_resistance;
+> > +	u32 reg_mask;
+> > +	u32 reg_value;
+> > +};
+> > +
+> > +static struct mc13xxx_driver_data mc13783_driver_data =3D {
+> > +	.type =3D MC13XXX_TYPE_MC13783,
+> > 	.max_resistance =3D 4096,
+> > +	.reg_mask =3D MC13XXX_ADC0_TSMOD_MASK,
+> > +	.reg_value =3D MC13XXX_ADC0_TSMOD0,
+> > +};
+> > +
+> > +static struct mc13xxx_driver_data mc34708_driver_data =3D {
+> > +	.type =3D MC13XXX_TYPE_MC34708,
+> > +	.max_resistance =3D 4080,
+> > +	.reg_mask =3D MC34708_ADC0_TSMASK,
+> > +	.reg_value =3D MC34708_ADC0_TSPENDETEN,
+> >  }; =20
+>=20
+> Have these 2 closer to the ID table.
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 0ea4831..35a66fc 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1176,7 +1176,6 @@ idtentry stack_segment		do_stack_segment	has_error_code=1
- #ifdef CONFIG_XEN_PV
- idtentry xennmi			do_nmi			has_error_code=0
- idtentry xendebug		do_debug		has_error_code=0
--idtentry xenint3		do_int3			has_error_code=0
- #endif
- 
- idtentry general_protection	do_general_protection	has_error_code=1
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index 7d6f3f3..f2bd284 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -40,7 +40,7 @@
- asmlinkage void xen_divide_error(void);
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
--asmlinkage void xen_xenint3(void);
-+asmlinkage void xen_int3(void);
- asmlinkage void xen_overflow(void);
- asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 4722ba2..30c14cb 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -596,12 +596,12 @@ struct trap_array_entry {
- 
- static struct trap_array_entry trap_array[] = {
- 	{ debug,                       xen_xendebug,                    true },
--	{ int3,                        xen_xenint3,                     true },
- 	{ double_fault,                xen_double_fault,                true },
- #ifdef CONFIG_X86_MCE
- 	{ machine_check,               xen_machine_check,               true },
- #endif
- 	{ nmi,                         xen_xennmi,                      true },
-+	{ int3,                        xen_int3,                        false },
- 	{ overflow,                    xen_overflow,                    false },
- #ifdef CONFIG_IA32_EMULATION
- 	{ entry_INT80_compat,          xen_entry_INT80_compat,          false },
-diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
-index 1e9ef0b..ebf610b 100644
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -32,7 +32,6 @@ xen_pv_trap divide_error
- xen_pv_trap debug
- xen_pv_trap xendebug
- xen_pv_trap int3
--xen_pv_trap xenint3
- xen_pv_trap xennmi
- xen_pv_trap overflow
- xen_pv_trap bounds
--- 
-1.8.3.1
+I will move those two instances of struct mc13xxx_chip closer to the ID
+table.
 
+>=20
+> > =20
+> >  static irqreturn_t mc13783_ts_handler(int irq, void *data)
+> > @@ -93,6 +123,10 @@ static void mc13783_ts_report_sample(struct
+> > mc13783_ts_priv *priv)=20
+> >  	cr0 =3D (cr0 + cr1) / 2;
+> > =20
+> > +	if (priv->drvdata->type =3D=3D MC13XXX_TYPE_MC34708 &&
+> > +	    cr0 > priv->drvdata->max_resistance)
+> > +		cr0 =3D 0; =20
+>=20
+> I would like to avoid the type comparisons. Given that both cr0 and
+> cr1 can't be more than 4095 (because we limit them when parsing
+> sampling data) I think we can simply say
+>=20
+> 	if (cr0 > priv->chip->max_resistance)
+> 		cr0 =3D 0;
+
+Ok.
+
+>=20
+> Thanks.
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/vvJ=aezb1tTRL8se99FcUFZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl0sQ8IACgkQAR8vZIA0
+zr1q6ggAgm0O7bad/curlZ5xARSCyhsO6t+yNwKyqX71v5jJsjfVTeN55P35kJ29
+zI0GbTI9Nbk95h4UjT5l+8pP9DV286AJXYKegnjs35OTPSa3LPyzmfdAcHnDo+S5
+ZuB0GCMG4V70P8NJ5/wrIMDvy0HyceuAiofYVVWEOwimM1YrP5IvuuqfdWr+6I0Y
+oTF8CzyjO7XvXEbj4ad4N/Lp96JNf7BCSA3Kw1x52BcMTORoRsUayLC38Ch0G/wb
+TFQYCKt9qZbQ42fqjYvQgtnZ9ZV55V0eBhsYUK12yINyRGLxe/qBa92A9+u8KtUW
+o2uNf3t3wTUV4BULrqh39y1smYLRRA==
+=iPcn
+-----END PGP SIGNATURE-----
+
+--Sig_/vvJ=aezb1tTRL8se99FcUFZ--
