@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D392C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E82C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528AB2184C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB77720896
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201579;
-	bh=U2LkgR4sI+q4YHxUuBafA+He8xzaKYy9a9ZftGmaqk8=;
+	s=default; t=1563201581;
+	bh=tuJB84rXC7Q+h6ENUYeb97y8lmA49fuyzqulqcxENxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJ8V6IEhPidLmL0DXDuBcfHiJGaiYocNUEys3R8FEkN7zJTrvmFjEbWAH2WM5NASj
-	 4qr3F8RrahdwluHWg4u5D4rBupjl05XviPMLdP8A6HywbdPOM8Ano026RQ1/Cw1Vr2
-	 n14/LDUIyXdVOlbA/y7pG8YFP+J6BwCZcWpX4qwc=
+	b=dzHuGH2I35RpnfMR/y6JNgvQuYQoXBD72ICGCpq90izWGIeR4BIWCdR6l/f9ZizW8
+	 fktnyTHJQEkQ9UKWzNZp5qee0YY06K9UKPRxCUF/FHArMINsVFxLYsycez9n5B0JBL
+	 dno71I7GydBDx7rQ8rusmzPihaWtgnGEGhfzdD6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404321AbfGOOjh (ORCPT
+        id S2391250AbfGOOjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404254AbfGOOj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:39:26 -0400
+        id S2404237AbfGOOjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:39:21 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF5921850;
-        Mon, 15 Jul 2019 14:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E16F7205ED;
+        Mon, 15 Jul 2019 14:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201565;
-        bh=U2LkgR4sI+q4YHxUuBafA+He8xzaKYy9a9ZftGmaqk8=;
+        s=default; t=1563201560;
+        bh=tuJB84rXC7Q+h6ENUYeb97y8lmA49fuyzqulqcxENxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1Q/gf31TAeXdnWS7puQuqhNIDAe20clma6U3L16iMiqwPXkFRK/6azCbxScuW4qF
-         CU4bYFBqw2HoFHAOGuZiE2Xgqewa9hGapGxUQTYc4iTUfWnQJJm2zh7iiyuv/Ul6Pl
-         B9+Yvfm7CXADR0mQ+K720iYnEr+DbepbUVSmuwP4=
+        b=xFyGl6hHG0BeESUX9rjghPU8kMP8F9tWaAogNllRiwqc3NmTUcWhHPPjfc6SEIhxm
+         Q1e42nVscLx+upX8O3eppmhbLDAH+pu0qaYDaivgGJ0t25qRJFsp0q7Hg6BzK+W1f+
+         tuXCTbuHXeA7Is7o+jZpHa84rPF5k5C5AqUMWkFQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 44/73] ipsec: select crypto ciphers for xfrm_algo
-Date:   Mon, 15 Jul 2019 10:36:00 -0400
-Message-Id: <20190715143629.10893-44-sashal@kernel.org>
+Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 42/73] ipoib: correcly show a VF hardware address
+Date:   Mon, 15 Jul 2019 10:35:58 -0400
+Message-Id: <20190715143629.10893-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -60,43 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Denis Kirjanov <kda@linux-powerpc.org>
 
-[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
+[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
 
-kernelci.org reports failed builds on arc because of what looks
-like an old missed 'select' statement:
+in the case of IPoIB with SRIOV enabled hardware
+ip link show command incorrecly prints
+0 instead of a VF hardware address.
 
-net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
-xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
+Before:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
+trust off, query_rss off
+...
+After:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0     link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
+checking off, link-state disable, trust off, query_rss off
 
-I don't see this in randconfig builds on other architectures, but
-it's fairly clear we want to select the hash code for it, like we
-do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
-is also required even though it has not popped up in build tests.
+v1->v2: just copy an address without modifing ifla_vf_mac
+v2->v3: update the changelog
 
-Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Acked-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
-index bda1a13628a8..c09336b5a028 100644
---- a/net/xfrm/Kconfig
-+++ b/net/xfrm/Kconfig
-@@ -9,6 +9,8 @@ config XFRM_ALGO
- 	tristate
- 	select XFRM
- 	select CRYPTO
-+	select CRYPTO_HASH
-+	select CRYPTO_BLKCIPHER
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index 17c5bc7e8957..45504febbc2a 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -1751,6 +1751,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
+ 		return err;
  
- config XFRM_USER
- 	tristate "Transformation user configuration interface"
+ 	ivf->vf = vf;
++	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
