@@ -2,200 +2,175 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384A8C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E176C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0344720693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563231903;
-	bh=OAOFMQ1YqsitIQn1m9jCtJlvkDP9qkIgJdVohZRQumA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qGn6+0YyBrj7kps6bixo2/lIHZkAdz8T+t0K2X6OOZxplh6f/ncUoKKAJAjpxgZYn
-	 Ugu6EoLC3wpPaZhPQ14n1fN1znvx7I387POjM+tlm2BgyuHTfsol6uhr9wWyLP5v8N
-	 6Yi1S6es6lVMUn7YaUmpcycPiicUqZzzLQFMXrj0=
+	by mail.kernel.org (Postfix) with ESMTP id 206D420693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732334AbfGOXFB (ORCPT
+        id S1732532AbfGOXFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:05:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44642 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731690AbfGOXFB (ORCPT
+        Mon, 15 Jul 2019 19:05:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2450 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731690AbfGOXFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:05:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so36798126iob.11;
-        Mon, 15 Jul 2019 16:05:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k28XQmjVwDonv00Vu61ACUarMShzug/T9SvQGCXzgaE=;
-        b=TInxfc9QZLFvxHjR59y88wSPsZE43q+VS+ILh/AAnEPM0mlAHrz07iCGu1nBU5qec7
-         O1AV5pwVM7Cwejs4W1vpmjukjuvrtSdxlEfzgyjnaNRCgInwESH/SexHyKmZ16Fa5fKG
-         V9Yf5McnAhoSOTQCd+5vtAoxRpP6bonZzGov2Hi4hKYOlXWfnbvJ+6Q8QsBEqldlBZFT
-         IaBuuY4ag8e4yInHsFVfC4/Hv1VwWtTCEn/PYRM1IfWZgorFj9DsIMJbWkfYmfNIdJiD
-         y2iaUcnAF4yP0JKhIJMxaBYH8Dlu9ip7lFtdXG18T4zMqnToZDC2RPwGa95TPuN1+rhK
-         Dplg==
-X-Gm-Message-State: APjAAAUPxrcnekVXHIneILHxMbKAZ4QJippg0NrL/U4I3Md92GPIOeaX
-        3OaoG+WI1R/cc7SDbqzZap5cKpk=
-X-Google-Smtp-Source: APXvYqx8oBeU1HXQ+y/8oUso7u6EabN+Lj8Dck1Dh5+0lXZxGOc8P8rXKPubjC3HT1yThMl/Q9mGIw==
-X-Received: by 2002:a5e:9404:: with SMTP id q4mr28791973ioj.46.1563231899603;
-        Mon, 15 Jul 2019 16:04:59 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id h8sm19123434ioq.61.2019.07.15.16.04.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 16:04:59 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-spi@vger.kernel.org
-Subject: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
-Date:   Mon, 15 Jul 2019 17:04:57 -0600
-Message-Id: <20190715230457.3901-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 15 Jul 2019 19:05:30 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FN2614049876
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 19:05:29 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tryv7xmw1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 19:05:29 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 16 Jul 2019 00:05:28 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Jul 2019 00:05:25 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FN5Ods53936622
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 23:05:24 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09124112064;
+        Mon, 15 Jul 2019 23:05:24 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EA1B112061;
+        Mon, 15 Jul 2019 23:05:16 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.238.93])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 15 Jul 2019 23:05:15 +0000 (GMT)
+References: <20190520090939-mutt-send-email-mst@kernel.org> <877ea26tk8.fsf@morokweng.localdomain> <20190603211528-mutt-send-email-mst@kernel.org> <877e96qxm7.fsf@morokweng.localdomain> <20190701092212-mutt-send-email-mst@kernel.org> <87d0id9nah.fsf@morokweng.localdomain> <20190715103411-mutt-send-email-mst@kernel.org> <874l3nnist.fsf@morokweng.localdomain> <20190715163453-mutt-send-email-mst@kernel.org> <8736j7neg8.fsf@morokweng.localdomain> <20190715181449-mutt-send-email-mst@kernel.org>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+In-reply-to: <20190715181449-mutt-send-email-mst@kernel.org>
+Date:   Mon, 15 Jul 2019 20:05:08 -0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19071523-0064-0000-0000-000003FBF5F2
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011435; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01232726; UDB=6.00649485; IPR=6.01014027;
+ MB=3.00027731; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-15 23:05:27
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071523-0065-0000-0000-00003E466205
+Message-Id: <871ryqoq57.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Properties which are child node definitions need to have an explict
-type. Otherwise, a matching (DT) property can silently match when an
-error is desired. Fix this up tree-wide. Once this is fixed, the
-meta-schema will enforce this on any child node definitions.
 
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-spi@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Please ack. I will take this via the DT tree.
+Michael S. Tsirkin <mst@redhat.com> writes:
 
-Rob
+> On Mon, Jul 15, 2019 at 07:03:03PM -0300, Thiago Jung Bauermann wrote:
+>> 
+>> Michael S. Tsirkin <mst@redhat.com> writes:
+>> 
+>> > On Mon, Jul 15, 2019 at 05:29:06PM -0300, Thiago Jung Bauermann wrote:
+>> >>
+>> >> Michael S. Tsirkin <mst@redhat.com> writes:
+>> >>
+>> >> > On Sun, Jul 14, 2019 at 02:51:18AM -0300, Thiago Jung Bauermann wrote:
+>> >> >>
+>> >> >>
+>> >> >> Michael S. Tsirkin <mst@redhat.com> writes:
+>> >> >>
+>> >> >> > So this is what I would call this option:
+>> >> >> >
+>> >> >> > VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS
+>> >> >> >
+>> >> >> > and the explanation should state that all device
+>> >> >> > addresses are translated by the platform to identical
+>> >> >> > addresses.
+>> >> >> >
+>> >> >> > In fact this option then becomes more, not less restrictive
+>> >> >> > than VIRTIO_F_ACCESS_PLATFORM - it's a promise
+>> >> >> > by guest to only create identity mappings,
+>> >> >> > and only before driver_ok is set.
+>> >> >> > This option then would always be negotiated together with
+>> >> >> > VIRTIO_F_ACCESS_PLATFORM.
+>> >> >> >
+>> >> >> > Host then must verify that
+>> >> >> > 1. full 1:1 mappings are created before driver_ok
+>> >> >> >     or can we make sure this happens before features_ok?
+>> >> >> >     that would be ideal as we could require that features_ok fails
+>> >> >> > 2. mappings are not modified between driver_ok and reset
+>> >> >> >     i guess attempts to change them will fail -
+>> >> >> >     possibly by causing a guest crash
+>> >> >> >     or some other kind of platform-specific error
+>> >> >>
+>> >> >> I think VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS is good, but requiring
+>> >> >> it to be accompanied by ACCESS_PLATFORM can be a problem. One reason is
+>> >> >> SLOF as I mentioned above, another is that we would be requiring all
+>> >> >> guests running on the machine (secure guests or not, since we would use
+>> >> >> the same configuration for all guests) to support it. But
+>> >> >> ACCESS_PLATFORM is relatively recent so it's a bit early for that. For
+>> >> >> instance, Ubuntu 16.04 LTS (which is still supported) doesn't know about
+>> >> >> it and wouldn't be able to use the device.
+>> >> >
+>> >> > OK and your target is to enable use with kernel drivers within
+>> >> > guests, right?
+>> >>
+>> >> Right.
+>> >>
+>> >> > My question is, we are defining a new flag here, I guess old guests
+>> >> > then do not set it. How does it help old guests? Or maybe it's
+>> >> > not designed to ...
+>> >>
+>> >> Indeed. The idea is that QEMU can offer the flag, old guests can reject
+>> >> it (or even new guests can reject it, if they decide not to convert into
+>> >> secure VMs) and the feature negotiation will succeed with the flag
+>> >> unset.
+>> >
+>> > OK. And then what does QEMU do? Assume guest is not encrypted I guess?
+>> 
+>> There's nothing different that QEMU needs to do, with or without the
+>> flag. the perspective of the host, a secure guest and a regular guest
+>> work the same way with respect to virtio.
+>
+> OK. So now let's get back to implementation. What will
+> Linux guest driver do? It can't activate DMA API blindly since that
+> will assume translation also works, right?
 
- .../devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml       | 1 +
- .../devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml      | 1 +
- Documentation/devicetree/bindings/mtd/nand-controller.yaml     | 1 +
- .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          | 3 +++
- .../devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml       | 1 +
- .../devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml       | 1 +
- 6 files changed, 8 insertions(+)
+It can on pseries, because we always have a 1:1 window mapping the whole
+guest memory.
 
-diff --git a/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml b/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
-index fc2f63860cc8..be32f087c529 100644
---- a/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
-+++ b/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
-@@ -42,6 +42,7 @@ properties:
- 
- patternProperties:
-   "^.*@[0-9a-fA-F]+$":
-+    type: object
-     properties:
-       reg:
-         maxItems: 1
-diff --git a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-index e5a411518be1..b5b3cf5b1ac2 100644
---- a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-@@ -55,6 +55,7 @@ patternProperties:
-   "^pinctrl-[0-9]+$": true
- 
-   "^nand@[a-f0-9]+$":
-+    type: object
-     properties:
-       reg:
-         minimum: 0
-diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-index 199ba5ac2a06..d261b7096c69 100644
---- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-+++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-@@ -40,6 +40,7 @@ properties:
- 
- patternProperties:
-   "^nand@[a-f0-9]$":
-+    type: object
-     properties:
-       reg:
-         description:
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-index 06c4b66c3ee6..3ac5d2088e49 100644
---- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-@@ -55,6 +55,7 @@ properties:
- 
- patternProperties:
-   '^gpio@[0-9a-f]*$':
-+    type: object
-     properties:
-       gpio-controller: true
-       '#gpio-cells':
-@@ -113,8 +114,10 @@ patternProperties:
-       - st,bank-name
- 
-   '-[0-9]*$':
-+    type: object
-     patternProperties:
-       '^pins':
-+        type: object
-         description: |
-           A pinctrl node should contain at least one subnode representing the
-           pinctrl group available on the machine. Each subnode will list the
-diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
-index c374fd4923a6..6d1329c28170 100644
---- a/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
-@@ -50,6 +50,7 @@ properties:
- 
- patternProperties:
-   "^.*@[0-9a-f]+":
-+    type: object
-     properties:
-       reg:
-         items:
-diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-index bda7a5befd8b..f36c46d236d7 100644
---- a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-@@ -55,6 +55,7 @@ properties:
- 
- patternProperties:
-   "^.*@[0-9a-f]+":
-+    type: object
-     properties:
-       reg:
-         items:
+> Or do we somehow limit it to just a specific platform?
+
+Yes, we want to accept the new flag only on secure pseries guests.
+
 -- 
-2.20.1
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
