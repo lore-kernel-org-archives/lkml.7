@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2620EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A292AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C8521842
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CC62053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200621;
-	bh=4/m/2Mfax+c7i6Z3CxWlTyE2IYQ4BoDrA/ah/vbuP70=;
+	s=default; t=1563200626;
+	bh=IJG9hFq+kIctBj1221ptmRHianLOCKWyb3EA3/1Soj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQiDmbP6WeN3/DP6QMwOdBbuvlmEoFg5gK5kJYkA/ZpVZstiQz+d7MgNFfLNjsySP
-	 fV4e1XxR0LYRTIl5fy/phkOTOYxIySEjKY8xvSy5rjILCs7jSjtOXdQAaS2+X6EvSa
-	 MCidUh2ssWa82v8a070OZoGQtBlHp0BK7fKNCysY=
+	b=O+FMPeMYe19O+4MW2Hf4fWae2p6TsoapIcN2Nc/xs5GcDm5UFybqB6pLgMHcMaWxD
+	 +7rwgK04O/AwND3XzqrhLocQkQN9euEasPC+Sx4dd0C3ngGUd53MlCNY/Lkvm5Eny+
+	 2hCTTJPUyPlNeLxO60LB2SkAlrKRR59HU+aWkdkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390777AbfGOOXk (ORCPT
+        id S2390796AbfGOOXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390118AbfGOOXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:23:31 -0400
+        id S2390787AbfGOOXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:23:41 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427C52053B;
-        Mon, 15 Jul 2019 14:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B05A820896;
+        Mon, 15 Jul 2019 14:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200609;
-        bh=4/m/2Mfax+c7i6Z3CxWlTyE2IYQ4BoDrA/ah/vbuP70=;
+        s=default; t=1563200620;
+        bh=IJG9hFq+kIctBj1221ptmRHianLOCKWyb3EA3/1Soj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9Kph1UeimZKnpWuhQIYpFfJw5Ka5mn8e2Y7OfSVbcrxHWnPxKnTXR5EnBx9/zCiY
-         bkfxF9GFcrKz3lowMDdr4XTUW5kv8lWSD5srGndceq4FBtNZv4Kyu1eaAxIZxRLeBO
-         D0ui/GDSA7GqdmFgscYPnps6Y4kkxM/N8NSxp0p0=
+        b=FWCq5ZSHcKopn81H6Fr079mklb7FtMjq0IoFcvjHNZ277bDUT0wF4KJ6fpu+uxmDt
+         Ge5bLpp3XxDTIWKGU/zv7ADrVJysUFZK2/Ejpt35kWVDfuATaVvh6TAdYzMpsIm2rS
+         4PTL/3Rpxd20q+twOk7Af3Qv3hTIBf/kwqteyB6Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Anastasov <ja@ssi.bg>,
-        syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: [PATCH AUTOSEL 4.19 091/158] ipvs: defer hook registration to avoid leaks
-Date:   Mon, 15 Jul 2019 10:17:02 -0400
-Message-Id: <20190715141809.8445-91-sashal@kernel.org>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Weikang shi <swkhack@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 094/158] ntp: Limit TAI-UTC offset
+Date:   Mon, 15 Jul 2019 10:17:05 -0400
+Message-Id: <20190715141809.8445-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -63,118 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit cf47a0b882a4e5f6b34c7949d7b293e9287f1972 ]
+[ Upstream commit d897a4ab11dc8a9fda50d2eccc081a96a6385998 ]
 
-syzkaller reports for memory leak when registering hooks [1]
+Don't allow the TAI-UTC offset of the system clock to be set by adjtimex()
+to a value larger than 100000 seconds.
 
-As we moved the nf_unregister_net_hooks() call into
-__ip_vs_dev_cleanup(), defer the nf_register_net_hooks()
-call, so that hooks are allocated and freed from same
-pernet_operations (ipvs_core_dev_ops).
+This prevents an overflow in the conversion to int, prevents the CLOCK_TAI
+clock from getting too far ahead of the CLOCK_REALTIME clock, and it is
+still large enough to allow leap seconds to be inserted at the maximum rate
+currently supported by the kernel (once per day) for the next ~270 years,
+however unlikely it is that someone can survive a catastrophic event which
+slowed down the rotation of the Earth so much.
 
-[1]
-BUG: memory leak
-unreferenced object 0xffff88810acd8a80 (size 96):
- comm "syz-executor073", pid 7254, jiffies 4294950560 (age 22.250s)
- hex dump (first 32 bytes):
-   02 00 00 00 00 00 00 00 50 8b bb 82 ff ff ff ff  ........P.......
-   00 00 00 00 00 00 00 00 00 77 bb 82 ff ff ff ff  .........w......
- backtrace:
-   [<0000000013db61f1>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-   [<0000000013db61f1>] slab_post_alloc_hook mm/slab.h:439 [inline]
-   [<0000000013db61f1>] slab_alloc_node mm/slab.c:3269 [inline]
-   [<0000000013db61f1>] kmem_cache_alloc_node_trace+0x15b/0x2a0 mm/slab.c:3597
-   [<000000001a27307d>] __do_kmalloc_node mm/slab.c:3619 [inline]
-   [<000000001a27307d>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-   [<0000000025054add>] kmalloc_node include/linux/slab.h:590 [inline]
-   [<0000000025054add>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-   [<0000000050d1bc00>] kvmalloc include/linux/mm.h:637 [inline]
-   [<0000000050d1bc00>] kvzalloc include/linux/mm.h:645 [inline]
-   [<0000000050d1bc00>] allocate_hook_entries_size+0x3b/0x60 net/netfilter/core.c:61
-   [<00000000e8abe142>] nf_hook_entries_grow+0xae/0x270 net/netfilter/core.c:128
-   [<000000004b94797c>] __nf_register_net_hook+0x9a/0x170 net/netfilter/core.c:337
-   [<00000000d1545cbc>] nf_register_net_hook+0x34/0xc0 net/netfilter/core.c:464
-   [<00000000876c9b55>] nf_register_net_hooks+0x53/0xc0 net/netfilter/core.c:480
-   [<000000002ea868e0>] __ip_vs_init+0xe8/0x170 net/netfilter/ipvs/ip_vs_core.c:2280
-   [<000000002eb2d451>] ops_init+0x4c/0x140 net/core/net_namespace.c:130
-   [<000000000284ec48>] setup_net+0xde/0x230 net/core/net_namespace.c:316
-   [<00000000a70600fa>] copy_net_ns+0xf0/0x1e0 net/core/net_namespace.c:439
-   [<00000000ff26c15e>] create_new_namespaces+0x141/0x2a0 kernel/nsproxy.c:107
-   [<00000000b103dc79>] copy_namespaces+0xa1/0xe0 kernel/nsproxy.c:165
-   [<000000007cc008a2>] copy_process.part.0+0x11fd/0x2150 kernel/fork.c:2035
-   [<00000000c344af7c>] copy_process kernel/fork.c:1800 [inline]
-   [<00000000c344af7c>] _do_fork+0x121/0x4f0 kernel/fork.c:2369
-
-Reported-by: syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com
-Fixes: 719c7d563c17 ("ipvs: Fix use-after-free in ip_vs_in")
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: Weikang shi <swkhack@gmail.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190618154713.20929-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_core.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ kernel/time/ntp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 62c0e80dcd71..a71f777d1353 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2218,7 +2218,6 @@ static const struct nf_hook_ops ip_vs_ops[] = {
- static int __net_init __ip_vs_init(struct net *net)
- {
- 	struct netns_ipvs *ipvs;
--	int ret;
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 6b23cd584295..e1110a7bd3e6 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -43,6 +43,7 @@ static u64			tick_length_base;
+ #define MAX_TICKADJ		500LL		/* usecs */
+ #define MAX_TICKADJ_SCALED \
+ 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
++#define MAX_TAI_OFFSET		100000
  
- 	ipvs = net_generic(net, ip_vs_net_id);
- 	if (ipvs == NULL)
-@@ -2250,17 +2249,11 @@ static int __net_init __ip_vs_init(struct net *net)
- 	if (ip_vs_sync_net_init(ipvs) < 0)
- 		goto sync_fail;
- 
--	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
--	if (ret < 0)
--		goto hook_fail;
--
- 	return 0;
  /*
-  * Error handling
-  */
+  * phase-lock loop variables
+@@ -698,7 +699,8 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
--hook_fail:
--	ip_vs_sync_net_cleanup(ipvs);
- sync_fail:
- 	ip_vs_conn_net_cleanup(ipvs);
- conn_fail:
-@@ -2290,6 +2283,19 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
- 	net->ipvs = NULL;
- }
+-	if (txc->modes & ADJ_TAI && txc->constant >= 0)
++	if (txc->modes & ADJ_TAI &&
++			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
+ 		*time_tai = txc->constant;
  
-+static int __net_init __ip_vs_dev_init(struct net *net)
-+{
-+	int ret;
-+
-+	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
-+	if (ret < 0)
-+		goto hook_fail;
-+	return 0;
-+
-+hook_fail:
-+	return ret;
-+}
-+
- static void __net_exit __ip_vs_dev_cleanup(struct net *net)
- {
- 	struct netns_ipvs *ipvs = net_ipvs(net);
-@@ -2309,6 +2315,7 @@ static struct pernet_operations ipvs_core_ops = {
- };
- 
- static struct pernet_operations ipvs_core_dev_ops = {
-+	.init = __ip_vs_dev_init,
- 	.exit = __ip_vs_dev_cleanup,
- };
- 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
