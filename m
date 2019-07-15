@@ -2,75 +2,98 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B791C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70418C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E677320665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4AF20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="F8NFVhck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732054AbfGOSKv (ORCPT
+        id S1732138AbfGOSLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 14:10:51 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40196 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbfGOSKu (ORCPT
+        Mon, 15 Jul 2019 14:11:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46314 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731762AbfGOSLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 14:10:50 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1692914EB4AF1;
-        Mon, 15 Jul 2019 11:10:49 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 11:10:48 -0700 (PDT)
-Message-Id: <20190715.111048.106149919999844475.davem@davemloft.net>
-To:     tranmanphong@gmail.com
-Cc:     syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
-        isdn@linux-pingi.de, gregkh@linuxfoundation.org,
-        andreyknvl@google.com, bigeasy@linutronix.de,
-        gustavo@embeddedor.com, pakki001@umn.edu,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, netdev@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: Re: [PATCH] ISDN: hfcsusb: checking idx of ep configuration
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190715150814.20022-1-tranmanphong@gmail.com>
-References: <000000000000f2b23d05868310f9@google.com>
-        <20190715150814.20022-1-tranmanphong@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jul 2019 11:10:49 -0700 (PDT)
+        Mon, 15 Jul 2019 14:11:05 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r4so12320256qkm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jYZYKAc4cXMboCx/2peydkmI+hhxw+p2e+4iD/ro77c=;
+        b=F8NFVhckIungTHtsKgQe+pQO0Vu3TG5O8v6TLBNPm2LSKZVomFfdlxVi7302e4YzWW
+         p58VTnJFCE8qGTKD3U8G7uCwOHI/Cxu5QVw7JcIdWxqaS2lghAGxWj+cyE/9bRSrslPz
+         gx/AtOPYgKNwcI3Ulq+Lt+0aFfLUFkSsDEB84Z6K4jpzQUzrDhcCukP32APpDsViackC
+         kx9MLL4M4RQc0UTIdaNXbUhPPNnMyrfbIn67E6H1JfKoXHPgxBoa0KbqYeKk4R1ZbMcc
+         EtGJVaRDM3sFfgNn1rAhpe3vriDI8ut4GguGgAk4s0ycWhZY4kbSwnHRXAyx1xamMsVm
+         whog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jYZYKAc4cXMboCx/2peydkmI+hhxw+p2e+4iD/ro77c=;
+        b=larXsCK7HZwAlvMq8KRw/YQATtBVv9XbGq+N7zZ22Oiq7Mg/DMONdF3qOP1+wUCuD7
+         BDNlxGKH7gL8Cc5O+Ydv2MGopzAs048maiMVUr0yj7U4w/w/PIKy4JKDE7GlA2L1wpnM
+         YXD1T/aN8Trl1JWA9AqlX0zNgoigtg8UKSKr9Z3HUvAmbZOwlRSm4GN8F80yrMVTs1Zs
+         SzzFr6IIrp1iWnD2VJjFz93JrTJ+aStUHo4cGFju12ArcBYKz0hkb03J71Sa63pBeB06
+         fSXiku6uADHfy6yKjJcYBfQ8nIIaB/rGo0L72ch1TEujZSrreTrglwMq+UNWBcNdoCkK
+         XUMg==
+X-Gm-Message-State: APjAAAVA+GEsq7TLGOWSUZZoI+meJv0+JhLWnbZ98Ysd5bGhgXTiUS+c
+        k5ZcWJE3GVpA3tdImQVDhM9f4hHIaRJ0aw==
+X-Google-Smtp-Source: APXvYqype9M44/+Osix16H39k34Y9HMTaUWvg9TbauPunTaltUu36Qa/d/0sfE+znqX75JjKsBNP8g==
+X-Received: by 2002:ae9:e10e:: with SMTP id g14mr17227313qkm.486.1563214264805;
+        Mon, 15 Jul 2019 11:11:04 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id 39sm8940896qts.41.2019.07.15.11.11.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jul 2019 11:11:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hn5RH-000248-T6; Mon, 15 Jul 2019 15:11:03 -0300
+Date:   Mon, 15 Jul 2019 15:11:03 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/24] rdma/cxgb3: Remove call to memset after
+ dma_alloc_coherent
+Message-ID: <20190715181103.GD4970@ziepe.ca>
+References: <20190715031746.6514-1-huangfq.daxian@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715031746.6514-1-huangfq.daxian@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
-Date: Mon, 15 Jul 2019 22:08:14 +0700
+On Mon, Jul 15, 2019 at 11:17:46AM +0800, Fuqian Huang wrote:
+> In commit 518a2f1925c3
+> ("dma-mapping: zero memory returned from dma_alloc_*"),
+> dma_alloc_coherent has already zeroed the memory.
+> So memset is not needed.
+> 
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+> Changes in v3:
+>   - Use actual commit rather than the merge commit in the commit message
+> 
+>  drivers/infiniband/hw/cxgb3/cxio_hal.c | 3 ---
+>  1 file changed, 3 deletions(-)
 
-> The syzbot test with random endpoint address which made the idx is
-> overflow in the table of endpoint configuations.
-> 
-> this adds the checking for fixing the error report from
-> syzbot
-> 
-> KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
-> The patch tested by syzbot [2]
-> 
-> Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
-> 
-> [1]:
-> https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
-> [2]:
-> https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Why are you resending this? I already applied the v2 version for
+RDMA's tree.
 
-Applied.
+Jason
