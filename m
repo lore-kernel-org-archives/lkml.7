@@ -2,254 +2,165 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D17CC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4A1C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B70020838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9552B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sxXAtiln"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N+eU86f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbfGOP5r (ORCPT
+        id S1731023AbfGOP7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:57:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55446 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730650AbfGOP5q (ORCPT
+        Mon, 15 Jul 2019 11:59:05 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42333 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730436AbfGOP7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:57:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6FFvRCw013298;
-        Mon, 15 Jul 2019 10:57:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563206247;
-        bh=Adq6LE1ZUlvUQeHP0KdS0R0FyBbMNW3Ol0h3y1se6Nk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sxXAtilnCsZyI7U5bGpo1zmfIFyDpAPh2jN3HDnClwp+5kyXXhrXIQVLC//nSTV85
-         leqbZz8GdppO5IL5yxnpk6pfVhoD7vw3472iwluEWvTpvG5bwSrpKT8ejoso7YEgHN
-         xy+pBJRmrf+Qjn6Um6NVBJmp1wabSxIzLOqzMgkE=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6FFvR6p084941
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jul 2019 10:57:27 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
- Jul 2019 10:57:27 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 15 Jul 2019 10:57:27 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6FFvQwH003929;
-        Mon, 15 Jul 2019 10:57:26 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v2 2/2] leds: Add control of the voltage/current regulator to the LED core
-Date:   Mon, 15 Jul 2019 17:56:57 +0200
-Message-ID: <20190715155657.22976-3-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190715155657.22976-1-jjhiblot@ti.com>
-References: <20190715155657.22976-1-jjhiblot@ti.com>
+        Mon, 15 Jul 2019 11:59:05 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t28so16782659lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 08:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HjbeDhOV51A8sdpXnqafwlfJ9iwiNhonhrxyNQUI16E=;
+        b=N+eU86f/1K4jXpLed142Olwx09e8H8Iivx69wTDwzoqwqFbC8Pe3Y7pdRrF6bmBl1f
+         JhdQC7tAw/WwyEYSmz5ltzaNJ2xL7+fD+UmUOm4E4KvTPROstgSY6AXe9Tm8qYYPrS2K
+         c9J9vJzxL6CrmTWBVQwLKPD9vYqRpjkpgcdwY/4H4sO7/+cMGdHMI64j+DBSE+dvsFc5
+         xTJlfTlD5s0iyTDoz9gh5jLj5fLF4b2spjq3k7oowVEbmTqoKHcNx483USXg1drtBEFk
+         buTzA7D5lMjlsRhVlWy3p5a+YlYB7pORyFDmytvW9qASNVxT/sQoj7DRdWrapqSeaqXn
+         F8dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HjbeDhOV51A8sdpXnqafwlfJ9iwiNhonhrxyNQUI16E=;
+        b=uCcSlrZQ+sRvEYYcUzSC+cKu4sANLCi6INBoJKr4mg2YVgGvj6BAJs2tKeRIv4NJuO
+         jnReufDcKWduoNt/r9daploSjoiaHToHDdoW/K2d/aPLG1PDiiHQVvf7myxtad5rwbHd
+         IK5nm+F2GYsoKlkZRC9PyUKs7aL9h8UI/upb6w/EJkBTBcdYilynmRRNMeQhtIRmJ7JB
+         SpPYVYXSv477PhEaQDeA85y0hPRU37Y3pXVWLSQQ+Wv91dyYh30ZNzj6/pbScI6hcDPa
+         XvvU3kDpxxyt1XlF1urv7F8BpEyaddzD4bE8+vvRA0gmMQWQN/U8vfNdRB52nngHP+bw
+         TamA==
+X-Gm-Message-State: APjAAAVuIj246diEHzxK6137RN88xUGS7CLaeDeT4ID6mWvDVa8fAu8b
+        8XiGJtInNQyzgD7ok3nUU8ZKtg==
+X-Google-Smtp-Source: APXvYqzV20YelwwZmVujNBOuf0KewDUAlMY5R7oPdGUPxlJpzk4n5D9ibscxmdTuGZoa2l4u193jag==
+X-Received: by 2002:a2e:3e01:: with SMTP id l1mr11682242lja.208.1563206342726;
+        Mon, 15 Jul 2019 08:59:02 -0700 (PDT)
+Received: from [192.168.27.209] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id f24sm2633350lfk.72.2019.07.15.08.59.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 08:59:01 -0700 (PDT)
+Subject: Re: [PATCH v4 3/4] media: venus: Update to bitrate based clock
+ scaling
+To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1562078787-516-1-git-send-email-amasule@codeaurora.org>
+ <1562078787-516-4-git-send-email-amasule@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <06248dce-2c01-279b-20be-4dfcafbd792f@linaro.org>
+Date:   Mon, 15 Jul 2019 18:58:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1562078787-516-4-git-send-email-amasule@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A LED is usually powered by a voltage/current regulator. Let the LED core
-know about it. This allows the LED core to turn on or off the power supply
-as needed.
+Hi,
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/led-class.c | 15 ++++++++++++
- drivers/leds/led-core.c  | 50 +++++++++++++++++++++++++++++++++++++---
- drivers/leds/leds.h      |  1 +
- include/linux/leds.h     |  4 ++++
- 4 files changed, 67 insertions(+), 3 deletions(-)
+On 7/2/19 5:46 PM, Aniket Masule wrote:
+> Introduced clock scaling using bitrate, preavious
+> calculations consider only the cycles per mb.
+> Also, clock scaling is now triggered before every
+> buffer being queued to the device. This helps in
+> deciding precise clock cycles required.
+> 
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/helpers.c | 31 +++++++++++++++++++++++++----
+>  1 file changed, 27 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> index 2c976e4..5726d86 100644
+> --- a/drivers/media/platform/qcom/venus/helpers.c
+> +++ b/drivers/media/platform/qcom/venus/helpers.c
+> @@ -399,17 +399,26 @@ static int scale_clocks(struct venus_inst *inst)
+>  	return ret;
+>  }
+>  
+> -static unsigned long calculate_vpp_freq(struct venus_inst *inst)
+> +static unsigned long calculate_inst_freq(struct venus_inst *inst,
+> +					 unsigned long filled_len)
+>  {
+> -	unsigned long vpp_freq = 0;
+> +	unsigned long vpp_freq = 0, vsp_freq = 0;
+> +	u64 fps = inst->fps;
+>  	u32 mbs_per_sec;
+>  
+>  	mbs_per_sec = load_per_instance(inst);
+>  	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+>  	/* 21 / 20 is overhead factor */
+>  	vpp_freq += vpp_freq / 20;
+> +	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
+>  
+> -	return vpp_freq;
+> +	/* 10 / 7 is overhead factor */
+> +	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
+> +		vsp_freq += (inst->controls.enc.bitrate * 10) / 7;
+> +	else
+> +		vsp_freq += ((fps * filled_len * 8) * 10) / 7;
+> +
+> +	return max(vpp_freq, vsp_freq);
+>  }
+>  
+>  static int scale_clocks_v4(struct venus_inst *inst)
+> @@ -417,13 +426,27 @@ static int scale_clocks_v4(struct venus_inst *inst)
+>  	struct venus_core *core = inst->core;
+>  	const struct freq_tbl *table = core->res->freq_tbl;
+>  	unsigned int num_rows = core->res->freq_tbl_size;
+> +	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
+>  	struct clk *clk = core->clks[0];
+>  	struct device *dev = core->dev;
+>  	unsigned int i;
+>  	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
+> +	unsigned long filled_len = 0;
+> +	struct venus_buffer *buf, *n;
+> +	struct vb2_buffer *vb;
+>  	int ret;
+>  
+> -	freq = calculate_vpp_freq(inst);
+> +	mutex_lock(&inst->lock);
+> +	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
+> +		vb = &buf->vb.vb2_buf;
+> +		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
+> +	}
+> +	mutex_unlock(&inst->lock);
+> +
+> +	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
+> +		return 0;
+> +
+> +	freq = calculate_inst_freq(inst, filled_len);
+>  
+>  	if (freq > table[0].freq)
+>  		dev_warn(dev, "HW is overloaded, needed: %lu max: %lu\n",
+> 
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 4793e77808e2..cadd43c30d50 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -253,6 +253,7 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
- {
- 	char name[LED_MAX_NAME_SIZE];
- 	int ret;
-+	struct regulator *regulator;
- 
- 	ret = led_classdev_next_name(led_cdev->name, name, sizeof(name));
- 	if (ret < 0)
-@@ -272,6 +273,20 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
- 				led_cdev->name, dev_name(led_cdev->dev));
- 
-+	regulator = devm_regulator_get_optional(led_cdev->dev, "power");
-+	if (IS_ERR(regulator)) {
-+		if (PTR_ERR(regulator) != -ENODEV) {
-+			dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-+				led_cdev->name);
-+			device_unregister(led_cdev->dev);
-+			mutex_unlock(&led_cdev->led_access);
-+			return PTR_ERR(regulator);
-+		}
-+		led_cdev->regulator = NULL;
-+	} else {
-+		led_cdev->regulator = regulator;
-+	}
-+
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
- 		if (ret) {
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index 7107cd7e87cf..a12b880b0a2f 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
- LIST_HEAD(leds_list);
- EXPORT_SYMBOL_GPL(leds_list);
- 
-+static bool __led_need_regulator_update(struct led_classdev *led_cdev,
-+					int brightness)
-+{
-+	bool new_state = (brightness != LED_OFF);
-+
-+	return led_cdev->regulator && led_cdev->regulator_state != new_state;
-+}
-+
-+static int __led_handle_regulator(struct led_classdev *led_cdev,
-+				int brightness)
-+{
-+	int rc;
-+
-+	if (__led_need_regulator_update(led_cdev, brightness)) {
-+
-+		if (brightness != LED_OFF)
-+			rc = regulator_enable(led_cdev->regulator);
-+		else
-+			rc = regulator_disable(led_cdev->regulator);
-+		if (rc)
-+			return rc;
-+
-+		led_cdev->regulator_state = (brightness != LED_OFF);
-+	}
-+	return 0;
-+}
-+
- static int __led_set_brightness(struct led_classdev *led_cdev,
- 				enum led_brightness value)
- {
-@@ -80,6 +107,7 @@ static void led_timer_function(struct timer_list *t)
- 	}
- 
- 	led_set_brightness_nosleep(led_cdev, brightness);
-+	__led_handle_regulator(led_cdev, brightness);
- 
- 	/* Return in next iteration if led is in one-shot mode and we are in
- 	 * the final blink state so that the led is toggled each delay_on +
-@@ -115,6 +143,8 @@ static void set_brightness_delayed(struct work_struct *ws)
- 	if (ret == -ENOTSUPP)
- 		ret = __led_set_brightness_blocking(led_cdev,
- 					led_cdev->delayed_set_value);
-+	__led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
-+
- 	if (ret < 0 &&
- 	    /* LED HW might have been unplugged, therefore don't warn */
- 	    !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
-@@ -141,6 +171,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
- 	/* never on - just set to off */
- 	if (!delay_on) {
- 		led_set_brightness_nosleep(led_cdev, LED_OFF);
-+		__led_handle_regulator(led_cdev, LED_OFF);
- 		return;
- 	}
- 
-@@ -148,6 +179,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
- 	if (!delay_off) {
- 		led_set_brightness_nosleep(led_cdev,
- 					   led_cdev->blink_brightness);
-+		__led_handle_regulator(led_cdev, led_cdev->blink_brightness);
- 		return;
- 	}
- 
-@@ -256,8 +288,14 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
- 			      enum led_brightness value)
- {
- 	/* Use brightness_set op if available, it is guaranteed not to sleep */
--	if (!__led_set_brightness(led_cdev, value))
--		return;
-+	if (!__led_set_brightness(led_cdev, value)) {
-+		/*
-+		 * if regulator state doesn't need to be changed, that is all/
-+		 * Otherwise delegate the change to a work queue
-+		 */
-+		if (!__led_need_regulator_update(led_cdev, value))
-+			return;
-+	}
- 
- 	/* If brightness setting can sleep, delegate it to a work queue task */
- 	led_cdev->delayed_set_value = value;
-@@ -280,6 +318,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
- int led_set_brightness_sync(struct led_classdev *led_cdev,
- 			    enum led_brightness value)
- {
-+	int ret;
-+
- 	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
- 		return -EBUSY;
- 
-@@ -288,7 +328,11 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
- 	if (led_cdev->flags & LED_SUSPENDED)
- 		return 0;
- 
--	return __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	if (ret)
-+		return ret;
-+
-+	return __led_handle_regulator(led_cdev, led_cdev->brightness);
- }
- EXPORT_SYMBOL_GPL(led_set_brightness_sync);
- 
-diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-index 47b229469069..5aa5c038bd38 100644
---- a/drivers/leds/leds.h
-+++ b/drivers/leds/leds.h
-@@ -11,6 +11,7 @@
- 
- #include <linux/rwsem.h>
- #include <linux/leds.h>
-+#include <linux/regulator/consumer.h>
- 
- static inline int led_get_brightness(struct led_classdev *led_cdev)
- {
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 9b2bf574a17a..bee8e3f8dddd 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -123,6 +123,10 @@ struct led_classdev {
- 
- 	/* Ensures consistent access to the LED Flash Class device */
- 	struct mutex		led_access;
-+
-+	/* regulator */
-+	struct regulator	*regulator;
-+	bool			regulator_state;
- };
- 
- extern int of_led_classdev_register(struct device *parent,
+The original patch has a call to load_scale_clocks from
+venus_helper_vb2_buf_queue, why it is not included here?
+
 -- 
-2.17.1
-
+regards,
+Stan
