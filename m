@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B07C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D55C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9857721841
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9DB21537
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199074;
-	bh=EnoKj8gvrxt9vzbUip65DQKTkQ796pgK5snKd2HkWao=;
+	s=default; t=1563199082;
+	bh=e7n4SXe09RzoHoyeKaTu1LZkIdvfo40iBdxKRHi0oac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LtrECqURhfdgscVwA4XdpIV0lLNIF4pf30rxdPJYxyIyI+0kEIBvYGJ+q9QpLGfaE
-	 cz52pm4j6cxiSa1rauxss9JiIWK/gjVG04XOLy7m9saaIf+mHPk+qZoUz4hvPksaJh
-	 7ZY/Ajiu6lAjX4cZ6f+hGA4rwB0Ggs4s6HjSFZGI=
+	b=ye9iqWi7xGTzfQwjW8J+mqJxCoZI4a9m5BiLHBPjBDh8fGSXd0bArYVtGEVlRFQO3
+	 7q5iZ1faFT3AFXoUob278122g+b/wK+vWZDd6tXM5qEzQNorHdueUbdvbbWp5QqSG3
+	 wb9ACXABiiJEvxTKIf9sUUDeakDKKcQI/vINlS1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733015AbfGON5x (ORCPT
+        id S1733052AbfGON6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731845AbfGON5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:52 -0400
+        id S1732131AbfGON57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:59 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F3102083D;
-        Mon, 15 Jul 2019 13:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B5621537;
+        Mon, 15 Jul 2019 13:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199071;
-        bh=EnoKj8gvrxt9vzbUip65DQKTkQ796pgK5snKd2HkWao=;
+        s=default; t=1563199078;
+        bh=e7n4SXe09RzoHoyeKaTu1LZkIdvfo40iBdxKRHi0oac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Dj34TYX3ZfpKKIqSYMiU6OZ5PPoMIhaY4QyZueGiN1TmkcZBnuYopK0UHEwcxN6C
-         KR6btM1Nu2kuTPqteU2oZH+BPcrDJeTeoi66OugG7jU73ZaIW1BrcvsJn7Bh1++x3N
-         sDfp8K6MfDyF1wIdup+gDPjqbz0GNnP2COc5im1Q=
+        b=ziA8+eIpGjvMLGhiPaD4SAL5JjNM+jsL5Hc/1/1udvlyoUSU5z4dsNUu6gTUpbfMS
+         9J3aGQrxVlcL/LJ5k1t4QnqTnyaeZb/wMK5Z+3dAjvw0K/7NoeoeESpENxr18qgM2i
+         O+aD85YArUcYBnKsaUbDu0pK8Czyv20aDmRraxp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian Shen <shenjian15@huawei.com>, Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 180/249] net: hns3: restore the MAC autoneg state after reset
-Date:   Mon, 15 Jul 2019 09:45:45 -0400
-Message-Id: <20190715134655.4076-180-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 183/249] crypto: serpent - mark __serpent_setkey_sbox noinline
+Date:   Mon, 15 Jul 2019 09:45:48 -0400
+Message-Id: <20190715134655.4076-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,45 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d736fc6c68a5f76e89a6c2c4100e3678706003a3 ]
+[ Upstream commit 473971187d6727609951858c63bf12b0307ef015 ]
 
-When doing global reset, the MAC autoneg state of fibre
-port is set to default, which may cause user configuration
-lost. This patch fixes it by restore the MAC autoneg state
-after reset.
+The same bug that gcc hit in the past is apparently now showing
+up with clang, which decides to inline __serpent_setkey_sbox:
 
-Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
+
+Marking it 'noinline' reduces the stack usage from 2112 bytes to
+192 and 96 bytes, respectively, and seems to generate more
+useful object code.
+
+Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ crypto/serpent_generic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 4d9bcad26f06..645b9b3e0256 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2389,6 +2389,15 @@ static int hclge_mac_init(struct hclge_dev *hdev)
- 		return ret;
- 	}
+diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
+index 16f612b6dbca..a9cc0b2aa0d6 100644
+--- a/crypto/serpent_generic.c
++++ b/crypto/serpent_generic.c
+@@ -225,7 +225,13 @@
+ 	x4 ^= x2;					\
+ 	})
  
-+	if (hdev->hw.mac.support_autoneg) {
-+		ret = hclge_set_autoneg_en(hdev, hdev->hw.mac.autoneg);
-+		if (ret) {
-+			dev_err(&hdev->pdev->dev,
-+				"Config mac autoneg fail ret=%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	mac->link = 0;
- 
- 	if (mac->user_fec_mode & BIT(HNAE3_FEC_USER_DEF)) {
+-static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
++/*
++ * both gcc and clang have misoptimized this function in the past,
++ * producing horrible object code from spilling temporary variables
++ * on the stack. Forcing this part out of line avoids that.
++ */
++static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
++					   u32 r3, u32 r4, u32 *k)
+ {
+ 	k += 100;
+ 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
 -- 
 2.20.1
 
