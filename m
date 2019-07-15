@@ -2,200 +2,155 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F01C7618A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45646C7618A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8516D20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F73120868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:41:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ncd0SFc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfGOGcp (ORCPT
+        id S1729141AbfGOGln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 02:32:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47390 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726425AbfGOGcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 02:32:45 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8905DF73582B4D07A654;
-        Mon, 15 Jul 2019 14:32:42 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 15 Jul 2019
- 14:32:33 +0800
-Subject: Re: ARM/gic-v4: deadlock occurred
-To:     Marc Zyngier <marc.zyngier@arm.com>
-References: <9efe0260-4a84-7489-ecdd-2e9561599320@huawei.com>
- <86lfzl9ofe.wl-marc.zyngier@arm.com>
- <0b413592-7d98-ebe8-35c5-da330f800326@huawei.com>
- <86a7fx9lg8.wl-marc.zyngier@arm.com>
- <4d60d130-b7ce-96cb-5f8a-11e83329601a@huawei.com>
- <868svg9igl.wl-marc.zyngier@arm.com>
- <dbbf516d-3326-a948-8617-db6b6ec0ceed@huawei.com>
- <20190713123704.2d8a308c@why>
-CC:     <linux-kernel@vger.kernel.org>,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
-        kvmarm <kvmarm@lists.cs.columbia.edu>
-From:   Guoheyi <guoheyi@huawei.com>
-Message-ID: <2697d96e-8f84-6a45-521a-d2270b6be1eb@huawei.com>
-Date:   Mon, 15 Jul 2019 14:32:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 15 Jul 2019 02:41:43 -0400
+Received: from mout.web.de ([212.227.17.12]:33443 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfGOGln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 02:41:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563172835;
+        bh=5N7eSzP8Tge+KuNT1ByNfjpaRy8jABPbJMW1CVN3BO8=;
+        h=X-UI-Sender-Class:Subject:Cc:References:From:To:Date:In-Reply-To;
+        b=Ncd0SFc0uWIbKgSGcepmFx9gSLxV67/NWF8o6nXu8OOftEE6HgOWmfxLiW74gdcwF
+         Daxk31Leg38oDqDMH9nEhbhxcVfWa9Y/GoGdRElFGcjYRRq7cCftMOGnFPSZxUyKiG
+         wP5DCdNgyC5ePRJRzGob0ssqFW4pcsUCqr0T6FoI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.73.93]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LxweO-1iYQbf1L2i-015GKT; Mon, 15
+ Jul 2019 08:40:35 +0200
+Subject: Re: [2/2] ASoC: samsung: odroid: fix a double-free issue for cpu_dai
+Cc:     linux-kernel@vger.kernel.org,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <201907150949139435825@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Wen Yang <wen.yang99@zte.com.cn>, alsa-devel@alsa-project.org,
+        kernel-janitors@vger.kernel.org
+Message-ID: <23d82d8b-d600-b28f-9444-65afe04a781a@web.de>
+Date:   Mon, 15 Jul 2019 08:40:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190713123704.2d8a308c@why>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
+In-Reply-To: <201907150949139435825@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kdpL+1mGs2vHWKv1DMqvrBT4iGiLJvJV0KoE2AFL1EQCrSCthr7
+ rP3myNrH+dj+I8cRJzcPIRLqHH8t51HF+9ygtIa4JrmNqxjILFHaDKCo+ahs5UlTTbucmMN
+ leZovJkMtme1ZIP8GXDc1TsUCHm4xqMQkp3K3ztGxpKCbwyBTXlIm7y+7cCRbXq5K+QIBY3
+ I3cKROv4WSV7c895ZLlFQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Hbv3PXxoCN0=:Zez5eONvyPtHFryPLpU1vt
+ lG370vbqGn7UYA3mLpiiPVthFRZuvVeyEbmNwJAKzJ+nq5jV+JTrvC56jYEnds5TXGZr2bnDr
+ RrmrpoMT9s0Kom041c2rBrKW3viXTfPeIu7NTZ0W9wwaMmm0XnWwW4sGSL5GS91dC07p3+fqb
+ Ur+DvP2FEwkHAMuk8AO71nE2oQz5SAJzgJkIf/WIPuBrE8iEvir2fPP0EEgezSf+ACg7IfkVI
+ BrdNZP7o0V4WY6JB8NHU4UzH10j2bvf6pp3X63WdsSXh/28MbF8kaxBWZfmPZbLbHGoybOOqu
+ SU7uy/Zl2QrX0c8+t12CEDuo/lL/2cKsSoPVwPErKm5+Y90xRFH1N8JrfbV+EZbLU9k8W0PnY
+ zcHyOdl2fjZloJI3Uv05xQXcZR9kSWuHIwWpiaxTgXSLySxMzV+qR4YPbHkvaMJlhO2JZNpH5
+ n0LP/Kw4u0KYxMzTY7TqYuJrSSF5/1tgEeELfkGpwiZ6a73r9+TJVm6n8v97niuI0DDpL1i6D
+ aw5W/TKXD13qVDyIOfqoJmuhHy0TarLUp1FVg7cGqlCj2wbCm+4s3bWKa1JUzJnTBrOrJL7tL
+ 0JowQF3itcCUDEdcNnUy8aa/A02yk2pFUYa8Jw0pgirjR9I5einV5UWo3jhqb+2fTjBZXhgKz
+ je3fmITlZxGbUlFwgn0oCatROXssUn1VgS74HGasoShBMOBjulLQLgBjufsdpXb3RztbSP6VU
+ 72b7vzTRIeYgUmAeQD80RhScu93gxe5vYpMtKQSftTzCezjQYb7rA/rrDENSWYdUJ2T3uajJ4
+ VGGp/e+lu2vvdOI5WHD1vNUYbwBSNE//8B1NFRmY71wJY1JLxGDI4wOyJx9Le34/3cIWmTQ46
+ E29J9KaIBbeuPE6UD/nXi2WfGfb6paqIfEBi1I6U93Uh1N2TwZG3mbVscIqH+lGv4LS6xR4kX
+ Z4Fx6t+FYpIAuc5sQ706wICVn2CyloZK3FFvq59/xcY7xyImiE+d5eKrcVI+xf3jqxlX4LbQ3
+ B1CCQgsbT9Dzo8YUaNEF74eBx41dHGDeJEcH0owMaGDM5BOJYycEMTSGEN8ogMsjw6UhbvQyP
+ SojfNPJ7glue5ScFlkeOEOIIVLWICJOVgUL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+> These two updates fix two different bugs.
 
-The issue only occurs after applying the vlpi_map_rework patches, and we 
-can see the patches only affect VM; it changes its_create_device() a 
-little so it may affect host booting in some ways, so I took the lazy 
-way to send it out for some insights.
-
-I am suspecting below code; if alloc_lpis == false, what will happen? 
-Anyway, I will investigate more on this.
+I can follow this view to some degree.
 
 
-	if  (alloc_lpis)  {
-		lpi_map  =  its_lpi_alloc(nvecs,  &lpi_base,  &nr_lpis);
-		if  (lpi_map)
-			col_map  =  kcalloc(nr_lpis,  sizeof(*col_map),
-					GFP_KERNEL);
-	}  else  {
-		col_map  =  kcalloc(nr_ites,  sizeof(*col_map),  GFP_KERNEL);
-		nr_lpis  =  0;
-		lpi_base  =  0;
-	}
-	if  (its->is_v4)
-		vlpi_map  =  kcalloc(nr_lpis,  sizeof(*vlpi_map),  GFP_KERNEL);
+> and the other is the double-free issue
 
-	if  (!dev  ||  !itt  ||   !col_map  ||  (!lpi_map  &&  alloc_lpis)  ||
-	(!vlpi_map  &&  its->is_v4))  {
-		kfree(dev);
-		kfree(itt);
-		kfree(lpi_map);
-		kfree(col_map);
-		kfree(vlpi_map);
-		return  NULL;
-	}
+This programming error affects also the use of data structures which becam=
+e invalid.
+https://cwe.mitre.org/data/definitions/415.html#oc_415_Notes
 
 
-Thanks,
+> So we sent two patches to fix them separately.
 
-Heyi
+You would like to fix something according to two variables (of the data ty=
+pe =E2=80=9Cdevice_node *=E2=80=9D)
+in the same function implementation.
+Please combine these corrections in an update step under a topic like
+=E2=80=9CASoC: samsung: odroid: Fix handling of device node references in =
+odroid_audio_probe()=E2=80=9D.
+(The previous update step would contain still a known programming mistake =
+otherwise,
+wouldn't it?)
 
-
-On 2019/7/13 19:37, Marc Zyngier wrote:
-> On Sat, 13 Jul 2019 19:08:57 +0800
-> Guoheyi <guoheyi@huawei.com> wrote:
->
-> Hi Heyi,
->
->> Hi Marc,
->>
->> Really sorry for the delay of testing the rework patches. I picked up
->> the work these days and applied the patches to our 4.19.36 stable
->> branch. However, I got below panic during the boot process of host
->> (not yet to boot guests).
->>
->> I supposed the result was not related with my testing kernel version,
->> for we don't have many differences in ITS driver; I can test against
->> mainline if you think it is necessary.
-> In general, please report bugs against mainline. There isn't much I can
-> do about your private tree...
->
-> That being said, a couple of comments below.
->
->> Thanks,
->>
->> Heyi
->>
->>
->> [   16.990413] iommu: Adding device 0000:00:00.0 to group 6
->> [   17.000691] pcieport 0000:00:00.0: Signaling PME with IRQ 133
->> [   17.006456] pcieport 0000:00:00.0: AER enabled with IRQ 134
->> [   17.012151] iommu: Adding device 0000:00:08.0 to group 7
->> [   17.018575] Unable to handle kernel paging request at virtual address 00686361635f746f
->> [   17.026467] Mem abort info:
->> [   17.029251]   ESR = 0x96000004
->> [   17.032313]   Exception class = DABT (current EL), IL = 32 bits
->> [   17.038207]   SET = 0, FnV = 0
->> [   17.041258]   EA = 0, S1PTW = 0
->> [   17.044391] Data abort info:
->> [   17.047260]   ISV = 0, ISS = 0x00000004
->> [   17.051081]   CM = 0, WnR = 0
->> [   17.054035] [00686361635f746f] address between user and kernel address ranges
->> [   17.061140] Internal error: Oops: 96000004 [#1] SMP
->> [   17.065997] Process kworker/0:4 (pid: 889, stack limit = 0x(____ptrval____))
->> [   17.073013] CPU: 0 PID: 889 Comm: kworker/0:4 Not tainted 4.19.36+ #8
->> [   17.079422] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 0.52 06/20/2019
->> [   17.086788] Workqueue: events work_for_cpu_fn
->> [   17.091126] pstate: 20c00009 (nzCv daif +PAN +UAO)
->> [   17.095895] pc : __kmalloc_track_caller+0xb0/0x2a0
->> [   17.100662] lr : __kmalloc_track_caller+0x64/0x2a0
->> [   17.105429] sp : ffff00002920ba00
->> [   17.108728] x29: ffff00002920ba00 x28: ffff802cb6792780
->> [   17.114015] x27: 00000000006080c0 x26: 00000000006000c0
->> [   17.119302] x25: ffff0000084c8a00 x24: ffff802cbfc0fc00
->> [   17.124588] x23: ffff802cbfc0fc00 x22: ffff0000084c8a00
->> [   17.129875] x21: 0000000000000004 x20: 00000000006000c0
->> [   17.135161] x19: 65686361635f746f x18: ffffffffffffffff
->> [   17.140448] x17: 000000000000000e x16: 0000000000000007
->> [   17.145734] x15: ffff000009119708 x14: 0000000000000000
->> [   17.151021] x13: 0000000000000003 x12: 0000000000000000
->> [   17.156307] x11: 0000000005f5e0ff x10: ffff00002920bb80
->> [   17.161594] x9 : 00000000ffffffd0 x8 : 0000000000000098
->> [   17.166880] x7 : ffff00002920bb80 x6 : ffff000008a8cb98
->> [   17.172167] x5 : 000000000000a705 x4 : ffff803f802d22e0
->> [   17.177453] x3 : ffff00002920b990 x2 : ffff7e00b2dafd00
->> [   17.182740] x1 : 0000803f77476000 x0 : 0000000000000000
->> [   17.188027] Call trace:
->> [   17.190461]  __kmalloc_track_caller+0xb0/0x2a0
->> [   17.194886]  kvasprintf+0x7c/0x108
->> [   17.198271]  kasprintf+0x60/0x80
->> [   17.201488]  populate_msi_sysfs+0xe4/0x250
->> [   17.205564]  __pci_enable_msi_range+0x278/0x450
->> [   17.210073]  pci_alloc_irq_vectors_affinity+0xd4/0x110
->> [   17.215188]  pcie_port_device_register+0x134/0x558
->> [   17.219955]  pcie_portdrv_probe+0x3c/0xf0
->> [   17.223947]  local_pci_probe+0x44/0xa8
->> [   17.227679]  work_for_cpu_fn+0x20/0x30
->> [   17.231411]  process_one_work+0x1b4/0x3f8
->> [   17.235401]  worker_thread+0x210/0x470
->> [   17.239134]  kthread+0x134/0x138
->> [   17.242348]  ret_from_fork+0x10/0x18
->> [   17.245907] Code: f100005f fa401a64 54000bc0 b9402300 (f8606a66)
->> [   17.251970] kernel fault(0x1) notification starting on CPU 0
->> [   17.257602] kernel fault(0x1) notification finished on CPU 0
->> [   17.263234] Modules linked in:
->> [   17.266277] ---[ end trace 023e6b19cb68b94f ]---
-> What in this trace makes you think that this has anything to do with an
-> ITS change? The system crashes in a completely unrelated piece of code.
-> Also, if you look at the VA that indicates the crash, it should be
-> obvious that this isn't a kernel address. Worse, this is a piece of
-> ASCII text:
->
-> $ echo 00686361635f746f | xxd -r -p
-> hcac_to
->
-> This tends to indicate some memory form of corruption ("hcac_to" looks
-> like the begining of a symbol), and I'm not sure how the ITS would be
-> involved in this... Furthermore, this happens on the host at boot time,
-> while the patch you suspect only affects VMs...
->
-> I think you need to spend more time analysing this issue.
->
-> Thanks,
->
-> 	M.
-
-
+Regards,
+Markus
