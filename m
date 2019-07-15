@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C42FC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06523C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014EF2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37A52083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197809;
-	bh=zCToULM46Hq+HWLQ6gM5hJf9Ca3UyBFZfKn42QEYCiw=;
+	s=default; t=1563197812;
+	bh=ItdIf+SpfcLyABhkX8V/kialrW2/Lw/Qt/bX3sAzwgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dNtJ88mZL3juEz3jS9tfGIBvsy/mxYGB6zYF7C0JLpmXo11Cp6cbsx9ZbpPDHUREB
-	 jBlUmp+xtMqsbyXg4AIkgUDsd1FpgTQTKSVDXytM+9VqPuV2U30kbYsckLspYRER/2
-	 vtKCrEOmIV1udrKpxchGj/YVu6KgAzxSopsmxWXM=
+	b=kjVU2Cl7Eby8WJmynW/OcCYg20+IwoQA9ldvL46HDR1LW+zWiJyn7DBGgyixCTpUc
+	 lIhYLe73DzkdJwqvFOTxTJK/X/pwcfVoVJA+cr1vf3Bulm1Czw4CgegGRPKVDTpqIc
+	 tnd4c8DsqSiDfJ82u4eUOBkeSFSRV6UepPRNhkJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfGONgr (ORCPT
+        id S1730646AbfGONg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33748 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:36:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbfGONgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:36:44 -0400
+        id S1730516AbfGONgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:36:07 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9D32083D;
-        Mon, 15 Jul 2019 13:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890F12083D;
+        Mon, 15 Jul 2019 13:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197804;
-        bh=zCToULM46Hq+HWLQ6gM5hJf9Ca3UyBFZfKn42QEYCiw=;
+        s=default; t=1563197766;
+        bh=ItdIf+SpfcLyABhkX8V/kialrW2/Lw/Qt/bX3sAzwgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLn+ipNueUXC+FL0Ap/aDFFIhFHNIowGKwKHyon08nMFyMdhtcXQx4brDqJRMxinS
-         eRKInSxGCozNcQtM02ah8Sp+Isywvgrs8peQzwjmr5DoKSv42ne6+ko5jJrwlv+7Se
-         doCRuOoGWE8HG9Ra7angQTUv2/Ra3nCN3HkmHrVs=
+        b=NtM4yQUbDo8vBzqPiHxppRzANKPyVvNxRkkWssmc0gmMJg3wzLP+a9u0F07unmEHj
+         WDTCXauwEUv39ZOQDYImlovwrtyDQBRJz9i7dD1uBMxxFBLFTMsDCsAyzzAsHZSsFv
+         vhy99lFn/71MlSa5+uw8C4WlnqCs7ttizQW6qaSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, len.brown@intel.com,
-        linux@endlessm.com, rafael.j.wysocki@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 013/249] x86/tsc: Use CPUID.0x16 to calculate missing crystal frequency
-Date:   Mon, 15 Jul 2019 09:31:54 -0400
-Message-Id: <20190715133550.1772-13-sashal@kernel.org>
+Cc:     Emil Renner Berthing <kernel@esmil.dk>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 007/249] spi: rockchip: turn down tx dma bursts
+Date:   Mon, 15 Jul 2019 09:31:48 -0400
+Message-Id: <20190715133550.1772-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133550.1772-1-sashal@kernel.org>
 References: <20190715133550.1772-1-sashal@kernel.org>
@@ -65,124 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Emil Renner Berthing <kernel@esmil.dk>
 
-[ Upstream commit 604dc9170f2435d27da5039a3efd757dceadc684 ]
+[ Upstream commit 47300728fb213486a830565d2af49da967c9d16a ]
 
-native_calibrate_tsc() had a data mapping Intel CPU families
-and crystal clock speed, but hardcoded tables are not ideal, and this
-approach was already problematic at least in the Skylake X case, as
-seen in commit:
+This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
 
-  b51120309348 ("x86/tsc: Fix erroneous TSC rate on Skylake Xeon")
+It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
+signal is generated or it might skip some words. This in turn makes
+the rx dma channel never complete for bi-directional transfers.
 
-By examining CPUID data from http://instlatx64.atw.hu/ and units
-in the lab, we have found that 3 different scenarios need to be dealt
-with, and we can eliminate most of the hardcoded data using an approach a
-little more advanced than before:
+Fix it by setting tx burst length to fifo_len / 4 and the dma
+watermark to fifo_len / 2.
 
- 1. ApolloLake, GeminiLake, CannonLake (and presumably all new chipsets
-    from this point) report the crystal frequency directly via CPUID.0x15.
-    That's definitive data that we can rely upon.
+However the rk3399 TRM says (sic):
+"DMAC support incrementing-address burst and fixed-address burst. But in
+the case of access SPI and UART at byte or halfword size, DMAC only
+support fixed-address burst and the address must be aligned to word."
 
- 2. Skylake, Kabylake and all variants of those two chipsets report a
-    crystal frequency of zero, however we can calculate the crystal clock
-    speed by condidering data from CPUID.0x16.
+So this relies on fifo_len being a multiple of 16 such that the
+burst length (= fifo_len / 4) is a multiple of 4 and the addresses
+will be word-aligned.
 
-    This method correctly distinguishes between the two crystal clock
-    frequencies present on different Skylake X variants that caused
-    headaches before.
-
-    As the calculations do not quite match the previously-hardcoded values
-    in some cases (e.g. 23913043Hz instead of 24MHz), TSC refinement is
-    enabled on all platforms where we had to calculate the crystal
-    frequency in this way.
-
- 3. Denverton (GOLDMONT_X) reports a crystal frequency of zero and does
-    not support CPUID.0x16, so we leave this entry hardcoded.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: len.brown@intel.com
-Cc: linux@endlessm.com
-Cc: rafael.j.wysocki@intel.com
-Link: http://lkml.kernel.org/r/20190509055417.13152-1-drake@endlessm.com
-Link: https://lkml.kernel.org/r/20190419083533.32388-1-drake@endlessm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/tsc.c | 47 +++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+ drivers/spi/spi-rockchip.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 0b29e58f288e..da029fd21460 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -632,31 +632,38 @@ unsigned long native_calibrate_tsc(void)
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 9b91188a85f9..2cc6d9951b52 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -417,7 +417,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
+ 			.direction = DMA_MEM_TO_DEV,
+ 			.dst_addr = rs->dma_addr_tx,
+ 			.dst_addr_width = rs->n_bytes,
+-			.dst_maxburst = rs->fifo_len / 2,
++			.dst_maxburst = rs->fifo_len / 4,
+ 		};
  
- 	crystal_khz = ecx_hz / 1000;
+ 		dmaengine_slave_config(master->dma_tx, &txconf);
+@@ -518,7 +518,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
+ 	else
+ 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
  
--	if (crystal_khz == 0) {
--		switch (boot_cpu_data.x86_model) {
--		case INTEL_FAM6_SKYLAKE_MOBILE:
--		case INTEL_FAM6_SKYLAKE_DESKTOP:
--		case INTEL_FAM6_KABYLAKE_MOBILE:
--		case INTEL_FAM6_KABYLAKE_DESKTOP:
--			crystal_khz = 24000;	/* 24.0 MHz */
--			break;
--		case INTEL_FAM6_ATOM_GOLDMONT_X:
--			crystal_khz = 25000;	/* 25.0 MHz */
--			break;
--		case INTEL_FAM6_ATOM_GOLDMONT:
--			crystal_khz = 19200;	/* 19.2 MHz */
--			break;
--		}
--	}
-+	/*
-+	 * Denverton SoCs don't report crystal clock, and also don't support
-+	 * CPUID.0x16 for the calculation below, so hardcode the 25MHz crystal
-+	 * clock.
-+	 */
-+	if (crystal_khz == 0 &&
-+			boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT_X)
-+		crystal_khz = 25000;
+-	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
++	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
+ 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
+ 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
  
--	if (crystal_khz == 0)
--		return 0;
- 	/*
--	 * TSC frequency determined by CPUID is a "hardware reported"
-+	 * TSC frequency reported directly by CPUID is a "hardware reported"
- 	 * frequency and is the most accurate one so far we have. This
- 	 * is considered a known frequency.
- 	 */
--	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+	if (crystal_khz != 0)
-+		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+
-+	/*
-+	 * Some Intel SoCs like Skylake and Kabylake don't report the crystal
-+	 * clock, but we can easily calculate it to a high degree of accuracy
-+	 * by considering the crystal ratio and the CPU speed.
-+	 */
-+	if (crystal_khz == 0 && boot_cpu_data.cpuid_level >= 0x16) {
-+		unsigned int eax_base_mhz, ebx, ecx, edx;
-+
-+		cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
-+		crystal_khz = eax_base_mhz * 1000 *
-+			eax_denominator / ebx_numerator;
-+	}
-+
-+	if (crystal_khz == 0)
-+		return 0;
- 
- 	/*
- 	 * For Atom SoCs TSC is the only reliable clocksource.
 -- 
 2.20.1
 
