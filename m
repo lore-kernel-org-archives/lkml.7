@@ -2,524 +2,129 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C61C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFFEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF2B2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F512086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BoJpYd01"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EHH94aTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732976AbfGOXPN (ORCPT
+        id S1732445AbfGOXRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:15:13 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33966 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732342AbfGOXPD (ORCPT
+        Mon, 15 Jul 2019 19:17:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33822 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731933AbfGOXRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:15:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so9079484plt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:15:03 -0700 (PDT)
+        Mon, 15 Jul 2019 19:17:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so37007097iot.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QGZTaeKhFqu5pAVrWBpOHuyToqVtufbZC9EFXeFhbDM=;
-        b=BoJpYd010gVNPvBZT5+n+Y4K58Iddv5UGAhubVUQwpOZvJzeNfB/XBFE7Sz3ytpwT1
-         99Q4wpj3+1+U1tMBbKs65Yh/+IDMRt2Awk0M08SKilA31/kdBMWaDWbOlhk9SXcPGVOc
-         zRYnIxlXGHmW7l32Zm1wvLcEw9eHSE9acfPL8=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yn8VlLNQyAd5j32lIivn24k9NKqobex1p7VQed0BPHA=;
+        b=EHH94aTDP0PnzaA0s5AjWTBU1xGlGD/LFZOledR+cH7MWGzDmdPqP/rCo4wxmhAZbv
+         A21vq14fsMhyq2qEGMmb+aQ6HDb9tKyvTcwAm9EOfWA3tqa6gGQwGEIDPeeIn2YxupSK
+         vx272qaWSFrCAzF583n1nUqKBQ6CeW5/lc4OA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QGZTaeKhFqu5pAVrWBpOHuyToqVtufbZC9EFXeFhbDM=;
-        b=etoMcXvcMw10sUp7OLiegDJeVU3WpUJ7BvxTwxMKSdMbr93Gho+BbI+tuveGBq07a2
-         8u5IdmutbnBfON/3cuSpI1bIlwuwtNYYomyneT6HAD2/WKaV27Jt2CCBsHLjbMW6uDQu
-         E+0E8eOUH9pH7Aln5zfxXYhG1xyaNc9WW8V+TpBwaAH2NLhVkr5RPxuOxbgiQKXoTYdN
-         kooWmKhTz8y9z2+3biSkPl3meFdngOcUXO6fBQSKgSHl+chEzjdLlmQQS3gvKMbzrgbq
-         efJ5PiZVsmEbjeJo0H+36l1/raRrsJbagzcMwnZSHqg7bCI+OyD4nZYpC7kbIPW90JD2
-         soVA==
-X-Gm-Message-State: APjAAAV6fG60EUove3bb6yEAvIxNUTvBJfXbqurCTUxxk3GOceS6ogsv
-        46hZDY3C/iiSXfZLhp/7gSqocP6wAlU=
-X-Google-Smtp-Source: APXvYqzzFsq6U8q+XxU5RQgiqMbSHttcVIk9SAyGmd/15Hz1ZylCR5rWJJT2GW72FVEHAM9Whj128Q==
-X-Received: by 2002:a17:902:b48f:: with SMTP id y15mr31717823plr.268.1563232502838;
-        Mon, 15 Jul 2019 16:15:02 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id a20sm15745061pjo.0.2019.07.15.16.15.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 16:15:02 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     jic23@kernel.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        fabien.lahoudere@collabora.com, dianders@chromium.org
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v6 3/4] iio: cros_ec_accel_legacy: Use cros_ec_sensors_core
-Date:   Mon, 15 Jul 2019 16:14:53 -0700
-Message-Id: <20190715231454.189459-4-gwendal@chromium.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-In-Reply-To: <20190715231454.189459-1-gwendal@chromium.org>
-References: <20190715231454.189459-1-gwendal@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yn8VlLNQyAd5j32lIivn24k9NKqobex1p7VQed0BPHA=;
+        b=q/sBldqaSmoVmp2mW1piaffg0oGFS4TH8Usf9rMDAYTeYVVGlXMVAIv1hnxpKjxdM3
+         9xs7gO+lxJcy9SUZ+xXn7u0j0Ju3gPDFfba8oQPQP7leBII35ErOlbg9xIrTAfydny7p
+         K5UxBTwkXXfNahCq353H1AJQtZYGj/FrN2VOOL1oS3GeXU3gRbvP4LSQ+lBXa6RYx/q9
+         xOIZHJle0Nh6bDkCEWZlIU7vf8y34KARCZpFr21z9/QyBfn9p8jHicRjc+GPHqIm71+r
+         6yTB7glj15e/x1MfV1sxLhypNQ37QEbG6CSyv6EfXgW7TE5T+25z5td/DJMHziXG05rL
+         lSpA==
+X-Gm-Message-State: APjAAAWU7vOcebI8+CE/mLDaGZsqdidjMqqo5KFhJidUDIORptOvLjoz
+        dCzO3Et0of9rNMPYexBy4p/3FvQaLpHtTkPyBxfQKg==
+X-Google-Smtp-Source: APXvYqxCc4h//SlHxeX+EOOYxEHHm0Snz000w2zAi+ors9FXY+qRFFztl7vx0QzshzEbHiv4+phwJRFw642plHNUPi4=
+X-Received: by 2002:a05:6602:2256:: with SMTP id o22mr2598615ioo.95.1563232655885;
+ Mon, 15 Jul 2019 16:17:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190715191017.98488-1-mka@chromium.org> <20190715195557.GA29926@google.com>
+ <20190715200447.GT250418@google.com>
+In-Reply-To: <20190715200447.GT250418@google.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Mon, 15 Jul 2019 16:17:24 -0700
+Message-ID: <CAPUE2us7HZvSbpCddx4u_5KcdxedNd43-o=MZDiNfcpbzt9aXA@mail.gmail.com>
+Subject: Re: [PATCH] iio: cros_ec_accel_legacy: Always release lock when
+ returning from _read()
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Benson Leung <bleung@google.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicate code in cros-ec-accel-legacy,
-use cros-ec-sensors-core functions and structures when possible.
+Sorry for the original mistake. I upload a patch at
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1702884.
 
-On glimmer, check the 2 accelerometers are presented and working.
-
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/iio/accel/Kconfig                |   4 +-
- drivers/iio/accel/cros_ec_accel_legacy.c | 336 ++++-------------------
- 2 files changed, 55 insertions(+), 285 deletions(-)
-
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 62a970a20219..7d0848f9ea45 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -201,9 +201,7 @@ config HID_SENSOR_ACCEL_3D
- 
- config IIO_CROS_EC_ACCEL_LEGACY
- 	tristate "ChromeOS EC Legacy Accelerometer Sensor"
--	select IIO_BUFFER
--	select IIO_TRIGGERED_BUFFER
--	select CROS_EC_LPC_REGISTER_DEVICE
-+	depends on IIO_CROS_EC_SENSORS_CORE
- 	help
- 	  Say yes here to get support for accelerometers on Chromebook using
- 	  legacy EC firmware.
-diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
-index ad19d9c716f4..f65578c65a1c 100644
---- a/drivers/iio/accel/cros_ec_accel_legacy.c
-+++ b/drivers/iio/accel/cros_ec_accel_legacy.c
-@@ -12,6 +12,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/iio/buffer.h>
-+#include <linux/iio/common/cros_ec_sensors_core.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/kfifo_buf.h>
- #include <linux/iio/trigger_consumer.h>
-@@ -25,191 +26,51 @@
- 
- #define DRV_NAME	"cros-ec-accel-legacy"
- 
-+#define CROS_EC_SENSOR_LEGACY_NUM 2
- /*
-  * Sensor scale hard coded at 10 bits per g, computed as:
-  * g / (2^10 - 1) = 0.009586168; with g = 9.80665 m.s^-2
-  */
- #define ACCEL_LEGACY_NSCALE 9586168
- 
--/* Indices for EC sensor values. */
--enum {
--	X,
--	Y,
--	Z,
--	MAX_AXIS,
--};
--
--/* State data for cros_ec_accel_legacy iio driver. */
--struct cros_ec_accel_legacy_state {
--	struct cros_ec_device *ec;
--
--	/*
--	 * Array holding data from a single capture. 2 bytes per channel
--	 * for the 3 channels plus the timestamp which is always last and
--	 * 8-bytes aligned.
--	 */
--	s16 capture_data[8];
--	s8 sign[MAX_AXIS];
--	u8 sensor_num;
--};
--
--static int ec_cmd_read_u8(struct cros_ec_device *ec, unsigned int offset,
--			  u8 *dest)
--{
--	return ec->cmd_readmem(ec, offset, 1, dest);
--}
--
--static int ec_cmd_read_u16(struct cros_ec_device *ec, unsigned int offset,
--			   u16 *dest)
--{
--	__le16 tmp;
--	int ret = ec->cmd_readmem(ec, offset, 2, &tmp);
--
--	*dest = le16_to_cpu(tmp);
--
--	return ret;
--}
--
--/**
-- * read_ec_until_not_busy() - Read from EC status byte until it reads not busy.
-- * @st: Pointer to state information for device.
-- *
-- * This function reads EC status until its busy bit gets cleared. It does not
-- * wait indefinitely and returns -EIO if the EC status is still busy after a
-- * few hundreds milliseconds.
-- *
-- * Return: 8-bit status if ok, -EIO on error
-- */
--static int read_ec_until_not_busy(struct cros_ec_accel_legacy_state *st)
--{
--	struct cros_ec_device *ec = st->ec;
--	u8 status;
--	int attempts = 0;
--
--	ec_cmd_read_u8(ec, EC_MEMMAP_ACC_STATUS, &status);
--	while (status & EC_MEMMAP_ACC_STATUS_BUSY_BIT) {
--		/* Give up after enough attempts, return error. */
--		if (attempts++ >= 50)
--			return -EIO;
--
--		/* Small delay every so often. */
--		if (attempts % 5 == 0)
--			msleep(25);
--
--		ec_cmd_read_u8(ec, EC_MEMMAP_ACC_STATUS, &status);
--	}
--
--	return status;
--}
--
--/**
-- * read_ec_accel_data_unsafe() - Read acceleration data from EC shared memory.
-- * @st:        Pointer to state information for device.
-- * @scan_mask: Bitmap of the sensor indices to scan.
-- * @data:      Location to store data.
-- *
-- * This is the unsafe function for reading the EC data. It does not guarantee
-- * that the EC will not modify the data as it is being read in.
-- */
--static void read_ec_accel_data_unsafe(struct cros_ec_accel_legacy_state *st,
--				      unsigned long scan_mask, s16 *data)
--{
--	int i = 0;
--	int num_enabled = bitmap_weight(&scan_mask, MAX_AXIS);
--
--	/* Read all sensors enabled in scan_mask. Each value is 2 bytes. */
--	while (num_enabled--) {
--		i = find_next_bit(&scan_mask, MAX_AXIS, i);
--		ec_cmd_read_u16(st->ec,
--				EC_MEMMAP_ACC_DATA +
--				sizeof(s16) *
--				(1 + i + st->sensor_num * MAX_AXIS),
--				data);
--		*data *= st->sign[i];
--		i++;
--		data++;
--	}
--}
--
--/**
-- * read_ec_accel_data() - Read acceleration data from EC shared memory.
-- * @st:        Pointer to state information for device.
-- * @scan_mask: Bitmap of the sensor indices to scan.
-- * @data:      Location to store data.
-- *
-- * This is the safe function for reading the EC data. It guarantees that
-- * the data sampled was not modified by the EC while being read.
-- *
-- * Return: 0 if ok, -ve on error
-- */
--static int read_ec_accel_data(struct cros_ec_accel_legacy_state *st,
--			      unsigned long scan_mask, s16 *data)
--{
--	u8 samp_id = 0xff;
--	u8 status = 0;
--	int ret;
--	int attempts = 0;
--
--	/*
--	 * Continually read all data from EC until the status byte after
--	 * all reads reflects that the EC is not busy and the sample id
--	 * matches the sample id from before all reads. This guarantees
--	 * that data read in was not modified by the EC while reading.
--	 */
--	while ((status & (EC_MEMMAP_ACC_STATUS_BUSY_BIT |
--			  EC_MEMMAP_ACC_STATUS_SAMPLE_ID_MASK)) != samp_id) {
--		/* If we have tried to read too many times, return error. */
--		if (attempts++ >= 5)
--			return -EIO;
--
--		/* Read status byte until EC is not busy. */
--		ret = read_ec_until_not_busy(st);
--		if (ret < 0)
--			return ret;
--		status = ret;
--
--		/*
--		 * Store the current sample id so that we can compare to the
--		 * sample id after reading the data.
--		 */
--		samp_id = status & EC_MEMMAP_ACC_STATUS_SAMPLE_ID_MASK;
--
--		/* Read all EC data, format it, and store it into data. */
--		read_ec_accel_data_unsafe(st, scan_mask, data);
--
--		/* Read status byte. */
--		ec_cmd_read_u8(st->ec, EC_MEMMAP_ACC_STATUS, &status);
--	}
--
--	return 0;
--}
--
- static int cros_ec_accel_legacy_read(struct iio_dev *indio_dev,
- 				     struct iio_chan_spec const *chan,
- 				     int *val, int *val2, long mask)
- {
--	struct cros_ec_accel_legacy_state *st = iio_priv(indio_dev);
-+	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
- 	s16 data = 0;
--	int ret = IIO_VAL_INT;
-+	int ret;
-+	int idx = chan->scan_index;
-+
-+	mutex_lock(&st->cmd_lock);
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		ret = read_ec_accel_data(st, (1 << chan->scan_index), &data);
--		if (ret)
--			return ret;
-+		ret = st->read_ec_sensors_data(indio_dev, 1 << idx, &data);
-+		if (ret < 0)
-+			break;
-+		ret = IIO_VAL_INT;
- 		*val = data;
--		return IIO_VAL_INT;
-+		break;
- 	case IIO_CHAN_INFO_SCALE:
-+		WARN_ON(st->type != MOTIONSENSE_TYPE_ACCEL);
- 		*val = 0;
- 		*val2 = ACCEL_LEGACY_NSCALE;
--		return IIO_VAL_INT_PLUS_NANO;
-+		ret = IIO_VAL_INT_PLUS_NANO;
-+		break;
- 	case IIO_CHAN_INFO_CALIBBIAS:
- 		/* Calibration not supported. */
- 		*val = 0;
--		return IIO_VAL_INT;
-+		ret = IIO_VAL_INT;
-+		break;
- 	default:
--		return -EINVAL;
-+		ret = cros_ec_sensors_core_read(st, chan, val, val2,
-+				mask);
-+		break;
- 	}
-+	mutex_unlock(&st->cmd_lock);
-+
-+	return ret;
- }
- 
- static int cros_ec_accel_legacy_write(struct iio_dev *indio_dev,
-@@ -231,86 +92,14 @@ static const struct iio_info cros_ec_accel_legacy_info = {
- 	.write_raw = &cros_ec_accel_legacy_write,
- };
- 
--/**
-- * cros_ec_accel_legacy_capture() - The trigger handler function
-- * @irq: The interrupt number.
-- * @p:   Private data - always a pointer to the poll func.
-- *
-- * On a trigger event occurring, if the pollfunc is attached then this
-- * handler is called as a threaded interrupt (and hence may sleep). It
-- * is responsible for grabbing data from the device and pushing it into
-- * the associated buffer.
-- *
-- * Return: IRQ_HANDLED
-+/*
-+ * Present the channel using HTML5 standard:
-+ * need to invert X and Y and invert some lid axis.
-  */
--static irqreturn_t cros_ec_accel_legacy_capture(int irq, void *p)
--{
--	struct iio_poll_func *pf = p;
--	struct iio_dev *indio_dev = pf->indio_dev;
--	struct cros_ec_accel_legacy_state *st = iio_priv(indio_dev);
--
--	/* Clear capture data. */
--	memset(st->capture_data, 0, sizeof(st->capture_data));
--
--	/*
--	 * Read data based on which channels are enabled in scan mask. Note
--	 * that on a capture we are always reading the calibrated data.
--	 */
--	read_ec_accel_data(st, *indio_dev->active_scan_mask, st->capture_data);
--
--	iio_push_to_buffers_with_timestamp(indio_dev, (void *)st->capture_data,
--					   iio_get_time_ns(indio_dev));
--
--	/*
--	 * Tell the core we are done with this trigger and ready for the
--	 * next one.
--	 */
--	iio_trigger_notify_done(indio_dev->trig);
--
--	return IRQ_HANDLED;
--}
--
--static char *cros_ec_accel_legacy_loc_strings[] = {
--	[MOTIONSENSE_LOC_BASE] = "base",
--	[MOTIONSENSE_LOC_LID] = "lid",
--	[MOTIONSENSE_LOC_MAX] = "unknown",
--};
--
--static ssize_t cros_ec_accel_legacy_loc(struct iio_dev *indio_dev,
--					uintptr_t private,
--					const struct iio_chan_spec *chan,
--					char *buf)
--{
--	struct cros_ec_accel_legacy_state *st = iio_priv(indio_dev);
--
--	return sprintf(buf, "%s\n",
--		       cros_ec_accel_legacy_loc_strings[st->sensor_num +
--							MOTIONSENSE_LOC_BASE]);
--}
--
--static ssize_t cros_ec_accel_legacy_id(struct iio_dev *indio_dev,
--				       uintptr_t private,
--				       const struct iio_chan_spec *chan,
--				       char *buf)
--{
--	struct cros_ec_accel_legacy_state *st = iio_priv(indio_dev);
--
--	return sprintf(buf, "%d\n", st->sensor_num);
--}
--
--static const struct iio_chan_spec_ext_info cros_ec_accel_legacy_ext_info[] = {
--	{
--		.name = "id",
--		.shared = IIO_SHARED_BY_ALL,
--		.read = cros_ec_accel_legacy_id,
--	},
--	{
--		.name = "location",
--		.shared = IIO_SHARED_BY_ALL,
--		.read = cros_ec_accel_legacy_loc,
--	},
--	{ }
--};
-+#define CROS_EC_ACCEL_ROTATE_AXIS(_axis)				\
-+	((_axis) == CROS_EC_SENSOR_Z ? CROS_EC_SENSOR_Z :		\
-+	 ((_axis) == CROS_EC_SENSOR_X ? CROS_EC_SENSOR_Y :		\
-+	  CROS_EC_SENSOR_X))
- 
- #define CROS_EC_ACCEL_LEGACY_CHAN(_axis)				\
- 	{								\
-@@ -321,28 +110,28 @@ static const struct iio_chan_spec_ext_info cros_ec_accel_legacy_ext_info[] = {
- 			BIT(IIO_CHAN_INFO_RAW) |			\
- 			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
--		.ext_info = cros_ec_accel_legacy_ext_info,		\
-+		.ext_info = cros_ec_sensors_ext_info,			\
- 		.scan_type = {						\
- 			.sign = 's',					\
--			.realbits = 16,					\
--			.storagebits = 16,				\
-+			.realbits = CROS_EC_SENSOR_BITS,		\
-+			.storagebits = CROS_EC_SENSOR_BITS,		\
- 		},							\
-+		.scan_index = CROS_EC_ACCEL_ROTATE_AXIS(_axis),		\
- 	}								\
- 
--static struct iio_chan_spec ec_accel_channels[] = {
--	CROS_EC_ACCEL_LEGACY_CHAN(X),
--	CROS_EC_ACCEL_LEGACY_CHAN(Y),
--	CROS_EC_ACCEL_LEGACY_CHAN(Z),
--	IIO_CHAN_SOFT_TIMESTAMP(MAX_AXIS)
-+static const struct iio_chan_spec cros_ec_accel_legacy_channels[] = {
-+		CROS_EC_ACCEL_LEGACY_CHAN(CROS_EC_SENSOR_X),
-+		CROS_EC_ACCEL_LEGACY_CHAN(CROS_EC_SENSOR_Y),
-+		CROS_EC_ACCEL_LEGACY_CHAN(CROS_EC_SENSOR_Z),
-+		IIO_CHAN_SOFT_TIMESTAMP(CROS_EC_SENSOR_MAX_AXIS)
- };
- 
- static int cros_ec_accel_legacy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
--	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
- 	struct iio_dev *indio_dev;
--	struct cros_ec_accel_legacy_state *state;
-+	struct cros_ec_sensors_core_state *state;
- 	int ret;
- 
- 	if (!ec || !ec->ec_dev) {
-@@ -350,46 +139,29 @@ static int cros_ec_accel_legacy_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	if (!ec->ec_dev->cmd_readmem) {
--		dev_warn(&pdev->dev, "EC does not support direct reads.\n");
--		return -EINVAL;
--	}
--
- 	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*state));
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
--	platform_set_drvdata(pdev, indio_dev);
--	state = iio_priv(indio_dev);
--	state->ec = ec->ec_dev;
--	state->sensor_num = sensor_platform->sensor_num;
--
--	indio_dev->dev.parent = dev;
--	indio_dev->name = pdev->name;
--	indio_dev->channels = ec_accel_channels;
--	/*
--	 * Present the channel using HTML5 standard:
--	 * need to invert X and Y and invert some lid axis.
--	 */
--	ec_accel_channels[X].scan_index = Y;
--	ec_accel_channels[Y].scan_index = X;
--	ec_accel_channels[Z].scan_index = Z;
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-+	if (ret)
-+		return ret;
- 
--	state->sign[Y] = 1;
-+	indio_dev->info = &cros_ec_accel_legacy_info;
-+	state = iio_priv(indio_dev);
- 
--	if (state->sensor_num == MOTIONSENSE_LOC_LID)
--		state->sign[X] = state->sign[Z] = -1;
--	else
--		state->sign[X] = state->sign[Z] = 1;
-+	state->read_ec_sensors_data = cros_ec_sensors_read_lpc;
- 
--	indio_dev->num_channels = ARRAY_SIZE(ec_accel_channels);
--	indio_dev->dev.parent = &pdev->dev;
--	indio_dev->info = &cros_ec_accel_legacy_info;
--	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = cros_ec_accel_legacy_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(cros_ec_accel_legacy_channels);
-+	/* The lid sensor needs to be presented inverted. */
-+	if (state->loc == MOTIONSENSE_LOC_LID) {
-+		state->sign[CROS_EC_SENSOR_X] = -1;
-+		state->sign[CROS_EC_SENSOR_Z] = -1;
-+	}
- 
- 	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
--					      cros_ec_accel_legacy_capture,
--					      NULL);
-+			cros_ec_sensors_capture, NULL);
- 	if (ret)
- 		return ret;
- 
--- 
-2.22.0.510.g264f2c817a-goog
-
+On Mon, Jul 15, 2019 at 1:04 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Hi Benson,
+>
+> On Mon, Jul 15, 2019 at 12:55:57PM -0700, Benson Leung wrote:
+> > Hi Matthias,
+> >
+> > On Mon, Jul 15, 2019 at 12:10:17PM -0700, Matthias Kaehlcke wrote:
+> > > Before doing any actual work cros_ec_accel_legacy_read() acquires
+> > > a mutex, which is released at the end of the function. However for
+> > > 'calibbias' channels the function returns directly, without releasing
+> > > the lock. The next attempt to acquire the lock blocks forever. Instead
+> > > of an explicit return statement use the common return path, which
+> > > releases the lock.
+> > >
+> > > Fixes: 11b86c7004ef1 ("platform/chrome: Add cros_ec_accel_legacy driver")
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > ---
+> > >  drivers/iio/accel/cros_ec_accel_legacy.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
+> > > index 46bb2e421bb9..27ca4a64dddf 100644
+> > > --- a/drivers/iio/accel/cros_ec_accel_legacy.c
+> > > +++ b/drivers/iio/accel/cros_ec_accel_legacy.c
+> > > @@ -206,7 +206,8 @@ static int cros_ec_accel_legacy_read(struct iio_dev *indio_dev,
+> > >     case IIO_CHAN_INFO_CALIBBIAS:
+> > >             /* Calibration not supported. */
+> > >             *val = 0;
+> > > -           return IIO_VAL_INT;
+> > > +           ret = IIO_VAL_INT;
+> > > +           break;
+> >
+> > The value of ret is not used below this. It seems to be only used in
+> > case IIO_CHAN_INFO_RAW. In fact, with your change,
+> > there's no return value at all and we just reach the end of
+> > cros_ec_accel_legacy_read.
+> >
+> > >     default:
+> > >             return -EINVAL;
+> > >     }
+> >
+>
+> I messed up. I was over-confident that a FROMLIST patch in our 4.19
+> kernel + this patch applying on upstream means that upstream uses the
+> same code. I should have double-checked that the upstream context is
+> actually the same.
+>
+> Sorry for the noise.
