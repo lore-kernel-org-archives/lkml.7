@@ -2,71 +2,115 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A681C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0391FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24154216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FA3217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563201548;
+	bh=gMYCMlIE9JhAmkeJS4THrWdhMpnJObwv71M4jlxwzgo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0T+UiqgWxn6JTgpF5xh7Ws4kTF+FoGOY3xxOGUtZFH/uPgX2ZkGl/4PRFqdzS2nlO
+	 MOta2HXbfw69B28CqmOSkHFVquzuwO52fCcSHZDa4yhnqkgAnpdu4k3BaflRvgoH5J
+	 BaqT6RLGS3jDa3grByJRvzwSalYwer1BDGqZ8KvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392235AbfGOOjD (ORCPT
+        id S2404195AbfGOOjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:39:03 -0400
-Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:42280
-        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731051AbfGOOix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:53 -0400
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-        by mail.dev.tdt.de (Postfix) with ESMTP id 6F67D2197C;
-        Mon, 15 Jul 2019 14:38:51 +0000 (UTC)
+        Mon, 15 Jul 2019 10:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392109AbfGOOiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:38:54 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A892086C;
+        Mon, 15 Jul 2019 14:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201533;
+        bh=gMYCMlIE9JhAmkeJS4THrWdhMpnJObwv71M4jlxwzgo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CnqwdXCsz3QjrP8XfVDrZcV90yUh4RGLO9ucpRh9FN0AQ3rpRjdhq/PhhHNFtSK4X
+         Z7yv2UYelcREXzaCe87cRzsKE9tyzsh6nupRFol1v6DRQvr7cLAvYHu/+YFxzJSMbi
+         A5fux5555aop6ituxdo3POfWxGIeG09WaEDAnljk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 36/73] bpf: silence warning messages in core
+Date:   Mon, 15 Jul 2019 10:35:52 -0400
+Message-Id: <20190715143629.10893-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
+References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 15 Jul 2019 16:38:51 +0200
-From:   Florian Eckert <fe@dev.tdt.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Eckert.Florian@googlemail.com, info@metux.net,
-        dvhart@infradead.org, andy@infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio
- export
-In-Reply-To: <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <20190704090205.19400-2-fe@dev.tdt.de>
- <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
-Message-ID: <10c574cd0dfb1c607536c68fc1c60c06@dev.tdt.de>
-X-Sender: fe@dev.tdt.de
-User-Agent: Roundcube Webmail/1.1.5
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
->> On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to 
->> reset
->> the ports from the userspace, add the definition to this platform
->> device. The gpio can then be exported by the legancy gpio subsystem to
->> toggle the mpcie reset pin.
->> 
-> 
-> Just tested your patch on an apu3. The driver itself seems to work,
-> but the pins don't seem to actually do anything.
-> 
-> How exactly did you test it ? Do you have some test case ?
+[ Upstream commit aee450cbe482a8c2f6fa5b05b178ef8b8ff107ca ]
 
-I plugged in a mpcie  usb modem.
-In my test case it was a EC25 from Quectel in mpcie2 port.
-After that I did a reboot and exported the gpio via "/sys/class/gpio"
-Then I executed the command "echo 0 > /sys/class/gpio/<name>/value" and 
-"echo 1 > /sys/class/gpio/<name>/value".
-Then I have seen the log message in the kernel that the device did an 
-unregistration/registration
-.
--- Florian
+Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
+
+kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
+ 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
+      |                                                                 ^~~~
+kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
+ 1087 |  INSN_3(ALU, ADD,  X),   \
+      |  ^~~~~~
+kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
+ 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
+      |   ^~~~~~~~~~~~
+kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
+ 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
+      |                                                                 ^~~~
+kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
+ 1087 |  INSN_3(ALU, ADD,  X),   \
+      |  ^~~~~~
+kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
+ 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
+      |   ^~~~~~~~~~~~
+
+98 copies of the above.
+
+The attached patch silences the warnings, because we *know* we're overwriting
+the default initializer. That leaves bpf/core.c with only 6 other warnings,
+which become more visible in comparison.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/bpf/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+index eed911d091da..5a590f22b4d4 100644
+--- a/kernel/bpf/Makefile
++++ b/kernel/bpf/Makefile
+@@ -1,4 +1,5 @@
+ obj-y := core.o
++CFLAGS_core.o += $(call cc-disable-warning, override-init)
+ 
+ obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o
+ obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o
+-- 
+2.20.1
 
