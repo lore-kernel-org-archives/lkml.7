@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912D5C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A16C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667322081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0250D21530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199905;
-	bh=bNyd6KJbBf6XaTkANNz5YNQDDdmIq/vmA8Rov+DAflw=;
+	s=default; t=1563199909;
+	bh=dgPjxt/gqRIALGSPpgY0sK9hd7upOyEO9JMEcmeLsJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2fTNXoZuELMXy8TG2+BLrlhWbbtgxSE+8MS77PxmncBhLGVxgYXRf9E/64BvI4yU
-	 ZNMLGp2bBs2n0azHRDcsNlw8iUtjLVSyKMYAo4Lkml1FR/5cFjXYihiiUeU8w6Ym23
-	 sZt6uFIz1kYmBx1qg/4GfqC+lf+91nvzLJ5FZzZc=
+	b=LFBfqUsu2PPnUj89eCZWVBk7D3aeZ00tjLeDE2DTYM/wqv9qhqxNY2pIukKZahE7Q
+	 1HP5k2KbS0iJoY7SjaTiV87gAp2lznH7lk7nFAgDQE23V2QbapfSfO083bpdGEoVjc
+	 WqfkHMptBPRBrX8/cuJI08v5OjAlyV8VPz6Z14PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388686AbfGOOLn (ORCPT
+        id S2388967AbfGOOLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388608AbfGOOLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:11:40 -0400
+        id S2388608AbfGOOLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:11:45 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B2D212F5;
-        Mon, 15 Jul 2019 14:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9911020651;
+        Mon, 15 Jul 2019 14:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199900;
-        bh=bNyd6KJbBf6XaTkANNz5YNQDDdmIq/vmA8Rov+DAflw=;
+        s=default; t=1563199905;
+        bh=dgPjxt/gqRIALGSPpgY0sK9hd7upOyEO9JMEcmeLsJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxXESnPxcjG8xpv9/4iTJCOR5XhHvY66aBNSSZIDwHAXT2/Jh+fBBVF9X57LO3c13
-         Gel5+NKiT3i7SKD4x7mTfUOT0BzTytfl19/mnw6bsJHlin6DRKOAn91lsP+lgOwLAl
-         a8THjd1TA2sR3TPlJ0EsyA05fDWUzctADqUnxM6o=
+        b=Poh7+RIKp/HL6pbkaJ+WIpnCk9qATsAAHOa3ofrGDCCc84gGQDBeP8tutR0EBUvG2
+         8uPyBbaYjfpCRVNtSi0+9xuJD0CW1pDy82MdFudcTzM4FPbJFM5ve4Tpgd31lt2bwu
+         smOUHTN2d0oQavtVJkHvVIttNUIIWIiTavMwmNhY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Graeme Gregory <graeme.gregory@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 131/219] ASoC: soc-core: call snd_soc_unbind_card() under mutex_lock;
-Date:   Mon, 15 Jul 2019 10:02:12 -0400
-Message-Id: <20190715140341.6443-131-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 132/219] acpi/arm64: ignore 5.1 FADTs that are reported as 5.0
+Date:   Mon, 15 Jul 2019 10:02:13 -0400
+Message-Id: <20190715140341.6443-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,82 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit b545542a0b866f7975254e41c595836e9bc0ff2f ]
+[ Upstream commit 2af22f3ec3ca452f1e79b967f634708ff01ced8a ]
 
-commit 34ac3c3eb8f0c07 ("ASoC: core: lock client_mutex while removing
-link components") added mutex_lock() at soc_remove_link_components().
+Some Qualcomm Snapdragon based laptops built to run Microsoft Windows
+are clearly ACPI 5.1 based, given that that is the first ACPI revision
+that supports ARM, and introduced the FADT 'arm_boot_flags' field,
+which has a non-zero field on those systems.
 
-Is is called from snd_soc_unbind_card()
+So in these cases, infer from the ARM boot flags that the FADT must be
+5.1 or later, and treat it as 5.1.
 
-	snd_soc_unbind_card()
-=>		soc_remove_link_components()
-		soc_cleanup_card_resources()
-			soc_remove_dai_links()
-=>				soc_remove_link_components()
-
-And, there are 2 way to call it.
-
-(1)
-	snd_soc_unregister_component()
-**		mutex_lock()
-			snd_soc_component_del_unlocked()
-=>				snd_soc_unbind_card()
-**		mutex_unlock()
-
-(2)
-	snd_soc_unregister_card()
-=>		snd_soc_unbind_card()
-
-(1) case is already using mutex_lock() when it calles
-snd_soc_unbind_card(), thus, we will get lockdep warning.
-
-commit 495f926c68ddb90 ("ASoC: core: Fix deadlock in
-snd_soc_instantiate_card()") tried to fixup it, but still not
-enough. We still have lockdep warning when we try unbind/bind.
-
-We need mutex_lock() under snd_soc_unregister_card()
-instead of snd_remove_link_components()/snd_soc_unbind_card().
-
-Fixes: 34ac3c3eb8f0c07 ("ASoC: core: lock client_mutex while removing link components")
-Fixes: 495f926c68ddb90 ("ASoC: core: Fix deadlock in snd_soc_instantiate_card()")
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Tested-by: Lee Jones <lee.jones@linaro.org>
+Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/acpi.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index c010cc864cf3..f05a5c0a8aff 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -2834,14 +2834,12 @@ static void snd_soc_unbind_card(struct snd_soc_card *card, bool unregister)
- 		snd_soc_dapm_shutdown(card);
- 		snd_soc_flush_all_delayed_work(card);
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index 803f0494dd3e..7722e85fb69c 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -155,10 +155,14 @@ static int __init acpi_fadt_sanity_check(void)
+ 	 */
+ 	if (table->revision < 5 ||
+ 	   (table->revision == 5 && fadt->minor_revision < 1)) {
+-		pr_err("Unsupported FADT revision %d.%d, should be 5.1+\n",
++		pr_err(FW_BUG "Unsupported FADT revision %d.%d, should be 5.1+\n",
+ 		       table->revision, fadt->minor_revision);
+-		ret = -EINVAL;
+-		goto out;
++
++		if (!fadt->arm_boot_flags) {
++			ret = -EINVAL;
++			goto out;
++		}
++		pr_err("FADT has ARM boot flags set, assuming 5.1\n");
+ 	}
  
--		mutex_lock(&client_mutex);
- 		/* remove all components used by DAI links on this card */
- 		for_each_comp_order(order) {
- 			for_each_card_rtds(card, rtd) {
- 				soc_remove_link_components(card, rtd, order);
- 			}
- 		}
--		mutex_unlock(&client_mutex);
- 
- 		soc_cleanup_card_resources(card);
- 		if (!unregister)
-@@ -2860,7 +2858,9 @@ static void snd_soc_unbind_card(struct snd_soc_card *card, bool unregister)
-  */
- int snd_soc_unregister_card(struct snd_soc_card *card)
- {
-+	mutex_lock(&client_mutex);
- 	snd_soc_unbind_card(card, true);
-+	mutex_unlock(&client_mutex);
- 	dev_dbg(card->dev, "ASoC: Unregistered card '%s'\n", card->name);
- 
- 	return 0;
+ 	if (!(fadt->flags & ACPI_FADT_HW_REDUCED)) {
 -- 
 2.20.1
 
