@@ -2,136 +2,57 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C6DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC9DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479A120C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="U42euZjc"
+	by mail.kernel.org (Postfix) with ESMTP id 017F920C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbfGOIMj (ORCPT
+        id S1729400AbfGOIMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 04:12:39 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60452 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729257AbfGOIMj (ORCPT
+        Mon, 15 Jul 2019 04:12:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46623 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729307AbfGOIMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 04:12:39 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 6B4E02E0E47;
-        Mon, 15 Jul 2019 11:12:35 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id bY44Bou3DU-CY4qvewE;
-        Mon, 15 Jul 2019 11:12:35 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1563178355; bh=5cuUVGpOKjEZE2zEyOt2pCBdqAx98lYW54gZVsRcm3M=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=U42euZjcfMleJ11bS6fI0HsLyRDy+E4n7PUvELcF8Z4i01C6Uvz6z/cKhGX43dAr4
-         1bxWZ/z0s3g/OJRIWfqPTDog6Jenk0Z7I5ShKB2xpFrs5axy1uzicmVWyR9D+MMhz/
-         dFcfROpk5PX9kBqt2krQKIKjBIvfUbhMNYh953TQ=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38c5:1c4f:8e20:cf1b])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id zz1WwJWmSJ-CYQCqQb5;
-        Mon, 15 Jul 2019 11:12:34 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] kernel/printk: prevent deadlock at calling kmsg_dump from
- NMI context
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <156294329676.1745.2620297516210526183.stgit@buzz>
- <20190713060929.GB1038@tigerII.localdomain>
- <CALYGNiPedT3wyZ3CrvJra=382g6ETUvrhirHJMb29XkBA3uMyg@mail.gmail.com>
- <20190713131947.GA4464@tigerII.localdomain>
- <CALYGNiPp8546yGcC-TYSVq5X9tnPmrQsDecZxZ2smex9zKB5wg@mail.gmail.com>
- <20190715023338.GB3653@jagdpanzerIV>
- <20190715075444.fzxnf3iduqj6dkgp@pathway.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <45b818b7-045d-2d65-327f-217b752accee@yandex-team.ru>
-Date:   Mon, 15 Jul 2019 11:12:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 04:12:40 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hmw66-0004kw-E6; Mon, 15 Jul 2019 10:12:34 +0200
+Date:   Mon, 15 Jul 2019 10:12:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mike Lothian <mike@fireburn.co.uk>
+cc:     thomas.lendacky@amd.com, bhe@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        luto@kernel.org, mingo@redhat.com,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
+ be reserved
+In-Reply-To: <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de>
+References: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com> <20190713145909.30749-1-mike@fireburn.co.uk> <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de>
+ <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190715075444.fzxnf3iduqj6dkgp@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.2019 10:54, Petr Mladek wrote:
-> On Mon 2019-07-15 11:33:38, Sergey Senozhatsky wrote:
->> On (07/13/19 17:03), Konstantin Khlebnikov wrote:
->>>> We call kmsg_dump(KMSG_DUMP_PANIC) after smp_send_stop()
->>>
->>> Indeed, panic is especially handled and looks fine.
-> 
-> Just to get a picture. What other situations are we talking about,
-> please?
-> 
-> oops_exit() is one candidate. The other callers seem to be working
-> in normal context.
+On Sun, 14 Jul 2019, Mike Lothian wrote:
 
-Oops in NMI mostly. Also I've screwed up several times with NMI watchdog
-and dumping log at setting taint.
+> Will the fix be in the next RC?
 
-> 
-> 
->>> Sanity check in my patch could be relaxed:
->>>
->>>         if (WARN_ON_ONCE(reason != KMSG_DUMP_PANIC && in_nmi()))
->>>                 return;
->>
->> How critical kmsg_dump() is? We deadlock only if NMI->kmsg_dump()
->> happens on the CPU which already holds the logbuf_lock; in any
->> other case logbuf_lock is owned by another CPU which is expected
->> to unlock it eventually. So it doesn't look like disabling all
->> NMI->kmsg_dump() is the only way to fix it.
->>
->> When we lock logbuf_lock we increment per-CPU printk_context
->> (PRINTK_SAFE_CONTEXT_MASK bits); when we unlock logbuf_lock
->> we decrement printk_context. Thus we always can tell if the
->> logbuf_lock was locked on the very same CPU - this_cpu printk_context
->> has PRINTK_SAFE_CONTEXT_MASK bits sets - and we are about to deadlock
->> in a nested context (NMI), or the lock was locked on another CPU and
->> it's "safe" to spin on logbuf_lock and wait for logbuf_lock to become
->> available.
-> 
-> This sounds familiar. I think that we did not consider it safe in the
-> end, see the commit 03fc7f9c99c1e7ae29 ("printk/nmi: Prevent deadlock
-> when accessing the main log buffer in NMI").
-> 
-> If the problem is only with Oops then the 2nd propose might be
-> acceptable. The system will either try to continue or it will end
-> up in panic() anyway.
-> 
-> Well, WARN() looks like an overkill, especially if there is only
-> one possible caller that prints the stack anyway. I would personally
-> do not print any message and do just:
-> 
-> 	/*
-> 	 * Prevent deadlock on logbuf_lock. It is safe only
-> 	 * in panic() after smp_send_stop() and resetting
-> 	 * the lock.
-> 	 */
-> 	if (in_nmi() && reason != KMSG_DUMP_PANIC)
-> 		return;
-> 
-
-WARN_ON_ONCE is useful timesaver in debugging.
-It's better to know when happens something that shouldn't.
-
-> Best Regards,
-> Petr
-> 
+As I said, it's upstream already, so yes.
+ 
