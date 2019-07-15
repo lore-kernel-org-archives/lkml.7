@@ -2,125 +2,160 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B430C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8630FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339BB214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D58214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hEYthpWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfGOIhT (ORCPT
+        id S1729440AbfGOIjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 04:37:19 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2227 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729245AbfGOIhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 04:37:19 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DCE869873CB4D6706D46;
-        Mon, 15 Jul 2019 16:37:14 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 15 Jul
- 2019 16:37:09 +0800
-Subject: Re: [PATCH v2 00/24] erofs: promote erofs from staging
-To:     Pavel Machek <pavel@denx.de>, Gao Xiang <hsiangkao@aol.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>
-CC:     <devel@driverdev.osuosl.org>, Theodore Ts'o <tytso@mit.edu>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>, <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Chao Yu <yuchao0@huawei.com>
-References: <20190711145755.33908-1-gaoxiang25@huawei.com>
- <20190714104940.GA1282@xo-6d-61-c0.localdomain>
- <63b9eaca-5d4b-0fe2-c861-7531977a5b48@aol.com> <20190715075641.GA7695@amd>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <a44e439a-7835-ebc8-711d-69f892501759@huawei.com>
-Date:   Mon, 15 Jul 2019 16:37:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 15 Jul 2019 04:39:02 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47445 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729245AbfGOIjB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 04:39:01 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190715083859euoutp020f1a8dd0d57591ba07e20f6673ab6060~xh99sXVWk3256232562euoutp02C
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 08:38:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190715083859euoutp020f1a8dd0d57591ba07e20f6673ab6060~xh99sXVWk3256232562euoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563179939;
+        bh=KJ3DnEhLriuVeWg98K+79IN0DVUic0shWLHqhmyUMzM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=hEYthpWLFYhVJjHE0S/wQaiOoD4M8zKN2j2dIMwkSkXNeCuluP2kkl6CGTdRFqVqP
+         x6zJ2GPXCH6zdyK/CnbBlcCVMZY8vFoGZzWrMIFMFDFjlOwmaHwaHhDYBx+EfQhESz
+         dqDFP2s1IlKrzfi9D89EjC0DgSfVqwK0sDhVwx7k=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190715083858eucas1p1061be8cc96299077ac936b1afb47196e~xh98_Pl4F2177321773eucas1p1q;
+        Mon, 15 Jul 2019 08:38:58 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id C2.B4.04298.2AB3C2D5; Mon, 15
+        Jul 2019 09:38:58 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190715083857eucas1p272d8e645daa15994fff794dbf7c26841~xh98SjSe82048420484eucas1p2k;
+        Mon, 15 Jul 2019 08:38:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190715083857eusmtrp287a3b3c3f8be41c509cb66bd42b6d009~xh98Ee65X0327603276eusmtrp2e;
+        Mon, 15 Jul 2019 08:38:57 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-50-5d2c3ba2c4c9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id A4.97.04140.1AB3C2D5; Mon, 15
+        Jul 2019 09:38:57 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190715083857eusmtip11a4e3e0060559b732ca13b129b64540c~xh97ppbQx2302623026eusmtip1f;
+        Mon, 15 Jul 2019 08:38:57 +0000 (GMT)
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, robdclark@gmail.com, bjorn.andersson@linaro.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <8b74afa7-65ed-c53d-3dc2-d758361f2d62@samsung.com>
+Date:   Mon, 15 Jul 2019 10:38:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.0
 MIME-Version: 1.0
-In-Reply-To: <20190715075641.GA7695@amd>
+In-Reply-To: <20190711145045.GI14859@sirena.co.uk>
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG/e9cdhxNjtPwxSLzdKPsYtHlhEs0Ik4fkqgQKsRmHjTyUpta
+        1ocuhGyK4QQzl6XOa2Ym001XyszSZaKYmVhWVq4LhprlZkK5No+C337v/3me9+WBP4XJugh/
+        6nRSCq9MUiQwpAQ3dcz0bNKHbIwK1tzzYbN7OkVsl2UcZ/M+2UjWadJibL99gmQzKh0Yq9GW
+        iVmtpVvMvnpUSLLfSv5gYRKuxVGMc2bdezF3W11AcIZqDcm9G2gmuUbHR4IbzrKKuN+GFYeo
+        4xJ5LJ9wOo1Xbgk9KYmftGViZ5ukF778aCeuoGFJJvKkgN4OHRWjeCaSUDK6CkFPxjQpDFMI
+        huqqCGH4jSCropdciORMl4kFoRJBweCH+fwYAu2LKuR2+bhcteWtmJt96VXwerplzoTRahH0
+        X22YE0h6PfyrfzO3VkqHQm/OrbkwTq+BkVwt4ealdCTMFGvmPd7QWWDD3exJb4PG7PciN2N0
+        MDzTFxICB0DjWCEmsB+8tRWJ3IeB/iyGkqxJl0C5hn1gqwGhjg+MWhvEAi8Hp7lIJPBlGK66
+        jglZNQJjnRkThBB4an1JCBwO+ulSXNjpBYNj3sJdL8g15c+fkoI6Qya4A2G42zi/xQ/Ke+1k
+        DmJ0i5rpFrXRLWqjW9SmGOHVyI9PVSXG8aqtSfz5zSpFoio1KW7zqeREA3J9sa5Z668mZO+L
+        aUM0hZgl0rDYoCgZoUhTpSe2IaAwxle6x+56ksYq0i/yyuRoZWoCr2pDyyic8ZNe8vh4QkbH
+        KVL4Mzx/llcuqCLK0/8K0rWvDdvtEdhsztZfM02tjqkOuhYhL+3YO+j/oMIwNRJzzPK4rO9m
+        TeRA0LlLwJi/3/n5ZuhJr/1AtNWRpTji3PlQvi3D6LkutLW2vivgBhM9K9ZP7rg7Lres7Isb
+        MB90GvN3HW6CEWPf3/sRyfKhkK/BjqPPGSU+EbY/jzOFOxlcFa/YugFTqhT/AblKCAleAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsVy+t/xu7oLrXViDZZ0Klv0njvJZHF6/zsW
+        i6kPn7BZ/N82kdniytf3bBZty78xW3ROXMJuMXH/WXaLy7vmsFk8X/iD2YHLY++3BSweO2fd
+        ZfeY3TGT1WPTqk42jzvX9rB5bP/2gNXjfvdxJo/Pm+QCOKL0bIryS0tSFTLyi0tslaINLYz0
+        DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mj4+6WIu2MFb8fT1UdYGxvtcXYycHBIC
+        JhITvi9h72Lk4hASWMoo0XVnLSNEQlxi9/y3zBC2sMSfa11sEEWvGSVmXQbp4OQQBupet/QA
+        WJGIgLLE1e97WUCKmAU6mCRerHvECNFxmkniQvtWVpAqNgFNib+bb7KB2LwCdhIXJswAW8ci
+        oCrxeNJEoBoODlGBMImjJ/IgSgQlTs58wgJicwoYSWzvvcsEYjML6EnsuP6LFcKWl9j+dg4z
+        hC0ucevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgTG
+        7LZjP7fsYOx6F3yIUYCDUYmH1yFFO1aINbGsuDL3EKMEB7OSCK/tV6AQb0piZVVqUX58UWlO
+        avEhRlOg3yYyS4km5wPTSV5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4m
+        Dk6pBsYy0xf2J6W28L69duFiw9zZN4s2XNnbXZe/5Tm3nq4Eu0ToEb6GY6/mJa37ITT7UF+P
+        XX3n+WNFtUkrmHNkp1T4zWBv2BOtxK7u8s5x9abtd2tOaYjU741wVo2cOLmEl/F45cOHslq8
+        TirfXokHTn054dj9E7w/v8fJsEbsUPjGd09MtnSa9BMlluKMREMt5qLiRAAFCI9Z7wIAAA==
+X-CMS-MailID: 20190715083857eucas1p272d8e645daa15994fff794dbf7c26841
+X-Msg-Generator: CA
+X-RootMTR: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+        <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+        <CGME20190706010615epcas2p343102f858a7fadaf6785f7ece105f1a7@epcas2p3.samsung.com>
+        <20190706010604.GG20625@sirena.org.uk>
+        <64ca3a74-374f-d4f3-bee6-a607cc5c0fc5@samsung.com>
+        <20190711145045.GI14859@sirena.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11.07.2019 16:50, Mark Brown wrote:
+> On Thu, Jul 11, 2019 at 03:11:56PM +0200, Andrzej Hajda wrote:
+>
+>> 1. DSI protocol defines actually more than 30 types of transactions[1],
+>> but this patchset implements only few of them (dsi generic write/read
+>> family). Is it possible to implement multiple types of transactions in
+>> regmap?
+> You can, there's a couple of different ways depending on how
+> exactly things are done.
+>
+>> 3. DSI devices are no MFDs so regmap abstraction has no big value added
+>> (correct me, if there are other significant benefits).
+> There's a few extra bits even if you're not using the marshalling
+> code to get things onto the bus - the main ones are the register
+> cache support (which people often use for simpler suspend/resume
+> support) and the debug and trace facilities (things like
+> tracepoints and debugfs for dumping the register map).
+
+I do not see cache usable in bridge drivers, I guess default config will
+be caching disabled, as it is already in the driver from this patchset.
+
+So beside marshaling, we are left only with debug facilities, not a big
+gain :)
+
+Moreover as it was already written DSI is mainly used to transport
+COMMANDS to the device, with variable number of arguments - it does not
+resembles registry map at all.
+
+On the other side there is some subset of DSI devices which exposes
+register memory using MIPI DSI Generic Write/Read packets, for example:
+ti-sn65dsi86, tc358764. They fit better to regmap framework. Hard to say
+how common is this pattern. Maybe we can try with it? If yes it would be
+good to put clear remark that regmap/dsi is for such devices, to avoid
+possible confusion.
 
 
-On 2019/7/15 15:56, Pavel Machek wrote:
-> Hi!
-> 
->>>> Changelog from v1:
->>>>  o resend the whole filesystem into a patchset suggested by Greg;
->>>>  o code is more cleaner, especially for decompression frontend.
->>>>
->>>> --8<----------
->>>>
->>>> Hi,
->>>>
->>>> EROFS file system has been in Linux-staging for about a year.
->>>> It has been proved to be stable enough to move out of staging
->>>> by 10+ millions of HUAWEI Android mobile phones on the market
->>>> from EMUI 9.0.1, and it was promoted as one of the key features
->>>> of EMUI 9.1 [1], including P30(pro).
->>>
->>> Ok, maybe it is ready to be moved to kernel proper, but as git can
->>> do moves, would it be better to do it as one commit?
->>>
->>> Separate patches are still better for review, I guess.
->>
->> Thanks for you reply. Either form is OK for me... The first step could
->> be that I hope someone could kindly take some time to look into these
->> patches... :)
->>
->> The patch v2 is slightly different for the current code in the staging
->> tree since I did some code cleanup these days (mainly renaming / moving,
->> including rename unzip_vle.{c,h} to zdata.{c,h} and some confusing
->> structure names and clean up internal.h...). No functional chance and I
->> can submit cleanup patches to staging as well if doing moves by git...
-> 
-> I believe you should get those committed to staging/, yes. Then you
-> ask Al Viro to do pull the git move, I guess, and you follow his
-> instructions at that point...
-> 
-> FILESYSTEMS (VFS and infrastructure)
-> M:      Alexander Viro <viro@zeniv.linux.org.uk>
-> L:      linux-fsdevel@vger.kernel.org
+Regards
 
-OK, I will send the incremental patches as well later if the above approach
-can be done in practice...
+Andrzej
 
-Actually I'd like to get fs people Acked-by about EROFS stuffes, e.g. Al, Ted, etc...
-Hello?
 
-It seems rare filesystems upstreamed these years, but I think EROFS is more useful
-after moving out of staging. If some people really care about compression ratio,
-I can add multi-block fixed-output compression support later (Not very hard, it's
-already on my TODO list), although my current company HUAWEI doesn't have any
-interest in that way in the near future...
-
-In the long term, I'd like to spend my personal free time to decouple code like
-fscrypt and introduce fscompr for other generic fs to compress unmodified files
-as well then...
-
-That is another stuff. Anyway, EROFS is one of optimal read-only performance
-solutions for consumer electronics compared with others (Note that block storage
-has been improved a lot in the past decade...)
-
-Thank you very much,
-Gao Xiang
-
-> 
-> Best regards,
-> 									Pavel
-> 
