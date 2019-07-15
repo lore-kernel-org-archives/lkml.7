@@ -2,374 +2,129 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC935C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D88FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77BDA20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD94120868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="f8hutmT/"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="w00yTOzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbfGOMEl (ORCPT
+        id S1730034AbfGOMEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 08:04:41 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35533 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729981AbfGOMEg (ORCPT
+        Mon, 15 Jul 2019 08:04:48 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:48525 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729988AbfGOMEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 08:04:36 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190715120434euoutp0228aeeb1630ed6c0ea1024641783474cb~xkxdaq9G21711217112euoutp02O
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:04:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190715120434euoutp0228aeeb1630ed6c0ea1024641783474cb~xkxdaq9G21711217112euoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563192274;
-        bh=mqVTzlYZzhDe6QFr7ZLnNYgy70dHGnRuuHI2qFzhuXI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8hutmT/IZrX+v+5QnxnpTL93fIOo8hEjRMM457h81zanzxVu184pKhUuiil4M182
-         BI+JlmbCVZ5D/p9k1cflqTVfWrmg4BbZa/JxjQaJpdlyUXhJypBb01Dw5XUFSNOrwZ
-         GkEoqy0kfiqd1cbpdBgrfgFVipWi/1AlxaS8lrW8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190715120433eucas1p13e84f8d9d71cdf4f501f9cb30f061a83~xkxcqCtA12398923989eucas1p11;
-        Mon, 15 Jul 2019 12:04:33 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id DE.DC.04377.1DB6C2D5; Mon, 15
-        Jul 2019 13:04:33 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190715120432eucas1p1b32d72d239420b861bf8596d4e8a053d~xkxb3qKeK1777317773eucas1p1P;
-        Mon, 15 Jul 2019 12:04:32 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190715120432eusmtrp12e5b61de6ca92629e38715fbd654bd6f~xkxbpfqRi1141311413eusmtrp1Y;
-        Mon, 15 Jul 2019 12:04:32 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-e7-5d2c6bd19e1c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id AC.12.04140.0DB6C2D5; Mon, 15
-        Jul 2019 13:04:32 +0100 (BST)
-Received: from AMDC3218.DIGITAL.local (unknown [106.120.51.18]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190715120431eusmtip18ae61336a03b3ee29ebec16557b18d63~xkxa4ufrr1792317923eusmtip1M;
-        Mon, 15 Jul 2019 12:04:31 +0000 (GMT)
-From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
-To:     k.konieczny@partner.samsung.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 3/4] ARM: dts: exynos: add initial data for coupled
- regulators for Exynos5422/5800
-Date:   Mon, 15 Jul 2019 14:04:15 +0200
-Message-Id: <20190715120416.3561-4-k.konieczny@partner.samsung.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
+        Mon, 15 Jul 2019 08:04:47 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x6FC4NmB010439
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 21:04:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6FC4NmB010439
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563192264;
+        bh=7Onnwj4Aol7vBEfdqH7wYkCIRDkp83Cer5+EmKQdOFE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w00yTOzIaj5vl2FtI+QcSJXcMye06NqSFvXFLwxK6Xa5KcQPEG/PP3Kqv0UoFuuX+
+         y12fzYi1JP/P8qGSihacuSJ6KEvFmiIp76xAtOUCxidESiXiqWy1MHGbchMGlZVciU
+         hdfOOz/NSNlV/Uh7QxM8iROXSzRF8uMWxEJTGx0BO1LCR7G1AENoJx4Pv1c3fZYgpf
+         UQKK8Mp52j3xI+Xer660ENag//H+hmP/BNbAPaosbDTgL6epk8+OK44rt7KE7/t/6y
+         WFLXdA51u/LWT8zTQnGVh8fPD6v/FgmcwQ7TBuG7Okv4pNMYYnAjgMMVoJKHIML2EU
+         A/1mh4sdcHKnQ==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id 190so11143053vsf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 05:04:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAUwOQxY0auZIwdAPX0W0fCSVx6YItK4tXXCbfP9vXRe6rdrf5jW
+        00nfHpiJjnRIJf63bvLopWEIeKTJeXDTNi1iPrQ=
+X-Google-Smtp-Source: APXvYqyfxSL5TnyJM5fr7O8sQTCclOIa1SfvEyoOE8HnRW8P/3ts/cp1Og/3hK/v5vJ9PY5O3OefkCqQJGfEon2W6l8=
+X-Received: by 2002:a67:fc45:: with SMTP id p5mr15874928vsq.179.1563192262732;
+ Mon, 15 Jul 2019 05:04:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHKsWRmVeSWpSXmKPExsWy7djP87oXs3ViDS6vZ7PYOGM9q8X1L89Z
-        LeYfOcdq0bfvP6NF/+PXzBbnz29gtzjb9IbdYtPja6wWl3fNYbP43HuE0WLG+X1MFmuP3GW3
-        WHr9IpPF7cYVbBZvfpxlsmjde4Td4t+1jSwWmx8cY3MQ8lgzbw2jx6ZVnWwem5fUexx8t4fJ
-        o2/LKkaP4ze2M3l83iQXwB7FZZOSmpNZllqkb5fAlfHx2ge2gk3WFR/PvWZpYLyi28XIySEh
-        YCKxcu9uxi5GLg4hgRWMEsf3/2ODcL4wStybfJoJwvnMKLFl50X2LkYOsJZv+5Mh4ssZJU5O
-        bWOC61g94QU7yFw2AXOJR9vPMIHYIgLKEpPvTWcGKWIW+MkiseHyRrAiYYF0ifP7PrCA2CwC
-        qhI7Lx4Ai/MKOEu8mrKECeJAeYnOHbvBajgFXCR23D8GVSMocXLmE7A4M1BN89bZzBD1H9kl
-        vuzOgbBdJO5c2MkOYQtLvDq+BcqWkTg9uYcFwi6XeLqwjx3kOAmBFkaJB+0foRLWEoePX2QF
-        eZlZQFNi/S59iLCjxIrF05kgIcEnceOtIMQJfBKTtoH8CBLmlehoE4Ko1pWY9/8MK4QtLdH1
-        fx2U7SFx+OpKpgmMirOQPDMLyTOzEPYuYGRexSieWlqcm55abJSXWq5XnJhbXJqXrpecn7uJ
-        EZjqTv87/mUH464/SYcYBTgYlXh4HVK0Y4VYE8uKK3MPMUpwMCuJ8Np+BQrxpiRWVqUW5ccX
-        leakFh9ilOZgURLnrWZ4EC0kkJ5YkpqdmlqQWgSTZeLglGpgZNxhw2XvJmNuOYVtm1pa97MG
-        8Uui9mYPJ3zXCp2QIPN1zyGDz6f27Xh33ZzHfO+ts2eXTyricPL/OSHl8ZPO3w4psY2ix2fy
-        Xf3owy6X6d40e+IiswRf6UXb5fckVVRnbWFWFFCeUtvKNDHnb/uR20uMrZdv9rfnWfm1iVNQ
-        auaBBXGZflLKSizFGYmGWsxFxYkA38QOlHEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xu7oXsnViDfa+4bPYOGM9q8X1L89Z
-        LeYfOcdq0bfvP6NF/+PXzBbnz29gtzjb9IbdYtPja6wWl3fNYbP43HuE0WLG+X1MFmuP3GW3
-        WHr9IpPF7cYVbBZvfpxlsmjde4Td4t+1jSwWmx8cY3MQ8lgzbw2jx6ZVnWwem5fUexx8t4fJ
-        o2/LKkaP4ze2M3l83iQXwB6lZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRv
-        Z5OSmpNZllqkb5egl/Hx2ge2gk3WFR/PvWZpYLyi28XIwSEhYCLxbX9yFyMXh5DAUkaJ+Yev
-        s3UxcgLFpSUaT69mgrCFJf5c62KDKPrEKNHQtp0ZJMEmYC7xaPsZsCIRAWWJyfemM4MUMQt0
-        skqseHIEbJKwQKrEtG1djCA2i4CqxM6LB9hBbF4BZ4lXU5ZAbZCX6NyxmwXE5hRwkdhx/xhY
-        jRBQTcurfhaIekGJkzOfgNnMQPXNW2czT2AUmIUkNQtJagEj0ypGkdTS4tz03GIjveLE3OLS
-        vHS95PzcTYzAqNx27OeWHYxd74IPMQpwMCrx8DqkaMcKsSaWFVfmHmKU4GBWEuG1/QoU4k1J
-        rKxKLcqPLyrNSS0+xGgK9MREZinR5HxgwsgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliS
-        mp2aWpBaBNPHxMEp1cAYvKBLYPGxKC3lD8JJG2axTBO89CilObF6SeBJddOYr161c9ZJyIp5
-        rPFdLOgUsOH6i6pHuyaflZstkSiVt2Bh3bHvQY96foVPWXJgRrv/Nf88zeKDGz8yCIr6LE1f
-        81tLxXF/x2uJ/KQPyYue7wyuEz869c43R9FGZfY/bsaNatOO3iiIPK+pxFKckWioxVxUnAgA
-        LP4dZeACAAA=
-X-CMS-MailID: 20190715120432eucas1p1b32d72d239420b861bf8596d4e8a053d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190715120432eucas1p1b32d72d239420b861bf8596d4e8a053d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190715120432eucas1p1b32d72d239420b861bf8596d4e8a053d
-References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
-        <CGME20190715120432eucas1p1b32d72d239420b861bf8596d4e8a053d@eucas1p1.samsung.com>
+References: <20190713032106.8509-1-yamada.masahiro@socionext.com>
+ <20190713124744.GS14074@gate.crashing.org> <20190713131642.GU14074@gate.crashing.org>
+ <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com>
+ <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au>
+ <20190715072959.GB20882@gate.crashing.org>
+In-Reply-To: <20190715072959.GB20882@gate.crashing.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 15 Jul 2019 21:03:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATGEK9wxz87J3sTNOYPdtAFXaegQU9EctEBGULQL-ZC4w@mail.gmail.com>
+Message-ID: <CAK7LNATGEK9wxz87J3sTNOYPdtAFXaegQU9EctEBGULQL-ZC4w@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
-bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
-be in 300mV range.
+On Mon, Jul 15, 2019 at 4:30 PM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> On Mon, Jul 15, 2019 at 05:05:34PM +1000, Michael Ellerman wrote:
+> > Segher Boessenkool <segher@kernel.crashing.org> writes:
+> > > Yes, that is why I used the environment variable, all binutils work
+> > > with that.  There was no --target option in GNU ar before 2.22.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- arch/arm/boot/dts/exynos5420.dtsi             | 34 +++++++++----------
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  4 +++
- arch/arm/boot/dts/exynos5800-peach-pi.dts     |  4 +++
- arch/arm/boot/dts/exynos5800.dtsi             | 32 ++++++++---------
- 4 files changed, 41 insertions(+), 33 deletions(-)
+I use binutils 2.30
+It does not understand --target option.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 5fb2326875dc..0cbf74750553 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -48,62 +48,62 @@
- 			opp-shared;
- 			opp-1800000000 {
- 				opp-hz = /bits/ 64 <1800000000>;
--				opp-microvolt = <1250000>;
-+				opp-microvolt = <1250000 1250000 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1700000000 {
- 				opp-hz = /bits/ 64 <1700000000>;
--				opp-microvolt = <1212500>;
-+				opp-microvolt = <1212500 1212500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1600000000 {
- 				opp-hz = /bits/ 64 <1600000000>;
--				opp-microvolt = <1175000>;
-+				opp-microvolt = <1175000 1175000 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1500000000 {
- 				opp-hz = /bits/ 64 <1500000000>;
--				opp-microvolt = <1137500>;
-+				opp-microvolt = <1137500 1137500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1400000000 {
- 				opp-hz = /bits/ 64 <1400000000>;
--				opp-microvolt = <1112500>;
-+				opp-microvolt = <1112500 1112500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1300000000 {
- 				opp-hz = /bits/ 64 <1300000000>;
--				opp-microvolt = <1062500>;
-+				opp-microvolt = <1062500 1062500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1200000000 {
- 				opp-hz = /bits/ 64 <1200000000>;
--				opp-microvolt = <1037500>;
-+				opp-microvolt = <1037500 1037500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1100000000 {
- 				opp-hz = /bits/ 64 <1100000000>;
--				opp-microvolt = <1012500>;
-+				opp-microvolt = <1012500 1012500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-1000000000 {
- 				opp-hz = /bits/ 64 <1000000000>;
--				opp-microvolt = < 987500>;
-+				opp-microvolt = < 987500 987500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-900000000 {
- 				opp-hz = /bits/ 64 <900000000>;
--				opp-microvolt = < 962500>;
-+				opp-microvolt = < 962500 962500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-800000000 {
- 				opp-hz = /bits/ 64 <800000000>;
--				opp-microvolt = < 937500>;
-+				opp-microvolt = < 937500 937500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 			opp-700000000 {
- 				opp-hz = /bits/ 64 <700000000>;
--				opp-microvolt = < 912500>;
-+				opp-microvolt = < 912500 912500 1500000>;
- 				clock-latency-ns = <140000>;
- 			};
- 		};
-@@ -1100,23 +1100,23 @@
- 
- 			opp00 {
- 				opp-hz = /bits/ 64 <84000000>;
--				opp-microvolt = <925000>;
-+				opp-microvolt = <925000 925000 1400000>;
- 			};
- 			opp01 {
- 				opp-hz = /bits/ 64 <111000000>;
--				opp-microvolt = <950000>;
-+				opp-microvolt = <950000 950000 1400000>;
- 			};
- 			opp02 {
- 				opp-hz = /bits/ 64 <222000000>;
--				opp-microvolt = <950000>;
-+				opp-microvolt = <950000 950000 1400000>;
- 			};
- 			opp03 {
- 				opp-hz = /bits/ 64 <333000000>;
--				opp-microvolt = <950000>;
-+				opp-microvolt = <950000 950000 1400000>;
- 			};
- 			opp04 {
- 				opp-hz = /bits/ 64 <400000000>;
--				opp-microvolt = <987500>;
-+				opp-microvolt = <987500 987500 1400000>;
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index 25d95de15c9b..65d094256b54 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -428,6 +428,8 @@
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-coupled-with = <&buck3_reg>;
-+				regulator-coupled-max-spread = <300000>;
- 			};
- 
- 			buck3_reg: BUCK3 {
-@@ -436,6 +438,8 @@
- 				regulator-max-microvolt = <1400000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+				regulator-coupled-with = <&buck2_reg>;
-+				regulator-coupled-max-spread = <300000>;
- 			};
- 
- 			buck4_reg: BUCK4 {
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index e0f470fe54c8..5c1e965ed7e9 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -257,6 +257,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-ramp-delay = <12500>;
-+				regulator-coupled-with = <&buck3_reg>;
-+				regulator-coupled-max-spread = <300000>;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-@@ -269,6 +271,8 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-ramp-delay = <12500>;
-+				regulator-coupled-with = <&buck2_reg>;
-+				regulator-coupled-max-spread = <300000>;
- 				regulator-state-mem {
- 					regulator-off-in-suspend;
- 				};
-diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
-index 57d3b319fd65..2a74735d161c 100644
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -22,61 +22,61 @@
- 
- &cluster_a15_opp_table {
- 	opp-1700000000 {
--		opp-microvolt = <1250000>;
-+		opp-microvolt = <1250000 1250000 1500000>;
- 	};
- 	opp-1600000000 {
--		opp-microvolt = <1250000>;
-+		opp-microvolt = <1250000 1250000 1500000>;
- 	};
- 	opp-1500000000 {
--		opp-microvolt = <1100000>;
-+		opp-microvolt = <1100000 1100000 1500000>;
- 	};
- 	opp-1400000000 {
--		opp-microvolt = <1100000>;
-+		opp-microvolt = <1100000 1100000 1500000>;
- 	};
- 	opp-1300000000 {
--		opp-microvolt = <1100000>;
-+		opp-microvolt = <1100000 1100000 1500000>;
- 	};
- 	opp-1200000000 {
--		opp-microvolt = <1000000>;
-+		opp-microvolt = <1000000 1000000 1500000>;
- 	};
- 	opp-1100000000 {
--		opp-microvolt = <1000000>;
-+		opp-microvolt = <1000000 1000000 1500000>;
- 	};
- 	opp-1000000000 {
--		opp-microvolt = <1000000>;
-+		opp-microvolt = <1000000 1000000 1500000>;
- 	};
- 	opp-900000000 {
--		opp-microvolt = <1000000>;
-+		opp-microvolt = <1000000 1000000 1500000>;
- 	};
- 	opp-800000000 {
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 	};
- 	opp-700000000 {
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 	};
- 	opp-600000000 {
- 		opp-hz = /bits/ 64 <600000000>;
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-500000000 {
- 		opp-hz = /bits/ 64 <500000000>;
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-400000000 {
- 		opp-hz = /bits/ 64 <400000000>;
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-300000000 {
- 		opp-hz = /bits/ 64 <300000000>;
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- 	opp-200000000 {
- 		opp-hz = /bits/ 64 <200000000>;
--		opp-microvolt = <900000>;
-+		opp-microvolt = <900000 900000 1500000>;
- 		clock-latency-ns = <140000>;
- 	};
- };
+$ powerpc-linux-ar --version
+GNU ar (GNU Binutils) 2.30
+Copyright (C) 2018 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) any later version.
+This program has absolutely no warranty.
+
+If I give --target=elf$(BITS)-$(GNUTARGET) option, I see this:
+powerpc-linux-ar: -t: No such file or directory
+
+
+
+> > Yeah, we're not very good at testing with really old binutils, so I
+> > guess we broke that.
+> >
+> > I'm inclined to merge this, it doesn't seem to break anything, and it
+> > fixes using --target on old binutils that don't have it.
+>
+> But we don't set the target any other way either.  I don't think this
+> will work with a 32-bit toolchain (default target 32 bit) and a 64-bit
+> kernel, or the other way around.
+>
+> Then again, does that work at *all* nowadays?  Do we even consider that
+> important, *should* it work?
+
+
+Let me confirm if I understood this discussion.
+
+
+[1] KBUILD_ARFLAGS += --target=elf$(BITS)-$(GNUTARGET)
+    is pointless since it is always overridden by another
+    KBUILD_ARFLAGS assignment.
+
+[2] If we stop overriding it, it would cause build errors.
+    So, --target is not only useless, but it is rather harmful.
+
+
+So, we all agreed with this patch, right?
+
+
+We are discussing whether or not to revive
+GNUTARGET=elf$(BITS)-$(GNUTARGET)
+in a *separate* patch, correct?
+
+
 -- 
-2.22.0
-
+Best Regards
+Masahiro Yamada
