@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01857C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A004CC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55DF2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751EC2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199968;
-	bh=EuzH1LumuIsQMp1SI1QC6Dx8IPXSOJ+BJvuEZWOFlGw=;
+	s=default; t=1563199972;
+	bh=lOE15GJAkkPs907XzEXCOpEE2O4/Jf4GNtl+bvxUd8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePPROaJZSkMHm2ZCctL8uQnl+D9AvOImtqPDuqaWms9pMI+Yk1odBFSt718tckjDG
-	 JhefG9iLpM8yZMBsg7RkVKSNLthd2RBSJuZX/d1NSU+R9ocX31P6ShyFrXIk/cYNzt
-	 ZL5RnXz64fPwObr8r+cqeJ6TEtktGZ2nVGQ+MGDw=
+	b=xJ0CVC0A+cw2R/0eH5PwtdnvPMpckHNnOd3MbrRTXTMROCqtnRAQJr/Arq6kGU0wM
+	 xgM8E4iTEjkjuU/NcHBptlFo/jqufsWiPH2VlIH1dgKriL/k8dwI6IkCSaS7TmjIqs
+	 /TmuDO6xrzbMq1//MHBKiS4dozaVgdqIfK+yoDCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389119AbfGOOMr (ORCPT
+        id S2389127AbfGOOMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52032 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387404AbfGOOMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:12:46 -0400
+        id S2389122AbfGOOMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:12:49 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D56206B8;
-        Mon, 15 Jul 2019 14:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D96872083D;
+        Mon, 15 Jul 2019 14:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199965;
-        bh=EuzH1LumuIsQMp1SI1QC6Dx8IPXSOJ+BJvuEZWOFlGw=;
+        s=default; t=1563199967;
+        bh=lOE15GJAkkPs907XzEXCOpEE2O4/Jf4GNtl+bvxUd8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UemEWpHT553vwiHhXajVD/HNWXd/4rY5IXixCCdTi43rFizntqg/31dbgkd4Z2I9A
-         AhcGQ+R9QgSdziXHWOlGyON9bgszsCbdHxl4nwpDHsNTAR2uWclBdUjHtlFZ9CjPrk
-         be9m5UBaXb+XVHCUeBr5KRA+PSUwl9uEBFQhClII=
+        b=Kr6Eb6UmMhNF3U3EntBknwUCN6uSKmYO4sPworlR+r7qMBlcq0BK9nN6H4/S37bT6
+         m/DAvdvHC6jLP6/GVqv51y8fU7n/uq6HLa4anFoUYz9K6jMl4w8710p0zJv4yhS8TU
+         ghqnzjm7s2aTtzF0n5SaZ6zQGaNASDKwGgq8D/+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 148/219] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
-Date:   Mon, 15 Jul 2019 10:02:29 -0400
-Message-Id: <20190715140341.6443-148-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 149/219] clocksource/drivers/tegra: Release all IRQ's on request_irq() error
+Date:   Mon, 15 Jul 2019 10:02:30 -0400
+Message-Id: <20190715140341.6443-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 0f6ff78540bd1b4df1e0f17806b0ce2e1dff0d78 ]
+[ Upstream commit 7a3916706e858ad0bc3b5629c68168e1449de26a ]
 
-When we unload Skylake driver we may end up calling
-hdac_component_master_unbind(), it uses acomp->audio_ops, which we set
-in hdmi_codec_probe(), so we need to set it to NULL in hdmi_codec_remove(),
-otherwise we will dereference no longer existing pointer.
+Release all requested IRQ's on the request error to properly clean up
+allocated resources.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/clocksource/timer-tegra20.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index 4de1fbfa8827..65177ca64827 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1880,6 +1880,12 @@ static void hdmi_codec_remove(struct snd_soc_component *component)
- {
- 	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
- 	struct hdac_device *hdev = hdmi->hdev;
-+	int ret;
-+
-+	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
-+	if (ret < 0)
-+		dev_err(&hdev->dev, "notifier unregister failed: err: %d\n",
-+				ret);
+diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
+index fdb3d795a409..cc18bb135a17 100644
+--- a/drivers/clocksource/timer-tegra20.c
++++ b/drivers/clocksource/timer-tegra20.c
+@@ -310,7 +310,7 @@ static int __init tegra_init_timer(struct device_node *np)
+ 			pr_err("%s: can't map IRQ for CPU%d\n",
+ 			       __func__, cpu);
+ 			ret = -EINVAL;
+-			goto out;
++			goto out_irq;
+ 		}
  
- 	pm_runtime_disable(&hdev->dev);
- }
+ 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
+@@ -320,7 +320,8 @@ static int __init tegra_init_timer(struct device_node *np)
+ 		if (ret) {
+ 			pr_err("%s: cannot setup irq %d for CPU%d\n",
+ 				__func__, cpu_to->clkevt.irq, cpu);
+-			ret = -EINVAL;
++			irq_dispose_mapping(cpu_to->clkevt.irq);
++			cpu_to->clkevt.irq = 0;
+ 			goto out_irq;
+ 		}
+ 	}
 -- 
 2.20.1
 
