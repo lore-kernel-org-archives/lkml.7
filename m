@@ -2,109 +2,125 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B203C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71719C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3B020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2482081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ixIO8DKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfGOSRl (ORCPT
+        id S1731031AbfGOSSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 14:17:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38759 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbfGOSRk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 14:17:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g17so18136547wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:17:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ffNMjzF2N9rsv6oDEllNIn4jfwNv5JXmfhkGppQP1yg=;
-        b=O91eXFT25PXdBCwhhWiW4XT6Ld7SM875chYeGEWh3d7UKI+ba51uEdduWIKFRshMcl
-         e6/D1LlqWXeQx30xA8X4TOEMmpMpXv9voNyB64YGQosi3kDInKhWM7r/ZjDkD9t4l1Gv
-         XQp9JFmnRDTNZse5z7vew4RPL6Ff6l4Je5YnpWKCdDdSMZqBYaC+CACnk1UHErpJS7t7
-         ZDw2l4sXBniDzIGXDRF78p68Bzvtmgfil7kXtEI7qDE1rjMqW/EcRzqAveWyvSQPbzm9
-         hjxyV6ZvERPJ1Ai5YuYgePt838oqMFlQzwyR2xZxIsKBEqOwjc3V4zJbK2OZU12aSYm3
-         jiSg==
-X-Gm-Message-State: APjAAAUhV9HV8vdtFsW9dtZzFr7Qiyrml+4venHcuYo5xX5MY1+kbxs0
-        ElnL7HbsSu/j76+O+zLA1bNYew==
-X-Google-Smtp-Source: APXvYqxyNSL3gMJzkJ6eNIg7eCskXt9Cw0ay4qeS8/0JUUWSzWob6wGPt/fu6XxHcdfYx8zmgiaKAA==
-X-Received: by 2002:adf:f888:: with SMTP id u8mr2920645wrp.238.1563214658539;
-        Mon, 15 Jul 2019 11:17:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b159:8d52:3041:ae0d? ([2001:b07:6468:f312:b159:8d52:3041:ae0d])
-        by smtp.gmail.com with ESMTPSA id l17sm5378428wrr.94.2019.07.15.11.17.37
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 11:17:38 -0700 (PDT)
-Subject: Re: [PATCH 03/22] x86/kvm: Fix frame pointer usage in vmx_vmenter()
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 15 Jul 2019 14:18:01 -0400
+Received: from mail-eopbgr710077.outbound.protection.outlook.com ([40.107.71.77]:29760
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729277AbfGOSSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 14:18:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CUxDFhMSSgZo5BkG3rM+p2fJPtHv7/N6bN/RxQIYXssrw71/JO5yafiR2KR0wdN+amOlBH+QyBb+J7khACV7uhwXIQRv+oB5UuaQmsfcYchnPvO7a+QDn/29RMHrlYxev4c7cjb+BaOxXGyzBR8HRgnSVfCF9KqgpASKM8OWNktUExw0Zz76M+eocRHBauudjtrQdvQspA9O86rCW0Dbxn5qq2VWHU1p7sCPEi69hx54GTbWeVhzDqmakD2FE7o6tjWDDx+BixwxThbzJQNMMc/j6nFaaPxjWdoH+OA0NdCMcO6hLoZXFiAUzNndFLKQK4LLlh1vmAlOfFVAorQ4cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7qhzh0sCemfs4/HUWjHMPtuD35pXQjPt26/ttyIbfyk=;
+ b=BIGtZEvnwmEnP45eY0IB08uzuctOFeMD0Kb4SYUs4ooQjESuLZkVsVvlf7AwYaum+Ot0k2cAiQDeo//p6AIWS4Iy7RFTNZDtpFAlIeCW2TyyiaOZRTq2V/zf53OGZTv97F++qdc7QknWG7dp5phAhotnpqc3PPNYGGc3o+5Wwn1+iE/wJ3fa0yWYb7j50ibl0Zednrk2MGFgg7khGVMYdTadOO0eE7uiwbwA798ubUI8i6lJwiB8mh8BtaWnJtTRnVHtTvFI/7dzpY6KnkFRIvF3cVMWL4Dh0KHNGJWSjIOY9sJFWtBWJsWKr+45mKGvJ913fvYl+WVfDbJe63orgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7qhzh0sCemfs4/HUWjHMPtuD35pXQjPt26/ttyIbfyk=;
+ b=ixIO8DKN7G5QV2CD1ZbQkTU1Ua4p2oowjnzKEEbFhMhPO/KqzfIzWVm7eKDlmRjm77uNq0R2ailpiW+sFhQ77hbbvYEmO0RM2KD34+vQqG/LqLxKAm+IPw7Rmm5S1M8Rc5lQQ4acd9OZBgRLRtXLp08IxZdmEhf6m5JnXNUw0Ys=
+Received: from SN6PR05MB4783.namprd05.prod.outlook.com (52.135.115.17) by
+ SN6PR05MB4413.namprd05.prod.outlook.com (52.135.74.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.10; Mon, 15 Jul 2019 18:17:59 +0000
+Received: from SN6PR05MB4783.namprd05.prod.outlook.com
+ ([fe80::25ae:a9c7:8cc2:24cb]) by SN6PR05MB4783.namprd05.prod.outlook.com
+ ([fe80::25ae:a9c7:8cc2:24cb%7]) with mapi id 15.20.2094.007; Mon, 15 Jul 2019
+ 18:17:59 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <cover.1563150885.git.jpoimboe@redhat.com>
- <299fe4adb78cff0a182f8376c23a445b94d7c782.1563150885.git.jpoimboe@redhat.com>
- <0b37031b-1043-8274-a086-2b5d0b02b5ef@redhat.com>
- <20190715123704.oke4pd4wguj5a7i3@treble>
- <2172ac52-899b-a32a-cba7-c2e5f2bb784e@redhat.com>
- <20190715133525.gr4wvnd4kxwtv63o@treble>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <48ce6e66-6458-483a-f36b-9ea8e19cbc4e@redhat.com>
-Date:   Mon, 15 Jul 2019 20:17:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190715133525.gr4wvnd4kxwtv63o@treble>
-Content-Type: text/plain; charset=utf-8
+        Andy Lutomirski <luto@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2] x86/paravirt: Drop {read,write}_cr8() hooks
+Thread-Topic: [PATCH v2] x86/paravirt: Drop {read,write}_cr8() hooks
+Thread-Index: AQHVOyBUFdACaHiktUycGK4yMfk9sqbL/QEA
+Date:   Mon, 15 Jul 2019 18:17:59 +0000
+Message-ID: <602B4D96-E2A9-45BE-8247-4E3481ED5402@vmware.com>
+References: <20190715151641.29210-1-andrew.cooper3@citrix.com>
+In-Reply-To: <20190715151641.29210-1-andrew.cooper3@citrix.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2b5dce4e-b85b-4580-9ba0-08d70950c472
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR05MB4413;
+x-ms-traffictypediagnostic: SN6PR05MB4413:
+x-microsoft-antispam-prvs: <SN6PR05MB441332FAD4D91B8EF277B82DD0CF0@SN6PR05MB4413.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(346002)(376002)(199004)(189003)(8676002)(5660300002)(6116002)(53936002)(256004)(476003)(8936002)(91956017)(76116006)(2616005)(66946007)(446003)(81156014)(99286004)(486006)(11346002)(81166006)(33656002)(25786009)(6512007)(3846002)(66066001)(478600001)(4326008)(14444005)(186003)(316002)(7416002)(7736002)(54906003)(229853002)(6246003)(86362001)(6436002)(102836004)(76176011)(6916009)(68736007)(6486002)(53546011)(26005)(6506007)(36756003)(64756008)(71200400001)(66476007)(71190400001)(66446008)(66556008)(2906002)(305945005)(14454004)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR05MB4413;H:SN6PR05MB4783.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e4rgQpucsPHPtHFuYvjh/PvUseVqR4OHS2qtcGw5ldmgsM4aqvli9nLVPGoEWBNuOC/yRbMEfcfMQ4DFBXG/Kg9wdXzhM8RSRFsbaZrKfndudNGx8+EbZJwksWOk5K1Q8bw3uHkwyaCtqb7SIWjvGsjeJKNfzmv5FbcGxdd2yxFp092nG7a1ddTwgnxlnrLg+rac6geXglf5jr0tdwX+7+xJgkGaxddv8UjQXEr6csQ5BrLHhmBWFhZDJlM6/PW+Oev8lTXe7FiwvlL15HQMoDbd27Y/J6szvcmKTYWAUa7tyPcs490/kL0oQqbfYR58Fj1M0RlnSrilDrrjOBmRh4p1T9GXlGAAb+f67jSDF8YHJQp5ZTW/FmRckLimxU0l66nCgifEy7hVEvcEk0KieN5kiZWRT42Xosx57GH1A/M=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FD49B339CA227D44BB5DFB367BC85236@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b5dce4e-b85b-4580-9ba0-08d70950c472
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 18:17:59.2414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR05MB4413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/19 15:35, Josh Poimboeuf wrote:
-> On Mon, Jul 15, 2019 at 03:03:23PM +0200, Paolo Bonzini wrote:
->> On 15/07/19 14:37, Josh Poimboeuf wrote:
->>> Would it make sense to remove the call to vmx_vmenter() altogether, and
->>> just either embed it in __vmx_vcpu_run(), or jmp back and forth to it
->>> from __vmx_vcpu_run()?
->>
->> Unfortunately there's another use of it in nested_vmx_check_vmentry_hw.
-> 
-> Ah, I missed that too (failed by cscope).  Is this ok?
-
-Yes, it is.  Thanks!
-
-Paolo
-
-> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-> index d4cb1945b2e3..4010d519eb8c 100644
-> --- a/arch/x86/kvm/vmx/vmenter.S
-> +++ b/arch/x86/kvm/vmx/vmenter.S
-> @@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
->  	ret
->  
->  3:	cmpb $0, kvm_rebooting
-> -	jne 4f
-> -	call kvm_spurious_fault
-> -4:	ret
-> +	je 4f
-> +	ret
-> +4:	ud2
->  
->  	.pushsection .fixup, "ax"
->  5:	jmp 3b
-> 
-
+PiBPbiBKdWwgMTUsIDIwMTksIGF0IDg6MTYgQU0sIEFuZHJldyBDb29wZXIgPGFuZHJldy5jb29w
+ZXIzQGNpdHJpeC5jb20+IHdyb3RlOg0KPiANCj4gVGhlcmUgaXMgYSBsb3Qgb2YgaW5mcmFzdHJ1
+Y3R1cmUgZm9yIGZ1bmN0aW9uYWxpdHkgd2hpY2ggaXMgdXNlZA0KPiBleGNsdXNpdmVseSBpbiBf
+X3tzYXZlLHJlc3RvcmV9X3Byb2Nlc3Nvcl9zdGF0ZSgpIG9uIHRoZSBzdXNwZW5kL3Jlc3VtZQ0K
+PiBwYXRoLg0KPiANCj4gY3I4IGlzIGFuIGFsaWFzIG9mIEFQSUNfVEFTS1BSSSwgYW5kIEFQSUNf
+VEFTS1BSSSBpcyBzYXZlZC9yZXN0b3JlZCBieQ0KPiBsYXBpY197c3VzcGVuZCxyZXN1bWV9KCku
+ICBTYXZpbmcgYW5kIHJlc3RvcmluZyBjcjggaW5kZXBlbmRlbnRseSBvZiB0aGUNCj4gcmVzdCBv
+ZiB0aGUgTG9jYWwgQVBJQyBzdGF0ZSBpc24ndCBhIGNsZXZlciB0aGluZyB0byBiZSBkb2luZy4N
+Cj4gDQo+IERlbGV0ZSB0aGUgc3VzcGVuZC9yZXN1bWUgY3I4IGhhbmRsaW5nLCB3aGljaCBzaHJp
+bmtzIHRoZSBzaXplIG9mIHN0cnVjdA0KPiBzYXZlZF9jb250ZXh0LCBhbmQgYWxsb3dzIGZvciB0
+aGUgcmVtb3ZhbCBvZiBib3RoIFBWT1BTLg0KDQpJIHRoaW5rIHJlbW92aW5nIHRoZSBpbnRlcmZh
+Y2UgZm9yIENSOCB3cml0ZXMgaXMgYWxzbyBnb29kIHRvIGF2b2lkDQpwb3RlbnRpYWwgY29ycmVj
+dG5lc3MgaXNzdWVzLCBhcyB0aGUgU0RNIHNheXMgKDEwLjguNi4xICJJbnRlcmFjdGlvbiBvZiBU
+YXNrDQpQcmlvcml0aWVzIGJldHdlZW4gQ1I4IGFuZCBBUElD4oCdKToNCg0KIk9wZXJhdGluZyBz
+b2Z0d2FyZSBzaG91bGQgaW1wbGVtZW50IGVpdGhlciBkaXJlY3QgQVBJQyBUUFIgdXBkYXRlcyBv
+ciBDUjgNCnN0eWxlIFRQUiB1cGRhdGVzIGJ1dCBub3QgbWl4IHRoZW0uIFNvZnR3YXJlIGNhbiB1
+c2UgYSBzZXJpYWxpemluZw0KaW5zdHJ1Y3Rpb24gKGZvciBleGFtcGxlLCBDUFVJRCkgdG8gc2Vy
+aWFsaXplIHVwZGF0ZXMgYmV0d2VlbiBNT1YgQ1I4IGFuZA0Kc3RvcmVzIHRvIHRoZSBBUElDLuKA
+nQ0KDQpBbmQgbmF0aXZlX3dyaXRlX2NyOCgpIGRpZCBub3QgZXZlbiBpc3N1ZSBhIHNlcmlhbGl6
+aW5nIGluc3RydWN0aW9uLg0KDQo=
