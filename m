@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC50C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D3AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA1B21537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A9920868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200410;
-	bh=L4Z7dcQV1PnKUow5ocfWrEhHdKLwH+6FO2ewvbfUNxM=;
+	s=default; t=1563200421;
+	bh=wH3dVA2zzh0v/D8LZeYeIYHl0GZ7SCoy6bIRg561CFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nel56Zi3DykT1jF/TLja4XnE8tfj3Eof+XsIyYaNMjOCtmG4Q5jD56sg06eBnyalM
-	 9on7c1s99uiCMiAUtTD3+kFsGUhhc846677DhCiXq8FCpqnWxZ1X2+cNrzMJGW87yb
-	 hdITDhqQDTdhxdNPcRQRN3Ax48asryu7WllkDgNc=
+	b=HIsU3wrw2Z5vusnN3oiriayXuiWzfbhVLVReYkgGOaBFArjgVLMuGAQdQjPBWFP68
+	 yMDZRlQMHQte8mT6Pg6f4DeaH58UzUdMlv2IPt25cOd3KsdDhUCZD9Pz9pZv+bJzNB
+	 3BYU4ESCSbC1fD12hyOvWW3JU4UszC78sFQUmG5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389617AbfGOOT5 (ORCPT
+        id S1731785AbfGOOUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389531AbfGOOTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:19:54 -0400
+        id S2390413AbfGOOUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:16 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C3D21849;
-        Mon, 15 Jul 2019 14:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C15920868;
+        Mon, 15 Jul 2019 14:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200393;
-        bh=L4Z7dcQV1PnKUow5ocfWrEhHdKLwH+6FO2ewvbfUNxM=;
+        s=default; t=1563200413;
+        bh=wH3dVA2zzh0v/D8LZeYeIYHl0GZ7SCoy6bIRg561CFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2H4zJiINRjoS30JKdciqCxQ6MkvcbSgpylLBKYSnIRarlCKfgLGEC6xFJwH+QxKlU
-         d9Jr5JC/6vKwTbWruv+ktmdXaoEdlOZRqMZR4OskuuIWMYUIJf3KBHgGioM7A2Y1VR
-         m3rRqMaLyBNWz2hTUIDdI78tN8dfvEa7VXEj7x/8=
+        b=beu++MA7RpKlbD+68p+Frm7H2Ot1BW7678mAiJOq0btlUBWTaYbphCs11izrfPYPg
+         icFpMm/Sa86NuJ4phZpBxpLndcezeLQY5RkYFE2Tk4VHGeHvS9B9+uAb0dT7g0oNRK
+         ZulzYhwbVpxWJtqmIFb6/NNw0QRpNdafBhYkNw3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 036/158] batman-adv: Fix duplicated OGMs on NETDEV_UP
-Date:   Mon, 15 Jul 2019 10:16:07 -0400
-Message-Id: <20190715141809.8445-36-sashal@kernel.org>
+Cc:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        Thomas Renninger <trenn@suse.de>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 040/158] cpupower : frequency-set -r option misses the last cpu in related cpu list
+Date:   Mon, 15 Jul 2019 10:16:11 -0400
+Message-Id: <20190715141809.8445-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,90 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Abhishek Goel <huntbag@linux.vnet.ibm.com>
 
-[ Upstream commit 9e6b5648bbc4cd48fab62cecbb81e9cc3c6e7e88 ]
+[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
 
-The state of slave interfaces are handled differently depending on whether
-the interface is up or not. All active interfaces (IFF_UP) will transmit
-OGMs. But for B.A.T.M.A.N. IV, also non-active interfaces are scheduling
-(low TTL) OGMs on active interfaces. The code which setups and schedules
-the OGMs must therefore already be called when the interfaces gets added as
-slave interface and the transmit function must then check whether it has to
-send out the OGM or not on the specific slave interface.
+To set frequency on specific cpus using cpupower, following syntax can
+be used :
+cpupower -c #i frequency-set -f #f -r
 
-But the commit f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule
-API calls") moved the setup code from the enable function to the activate
-function. The latter is called either when the added slave was already up
-when batadv_hardif_enable_interface processed the new interface or when a
-NETDEV_UP event was received for this slave interfac. As result, each
-NETDEV_UP would schedule a new OGM worker for the interface and thus OGMs
-would be send a lot more than expected.
+While setting frequency using cpupower frequency-set command, if we use
+'-r' option, it is expected to set frequency for all cpus related to
+cpu #i. But it is observed to be missing the last cpu in related cpu
+list. This patch fixes the problem.
 
-Fixes: f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule API calls")
-Reported-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Tested-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Acked-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_iv_ogm.c     | 4 ++--
- net/batman-adv/hard-interface.c | 3 +++
- net/batman-adv/types.h          | 3 +++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ tools/power/cpupower/utils/cpufreq-set.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 73bf6a93a3cf..0b7b36fa0d5c 100644
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -2485,7 +2485,7 @@ batadv_iv_ogm_neigh_is_sob(struct batadv_neigh_node *neigh1,
- 	return ret;
- }
- 
--static void batadv_iv_iface_activate(struct batadv_hard_iface *hard_iface)
-+static void batadv_iv_iface_enabled(struct batadv_hard_iface *hard_iface)
- {
- 	/* begin scheduling originator messages on that interface */
- 	batadv_iv_ogm_schedule(hard_iface);
-@@ -2825,8 +2825,8 @@ static void batadv_iv_gw_dump(struct sk_buff *msg, struct netlink_callback *cb,
- static struct batadv_algo_ops batadv_batman_iv __read_mostly = {
- 	.name = "BATMAN_IV",
- 	.iface = {
--		.activate = batadv_iv_iface_activate,
- 		.enable = batadv_iv_ogm_iface_enable,
-+		.enabled = batadv_iv_iface_enabled,
- 		.disable = batadv_iv_ogm_iface_disable,
- 		.update_mac = batadv_iv_ogm_iface_update_mac,
- 		.primary_set = batadv_iv_ogm_primary_iface_set,
-diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interface.c
-index 08690d06b7be..36f0962040d1 100644
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -821,6 +821,9 @@ int batadv_hardif_enable_interface(struct batadv_hard_iface *hard_iface,
- 
- 	batadv_hardif_recalc_extra_skbroom(soft_iface);
- 
-+	if (bat_priv->algo_ops->iface.enabled)
-+		bat_priv->algo_ops->iface.enabled(hard_iface);
-+
- out:
- 	return 0;
- 
-diff --git a/net/batman-adv/types.h b/net/batman-adv/types.h
-index eeee3e61c625..fdba8a144d73 100644
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -2130,6 +2130,9 @@ struct batadv_algo_iface_ops {
- 	/** @enable: init routing info when hard-interface is enabled */
- 	int (*enable)(struct batadv_hard_iface *hard_iface);
- 
-+	/** @enabled: notification when hard-interface was enabled (optional) */
-+	void (*enabled)(struct batadv_hard_iface *hard_iface);
-+
- 	/** @disable: de-init routing info when hard-interface is disabled */
- 	void (*disable)(struct batadv_hard_iface *hard_iface);
- 
+diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
+index 1eef0aed6423..08a405593a79 100644
+--- a/tools/power/cpupower/utils/cpufreq-set.c
++++ b/tools/power/cpupower/utils/cpufreq-set.c
+@@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
+ 				bitmask_setbit(cpus_chosen, cpus->cpu);
+ 				cpus = cpus->next;
+ 			}
++			/* Set the last cpu in related cpus list */
++			bitmask_setbit(cpus_chosen, cpus->cpu);
+ 			cpufreq_put_related_cpus(cpus);
+ 		}
+ 	}
 -- 
 2.20.1
 
