@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A646C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D99C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D9121537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17ED020868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200226;
-	bh=5JECM+bQrfQSnRJfsBlhnSySrb+gBPijBGjwUgLvW68=;
+	s=default; t=1563200230;
+	bh=zCNqmRsIrfkKLauR/xi8cjfB1cuIG0NmwcE6Nd8GDmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vPYcDjrHLugjw7CISuBpmq+mVEhZiUd4ScAt6GFVkxOKFi8bkAqmt/b7+WGZ2bhEu
-	 5LNj14G/iBqHAXvq0pkzLU4Yjrh/03RTian6QpfIXVzls3ZxIgrxFk+zm7JQ/BtcBG
-	 Df21Mpnv2ZcGUgM7LBurALXOoVQrNGRLwrXaO4HE=
+	b=fnjatB///CjPZGPNbTY0h8L1pDpfg/PaLICAnf2ll51+WH1bwqOEZn6+M8cfDQYTF
+	 cTtDLdsPHUy+bMwNmuagD7K2qAlHK9kv98n1OmgxaHOlZ8sBqXbi98Ib4m4SYem5Ww
+	 +8EPv7/jnorl4sRPD7nN5IrxH8B5W8JDkmO8TSLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389284AbfGOORE (ORCPT
+        id S2389482AbfGOORJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35348 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731682AbfGOOQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:16:57 -0400
+        id S1731682AbfGOORG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:17:06 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5439F2081C;
-        Mon, 15 Jul 2019 14:16:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B852081C;
+        Mon, 15 Jul 2019 14:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200215;
-        bh=5JECM+bQrfQSnRJfsBlhnSySrb+gBPijBGjwUgLvW68=;
+        s=default; t=1563200225;
+        bh=zCNqmRsIrfkKLauR/xi8cjfB1cuIG0NmwcE6Nd8GDmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMbJL5xE4RTMyqvAAAw5dBnhp9pWwKDkXzw8IQ0AXMrQVREY9attq3ZLCIAooNc+R
-         Q6Xyh5r1e0CjDtVwEu/uR3vi2xn5laUXA4oht3yeCWZb4AqDX+zlMauRYdS2Dhy9PS
-         4KdSBQvc9WgDksPDIWo6+H+59/gzZJMn5C3jMaOg=
+        b=rc7i6tfelcUBA63sZ7KmOsSzih31JdCtgYcuFTx5D9Ws/1/dkt+p4++8agcwPfiWo
+         gVSz8hNDRtABozVA0Fqtv2OqD0NM5+B5+jDweUk9sRY5cDAVN2ntGsDFVM24TCm89j
+         YpWSyJHyjq+x7Et9F9ciVYAuJ/EErlNKjp/ZX+IM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 209/219] perf tests: Fix record+probe_libc_inet_pton.sh for powerpc64
-Date:   Mon, 15 Jul 2019 10:03:30 -0400
-Message-Id: <20190715140341.6443-209-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 211/219] Bluetooth: hidp: NUL terminate a string in the compat ioctl
+Date:   Mon, 15 Jul 2019 10:03:32 -0400
+Message-Id: <20190715140341.6443-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -67,82 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit bff5a556c149804de29347a88a884d25e4e4e3a2 ]
+[ Upstream commit dcae9052ebb0c5b2614de620323d615fcbfda7f8 ]
 
-'probe libc's inet_pton & backtrace it with ping' testcase sometimes
-fails on powerpc because distro ping binary does not have symbol
-information and thus it prints "[unknown]" function name in the
-backtrace.
+This change is similar to commit a1616a5ac99e ("Bluetooth: hidp: fix
+buffer overflow") but for the compat ioctl.  We take a string from the
+user and forgot to ensure that it's NUL terminated.
 
-Accept "[unknown]" as valid function name for powerpc as well.
+I have also changed the strncpy() in to strscpy() in hidp_setup_hid().
+The difference is the strncpy() doesn't necessarily NUL terminate the
+destination string.  Either change would fix the problem but it's nice
+to take a belt and suspenders approach and do both.
 
- # perf test -v "probe libc's inet_pton & backtrace it with ping"
-
-Before:
-
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79695
-  ping 79718 [077] 96483.787025: probe_libc:inet_pton: (7fff83a754c8)
-  7fff83a754c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  1171830f4 [unknown] (/usr/bin/ping)
-  FAIL: expected backtrace entry
-  ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
-  got "1171830f4 [unknown] (/usr/bin/ping)"
-  test child finished with -1
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: FAILED!
-
-After:
-
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79085
-  ping 79108 [045] 96400.214177: probe_libc:inet_pton: (7fffbb9654c8)
-  7fffbb9654c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  132e830f4 [unknown] (/usr/bin/ping)
-  test child finished with 0
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: Ok
-
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Reviewed-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sandipan Das <sandipan@linux.ibm.com>
-Fixes: 1632936480a5 ("perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo")
-Link: http://lkml.kernel.org/r/1561630614-3216-1-git-send-email-s1seetee@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hidp/core.c | 2 +-
+ net/bluetooth/hidp/sock.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 61c9f8fc6fa1..58a99a292930 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -44,7 +44,7 @@ trace_libc_inet_pton_backtrace() {
- 		eventattr='max-stack=4'
- 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
- 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	*)
- 		eventattr='max-stack=3'
+diff --git a/net/bluetooth/hidp/core.c b/net/bluetooth/hidp/core.c
+index a442e21f3894..5abd423b55fa 100644
+--- a/net/bluetooth/hidp/core.c
++++ b/net/bluetooth/hidp/core.c
+@@ -775,7 +775,7 @@ static int hidp_setup_hid(struct hidp_session *session,
+ 	hid->version = req->version;
+ 	hid->country = req->country;
+ 
+-	strncpy(hid->name, req->name, sizeof(hid->name));
++	strscpy(hid->name, req->name, sizeof(hid->name));
+ 
+ 	snprintf(hid->phys, sizeof(hid->phys), "%pMR",
+ 		 &l2cap_pi(session->ctrl_sock->sk)->chan->src);
+diff --git a/net/bluetooth/hidp/sock.c b/net/bluetooth/hidp/sock.c
+index 2151913892ce..03be6a4baef3 100644
+--- a/net/bluetooth/hidp/sock.c
++++ b/net/bluetooth/hidp/sock.c
+@@ -192,6 +192,7 @@ static int hidp_sock_compat_ioctl(struct socket *sock, unsigned int cmd, unsigne
+ 		ca.version = ca32.version;
+ 		ca.flags = ca32.flags;
+ 		ca.idle_to = ca32.idle_to;
++		ca32.name[sizeof(ca32.name) - 1] = '\0';
+ 		memcpy(ca.name, ca32.name, 128);
+ 
+ 		csock = sockfd_lookup(ca.ctrl_sock, &err);
 -- 
 2.20.1
 
