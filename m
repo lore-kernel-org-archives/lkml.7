@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 599C0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278D0C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFA8212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99CA2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198666;
-	bh=V7/RbqCX1YhchHKhMe9qWX6100K5iWkhdr8+rSnHO7Q=;
+	s=default; t=1563198669;
+	bh=0jxzida8Nrq1/xjaMQLT+q8JO8kBcnfMpyXemMAAhmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJSSEWNOxIM5qtYJHso/D1HqFYIvsl6M3Y460fsQ8mLBB+wcnmYXByJiDN2gQeLZm
-	 7tAgoqpXLBmawCnt6037SPVB45Rz6NL2edHhn59DE6IkPHEAwyzlc5pvC0P1PXmWmN
-	 aiyOc0i3eAPOzxtvZJLALs3YJqfDeSjQMl3vDnY8=
+	b=OZ04EKzeQTvjlwJbJezaEg5Pcx3s2w8AusRZjmIuRsZizRCECvQU0BKcrEQfVOdGa
+	 UR9dY0TDRoiLPV3rSW9tiE5e/gkf9GRrhfa+pbLG7q6AyAFxUP9RIFFr4015q04KcY
+	 TRjcxC4L8u5if2nh6Xztm1grkfT86avOYoU11ELw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbfGONvF (ORCPT
+        id S1731874AbfGONvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:51:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731621AbfGONvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:51:00 -0400
+        id S1731803AbfGONvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:51:04 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D1E62081C;
-        Mon, 15 Jul 2019 13:50:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA5B2081C;
+        Mon, 15 Jul 2019 13:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198659;
-        bh=V7/RbqCX1YhchHKhMe9qWX6100K5iWkhdr8+rSnHO7Q=;
+        s=default; t=1563198663;
+        bh=0jxzida8Nrq1/xjaMQLT+q8JO8kBcnfMpyXemMAAhmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CzHdxMofD2WvIswbRrmKTdVv3RLl0rHMNUAnQuRjdjnWjQGAXnOKEMRrbSqdbZslL
-         j8r7npN6MUG4guyucaSE+5PmekTiDWOtjX08KsTMDQssXbs5Zj9A6pZlUrpQIYsgdv
-         gpiXQqBRtWqzAFAjK8HXSVKfqJvAk7l6Y8fXzydk=
+        b=UhQd3DK0tmmAe/0Z/qsd8PSe9MgjCSccbgXZOVzoiWy4J/EZ40r3eHbwxgkffo7vz
+         SdYUW5zl7kFETjKcOfc9y9jOo8uZnssI1k501TixLuabA/FOhR3huCJZWyYXtpdXcT
+         Dh8K17pCHN/xTbe64FoQ7KNeSDhXdOnwk6LShpqc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 075/249] net: fec: Do not use netdev messages too early
-Date:   Mon, 15 Jul 2019 09:44:00 -0400
-Message-Id: <20190715134655.4076-75-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 077/249] s390/qdio: handle PENDING state for QEBSM devices
+Date:   Mon, 15 Jul 2019 09:44:02 -0400
+Message-Id: <20190715134655.4076-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,50 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
+[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
 
-When a valid MAC address is not found the current messages
-are shown:
+When a CQ-enabled device uses QEBSM for SBAL state inspection,
+get_buf_states() can return the PENDING state for an Output Queue.
+get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
+buffer will permanently stall all further completion processing on this
+Queue.
 
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
+This isn't a concern for non-QEBSM devices, as get_buf_states() for such
+devices will manually turn PENDING buffers into EMPTY ones.
 
-Since the network device has not been registered at this point, it is better
-to use dev_err()/dev_info() instead, which will provide cleaner log
-messages like these:
-
-fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
-
-Tested on a imx6dl-pico-pi board.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 38f10f7dcbc3..831bb709e783 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1689,10 +1689,10 @@ static void fec_get_mac(struct net_device *ndev)
- 	 */
- 	if (!is_valid_ether_addr(iap)) {
- 		/* Report it and use a random ethernet address instead */
--		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
-+		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
- 		eth_hw_addr_random(ndev);
--		netdev_info(ndev, "Using random MAC address: %pM\n",
--			    ndev->dev_addr);
-+		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
-+			 ndev->dev_addr);
- 		return;
- 	}
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 7b7620de2acd..730c4e68094b 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -736,6 +736,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q, unsigned int start)
  
+ 	switch (state) {
+ 	case SLSB_P_OUTPUT_EMPTY:
++	case SLSB_P_OUTPUT_PENDING:
+ 		/* the adapter got it */
+ 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
+ 			"out empty:%1d %02x", q->nr, count);
 -- 
 2.20.1
 
